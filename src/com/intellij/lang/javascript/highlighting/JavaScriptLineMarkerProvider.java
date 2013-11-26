@@ -31,14 +31,18 @@ import com.intellij.lang.javascript.index.JSNamespace;
 import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.index.JavaScriptSymbolProcessor;
-import com.intellij.lang.javascript.psi.*;
+import com.intellij.lang.javascript.psi.JSAttributeList;
+import com.intellij.lang.javascript.psi.JSClass;
+import com.intellij.lang.javascript.psi.JSFile;
+import com.intellij.lang.javascript.psi.JSFunction;
+import com.intellij.lang.javascript.psi.JSFunctionExpression;
+import com.intellij.lang.javascript.psi.JSProperty;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import com.intellij.lang.javascript.search.JSClassSearch;
 import com.intellij.lang.javascript.search.JSFunctionsSearch;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.IconLoader;
@@ -47,7 +51,6 @@ import com.intellij.openapi.util.Ref;
 import com.intellij.psi.NavigatablePsiElement;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.ResolveResult;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.CollectionQuery;
 import com.intellij.util.Function;
@@ -214,156 +217,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 	@Override
 	public LineMarkerInfo getLineMarkerInfo(@NotNull final PsiElement element)
 	{
-		if(element instanceof JSReferenceExpression)
-		{
-			final ResolveResult[] results = ((JSReferenceExpression) element).multiResolve(false);
-			boolean isStatic = false;
-			boolean isMethod = false;
-			boolean isFunction = false;
-			boolean isVariable = false;
-			boolean isField = false;
-			TextAttributesKey type = null;
-			@NonNls String text = null;
-
-			for(ResolveResult r : results)
-			{
-				final PsiElement resolve = r.getElement();
-
-				if(resolve instanceof JSNamedElementProxy)
-				{
-					final JSNamedElementProxy elementProxy = (JSNamedElementProxy) resolve;
-					final JSNamedElementProxy.NamedItemType namedItemType = elementProxy.getType();
-
-					if(namedItemType == JSNamedElementProxy.NamedItemType.AttributeValue)
-					{
-						type = JSHighlighter.JS_INSTANCE_MEMBER_VARIABLE;
-						text = "field";
-					}
-					else
-					{
-						isStatic |= elementProxy.hasProperty(JSNamedElementProxy.Property.Static);
-
-						isMethod |= (namedItemType == JSNamedElementProxy.NamedItemType.MemberFunction || namedItemType == JSNamedElementProxy
-								.NamedItemType.FunctionProperty);
-						isFunction |= namedItemType == JSNamedElementProxy.NamedItemType.Function;
-						isVariable |= namedItemType == JSNamedElementProxy.NamedItemType.Variable;
-						isField |= namedItemType == JSNamedElementProxy.NamedItemType.Definition || namedItemType == JSNamedElementProxy
-								.NamedItemType.Property;
-
-						if(namedItemType == JSNamedElementProxy.NamedItemType.FunctionExpression)
-						{
-							final JSNamespace namespace = elementProxy.getNamespace();
-
-							if(namespace.getNameId() == -1)
-							{
-								isFunction = true;
-							}
-							else
-							{
-								isMethod = true;
-							}
-						}
-					}
-				}
-				else if(resolve instanceof JSAttributeListOwner)
-				{
-					if(resolve instanceof JSVariable)
-					{
-						return buildHighlightForVariable(resolve, element);
-					}
-
-					final JSAttributeList attributeList = ((JSAttributeListOwner) resolve).getAttributeList();
-
-					if(attributeList != null)
-					{
-						isStatic |= attributeList.hasModifier(JSAttributeList.ModifierType.STATIC);
-					}
-
-					isMethod = resolve instanceof JSFunction;
-					if(isMethod && !isClass(resolve.getParent()))
-					{
-						isMethod = false;
-						isFunction = true;
-					}
-				}
-				else if(resolve instanceof JSDefinitionExpression)
-				{
-					final PsiElement parent = resolve.getParent();
-					if(parent instanceof JSAssignmentExpression)
-					{
-						final JSExpression jsExpression = ((JSAssignmentExpression) parent).getROperand();
-						if(jsExpression instanceof JSFunctionExpression)
-						{
-							isMethod = true;
-						}
-						else
-						{
-							isField = true;
-						}
-					}
-				}
-				else if(resolve instanceof JSProperty)
-				{
-					final JSExpression expression = ((JSProperty) resolve).getValue();
-
-					if(expression instanceof JSFunctionExpression)
-					{
-						isMethod = true;
-					}
-					else
-					{
-						isField = true;
-					}
-				}
-			}
-
-			if(isMethod)
-			{
-				if(isStatic)
-				{
-					type = JSHighlighter.JS_STATIC_MEMBER_FUNCTION;
-					if(myUnitTestMode)
-					{
-						text = "static method";
-					}
-				}
-				else
-				{
-					type = JSHighlighter.JS_INSTANCE_MEMBER_FUNCTION;
-					if(myUnitTestMode)
-					{
-						text = INSTANCE_METHOD;
-					}
-				}
-			}
-			else if(isFunction)
-			{
-				type = JSHighlighter.JS_GLOBAL_FUNCTION;
-				if(myUnitTestMode)
-				{
-					text = "global function";
-				}
-			}
-			else if(isVariable)
-			{
-				type = JSHighlighter.JS_GLOBAL_VARIABLE;
-				if(myUnitTestMode)
-				{
-					text = "global variable";
-				}
-			}
-			else if(isField)
-			{
-				type = JSHighlighter.JS_INSTANCE_MEMBER_VARIABLE;
-				if(myUnitTestMode)
-				{
-					text = INSTANCE_FIELD;
-				}
-			}
-
-			return createLineMarker(element, type, text);
-		}
-		else if(element instanceof JSFunction)
+		if(element instanceof JSFunction)
 		{
 			final JSFunction function = (JSFunction) element;
 			function.putUserData(ourParticipatesInHierarchyKey, null);
@@ -439,36 +293,6 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 					);
 				}
 			}
-		}
-		else if(element instanceof JSProperty)
-		{
-			final JSProperty property = (JSProperty) element;
-
-			final JSExpression expression = property.getValue();
-			TextAttributesKey type = null;
-			@NonNls String text = null;
-
-			if(expression instanceof JSFunctionExpression)
-			{
-				type = JSHighlighter.JS_INSTANCE_MEMBER_FUNCTION;
-				if(myUnitTestMode)
-				{
-					text = INSTANCE_METHOD;
-				}
-			}
-			else
-			{
-				type = JSHighlighter.JS_INSTANCE_MEMBER_VARIABLE;
-				if(myUnitTestMode)
-				{
-					text = INSTANCE_FIELD;
-				}
-			}
-			return createLineMarker(property, type, text);
-		}
-		else if(element instanceof JSAttribute)
-		{
-			return createLineMarker(element, JSHighlighter.JS_METADATA, myUnitTestMode ? "attribute" : null);
 		}
 
 		return null;
