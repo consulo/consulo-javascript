@@ -4,8 +4,12 @@
  */
 package com.intellij.javascript;
 
-import com.intellij.codeInsight.completion.*;
-import com.intellij.codeInsight.lookup.LookupElement;
+import com.intellij.codeInsight.completion.CompletionContributor;
+import com.intellij.codeInsight.completion.CompletionParameters;
+import com.intellij.codeInsight.completion.CompletionResult;
+import com.intellij.codeInsight.completion.CompletionResultSet;
+import com.intellij.codeInsight.completion.CompletionService;
+import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.lang.Language;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.openapi.application.ApplicationManager;
@@ -24,20 +28,17 @@ public class JSCompletionContributor extends CompletionContributor{
   }
 
   @Override
-  public boolean fillCompletionVariants(final CompletionParameters parameters, final CompletionResultSet result) {
+  public void fillCompletionVariants(final CompletionParameters parameters, final CompletionResultSet result) {
     ourDoingSmartCodeCompleteAction = parameters.getCompletionType() == CompletionType.SMART &&
                                       getElementLanguage(parameters).isKindOf(JavaScriptSupportLoader.JAVASCRIPT.getLanguage());
     if (ourDoingSmartCodeCompleteAction) {
-      final CompletionParameters newParams = new CompletionParameters(parameters.getPosition(), parameters.getOriginalFile(),
-                                                                      CompletionType.BASIC, parameters.getOffset(),
-                                                                      parameters.getInvocationCount());
-      CompletionService.getCompletionService().getVariantsFromContributors(EP_NAME, newParams, this, new Consumer<LookupElement>() {
-        public void consume(final LookupElement lookupElement) {
-          result.addElement(lookupElement);
+      final CompletionParameters newParams = parameters.withType(CompletionType.BASIC);
+      CompletionService.getCompletionService().getVariantsFromContributors(newParams, this, new Consumer<CompletionResult>() {
+        public void consume(final CompletionResult lookupElement) {
+          result.addElement(lookupElement.getLookupElement());
         }
       });
     }
-    return true;
   }
 
   private static Language getElementLanguage(final CompletionParameters parameters) {

@@ -1,5 +1,6 @@
 package com.intellij.lang.javascript;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.codeInsight.template.TemplateContextType;
 import com.intellij.lang.Language;
 import com.intellij.lang.javascript.psi.JSFile;
@@ -12,8 +13,8 @@ import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiLanguageInjectionHost;
+import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.util.PsiTreeUtil;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Maxim.Mossienko
@@ -38,11 +39,13 @@ public class JavaScriptCodeContextType extends TemplateContextType {
       if (host != null) {
         final Ref<Boolean> hasJsInjection = new Ref<Boolean>(Boolean.FALSE);
 
-        host.processInjectedPsi(new JSResolveUtil.JSInjectedFilesVisitor() {
-          protected void process(final JSFile file) {
-            hasJsInjection.set(Boolean.TRUE);
-          }
-        });
+        InjectedLanguageUtil.enumerate(host, new JSResolveUtil.JSInjectedFilesVisitor()
+		{
+			protected void process(final JSFile file)
+			{
+				hasJsInjection.set(Boolean.TRUE);
+			}
+		});
 
         if (hasJsInjection.get()) {
           language = JavaScriptSupportLoader.JAVASCRIPT.getLanguage();

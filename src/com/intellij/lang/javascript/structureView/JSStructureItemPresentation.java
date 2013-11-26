@@ -1,23 +1,24 @@
 package com.intellij.lang.javascript.structureView;
 
-import com.intellij.ide.IconProvider;
+import gnu.trove.THashMap;
+
+import java.util.Map;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+
+import com.intellij.icons.AllIcons;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.lang.javascript.JSBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlTag;
-import com.intellij.util.Icons;
-import com.intellij.xml.XmlElementDescriptor;
-import gnu.trove.THashMap;
-
-import javax.swing.*;
-import java.util.Map;
 
 /**
  * @author Maxim.Mossienko
@@ -117,12 +118,12 @@ class JSStructureItemPresentation extends JSStructureViewElement.JSStructureItem
     if (!psiElement.isValid()) return null;
     if (psiElement instanceof JSProperty) {
       final JSExpression expression = ((JSProperty)psiElement).getValue();
-      if (expression instanceof JSObjectLiteralExpression) return Icons.CLASS_ICON;
-      if (expression instanceof JSFunction) return Icons.METHOD_ICON;
-      return Icons.VARIABLE_ICON;
+      if (expression instanceof JSObjectLiteralExpression) return AllIcons.Nodes.Class;
+      if (expression instanceof JSFunction) return AllIcons.Nodes.Method;
+      return AllIcons.Nodes.Variable;
     }
     if (psiElement instanceof JSReferenceExpression) {
-      return Icons.VARIABLE_ICON;
+      return AllIcons.Nodes.Variable;
     }
 
     if (psiElement instanceof JSNamedElementProxy &&
@@ -132,8 +133,8 @@ class JSStructureItemPresentation extends JSStructureViewElement.JSStructureItem
       if (icon != null) return icon;
     }
     
-    if (element.getProxy() != null) return element.getProxy().getIcon(Iconable.ICON_FLAG_OPEN);
-    return psiElement.getIcon(Iconable.ICON_FLAG_OPEN);
+    if (element.getProxy() != null) return IconDescriptorUpdaters.getIcon(element.getProxy(), 0);
+    return IconDescriptorUpdaters.getIcon(psiElement, 0);
   }
 
   private static Map<String, Icon> myQNameToIconMap = new THashMap<String, Icon>();
@@ -189,11 +190,6 @@ class JSStructureItemPresentation extends JSStructureViewElement.JSStructureItem
           }
         }
       }
-    }
-
-    final XmlElementDescriptor descriptor = tag.getDescriptor();
-    if (descriptor instanceof IconProvider && aClass != null) {
-      return ((IconProvider)descriptor).getIcon(aClass, 0);
     }
 
     return null;

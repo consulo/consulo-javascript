@@ -1,13 +1,40 @@
 package com.intellij.lang.javascript.index;
 
+import gnu.trove.THashMap;
+import gnu.trove.THashSet;
+import gnu.trove.TIntObjectHashMap;
+import gnu.trove.TObjectIntHashMap;
+import gnu.trove.TObjectIntIterator;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.ref.SoftReference;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
+
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.ProjectTopics;
-import com.intellij.facet.Facet;
-import com.intellij.facet.FacetManager;
 import com.intellij.javaee.UriUtil;
 import com.intellij.lang.javascript.JSBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
-import com.intellij.lang.javascript.flex.IFlexFacet;
-import com.intellij.lang.javascript.flex.IFlexSdkType;
+import com.intellij.lang.javascript.flex.FlexModuleExtension;
 import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
 import com.intellij.lang.javascript.index.predefined.Marker;
 import com.intellij.lang.javascript.psi.JSFile;
@@ -21,33 +48,41 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.ContentIterator;
+import com.intellij.openapi.roots.ModuleRootEvent;
+import com.intellij.openapi.roots.ModuleRootListener;
+import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileAdapter;
+import com.intellij.openapi.vfs.VirtualFileEvent;
+import com.intellij.openapi.vfs.VirtualFileListener;
+import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.VirtualFileMoveEvent;
+import com.intellij.openapi.vfs.VirtualFilePropertyEvent;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
-import com.intellij.psi.*;
+import com.intellij.psi.MultiplePsiFilesPerDocumentFileViewProvider;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.PsiTreeChangeAdapter;
+import com.intellij.psi.PsiTreeChangeEvent;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.messages.MessageBusConnection;
-import gnu.trove.*;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.io.*;
-import java.lang.ref.SoftReference;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.util.*;
 
 /**
  * @by maxim, yole
@@ -386,35 +421,19 @@ public final class JavaScriptIndex implements ProjectComponent {
     }
   }
 
-  @Nullable
-  public static VirtualFile getFlexLocationFromFacet(final Module module) {
-    final IFlexFacet facet = getFlexFacet(module);
-
-    if (facet != null) {
-      final Sdk flexSdk = facet.getFlexConfiguration().getFlexSdk();
-      if (flexSdk != null) {
-        return flexSdk.getHomeDirectory();
-      }
-    }
-
-    return null;
-  }
-
-  @Nullable
+	@Nullable
   public static VirtualFile getFlexSdkLocation(final Module module) {
-    VirtualFile file = getFlexLocationFromFacet(module);
-
-    if (file != null) {
-      return file;
-    } else {
-      final Sdk sdk = ModuleRootManager.getInstance(module).getSdk();
-      if (sdk != null && sdk.getSdkType() instanceof IFlexSdkType) {
-        return sdk.getHomeDirectory();
-      }
-    }
-
-    return null;
-  }
+		FlexModuleExtension extension = ModuleUtilCore.getExtension(module, FlexModuleExtension.class);
+		if(extension != null)
+		{
+			Sdk sdk = extension.getSdk();
+			if(sdk != null)
+			{
+				return sdk.getHomeDirectory();
+			}
+		}
+		return null;
+	}
 
   private void initPredefines(ProgressIndicator progress) {
     for(String name:ourPredefinedFileNames) {
@@ -791,11 +810,7 @@ public final class JavaScriptIndex implements ProjectComponent {
     boolean seenEntryForFile = moduleForFile != null;
 
     if (moduleForFile != null) {
-      boolean facetBased = true;
-      final Sdk sdk = ModuleRootManager.getInstance(moduleForFile).getSdk();
-      if (sdk != null && sdk.getSdkType() instanceof IFlexSdkType) {
-        facetBased = false;
-      }
+      boolean facetBased = false;
 
       if (facetBased) {
         final Module[] dependencies = ModuleRootManager.getInstance(moduleForFile).getDependencies();
@@ -1012,17 +1027,6 @@ public final class JavaScriptIndex implements ProjectComponent {
 
   public final Project getProject() {
     return myProject;
-  }
-
-  @Nullable
-  public static IFlexFacet getFlexFacet(final Module module) {
-    final Facet[] allFacets = FacetManager.getInstance(module).getAllFacets();
-    for (Facet facet : allFacets) {
-      if (facet instanceof IFlexFacet) {
-        return (IFlexFacet) facet;
-      }
-    }
-    return null;
   }
 
   public Set<VirtualFile> getECMAScriptFilesSetFromEntries() {

@@ -15,6 +15,8 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import com.intellij.codeInsight.daemon.EmptyResolveMessageProvider;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSBundle;
@@ -22,13 +24,17 @@ import com.intellij.lang.javascript.JSDocTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.util.JSLookupUtil;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
+import com.intellij.psi.ElementManipulator;
+import com.intellij.psi.ElementManipulators;
+import com.intellij.psi.PsiComment;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiReference;
+import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 
 public class JSDocTagImpl extends JSElementImpl implements JSDocTag {
   private volatile PsiReference[] myRefs;
@@ -230,10 +236,9 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag {
       if (parameterList != null) {
         final JSParameter[] parameters = parameterList.getParameters();
         final Object[] result = new Object[parameters.length];
-        final JSLookupUtil lookupUtil = JSLookupUtil.getInstance();
-        
+
         for(int i = 0; i < parameters.length; ++i) {
-          result[i] = lookupUtil.createPrioritizedLookupItem(parameters[i], parameters[i].getName(), 3);
+          result[i] = JSLookupUtil.createPrioritizedLookupItem(parameters[i], parameters[i].getName(), 3);
         }
         return result;
       }

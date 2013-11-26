@@ -1,10 +1,10 @@
 package com.intellij.lang.javascript.findUsages;
 
+import org.jetbrains.annotations.NotNull;
+import com.intellij.icons.AllIcons;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSNamedElement;
 import com.intellij.usages.UsageGroup;
-import com.intellij.util.Icons;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Maxim.Mossienko
@@ -20,7 +20,7 @@ public class JavaScriptFunctionGroupRuleProvider extends JavaScriptGroupRuleProv
 
   private static class FunctionUsageGroup extends JavaScriptGroupRuleProviderBase.PsiNamedElementUsageGroupBase<JSFunction> {
     public FunctionUsageGroup(@NotNull JSFunction function) {
-      super(function, Icons.METHOD_ICON);
+      super(function, AllIcons.Nodes.Function);
     }
   }
 }

@@ -15,14 +15,15 @@
  */
 package com.intellij.lang.javascript.parsing;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.PsiParser;
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
-import com.intellij.lang.javascript.JSLanguageDialect;
-import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.lang.ASTNode;
+import com.intellij.lang.LanguageVersion;
+import com.intellij.lang.PsiBuilder;
+import com.intellij.lang.PsiParser;
+import com.intellij.lang.javascript.JSLanguageDialect;
+import com.intellij.lang.javascript.JavaScriptSupportLoader;
+import com.intellij.psi.tree.IElementType;
 
 /**
  * @by max
@@ -35,7 +36,7 @@ public class JSParser implements PsiParser {
   }
 
   @NotNull
-  public ASTNode parse(IElementType root, PsiBuilder builder) {
+  public ASTNode parse(IElementType root, PsiBuilder builder, LanguageVersion languageVersion) {
     final PsiBuilder.Marker rootMarker = builder.mark();
     if (myDialect == JavaScriptSupportLoader.JSON) {
       ExpressionParsing.parseJSON(builder);

@@ -1,5 +1,13 @@
 package com.intellij.lang.javascript.psi.impl;
 
+import gnu.trove.THashMap;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.psi.*;
@@ -18,13 +26,6 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.Query;
-import gnu.trove.THashMap;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Maxim.Mossienko
@@ -166,7 +167,7 @@ public class JSSmartCompletionVariantsHandler {
           if (variable != null) {
             myCandidatesMap.remove(value);
             myVariants.add(
-              JSLookupUtil.getInstance().createPrioritizedLookupItem(
+              JSLookupUtil.createPrioritizedLookupItem(
                 variable,
                 ((JSClass)variable.getParent().getParent()).getName() + "." + variable.getName(),
                 3

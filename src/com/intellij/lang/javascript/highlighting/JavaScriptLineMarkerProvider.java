@@ -1,5 +1,24 @@
 package com.intellij.lang.javascript.highlighting;
 
+import gnu.trove.THashMap;
+import gnu.trove.THashSet;
+
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.swing.Icon;
+
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeInsight.daemon.GutterIconNavigationHandler;
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
@@ -7,8 +26,11 @@ import com.intellij.codeInsight.daemon.LineMarkerProvider;
 import com.intellij.codeInsight.daemon.impl.PsiElementListNavigator;
 import com.intellij.codeInsight.navigation.NavigationUtil;
 import com.intellij.ide.util.DefaultPsiElementCellRenderer;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.index.*;
+import com.intellij.lang.javascript.index.JSNamedElementProxy;
+import com.intellij.lang.javascript.index.JSNamespace;
+import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
+import com.intellij.lang.javascript.index.JavaScriptIndex;
+import com.intellij.lang.javascript.index.JavaScriptSymbolProcessor;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
@@ -32,15 +54,6 @@ import com.intellij.util.CollectionQuery;
 import com.intellij.util.Function;
 import com.intellij.util.Processor;
 import com.intellij.util.Query;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
-import java.awt.event.MouseEvent;
-import java.util.*;
 
 /**
  * @author Maxim.Mossienko
@@ -379,7 +392,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
   @Nullable
   private static LineMarkerInfo createLineMarker(@NotNull final PsiElement element, @Nullable final TextAttributesKey type,
                                                            @Nullable @NonNls final String text) {
-    if (type == null) return null;
+   /* if (type == null) return null;
     PsiElement markedNode = element.getLastChild();
     if (element instanceof JSNamedElement) {
       ASTNode nameNode = ((JSNamedElement)element).findNameIdentifier();
@@ -404,7 +417,8 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
     );
     markerInfo.endOffset = markerInfo.startOffset + markedNode.getTextLength();
     markerInfo.textAttributesKey = type;
-    return markerInfo;
+    return markerInfo;  */
+	  return null;
   }
 
   public void collectSlowLineMarkers(final List<PsiElement> elements, final Collection<LineMarkerInfo> result) {
@@ -602,7 +616,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
         }
       });
       final NavigatablePsiElement[] methods = navElements.toArray(new NavigatablePsiElement[navElements.size()]);
-      PsiElementListNavigator.openTargets(e, methods, getTitle(elt), new DefaultPsiElementCellRenderer());
+      PsiElementListNavigator.openTargets(e, methods, getTitle(elt), "", new DefaultPsiElementCellRenderer());
     }
 
     protected abstract String getTitle(T elt);

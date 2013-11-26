@@ -552,7 +552,6 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
     if (processorResults == null) return ArrayUtil.EMPTY_OBJECT_ARRAY;
     final int numberOfVariants = processorResults.size();
     final List<Object> objects = new ArrayList<Object>(numberOfVariants);
-    final JSLookupUtil lookupUtil = JSLookupUtil.getInstance();
     final Set<String> processedCandidateNames = new THashSet<String>(numberOfVariants);
 
     for(int i = 0; i < numberOfVariants; ++i) {
@@ -568,7 +567,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
         continue;
       }
 
-      objects.add(lookupUtil.createPrioritizedLookupItem(namedElement, name, 3));
+      objects.add(JSLookupUtil.createPrioritizedLookupItem(namedElement, name, 3));
     }
     return ArrayUtil.toObjectArray(objects);
   }

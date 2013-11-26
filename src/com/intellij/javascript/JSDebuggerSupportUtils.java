@@ -1,5 +1,9 @@
 package com.intellij.javascript;
 
+import java.util.List;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.JSElementFactory;
@@ -12,12 +16,16 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiComment;
+import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiLanguageInjectionHost;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.PsiReference;
+import com.intellij.psi.PsiWhiteSpace;
+import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.util.PsiTreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -48,17 +56,19 @@ public class JSDebuggerSupportUtils {
         final Ref<PsiElement> eltInInjected = new Ref<PsiElement>();
         final int[] injectedOffset = new int[1];
 
-        psiLanguageInjectionHost.processInjectedPsi(new PsiLanguageInjectionHost.InjectedPsiVisitor() {
-          public void visit(@NotNull final PsiFile injectedPsi, @NotNull final List<PsiLanguageInjectionHost.Shred> places) {
-            final PsiLanguageInjectionHost.Shred shred = places.get(0);
-            final int injectedStart = shred.getRangeInsideHost().getStartOffset() + shred.host.getTextOffset();
-            final int offsetInInjected = offset - injectedStart;
+        InjectedLanguageUtil.enumerate(psiLanguageInjectionHost, new PsiLanguageInjectionHost.InjectedPsiVisitor()
+		{
+			public void visit(@NotNull final PsiFile injectedPsi, @NotNull final List<PsiLanguageInjectionHost.Shred> places)
+			{
+				final PsiLanguageInjectionHost.Shred shred = places.get(0);
+				final int injectedStart = shred.getRangeInsideHost().getStartOffset() + shred.getHost().getTextOffset();
+				final int offsetInInjected = offset - injectedStart;
 
-            result.set(injectedPsi.findReferenceAt(offsetInInjected));
-            eltInInjected.set(injectedPsi.findElementAt(offsetInInjected));
-            injectedOffset[0] = injectedStart;
-          }
-        });
+				result.set(injectedPsi.findReferenceAt(offsetInInjected));
+				eltInInjected.set(injectedPsi.findElementAt(offsetInInjected));
+				injectedOffset[0] = injectedStart;
+			}
+		});
 
         ref =  result.get();
 
@@ -139,10 +149,10 @@ public class JSDebuggerSupportUtils {
         final int finalOffset = offset;
         final Ref<PsiElement> resultInInjected = new Ref<PsiElement>();
 
-        parent.processInjectedPsi(new PsiLanguageInjectionHost.InjectedPsiVisitor() {
+        InjectedLanguageUtil.enumerate(parent, new PsiLanguageInjectionHost.InjectedPsiVisitor() {
           public void visit(@NotNull final PsiFile injectedPsi, @NotNull final List<PsiLanguageInjectionHost.Shred> places) {
             final PsiLanguageInjectionHost.Shred shred = places.get(0);
-            final int injectedStart = shred.getRangeInsideHost().getStartOffset() + shred.host.getTextOffset();
+            final int injectedStart = shred.getRangeInsideHost().getStartOffset() + shred.getHost().getTextOffset();
             final int offsetInInjected = finalOffset - injectedStart;
 
             resultInInjected.set(injectedPsi.findElementAt(offsetInInjected));

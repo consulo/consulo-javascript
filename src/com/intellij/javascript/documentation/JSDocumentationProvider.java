@@ -1,5 +1,15 @@
 package com.intellij.javascript.documentation;
 
+import java.io.File;
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.codeInsight.lookup.LookupValueWithPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.documentation.CodeDocumentationProvider;
@@ -17,19 +27,18 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiComment;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.PsiNamedElement;
+import com.intellij.psi.PsiWhiteSpace;
+import com.intellij.psi.ResolveResult;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlToken;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.io.File;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -311,7 +320,14 @@ public class JSDocumentationProvider implements CodeDocumentationProvider {
     return result == null ? null : result.toString();
   }
 
-  public String getUrlFor(PsiElement element, PsiElement originalElement) {
+	@Nullable
+	@Override
+	public String getQuickNavigateInfo(PsiElement element, PsiElement element2)
+	{
+		return null;
+	}
+
+	public List<String> getUrlFor(PsiElement element, PsiElement originalElement) {
     String possibleCssName = findPossibleCssName(element);
 
     if (possibleCssName != null) {
@@ -320,7 +336,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider {
         final Method method = documentationProvider.getClass().getMethod("getUrlFor", new Class[]{String.class});
         final Object o = method.invoke(null, new Object[]{possibleCssName});
 
-        if (o instanceof String) return (String)o;
+        if (o instanceof String) return Collections.singletonList((String)o);
       }
       catch (Exception e) {
       }
@@ -682,7 +698,14 @@ public class JSDocumentationProvider implements CodeDocumentationProvider {
     return contextElement;
   }
 
-  @Nullable
+	@Nullable
+	@Override
+	public Pair<PsiElement, PsiComment> parseContext(@NotNull PsiElement element)
+	{
+		return null;
+	}
+
+	@Nullable
   public String generateDocumentationContentStub(PsiComment contextComment) {
     for (PsiElement el = contextComment.getParent(); el != null; el = el.getNextSibling()) {
       if (el instanceof JSProperty) {

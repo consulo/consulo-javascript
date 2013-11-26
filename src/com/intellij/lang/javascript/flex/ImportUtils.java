@@ -1,7 +1,19 @@
 package com.intellij.lang.javascript.flex;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.idea.LoggerFactory;
+import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
@@ -9,25 +21,20 @@ import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.psi.xml.XmlText;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.*;
 
 /**
  * @author Maxim.Mossienko
@@ -139,10 +146,10 @@ public class ImportUtils {
       PsiElement formatTo = inserted.getNextSibling() instanceof PsiWhiteSpace ? inserted.getNextSibling() : inserted;
 
       PsiFile realFile = file.getContext() != null ? file.getContext().getContainingFile() : file;
-      final int injectionOffset = PsiUtilBase.findInjectedElementOffsetInRealDocument(inserted);
+      final TextRange injectionOffset = InjectedLanguageManager.getInstance(project).injectedToHost(inserted, inserted.getTextRange());
 
-      CodeStyleManager.getInstance(project).reformatText(realFile, injectionOffset + formatFrom.getTextRange().getStartOffset(),
-                                                         injectionOffset + formatTo.getTextRange().getEndOffset());
+      CodeStyleManager.getInstance(project).reformatText(realFile, injectionOffset.getStartOffset() + formatFrom.getTextRange().getStartOffset(),
+			  injectionOffset.getEndOffset() + formatTo.getTextRange().getEndOffset());
     }
     catch (IncorrectOperationException ex) {
       LoggerFactory.getInstance().getLoggerInstance(ImportUtils.class.getName()).error(ex);

@@ -16,11 +16,27 @@
 
 package com.intellij.lang.javascript.index;
 
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+
+import javax.swing.Icon;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.extapi.psi.PsiElementBase;
+import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
-import com.intellij.lang.javascript.psi.*;
+import com.intellij.lang.javascript.psi.JSAssignmentExpression;
+import com.intellij.lang.javascript.psi.JSAttributeList;
+import com.intellij.lang.javascript.psi.JSClass;
+import com.intellij.lang.javascript.psi.JSDefinitionExpression;
+import com.intellij.lang.javascript.psi.JSFile;
+import com.intellij.lang.javascript.psi.JSFunctionExpression;
+import com.intellij.lang.javascript.psi.JSNamedElement;
+import com.intellij.lang.javascript.psi.JSNewExpression;
+import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.impl.JSElementImpl;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.project.Project;
@@ -30,19 +46,16 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.pom.Navigatable;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiComment;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilBase;
-import com.intellij.psi.xml.XmlToken;
 import com.intellij.psi.xml.XmlAttributeValue;
-import com.intellij.util.Icons;
+import com.intellij.psi.xml.XmlToken;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
-import java.io.IOException;
-import java.lang.ref.WeakReference;
 
 /**
  * @by Maxim.Mossienko
@@ -359,24 +372,24 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
             hasProperty(Property.SetFunction)
           )
          ) {
-        return Icons.PROPERTY_ICON;
+        return AllIcons.Nodes.Property;
       }
-      return Icons.METHOD_ICON;
+      return AllIcons.Nodes.Function;
     }
 
     if (valueType == NamedItemType.Variable ||
         valueType == NamedItemType.MemberVariable ||
         valueType == NamedItemType.ImplicitVariable
        ) {
-      return Icons.VARIABLE_ICON;
+      return AllIcons.Nodes.Variable;
     }
-    if (valueType == NamedItemType.Property) return Icons.PROPERTY_ICON;
-    if (valueType == NamedItemType.AttributeValue) return Icons.XML_TAG_ICON;
+    if (valueType == NamedItemType.Property) return AllIcons.Nodes.Property;
+    if (valueType == NamedItemType.AttributeValue) return AllIcons.Nodes.Tag;
     if (valueType == NamedItemType.Clazz || valueType == NamedItemType.Namespace) {
-      return hasProperty(Property.Interface) ? Icons.INTERFACE_ICON:Icons.CLASS_ICON;
+      return hasProperty(Property.Interface) ? AllIcons.Nodes.Interface:AllIcons.Nodes.Class;
     }
 
-    return Icons.FIELD_ICON;
+    return AllIcons.Nodes.Variable;
   }
 
   public NamedItemType getType() {

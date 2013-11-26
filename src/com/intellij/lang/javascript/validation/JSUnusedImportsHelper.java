@@ -1,5 +1,14 @@
 package com.intellij.lang.javascript.validation;
 
+import gnu.trove.THashSet;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
@@ -14,16 +23,13 @@ import com.intellij.psi.ResolveResult;
 import com.intellij.psi.search.PsiElementProcessor;
 import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
+import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.psi.xml.XmlText;
-import gnu.trove.THashSet;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.*;
 
 public class JSUnusedImportsHelper {
   private final Collection<PsiElement> myElements;
@@ -212,25 +218,28 @@ public class JSUnusedImportsHelper {
     CachedValue<Results> data = containingFile.getUserData(ourUnusedImportsKey);
     if (data == null) {
       final PsiFile containingFile1 = containingFile;
-      data = file.getManager().getCachedValuesManager().createCachedValue(new CachedValueProvider<Results>() {
-        public Result<Results> compute() {
-          final Map<XmlTag, Collection<PsiElement>> allElements = new HashMap<XmlTag, Collection<PsiElement>>();
-          Collection<JSFile> processedFiles = new THashSet<JSFile>();
-          collectElements(null, containingFile1, allElements, processedFiles);
+      data = CachedValuesManager.getManager(file.getProject()).createCachedValue(new CachedValueProvider<Results>()
+	  {
+		  public Result<Results> compute()
+		  {
+			  final Map<XmlTag, Collection<PsiElement>> allElements = new HashMap<XmlTag, Collection<PsiElement>>();
+			  Collection<JSFile> processedFiles = new THashSet<JSFile>();
+			  collectElements(null, containingFile1, allElements, processedFiles);
 
-          Results allResults = new Results(new HashMap<JSReferenceExpression, String>(), new ArrayList<JSImportStatement>(),
-                                           new ArrayList<JSImportStatement>());
-          for (Collection<PsiElement> elements : allElements.values()) {
-            Results results = new JSUnusedImportsHelper(containingFile1, elements).getUnusedImports();
-            allResults.fqnsToReplaceWithImport.putAll(results.fqnsToReplaceWithImport);
-            allResults.unusedImports.addAll(results.unusedImports);
-            allResults.allImports.addAll(results.allImports);
-          }
+			  Results allResults = new Results(new HashMap<JSReferenceExpression, String>(), new ArrayList<JSImportStatement>(),
+					  new ArrayList<JSImportStatement>());
+			  for(Collection<PsiElement> elements : allElements.values())
+			  {
+				  Results results = new JSUnusedImportsHelper(containingFile1, elements).getUnusedImports();
+				  allResults.fqnsToReplaceWithImport.putAll(results.fqnsToReplaceWithImport);
+				  allResults.unusedImports.addAll(results.unusedImports);
+				  allResults.allImports.addAll(results.allImports);
+			  }
 
-          // TODO explicit depencencies
-          return new Result<Results>(allResults, PsiModificationTracker.MODIFICATION_COUNT);
-        }
-      }, false);
+			  // TODO explicit depencencies
+			  return new Result<Results>(allResults, PsiModificationTracker.MODIFICATION_COUNT);
+		  }
+	  }, false);
       containingFile1.putUserData(ourUnusedImportsKey, data);
     }
     return data.getValue();

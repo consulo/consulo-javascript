@@ -1,13 +1,11 @@
-<idea-plugin version="2" use-idea-classloader="true">
+<idea-plugin>
   <name>JavaScript Support</name>
   <id>JavaScript</id>
   <version>1.0</version>
   <category>HTML/JavaScript Development</category>
   <vendor logo="/general/ijLogo.png">JetBrains</vendor>
-  <idea-version since-build="3000"/>
   <resource-bundle>com.intellij.lang.javascript.JavaScriptBundle</resource-bundle>
-  <depends optional="false">JSHtmlBridge</depends>
-  <depends>com.intellij.modules.xml</depends>
+  <depends>com.intellij.xml</depends>
   <extensions defaultExtensionNs="com.intellij">
     <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
     <colorSettingsPage implementation="com.intellij.lang.javascript.highlighting.JavaScriptColorsAndFontsPage"/>
@@ -73,7 +71,8 @@
     <referencesSearch implementation="com.intellij.lang.javascript.search.JSReferencesSearchExecutor"/>
     <declarationRangeHandler key="com.intellij.lang.javascript.psi.JSNamedElement"
                              implementationClass="com.intellij.lang.javascript.search.JSDeclarationRangeHandler"/>
-    <multiHostInjector implementation="com.intellij.lang.javascript.JSLanguageInjector"/>
+    <multiHostInjector forClass="com.intellij.psi.xml.XmlText" implementationClass="com.intellij.lang.javascript.JSLanguageInjector"/>
+    <multiHostInjector forClass="com.intellij.psi.xml.XmlAttributeValue" implementationClass="com.intellij.lang.javascript.JSLanguageInjector"/>
     <stubElementTypeHolder class="com.intellij.lang.javascript.JSElementTypes"/>
     <lang.importOptimizer language="ECMA Script Level 4" implementationClass="com.intellij.lang.javascript.flex.ECMAScriptImportOptimizer" />
     <lang.importOptimizer language="XML" implementationClass="com.intellij.lang.javascript.flex.ECMAScriptImportOptimizer" />
@@ -88,7 +87,9 @@
     <lang.elementManipulator forClass="com.intellij.lang.javascript.psi.JSDocTag"
       implementationClass="com.intellij.javascript.manipulators.JSDocTagManipulator"/>
 
-    <completion.contributor implementation="com.intellij.javascript.JSCompletionContributor"/>
+    <completion.contributor language="JavaScript" implementationClass="com.intellij.javascript.JSCompletionContributor"/>
+    <completion.contributor language="ECMA Script Level 4" implementationClass="com.intellij.javascript.JSCompletionContributor"/>
+    <completion.contributor language="GWT JavaScript" implementationClass="com.intellij.javascript.JSCompletionContributor"/>
 
     <liveTemplateMacro implementation="com.intellij.javascript.JSClassNameMacro"/>
     <liveTemplateMacro implementation="com.intellij.javascript.JSMethodNameMacro"/>

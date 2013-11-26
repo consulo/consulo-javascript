@@ -15,23 +15,28 @@
  */
 package com.intellij.lang.javascript.formatter.blocks;
 
-import com.intellij.formatting.*;
+import java.util.List;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import com.intellij.formatting.Alignment;
+import com.intellij.formatting.Block;
+import com.intellij.formatting.ChildAttributes;
+import com.intellij.formatting.Indent;
+import com.intellij.formatting.Spacing;
+import com.intellij.formatting.Wrap;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.types.JSFileElementType;
-import com.intellij.lang.javascript.formatter.JSSpacingProcessor;
 import com.intellij.lang.javascript.formatter.JSCodeStyleSettings;
+import com.intellij.lang.javascript.formatter.JSSpacingProcessor;
+import com.intellij.lang.javascript.types.JSFileElementType;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
+import com.intellij.psi.tree.IElementType;
 
 /**
  * @author ven
@@ -90,7 +95,7 @@ public class JSBlock implements Block {
 
   @Nullable
   public Spacing getSpacing(Block child1, Block child2) {
-    if (child1 instanceof JSDocCommentBlock || child2 instanceof JSDocCommentBlock) {
+    if (child1 instanceof JSDocCommentBlock || child2 instanceof JSDocCommentBlock || child1 == null) {
       return null;
     }
     return new JSSpacingProcessor(getNode(), ((JSBlock)child1).getNode(), ((JSBlock)child2).getNode(), mySettings).getResult();

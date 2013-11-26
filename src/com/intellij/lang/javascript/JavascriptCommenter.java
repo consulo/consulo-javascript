@@ -15,60 +15,86 @@
  */
 package com.intellij.lang.javascript;
 
+import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.CodeDocumentationAwareCommenter;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author max
  */
-public class JavascriptCommenter implements CodeDocumentationAwareCommenter {
+public class JavascriptCommenter implements CodeDocumentationAwareCommenter
+{
 
-  public String getLineCommentPrefix() {
-    return "//";
-  }
+	public String getLineCommentPrefix()
+	{
+		return "//";
+	}
 
-  public boolean isLineCommentPrefixOnZeroColumn() {
-    return false;
-  }
+	public boolean isLineCommentPrefixOnZeroColumn()
+	{
+		return false;
+	}
 
-  public String getBlockCommentPrefix() {
-    return "/*";
-  }
+	public String getBlockCommentPrefix()
+	{
+		return "/*";
+	}
 
-  public String getBlockCommentSuffix() {
-    return "*/";
-  }
+	public String getBlockCommentSuffix()
+	{
+		return "*/";
+	}
 
-  @Nullable
-  public IElementType getLineCommentTokenType() {
-    return JSTokenTypes.END_OF_LINE_COMMENT;
-  }
+	@Nullable
+	@Override
+	public String getCommentedBlockCommentPrefix()
+	{
+		return null;
+	}
 
-  @Nullable
-  public IElementType getBlockCommentTokenType() {
-    return JSTokenTypes.C_STYLE_COMMENT;
-  }
+	@Nullable
+	@Override
+	public String getCommentedBlockCommentSuffix()
+	{
+		return null;
+	}
 
-  public String getDocumentationCommentPrefix() {
-    return "/**";
-  }
+	@Nullable
+	public IElementType getLineCommentTokenType()
+	{
+		return JSTokenTypes.END_OF_LINE_COMMENT;
+	}
 
-  public String getDocumentationCommentLinePrefix() {
-    return "*";
-  }
+	@Nullable
+	public IElementType getBlockCommentTokenType()
+	{
+		return JSTokenTypes.C_STYLE_COMMENT;
+	}
 
-  public String getDocumentationCommentSuffix() {
-    return "*/";
-  }
+	public String getDocumentationCommentPrefix()
+	{
+		return "/**";
+	}
 
-  public boolean isDocumentationComment(final PsiComment element) {
-    return element.getTokenType() == JSTokenTypes.DOC_COMMENT;
-  }
+	public String getDocumentationCommentLinePrefix()
+	{
+		return "*";
+	}
 
-  @Nullable
-  public IElementType getDocumentationCommentTokenType() {
-    return JSTokenTypes.DOC_COMMENT;
-  }
+	public String getDocumentationCommentSuffix()
+	{
+		return "*/";
+	}
+
+	public boolean isDocumentationComment(final PsiComment element)
+	{
+		return element.getTokenType() == JSTokenTypes.DOC_COMMENT;
+	}
+
+	@Nullable
+	public IElementType getDocumentationCommentTokenType()
+	{
+		return JSTokenTypes.DOC_COMMENT;
+	}
 }

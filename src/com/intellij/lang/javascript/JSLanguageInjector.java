@@ -1,5 +1,7 @@
 package com.intellij.lang.javascript;
 
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.Language;
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
@@ -12,13 +14,16 @@ import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.html.HtmlTag;
 import com.intellij.psi.meta.PsiMetaData;
 import com.intellij.psi.templateLanguages.OuterLanguageElement;
-import com.intellij.psi.xml.*;
+import com.intellij.psi.xml.XmlAttribute;
+import com.intellij.psi.xml.XmlAttributeValue;
+import com.intellij.psi.xml.XmlElementType;
+import com.intellij.psi.xml.XmlTag;
+import com.intellij.psi.xml.XmlTagChild;
+import com.intellij.psi.xml.XmlTagValue;
+import com.intellij.psi.xml.XmlText;
+import com.intellij.psi.xml.XmlToken;
+import com.intellij.psi.xml.XmlTokenType;
 import com.intellij.xml.XmlElementDescriptorWithCDataContent;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author Maxim.Mossienko
@@ -41,7 +46,7 @@ public class JSLanguageInjector implements MultiHostInjector {
     cssLanguage = lang;
   }
 
-  public void getLanguagesToInject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement host) {
+  public void injectLanguages(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement host) {
 
     if (host instanceof XmlAttributeValue) {
       final PsiElement attribute = host.getParent();
@@ -340,10 +345,5 @@ public class JSLanguageInjector implements MultiHostInjector {
         }
       }
     }
-  }
-
-  @NotNull
-  public List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
-    return Arrays.asList(XmlText.class, XmlAttributeValue.class);
   }
 }

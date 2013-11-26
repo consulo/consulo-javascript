@@ -15,15 +15,15 @@
  */
 package com.intellij.lang.javascript;
 
+import java.lang.reflect.Constructor;
+
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.types.PsiGenerator;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-
-import java.lang.reflect.Constructor;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,7 +41,7 @@ public class JSElementType extends IElementType implements PsiGenerator<JSElemen
   }
   
   public JSElementType(@NonNls @NotNull String debugName, boolean register) {
-    super(debugName, JavaScriptSupportLoader.JAVASCRIPT.getLanguage(), register);
+    super(debugName, JavaScriptSupportLoader.JAVASCRIPT.getLanguage(), null, register);
 
     final StringBuilder builder = new StringBuilder("com.intellij.lang.javascript.psi.impl.JS");
     boolean doUp = false;

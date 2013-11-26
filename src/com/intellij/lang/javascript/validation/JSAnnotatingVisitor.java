@@ -15,10 +15,21 @@
  */
 package com.intellij.lang.javascript.validation;
 
+import gnu.trove.THashMap;
+import gnu.trove.THashSet;
+
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.PropertyKey;
 import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.codeInsight.daemon.EmptyResolveMessageProvider;
 import com.intellij.codeInsight.daemon.impl.quickfix.RenameFileFix;
-import com.intellij.codeInsight.daemon.impl.quickfix.RenamePublicClassFix;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInsight.template.Template;
 import com.intellij.codeInsight.template.TemplateManager;
@@ -46,25 +57,19 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiComment;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiLanguageInjectionHost;
+import com.intellij.psi.PsiPolyVariantReference;
+import com.intellij.psi.PsiReference;
+import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTagChild;
 import com.intellij.util.IncorrectOperationException;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.PropertyKey;
-
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @by max, maxim.mossienko
@@ -923,7 +928,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
         final Annotation annotation = myHolder.createErrorAnnotation(node, message);
 
         annotation.registerFix(new RenameFileFix(nameWithExtension));
-        annotation.registerFix(new RenamePublicClassFix(aClass) {
+        /*annotation.registerFix(new RenamePublicClassFix(aClass) {
           final String text;
           final String familyName;
 
@@ -943,7 +948,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
           public String getFamilyName() {
             return familyName;
           }
-        });
+        }); */
       }
     }
 

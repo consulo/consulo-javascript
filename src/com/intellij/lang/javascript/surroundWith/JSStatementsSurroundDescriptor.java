@@ -15,6 +15,10 @@
  */
 package com.intellij.lang.javascript.surroundWith;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSBlockStatement;
 import com.intellij.lang.javascript.psi.JSFile;
@@ -27,10 +31,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -66,7 +66,13 @@ public class JSStatementsSurroundDescriptor implements SurroundDescriptor {
     return SURROUNDERS;
   }
 
-  private PsiElement[] findStatementsInRange(PsiFile file, int startOffset, int endOffset) {
+	@Override
+	public boolean isExclusive()
+	{
+		return false;
+	}
+
+	private PsiElement[] findStatementsInRange(PsiFile file, int startOffset, int endOffset) {
     PsiElement element1 = file.findElementAt(startOffset);
     PsiElement element2 = file.findElementAt(endOffset - 1);
     if (element1 instanceof PsiWhiteSpace) {

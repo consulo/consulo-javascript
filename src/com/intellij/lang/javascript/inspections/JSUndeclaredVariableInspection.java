@@ -16,6 +16,11 @@
 
 package com.intellij.lang.javascript.inspections;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
@@ -36,11 +41,6 @@ import com.intellij.psi.ResolveResult;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * @author Maxim.Mossienko
@@ -158,7 +158,7 @@ public class JSUndeclaredVariableInspection extends JSInspection {
     }
 
     public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-      if ( !CodeInsightUtilBase.prepareFileForWrite(myFile)) return;
+      if ( !CodeInsightUtilBase.getInstance().prepareFileForWrite(myFile)) return;
 
       PsiElement anchor = JSUtils.findStatementAnchor(myReferenceExpression, myFile);
       boolean implicitlyDeclared = isImplicitlyDeclared(myReferenceExpression, anchor);

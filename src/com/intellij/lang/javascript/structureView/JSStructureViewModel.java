@@ -15,11 +15,22 @@
  */
 package com.intellij.lang.javascript.structureView;
 
+import java.util.Comparator;
+import java.util.List;
+
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.structureView.TextEditorBasedStructureViewModel;
 import com.intellij.ide.util.FileStructureFilter;
-import com.intellij.ide.util.treeView.smartTree.*;
+import com.intellij.ide.util.treeView.smartTree.ActionPresentation;
+import com.intellij.ide.util.treeView.smartTree.ActionPresentationData;
+import com.intellij.ide.util.treeView.smartTree.Filter;
+import com.intellij.ide.util.treeView.smartTree.Grouper;
+import com.intellij.ide.util.treeView.smartTree.Sorter;
+import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.psi.*;
@@ -32,13 +43,8 @@ import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiLanguageInjectionHost;
+import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.Icons;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Comparator;
-import java.util.List;
 
 /**
  * @by max, maxim
@@ -151,8 +157,7 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel {
     public ActionPresentation getPresentation() {
       return new ActionPresentationData(
         IdeBundle.message("action.structureview.show.fields"),
-        null,
-        Icons.FIELD_ICON
+        null, AllIcons.Nodes.Variable
       );
     }
 
@@ -249,15 +254,17 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel {
 
       if (injectionHost != null) {
         final Ref<PsiElement> ref = new Ref<PsiElement>();
-        injectionHost.processInjectedPsi(new PsiLanguageInjectionHost.InjectedPsiVisitor() {
-          public void visit(@NotNull final PsiFile injectedPsi, @NotNull final List<PsiLanguageInjectionHost.Shred> places) {
-            final PsiLanguageInjectionHost.Shred shred = places.get(0);
-            final int injectedStart = shred.getRangeInsideHost().getStartOffset() + shred.host.getTextOffset();
-            final int offsetInInjected = offset - injectedStart;
+        InjectedLanguageUtil.enumerate(injectionHost, new PsiLanguageInjectionHost.InjectedPsiVisitor()
+		{
+			public void visit(@NotNull final PsiFile injectedPsi, @NotNull final List<PsiLanguageInjectionHost.Shred> places)
+			{
+				final PsiLanguageInjectionHost.Shred shred = places.get(0);
+				final int injectedStart = shred.getRangeInsideHost().getStartOffset() + shred.getHost().getTextOffset();
+				final int offsetInInjected = offset - injectedStart;
 
-            ref.set(injectedPsi.findElementAt(offsetInInjected));
-          }
-        });
+				ref.set(injectedPsi.findElementAt(offsetInInjected));
+			}
+		});
 
         final PsiElement element = ref.get();
         if (element != null) {

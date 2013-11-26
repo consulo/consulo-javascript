@@ -15,11 +15,21 @@
  */
 package com.intellij.lang.javascript.highlighting;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.jetbrains.annotations.NotNull;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
-import com.intellij.lang.javascript.*;
+import com.intellij.lang.javascript.DialectOptionHolder;
+import com.intellij.lang.javascript.JSDocElementType;
+import com.intellij.lang.javascript.JSDocTokenTypes;
+import com.intellij.lang.javascript.JSTokenTypes;
+import com.intellij.lang.javascript.JavaScriptHighlightingLexer;
 import com.intellij.lexer.Lexer;
+import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.HighlighterColors;
-import com.intellij.openapi.editor.SyntaxHighlighterColors;
 import com.intellij.openapi.editor.XmlHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.EffectType;
@@ -27,11 +37,6 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.StringEscapesTokenTypes;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
-
-import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -56,17 +61,17 @@ public class JSHighlighter extends SyntaxHighlighterBase {
 
   static final TextAttributesKey JS_KEYWORD = TextAttributesKey.createTextAttributesKey(
                                                 "JS.KEYWORD",
-                                                SyntaxHighlighterColors.KEYWORD.getDefaultAttributes()
+                                                DefaultLanguageHighlighterColors.KEYWORD
                                               );
 
   static final TextAttributesKey JS_STRING = TextAttributesKey.createTextAttributesKey(
                                                "JS.STRING",
-                                               SyntaxHighlighterColors.STRING.getDefaultAttributes()
+                                               DefaultLanguageHighlighterColors.STRING
                                              );
 
   static final TextAttributesKey JS_NUMBER = TextAttributesKey.createTextAttributesKey(
                                                "JS.NUMBER",
-                                               SyntaxHighlighterColors.NUMBER.getDefaultAttributes()
+                                               DefaultLanguageHighlighterColors.NUMBER
                                              );
 
   static final TextAttributesKey JS_REGEXP = TextAttributesKey.createTextAttributesKey(
@@ -76,73 +81,73 @@ public class JSHighlighter extends SyntaxHighlighterBase {
 
   static final TextAttributesKey JS_LINE_COMMENT = TextAttributesKey.createTextAttributesKey(
                                                      "JS.LINE_COMMENT",
-                                                     SyntaxHighlighterColors.LINE_COMMENT.getDefaultAttributes()
+                                                     DefaultLanguageHighlighterColors.LINE_COMMENT
                                                    );
 
   static final TextAttributesKey JS_BLOCK_COMMENT = TextAttributesKey.createTextAttributesKey(
                                                       "JS.BLOCK_COMMENT",
-                                                      SyntaxHighlighterColors.JAVA_BLOCK_COMMENT.getDefaultAttributes()
+                                                      DefaultLanguageHighlighterColors.BLOCK_COMMENT
                                                     );
 
   static final TextAttributesKey JS_DOC_COMMENT = TextAttributesKey.createTextAttributesKey(
                                                     "JS.DOC_COMMENT",
-                                                    SyntaxHighlighterColors.DOC_COMMENT.getDefaultAttributes()
+                                                    DefaultLanguageHighlighterColors.DOC_COMMENT
                                                   );
 
   public static final TextAttributesKey JS_OPERATION_SIGN = TextAttributesKey.createTextAttributesKey(
                                                        "JS.OPERATION_SIGN",
-                                                       SyntaxHighlighterColors.OPERATION_SIGN.getDefaultAttributes()
+                                                       DefaultLanguageHighlighterColors.OPERATION_SIGN
                                                      );
 
   static final TextAttributesKey JS_PARENTHS = TextAttributesKey.createTextAttributesKey(
                                                  "JS.PARENTHS",
-                                                 SyntaxHighlighterColors.PARENTHS.getDefaultAttributes()
+                                                 DefaultLanguageHighlighterColors.PARENTHESES
                                                );
 
   static final TextAttributesKey JS_BRACKETS = TextAttributesKey.createTextAttributesKey(
                                                  "JS.BRACKETS",
-                                                 SyntaxHighlighterColors.BRACKETS.getDefaultAttributes()
+                                                 DefaultLanguageHighlighterColors.BRACKETS
                                                );
 
   static final TextAttributesKey JS_BRACES = TextAttributesKey.createTextAttributesKey(
                                                "JS.BRACES",
-                                               SyntaxHighlighterColors.BRACES.getDefaultAttributes()
+                                               DefaultLanguageHighlighterColors.BRACES
                                              );
 
   static final TextAttributesKey JS_COMMA = TextAttributesKey.createTextAttributesKey(
                                               "JS.COMMA",
-                                              SyntaxHighlighterColors.COMMA.getDefaultAttributes()
+                                              DefaultLanguageHighlighterColors.COMMA
                                             );
 
   static final TextAttributesKey JS_DOT = TextAttributesKey.createTextAttributesKey(
                                             "JS.DOT",
-                                            SyntaxHighlighterColors.DOT.getDefaultAttributes()
+                                            DefaultLanguageHighlighterColors.DOT
                                           );
 
   static final TextAttributesKey JS_SEMICOLON = TextAttributesKey.createTextAttributesKey(
                                                   "JS.SEMICOLON",
-                                                  SyntaxHighlighterColors.JAVA_SEMICOLON.getDefaultAttributes()
+                                                  DefaultLanguageHighlighterColors.SEMICOLON
                                                 );
 
   static final TextAttributesKey JS_BAD_CHARACTER = TextAttributesKey.createTextAttributesKey(
                                                   "JS.BADCHARACTER",
-                                                  HighlighterColors.BAD_CHARACTER.getDefaultAttributes()
+                                                  HighlighterColors.BAD_CHARACTER
                                                 );
   static final TextAttributesKey JS_DOC_TAG = TextAttributesKey.createTextAttributesKey(
                                                     "JS.DOC_TAG",
-                                                    SyntaxHighlighterColors.DOC_COMMENT_TAG.getDefaultAttributes()
+                                                    DefaultLanguageHighlighterColors.DOC_COMMENT_TAG
                                                   );
   static final TextAttributesKey JS_DOC_MARKUP = TextAttributesKey.createTextAttributesKey(
                                                     "JS.DOC_MARKUP",
-                                                    SyntaxHighlighterColors.DOC_COMMENT_MARKUP.getDefaultAttributes()
+                                                    DefaultLanguageHighlighterColors.DOC_COMMENT_MARKUP
                                                   );
   static final TextAttributesKey JS_VALID_STRING_ESCAPE = TextAttributesKey.createTextAttributesKey(
                                                     "JS.VALID_STRING_ESCAPE",
-                                                    SyntaxHighlighterColors.VALID_STRING_ESCAPE.getDefaultAttributes()
+                                                    DefaultLanguageHighlighterColors.VALID_STRING_ESCAPE
                                                   );
   static final TextAttributesKey JS_INVALID_STRING_ESCAPE = TextAttributesKey.createTextAttributesKey(
                                                     "JS.INVALID_STRING_ESCAPE",
-                                                    SyntaxHighlighterColors.INVALID_STRING_ESCAPE.getDefaultAttributes()
+                                                    DefaultLanguageHighlighterColors.INVALID_STRING_ESCAPE
                                                   );
   static final TextAttributesKey JS_LOCAL_VARIABLE = TextAttributesKey.createTextAttributesKey(
                                                     "JS.LOCAL_VARIABLE",
@@ -154,23 +159,23 @@ public class JSHighlighter extends SyntaxHighlighterBase {
                                                   );
   static final TextAttributesKey JS_INSTANCE_MEMBER_VARIABLE = TextAttributesKey.createTextAttributesKey(
                                                     "JS.INSTANCE_MEMBER_VARIABLE",
-                                                    HighlightInfoType.INSTANCE_FIELD.getAttributesKey().getDefaultAttributes()
+                                                    HighlightInfoType.INSTANCE_FIELD.getAttributesKey()
                                                   );
   static final TextAttributesKey JS_STATIC_MEMBER_VARIABLE = TextAttributesKey.createTextAttributesKey(
                                                     "JS.STATIC_MEMBER_VARIABLE",
-                                                    HighlightInfoType.STATIC_FIELD.getAttributesKey().getDefaultAttributes()
+                                                    HighlightInfoType.STATIC_FIELD.getAttributesKey()
                                                   );
   static final TextAttributesKey JS_GLOBAL_VARIABLE = TextAttributesKey.createTextAttributesKey(
                                                     "JS.GLOBAL_VARIABLE",
-                                                    HighlightInfoType.STATIC_FIELD.getAttributesKey().getDefaultAttributes()
+                                                    HighlightInfoType.STATIC_FIELD.getAttributesKey()
                                                   );
   static final TextAttributesKey JS_GLOBAL_FUNCTION = TextAttributesKey.createTextAttributesKey(
                                                     "JS.GLOBAL_FUNCTION",
-                                                    HighlightInfoType.STATIC_METHOD.getAttributesKey().getDefaultAttributes()
+                                                    HighlightInfoType.STATIC_METHOD.getAttributesKey()
                                                   );
   static final TextAttributesKey JS_STATIC_MEMBER_FUNCTION = TextAttributesKey.createTextAttributesKey(
                                                     "JS.STATIC_MEMBER_FUNCTION",
-                                                    HighlightInfoType.STATIC_METHOD.getAttributesKey().getDefaultAttributes()
+                                                    HighlightInfoType.STATIC_METHOD.getAttributesKey()
                                                   );
   static final TextAttributesKey JS_INSTANCE_MEMBER_FUNCTION = TextAttributesKey.createTextAttributesKey(
                                                     "JS.INSTANCE_MEMBER_FUNCTION",

@@ -15,10 +15,36 @@
  */
 package com.intellij.lang.javascript.structureView;
 
+import gnu.trove.THashMap;
+import gnu.trove.THashSet;
+import gnu.trove.TIntHashSet;
+import gnu.trove.TIntObjectHashMap;
+import gnu.trove.TIntObjectIterator;
+import gnu.trove.TIntObjectProcedure;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.swing.Icon;
+
+import org.jetbrains.annotations.Nullable;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
-import com.intellij.lang.javascript.index.*;
+import com.intellij.lang.javascript.index.JSIndexEntry;
+import com.intellij.lang.javascript.index.JSNamedElementProxy;
+import com.intellij.lang.javascript.index.JSNamespace;
+import com.intellij.lang.javascript.index.JSSymbolUtil;
+import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
+import com.intellij.lang.javascript.index.JavaScriptIndex;
+import com.intellij.lang.javascript.index.JavaScriptSymbolProcessor;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.VariantsProcessor;
@@ -26,16 +52,11 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilBase;
-import gnu.trove.*;
-import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
-import java.util.*;
 
 /**
  * @author max
@@ -178,8 +199,10 @@ public class JSStructureViewElement implements StructureViewTreeElement {
         PsiElement e = getPsiElement(_o1);
         PsiElement e2 = getPsiElement(_o2);
 
-        final int offset = e.getTextOffset() + PsiUtilBase.findInjectedElementOffsetInRealDocument(e);
-        final int offset2 = e2.getTextOffset() + PsiUtilBase.findInjectedElementOffsetInRealDocument(e2);
+		  TextRange t1 = InjectedLanguageManager.getInstance(e.getProject()).injectedToHost(e, e.getTextRange());
+		  TextRange t2 = InjectedLanguageManager.getInstance(e.getProject()).injectedToHost(e, e.getTextRange());
+		  final int offset = e.getTextOffset() + t1.getStartOffset();
+        final int offset2 = e2.getTextOffset() + t2.getStartOffset();
         
         return offset - offset2;
       }
@@ -511,7 +534,7 @@ public class JSStructureViewElement implements StructureViewTreeElement {
 
         @Nullable
         public Icon getIcon(final boolean open) {
-          return myProxy.getIcon(0);
+          return IconDescriptorUpdaters.getIcon(myProxy, 0);
         }
       };
     }

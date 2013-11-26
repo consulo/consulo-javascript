@@ -3,6 +3,14 @@
  */
 package com.intellij.lang.javascript.generation;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+import javax.swing.JComponent;
+
+import org.jetbrains.annotations.NonNls;
 import com.intellij.ide.util.MemberChooser;
 import com.intellij.lang.LanguageCodeInsightActionHandler;
 import com.intellij.lang.javascript.JSBundle;
@@ -19,13 +27,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NonNls;
-
-import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler {
   public void invoke(final Project project, final Editor editor, final PsiFile file) {
@@ -48,12 +49,14 @@ abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler
         final MemberChooser<JSNamedElementNode> chooser = new MemberChooser<JSNamedElementNode>(
             candidates.toArray(new JSNamedElementNode[candidates.size()]), false, true, project, false
         ) {
-          @Override
-          protected List<JComponent> customizeOptionsPanel() {
-            List<JComponent> jComponentList = super.customizeOptionsPanel();
+          /*@Override
+          protected void customizeOptionsPanel() {
+
+			super.customizeOptionsPanel();
+
             appendOwnOptions(jComponentList);
             return jComponentList;
-          }
+          } */
         };
 
         chooser.setTitle(JSBundle.message(getTitleKey()));

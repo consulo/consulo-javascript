@@ -16,18 +16,19 @@
 
 package com.intellij.lang.javascript;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.javascript.highlighting.JSHighlighter;
+import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SingleLazyInstanceSyntaxHighlighterFactory;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.lang.javascript.highlighting.JSHighlighter;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author nik
@@ -59,7 +60,7 @@ public class GwtLanguageDialect extends JSLanguageDialect {
       myKeysMap.put(JSTokenTypes.COLON_COLON, JS_OPERATION_SIGN);
       myKeysMap.put(JSTokenTypes.GWT_FIELD_OR_METHOD, CodeInsightColors.METHOD_CALL_ATTRIBUTES);
       myKeysMap.put(JSTokenTypes.AT, JS_OPERATION_SIGN);
-      myKeysMap.put(JSTokenTypes.IDENTIFIER, CodeInsightColors.CLASS_NAME_ATTRIBUTES);
+      myKeysMap.put(JSTokenTypes.IDENTIFIER, DefaultLanguageHighlighterColors.CLASS_NAME);
     }
 
     @NotNull

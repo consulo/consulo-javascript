@@ -560,9 +560,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
       }
     }
 
-    final JSLookupUtil lookupUtil = JSLookupUtil.getInstance();
-    assert lookupUtil != null : "JSHtmlBridge plugin is disabled";
-    final Object item = lookupUtil.createPrioritizedLookupItem(
+    final Object item = JSLookupUtil.createPrioritizedLookupItem(
       element,
       myIndex.getStringByIndex(nameId),
       priority == LookupPriority.HIGHEST ? 3:

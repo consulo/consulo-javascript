@@ -1,12 +1,9 @@
 package com.intellij.lang.javascript.psi.util;
 
-import com.intellij.openapi.components.ApplicationComponent;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.lang.javascript.psi.JSNamedElement;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.ide.IconDescriptorUpdaters;
+import com.intellij.psi.PsiElement;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,21 +12,15 @@ import org.jetbrains.annotations.Nullable;
  * Time: 8:35:58 PM
  * To change this template use File | Settings | File Templates.
  */
-public abstract class JSLookupUtil implements ApplicationComponent {
-  @NonNls
-  public String getComponentName() {
-    return "JS.LookupUtil";
-  }
+public class JSLookupUtil
+{
 
-  public void initComponent() {}
-
-  public void disposeComponent() {
-  }
-
-  @Nullable
-  public abstract Object createPrioritizedLookupItem(PsiElement value, String name, int priority);
-
-  public static JSLookupUtil getInstance() {
-    return ApplicationManager.getApplication().getComponent(JSLookupUtil.class);
-  }
+	@Nullable
+	public static Object createPrioritizedLookupItem(PsiElement value, String name, int priority)
+	{
+		LookupElementBuilder builder = LookupElementBuilder.create(name);
+		builder = builder.withTypeText(value.getContainingFile().getName(), true);
+		builder = builder.withIcon(IconDescriptorUpdaters.getIcon(value, 0));
+		return builder;
+	}
 }

@@ -15,6 +15,7 @@
  */
 package com.intellij.lang.javascript.surroundWith;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.javascript.psi.JSCallExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
@@ -24,7 +25,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -50,7 +50,13 @@ public class JSExpressionSurroundDescriptor implements SurroundDescriptor {
     return SURROUNDERS;
   }
 
-  private static JSExpression findExpressionInRange(PsiFile file, int startOffset, int endOffset) {
+	@Override
+	public boolean isExclusive()
+	{
+		return false;
+	}
+
+	private static JSExpression findExpressionInRange(PsiFile file, int startOffset, int endOffset) {
     PsiElement element1 = file.findElementAt(startOffset);
     PsiElement element2 = file.findElementAt(endOffset - 1);
     if (element1 instanceof PsiWhiteSpace) {

@@ -16,17 +16,20 @@
 
 package com.intellij.lang.javascript.index;
 
-import com.intellij.lang.javascript.psi.*;
+import javax.swing.Icon;
+
+import org.jetbrains.annotations.Nullable;
+import com.intellij.ide.IconDescriptorUpdaters;
+import com.intellij.lang.javascript.psi.JSClass;
+import com.intellij.lang.javascript.psi.JSFunction;
+import com.intellij.lang.javascript.psi.JSNamedElement;
+import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -96,7 +99,7 @@ public class JSItemPresentation implements ItemPresentation {
 
   @Nullable
   public Icon getIcon(boolean open) {
-    return myElement.getIcon( open ? Iconable.ICON_FLAG_OPEN:Iconable.ICON_FLAG_CLOSED );
+    return IconDescriptorUpdaters.getIcon(myElement, 0);
   }
 
   @Nullable

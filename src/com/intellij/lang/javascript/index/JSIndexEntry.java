@@ -1,8 +1,21 @@
 package com.intellij.lang.javascript.index;
 
+import static com.intellij.lang.javascript.index.JSNamedElementProxy.NamedItemType;
+
+import gnu.trove.THashMap;
+import gnu.trove.TIntObjectHashMap;
+import gnu.trove.TIntObjectIterator;
+import gnu.trove.TObjectHashingStrategy;
+
+import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
+
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.Language;
-import static com.intellij.lang.javascript.index.JSNamedElementProxy.NamedItemType;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.application.ApplicationManager;
@@ -10,26 +23,22 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
+import com.intellij.psi.FileViewProvider;
+import com.intellij.psi.MultiplePsiFilesPerDocumentFileViewProvider;
+import com.intellij.psi.PsiComment;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
+import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.reference.SoftReference;
-import gnu.trove.THashMap;
-import gnu.trove.TIntObjectHashMap;
-import gnu.trove.TIntObjectIterator;
-import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @by yole, maxim.mossienko
@@ -186,7 +195,7 @@ public class JSIndexEntry {
     final PsiFile psiFile = myFile != null ? buildPsiFileFromFile() : null;
     assert psiFile != null || content != null:"Psi file could not be retrieved for " + myFile;
 
-    myIndexValue = PsiManager.getInstance(myIndex.getProject()).getCachedValuesManager().createCachedValue(new CachedValueProvider<IndexEntryContent>() {
+    myIndexValue = CachedValuesManager.getManager(myIndex.getProject()).createCachedValue(new CachedValueProvider<IndexEntryContent>() {
       boolean computeFirstTime = true;
       final ModificationTracker tracker = new ModificationTracker() {
         public long getModificationCount() {

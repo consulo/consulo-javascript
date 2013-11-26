@@ -1,13 +1,13 @@
 package com.intellij.lang.javascript.index;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
-import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
-import com.intellij.lang.javascript.psi.JSClass;
-import com.intellij.lang.javascript.psi.JSNamespaceDeclaration;
-import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
-import com.intellij.lang.javascript.psi.stubs.JSNameIndex;
 import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
+import com.intellij.lang.javascript.psi.stubs.JSNameIndex;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
@@ -19,11 +19,6 @@ import com.intellij.psi.stubs.StubIndex;
 import com.intellij.util.Processor;
 import com.intellij.util.indexing.FileBasedIndex;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * @author maxim
  */
@@ -31,7 +26,7 @@ public class JavaScriptClassContributor implements ChooseByNameContributor {
   public String[] getNames(Project project, boolean includeNonProjectItems) {
     final Set<String> result = new HashSet<String>();
 
-    result.addAll(StubIndex.getInstance().getAllKeys(JSNameIndex.KEY));
+    result.addAll(StubIndex.getInstance().getAllKeys(JSNameIndex.KEY, project));
 
     FileBasedIndex.getInstance().processAllKeys(FilenameIndex.NAME, new Processor<String>() {
       public boolean process(String s) {
@@ -40,7 +35,7 @@ public class JavaScriptClassContributor implements ChooseByNameContributor {
         }
         return true;
       }
-    });
+    }, project);
     return result.toArray(new String[result.size()]);
   }
 

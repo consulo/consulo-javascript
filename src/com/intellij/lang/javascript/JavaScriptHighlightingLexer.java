@@ -46,7 +46,7 @@ public class JavaScriptHighlightingLexer extends LayeredLexer {
                                 new IElementType[]{JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL},
                                 IElementType.EMPTY_ARRAY);
 
-      final LayeredLexer docLexer = new LayeredLexer(new DocCommentLexer(new JSDocCommentTokenTypes(), false));
+      final LayeredLexer docLexer = new LayeredLexer(new FlexAdapter(new _JSDocLexer(true)));
       final Lexer lexer = getHtmlHighlightingLexer();
 
       // Force html highlighting lexer not to return tag content type since it causes token type collision in javascript embedded to html

@@ -1,14 +1,19 @@
 package com.intellij.lang.javascript.findUsages;
 
+import javax.swing.Icon;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.JSNamedElement;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FileStatus;
-import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.SmartPointerManager;
@@ -21,10 +26,6 @@ import com.intellij.usages.UsageView;
 import com.intellij.usages.impl.FileStructureGroupRuleProvider;
 import com.intellij.usages.rules.PsiElementUsage;
 import com.intellij.usages.rules.UsageGroupingRule;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author Maxim.Mossienko
@@ -86,7 +87,7 @@ abstract static class PsiNamedElementUsageGroupBase<T extends PsiNamedElement & 
   }
 
   public FileStatus getFileStatus() {
-    return isValid() ? getElement().getFileStatus() : null;
+	  return isValid() ? FileStatusManager.getInstance(getElement().getProject()).getStatus(getElement().getContainingFile().getVirtualFile()) : null;
   }
 
   public boolean isValid() {

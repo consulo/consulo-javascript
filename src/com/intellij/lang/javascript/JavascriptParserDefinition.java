@@ -15,13 +15,20 @@
  */
 package com.intellij.lang.javascript;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageUtil;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiParser;
 import com.intellij.lang.javascript.parsing.JSParser;
-import com.intellij.lang.javascript.psi.impl.*;
+import com.intellij.lang.javascript.psi.impl.JSDocCommentImpl;
+import com.intellij.lang.javascript.psi.impl.JSEmbeddedContentImpl;
+import com.intellij.lang.javascript.psi.impl.JSFileImpl;
+import com.intellij.lang.javascript.psi.impl.JSFunctionImpl;
+import com.intellij.lang.javascript.psi.impl.JSParameterImpl;
+import com.intellij.lang.javascript.psi.impl.JSReferenceListImpl;
 import com.intellij.lang.javascript.types.PsiGenerator;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
@@ -32,7 +39,6 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.Function;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author max
@@ -41,7 +47,7 @@ public class JavascriptParserDefinition implements ParserDefinition {
   private static Function<ASTNode, PsiElement> ourGwtReferenceExpressionCreator;
 
   @NotNull
-  public Lexer createLexer(Project project) {
+  public Lexer createLexer(Project project, LanguageVersion languageVersion) {
     return new JavaScriptParsingLexer(JavascriptLanguage.DIALECT_OPTION_HOLDER);
   }
 
@@ -50,22 +56,22 @@ public class JavascriptParserDefinition implements ParserDefinition {
   }
 
   @NotNull
-  public TokenSet getWhitespaceTokens() {
+  public TokenSet getWhitespaceTokens(LanguageVersion languageVersion) {
     return TokenSet.create(JSTokenTypes.WHITE_SPACE);
   }
 
   @NotNull
-  public TokenSet getCommentTokens() {
+  public TokenSet getCommentTokens(LanguageVersion languageVersion) {
     return JSTokenTypes.COMMENTS;
   }
 
   @NotNull
-  public TokenSet getStringLiteralElements() {
+  public TokenSet getStringLiteralElements(LanguageVersion languageVersion) {
     return TokenSet.EMPTY;
   }
 
   @NotNull
-  public PsiParser createParser(final Project project) {
+  public PsiParser createParser(final Project project, LanguageVersion languageVersion) {
     return new JSParser(null);
   }
 
@@ -74,8 +80,8 @@ public class JavascriptParserDefinition implements ParserDefinition {
   }
 
   public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
-    final Lexer lexer = createLexer(left.getPsi().getProject());
-    return LanguageUtil.canStickTokensTogetherByLexer(left, right, lexer, 0);
+    final Lexer lexer = createLexer(left.getPsi().getProject(), null);
+    return LanguageUtil.canStickTokensTogetherByLexer(left, right, lexer);
   }
 
   public static void setGwtReferenceExpressionCreator(final Function<ASTNode, PsiElement> gwtReferenceExpressionCreator) {

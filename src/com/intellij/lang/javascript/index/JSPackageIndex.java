@@ -1,30 +1,6 @@
 package com.intellij.lang.javascript.index;
 
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
-import com.intellij.lang.javascript.flex.JSResolveHelper;
-import com.intellij.lang.javascript.psi.JSFile;
-import com.intellij.lang.javascript.psi.stubs.*;
-import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.impl.source.PsiFileImpl;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.stubs.*;
-import com.intellij.util.Processor;
-import com.intellij.util.SmartList;
-import com.intellij.util.indexing.*;
-import com.intellij.util.io.DataExternalizer;
-import com.intellij.util.io.EnumeratorStringDescriptor;
-import com.intellij.util.io.IOUtil;
-import com.intellij.util.io.KeyDescriptor;
-import com.intellij.util.text.StringTokenizer;
-import com.intellij.idea.LoggerFactory;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -34,6 +10,52 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import com.intellij.idea.LoggerFactory;
+import com.intellij.lang.javascript.JavaScriptSupportLoader;
+import com.intellij.lang.javascript.flex.JSResolveHelper;
+import com.intellij.lang.javascript.psi.JSFile;
+import com.intellij.lang.javascript.psi.stubs.JSClassStub;
+import com.intellij.lang.javascript.psi.stubs.JSFunctionExpressionStub;
+import com.intellij.lang.javascript.psi.stubs.JSFunctionStub;
+import com.intellij.lang.javascript.psi.stubs.JSNamespaceDeclarationStub;
+import com.intellij.lang.javascript.psi.stubs.JSPackageStatementStub;
+import com.intellij.lang.javascript.psi.stubs.JSParameterStub;
+import com.intellij.lang.javascript.psi.stubs.JSQualifiedStub;
+import com.intellij.lang.javascript.psi.stubs.JSVarStatementStub;
+import com.intellij.lang.javascript.psi.stubs.JSVariableStub;
+import com.intellij.openapi.extensions.Extensions;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.FileTypeManager;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.impl.source.PsiFileImpl;
+import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.stubs.BinaryFileStubBuilder;
+import com.intellij.psi.stubs.BinaryFileStubBuilders;
+import com.intellij.psi.stubs.PsiFileStub;
+import com.intellij.psi.stubs.Stub;
+import com.intellij.psi.stubs.StubElement;
+import com.intellij.psi.stubs.StubTree;
+import com.intellij.util.Processor;
+import com.intellij.util.SmartList;
+import com.intellij.util.indexing.CustomImplementationFileBasedIndexExtension;
+import com.intellij.util.indexing.DataIndexer;
+import com.intellij.util.indexing.FileBasedIndex;
+import com.intellij.util.indexing.FileBasedIndexExtension;
+import com.intellij.util.indexing.FileContent;
+import com.intellij.util.indexing.ID;
+import com.intellij.util.indexing.IndexStorage;
+import com.intellij.util.indexing.MapReduceIndex;
+import com.intellij.util.indexing.UpdatableIndex;
+import com.intellij.util.io.DataExternalizer;
+import com.intellij.util.io.EnumeratorStringDescriptor;
+import com.intellij.util.io.IOUtil;
+import com.intellij.util.io.KeyDescriptor;
+import com.intellij.util.text.StringTokenizer;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Maxim.Mossienko
@@ -41,7 +63,7 @@ import java.util.Map;
  * Time: 19:11:15
  * To change this template use File | Settings | File Templates.
  */
-public class JSPackageIndex implements CustomImplementationFileBasedIndexExtension<String, List<JSPackageIndexInfo>, FileContent> {
+public class JSPackageIndex extends CustomImplementationFileBasedIndexExtension<String, List<JSPackageIndexInfo>, FileContent> {
   private static final int myVersion = 6;
 
   public static final ID<String, List<JSPackageIndexInfo>> INDEX_ID = new ID<String, List<JSPackageIndexInfo>>("js.package.index") {};
@@ -57,10 +79,10 @@ public class JSPackageIndex implements CustomImplementationFileBasedIndexExtensi
         BinaryFileStubBuilder binaryFileStubBuilder = BinaryFileStubBuilders.INSTANCE.forFileType(inputData.getFileType());
         if (binaryFileStubBuilder == null) return Collections.emptyMap();
 
-        StubElement stubElement;
+        Stub stubElement;
 
         try {
-          stubElement= binaryFileStubBuilder.buildStubTree(inputData.getFile(), inputData.getContent(), inputData.getProject());
+          stubElement= binaryFileStubBuilder.buildStubTree(inputData);
         } catch (Exception e) {
           stubElement = null;
           LoggerFactory.getInstance().getLoggerInstance(getClass().getName()).error("Corrupted zip file", e);
@@ -145,7 +167,7 @@ public class JSPackageIndex implements CustomImplementationFileBasedIndexExtensi
 
   private final FileBasedIndex.InputFilter myInputFilter = new FileBasedIndex.InputFilter() {
     final FileType swfFileType = FileTypeManager.getInstance().getFileTypeByExtension("swf");
-    public boolean acceptInput(final VirtualFile file) {
+    public boolean acceptInput(final Project project,  final VirtualFile file) {
       FileType type = file.getFileType();
       return type == JavaScriptSupportLoader.JAVASCRIPT || type == swfFileType;
     }
@@ -212,7 +234,7 @@ public class JSPackageIndex implements CustomImplementationFileBasedIndexExtensi
   public UpdatableIndex<String, List<JSPackageIndexInfo>, FileContent> createIndexImplementation(ID<String, List<JSPackageIndexInfo>> indexId,
                                                                                                  FileBasedIndex owner,
                                                                                                  IndexStorage <String, List<JSPackageIndexInfo>> indexStorage) {
-    return new SimpleMapReduceIndex<String, List<JSPackageIndexInfo>>(indexId, myIndexer, indexStorage);
+    return new MapReduceIndex<String, List<JSPackageIndexInfo>, FileContent>(indexId, myIndexer, indexStorage);
   }
 
   public interface PackageElementsProcessor {

@@ -15,11 +15,11 @@
  */
 package com.intellij.lang.javascript;
 
-import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.util.IconLoader;
-import org.jetbrains.annotations.NotNull;
+import javax.swing.Icon;
 
-import javax.swing.*;
+import org.jetbrains.annotations.NotNull;
+import com.intellij.icons.AllIcons;
+import com.intellij.openapi.fileTypes.LanguageFileType;
 
 /**
  * Created by IntelliJ IDEA.
@@ -49,6 +49,6 @@ public class JavaScriptFileType extends LanguageFileType {
   }
 
   public Icon getIcon() {
-    return IconLoader.getIcon("/fileTypes/javaScript.png");
+    return AllIcons.FileTypes.AS;
   }
 }

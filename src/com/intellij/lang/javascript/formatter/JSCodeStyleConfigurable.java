@@ -3,10 +3,7 @@ package com.intellij.lang.javascript.formatter;
 import com.intellij.application.options.CodeStyleAbstractConfigurable;
 import com.intellij.application.options.CodeStyleAbstractPanel;
 import com.intellij.lang.javascript.JSBundle;
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
-
-import javax.swing.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,10 +23,5 @@ public class JSCodeStyleConfigurable extends CodeStyleAbstractConfigurable {
 
   public String getHelpTopic() {
     return null; // TODO
-  }
-
-  @Override
-  public Icon getIcon() {
-    return JavaScriptSupportLoader.JAVASCRIPT.getIcon();
   }
 }

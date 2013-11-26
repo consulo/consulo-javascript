@@ -1,17 +1,22 @@
 package com.intellij.lang.javascript.generation;
 
+import javax.swing.Icon;
+
 import com.intellij.codeInsight.generation.ClassMember;
 import com.intellij.codeInsight.generation.MemberChooserObject;
 import com.intellij.codeInsight.generation.PsiElementMemberChooserObject;
+import com.intellij.icons.AllIcons;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.javascript.JSParameterInfoHandler;
-import com.intellij.lang.javascript.psi.*;
+import com.intellij.lang.javascript.psi.JSFunction;
+import com.intellij.lang.javascript.psi.JSNamedElement;
+import com.intellij.lang.javascript.psi.JSParameter;
+import com.intellij.lang.javascript.psi.JSParameterList;
+import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.LayeredIcon;
 import com.intellij.ui.RowIcon;
-import com.intellij.util.Icons;
-
-import javax.swing.*;
 
 /**
  * @author Maxim.Mossienko
@@ -24,16 +29,16 @@ public class JSNamedElementNode extends PsiElementMemberChooserObject implements
   }
 
   private static Icon buildIcon(final JSNamedElement node) {
-    Icon icon = node.getIcon(0);
+    Icon icon = IconDescriptorUpdaters.getIcon(node, 0);
 
     if (node instanceof JSFunction) {
       final JSFunction function = (JSFunction)node;
       final Icon accessIcon;
 
       if(function.isGetProperty()) {
-        accessIcon = Icons.VARIABLE_READ_ACCESS;
+        accessIcon = AllIcons.Nodes.Read_access;
       } else if(function.isSetProperty()) {
-        accessIcon = Icons.VARIABLE_WRITE_ACCESS;
+        accessIcon = AllIcons.Nodes.Write_access;
       } else {
         accessIcon = null;
       }
