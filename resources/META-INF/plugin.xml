@@ -1,0 +1,140 @@
+<idea-plugin version="2" use-idea-classloader="true">
+  <name>JavaScript Support</name>
+  <id>JavaScript</id>
+  <version>1.0</version>
+  <category>HTML/JavaScript Development</category>
+  <vendor logo="/general/ijLogo.png">JetBrains</vendor>
+  <idea-version since-build="3000"/>
+  <resource-bundle>com.intellij.lang.javascript.JavaScriptBundle</resource-bundle>
+  <depends optional="false">JSHtmlBridge</depends>
+  <depends>com.intellij.modules.xml</depends>
+  <extensions defaultExtensionNs="com.intellij">
+    <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
+    <colorSettingsPage implementation="com.intellij.lang.javascript.highlighting.JavaScriptColorsAndFontsPage"/>
+    <gotoSymbolContributor implementation="com.intellij.lang.javascript.index.JavaScriptSymbolContributor"/>
+    <gotoClassContributor implementation="com.intellij.lang.javascript.index.JavaScriptClassContributor"/>
+    
+    <fileTypeFactory implementation="com.intellij.lang.javascript.JavaScriptSupportLoader"/>
+    <syntaxHighlighter key="JavaScript" factoryClass="com.intellij.lang.javascript.highlighting.JSSyntaxHighlighterProvider"/>
+
+    <lang.substitutor language="JavaScript" implementationClass="com.intellij.lang.javascript.psi.impl.JSLanguageSubstitor"/>
+
+    <lang.parserDefinition language="JavaScript" implementationClass="com.intellij.lang.javascript.JavascriptParserDefinition"/>
+    <lang.parserDefinition language="GWT JavaScript" implementationClass="com.intellij.lang.javascript.GwtParserDefinition"/>
+    <lang.parserDefinition language="ECMA Script Level 4" implementationClass="com.intellij.lang.javascript.ECMAL4ParserDefinition"/>
+    <lang.parserDefinition language="JavaScript Object Notation" implementationClass="com.intellij.lang.javascript.JSONParserDefinition"/>
+
+    <fileBasedIndex implementation="com.intellij.lang.javascript.index.JSPackageIndex"/>
+    <annotator language="JavaScript" implementationClass="com.intellij.lang.javascript.validation.JSAnnotatingVisitor"/>
+    <readWriteAccessDetector implementation="com.intellij.lang.javascript.findUsages.JSReadWriteAccessDetector"/>
+    <lang.refactoringSupport language="JavaScript" implementationClass="com.intellij.lang.javascript.refactoring.JavascriptRefactoringSupportProvider"/>
+    <lang.formatter language="JavaScript" implementationClass="com.intellij.lang.javascript.formatter.JavascriptFormattingModelBuilder"/>
+    <lang.documentationProvider language="JavaScript" implementationClass="com.intellij.javascript.documentation.JSDocumentationProvider"/>
+
+    <lang.namesValidator language="GWT JavaScript" implementationClass="com.intellij.lang.javascript.refactoring.GwtNamesValidator"/>
+    <lang.namesValidator language="JavaScript Object Notation" implementationClass="com.intellij.lang.javascript.refactoring.JSONNamesValidator"/>
+    <lang.namesValidator language="ECMA Script Level 4" implementationClass="com.intellij.lang.javascript.refactoring.ECMAL4NamesValidator"/>
+    <lang.namesValidator language="JavaScript" implementationClass="com.intellij.lang.javascript.refactoring.BasicJavascriptNamesValidator"/>
+
+    <lang.surroundDescriptor language="JavaScript" implementationClass="com.intellij.lang.javascript.surroundWith.JSExpressionSurroundDescriptor"/>
+    <lang.surroundDescriptor language="JavaScript" implementationClass="com.intellij.lang.javascript.surroundWith.JSStatementsSurroundDescriptor"/>
+
+    <codeInsight.gotoSuper language="JavaScript" implementationClass="com.intellij.lang.javascript.navigation.JavaScriptGotoSuperHandler"/>
+    <codeInsight.overrideMethod language="JavaScript" implementationClass="com.intellij.lang.javascript.generation.JavaScriptOverrideMethodsHandler"/>
+    <codeInsight.implementMethod language="JavaScript" implementationClass="com.intellij.lang.javascript.generation.JavaScriptImplementMethodsHandler"/>
+
+    <lang.findUsagesProvider language="JavaScript" implementationClass="com.intellij.lang.javascript.findUsages.JavaScriptFindUsagesProvider"/>
+
+    <lang.commenter language="JavaScript Object Notation" implementationClass="com.intellij.lang.javascript.JavascriptCommenter"/>
+    <lang.commenter language="JavaScript" implementationClass="com.intellij.lang.javascript.JavascriptCommenter"/>
+
+    <lang.braceMatcher language="JavaScript" implementationClass="com.intellij.lang.javascript.highlighting.JSBraceMatcher"/>
+
+    <lang.foldingBuilder language="JavaScript" implementationClass="com.intellij.lang.javascript.folding.JavaScriptFoldingBuilder"/>
+    <lang.psiStructureViewFactory language="JavaScript" implementationClass="com.intellij.lang.javascript.structureView.JSStructureViewBuilderFactory"/>
+
+    <codeInsight.parameterInfo language="JavaScript" implementationClass="com.intellij.javascript.JSParameterInfoHandler"/>
+    <fileStructureGroupRuleProvider implementation="com.intellij.lang.javascript.findUsages.JavaScriptClassGroupRuleProvider"/>
+    <fileStructureGroupRuleProvider implementation="com.intellij.lang.javascript.findUsages.JavaScriptFunctionGroupRuleProvider"/>
+
+    <stubIndex implementation="com.intellij.lang.javascript.psi.stubs.JSNameIndex"/>
+    <stubIndex implementation="com.intellij.lang.javascript.psi.stubs.JSQualifiedElementIndex"/>
+    <stubIndex implementation="com.intellij.lang.javascript.psi.stubs.JSSuperClassIndex"/>
+    <stubIndex implementation="com.intellij.lang.javascript.psi.stubs.JSImplementedInterfacesIndex"/>
+
+    <fileTypeIndentOptionsProvider implementation="com.intellij.lang.javascript.formatter.JavaScriptIndentOptionsProvider"/>
+    <codeStyleSettingsProvider implementation="com.intellij.lang.javascript.formatter.JSCodeStyleSettingsProvider"/>
+    <liveTemplateContext implementation="com.intellij.lang.javascript.JavaScriptCodeContextType"/>
+
+    <codeInsight.lineMarkerProvider language="JavaScript" implementationClass="com.intellij.lang.javascript.highlighting.JavaScriptLineMarkerProvider"/>
+    <typeDeclarationProvider implementation="com.intellij.lang.javascript.navigation.JavaScriptTypeDeclarationProvider"/>
+    <gotoTargetRendererProvider implementation="com.intellij.lang.javascript.search.JSGotoTargetRendererProvider"/>
+    <definitionsSearch implementation="com.intellij.lang.javascript.search.JSDefinitionsSearchExecutor"/>
+    <referencesSearch implementation="com.intellij.lang.javascript.search.JSReferencesSearchExecutor"/>
+    <declarationRangeHandler key="com.intellij.lang.javascript.psi.JSNamedElement"
+                             implementationClass="com.intellij.lang.javascript.search.JSDeclarationRangeHandler"/>
+    <multiHostInjector implementation="com.intellij.lang.javascript.JSLanguageInjector"/>
+    <stubElementTypeHolder class="com.intellij.lang.javascript.JSElementTypes"/>
+    <lang.importOptimizer language="ECMA Script Level 4" implementationClass="com.intellij.lang.javascript.flex.ECMAScriptImportOptimizer" />
+    <lang.importOptimizer language="XML" implementationClass="com.intellij.lang.javascript.flex.ECMAScriptImportOptimizer" />
+    <lang.smartEnterProcessor language="JavaScript" implementationClass="com.intellij.lang.javascript.JSSmartEnterProcessor"/>
+    <lang.smartEnterProcessor language="ECMA Script Level 4" implementationClass="com.intellij.lang.javascript.JSSmartEnterProcessor"/>
+
+    <lang.implementationTextSelectioner language="JavaScript" implementationClass="com.intellij.javascript.JSImplementationTextSelectioner"/>
+    <lang.elementManipulator forClass="com.intellij.lang.javascript.psi.impl.JSIncludeDirectiveImpl"
+      implementationClass="com.intellij.javascript.manipulators.JSIncludeDirectiveManipulator"/>
+    <lang.elementManipulator forClass="com.intellij.lang.javascript.psi.JSAttributeNameValuePair"
+      implementationClass="com.intellij.javascript.manipulators.JSAttributeNameValuePairManipulator"/>
+    <lang.elementManipulator forClass="com.intellij.lang.javascript.psi.JSDocTag"
+      implementationClass="com.intellij.javascript.manipulators.JSDocTagManipulator"/>
+
+    <completion.contributor implementation="com.intellij.javascript.JSCompletionContributor"/>
+
+    <liveTemplateMacro implementation="com.intellij.javascript.JSClassNameMacro"/>
+    <liveTemplateMacro implementation="com.intellij.javascript.JSMethodNameMacro"/>
+
+    <inspectionToolProvider implementation="com.intellij.lang.javascript.inspections.JSInspectionToolProvider"/>
+    <targetElementEvaluator language="JavaScript" implementationClass="com.intellij.lang.javascript.JSTargetElementEvaluator"/>
+    <indexedRootsProvider implementation="com.intellij.lang.javascript.index.JSIndexedRootProvider"/>
+  </extensions>
+
+  <extensionPoints>
+    <extensionPoint qualifiedName="JavaScript.resolveHelper" interface="com.intellij.lang.javascript.flex.JSResolveHelper"/>
+    <extensionPoint qualifiedName="JavaScript.classInheritorsProvider" interface="com.intellij.lang.javascript.search.JSClassInheritorsProvider"/>
+  </extensionPoints>
+
+  <project-components>
+    <component>
+      <implementation-class>com.intellij.lang.javascript.index.JavaScriptIndex</implementation-class>
+    </component>
+    <component>
+      <implementation-class>com.intellij.lang.javascript.index.BrowserSupportManager</implementation-class>
+    </component>
+    <component>
+      <implementation-class>com.intellij.lang.javascript.index.JSTypeEvaluateManager</implementation-class>
+    </component>
+  </project-components>
+
+  <actions>
+    <action id="Generate.GetAccessor.Actionscript" class="com.intellij.lang.javascript.generation.JavaScriptGenerateGetAccessorAction"
+            text="Getter">
+      <add-to-group anchor="last" group-id="GenerateGroup"/>
+    </action>
+    <action id="Generate.SetAccessor.Actionscript" class="com.intellij.lang.javascript.generation.JavaScriptGenerateSetAccessorAction"
+            text="Setter">
+      <add-to-group anchor="last" group-id="GenerateGroup"/>
+    </action>
+    <action id="Generate.GetSetAccessor.Actionscript" class="com.intellij.lang.javascript.generation.JavaScriptGenerateGetSetAccessorAction"
+            text="Getter and Setter">
+      <add-to-group anchor="last" group-id="GenerateGroup"/>
+    </action>
+    <action id="Generate.Constructor.Actionscript" class="com.intellij.lang.javascript.generation.JavaScriptGenerateConstructorAction"
+            text="Constructor">
+      <add-to-group anchor="last" group-id="GenerateGroup"/>
+    </action>
+    <action id="Generate.ToString.Actionscript" class="com.intellij.lang.javascript.generation.JavaScriptGenerateToStringAction"
+            text="toString() member function">
+      <add-to-group anchor="last" group-id="GenerateGroup"/>
+    </action>
+  </actions>
+</idea-plugin>

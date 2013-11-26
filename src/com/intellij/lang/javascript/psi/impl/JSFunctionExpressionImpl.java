@@ -1,0 +1,132 @@
+/*
+ * Copyright 2000-2005 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.intellij.lang.javascript.psi.impl;
+
+import javax.swing.Icon;
+
+import org.jetbrains.annotations.NotNull;
+import com.intellij.icons.AllIcons;
+import com.intellij.lang.ASTNode;
+import com.intellij.lang.javascript.JSTokenTypes;
+import com.intellij.lang.javascript.psi.*;
+import com.intellij.lang.javascript.psi.stubs.JSFunctionExpressionStub;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.util.IncorrectOperationException;
+
+/**
+ * Created by IntelliJ IDEA.
+ * User: max
+ * Date: Jan 30, 2005
+ * Time: 11:55:33 PM
+ * To change this template use File | Settings | File Templates.
+ */
+public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionExpressionStub,JSFunctionExpression> implements JSFunctionExpression {
+  public JSFunctionExpressionImpl(final ASTNode node) {
+    super(node);
+  }
+
+  public JSFunctionExpressionImpl(final JSFunctionExpressionStub stub, IStubElementType type) {
+    super(stub, type);
+  }
+
+  public JSFunction getFunction() {
+    return this;
+  }
+
+  public void accept(@NotNull PsiElementVisitor visitor) {
+    if (visitor instanceof JSElementVisitor) {
+      ((JSElementVisitor)visitor).visitJSFunctionExpression(this);
+    }
+    else {
+      visitor.visitElement(this);
+    }
+  }
+
+  protected ASTNode createNameIdentifier(final String name) {
+    return JSChangeUtil.createNameIdentifier(getProject(), name);
+  }
+  
+  public JSExpression replace(JSExpression newExpr) {
+    return JSChangeUtil.replaceExpression(this, newExpr);
+  }
+
+  public ASTNode findNameIdentifier() {
+    final ASTNode treeParent = getNode().getTreeParent();
+    PsiElement psi = treeParent != null ? treeParent.getPsi():null;
+    if (psi instanceof JSCallExpression) {
+      psi = psi.getParent();
+    }
+    if (psi instanceof JSAssignmentExpression) {
+      final JSExpression jsExpression = ((JSAssignmentExpression)psi).getLOperand();
+      final JSExpression lOperand = jsExpression instanceof JSDefinitionExpression? ((JSDefinitionExpression)jsExpression).getExpression():null;
+      
+      if (lOperand instanceof JSReferenceExpression) {
+        return lOperand.getNode().findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET);
+      }
+    } else if (psi instanceof JSProperty) {
+      return psi.getNode().findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET);
+    } else {
+      final ASTNode node = super.findNameIdentifier();
+
+      if (node != null) return node;
+
+      if (psi instanceof JSVariable) {
+        return psi.getNode().findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET);
+      }
+    }
+    return null;
+  }
+
+  public JSAttributeList getAttributeList() {
+    return null;
+  }
+
+  public int getTextOffset() {
+    final ASTNode name = findNameIdentifier();
+    return name != null ? name.getStartOffset() : super.getTextOffset();
+  }
+
+  public void delete() throws IncorrectOperationException {
+    final PsiElement parent = getParent();
+    if (parent instanceof JSAssignmentExpression) {
+      ((JSAssignmentExpression)parent).getLOperand().delete();
+      return;
+    }
+    super.delete();
+  }
+
+  public Icon getIcon(final int flags) {
+    return AllIcons.Nodes.Function;
+  }
+
+  public boolean isGetProperty() {
+    return false;
+  }
+
+  public boolean isSetProperty() {
+    return false;
+  }
+
+  public boolean isConstructor() {
+    return false;
+  }
+
+  public String getQualifiedName() {
+    return getName();
+  }
+}
