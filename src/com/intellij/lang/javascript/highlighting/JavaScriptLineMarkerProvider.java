@@ -17,6 +17,7 @@ import java.util.Set;
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeInsight.daemon.GutterIconNavigationHandler;
@@ -69,6 +70,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 
 	private static final Function<JSClass, String> ourClassInheritorsTooltipProvider = new Function<JSClass, String>()
 	{
+		@Override
 		public String fun(final JSClass clazz)
 		{
 			return "Has subclasses";
@@ -77,6 +79,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 
 	private static final Function<JSClass, String> ourImplementedInterfacesTooltipProvider = new Function<JSClass, String>()
 	{
+		@Override
 		public String fun(final JSClass clazz)
 		{
 			return "Has implementations";
@@ -85,6 +88,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 
 	private static final Function<JSFunction, String> ourOverriddenFunctionsTooltipProvider = new Function<JSFunction, String>()
 	{
+		@Override
 		public String fun(final JSFunction psiElement)
 		{
 			return "Is overridden";
@@ -93,6 +97,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 
 	private static final Function<JSFunction, String> ourImplementingFunctionsTooltipProvider = new Function<JSFunction, String>()
 	{
+		@Override
 		public String fun(final JSFunction psiElement)
 		{
 			return "Is implemented";
@@ -101,11 +106,13 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 
 	private static final BasicGutterIconNavigationHandler<JSClass> ourClassInheritorsNavHandler = new BasicGutterIconNavigationHandler<JSClass>()
 	{
+		@Override
 		protected String getTitle(final JSClass elt)
 		{
 			return "Choose Subclass of " + elt.getName();
 		}
 
+		@Override
 		protected Query<JSClass> search(final JSClass elt)
 		{
 			return JSClassSearch.searchClassInheritors(elt, true);
@@ -115,11 +122,13 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 	private static final BasicGutterIconNavigationHandler<JSClass> ourInterfaceImplementationsNavHandler = new
 			BasicGutterIconNavigationHandler<JSClass>()
 	{
+		@Override
 		protected String getTitle(final JSClass elt)
 		{
 			return "Choose Implementation of " + elt.getName();
 		}
 
+		@Override
 		protected Query<JSClass> search(final JSClass elt)
 		{
 			return JSClassSearch.searchInterfaceImplementations(elt, true);
@@ -129,11 +138,13 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 	private static final BasicGutterIconNavigationHandler<JSFunction> ourOverriddenFunctionsNavHandler = new
 			BasicGutterIconNavigationHandler<JSFunction>()
 	{
+		@Override
 		protected String getTitle(final JSFunction elt)
 		{
 			return "Choose Overriden Function of " + elt.getName();
 		}
 
+		@Override
 		protected Query<JSFunction> search(final JSFunction elt)
 		{
 			return doFindOverridenFunctionStatic(elt);
@@ -155,6 +166,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 			final ArrayList<JSFunction> result = new ArrayList<JSFunction>();
 			MyNamespaceProcessor namespaceProcessor = new MyNamespaceProcessor(new THashSet<JSFunction>(Arrays.asList(elt)))
 			{
+				@Override
 				protected boolean doProcess(PsiElement elt)
 				{
 					if(elt instanceof JSNamedElementProxy)
@@ -184,11 +196,13 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 	private static final BasicGutterIconNavigationHandler<JSFunction> ourImplementingFunctionsNavHandler = new
 			BasicGutterIconNavigationHandler<JSFunction>()
 	{
+		@Override
 		protected String getTitle(final JSFunction elt)
 		{
 			return "Choose Implementation of " + elt.getName();
 		}
 
+		@Override
 		protected Query<JSFunction> search(final JSFunction elt)
 		{
 			return JSFunctionsSearch.searchImplementingFunctions(elt, true);
@@ -197,7 +211,8 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 
 	public static Key<Boolean> ourParticipatesInHierarchyKey = Key.create("js.named.item.participates.in.hierarchy");
 
-	public LineMarkerInfo getLineMarkerInfo(final PsiElement element)
+	@Override
+	public LineMarkerInfo getLineMarkerInfo(@NotNull final PsiElement element)
 	{
 		if(element instanceof JSReferenceExpression)
 		{
@@ -387,17 +402,20 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 					return new LineMarkerInfo<JSFunction>(function, function.findNameIdentifier().getTextRange().getStartOffset(),
 							OVERRIDING_METHOD_ICON, Pass.UPDATE_ALL, new Function<JSFunction, String>()
 					{
+						@Override
 						public String fun(final JSFunction psiElement)
 						{
 							return OVERRIDES_METHOD_IN + overrideHandler.className;
 						}
 					}, new GutterIconNavigationHandler<JSFunction>()
 					{
+						@Override
 						public void navigate(final MouseEvent e, final JSFunction elt)
 						{
 							final Set<NavigationItem> results = new THashSet<NavigationItem>();
 							JSResolveUtil.iterateType(function, parentNode1, typeName, new JSResolveUtil.OverrideHandler()
 							{
+								@Override
 								public boolean process(final ResolveProcessor processor, final PsiElement scope, final String className)
 								{
 									for(PsiElement e : processor.getResults())
@@ -456,7 +474,8 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 		return null;
 	}
 
-	public void collectSlowLineMarkers(final List<PsiElement> elements, final Collection<LineMarkerInfo> result)
+	@Override
+	public void collectSlowLineMarkers(@NotNull final List<PsiElement> elements, @NotNull final Collection<LineMarkerInfo> result)
 	{
 		final Map<String, Set<JSFunction>> jsFunctionsToProcess = new THashMap<String, Set<JSFunction>>();
 		final Map<JSClass, Set<JSFunction>> jsMethodsToProcess = new THashMap<JSClass, Set<JSFunction>>();
@@ -525,6 +544,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 
 			MyNamespaceProcessor processor = new MyNamespaceProcessor(entry.getValue())
 			{
+				@Override
 				protected boolean doProcess(final PsiElement elt)
 				{
 					function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
@@ -549,6 +569,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 				boolean addedClassMarker;
 				final Set<JSFunction> methodsClone = methods == null || clazz.isInterface() ? null : new THashSet<JSFunction>(methods);
 
+				@Override
 				public boolean process(final JSClass jsClass)
 				{
 					if(!addedClassMarker)
@@ -625,6 +646,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 						result.add(new LineMarkerInfo<JSFunction>(function, function.getTextOffset(), IMPLEMENTING_ICON,
 								Pass.UPDATE_OVERRIDEN_MARKERS, new Function<JSFunction, String>()
 						{
+							@Override
 							public String fun(final JSFunction jsFunction)
 							{
 								return "Implementation of " + jsFunction.getName() + " in " + ((NavigationItem) implementedFunction.getParent())
@@ -632,6 +654,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 							}
 						}, new GutterIconNavigationHandler<JSFunction>()
 						{
+							@Override
 							public void navigate(final MouseEvent e, final JSFunction elt)
 							{
 								final JSFunction implementedFunction = findImplementedFunction(elt);
@@ -646,6 +669,19 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 				}
 			}
 		}
+	}
+
+	private static boolean isClass(final PsiElement element)
+	{
+		if(element instanceof JSClass)
+		{
+			return true;
+		}
+		if(element instanceof JSFile && element.getContext() != null)
+		{
+			return true;
+		}
+		return false;
 	}
 
 	@Nullable
@@ -664,6 +700,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 		JSResolveUtil.processInterfaceMethods((JSClass) clazz, new JSResolveUtil.CollectMethodsToImplementProcessor(implementingFunction.getName(),
 				implementingFunction)
 		{
+			@Override
 			protected boolean process(final ResolveProcessor processor)
 			{
 				result.set((JSFunction) processor.getResult());
@@ -686,6 +723,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 	{
 		String className;
 
+		@Override
 		public boolean process(final ResolveProcessor processor, final PsiElement scope, final String className)
 		{
 			this.className = className;
@@ -695,6 +733,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 
 	private abstract static class BasicGutterIconNavigationHandler<T extends PsiElement> implements GutterIconNavigationHandler<T>
 	{
+		@Override
 		public void navigate(final MouseEvent e, final T elt)
 		{
 			final List<NavigatablePsiElement> navElements = new ArrayList<NavigatablePsiElement>();
@@ -705,6 +744,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 			}
 			elementQuery.forEach(new Processor<T>()
 			{
+				@Override
 				public boolean process(final T psiElement)
 				{
 					if(psiElement instanceof NavigatablePsiElement)
@@ -738,6 +778,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 			myFunctions = functions;
 		}
 
+		@Override
 		public boolean process(final JSNamespace superNs)
 		{
 			JavaScriptIndex index = JavaScriptIndex.getInstance(myFunctions.iterator().next().getProject());
@@ -781,6 +822,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 			return result;
 		}
 
+		@Override
 		protected boolean process(PsiElement namedElement, final JSNamespace namespace)
 		{
 			return doProcess(namedElement);
@@ -788,11 +830,13 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 
 		protected abstract boolean doProcess(final PsiElement elt);
 
+		@Override
 		public PsiFile getBaseFile()
 		{
 			return null;
 		}
 
+		@Override
 		public int getRequiredNameId()
 		{
 			return myDescendantNameId;
