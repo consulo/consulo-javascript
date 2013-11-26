@@ -1,6 +1,6 @@
 <idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
+	<id>org.mustbe.consulo.javascript</id>
 	<name>JavaScript Support</name>
-	<id>JavaScript</id>
 	<version>1.0</version>
 	<category>HTML/JavaScript Development</category>
 	<vendor>JetBrains
