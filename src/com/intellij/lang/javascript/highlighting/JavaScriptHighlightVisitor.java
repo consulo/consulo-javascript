@@ -25,9 +25,12 @@ import com.intellij.psi.util.PsiTreeUtil;
  */
 public class JavaScriptHighlightVisitor extends JSElementVisitor implements HighlightVisitor
 {
-	@NonNls private static final String PARAMETER_MESSAGE = "parameter";
-	@NonNls private static final String INSTANCE_FIELD = "instance field";
-	@NonNls private static final String INSTANCE_METHOD = "instance method";
+	@NonNls
+	private static final String PARAMETER_MESSAGE = "parameter";
+	@NonNls
+	private static final String INSTANCE_FIELD = "instance field";
+	@NonNls
+	private static final String INSTANCE_METHOD = "instance method";
 
 	private HighlightInfoHolder myHighlightInfoHolder;
 
@@ -71,24 +74,35 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 	}
 
 	@Nullable
-	private static com.intellij.codeInsight.daemon.LineMarkerInfo buildHighlightForVariable(@NotNull final PsiElement element, @NotNull final PsiElement markerAddTo) {
+	private static com.intellij.codeInsight.daemon.LineMarkerInfo buildHighlightForVariable(@NotNull final PsiElement element,
+			@NotNull final PsiElement markerAddTo)
+	{
 		TextAttributesKey type;
 		@NonNls String text;
 
-		if (element instanceof JSParameter) {
+		if(element instanceof JSParameter)
+		{
 			type = JSHighlighter.JS_PARAMETER;
 			text = PARAMETER_MESSAGE;
-		} else {
-			if (isClass(element.getParent().getParent())) {
-				final JSAttributeList attributeList = ((JSAttributeListOwner)element).getAttributeList();
+		}
+		else
+		{
+			if(isClass(element.getParent().getParent()))
+			{
+				final JSAttributeList attributeList = ((JSAttributeListOwner) element).getAttributeList();
 				final boolean isStatic = attributeList != null && attributeList.hasModifier(JSAttributeList.ModifierType.STATIC);
-				type = isStatic ? JSHighlighter.JS_STATIC_MEMBER_VARIABLE:JSHighlighter.JS_INSTANCE_MEMBER_VARIABLE;
-				text = (isStatic ? "static ":"") + "field";
-			} else {
-				if (PsiTreeUtil.getParentOfType(element, JSFunction.class) != null) {
+				type = isStatic ? JSHighlighter.JS_STATIC_MEMBER_VARIABLE : JSHighlighter.JS_INSTANCE_MEMBER_VARIABLE;
+				text = (isStatic ? "static " : "") + "field";
+			}
+			else
+			{
+				if(PsiTreeUtil.getParentOfType(element, JSFunction.class) != null)
+				{
 					type = JSHighlighter.JS_LOCAL_VARIABLE;
 					text = "local variable";
-				} else {
+				}
+				else
+				{
 					type = JSHighlighter.JS_GLOBAL_VARIABLE;
 					text = "global variable";
 				}
@@ -99,9 +113,14 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 	}
 
 
-	private static boolean isClass(final PsiElement element) {
-		if(element instanceof JSClass) return true;
-		if (element instanceof JSFile && element.getContext() != null) {
+	private static boolean isClass(final PsiElement element)
+	{
+		if(element instanceof JSClass)
+		{
+			return true;
+		}
+		if(element instanceof JSFile && element.getContext() != null)
+		{
 			return true;
 		}
 		return false;
@@ -109,9 +128,10 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
 	@Nullable
 	private static LineMarkerInfo createLineMarker(@NotNull final PsiElement element, @Nullable final TextAttributesKey type,
-			@Nullable @NonNls final String text) {
+			@Nullable @NonNls final String text)
+	{
    /* if (type == null) return null;
-    PsiElement markedNode = element.getLastChild();
+	PsiElement markedNode = element.getLastChild();
     if (element instanceof JSNamedElement) {
       ASTNode nameNode = ((JSNamedElement)element).findNameIdentifier();
       if (nameNode != null) markedNode = nameNode.getPsi();
