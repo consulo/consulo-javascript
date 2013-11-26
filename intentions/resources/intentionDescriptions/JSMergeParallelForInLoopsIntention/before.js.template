@@ -1,0 +1,8 @@
+function f(a) {
+  <spot>for</spot> (var i in a) {
+    alert(i);
+  }
+  for (var i in a) {
+    alert(i*2);
+  }
+}

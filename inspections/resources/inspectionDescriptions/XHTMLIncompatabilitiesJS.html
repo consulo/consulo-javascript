@@ -1,0 +1,29 @@
+<html>
+<body>
+<table>
+    <tr>
+        <td valign="top" height="150">
+            <font face="verdana" size="-1">
+                This inspection reports common JavaScript DOM patterns which may present problems
+                with XHTML documents. In particular, the patterns detected will behave completely
+                differently depending on whether the document is loaded as XML or HTML.
+                This can result in subtle bugs where script behaviour is dependent on the MIME-type
+                of the document, rather than it's content.
+                Patterns detected include
+                <b><font color="#000080">document.body</font></b>,
+                <b><font color="#000080">document.images</font></b>,
+                <b><font color="#000080">document.applets</font></b>,
+                <b><font color="#000080">document.links</font></b>,
+                <b><font color="#000080">document.forms</font></b>, and
+                <b><font color="#000080">document.anchors</font></b>.
+            </font>
+        </td>
+    </tr>
+    <tr>
+        <td height="20">
+            <font face="verdana" size="-2">Powered by InspectionJS</font>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,9 @@
+function f(a) {
+  if (a == 0) {
+    alert("1");
+    return 2;
+  } else {
+    alert("2");
+    return 18;
+  }
+}

@@ -1,0 +1,4 @@
+function f() {
+  var j = arr[i];
+  i++;
+}

@@ -1,0 +1,25 @@
+<html>
+<body>
+<table>
+    <tr>
+        <td valign="top" height="150">
+            <font face="verdana" size="-1">
+                This inspection reports JavaScript accesses to DOM nodes as text using the
+                <b><font color="#000080">innerHTML</font></b> property.
+                Most uses of <b><font color="#000080">innerHTML</font></b> are better performed using explicit
+                DOM calls such as <b><font color="#000080">getElementByID()</font></b> and
+                <b><font color="#000080">createElement()</font></b>.  Additionally,
+                <b><font color="#000080">innerHTML</font></b> will not work with XML
+                DOMs, including DOMs for XHTML if viewed as XML.  This can lead to difficult to
+                diagnose bugs.
+            </font>
+        </td>
+    </tr>
+    <tr>
+        <td height="20">
+            <font face="verdana" size="-2">Powered by InspectionJS</font>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

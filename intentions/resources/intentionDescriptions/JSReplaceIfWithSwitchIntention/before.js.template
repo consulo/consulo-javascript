@@ -1,0 +1,9 @@
+function f(a) {
+  <spot>if</spot> (a == 0) {
+    return 1;
+  } else if (a == 9) {
+    return 8;
+  } else {
+    return 2;
+  }
+}

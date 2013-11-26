@@ -1,0 +1,9 @@
+function f(a, b) {
+  <spot>if</spot> (!a) {
+    return true;
+  }
+  <spot>else</spot> if (b) {
+    return true;
+  }
+  return false;
+}

@@ -1,0 +1,7 @@
+<idea-plugin version="2">
+    <application-components>
+        <component>
+            <implementation-class>com.sixrr.inspectjs.InspectionJSPlugin</implementation-class>
+        </component>
+    </application-components>
+</idea-plugin>

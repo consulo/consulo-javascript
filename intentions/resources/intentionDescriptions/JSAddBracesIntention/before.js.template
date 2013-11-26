@@ -1,0 +1,5 @@
+function f(b) {
+  if (b)
+    <spot>return 1</spot>;
+  return 0;
+}

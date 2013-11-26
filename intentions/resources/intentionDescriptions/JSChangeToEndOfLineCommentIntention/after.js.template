@@ -1,0 +1,4 @@
+function f() {
+  // comment
+  // more of the same comment
+}

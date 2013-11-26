@@ -1,0 +1,27 @@
+<html>
+<body>
+<table>
+    <tr>
+        <td valign="top" height="150">
+            <font face="verdana" size="-1">
+                This inspection reports JavaScript method calls to
+                <b><font color="#000080">document.write()</font></b> or
+                <b><font color="#000080">document.writeln()</font></b>.
+                Most uses of these calls are better performed using explicit
+                DOM calls such as <b><font color="#000080">getElementByID()</font></b> and
+                <b><font color="#000080">createElement()</font></b>.  Additionally,
+                the <b><font color="#000080">write()</font></b> and
+                <b><font color="#000080">writeln()</font></b> calls will not work with XML
+                DOMs, including DOMs for XHTML if viewed as XML.  This can lead to difficult to
+                diagnose bugs.
+            </font>
+        </td>
+    </tr>
+    <tr>
+        <td height="20">
+            <font face="verdana" size="-2">Powered by InspectionJS</font>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

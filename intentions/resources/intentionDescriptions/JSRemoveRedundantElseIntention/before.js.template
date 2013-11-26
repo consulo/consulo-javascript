@@ -1,0 +1,8 @@
+function f(i) {
+  if (i==0) {
+    return;
+  }
+  <spot>else</spot> {
+    var j = 0;
+  }
+}

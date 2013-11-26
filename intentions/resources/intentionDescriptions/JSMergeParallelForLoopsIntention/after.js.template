@@ -1,0 +1,6 @@
+function f(a) {
+  for (var i = 0; i < a; i++) {
+    alert(i);
+    alert(i*2);
+  }
+}

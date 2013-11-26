@@ -1,0 +1,10 @@
+function f(a) {
+  switch (a) {
+    case 0:
+      return 1;
+    case 9:
+      return 8;
+    default:
+      return 2;
+  }
+}

@@ -1,0 +1,12 @@
+function f(a) {
+  <spot>if</spot> (a == 0) {
+    alert("1");
+  } else {
+    alert("2");
+  }
+  if (a == 0) {
+    return 2;
+  } else {
+    return 18;
+  }
+}

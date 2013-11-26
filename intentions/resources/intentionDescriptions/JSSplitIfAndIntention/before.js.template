@@ -1,0 +1,6 @@
+function f(a, b) {
+  <spot>if (!a && b)</spot> {
+    return true;
+  }
+  return false;
+}

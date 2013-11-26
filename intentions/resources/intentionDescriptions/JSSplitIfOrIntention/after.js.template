@@ -1,0 +1,11 @@
+function f(a, b) {
+  if (!a) {
+    return true;
+  }
+  else if (b) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}

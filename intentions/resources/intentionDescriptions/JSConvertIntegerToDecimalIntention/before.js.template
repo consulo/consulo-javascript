@@ -1,0 +1,3 @@
+function f() {
+  var i = <spot>0xffff</spot>;
+}

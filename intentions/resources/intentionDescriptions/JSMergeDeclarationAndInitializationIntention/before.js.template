@@ -1,0 +1,4 @@
+function f() {
+  <spot>var i;</spot>
+  i = 65535;
+}

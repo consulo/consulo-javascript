@@ -1,0 +1,3 @@
+function f(a, b) {
+  if (<spot>a && b</spot>) return;
+}

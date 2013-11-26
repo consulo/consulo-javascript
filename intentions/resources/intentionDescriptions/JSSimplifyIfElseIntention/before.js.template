@@ -1,0 +1,6 @@
+function f(a) {
+  <spot>if</spot> (a) {
+    return true;
+  }
+  return false;
+}
