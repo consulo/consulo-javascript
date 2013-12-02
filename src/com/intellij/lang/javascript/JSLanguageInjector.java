@@ -1,8 +1,10 @@
 package com.intellij.lang.javascript;
 
+import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.Language;
+import com.intellij.lang.LanguagePointerUtil;
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
 import com.intellij.lang.javascript.flex.AnnotationBackedDescriptor;
@@ -33,19 +35,10 @@ import com.intellij.xml.XmlElementDescriptorWithCDataContent;
 public class JSLanguageInjector implements MultiHostInjector {
   @NonNls private static final String JAVASCRIPT_PREFIX = "javascript:";
   @NonNls public static final String JSP_URI = "http://java.sun.com/JSP/Page";
-  private static final Language cssLanguage;
 
-  static {
-    Language lang;
-    try {
-      lang = Language.findInstance((Class<? extends Language>)Class.forName("com.intellij.lang.css.CSSLanguage"));
-    } catch (ClassNotFoundException ex) {
-      lang = null;
-    }
+  private static final NamedPointer<Language> CSS_LANGUAGE = LanguagePointerUtil.createPointer("CSS");
 
-    cssLanguage = lang;
-  }
-
+  @Override
   public void injectLanguages(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement host) {
 
     if (host instanceof XmlAttributeValue) {
@@ -72,8 +65,8 @@ public class JSLanguageInjector implements MultiHostInjector {
           } else {
             checkMxmlInjection(registrar, host, attribute, tag);
           }
-        } else if ("style".equals(attrName) && isMozillaXulOrXblNs(((XmlTag)tag).getNamespace()) && cssLanguage != null) {
-          registrar.startInjecting(cssLanguage)
+        } else if ("style".equals(attrName) && isMozillaXulOrXblNs(((XmlTag)tag).getNamespace()) && CSS_LANGUAGE.get() != null) {
+          registrar.startInjecting(CSS_LANGUAGE.get())
             .addPlace("inline.style {", "}", (PsiLanguageInjectionHost)host, new TextRange(1, host.getTextLength() - 1))
             .doneInjecting();
         } else if ("implements".equals(attrName) && JavaScriptSupportLoader.isFlexMxmFile(tag.getContainingFile())) {
@@ -109,8 +102,8 @@ public class JSLanguageInjector implements MultiHostInjector {
             Language language = JavaScriptSupportLoader.JAVASCRIPT.getLanguage();
             injectToXmlText(registrar, host, language, null, null);
           }
-        } else if ("Style".equals(localName) && JavaScriptSupportLoader.isMxmlNs(tag.getNamespace()) && cssLanguage != null) {
-          injectToXmlText(registrar, host, cssLanguage, null, null);
+        } else if ("Style".equals(localName) && JavaScriptSupportLoader.isMxmlNs(tag.getNamespace()) && CSS_LANGUAGE.get() != null) {
+          injectToXmlText(registrar, host, CSS_LANGUAGE.get(), null, null);
         } else if ( ( ("script".equals(localName) && ((tag.getNamespacePrefix().length() > 0 && doInjectTo(tag)) || isMozillaXulOrXblNs(tag.getNamespace()))) ||
                       "Script".equals(localName) ||
                       "Metadata".equals(localName)
