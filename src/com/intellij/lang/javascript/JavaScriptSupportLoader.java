@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.DependentLanguage;
 import com.intellij.lang.LanguageParserDefinitions;
 import com.intellij.lang.LanguageVersion;
+import com.intellij.lang.javascript.flex.ActionScriptFileType;
 import com.intellij.lang.javascript.highlighting.JSHighlighter;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.application.ApplicationManager;
@@ -45,16 +46,15 @@ import com.intellij.util.ArrayUtil;
  */
 public class JavaScriptSupportLoader extends FileTypeFactory
 {
-	public static final LanguageFileType JAVASCRIPT = new JavaScriptFileType();
+	@Deprecated
+	public static final LanguageFileType JAVASCRIPT = JavaScriptFileType.INSTANCE;
 
 	public static final JSLanguageDialect ECMA_SCRIPT_L4 = new ECMAL4LanguageDialect();
 	public static final JSLanguageDialect JSON = new JSONLanguageDialect();
 	public static final JSLanguageDialect GWT_DIALECT = new GwtLanguageDialect();
 	public static final JSLanguageDialect JS_IN_HTML_DIALECT = new JsInHtmlLanguageDialect();
 
-	private static final
-	@NonNls
-	String ECMA_SCRIPT_L4_FILE_EXTENSION = "as";
+
 	public static final
 	@NonNls
 	String ECMA_SCRIPT_L4_FILE_EXTENSION2 = "js2";
@@ -115,9 +115,12 @@ public class JavaScriptSupportLoader extends FileTypeFactory
 		if(file != null)
 		{
 			final String extension = file.getExtension();
-			if(ECMA_SCRIPT_L4_FILE_EXTENSION.equals(extension) ||
-					ECMA_SCRIPT_L4_FILE_EXTENSION2.equals(extension) ||
+			if(ECMA_SCRIPT_L4_FILE_EXTENSION2.equals(extension) ||
 					ECMA_SCRIPT_L4_FILE_EXTENSION3.equals(extension))
+			{
+				return ECMA_SCRIPT_L4;
+			}
+			else if(file.getFileType() == ActionScriptFileType.INSTANCE)
 			{
 				return ECMA_SCRIPT_L4;
 			}
@@ -133,10 +136,13 @@ public class JavaScriptSupportLoader extends FileTypeFactory
 		return null;
 	}
 
+	@Override
 	public void createFileTypes(final @NotNull FileTypeConsumer consumer)
 	{
-		consumer.consume(JAVASCRIPT, "js;" + ECMA_SCRIPT_L4_FILE_EXTENSION + ";" + ECMA_SCRIPT_L4_FILE_EXTENSION2 + ";" + ECMA_SCRIPT_L4_FILE_EXTENSION3);
+		consumer.consume(JavaScriptFileType.INSTANCE, "js;" + ECMA_SCRIPT_L4_FILE_EXTENSION2 + ";" +
+				ECMA_SCRIPT_L4_FILE_EXTENSION3);
 		consumer.consume(JsonFileType.INSTANCE);
+		consumer.consume(ActionScriptFileType.INSTANCE);
 	}
 
 	public static boolean isFlexMxmFile(final PsiFile file)
@@ -196,6 +202,7 @@ public class JavaScriptSupportLoader extends FileTypeFactory
 		{
 			SyntaxHighlighterFactory.LANGUAGE_FACTORY.addExplicitExtension(this, new SingleLazyInstanceSyntaxHighlighterFactory()
 			{
+				@Override
 				@NotNull
 				protected SyntaxHighlighter createHighlighter()
 				{
@@ -215,6 +222,7 @@ public class JavaScriptSupportLoader extends FileTypeFactory
 			});
 		}
 
+		@Override
 		public String getFileExtension()
 		{
 			return "jshtml";

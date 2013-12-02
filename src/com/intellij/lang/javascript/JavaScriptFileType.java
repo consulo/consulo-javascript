@@ -21,37 +21,41 @@ import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 
 /**
- * Created by IntelliJ IDEA.
  * User: max
  * Date: Jan 27, 2005
  * Time: 6:02:59 PM
- * To change this template use File | Settings | File Templates.
  */
 public class JavaScriptFileType extends LanguageFileType
 {
+	public static final JavaScriptFileType INSTANCE = new JavaScriptFileType();
+
 	public JavaScriptFileType()
 	{
-		super(new JavascriptLanguage());
+		super(JavascriptLanguage.INSTANCE);
 	}
 
+	@Override
 	@NotNull
 	public String getName()
 	{
 		return "JavaScript";
 	}
 
+	@Override
 	@NotNull
 	public String getDescription()
 	{
 		return JSBundle.message("javascript.filetype.description");
 	}
 
+	@Override
 	@NotNull
 	public String getDefaultExtension()
 	{
 		return "js";
 	}
 
+	@Override
 	public Icon getIcon()
 	{
 		return JavaScriptIcons.JavaScript;

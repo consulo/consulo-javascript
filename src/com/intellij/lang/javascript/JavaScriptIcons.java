@@ -12,4 +12,5 @@ public interface JavaScriptIcons
 {
 	public static Icon JavaScript = IconLoader.findIcon("/icons/javaScript.png");
 	public static Icon Json = IconLoader.findIcon("/icons/json.png");
+	public static Icon As = IconLoader.findIcon("/icons/as.png");
 }

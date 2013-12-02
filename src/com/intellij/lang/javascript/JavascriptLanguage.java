@@ -23,15 +23,14 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
 
 /**
- * Created by IntelliJ IDEA.
  * User: max
  * Date: Jan 27, 2005
  * Time: 6:03:49 PM
- * To change this template use File | Settings | File Templates.
  */
 public class JavascriptLanguage extends Language
 {
 	public static final DialectOptionHolder DIALECT_OPTION_HOLDER = new DialectOptionHolder(false, false);
+	public static final JavascriptLanguage INSTANCE = new JavascriptLanguage();
 
 	public JavascriptLanguage()
 	{
@@ -39,6 +38,7 @@ public class JavascriptLanguage extends Language
 
 		SyntaxHighlighterFactory.LANGUAGE_FACTORY.addExplicitExtension(this, new SingleLazyInstanceSyntaxHighlighterFactory()
 		{
+			@Override
 			@NotNull
 			protected SyntaxHighlighter createHighlighter()
 			{
