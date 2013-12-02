@@ -18,7 +18,6 @@ package com.intellij.lang.javascript;
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 
 /**
@@ -49,6 +48,6 @@ public class JavaScriptFileType extends LanguageFileType {
   }
 
   public Icon getIcon() {
-    return AllIcons.FileTypes.AS;
+    return JavaScriptIcons.JavaScript;
   }
 }

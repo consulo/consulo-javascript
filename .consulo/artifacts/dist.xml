@@ -5,8 +5,8 @@
       <element id="directory" name="javascript">
         <element id="directory" name="lib">
           <element id="zip-archive" name="javascript.jar">
-            <element id="module-output" name="javascript" />
-            <element id="module-production-resource-output" name="javascript" />
+            <element id="module-output" name="consulo-javascript" />
+            <element id="module-production-resource-output" name="consulo-javascript" />
             <element id="module-output" name="inspections" />
             <element id="module-production-resource-output" name="inspections" />
             <element id="module-output" name="intentions" />

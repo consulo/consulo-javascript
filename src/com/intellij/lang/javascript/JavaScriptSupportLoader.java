@@ -76,7 +76,7 @@ public class JavaScriptSupportLoader extends FileTypeFactory {
           ECMA_SCRIPT_L4_FILE_EXTENSION2.equals(extension)  ||
           ECMA_SCRIPT_L4_FILE_EXTENSION3.equals(extension)) {
         return ECMA_SCRIPT_L4;
-      } else if (JSON_FILE_EXTENSION.equals(extension)) {
+      } else if (file.getFileType() == JsonFileType.INSTANCE) {
         return JSON;
       } else if (ApplicationManager.getApplication().isUnitTestMode() && GWT_DIALECT.getFileExtension().equals(extension)) {
         return GWT_DIALECT;
@@ -86,8 +86,8 @@ public class JavaScriptSupportLoader extends FileTypeFactory {
   }
 
   public void createFileTypes(final @NotNull FileTypeConsumer consumer) {
-    consumer.consume(JAVASCRIPT, "js;" + ECMA_SCRIPT_L4_FILE_EXTENSION + ";" + ECMA_SCRIPT_L4_FILE_EXTENSION2 + ";" + JSON_FILE_EXTENSION +
-                                 ";" + ECMA_SCRIPT_L4_FILE_EXTENSION3);
+    consumer.consume(JAVASCRIPT, "js;" + ECMA_SCRIPT_L4_FILE_EXTENSION + ";" + ECMA_SCRIPT_L4_FILE_EXTENSION2 + ";" + ECMA_SCRIPT_L4_FILE_EXTENSION3);
+	consumer.consume(JsonFileType.INSTANCE);
   }
 
   public static boolean isFlexMxmFile(final PsiFile file) {
