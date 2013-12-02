@@ -113,8 +113,8 @@
 	</extensions>
 
 	<extensionPoints>
-		<extensionPoint qualifiedName="JavaScript.resolveHelper" interface="com.intellij.lang.javascript.flex.JSResolveHelper"/>
-		<extensionPoint qualifiedName="JavaScript.classInheritorsProvider" interface="com.intellij.lang.javascript.search.JSClassInheritorsProvider"/>
+		<extensionPoint name="resolveHelper" interface="com.intellij.lang.javascript.flex.JSResolveHelper"/>
+		<extensionPoint name="classInheritorsProvider" interface="com.intellij.lang.javascript.search.JSClassInheritorsProvider"/>
 	</extensionPoints>
 
 	<project-components>

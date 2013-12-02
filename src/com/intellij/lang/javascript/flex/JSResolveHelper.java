@@ -1,5 +1,6 @@
 package com.intellij.lang.javascript.flex;
 
+import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
@@ -9,13 +10,12 @@ import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author yole
  */
 public interface JSResolveHelper {
-  ExtensionPointName<JSResolveHelper> EP_NAME = ExtensionPointName.create("JavaScript.resolveHelper");
+  ExtensionPointName<JSResolveHelper> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.javascript.resolveHelper");
 
   // TODO: drop module
   @Nullable
