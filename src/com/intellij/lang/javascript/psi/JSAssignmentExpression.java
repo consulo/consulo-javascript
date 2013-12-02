@@ -22,5 +22,6 @@ package com.intellij.lang.javascript.psi;
  * Time: 7:40:31 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSAssignmentExpression extends JSBinaryExpression {
+public interface JSAssignmentExpression extends JSBinaryExpression
+{
 }

@@ -15,10 +15,13 @@
  */
 package com.intellij.lang.javascript.surroundWith;
 
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.javascript.JSLanguageDialect;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import com.intellij.lang.javascript.psi.util.JSUtils;
-import com.intellij.lang.javascript.JSLanguageDialect;
 import com.intellij.lang.surroundWith.Surrounder;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -26,9 +29,6 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -37,39 +37,44 @@ import org.jetbrains.annotations.Nullable;
  * Time: 16:50:58
  * To change this template use File | Settings | File Templates.
  */
-public abstract class JSStatementSurrounder implements Surrounder {
-  public boolean isApplicable(@NotNull PsiElement[] elements) {
-    return true;
-  }
+public abstract class JSStatementSurrounder implements Surrounder
+{
+	public boolean isApplicable(@NotNull PsiElement[] elements)
+	{
+		return true;
+	}
 
-  @Nullable
-  public TextRange surroundElements(@NotNull Project project, @NotNull Editor editor, @NotNull PsiElement[] elements)
-    throws IncorrectOperationException {
-    final JSLanguageDialect languageDialect = JSUtils.getDialect(elements[0].getContainingFile());
-    ASTNode node = JSChangeUtil.createStatementFromText(
-      project,
-      getStatementTemplate(project, elements[0]), languageDialect
-    );
-    
-    PsiElement container = elements [0].getParent();
-    container.getNode().addChild(node, elements [0].getNode());
-    final ASTNode insertBeforeNode = getInsertBeforeNode(node);
+	@Nullable
+	public TextRange surroundElements(@NotNull Project project, @NotNull Editor editor, @NotNull PsiElement[] elements) throws
+			IncorrectOperationException
+	{
+		final JSLanguageDialect languageDialect = JSUtils.getDialect(elements[0].getContainingFile());
+		ASTNode node = JSChangeUtil.createStatementFromText(project, getStatementTemplate(project, elements[0]), languageDialect);
 
-    for (int i=0; i<elements.length; i++) {
-      final ASTNode childNode = elements[i].getNode();
-      final ASTNode childNodeCopy = childNode.copyElement();
+		PsiElement container = elements[0].getParent();
+		container.getNode().addChild(node, elements[0].getNode());
+		final ASTNode insertBeforeNode = getInsertBeforeNode(node);
 
-      container.getNode().removeChild(childNode);
-      insertBeforeNode.getTreeParent().addChild(childNodeCopy, insertBeforeNode);
-    }
+		for(int i = 0; i < elements.length; i++)
+		{
+			final ASTNode childNode = elements[i].getNode();
+			final ASTNode childNodeCopy = childNode.copyElement();
 
-    final CodeStyleManager csManager = CodeStyleManager.getInstance(project);
-    csManager.reformat(node.getPsi());
+			container.getNode().removeChild(childNode);
+			insertBeforeNode.getTreeParent().addChild(childNodeCopy, insertBeforeNode);
+		}
 
-    return getSurroundSelectionRange(node);
-  }
+		final CodeStyleManager csManager = CodeStyleManager.getInstance(project);
+		csManager.reformat(node.getPsi());
 
-  protected abstract @NonNls String getStatementTemplate(final Project project, PsiElement context);
-  protected abstract ASTNode getInsertBeforeNode(final ASTNode statementNode);
-  protected abstract TextRange getSurroundSelectionRange(final ASTNode statementNode);
+		return getSurroundSelectionRange(node);
+	}
+
+	protected abstract
+	@NonNls
+	String getStatementTemplate(final Project project, PsiElement context);
+
+	protected abstract ASTNode getInsertBeforeNode(final ASTNode statementNode);
+
+	protected abstract TextRange getSurroundSelectionRange(final ASTNode statementNode);
 }

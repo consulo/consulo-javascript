@@ -22,7 +22,9 @@ package com.intellij.lang.javascript.psi;
  * Time: 7:45:31 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSIndexedPropertyAccessExpression extends JSExpression {
-  JSExpression getQualifier();
-  JSExpression getIndexExpression();
+public interface JSIndexedPropertyAccessExpression extends JSExpression
+{
+	JSExpression getQualifier();
+
+	JSExpression getIndexExpression();
 }

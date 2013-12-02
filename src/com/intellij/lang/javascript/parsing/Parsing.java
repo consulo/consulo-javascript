@@ -29,31 +29,40 @@ import com.intellij.psi.tree.IElementType;
  * Time: 7:03:42 PM
  * To change this template use File | Settings | File Templates.
  */
-public class Parsing {
-  public static final Key<JSLanguageDialect> JS_DIALECT_KEY = Key.create("JS_DIALECT");
+public class Parsing
+{
+	public static final Key<JSLanguageDialect> JS_DIALECT_KEY = Key.create("JS_DIALECT");
 
-  protected Parsing() { }
+	protected Parsing()
+	{
+	}
 
-  protected static boolean checkMatches(final PsiBuilder builder, final IElementType token, final String message) {
-    if (builder.getTokenType() == token) {
-      builder.advanceLexer();
-      return true;
-    }
-    else {
-      builder.error(message);
-      return false;
-    }
-  }
+	protected static boolean checkMatches(final PsiBuilder builder, final IElementType token, final String message)
+	{
+		if(builder.getTokenType() == token)
+		{
+			builder.advanceLexer();
+			return true;
+		}
+		else
+		{
+			builder.error(message);
+			return false;
+		}
+	}
 
-  protected static boolean isECMAL4(final PsiBuilder builder) {
-    return builder.getUserData(JS_DIALECT_KEY) == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
-  }
+	protected static boolean isECMAL4(final PsiBuilder builder)
+	{
+		return builder.getUserData(JS_DIALECT_KEY) == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
+	}
 
-  protected static boolean isGwt(final PsiBuilder builder) {
-    return builder.getUserData(JS_DIALECT_KEY) == JavaScriptSupportLoader.GWT_DIALECT;
-  }
+	protected static boolean isGwt(final PsiBuilder builder)
+	{
+		return builder.getUserData(JS_DIALECT_KEY) == JavaScriptSupportLoader.GWT_DIALECT;
+	}
 
-  static boolean isIdentifierToken(final IElementType tokenType) {
-    return JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(tokenType);
-  }
+	static boolean isIdentifierToken(final IElementType tokenType)
+	{
+		return JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(tokenType);
+	}
 }

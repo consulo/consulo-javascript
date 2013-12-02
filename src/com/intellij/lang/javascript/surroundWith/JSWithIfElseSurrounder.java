@@ -26,12 +26,15 @@ import com.intellij.psi.PsiElement;
  * Time: 17:48:14
  * To change this template use File | Settings | File Templates.
  */
-public class JSWithIfElseSurrounder extends JSWithIfSurrounder {
-  public String getTemplateDescription() {
-    return JSBundle.message("javascript.surround.with.if.else");
-  }
+public class JSWithIfElseSurrounder extends JSWithIfSurrounder
+{
+	public String getTemplateDescription()
+	{
+		return JSBundle.message("javascript.surround.with.if.else");
+	}
 
-  protected String getStatementTemplate(final Project project, PsiElement context) {
-    return "if (a) { } else { }";
-  }
+	protected String getStatementTemplate(final Project project, PsiElement context)
+	{
+		return "if (a) { } else { }";
+	}
 }

@@ -18,8 +18,8 @@ package com.intellij.lang.javascript.surroundWith;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSBundle;
 import com.intellij.lang.javascript.psi.JSWhileStatement;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -29,22 +29,27 @@ import com.intellij.psi.PsiElement;
  * Time: 18:03:50
  * To change this template use File | Settings | File Templates.
  */
-public class JSWithWhileSurrounder extends JSStatementSurrounder {
-  public String getTemplateDescription() {
-    return JSBundle.message("javascript.surround.with.while");
-  }
+public class JSWithWhileSurrounder extends JSStatementSurrounder
+{
+	public String getTemplateDescription()
+	{
+		return JSBundle.message("javascript.surround.with.while");
+	}
 
-  protected String getStatementTemplate(final Project project, PsiElement context) {
-    return "while(true) { }";
-  }
+	protected String getStatementTemplate(final Project project, PsiElement context)
+	{
+		return "while(true) { }";
+	}
 
-  protected ASTNode getInsertBeforeNode(ASTNode statementNode) {
-    JSWhileStatement stmt = (JSWhileStatement) statementNode.getPsi();
-    return stmt.getBody().getLastChild().getNode();
-  }
+	protected ASTNode getInsertBeforeNode(ASTNode statementNode)
+	{
+		JSWhileStatement stmt = (JSWhileStatement) statementNode.getPsi();
+		return stmt.getBody().getLastChild().getNode();
+	}
 
-  protected TextRange getSurroundSelectionRange(final ASTNode statementNode) {
-    JSWhileStatement stmt = (JSWhileStatement) statementNode.getPsi();
-    return stmt.getCondition().getTextRange();
-  }
+	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
+	{
+		JSWhileStatement stmt = (JSWhileStatement) statementNode.getPsi();
+		return stmt.getCondition().getTextRange();
+	}
 }

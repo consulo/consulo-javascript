@@ -15,13 +15,13 @@
  */
 package com.intellij.lang.javascript.surroundWith;
 
+import org.jetbrains.annotations.NonNls;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSBundle;
 import com.intellij.lang.javascript.psi.JSIfStatement;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,27 +30,32 @@ import org.jetbrains.annotations.NonNls;
  * Time: 16:33:55
  * To change this template use File | Settings | File Templates.
  */
-public class JSWithIfSurrounder extends JSStatementSurrounder {
-  public String getTemplateDescription() {
-    return JSBundle.message("javascript.surround.with.if");
-  }
+public class JSWithIfSurrounder extends JSStatementSurrounder
+{
+	public String getTemplateDescription()
+	{
+		return JSBundle.message("javascript.surround.with.if");
+	}
 
-  @NonNls
-  protected String getStatementTemplate(final Project project, PsiElement context) {
-    return "if(a) { }";
-  }
+	@NonNls
+	protected String getStatementTemplate(final Project project, PsiElement context)
+	{
+		return "if(a) { }";
+	}
 
-  protected ASTNode getInsertBeforeNode(final ASTNode statementNode) {
-    JSIfStatement stmt = (JSIfStatement) statementNode.getPsi();
-    return stmt.getThen().getNode().getLastChildNode();
-  }
+	protected ASTNode getInsertBeforeNode(final ASTNode statementNode)
+	{
+		JSIfStatement stmt = (JSIfStatement) statementNode.getPsi();
+		return stmt.getThen().getNode().getLastChildNode();
+	}
 
-  protected TextRange getSurroundSelectionRange(final ASTNode statementNode) {
-    JSIfStatement stmt = (JSIfStatement) statementNode.getPsi();
-    ASTNode conditionNode = stmt.getCondition().getNode();
-    int offset = conditionNode.getStartOffset();
-    stmt.getNode().removeChild(conditionNode);
+	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
+	{
+		JSIfStatement stmt = (JSIfStatement) statementNode.getPsi();
+		ASTNode conditionNode = stmt.getCondition().getNode();
+		int offset = conditionNode.getStartOffset();
+		stmt.getNode().removeChild(conditionNode);
 
-    return new TextRange(offset, offset);
-  }
+		return new TextRange(offset, offset);
+	}
 }

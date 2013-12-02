@@ -11,18 +11,22 @@ import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.tree.IFileElementType;
 
-public class JSONParserDefinition extends JavascriptParserDefinition {
-  @NotNull
-  public Lexer createLexer(final Project project, LanguageVersion languageVersion) {
-    return new JSONLexer(new JavaScriptParsingLexer(JavascriptLanguage.DIALECT_OPTION_HOLDER));
-  }
+public class JSONParserDefinition extends JavascriptParserDefinition
+{
+	@NotNull
+	public Lexer createLexer(final Project project, LanguageVersion languageVersion)
+	{
+		return new JSONLexer(new JavaScriptParsingLexer(JavascriptLanguage.DIALECT_OPTION_HOLDER));
+	}
 
-  public IFileElementType getFileNodeType() {
-    return JSElementTypes.JSON_FILE;
-  }
+	public IFileElementType getFileNodeType()
+	{
+		return JSElementTypes.JSON_FILE;
+	}
 
-  @NotNull
-  public PsiParser createParser(final Project project, LanguageVersion languageVersion) {
-    return new JSParser(JavaScriptSupportLoader.JSON);
-  }
+	@NotNull
+	public PsiParser createParser(final Project project, LanguageVersion languageVersion)
+	{
+		return new JSParser(JavaScriptSupportLoader.JSON);
+	}
 }

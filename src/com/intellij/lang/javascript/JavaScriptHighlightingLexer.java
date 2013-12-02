@@ -16,7 +16,11 @@
 package com.intellij.lang.javascript;
 
 import com.intellij.lang.html.HTMLLanguage;
-import com.intellij.lexer.*;
+import com.intellij.lexer.FlexAdapter;
+import com.intellij.lexer.LayeredLexer;
+import com.intellij.lexer.Lexer;
+import com.intellij.lexer.LexerBase;
+import com.intellij.lexer.StringLiteralLexer;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
 import com.intellij.psi.tree.IElementType;
 
@@ -27,85 +31,99 @@ import com.intellij.psi.tree.IElementType;
  * Time: 12:13:05 AM
  * To change this template use File | Settings | File Templates.
  */
-public class JavaScriptHighlightingLexer extends LayeredLexer {
-  public JavaScriptHighlightingLexer(DialectOptionHolder optionHolder) {
-    this(optionHolder, true);
-  }
+public class JavaScriptHighlightingLexer extends LayeredLexer
+{
+	public JavaScriptHighlightingLexer(DialectOptionHolder optionHolder)
+	{
+		this(optionHolder, true);
+	}
 
-  private JavaScriptHighlightingLexer(DialectOptionHolder optionHolder, boolean withEmbeddments) {
-    super(new JSFlexAdapter(new _JavaScriptLexer(true, optionHolder)));
+	private JavaScriptHighlightingLexer(DialectOptionHolder optionHolder, boolean withEmbeddments)
+	{
+		super(new JSFlexAdapter(new _JavaScriptLexer(true, optionHolder)));
 
-    if (withEmbeddments) {
-      registerSelfStoppingLayer(new StringLiteralLexer('\"', JSTokenTypes.STRING_LITERAL,true,"/"),
-                                new IElementType[]{JSTokenTypes.STRING_LITERAL}, IElementType.EMPTY_ARRAY);
+		if(withEmbeddments)
+		{
+			registerSelfStoppingLayer(new StringLiteralLexer('\"', JSTokenTypes.STRING_LITERAL, true, "/"), new IElementType[]{JSTokenTypes.STRING_LITERAL},
+					IElementType.EMPTY_ARRAY);
 
-      registerSelfStoppingLayer(new JavaScriptHighlightingLexer(optionHolder, false),
-                                new IElementType[]{JSTokenTypes.XML_JS_SCRIPT}, IElementType.EMPTY_ARRAY);
+			registerSelfStoppingLayer(new JavaScriptHighlightingLexer(optionHolder, false), new IElementType[]{JSTokenTypes.XML_JS_SCRIPT},
+					IElementType.EMPTY_ARRAY);
 
-      registerSelfStoppingLayer(new StringLiteralLexer('\'', JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL, true,"/"),
-                                new IElementType[]{JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL},
-                                IElementType.EMPTY_ARRAY);
+			registerSelfStoppingLayer(new StringLiteralLexer('\'', JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL, true, "/"),
+					new IElementType[]{JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL}, IElementType.EMPTY_ARRAY);
 
-      final LayeredLexer docLexer = new LayeredLexer(new FlexAdapter(new _JSDocLexer(true)));
-      final Lexer lexer = getHtmlHighlightingLexer();
+			final LayeredLexer docLexer = new LayeredLexer(new FlexAdapter(new _JSDocLexer(true)));
+			final Lexer lexer = getHtmlHighlightingLexer();
 
-      // Force html highlighting lexer not to return tag content type since it causes token type collision in javascript embedded to html
-      docLexer.registerLayer(new LexerBase() {
-        final IElementType tagContentType = getTagContentTokenType();
-
-
-        @Override
-        public void start(final CharSequence buffer, final int startOffset, final int endOffset, final int initialState) {
-          lexer.start(buffer, startOffset, endOffset, initialState);
-        }
-
-        public int getState() {
-          return lexer.getState();
-        }
-
-        public IElementType getTokenType() {
-          final IElementType tokenType = lexer.getTokenType();
-          if (tokenType == tagContentType) return JSTokenTypes.JSDOC_TAG_DATA;
-          return tokenType;
-        }
-
-        public int getTokenStart() {
-          return lexer.getTokenStart();
-        }
-
-        public int getTokenEnd() {
-          return lexer.getTokenEnd();
-        }
-
-        public void advance() {
-          lexer.advance();
-        }
-
-		  @Override
-		  public CharSequence getBufferSequence()
-		  {
-			  return lexer.getBufferSequence();
-		  }
+			// Force html highlighting lexer not to return tag content type since it causes token type collision in javascript embedded to html
+			docLexer.registerLayer(new LexerBase()
+			{
+				final IElementType tagContentType = getTagContentTokenType();
 
 
-        public int getBufferEnd() {
-          return lexer.getBufferEnd();
-        }
-      }, JSDocTokenTypes.DOC_COMMENT_DATA);
-      registerSelfStoppingLayer(docLexer,
-                                new IElementType[]{JSTokenTypes.DOC_COMMENT},
-                                new IElementType[]{JSDocTokenTypes.DOC_COMMENT_END});
+				@Override
+				public void start(final CharSequence buffer, final int startOffset, final int endOffset, final int initialState)
+				{
+					lexer.start(buffer, startOffset, endOffset, initialState);
+				}
 
-    }
-  }
+				public int getState()
+				{
+					return lexer.getState();
+				}
 
-  public static IElementType getTagContentTokenType() {
-    final Lexer highlightingLexer = getHtmlHighlightingLexer();
-    highlightingLexer.start("a",0,1,0);
-    return highlightingLexer.getTokenType();
-  }
+				public IElementType getTokenType()
+				{
+					final IElementType tokenType = lexer.getTokenType();
+					if(tokenType == tagContentType)
+					{
+						return JSTokenTypes.JSDOC_TAG_DATA;
+					}
+					return tokenType;
+				}
 
-  private static Lexer getHtmlHighlightingLexer() {
-    return SyntaxHighlighterFactory.getSyntaxHighlighter(HTMLLanguage.INSTANCE, null, null).getHighlightingLexer();
-  }
+				public int getTokenStart()
+				{
+					return lexer.getTokenStart();
+				}
+
+				public int getTokenEnd()
+				{
+					return lexer.getTokenEnd();
+				}
+
+				public void advance()
+				{
+					lexer.advance();
+				}
+
+				@Override
+				public CharSequence getBufferSequence()
+				{
+					return lexer.getBufferSequence();
+				}
+
+
+				public int getBufferEnd()
+				{
+					return lexer.getBufferEnd();
+				}
+			}, JSDocTokenTypes.DOC_COMMENT_DATA);
+			registerSelfStoppingLayer(docLexer, new IElementType[]{JSTokenTypes.DOC_COMMENT}, new IElementType[]{JSDocTokenTypes.DOC_COMMENT_END});
+
+		}
+	}
+
+	public static IElementType getTagContentTokenType()
+	{
+		final Lexer highlightingLexer = getHtmlHighlightingLexer();
+		highlightingLexer.start("a", 0, 1, 0);
+		return highlightingLexer.getTokenType();
+	}
+
+	private static Lexer getHtmlHighlightingLexer()
+	{
+		return SyntaxHighlighterFactory.getSyntaxHighlighter(HTMLLanguage.INSTANCE, null, null).getHighlightingLexer();
+	}
 }

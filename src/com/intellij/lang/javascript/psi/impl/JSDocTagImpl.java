@@ -36,223 +36,303 @@ import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 
-public class JSDocTagImpl extends JSElementImpl implements JSDocTag {
-  private volatile PsiReference[] myRefs;
-  private volatile long myModificationCount = -1;
+public class JSDocTagImpl extends JSElementImpl implements JSDocTag
+{
+	private volatile PsiReference[] myRefs;
+	private volatile long myModificationCount = -1;
 
-  public JSDocTagImpl(final ASTNode node) {
-    super(node);
-  }
+	public JSDocTagImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  @Override
-  public String getName() {
-    final PsiElement element = findChildByType(JSDocTokenTypes.DOC_TAG_NAME);
-    return element != null ? element.getText().substring(1):null;
-  }
+	@Override
+	public String getName()
+	{
+		final PsiElement element = findChildByType(JSDocTokenTypes.DOC_TAG_NAME);
+		return element != null ? element.getText().substring(1) : null;
+	}
 
-  public PsiElement setName(@NonNls @NotNull final String name) throws IncorrectOperationException {
-    throw new IncorrectOperationException();
-  }
+	public PsiElement setName(@NonNls @NotNull final String name) throws IncorrectOperationException
+	{
+		throw new IncorrectOperationException();
+	}
 
-  @Override
-  public void accept(@NotNull final PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSDocTag(this);
-    } else {
-      visitor.visitElement(this);
-    }
-  }
+	@Override
+	public void accept(@NotNull final PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSDocTag(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 
-  public JSDocTagValue getValue() {
-    return findChildByClass(JSDocTagValue.class);
-  }
+	public JSDocTagValue getValue()
+	{
+		return findChildByClass(JSDocTagValue.class);
+	}
 
-  @NotNull
-  @Override
-  public PsiReference[] getReferences() {
-    final long count = getManager().getModificationTracker().getModificationCount();
+	@NotNull
+	@Override
+	public PsiReference[] getReferences()
+	{
+		final long count = getManager().getModificationTracker().getModificationCount();
 
-    if (count != myModificationCount) {
-      final @NonNls String name = getName();
-      PsiReference[] result = PsiReference.EMPTY_ARRAY;
+		if(count != myModificationCount)
+		{
+			final @NonNls String name = getName();
+			PsiReference[] result = PsiReference.EMPTY_ARRAY;
 
-      if ("param".equals(name)) {
-        final PsiElement data = findChildByType(JSDocTokenTypes.DOC_COMMENT_DATA);
-        if (data != null) {
-          result = new PsiReference[] { new ParamReference(this) };
-        }
-      }
+			if("param".equals(name))
+			{
+				final PsiElement data = findChildByType(JSDocTokenTypes.DOC_COMMENT_DATA);
+				if(data != null)
+				{
+					result = new PsiReference[]{new ParamReference(this)};
+				}
+			}
 
-      myRefs = result;
-      myModificationCount = count;
-    }
+			myRefs = result;
+			myModificationCount = count;
+		}
 
-    return myRefs;
-  }
+		return myRefs;
+	}
 
-  private static class ParamReference implements PsiReference, EmptyResolveMessageProvider {
-    private PsiElement myJsDocTagValue;
-    private TextRange myRange;
+	private static class ParamReference implements PsiReference, EmptyResolveMessageProvider
+	{
+		private PsiElement myJsDocTagValue;
+		private TextRange myRange;
 
-    public ParamReference(final JSDocTagImpl elt) {
-      reset(elt);
-    }
+		public ParamReference(final JSDocTagImpl elt)
+		{
+			reset(elt);
+		}
 
-    private void reset(final JSDocTagImpl elt) {
-      myJsDocTagValue = elt.findChildByType(JSDocTokenTypes.DOC_COMMENT_DATA);
-      int offsetInParent = myJsDocTagValue.getStartOffsetInParent();
-      int textLength;
+		private void reset(final JSDocTagImpl elt)
+		{
+			myJsDocTagValue = elt.findChildByType(JSDocTokenTypes.DOC_COMMENT_DATA);
+			int offsetInParent = myJsDocTagValue.getStartOffsetInParent();
+			int textLength;
 
-      if(myJsDocTagValue.textContains('[')) {
-        final String text = myJsDocTagValue.getText();
-        final int at = text.indexOf('[');
-        offsetInParent += at + 1;
+			if(myJsDocTagValue.textContains('['))
+			{
+				final String text = myJsDocTagValue.getText();
+				final int at = text.indexOf('[');
+				offsetInParent += at + 1;
 
-        // @param [name] | //@param[name="something"] | [obj.prop2(='somestring')?]
-        int rBracketIndex = text.indexOf(']');
-        int eqIndex = text.indexOf('=');
-        int dotIndex = text.indexOf('.');
-        int combinedIndex = text.length();
+				// @param [name] | //@param[name="something"] | [obj.prop2(='somestring')?]
+				int rBracketIndex = text.indexOf(']');
+				int eqIndex = text.indexOf('=');
+				int dotIndex = text.indexOf('.');
+				int combinedIndex = text.length();
 
-        if (rBracketIndex != -1) combinedIndex = rBracketIndex;
-        if (eqIndex != -1) combinedIndex = eqIndex;
-        if (dotIndex != -1 && (eqIndex == -1 || dotIndex < eqIndex)) combinedIndex = dotIndex;
-        textLength = combinedIndex - at - 1;
+				if(rBracketIndex != -1)
+				{
+					combinedIndex = rBracketIndex;
+				}
+				if(eqIndex != -1)
+				{
+					combinedIndex = eqIndex;
+				}
+				if(dotIndex != -1 && (eqIndex == -1 || dotIndex < eqIndex))
+				{
+					combinedIndex = dotIndex;
+				}
+				textLength = combinedIndex - at - 1;
 
-      } else if (myJsDocTagValue.textContains('=')) {
-        textLength = myJsDocTagValue.getText().indexOf('='); // @param name=""
-      } else {
-        if (myJsDocTagValue.textContains('.')) { //@param userInfo.email
-          textLength = myJsDocTagValue.getText().indexOf('.');
-        } else {
-          textLength = myJsDocTagValue.getTextLength();
-        }
-      }
-      myRange = new TextRange(offsetInParent, offsetInParent + textLength);
-    }
+			}
+			else if(myJsDocTagValue.textContains('='))
+			{
+				textLength = myJsDocTagValue.getText().indexOf('='); // @param name=""
+			}
+			else
+			{
+				if(myJsDocTagValue.textContains('.'))
+				{ //@param userInfo.email
+					textLength = myJsDocTagValue.getText().indexOf('.');
+				}
+				else
+				{
+					textLength = myJsDocTagValue.getTextLength();
+				}
+			}
+			myRange = new TextRange(offsetInParent, offsetInParent + textLength);
+		}
 
-    public PsiElement getElement() {
-      return myJsDocTagValue.getParent();
-    }
+		public PsiElement getElement()
+		{
+			return myJsDocTagValue.getParent();
+		}
 
-    public TextRange getRangeInElement() {
-      return myRange;
-    }
+		public TextRange getRangeInElement()
+		{
+			return myRange;
+		}
 
-    public String getCanonicalText() {
-      final int offsetInText = myRange.getStartOffset() - myJsDocTagValue.getStartOffsetInParent();
-      return myJsDocTagValue.getText().substring(offsetInText, offsetInText + myRange.getLength());
-    }
+		public String getCanonicalText()
+		{
+			final int offsetInText = myRange.getStartOffset() - myJsDocTagValue.getStartOffsetInParent();
+			return myJsDocTagValue.getText().substring(offsetInText, offsetInText + myRange.getLength());
+		}
 
-    public PsiElement handleElementRename(final String newElementName) throws IncorrectOperationException {
-      JSDocTag jsDocTag = (JSDocTag)myJsDocTagValue.getParent();
-      final ElementManipulator<JSDocTag> manipulator = ElementManipulators.getManipulator(jsDocTag);
-      jsDocTag = manipulator.handleContentChange(jsDocTag, myRange, newElementName);
-      reset((JSDocTagImpl)jsDocTag);
-      return myJsDocTagValue;
-    }
+		public PsiElement handleElementRename(final String newElementName) throws IncorrectOperationException
+		{
+			JSDocTag jsDocTag = (JSDocTag) myJsDocTagValue.getParent();
+			final ElementManipulator<JSDocTag> manipulator = ElementManipulators.getManipulator(jsDocTag);
+			jsDocTag = manipulator.handleContentChange(jsDocTag, myRange, newElementName);
+			reset((JSDocTagImpl) jsDocTag);
+			return myJsDocTagValue;
+		}
 
-    public PsiElement bindToElement(@NotNull final PsiElement element) throws IncorrectOperationException {
-      return null;
-    }
+		public PsiElement bindToElement(@NotNull final PsiElement element) throws IncorrectOperationException
+		{
+			return null;
+		}
 
-    public boolean isReferenceTo(final PsiElement element) {
-      return element.isEquivalentTo(resolve());
-    }
+		public boolean isReferenceTo(final PsiElement element)
+		{
+			return element.isEquivalentTo(resolve());
+		}
 
-    private static JSParameterList findParameterList(PsiElement elt) {
-      if (elt == null) return null;
-      PsiComment psiComment = PsiTreeUtil.getParentOfType(elt, PsiComment.class);
-      assert psiComment != null;
-      final PsiElement parent = psiComment.getParent();
-      if (parent instanceof PsiComment) psiComment = (PsiComment)parent;
+		private static JSParameterList findParameterList(PsiElement elt)
+		{
+			if(elt == null)
+			{
+				return null;
+			}
+			PsiComment psiComment = PsiTreeUtil.getParentOfType(elt, PsiComment.class);
+			assert psiComment != null;
+			final PsiElement parent = psiComment.getParent();
+			if(parent instanceof PsiComment)
+			{
+				psiComment = (PsiComment) parent;
+			}
 
-      PsiElement next = psiComment.getNextSibling();
-      if (next instanceof PsiWhiteSpace) next = next.getNextSibling();
-      if (next instanceof PsiComment) {
-        next = next.getNextSibling();
-        if (next instanceof PsiWhiteSpace) next = next.getNextSibling();
-      }
+			PsiElement next = psiComment.getNextSibling();
+			if(next instanceof PsiWhiteSpace)
+			{
+				next = next.getNextSibling();
+			}
+			if(next instanceof PsiComment)
+			{
+				next = next.getNextSibling();
+				if(next instanceof PsiWhiteSpace)
+				{
+					next = next.getNextSibling();
+				}
+			}
 
-      if (next instanceof JSExpressionStatement) {
-        final JSExpression expression = ((JSExpressionStatement)next).getExpression();
+			if(next instanceof JSExpressionStatement)
+			{
+				final JSExpression expression = ((JSExpressionStatement) next).getExpression();
 
-        if (expression instanceof JSAssignmentExpression) {
-          JSExpression roperand = ((JSAssignmentExpression)expression).getROperand();
-          if (roperand instanceof JSNewExpression) {
-            roperand = ((JSNewExpression)roperand).getMethodExpression();
-          }
+				if(expression instanceof JSAssignmentExpression)
+				{
+					JSExpression roperand = ((JSAssignmentExpression) expression).getROperand();
+					if(roperand instanceof JSNewExpression)
+					{
+						roperand = ((JSNewExpression) roperand).getMethodExpression();
+					}
 
-          if (roperand instanceof JSFunctionExpression) {
-            next = roperand;
-          }
-        }
-      } else if (next instanceof JSProperty) {
-        next = ((JSProperty)next).getValue();
-      } else if (next instanceof JSVarStatement) {
-        JSVariable[] variables = ((JSVarStatement)next).getVariables();
-        if (variables.length > 0) {
-          JSExpression initializer = variables[0].getInitializer();
-          if (initializer instanceof JSFunctionExpression) {
-            next = initializer;
-          }
-        }
-      } else if (next != null) {
-        if (next instanceof JSVariable) {
-          JSExpression expression = ((JSVariable) next).getInitializer();
-          if (expression instanceof JSFunctionExpression) {
-            next = expression;
-          }
-        }
-        PsiElement nextParent = next.getParent();
-        if (nextParent instanceof JSFunction) {
-          next = nextParent;
-        }
-      }
-      if (next instanceof JSFunction) {
-        return ((JSFunction)next).getParameterList();
-      }
+					if(roperand instanceof JSFunctionExpression)
+					{
+						next = roperand;
+					}
+				}
+			}
+			else if(next instanceof JSProperty)
+			{
+				next = ((JSProperty) next).getValue();
+			}
+			else if(next instanceof JSVarStatement)
+			{
+				JSVariable[] variables = ((JSVarStatement) next).getVariables();
+				if(variables.length > 0)
+				{
+					JSExpression initializer = variables[0].getInitializer();
+					if(initializer instanceof JSFunctionExpression)
+					{
+						next = initializer;
+					}
+				}
+			}
+			else if(next != null)
+			{
+				if(next instanceof JSVariable)
+				{
+					JSExpression expression = ((JSVariable) next).getInitializer();
+					if(expression instanceof JSFunctionExpression)
+					{
+						next = expression;
+					}
+				}
+				PsiElement nextParent = next.getParent();
+				if(nextParent instanceof JSFunction)
+				{
+					next = nextParent;
+				}
+			}
+			if(next instanceof JSFunction)
+			{
+				return ((JSFunction) next).getParameterList();
+			}
 
-      return null;
-    }
+			return null;
+		}
 
-    public PsiElement resolve() {
-      final JSParameterList parameterList = findParameterList(getElement());
+		public PsiElement resolve()
+		{
+			final JSParameterList parameterList = findParameterList(getElement());
 
-      if (parameterList != null) {
-        final String name = getCanonicalText();
-        for(JSParameter param:parameterList.getParameters()) {
-          if (name.equals(param.getName())) return param;
-        }
-      }
+			if(parameterList != null)
+			{
+				final String name = getCanonicalText();
+				for(JSParameter param : parameterList.getParameters())
+				{
+					if(name.equals(param.getName()))
+					{
+						return param;
+					}
+				}
+			}
 
-      return null;
-    }
+			return null;
+		}
 
-    public Object[] getVariants() {
-      final PsiElement elt = getElement();
-      final JSParameterList parameterList = findParameterList(PsiUtilBase.getOriginalElement(elt, elt.getClass()));
+		public Object[] getVariants()
+		{
+			final PsiElement elt = getElement();
+			final JSParameterList parameterList = findParameterList(PsiUtilBase.getOriginalElement(elt, elt.getClass()));
 
-      if (parameterList != null) {
-        final JSParameter[] parameters = parameterList.getParameters();
-        final Object[] result = new Object[parameters.length];
+			if(parameterList != null)
+			{
+				final JSParameter[] parameters = parameterList.getParameters();
+				final Object[] result = new Object[parameters.length];
 
-        for(int i = 0; i < parameters.length; ++i) {
-          result[i] = JSLookupUtil.createPrioritizedLookupItem(parameters[i], parameters[i].getName(), 3);
-        }
-        return result;
-      }
+				for(int i = 0; i < parameters.length; ++i)
+				{
+					result[i] = JSLookupUtil.createPrioritizedLookupItem(parameters[i], parameters[i].getName(), 3);
+				}
+				return result;
+			}
 
-      return ArrayUtil.EMPTY_OBJECT_ARRAY;
-    }
+			return ArrayUtil.EMPTY_OBJECT_ARRAY;
+		}
 
-    public boolean isSoft() {
-      return false;
-    }
+		public boolean isSoft()
+		{
+			return false;
+		}
 
-    public String getUnresolvedMessagePattern() {
-      return JSBundle.message("javascript.validation.message.incorrect.parameter.name");
-    }
-  }
+		public String getUnresolvedMessagePattern()
+		{
+			return JSBundle.message("javascript.validation.message.incorrect.parameter.name");
+		}
+	}
 
 }

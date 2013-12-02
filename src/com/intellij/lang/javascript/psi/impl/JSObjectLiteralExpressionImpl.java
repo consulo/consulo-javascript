@@ -37,43 +37,60 @@ import com.intellij.psi.tree.TokenSet;
  * Time: 11:36:30 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSObjectLiteralExpressionImpl extends JSExpressionImpl implements JSObjectLiteralExpression {
-  private static final TokenSet PROPERTIES_FILTER = TokenSet.create(JSElementTypes.PROPERTY);
+public class JSObjectLiteralExpressionImpl extends JSExpressionImpl implements JSObjectLiteralExpression
+{
+	private static final TokenSet PROPERTIES_FILTER = TokenSet.create(JSElementTypes.PROPERTY);
 
-  public JSObjectLiteralExpressionImpl(final ASTNode node) {
-    super(node);
-  }
+	public JSObjectLiteralExpressionImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSProperty[] getProperties() {
-    final ASTNode[] nodes = getNode().getChildren(PROPERTIES_FILTER);
-    final JSProperty[] properties = new JSProperty[nodes.length];
-    for (int i = 0; i < properties.length; i++) {
-      properties[i] = (JSProperty)nodes[i].getPsi();
-    }
-    return properties;
-  }
+	public JSProperty[] getProperties()
+	{
+		final ASTNode[] nodes = getNode().getChildren(PROPERTIES_FILTER);
+		final JSProperty[] properties = new JSProperty[nodes.length];
+		for(int i = 0; i < properties.length; i++)
+		{
+			properties[i] = (JSProperty) nodes[i].getPsi();
+		}
+		return properties;
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSObjectLiteralExpression(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSObjectLiteralExpression(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 
-  public Icon getIcon(int flags) {
-    return AllIcons.Nodes.Class;
-  }
+	public Icon getIcon(int flags)
+	{
+		return AllIcons.Nodes.Class;
+	}
 
-  public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState state, final PsiElement lastParent, @NotNull final PsiElement place) {
-    if (lastParent == null || !(place instanceof JSProperty)) return true;
-    final JSProperty[] props = getProperties();
+	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState state, final PsiElement lastParent,
+			@NotNull final PsiElement place)
+	{
+		if(lastParent == null || !(place instanceof JSProperty))
+		{
+			return true;
+		}
+		final JSProperty[] props = getProperties();
 
-    for (JSProperty property : props) {
-      if (!processor.execute(property, state)) return false;
-    }
+		for(JSProperty property : props)
+		{
+			if(!processor.execute(property, state))
+			{
+				return false;
+			}
+		}
 
-    return true;
-  }
+		return true;
+	}
 }

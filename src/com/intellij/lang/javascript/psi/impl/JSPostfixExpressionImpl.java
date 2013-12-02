@@ -15,6 +15,7 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -23,7 +24,6 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSPostfixExpression;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,27 +32,34 @@ import org.jetbrains.annotations.NotNull;
  * Time: 11:52:13 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSPostfixExpressionImpl extends JSExpressionImpl implements JSPostfixExpression {
-  public JSPostfixExpressionImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSPostfixExpressionImpl extends JSExpressionImpl implements JSPostfixExpression
+{
+	public JSPostfixExpressionImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSExpression getExpression() {
-    final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
-    return node != null ? (JSExpression)node.getPsi() : null;
-  }
+	public JSExpression getExpression()
+	{
+		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
+		return node != null ? (JSExpression) node.getPsi() : null;
+	}
 
-  public IElementType getOperationSign() {
-    final ASTNode[] nodes = getNode().getChildren(JSTokenTypes.OPERATIONS);
-    return nodes.length == 1 ? nodes[0].getElementType() : null;
-  }
+	public IElementType getOperationSign()
+	{
+		final ASTNode[] nodes = getNode().getChildren(JSTokenTypes.OPERATIONS);
+		return nodes.length == 1 ? nodes[0].getElementType() : null;
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSPostfixExpression(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSPostfixExpression(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 }

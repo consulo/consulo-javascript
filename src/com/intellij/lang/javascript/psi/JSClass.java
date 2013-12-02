@@ -15,35 +15,41 @@
  */
 package com.intellij.lang.javascript.psi;
 
+import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.javascript.psi.stubs.JSClassStub;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.StubBasedPsiElement;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @by Maxim.Mossienko
  */
-public interface JSClass extends JSQualifiedNamedElement, JSSourceElement, JSAttributeListOwner, Navigatable, StubBasedPsiElement<JSClassStub> {
-  JSClass[] EMPTY_ARRAY = new JSClass[0];
+public interface JSClass extends JSQualifiedNamedElement, JSSourceElement, JSAttributeListOwner, Navigatable, StubBasedPsiElement<JSClassStub>
+{
+	JSClass[] EMPTY_ARRAY = new JSClass[0];
 
-  @Nullable JSReferenceList getExtendsList();
-  @Nullable JSReferenceList getImplementsList();
+	@Nullable
+	JSReferenceList getExtendsList();
 
-  boolean isInterface();
+	@Nullable
+	JSReferenceList getImplementsList();
 
-  JSClass[] getSuperClasses();
+	boolean isInterface();
 
-  JSFunction[] getFunctions();
-  JSVariable[] getFields();
+	JSClass[] getSuperClasses();
 
-  JSFunction findFunctionByName(final String name);
+	JSFunction[] getFunctions();
 
-  JSFunction findFunctionByNameAndKind(final String name, JSFunction.FunctionKind kind);
-  JSVariable findFieldByName(final String name);
+	JSVariable[] getFields();
 
-  JSClass[] getSupers();
+	JSFunction findFunctionByName(final String name);
 
-  JSClass[] getImplementedInterfaces();
+	JSFunction findFunctionByNameAndKind(final String name, JSFunction.FunctionKind kind);
 
-  boolean isDeprecated();
+	JSVariable findFieldByName(final String name);
+
+	JSClass[] getSupers();
+
+	JSClass[] getImplementedInterfaces();
+
+	boolean isDeprecated();
 }

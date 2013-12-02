@@ -15,17 +15,17 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSLabeledStatement;
-import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.JSNamedElement;
+import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,56 +34,70 @@ import org.jetbrains.annotations.NotNull;
  * Time: 9:20:04 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSLabeledStatementImpl extends JSStatementImpl implements JSLabeledStatement, JSNamedElement {
-  public JSLabeledStatementImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSLabeledStatementImpl extends JSStatementImpl implements JSLabeledStatement, JSNamedElement
+{
+	public JSLabeledStatementImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public String getLabel() {
-    return findNameIdentifier().getText();
-  }
+	public String getLabel()
+	{
+		return findNameIdentifier().getText();
+	}
 
-  public ASTNode findNameIdentifier() {
-    return getNode().findChildByType(JSTokenTypes.IDENTIFIER);
-  }
+	public ASTNode findNameIdentifier()
+	{
+		return getNode().findChildByType(JSTokenTypes.IDENTIFIER);
+	}
 
-  public PsiElement getLabelIdentifier() {
-    return findNameIdentifier().getPsi();
-  }
+	public PsiElement getLabelIdentifier()
+	{
+		return findNameIdentifier().getPsi();
+	}
 
-  public JSStatement getStatement() {
-    final ASTNode node = getNode().findChildByType(JSElementTypes.STATEMENTS);
-    return node != null ? (JSStatement)node.getPsi() : null;
-  }
+	public JSStatement getStatement()
+	{
+		final ASTNode node = getNode().findChildByType(JSElementTypes.STATEMENTS);
+		return node != null ? (JSStatement) node.getPsi() : null;
+	}
 
-  public JSStatement unlabel() {
-    throw new UnsupportedOperationException("TODO: implement");
-  }
+	public JSStatement unlabel()
+	{
+		throw new UnsupportedOperationException("TODO: implement");
+	}
 
-  public JSLabeledStatement setLabel(String label) {
-    throw new UnsupportedOperationException("TODO: implement");
-  }
+	public JSLabeledStatement setLabel(String label)
+	{
+		throw new UnsupportedOperationException("TODO: implement");
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSLabeledStatement(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSLabeledStatement(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 
-  public String getName() {
-    return getLabel();
-  }
+	public String getName()
+	{
+		return getLabel();
+	}
 
-  public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
-    JSChangeUtil.doIdentifierReplacement(this, getLabelIdentifier(), name);
-    return this;
-  }
+	public PsiElement setName(@NotNull String name) throws IncorrectOperationException
+	{
+		JSChangeUtil.doIdentifierReplacement(this, getLabelIdentifier(), name);
+		return this;
+	}
 
-  public PsiElement getNameIdentifier() {
-    final ASTNode node = findNameIdentifier();
-    return node != null ? node.getPsi():null;
-  }
+	public PsiElement getNameIdentifier()
+	{
+		final ASTNode node = findNameIdentifier();
+		return node != null ? node.getPsi() : null;
+	}
 }

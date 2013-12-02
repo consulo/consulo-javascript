@@ -16,8 +16,8 @@
 package com.intellij.lang.javascript.surroundWith;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -27,21 +27,26 @@ import com.intellij.psi.PsiElement;
  * Time: 14:15:25
  * To change this template use File | Settings | File Templates.
  */
-public class JSWithBlockSurrounder extends JSStatementSurrounder {
-  public String getTemplateDescription() {
-    return "{ }";
-  }
+public class JSWithBlockSurrounder extends JSStatementSurrounder
+{
+	public String getTemplateDescription()
+	{
+		return "{ }";
+	}
 
-  protected String getStatementTemplate(final Project project, PsiElement context) {
-    return "{ }";
-  }
+	protected String getStatementTemplate(final Project project, PsiElement context)
+	{
+		return "{ }";
+	}
 
-  protected ASTNode getInsertBeforeNode(final ASTNode statementNode) {
-    return statementNode.getLastChildNode();
-  }
+	protected ASTNode getInsertBeforeNode(final ASTNode statementNode)
+	{
+		return statementNode.getLastChildNode();
+	}
 
-  protected TextRange getSurroundSelectionRange(final ASTNode statementNode) {
-    int endOffset = statementNode.getTextRange().getEndOffset();
-    return new TextRange(endOffset, endOffset);
-  }
+	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
+	{
+		int endOffset = statementNode.getTextRange().getEndOffset();
+		return new TextRange(endOffset, endOffset);
+	}
 }

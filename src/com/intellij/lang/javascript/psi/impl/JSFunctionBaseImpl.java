@@ -15,22 +15,30 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavascriptLanguage;
-import com.intellij.lang.javascript.psi.*;
-import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
+import com.intellij.lang.javascript.psi.JSAttributeList;
+import com.intellij.lang.javascript.psi.JSClass;
+import com.intellij.lang.javascript.psi.JSElement;
+import com.intellij.lang.javascript.psi.JSElementVisitor;
+import com.intellij.lang.javascript.psi.JSFunction;
+import com.intellij.lang.javascript.psi.JSParameter;
+import com.intellij.lang.javascript.psi.JSParameterList;
+import com.intellij.lang.javascript.psi.JSReferenceExpression;
+import com.intellij.lang.javascript.psi.JSSourceElement;
 import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
+import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.stubs.JSFunctionStubBase;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -38,209 +46,288 @@ import org.jetbrains.annotations.NotNull;
  * Date: Jan 30, 2005
  * Time: 8:25:27 PM
  */
-abstract class JSFunctionBaseImpl<T extends JSFunctionStubBase<T2>,T2 extends JSFunction> extends JSStubElementImpl<T> implements JSFunction {
-  private boolean referencesArgumentsCalculated;
-  private boolean referencesArguments;
+abstract class JSFunctionBaseImpl<T extends JSFunctionStubBase<T2>, T2 extends JSFunction> extends JSStubElementImpl<T> implements JSFunction
+{
+	private boolean referencesArgumentsCalculated;
+	private boolean referencesArguments;
 
-  public JSFunctionBaseImpl(final ASTNode node) {
-    super(node);
-  }
+	public JSFunctionBaseImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSFunctionBaseImpl(final T stub, IStubElementType type) {
-    super(stub, type);
-  }
+	public JSFunctionBaseImpl(final T stub, IStubElementType type)
+	{
+		super(stub, type);
+	}
 
-  @Override
-  public void subtreeChanged() {
-    super.subtreeChanged();
-    referencesArgumentsCalculated = false;
-    referencesArguments = false;
-  }
+	@Override
+	public void subtreeChanged()
+	{
+		super.subtreeChanged();
+		referencesArgumentsCalculated = false;
+		referencesArguments = false;
+	}
 
-  public JSParameterList getParameterList() {
-    return getStubOrPsiChild(JSElementTypes.PARAMETER_LIST);
-  }
+	public JSParameterList getParameterList()
+	{
+		return getStubOrPsiChild(JSElementTypes.PARAMETER_LIST);
+	}
 
-  public JSSourceElement[] getBody() {
-    final ASTNode[] children = getNode().getChildren(JSElementTypes.SOURCE_ELEMENTS);
-    if (children.length == 0) return JSSourceElement.EMPTY_ARRAY;
-    JSSourceElement[] result = new JSSourceElement[children.length];
-    for (int i = 0; i < children.length; i++) {
-      result[i] = (JSSourceElement)children[i].getPsi();
-    }
-    return result;
-  }
+	public JSSourceElement[] getBody()
+	{
+		final ASTNode[] children = getNode().getChildren(JSElementTypes.SOURCE_ELEMENTS);
+		if(children.length == 0)
+		{
+			return JSSourceElement.EMPTY_ARRAY;
+		}
+		JSSourceElement[] result = new JSSourceElement[children.length];
+		for(int i = 0; i < children.length; i++)
+		{
+			result[i] = (JSSourceElement) children[i].getPsi();
+		}
+		return result;
+	}
 
-  public String getReturnTypeString() {
-    final T stub = getStub();
-    if (stub != null) return stub.getReturnTypeString();
-    return JSPsiImplUtils.getType(this);
-  }
+	public String getReturnTypeString()
+	{
+		final T stub = getStub();
+		if(stub != null)
+		{
+			return stub.getReturnTypeString();
+		}
+		return JSPsiImplUtils.getType(this);
+	}
 
-  public PsiElement getReturnTypeElement() {
-    ASTNode node = JSPsiImplUtils.getTypeExpressionFromDeclaration(this);
-    return node != null ? node.getPsi():null;
-  }
+	public PsiElement getReturnTypeElement()
+	{
+		ASTNode node = JSPsiImplUtils.getTypeExpressionFromDeclaration(this);
+		return node != null ? node.getPsi() : null;
+	}
 
-  public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
-    final boolean isConstructor = isConstructor();
-    final ASTNode newNameElement = createNameIdentifier(name);
-    final ASTNode nameIdentifier = findNameIdentifier();
-    nameIdentifier.getTreeParent().replaceChild(nameIdentifier, newNameElement);
+	public PsiElement setName(@NotNull String name) throws IncorrectOperationException
+	{
+		final boolean isConstructor = isConstructor();
+		final ASTNode newNameElement = createNameIdentifier(name);
+		final ASTNode nameIdentifier = findNameIdentifier();
+		nameIdentifier.getTreeParent().replaceChild(nameIdentifier, newNameElement);
 
-    if (isConstructor) {
-      ((JSClass)getParent()).setName(name);
-    }
-    return this;
-  }
+		if(isConstructor)
+		{
+			((JSClass) getParent()).setName(name);
+		}
+		return this;
+	}
 
-  protected ASTNode createNameIdentifier(final String name) {
-    return JSChangeUtil.createExpressionFromText(getProject(), name);
-  }
+	protected ASTNode createNameIdentifier(final String name)
+	{
+		return JSChangeUtil.createExpressionFromText(getProject(), name);
+	}
 
-  public String getName() {
-    final JSFunctionStubBase stub = getStub();
-    if (stub != null) return stub.getName();
-    final ASTNode name = findNameIdentifier();
+	public String getName()
+	{
+		final JSFunctionStubBase stub = getStub();
+		if(stub != null)
+		{
+			return stub.getName();
+		}
+		final ASTNode name = findNameIdentifier();
 
-    if (name != null) {
-      final PsiElement psi = name.getPsi();
-      if (psi instanceof JSReferenceExpression) {
-        return ((JSReferenceExpression)psi).getReferencedName();
-      } else {
-        return name.getText();
-      }
-    }
-    return null;
-  }
+		if(name != null)
+		{
+			final PsiElement psi = name.getPsi();
+			if(psi instanceof JSReferenceExpression)
+			{
+				return ((JSReferenceExpression) psi).getReferencedName();
+			}
+			else
+			{
+				return name.getText();
+			}
+		}
+		return null;
+	}
 
-  public ASTNode findNameIdentifier() {
-    final ASTNode myNode = getNode();
-    ASTNode astNode = myNode.findChildByType(JSTokenTypes.FUNCTION_KEYWORD);
+	public ASTNode findNameIdentifier()
+	{
+		final ASTNode myNode = getNode();
+		ASTNode astNode = myNode.findChildByType(JSTokenTypes.FUNCTION_KEYWORD);
 
-    if (astNode != null) {
-      astNode = advance(astNode);
-    } else {
-      astNode = myNode.findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
-    }
+		if(astNode != null)
+		{
+			astNode = advance(astNode);
+		}
+		else
+		{
+			astNode = myNode.findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
+		}
 
-    IElementType type = astNode != null ? astNode.getElementType():null;
-    ASTNode prevAstNode = null;
-    
-    if (type == JSTokenTypes.GET_KEYWORD || type == JSTokenTypes.SET_KEYWORD) {
-      prevAstNode = astNode;
-      astNode = advance(astNode);
-      type = astNode.getElementType();
-    }
+		IElementType type = astNode != null ? astNode.getElementType() : null;
+		ASTNode prevAstNode = null;
 
-    if (JSVariableBaseImpl.IDENTIFIER_TOKENS_SET.contains(type)) return astNode;
-    if (prevAstNode != null) {
-      return prevAstNode;
-    }
+		if(type == JSTokenTypes.GET_KEYWORD || type == JSTokenTypes.SET_KEYWORD)
+		{
+			prevAstNode = astNode;
+			astNode = advance(astNode);
+			type = astNode.getElementType();
+		}
 
-    return null;
-  }
+		if(JSVariableBaseImpl.IDENTIFIER_TOKENS_SET.contains(type))
+		{
+			return astNode;
+		}
+		if(prevAstNode != null)
+		{
+			return prevAstNode;
+		}
 
-  private static ASTNode advance(ASTNode astNode) {
-    astNode = astNode != null ? astNode.getTreeNext():null;
+		return null;
+	}
 
-    if (astNode != null && astNode.getElementType() == JSTokenTypes.WHITE_SPACE) {
-      astNode = astNode.getTreeNext();
-    }
-    return astNode;
-  }
+	private static ASTNode advance(ASTNode astNode)
+	{
+		astNode = astNode != null ? astNode.getTreeNext() : null;
 
-  public int getTextOffset() {
-    final ASTNode name = findNameIdentifier();
-    return name != null ? name.getStartOffset() : super.getTextOffset();
-  }
+		if(astNode != null && astNode.getElementType() == JSTokenTypes.WHITE_SPACE)
+		{
+			astNode = astNode.getTreeNext();
+		}
+		return astNode;
+	}
 
-  public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-                                     @NotNull ResolveState state,
-                                     PsiElement lastParent,
-                                     @NotNull PsiElement place) {
-    if (lastParent != null && lastParent.getParent() == this) {
-      if (place instanceof JSReferenceExpression) {
-        boolean b = JSImportHandlingUtil.tryResolveImports(processor, this, place);
-        if (!b || JSResolveUtil.isExprInStrictTypeContext((JSReferenceExpression)place)) {
-          return b;
-        }
-      }
+	public int getTextOffset()
+	{
+		final ASTNode name = findNameIdentifier();
+		return name != null ? name.getStartOffset() : super.getTextOffset();
+	}
 
-      final JSParameter[] params = getParameterList().getParameters();
-      for (JSParameter param : params) {
-        if (!processor.execute(param, state)) return false;
-      }
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
+			@NotNull PsiElement place)
+	{
+		if(lastParent != null && lastParent.getParent() == this)
+		{
+			if(place instanceof JSReferenceExpression)
+			{
+				boolean b = JSImportHandlingUtil.tryResolveImports(processor, this, place);
+				if(!b || JSResolveUtil.isExprInStrictTypeContext((JSReferenceExpression) place))
+				{
+					return b;
+				}
+			}
 
-      boolean b = JSResolveUtil.processDeclarationsInScope(this, processor, state, lastParent, place);
-      if (b) processor.handleEvent(PsiScopeProcessor.Event.SET_DECLARATION_HOLDER, this);
-      return b;
-    }
+			final JSParameter[] params = getParameterList().getParameters();
+			for(JSParameter param : params)
+			{
+				if(!processor.execute(param, state))
+				{
+					return false;
+				}
+			}
 
-    return processor.execute(this, state);
-  }
+			boolean b = JSResolveUtil.processDeclarationsInScope(this, processor, state, lastParent, place);
+			if(b)
+			{
+				processor.handleEvent(PsiScopeProcessor.Event.SET_DECLARATION_HOLDER, this);
+			}
+			return b;
+		}
 
-  @Override
-  public PsiElement addBefore(@NotNull final PsiElement element, final PsiElement anchor) throws IncorrectOperationException {
-    if (anchor == getFirstChild() && element instanceof JSAttributeList && anchor.getNode().getElementType() == JSTokenTypes.FUNCTION_KEYWORD) {
-      return JSChangeUtil.doDoAddBefore(this, element, anchor);
-    }
-    return super.addBefore(element, anchor);
-  }
+		return processor.execute(this, state);
+	}
 
-  public FunctionKind getKind() {
-    if (isGetProperty()) return FunctionKind.GETTER;
-    if (isSetProperty()) return FunctionKind.SETTER;
-    if (isConstructor()) return FunctionKind.CONSTRUCTOR;
-    return FunctionKind.SIMPLE;
-  }
+	@Override
+	public PsiElement addBefore(@NotNull final PsiElement element, final PsiElement anchor) throws IncorrectOperationException
+	{
+		if(anchor == getFirstChild() && element instanceof JSAttributeList && anchor.getNode().getElementType() == JSTokenTypes.FUNCTION_KEYWORD)
+		{
+			return JSChangeUtil.doDoAddBefore(this, element, anchor);
+		}
+		return super.addBefore(element, anchor);
+	}
 
-  public boolean isDeprecated() {
-    final T stub = getStub();
-    if (stub != null) return stub.isDeprecated();
-    return JSDocumentationUtils.calculateDeprecated(this);
-  }
+	public FunctionKind getKind()
+	{
+		if(isGetProperty())
+		{
+			return FunctionKind.GETTER;
+		}
+		if(isSetProperty())
+		{
+			return FunctionKind.SETTER;
+		}
+		if(isConstructor())
+		{
+			return FunctionKind.CONSTRUCTOR;
+		}
+		return FunctionKind.SIMPLE;
+	}
 
-  public boolean isReferencesArguments() {
-    final T stub = getStub();
-    if (stub != null) return stub.isReferencesArguments();
+	public boolean isDeprecated()
+	{
+		final T stub = getStub();
+		if(stub != null)
+		{
+			return stub.isDeprecated();
+		}
+		return JSDocumentationUtils.calculateDeprecated(this);
+	}
 
-    if (!referencesArgumentsCalculated) {
-      acceptChildren(new JSElementVisitor() {
-        boolean continueVisiting = true;
+	public boolean isReferencesArguments()
+	{
+		final T stub = getStub();
+		if(stub != null)
+		{
+			return stub.isReferencesArguments();
+		}
 
-        public void visitJSReferenceExpression(final JSReferenceExpression node) {
-          if (isInJS(node) && node.getQualifier() == null) {
-            if ("arguments".equals(node.getText())) {
-              referencesArguments = true;
-              continueVisiting = false;
-              return;
-            }
-          }
-          super.visitJSReferenceExpression(node);
-        }
+		if(!referencesArgumentsCalculated)
+		{
+			acceptChildren(new JSElementVisitor()
+			{
+				boolean continueVisiting = true;
 
-        public void visitJSElement(final JSElement node) {
-          if (continueVisiting) node.acceptChildren(this);
-        }
-      });
+				public void visitJSReferenceExpression(final JSReferenceExpression node)
+				{
+					if(isInJS(node) && node.getQualifier() == null)
+					{
+						if("arguments".equals(node.getText()))
+						{
+							referencesArguments = true;
+							continueVisiting = false;
+							return;
+						}
+					}
+					super.visitJSReferenceExpression(node);
+				}
 
-      referencesArgumentsCalculated=true;
-    }
+				public void visitJSElement(final JSElement node)
+				{
+					if(continueVisiting)
+					{
+						node.acceptChildren(this);
+					}
+				}
+			});
 
-    return referencesArguments;
-  }
+			referencesArgumentsCalculated = true;
+		}
 
-  private static boolean isInJS(final JSReferenceExpression node) {
-    final PsiElement parent = node.getParent();
-    if (parent != null && !(parent.getLanguage() instanceof JavascriptLanguage)) {
-      return false;
-    }
-    return true;
-  }
+		return referencesArguments;
+	}
 
-  public PsiElement getNameIdentifier() {
-    final ASTNode node = findNameIdentifier();
-    return node != null ? node.getPsi():null;
-  }
+	private static boolean isInJS(final JSReferenceExpression node)
+	{
+		final PsiElement parent = node.getParent();
+		if(parent != null && !(parent.getLanguage() instanceof JavascriptLanguage))
+		{
+			return false;
+		}
+		return true;
+	}
+
+	public PsiElement getNameIdentifier()
+	{
+		final ASTNode node = findNameIdentifier();
+		return node != null ? node.getPsi() : null;
+	}
 }

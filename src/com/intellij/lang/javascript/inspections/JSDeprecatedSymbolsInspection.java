@@ -16,58 +16,68 @@
 
 package com.intellij.lang.javascript.inspections;
 
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.javascript.JSBundle;
 import com.intellij.lang.javascript.psi.JSAssignmentExpression;
 import com.intellij.lang.javascript.psi.JSDefinitionExpression;
-import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
+import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveResult;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @by Maxim.Mossienko
  */
-public class JSDeprecatedSymbolsInspection extends JSInspection {
-  @NonNls private static final String SHORT_NAME = "JSDeprecatedSymbols";
+public class JSDeprecatedSymbolsInspection extends JSInspection
+{
+	@NonNls
+	private static final String SHORT_NAME = "JSDeprecatedSymbols";
 
-  @NotNull
-  public String getGroupDisplayName() {
-    return JSBundle.message("js.inspection.group.name");
-  }
+	@NotNull
+	public String getGroupDisplayName()
+	{
+		return JSBundle.message("js.inspection.group.name");
+	}
 
-  @NotNull
-  public String getDisplayName() {
-    return JSBundle.message("js.deprecated.symbols.inspection.name");
-  }
+	@NotNull
+	public String getDisplayName()
+	{
+		return JSBundle.message("js.deprecated.symbols.inspection.name");
+	}
 
-  @NotNull
-  @NonNls
-  public String getShortName() {
-    return SHORT_NAME;
-  }
+	@NotNull
+	@NonNls
+	public String getShortName()
+	{
+		return SHORT_NAME;
+	}
 
-  protected JSElementVisitor createVisitor(final ProblemsHolder holder) {
-    return new JSElementVisitor() {
-      @Override public void visitJSReferenceExpression(final JSReferenceExpression node) {
-        for(ResolveResult r: node.multiResolve(false)) {
-          final PsiElement element = r.getElement();
-          if ((element instanceof JSDefinitionExpression && element.getParent() instanceof JSAssignmentExpression) ||
-              element == node.getParent()
-              ) continue;
-          if (JSDocumentationUtils.isDeprecated(element)) {
-            holder.registerProblem(node.getReferenceNameElement(),
-                                   JSBundle.message("javascript.deprecated.symbol.used.name.message"),
-                                   ProblemHighlightType.LIKE_DEPRECATED
-                                  );
-            break;
-          }
-        }
-      }
-    };
-  }
+	protected JSElementVisitor createVisitor(final ProblemsHolder holder)
+	{
+		return new JSElementVisitor()
+		{
+			@Override
+			public void visitJSReferenceExpression(final JSReferenceExpression node)
+			{
+				for(ResolveResult r : node.multiResolve(false))
+				{
+					final PsiElement element = r.getElement();
+					if((element instanceof JSDefinitionExpression && element.getParent() instanceof JSAssignmentExpression) || element == node.getParent())
+					{
+						continue;
+					}
+					if(JSDocumentationUtils.isDeprecated(element))
+					{
+						holder.registerProblem(node.getReferenceNameElement(), JSBundle.message("javascript.deprecated.symbol.used.name.message"),
+								ProblemHighlightType.LIKE_DEPRECATED);
+						break;
+					}
+				}
+			}
+		};
+	}
 }

@@ -17,38 +17,44 @@ package com.intellij.lang.javascript.surroundWith;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSBundle;
-import com.intellij.lang.javascript.psi.JSFunctionExpression;
-import com.intellij.lang.javascript.psi.JSExpressionStatement;
 import com.intellij.lang.javascript.psi.JSAssignmentExpression;
+import com.intellij.lang.javascript.psi.JSExpressionStatement;
+import com.intellij.lang.javascript.psi.JSFunctionExpression;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 
-public class JSWithFunctionExpressionSurrounder extends JSStatementSurrounder {
-  public String getTemplateDescription() {
-    return JSBundle.message("javascript.surround.with.function.expression");
-  }
+public class JSWithFunctionExpressionSurrounder extends JSStatementSurrounder
+{
+	public String getTemplateDescription()
+	{
+		return JSBundle.message("javascript.surround.with.function.expression");
+	}
 
-  protected String getStatementTemplate(final Project project, PsiElement context) {
-    return "aaa = function () { }" + JSChangeUtil.getSemicolon(project);
-  }
+	protected String getStatementTemplate(final Project project, PsiElement context)
+	{
+		return "aaa = function () { }" + JSChangeUtil.getSemicolon(project);
+	}
 
-  protected ASTNode getInsertBeforeNode(final ASTNode statementNode) {
-    JSFunctionExpression stmt = getFunctionExpr(statementNode);
-    return stmt.getBody()[0].getLastChild().getNode();
-  }
+	protected ASTNode getInsertBeforeNode(final ASTNode statementNode)
+	{
+		JSFunctionExpression stmt = getFunctionExpr(statementNode);
+		return stmt.getBody()[0].getLastChild().getNode();
+	}
 
-  private static JSFunctionExpression getFunctionExpr(final ASTNode statementNode) {
-    return (JSFunctionExpression) ((JSAssignmentExpression)((JSExpressionStatement)statementNode.getPsi()).getExpression()).getROperand();
-  }
+	private static JSFunctionExpression getFunctionExpr(final ASTNode statementNode)
+	{
+		return (JSFunctionExpression) ((JSAssignmentExpression) ((JSExpressionStatement) statementNode.getPsi()).getExpression()).getROperand();
+	}
 
-  protected TextRange getSurroundSelectionRange(final ASTNode statementNode) {
-    JSFunctionExpression stmt = getFunctionExpr(statementNode);
-    ASTNode conditionNode = stmt.findNameIdentifier();
-    int offset = conditionNode.getStartOffset();
-    stmt.getParent().getNode().removeChild(conditionNode);
+	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
+	{
+		JSFunctionExpression stmt = getFunctionExpr(statementNode);
+		ASTNode conditionNode = stmt.findNameIdentifier();
+		int offset = conditionNode.getStartOffset();
+		stmt.getParent().getNode().removeChild(conditionNode);
 
-    return new TextRange(offset, offset);
-  }
+		return new TextRange(offset, offset);
+	}
 }

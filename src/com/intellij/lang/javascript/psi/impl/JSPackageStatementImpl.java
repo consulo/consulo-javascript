@@ -15,6 +15,10 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import java.io.IOException;
+
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -34,138 +38,190 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
 
 /**
  * @by Maxim.Mossienko
  */
-public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStatementStub> implements JSPackageStatement {
-  public JSPackageStatementImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStatementStub> implements JSPackageStatement
+{
+	public JSPackageStatementImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSPackageStatementImpl(final JSPackageStatementStub stub) {
-    super(stub, JSElementTypes.PACKAGE_STATEMENT);
-  }
+	public JSPackageStatementImpl(final JSPackageStatementStub stub)
+	{
+		super(stub, JSElementTypes.PACKAGE_STATEMENT);
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSPackageStatement(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSPackageStatement(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 
-  public String getName() {
-    final JSPackageStatementStub stub = getStub();
-    if (stub != null) return stub.getName();
-    final ASTNode node = findNameIdentifier();
-    if (node != null) {
-      return ((JSReferenceExpression)node.getPsi()).getReferencedName();
-    }
-    return null;
-  }
+	public String getName()
+	{
+		final JSPackageStatementStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getName();
+		}
+		final ASTNode node = findNameIdentifier();
+		if(node != null)
+		{
+			return ((JSReferenceExpression) node.getPsi()).getReferencedName();
+		}
+		return null;
+	}
 
-  public String getQualifiedName() {
-    final JSPackageStatementStub stub = getStub();
-    if (stub != null) return stub.getQualifiedName();
+	public String getQualifiedName()
+	{
+		final JSPackageStatementStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getQualifiedName();
+		}
 
-    final ASTNode node = findNameIdentifier();
-    if (node != null) return node.getText();
-    return null;
-  }
+		final ASTNode node = findNameIdentifier();
+		if(node != null)
+		{
+			return node.getText();
+		}
+		return null;
+	}
 
-  public JSSourceElement[] getStatements() {
-    return getStubOrPsiChildren(JSElementTypes.SOURCE_ELEMENTS, JSSourceElement.EMPTY_ARRAY);
-  }
+	public JSSourceElement[] getStatements()
+	{
+		return getStubOrPsiChildren(JSElementTypes.SOURCE_ELEMENTS, JSSourceElement.EMPTY_ARRAY);
+	}
 
-  public void setQualifiedName(final String expectedPackageNameFromFile) {
-    doChangeName(getProject(), this, expectedPackageNameFromFile);
-  }
+	public void setQualifiedName(final String expectedPackageNameFromFile)
+	{
+		doChangeName(getProject(), this, expectedPackageNameFromFile);
+	}
 
-  public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
-    VirtualFile virtualFile = getContainingFile().getVirtualFile();
-    String expectedPackageNameFromFile =
-      JSResolveUtil.getExpectedPackageNameFromFile(virtualFile, getProject(), false);
-    if (expectedPackageNameFromFile != null && expectedPackageNameFromFile.equals(getQualifiedName())) {
-      try {
-        JSPsiImplUtils.doRenameParentDirectoryIfNeeded(virtualFile, name, this);
-      } catch (IOException ex) {
-        throw new IncorrectOperationException("", ex);
-      }
-    }
+	public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException
+	{
+		VirtualFile virtualFile = getContainingFile().getVirtualFile();
+		String expectedPackageNameFromFile = JSResolveUtil.getExpectedPackageNameFromFile(virtualFile, getProject(), false);
+		if(expectedPackageNameFromFile != null && expectedPackageNameFromFile.equals(getQualifiedName()))
+		{
+			try
+			{
+				JSPsiImplUtils.doRenameParentDirectoryIfNeeded(virtualFile, name, this);
+			}
+			catch(IOException ex)
+			{
+				throw new IncorrectOperationException("", ex);
+			}
+		}
 
-    ASTNode child = findNameIdentifier();
-    if (child != null) {
-      JSReferenceExpression expr = (JSReferenceExpression)child.getPsi();
-      PsiElement element = expr.getReferenceNameElement();
-      if (element != null) JSChangeUtil.doIdentifierReplacement(expr, element, name);
-    }
+		ASTNode child = findNameIdentifier();
+		if(child != null)
+		{
+			JSReferenceExpression expr = (JSReferenceExpression) child.getPsi();
+			PsiElement element = expr.getReferenceNameElement();
+			if(element != null)
+			{
+				JSChangeUtil.doIdentifierReplacement(expr, element, name);
+			}
+		}
 
-    return this;
-  }
+		return this;
+	}
 
-  public ASTNode findNameIdentifier() {
-    return getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
-  }
+	public ASTNode findNameIdentifier()
+	{
+		return getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
+	}
 
-  @Override
-  public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState substitutor, final PsiElement lastParent,
-                                     @NotNull final PsiElement place) {
-    if (lastParent != null && lastParent.getParent() == this) {
-      return JSImportHandlingUtil.tryResolveImports(processor, this, place);
-    } else {
-      return true;
-    }
-  }
+	@Override
+	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState substitutor,
+			final PsiElement lastParent, @NotNull final PsiElement place)
+	{
+		if(lastParent != null && lastParent.getParent() == this)
+		{
+			return JSImportHandlingUtil.tryResolveImports(processor, this, place);
+		}
+		else
+		{
+			return true;
+		}
+	}
 
-  public PsiElement getNameIdentifier() {
-    final ASTNode node = findNameIdentifier();
-    return node != null ? node.getPsi():null;
-  }
+	public PsiElement getNameIdentifier()
+	{
+		final ASTNode node = findNameIdentifier();
+		return node != null ? node.getPsi() : null;
+	}
 
-  public PsiElement addBefore(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
-    if (JSChangeUtil.isStatementOrComment(element)) {
-      final PsiElement insertedElement = JSChangeUtil.doAddBefore(this, element, anchor);
-      CodeStyleManager.getInstance(getProject()).reformatNewlyAddedElement(getNode(), insertedElement.getNode());
-      return insertedElement;
-    }
-    return super.addBefore(element, anchor);
-  }
+	public PsiElement addBefore(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException
+	{
+		if(JSChangeUtil.isStatementOrComment(element))
+		{
+			final PsiElement insertedElement = JSChangeUtil.doAddBefore(this, element, anchor);
+			CodeStyleManager.getInstance(getProject()).reformatNewlyAddedElement(getNode(), insertedElement.getNode());
+			return insertedElement;
+		}
+		return super.addBefore(element, anchor);
+	}
 
-  public PsiElement addAfter(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
-    if (JSChangeUtil.isStatementOrComment(element)) {
-      final PsiElement insertedElement = JSChangeUtil.doAddAfter(this, element, anchor);
-      CodeStyleManager.getInstance(getProject()).reformatNewlyAddedElement(getNode(), insertedElement.getNode());
-      return insertedElement;
-    }
-    return super.addAfter(element, anchor);
-  }
+	public PsiElement addAfter(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException
+	{
+		if(JSChangeUtil.isStatementOrComment(element))
+		{
+			final PsiElement insertedElement = JSChangeUtil.doAddAfter(this, element, anchor);
+			CodeStyleManager.getInstance(getProject()).reformatNewlyAddedElement(getNode(), insertedElement.getNode());
+			return insertedElement;
+		}
+		return super.addAfter(element, anchor);
+	}
 
-  public static void doChangeName(final Project project, final JSPackageStatement packageStatement, final String expected) {
-    if (expected == null) return;
-    final ASTNode node = packageStatement.findNameIdentifier();
-    final ASTNode parent = packageStatement.getNode();
+	public static void doChangeName(final Project project, final JSPackageStatement packageStatement, final String expected)
+	{
+		if(expected == null)
+		{
+			return;
+		}
+		final ASTNode node = packageStatement.findNameIdentifier();
+		final ASTNode parent = packageStatement.getNode();
 
-    if (expected.length() == 0) {
-      if (node != null) {
-        final ASTNode treeNext = node.getTreeNext();
-        parent.removeChild(node);
-        if (treeNext.getPsi() instanceof PsiWhiteSpace) parent.removeChild(treeNext);
-      }
-    } else {
-      final ASTNode child = JSChangeUtil.createExpressionFromText(project, expected);
-      if (node != null) parent.replaceChild(node, child);
-      else parent.addChild(child, parent.findChildByType(JSTokenTypes.LBRACE));
-    }
-  }
+		if(expected.length() == 0)
+		{
+			if(node != null)
+			{
+				final ASTNode treeNext = node.getTreeNext();
+				parent.removeChild(node);
+				if(treeNext.getPsi() instanceof PsiWhiteSpace)
+				{
+					parent.removeChild(treeNext);
+				}
+			}
+		}
+		else
+		{
+			final ASTNode child = JSChangeUtil.createExpressionFromText(project, expected);
+			if(node != null)
+			{
+				parent.replaceChild(node, child);
+			}
+			else
+			{
+				parent.addChild(child, parent.findChildByType(JSTokenTypes.LBRACE));
+			}
+		}
+	}
 
-  @Override
-  public boolean isEquivalentTo(PsiElement another) {
-    return JSPackageWrapper.isPackageReferenceOfSomeForm(getQualifiedName(), getProject(), getResolveScope(), another);
-  }
+	@Override
+	public boolean isEquivalentTo(PsiElement another)
+	{
+		return JSPackageWrapper.isPackageReferenceOfSomeForm(getQualifiedName(), getProject(), getResolveScope(), another);
+	}
 }

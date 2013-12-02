@@ -1,5 +1,15 @@
 package com.intellij.lang.javascript.psi.impl;
 
+import gnu.trove.TObjectHashingStrategy;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -16,311 +26,419 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiComment;
+import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiDirectoryContainer;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.IncorrectOperationException;
-import gnu.trove.TObjectHashingStrategy;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author Maxim.Mossienko
  *         Date: Jun 8, 2008
  *         Time: 3:23:37 PM
  */
-public class JSPsiImplUtils {
-  @NonNls private static final String ARRAY_TYPE_NAME = "Array";
-  @NonNls private static final String ARRAY_ELEMENT_TYPE_ANNOTATION_NAME = "ArrayElementType";
+public class JSPsiImplUtils
+{
+	@NonNls
+	private static final String ARRAY_TYPE_NAME = "Array";
+	@NonNls
+	private static final String ARRAY_ELEMENT_TYPE_ANNOTATION_NAME = "ArrayElementType";
 
-  public static ASTNode getTypeExpressionFromDeclaration(JSNamedElement element) {
-    final ASTNode myNode = element.getNode();
-    final ASTNode node = myNode != null ? myNode.findChildByType(JSTokenTypes.COLON):null;
-    String s = null;
+	public static ASTNode getTypeExpressionFromDeclaration(JSNamedElement element)
+	{
+		final ASTNode myNode = element.getNode();
+		final ASTNode node = myNode != null ? myNode.findChildByType(JSTokenTypes.COLON) : null;
+		String s = null;
 
-    if (node != null) {
-      return myNode.findChildByType(JSDocumentationUtils.ourTypeFilter, node);
-    }
+		if(node != null)
+		{
+			return myNode.findChildByType(JSDocumentationUtils.ourTypeFilter, node);
+		}
 
-    return null;
-  }
-  public static String getTypeFromDeclaration(JSNamedElement element) {
-    ASTNode typeExpr = getTypeExpressionFromDeclaration(element);
+		return null;
+	}
 
-    String s = null;
-    if (typeExpr != null) {
-      s = typeExpr.getText();
-    } else if (element instanceof JSParameter && ((JSParameter)element).isRest()) {
-      s = ARRAY_TYPE_NAME;
-    }
+	public static String getTypeFromDeclaration(JSNamedElement element)
+	{
+		ASTNode typeExpr = getTypeExpressionFromDeclaration(element);
 
-    if (ARRAY_TYPE_NAME.equals(s)) {
-      final PsiComment psiComment = typeExpr != null ? PsiTreeUtil.getPrevSiblingOfType(typeExpr.getPsi(), PsiComment.class):null;
+		String s = null;
+		if(typeExpr != null)
+		{
+			s = typeExpr.getText();
+		}
+		else if(element instanceof JSParameter && ((JSParameter) element).isRest())
+		{
+			s = ARRAY_TYPE_NAME;
+		}
 
-      if (psiComment != null) {
-        final String elementType = JSDocumentationUtils.unwrapCommentDelimiters(psiComment.getText()).trim();
+		if(ARRAY_TYPE_NAME.equals(s))
+		{
+			final PsiComment psiComment = typeExpr != null ? PsiTreeUtil.getPrevSiblingOfType(typeExpr.getPsi(), PsiComment.class) : null;
 
-        if (elementType.length() > 0) return s+"["+elementType;
-      }
+			if(psiComment != null)
+			{
+				final String elementType = JSDocumentationUtils.unwrapCommentDelimiters(psiComment.getText()).trim();
 
-      if (element instanceof JSAttributeListOwner) {
-        final JSAttributeListOwner attributeListOwner = (JSAttributeListOwner)element;
-        final JSAttributeList attributeList = attributeListOwner.getAttributeList();
+				if(elementType.length() > 0)
+				{
+					return s + "[" + elementType;
+				}
+			}
 
-        if (attributeList != null) {
-          String type = getArrayElementTypeFromAnnotation(attributeList);
-          if (type != null && type.length() > 0) return s+"["+type;
-        }
-      }
+			if(element instanceof JSAttributeListOwner)
+			{
+				final JSAttributeListOwner attributeListOwner = (JSAttributeListOwner) element;
+				final JSAttributeList attributeList = attributeListOwner.getAttributeList();
 
-    }
+				if(attributeList != null)
+				{
+					String type = getArrayElementTypeFromAnnotation(attributeList);
+					if(type != null && type.length() > 0)
+					{
+						return s + "[" + type;
+					}
+				}
+			}
 
-    return s;
-  }
+		}
 
-  public static @Nullable String getArrayElementTypeFromAnnotation(JSAttributeList attributeList) {
-    return getTypeFromAnnotationParameter(attributeList, ARRAY_ELEMENT_TYPE_ANNOTATION_NAME, null);
-  }
+		return s;
+	}
 
-  public static String getType(JSNamedElement element) {
-    final String typeFromDeclaration = getTypeFromDeclaration(element);
-    if (typeFromDeclaration != null) return typeFromDeclaration;
+	public static
+	@Nullable
+	String getArrayElementTypeFromAnnotation(JSAttributeList attributeList)
+	{
+		return getTypeFromAnnotationParameter(attributeList, ARRAY_ELEMENT_TYPE_ANNOTATION_NAME, null);
+	}
 
-    return JSDocumentationUtils.findTypeFromComments(element);
-  }
+	public static String getType(JSNamedElement element)
+	{
+		final String typeFromDeclaration = getTypeFromDeclaration(element);
+		if(typeFromDeclaration != null)
+		{
+			return typeFromDeclaration;
+		}
 
-  public static void updateFileName(JSQualifiedNamedElement jsClassBase, final String newName, final String oldName) throws
-                                                                                                                     IncorrectOperationException {
-    final PsiFile containingFile = jsClassBase.getContainingFile();
+		return JSDocumentationUtils.findTypeFromComments(element);
+	}
 
-    if (containingFile.getContext() == null) {
-      final VirtualFile virtualFile = containingFile.getVirtualFile();
+	public static void updateFileName(JSQualifiedNamedElement jsClassBase, final String newName,
+			final String oldName) throws IncorrectOperationException
+	{
+		final PsiFile containingFile = jsClassBase.getContainingFile();
 
-      if (virtualFile != null && virtualFile.getNameWithoutExtension().equals(oldName)) {
-        final String s = containingFile.getName();
-        containingFile.setName(newName + "." + s.substring(s.lastIndexOf('.') + 1));
-      }
-    }
-  }
+		if(containingFile.getContext() == null)
+		{
+			final VirtualFile virtualFile = containingFile.getVirtualFile();
 
-  public static @Nullable JSPackageStatement findPackageStatement(JSFile file) {
-    JSPackageStatement packageStatement = null;
+			if(virtualFile != null && virtualFile.getNameWithoutExtension().equals(oldName))
+			{
+				final String s = containingFile.getName();
+				containingFile.setName(newName + "." + s.substring(s.lastIndexOf('.') + 1));
+			}
+		}
+	}
 
-    for(PsiElement statement:file.getChildren()) {
-      if (statement instanceof JSPackageStatement) {
-        packageStatement = (JSPackageStatement)statement;
-        break;
-      }
-    }
-    return packageStatement;
-  }
+	public static
+	@Nullable
+	JSPackageStatement findPackageStatement(JSFile file)
+	{
+		JSPackageStatement packageStatement = null;
 
-  static @NotNull PsiElement findTopLevelNavigatableElement(@NotNull JSQualifiedNamedElement jsClass) {
-    PsiElement sourceElement = findTopLevelNavigatableElementWithSource(jsClass, null);
-    if (sourceElement != null) {
-      return sourceElement;
-    }
-    return jsClass;
-  }
+		for(PsiElement statement : file.getChildren())
+		{
+			if(statement instanceof JSPackageStatement)
+			{
+				packageStatement = (JSPackageStatement) statement;
+				break;
+			}
+		}
+		return packageStatement;
+	}
 
-  public static @Nullable PsiElement findTopLevelNavigatableElementWithSource(@NotNull JSQualifiedNamedElement jsClass,
-                                                             @Nullable Consumer<JSQualifiedNamedElement> candidatesConsumer) {
-    if (candidatesConsumer != null) candidatesConsumer.consume(jsClass);
+	static
+	@NotNull
+	PsiElement findTopLevelNavigatableElement(@NotNull JSQualifiedNamedElement jsClass)
+	{
+		PsiElement sourceElement = findTopLevelNavigatableElementWithSource(jsClass, null);
+		if(sourceElement != null)
+		{
+			return sourceElement;
+		}
+		return jsClass;
+	}
 
-    PsiElement sourceElement = findSourceElement(jsClass);
-    if (sourceElement != null) {
-      return sourceElement;
-    }
+	public static
+	@Nullable
+	PsiElement findTopLevelNavigatableElementWithSource(@NotNull JSQualifiedNamedElement jsClass, @Nullable Consumer<JSQualifiedNamedElement>
+			candidatesConsumer)
+	{
+		if(candidatesConsumer != null)
+		{
+			candidatesConsumer.consume(jsClass);
+		}
 
-    GlobalSearchScope searchScope = JSResolveUtil.getSearchScope(jsClass);
-    final String qName = jsClass.getQualifiedName();
-    final Collection<JSQualifiedNamedElement> candidates =
-      StubIndex.getInstance().get(JSQualifiedElementIndex.KEY, qName.hashCode(), jsClass.getProject(), searchScope);
-    for (Iterator<JSQualifiedNamedElement> i = candidates.iterator(); i.hasNext();) {
-      if (!qName.equals(i.next().getQualifiedName())) {
-        i.remove();
-      }
-    }
+		PsiElement sourceElement = findSourceElement(jsClass);
+		if(sourceElement != null)
+		{
+			return sourceElement;
+		}
 
-    for (JSQualifiedNamedElement candidate : candidates) {
-      if (candidate == jsClass) continue;
+		GlobalSearchScope searchScope = JSResolveUtil.getSearchScope(jsClass);
+		final String qName = jsClass.getQualifiedName();
+		final Collection<JSQualifiedNamedElement> candidates = StubIndex.getInstance().get(JSQualifiedElementIndex.KEY, qName.hashCode(),
+				jsClass.getProject(), searchScope);
+		for(Iterator<JSQualifiedNamedElement> i = candidates.iterator(); i.hasNext(); )
+		{
+			if(!qName.equals(i.next().getQualifiedName()))
+			{
+				i.remove();
+			}
+		}
 
-      if (candidatesConsumer != null) candidatesConsumer.consume(candidate);
+		for(JSQualifiedNamedElement candidate : candidates)
+		{
+			if(candidate == jsClass)
+			{
+				continue;
+			}
 
-      PsiElement candidateSourceElement = findSourceElement(candidate);
-      if (candidateSourceElement != null) {
-       return candidateSourceElement;
-      }
-    }
-    return null;
-  }
+			if(candidatesConsumer != null)
+			{
+				candidatesConsumer.consume(candidate);
+			}
 
-  @Nullable
-  private static PsiElement findSourceElement(JSQualifiedNamedElement jsClass) {
-    PsiFile containingFile = jsClass.getContainingFile();
-    if (containingFile == null) {
-      return null;
-    }
+			PsiElement candidateSourceElement = findSourceElement(candidate);
+			if(candidateSourceElement != null)
+			{
+				return candidateSourceElement;
+			}
+		}
+		return null;
+	}
 
-    VirtualFile vFile = containingFile.getVirtualFile();
-    ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(jsClass.getProject()).getFileIndex();
-    if (vFile == null || projectFileIndex.getClassRootForFile(vFile) == null) {
-      return null;
-    }
+	@Nullable
+	private static PsiElement findSourceElement(JSQualifiedNamedElement jsClass)
+	{
+		PsiFile containingFile = jsClass.getContainingFile();
+		if(containingFile == null)
+		{
+			return null;
+		}
 
-    final List<OrderEntry> orderEntries = projectFileIndex.getOrderEntriesForFile(vFile);
+		VirtualFile vFile = containingFile.getVirtualFile();
+		ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(jsClass.getProject()).getFileIndex();
+		if(vFile == null || projectFileIndex.getClassRootForFile(vFile) == null)
+		{
+			return null;
+		}
 
-    String qName = jsClass.getQualifiedName();
-    String baseSourceName = jsClass.getName();
-    int index = qName != null ? qName.lastIndexOf('.'):-1;
-    String packageName = index != -1 ? qName.substring(0, index):"";
-    String relativeFilePath = packageName.length() == 0 ? baseSourceName : packageName.replace('.', '/') + '/' + baseSourceName;
-    String relativeFilePath2 = relativeFilePath + ".mxml";
-    String relativeFilePath3 = relativeFilePath + ".mxm";
-    relativeFilePath += ".as";
+		final List<OrderEntry> orderEntries = projectFileIndex.getOrderEntriesForFile(vFile);
 
-    for (OrderEntry orderEntry : orderEntries) {
-      VirtualFile[] files = orderEntry.getFiles(OrderRootType.SOURCES);
+		String qName = jsClass.getQualifiedName();
+		String baseSourceName = jsClass.getName();
+		int index = qName != null ? qName.lastIndexOf('.') : -1;
+		String packageName = index != -1 ? qName.substring(0, index) : "";
+		String relativeFilePath = packageName.length() == 0 ? baseSourceName : packageName.replace('.', '/') + '/' + baseSourceName;
+		String relativeFilePath2 = relativeFilePath + ".mxml";
+		String relativeFilePath3 = relativeFilePath + ".mxm";
+		relativeFilePath += ".as";
 
-      for (VirtualFile file : files) {
-        VirtualFile source = file.findFileByRelativePath(relativeFilePath);
+		for(OrderEntry orderEntry : orderEntries)
+		{
+			VirtualFile[] files = orderEntry.getFiles(OrderRootType.SOURCES);
 
-        if (source != null) {
-          PsiFile psiSource = jsClass.getManager().findFile(source);
+			for(VirtualFile file : files)
+			{
+				VirtualFile source = file.findFileByRelativePath(relativeFilePath);
 
-          if (psiSource instanceof JSFile) {
-            JSPackageStatement statement = findPackageStatement((JSFile)psiSource);
+				if(source != null)
+				{
+					PsiFile psiSource = jsClass.getManager().findFile(source);
 
-            if (statement != null) {
-              for(JSSourceElement el:statement.getStatements()) {
-                if (el.getClass() == jsClass.getClass() && jsClass.getName().equals(el.getName())) {
-                  return el;
-                }
-              }
-            }
-            return psiSource;
-          }
-        } else {
-          source = file.findFileByRelativePath(relativeFilePath2);
-          if (source == null) source = file.findFileByRelativePath(relativeFilePath3);
-          if (source != null) {
-            PsiFile psiSource = jsClass.getManager().findFile(source);
-            if (psiSource instanceof XmlFile) return XmlBackedJSClassImpl.getXmlBackedClass((XmlFile)psiSource);
-          }
-        }
-      }
-    }
-    return null;
-  }
+					if(psiSource instanceof JSFile)
+					{
+						JSPackageStatement statement = findPackageStatement((JSFile) psiSource);
 
-  static String getQName(final JSNamedElement element) {
-    final ASTNode node = element.findNameIdentifier();
-    final String name = node != null ? node.getText():null;
-    PsiElement responsibleParent = element.getParent();
+						if(statement != null)
+						{
+							for(JSSourceElement el : statement.getStatements())
+							{
+								if(el.getClass() == jsClass.getClass() && jsClass.getName().equals(el.getName()))
+								{
+									return el;
+								}
+							}
+						}
+						return psiSource;
+					}
+				}
+				else
+				{
+					source = file.findFileByRelativePath(relativeFilePath2);
+					if(source == null)
+					{
+						source = file.findFileByRelativePath(relativeFilePath3);
+					}
+					if(source != null)
+					{
+						PsiFile psiSource = jsClass.getManager().findFile(source);
+						if(psiSource instanceof XmlFile)
+						{
+							return XmlBackedJSClassImpl.getXmlBackedClass((XmlFile) psiSource);
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
 
-    if (responsibleParent instanceof JSVarStatement) {
-      responsibleParent = responsibleParent.getParent();
-    }
+	static String getQName(final JSNamedElement element)
+	{
+		final ASTNode node = element.findNameIdentifier();
+		final String name = node != null ? node.getText() : null;
+		PsiElement responsibleParent = element.getParent();
 
-    if (responsibleParent instanceof JSPackageStatement && name != null) {
-      final String packageName = ((JSPackageStatement)responsibleParent).getQualifiedName();
-      if (!StringUtil.isEmpty(packageName)) return packageName.concat(".").concat(name);
-    }
-    return name;
-  }
+		if(responsibleParent instanceof JSVarStatement)
+		{
+			responsibleParent = responsibleParent.getParent();
+		}
 
-  public static @Nullable String getTypeFromAnnotationParameter(@NotNull JSAttributeList attributeList, @NotNull String annotationName,
-                                                                 @Nullable String annotationParameter) {
-    String arrayType = null;
-    final JSAttribute[] byName = attributeList.getAttributesByName(annotationName);
-    if (byName.length > 0) {
-      final JSAttributeNameValuePair jsAttributeNameValuePair = byName[0].getValueByName(annotationParameter);
-      arrayType = jsAttributeNameValuePair != null ? jsAttributeNameValuePair.getSimpleValue():null;
-    }
-    return arrayType;
-  }
+		if(responsibleParent instanceof JSPackageStatement && name != null)
+		{
+			final String packageName = ((JSPackageStatement) responsibleParent).getQualifiedName();
+			if(!StringUtil.isEmpty(packageName))
+			{
+				return packageName.concat(".").concat(name);
+			}
+		}
+		return name;
+	}
 
-  /**
-   * @see <code>QUALIFIED_NAME_HASHING_STRATEGY</code>
-   */
-  static boolean isTheSameClass(final PsiElement typeSource, final JSClass jsClass) {
-    if (typeSource == jsClass) return true;
-    if (typeSource instanceof JSClass && jsClass != null) {
-      final String qName = ((JSClass)typeSource).getQualifiedName();
-      return qName != null && qName.equals(jsClass.getQualifiedName());
-    }
-    return false;
-  }
+	public static
+	@Nullable
+	String getTypeFromAnnotationParameter(@NotNull JSAttributeList attributeList, @NotNull String annotationName, @Nullable String annotationParameter)
+	{
+		String arrayType = null;
+		final JSAttribute[] byName = attributeList.getAttributesByName(annotationName);
+		if(byName.length > 0)
+		{
+			final JSAttributeNameValuePair jsAttributeNameValuePair = byName[0].getValueByName(annotationParameter);
+			arrayType = jsAttributeNameValuePair != null ? jsAttributeNameValuePair.getSimpleValue() : null;
+		}
+		return arrayType;
+	}
 
-  public static final TObjectHashingStrategy<JSQualifiedNamedElement> QUALIFIED_NAME_HASHING_STRATEGY =
-    new TObjectHashingStrategy<JSQualifiedNamedElement>() {
-      public int computeHashCode(final JSQualifiedNamedElement object) {
-        return object == null || object.getQualifiedName() == null ? 0 : object.getQualifiedName().hashCode();
-      }
+	/**
+	 * @see <code>QUALIFIED_NAME_HASHING_STRATEGY</code>
+	 */
+	static boolean isTheSameClass(final PsiElement typeSource, final JSClass jsClass)
+	{
+		if(typeSource == jsClass)
+		{
+			return true;
+		}
+		if(typeSource instanceof JSClass && jsClass != null)
+		{
+			final String qName = ((JSClass) typeSource).getQualifiedName();
+			return qName != null && qName.equals(jsClass.getQualifiedName());
+		}
+		return false;
+	}
 
-      public boolean equals(final JSQualifiedNamedElement o1, final JSQualifiedNamedElement o2) {
-        return Comparing.equal(o1.getQualifiedName(), o2.getQualifiedName());
-      }
-    };
+	public static final TObjectHashingStrategy<JSQualifiedNamedElement> QUALIFIED_NAME_HASHING_STRATEGY = new
+			TObjectHashingStrategy<JSQualifiedNamedElement>()
+	{
+		public int computeHashCode(final JSQualifiedNamedElement object)
+		{
+			return object == null || object.getQualifiedName() == null ? 0 : object.getQualifiedName().hashCode();
+		}
 
-  static void doRenameParentDirectoryIfNeeded(VirtualFile file, String name, Object requestor) throws IOException {
-    VirtualFile directory = file.isDirectory() ? file:file.getParent();
-    if (!name.equals(directory.getName())) {
-      directory.rename(requestor, name);
-    }
-  }
+		public boolean equals(final JSQualifiedNamedElement o1, final JSQualifiedNamedElement o2)
+		{
+			return Comparing.equal(o1.getQualifiedName(), o2.getQualifiedName());
+		}
+	};
 
-  static @Nullable String getQNameForMove(@NotNull PsiElement targetElement, PsiElement elementToBind) {
-    String qName = null;
-    Project project = targetElement.getProject();
+	static void doRenameParentDirectoryIfNeeded(VirtualFile file, String name, Object requestor) throws IOException
+	{
+		VirtualFile directory = file.isDirectory() ? file : file.getParent();
+		if(!name.equals(directory.getName()))
+		{
+			directory.rename(requestor, name);
+		}
+	}
 
-    if (elementToBind instanceof PsiFile) {
-      String newName = ((PsiNamedElement)elementToBind).getName();
-      int index = newName.lastIndexOf('.');
-      if (index != -1) newName = newName.substring(0, index);
-      VirtualFile elementToBindFile = elementToBind.getContainingFile().getVirtualFile();
+	static
+	@Nullable
+	String getQNameForMove(@NotNull PsiElement targetElement, PsiElement elementToBind)
+	{
+		String qName = null;
+		Project project = targetElement.getProject();
 
-      String packageName = JSResolveUtil.getExpectedPackageNameFromFile(elementToBindFile, project, false);
+		if(elementToBind instanceof PsiFile)
+		{
+			String newName = ((PsiNamedElement) elementToBind).getName();
+			int index = newName.lastIndexOf('.');
+			if(index != -1)
+			{
+				newName = newName.substring(0, index);
+			}
+			VirtualFile elementToBindFile = elementToBind.getContainingFile().getVirtualFile();
 
-      if (targetElement instanceof JSReferenceExpression) {
-        JSExpression qualifier = ((JSReferenceExpression)targetElement).getQualifier();
-        String targetElementPackageName = qualifier != null ?
-                                          qualifier.getText():
-                                          JSResolveUtil.getExpectedPackageNameFromFile(targetElement.getContainingFile().getVirtualFile(), project, false);
-        if (!differentPackageName(targetElementPackageName, packageName)) return null;
-        if (qualifier == null) {
-          if (!(targetElement.getParent() instanceof JSImportStatement)) return null;
-        }
-      }
+			String packageName = JSResolveUtil.getExpectedPackageNameFromFile(elementToBindFile, project, false);
 
-      qName = JSPackageIndex.buildQualifiedName(packageName, newName);
-    } else if (elementToBind instanceof PsiDirectoryContainer) {
-      PsiDirectory[] directories = ((PsiDirectoryContainer)elementToBind).getDirectories(targetElement.getResolveScope());
-      if (directories.length > 0) {
-        qName = JSResolveUtil.getExpectedPackageNameFromFile(directories[0].getVirtualFile(), project, false);
-      }
-    }
-    return qName;
-  }
+			if(targetElement instanceof JSReferenceExpression)
+			{
+				JSExpression qualifier = ((JSReferenceExpression) targetElement).getQualifier();
+				String targetElementPackageName = qualifier != null ? qualifier.getText() : JSResolveUtil.getExpectedPackageNameFromFile(targetElement
+						.getContainingFile().getVirtualFile(), project, false);
+				if(!differentPackageName(targetElementPackageName, packageName))
+				{
+					return null;
+				}
+				if(qualifier == null)
+				{
+					if(!(targetElement.getParent() instanceof JSImportStatement))
+					{
+						return null;
+					}
+				}
+			}
 
-  public static boolean differentPackageName(final String s, final String expectedPackageNameFromFile) {
-    final boolean sIsEmpty = isEmpty(s);
-    final boolean expectedIsEmpty = isEmpty(expectedPackageNameFromFile);
+			qName = JSPackageIndex.buildQualifiedName(packageName, newName);
+		}
+		else if(elementToBind instanceof PsiDirectoryContainer)
+		{
+			PsiDirectory[] directories = ((PsiDirectoryContainer) elementToBind).getDirectories(targetElement.getResolveScope());
+			if(directories.length > 0)
+			{
+				qName = JSResolveUtil.getExpectedPackageNameFromFile(directories[0].getVirtualFile(), project, false);
+			}
+		}
+		return qName;
+	}
 
-    return (sIsEmpty && !expectedIsEmpty) ||
-        (!sIsEmpty && (expectedIsEmpty || !s.equals(expectedPackageNameFromFile)));
-  }
+	public static boolean differentPackageName(final String s, final String expectedPackageNameFromFile)
+	{
+		final boolean sIsEmpty = isEmpty(s);
+		final boolean expectedIsEmpty = isEmpty(expectedPackageNameFromFile);
 
-  public static boolean isEmpty(final String expectedPackageNameFromFile) {
-    return expectedPackageNameFromFile == null || expectedPackageNameFromFile.length() == 0;
-  }
+		return (sIsEmpty && !expectedIsEmpty) || (!sIsEmpty && (expectedIsEmpty || !s.equals(expectedPackageNameFromFile)));
+	}
+
+	public static boolean isEmpty(final String expectedPackageNameFromFile)
+	{
+		return expectedPackageNameFromFile == null || expectedPackageNameFromFile.length() == 0;
+	}
 }

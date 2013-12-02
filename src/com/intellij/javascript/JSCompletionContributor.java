@@ -20,32 +20,41 @@ import com.intellij.util.Consumer;
 /**
  * @author peter
  */
-public class JSCompletionContributor extends CompletionContributor{
-  private static boolean ourDoingSmartCodeCompleteAction;
+public class JSCompletionContributor extends CompletionContributor
+{
+	private static boolean ourDoingSmartCodeCompleteAction;
 
-  public static boolean isDoingSmartCodeCompleteAction() {
-    return ourDoingSmartCodeCompleteAction;
-  }
+	public static boolean isDoingSmartCodeCompleteAction()
+	{
+		return ourDoingSmartCodeCompleteAction;
+	}
 
-  @Override
-  public void fillCompletionVariants(final CompletionParameters parameters, final CompletionResultSet result) {
-    ourDoingSmartCodeCompleteAction = parameters.getCompletionType() == CompletionType.SMART &&
-                                      getElementLanguage(parameters).isKindOf(JavaScriptSupportLoader.JAVASCRIPT.getLanguage());
-    if (ourDoingSmartCodeCompleteAction) {
-      final CompletionParameters newParams = parameters.withType(CompletionType.BASIC);
-      CompletionService.getCompletionService().getVariantsFromContributors(newParams, this, new Consumer<CompletionResult>() {
-        public void consume(final CompletionResult lookupElement) {
-          result.addElement(lookupElement.getLookupElement());
-        }
-      });
-    }
-  }
+	@Override
+	public void fillCompletionVariants(final CompletionParameters parameters, final CompletionResultSet result)
+	{
+		ourDoingSmartCodeCompleteAction = parameters.getCompletionType() == CompletionType.SMART && getElementLanguage(parameters).isKindOf
+				(JavaScriptSupportLoader.JAVASCRIPT.getLanguage());
+		if(ourDoingSmartCodeCompleteAction)
+		{
+			final CompletionParameters newParams = parameters.withType(CompletionType.BASIC);
+			CompletionService.getCompletionService().getVariantsFromContributors(newParams, this, new Consumer<CompletionResult>()
+			{
+				public void consume(final CompletionResult lookupElement)
+				{
+					result.addElement(lookupElement.getLookupElement());
+				}
+			});
+		}
+	}
 
-  private static Language getElementLanguage(final CompletionParameters parameters) {
-    return ApplicationManager.getApplication().runReadAction(new Computable<Language>() {
-      public Language compute() {
-        return PsiUtilBase.getLanguageAtOffset(parameters.getPosition().getContainingFile(), parameters.getOffset());
-      }
-    });
-  }
+	private static Language getElementLanguage(final CompletionParameters parameters)
+	{
+		return ApplicationManager.getApplication().runReadAction(new Computable<Language>()
+		{
+			public Language compute()
+			{
+				return PsiUtilBase.getLanguageAtOffset(parameters.getPosition().getContainingFile(), parameters.getOffset());
+			}
+		});
+	}
 }

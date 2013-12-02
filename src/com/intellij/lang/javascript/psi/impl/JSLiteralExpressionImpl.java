@@ -15,11 +15,12 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
-import com.intellij.psi.*;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiReference;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,50 +29,64 @@ import org.jetbrains.annotations.NotNull;
  * Time: 11:24:42 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSLiteralExpression{
-  private volatile JSReferenceSet myReferenceSet;
-  private volatile long myModCount;
+public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSLiteralExpression
+{
+	private volatile JSReferenceSet myReferenceSet;
+	private volatile long myModCount;
 
-  public JSLiteralExpressionImpl(final ASTNode node) {
-    super(node);
-  }
+	public JSLiteralExpressionImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  @NotNull
-  public PsiReference[] getReferences() {
-    JSReferenceSet referenceSet = myReferenceSet;
+	@NotNull
+	public PsiReference[] getReferences()
+	{
+		JSReferenceSet referenceSet = myReferenceSet;
 
-    if (referenceSet == null) {
-      synchronized (this) {
-        referenceSet = myReferenceSet;
-        if (referenceSet == null) {
-          referenceSet = new JSReferenceSet(this);
-          referenceSet.update(getText(), 0);
-          myReferenceSet = referenceSet;
-        }
-      }
-    } else {
-      final long count = getManager().getModificationTracker().getModificationCount();
+		if(referenceSet == null)
+		{
+			synchronized(this)
+			{
+				referenceSet = myReferenceSet;
+				if(referenceSet == null)
+				{
+					referenceSet = new JSReferenceSet(this);
+					referenceSet.update(getText(), 0);
+					myReferenceSet = referenceSet;
+				}
+			}
+		}
+		else
+		{
+			final long count = getManager().getModificationTracker().getModificationCount();
 
-      if (count != myModCount) {
-        synchronized (this) {
-          if (count != myModCount) {
-            referenceSet.update(getText(), 0);
-            myModCount = count;
-          }
-        }
-      }
-    }
-    
-    return myReferenceSet.getReferences();
-  }
+			if(count != myModCount)
+			{
+				synchronized(this)
+				{
+					if(count != myModCount)
+					{
+						referenceSet.update(getText(), 0);
+						myModCount = count;
+					}
+				}
+			}
+		}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSLiteralExpression(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+		return myReferenceSet.getReferences();
+	}
+
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSLiteralExpression(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 
 }

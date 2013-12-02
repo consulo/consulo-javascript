@@ -15,17 +15,18 @@ import com.intellij.util.IncorrectOperationException;
 
 /**
  * @author peter
-*/
-abstract class JSAbstractElementManipulator<T extends PsiElement> extends AbstractElementManipulator<T> {
-  public T handleContentChange(final T element, final TextRange range, String newContent)
-    throws IncorrectOperationException {
-    String oldText = element.getText();
-    newContent = StringUtil.escapeStringCharacters(newContent);
-    String newText = oldText.substring(0, range.getStartOffset()) + newContent + oldText.substring(range.getEndOffset());
-    final JSLanguageDialect languageDialect = JSUtils.getDialect(element.getContainingFile());
+ */
+abstract class JSAbstractElementManipulator<T extends PsiElement> extends AbstractElementManipulator<T>
+{
+	public T handleContentChange(final T element, final TextRange range, String newContent) throws IncorrectOperationException
+	{
+		String oldText = element.getText();
+		newContent = StringUtil.escapeStringCharacters(newContent);
+		String newText = oldText.substring(0, range.getStartOffset()) + newContent + oldText.substring(range.getEndOffset());
+		final JSLanguageDialect languageDialect = JSUtils.getDialect(element.getContainingFile());
 
-    return (T)element.replace(createTree(newText,languageDialect, element.getProject()));
-  }
+		return (T) element.replace(createTree(newText, languageDialect, element.getProject()));
+	}
 
-  protected abstract T createTree(final String newText, final JSLanguageDialect languageDialect, final Project project);
+	protected abstract T createTree(final String newText, final JSLanguageDialect languageDialect, final Project project);
 }

@@ -43,80 +43,103 @@ import com.intellij.util.Function;
 /**
  * @author max
  */
-public class JavascriptParserDefinition implements ParserDefinition {
-  private static Function<ASTNode, PsiElement> ourGwtReferenceExpressionCreator;
+public class JavascriptParserDefinition implements ParserDefinition
+{
+	private static Function<ASTNode, PsiElement> ourGwtReferenceExpressionCreator;
 
-  @NotNull
-  public Lexer createLexer(Project project, LanguageVersion languageVersion) {
-    return new JavaScriptParsingLexer(JavascriptLanguage.DIALECT_OPTION_HOLDER);
-  }
+	@NotNull
+	public Lexer createLexer(Project project, LanguageVersion languageVersion)
+	{
+		return new JavaScriptParsingLexer(JavascriptLanguage.DIALECT_OPTION_HOLDER);
+	}
 
-  public IFileElementType getFileNodeType() {
-    return JSElementTypes.FILE;
-  }
+	public IFileElementType getFileNodeType()
+	{
+		return JSElementTypes.FILE;
+	}
 
-  @NotNull
-  public TokenSet getWhitespaceTokens(LanguageVersion languageVersion) {
-    return TokenSet.create(JSTokenTypes.WHITE_SPACE);
-  }
+	@NotNull
+	public TokenSet getWhitespaceTokens(LanguageVersion languageVersion)
+	{
+		return TokenSet.create(JSTokenTypes.WHITE_SPACE);
+	}
 
-  @NotNull
-  public TokenSet getCommentTokens(LanguageVersion languageVersion) {
-    return JSTokenTypes.COMMENTS;
-  }
+	@NotNull
+	public TokenSet getCommentTokens(LanguageVersion languageVersion)
+	{
+		return JSTokenTypes.COMMENTS;
+	}
 
-  @NotNull
-  public TokenSet getStringLiteralElements(LanguageVersion languageVersion) {
-    return TokenSet.EMPTY;
-  }
+	@NotNull
+	public TokenSet getStringLiteralElements(LanguageVersion languageVersion)
+	{
+		return TokenSet.EMPTY;
+	}
 
-  @NotNull
-  public PsiParser createParser(final Project project, LanguageVersion languageVersion) {
-    return new JSParser(null);
-  }
+	@NotNull
+	public PsiParser createParser(final Project project, LanguageVersion languageVersion)
+	{
+		return new JSParser(null);
+	}
 
-  public PsiFile createFile(FileViewProvider viewProvider) {
-    return new JSFileImpl(viewProvider);
-  }
+	public PsiFile createFile(FileViewProvider viewProvider)
+	{
+		return new JSFileImpl(viewProvider);
+	}
 
-  public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
-    final Lexer lexer = createLexer(left.getPsi().getProject(), null);
-    return LanguageUtil.canStickTokensTogetherByLexer(left, right, lexer);
-  }
+	public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right)
+	{
+		final Lexer lexer = createLexer(left.getPsi().getProject(), null);
+		return LanguageUtil.canStickTokensTogetherByLexer(left, right, lexer);
+	}
 
-  public static void setGwtReferenceExpressionCreator(final Function<ASTNode, PsiElement> gwtReferenceExpressionCreator) {
-    ourGwtReferenceExpressionCreator = gwtReferenceExpressionCreator;
-  }
+	public static void setGwtReferenceExpressionCreator(final Function<ASTNode, PsiElement> gwtReferenceExpressionCreator)
+	{
+		ourGwtReferenceExpressionCreator = gwtReferenceExpressionCreator;
+	}
 
-  @NotNull
-  public PsiElement createElement(ASTNode node) {
-    final IElementType type = node.getElementType();
-    if (type instanceof PsiGenerator) {
-      final PsiElement element = ((PsiGenerator)type).construct(node);
-      if (element != null) return element;
-    }
+	@NotNull
+	public PsiElement createElement(ASTNode node)
+	{
+		final IElementType type = node.getElementType();
+		if(type instanceof PsiGenerator)
+		{
+			final PsiElement element = ((PsiGenerator) type).construct(node);
+			if(element != null)
+			{
+				return element;
+			}
+		}
 
-    if (type == JSElementTypes.FUNCTION_DECLARATION) {
-      return new JSFunctionImpl(node);
-    } else if (type == JSElementTypes.EXTENDS_LIST || type == JSElementTypes.IMPLEMENTS_LIST) {
-      return new JSReferenceListImpl(node);
-    }
-    else if (type == JSElementTypes.FORMAL_PARAMETER) {
-      return new JSParameterImpl(node);
-    }
-    else if (type == JSElementTypes.GWT_REFERENCE_EXPRESSION) {
-      return ourGwtReferenceExpressionCreator.fun(node);
-    }
-    else if (type == JSElementTypes.EMBEDDED_CONTENT) {
-      return new JSEmbeddedContentImpl(node);
-    } else if (type == JSTokenTypes.XML_JS_SCRIPT ||
-               type == JSElementTypes.EMBEDDED_EXPRESSION
-              ) {
-      return new JSEmbeddedContentImpl(node);
-    } else if (type == JSTokenTypes.DOC_COMMENT) {
-      return new JSDocCommentImpl(node);
-    }
+		if(type == JSElementTypes.FUNCTION_DECLARATION)
+		{
+			return new JSFunctionImpl(node);
+		}
+		else if(type == JSElementTypes.EXTENDS_LIST || type == JSElementTypes.IMPLEMENTS_LIST)
+		{
+			return new JSReferenceListImpl(node);
+		}
+		else if(type == JSElementTypes.FORMAL_PARAMETER)
+		{
+			return new JSParameterImpl(node);
+		}
+		else if(type == JSElementTypes.GWT_REFERENCE_EXPRESSION)
+		{
+			return ourGwtReferenceExpressionCreator.fun(node);
+		}
+		else if(type == JSElementTypes.EMBEDDED_CONTENT)
+		{
+			return new JSEmbeddedContentImpl(node);
+		}
+		else if(type == JSTokenTypes.XML_JS_SCRIPT || type == JSElementTypes.EMBEDDED_EXPRESSION)
+		{
+			return new JSEmbeddedContentImpl(node);
+		}
+		else if(type == JSTokenTypes.DOC_COMMENT)
+		{
+			return new JSDocCommentImpl(node);
+		}
 
-    return new ASTWrapperPsiElement(node);
-  }
+		return new ASTWrapperPsiElement(node);
+	}
 }

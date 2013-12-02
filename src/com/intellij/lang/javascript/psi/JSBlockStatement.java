@@ -22,6 +22,7 @@ package com.intellij.lang.javascript.psi;
  * Time: 6:51:45 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSBlockStatement extends JSStatement {
-  JSStatement[] getStatements();
+public interface JSBlockStatement extends JSStatement
+{
+	JSStatement[] getStatements();
 }

@@ -5,8 +5,10 @@ package com.intellij.lang.javascript.generation;
  *         Date: Jul 19, 2008
  *         Time: 1:01:05 AM
  */
-public class JavaScriptGenerateConstructorAction extends BaseJSGenerateAction {
-  protected JavaScriptGenerateAccessorHandler.GenerationMode getGenerationMode() {
-    return JavaScriptGenerateAccessorHandler.GenerationMode.CONSTRUCTOR;
-  }
+public class JavaScriptGenerateConstructorAction extends BaseJSGenerateAction
+{
+	protected JavaScriptGenerateAccessorHandler.GenerationMode getGenerationMode()
+	{
+		return JavaScriptGenerateAccessorHandler.GenerationMode.CONSTRUCTOR;
+	}
 }

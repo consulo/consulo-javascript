@@ -22,9 +22,10 @@ package com.intellij.lang.javascript.psi;
  * Time: 6:46:19 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSExpression extends JSElement {
-  JSExpression[] EMPTY_ARRAY = new JSExpression[0];
-  //JSType getType(); TODO
+public interface JSExpression extends JSElement
+{
+	JSExpression[] EMPTY_ARRAY = new JSExpression[0];
+	//JSType getType(); TODO
 
-  JSExpression replace(JSExpression other);
+	JSExpression replace(JSExpression other);
 }

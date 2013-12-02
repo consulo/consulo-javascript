@@ -21,6 +21,7 @@ import com.intellij.psi.StubBasedPsiElement;
 /**
  * @by Maxim.Mossienko
  */
-public interface JSUseNamespaceDirective extends JSStatement, StubBasedPsiElement<JSUseNamespaceDirectiveStub> {
-  String getNamespaceToBeUsed();
+public interface JSUseNamespaceDirective extends JSStatement, StubBasedPsiElement<JSUseNamespaceDirectiveStub>
+{
+	String getNamespaceToBeUsed();
 }

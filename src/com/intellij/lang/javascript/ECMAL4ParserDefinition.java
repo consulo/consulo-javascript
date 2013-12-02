@@ -11,19 +11,23 @@ import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.tree.IFileElementType;
 
-public class ECMAL4ParserDefinition extends JavascriptParserDefinition {
-  @NotNull
-  public Lexer createLexer(final Project project, LanguageVersion languageVersion) {
-    return new JavaScriptParsingLexer(ECMAL4LanguageDialect.DIALECT_OPTION_HOLDER);
-  }
+public class ECMAL4ParserDefinition extends JavascriptParserDefinition
+{
+	@NotNull
+	public Lexer createLexer(final Project project, LanguageVersion languageVersion)
+	{
+		return new JavaScriptParsingLexer(ECMAL4LanguageDialect.DIALECT_OPTION_HOLDER);
+	}
 
-  public IFileElementType getFileNodeType() {
-    return JSElementTypes.ECMA4_FILE;
-  }
+	public IFileElementType getFileNodeType()
+	{
+		return JSElementTypes.ECMA4_FILE;
+	}
 
 
-  @NotNull
-  public PsiParser createParser(final Project project, LanguageVersion languageVersion) {
-    return new JSParser(JavaScriptSupportLoader.ECMA_SCRIPT_L4);
-  }
+	@NotNull
+	public PsiParser createParser(final Project project, LanguageVersion languageVersion)
+	{
+		return new JSParser(JavaScriptSupportLoader.ECMA_SCRIPT_L4);
+	}
 }

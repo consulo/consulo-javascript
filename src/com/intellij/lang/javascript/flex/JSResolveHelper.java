@@ -14,14 +14,16 @@ import com.intellij.util.Processor;
 /**
  * @author yole
  */
-public interface JSResolveHelper {
-  ExtensionPointName<JSResolveHelper> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.javascript.resolveHelper");
+public interface JSResolveHelper
+{
+	ExtensionPointName<JSResolveHelper> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.javascript.resolveHelper");
 
-  // TODO: drop module
-  @Nullable
-  PsiElement findClassByQName(final String link, final JavaScriptIndex index, final String className, GlobalSearchScope scope);
+	// TODO: drop module
+	@Nullable
+	PsiElement findClassByQName(final String link, final JavaScriptIndex index, final String className, GlobalSearchScope scope);
 
-  void importClass(final PsiScopeProcessor processor, final PsiNamedElement file, final String packageQualifierText);
-  boolean processPackage(final String packageQualifierText, String resolvedName, final Processor<VirtualFile> processor, GlobalSearchScope globalSearchScope,
-                         Project project);
+	void importClass(final PsiScopeProcessor processor, final PsiNamedElement file, final String packageQualifierText);
+
+	boolean processPackage(final String packageQualifierText, String resolvedName, final Processor<VirtualFile> processor,
+			GlobalSearchScope globalSearchScope, Project project);
 }

@@ -9,18 +9,23 @@ import com.intellij.usages.UsageGroup;
 /**
  * @author Maxim.Mossienko
  */
-public class JavaScriptFunctionGroupRuleProvider extends JavaScriptGroupRuleProviderBase<JSFunction> {
-  protected Class<? extends JSNamedElement> getUsageClass() {
-    return JSFunction.class;
-  }
+public class JavaScriptFunctionGroupRuleProvider extends JavaScriptGroupRuleProviderBase<JSFunction>
+{
+	protected Class<? extends JSNamedElement> getUsageClass()
+	{
+		return JSFunction.class;
+	}
 
-  protected UsageGroup createUsageGroup(final JSFunction jsFunction) {
-    return new FunctionUsageGroup(jsFunction);
-  }
+	protected UsageGroup createUsageGroup(final JSFunction jsFunction)
+	{
+		return new FunctionUsageGroup(jsFunction);
+	}
 
-  private static class FunctionUsageGroup extends JavaScriptGroupRuleProviderBase.PsiNamedElementUsageGroupBase<JSFunction> {
-    public FunctionUsageGroup(@NotNull JSFunction function) {
-      super(function, AllIcons.Nodes.Function);
-    }
-  }
+	private static class FunctionUsageGroup extends JavaScriptGroupRuleProviderBase.PsiNamedElementUsageGroupBase<JSFunction>
+	{
+		public FunctionUsageGroup(@NotNull JSFunction function)
+		{
+			super(function, AllIcons.Nodes.Function);
+		}
+	}
 }

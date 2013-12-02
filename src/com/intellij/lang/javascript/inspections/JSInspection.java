@@ -39,37 +39,45 @@ import com.intellij.psi.util.PsiTreeUtil;
  * Time: 7:34:46 PM
  * To change this template use File | Settings | File Templates.
  */
-public abstract class JSInspection extends LocalInspectionTool implements CustomSuppressableInspectionTool {
-  protected boolean myOnTheFly;
-  protected abstract JSElementVisitor createVisitor(final ProblemsHolder holder);
+public abstract class JSInspection extends LocalInspectionTool implements CustomSuppressableInspectionTool
+{
+	protected boolean myOnTheFly;
 
-  @NotNull
-  public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
-    myOnTheFly = isOnTheFly;
-    return createVisitor(holder);
-  }
+	protected abstract JSElementVisitor createVisitor(final ProblemsHolder holder);
 
-  public boolean isEnabledByDefault() {
-    return true;
-  }
+	@NotNull
+	public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly)
+	{
+		myOnTheFly = isOnTheFly;
+		return createVisitor(holder);
+	}
 
-  @NotNull
-  public HighlightDisplayLevel getDefaultLevel() {
-    return HighlightDisplayLevel.INFO;
-  }
+	public boolean isEnabledByDefault()
+	{
+		return true;
+	}
 
-  public PsiNamedElement getProblemElement(final PsiElement psiElement) {
-    return PsiTreeUtil.getNonStrictParentOfType(psiElement, JSNamedElement.class);
-  }
+	@NotNull
+	public HighlightDisplayLevel getDefaultLevel()
+	{
+		return HighlightDisplayLevel.INFO;
+	}
 
-  @Nullable
-  public SuppressIntentionAction[] getSuppressActions(final PsiElement element) {
-    return new SuppressIntentionAction[] {
-    /*  new AddNoInspectionCommentFix(HighlightDisplayKey.find(getShortName()), JSSuppressionHolder.class),*/
-    };
-  }
+	public PsiNamedElement getProblemElement(final PsiElement psiElement)
+	{
+		return PsiTreeUtil.getNonStrictParentOfType(psiElement, JSNamedElement.class);
+	}
 
-  public boolean isSuppressedFor(final PsiElement element) {
-    return SuppressionUtil.isSuppressedInStatement(element, getID(), JSSuppressionHolder.class);
-  }
+	@Nullable
+	public SuppressIntentionAction[] getSuppressActions(final PsiElement element)
+	{
+		return new SuppressIntentionAction[]{
+	/*  new AddNoInspectionCommentFix(HighlightDisplayKey.find(getShortName()), JSSuppressionHolder.class),*/
+		};
+	}
+
+	public boolean isSuppressedFor(final PsiElement element)
+	{
+		return SuppressionUtil.isSuppressedInStatement(element, getID(), JSSuppressionHolder.class);
+	}
 }

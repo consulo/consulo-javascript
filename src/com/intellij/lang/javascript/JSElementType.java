@@ -32,51 +32,67 @@ import com.intellij.psi.tree.IElementType;
  * Time: 6:38:56 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSElementType extends IElementType implements PsiGenerator<JSElement> {
-  private Constructor<JSElement> constructor;
-  private static final Logger LOG = Logger.getInstance("JSElementType.PsiGenerator");
+public class JSElementType extends IElementType implements PsiGenerator<JSElement>
+{
+	private Constructor<JSElement> constructor;
+	private static final Logger LOG = Logger.getInstance("JSElementType.PsiGenerator");
 
-  public JSElementType(@NonNls @NotNull String debugName) {
-    this(debugName, true);
-  }
-  
-  public JSElementType(@NonNls @NotNull String debugName, boolean register) {
-    super(debugName, JavaScriptSupportLoader.JAVASCRIPT.getLanguage(), null, register);
+	public JSElementType(@NonNls @NotNull String debugName)
+	{
+		this(debugName, true);
+	}
 
-    final StringBuilder builder = new StringBuilder("com.intellij.lang.javascript.psi.impl.JS");
-    boolean doUp = false;
-    for(int i = 0; i < debugName.length(); ++i) {
-      final char ch = debugName.charAt(i);
-      if (ch == '_') {
-        doUp = true;
-        continue;
-      }
+	public JSElementType(@NonNls @NotNull String debugName, boolean register)
+	{
+		super(debugName, JavaScriptSupportLoader.JAVASCRIPT.getLanguage(), null, register);
 
-      builder.append(i == 0 || doUp ? Character.toUpperCase(ch) : Character.toLowerCase(ch));
-      doUp = false;
-    }
+		final StringBuilder builder = new StringBuilder("com.intellij.lang.javascript.psi.impl.JS");
+		boolean doUp = false;
+		for(int i = 0; i < debugName.length(); ++i)
+		{
+			final char ch = debugName.charAt(i);
+			if(ch == '_')
+			{
+				doUp = true;
+				continue;
+			}
 
-    builder.append("Impl");
+			builder.append(i == 0 || doUp ? Character.toUpperCase(ch) : Character.toLowerCase(ch));
+			doUp = false;
+		}
 
-    final String s = builder.toString();
-    try {
-      constructor = (Constructor<JSElement>)Class.forName(s).getConstructor(ASTNode.class);
-    } catch (Exception e) {
-    }
-  }
+		builder.append("Impl");
 
-  @SuppressWarnings({"HardCodedStringLiteral"})
-  public String toString() {
-    return "JS:" + super.toString();
-  }
+		final String s = builder.toString();
+		try
+		{
+			constructor = (Constructor<JSElement>) Class.forName(s).getConstructor(ASTNode.class);
+		}
+		catch(Exception e)
+		{
+		}
+	}
 
-  public JSElement construct(ASTNode node) {
-    if (constructor == null) return null;
-    try {
-      return constructor.newInstance(node);
-    } catch (Exception ex) {
-      LOG.error(ex);
-      throw new RuntimeException(ex);
-    }
-  }
+	@SuppressWarnings({"HardCodedStringLiteral"})
+	public String toString()
+	{
+		return "JS:" + super.toString();
+	}
+
+	public JSElement construct(ASTNode node)
+	{
+		if(constructor == null)
+		{
+			return null;
+		}
+		try
+		{
+			return constructor.newInstance(node);
+		}
+		catch(Exception ex)
+		{
+			LOG.error(ex);
+			throw new RuntimeException(ex);
+		}
+	}
 }

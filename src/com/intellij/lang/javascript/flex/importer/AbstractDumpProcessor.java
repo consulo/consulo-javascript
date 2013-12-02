@@ -5,215 +5,288 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Maxim.Mossienko
-*         Date: Oct 20, 2008
-*         Time: 7:02:13 PM
-*/
-abstract class AbstractDumpProcessor implements FlexByteCodeInformationProcessor {
-  protected @NonNls StringBuilder sb = new StringBuilder();
-  private boolean firstMetaDataMember;
+ *         Date: Oct 20, 2008
+ *         Time: 7:02:13 PM
+ */
+abstract class AbstractDumpProcessor implements FlexByteCodeInformationProcessor
+{
+	protected
+	@NonNls
+	StringBuilder sb = new StringBuilder();
+	private boolean firstMetaDataMember;
 
-  String getResult() { return sb.toString(); }
+	String getResult()
+	{
+		return sb.toString();
+	}
 
-  public void append(@NotNull @NonNls String str) {
-    sb.append(str);
-  }
+	public void append(@NotNull @NonNls String str)
+	{
+		sb.append(str);
+	}
 
-  public String getParentName(final MemberInfo member) {
-    String parentName = null;
+	public String getParentName(final MemberInfo member)
+	{
+		String parentName = null;
 
-    if (member.parentTraits != null) {
-      if(member.parentTraits.name instanceof Multiname) {
-        final Multiname multiname = (Multiname)member.parentTraits.name;
+		if(member.parentTraits != null)
+		{
+			if(member.parentTraits.name instanceof Multiname)
+			{
+				final Multiname multiname = (Multiname) member.parentTraits.name;
 
-        if(multiname.hasNamespace()) {
-          parentName = multiname.name;
-        }
-      }
-      if (parentName == null) {
-        parentName = member.parentTraits.name.toString().replaceAll("::", ".");
-      }
-    }
-    return parentName;
-  }
+				if(multiname.hasNamespace())
+				{
+					parentName = multiname.name;
+				}
+			}
+			if(parentName == null)
+			{
+				parentName = member.parentTraits.name.toString().replaceAll("::", ".");
+			}
+		}
+		return parentName;
+	}
 
-  public void addMetaDataValue(String s, String s1) {
-    append(firstMetaDataMember ? "(":",");
-    firstMetaDataMember = false;
-    if (s != null) {
-      append(s);
-      append("=");
-    }
-    append(s1);
-  }
+	public void addMetaDataValue(String s, String s1)
+	{
+		append(firstMetaDataMember ? "(" : ",");
+		firstMetaDataMember = false;
+		if(s != null)
+		{
+			append(s);
+			append("=");
+		}
+		append(s1);
+	}
 
-  public void processVariable(SlotInfo info, String indent, String attr) {
-    appendFieldSeparator();
+	public void processVariable(SlotInfo info, String indent, String attr)
+	{
+		appendFieldSeparator();
 
-    attr = appendModifiers(info, attr);
-    processModifierList(info, attr, indent);
-    append(indent + attr);
-    processMemberKindAndName(info);
+		attr = appendModifiers(info, attr);
+		processModifierList(info, attr, indent);
+		append(indent + attr);
+		processMemberKindAndName(info);
 
-    append(":");
-    processMultinameAsPackageName(info.type, info.parentTraits.getClassName(), true);
-    if (info.value != null) processValue(info.type, info.value);
-  }
+		append(":");
+		processMultinameAsPackageName(info.type, info.parentTraits.getClassName(), true);
+		if(info.value != null)
+		{
+			processValue(info.type, info.value);
+		}
+	}
 
-  public void processFunction(MethodInfo methodInfo, boolean referenceNameRequested, Abc abc, String indent, String attr) {
-    if (!referenceNameRequested) appendMethodSeparator();
+	public void processFunction(MethodInfo methodInfo, boolean referenceNameRequested, Abc abc, String indent, String attr)
+	{
+		if(!referenceNameRequested)
+		{
+			appendMethodSeparator();
+		}
 
-    attr = appendModifiers(methodInfo, attr);
-    processModifierList(methodInfo, attr, indent);
+		attr = appendModifiers(methodInfo, attr);
+		processModifierList(methodInfo, attr, indent);
 
-    append(indent + attr);
+		append(indent + attr);
 
-    processMemberKindAndName(methodInfo);
-    final String parentName = methodInfo.getParentName();
-    processArgumentList(methodInfo, parentName);
-    append(":");
-    processMultinameAsPackageName(methodInfo.returnType, parentName, referenceNameRequested);
-  }
+		processMemberKindAndName(methodInfo);
+		final String parentName = methodInfo.getParentName();
+		processArgumentList(methodInfo, parentName);
+		append(":");
+		processMultinameAsPackageName(methodInfo.returnType, parentName, referenceNameRequested);
+	}
 
-  protected void processMemberKindAndName(@NotNull final MemberInfo member) {
-    append(Abc.traitKinds[member.kind]);
-    append(" ");
+	protected void processMemberKindAndName(@NotNull final MemberInfo member)
+	{
+		append(Abc.traitKinds[member.kind]);
+		append(" ");
 
-    if (member.name != null) {
-      processMultinameAsPackageName(member.name, member.parentTraits.getClassName(), false);
-    } else {
-      append("undefined");
-    }
-  }
+		if(member.name != null)
+		{
+			processMultinameAsPackageName(member.name, member.parentTraits.getClassName(), false);
+		}
+		else
+		{
+			append("undefined");
+		}
+	}
 
-  protected abstract String appendModifiers(MemberInfo methodInfo, String attr);
-  protected abstract void processValue(Multiname type, Object value);
+	protected abstract String appendModifiers(MemberInfo methodInfo, String attr);
 
-  protected void processArgumentList(MethodInfo methodInfo, String parentName) {
-    append("(");
+	protected abstract void processValue(Multiname type, Object value);
 
-    for (int i = 0; i < methodInfo.paramTypes.length; ++i) {
-      final Multiname paramType = methodInfo.paramTypes[i];
-      final boolean restParameter = FlexByteCodeInformationProcessor.REST_PARAMETER_TYPE.equals(paramType.name);
-      if (restParameter && !dumpRestParameter()) break; // original one do not dump
-      if (i > 0) append(",");
+	protected void processArgumentList(MethodInfo methodInfo, String parentName)
+	{
+		append("(");
 
-      processParameter(
-        methodInfo.paramNames != null ? methodInfo.paramNames[i] : "a" + (i > 0 ? "" + (i + 1) : ""),
-        methodInfo.paramTypes[i],
-        parentName,
-        methodInfo.optionalValues != null && i < methodInfo.optionalValues.length ? methodInfo.optionalValues[i] : null,
-        restParameter
-      );
-    }
+		for(int i = 0; i < methodInfo.paramTypes.length; ++i)
+		{
+			final Multiname paramType = methodInfo.paramTypes[i];
+			final boolean restParameter = FlexByteCodeInformationProcessor.REST_PARAMETER_TYPE.equals(paramType.name);
+			if(restParameter && !dumpRestParameter())
+			{
+				break; // original one do not dump
+			}
+			if(i > 0)
+			{
+				append(",");
+			}
 
-    append(")");
-  }
+			processParameter(methodInfo.paramNames != null ? methodInfo.paramNames[i] : "a" + (i > 0 ? "" + (i + 1) : ""), methodInfo.paramTypes[i],
+					parentName, methodInfo.optionalValues != null && i < methodInfo.optionalValues.length ? methodInfo.optionalValues[i] : null, restParameter);
+		}
 
-  protected abstract boolean dumpRestParameter();
+		append(")");
+	}
 
-  public void processMetadata(MetaData metaData) {
-    append("[");
-    append(metaData.name);
-    firstMetaDataMember = true;
-    
-    for (String n : metaData.keySet()) {
-      addMetaDataValue(!"*".equals(n) || doStarMetaAttrNameDump() ?  n:null, '"' + metaData.get(n) + '"');
-    }
+	protected abstract boolean dumpRestParameter();
 
-    if (!firstMetaDataMember) append(")");
-    append("]");
-  }
+	public void processMetadata(MetaData metaData)
+	{
+		append("[");
+		append(metaData.name);
+		firstMetaDataMember = true;
 
-  public void processClass(SlotInfo slotInfo, Abc abc, String attr, String indent) {
-    append("\n");
+		for(String n : metaData.keySet())
+		{
+			addMetaDataValue(!"*".equals(n) || doStarMetaAttrNameDump() ? n : null, '"' + metaData.get(n) + '"');
+		}
 
-    @NonNls String def;
-    final boolean isInterface = slotInfo.isInterfaceClass();
-    if (isInterface) def = "interface";
-    else {
-      def = "class";
-    }
+		if(!firstMetaDataMember)
+		{
+			append(")");
+		}
+		append("]");
+	}
 
-    if (!doStarTypeDumpInExtends()) {
-      final String ns = slotInfo.name.hasNamespace() ? slotInfo.name.getNsName():null;
+	public void processClass(SlotInfo slotInfo, Abc abc, String attr, String indent)
+	{
+		append("\n");
 
-      if (ns != null && ns.length() > 0) attr += ns;
-      else attr+="public";
-      attr += " ";
-    }
+		@NonNls String def;
+		final boolean isInterface = slotInfo.isInterfaceClass();
+		if(isInterface)
+		{
+			def = "interface";
+		}
+		else
+		{
+			def = "class";
+		}
 
-    Traits ct = (Traits)slotInfo.value;
-    Traits it = ct.itraits;
-    if (!isInterface) {
-      if ((it.flags & Abc.CLASS_FLAG_final) != 0) attr += "final ";
-      if ((it.flags & Abc.CLASS_FLAG_sealed) == 0) attr += "dynamic ";
-    }
+		if(!doStarTypeDumpInExtends())
+		{
+			final String ns = slotInfo.name.hasNamespace() ? slotInfo.name.getNsName() : null;
 
-    processModifierList(slotInfo, attr, indent);
+			if(ns != null && ns.length() > 0)
+			{
+				attr += ns;
+			}
+			else
+			{
+				attr += "public";
+			}
+			attr += " ";
+		}
 
-    append(indent + attr + def + " ");
-    processMultinameAsPackageName(slotInfo.name, null, true);
-    dumpExtendsList(it);
+		Traits ct = (Traits) slotInfo.value;
+		Traits it = ct.itraits;
+		if(!isInterface)
+		{
+			if((it.flags & Abc.CLASS_FLAG_final) != 0)
+			{
+				attr += "final ";
+			}
+			if((it.flags & Abc.CLASS_FLAG_sealed) == 0)
+			{
+				attr += "dynamic ";
+			}
+		}
 
-    append("\n");
-    String oldindent = indent;
-    indent += Abc.TAB;
+		processModifierList(slotInfo, attr, indent);
 
-    dumpInterfacesList(indent, it, isInterface);
-    append(oldindent + "{\n");
-    setProcessingInterface(isInterface);
+		append(indent + attr + def + " ");
+		processMultinameAsPackageName(slotInfo.name, null, true);
+		dumpExtendsList(it);
 
-    it.init.dump(abc, indent, "", this);
-    it.dump(abc, indent, "", this);
-    ct.dump(abc, indent, "static ", this);
-    ct.init.dump(abc, indent, "static ", this);
-    append(oldindent + "}\n");
-    setProcessingInterface(false);
-  }
+		append("\n");
+		String oldindent = indent;
+		indent += Abc.TAB;
 
-  protected void processModifierList(MemberInfo memberInfo, String attr, String indent) {
-    memberInfo.dumpMetaData(indent, this);
-  }
+		dumpInterfacesList(indent, it, isInterface);
+		append(oldindent + "{\n");
+		setProcessingInterface(isInterface);
 
-  protected void dumpExtendsList(Traits it) {
-    if (!it.base.isStarReference() || doStarTypeDumpInExtends()) {
-      append(" extends ");
-      processMultinameAsPackageName(it.base, null, true);
-    }
-  }
+		it.init.dump(abc, indent, "", this);
+		it.dump(abc, indent, "", this);
+		ct.dump(abc, indent, "static ", this);
+		ct.init.dump(abc, indent, "static ", this);
+		append(oldindent + "}\n");
+		setProcessingInterface(false);
+	}
 
-  protected void dumpInterfacesList(String indent, Traits it, boolean anInterface) {
-    if (it.interfaces.length > 0) {
-      append(indent + (anInterface && this instanceof AS3InterfaceDumper ? "extends ":"implements "));
-      boolean first = true;
+	protected void processModifierList(MemberInfo memberInfo, String attr, String indent)
+	{
+		memberInfo.dumpMetaData(indent, this);
+	}
 
-      for (Multiname name : it.interfaces) {
-        if (!first) append(",");
-        first = false;
-        processMultinameAsPackageName(name,null, true);
-      }
-      append("\n");
-    }
-  }
+	protected void dumpExtendsList(Traits it)
+	{
+		if(!it.base.isStarReference() || doStarTypeDumpInExtends())
+		{
+			append(" extends ");
+			processMultinameAsPackageName(it.base, null, true);
+		}
+	}
 
-  protected static String quote(final String s) {
-    if (s.length() == 0) return s;
-    final StringBuilder b = new StringBuilder(s.length());
+	protected void dumpInterfacesList(String indent, Traits it, boolean anInterface)
+	{
+		if(it.interfaces.length > 0)
+		{
+			append(indent + (anInterface && this instanceof AS3InterfaceDumper ? "extends " : "implements "));
+			boolean first = true;
 
-    for(int i = 0; i < s.length(); ++i) {
-      final char ch = s.charAt(i);
+			for(Multiname name : it.interfaces)
+			{
+				if(!first)
+				{
+					append(",");
+				}
+				first = false;
+				processMultinameAsPackageName(name, null, true);
+			}
+			append("\n");
+		}
+	}
 
-      if (ch == '\\' || ch == '"') {
-        b.append('\\');
-      } else if (ch == '\n') {
-        b.append("\\n");
-        continue;
-      } else if (ch == '\r') {
-        b.append("\\r");
-        continue;
-      }
-      b.append(ch);
-    }
-    return b.toString();
-  }
+	protected static String quote(final String s)
+	{
+		if(s.length() == 0)
+		{
+			return s;
+		}
+		final StringBuilder b = new StringBuilder(s.length());
+
+		for(int i = 0; i < s.length(); ++i)
+		{
+			final char ch = s.charAt(i);
+
+			if(ch == '\\' || ch == '"')
+			{
+				b.append('\\');
+			}
+			else if(ch == '\n')
+			{
+				b.append("\\n");
+				continue;
+			}
+			else if(ch == '\r')
+			{
+				b.append("\\r");
+				continue;
+			}
+			b.append(ch);
+		}
+		return b.toString();
+	}
 }

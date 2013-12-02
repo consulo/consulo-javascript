@@ -15,6 +15,10 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -24,11 +28,6 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.IElementType;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.jetbrains.annotations.NotNull;
-
 /**
  * Created by IntelliJ IDEA.
  * User: max
@@ -36,41 +35,52 @@ import org.jetbrains.annotations.NotNull;
  * Time: 11:32:23 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSArrayLiteralExpressionImpl extends JSExpressionImpl implements JSArrayLiteralExpression {
-  public JSArrayLiteralExpressionImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSArrayLiteralExpressionImpl extends JSExpressionImpl implements JSArrayLiteralExpression
+{
+	public JSArrayLiteralExpressionImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSExpression[] getExpressions() {
-    List<JSExpression> result = new ArrayList<JSExpression>();
-    ASTNode child = getNode().getFirstChildNode();
-    boolean wasExpression = false;
-    while (child != null) {
-      final IElementType type = child.getElementType();
-      if (JSElementTypes.EXPRESSIONS.contains(type)) {
-        result.add((JSExpression)child.getPsi());
-        wasExpression = true;
-      }
-      else if (type == JSTokenTypes.COMMA) {
-        if (wasExpression) {
-          wasExpression = false;
-        }
-        else {
-          result.add(null); // Skipped expression like [a,,b]
-        }
-      }
-      child = child.getTreeNext();
-    }
+	public JSExpression[] getExpressions()
+	{
+		List<JSExpression> result = new ArrayList<JSExpression>();
+		ASTNode child = getNode().getFirstChildNode();
+		boolean wasExpression = false;
+		while(child != null)
+		{
+			final IElementType type = child.getElementType();
+			if(JSElementTypes.EXPRESSIONS.contains(type))
+			{
+				result.add((JSExpression) child.getPsi());
+				wasExpression = true;
+			}
+			else if(type == JSTokenTypes.COMMA)
+			{
+				if(wasExpression)
+				{
+					wasExpression = false;
+				}
+				else
+				{
+					result.add(null); // Skipped expression like [a,,b]
+				}
+			}
+			child = child.getTreeNext();
+		}
 
-    return result.toArray(new JSExpression[result.size()]);
-  }
+		return result.toArray(new JSExpression[result.size()]);
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSArrayLiteralExpression(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSArrayLiteralExpression(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 }

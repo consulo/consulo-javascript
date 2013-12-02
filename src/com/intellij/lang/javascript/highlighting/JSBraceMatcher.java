@@ -15,13 +15,13 @@
  */
 package com.intellij.lang.javascript.highlighting;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.BracePair;
 import com.intellij.lang.PairedBraceMatcher;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.psi.tree.IElementType;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,29 +30,28 @@ import org.jetbrains.annotations.Nullable;
  * Time: 12:10:44 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSBraceMatcher implements PairedBraceMatcher {
-  private static final BracePair[] PAIRS = new BracePair[] {
-    new BracePair(JSTokenTypes.LPAR, JSTokenTypes.RPAR, false),
-    new BracePair(JSTokenTypes.LBRACKET, JSTokenTypes.RBRACKET, false),
-    new BracePair(JSTokenTypes.LBRACE, JSTokenTypes.RBRACE, true)
-  };
+public class JSBraceMatcher implements PairedBraceMatcher
+{
+	private static final BracePair[] PAIRS = new BracePair[]{
+			new BracePair(JSTokenTypes.LPAR, JSTokenTypes.RPAR, false),
+			new BracePair(JSTokenTypes.LBRACKET, JSTokenTypes.RBRACKET, false),
+			new BracePair(JSTokenTypes.LBRACE, JSTokenTypes.RBRACE, true)
+	};
 
-  public BracePair[] getPairs() {
-    return PAIRS;
-  }
+	public BracePair[] getPairs()
+	{
+		return PAIRS;
+	}
 
-  public boolean isPairedBracesAllowedBeforeType(@NotNull final IElementType lbraceType, @Nullable final IElementType tokenType) {
-    return JSTokenTypes.WHITE_SPACE  == tokenType
-            || JSTokenTypes.COMMENTS.contains(tokenType)
-            || tokenType == JSTokenTypes.SEMICOLON
-            || tokenType == JSTokenTypes.COMMA
-            || tokenType == JSTokenTypes.RPAR
-            || tokenType == JSTokenTypes.RBRACKET
-            || tokenType == JSTokenTypes.RBRACE
-            || null == tokenType;
-  }
+	public boolean isPairedBracesAllowedBeforeType(@NotNull final IElementType lbraceType, @Nullable final IElementType tokenType)
+	{
+		return JSTokenTypes.WHITE_SPACE == tokenType || JSTokenTypes.COMMENTS.contains(tokenType) || tokenType == JSTokenTypes.SEMICOLON || tokenType ==
+				JSTokenTypes.COMMA || tokenType == JSTokenTypes.RPAR || tokenType == JSTokenTypes.RBRACKET || tokenType == JSTokenTypes.RBRACE || null ==
+				tokenType;
+	}
 
-  public int getCodeConstructStart(final PsiFile file, int openingBraceOffset) {
-    return openingBraceOffset;
-  }
+	public int getCodeConstructStart(final PsiFile file, int openingBraceOffset)
+	{
+		return openingBraceOffset;
+	}
 }

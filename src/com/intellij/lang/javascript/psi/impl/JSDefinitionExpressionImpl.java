@@ -28,78 +28,103 @@ import com.intellij.util.IncorrectOperationException;
  * Time: 6:40:04 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSDefinitionExpressionImpl extends JSExpressionImpl implements JSDefinitionExpression {
-  public JSDefinitionExpressionImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSDefinitionExpressionImpl extends JSExpressionImpl implements JSDefinitionExpression
+{
+	public JSDefinitionExpressionImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSExpression getExpression() {
-    final ASTNode expressionNode = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
-    return expressionNode != null ? (JSExpression)expressionNode.getPsi() : null;
-  }
+	public JSExpression getExpression()
+	{
+		final ASTNode expressionNode = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
+		return expressionNode != null ? (JSExpression) expressionNode.getPsi() : null;
+	}
 
-  public String getName() {
-    final JSExpression expression = getExpression();
-    if (expression instanceof JSReferenceExpression) {
-      return ((JSReferenceExpression)expression).getReferencedName();
-    }
-    return null;
-  }
+	public String getName()
+	{
+		final JSExpression expression = getExpression();
+		if(expression instanceof JSReferenceExpression)
+		{
+			return ((JSReferenceExpression) expression).getReferencedName();
+		}
+		return null;
+	}
 
-  public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
-    final JSExpression expression = getExpression();
-    if (expression instanceof JSReferenceExpressionImpl) {
-      return ((JSReferenceExpressionImpl)expression).handleElementRenameInternal(name);
-    }
-    return null;
-  }
+	public PsiElement setName(@NotNull String name) throws IncorrectOperationException
+	{
+		final JSExpression expression = getExpression();
+		if(expression instanceof JSReferenceExpressionImpl)
+		{
+			return ((JSReferenceExpressionImpl) expression).handleElementRenameInternal(name);
+		}
+		return null;
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSDefinitionExpression(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSDefinitionExpression(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 
-  public Icon getIcon(int flags) {
-    return AllIcons.Nodes.Variable;
-  }
+	public Icon getIcon(int flags)
+	{
+		return AllIcons.Nodes.Variable;
+	}
 
-  public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
-    if (lastParent == null) return processor.execute(this, state);
-    return true;
-  }
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
+			@NotNull PsiElement place)
+	{
+		if(lastParent == null)
+		{
+			return processor.execute(this, state);
+		}
+		return true;
+	}
 
-  public void delete() throws IncorrectOperationException {
-    final PsiElement parent = getParent();
+	public void delete() throws IncorrectOperationException
+	{
+		final PsiElement parent = getParent();
 
-    if (parent instanceof JSAssignmentExpression) {
-      final PsiElement grandParent = parent.getParent();
+		if(parent instanceof JSAssignmentExpression)
+		{
+			final PsiElement grandParent = parent.getParent();
 
-      if (grandParent instanceof JSStatement) {
-        grandParent.delete();
-        return;
-      } else if (grandParent instanceof JSBinaryExpression) {
-        ((JSBinaryExpression)grandParent).getROperand().replace(((JSAssignmentExpression)parent).getROperand());
-        return;
-      } else if (grandParent instanceof JSVariable) {
-        final JSExpression initializerExpression = ((JSVariable)grandParent).getInitializer();
-        initializerExpression.replace(((JSAssignmentExpression)parent).getROperand());
-        return;
-      }
-    }
-    super.delete();
-  }
+			if(grandParent instanceof JSStatement)
+			{
+				grandParent.delete();
+				return;
+			}
+			else if(grandParent instanceof JSBinaryExpression)
+			{
+				((JSBinaryExpression) grandParent).getROperand().replace(((JSAssignmentExpression) parent).getROperand());
+				return;
+			}
+			else if(grandParent instanceof JSVariable)
+			{
+				final JSExpression initializerExpression = ((JSVariable) grandParent).getInitializer();
+				initializerExpression.replace(((JSAssignmentExpression) parent).getROperand());
+				return;
+			}
+		}
+		super.delete();
+	}
 
-  @Nullable
-  public ASTNode findNameIdentifier() {
-    return null;
-  }
+	@Nullable
+	public ASTNode findNameIdentifier()
+	{
+		return null;
+	}
 
-  public PsiElement getNameIdentifier() {
-    final ASTNode node = findNameIdentifier();
-    return node != null ? node.getPsi():null;
-  }
+	public PsiElement getNameIdentifier()
+	{
+		final ASTNode node = findNameIdentifier();
+		return node != null ? node.getPsi() : null;
+	}
 }

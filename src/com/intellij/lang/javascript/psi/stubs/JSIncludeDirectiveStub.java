@@ -8,6 +8,7 @@ import com.intellij.psi.stubs.StubElement;
  *         Date: Jun 6, 2008
  *         Time: 7:52:57 PM
  */
-public interface JSIncludeDirectiveStub extends JSStubElement<JSIncludeDirective>, StubElement<JSIncludeDirective> {
-  String getIncludeText();
+public interface JSIncludeDirectiveStub extends JSStubElement<JSIncludeDirective>, StubElement<JSIncludeDirective>
+{
+	String getIncludeText();
 }

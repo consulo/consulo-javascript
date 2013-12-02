@@ -38,54 +38,70 @@ import com.intellij.psi.scope.PsiScopeProcessor;
  * Time: 9:26:39 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSExpressionStatementImpl extends JSStatementImpl implements JSExpressionStatement {
-  public JSExpressionStatementImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSExpressionStatementImpl extends JSStatementImpl implements JSExpressionStatement
+{
+	public JSExpressionStatementImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSExpression getExpression() {
-    final ASTNode expressionNode = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
-    return expressionNode != null ? (JSExpression)expressionNode.getPsi(): null;
-  }
+	public JSExpression getExpression()
+	{
+		final ASTNode expressionNode = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
+		return expressionNode != null ? (JSExpression) expressionNode.getPsi() : null;
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSExpressionStatement(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSExpressionStatement(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 
-  public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
-    if (lastParent == null) {
-      final JSExpression expression = getExpression();
-      if (expression != null) {
-        return expression.processDeclarations(processor, state, lastParent, place);
-      }
-    }
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
+			@NotNull PsiElement place)
+	{
+		if(lastParent == null)
+		{
+			final JSExpression expression = getExpression();
+			if(expression != null)
+			{
+				return expression.processDeclarations(processor, state, lastParent, place);
+			}
+		}
 
-    return super.processDeclarations(processor, state, lastParent,place);
-  }
+		return super.processDeclarations(processor, state, lastParent, place);
+	}
 
-  public ItemPresentation getPresentation() {
-    return new ItemPresentation() {
-      public String getPresentableText() {
-        return getText();
-      }
+	public ItemPresentation getPresentation()
+	{
+		return new ItemPresentation()
+		{
+			public String getPresentableText()
+			{
+				return getText();
+			}
 
-      public String getLocationString() {
-        return "";
-      }
+			public String getLocationString()
+			{
+				return "";
+			}
 
-      public TextAttributesKey getTextAttributesKey() {
-        return null;
-      }
+			public TextAttributesKey getTextAttributesKey()
+			{
+				return null;
+			}
 
-      public Icon getIcon(boolean open) {
-        return IconDescriptorUpdaters.getIcon(JSExpressionStatementImpl.this, 0);
-      }
-    };
+			public Icon getIcon(boolean open)
+			{
+				return IconDescriptorUpdaters.getIcon(JSExpressionStatementImpl.this, 0);
+			}
+		};
 
-  }
+	}
 }

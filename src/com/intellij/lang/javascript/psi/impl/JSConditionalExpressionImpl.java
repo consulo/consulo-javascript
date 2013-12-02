@@ -15,6 +15,7 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -23,7 +24,6 @@ import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,69 +32,92 @@ import org.jetbrains.annotations.NotNull;
  * Time: 11:47:35 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSConditionalExpressionImpl extends JSExpressionImpl implements JSConditionalExpression {
-  public JSConditionalExpressionImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSConditionalExpressionImpl extends JSExpressionImpl implements JSConditionalExpression
+{
+	public JSConditionalExpressionImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSExpression getCondition() {
-    ASTNode child = getNode().getFirstChildNode();
-    while (child != null) {
-      final IElementType type = child.getElementType();
-      if (type == JSTokenTypes.QUEST) return null;
-      if (JSElementTypes.EXPRESSIONS.contains(type)) return (JSExpression)child.getPsi();
-      child = child.getTreeNext();
-    }
-    return null;
-  }
+	public JSExpression getCondition()
+	{
+		ASTNode child = getNode().getFirstChildNode();
+		while(child != null)
+		{
+			final IElementType type = child.getElementType();
+			if(type == JSTokenTypes.QUEST)
+			{
+				return null;
+			}
+			if(JSElementTypes.EXPRESSIONS.contains(type))
+			{
+				return (JSExpression) child.getPsi();
+			}
+			child = child.getTreeNext();
+		}
+		return null;
+	}
 
-  public JSExpression getThen() {
-    boolean questPassed = false;
-    ASTNode child = getNode().getFirstChildNode();
-    while (child != null) {
-      final IElementType type = child.getElementType();
-      if (type == JSTokenTypes.QUEST) {
-        questPassed = true;
-      }
-      if (type == JSTokenTypes.COLON) {
-        return null;
-      }
-      if (questPassed && JSElementTypes.EXPRESSIONS.contains(type)) {
-        return (JSExpression)child.getPsi();
-      }
+	public JSExpression getThen()
+	{
+		boolean questPassed = false;
+		ASTNode child = getNode().getFirstChildNode();
+		while(child != null)
+		{
+			final IElementType type = child.getElementType();
+			if(type == JSTokenTypes.QUEST)
+			{
+				questPassed = true;
+			}
+			if(type == JSTokenTypes.COLON)
+			{
+				return null;
+			}
+			if(questPassed && JSElementTypes.EXPRESSIONS.contains(type))
+			{
+				return (JSExpression) child.getPsi();
+			}
 
-      child = child.getTreeNext();
-    }
-    return null;
-  }
+			child = child.getTreeNext();
+		}
+		return null;
+	}
 
-  public JSExpression getElse() {
-    boolean questPassed = false;
-    boolean colonPassed = false;
-    ASTNode child = getNode().getFirstChildNode();
-    while (child != null) {
-      final IElementType type = child.getElementType();
-      if (type == JSTokenTypes.QUEST) {
-        questPassed = true;
-      }
-      if (type == JSTokenTypes.COLON) {
-        colonPassed = true;
-      }
-      if (questPassed && colonPassed && JSElementTypes.EXPRESSIONS.contains(type)) {
-        return (JSExpression)child.getPsi();
-      }
+	public JSExpression getElse()
+	{
+		boolean questPassed = false;
+		boolean colonPassed = false;
+		ASTNode child = getNode().getFirstChildNode();
+		while(child != null)
+		{
+			final IElementType type = child.getElementType();
+			if(type == JSTokenTypes.QUEST)
+			{
+				questPassed = true;
+			}
+			if(type == JSTokenTypes.COLON)
+			{
+				colonPassed = true;
+			}
+			if(questPassed && colonPassed && JSElementTypes.EXPRESSIONS.contains(type))
+			{
+				return (JSExpression) child.getPsi();
+			}
 
-      child = child.getTreeNext();
-    }
-    return null;
-  }
+			child = child.getTreeNext();
+		}
+		return null;
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSConditionalExpression(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSConditionalExpression(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 }

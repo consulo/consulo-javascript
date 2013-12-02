@@ -21,6 +21,7 @@ import com.intellij.psi.PsiElement;
 /**
  * @author maxim
  */
-public interface PsiGenerator<T extends PsiElement> {
-  T construct(ASTNode node);
+public interface PsiGenerator<T extends PsiElement>
+{
+	T construct(ASTNode node);
 }

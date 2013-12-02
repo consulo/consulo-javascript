@@ -50,115 +50,146 @@ import com.intellij.psi.PsiFile;
 /**
  * @author Maxim.Mossienko
  */
-public class JSUntypedDeclarationInspection extends JSInspection {
-  @NonNls public static final String SHORT_NAME = "JSUntypedDeclaration";
+public class JSUntypedDeclarationInspection extends JSInspection
+{
+	@NonNls
+	public static final String SHORT_NAME = "JSUntypedDeclaration";
 
-  @NotNull
-  public String getGroupDisplayName() {
-    return JSBundle.message("js.inspection.group.name");
-  }
+	@NotNull
+	public String getGroupDisplayName()
+	{
+		return JSBundle.message("js.inspection.group.name");
+	}
 
-  @NotNull
-  public String getDisplayName() {
-    return JSBundle.message("js.untyped.declaration.inspection.name");
-  }
+	@NotNull
+	public String getDisplayName()
+	{
+		return JSBundle.message("js.untyped.declaration.inspection.name");
+	}
 
-  @NotNull
-  @Override
-  public HighlightDisplayLevel getDefaultLevel() {
-    return HighlightDisplayLevel.WARNING;
-  }
+	@NotNull
+	@Override
+	public HighlightDisplayLevel getDefaultLevel()
+	{
+		return HighlightDisplayLevel.WARNING;
+	}
 
-  @NotNull
-  @NonNls
-  public String getShortName() {
-    return SHORT_NAME;
-  }
+	@NotNull
+	@NonNls
+	public String getShortName()
+	{
+		return SHORT_NAME;
+	}
 
-  protected JSElementVisitor createVisitor(final ProblemsHolder holder) {
-    return new JSElementVisitor() {
-      @Override public void visitJSVariable(final JSVariable node) {
-        process(node, holder);
-      }
+	protected JSElementVisitor createVisitor(final ProblemsHolder holder)
+	{
+		return new JSElementVisitor()
+		{
+			@Override
+			public void visitJSVariable(final JSVariable node)
+			{
+				process(node, holder);
+			}
 
-      @Override public void visitJSFunctionExpression(final JSFunctionExpression node) {
-        process(node.getFunction(), holder);
-      }
+			@Override
+			public void visitJSFunctionExpression(final JSFunctionExpression node)
+			{
+				process(node.getFunction(), holder);
+			}
 
-      @Override public void visitJSFunctionDeclaration(final JSFunction node) {
-        if (node.isConstructor() || node.isSetProperty()) return;
-        process(node, holder);
-      }
-    };
-  }
+			@Override
+			public void visitJSFunctionDeclaration(final JSFunction node)
+			{
+				if(node.isConstructor() || node.isSetProperty())
+				{
+					return;
+				}
+				process(node, holder);
+			}
+		};
+	}
 
-  private static void process(final JSNamedElement node, final ProblemsHolder holder) {
-    if (node.getContainingFile().getLanguage() != JavaScriptSupportLoader.ECMA_SCRIPT_L4) return;
-    ASTNode nameIdentifier = node.findNameIdentifier();
-    
-    if (nameIdentifier != null &&
-        JSPsiImplUtils.getTypeFromDeclaration(node) == null &&
-        (!(node instanceof JSParameter) || !((JSParameter)node).isRest())
-      ) {
-      holder.registerProblem(
-        nameIdentifier.getPsi(),
-        JSBundle.message(node instanceof JSFunction ? "js.untyped.function.problem":"js.untyped.variable.problem", nameIdentifier.getText()),
-        ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
-        new AddTypeToDclFix()
-      );
-    }
-  }
+	private static void process(final JSNamedElement node, final ProblemsHolder holder)
+	{
+		if(node.getContainingFile().getLanguage() != JavaScriptSupportLoader.ECMA_SCRIPT_L4)
+		{
+			return;
+		}
+		ASTNode nameIdentifier = node.findNameIdentifier();
 
-  private static class AddTypeToDclFix implements LocalQuickFix {
+		if(nameIdentifier != null &&
+				JSPsiImplUtils.getTypeFromDeclaration(node) == null &&
+				(!(node instanceof JSParameter) || !((JSParameter) node).isRest()))
+		{
+			holder.registerProblem(nameIdentifier.getPsi(), JSBundle.message(node instanceof JSFunction ? "js.untyped.function.problem" : "js.untyped" +
+					".variable.problem", nameIdentifier.getText()), ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new AddTypeToDclFix());
+		}
+	}
 
-    @NotNull
-    public String getName() {
-      return JSBundle.message("js.untyped.declaration.problem.addtype.fix");
-    }
+	private static class AddTypeToDclFix implements LocalQuickFix
+	{
 
-    @NotNull
-    public String getFamilyName() {
-      return getName();
-    }
+		@NotNull
+		public String getName()
+		{
+			return JSBundle.message("js.untyped.declaration.problem.addtype.fix");
+		}
 
-    public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor) {
-      PsiElement anchor = descriptor.getPsiElement();
-      PsiFile containingFile = anchor.getContainingFile();
-      if (!CodeInsightUtilBase.getInstance().prepareFileForWrite(containingFile)) return;
+		@NotNull
+		public String getFamilyName()
+		{
+			return getName();
+		}
 
-      if (anchor.getParent() instanceof JSFunction) {
-        anchor = ((JSFunction)anchor.getParent()).getParameterList();
-      }
+		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor)
+		{
+			PsiElement anchor = descriptor.getPsiElement();
+			PsiFile containingFile = anchor.getContainingFile();
+			if(!CodeInsightUtilBase.getInstance().prepareFileForWrite(containingFile))
+			{
+				return;
+			}
 
-      OpenFileDescriptor openDescriptor = new OpenFileDescriptor(project, containingFile.getVirtualFile(), anchor.getTextRange().getEndOffset());
-      openDescriptor.navigate(true);
-      Editor textEditor = FileEditorManager.getInstance(project).getSelectedTextEditor();
-      TemplateManager templateManager = TemplateManager.getInstance(project);
+			if(anchor.getParent() instanceof JSFunction)
+			{
+				anchor = ((JSFunction) anchor.getParent()).getParameterList();
+			}
 
-      Template t = templateManager.createTemplate("","");
-      t.addTextSegment(":");
-      boolean hasDetectedTypeFromUsage = false;
-      final PsiElement anchorParent = anchor.getParent();
+			OpenFileDescriptor openDescriptor = new OpenFileDescriptor(project, containingFile.getVirtualFile(), anchor.getTextRange().getEndOffset());
+			openDescriptor.navigate(true);
+			Editor textEditor = FileEditorManager.getInstance(project).getSelectedTextEditor();
+			TemplateManager templateManager = TemplateManager.getInstance(project);
 
-      if (anchorParent instanceof JSVariable) {
-        final JSExpression expression = ((JSVariable)anchorParent).getInitializer();
-        
-        if (expression != null) {
-          BaseCreateFix.guessExprTypeAndAddSuchVariable(expression, t, "a", containingFile, true);
-          hasDetectedTypeFromUsage = true;
-        }
-      }
+			Template t = templateManager.createTemplate("", "");
+			t.addTextSegment(":");
+			boolean hasDetectedTypeFromUsage = false;
+			final PsiElement anchorParent = anchor.getParent();
 
-      if (!hasDetectedTypeFromUsage) {
-        String defaultValue = "uint";
-        if (ApplicationManager.getApplication().isUnitTestMode()) {
-          t.addTextSegment(defaultValue);
-        } else {
-          t.addVariable("a", new MacroCallNode(MacroFactory.createMacro("complete")), new BaseCreateFix.MyExpression(defaultValue), true);
-        }
-      }
-      
-      templateManager.startTemplate(textEditor, t);
-    }
-  }
+			if(anchorParent instanceof JSVariable)
+			{
+				final JSExpression expression = ((JSVariable) anchorParent).getInitializer();
+
+				if(expression != null)
+				{
+					BaseCreateFix.guessExprTypeAndAddSuchVariable(expression, t, "a", containingFile, true);
+					hasDetectedTypeFromUsage = true;
+				}
+			}
+
+			if(!hasDetectedTypeFromUsage)
+			{
+				String defaultValue = "uint";
+				if(ApplicationManager.getApplication().isUnitTestMode())
+				{
+					t.addTextSegment(defaultValue);
+				}
+				else
+				{
+					t.addVariable("a", new MacroCallNode(MacroFactory.createMacro("complete")), new BaseCreateFix.MyExpression(defaultValue), true);
+				}
+			}
+
+			templateManager.startTemplate(textEditor, t);
+		}
+	}
 }

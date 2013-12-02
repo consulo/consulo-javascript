@@ -15,11 +15,15 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.psi.*;
+import com.intellij.lang.javascript.psi.JSContinueStatement;
+import com.intellij.lang.javascript.psi.JSElementVisitor;
+import com.intellij.lang.javascript.psi.JSLoopStatement;
+import com.intellij.lang.javascript.psi.JSStatement;
+import com.intellij.lang.javascript.psi.JSSwitchStatement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,27 +32,35 @@ import org.jetbrains.annotations.NotNull;
  * Time: 9:52:04 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSContinueStatementImpl extends JSStatementWithLabelReferenceImpl implements JSContinueStatement {
-  public JSContinueStatementImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSContinueStatementImpl extends JSStatementWithLabelReferenceImpl implements JSContinueStatement
+{
+	public JSContinueStatementImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSStatement getStatementToContinue() {
-    String label = getLabel();
-    if (label == null) {
-      return PsiTreeUtil.getParentOfType(this, JSLoopStatement.class, JSSwitchStatement.class);
-    }
-    else {
-      return (JSStatement)getReferences()[0].resolve();
-    }
-  }
+	public JSStatement getStatementToContinue()
+	{
+		String label = getLabel();
+		if(label == null)
+		{
+			return PsiTreeUtil.getParentOfType(this, JSLoopStatement.class, JSSwitchStatement.class);
+		}
+		else
+		{
+			return (JSStatement) getReferences()[0].resolve();
+		}
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSContinueStatement(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSContinueStatement(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 }

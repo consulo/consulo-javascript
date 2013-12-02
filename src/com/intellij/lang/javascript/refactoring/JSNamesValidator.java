@@ -16,40 +16,43 @@
 
 package com.intellij.lang.javascript.refactoring;
 
-import com.intellij.lang.refactoring.NamesValidator;
 import com.intellij.lang.javascript.DialectOptionHolder;
-import com.intellij.lang.javascript.JavaScriptLexer;
 import com.intellij.lang.javascript.JSTokenTypes;
+import com.intellij.lang.javascript.JavaScriptLexer;
+import com.intellij.lang.refactoring.NamesValidator;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
 
 /**
  * Created by IntelliJ IDEA.
-* User: Maxim.Mossienko
-* Date: Jun 27, 2006
-* Time: 8:28:35 PM
-* To change this template use File | Settings | File Templates.
-*/
-class JSNamesValidator implements NamesValidator {
-  protected final Lexer myLexer;
+ * User: Maxim.Mossienko
+ * Date: Jun 27, 2006
+ * Time: 8:28:35 PM
+ * To change this template use File | Settings | File Templates.
+ */
+class JSNamesValidator implements NamesValidator
+{
+	protected final Lexer myLexer;
 
-  JSNamesValidator(DialectOptionHolder optionHolder) {
-    myLexer = createLexer(optionHolder);
-  }
+	JSNamesValidator(DialectOptionHolder optionHolder)
+	{
+		myLexer = createLexer(optionHolder);
+	}
 
-  protected Lexer createLexer(final DialectOptionHolder optionHolder) {
-    return new JavaScriptLexer(optionHolder);
-  }
+	protected Lexer createLexer(final DialectOptionHolder optionHolder)
+	{
+		return new JavaScriptLexer(optionHolder);
+	}
 
-  public synchronized boolean isKeyword(String name, Project project) {
-    myLexer.start(name, 0, name.length(),0);
-    return JSTokenTypes.KEYWORDS.contains( myLexer.getTokenType() ) &&
-      myLexer.getTokenEnd() == name.length();
-  }
+	public synchronized boolean isKeyword(String name, Project project)
+	{
+		myLexer.start(name, 0, name.length(), 0);
+		return JSTokenTypes.KEYWORDS.contains(myLexer.getTokenType()) && myLexer.getTokenEnd() == name.length();
+	}
 
-  public synchronized boolean isIdentifier(String name, Project project) {
-    myLexer.start(name, 0, name.length(),0);
-    return JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(myLexer.getTokenType()) &&
-      myLexer.getTokenEnd() == name.length();
-  }
+	public synchronized boolean isIdentifier(String name, Project project)
+	{
+		myLexer.start(name, 0, name.length(), 0);
+		return JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(myLexer.getTokenType()) && myLexer.getTokenEnd() == name.length();
+	}
 }

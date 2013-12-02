@@ -24,7 +24,10 @@ public class JSIndexedRootProvider extends IndexableSetContributor
 	public Set<VirtualFile> getAdditionalProjectRootsToIndex(@Nullable Project project)
 	{
 		Set<VirtualFile> files = JavaScriptIndex.getInstance(project).getECMAScriptFilesSetFromEntries();
-		for(VirtualFile file:files) file.putUserData(JSResolveUtil.IMPLICIT_JS_FILES_KEY, Boolean.TRUE);
+		for(VirtualFile file : files)
+		{
+			file.putUserData(JSResolveUtil.IMPLICIT_JS_FILES_KEY, Boolean.TRUE);
+		}
 		return files;
 	}
 

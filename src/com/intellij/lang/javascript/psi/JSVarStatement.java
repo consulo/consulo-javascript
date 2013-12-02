@@ -25,7 +25,9 @@ import com.intellij.psi.StubBasedPsiElement;
  * Time: 6:55:04 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSVarStatement extends JSStatement, StubBasedPsiElement<JSVarStatementStub> {
-  JSVariable[] getVariables();
-  void declareVariable(String name, JSExpression initializer);
+public interface JSVarStatement extends JSStatement, StubBasedPsiElement<JSVarStatementStub>
+{
+	JSVariable[] getVariables();
+
+	void declareVariable(String name, JSExpression initializer);
 }

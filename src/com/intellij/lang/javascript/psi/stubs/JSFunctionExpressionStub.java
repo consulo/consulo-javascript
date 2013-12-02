@@ -4,9 +4,10 @@ import com.intellij.lang.javascript.psi.JSFunctionExpression;
 
 /**
  * @author Maxim.Mossienko
- * Date: Mar 25, 2008
- * Time: 4:00:16 PM
+ *         Date: Mar 25, 2008
+ *         Time: 4:00:16 PM
  */
-public interface JSFunctionExpressionStub extends JSFunctionStubBase<JSFunctionExpression> {
+public interface JSFunctionExpressionStub extends JSFunctionStubBase<JSFunctionExpression>
+{
 
 }

@@ -17,6 +17,7 @@ package com.intellij.lang.javascript.psi;
 
 import com.intellij.psi.PsiComment;
 
-public interface JSDocComment extends PsiComment, JSElement {
-  JSDocTag[] getTags();
+public interface JSDocComment extends PsiComment, JSElement
+{
+	JSDocTag[] getTags();
 }

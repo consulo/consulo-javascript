@@ -22,7 +22,9 @@ package com.intellij.lang.javascript.psi;
  * Time: 7:06:18 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSSwitchStatement extends JSStatement {
-  JSExpression getSwitchExpression();
-  JSCaseClause[] getCaseClauses();
+public interface JSSwitchStatement extends JSStatement
+{
+	JSExpression getSwitchExpression();
+
+	JSCaseClause[] getCaseClauses();
 }

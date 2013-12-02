@@ -15,33 +15,39 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSYieldStatement;
 import com.intellij.psi.PsiElementVisitor;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author maxim
  */
-public class JSYieldStatementImpl extends JSStatementImpl implements JSYieldStatement {
-  public JSYieldStatementImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSYieldStatementImpl extends JSStatementImpl implements JSYieldStatement
+{
+	public JSYieldStatementImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSExpression getExpression() {
-    final ASTNode expressionNode = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
-    return expressionNode != null ? (JSExpression)expressionNode.getPsi(): null;
-  }
+	public JSExpression getExpression()
+	{
+		final ASTNode expressionNode = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
+		return expressionNode != null ? (JSExpression) expressionNode.getPsi() : null;
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSYieldStatement(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSYieldStatement(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 }

@@ -15,6 +15,7 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -23,7 +24,6 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSIfStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.psi.PsiElementVisitor;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,47 +32,57 @@ import org.jetbrains.annotations.NotNull;
  * Time: 9:49:01 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSIfStatementImpl extends JSStatementImpl implements JSIfStatement {
-  public JSIfStatementImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSIfStatementImpl extends JSStatementImpl implements JSIfStatement
+{
+	public JSIfStatementImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSExpression getCondition() {
-    final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
-    return node != null ? (JSExpression)node.getPsi() : null;
-  }
+	public JSExpression getCondition()
+	{
+		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
+		return node != null ? (JSExpression) node.getPsi() : null;
+	}
 
-  public JSStatement getThen() {
-    final ASTNode node = getNode().findChildByType(JSElementTypes.STATEMENTS);
-    return node != null ? (JSStatement)node.getPsi() : null;
-  }
+	public JSStatement getThen()
+	{
+		final ASTNode node = getNode().findChildByType(JSElementTypes.STATEMENTS);
+		return node != null ? (JSStatement) node.getPsi() : null;
+	}
 
-  public JSStatement getElse() {
-    final ASTNode myNode = getNode();
-    final ASTNode elseNode = myNode.findChildByType(JSTokenTypes.ELSE_KEYWORD);
-    final ASTNode node = elseNode != null ? myNode.findChildByType(
-      JSElementTypes.STATEMENTS, elseNode) : null;
-    return node != null ? (JSStatement)node.getPsi() : null;
-  }
+	public JSStatement getElse()
+	{
+		final ASTNode myNode = getNode();
+		final ASTNode elseNode = myNode.findChildByType(JSTokenTypes.ELSE_KEYWORD);
+		final ASTNode node = elseNode != null ? myNode.findChildByType(JSElementTypes.STATEMENTS, elseNode) : null;
+		return node != null ? (JSStatement) node.getPsi() : null;
+	}
 
-  public void setThen(JSStatement statement) {
-    throw new UnsupportedOperationException("TODO: implement");
-  }
+	public void setThen(JSStatement statement)
+	{
+		throw new UnsupportedOperationException("TODO: implement");
+	}
 
-  public void setElse(JSStatement statement) {
-    throw new UnsupportedOperationException("TODO: implement");
-  }
+	public void setElse(JSStatement statement)
+	{
+		throw new UnsupportedOperationException("TODO: implement");
+	}
 
-  public void setCondition(JSExpression expr) {
-    throw new UnsupportedOperationException("TODO: implement");
-  }
+	public void setCondition(JSExpression expr)
+	{
+		throw new UnsupportedOperationException("TODO: implement");
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSIfStatement(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSIfStatement(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 }

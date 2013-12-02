@@ -38,75 +38,92 @@ import com.intellij.psi.PsiFile;
  * Time: 9:55:49 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSItemPresentation implements ItemPresentation {
-  private JSNamedElement myElement;
-  private JSNamespace myNamespace;
+public class JSItemPresentation implements ItemPresentation
+{
+	private JSNamedElement myElement;
+	private JSNamespace myNamespace;
 
-  public JSItemPresentation(final JSNamedElement elementProxy, final JSNamespace namespace) {
-    this.myElement = elementProxy;
-    this.myNamespace = namespace;
-  }
+	public JSItemPresentation(final JSNamedElement elementProxy, final JSNamespace namespace)
+	{
+		this.myElement = elementProxy;
+		this.myNamespace = namespace;
+	}
 
-  public String getPresentableText() {
-    return myElement.getName();
-  }
+	public String getPresentableText()
+	{
+		return myElement.getName();
+	}
 
-  @Nullable
-  public String getLocationString() {
-    final PsiFile psiFile = myElement.getContainingFile();
-    if (myNamespace != null) {
-      final StringBuilder presentation = new StringBuilder();
-      JavaScriptIndex index = JavaScriptIndex.getInstance(psiFile.getProject());
-      String location = myNamespace.getQualifiedName(index);
+	@Nullable
+	public String getLocationString()
+	{
+		final PsiFile psiFile = myElement.getContainingFile();
+		if(myNamespace != null)
+		{
+			final StringBuilder presentation = new StringBuilder();
+			JavaScriptIndex index = JavaScriptIndex.getInstance(psiFile.getProject());
+			String location = myNamespace.getQualifiedName(index);
 
-      if (location != null && location.length() > 0) {
-        presentation.append(location);
-        presentation.append('(').append(getFileName(psiFile)).append(')');
-        return presentation.toString();
-      }
-    } else if (myElement instanceof JSVariable || myElement instanceof JSFunction) {
-      PsiElement possibleClazz = JSResolveUtil.findParent(myElement);
+			if(location != null && location.length() > 0)
+			{
+				presentation.append(location);
+				presentation.append('(').append(getFileName(psiFile)).append(')');
+				return presentation.toString();
+			}
+		}
+		else if(myElement instanceof JSVariable || myElement instanceof JSFunction)
+		{
+			PsiElement possibleClazz = JSResolveUtil.findParent(myElement);
 
-      if (possibleClazz instanceof JSClass) {
-        final StringBuilder presentation = new StringBuilder();
+			if(possibleClazz instanceof JSClass)
+			{
+				final StringBuilder presentation = new StringBuilder();
 
-        presentation.append(((JSClass)possibleClazz).getQualifiedName());
-        presentation.append('(').append(getFileName(psiFile)).append(')');
-        return presentation.toString();
-      }
-    } else if (myElement instanceof JSClass) {
-      final String s = ((JSClass)myElement).getQualifiedName();
-      final int i = s.lastIndexOf('.');
+				presentation.append(((JSClass) possibleClazz).getQualifiedName());
+				presentation.append('(').append(getFileName(psiFile)).append(')');
+				return presentation.toString();
+			}
+		}
+		else if(myElement instanceof JSClass)
+		{
+			final String s = ((JSClass) myElement).getQualifiedName();
+			final int i = s.lastIndexOf('.');
 
-      if (i != -1) {
-        final StringBuilder presentation = new StringBuilder();
+			if(i != -1)
+			{
+				final StringBuilder presentation = new StringBuilder();
 
-        presentation.append(s.substring(0, i));
-        presentation.append('(').append(getFileName(psiFile)).append(')');
-        return presentation.toString();
-      }
-    }
-    return getFileName(psiFile);
-  }
+				presentation.append(s.substring(0, i));
+				presentation.append('(').append(getFileName(psiFile)).append(')');
+				return presentation.toString();
+			}
+		}
+		return getFileName(psiFile);
+	}
 
-  private static String getFileName(final PsiFile psiFile) {
-    final String s = psiFile.getName();
-    if (JSResolveUtil.isPredefinedFile(psiFile)) {
-      return s.substring(s.lastIndexOf('/') + 1);
-    }
-    return s;
-  }
+	private static String getFileName(final PsiFile psiFile)
+	{
+		final String s = psiFile.getName();
+		if(JSResolveUtil.isPredefinedFile(psiFile))
+		{
+			return s.substring(s.lastIndexOf('/') + 1);
+		}
+		return s;
+	}
 
-  @Nullable
-  public Icon getIcon(boolean open) {
-    return IconDescriptorUpdaters.getIcon(myElement, 0);
-  }
+	@Nullable
+	public Icon getIcon(boolean open)
+	{
+		return IconDescriptorUpdaters.getIcon(myElement, 0);
+	}
 
-  @Nullable
-  public TextAttributesKey getTextAttributesKey() {
-    if (myElement instanceof JSNamedElementProxy) {
-      return ((JSNamedElementProxy)myElement).isDeprecated() ? CodeInsightColors.DEPRECATED_ATTRIBUTES : null;
-    }
-    return null;
-  }
+	@Nullable
+	public TextAttributesKey getTextAttributesKey()
+	{
+		if(myElement instanceof JSNamedElementProxy)
+		{
+			return ((JSNamedElementProxy) myElement).isDeprecated() ? CodeInsightColors.DEPRECATED_ATTRIBUTES : null;
+		}
+		return null;
+	}
 }

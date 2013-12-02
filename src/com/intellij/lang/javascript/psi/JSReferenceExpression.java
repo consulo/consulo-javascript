@@ -15,9 +15,9 @@
  */
 package com.intellij.lang.javascript.psi;
 
+import org.jetbrains.annotations.Nullable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiPolyVariantReference;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,9 +26,16 @@ import org.jetbrains.annotations.Nullable;
  * Time: 7:26:32 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSReferenceExpression extends JSExpression, PsiPolyVariantReference {
-  @Nullable JSExpression getQualifier();
-  @Nullable String getReferencedName();
-  @Nullable PsiElement getReferenceNameElement();
-  boolean shouldCheckReferences();
+public interface JSReferenceExpression extends JSExpression, PsiPolyVariantReference
+{
+	@Nullable
+	JSExpression getQualifier();
+
+	@Nullable
+	String getReferencedName();
+
+	@Nullable
+	PsiElement getReferenceNameElement();
+
+	boolean shouldCheckReferences();
 }

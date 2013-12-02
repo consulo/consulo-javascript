@@ -15,23 +15,28 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSGenericSignature;
 import com.intellij.psi.PsiElementVisitor;
-import org.jetbrains.annotations.NotNull;
 
-public class JSGenericSignatureImpl extends JSElementImpl implements JSGenericSignature {
-  public JSGenericSignatureImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSGenericSignatureImpl extends JSElementImpl implements JSGenericSignature
+{
+	public JSGenericSignatureImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSGenericSignature(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSGenericSignature(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 }

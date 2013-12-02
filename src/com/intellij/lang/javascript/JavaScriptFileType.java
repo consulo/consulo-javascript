@@ -27,27 +27,33 @@ import com.intellij.openapi.fileTypes.LanguageFileType;
  * Time: 6:02:59 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JavaScriptFileType extends LanguageFileType {
-  public JavaScriptFileType() {
-    super(new JavascriptLanguage());
-  }
+public class JavaScriptFileType extends LanguageFileType
+{
+	public JavaScriptFileType()
+	{
+		super(new JavascriptLanguage());
+	}
 
-  @NotNull
-  public String getName() {
-    return "JavaScript";
-  }
+	@NotNull
+	public String getName()
+	{
+		return "JavaScript";
+	}
 
-  @NotNull
-  public String getDescription() {
-    return JSBundle.message("javascript.filetype.description");
-  }
+	@NotNull
+	public String getDescription()
+	{
+		return JSBundle.message("javascript.filetype.description");
+	}
 
-  @NotNull
-  public String getDefaultExtension() {
-    return "js";
-  }
+	@NotNull
+	public String getDefaultExtension()
+	{
+		return "js";
+	}
 
-  public Icon getIcon() {
-    return JavaScriptIcons.JavaScript;
-  }
+	public Icon getIcon()
+	{
+		return JavaScriptIcons.JavaScript;
+	}
 }

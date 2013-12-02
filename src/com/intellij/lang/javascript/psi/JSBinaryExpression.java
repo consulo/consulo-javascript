@@ -24,8 +24,11 @@ import com.intellij.psi.tree.IElementType;
  * Time: 6:49:21 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSBinaryExpression extends JSExpression {
-  JSExpression getLOperand();
-  JSExpression getROperand();
-  IElementType getOperationSign();
+public interface JSBinaryExpression extends JSExpression
+{
+	JSExpression getLOperand();
+
+	JSExpression getROperand();
+
+	IElementType getOperationSign();
 }

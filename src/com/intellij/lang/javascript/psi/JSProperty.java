@@ -24,9 +24,12 @@ import org.jetbrains.annotations.Nullable;
  * Time: 7:39:29 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSProperty extends JSNamedElement {
-  @Nullable JSExpression getValue();
+public interface JSProperty extends JSNamedElement
+{
+	@Nullable
+	JSExpression getValue();
 
-  boolean isGetProperty();
-  boolean isSetProperty();
+	boolean isGetProperty();
+
+	boolean isSetProperty();
 }

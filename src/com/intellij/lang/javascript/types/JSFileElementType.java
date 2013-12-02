@@ -9,21 +9,25 @@ import com.intellij.psi.tree.IStubFileElementType;
 
 /**
  * @author peter
-*/
-public class JSFileElementType extends IStubFileElementType {
-  public static final int VERSION = 22;
-  
-  public JSFileElementType(final Language language) {
-    super(language);
-  }
+ */
+public class JSFileElementType extends IStubFileElementType
+{
+	public static final int VERSION = 22;
 
-  @Override
-  public String getExternalId() {
-    return getLanguage()+":"+toString();
-  }
+	public JSFileElementType(final Language language)
+	{
+		super(language);
+	}
 
-  @Override
-  public int getStubVersion() {
-    return VERSION;
-  }
+	@Override
+	public String getExternalId()
+	{
+		return getLanguage() + ":" + toString();
+	}
+
+	@Override
+	public int getStubVersion()
+	{
+		return VERSION;
+	}
 }

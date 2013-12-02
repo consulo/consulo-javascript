@@ -22,10 +22,13 @@ package com.intellij.lang.javascript.psi;
  * Time: 7:21:49 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSForStatement extends JSLoopStatement {
-  JSVarStatement getVarDeclaration();
-  JSExpression getInitialization();
+public interface JSForStatement extends JSLoopStatement
+{
+	JSVarStatement getVarDeclaration();
 
-  JSExpression getCondition();
-  JSExpression getUpdate();
+	JSExpression getInitialization();
+
+	JSExpression getCondition();
+
+	JSExpression getUpdate();
 }

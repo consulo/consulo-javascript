@@ -253,8 +253,8 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 					final PsiElement parentNode1 = parentNode;
 					function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
 
-					return new LineMarkerInfo<JSFunction>(function, function.findNameIdentifier().getTextRange().getStartOffset(),
-							OVERRIDING_METHOD_ICON, Pass.UPDATE_ALL, new Function<JSFunction, String>()
+					return new LineMarkerInfo<JSFunction>(function, function.findNameIdentifier().getTextRange().getStartOffset(), OVERRIDING_METHOD_ICON,
+							Pass.UPDATE_ALL, new Function<JSFunction, String>()
 					{
 						@Override
 						public String fun(final JSFunction psiElement)
@@ -286,7 +286,8 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 							}
 							else if(results.size() > 1)
 							{
-								NavigationUtil.getPsiElementPopup(results.toArray(new PsiElement[results.size()]), "Choose super class or interface").show(new RelativePoint(e));
+								NavigationUtil.getPsiElementPopup(results.toArray(new PsiElement[results.size()]), "Choose super class or interface").show(new RelativePoint
+										(e));
 							}
 						}
 					}
@@ -414,8 +415,8 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 							{
 								// TODO: more correct check for override
 								function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
-								result.add(new LineMarkerInfo<JSFunction>(function, function.getTextOffset(), OVERRIDDEN_ICON,
-										Pass.UPDATE_OVERRIDEN_MARKERS, ourOverriddenFunctionsTooltipProvider, ourOverriddenFunctionsNavHandler));
+								result.add(new LineMarkerInfo<JSFunction>(function, function.getTextOffset(), OVERRIDDEN_ICON, Pass.UPDATE_OVERRIDEN_MARKERS,
+										ourOverriddenFunctionsTooltipProvider, ourOverriddenFunctionsNavHandler));
 								functionIterator.remove();
 							}
 						}
@@ -450,8 +451,8 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 					if(query.findFirst() != null)
 					{
 						function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
-						result.add(new LineMarkerInfo<JSFunction>(function, function.getTextOffset(), IMPLEMENTED_ICON,
-								Pass.UPDATE_OVERRIDEN_MARKERS, ourImplementingFunctionsTooltipProvider, ourImplementingFunctionsNavHandler));
+						result.add(new LineMarkerInfo<JSFunction>(function, function.getTextOffset(), IMPLEMENTED_ICON, Pass.UPDATE_OVERRIDEN_MARKERS,
+								ourImplementingFunctionsTooltipProvider, ourImplementingFunctionsNavHandler));
 					}
 				}
 				else
@@ -467,14 +468,13 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 					{
 						function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
 
-						result.add(new LineMarkerInfo<JSFunction>(function, function.getTextOffset(), IMPLEMENTING_ICON,
-								Pass.UPDATE_OVERRIDEN_MARKERS, new Function<JSFunction, String>()
+						result.add(new LineMarkerInfo<JSFunction>(function, function.getTextOffset(), IMPLEMENTING_ICON, Pass.UPDATE_OVERRIDEN_MARKERS,
+								new Function<JSFunction, String>()
 						{
 							@Override
 							public String fun(final JSFunction jsFunction)
 							{
-								return "Implementation of " + jsFunction.getName() + " in " + ((NavigationItem) implementedFunction.getParent())
-										.getName();
+								return "Implementation of " + jsFunction.getName() + " in " + ((NavigationItem) implementedFunction.getParent()).getName();
 							}
 						}, new GutterIconNavigationHandler<JSFunction>()
 						{
@@ -624,8 +624,8 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 				JSNamespace ns = superNs;
 				final String funName = function.getName();
 
-				if(function instanceof JSFunctionExpression && funName != null && funName.length() > 0 && (Character.isLowerCase(funName.charAt(0))
-						|| '_' == funName.charAt(0)))
+				if(function instanceof JSFunctionExpression && funName != null && funName.length() > 0 && (Character.isLowerCase(funName.charAt(0)) || '_' ==
+						funName.charAt(0)))
 				{
 					myDescendantNameId = index.getIndexOf(funName);
 				}

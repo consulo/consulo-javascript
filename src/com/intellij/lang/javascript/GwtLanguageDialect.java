@@ -32,44 +32,53 @@ import com.intellij.psi.tree.IElementType;
 
 /**
  * @author nik
-*/
-public class GwtLanguageDialect extends JSLanguageDialect {
-  public static final DialectOptionHolder DIALECT_OPTION_HOLDER = new DialectOptionHolder(false, true);
+ */
+public class GwtLanguageDialect extends JSLanguageDialect
+{
+	public static final DialectOptionHolder DIALECT_OPTION_HOLDER = new DialectOptionHolder(false, true);
 
-  public GwtLanguageDialect() {
-    super("GWT JavaScript");
+	public GwtLanguageDialect()
+	{
+		super("GWT JavaScript");
 
-    SyntaxHighlighterFactory.LANGUAGE_FACTORY.addExplicitExtension(this, new SingleLazyInstanceSyntaxHighlighterFactory() {
-      @NotNull
-      protected SyntaxHighlighter createHighlighter() {
-        return new GwtSyntaxHighlighter();
-      }
-    });
-  }
+		SyntaxHighlighterFactory.LANGUAGE_FACTORY.addExplicitExtension(this, new SingleLazyInstanceSyntaxHighlighterFactory()
+		{
+			@NotNull
+			protected SyntaxHighlighter createHighlighter()
+			{
+				return new GwtSyntaxHighlighter();
+			}
+		});
+	}
 
-  @NonNls
-  public String getFileExtension() {
-    return "GwtJavaScript";
-  }
+	@NonNls
+	public String getFileExtension()
+	{
+		return "GwtJavaScript";
+	}
 
-  private static class GwtSyntaxHighlighter extends JSHighlighter {
-    private Map<IElementType, TextAttributesKey> myKeysMap = new HashMap<IElementType, TextAttributesKey>();
+	private static class GwtSyntaxHighlighter extends JSHighlighter
+	{
+		private Map<IElementType, TextAttributesKey> myKeysMap = new HashMap<IElementType, TextAttributesKey>();
 
-    public GwtSyntaxHighlighter() {
-      super(GwtLanguageDialect.DIALECT_OPTION_HOLDER);
-      myKeysMap.put(JSTokenTypes.COLON_COLON, JS_OPERATION_SIGN);
-      myKeysMap.put(JSTokenTypes.GWT_FIELD_OR_METHOD, CodeInsightColors.METHOD_CALL_ATTRIBUTES);
-      myKeysMap.put(JSTokenTypes.AT, JS_OPERATION_SIGN);
-      myKeysMap.put(JSTokenTypes.IDENTIFIER, DefaultLanguageHighlighterColors.CLASS_NAME);
-    }
+		public GwtSyntaxHighlighter()
+		{
+			super(GwtLanguageDialect.DIALECT_OPTION_HOLDER);
+			myKeysMap.put(JSTokenTypes.COLON_COLON, JS_OPERATION_SIGN);
+			myKeysMap.put(JSTokenTypes.GWT_FIELD_OR_METHOD, CodeInsightColors.METHOD_CALL_ATTRIBUTES);
+			myKeysMap.put(JSTokenTypes.AT, JS_OPERATION_SIGN);
+			myKeysMap.put(JSTokenTypes.IDENTIFIER, DefaultLanguageHighlighterColors.CLASS_NAME);
+		}
 
-    @NotNull
-    public TextAttributesKey[] getTokenHighlights(final IElementType tokenType) {
-      if (myKeysMap.containsKey(tokenType)) {
-        return pack(myKeysMap.get(tokenType));
-      }
-      return super.getTokenHighlights(tokenType);
-    }
-  }
+		@NotNull
+		public TextAttributesKey[] getTokenHighlights(final IElementType tokenType)
+		{
+			if(myKeysMap.containsKey(tokenType))
+			{
+				return pack(myKeysMap.get(tokenType));
+			}
+			return super.getTokenHighlights(tokenType);
+		}
+	}
 
 }

@@ -1,47 +1,55 @@
 package com.intellij.lang.javascript.flex.importer;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Maxim.Mossienko
-*         Date: Oct 20, 2008
-*         Time: 7:02:07 PM
-*/
-interface FlexByteCodeInformationProcessor {
-  void dumpStat(@NotNull @NonNls String stat);
-  void hasError(@NotNull String error);
-  void append(@NotNull @NonNls String str);
+ *         Date: Oct 20, 2008
+ *         Time: 7:02:07 PM
+ */
+interface FlexByteCodeInformationProcessor
+{
+	void dumpStat(@NotNull @NonNls String stat);
 
-  void processMultinameAsPackageName(@NotNull Multiname name, @Nullable String parentName, boolean referenceNameRequested);
+	void hasError(@NotNull String error);
 
-  void dumpToplevelAnonymousMethod(final @NotNull Abc abc, final @NotNull MethodInfo m);
+	void append(@NotNull @NonNls String str);
 
-  void dumpTopLevelTraits(final @NotNull Abc abc, final @NotNull Traits t, final String indent);
+	void processMultinameAsPackageName(@NotNull Multiname name, @Nullable String parentName, boolean referenceNameRequested);
 
-  boolean doDumpMember(final @NotNull MemberInfo memberInfo);
-  void appendMethodSeparator();
-  void appendFieldSeparator();
-  String getAbcInSwfIndent();
-  
-  boolean doDumpMetaData(final @NotNull MetaData md);
+	void dumpToplevelAnonymousMethod(final @NotNull Abc abc, final @NotNull MethodInfo m);
 
-  String REST_PARAMETER_TYPE = "...";
-  void processParameter(final @NotNull String name, @Nullable Multiname type, String parentName, @Nullable Multiname value, boolean rest);
+	void dumpTopLevelTraits(final @NotNull Abc abc, final @NotNull Traits t, final String indent);
 
-  boolean doStarTypeDumpInExtends();
-  boolean doStarMetaAttrNameDump();
+	boolean doDumpMember(final @NotNull MemberInfo memberInfo);
 
-  void setProcessingInterface(final boolean anInterface);
+	void appendMethodSeparator();
 
-  String getParentName(final MemberInfo member);
+	void appendFieldSeparator();
 
-  void processVariable(SlotInfo info, String indent, String attr);
+	String getAbcInSwfIndent();
 
-  void processFunction(MethodInfo methodInfo, boolean referenceNameRequested, Abc abc, String indent, String attr);
+	boolean doDumpMetaData(final @NotNull MetaData md);
 
-  void processMetadata(MetaData metaData);
+	String REST_PARAMETER_TYPE = "...";
 
-  void processClass(SlotInfo slotInfo, Abc abc, String attr, String indent);
+	void processParameter(final @NotNull String name, @Nullable Multiname type, String parentName, @Nullable Multiname value, boolean rest);
+
+	boolean doStarTypeDumpInExtends();
+
+	boolean doStarMetaAttrNameDump();
+
+	void setProcessingInterface(final boolean anInterface);
+
+	String getParentName(final MemberInfo member);
+
+	void processVariable(SlotInfo info, String indent, String attr);
+
+	void processFunction(MethodInfo methodInfo, boolean referenceNameRequested, Abc abc, String indent, String attr);
+
+	void processMetadata(MetaData metaData);
+
+	void processClass(SlotInfo slotInfo, Abc abc, String attr, String indent);
 }

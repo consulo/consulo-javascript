@@ -37,98 +37,130 @@ import com.intellij.util.IncorrectOperationException;
 /**
  * @by Maxim.Mossienko
  */
-public class JSNamespaceDeclarationImpl extends JSStubbedStatementImpl<JSNamespaceDeclarationStub> implements JSNamespaceDeclaration {
-  public JSNamespaceDeclarationImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSNamespaceDeclarationImpl extends JSStubbedStatementImpl<JSNamespaceDeclarationStub> implements JSNamespaceDeclaration
+{
+	public JSNamespaceDeclarationImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSNamespaceDeclarationImpl(final JSNamespaceDeclarationStub node) {
-    super(node, JSElementTypes.NAMESPACE_DECLARATION);
-  }
+	public JSNamespaceDeclarationImpl(final JSNamespaceDeclarationStub node)
+	{
+		super(node, JSElementTypes.NAMESPACE_DECLARATION);
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSNamespaceDeclaration(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSNamespaceDeclaration(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 
-  public JSAttributeList getAttributeList() {
-    return getStubOrPsiChild(JSElementTypes.ATTRIBUTE_LIST);
-  }
+	public JSAttributeList getAttributeList()
+	{
+		return getStubOrPsiChild(JSElementTypes.ATTRIBUTE_LIST);
+	}
 
-  public PsiElement setName(@NonNls @NotNull String newName) throws IncorrectOperationException {
-    final String oldName = getName();
-    if(newName.equals(oldName)) return this;
+	public PsiElement setName(@NonNls @NotNull String newName) throws IncorrectOperationException
+	{
+		final String oldName = getName();
+		if(newName.equals(oldName))
+		{
+			return this;
+		}
 
-    getNode().replaceChild(findNameIdentifier(), JSChangeUtil.createExpressionFromText(getProject(), newName));
+		getNode().replaceChild(findNameIdentifier(), JSChangeUtil.createExpressionFromText(getProject(), newName));
 
-    JSPsiImplUtils.updateFileName(this, newName, oldName);
-    return this;
-  }
+		JSPsiImplUtils.updateFileName(this, newName, oldName);
+		return this;
+	}
 
-  public String getName() {
-    final JSNamespaceDeclarationStub stub = getStub();
-    if (stub != null) return stub.getName();
-    final ASTNode node = findNameIdentifier();
-    return node != null? node.getText() : null;
-  }
+	public String getName()
+	{
+		final JSNamespaceDeclarationStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getName();
+		}
+		final ASTNode node = findNameIdentifier();
+		return node != null ? node.getText() : null;
+	}
 
-  public int getTextOffset() {
-    final ASTNode node = findNameIdentifier();
-    return node == null ? super.getTextOffset() : node.getStartOffset();
-  }
+	public int getTextOffset()
+	{
+		final ASTNode node = findNameIdentifier();
+		return node == null ? super.getTextOffset() : node.getStartOffset();
+	}
 
-  public ASTNode findNameIdentifier() {
-    return getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
-  }
+	public ASTNode findNameIdentifier()
+	{
+		return getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
+	}
 
-  public String getQualifiedName() {
-    final JSNamespaceDeclarationStub stub = getStub();
-    if (stub != null) return stub.getQualifiedName();
-    return JSPsiImplUtils.getQName(this);
-  }
+	public String getQualifiedName()
+	{
+		final JSNamespaceDeclarationStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getQualifiedName();
+		}
+		return JSPsiImplUtils.getQName(this);
+	}
 
-  public PsiElement getNameIdentifier() {
-    final ASTNode node = findNameIdentifier();
-    return node != null ? node.getPsi():null;
-  }
+	public PsiElement getNameIdentifier()
+	{
+		final ASTNode node = findNameIdentifier();
+		return node != null ? node.getPsi() : null;
+	}
 
-  public String getInitialValueString() {
-    final JSNamespaceDeclarationStub stub = getStub();
-    if (stub != null) return stub.getInitialValueString();
-    final ASTNode anchor = getNode().findChildByType(JSTokenTypes.EQ);
+	public String getInitialValueString()
+	{
+		final JSNamespaceDeclarationStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getInitialValueString();
+		}
+		final ASTNode anchor = getNode().findChildByType(JSTokenTypes.EQ);
 
-    if (anchor != null) {
-      ASTNode node = anchor.getTreeNext();
+		if(anchor != null)
+		{
+			ASTNode node = anchor.getTreeNext();
 
-      if (node != null && node.getElementType() == JSTokenTypes.WHITE_SPACE) {
-        node = node.getTreeNext();
-      }
+			if(node != null && node.getElementType() == JSTokenTypes.WHITE_SPACE)
+			{
+				node = node.getTreeNext();
+			}
 
-      IElementType type;
-      if (node != null && ((type = node.getElementType()) == JSTokenTypes.STRING_LITERAL || type == JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL)) {
-        return node.getText();
-      }
-    }
-    return null;
-  }
+			IElementType type;
+			if(node != null && ((type = node.getElementType()) == JSTokenTypes.STRING_LITERAL || type == JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL))
+			{
+				return node.getText();
+			}
+		}
+		return null;
+	}
 
-  public boolean isDeprecated() {
-    return false;
-  }
+	public boolean isDeprecated()
+	{
+		return false;
+	}
 
-  @Override
-  public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState state, final PsiElement lastParent,
-                                     @NotNull final PsiElement place) {
-    return processor.execute(lastParent, state);
-  }
+	@Override
+	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState state, final PsiElement lastParent,
+			@NotNull final PsiElement place)
+	{
+		return processor.execute(lastParent, state);
+	}
 
-  public Icon getIcon(int flags) {
-    final JSAttributeList attributeList = getAttributeList();
-    final JSAttributeList.AccessType type = attributeList != null ? attributeList.getAccessType(): JSAttributeList.AccessType.PACKAGE_LOCAL;
-    return buildIcon(blendModifierFlags(AllIcons.Nodes.Class, attributeList),type.getIcon());
-  }
+	public Icon getIcon(int flags)
+	{
+		final JSAttributeList attributeList = getAttributeList();
+		final JSAttributeList.AccessType type = attributeList != null ? attributeList.getAccessType() : JSAttributeList.AccessType.PACKAGE_LOCAL;
+		return buildIcon(blendModifierFlags(AllIcons.Nodes.Class, attributeList), type.getIcon());
+	}
 }

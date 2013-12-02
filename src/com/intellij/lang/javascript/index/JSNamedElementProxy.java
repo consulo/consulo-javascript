@@ -16,36 +16,45 @@
 
 package com.intellij.lang.javascript.index;
 
+import java.io.IOException;
+
 import com.intellij.lang.javascript.psi.JSAttributeList;
 import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
 import com.intellij.psi.PsiElement;
 
-import java.io.IOException;
-
 /**
  * @by Maxim.Mossienko
  */
-public interface JSNamedElementProxy extends JSQualifiedNamedElement {
-  void write(SerializationContext context) throws IOException;
-  void enumerateNames(final SerializationContext context);
-  int getNameId();
+public interface JSNamedElementProxy extends JSQualifiedNamedElement
+{
+	void write(SerializationContext context) throws IOException;
 
-  boolean isDeprecated();
-  JSAttributeList.AccessType getAccessType();
+	void enumerateNames(final SerializationContext context);
 
-  enum Property {
-    GetFunction, SetFunction, Constructor, Dynamic, Override, Static, Interface, HasConstructor
-  }
+	int getNameId();
 
-  boolean hasProperty(Property property);
+	boolean isDeprecated();
 
-  enum NamedItemType {
-    Definition, Variable, Function, Property, FunctionProperty, FunctionExpression,AttributeValue,Clazz,Namespace, MemberVariable,
-    MemberFunction, ImplicitFunction, ImplicitVariable
-  }
+	JSAttributeList.AccessType getAccessType();
 
-  PsiElement getElement();
-  NamedItemType getType();
-  JSNamespace getNamespace();
-  JSIndexEntry getEntry();
+	enum Property
+	{
+		GetFunction, SetFunction, Constructor, Dynamic, Override, Static, Interface, HasConstructor
+	}
+
+	boolean hasProperty(Property property);
+
+	enum NamedItemType
+	{
+		Definition, Variable, Function, Property, FunctionProperty, FunctionExpression, AttributeValue, Clazz, Namespace, MemberVariable,
+		MemberFunction, ImplicitFunction, ImplicitVariable
+	}
+
+	PsiElement getElement();
+
+	NamedItemType getType();
+
+	JSNamespace getNamespace();
+
+	JSIndexEntry getEntry();
 }

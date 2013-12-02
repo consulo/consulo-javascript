@@ -15,6 +15,7 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -24,37 +25,48 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @by Maxim.Mossienko
  */
-public class JSImportStatementImpl extends JSStubbedStatementImpl<JSImportStatementStub> implements JSImportStatement {
-  public JSImportStatementImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSImportStatementImpl extends JSStubbedStatementImpl<JSImportStatementStub> implements JSImportStatement
+{
+	public JSImportStatementImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSImportStatementImpl(final JSImportStatementStub stub) {
-    super(stub, JSElementTypes.IMPORT_STATEMENT);
-  }
+	public JSImportStatementImpl(final JSImportStatementStub stub)
+	{
+		super(stub, JSElementTypes.IMPORT_STATEMENT);
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSImportStatement(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSImportStatement(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 
-  public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState state, final PsiElement lastParent, @NotNull final PsiElement place) {
-    return true;
-  }
+	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState state, final PsiElement lastParent,
+			@NotNull final PsiElement place)
+	{
+		return true;
+	}
 
-  public String getImportText() {
-    final JSImportStatementStub stub = getStub();
-    if (stub != null) return stub.getImportText();
-    final ASTNode node = getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
-    return node != null ? node.getText() : null;
-  }
+	public String getImportText()
+	{
+		final JSImportStatementStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getImportText();
+		}
+		final ASTNode node = getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
+		return node != null ? node.getText() : null;
+	}
 }

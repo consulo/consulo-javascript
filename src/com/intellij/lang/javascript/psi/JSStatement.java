@@ -24,10 +24,13 @@ import com.intellij.util.IncorrectOperationException;
  * Time: 6:48:51 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSStatement extends JSSourceElement {
-  JSStatement[] EMPTY = new JSStatement[0];
+public interface JSStatement extends JSSourceElement
+{
+	JSStatement[] EMPTY = new JSStatement[0];
 
-  JSStatement addStatementBefore(JSStatement toAdd) throws IncorrectOperationException;
-  JSStatement addStatementAfter(JSStatement toAdd) throws IncorrectOperationException;
-  JSStatement replace(JSStatement with);
+	JSStatement addStatementBefore(JSStatement toAdd) throws IncorrectOperationException;
+
+	JSStatement addStatementAfter(JSStatement toAdd) throws IncorrectOperationException;
+
+	JSStatement replace(JSStatement with);
 }

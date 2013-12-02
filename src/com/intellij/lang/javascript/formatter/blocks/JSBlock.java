@@ -41,150 +41,185 @@ import com.intellij.psi.tree.IElementType;
 /**
  * @author ven
  */
-public class JSBlock implements Block {
-  private ASTNode myNode;
+public class JSBlock implements Block
+{
+	private ASTNode myNode;
 
-  private final CodeStyleSettings mySettings;
+	private final CodeStyleSettings mySettings;
 
-  private Alignment myAlignment;
-  private Indent myIndent;
-  private Wrap myWrap;
-  private List<Block> mySubBlocks = null;
+	private Alignment myAlignment;
+	private Indent myIndent;
+	private Wrap myWrap;
+	private List<Block> mySubBlocks = null;
 
-  public JSBlock(final ASTNode node, final Alignment alignment, final Indent indent, final Wrap wrap, final CodeStyleSettings settings) {
-    myAlignment = alignment;
-    myIndent = indent;
-    myNode = node;
-    myWrap = wrap;
-    mySettings = settings;
-  }
+	public JSBlock(final ASTNode node, final Alignment alignment, final Indent indent, final Wrap wrap, final CodeStyleSettings settings)
+	{
+		myAlignment = alignment;
+		myIndent = indent;
+		myNode = node;
+		myWrap = wrap;
+		mySettings = settings;
+	}
 
-  public ASTNode getNode() {
-    return myNode;
-  }
+	public ASTNode getNode()
+	{
+		return myNode;
+	}
 
-  @NotNull
-  public TextRange getTextRange() {
-    return myNode.getTextRange();
-  }
+	@NotNull
+	public TextRange getTextRange()
+	{
+		return myNode.getTextRange();
+	}
 
-  @NotNull
-  public List<Block> getSubBlocks() {
-    if (mySubBlocks == null) {
-      SubBlockVisitor visitor = new SubBlockVisitor(getSettings());
-      visitor.visit(myNode);
-      mySubBlocks = visitor.getBlocks();
-    }
-    return mySubBlocks;
-  }
+	@NotNull
+	public List<Block> getSubBlocks()
+	{
+		if(mySubBlocks == null)
+		{
+			SubBlockVisitor visitor = new SubBlockVisitor(getSettings());
+			visitor.visit(myNode);
+			mySubBlocks = visitor.getBlocks();
+		}
+		return mySubBlocks;
+	}
 
-  @Nullable
-  public Wrap getWrap() {
-    return myWrap;
-  }
+	@Nullable
+	public Wrap getWrap()
+	{
+		return myWrap;
+	}
 
-  @Nullable
-  public Indent getIndent() {
-    return myIndent;
-  }
+	@Nullable
+	public Indent getIndent()
+	{
+		return myIndent;
+	}
 
-  @Nullable
-  public Alignment getAlignment() {
-    return myAlignment;
-  }
+	@Nullable
+	public Alignment getAlignment()
+	{
+		return myAlignment;
+	}
 
-  @Nullable
-  public Spacing getSpacing(Block child1, Block child2) {
-    if (child1 instanceof JSDocCommentBlock || child2 instanceof JSDocCommentBlock || child1 == null) {
-      return null;
-    }
-    return new JSSpacingProcessor(getNode(), ((JSBlock)child1).getNode(), ((JSBlock)child2).getNode(), mySettings).getResult();
-  }
+	@Nullable
+	public Spacing getSpacing(Block child1, Block child2)
+	{
+		if(child1 instanceof JSDocCommentBlock || child2 instanceof JSDocCommentBlock || child1 == null)
+		{
+			return null;
+		}
+		return new JSSpacingProcessor(getNode(), ((JSBlock) child1).getNode(), ((JSBlock) child2).getNode(), mySettings).getResult();
+	}
 
-  @NotNull
-  public ChildAttributes getChildAttributes(final int newChildIndex) {
-    Indent indent = null;
-    final IElementType blockElementType = myNode.getElementType();
-    
-    if (blockElementType == JSTokenTypes.DOC_COMMENT) {
-      return new ChildAttributes(Indent.getSpaceIndent(1), null);
-    }
+	@NotNull
+	public ChildAttributes getChildAttributes(final int newChildIndex)
+	{
+		Indent indent = null;
+		final IElementType blockElementType = myNode.getElementType();
 
-    if (blockElementType == JSElementTypes.PACKAGE_STATEMENT) {
-      final JSCodeStyleSettings customSettings = CodeStyleSettingsManager.getSettings(myNode.getPsi().getProject()).getCustomSettings(
-            JSCodeStyleSettings.class);
-        if (customSettings.INDENT_PACKAGE_CHILDREN == JSCodeStyleSettings.INDENT) {
-          indent = Indent.getNormalIndent();
-        } else {
-          indent = Indent.getNoneIndent();
-        }
-    } else
-    if (blockElementType == JSElementTypes.BLOCK_STATEMENT ||
-        blockElementType == JSElementTypes.CLASS ||
-        blockElementType == JSElementTypes.OBJECT_LITERAL_EXPRESSION
-       ) {
-      indent = Indent.getNormalIndent();
-    }
-    else if (blockElementType instanceof JSFileElementType ||
-             blockElementType == JSElementTypes.EMBEDDED_CONTENT
-            ) {
-      indent = Indent.getNoneIndent();
-    }
-    else if (JSElementTypes.SOURCE_ELEMENTS.contains(blockElementType) ||
-             blockElementType == JSElementTypes.FUNCTION_EXPRESSION ||
-             blockElementType == JSElementTypes.ATTRIBUTE_LIST
-            ) {
-      indent = Indent.getNoneIndent();
-    }
+		if(blockElementType == JSTokenTypes.DOC_COMMENT)
+		{
+			return new ChildAttributes(Indent.getSpaceIndent(1), null);
+		}
 
-    Alignment alignment = null;
-    final List<Block> subBlocks = getSubBlocks();
-    for (int i = 0; i < newChildIndex; i++) {
-      if (i == subBlocks.size()) break;
-      final Alignment childAlignment = subBlocks.get(i).getAlignment();
-      if (childAlignment != null) {
-        alignment = childAlignment;
-        break;
-      }
-    }
+		if(blockElementType == JSElementTypes.PACKAGE_STATEMENT)
+		{
+			final JSCodeStyleSettings customSettings = CodeStyleSettingsManager.getSettings(myNode.getPsi().getProject()).getCustomSettings
+					(JSCodeStyleSettings.class);
+			if(customSettings.INDENT_PACKAGE_CHILDREN == JSCodeStyleSettings.INDENT)
+			{
+				indent = Indent.getNormalIndent();
+			}
+			else
+			{
+				indent = Indent.getNoneIndent();
+			}
+		}
+		else if(blockElementType == JSElementTypes.BLOCK_STATEMENT ||
+				blockElementType == JSElementTypes.CLASS ||
+				blockElementType == JSElementTypes.OBJECT_LITERAL_EXPRESSION)
+		{
+			indent = Indent.getNormalIndent();
+		}
+		else if(blockElementType instanceof JSFileElementType || blockElementType == JSElementTypes.EMBEDDED_CONTENT)
+		{
+			indent = Indent.getNoneIndent();
+		}
+		else if(JSElementTypes.SOURCE_ELEMENTS.contains(blockElementType) ||
+				blockElementType == JSElementTypes.FUNCTION_EXPRESSION ||
+				blockElementType == JSElementTypes.ATTRIBUTE_LIST)
+		{
+			indent = Indent.getNoneIndent();
+		}
 
-    // in for loops, alignment is required only for items within parentheses 
-    if (blockElementType == JSElementTypes.FOR_STATEMENT ||
-        blockElementType == JSElementTypes.FOR_IN_STATEMENT) {
-      for(int i=0; i < newChildIndex; i++) {
-        if (((JSBlock) subBlocks.get(i)).getNode().getElementType() == JSTokenTypes.RPAR) {
-          alignment = null;
-          break;
-        }
-      }
-    }
+		Alignment alignment = null;
+		final List<Block> subBlocks = getSubBlocks();
+		for(int i = 0; i < newChildIndex; i++)
+		{
+			if(i == subBlocks.size())
+			{
+				break;
+			}
+			final Alignment childAlignment = subBlocks.get(i).getAlignment();
+			if(childAlignment != null)
+			{
+				alignment = childAlignment;
+				break;
+			}
+		}
 
-    return new ChildAttributes(indent, alignment);
-  }
+		// in for loops, alignment is required only for items within parentheses
+		if(blockElementType == JSElementTypes.FOR_STATEMENT || blockElementType == JSElementTypes.FOR_IN_STATEMENT)
+		{
+			for(int i = 0; i < newChildIndex; i++)
+			{
+				if(((JSBlock) subBlocks.get(i)).getNode().getElementType() == JSTokenTypes.RPAR)
+				{
+					alignment = null;
+					break;
+				}
+			}
+		}
 
-  public boolean isIncomplete() {
-    return isIncomplete(myNode);
-  }
+		return new ChildAttributes(indent, alignment);
+	}
 
-  private boolean isIncomplete(ASTNode node) {
-    node.getPsi().getFirstChild(); // expand chameleon
-    ASTNode lastChild = node.getLastChildNode();
-    while (lastChild != null && lastChild.getPsi() instanceof PsiWhiteSpace) {
-      lastChild = lastChild.getTreePrev();
-    }
-    if (lastChild == null) return false;
-    if (lastChild.getPsi() instanceof PsiErrorElement) return true;
-    return isIncomplete(lastChild);
-  }
+	public boolean isIncomplete()
+	{
+		return isIncomplete(myNode);
+	}
 
-  public CodeStyleSettings getSettings() {
-    return mySettings;
-  }
+	private boolean isIncomplete(ASTNode node)
+	{
+		node.getPsi().getFirstChild(); // expand chameleon
+		ASTNode lastChild = node.getLastChildNode();
+		while(lastChild != null && lastChild.getPsi() instanceof PsiWhiteSpace)
+		{
+			lastChild = lastChild.getTreePrev();
+		}
+		if(lastChild == null)
+		{
+			return false;
+		}
+		if(lastChild.getPsi() instanceof PsiErrorElement)
+		{
+			return true;
+		}
+		return isIncomplete(lastChild);
+	}
 
-  public boolean isLeaf() {
-    if (myNode.getElementType() == JSTokenTypes.DOC_COMMENT) {
-      return false;
-    }
-    return myNode.getFirstChildNode() == null;
-  }
+	public CodeStyleSettings getSettings()
+	{
+		return mySettings;
+	}
+
+	public boolean isLeaf()
+	{
+		if(myNode.getElementType() == JSTokenTypes.DOC_COMMENT)
+		{
+			return false;
+		}
+		return myNode.getFirstChildNode() == null;
+	}
 }

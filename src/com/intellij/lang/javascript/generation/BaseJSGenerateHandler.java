@@ -28,28 +28,42 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 
-abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler {
-  public void invoke(final Project project, final Editor editor, final PsiFile file) {
-    JSClass clazz = findClass(file, editor);
+abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler
+{
+	public void invoke(final Project project, final Editor editor, final PsiFile file)
+	{
+		JSClass clazz = findClass(file, editor);
 
-    if (clazz == null) return;
+		if(clazz == null)
+		{
+			return;
+		}
 
-    final Collection<JSNamedElementNode> candidates = new ArrayList<JSNamedElementNode>();
-    collectCandidates(clazz, candidates);
+		final Collection<JSNamedElementNode> candidates = new ArrayList<JSNamedElementNode>();
+		collectCandidates(clazz, candidates);
 
-    final Collection<JSNamedElementNode> selectedElements;
+		final Collection<JSNamedElementNode> selectedElements;
 
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
-      selectedElements = candidates;
-    } else {
-      if (candidates.size() == 0) {
-        if (!canHaveEmptySelectedElements()) return;
-        selectedElements = Collections.emptyList();
-      } else {
-        final MemberChooser<JSNamedElementNode> chooser = new MemberChooser<JSNamedElementNode>(
-            candidates.toArray(new JSNamedElementNode[candidates.size()]), false, true, project, false
-        ) {
-          /*@Override
+		if(ApplicationManager.getApplication().isUnitTestMode())
+		{
+			selectedElements = candidates;
+		}
+		else
+		{
+			if(candidates.size() == 0)
+			{
+				if(!canHaveEmptySelectedElements())
+				{
+					return;
+				}
+				selectedElements = Collections.emptyList();
+			}
+			else
+			{
+				final MemberChooser<JSNamedElementNode> chooser = new MemberChooser<JSNamedElementNode>(candidates.toArray(new JSNamedElementNode[candidates
+						.size()]), false, true, project, false)
+				{
+		  /*@Override
           protected void customizeOptionsPanel() {
 
 			super.customizeOptionsPanel();
@@ -57,77 +71,109 @@ abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler
             appendOwnOptions(jComponentList);
             return jComponentList;
           } */
-        };
+				};
 
-        chooser.setTitle(JSBundle.message(getTitleKey()));
-        chooser.setCopyJavadocVisible(false);
-        chooser.show();
-        if (chooser.getExitCode() != DialogWrapper.OK_EXIT_CODE) return;
-        selectedElements = chooser.getSelectedElements();
-      }
-    }
+				chooser.setTitle(JSBundle.message(getTitleKey()));
+				chooser.setCopyJavadocVisible(false);
+				chooser.show();
+				if(chooser.getExitCode() != DialogWrapper.OK_EXIT_CODE)
+				{
+					return;
+				}
+				selectedElements = chooser.getSelectedElements();
+			}
+		}
 
-    if (selectedElements == null) return;
+		if(selectedElements == null)
+		{
+			return;
+		}
 
-    final JSClass jsClass = clazz;
-    final Collection<JSNamedElementNode> selectedElements1 = selectedElements;
-    Runnable runnable = new Runnable() {
-      public void run() {
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-          public void run() {
-            try {
-              final BaseCreateMethodsFix createMethodsFix = createFix(jsClass);
-              createMethodsFix.addElementsToProcessFrom(selectedElements1);
-              createMethodsFix.invoke(project, editor, file);
-            } catch (IncorrectOperationException ex) {
-              Logger.getInstance(getClass().getName()).error(ex);
-            }
-          }
-        });
-      }
-    };
+		final JSClass jsClass = clazz;
+		final Collection<JSNamedElementNode> selectedElements1 = selectedElements;
+		Runnable runnable = new Runnable()
+		{
+			public void run()
+			{
+				ApplicationManager.getApplication().runWriteAction(new Runnable()
+				{
+					public void run()
+					{
+						try
+						{
+							final BaseCreateMethodsFix createMethodsFix = createFix(jsClass);
+							createMethodsFix.addElementsToProcessFrom(selectedElements1);
+							createMethodsFix.invoke(project, editor, file);
+						}
+						catch(IncorrectOperationException ex)
+						{
+							Logger.getInstance(getClass().getName()).error(ex);
+						}
+					}
+				});
+			}
+		};
 
-    if (CommandProcessor.getInstance().getCurrentCommand() == null) {
-      CommandProcessor.getInstance().executeCommand(project, runnable, getClass().getName(), null);
-    } else {
-      runnable.run();
-    }
-  }
+		if(CommandProcessor.getInstance().getCurrentCommand() == null)
+		{
+			CommandProcessor.getInstance().executeCommand(project, runnable, getClass().getName(), null);
+		}
+		else
+		{
+			runnable.run();
+		}
+	}
 
-  protected void appendOwnOptions(List<JComponent> jComponentList) {
-  }
+	protected void appendOwnOptions(List<JComponent> jComponentList)
+	{
+	}
 
-  protected boolean canHaveEmptySelectedElements() {
-    return false;
-  }
+	protected boolean canHaveEmptySelectedElements()
+	{
+		return false;
+	}
 
-  static JSClass findClass(PsiFile file, Editor editor) {
-    final PsiElement at = file.findElementAt(editor.getCaretModel().getOffset());
-    if (at == null) return null;
+	static JSClass findClass(PsiFile file, Editor editor)
+	{
+		final PsiElement at = file.findElementAt(editor.getCaretModel().getOffset());
+		if(at == null)
+		{
+			return null;
+		}
 
-    JSClass clazz = PsiTreeUtil.getParentOfType(at, JSClass.class);
-    if (clazz == null) {
-      final PsiFile containingFile = at.getContainingFile();
-      final PsiElement element = JSResolveUtil.getClassReferenceForXmlFromContext(containingFile);
-      if (element instanceof JSClass) clazz = (JSClass)element;
-    } else if (JSResolveUtil.isArtificialClassUsedForReferenceList(clazz)) {
-      clazz = null;
-    }
+		JSClass clazz = PsiTreeUtil.getParentOfType(at, JSClass.class);
+		if(clazz == null)
+		{
+			final PsiFile containingFile = at.getContainingFile();
+			final PsiElement element = JSResolveUtil.getClassReferenceForXmlFromContext(containingFile);
+			if(element instanceof JSClass)
+			{
+				clazz = (JSClass) element;
+			}
+		}
+		else if(JSResolveUtil.isArtificialClassUsedForReferenceList(clazz))
+		{
+			clazz = null;
+		}
 
-    return clazz;
-  }
+		return clazz;
+	}
 
-  protected abstract /*@PropertyKey(resourceBundle = JSBundle.BUNDLE)*/ @NonNls String getTitleKey();
+	protected abstract /*@PropertyKey(resourceBundle = JSBundle.BUNDLE)*/
+	@NonNls
+	String getTitleKey();
 
-  protected abstract BaseCreateMethodsFix createFix(JSClass clazz);
+	protected abstract BaseCreateMethodsFix createFix(JSClass clazz);
 
-  protected abstract void collectCandidates(final JSClass clazz, final Collection<JSNamedElementNode> candidates);
+	protected abstract void collectCandidates(final JSClass clazz, final Collection<JSNamedElementNode> candidates);
 
-  public boolean startInWriteAction() {
-    return false;
-  }
+	public boolean startInWriteAction()
+	{
+		return false;
+	}
 
-  public boolean isValidFor(final Editor editor, final PsiFile file) {
-    return true;
-  }
+	public boolean isValidFor(final Editor editor, final PsiFile file)
+	{
+		return true;
+	}
 }

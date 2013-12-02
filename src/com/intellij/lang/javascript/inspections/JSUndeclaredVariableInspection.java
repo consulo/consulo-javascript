@@ -45,193 +45,223 @@ import com.intellij.util.IncorrectOperationException;
 /**
  * @author Maxim.Mossienko
  */
-public class JSUndeclaredVariableInspection extends JSInspection {
-  @NonNls public static final String SHORT_NAME = "JSUndeclaredVariable";
+public class JSUndeclaredVariableInspection extends JSInspection
+{
+	@NonNls
+	public static final String SHORT_NAME = "JSUndeclaredVariable";
 
-  @NotNull
-  public String getGroupDisplayName() {
-    return JSBundle.message("js.inspection.group.name");
-  }
+	@NotNull
+	public String getGroupDisplayName()
+	{
+		return JSBundle.message("js.inspection.group.name");
+	}
 
-  @NotNull
-  public String getDisplayName() {
-    return JSBundle.message("js.undeclared.variable.inspection.name");
-  }
+	@NotNull
+	public String getDisplayName()
+	{
+		return JSBundle.message("js.undeclared.variable.inspection.name");
+	}
 
-  @NotNull
-  @NonNls
-  public String getShortName() {
-    return SHORT_NAME;
-  }
+	@NotNull
+	@NonNls
+	public String getShortName()
+	{
+		return SHORT_NAME;
+	}
 
-  protected JSElementVisitor createVisitor(final ProblemsHolder holder) {
-    return new JSElementVisitor() {
-      @Override public void visitJSReferenceExpression(final JSReferenceExpression node) {
-        final PsiElement parentElement = node.getParent();
+	protected JSElementVisitor createVisitor(final ProblemsHolder holder)
+	{
+		return new JSElementVisitor()
+		{
+			@Override
+			public void visitJSReferenceExpression(final JSReferenceExpression node)
+			{
+				final PsiElement parentElement = node.getParent();
 
-        if (!(parentElement instanceof JSCallExpression) && node.shouldCheckReferences()
-            && node.getQualifier() == null && parentElement instanceof JSDefinitionExpression) {
-          final JSSourceElement element = PsiTreeUtil.getParentOfType(node, JSWithStatement.class, JSFunction.class);
+				if(!(parentElement instanceof JSCallExpression) && node.shouldCheckReferences() && node.getQualifier() == null && parentElement instanceof
+						JSDefinitionExpression)
+				{
+					final JSSourceElement element = PsiTreeUtil.getParentOfType(node, JSWithStatement.class, JSFunction.class);
 
-          if (!(element instanceof JSWithStatement)) {
-            boolean varReferenceWithoutVar = true;
-            final ResolveResult[] resolveResults = node.multiResolve(false);
+					if(!(element instanceof JSWithStatement))
+					{
+						boolean varReferenceWithoutVar = true;
+						final ResolveResult[] resolveResults = node.multiResolve(false);
 
-            JSNamedElementProxy proxy;
+						JSNamedElementProxy proxy;
 
-            for(ResolveResult r:resolveResults) {
-              final PsiElement resolveResult = r.getElement();
-              if (resolveResult instanceof JSVariable ||
-                  resolveResult instanceof JSFunction ||
-                  ( resolveResult instanceof JSNamedElementProxy &&
-                    ( (proxy = ((JSNamedElementProxy)resolveResult)).getType() == JSNamedElementProxy.NamedItemType.MemberVariable ||
-                      proxy.getType() == JSNamedElementProxy.NamedItemType.MemberFunction &&
-                      ( proxy.hasProperty(JSNamedElementProxy.Property.GetFunction) ||
-                        proxy.hasProperty(JSNamedElementProxy.Property.SetFunction)
-                      )
-                    )
-                  )
-                 ) {
-                varReferenceWithoutVar = false;
-                break;
-              }
-            }
+						for(ResolveResult r : resolveResults)
+						{
+							final PsiElement resolveResult = r.getElement();
+							if(resolveResult instanceof JSVariable ||
+									resolveResult instanceof JSFunction ||
+									(resolveResult instanceof JSNamedElementProxy && ((proxy = ((JSNamedElementProxy) resolveResult)).getType() == JSNamedElementProxy
+											.NamedItemType.MemberVariable || proxy.getType() == JSNamedElementProxy.NamedItemType.MemberFunction && (proxy.hasProperty
+											(JSNamedElementProxy.Property.GetFunction) || proxy.hasProperty(JSNamedElementProxy.Property.SetFunction)))))
+							{
+								varReferenceWithoutVar = false;
+								break;
+							}
+						}
 
-            if (varReferenceWithoutVar) {
-              final PsiElement nameIdentifier = node.getReferenceNameElement();
+						if(varReferenceWithoutVar)
+						{
+							final PsiElement nameIdentifier = node.getReferenceNameElement();
 
-              if (nameIdentifier != null) {
-                final List<LocalQuickFix> fixes = new LinkedList<LocalQuickFix>();
+							if(nameIdentifier != null)
+							{
+								final List<LocalQuickFix> fixes = new LinkedList<LocalQuickFix>();
 
-                if (myOnTheFly) {
-                  fixes.add( new DeclareJSVariableIntentionAction(node) );
-                }
+								if(myOnTheFly)
+								{
+									fixes.add(new DeclareJSVariableIntentionAction(node));
+								}
 
-                holder.registerProblem(
-                  nameIdentifier,
-                  JSBundle.message("javascript.undeclared.variable.name.message",node.getReferencedName()),
-                  ProblemHighlightType.GENERIC_ERROR_OR_WARNING, !fixes.isEmpty() ? fixes.toArray(new LocalQuickFix[fixes.size()]):null
-                );
-              }
-            }
-          }
-        }
-        super.visitJSReferenceExpression(node);
-      }
-    };
-  }
+								holder.registerProblem(nameIdentifier, JSBundle.message("javascript.undeclared.variable.name.message", node.getReferencedName()),
+										ProblemHighlightType.GENERIC_ERROR_OR_WARNING, !fixes.isEmpty() ? fixes.toArray(new LocalQuickFix[fixes.size()]) : null);
+							}
+						}
+					}
+				}
+				super.visitJSReferenceExpression(node);
+			}
+		};
+	}
 
-  private static boolean isImplicitlyDeclared(final JSReferenceExpression node, final PsiElement parentElement) {
-    if (parentElement instanceof JSForInStatement) {
-      final JSExpression varExpression = ((JSForInStatement)parentElement).getVariableExpression();
+	private static boolean isImplicitlyDeclared(final JSReferenceExpression node, final PsiElement parentElement)
+	{
+		if(parentElement instanceof JSForInStatement)
+		{
+			final JSExpression varExpression = ((JSForInStatement) parentElement).getVariableExpression();
 
-      return PsiTreeUtil.findCommonParent(varExpression, node) == varExpression;
-    } else if (parentElement instanceof JSForStatement) {
-      final JSExpression varExpression = ((JSForStatement)parentElement).getInitialization();
+			return PsiTreeUtil.findCommonParent(varExpression, node) == varExpression;
+		}
+		else if(parentElement instanceof JSForStatement)
+		{
+			final JSExpression varExpression = ((JSForStatement) parentElement).getInitialization();
 
-      return PsiTreeUtil.findCommonParent(varExpression, node) == varExpression;
-    }
-    return false;
-  }
+			return PsiTreeUtil.findCommonParent(varExpression, node) == varExpression;
+		}
+		return false;
+	}
 
-  private static class DeclareJSVariableIntentionAction implements LocalQuickFix {
-    private final JSReferenceExpression myReferenceExpression;
-    @NonNls private static final String VAR_STATEMENT_START = "var ";
-    private final PsiFile myFile;
+	private static class DeclareJSVariableIntentionAction implements LocalQuickFix
+	{
+		private final JSReferenceExpression myReferenceExpression;
+		@NonNls
+		private static final String VAR_STATEMENT_START = "var ";
+		private final PsiFile myFile;
 
-    DeclareJSVariableIntentionAction(JSReferenceExpression expression) {
-      myReferenceExpression = expression;
-      myFile = expression.getContainingFile();
-    }
+		DeclareJSVariableIntentionAction(JSReferenceExpression expression)
+		{
+			myReferenceExpression = expression;
+			myFile = expression.getContainingFile();
+		}
 
-    @NotNull
-    public String getName() {
-      return JSBundle.message(
-        "javascript.declare.variable.intention.name",
-        myReferenceExpression.getReferencedName()
-      );
-    }
+		@NotNull
+		public String getName()
+		{
+			return JSBundle.message("javascript.declare.variable.intention.name", myReferenceExpression.getReferencedName());
+		}
 
-    @NotNull
-    public String getFamilyName() {
-      return JSBundle.message("javascript.create.variable.intention.family");
-    }
+		@NotNull
+		public String getFamilyName()
+		{
+			return JSBundle.message("javascript.create.variable.intention.family");
+		}
 
-    public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-      if ( !CodeInsightUtilBase.getInstance().prepareFileForWrite(myFile)) return;
+		public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor)
+		{
+			if(!CodeInsightUtilBase.getInstance().prepareFileForWrite(myFile))
+			{
+				return;
+			}
 
-      PsiElement anchor = JSUtils.findStatementAnchor(myReferenceExpression, myFile);
-      boolean implicitlyDeclared = isImplicitlyDeclared(myReferenceExpression, anchor);
+			PsiElement anchor = JSUtils.findStatementAnchor(myReferenceExpression, myFile);
+			boolean implicitlyDeclared = isImplicitlyDeclared(myReferenceExpression, anchor);
 
-      if (implicitlyDeclared) {
-        anchor = myReferenceExpression;
-        final JSStatement statement = PsiTreeUtil.getParentOfType(anchor, JSForStatement.class,JSStatement.class);
+			if(implicitlyDeclared)
+			{
+				anchor = myReferenceExpression;
+				final JSStatement statement = PsiTreeUtil.getParentOfType(anchor, JSForStatement.class, JSStatement.class);
 
-        if (statement instanceof JSForStatement) {
-          final JSExpression initialization = ((JSForStatement)statement).getInitialization();
+				if(statement instanceof JSForStatement)
+				{
+					final JSExpression initialization = ((JSForStatement) statement).getInitialization();
 
-          if (initialization instanceof JSBinaryExpression &&
-              ((JSBinaryExpression)initialization).getOperationSign() == JSTokenTypes.COMMA) {
-            anchor = ((JSAssignmentExpression)((JSBinaryExpression)initialization).getLOperand()).getLOperand();
-          }
-        }
-      }
+					if(initialization instanceof JSBinaryExpression && ((JSBinaryExpression) initialization).getOperationSign() == JSTokenTypes.COMMA)
+					{
+						anchor = ((JSAssignmentExpression) ((JSBinaryExpression) initialization).getLOperand()).getLOperand();
+					}
+				}
+			}
 
-      if (anchor != null) {
-        boolean anchorChanged = false;
+			if(anchor != null)
+			{
+				boolean anchorChanged = false;
 
-        if (!implicitlyDeclared) {
-          PsiElement parent = anchor.getParent();
+				if(!implicitlyDeclared)
+				{
+					PsiElement parent = anchor.getParent();
 
-          while (parent instanceof JSBlockStatement || parent instanceof JSIfStatement || parent instanceof JSLoopStatement) {
-            PsiElement newAnchor = parent.getParent();
+					while(parent instanceof JSBlockStatement || parent instanceof JSIfStatement || parent instanceof JSLoopStatement)
+					{
+						PsiElement newAnchor = parent.getParent();
 
-            if (newAnchor instanceof JSIfStatement || newAnchor instanceof JSWithStatement || newAnchor instanceof JSLoopStatement ||
-                newAnchor instanceof JSTryStatement || newAnchor instanceof JSSwitchStatement) {
-              anchor = newAnchor;
-              parent = anchor.getParent();
-              anchorChanged = true;
-            }
-            else if (newAnchor instanceof JSFile) {
-              anchor = parent;
-              anchorChanged = true;
-              break;
-            }
-            else {
-              break;
-            }
-          }
-        }
+						if(newAnchor instanceof JSIfStatement || newAnchor instanceof JSWithStatement || newAnchor instanceof JSLoopStatement ||
+								newAnchor instanceof JSTryStatement || newAnchor instanceof JSSwitchStatement)
+						{
+							anchor = newAnchor;
+							parent = anchor.getParent();
+							anchorChanged = true;
+						}
+						else if(newAnchor instanceof JSFile)
+						{
+							anchor = parent;
+							anchorChanged = true;
+							break;
+						}
+						else
+						{
+							break;
+						}
+					}
+				}
 
-        final TextRange textRange = anchor.getTextRange();
-        final int startOffset = textRange.getStartOffset();
-        @NonNls StringBuilder builder = new StringBuilder();
-        builder.append(VAR_STATEMENT_START);
+				final TextRange textRange = anchor.getTextRange();
+				final int startOffset = textRange.getStartOffset();
+				@NonNls StringBuilder builder = new StringBuilder();
+				builder.append(VAR_STATEMENT_START);
 
-        if (anchor instanceof JSExpressionStatement) {
-          JSExpression expr = ((JSExpressionStatement)anchor).getExpression();
-          if (expr instanceof JSAssignmentExpression && ((JSAssignmentExpression)expr).getOperationSign() != JSTokenTypes.EQ) {
-            anchorChanged = true;
-          }
-        }
-        
-        if ((anchorChanged || !(anchor instanceof JSExpressionStatement)) && !implicitlyDeclared) {
-          // var statement should be inserted completely
-          builder.append(myReferenceExpression.getReferencedName()).append(";\n");
-        }
+				if(anchor instanceof JSExpressionStatement)
+				{
+					JSExpression expr = ((JSExpressionStatement) anchor).getExpression();
+					if(expr instanceof JSAssignmentExpression && ((JSAssignmentExpression) expr).getOperationSign() != JSTokenTypes.EQ)
+					{
+						anchorChanged = true;
+					}
+				}
 
-        Document document = PsiDocumentManager.getInstance(project).getDocument(myFile);
-        document.replaceString(startOffset, startOffset, builder);
-        PsiDocumentManager.getInstance(project).commitDocument(document);
+				if((anchorChanged || !(anchor instanceof JSExpressionStatement)) && !implicitlyDeclared)
+				{
+					// var statement should be inserted completely
+					builder.append(myReferenceExpression.getReferencedName()).append(";\n");
+				}
 
-        try {
-          CodeStyleManager.getInstance(project).reformatText(myFile, startOffset, textRange.getEndOffset() + builder.length());
-        }
-        catch (IncorrectOperationException e) {
-          e.printStackTrace();
-        }
-        myFile.navigate(true);
-      }
-    }
-  }
+				Document document = PsiDocumentManager.getInstance(project).getDocument(myFile);
+				document.replaceString(startOffset, startOffset, builder);
+				PsiDocumentManager.getInstance(project).commitDocument(document);
+
+				try
+				{
+					CodeStyleManager.getInstance(project).reformatText(myFile, startOffset, textRange.getEndOffset() + builder.length());
+				}
+				catch(IncorrectOperationException e)
+				{
+					e.printStackTrace();
+				}
+				myFile.navigate(true);
+			}
+		}
+	}
 }

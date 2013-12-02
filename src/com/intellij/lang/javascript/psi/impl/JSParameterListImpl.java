@@ -15,6 +15,7 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -22,7 +23,6 @@ import com.intellij.lang.javascript.psi.JSParameter;
 import com.intellij.lang.javascript.psi.JSParameterList;
 import com.intellij.lang.javascript.psi.stubs.JSParameterListStub;
 import com.intellij.psi.PsiElementVisitor;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,25 +31,32 @@ import org.jetbrains.annotations.NotNull;
  * Time: 8:41:53 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSParameterListImpl extends JSStubElementImpl<JSParameterListStub> implements JSParameterList {
-  public JSParameterListImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSParameterListImpl extends JSStubElementImpl<JSParameterListStub> implements JSParameterList
+{
+	public JSParameterListImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSParameterListImpl(final JSParameterListStub stub) {
-    super(stub, JSElementTypes.PARAMETER_LIST);
-  }
+	public JSParameterListImpl(final JSParameterListStub stub)
+	{
+		super(stub, JSElementTypes.PARAMETER_LIST);
+	}
 
-  public JSParameter[] getParameters() {
-    return getStubOrPsiChildren(JSElementTypes.FORMAL_PARAMETER, JSParameter.EMPTY_ARRAY);
-  }
+	public JSParameter[] getParameters()
+	{
+		return getStubOrPsiChildren(JSElementTypes.FORMAL_PARAMETER, JSParameter.EMPTY_ARRAY);
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSParameterList(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSParameterList(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 }

@@ -21,6 +21,7 @@ import com.intellij.psi.StubBasedPsiElement;
 /**
  * @by Maxim.Mossienko
  */
-public interface JSImportStatement extends JSStatement, StubBasedPsiElement<JSImportStatementStub> {
-  String getImportText();
+public interface JSImportStatement extends JSStatement, StubBasedPsiElement<JSImportStatementStub>
+{
+	String getImportText();
 }

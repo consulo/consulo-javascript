@@ -25,15 +25,17 @@ import org.jetbrains.annotations.Nullable;
  * Time: 7:03:06 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSTryStatement extends JSStatement {
-  JSStatement getStatement();
+public interface JSTryStatement extends JSStatement
+{
+	JSStatement getStatement();
 
-  @NotNull
-  JSCatchBlock[] getAllCatchBlocks();
+	@NotNull
+	JSCatchBlock[] getAllCatchBlocks();
 
-  @Deprecated @Nullable
-  JSCatchBlock getCatchBlock();
+	@Deprecated
+	@Nullable
+	JSCatchBlock getCatchBlock();
 
-  @Nullable
-  JSStatement getFinallyStatement();
+	@Nullable
+	JSStatement getFinallyStatement();
 }

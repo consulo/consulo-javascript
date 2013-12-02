@@ -15,6 +15,7 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -23,7 +24,6 @@ import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.psi.PsiElementVisitor;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,36 +32,48 @@ import org.jetbrains.annotations.NotNull;
  * Time: 10:11:23 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSCaseClauseImpl extends JSElementImpl implements JSCaseClause {
-  public JSCaseClauseImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSCaseClauseImpl extends JSElementImpl implements JSCaseClause
+{
+	public JSCaseClauseImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public boolean isDefault() {
-    return getNode().findChildByType(JSTokenTypes.DEFAULT_KEYWORD) != null;
-  }
+	public boolean isDefault()
+	{
+		return getNode().findChildByType(JSTokenTypes.DEFAULT_KEYWORD) != null;
+	}
 
-  public JSExpression getCaseExpression() {
-    if (isDefault()) return null;
-    final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
-    return node != null ? (JSExpression)node.getPsi() : null;
-  }
+	public JSExpression getCaseExpression()
+	{
+		if(isDefault())
+		{
+			return null;
+		}
+		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
+		return node != null ? (JSExpression) node.getPsi() : null;
+	}
 
-  public JSStatement[] getStatements() {
-    final ASTNode[] nodes = getNode().getChildren(JSElementTypes.STATEMENTS);
-    final JSStatement[] statements = new JSStatement[nodes.length];
-    for (int i = 0; i < statements.length; i++) {
-      statements[i] = (JSStatement)nodes[i].getPsi();
-    }
-    return statements;
-  }
+	public JSStatement[] getStatements()
+	{
+		final ASTNode[] nodes = getNode().getChildren(JSElementTypes.STATEMENTS);
+		final JSStatement[] statements = new JSStatement[nodes.length];
+		for(int i = 0; i < statements.length; i++)
+		{
+			statements[i] = (JSStatement) nodes[i].getPsi();
+		}
+		return statements;
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSCaseClause(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSCaseClause(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 }

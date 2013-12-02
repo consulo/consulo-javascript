@@ -21,46 +21,57 @@ import com.intellij.psi.util.PsiTreeUtil;
  *         Date: Apr 14, 2008
  *         Time: 6:01:09 PM
  */
-public class JavaScriptCodeContextType extends TemplateContextType {
-  private static final String JAVA_SCRIPT = "JAVA_SCRIPT";
+public class JavaScriptCodeContextType extends TemplateContextType
+{
+	private static final String JAVA_SCRIPT = "JAVA_SCRIPT";
 
-  public JavaScriptCodeContextType() {
-    super(JAVA_SCRIPT, JSBundle.message("javascript.template.context.type"));
-  }
+	public JavaScriptCodeContextType()
+	{
+		super(JAVA_SCRIPT, JSBundle.message("javascript.template.context.type"));
+	}
 
-  public boolean isInContext(@NotNull final PsiFile file, final int offset) {
-    PsiElement at = file.findElementAt(offset);
-    if (at == null && offset == file.getTextLength()) at = file.findElementAt(offset - 1);
-    Language language = at != null ? at.getParent().getLanguage():null;
-
-    if (language instanceof XMLLanguage) {
-      final PsiLanguageInjectionHost host = PsiTreeUtil.getParentOfType(at, PsiLanguageInjectionHost.class, false);
-
-      if (host != null) {
-        final Ref<Boolean> hasJsInjection = new Ref<Boolean>(Boolean.FALSE);
-
-        InjectedLanguageUtil.enumerate(host, new JSResolveUtil.JSInjectedFilesVisitor()
+	public boolean isInContext(@NotNull final PsiFile file, final int offset)
+	{
+		PsiElement at = file.findElementAt(offset);
+		if(at == null && offset == file.getTextLength())
 		{
-			protected void process(final JSFile file)
+			at = file.findElementAt(offset - 1);
+		}
+		Language language = at != null ? at.getParent().getLanguage() : null;
+
+		if(language instanceof XMLLanguage)
+		{
+			final PsiLanguageInjectionHost host = PsiTreeUtil.getParentOfType(at, PsiLanguageInjectionHost.class, false);
+
+			if(host != null)
 			{
-				hasJsInjection.set(Boolean.TRUE);
+				final Ref<Boolean> hasJsInjection = new Ref<Boolean>(Boolean.FALSE);
+
+				InjectedLanguageUtil.enumerate(host, new JSResolveUtil.JSInjectedFilesVisitor()
+				{
+					protected void process(final JSFile file)
+					{
+						hasJsInjection.set(Boolean.TRUE);
+					}
+				});
+
+				if(hasJsInjection.get())
+				{
+					language = JavaScriptSupportLoader.JAVASCRIPT.getLanguage();
+				}
 			}
-		});
+		}
+		return language != null && language.isKindOf(JavaScriptSupportLoader.JAVASCRIPT.getLanguage());
+	}
 
-        if (hasJsInjection.get()) {
-          language = JavaScriptSupportLoader.JAVASCRIPT.getLanguage();
-        }
-      }
-    }
-    return language != null && language.isKindOf(JavaScriptSupportLoader.JAVASCRIPT.getLanguage());
-  }
+	public boolean isInContext(@NotNull final FileType fileType)
+	{
+		return fileType instanceof JavaScriptFileType;
+	}
 
-  public boolean isInContext(@NotNull final FileType fileType) {
-    return fileType instanceof JavaScriptFileType;
-  }
-
-  public SyntaxHighlighter createHighlighter() {
-    final SyntaxHighlighterFactory factory = SyntaxHighlighterFactory.LANGUAGE_FACTORY.forLanguage(JavaScriptSupportLoader.ECMA_SCRIPT_L4);
-    return factory.getSyntaxHighlighter(JavaScriptSupportLoader.ECMA_SCRIPT_L4, null, null);
-  }
+	public SyntaxHighlighter createHighlighter()
+	{
+		final SyntaxHighlighterFactory factory = SyntaxHighlighterFactory.LANGUAGE_FACTORY.forLanguage(JavaScriptSupportLoader.ECMA_SCRIPT_L4);
+		return factory.getSyntaxHighlighter(JavaScriptSupportLoader.ECMA_SCRIPT_L4, null, null);
+	}
 }

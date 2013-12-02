@@ -25,8 +25,10 @@ import com.intellij.psi.stubs.StubElement;
  * Time: 8:23:10 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSElementImpl extends JSStubElementImpl<StubElement>{
-  public JSElementImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSElementImpl extends JSStubElementImpl<StubElement>
+{
+	public JSElementImpl(final ASTNode node)
+	{
+		super(node);
+	}
 }

@@ -15,6 +15,7 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSCaseClause;
@@ -23,7 +24,6 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSSwitchStatement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.TokenSet;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,33 +32,41 @@ import org.jetbrains.annotations.NotNull;
  * Time: 10:08:20 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSSwitchStatementImpl extends JSStatementImpl implements JSSwitchStatement {
-  private static final TokenSet CASE_CLAUSE_FILTER = TokenSet.create(JSElementTypes.CASE_CLAUSE);
+public class JSSwitchStatementImpl extends JSStatementImpl implements JSSwitchStatement
+{
+	private static final TokenSet CASE_CLAUSE_FILTER = TokenSet.create(JSElementTypes.CASE_CLAUSE);
 
-  public JSSwitchStatementImpl(final ASTNode node) {
-    super(node);
-  }
+	public JSSwitchStatementImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSExpression getSwitchExpression() {
-    final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
-    return node != null ? (JSExpression)node.getPsi() : null;
-  }
+	public JSExpression getSwitchExpression()
+	{
+		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
+		return node != null ? (JSExpression) node.getPsi() : null;
+	}
 
-  public JSCaseClause[] getCaseClauses() {
-    final ASTNode[] nodes = getNode().getChildren(CASE_CLAUSE_FILTER);
-    final JSCaseClause[] clauses = new JSCaseClause[nodes.length];
-    for (int i = 0; i < clauses.length; i++) {
-      clauses[i] = (JSCaseClause)nodes[i].getPsi();
-    }
-    return clauses;
-  }
+	public JSCaseClause[] getCaseClauses()
+	{
+		final ASTNode[] nodes = getNode().getChildren(CASE_CLAUSE_FILTER);
+		final JSCaseClause[] clauses = new JSCaseClause[nodes.length];
+		for(int i = 0; i < clauses.length; i++)
+		{
+			clauses[i] = (JSCaseClause) nodes[i].getPsi();
+		}
+		return clauses;
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSSwitchStatement(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSSwitchStatement(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 }

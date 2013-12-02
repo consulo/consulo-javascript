@@ -8,6 +8,7 @@ import com.intellij.psi.stubs.StubElement;
  *         Date: Jun 6, 2008
  *         Time: 7:52:51 PM
  */
-public interface JSReferenceListStub extends JSStubElement<JSReferenceList>, StubElement<JSReferenceList> {
-  String[] getReferenceTexts();
+public interface JSReferenceListStub extends JSStubElement<JSReferenceList>, StubElement<JSReferenceList>
+{
+	String[] getReferenceTexts();
 }

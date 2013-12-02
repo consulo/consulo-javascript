@@ -15,6 +15,7 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSArgumentList;
@@ -22,7 +23,6 @@ import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSNewExpression;
 import com.intellij.psi.PsiElementVisitor;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,27 +31,34 @@ import org.jetbrains.annotations.NotNull;
  * Time: 11:57:36 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSNewExpressionImpl extends JSExpressionImpl implements JSNewExpression {
-  public JSNewExpressionImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSNewExpressionImpl extends JSExpressionImpl implements JSNewExpression
+{
+	public JSNewExpressionImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSExpression getMethodExpression() {
-    final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
-    return node != null ? (JSExpression)node.getPsi() : null;
-  }
+	public JSExpression getMethodExpression()
+	{
+		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
+		return node != null ? (JSExpression) node.getPsi() : null;
+	}
 
-  public JSArgumentList getArgumentList() {
-    final ASTNode node = getNode().findChildByType(JSElementTypes.ARGUMENT_LIST);
-    return node != null ? (JSArgumentList)node.getPsi():null;
-  }
+	public JSArgumentList getArgumentList()
+	{
+		final ASTNode node = getNode().findChildByType(JSElementTypes.ARGUMENT_LIST);
+		return node != null ? (JSArgumentList) node.getPsi() : null;
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSNewExpression(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSNewExpression(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 }

@@ -28,25 +28,32 @@ import com.intellij.psi.tree.IElementType;
 /**
  * @by max
  */
-public class JSParser implements PsiParser {
-  private final JSLanguageDialect myDialect;
+public class JSParser implements PsiParser
+{
+	private final JSLanguageDialect myDialect;
 
-  public JSParser(@Nullable final JSLanguageDialect dialect) {
-    myDialect = dialect;
-  }
+	public JSParser(@Nullable final JSLanguageDialect dialect)
+	{
+		myDialect = dialect;
+	}
 
-  @NotNull
-  public ASTNode parse(IElementType root, PsiBuilder builder, LanguageVersion languageVersion) {
-    final PsiBuilder.Marker rootMarker = builder.mark();
-    if (myDialect == JavaScriptSupportLoader.JSON) {
-      ExpressionParsing.parseJSON(builder);
-    } else {
-      builder.putUserData(Parsing.JS_DIALECT_KEY, myDialect);
-      while (!builder.eof()) {
-        StatementParsing.parseSourceElement(builder);
-      }
-    }
-    rootMarker.done(root);
-    return builder.getTreeBuilt();
-  }
+	@NotNull
+	public ASTNode parse(IElementType root, PsiBuilder builder, LanguageVersion languageVersion)
+	{
+		final PsiBuilder.Marker rootMarker = builder.mark();
+		if(myDialect == JavaScriptSupportLoader.JSON)
+		{
+			ExpressionParsing.parseJSON(builder);
+		}
+		else
+		{
+			builder.putUserData(Parsing.JS_DIALECT_KEY, myDialect);
+			while(!builder.eof())
+			{
+				StatementParsing.parseSourceElement(builder);
+			}
+		}
+		rootMarker.done(root);
+		return builder.getTreeBuilt();
+	}
 }

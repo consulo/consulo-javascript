@@ -5,9 +5,11 @@ package com.intellij.lang.javascript.generation;
  *         Date: Jul 19, 2008
  *         Time: 1:01:05 AM
  */
-public class JavaScriptGenerateGetSetAccessorAction extends BaseJSGenerateAction {
+public class JavaScriptGenerateGetSetAccessorAction extends BaseJSGenerateAction
+{
 
-  protected JavaScriptGenerateAccessorHandler.GenerationMode getGenerationMode() {
-    return JavaScriptGenerateAccessorHandler.GenerationMode.GETTERS_AND_SETTERS;
-  }
+	protected JavaScriptGenerateAccessorHandler.GenerationMode getGenerationMode()
+	{
+		return JavaScriptGenerateAccessorHandler.GenerationMode.GETTERS_AND_SETTERS;
+	}
 }

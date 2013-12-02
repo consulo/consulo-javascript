@@ -15,12 +15,13 @@
  */
 package com.intellij.lang.javascript.psi;
 
-import com.intellij.psi.PsiNamedElement;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.psi.PsiNamedElement;
 
-public interface JSDocTag extends PsiNamedElement, JSElement {
-  JSDocTag[] EMPTY_ARRAY = new JSDocTag[0];
+public interface JSDocTag extends PsiNamedElement, JSElement
+{
+	JSDocTag[] EMPTY_ARRAY = new JSDocTag[0];
 
-  @Nullable
-  JSDocTagValue getValue();
+	@Nullable
+	JSDocTagValue getValue();
 }

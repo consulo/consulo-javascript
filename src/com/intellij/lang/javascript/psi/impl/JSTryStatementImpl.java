@@ -15,6 +15,8 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -25,8 +27,6 @@ import com.intellij.lang.javascript.psi.JSTryStatement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,57 +35,79 @@ import org.jetbrains.annotations.Nullable;
  * Time: 9:59:44 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSTryStatementImpl extends JSStatementImpl implements JSTryStatement {
-  private static TokenSet ourCatchesTypeSet = TokenSet.create(JSElementTypes.CATCH_BLOCK);
+public class JSTryStatementImpl extends JSStatementImpl implements JSTryStatement
+{
+	private static TokenSet ourCatchesTypeSet = TokenSet.create(JSElementTypes.CATCH_BLOCK);
 
-  public JSTryStatementImpl(final ASTNode node) {
-    super(node);
-  }
+	public JSTryStatementImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSStatement getStatement() {
-    ASTNode child = getNode().getFirstChildNode();
-    while (child != null) {
-      final IElementType type = child.getElementType();
-      if (JSElementTypes.STATEMENTS.contains(type)) return (JSStatement)child.getPsi();
-      if (type == JSTokenTypes.FINALLY_KEYWORD) break;
-      child = child.getTreeNext();
-    }
-    return null;
-  }
+	public JSStatement getStatement()
+	{
+		ASTNode child = getNode().getFirstChildNode();
+		while(child != null)
+		{
+			final IElementType type = child.getElementType();
+			if(JSElementTypes.STATEMENTS.contains(type))
+			{
+				return (JSStatement) child.getPsi();
+			}
+			if(type == JSTokenTypes.FINALLY_KEYWORD)
+			{
+				break;
+			}
+			child = child.getTreeNext();
+		}
+		return null;
+	}
 
-  @Nullable
-  public JSCatchBlock getCatchBlock() {
-    final ASTNode catchChild = getNode().findChildByType(JSElementTypes.CATCH_BLOCK);
-    if (catchChild == null) {
-      return null;
-    }
-    return (JSCatchBlock)catchChild.getPsi();
-  }
+	@Nullable
+	public JSCatchBlock getCatchBlock()
+	{
+		final ASTNode catchChild = getNode().findChildByType(JSElementTypes.CATCH_BLOCK);
+		if(catchChild == null)
+		{
+			return null;
+		}
+		return (JSCatchBlock) catchChild.getPsi();
+	}
 
-  public JSCatchBlock[] getAllCatchBlocks() {
-    return findChildrenByClass(JSCatchBlock.class);
-  }
+	public JSCatchBlock[] getAllCatchBlocks()
+	{
+		return findChildrenByClass(JSCatchBlock.class);
+	}
 
-  public JSStatement getFinallyStatement() {
-    ASTNode child = getNode().getFirstChildNode();
-    boolean foundFinally = false;
-    while (child != null) {
-      final IElementType type = child.getElementType();
-      if (foundFinally && JSElementTypes.STATEMENTS.contains(type)) return (JSStatement)child.getPsi();
-      if (type == JSTokenTypes.FINALLY_KEYWORD) {
-        foundFinally = true;
-      }
-      child = child.getTreeNext();
-    }
-    return null;
-  }
+	public JSStatement getFinallyStatement()
+	{
+		ASTNode child = getNode().getFirstChildNode();
+		boolean foundFinally = false;
+		while(child != null)
+		{
+			final IElementType type = child.getElementType();
+			if(foundFinally && JSElementTypes.STATEMENTS.contains(type))
+			{
+				return (JSStatement) child.getPsi();
+			}
+			if(type == JSTokenTypes.FINALLY_KEYWORD)
+			{
+				foundFinally = true;
+			}
+			child = child.getTreeNext();
+		}
+		return null;
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSTryStatement(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSTryStatement(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 }

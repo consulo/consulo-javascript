@@ -109,12 +109,11 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 				{
 					isStatic |= elementProxy.hasProperty(JSNamedElementProxy.Property.Static);
 
-					isMethod |= (namedItemType == JSNamedElementProxy.NamedItemType.MemberFunction || namedItemType == JSNamedElementProxy
-							.NamedItemType.FunctionProperty);
+					isMethod |= (namedItemType == JSNamedElementProxy.NamedItemType.MemberFunction || namedItemType == JSNamedElementProxy.NamedItemType
+							.FunctionProperty);
 					isFunction |= namedItemType == JSNamedElementProxy.NamedItemType.Function;
 					isVariable |= namedItemType == JSNamedElementProxy.NamedItemType.Variable;
-					isField |= namedItemType == JSNamedElementProxy.NamedItemType.Definition || namedItemType == JSNamedElementProxy.NamedItemType
-							.Property;
+					isField |= namedItemType == JSNamedElementProxy.NamedItemType.Definition || namedItemType == JSNamedElementProxy.NamedItemType.Property;
 
 					if(namedItemType == JSNamedElementProxy.NamedItemType.FunctionExpression)
 					{

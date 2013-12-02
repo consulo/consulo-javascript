@@ -4,18 +4,20 @@
  */
 package com.intellij.javascript.manipulators;
 
+import org.jetbrains.annotations.NonNls;
 import com.intellij.lang.javascript.JSLanguageDialect;
 import com.intellij.lang.javascript.psi.JSDocComment;
 import com.intellij.lang.javascript.psi.JSDocTag;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NonNls;
 
-public class JSDocTagManipulator extends JSAbstractElementManipulator<JSDocTag> {
-  protected JSDocTag createTree(final String newText, final JSLanguageDialect languageDialect, final Project project) {
-    @NonNls String ToCreate = "/** " + newText + " */";
-    final PsiElement element = JSChangeUtil.createJSTreeFromText(project, ToCreate, languageDialect).getPsi();
-    return ((JSDocComment)element).getTags()[0];
-  }
+public class JSDocTagManipulator extends JSAbstractElementManipulator<JSDocTag>
+{
+	protected JSDocTag createTree(final String newText, final JSLanguageDialect languageDialect, final Project project)
+	{
+		@NonNls String ToCreate = "/** " + newText + " */";
+		final PsiElement element = JSChangeUtil.createJSTreeFromText(project, ToCreate, languageDialect).getPsi();
+		return ((JSDocComment) element).getTags()[0];
+	}
 }

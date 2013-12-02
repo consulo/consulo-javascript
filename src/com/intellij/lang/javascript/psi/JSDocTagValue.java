@@ -15,6 +15,7 @@
  */
 package com.intellij.lang.javascript.psi;
 
-public interface JSDocTagValue extends JSElement {
-  
+public interface JSDocTagValue extends JSElement
+{
+
 }

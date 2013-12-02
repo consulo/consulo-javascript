@@ -24,9 +24,13 @@ import com.intellij.psi.PsiElement;
  * Time: 6:52:43 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSLabeledStatement extends JSStatement{
-  String getLabel();
-  PsiElement getLabelIdentifier();
-  JSStatement getStatement();
-  JSStatement unlabel();
+public interface JSLabeledStatement extends JSStatement
+{
+	String getLabel();
+
+	PsiElement getLabelIdentifier();
+
+	JSStatement getStatement();
+
+	JSStatement unlabel();
 }

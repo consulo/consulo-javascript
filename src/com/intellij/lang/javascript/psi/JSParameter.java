@@ -22,10 +22,13 @@ package com.intellij.lang.javascript.psi;
  * Time: 6:43:02 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSParameter extends JSVariable {
-  JSParameter[] EMPTY_ARRAY = new JSParameter[0];
-  JSFunction getDeclaringFunction();
+public interface JSParameter extends JSVariable
+{
+	JSParameter[] EMPTY_ARRAY = new JSParameter[0];
 
-  boolean isRest();
-  boolean isOptional();
+	JSFunction getDeclaringFunction();
+
+	boolean isRest();
+
+	boolean isOptional();
 }

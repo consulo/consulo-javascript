@@ -23,41 +23,47 @@ import com.intellij.refactoring.RefactoringActionHandler;
 
 public class JavascriptRefactoringSupportProvider extends RefactoringSupportProvider
 {
-  public boolean isSafeDeleteAvailable(PsiElement element) {
-    boolean simpleElement =
-      element instanceof JSFunction || element instanceof JSVariable || element instanceof JSDefinitionExpression ||
-      element instanceof JSProperty || element instanceof JSClass;
+	public boolean isSafeDeleteAvailable(PsiElement element)
+	{
+		boolean simpleElement = element instanceof JSFunction || element instanceof JSVariable || element instanceof JSDefinitionExpression ||
+				element instanceof JSProperty || element instanceof JSClass;
 
-    if (element instanceof JSNamedElementProxy) {
-      final JSNamedElementProxy.NamedItemType namedItemType = ((JSNamedElementProxy)element).getType();
+		if(element instanceof JSNamedElementProxy)
+		{
+			final JSNamedElementProxy.NamedItemType namedItemType = ((JSNamedElementProxy) element).getType();
 
-      simpleElement = namedItemType != JSNamedElementProxy.NamedItemType.AttributeValue;
-    }
+			simpleElement = namedItemType != JSNamedElementProxy.NamedItemType.AttributeValue;
+		}
 
-    return simpleElement && ((JSNamedElement)element).getName() != null;
-  }
+		return simpleElement && ((JSNamedElement) element).getName() != null;
+	}
 
-  @Nullable
-  public RefactoringActionHandler getIntroduceVariableHandler() {
-    return new JSIntroduceVariableHandler();
-  }
+	@Nullable
+	public RefactoringActionHandler getIntroduceVariableHandler()
+	{
+		return new JSIntroduceVariableHandler();
+	}
 
-  @Nullable
-  public RefactoringActionHandler getExtractMethodHandler() {
-    return ApplicationManager.getApplication().isUnitTestMode() ?new JSExtractFunctionHandler():null;
-  }
+	@Nullable
+	public RefactoringActionHandler getExtractMethodHandler()
+	{
+		return ApplicationManager.getApplication().isUnitTestMode() ? new JSExtractFunctionHandler() : null;
+	}
 
-  @Override
-  public RefactoringActionHandler getIntroduceConstantHandler() {
-    return new JSIntroduceConstantHandler();
-  }
+	@Override
+	public RefactoringActionHandler getIntroduceConstantHandler()
+	{
+		return new JSIntroduceConstantHandler();
+	}
 
-  @Override
-  public RefactoringActionHandler getIntroduceFieldHandler() {
-    return new JSIntroduceFieldHandler();
-  }
+	@Override
+	public RefactoringActionHandler getIntroduceFieldHandler()
+	{
+		return new JSIntroduceFieldHandler();
+	}
 
-  public boolean doInplaceRenameFor(final PsiElement element, final PsiElement context) {
-    return element instanceof JSNamedElement && element.getUseScope() instanceof LocalSearchScope;
-  }
+	public boolean doInplaceRenameFor(final PsiElement element, final PsiElement context)
+	{
+		return element instanceof JSNamedElement && element.getUseScope() instanceof LocalSearchScope;
+	}
 }

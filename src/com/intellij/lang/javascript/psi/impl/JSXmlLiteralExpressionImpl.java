@@ -20,8 +20,10 @@ import com.intellij.lang.ASTNode;
 /**
  * @by Maxim.Mossienko
  */
-public class JSXmlLiteralExpressionImpl extends JSLiteralExpressionImpl{
-  public JSXmlLiteralExpressionImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSXmlLiteralExpressionImpl extends JSLiteralExpressionImpl
+{
+	public JSXmlLiteralExpressionImpl(final ASTNode node)
+	{
+		super(node);
+	}
 }

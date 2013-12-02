@@ -18,6 +18,7 @@ package com.intellij.lang.javascript.psi;
 /**
  * @author ven
  */
-public interface JSSourceElement extends JSElement {
-  JSSourceElement[] EMPTY_ARRAY = new JSSourceElement[0];
+public interface JSSourceElement extends JSElement
+{
+	JSSourceElement[] EMPTY_ARRAY = new JSSourceElement[0];
 }

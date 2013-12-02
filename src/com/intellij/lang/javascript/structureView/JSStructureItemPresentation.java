@@ -25,173 +25,240 @@ import com.intellij.psi.xml.XmlTag;
  *         Date: Jul 23, 2008
  *         Time: 6:54:27 PM
  */
-class JSStructureItemPresentation extends JSStructureViewElement.JSStructureItemPresentationBase {
-  public JSStructureItemPresentation(final JSStructureViewElement jsStructureViewElement) {
-    super(jsStructureViewElement);
-  }
+class JSStructureItemPresentation extends JSStructureViewElement.JSStructureItemPresentationBase
+{
+	public JSStructureItemPresentation(final JSStructureViewElement jsStructureViewElement)
+	{
+		super(jsStructureViewElement);
+	}
 
-  public String getPresentableText() {
-    PsiElement psiElement = element.getUpToDateElement();
-    if (psiElement == null || !psiElement.isValid()) return "*invalid*";
+	public String getPresentableText()
+	{
+		PsiElement psiElement = element.getUpToDateElement();
+		if(psiElement == null || !psiElement.isValid())
+		{
+			return "*invalid*";
+		}
 
-    if (psiElement instanceof JSObjectLiteralExpression) {
-      if (psiElement.getParent() instanceof JSAssignmentExpression) {
-        final JSExpression expression =
-            ((JSDefinitionExpression)((JSAssignmentExpression)psiElement.getParent()).getLOperand()).getExpression();
-        return JSResolveUtil.findClassIdentifier(expression).getText();
-      }
-      else {
-        return JSBundle.message("javascript.language.term.prototype");
-      }
-    }
+		if(psiElement instanceof JSObjectLiteralExpression)
+		{
+			if(psiElement.getParent() instanceof JSAssignmentExpression)
+			{
+				final JSExpression expression = ((JSDefinitionExpression) ((JSAssignmentExpression) psiElement.getParent()).getLOperand()).getExpression();
+				return JSResolveUtil.findClassIdentifier(expression).getText();
+			}
+			else
+			{
+				return JSBundle.message("javascript.language.term.prototype");
+			}
+		}
 
-    if (psiElement instanceof JSDefinitionExpression) {
-      psiElement = ((JSDefinitionExpression)psiElement).getExpression();
-    }
+		if(psiElement instanceof JSDefinitionExpression)
+		{
+			psiElement = ((JSDefinitionExpression) psiElement).getExpression();
+		}
 
-    if (psiElement instanceof JSReferenceExpression) {
-      JSReferenceExpression expression = (JSReferenceExpression)psiElement;
+		if(psiElement instanceof JSReferenceExpression)
+		{
+			JSReferenceExpression expression = (JSReferenceExpression) psiElement;
 
-      if (element.getProxy() != null &&
-          element.getProxy().getType() == JSNamedElementProxy.NamedItemType.Namespace) {
-        final JSExpression jsExpression = expression.getQualifier();
-        if (jsExpression instanceof JSReferenceExpression) {
+			if(element.getProxy() != null && element.getProxy().getType() == JSNamedElementProxy.NamedItemType.Namespace)
+			{
+				final JSExpression jsExpression = expression.getQualifier();
+				if(jsExpression instanceof JSReferenceExpression)
+				{
 
-          expression = (JSReferenceExpression)jsExpression;
-        }
-      }
+					expression = (JSReferenceExpression) jsExpression;
+				}
+			}
 
-      String s = expression.getReferencedName();
+			String s = expression.getReferencedName();
 
-      if (JSResolveUtil.PROTOTYPE_FIELD_NAME.equals(s)) {
-        final JSExpression jsExpression = expression.getQualifier();
-        if (jsExpression instanceof JSReferenceExpression) {
-          s = ((JSReferenceExpression)jsExpression).getReferencedName();
-        }
-      }
-      return s;
-    }
+			if(JSResolveUtil.PROTOTYPE_FIELD_NAME.equals(s))
+			{
+				final JSExpression jsExpression = expression.getQualifier();
+				if(jsExpression instanceof JSReferenceExpression)
+				{
+					s = ((JSReferenceExpression) jsExpression).getReferencedName();
+				}
+			}
+			return s;
+		}
 
-    if (!(psiElement instanceof PsiNamedElement)) {
-      return psiElement.getText();
-    }
+		if(!(psiElement instanceof PsiNamedElement))
+		{
+			return psiElement.getText();
+		}
 
-    String name = ((PsiNamedElement)psiElement).getName();
+		String name = ((PsiNamedElement) psiElement).getName();
 
-    if (psiElement instanceof JSProperty) {
-      psiElement = ((JSProperty)psiElement).getValue();
-    }
+		if(psiElement instanceof JSProperty)
+		{
+			psiElement = ((JSProperty) psiElement).getValue();
+		}
 
-    if (psiElement instanceof JSFunction) {
-      if (name == null) name = "<anonymous>";
-      name += "(";
-      JSParameterList parameterList = ((JSFunction)psiElement).getParameterList();
-      if (parameterList != null) {
-        for (JSParameter p : parameterList.getParameters()) {
-          if (!name.endsWith("(")) name += ", ";
-          name += p.getName();
-          final String variableType = p.getTypeString();
-          if (variableType != null) name += ":" + variableType;
-        }
-      }
-      name += ")";
+		if(psiElement instanceof JSFunction)
+		{
+			if(name == null)
+			{
+				name = "<anonymous>";
+			}
+			name += "(";
+			JSParameterList parameterList = ((JSFunction) psiElement).getParameterList();
+			if(parameterList != null)
+			{
+				for(JSParameter p : parameterList.getParameters())
+				{
+					if(!name.endsWith("("))
+					{
+						name += ", ";
+					}
+					name += p.getName();
+					final String variableType = p.getTypeString();
+					if(variableType != null)
+					{
+						name += ":" + variableType;
+					}
+				}
+			}
+			name += ")";
 
-      final String type = ((JSFunction)psiElement).getReturnTypeString();
-      if (type != null) {
-        name += ":" + type;
-      }
-    }
+			final String type = ((JSFunction) psiElement).getReturnTypeString();
+			if(type != null)
+			{
+				name += ":" + type;
+			}
+		}
 
-    if (name == null && psiElement.getParent() instanceof JSAssignmentExpression) {
-      JSExpression lOperand = ((JSDefinitionExpression)((JSAssignmentExpression)psiElement.getParent()).getLOperand()).getExpression();
-      lOperand = JSResolveUtil.findClassIdentifier(lOperand);
-      if (lOperand instanceof JSReferenceExpression) {
-        return ((JSReferenceExpression)lOperand).getReferencedName();
-      }
-      return lOperand.getText();
-    }
-    return name;
-  }
+		if(name == null && psiElement.getParent() instanceof JSAssignmentExpression)
+		{
+			JSExpression lOperand = ((JSDefinitionExpression) ((JSAssignmentExpression) psiElement.getParent()).getLOperand()).getExpression();
+			lOperand = JSResolveUtil.findClassIdentifier(lOperand);
+			if(lOperand instanceof JSReferenceExpression)
+			{
+				return ((JSReferenceExpression) lOperand).getReferencedName();
+			}
+			return lOperand.getText();
+		}
+		return name;
+	}
 
-  public Icon getIcon(boolean open) {
-    final PsiElement psiElement = this.element.getRealElement();
-    if (!psiElement.isValid()) return null;
-    if (psiElement instanceof JSProperty) {
-      final JSExpression expression = ((JSProperty)psiElement).getValue();
-      if (expression instanceof JSObjectLiteralExpression) return AllIcons.Nodes.Class;
-      if (expression instanceof JSFunction) return AllIcons.Nodes.Method;
-      return AllIcons.Nodes.Variable;
-    }
-    if (psiElement instanceof JSReferenceExpression) {
-      return AllIcons.Nodes.Variable;
-    }
+	public Icon getIcon(boolean open)
+	{
+		final PsiElement psiElement = this.element.getRealElement();
+		if(!psiElement.isValid())
+		{
+			return null;
+		}
+		if(psiElement instanceof JSProperty)
+		{
+			final JSExpression expression = ((JSProperty) psiElement).getValue();
+			if(expression instanceof JSObjectLiteralExpression)
+			{
+				return AllIcons.Nodes.Class;
+			}
+			if(expression instanceof JSFunction)
+			{
+				return AllIcons.Nodes.Method;
+			}
+			return AllIcons.Nodes.Variable;
+		}
+		if(psiElement instanceof JSReferenceExpression)
+		{
+			return AllIcons.Nodes.Variable;
+		}
 
-    if (psiElement instanceof JSNamedElementProxy &&
-        ((JSNamedElementProxy)psiElement).getType() == JSNamedElementProxy.NamedItemType.AttributeValue
-        ) {
-      final Icon icon = getIcon(PsiTreeUtil.getParentOfType(((JSNamedElementProxy)psiElement).getElement(), XmlTag.class));
-      if (icon != null) return icon;
-    }
-    
-    if (element.getProxy() != null) return IconDescriptorUpdaters.getIcon(element.getProxy(), 0);
-    return IconDescriptorUpdaters.getIcon(psiElement, 0);
-  }
+		if(psiElement instanceof JSNamedElementProxy && ((JSNamedElementProxy) psiElement).getType() == JSNamedElementProxy.NamedItemType.AttributeValue)
+		{
+			final Icon icon = getIcon(PsiTreeUtil.getParentOfType(((JSNamedElementProxy) psiElement).getElement(), XmlTag.class));
+			if(icon != null)
+			{
+				return icon;
+			}
+		}
 
-  private static Map<String, Icon> myQNameToIconMap = new THashMap<String, Icon>();
-  private static long myQNameToIconModificationCount;
+		if(element.getProxy() != null)
+		{
+			return IconDescriptorUpdaters.getIcon(element.getProxy(), 0);
+		}
+		return IconDescriptorUpdaters.getIcon(psiElement, 0);
+	}
 
-  private Icon getIcon(XmlTag tag) {
-    if (tag == null) return null;
+	private static Map<String, Icon> myQNameToIconMap = new THashMap<String, Icon>();
+	private static long myQNameToIconModificationCount;
 
-    if (JavaScriptSupportLoader.isFlexMxmFile(tag.getContainingFile())) {
-      Icon icon;
-      final long count = tag.getManager().getModificationTracker().getModificationCount();
-      final String tagName = tag.getName();
+	private Icon getIcon(XmlTag tag)
+	{
+		if(tag == null)
+		{
+			return null;
+		}
 
-      if (myQNameToIconModificationCount == count) {
-        icon = myQNameToIconMap.get(tagName);
-        if (icon != null) return icon;
-        if (myQNameToIconMap.containsKey(tagName)) return null;
-      }
-      else {
-        myQNameToIconMap.clear();
-        myQNameToIconModificationCount = count;
-      }
+		if(JavaScriptSupportLoader.isFlexMxmFile(tag.getContainingFile()))
+		{
+			Icon icon;
+			final long count = tag.getManager().getModificationTracker().getModificationCount();
+			final String tagName = tag.getName();
 
-      myQNameToIconMap.put(tagName, icon = findIcon(tag));
-      return icon;
-    }
+			if(myQNameToIconModificationCount == count)
+			{
+				icon = myQNameToIconMap.get(tagName);
+				if(icon != null)
+				{
+					return icon;
+				}
+				if(myQNameToIconMap.containsKey(tagName))
+				{
+					return null;
+				}
+			}
+			else
+			{
+				myQNameToIconMap.clear();
+				myQNameToIconModificationCount = count;
+			}
 
-    return null;
-  }
+			myQNameToIconMap.put(tagName, icon = findIcon(tag));
+			return icon;
+		}
 
-  private static Icon findIcon(XmlTag tag) {
-    final JSClass aClass = JSResolveUtil.getClassFromTagNameInMxml(tag.getFirstChild());
-    if (aClass != null) {
-      final JSAttributeList attributeList = aClass.getAttributeList();
+		return null;
+	}
 
-      if (attributeList != null) {
-        final JSAttribute[] attrs = attributeList.getAttributesByName("IconFile");
+	private static Icon findIcon(XmlTag tag)
+	{
+		final JSClass aClass = JSResolveUtil.getClassFromTagNameInMxml(tag.getFirstChild());
+		if(aClass != null)
+		{
+			final JSAttributeList attributeList = aClass.getAttributeList();
 
-        if (attrs.length > 0) {
-          final JSAttributeNameValuePair pair = attrs[0].getValueByName(null);
+			if(attributeList != null)
+			{
+				final JSAttribute[] attrs = attributeList.getAttributesByName("IconFile");
 
-          if (pair != null) {
-            final String s = pair.getSimpleValue();
-            final VirtualFile file = aClass.getContainingFile().getVirtualFile();
+				if(attrs.length > 0)
+				{
+					final JSAttributeNameValuePair pair = attrs[0].getValueByName(null);
 
-            if (file != null) {
-              final VirtualFile parent = file.getParent();
-              final VirtualFile child = parent != null ? parent.findChild(s):null;
-              if (child != null) {
-                return new ImageIcon(child.getPath());
-              }
-            }
-          }
-        }
-      }
-    }
+					if(pair != null)
+					{
+						final String s = pair.getSimpleValue();
+						final VirtualFile file = aClass.getContainingFile().getVirtualFile();
 
-    return null;
-  }
+						if(file != null)
+						{
+							final VirtualFile parent = file.getParent();
+							final VirtualFile child = parent != null ? parent.findChild(s) : null;
+							if(child != null)
+							{
+								return new ImageIcon(child.getPath());
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return null;
+	}
 }

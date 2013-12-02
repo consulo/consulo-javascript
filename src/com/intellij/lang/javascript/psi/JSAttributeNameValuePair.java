@@ -22,8 +22,11 @@ import com.intellij.psi.StubBasedPsiElement;
 /**
  * @by Maxim.Mossienko
  */
-public interface JSAttributeNameValuePair extends JSElement,PsiNamedElement, StubBasedPsiElement<JSAttributeNameValuePairStub> {
-  JSAttributeNameValuePair[] EMPTY_ARRAY = new JSAttributeNameValuePair[0]; 
-  JSExpression getValue();
-  String getSimpleValue();
+public interface JSAttributeNameValuePair extends JSElement, PsiNamedElement, StubBasedPsiElement<JSAttributeNameValuePairStub>
+{
+	JSAttributeNameValuePair[] EMPTY_ARRAY = new JSAttributeNameValuePair[0];
+
+	JSExpression getValue();
+
+	String getSimpleValue();
 }

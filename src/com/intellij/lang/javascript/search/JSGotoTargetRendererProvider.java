@@ -14,27 +14,35 @@ import com.intellij.psi.PsiElement;
  *         Date: Apr 28, 2008
  *         Time: 8:14:14 PM
  */
-public class JSGotoTargetRendererProvider implements GotoTargetRendererProvider {
-  static class JSClassListCellRenderer extends PsiElementListCellRenderer<JSNamedElement> {
-    public String getElementText(final JSNamedElement element) {
-      return element.getName();
-    }
+public class JSGotoTargetRendererProvider implements GotoTargetRendererProvider
+{
+	static class JSClassListCellRenderer extends PsiElementListCellRenderer<JSNamedElement>
+	{
+		public String getElementText(final JSNamedElement element)
+		{
+			return element.getName();
+		}
 
-    protected String getContainerText(final JSNamedElement element, final String name) {
-      final ItemPresentation presentation = ((NavigationItem)element).getPresentation();
-      return presentation != null ? presentation.getLocationString():null;
-    }
+		protected String getContainerText(final JSNamedElement element, final String name)
+		{
+			final ItemPresentation presentation = ((NavigationItem) element).getPresentation();
+			return presentation != null ? presentation.getLocationString() : null;
+		}
 
-    protected int getIconFlags() {
-      return 0;
-    }
-  }
+		protected int getIconFlags()
+		{
+			return 0;
+		}
+	}
 
 	@Nullable
 	@Override
 	public PsiElementListCellRenderer getRenderer(PsiElement element, GotoTargetHandler.GotoData gotoData)
 	{
-		if (!(element instanceof JSNamedElement)) return null;
+		if(!(element instanceof JSNamedElement))
+		{
+			return null;
+		}
 
 		return new JSClassListCellRenderer();
 	}

@@ -26,12 +26,15 @@ import com.intellij.psi.PsiElement;
  * Time: 19:24:26
  * To change this template use File | Settings | File Templates.
  */
-public class JSWithTryFinallySurrounder extends JSWithTryCatchFinallySurrounder {
-  public String getTemplateDescription() {
-    return JSBundle.message("javascript.surround.with.try.finally");
-  }
+public class JSWithTryFinallySurrounder extends JSWithTryCatchFinallySurrounder
+{
+	public String getTemplateDescription()
+	{
+		return JSBundle.message("javascript.surround.with.try.finally");
+	}
 
-  protected String getStatementTemplate(final Project project, PsiElement context) {
-    return "try { } finally { }";
-  }
+	protected String getStatementTemplate(final Project project, PsiElement context)
+	{
+		return "try { } finally { }";
+	}
 }

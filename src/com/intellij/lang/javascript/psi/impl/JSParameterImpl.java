@@ -38,76 +38,102 @@ import com.intellij.util.IncorrectOperationException;
  * Time: 9:12:51 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSParameterImpl extends JSVariableBaseImpl<JSParameterStub, JSParameter> implements JSParameter {
-  public JSParameterImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSParameterImpl extends JSVariableBaseImpl<JSParameterStub, JSParameter> implements JSParameter
+{
+	public JSParameterImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSParameterImpl(final JSParameterStub stub) {
-    super(stub, JSElementTypes.FORMAL_PARAMETER);
-  }
+	public JSParameterImpl(final JSParameterStub stub)
+	{
+		super(stub, JSElementTypes.FORMAL_PARAMETER);
+	}
 
-  public JSFunction getDeclaringFunction() {
-    return (JSFunction)getNode().getTreeParent().getTreeParent().getPsi();
-  }
+	public JSFunction getDeclaringFunction()
+	{
+		return (JSFunction) getNode().getTreeParent().getTreeParent().getPsi();
+	}
 
-  public boolean isRest() {
-    final JSParameterStub parameterStub = getStub();
-    if (parameterStub != null) return parameterStub.isRest();
-    return getNode().findChildByType(JSTokenTypes.DOT_DOT_DOT) != null;
-  }
+	public boolean isRest()
+	{
+		final JSParameterStub parameterStub = getStub();
+		if(parameterStub != null)
+		{
+			return parameterStub.isRest();
+		}
+		return getNode().findChildByType(JSTokenTypes.DOT_DOT_DOT) != null;
+	}
 
-  public boolean isOptional() {
-    final JSParameterStub parameterStub = getStub();
-    if (parameterStub != null) return parameterStub.isOptional();
-    if (getInitializer() != null) return true;
+	public boolean isOptional()
+	{
+		final JSParameterStub parameterStub = getStub();
+		if(parameterStub != null)
+		{
+			return parameterStub.isOptional();
+		}
+		if(getInitializer() != null)
+		{
+			return true;
+		}
 
-    return JSDocumentationUtils.findOptionalStatusFromComments(this);
-  }
+		return JSDocumentationUtils.findOptionalStatusFromComments(this);
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSParameter(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSParameter(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 
-  public Icon getIcon(int flags) {
-    return AllIcons.Nodes.Parameter;
-  }
+	public Icon getIcon(int flags)
+	{
+		return AllIcons.Nodes.Parameter;
+	}
 
-  public JSAttributeList getAttributeList() {
-    return null;
-  }
+	public JSAttributeList getAttributeList()
+	{
+		return null;
+	}
 
-  public void delete() throws IncorrectOperationException {
-    final ASTNode myNode = getNode();
-    final ASTNode parent = myNode.getTreeParent();
+	public void delete() throws IncorrectOperationException
+	{
+		final ASTNode myNode = getNode();
+		final ASTNode parent = myNode.getTreeParent();
 
-    if (parent.getElementType() == JSElementTypes.PARAMETER_LIST) {
-      JSChangeUtil.removeRangeWithRemovalOfCommas(myNode, parent);
-      return;
-    }
+		if(parent.getElementType() == JSElementTypes.PARAMETER_LIST)
+		{
+			JSChangeUtil.removeRangeWithRemovalOfCommas(myNode, parent);
+			return;
+		}
 
-    throw new IncorrectOperationException("Cannot delete variable from parent : " + parent.getElementType());
-  }
+		throw new IncorrectOperationException("Cannot delete variable from parent : " + parent.getElementType());
+	}
 
-  protected String doGetType() {
-    String s = super.doGetType();
-    
-    if (s == null) {
-      final ASTNode astNode = getNode();
-      final ASTNode anchor = astNode.findChildByType(JSTokenTypes.INSTANCEOF_KEYWORD);
+	protected String doGetType()
+	{
+		String s = super.doGetType();
 
-      if (anchor != null) {
-        ASTNode type = astNode.findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET, anchor);
-        if (type != null) {
-          s = type.getText();
-        }
-      }
-    }
-    return s;
-  }
+		if(s == null)
+		{
+			final ASTNode astNode = getNode();
+			final ASTNode anchor = astNode.findChildByType(JSTokenTypes.INSTANCEOF_KEYWORD);
+
+			if(anchor != null)
+			{
+				ASTNode type = astNode.findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET, anchor);
+				if(type != null)
+				{
+					s = type.getText();
+				}
+			}
+		}
+		return s;
+	}
 }

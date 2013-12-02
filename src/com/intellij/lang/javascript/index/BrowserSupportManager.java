@@ -16,14 +16,15 @@
 
 package com.intellij.lang.javascript.index;
 
+import gnu.trove.THashSet;
+
+import java.util.Set;
+
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.javascript.psi.JSNamedElement;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.Project;
-import gnu.trove.THashSet;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,56 +33,75 @@ import java.util.Set;
  * Time: 5:14:19 PM
  * To change this template use File | Settings | File Templates.
  */
-public class BrowserSupportManager implements ProjectComponent {
-  private Set<JSNamedElement> myIESpecificSymbols = new THashSet<JSNamedElement>(50);
-  private Set<JSNamedElement> myGeckoSpecificSymbols = new THashSet<JSNamedElement>(50);
-  private Set<JSNamedElement> myOperaSpecificSymbols = new THashSet<JSNamedElement>(50);
-  //private Set<JSNamedElement> myW3SpecificSymbols = new THashSet<JSNamedElement>(50);
+public class BrowserSupportManager implements ProjectComponent
+{
+	private Set<JSNamedElement> myIESpecificSymbols = new THashSet<JSNamedElement>(50);
+	private Set<JSNamedElement> myGeckoSpecificSymbols = new THashSet<JSNamedElement>(50);
+	private Set<JSNamedElement> myOperaSpecificSymbols = new THashSet<JSNamedElement>(50);
+	//private Set<JSNamedElement> myW3SpecificSymbols = new THashSet<JSNamedElement>(50);
 
-  public static BrowserSupportManager getInstance(Project project) {
-    return project.getComponent(BrowserSupportManager.class);
-  }
+	public static BrowserSupportManager getInstance(Project project)
+	{
+		return project.getComponent(BrowserSupportManager.class);
+	}
 
-  public void projectOpened() {}
-  public void projectClosed() {}
+	public void projectOpened()
+	{
+	}
 
-  @NonNls
-  @NotNull
-  public String getComponentName() {
-    return "JS.BrowserSupportManager";
-  }
+	public void projectClosed()
+	{
+	}
 
-  public void initComponent() {}
+	@NonNls
+	@NotNull
+	public String getComponentName()
+	{
+		return "JS.BrowserSupportManager";
+	}
 
-  public void disposeComponent() {}
+	public void initComponent()
+	{
+	}
 
-  public void addIESpecificSymbol(JSNamedElement element) {
-    myIESpecificSymbols.add(element);
-  }
+	public void disposeComponent()
+	{
+	}
 
-  public void addGeckoSpecificSymbol(JSNamedElement element) {
-    myGeckoSpecificSymbols.add(element);
-  }
+	public void addIESpecificSymbol(JSNamedElement element)
+	{
+		myIESpecificSymbols.add(element);
+	}
 
-  public void addOperaSpecificSymbol(JSNamedElement element) {
-    myOperaSpecificSymbols.add(element);
-  }
-  
-  public boolean isIESpecificSymbol(JSNamedElement element) {
-    return myIESpecificSymbols.contains(element);
-  }
+	public void addGeckoSpecificSymbol(JSNamedElement element)
+	{
+		myGeckoSpecificSymbols.add(element);
+	}
 
-  public boolean isGeckoSpecificSymbol(JSNamedElement element) {
-    return myGeckoSpecificSymbols.contains(element);
-  }
+	public void addOperaSpecificSymbol(JSNamedElement element)
+	{
+		myOperaSpecificSymbols.add(element);
+	}
 
-  public boolean isOperaSpecificSymbol(JSNamedElement element) {
-    return myOperaSpecificSymbols.contains(element);
-  }
+	public boolean isIESpecificSymbol(JSNamedElement element)
+	{
+		return myIESpecificSymbols.contains(element);
+	}
 
-  public void clear() {
-    myGeckoSpecificSymbols.clear();
-    myIESpecificSymbols.clear();
-    myOperaSpecificSymbols.clear();
-  }
+	public boolean isGeckoSpecificSymbol(JSNamedElement element)
+	{
+		return myGeckoSpecificSymbols.contains(element);
+	}
+
+	public boolean isOperaSpecificSymbol(JSNamedElement element)
+	{
+		return myOperaSpecificSymbols.contains(element);
+	}
+
+	public void clear()
+	{
+		myGeckoSpecificSymbols.clear();
+		myIESpecificSymbols.clear();
+		myOperaSpecificSymbols.clear();
+	}
 }

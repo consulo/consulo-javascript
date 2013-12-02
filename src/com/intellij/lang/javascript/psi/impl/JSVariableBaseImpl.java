@@ -42,190 +42,258 @@ import com.intellij.util.IncorrectOperationException;
  * Time: 8:47:58 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>,T2 extends JSVariable> extends JSStubElementImpl<T> implements JSVariable {
-  public static final TokenSet IDENTIFIER_TOKENS_SET = TokenSet.orSet(JSTokenTypes.IDENTIFIER_TOKENS_SET, TokenSet.create(JSElementTypes.REFERENCE_EXPRESSION));
+public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSVariable> extends JSStubElementImpl<T> implements JSVariable
+{
+	public static final TokenSet IDENTIFIER_TOKENS_SET = TokenSet.orSet(JSTokenTypes.IDENTIFIER_TOKENS_SET,
+			TokenSet.create(JSElementTypes.REFERENCE_EXPRESSION));
 
-  protected JSVariableBaseImpl(ASTNode node) {
-    super(node);
-  }
+	protected JSVariableBaseImpl(ASTNode node)
+	{
+		super(node);
+	}
 
-  protected JSVariableBaseImpl(final T stub, final JSStubElementType<T, T2> elementType) {
-    super(stub, elementType);
-  }
+	protected JSVariableBaseImpl(final T stub, final JSStubElementType<T, T2> elementType)
+	{
+		super(stub, elementType);
+	}
 
-  public boolean hasInitializer() {
-    return getInitializerText() != null;
-  }
+	public boolean hasInitializer()
+	{
+		return getInitializerText() != null;
+	}
 
-  public JSExpression getInitializer() {
-    final ASTNode eqNode = getNode().findChildByType(JSTokenTypes.EQ);
-    final ASTNode node = eqNode != null ? getNode().findChildByType(JSElementTypes.EXPRESSIONS,eqNode):null;
-    return node != null ? (JSExpression)node.getPsi() : null;
-  }
+	public JSExpression getInitializer()
+	{
+		final ASTNode eqNode = getNode().findChildByType(JSTokenTypes.EQ);
+		final ASTNode node = eqNode != null ? getNode().findChildByType(JSElementTypes.EXPRESSIONS, eqNode) : null;
+		return node != null ? (JSExpression) node.getPsi() : null;
+	}
 
-  public String getInitializerText() {
-    final T stub = getStub();
-    if (stub != null) return stub.getInitializerText();
+	public String getInitializerText()
+	{
+		final T stub = getStub();
+		if(stub != null)
+		{
+			return stub.getInitializerText();
+		}
 
-    final JSExpression expression = getInitializer();
-    return expression != null ? expression.getText():null;
-  }
+		final JSExpression expression = getInitializer();
+		return expression != null ? expression.getText() : null;
+	}
 
-  @NotNull
-  public SearchScope getUseScope() {
-    return JSResolveUtil.findUseScope(this);
-  }
+	@NotNull
+	public SearchScope getUseScope()
+	{
+		return JSResolveUtil.findUseScope(this);
+	}
 
-  public String getName() {
-    final T stub = getStub();
-    if (stub != null) return stub.getName();
-    final ASTNode name = findNameIdentifier();
+	public String getName()
+	{
+		final T stub = getStub();
+		if(stub != null)
+		{
+			return stub.getName();
+		}
+		final ASTNode name = findNameIdentifier();
 
-    if (name != null) {
-      final PsiElement element = name.getPsi();
+		if(name != null)
+		{
+			final PsiElement element = name.getPsi();
 
-      if (element instanceof JSReferenceExpression) {
-        return ((JSReferenceExpression)element).getReferencedName();
-      }
-    }
-    return name != null ? name.getText() : "";
-  }
+			if(element instanceof JSReferenceExpression)
+			{
+				return ((JSReferenceExpression) element).getReferencedName();
+			}
+		}
+		return name != null ? name.getText() : "";
+	}
 
-  public ASTNode findNameIdentifier() {
-    return getNode().findChildByType(IDENTIFIER_TOKENS_SET);
-  }
+	public ASTNode findNameIdentifier()
+	{
+		return getNode().findChildByType(IDENTIFIER_TOKENS_SET);
+	}
 
-  public JSAttributeList getAttributeList() {
-    return ((JSVarStatementImpl)getParent()).getStubOrPsiChild(JSElementTypes.ATTRIBUTE_LIST);
-  }
+	public JSAttributeList getAttributeList()
+	{
+		return ((JSVarStatementImpl) getParent()).getStubOrPsiChild(JSElementTypes.ATTRIBUTE_LIST);
+	}
 
-  public void setInitializer(JSExpression expr) throws IncorrectOperationException {
-    throw new UnsupportedOperationException("TODO: implement");
-  }
+	public void setInitializer(JSExpression expr) throws IncorrectOperationException
+	{
+		throw new UnsupportedOperationException("TODO: implement");
+	}
 
-  public JSType getType() {
-    return null;
-  }
+	public JSType getType()
+	{
+		return null;
+	}
 
-  public String getTypeString() {
-    final T stub = getStub();
-    if (stub != null) return stub.getTypeString();
-    return doGetType();
-  }
+	public String getTypeString()
+	{
+		final T stub = getStub();
+		if(stub != null)
+		{
+			return stub.getTypeString();
+		}
+		return doGetType();
+	}
 
-  public PsiElement getTypeElement() {
-    ASTNode node = JSPsiImplUtils.getTypeExpressionFromDeclaration(this);
-    return node != null ? node.getPsi() : null;
-  }
+	public PsiElement getTypeElement()
+	{
+		ASTNode node = JSPsiImplUtils.getTypeExpressionFromDeclaration(this);
+		return node != null ? node.getPsi() : null;
+	}
 
-  protected String doGetType() {
-    return JSPsiImplUtils.getType(this);
-  }
+	protected String doGetType()
+	{
+		return JSPsiImplUtils.getType(this);
+	}
 
-  public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
-    final ASTNode nameNode = findNameIdentifier();
-    if (nameNode == null) return this;
-    final ASTNode nameElement = JSChangeUtil.createNameIdentifier(getProject(), name);
-    getNode().replaceChild(nameNode, nameElement);
-    return this;
-  }
+	public PsiElement setName(@NotNull String name) throws IncorrectOperationException
+	{
+		final ASTNode nameNode = findNameIdentifier();
+		if(nameNode == null)
+		{
+			return this;
+		}
+		final ASTNode nameElement = JSChangeUtil.createNameIdentifier(getProject(), name);
+		getNode().replaceChild(nameNode, nameElement);
+		return this;
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSVariable(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSVariable(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 
-  public int getTextOffset() {
-    final ASTNode name = findNameIdentifier();
-    return name != null ? name.getStartOffset() : super.getTextOffset();
-  }
+	public int getTextOffset()
+	{
+		final ASTNode name = findNameIdentifier();
+		return name != null ? name.getStartOffset() : super.getTextOffset();
+	}
 
-  public boolean isConst() {
-    final T stub = getStub();
-    if (stub != null) return stub.isConst();
-    final ASTNode parent = getNode().getTreeParent();
+	public boolean isConst()
+	{
+		final T stub = getStub();
+		if(stub != null)
+		{
+			return stub.isConst();
+		}
+		final ASTNode parent = getNode().getTreeParent();
 
-    if(parent.getElementType() == JSElementTypes.VAR_STATEMENT) {
-      ASTNode node = parent.getFirstChildNode();
-      IElementType type = node.getElementType();
-      
-      if (type == JSElementTypes.ATTRIBUTE_LIST || type == JSElementTypes.REFERENCE_EXPRESSION) {
-        node = node.getTreeNext();
+		if(parent.getElementType() == JSElementTypes.VAR_STATEMENT)
+		{
+			ASTNode node = parent.getFirstChildNode();
+			IElementType type = node.getElementType();
 
-        if (node != null && node.getElementType() == JSTokenTypes.WHITE_SPACE) {
-          node = node.getTreeNext();
-        }
-      }
-      return node != null && node.getElementType() == JSTokenTypes.CONST_KEYWORD;
-    }
+			if(type == JSElementTypes.ATTRIBUTE_LIST || type == JSElementTypes.REFERENCE_EXPRESSION)
+			{
+				node = node.getTreeNext();
 
-    return false;
-  }
+				if(node != null && node.getElementType() == JSTokenTypes.WHITE_SPACE)
+				{
+					node = node.getTreeNext();
+				}
+			}
+			return node != null && node.getElementType() == JSTokenTypes.CONST_KEYWORD;
+		}
 
-  public boolean isLocal() {
-    final T stub = getStub();
-    if (stub != null) return stub.isLocal();
-    final ASTNode parent = getNode().getTreeParent();
-    return parent.getElementType() == JSElementTypes.VAR_STATEMENT && parent.getFirstChildNode().getElementType() == JSTokenTypes.LET_KEYWORD;
-  }
+		return false;
+	}
 
-  public boolean isDeprecated() {
-    final T stub = getStub();
-    if (stub != null) return stub.isDeprecated();
-    return JSDocumentationUtils.calculateDeprecated(this);
-  }
+	public boolean isLocal()
+	{
+		final T stub = getStub();
+		if(stub != null)
+		{
+			return stub.isLocal();
+		}
+		final ASTNode parent = getNode().getTreeParent();
+		return parent.getElementType() == JSElementTypes.VAR_STATEMENT && parent.getFirstChildNode().getElementType() == JSTokenTypes.LET_KEYWORD;
+	}
 
-  public Icon getIcon(int flags) {
-    final PsiElement grandParent = JSResolveUtil.findParent(this);
+	public boolean isDeprecated()
+	{
+		final T stub = getStub();
+		if(stub != null)
+		{
+			return stub.isDeprecated();
+		}
+		return JSDocumentationUtils.calculateDeprecated(this);
+	}
 
-    if (grandParent instanceof JSClass) {
-      final JSAttributeList attributeList = getAttributeList();
-      if (attributeList != null) {
-        return buildIcon(blendModifierFlags(AllIcons.Nodes.Variable, attributeList), attributeList.getAccessType().getIcon());
-      }
-    } else if (grandParent instanceof JSBlockStatement || grandParent instanceof JSLoopStatement) {
-      return buildIcon(AllIcons.Nodes.Variable, AllIcons.Nodes.C_private);
-    }
-    return AllIcons.Nodes.Variable;
-  }
+	public Icon getIcon(int flags)
+	{
+		final PsiElement grandParent = JSResolveUtil.findParent(this);
 
-  public void delete() throws IncorrectOperationException {
-    final ASTNode myNode = getNode();
-    final ASTNode parent = myNode.getTreeParent();
+		if(grandParent instanceof JSClass)
+		{
+			final JSAttributeList attributeList = getAttributeList();
+			if(attributeList != null)
+			{
+				return buildIcon(blendModifierFlags(AllIcons.Nodes.Variable, attributeList), attributeList.getAccessType().getIcon());
+			}
+		}
+		else if(grandParent instanceof JSBlockStatement || grandParent instanceof JSLoopStatement)
+		{
+			return buildIcon(AllIcons.Nodes.Variable, AllIcons.Nodes.C_private);
+		}
+		return AllIcons.Nodes.Variable;
+	}
 
-    if (parent.getElementType() == JSElementTypes.VAR_STATEMENT) {
-      final JSVariable[] jsVariables = ((JSVarStatement)parent.getPsi()).getVariables();
+	public void delete() throws IncorrectOperationException
+	{
+		final ASTNode myNode = getNode();
+		final ASTNode parent = myNode.getTreeParent();
 
-      if (jsVariables.length == 1) parent.getPsi().delete();
-      else {
-        JSChangeUtil.removeRangeWithRemovalOfCommas(myNode, parent);
-      }
-      return;
-    }
+		if(parent.getElementType() == JSElementTypes.VAR_STATEMENT)
+		{
+			final JSVariable[] jsVariables = ((JSVarStatement) parent.getPsi()).getVariables();
 
-    throw new IncorrectOperationException("Cannot delete variable from parent : " + parent.getElementType());
-  }
+			if(jsVariables.length == 1)
+			{
+				parent.getPsi().delete();
+			}
+			else
+			{
+				JSChangeUtil.removeRangeWithRemovalOfCommas(myNode, parent);
+			}
+			return;
+		}
 
-  public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState state, final PsiElement lastParent,
-                                     @NotNull final PsiElement place) {
-    if (lastParent != null && lastParent.getParent() == this) {
-      processor.handleEvent(PsiScopeProcessor.Event.SET_DECLARATION_HOLDER, this);
-    }
-    return processor.execute(this, state);
-  }
+		throw new IncorrectOperationException("Cannot delete variable from parent : " + parent.getElementType());
+	}
 
-  public String getQualifiedName() {
-    final T stub = getStub();
-    if (stub != null) return stub.getQualifiedName();
-    return JSPsiImplUtils.getQName(this);
-  }
+	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState state, final PsiElement lastParent,
+			@NotNull final PsiElement place)
+	{
+		if(lastParent != null && lastParent.getParent() == this)
+		{
+			processor.handleEvent(PsiScopeProcessor.Event.SET_DECLARATION_HOLDER, this);
+		}
+		return processor.execute(this, state);
+	}
 
-  public PsiElement getNameIdentifier() {
-    final ASTNode node = findNameIdentifier();
-    return node != null ? node.getPsi():null;
-  }
+	public String getQualifiedName()
+	{
+		final T stub = getStub();
+		if(stub != null)
+		{
+			return stub.getQualifiedName();
+		}
+		return JSPsiImplUtils.getQName(this);
+	}
+
+	public PsiElement getNameIdentifier()
+	{
+		final ASTNode node = findNameIdentifier();
+		return node != null ? node.getPsi() : null;
+	}
 }

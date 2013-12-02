@@ -7,5 +7,6 @@ package com.intellij.lang.javascript.psi;
  * Time: 16:15:34
  * To change this template use File | Settings | File Templates.
  */
-public interface JSPackage extends JSQualifiedNamedElement {
+public interface JSPackage extends JSQualifiedNamedElement
+{
 }

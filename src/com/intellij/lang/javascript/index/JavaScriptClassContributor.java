@@ -22,27 +22,33 @@ import com.intellij.util.indexing.FileBasedIndex;
 /**
  * @author maxim
  */
-public class JavaScriptClassContributor implements ChooseByNameContributor {
-  public String[] getNames(Project project, boolean includeNonProjectItems) {
-    final Set<String> result = new HashSet<String>();
+public class JavaScriptClassContributor implements ChooseByNameContributor
+{
+	public String[] getNames(Project project, boolean includeNonProjectItems)
+	{
+		final Set<String> result = new HashSet<String>();
 
-    result.addAll(StubIndex.getInstance().getAllKeys(JSNameIndex.KEY, project));
+		result.addAll(StubIndex.getInstance().getAllKeys(JSNameIndex.KEY, project));
 
-    FileBasedIndex.getInstance().processAllKeys(FilenameIndex.NAME, new Processor<String>() {
-      public boolean process(String s) {
-        if (JavaScriptSupportLoader.isFlexMxmFile(s)) {
-          result.add(FileUtil.getNameWithoutExtension(s));
-        }
-        return true;
-      }
-    }, project);
-    return result.toArray(new String[result.size()]);
-  }
+		FileBasedIndex.getInstance().processAllKeys(FilenameIndex.NAME, new Processor<String>()
+		{
+			public boolean process(String s)
+			{
+				if(JavaScriptSupportLoader.isFlexMxmFile(s))
+				{
+					result.add(FileUtil.getNameWithoutExtension(s));
+				}
+				return true;
+			}
+		}, project);
+		return result.toArray(new String[result.size()]);
+	}
 
-  public NavigationItem[] getItemsByName(String name, final String pattern, Project project, boolean includeNonProjectItems) {
-    GlobalSearchScope scope = includeNonProjectItems ? ProjectScope.getAllScope(project) : ProjectScope.getProjectScope(project);
-    Collection<JSQualifiedNamedElement> result = JSResolveUtil.findElementsByName(name, project, scope);
-    return result.toArray(new NavigationItem[result.size()]);
-  }
+	public NavigationItem[] getItemsByName(String name, final String pattern, Project project, boolean includeNonProjectItems)
+	{
+		GlobalSearchScope scope = includeNonProjectItems ? ProjectScope.getAllScope(project) : ProjectScope.getProjectScope(project);
+		Collection<JSQualifiedNamedElement> result = JSResolveUtil.findElementsByName(name, project, scope);
+		return result.toArray(new NavigationItem[result.size()]);
+	}
 
 }

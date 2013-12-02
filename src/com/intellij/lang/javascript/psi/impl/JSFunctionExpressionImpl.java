@@ -35,98 +35,128 @@ import com.intellij.util.IncorrectOperationException;
  * Time: 11:55:33 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionExpressionStub,JSFunctionExpression> implements JSFunctionExpression {
-  public JSFunctionExpressionImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionExpressionStub, JSFunctionExpression> implements JSFunctionExpression
+{
+	public JSFunctionExpressionImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSFunctionExpressionImpl(final JSFunctionExpressionStub stub, IStubElementType type) {
-    super(stub, type);
-  }
+	public JSFunctionExpressionImpl(final JSFunctionExpressionStub stub, IStubElementType type)
+	{
+		super(stub, type);
+	}
 
-  public JSFunction getFunction() {
-    return this;
-  }
+	public JSFunction getFunction()
+	{
+		return this;
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSFunctionExpression(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSFunctionExpression(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 
-  protected ASTNode createNameIdentifier(final String name) {
-    return JSChangeUtil.createNameIdentifier(getProject(), name);
-  }
-  
-  public JSExpression replace(JSExpression newExpr) {
-    return JSChangeUtil.replaceExpression(this, newExpr);
-  }
+	protected ASTNode createNameIdentifier(final String name)
+	{
+		return JSChangeUtil.createNameIdentifier(getProject(), name);
+	}
 
-  public ASTNode findNameIdentifier() {
-    final ASTNode treeParent = getNode().getTreeParent();
-    PsiElement psi = treeParent != null ? treeParent.getPsi():null;
-    if (psi instanceof JSCallExpression) {
-      psi = psi.getParent();
-    }
-    if (psi instanceof JSAssignmentExpression) {
-      final JSExpression jsExpression = ((JSAssignmentExpression)psi).getLOperand();
-      final JSExpression lOperand = jsExpression instanceof JSDefinitionExpression? ((JSDefinitionExpression)jsExpression).getExpression():null;
-      
-      if (lOperand instanceof JSReferenceExpression) {
-        return lOperand.getNode().findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET);
-      }
-    } else if (psi instanceof JSProperty) {
-      return psi.getNode().findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET);
-    } else {
-      final ASTNode node = super.findNameIdentifier();
+	public JSExpression replace(JSExpression newExpr)
+	{
+		return JSChangeUtil.replaceExpression(this, newExpr);
+	}
 
-      if (node != null) return node;
+	public ASTNode findNameIdentifier()
+	{
+		final ASTNode treeParent = getNode().getTreeParent();
+		PsiElement psi = treeParent != null ? treeParent.getPsi() : null;
+		if(psi instanceof JSCallExpression)
+		{
+			psi = psi.getParent();
+		}
+		if(psi instanceof JSAssignmentExpression)
+		{
+			final JSExpression jsExpression = ((JSAssignmentExpression) psi).getLOperand();
+			final JSExpression lOperand = jsExpression instanceof JSDefinitionExpression ? ((JSDefinitionExpression) jsExpression).getExpression() : null;
 
-      if (psi instanceof JSVariable) {
-        return psi.getNode().findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET);
-      }
-    }
-    return null;
-  }
+			if(lOperand instanceof JSReferenceExpression)
+			{
+				return lOperand.getNode().findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET);
+			}
+		}
+		else if(psi instanceof JSProperty)
+		{
+			return psi.getNode().findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET);
+		}
+		else
+		{
+			final ASTNode node = super.findNameIdentifier();
 
-  public JSAttributeList getAttributeList() {
-    return null;
-  }
+			if(node != null)
+			{
+				return node;
+			}
 
-  public int getTextOffset() {
-    final ASTNode name = findNameIdentifier();
-    return name != null ? name.getStartOffset() : super.getTextOffset();
-  }
+			if(psi instanceof JSVariable)
+			{
+				return psi.getNode().findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET);
+			}
+		}
+		return null;
+	}
 
-  public void delete() throws IncorrectOperationException {
-    final PsiElement parent = getParent();
-    if (parent instanceof JSAssignmentExpression) {
-      ((JSAssignmentExpression)parent).getLOperand().delete();
-      return;
-    }
-    super.delete();
-  }
+	public JSAttributeList getAttributeList()
+	{
+		return null;
+	}
 
-  public Icon getIcon(final int flags) {
-    return AllIcons.Nodes.Function;
-  }
+	public int getTextOffset()
+	{
+		final ASTNode name = findNameIdentifier();
+		return name != null ? name.getStartOffset() : super.getTextOffset();
+	}
 
-  public boolean isGetProperty() {
-    return false;
-  }
+	public void delete() throws IncorrectOperationException
+	{
+		final PsiElement parent = getParent();
+		if(parent instanceof JSAssignmentExpression)
+		{
+			((JSAssignmentExpression) parent).getLOperand().delete();
+			return;
+		}
+		super.delete();
+	}
 
-  public boolean isSetProperty() {
-    return false;
-  }
+	public Icon getIcon(final int flags)
+	{
+		return AllIcons.Nodes.Function;
+	}
 
-  public boolean isConstructor() {
-    return false;
-  }
+	public boolean isGetProperty()
+	{
+		return false;
+	}
 
-  public String getQualifiedName() {
-    return getName();
-  }
+	public boolean isSetProperty()
+	{
+		return false;
+	}
+
+	public boolean isConstructor()
+	{
+		return false;
+	}
+
+	public String getQualifiedName()
+	{
+		return getName();
+	}
 }

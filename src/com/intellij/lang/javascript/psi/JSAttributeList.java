@@ -27,38 +27,49 @@ import com.intellij.psi.StubBasedPsiElement;
 /**
  * @by Maxim.Mossienko
  */
-public interface JSAttributeList extends JSElement, StubBasedPsiElement<JSAttributeListStub> {
-  @Nullable
-  String getNamespace();
+public interface JSAttributeList extends JSElement, StubBasedPsiElement<JSAttributeListStub>
+{
+	@Nullable
+	String getNamespace();
 
-  @Nullable
-  JSReferenceExpression getNamespaceElement();
+	@Nullable
+	JSReferenceExpression getNamespaceElement();
 
-  JSAttribute[] getAttributes();
+	JSAttribute[] getAttributes();
 
-  @NotNull JSAttribute[] getAttributesByName(@NotNull String name);
+	@NotNull
+	JSAttribute[] getAttributesByName(@NotNull String name);
 
-  enum AccessType {
-    PACKAGE_LOCAL,PUBLIC, PRIVATE, PROTECTED;
+	enum AccessType
+	{
+		PACKAGE_LOCAL, PUBLIC, PRIVATE, PROTECTED;
 
-    public Icon getIcon() {
-      switch(this) {
-        case PUBLIC:return AllIcons.Nodes.C_public;
-        case PRIVATE:return AllIcons.Nodes.C_private;
-        case PROTECTED:return AllIcons.Nodes.C_protected;
-        case PACKAGE_LOCAL:return AllIcons.Nodes.C_plocal;
-      }
-      return null;
-    }
-  }
+		public Icon getIcon()
+		{
+			switch(this)
+			{
+				case PUBLIC:
+					return AllIcons.Nodes.C_public;
+				case PRIVATE:
+					return AllIcons.Nodes.C_private;
+				case PROTECTED:
+					return AllIcons.Nodes.C_protected;
+				case PACKAGE_LOCAL:
+					return AllIcons.Nodes.C_plocal;
+			}
+			return null;
+		}
+	}
 
-  AccessType getAccessType();
+	AccessType getAccessType();
 
-  @Nullable PsiElement findAccessTypeElement();
+	@Nullable
+	PsiElement findAccessTypeElement();
 
-  enum ModifierType {
-    DYNAMIC, NATIVE, OVERRIDE, STATIC, FINAL, VIRTUAL
-  }
-  
-  boolean hasModifier(ModifierType modifier);
+	enum ModifierType
+	{
+		DYNAMIC, NATIVE, OVERRIDE, STATIC, FINAL, VIRTUAL
+	}
+
+	boolean hasModifier(ModifierType modifier);
 }

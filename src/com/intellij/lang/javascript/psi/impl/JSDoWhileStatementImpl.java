@@ -15,6 +15,7 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSDoWhileStatement;
@@ -22,7 +23,6 @@ import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.psi.PsiElementVisitor;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,27 +31,34 @@ import org.jetbrains.annotations.NotNull;
  * Time: 10:15:13 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSDoWhileStatementImpl extends JSStatementImpl implements JSDoWhileStatement {
-  public JSDoWhileStatementImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSDoWhileStatementImpl extends JSStatementImpl implements JSDoWhileStatement
+{
+	public JSDoWhileStatementImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSExpression getCondition() {
-    final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
-    return node != null ? (JSExpression)node.getPsi() : null;
-  }
+	public JSExpression getCondition()
+	{
+		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
+		return node != null ? (JSExpression) node.getPsi() : null;
+	}
 
-  public JSStatement getBody() {
-    final ASTNode node = getNode().findChildByType(JSElementTypes.STATEMENTS);
-    return node != null ? (JSStatement)node.getPsi() : null;
-  }
+	public JSStatement getBody()
+	{
+		final ASTNode node = getNode().findChildByType(JSElementTypes.STATEMENTS);
+		return node != null ? (JSStatement) node.getPsi() : null;
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSDoWhileStatement(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSDoWhileStatement(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 }

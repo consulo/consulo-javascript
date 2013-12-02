@@ -22,7 +22,9 @@ import com.intellij.psi.StubBasedPsiElement;
 /**
  * @by Maxim.Mossienko
  */
-public interface JSIncludeDirective extends JSStatement, StubBasedPsiElement<JSIncludeDirectiveStub> {
-  String getIncludeText();
-  PsiFile resolveFile();
+public interface JSIncludeDirective extends JSStatement, StubBasedPsiElement<JSIncludeDirectiveStub>
+{
+	String getIncludeText();
+
+	PsiFile resolveFile();
 }

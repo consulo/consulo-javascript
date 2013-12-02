@@ -16,27 +16,36 @@
 package com.intellij.lang.javascript.psi;
 
 import com.intellij.lang.javascript.psi.stubs.JSVariableStubBase;
-import com.intellij.psi.StubBasedPsiElement;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.StubBasedPsiElement;
 import com.intellij.util.IncorrectOperationException;
 
 /**
  * @author max
- * Date: Jan 30, 2005
- * Time: 6:43:42 PM
+ *         Date: Jan 30, 2005
+ *         Time: 6:43:42 PM
  */
-public interface JSVariable extends JSQualifiedNamedElement, JSAttributeListOwner, StubBasedPsiElement<JSVariableStubBase> {
-  JSVariable[] EMPTY_ARRAY = new JSVariable[0];
-  
-  boolean hasInitializer();
-  JSExpression getInitializer();
-  String getInitializerText();
+public interface JSVariable extends JSQualifiedNamedElement, JSAttributeListOwner, StubBasedPsiElement<JSVariableStubBase>
+{
+	JSVariable[] EMPTY_ARRAY = new JSVariable[0];
 
-  void setInitializer(JSExpression expr) throws IncorrectOperationException;
-  JSType getType();
-  String getTypeString();
-  PsiElement getTypeElement();
-  boolean isConst();
-  boolean isLocal();
-  boolean isDeprecated();
+	boolean hasInitializer();
+
+	JSExpression getInitializer();
+
+	String getInitializerText();
+
+	void setInitializer(JSExpression expr) throws IncorrectOperationException;
+
+	JSType getType();
+
+	String getTypeString();
+
+	PsiElement getTypeElement();
+
+	boolean isConst();
+
+	boolean isLocal();
+
+	boolean isDeprecated();
 }

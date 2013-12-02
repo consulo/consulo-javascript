@@ -22,5 +22,6 @@ package com.intellij.lang.javascript.psi;
  * Time: 6:56:36 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSEmptyStatement extends JSStatement {
+public interface JSEmptyStatement extends JSStatement
+{
 }

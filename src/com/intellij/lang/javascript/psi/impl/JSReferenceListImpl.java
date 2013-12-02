@@ -15,8 +15,17 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.psi.*;
+import com.intellij.lang.javascript.psi.JSClass;
+import com.intellij.lang.javascript.psi.JSElementVisitor;
+import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
+import com.intellij.lang.javascript.psi.JSReferenceExpression;
+import com.intellij.lang.javascript.psi.JSReferenceList;
 import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.stubs.JSQualifiedElementIndex;
 import com.intellij.lang.javascript.psi.stubs.JSReferenceListStub;
@@ -26,81 +35,113 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.search.ProjectScope;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * @by Maxim.Mossienko
  */
-public class JSReferenceListImpl extends JSStubElementImpl<JSReferenceListStub> implements JSReferenceList {
-  public JSReferenceListImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSReferenceListImpl extends JSStubElementImpl<JSReferenceListStub> implements JSReferenceList
+{
+	public JSReferenceListImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSReferenceListImpl(final JSReferenceListStub stub) {
-    super(stub, stub.getStubType());
-  }
+	public JSReferenceListImpl(final JSReferenceListStub stub)
+	{
+		super(stub, stub.getStubType());
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSReferenceList(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSReferenceList(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 
-  public JSReferenceExpression[] getExpressions() {
-    return findChildrenByClass(JSReferenceExpression.class);
-  }
+	public JSReferenceExpression[] getExpressions()
+	{
+		return findChildrenByClass(JSReferenceExpression.class);
+	}
 
-  public String[] getReferenceTexts() {
-    final JSReferenceListStub stub = getStub();
-    if (stub != null) return stub.getReferenceTexts();
+	public String[] getReferenceTexts()
+	{
+		final JSReferenceListStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getReferenceTexts();
+		}
 
-    final JSReferenceExpression[] referenceExpressions = getExpressions();
-    if (referenceExpressions == null || referenceExpressions.length == 0) return ArrayUtil.EMPTY_STRING_ARRAY;
-    int count =  referenceExpressions.length;
-    final String[] result = new String[count];
+		final JSReferenceExpression[] referenceExpressions = getExpressions();
+		if(referenceExpressions == null || referenceExpressions.length == 0)
+		{
+			return ArrayUtil.EMPTY_STRING_ARRAY;
+		}
+		int count = referenceExpressions.length;
+		final String[] result = new String[count];
 
-    for(int i = 0; i < count; ++i) result[i] = referenceExpressions[i].getText();
-    return result;
-  }
+		for(int i = 0; i < count; ++i)
+		{
+			result[i] = referenceExpressions[i].getText();
+		}
+		return result;
+	}
 
-  public JSClass[] getReferencedClasses() {
-    @NonNls String[] texts = getReferenceTexts();
+	public JSClass[] getReferencedClasses()
+	{
+		@NonNls String[] texts = getReferenceTexts();
 
-    if (texts.length == 0) return JSClass.EMPTY_ARRAY;
+		if(texts.length == 0)
+		{
+			return JSClass.EMPTY_ARRAY;
+		}
 
-    final Project project = getProject();
-    final ArrayList<JSClass> supers = new ArrayList<JSClass>(1);
+		final Project project = getProject();
+		final ArrayList<JSClass> supers = new ArrayList<JSClass>(1);
 
-    for (String text:texts) {
-      final int index = supers.size();
+		for(String text : texts)
+		{
+			final int index = supers.size();
 
-      text = JSImportHandlingUtil.resolveTypeName(text, this);
+			text = JSImportHandlingUtil.resolveTypeName(text, this);
 
-      final Collection<JSQualifiedNamedElement> candidates = StubIndex.getInstance().get(JSQualifiedElementIndex.KEY, text.hashCode(), project,
-                                                                       ProjectScope.getAllScope(project));
-      for(JSQualifiedNamedElement _clazz:candidates) {
-        if (!(_clazz instanceof JSClass)) continue;
-        final JSClass clazz = (JSClass)_clazz;
-        
-        if (text.equals(clazz.getQualifiedName())) {
-          if (clazz.canNavigate()) supers.add(index, clazz);
-          else supers.add(clazz);
-        }
-      }
+			final Collection<JSQualifiedNamedElement> candidates = StubIndex.getInstance().get(JSQualifiedElementIndex.KEY, text.hashCode(), project,
+					ProjectScope.getAllScope(project));
+			for(JSQualifiedNamedElement _clazz : candidates)
+			{
+				if(!(_clazz instanceof JSClass))
+				{
+					continue;
+				}
+				final JSClass clazz = (JSClass) _clazz;
 
-      if (candidates.size() == 0) {
-        final PsiElement element = JSClassImpl.findClassFromNamespace(text, this);
-        if (element instanceof JSClass) supers.add((JSClass)element);
-      }
-    }
+				if(text.equals(clazz.getQualifiedName()))
+				{
+					if(clazz.canNavigate())
+					{
+						supers.add(index, clazz);
+					}
+					else
+					{
+						supers.add(clazz);
+					}
+				}
+			}
 
-    return supers.toArray(new JSClass[supers.size()]);
-  }
+			if(candidates.size() == 0)
+			{
+				final PsiElement element = JSClassImpl.findClassFromNamespace(text, this);
+				if(element instanceof JSClass)
+				{
+					supers.add((JSClass) element);
+				}
+			}
+		}
+
+		return supers.toArray(new JSClass[supers.size()]);
+	}
 }

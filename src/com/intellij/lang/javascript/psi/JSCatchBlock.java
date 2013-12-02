@@ -22,9 +22,11 @@ package com.intellij.lang.javascript.psi;
  * Time: 7:04:04 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSCatchBlock extends JSElement {
-  JSCatchBlock[] EMPTY_ARRAY = new JSCatchBlock[0];
-  
-  JSParameter getParameter();
-  JSStatement getStatement();
+public interface JSCatchBlock extends JSElement
+{
+	JSCatchBlock[] EMPTY_ARRAY = new JSCatchBlock[0];
+
+	JSParameter getParameter();
+
+	JSStatement getStatement();
 }

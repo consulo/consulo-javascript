@@ -15,6 +15,7 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSArgumentList;
@@ -24,7 +25,6 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -33,32 +33,40 @@ import org.jetbrains.annotations.NotNull;
  * Time: 9:15:02 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSArgumentListImpl extends JSElementImpl implements JSArgumentList {
-  public JSArgumentListImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSArgumentListImpl extends JSElementImpl implements JSArgumentList
+{
+	public JSArgumentListImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSExpression[] getArguments() {
-    final ASTNode[] nodes = getNode().getChildren(JSElementTypes.EXPRESSIONS);
-    final JSExpression[] exprs = new JSExpression[nodes.length];
-    for (int i = 0; i < exprs.length; i++) {
-      exprs[i] = (JSExpression)nodes[i].getPsi();
-    }
-    return exprs;
-  }
+	public JSExpression[] getArguments()
+	{
+		final ASTNode[] nodes = getNode().getChildren(JSElementTypes.EXPRESSIONS);
+		final JSExpression[] exprs = new JSExpression[nodes.length];
+		for(int i = 0; i < exprs.length; i++)
+		{
+			exprs[i] = (JSExpression) nodes[i].getPsi();
+		}
+		return exprs;
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSArgumentList(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSArgumentList(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 
-  @Override
-  public void delete() throws IncorrectOperationException {
-    PsiElement element = getParent();
-    element.replace(((JSCallExpression)element).getMethodExpression());
-  }
+	@Override
+	public void delete() throws IncorrectOperationException
+	{
+		PsiElement element = getParent();
+		element.replace(((JSCallExpression) element).getMethodExpression());
+	}
 }

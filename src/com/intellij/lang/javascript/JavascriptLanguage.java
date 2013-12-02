@@ -29,18 +29,22 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
  * Time: 6:03:49 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JavascriptLanguage extends Language {
-  public static final DialectOptionHolder DIALECT_OPTION_HOLDER = new DialectOptionHolder(false, false);
+public class JavascriptLanguage extends Language
+{
+	public static final DialectOptionHolder DIALECT_OPTION_HOLDER = new DialectOptionHolder(false, false);
 
-  public JavascriptLanguage() {
-    super("JavaScript", "text/javascript", "application/javascript");
+	public JavascriptLanguage()
+	{
+		super("JavaScript", "text/javascript", "application/javascript");
 
-    SyntaxHighlighterFactory.LANGUAGE_FACTORY.addExplicitExtension(this, new SingleLazyInstanceSyntaxHighlighterFactory() {
-      @NotNull
-      protected SyntaxHighlighter createHighlighter() {
-        return new JSHighlighter(DIALECT_OPTION_HOLDER);
-      }
-    });
-  }
+		SyntaxHighlighterFactory.LANGUAGE_FACTORY.addExplicitExtension(this, new SingleLazyInstanceSyntaxHighlighterFactory()
+		{
+			@NotNull
+			protected SyntaxHighlighter createHighlighter()
+			{
+				return new JSHighlighter(DIALECT_OPTION_HOLDER);
+			}
+		});
+	}
 
 }

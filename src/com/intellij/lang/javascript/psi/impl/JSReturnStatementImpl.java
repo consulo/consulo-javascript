@@ -15,13 +15,13 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSReturnStatement;
 import com.intellij.psi.PsiElementVisitor;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,22 +30,28 @@ import org.jetbrains.annotations.NotNull;
  * Time: 9:57:08 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSReturnStatementImpl extends JSStatementImpl implements JSReturnStatement{
-  public JSReturnStatementImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSReturnStatementImpl extends JSStatementImpl implements JSReturnStatement
+{
+	public JSReturnStatementImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSExpression getExpression() {
-    final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
-    return node != null ? (JSExpression)node.getPsi() : null;
-  }
+	public JSExpression getExpression()
+	{
+		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
+		return node != null ? (JSExpression) node.getPsi() : null;
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSReturnStatement(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSReturnStatement(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 }

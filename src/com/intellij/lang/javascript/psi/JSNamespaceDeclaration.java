@@ -15,16 +15,18 @@
  */
 package com.intellij.lang.javascript.psi;
 
+import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.javascript.psi.stubs.JSNamespaceDeclarationStub;
 import com.intellij.psi.StubBasedPsiElement;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @by Maxim.Mossienko
  */
 public interface JSNamespaceDeclaration extends JSStatement, JSQualifiedNamedElement, JSAttributeListOwner,
-                                                StubBasedPsiElement<JSNamespaceDeclarationStub> {
-  @Nullable
-  String getInitialValueString();
-  boolean isDeprecated();
+		StubBasedPsiElement<JSNamespaceDeclarationStub>
+{
+	@Nullable
+	String getInitialValueString();
+
+	boolean isDeprecated();
 }

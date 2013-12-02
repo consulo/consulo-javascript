@@ -22,9 +22,13 @@ import com.intellij.psi.StubBasedPsiElement;
 /**
  * @by Maxim.Mossienko
  */
-public interface JSAttribute extends JSElement, PsiNamedElement, StubBasedPsiElement<JSAttributeStub> {
-  JSAttribute[] EMPTY = new JSAttribute[0];
-  String getName();
-  JSAttributeNameValuePair[] getValues();
-  JSAttributeNameValuePair getValueByName(String name);
+public interface JSAttribute extends JSElement, PsiNamedElement, StubBasedPsiElement<JSAttributeStub>
+{
+	JSAttribute[] EMPTY = new JSAttribute[0];
+
+	String getName();
+
+	JSAttributeNameValuePair[] getValues();
+
+	JSAttributeNameValuePair getValueByName(String name);
 }

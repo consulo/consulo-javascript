@@ -2,7 +2,12 @@ package com.intellij.lang.javascript.findUsages;
 
 import com.intellij.codeInsight.highlighting.ReadWriteAccessDetector;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.psi.*;
+import com.intellij.lang.javascript.psi.JSAssignmentExpression;
+import com.intellij.lang.javascript.psi.JSDefinitionExpression;
+import com.intellij.lang.javascript.psi.JSFunction;
+import com.intellij.lang.javascript.psi.JSPostfixExpression;
+import com.intellij.lang.javascript.psi.JSPrefixExpression;
+import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.tree.IElementType;
@@ -14,48 +19,57 @@ import com.intellij.psi.tree.IElementType;
  * Time: 21:51:25
  * To change this template use File | Settings | File Templates.
  */
-public class JSReadWriteAccessDetector extends ReadWriteAccessDetector {
-  public boolean isReadWriteAccessible(PsiElement element) {
-    return element instanceof JSVariable ||
-           ((element instanceof JSFunction) &&
-            ( ((JSFunction)element).isGetProperty() || ((JSFunction)element).isSetProperty())) ||
-           element instanceof JSDefinitionExpression
-      ;
-  }
+public class JSReadWriteAccessDetector extends ReadWriteAccessDetector
+{
+	public boolean isReadWriteAccessible(PsiElement element)
+	{
+		return element instanceof JSVariable ||
+				((element instanceof JSFunction) && (((JSFunction) element).isGetProperty() || ((JSFunction) element).isSetProperty())) ||
+				element instanceof JSDefinitionExpression;
+	}
 
-  public boolean isDeclarationWriteAccess(PsiElement element) {
-    return (element instanceof JSVariable && ((JSVariable)element).getInitializer() != null);
-  }
+	public boolean isDeclarationWriteAccess(PsiElement element)
+	{
+		return (element instanceof JSVariable && ((JSVariable) element).getInitializer() != null);
+	}
 
-  public Access getReferenceAccess(PsiElement referencedElement, PsiReference reference) {
-    return getExpressionAccess(reference.getElement());
-  }
+	public Access getReferenceAccess(PsiElement referencedElement, PsiReference reference)
+	{
+		return getExpressionAccess(reference.getElement());
+	}
 
-  public Access getExpressionAccess(PsiElement expression) {
-    expression = expression.getParent();
-    if (expression instanceof JSDefinitionExpression) {
-      PsiElement grandParent = expression.getParent();
-      if (grandParent instanceof JSAssignmentExpression &&
-          ((JSAssignmentExpression)grandParent).getOperationSign() == JSTokenTypes.EQ
-         ) {
-        return Access.Write;
-      }
+	public Access getExpressionAccess(PsiElement expression)
+	{
+		expression = expression.getParent();
+		if(expression instanceof JSDefinitionExpression)
+		{
+			PsiElement grandParent = expression.getParent();
+			if(grandParent instanceof JSAssignmentExpression && ((JSAssignmentExpression) grandParent).getOperationSign() == JSTokenTypes.EQ)
+			{
+				return Access.Write;
+			}
 
-      return Access.ReadWrite;
-    }
-    if (expression instanceof JSPrefixExpression) {
-      if (isIncrementOrDecrement(((JSPrefixExpression)expression).getOperationSign())) {
-        return Access.ReadWrite;
-      }
-    } else if (expression instanceof JSPostfixExpression) {
-      if (isIncrementOrDecrement(((JSPostfixExpression)expression).getOperationSign())) {
-        return Access.ReadWrite;
-      }
-    }
-    return Access.Read;
-  }
+			return Access.ReadWrite;
+		}
+		if(expression instanceof JSPrefixExpression)
+		{
+			if(isIncrementOrDecrement(((JSPrefixExpression) expression).getOperationSign()))
+			{
+				return Access.ReadWrite;
+			}
+		}
+		else if(expression instanceof JSPostfixExpression)
+		{
+			if(isIncrementOrDecrement(((JSPostfixExpression) expression).getOperationSign()))
+			{
+				return Access.ReadWrite;
+			}
+		}
+		return Access.Read;
+	}
 
-  private static boolean isIncrementOrDecrement(IElementType sign) {
-    return sign == JSTokenTypes.PLUSPLUS || sign == JSTokenTypes.MINUSMINUS;
-  }
+	private static boolean isIncrementOrDecrement(IElementType sign)
+	{
+		return sign == JSTokenTypes.PLUSPLUS || sign == JSTokenTypes.MINUSMINUS;
+	}
 }

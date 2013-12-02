@@ -24,5 +24,6 @@ import com.intellij.psi.NavigatablePsiElement;
  * Time: 2:30:26 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSElement extends NavigatablePsiElement {
+public interface JSElement extends NavigatablePsiElement
+{
 }

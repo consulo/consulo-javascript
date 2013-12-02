@@ -15,42 +15,59 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.psi.*;
-import com.intellij.lang.javascript.JSElementTypes;
-import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.ASTNode;
+import com.intellij.lang.javascript.JSElementTypes;
+import com.intellij.lang.javascript.psi.JSBlockStatement;
+import com.intellij.lang.javascript.psi.JSElementVisitor;
+import com.intellij.lang.javascript.psi.JSExpression;
+import com.intellij.lang.javascript.psi.JSLetStatement;
+import com.intellij.psi.PsiElementVisitor;
 
 /**
  * @author maxim
  */
-public class JSLetStatementImpl extends JSStatementImpl implements JSLetStatement {
-  public JSLetStatementImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSLetStatementImpl extends JSStatementImpl implements JSLetStatement
+{
+	public JSLetStatementImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSLetStatement(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSLetStatement(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 
-  public JSExpression[] getExpressions() {
-    final ASTNode[] children = getNode().getChildren(JSElementTypes.EXPRESSIONS);
-    if (children.length == 0) return JSExpression.EMPTY_ARRAY;
-    JSExpression[] result = new JSExpression[children.length];
-    for (int i = 0; i < children.length; i++) {
-      result[i] = (JSExpression)children[i].getPsi();
-    }
-    return result;
-  }
+	public JSExpression[] getExpressions()
+	{
+		final ASTNode[] children = getNode().getChildren(JSElementTypes.EXPRESSIONS);
+		if(children.length == 0)
+		{
+			return JSExpression.EMPTY_ARRAY;
+		}
+		JSExpression[] result = new JSExpression[children.length];
+		for(int i = 0; i < children.length; i++)
+		{
+			result[i] = (JSExpression) children[i].getPsi();
+		}
+		return result;
+	}
 
-  public JSBlockStatement getBody() {
-    final ASTNode child = getNode().findChildByType(JSElementTypes.BLOCK_STATEMENT);
-    if (child == null) return null;
-    return (JSBlockStatement)child.getPsi();
-  }
+	public JSBlockStatement getBody()
+	{
+		final ASTNode child = getNode().findChildByType(JSElementTypes.BLOCK_STATEMENT);
+		if(child == null)
+		{
+			return null;
+		}
+		return (JSBlockStatement) child.getPsi();
+	}
 }

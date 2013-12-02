@@ -15,54 +15,64 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSUseNamespaceDirective;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import com.intellij.lang.javascript.psi.stubs.JSUseNamespaceDirectiveStub;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @by Maxim.Mossienko
  */
-public class JSUseNamespaceDirectiveImpl extends JSStubbedStatementImpl<JSUseNamespaceDirectiveStub> implements JSUseNamespaceDirective {
-  public JSUseNamespaceDirectiveImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSUseNamespaceDirectiveImpl extends JSStubbedStatementImpl<JSUseNamespaceDirectiveStub> implements JSUseNamespaceDirective
+{
+	public JSUseNamespaceDirectiveImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSUseNamespaceDirectiveImpl(final JSUseNamespaceDirectiveStub stub) {
-    super(stub, JSElementTypes.USE_NAMESPACE_DIRECTIVE);
-  }
+	public JSUseNamespaceDirectiveImpl(final JSUseNamespaceDirectiveStub stub)
+	{
+		super(stub, JSElementTypes.USE_NAMESPACE_DIRECTIVE);
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSUseNamespaceDirective(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSUseNamespaceDirective(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 
-  public String getNamespaceToBeUsed() {
-    final JSUseNamespaceDirectiveStub stub = getStub();
-    if (stub != null) return stub.getNamespaceToUse();
-    final ASTNode node = getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
-    return node != null ? node.getText():null;
-  }
+	public String getNamespaceToBeUsed()
+	{
+		final JSUseNamespaceDirectiveStub stub = getStub();
+		if(stub != null)
+		{
+			return stub.getNamespaceToUse();
+		}
+		final ASTNode node = getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
+		return node != null ? node.getText() : null;
+	}
 
-  @Override
-  public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-                                     @NotNull ResolveState state,
-                                     PsiElement lastParent,
-                                     @NotNull PsiElement place) {
-    if (processor instanceof ResolveProcessor && ((ResolveProcessor)processor).lookingForUseNamespaces()) {
-      return processor.execute(this, state);
-    }
-    return true;
-  }
+	@Override
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
+			@NotNull PsiElement place)
+	{
+		if(processor instanceof ResolveProcessor && ((ResolveProcessor) processor).lookingForUseNamespaces())
+		{
+			return processor.execute(this, state);
+		}
+		return true;
+	}
 }

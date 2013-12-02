@@ -15,6 +15,8 @@
  */
 package com.intellij.lang.javascript.surroundWith;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSBundle;
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -26,8 +28,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -36,26 +36,26 @@ import org.jetbrains.annotations.Nullable;
  * Time: 12:47:49
  * To change this template use File | Settings | File Templates.
  */
-public class JSWithParenthesesSurrounder implements Surrounder {
-  public String getTemplateDescription() {
-    return JSBundle.message("javascript.surround.with.parenthesis");
-  }
+public class JSWithParenthesesSurrounder implements Surrounder
+{
+	public String getTemplateDescription()
+	{
+		return JSBundle.message("javascript.surround.with.parenthesis");
+	}
 
-  public boolean isApplicable(@NotNull PsiElement[] elements) {
-    return true;
-  }
+	public boolean isApplicable(@NotNull PsiElement[] elements)
+	{
+		return true;
+	}
 
-  @Nullable
-  public TextRange surroundElements(@NotNull Project project, @NotNull Editor editor, @NotNull PsiElement[] elements)
-    throws IncorrectOperationException {
-    JSExpression expr = (JSExpression) elements [0];
-    ASTNode parenthExprNode = JSChangeUtil.createExpressionFromText(
-      project,
-      "(" + expr.getText() + ")",
-      JSUtils.getDialect(expr.getContainingFile())
-    );
-    expr.getNode().getTreeParent().replaceChild(expr.getNode(), parenthExprNode);
-    int offset = parenthExprNode.getTextRange().getEndOffset();
-    return new TextRange(offset, offset);
-  }
+	@Nullable
+	public TextRange surroundElements(@NotNull Project project, @NotNull Editor editor, @NotNull PsiElement[] elements) throws
+			IncorrectOperationException
+	{
+		JSExpression expr = (JSExpression) elements[0];
+		ASTNode parenthExprNode = JSChangeUtil.createExpressionFromText(project, "(" + expr.getText() + ")", JSUtils.getDialect(expr.getContainingFile()));
+		expr.getNode().getTreeParent().replaceChild(expr.getNode(), parenthExprNode);
+		int offset = parenthExprNode.getTextRange().getEndOffset();
+		return new TextRange(offset, offset);
+	}
 }

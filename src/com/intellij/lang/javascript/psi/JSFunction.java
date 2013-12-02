@@ -23,30 +23,39 @@ import com.intellij.util.ArrayFactory;
 /**
  * @author max
  */
-public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JSAttributeListOwner, StubBasedPsiElement<JSFunctionStubBase> {
-  JSFunction[] EMPTY_ARRAY = new JSFunction[0];
-  ArrayFactory<JSFunction> ARRAY_FACTORY = new ArrayFactory<JSFunction>() {
-    public JSFunction[] create(int count) {
-      return count == 0 ? EMPTY_ARRAY : new JSFunction[count];
-    }
-  };
+public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JSAttributeListOwner, StubBasedPsiElement<JSFunctionStubBase>
+{
+	JSFunction[] EMPTY_ARRAY = new JSFunction[0];
+	ArrayFactory<JSFunction> ARRAY_FACTORY = new ArrayFactory<JSFunction>()
+	{
+		public JSFunction[] create(int count)
+		{
+			return count == 0 ? EMPTY_ARRAY : new JSFunction[count];
+		}
+	};
 
-  JSParameterList getParameterList();
-  JSSourceElement[] getBody();
+	JSParameterList getParameterList();
 
-  boolean isGetProperty();
-  boolean isSetProperty();
-  boolean isConstructor();
+	JSSourceElement[] getBody();
 
-  String getReturnTypeString();
-  PsiElement getReturnTypeElement();
+	boolean isGetProperty();
 
-  enum FunctionKind {
-    GETTER, SETTER, CONSTRUCTOR, SIMPLE
-  }
+	boolean isSetProperty();
 
-  FunctionKind getKind();
+	boolean isConstructor();
 
-  boolean isDeprecated();
-  boolean isReferencesArguments();
+	String getReturnTypeString();
+
+	PsiElement getReturnTypeElement();
+
+	enum FunctionKind
+	{
+		GETTER, SETTER, CONSTRUCTOR, SIMPLE
+	}
+
+	FunctionKind getKind();
+
+	boolean isDeprecated();
+
+	boolean isReferencesArguments();
 }

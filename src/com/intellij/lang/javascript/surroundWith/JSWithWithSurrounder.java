@@ -18,8 +18,8 @@ package com.intellij.lang.javascript.surroundWith;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSBundle;
 import com.intellij.lang.javascript.psi.JSWithStatement;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -29,26 +29,31 @@ import com.intellij.psi.PsiElement;
  * Time: 19:34:54
  * To change this template use File | Settings | File Templates.
  */
-public class JSWithWithSurrounder extends JSStatementSurrounder {
-  public String getTemplateDescription() {
-    return JSBundle.message("javascript.surround.with.with");
-  }
+public class JSWithWithSurrounder extends JSStatementSurrounder
+{
+	public String getTemplateDescription()
+	{
+		return JSBundle.message("javascript.surround.with.with");
+	}
 
-  protected String getStatementTemplate(final Project project, PsiElement context) {
-    return "with(a) { }";
-  }
+	protected String getStatementTemplate(final Project project, PsiElement context)
+	{
+		return "with(a) { }";
+	}
 
-  protected ASTNode getInsertBeforeNode(final ASTNode statementNode) {
-    JSWithStatement stmt = (JSWithStatement) statementNode.getPsi();
-    return stmt.getStatement().getLastChild().getNode();
-  }
+	protected ASTNode getInsertBeforeNode(final ASTNode statementNode)
+	{
+		JSWithStatement stmt = (JSWithStatement) statementNode.getPsi();
+		return stmt.getStatement().getLastChild().getNode();
+	}
 
-  protected TextRange getSurroundSelectionRange(final ASTNode statementNode) {
-    JSWithStatement stmt = (JSWithStatement) statementNode.getPsi();
-    ASTNode conditionNode = stmt.getExpression().getNode();
-    int offset = conditionNode.getStartOffset();
-    stmt.getNode().removeChild(conditionNode);
+	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
+	{
+		JSWithStatement stmt = (JSWithStatement) statementNode.getPsi();
+		ASTNode conditionNode = stmt.getExpression().getNode();
+		int offset = conditionNode.getStartOffset();
+		stmt.getNode().removeChild(conditionNode);
 
-    return new TextRange(offset, offset);
-  }
+		return new TextRange(offset, offset);
+	}
 }

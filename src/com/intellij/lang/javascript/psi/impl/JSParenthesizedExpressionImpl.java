@@ -15,13 +15,13 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSParenthesizedExpression;
 import com.intellij.psi.PsiElementVisitor;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,22 +30,28 @@ import org.jetbrains.annotations.NotNull;
  * Time: 11:30:44 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSParenthesizedExpressionImpl extends JSExpressionImpl implements JSParenthesizedExpression{
-  public JSParenthesizedExpressionImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSParenthesizedExpressionImpl extends JSExpressionImpl implements JSParenthesizedExpression
+{
+	public JSParenthesizedExpressionImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSExpression getInnerExpression() {
-    final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
-    return node != null ? (JSExpression)node.getPsi() : null;
-  }
+	public JSExpression getInnerExpression()
+	{
+		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
+		return node != null ? (JSExpression) node.getPsi() : null;
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSParenthesizedExpression(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSParenthesizedExpression(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 }

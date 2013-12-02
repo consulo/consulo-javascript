@@ -7,6 +7,7 @@ import com.intellij.lang.javascript.psi.JSNamespaceDeclaration;
  *         Date: Jun 6, 2008
  *         Time: 7:52:57 PM
  */
-public interface JSNamespaceDeclarationStub extends JSStubElement<JSNamespaceDeclaration>, JSQualifiedStub<JSNamespaceDeclaration> {
-  String getInitialValueString();
+public interface JSNamespaceDeclarationStub extends JSStubElement<JSNamespaceDeclaration>, JSQualifiedStub<JSNamespaceDeclaration>
+{
+	String getInitialValueString();
 }

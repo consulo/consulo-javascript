@@ -15,13 +15,14 @@
  */
 package com.intellij.lang.javascript.psi;
 
-import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.psi.PsiElement;
 
 /**
  * @by Maxim.Mossienko
  */
-public interface JSAttributeListOwner extends PsiElement {
-  @Nullable
-  JSAttributeList getAttributeList();
+public interface JSAttributeListOwner extends PsiElement
+{
+	@Nullable
+	JSAttributeList getAttributeList();
 }

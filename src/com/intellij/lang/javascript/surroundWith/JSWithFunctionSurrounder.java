@@ -18,30 +18,35 @@ package com.intellij.lang.javascript.surroundWith;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSBundle;
 import com.intellij.lang.javascript.psi.JSFunction;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 
-public class JSWithFunctionSurrounder extends JSStatementSurrounder {
-  public String getTemplateDescription() {
-    return JSBundle.message("javascript.surround.with.function");
-  }
+public class JSWithFunctionSurrounder extends JSStatementSurrounder
+{
+	public String getTemplateDescription()
+	{
+		return JSBundle.message("javascript.surround.with.function");
+	}
 
-  protected String getStatementTemplate(final Project project, PsiElement context) {
-    return "function $name$() { }";
-  }
+	protected String getStatementTemplate(final Project project, PsiElement context)
+	{
+		return "function $name$() { }";
+	}
 
-  protected ASTNode getInsertBeforeNode(final ASTNode statementNode) {
-    JSFunction stmt = (JSFunction) statementNode.getPsi();
-    return stmt.getBody()[0].getLastChild().getNode();
-  }
+	protected ASTNode getInsertBeforeNode(final ASTNode statementNode)
+	{
+		JSFunction stmt = (JSFunction) statementNode.getPsi();
+		return stmt.getBody()[0].getLastChild().getNode();
+	}
 
-  protected TextRange getSurroundSelectionRange(final ASTNode statementNode) {
-    JSFunction stmt = (JSFunction) statementNode.getPsi();
-    ASTNode conditionNode = stmt.findNameIdentifier();
-    int offset = conditionNode.getStartOffset();
-    stmt.getNode().removeChild(conditionNode);
+	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
+	{
+		JSFunction stmt = (JSFunction) statementNode.getPsi();
+		ASTNode conditionNode = stmt.findNameIdentifier();
+		int offset = conditionNode.getStartOffset();
+		stmt.getNode().removeChild(conditionNode);
 
-    return new TextRange(offset, offset);
-  }
+		return new TextRange(offset, offset);
+	}
 }

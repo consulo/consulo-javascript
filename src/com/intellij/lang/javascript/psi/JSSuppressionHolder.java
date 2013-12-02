@@ -7,5 +7,6 @@ import com.intellij.psi.PsiElement;
  *
  * @author yole
  */
-public interface JSSuppressionHolder extends PsiElement {
+public interface JSSuppressionHolder extends PsiElement
+{
 }

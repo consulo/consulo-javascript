@@ -17,13 +17,13 @@ package com.intellij.lang.javascript.surroundWith;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSBundle;
-import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JSElementTypes;
+import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSForStatement;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiWhiteSpace;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiWhiteSpace;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,32 +32,40 @@ import com.intellij.psi.PsiElement;
  * Time: 18:29:38
  * To change this template use File | Settings | File Templates.
  */
-public class JSWithForSurrounder extends JSStatementSurrounder {
-  public String getTemplateDescription() {
-    return JSBundle.message("javascript.surround.with.for");
-  }
+public class JSWithForSurrounder extends JSStatementSurrounder
+{
+	public String getTemplateDescription()
+	{
+		return JSBundle.message("javascript.surround.with.for");
+	}
 
-  protected String getStatementTemplate(final Project project, PsiElement context) {
-    return "for(i=0; i<1; i++) { }";
-  }
+	protected String getStatementTemplate(final Project project, PsiElement context)
+	{
+		return "for(i=0; i<1; i++) { }";
+	}
 
-  protected ASTNode getInsertBeforeNode(final ASTNode statementNode) {
-    JSForStatement forStatement = (JSForStatement) statementNode.getPsi();
-    return forStatement.getBody().getLastChild().getNode();
-  }
+	protected ASTNode getInsertBeforeNode(final ASTNode statementNode)
+	{
+		JSForStatement forStatement = (JSForStatement) statementNode.getPsi();
+		return forStatement.getBody().getLastChild().getNode();
+	}
 
-  protected TextRange getSurroundSelectionRange(final ASTNode statementNode) {
-    for(ASTNode childNode: statementNode.getChildren(null)) {
-      if (childNode.getElementType() == JSTokenTypes.SEMICOLON ||
-          childNode.getPsi() instanceof PsiWhiteSpace ||
-          JSElementTypes.EXPRESSIONS.contains(childNode.getElementType())) {
-        statementNode.removeChild(childNode);
-      }
-      else if (childNode.getElementType() == JSTokenTypes.RPAR) {
-        int offset = childNode.getStartOffset();
-        return new TextRange(offset, offset);
-      }
-    }
-    return null;
-  }
+	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
+	{
+		for(ASTNode childNode : statementNode.getChildren(null))
+		{
+			if(childNode.getElementType() == JSTokenTypes.SEMICOLON ||
+					childNode.getPsi() instanceof PsiWhiteSpace ||
+					JSElementTypes.EXPRESSIONS.contains(childNode.getElementType()))
+			{
+				statementNode.removeChild(childNode);
+			}
+			else if(childNode.getElementType() == JSTokenTypes.RPAR)
+			{
+				int offset = childNode.getStartOffset();
+				return new TextRange(offset, offset);
+			}
+		}
+		return null;
+	}
 }

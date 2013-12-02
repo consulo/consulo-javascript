@@ -15,6 +15,7 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSCatchBlock;
@@ -26,7 +27,6 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,45 +35,56 @@ import org.jetbrains.annotations.NotNull;
  * Time: 10:06:09 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSCatchBlockImpl extends JSElementImpl implements JSCatchBlock {
-  public JSCatchBlockImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSCatchBlockImpl extends JSElementImpl implements JSCatchBlock
+{
+	public JSCatchBlockImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSParameter getParameter() {
-    final ASTNode node = getNode().findChildByType(JSElementTypes.FORMAL_PARAMETER);
-    return node != null ? (JSParameter)node.getPsi():null;
-  }
+	public JSParameter getParameter()
+	{
+		final ASTNode node = getNode().findChildByType(JSElementTypes.FORMAL_PARAMETER);
+		return node != null ? (JSParameter) node.getPsi() : null;
+	}
 
-  public JSStatement getStatement() {
-    final ASTNode node = getNode().findChildByType(JSElementTypes.STATEMENTS);
-    return node != null ? (JSStatement)node.getPsi() : null;
-  }
+	public JSStatement getStatement()
+	{
+		final ASTNode node = getNode().findChildByType(JSElementTypes.STATEMENTS);
+		return node != null ? (JSStatement) node.getPsi() : null;
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSCatchBlock(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSCatchBlock(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 
-  public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-                                     @NotNull ResolveState state,
-                                     PsiElement lastParent,
-                                     @NotNull PsiElement place) {
-    if (lastParent != null) {
-      final JSParameter param = getParameter();
-      if (param != null) return processor.execute(param, state);
-    }
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
+			@NotNull PsiElement place)
+	{
+		if(lastParent != null)
+		{
+			final JSParameter param = getParameter();
+			if(param != null)
+			{
+				return processor.execute(param, state);
+			}
+		}
 
-    return true;
-  }
+		return true;
+	}
 
-  @Override
-  public void delete() throws IncorrectOperationException {
-    final ASTNode astNode = getNode();
-    astNode.getTreeParent().removeChild(astNode);
-  }
+	@Override
+	public void delete() throws IncorrectOperationException
+	{
+		final ASTNode astNode = getNode();
+		astNode.getTreeParent().removeChild(astNode);
+	}
 }

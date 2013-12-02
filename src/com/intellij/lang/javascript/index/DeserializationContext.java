@@ -16,33 +16,36 @@
 
 package com.intellij.lang.javascript.index;
 
-import com.intellij.psi.PsiManager;
-import com.intellij.openapi.project.Project;
 import gnu.trove.TIntObjectHashMap;
 
 import java.io.DataInputStream;
 
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiManager;
+
 /**
  * @by Maxim.Mossienko
-*/
-class DeserializationContext {
-  final DataInputStream inputStream;
-  final TIntObjectHashMap<String> myNames;
-  final TIntObjectHashMap<JSNamespace> myNameSpaces = new TIntObjectHashMap<JSNamespace>();
-  final TIntObjectHashMap<JSPackage> myPackages = new TIntObjectHashMap<JSPackage>();
-  final JSTypeEvaluateManager typeEvaluateManager;
-  final BrowserSupportManager browserSupportManager;
-  final PsiManager manager;
-  final JavaScriptIndex index;
+ */
+class DeserializationContext
+{
+	final DataInputStream inputStream;
+	final TIntObjectHashMap<String> myNames;
+	final TIntObjectHashMap<JSNamespace> myNameSpaces = new TIntObjectHashMap<JSNamespace>();
+	final TIntObjectHashMap<JSPackage> myPackages = new TIntObjectHashMap<JSPackage>();
+	final JSTypeEvaluateManager typeEvaluateManager;
+	final BrowserSupportManager browserSupportManager;
+	final PsiManager manager;
+	final JavaScriptIndex index;
 
-  DeserializationContext(DataInputStream _inputStream, PsiManager _manager, TIntObjectHashMap<String> names) {
-    inputStream = _inputStream;
-    manager = _manager;
-    myNames =  names;
-    
-    final Project project = manager.getProject();
-    typeEvaluateManager = JSTypeEvaluateManager.getInstance(project);
-    browserSupportManager = BrowserSupportManager.getInstance(project);
-    index = JavaScriptIndex.getInstance(project);
-  }
+	DeserializationContext(DataInputStream _inputStream, PsiManager _manager, TIntObjectHashMap<String> names)
+	{
+		inputStream = _inputStream;
+		manager = _manager;
+		myNames = names;
+
+		final Project project = manager.getProject();
+		typeEvaluateManager = JSTypeEvaluateManager.getInstance(project);
+		browserSupportManager = BrowserSupportManager.getInstance(project);
+		index = JavaScriptIndex.getInstance(project);
+	}
 }

@@ -22,6 +22,7 @@ package com.intellij.lang.javascript.psi;
  * Time: 9:27:17 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSYieldStatement extends JSStatement {
-  JSExpression getExpression();
+public interface JSYieldStatement extends JSStatement
+{
+	JSExpression getExpression();
 }

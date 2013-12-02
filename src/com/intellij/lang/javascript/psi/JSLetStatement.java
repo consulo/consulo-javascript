@@ -18,7 +18,9 @@ package com.intellij.lang.javascript.psi;
 /**
  * @author maxim
  */
-public interface JSLetStatement extends JSStatement {
-  JSExpression[] getExpressions();
-  JSBlockStatement getBody();
+public interface JSLetStatement extends JSStatement
+{
+	JSExpression[] getExpressions();
+
+	JSBlockStatement getBody();
 }

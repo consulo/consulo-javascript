@@ -22,6 +22,7 @@ package com.intellij.lang.javascript.psi;
  * Time: 6:47:23 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSType {
-  String COMMENT_DELIMITERS = "|/";
+public interface JSType
+{
+	String COMMENT_DELIMITERS = "|/";
 }

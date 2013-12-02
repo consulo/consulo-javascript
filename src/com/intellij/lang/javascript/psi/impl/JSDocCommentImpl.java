@@ -15,6 +15,7 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSDocTokenTypes;
 import com.intellij.lang.javascript.psi.JSDocComment;
@@ -23,29 +24,39 @@ import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
 
-public class JSDocCommentImpl extends JSElementImpl implements JSDocComment {
-  public JSDocCommentImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSDocCommentImpl extends JSElementImpl implements JSDocComment
+{
+	public JSDocCommentImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public IElementType getTokenType() {
-    return getNode().getElementType();
-  }
+	public IElementType getTokenType()
+	{
+		return getNode().getElementType();
+	}
 
-  @Override
-  public void accept(@NotNull final PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSDocComment(this);
-    } else {
-      visitor.visitComment(this);
-    }
-  }
+	@Override
+	public void accept(@NotNull final PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSDocComment(this);
+		}
+		else
+		{
+			visitor.visitComment(this);
+		}
+	}
 
-  public JSDocTag[] getTags() {
-    final PsiElement firstChild = getFirstChild();
-    if (firstChild instanceof JSDocComment) return ((JSDocComment)firstChild).getTags();
-    return findChildrenByType(JSDocTokenTypes.DOC_TAG, JSDocTag.class);
-  }
+	public JSDocTag[] getTags()
+	{
+		final PsiElement firstChild = getFirstChild();
+		if(firstChild instanceof JSDocComment)
+		{
+			return ((JSDocComment) firstChild).getTags();
+		}
+		return findChildrenByType(JSDocTokenTypes.DOC_TAG, JSDocTag.class);
+	}
 }

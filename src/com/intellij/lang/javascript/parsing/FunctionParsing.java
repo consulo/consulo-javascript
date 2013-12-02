@@ -15,267 +15,334 @@
  */
 package com.intellij.lang.javascript.parsing;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSBundle;
-import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JSElementTypes;
+import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author max
  */
-public class FunctionParsing extends Parsing {
-  static final Key<String> allowEmptyMethodsKey = Key.create("allowEmptyMethodsKey");
+public class FunctionParsing extends Parsing
+{
+	static final Key<String> allowEmptyMethodsKey = Key.create("allowEmptyMethodsKey");
 
-  private FunctionParsing() { }  
+	private FunctionParsing()
+	{
+	}
 
-  public static void parseFunctionExpression(PsiBuilder builder) {
-    parseFunction(builder, true);
-  }
+	public static void parseFunctionExpression(PsiBuilder builder)
+	{
+		parseFunction(builder, true);
+	}
 
-  public static void parseFunctionDeclaration(PsiBuilder builder) {
-    parseFunction(builder, false);
-  }
+	public static void parseFunctionDeclaration(PsiBuilder builder)
+	{
+		parseFunction(builder, false);
+	}
 
-  private static void parseFunction(PsiBuilder builder, boolean expressionContext) {
-    parseFunctionNoMarker(builder, expressionContext, builder.mark());
-  }
+	private static void parseFunction(PsiBuilder builder, boolean expressionContext)
+	{
+		parseFunctionNoMarker(builder, expressionContext, builder.mark());
+	}
 
-  public static void parseFunctionNoMarker(final PsiBuilder builder,
-                                            final boolean expressionContext,
-                                            final @NotNull PsiBuilder.Marker functionMarker) {
-    if (builder.getTokenType() == JSTokenTypes.FUNCTION_KEYWORD) { // function keyword may be ommited in context of get/set property definition
-      builder.advanceLexer();
-    }
+	public static void parseFunctionNoMarker(final PsiBuilder builder, final boolean expressionContext, final @NotNull PsiBuilder.Marker functionMarker)
+	{
+		if(builder.getTokenType() == JSTokenTypes.FUNCTION_KEYWORD)
+		{ // function keyword may be ommited in context of get/set property definition
+			builder.advanceLexer();
+		}
 
-    // Function name
+		// Function name
 
-    final IElementType tokenType = builder.getTokenType();
-    if (!expressionContext &&
-        ( tokenType == JSTokenTypes.GET_KEYWORD ||
-          tokenType == JSTokenTypes.SET_KEYWORD
-        )
-      ) {
-      builder.advanceLexer();
-    }
+		final IElementType tokenType = builder.getTokenType();
+		if(!expressionContext && (tokenType == JSTokenTypes.GET_KEYWORD || tokenType == JSTokenTypes.SET_KEYWORD))
+		{
+			builder.advanceLexer();
+		}
 
-    if (isIdentifierToken(builder.getTokenType())
-      ) {
-      ExpressionParsing.parseQualifiedTypeName(builder, false);
-    }
-    else {
-      if (!expressionContext && builder.getTokenType() != JSTokenTypes.LPAR /*get/set as name*/) {
-        builder.error(JSBundle.message("javascript.parser.message.expected.function.name"));
-      }
-    }
+		if(isIdentifierToken(builder.getTokenType()))
+		{
+			ExpressionParsing.parseQualifiedTypeName(builder, false);
+		}
+		else
+		{
+			if(!expressionContext && builder.getTokenType() != JSTokenTypes.LPAR /*get/set as name*/)
+			{
+				builder.error(JSBundle.message("javascript.parser.message.expected.function.name"));
+			}
+		}
 
-    parseParameterList(builder);
+		parseParameterList(builder);
 
-    ExpressionParsing.tryParseType(builder);
+		ExpressionParsing.tryParseType(builder);
 
-    if (builder.getUserData(allowEmptyMethodsKey) == null) {
-      StatementParsing.parseFunctionBody(builder);
-    } else {
-      if (builder.getTokenType() == JSTokenTypes.SEMICOLON) {
-        builder.advanceLexer();
-      }
+		if(builder.getUserData(allowEmptyMethodsKey) == null)
+		{
+			StatementParsing.parseFunctionBody(builder);
+		}
+		else
+		{
+			if(builder.getTokenType() == JSTokenTypes.SEMICOLON)
+			{
+				builder.advanceLexer();
+			}
 
-      if (builder.getTokenType() == JSTokenTypes.LBRACE) {
-        builder.error(JSBundle.message("interface.function.declaration.should.have.no.body"));
-      }
-    }
+			if(builder.getTokenType() == JSTokenTypes.LBRACE)
+			{
+				builder.error(JSBundle.message("interface.function.declaration.should.have.no.body"));
+			}
+		}
 
-    functionMarker.done(expressionContext ? JSElementTypes.FUNCTION_EXPRESSION : JSElementTypes.FUNCTION_DECLARATION);
-  }
+		functionMarker.done(expressionContext ? JSElementTypes.FUNCTION_EXPRESSION : JSElementTypes.FUNCTION_DECLARATION);
+	}
 
-  public static void parseAttributeWithoutBrackets(final PsiBuilder builder) {
-    final PsiBuilder.Marker attribute = builder.mark();
-    if(!checkMatches(builder, JSTokenTypes.IDENTIFIER, JSBundle.message("javascript.parser.message.expected.identifier"))) {
-      attribute.drop();
-      return;
-    }
-    parseAttributeBody(builder);
-    attribute.done(JSElementTypes.ATTRIBUTE);
-  }
+	public static void parseAttributeWithoutBrackets(final PsiBuilder builder)
+	{
+		final PsiBuilder.Marker attribute = builder.mark();
+		if(!checkMatches(builder, JSTokenTypes.IDENTIFIER, JSBundle.message("javascript.parser.message.expected.identifier")))
+		{
+			attribute.drop();
+			return;
+		}
+		parseAttributeBody(builder);
+		attribute.done(JSElementTypes.ATTRIBUTE);
+	}
 
-  static void parseAttributesList(final PsiBuilder builder) {
-    if (!isECMAL4(builder)) return;
-    final PsiBuilder.Marker modifierList = builder.mark();
+	static void parseAttributesList(final PsiBuilder builder)
+	{
+		if(!isECMAL4(builder))
+		{
+			return;
+		}
+		final PsiBuilder.Marker modifierList = builder.mark();
 
-    boolean seenNs = false;
-    boolean seenAnyAttributes = false;
+		boolean seenNs = false;
+		boolean seenAnyAttributes = false;
 
-    try {
-      boolean hasSomethingInAttrList = true;
+		try
+		{
+			boolean hasSomethingInAttrList = true;
 
-      while(hasSomethingInAttrList) {
-        hasSomethingInAttrList = false;
+			while(hasSomethingInAttrList)
+			{
+				hasSomethingInAttrList = false;
 
-        while (builder.getTokenType() == JSTokenTypes.LBRACKET) {
-          seenAnyAttributes = true;
-          PsiBuilder.Marker attribute = builder.mark();
+				while(builder.getTokenType() == JSTokenTypes.LBRACKET)
+				{
+					seenAnyAttributes = true;
+					PsiBuilder.Marker attribute = builder.mark();
 
-          builder.advanceLexer();
+					builder.advanceLexer();
 
-          if (builder.eof() ||
-              ( !checkMatches(builder, JSTokenTypes.IDENTIFIER, JSBundle.message("javascript.parser.message.expected.identifier")) &&
-                builder.getTokenType() != JSTokenTypes.RBRACKET)) {
-            attribute.drop();
-            return;
-          }
+					if(builder.eof() || (!checkMatches(builder, JSTokenTypes.IDENTIFIER, JSBundle.message("javascript.parser.message.expected.identifier")) &&
+							builder.getTokenType() != JSTokenTypes.RBRACKET))
+					{
+						attribute.drop();
+						return;
+					}
 
-          while(builder.getTokenType() != JSTokenTypes.RBRACKET) {
-            parseAttributeBody(builder);
+					while(builder.getTokenType() != JSTokenTypes.RBRACKET)
+					{
+						parseAttributeBody(builder);
 
-            if (builder.eof()) {
-              attribute.done(JSElementTypes.ATTRIBUTE);
-              builder.error(JSBundle.message("javascript.parser.message.expected.rbracket"));
-              return;
-            }
-          }
+						if(builder.eof())
+						{
+							attribute.done(JSElementTypes.ATTRIBUTE);
+							builder.error(JSBundle.message("javascript.parser.message.expected.rbracket"));
+							return;
+						}
+					}
 
-          builder.advanceLexer();
-          attribute.done(JSElementTypes.ATTRIBUTE);
-          hasSomethingInAttrList = true;
-        }
+					builder.advanceLexer();
+					attribute.done(JSElementTypes.ATTRIBUTE);
+					hasSomethingInAttrList = true;
+				}
 
-        if (builder.getTokenType() == JSTokenTypes.INCLUDE_KEYWORD) {
-          hasSomethingInAttrList = true;
-          StatementParsing.parseIncludeDirective(builder);
-        }
+				if(builder.getTokenType() == JSTokenTypes.INCLUDE_KEYWORD)
+				{
+					hasSomethingInAttrList = true;
+					StatementParsing.parseIncludeDirective(builder);
+				}
 
-        if (builder.getTokenType() == JSTokenTypes.IDENTIFIER && !seenNs) {
-          hasSomethingInAttrList = true;
-          seenNs = true;
-          PsiBuilder.Marker marker = builder.mark();
-          builder.advanceLexer();
-          marker.done(JSElementTypes.REFERENCE_EXPRESSION);
-        }
+				if(builder.getTokenType() == JSTokenTypes.IDENTIFIER && !seenNs)
+				{
+					hasSomethingInAttrList = true;
+					seenNs = true;
+					PsiBuilder.Marker marker = builder.mark();
+					builder.advanceLexer();
+					marker.done(JSElementTypes.REFERENCE_EXPRESSION);
+				}
 
-        while(JSTokenTypes.MODIFIERS.contains(builder.getTokenType())) {
-          seenAnyAttributes = true;
-          hasSomethingInAttrList = true;
-          if (builder.getTokenType() == JSTokenTypes.NATIVE_KEYWORD) builder.putUserData(allowEmptyMethodsKey, "");
-          builder.advanceLexer();
-        }
+				while(JSTokenTypes.MODIFIERS.contains(builder.getTokenType()))
+				{
+					seenAnyAttributes = true;
+					hasSomethingInAttrList = true;
+					if(builder.getTokenType() == JSTokenTypes.NATIVE_KEYWORD)
+					{
+						builder.putUserData(allowEmptyMethodsKey, "");
+					}
+					builder.advanceLexer();
+				}
 
-        if (builder.eof()) {
-          return;
-        }
-      }
-    }
-    finally {
-      final IElementType currentTokenType = builder.getTokenType();
-      
-      if (seenNs &&
-          !seenAnyAttributes &&
-          ( currentTokenType != JSTokenTypes.VAR_KEYWORD &&
-            currentTokenType != JSTokenTypes.FUNCTION_KEYWORD &&
-            currentTokenType != JSTokenTypes.CLASS_KEYWORD &&
-            currentTokenType != JSTokenTypes.INTERFACE_KEYWORD
-          )
-         ) {
-        modifierList.drop();
-      } else {
-        modifierList.done(JSElementTypes.ATTRIBUTE_LIST);
-      }
-    }
-  }
+				if(builder.eof())
+				{
+					return;
+				}
+			}
+		}
+		finally
+		{
+			final IElementType currentTokenType = builder.getTokenType();
 
-  private static void parseAttributeBody(final PsiBuilder builder) {
-    final boolean haveLParen = checkMatches(builder, JSTokenTypes.LPAR, JSBundle.message("javascript.parser.message.expected.lparen"));
-    boolean hasName;
+			if(seenNs &&
+					!seenAnyAttributes &&
+					(currentTokenType != JSTokenTypes.VAR_KEYWORD &&
+							currentTokenType != JSTokenTypes.FUNCTION_KEYWORD &&
+							currentTokenType != JSTokenTypes.CLASS_KEYWORD &&
+							currentTokenType != JSTokenTypes.INTERFACE_KEYWORD))
+			{
+				modifierList.drop();
+			}
+			else
+			{
+				modifierList.done(JSElementTypes.ATTRIBUTE_LIST);
+			}
+		}
+	}
 
-    while(haveLParen) {
-      PsiBuilder.Marker attributeNameValuePair;
-      hasName = builder.getTokenType() == JSTokenTypes.IDENTIFIER;
+	private static void parseAttributeBody(final PsiBuilder builder)
+	{
+		final boolean haveLParen = checkMatches(builder, JSTokenTypes.LPAR, JSBundle.message("javascript.parser.message.expected.lparen"));
+		boolean hasName;
 
-      if (builder.getTokenType() == JSTokenTypes.COMMA) {
-        builder.error(JSBundle.message("javascript.parser.message.expected.identifer.or.value"));
-        break;
-      }
-      if (builder.getTokenType() == JSTokenTypes.RBRACKET) break;
+		while(haveLParen)
+		{
+			PsiBuilder.Marker attributeNameValuePair;
+			hasName = builder.getTokenType() == JSTokenTypes.IDENTIFIER;
 
-      attributeNameValuePair = builder.mark();
-      builder.advanceLexer();
+			if(builder.getTokenType() == JSTokenTypes.COMMA)
+			{
+				builder.error(JSBundle.message("javascript.parser.message.expected.identifer.or.value"));
+				break;
+			}
+			if(builder.getTokenType() == JSTokenTypes.RBRACKET)
+			{
+				break;
+			}
 
-      if (hasName && builder.getTokenType() != JSTokenTypes.COMMA && builder.getTokenType() != JSTokenTypes.RPAR) {
-        checkMatches(builder, JSTokenTypes.EQ, JSBundle.message("javascript.parser.message.expected.equal"));
+			attributeNameValuePair = builder.mark();
+			builder.advanceLexer();
 
-        if (builder.getTokenType() != JSTokenTypes.COMMA && builder.getTokenType() != JSTokenTypes.RBRACKET && builder.getTokenType() != JSTokenTypes.RPAR) {
-          builder.advanceLexer();
-        } else {
-          builder.error(JSBundle.message("javascript.parser.message.expected.value"));
-        }
-      }
+			if(hasName && builder.getTokenType() != JSTokenTypes.COMMA && builder.getTokenType() != JSTokenTypes.RPAR)
+			{
+				checkMatches(builder, JSTokenTypes.EQ, JSBundle.message("javascript.parser.message.expected.equal"));
 
-      if (attributeNameValuePair != null) attributeNameValuePair.done(JSElementTypes.ATTRIBUTE_NAME_VALUE_PAIR);
-      if (builder.getTokenType() != JSTokenTypes.COMMA) break;
-      builder.advanceLexer();
+				if(builder.getTokenType() != JSTokenTypes.COMMA && builder.getTokenType() != JSTokenTypes.RBRACKET && builder.getTokenType() != JSTokenTypes
+						.RPAR)
+				{
+					builder.advanceLexer();
+				}
+				else
+				{
+					builder.error(JSBundle.message("javascript.parser.message.expected.value"));
+				}
+			}
 
-      if (builder.eof()) {
-        builder.error(JSBundle.message("javascript.parser.message.expected.rparen"));
-        return;
-      }
-    }
+			if(attributeNameValuePair != null)
+			{
+				attributeNameValuePair.done(JSElementTypes.ATTRIBUTE_NAME_VALUE_PAIR);
+			}
+			if(builder.getTokenType() != JSTokenTypes.COMMA)
+			{
+				break;
+			}
+			builder.advanceLexer();
 
-    if (haveLParen) checkMatches(builder, JSTokenTypes.RPAR, JSBundle.message("javascript.parser.message.expected.rparen"));
-    else builder.advanceLexer();
-  }
+			if(builder.eof())
+			{
+				builder.error(JSBundle.message("javascript.parser.message.expected.rparen"));
+				return;
+			}
+		}
 
-  private static void parseParameterList(final PsiBuilder builder) {
-    final PsiBuilder.Marker parameterList;
-    if (builder.getTokenType() != JSTokenTypes.LPAR) {
-      builder.error(JSBundle.message("javascript.parser.message.expected.lparen"));
-      parameterList = builder.mark(); // To have non-empty parameters list at all the time.
-      parameterList.done(JSElementTypes.PARAMETER_LIST);
-      return;
-    }
-    else {
-      parameterList = builder.mark();
-      builder.advanceLexer();
-    }
+		if(haveLParen)
+		{
+			checkMatches(builder, JSTokenTypes.RPAR, JSBundle.message("javascript.parser.message.expected.rparen"));
+		}
+		else
+		{
+			builder.advanceLexer();
+		}
+	}
 
-    boolean first = true;
-    while (builder.getTokenType() != JSTokenTypes.RPAR) {
-      if (first) {
-        first = false;
-      }
-      else {
-        if (builder.getTokenType() == JSTokenTypes.COMMA) {
-          builder.advanceLexer();
-        }
-        else {
-          builder.error(JSBundle.message("javascript.parser.message.expected.comma.or.rparen"));
-          break;
-        }
-      }
+	private static void parseParameterList(final PsiBuilder builder)
+	{
+		final PsiBuilder.Marker parameterList;
+		if(builder.getTokenType() != JSTokenTypes.LPAR)
+		{
+			builder.error(JSBundle.message("javascript.parser.message.expected.lparen"));
+			parameterList = builder.mark(); // To have non-empty parameters list at all the time.
+			parameterList.done(JSElementTypes.PARAMETER_LIST);
+			return;
+		}
+		else
+		{
+			parameterList = builder.mark();
+			builder.advanceLexer();
+		}
 
-      final PsiBuilder.Marker parameter = builder.mark();
-      if (builder.getTokenType() == JSTokenTypes.DOT_DOT_DOT) {
-        builder.advanceLexer();
-      }
-      if (JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(builder.getTokenType())) {
-        builder.advanceLexer();
-        ExpressionParsing.tryParseType(builder);
-        if (builder.getTokenType() == JSTokenTypes.EQ) {
-          builder.advanceLexer();
-          ExpressionParsing.parseSimpleExpression(builder);
-        }
-        parameter.done(JSElementTypes.FORMAL_PARAMETER);
-      }
-      else {
-        builder.error(JSBundle.message("javascript.parser.message.expected.formal.parameter.name"));
-        parameter.drop();
-      }
-    }
+		boolean first = true;
+		while(builder.getTokenType() != JSTokenTypes.RPAR)
+		{
+			if(first)
+			{
+				first = false;
+			}
+			else
+			{
+				if(builder.getTokenType() == JSTokenTypes.COMMA)
+				{
+					builder.advanceLexer();
+				}
+				else
+				{
+					builder.error(JSBundle.message("javascript.parser.message.expected.comma.or.rparen"));
+					break;
+				}
+			}
 
-    if (builder.getTokenType() == JSTokenTypes.RPAR) {
-      builder.advanceLexer();
-    }
+			final PsiBuilder.Marker parameter = builder.mark();
+			if(builder.getTokenType() == JSTokenTypes.DOT_DOT_DOT)
+			{
+				builder.advanceLexer();
+			}
+			if(JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(builder.getTokenType()))
+			{
+				builder.advanceLexer();
+				ExpressionParsing.tryParseType(builder);
+				if(builder.getTokenType() == JSTokenTypes.EQ)
+				{
+					builder.advanceLexer();
+					ExpressionParsing.parseSimpleExpression(builder);
+				}
+				parameter.done(JSElementTypes.FORMAL_PARAMETER);
+			}
+			else
+			{
+				builder.error(JSBundle.message("javascript.parser.message.expected.formal.parameter.name"));
+				parameter.drop();
+			}
+		}
 
-    parameterList.done(JSElementTypes.PARAMETER_LIST);
-  }
+		if(builder.getTokenType() == JSTokenTypes.RPAR)
+		{
+			builder.advanceLexer();
+		}
+
+		parameterList.done(JSElementTypes.PARAMETER_LIST);
+	}
 }

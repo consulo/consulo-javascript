@@ -15,6 +15,7 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -26,7 +27,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,46 +35,60 @@ import org.jetbrains.annotations.NotNull;
  * Time: 9:35:47 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSVarStatementImpl extends JSStubbedStatementImpl<JSVarStatementStub> implements JSVarStatement {
+public class JSVarStatementImpl extends JSStubbedStatementImpl<JSVarStatementStub> implements JSVarStatement
+{
 
 
-  public JSVarStatementImpl(final ASTNode node) {
-    super(node);
-  }
+	public JSVarStatementImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public JSVarStatementImpl(final JSVarStatementStub node) {
-    super(node, JSElementTypes.VAR_STATEMENT);
-  }
+	public JSVarStatementImpl(final JSVarStatementStub node)
+	{
+		super(node, JSElementTypes.VAR_STATEMENT);
+	}
 
-  public JSVariable[] getVariables() {
-    return getStubOrPsiChildren(JSElementTypes.VARIABLE, JSVariable.EMPTY_ARRAY);
-  }
+	public JSVariable[] getVariables()
+	{
+		return getStubOrPsiChildren(JSElementTypes.VARIABLE, JSVariable.EMPTY_ARRAY);
+	}
 
-  public void declareVariable(String name, JSExpression initializer) {
-    throw new UnsupportedOperationException("TODO: implement");
-  }
+	public void declareVariable(String name, JSExpression initializer)
+	{
+		throw new UnsupportedOperationException("TODO: implement");
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSVarStatement(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSVarStatement(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 
-  public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-                                     @NotNull ResolveState state,
-                                     PsiElement lastParent,
-                                     @NotNull PsiElement place) {
-    final JSVariable[] vars = getVariables();
-    
-    for (JSVariable var : vars) {
-      if (lastParent != null && lastParent.getParent() == var) break;
-      if (!processor.execute(var, state)) return false;
-    }
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
+			@NotNull PsiElement place)
+	{
+		final JSVariable[] vars = getVariables();
+
+		for(JSVariable var : vars)
+		{
+			if(lastParent != null && lastParent.getParent() == var)
+			{
+				break;
+			}
+			if(!processor.execute(var, state))
+			{
+				return false;
+			}
+		}
 
 
-    return true;
-  }
+		return true;
+	}
 }

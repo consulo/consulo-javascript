@@ -15,17 +15,27 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.psi.*;
+import com.intellij.lang.javascript.psi.JSCallExpression;
+import com.intellij.lang.javascript.psi.JSClass;
+import com.intellij.lang.javascript.psi.JSElementVisitor;
+import com.intellij.lang.javascript.psi.JSFile;
+import com.intellij.lang.javascript.psi.JSReferenceExpression;
+import com.intellij.lang.javascript.psi.JSReferenceList;
+import com.intellij.lang.javascript.psi.JSSuperExpression;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiReference;
+import com.intellij.psi.ResolveResult;
+import com.intellij.psi.ResolveState;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,103 +44,133 @@ import org.jetbrains.annotations.Nullable;
  * Time: 11:24:42 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperExpression {
-  private PsiReference[] references;
+public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperExpression
+{
+	private PsiReference[] references;
 
-  public JSSuperExpressionImpl(final ASTNode node) {
-    super(node);
-  }
+	public JSSuperExpressionImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSSuperExpression(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSSuperExpression(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 
-  @Override
-  public PsiReference getReference() {
-    return getReferences()[0];
-  }
+	@Override
+	public PsiReference getReference()
+	{
+		return getReferences()[0];
+	}
 
-  @Override
-  @NotNull
-  public PsiReference[] getReferences() {
-    if (references != null) return references;
-    PsiReference[] refs = { new PsiReference() {
-      public PsiElement getElement() {
-        return JSSuperExpressionImpl.this;
-      }
+	@Override
+	@NotNull
+	public PsiReference[] getReferences()
+	{
+		if(references != null)
+		{
+			return references;
+		}
+		PsiReference[] refs = {
+				new PsiReference()
+				{
+					public PsiElement getElement()
+					{
+						return JSSuperExpressionImpl.this;
+					}
 
-      public TextRange getRangeInElement() {
-        return new TextRange(0, getTextLength());
-      }
+					public TextRange getRangeInElement()
+					{
+						return new TextRange(0, getTextLength());
+					}
 
-      @Nullable
-      public PsiElement resolve() {
-        final PsiElement element = findClass();
+					@Nullable
+					public PsiElement resolve()
+					{
+						final PsiElement element = findClass();
 
-        if (getElement().getParent() instanceof JSCallExpression &&
-            element instanceof JSClass
-           ) {
-          final JSClass clazz = (JSClass)element;
-          final ResolveProcessor processor = new ResolveProcessor(clazz.getName(), JSSuperExpressionImpl.this);
-          element.processDeclarations(processor, ResolveState.initial(), clazz, getElement());
-          if(processor.getResult() != null) return processor.getResult();
-        }
+						if(getElement().getParent() instanceof JSCallExpression && element instanceof JSClass)
+						{
+							final JSClass clazz = (JSClass) element;
+							final ResolveProcessor processor = new ResolveProcessor(clazz.getName(), JSSuperExpressionImpl.this);
+							element.processDeclarations(processor, ResolveState.initial(), clazz, getElement());
+							if(processor.getResult() != null)
+							{
+								return processor.getResult();
+							}
+						}
 
-        return element;
-      }
+						return element;
+					}
 
-      private PsiElement findClass() {
-        final JSClass jsClass = PsiTreeUtil.getParentOfType(getElement(), JSClass.class);
+					private PsiElement findClass()
+					{
+						final JSClass jsClass = PsiTreeUtil.getParentOfType(getElement(), JSClass.class);
 
-        if (jsClass != null) {
-          final JSReferenceList extendsList = jsClass.getExtendsList();
-          if (extendsList != null) {
-            final JSReferenceExpression[] referenceExpressions = extendsList.getExpressions();
-            if (referenceExpressions != null && referenceExpressions.length > 0) {
-              final ResolveResult[] results = referenceExpressions[0].multiResolve(false);
-              return results.length > 0 ? results[0].getElement() : null;
-            }
-          }
-        } else {
-          final JSFile jsFile = PsiTreeUtil.getParentOfType(getElement(), JSFile.class);
+						if(jsClass != null)
+						{
+							final JSReferenceList extendsList = jsClass.getExtendsList();
+							if(extendsList != null)
+							{
+								final JSReferenceExpression[] referenceExpressions = extendsList.getExpressions();
+								if(referenceExpressions != null && referenceExpressions.length > 0)
+								{
+									final ResolveResult[] results = referenceExpressions[0].multiResolve(false);
+									return results.length > 0 ? results[0].getElement() : null;
+								}
+							}
+						}
+						else
+						{
+							final JSFile jsFile = PsiTreeUtil.getParentOfType(getElement(), JSFile.class);
 
-          if (jsFile != null) {
-            return JSResolveUtil.getClassReferenceForXmlFromContext(jsFile);
-          }
-        }
-        return null;
-      }
+							if(jsFile != null)
+							{
+								return JSResolveUtil.getClassReferenceForXmlFromContext(jsFile);
+							}
+						}
+						return null;
+					}
 
-      public String getCanonicalText() {
-        return getText();
-      }
+					public String getCanonicalText()
+					{
+						return getText();
+					}
 
-      public PsiElement handleElementRename(final String newElementName) throws IncorrectOperationException {
-        return null;
-      }
+					public PsiElement handleElementRename(final String newElementName) throws IncorrectOperationException
+					{
+						return null;
+					}
 
-      public PsiElement bindToElement(@NotNull final PsiElement element) throws IncorrectOperationException {
-        return null;
-      }
+					public PsiElement bindToElement(@NotNull final PsiElement element) throws IncorrectOperationException
+					{
+						return null;
+					}
 
-      public boolean isReferenceTo(final PsiElement element) {
-        return false;
-      }
+					public boolean isReferenceTo(final PsiElement element)
+					{
+						return false;
+					}
 
-      public Object[] getVariants() {
-        return ArrayUtil.EMPTY_OBJECT_ARRAY;
-      }
+					public Object[] getVariants()
+					{
+						return ArrayUtil.EMPTY_OBJECT_ARRAY;
+					}
 
-      public boolean isSoft() {
-        return true;
-      }
-    }
-    };
-    return references = refs;
-  }
+					public boolean isSoft()
+					{
+						return true;
+					}
+				}
+		};
+		return references = refs;
+	}
 }

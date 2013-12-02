@@ -22,6 +22,7 @@ package com.intellij.lang.javascript.psi;
  * Time: 7:01:41 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSReturnStatement extends JSStatement {
-  JSExpression getExpression();
+public interface JSReturnStatement extends JSStatement
+{
+	JSExpression getExpression();
 }

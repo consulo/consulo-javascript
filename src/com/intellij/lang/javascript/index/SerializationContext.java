@@ -16,41 +16,50 @@
 
 package com.intellij.lang.javascript.index;
 
-import com.intellij.openapi.project.Project;
 import gnu.trove.TObjectIntHashMap;
 
 import java.io.DataOutputStream;
 
+import com.intellij.openapi.project.Project;
+
 /**
  * @by Maxim.Mossienko
  */
-final class SerializationContext {
-  final DataOutputStream outputStream;
-  final TObjectIntHashMap<String> myNames = new TObjectIntHashMap<String>();
-  final TObjectIntHashMap<JSNamespace> myNameSpaces = new TObjectIntHashMap<JSNamespace>();
-  final TObjectIntHashMap<JSPackage> myPackages = new TObjectIntHashMap<JSPackage>();
-  final JSTypeEvaluateManager typeEvaluateManager;
-  final BrowserSupportManager browserSupportManager;
-  final JavaScriptIndex myIndex;
-  private int myFilesCount;
+final class SerializationContext
+{
+	final DataOutputStream outputStream;
+	final TObjectIntHashMap<String> myNames = new TObjectIntHashMap<String>();
+	final TObjectIntHashMap<JSNamespace> myNameSpaces = new TObjectIntHashMap<JSNamespace>();
+	final TObjectIntHashMap<JSPackage> myPackages = new TObjectIntHashMap<JSPackage>();
+	final JSTypeEvaluateManager typeEvaluateManager;
+	final BrowserSupportManager browserSupportManager;
+	final JavaScriptIndex myIndex;
+	private int myFilesCount;
 
-  SerializationContext(DataOutputStream _outputStream, Project project, int filesCount) {
-    outputStream = _outputStream;
-    typeEvaluateManager = JSTypeEvaluateManager.getInstance(project);
-    browserSupportManager = BrowserSupportManager.getInstance(project);
-    myIndex = JavaScriptIndex.getInstance(project);
-    myFilesCount = filesCount;
-  }
+	SerializationContext(DataOutputStream _outputStream, Project project, int filesCount)
+	{
+		outputStream = _outputStream;
+		typeEvaluateManager = JSTypeEvaluateManager.getInstance(project);
+		browserSupportManager = BrowserSupportManager.getInstance(project);
+		myIndex = JavaScriptIndex.getInstance(project);
+		myFilesCount = filesCount;
+	}
 
-  public void addName(final String name) {
-    if (!myNames.contains(name)) myNames.put(name, myNames.size() + 1);
-  }
+	public void addName(final String name)
+	{
+		if(!myNames.contains(name))
+		{
+			myNames.put(name, myNames.size() + 1);
+		}
+	}
 
-  public void decFileCount() {
-    --myFilesCount;
-  }
+	public void decFileCount()
+	{
+		--myFilesCount;
+	}
 
-  public int getFilesCount() {
-    return myFilesCount;
-  }
+	public int getFilesCount()
+	{
+		return myFilesCount;
+	}
 }

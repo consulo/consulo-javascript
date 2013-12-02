@@ -21,20 +21,24 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
 /**
  * @author ven
  */
-public class Util {
-  private Util() {
-  }
+public class Util
+{
+	private Util()
+	{
+	}
 
-  public static WrapType getWrapType (int settings) {
-    switch (settings) {
-      case CodeStyleSettings.WRAP_ALWAYS:
-        return WrapType.ALWAYS;
-      case CodeStyleSettings.WRAP_AS_NEEDED:
-        return WrapType.NORMAL;
-      case CodeStyleSettings.DO_NOT_WRAP:
-        return WrapType.NONE;
-      default:
-        return WrapType.CHOP_DOWN_IF_LONG;
-    }
-  }
+	public static WrapType getWrapType(int settings)
+	{
+		switch(settings)
+		{
+			case CodeStyleSettings.WRAP_ALWAYS:
+				return WrapType.ALWAYS;
+			case CodeStyleSettings.WRAP_AS_NEEDED:
+				return WrapType.NORMAL;
+			case CodeStyleSettings.DO_NOT_WRAP:
+				return WrapType.NONE;
+			default:
+				return WrapType.CHOP_DOWN_IF_LONG;
+		}
+	}
 }

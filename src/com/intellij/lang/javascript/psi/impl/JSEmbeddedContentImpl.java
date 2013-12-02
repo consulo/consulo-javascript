@@ -15,6 +15,7 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
@@ -26,7 +27,6 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.psi.xml.XmlTagChild;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,48 +35,70 @@ import org.jetbrains.annotations.NotNull;
  * Time: 12:02:38 AM
  * To change this template use File | Settings | File Templates.
  */
-public class JSEmbeddedContentImpl extends JSElementImpl implements XmlTagChild {
-  public JSEmbeddedContentImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSEmbeddedContentImpl extends JSElementImpl implements XmlTagChild
+{
+	public JSEmbeddedContentImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public XmlTag getParentTag() {
-    final PsiElement parent = getParent();
-    if(parent instanceof XmlTag) return (XmlTag)parent;
-    return null;
-  }
+	public XmlTag getParentTag()
+	{
+		final PsiElement parent = getParent();
+		if(parent instanceof XmlTag)
+		{
+			return (XmlTag) parent;
+		}
+		return null;
+	}
 
-  public XmlTagChild getNextSiblingInTag() {
-    PsiElement nextSibling = getNextSibling();
-    if(nextSibling instanceof XmlTagChild) return (XmlTagChild)nextSibling;
-    return null;
-  }
+	public XmlTagChild getNextSiblingInTag()
+	{
+		PsiElement nextSibling = getNextSibling();
+		if(nextSibling instanceof XmlTagChild)
+		{
+			return (XmlTagChild) nextSibling;
+		}
+		return null;
+	}
 
-  public XmlTagChild getPrevSiblingInTag() {
-    final PsiElement prevSibling = getPrevSibling();
-    if(prevSibling instanceof XmlTagChild) return (XmlTagChild)prevSibling;
-    return null;
-  }
+	public XmlTagChild getPrevSiblingInTag()
+	{
+		final PsiElement prevSibling = getPrevSibling();
+		if(prevSibling instanceof XmlTagChild)
+		{
+			return (XmlTagChild) prevSibling;
+		}
+		return null;
+	}
 
-  public boolean processElements(PsiElementProcessor processor, PsiElement place) {
-    // TODO
-    return true;
-  }
+	public boolean processElements(PsiElementProcessor processor, PsiElement place)
+	{
+		// TODO
+		return true;
+	}
 
-  public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
-    return JSResolveUtil.processDeclarationsInScope(this, processor, state, lastParent, place);
-  }
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
+			@NotNull PsiElement place)
+	{
+		return JSResolveUtil.processDeclarationsInScope(this, processor, state, lastParent, place);
+	}
 
-  public String toString() {
-    String s = super.toString();
-    final IElementType type = getNode().getElementType();
-    if (type != JSElementTypes.EMBEDDED_CONTENT) s += ":" + type;
-    return s;
-  }
+	public String toString()
+	{
+		String s = super.toString();
+		final IElementType type = getNode().getElementType();
+		if(type != JSElementTypes.EMBEDDED_CONTENT)
+		{
+			s += ":" + type;
+		}
+		return s;
+	}
 
-  @Override
-  public void delete() throws IncorrectOperationException {
-    final ASTNode astNode = getNode();
-    astNode.getTreeParent().removeChild(astNode);
-  }
+	@Override
+	public void delete() throws IncorrectOperationException
+	{
+		final ASTNode astNode = getNode();
+		astNode.getTreeParent().removeChild(astNode);
+	}
 }

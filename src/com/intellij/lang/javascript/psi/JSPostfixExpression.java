@@ -24,7 +24,9 @@ import com.intellij.psi.tree.IElementType;
  * Time: 7:41:36 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSPostfixExpression extends JSExpression {
-  JSExpression getExpression();
-  IElementType getOperationSign();
+public interface JSPostfixExpression extends JSExpression
+{
+	JSExpression getExpression();
+
+	IElementType getOperationSign();
 }

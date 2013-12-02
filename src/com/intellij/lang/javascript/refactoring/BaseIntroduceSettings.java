@@ -3,9 +3,11 @@ package com.intellij.lang.javascript.refactoring;
 /**
  * @author ven
  */
-public interface BaseIntroduceSettings {
-  boolean isReplaceAllOccurences();
+public interface BaseIntroduceSettings
+{
+	boolean isReplaceAllOccurences();
 
-  String getVariableName();
-  String getVariableType();
+	String getVariableName();
+
+	String getVariableType();
 }

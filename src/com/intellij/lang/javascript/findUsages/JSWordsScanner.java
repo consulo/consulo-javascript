@@ -16,9 +16,9 @@
 package com.intellij.lang.javascript.findUsages;
 
 import com.intellij.lang.cacheBuilder.DefaultWordsScanner;
+import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptLexer;
 import com.intellij.lang.javascript.JavascriptLanguage;
-import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.psi.tree.TokenSet;
 
 /**
@@ -28,10 +28,12 @@ import com.intellij.psi.tree.TokenSet;
  * Time: 9:34:58 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSWordsScanner extends DefaultWordsScanner {
-  public JSWordsScanner() {
-    super(new JavaScriptLexer(JavascriptLanguage.DIALECT_OPTION_HOLDER), JSTokenTypes.IDENTIFIER_TOKENS_SET,
-          JSTokenTypes.COMMENTS, TokenSet.create(JSTokenTypes.STRING_LITERAL));
-    setMayHaveFileRefsInLiterals(true);
-  }
+public class JSWordsScanner extends DefaultWordsScanner
+{
+	public JSWordsScanner()
+	{
+		super(new JavaScriptLexer(JavascriptLanguage.DIALECT_OPTION_HOLDER), JSTokenTypes.IDENTIFIER_TOKENS_SET, JSTokenTypes.COMMENTS,
+				TokenSet.create(JSTokenTypes.STRING_LITERAL));
+		setMayHaveFileRefsInLiterals(true);
+	}
 }

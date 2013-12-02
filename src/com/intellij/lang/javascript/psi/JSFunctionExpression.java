@@ -22,6 +22,7 @@ package com.intellij.lang.javascript.psi;
  * Time: 7:42:48 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSFunctionExpression extends JSFunction, JSExpression {
-  JSFunction getFunction();
+public interface JSFunctionExpression extends JSFunction, JSExpression
+{
+	JSFunction getFunction();
 }

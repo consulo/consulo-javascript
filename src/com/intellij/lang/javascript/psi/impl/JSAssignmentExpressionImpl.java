@@ -15,11 +15,11 @@
  */
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSAssignmentExpression;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.psi.PsiElementVisitor;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,17 +28,22 @@ import org.jetbrains.annotations.NotNull;
  * Time: 11:41:42 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSAssignmentExpressionImpl extends JSBinaryExpressionImpl implements JSAssignmentExpression {
-  public JSAssignmentExpressionImpl(final ASTNode node) {
-    super(node);
-  }
+public class JSAssignmentExpressionImpl extends JSBinaryExpressionImpl implements JSAssignmentExpression
+{
+	public JSAssignmentExpressionImpl(final ASTNode node)
+	{
+		super(node);
+	}
 
-  public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof JSElementVisitor) {
-      ((JSElementVisitor)visitor).visitJSAssignmentExpression(this);
-    }
-    else {
-      visitor.visitElement(this);
-    }
-  }
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor) visitor).visitJSAssignmentExpression(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
+	}
 }

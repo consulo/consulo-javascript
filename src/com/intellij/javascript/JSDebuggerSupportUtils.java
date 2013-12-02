@@ -34,134 +34,174 @@ import com.intellij.psi.util.PsiTreeUtil;
  * Time: 7:45:08 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSDebuggerSupportUtils {
-  @Nullable
-  public static TextRange getExpressionAtOffset(@NotNull Project project, @NotNull Document document, final int offset) {
-    PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
-    if (file == null) return null;
-
-    int injectionOffsetCorrection = 0;
-    PsiReference ref = file.findReferenceAt(offset);
-    
-    if (ref == null) {
-      final PsiElement at = file.findElementAt(offset);
-
-      TextRange rangeForNamedElement = getRangeForNamedElement(at, 0);
-      if (rangeForNamedElement != null) return rangeForNamedElement;
-
-      final PsiLanguageInjectionHost psiLanguageInjectionHost = PsiTreeUtil.getParentOfType(at, PsiLanguageInjectionHost.class);
-
-      if (psiLanguageInjectionHost != null) {
-        final Ref<PsiReference> result = new Ref<PsiReference>();
-        final Ref<PsiElement> eltInInjected = new Ref<PsiElement>();
-        final int[] injectedOffset = new int[1];
-
-        InjectedLanguageUtil.enumerate(psiLanguageInjectionHost, new PsiLanguageInjectionHost.InjectedPsiVisitor()
+public class JSDebuggerSupportUtils
+{
+	@Nullable
+	public static TextRange getExpressionAtOffset(@NotNull Project project, @NotNull Document document, final int offset)
+	{
+		PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
+		if(file == null)
 		{
-			public void visit(@NotNull final PsiFile injectedPsi, @NotNull final List<PsiLanguageInjectionHost.Shred> places)
+			return null;
+		}
+
+		int injectionOffsetCorrection = 0;
+		PsiReference ref = file.findReferenceAt(offset);
+
+		if(ref == null)
+		{
+			final PsiElement at = file.findElementAt(offset);
+
+			TextRange rangeForNamedElement = getRangeForNamedElement(at, 0);
+			if(rangeForNamedElement != null)
 			{
-				final PsiLanguageInjectionHost.Shred shred = places.get(0);
-				final int injectedStart = shred.getRangeInsideHost().getStartOffset() + shred.getHost().getTextOffset();
-				final int offsetInInjected = offset - injectedStart;
-
-				result.set(injectedPsi.findReferenceAt(offsetInInjected));
-				eltInInjected.set(injectedPsi.findElementAt(offsetInInjected));
-				injectedOffset[0] = injectedStart;
+				return rangeForNamedElement;
 			}
-		});
 
-        ref =  result.get();
+			final PsiLanguageInjectionHost psiLanguageInjectionHost = PsiTreeUtil.getParentOfType(at, PsiLanguageInjectionHost.class);
 
-        if (ref == null) {
-          rangeForNamedElement = getRangeForNamedElement(eltInInjected.get(), injectedOffset[0]);
-          if (rangeForNamedElement != null) return rangeForNamedElement;
-        } else {
-          injectionOffsetCorrection = injectedOffset[0];
-        }
-      }
+			if(psiLanguageInjectionHost != null)
+			{
+				final Ref<PsiReference> result = new Ref<PsiReference>();
+				final Ref<PsiElement> eltInInjected = new Ref<PsiElement>();
+				final int[] injectedOffset = new int[1];
 
-      if (ref == null) {
-        return null;
-      }
-    }
+				InjectedLanguageUtil.enumerate(psiLanguageInjectionHost, new PsiLanguageInjectionHost.InjectedPsiVisitor()
+				{
+					public void visit(@NotNull final PsiFile injectedPsi, @NotNull final List<PsiLanguageInjectionHost.Shred> places)
+					{
+						final PsiLanguageInjectionHost.Shred shred = places.get(0);
+						final int injectedStart = shred.getRangeInsideHost().getStartOffset() + shred.getHost().getTextOffset();
+						final int offsetInInjected = offset - injectedStart;
 
-    final PsiElement element = ref.getElement();
-    if (!element.getLanguage().isKindOf(JavaScriptSupportLoader.JAVASCRIPT.getLanguage())) return null;
-    
-    return element.getTextRange().shiftRight(injectionOffsetCorrection);
-  }
+						result.set(injectedPsi.findReferenceAt(offsetInInjected));
+						eltInInjected.set(injectedPsi.findElementAt(offsetInInjected));
+						injectedOffset[0] = injectedStart;
+					}
+				});
 
-  private static TextRange getRangeForNamedElement(final PsiElement at, int offset) {
-    final PsiElement parent = at != null ? at.getParent():null;
+				ref = result.get();
 
-    if (parent instanceof JSNamedElement) {
-      final ASTNode node = ((JSNamedElement)parent).findNameIdentifier();
+				if(ref == null)
+				{
+					rangeForNamedElement = getRangeForNamedElement(eltInInjected.get(), injectedOffset[0]);
+					if(rangeForNamedElement != null)
+					{
+						return rangeForNamedElement;
+					}
+				}
+				else
+				{
+					injectionOffsetCorrection = injectedOffset[0];
+				}
+			}
 
-      if (node != null) {
-        return node.getPsi().getTextRange().shiftRight(offset);
-      }
-    }
-    return null;
-  }
+			if(ref == null)
+			{
+				return null;
+			}
+		}
 
-  public static Document createDocument(final String text,final Project project, @Nullable VirtualFile contextVirtualFile, int contextOffset) {
-    PsiElement context = null;
-    if (contextVirtualFile != null) {
-      context = getContextElement(contextVirtualFile, contextOffset, project);
-    }
-    JSFile file = JSElementFactory.createExpressionCodeFragment(project, text, context, true);
-    return PsiDocumentManager.getInstance(project).getDocument(file);
-  }
+		final PsiElement element = ref.getElement();
+		if(!element.getLanguage().isKindOf(JavaScriptSupportLoader.JAVASCRIPT.getLanguage()))
+		{
+			return null;
+		}
 
-  @Nullable
-  public static PsiElement getContextElement(VirtualFile virtualFile, int offset,final @NotNull Project project) {
-    Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
-    PsiFile file = PsiManager.getInstance(project).findFile(virtualFile);
-    if (file == null || document == null) {
-      return null;
-    }
+		return element.getTextRange().shiftRight(injectionOffsetCorrection);
+	}
 
-    if (offset < 0) offset = 0;
-    if (offset > document.getTextLength()) offset = document.getTextLength();
-    int startOffset = offset;
+	private static TextRange getRangeForNamedElement(final PsiElement at, int offset)
+	{
+		final PsiElement parent = at != null ? at.getParent() : null;
 
-    int lineEndOffset = document.getLineEndOffset(document.getLineNumber(offset));
-    PsiElement result = null;
-    do {
-      PsiElement element = file.findElementAt(offset);
-      if (!(element instanceof PsiWhiteSpace) && !(element instanceof PsiComment)) {
-        result = element;
-        break;
-      }
+		if(parent instanceof JSNamedElement)
+		{
+			final ASTNode node = ((JSNamedElement) parent).findNameIdentifier();
 
-      offset = element.getTextRange().getEndOffset() + 1;
-    }
-    while (offset < lineEndOffset);
+			if(node != null)
+			{
+				return node.getPsi().getTextRange().shiftRight(offset);
+			}
+		}
+		return null;
+	}
 
-    if (result == null) {
-      result = file.findElementAt(startOffset);
-    }
+	public static Document createDocument(final String text, final Project project, @Nullable VirtualFile contextVirtualFile, int contextOffset)
+	{
+		PsiElement context = null;
+		if(contextVirtualFile != null)
+		{
+			context = getContextElement(contextVirtualFile, contextOffset, project);
+		}
+		JSFile file = JSElementFactory.createExpressionCodeFragment(project, text, context, true);
+		return PsiDocumentManager.getInstance(project).getDocument(file);
+	}
 
-    if (result != null && StdFileTypes.XML.getLanguage().equals(result.getLanguage())) {
-      PsiLanguageInjectionHost parent = PsiTreeUtil.getParentOfType(result, PsiLanguageInjectionHost.class);
+	@Nullable
+	public static PsiElement getContextElement(VirtualFile virtualFile, int offset, final @NotNull Project project)
+	{
+		Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
+		PsiFile file = PsiManager.getInstance(project).findFile(virtualFile);
+		if(file == null || document == null)
+		{
+			return null;
+		}
 
-      if (parent != null) {
-        final int finalOffset = offset;
-        final Ref<PsiElement> resultInInjected = new Ref<PsiElement>();
+		if(offset < 0)
+		{
+			offset = 0;
+		}
+		if(offset > document.getTextLength())
+		{
+			offset = document.getTextLength();
+		}
+		int startOffset = offset;
 
-        InjectedLanguageUtil.enumerate(parent, new PsiLanguageInjectionHost.InjectedPsiVisitor() {
-          public void visit(@NotNull final PsiFile injectedPsi, @NotNull final List<PsiLanguageInjectionHost.Shred> places) {
-            final PsiLanguageInjectionHost.Shred shred = places.get(0);
-            final int injectedStart = shred.getRangeInsideHost().getStartOffset() + shred.getHost().getTextOffset();
-            final int offsetInInjected = finalOffset - injectedStart;
+		int lineEndOffset = document.getLineEndOffset(document.getLineNumber(offset));
+		PsiElement result = null;
+		do
+		{
+			PsiElement element = file.findElementAt(offset);
+			if(!(element instanceof PsiWhiteSpace) && !(element instanceof PsiComment))
+			{
+				result = element;
+				break;
+			}
 
-            resultInInjected.set(injectedPsi.findElementAt(offsetInInjected));
-          }
-        });
+			offset = element.getTextRange().getEndOffset() + 1;
+		}
+		while(offset < lineEndOffset);
 
-        result = resultInInjected.get();
-      }
-    }
-    return result;
-  }
+		if(result == null)
+		{
+			result = file.findElementAt(startOffset);
+		}
+
+		if(result != null && StdFileTypes.XML.getLanguage().equals(result.getLanguage()))
+		{
+			PsiLanguageInjectionHost parent = PsiTreeUtil.getParentOfType(result, PsiLanguageInjectionHost.class);
+
+			if(parent != null)
+			{
+				final int finalOffset = offset;
+				final Ref<PsiElement> resultInInjected = new Ref<PsiElement>();
+
+				InjectedLanguageUtil.enumerate(parent, new PsiLanguageInjectionHost.InjectedPsiVisitor()
+				{
+					public void visit(@NotNull final PsiFile injectedPsi, @NotNull final List<PsiLanguageInjectionHost.Shred> places)
+					{
+						final PsiLanguageInjectionHost.Shred shred = places.get(0);
+						final int injectedStart = shred.getRangeInsideHost().getStartOffset() + shred.getHost().getTextOffset();
+						final int offsetInInjected = finalOffset - injectedStart;
+
+						resultInInjected.set(injectedPsi.findElementAt(offsetInInjected));
+					}
+				});
+
+				result = resultInInjected.get();
+			}
+		}
+		return result;
+	}
 }
