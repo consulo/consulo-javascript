@@ -19,17 +19,20 @@ public class NestedFunctionJSInspection extends JavaScriptInspection {
     @SuppressWarnings({"PublicField"})
     public boolean m_includeAnonymousFunctions = false;
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("nested.function.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
-    @Nullable
+    @Override
+	@Nullable
     protected String buildErrorString(Object... args) {
         final JSFunction function = (JSFunction) ((PsiElement) args[0]).getParent();
         if(functionHasIdentifier(function))
@@ -40,12 +43,14 @@ public class NestedFunctionJSInspection extends JavaScriptInspection {
     }
 
 
-    public JComponent createOptionsPanel() {
+    @Override
+	public JComponent createOptionsPanel() {
         return new SingleCheckboxOptionsPanel(InspectionJSBundle.message("include.anonymous.functions.parameter"),
                 this, "m_includeAnonymousFunctions");
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
@@ -64,7 +69,8 @@ public class NestedFunctionJSInspection extends JavaScriptInspection {
             registerFunctionError(function);
         }
 
-        public void visitJSFunctionExpression(final JSFunctionExpression node) {
+        @Override
+		public void visitJSFunctionExpression(final JSFunctionExpression node) {
             visitJSFunctionDeclaration(node.getFunction()); 
         }
     }

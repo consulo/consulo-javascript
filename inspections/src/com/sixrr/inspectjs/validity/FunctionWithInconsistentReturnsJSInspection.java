@@ -12,21 +12,25 @@ import org.jetbrains.annotations.Nullable;
 
 public class FunctionWithInconsistentReturnsJSInspection extends JavaScriptInspection {
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("function.with.inconsistent.returns.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.VALIDITY_GROUP_NAME;
     }
 
-    public boolean isEnabledByDefault() {
+    @Override
+	public boolean isEnabledByDefault() {
         return true;
     }
 
-    @Nullable
+    @Override
+	@Nullable
     protected String buildErrorString(Object... args) {
         final JSFunction function = (JSFunction) ((PsiElement) args[0]).getParent();
         assert function != null;
@@ -37,12 +41,14 @@ public class FunctionWithInconsistentReturnsJSInspection extends JavaScriptInspe
         }
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
     private static class Visitor extends BaseInspectionVisitor {
-        protected ProblemHighlightType getProblemHighlightType(PsiElement location) {
+        @Override
+		protected ProblemHighlightType getProblemHighlightType(PsiElement location) {
             return location.getContainingFile().getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4 ?
                    ProblemHighlightType.GENERIC_ERROR:super.getProblemHighlightType(location);
         }

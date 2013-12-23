@@ -39,11 +39,13 @@ public class JSCaseClauseImpl extends JSElementImpl implements JSCaseClause
 		super(node);
 	}
 
+	@Override
 	public boolean isDefault()
 	{
 		return getNode().findChildByType(JSTokenTypes.DEFAULT_KEYWORD) != null;
 	}
 
+	@Override
 	public JSExpression getCaseExpression()
 	{
 		if(isDefault())
@@ -54,6 +56,7 @@ public class JSCaseClauseImpl extends JSElementImpl implements JSCaseClause
 		return node != null ? (JSExpression) node.getPsi() : null;
 	}
 
+	@Override
 	public JSStatement[] getStatements()
 	{
 		final ASTNode[] nodes = getNode().getChildren(JSElementTypes.STATEMENTS);
@@ -65,6 +68,7 @@ public class JSCaseClauseImpl extends JSElementImpl implements JSCaseClause
 		return statements;
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)

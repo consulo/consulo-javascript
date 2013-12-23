@@ -39,7 +39,8 @@ public class JSIntentionTestManager extends TestManager {
         this.intentionActions = IntentionManager.getInstance().getIntentionActions();
     }
 
-    protected TestCase createTestCase(TestManager manager, String familyName, String caseName,
+    @Override
+	protected TestCase createTestCase(TestManager manager, String familyName, String caseName,
                                       String beforeStatement, String afterStatement, boolean noDetectionExpected) {
         return new IntentionTestCase(manager, familyName, caseName, beforeStatement, afterStatement, noDetectionExpected);
     }
@@ -80,7 +81,8 @@ public class JSIntentionTestManager extends TestManager {
             super(numIntentions, JSIntentionBundle.message("plugin.test.title"));
         }
 
-        protected String getMessage(String key, Object... params) {
+        @Override
+		protected String getMessage(String key, Object... params) {
             return JSIntentionBundle.message(key, params);
         }
     }

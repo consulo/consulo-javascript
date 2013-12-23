@@ -39,6 +39,7 @@ public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSLiter
 		super(node);
 	}
 
+	@Override
 	@NotNull
 	public PsiReference[] getReferences()
 	{
@@ -77,6 +78,7 @@ public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSLiter
 		return myReferenceSet.getReferences();
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)

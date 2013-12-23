@@ -29,12 +29,14 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 
 public class JSRemoveConditionalIntention extends JSIntention {
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new RemoveConditionalPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final JSConditionalExpression exp            = (JSConditionalExpression) element;
         final JSExpression            condition      = exp.getCondition();
         final JSExpression            thenExpression = exp.getThen();
@@ -51,7 +53,8 @@ public class JSRemoveConditionalIntention extends JSIntention {
     }
 
     private static class RemoveConditionalPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof JSConditionalExpression)) {
                 return false;
             }

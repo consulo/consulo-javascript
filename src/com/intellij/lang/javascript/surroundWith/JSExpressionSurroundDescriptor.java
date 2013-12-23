@@ -39,6 +39,7 @@ public class JSExpressionSurroundDescriptor implements SurroundDescriptor
 			new JSWithParenthesesSurrounder()
 	};
 
+	@Override
 	@NotNull
 	public PsiElement[] getElementsToSurround(PsiFile file, int startOffset, int endOffset)
 	{
@@ -50,6 +51,7 @@ public class JSExpressionSurroundDescriptor implements SurroundDescriptor
 		return new PsiElement[]{expr};
 	}
 
+	@Override
 	@NotNull
 	public Surrounder[] getSurrounders()
 	{

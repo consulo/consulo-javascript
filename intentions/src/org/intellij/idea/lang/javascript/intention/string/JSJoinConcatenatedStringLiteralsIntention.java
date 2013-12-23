@@ -29,12 +29,14 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 
 public class JSJoinConcatenatedStringLiteralsIntention extends JSIntention {
-    @NotNull
+    @Override
+	@NotNull
     protected JSElementPredicate getElementPredicate() {
         return new StringConcatPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element)
+    @Override
+	public void processIntention(@NotNull PsiElement element)
             throws IncorrectOperationException {
         final JSBinaryExpression expression = (JSBinaryExpression) element;
         final JSExpression       lhs        = expression.getLOperand();
@@ -61,7 +63,8 @@ public class JSJoinConcatenatedStringLiteralsIntention extends JSIntention {
     }
 
     private static class StringConcatPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof JSBinaryExpression)) {
                 return false;
             }

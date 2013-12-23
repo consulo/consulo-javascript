@@ -22,21 +22,25 @@ public class PointlessArithmeticExpressionJSInspection
 
     private final PointlessArithmeticFix fix = new PointlessArithmeticFix();
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("pointless.arithmetic.expression.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
-    public boolean isEnabledByDefault() {
+    @Override
+	public boolean isEnabledByDefault() {
         return true;
     }
 
-    public String buildErrorString(Object... args) {
+    @Override
+	public String buildErrorString(Object... args) {
         return InspectionJSBundle.message("pointless.arithmetic.error.message", calculateReplacementExpression((JSExpression)args[0]));
     }
 
@@ -70,21 +74,25 @@ public class PointlessArithmeticExpressionJSInspection
         }
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new PointlessArithmeticVisitor();
     }
 
-    public InspectionJSFix buildFix(PsiElement location) {
+    @Override
+	public InspectionJSFix buildFix(PsiElement location) {
         return fix;
     }
 
     private class PointlessArithmeticFix extends InspectionJSFix {
-        @NotNull
+        @Override
+		@NotNull
         public String getName() {
             return InspectionJSBundle.message("simplify.fix");
         }
 
-        public void doFix(Project project, ProblemDescriptor descriptor)
+        @Override
+		public void doFix(Project project, ProblemDescriptor descriptor)
                 throws IncorrectOperationException {
             final JSExpression expression = (JSExpression) descriptor
                     .getPsiElement();

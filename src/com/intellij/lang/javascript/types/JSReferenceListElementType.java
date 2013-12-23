@@ -20,12 +20,14 @@ public class JSReferenceListElementType extends JSStubElementType<JSReferenceLis
 	private static final JSStubGenerator<JSReferenceListStub, JSReferenceList> ourStubGenerator = new JSStubGenerator<JSReferenceListStub,
 			JSReferenceList>()
 	{
+		@Override
 		public JSReferenceListStub newInstance(final StubInputStream dataStream, final StubElement parentStub,
 				final JSStubElementType<JSReferenceListStub, JSReferenceList> type) throws IOException
 		{
 			return new JSReferenceListStubImpl(dataStream, parentStub, type);
 		}
 
+		@Override
 		public JSReferenceListStub newInstance(final JSReferenceList psi, final StubElement parentStub, final JSStubElementType<JSReferenceListStub,
 				JSReferenceList> type)
 		{

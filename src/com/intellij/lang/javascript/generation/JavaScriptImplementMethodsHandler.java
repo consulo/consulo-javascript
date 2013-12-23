@@ -14,10 +14,12 @@ import com.intellij.lang.javascript.validation.ImplementedMethodProcessor;
 
 public class JavaScriptImplementMethodsHandler extends BaseJSGenerateHandler
 {
+	@Override
 	protected void collectCandidates(final JSClass clazz, final Collection<JSNamedElementNode> candidates)
 	{
 		ImplementedMethodProcessor processor = new ImplementedMethodProcessor(clazz)
 		{
+			@Override
 			protected void addNonimplementedFunction(final JSFunction function)
 			{
 				candidates.add(new JSNamedElementNode(function));
@@ -27,11 +29,13 @@ public class JavaScriptImplementMethodsHandler extends BaseJSGenerateHandler
 		JSResolveUtil.processInterfaceMethods(clazz, processor);
 	}
 
+	@Override
 	protected String getTitleKey()
 	{
 		return "methods.to.implement.chooser.title";
 	}
 
+	@Override
 	protected BaseCreateMethodsFix createFix(final JSClass clazz)
 	{
 		return new ImplementMethodsFix(clazz);

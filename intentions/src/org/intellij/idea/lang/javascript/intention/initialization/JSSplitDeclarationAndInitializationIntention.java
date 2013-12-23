@@ -35,12 +35,14 @@ import java.util.List;
 public class JSSplitDeclarationAndInitializationIntention extends JSIntention {
     @NonNls private static final String VAR_KEYWORD = "var ";
 
-    @NotNull
+    @Override
+	@NotNull
     protected JSElementPredicate getElementPredicate() {
         return new Predicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         assert (element instanceof JSVarStatement);
 
         final JSVarStatement varStatement      = (JSVarStatement) element;
@@ -76,7 +78,8 @@ public class JSSplitDeclarationAndInitializationIntention extends JSIntention {
     }
 
     private static class Predicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             PsiElement elementParent;
 
             if (!(element instanceof JSVarStatement) ||

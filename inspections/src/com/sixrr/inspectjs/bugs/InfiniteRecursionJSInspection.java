@@ -11,28 +11,33 @@ import org.jetbrains.annotations.NotNull;
 public class InfiniteRecursionJSInspection extends JavaScriptInspection {
     private static Logger logger = Logger.getInstance("ULVJS");
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message(
                 "infinite.recursion.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.BUGS_GROUP_NAME;
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String buildErrorString(Object... args) {
         return InspectionJSBundle.message(
                 "infinite.recursion.problem.descriptor");
     }
 
-    public boolean isEnabledByDefault() {
+    @Override
+	public boolean isEnabledByDefault() {
         return true;
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new InfiniteRecursionVisitor();
     }
 

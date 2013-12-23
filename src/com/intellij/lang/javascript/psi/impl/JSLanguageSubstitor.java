@@ -16,6 +16,7 @@ import com.intellij.psi.LanguageSubstitutor;
  */
 public class JSLanguageSubstitor extends LanguageSubstitutor
 {
+	@Override
 	public Language getLanguage(@NotNull final VirtualFile file, @NotNull final Project project)
 	{
 		return JavaScriptSupportLoader.getLanguageDialect(file);

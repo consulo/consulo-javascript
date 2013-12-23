@@ -23,31 +23,36 @@ public class UnusedCatchParameterJSInspection extends JavaScriptInspection {
      */
     public boolean m_ignoreCatchBlocksWithComments = false;
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message(
                 "unused.catch.parameter.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.ERRORHANDLING_GROUP_NAME;
     }
 
-    public JComponent createOptionsPanel() {
+    @Override
+	public JComponent createOptionsPanel() {
 
         return new SingleCheckboxOptionsPanel(InspectionJSBundle.message(
                 "unused.catch.parameter.ignore.catch.option"), this,
                 "m_ignoreCatchBlocksWithComments");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     protected String buildErrorString(Object... args) {
         return InspectionJSBundle.message(
                 "unused.catch.parameter.problem.descriptor");
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new EmptyCatchBlockVisitor();
     }
 

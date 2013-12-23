@@ -437,6 +437,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 		return null;
 	}
 
+	@Override
 	public List<String> getUrlFor(PsiElement element, PsiElement originalElement)
 	{
 		String possibleCssName = findPossibleCssName(element);
@@ -461,6 +462,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 		return null;
 	}
 
+	@Override
 	public String generateDoc(PsiElement _element, PsiElement originalElement)
 	{
 		if(_element instanceof JSReferenceExpression)
@@ -660,6 +662,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 		return null;
 	}
 
+	@Override
 	public PsiElement getDocumentationElementForLookupItem(PsiManager psiManager, Object object, PsiElement element)
 	{
 		if(object instanceof LookupValueWithPsiElement)
@@ -780,6 +783,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 		return null;
 	}
 
+	@Override
 	@Nullable
 	public PsiElement getDocumentationElementForLink(final PsiManager psiManager, String link, final PsiElement context)
 	{
@@ -885,6 +889,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 		final Ref<JSAttributeNameValuePair> attribute = new Ref<JSAttributeNameValuePair>();
 		JSResolveUtil.processMetaAttributesForClass(clazz, new JSResolveUtil.MetaDataProcessor()
 		{
+			@Override
 			public boolean process(@NotNull JSAttribute jsAttribute)
 			{
 				if(type.equals(jsAttribute.getName()))
@@ -899,6 +904,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 				return true;
 			}
 
+			@Override
 			public boolean handleOtherElement(PsiElement el, PsiElement context, @Nullable Ref<PsiElement> continuePassElement)
 			{
 				return true;
@@ -927,6 +933,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 		return result;
 	}
 
+	@Override
 	@Nullable
 	public PsiComment findExistingDocComment(PsiComment contextElement)
 	{
@@ -940,6 +947,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 		return null;
 	}
 
+	@Override
 	@Nullable
 	public String generateDocumentationContentStub(PsiComment contextComment)
 	{

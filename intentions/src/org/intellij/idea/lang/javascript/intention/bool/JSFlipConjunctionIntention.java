@@ -29,18 +29,21 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 
 public class JSFlipConjunctionIntention extends JSMutablyNamedIntention {
-    protected String getTextForElement(PsiElement element) {
+    @Override
+	protected String getTextForElement(PsiElement element) {
         final JSBinaryExpression binaryExpression = (JSBinaryExpression) element;
         final IElementType       sign             = binaryExpression.getOperationSign();
 
         return this.getText(BinaryOperatorUtils.getOperatorText(sign));
     }
 
-    @NotNull public JSElementPredicate getElementPredicate() {
+    @Override
+	@NotNull public JSElementPredicate getElementPredicate() {
         return new ConjunctionPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final JSBinaryExpression binaryExpression = (JSBinaryExpression) element;
         JSExpression             exp              = binaryExpression;
 

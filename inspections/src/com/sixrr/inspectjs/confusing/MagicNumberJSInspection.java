@@ -36,17 +36,20 @@ public class MagicNumberJSInspection extends JavaScriptInspection {
         }
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("magic.number.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String buildErrorString(Object... args) {
         return InspectionJSBundle.message(
                 "magic.number.problem.descriptor");
@@ -56,7 +59,8 @@ public class MagicNumberJSInspection extends JavaScriptInspection {
         return s_specialCaseLiterals.contains(text);
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new MagicNumberVisitor();
     }
 

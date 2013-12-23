@@ -46,6 +46,7 @@ public class JSObjectLiteralExpressionImpl extends JSExpressionImpl implements J
 		super(node);
 	}
 
+	@Override
 	public JSProperty[] getProperties()
 	{
 		final ASTNode[] nodes = getNode().getChildren(PROPERTIES_FILTER);
@@ -57,6 +58,7 @@ public class JSObjectLiteralExpressionImpl extends JSExpressionImpl implements J
 		return properties;
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -74,6 +76,7 @@ public class JSObjectLiteralExpressionImpl extends JSExpressionImpl implements J
 		return AllIcons.Nodes.Class;
 	}
 
+	@Override
 	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState state, final PsiElement lastParent,
 			@NotNull final PsiElement place)
 	{

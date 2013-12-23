@@ -10,6 +10,7 @@ public class JSSuperClassIndex extends StringStubIndexExtension<JSClass>
 	public static final StubIndexKey<String, JSClass> KEY = StubIndexKey.createIndexKey("JS.class.super");
 	private static final int VERSION = 1;
 
+	@Override
 	public StubIndexKey<String, JSClass> getKey()
 	{
 		return KEY;

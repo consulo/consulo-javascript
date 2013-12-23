@@ -31,18 +31,21 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 
 public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention {
-    protected String getTextForElement(PsiElement element) {
+    @Override
+	protected String getTextForElement(PsiElement element) {
         final JSBinaryExpression binaryExpression = (JSBinaryExpression) element;
 
         return this.getText(BinaryOperatorUtils.getOperatorText(binaryExpression.getOperationSign()));
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new BooleanLiteralEqualityPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element)
+    @Override
+	public void processIntention(@NotNull PsiElement element)
             throws IncorrectOperationException {
         final JSBinaryExpression exp      = (JSBinaryExpression) element;
         final boolean            isEquals = exp.getOperationSign().equals(JSTokenTypes.EQEQ);
@@ -83,7 +86,8 @@ public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention {
     }
 
     private static class BooleanLiteralEqualityPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof JSBinaryExpression)) {
                 return false;
             }

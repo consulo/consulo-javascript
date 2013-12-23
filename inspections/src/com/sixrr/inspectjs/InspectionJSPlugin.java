@@ -335,12 +335,14 @@ public class InspectionJSPlugin implements ApplicationComponent,
         return numQuickFixes;
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getComponentName() {
         return "InspectionJS";
     }
 
-    public Class<? extends LocalInspectionTool>[] getInspectionClasses() {
+    @Override
+	public Class<? extends LocalInspectionTool>[] getInspectionClasses() {
         if (m_inspectionClasses.isEmpty()) {
             registerDOMInspections();
             registerControlFlowInspections();
@@ -359,7 +361,8 @@ public class InspectionJSPlugin implements ApplicationComponent,
         return m_inspectionClasses.toArray(new Class[numInspections]);
     }
 
-    public void initComponent() {
+    @Override
+	public void initComponent() {
     }
 
     private void registerAssignmentInspections() {
@@ -502,6 +505,7 @@ public class InspectionJSPlugin implements ApplicationComponent,
         m_inspectionClasses.add(ReuseOfLocalVariableJSInspection.class);
     }
 
-    public void disposeComponent() {
+    @Override
+	public void disposeComponent() {
     }
 }

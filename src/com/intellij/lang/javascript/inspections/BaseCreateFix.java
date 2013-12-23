@@ -49,6 +49,7 @@ abstract class BaseCreateFix implements LocalQuickFix
 	private static final String ANY_TYPE = "*";
 	private static final String SCRIPT_TAG_NAME = "Script";
 
+	@Override
 	public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor)
 	{
 		final PsiElement psiElement = descriptor.getPsiElement();
@@ -460,16 +461,19 @@ abstract class BaseCreateFix implements LocalQuickFix
 			result = new TextResult(myVar1);
 		}
 
+		@Override
 		public Result calculateResult(ExpressionContext context)
 		{
 			return result;
 		}
 
+		@Override
 		public Result calculateQuickResult(ExpressionContext context)
 		{
 			return result;
 		}
 
+		@Override
 		public LookupElement[] calculateLookupItems(ExpressionContext context)
 		{
 			return LookupItem.EMPTY_ARRAY;

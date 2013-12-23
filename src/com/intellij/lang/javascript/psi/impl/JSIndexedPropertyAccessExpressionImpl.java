@@ -39,6 +39,7 @@ public class JSIndexedPropertyAccessExpressionImpl extends JSExpressionImpl impl
 		super(node);
 	}
 
+	@Override
 	public JSExpression getQualifier()
 	{
 		ASTNode child = getNode().getFirstChildNode();
@@ -58,6 +59,7 @@ public class JSIndexedPropertyAccessExpressionImpl extends JSExpressionImpl impl
 		return null;
 	}
 
+	@Override
 	public JSExpression getIndexExpression()
 	{
 		ASTNode child = getNode().getFirstChildNode();
@@ -78,6 +80,7 @@ public class JSIndexedPropertyAccessExpressionImpl extends JSExpressionImpl impl
 		return null;
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)

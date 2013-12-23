@@ -130,7 +130,8 @@ public class ArrayStack<E> extends ArrayList<E> implements Cloneable {
      *
      * @return  a clone of this <tt>ArrayList</tt> instance.
      */
-    public Object clone() {
+    @Override
+	public Object clone() {
         return (ArrayStack<E>) super.clone();
     }
 

@@ -50,11 +50,13 @@ public class JSParameterImpl extends JSVariableBaseImpl<JSParameterStub, JSParam
 		super(stub, JSElementTypes.FORMAL_PARAMETER);
 	}
 
+	@Override
 	public JSFunction getDeclaringFunction()
 	{
 		return (JSFunction) getNode().getTreeParent().getTreeParent().getPsi();
 	}
 
+	@Override
 	public boolean isRest()
 	{
 		final JSParameterStub parameterStub = getStub();
@@ -65,6 +67,7 @@ public class JSParameterImpl extends JSVariableBaseImpl<JSParameterStub, JSParam
 		return getNode().findChildByType(JSTokenTypes.DOT_DOT_DOT) != null;
 	}
 
+	@Override
 	public boolean isOptional()
 	{
 		final JSParameterStub parameterStub = getStub();
@@ -80,6 +83,7 @@ public class JSParameterImpl extends JSVariableBaseImpl<JSParameterStub, JSParam
 		return JSDocumentationUtils.findOptionalStatusFromComments(this);
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -92,16 +96,19 @@ public class JSParameterImpl extends JSVariableBaseImpl<JSParameterStub, JSParam
 		}
 	}
 
+	@Override
 	public Icon getIcon(int flags)
 	{
 		return AllIcons.Nodes.Parameter;
 	}
 
+	@Override
 	public JSAttributeList getAttributeList()
 	{
 		return null;
 	}
 
+	@Override
 	public void delete() throws IncorrectOperationException
 	{
 		final ASTNode myNode = getNode();
@@ -116,6 +123,7 @@ public class JSParameterImpl extends JSVariableBaseImpl<JSParameterStub, JSParam
 		throw new IncorrectOperationException("Cannot delete variable from parent : " + parent.getElementType());
 	}
 
+	@Override
 	protected String doGetType()
 	{
 		String s = super.doGetType();

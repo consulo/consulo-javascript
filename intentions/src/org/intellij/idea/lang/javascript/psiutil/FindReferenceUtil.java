@@ -145,7 +145,8 @@ public class FindReferenceUtil {
         }
 
         return new Iterable<PsiElement>() {
-                public Iterator<PsiElement> iterator() {
+                @Override
+				public Iterator<PsiElement> iterator() {
                     return new JSReferenceIterator(variable, minTextOffset, maxTextOffset, iteratedScope);
                 }
             };
@@ -163,7 +164,8 @@ public class FindReferenceUtil {
             this.variableName = variable.getName();
         }
 
-        public boolean visitElement(PsiElement element) {
+        @Override
+		public boolean visitElement(PsiElement element) {
             if (!(element.getText().equals(this.variableName) &&
                   element instanceof JSReferenceExpression)) {
                 return false;

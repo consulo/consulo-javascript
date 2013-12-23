@@ -68,11 +68,13 @@ public class JavaScriptHighlightingLexer extends LayeredLexer
 					lexer.start(buffer, startOffset, endOffset, initialState);
 				}
 
+				@Override
 				public int getState()
 				{
 					return lexer.getState();
 				}
 
+				@Override
 				public IElementType getTokenType()
 				{
 					final IElementType tokenType = lexer.getTokenType();
@@ -83,16 +85,19 @@ public class JavaScriptHighlightingLexer extends LayeredLexer
 					return tokenType;
 				}
 
+				@Override
 				public int getTokenStart()
 				{
 					return lexer.getTokenStart();
 				}
 
+				@Override
 				public int getTokenEnd()
 				{
 					return lexer.getTokenEnd();
 				}
 
+				@Override
 				public void advance()
 				{
 					lexer.advance();
@@ -105,6 +110,7 @@ public class JavaScriptHighlightingLexer extends LayeredLexer
 				}
 
 
+				@Override
 				public int getBufferEnd()
 				{
 					return lexer.getBufferEnd();

@@ -57,6 +57,7 @@ public class JSFunctionImpl extends JSFunctionBaseImpl<JSFunctionStub, JSFunctio
 		super(stub, type);
 	}
 
+	@Override
 	public boolean isGetProperty()
 	{
 		final JSFunctionStub stub = getStub();
@@ -68,6 +69,7 @@ public class JSFunctionImpl extends JSFunctionBaseImpl<JSFunctionStub, JSFunctio
 		return node != null && node != findNameIdentifier();
 	}
 
+	@Override
 	public boolean isSetProperty()
 	{
 		final JSFunctionStub stub = getStub();
@@ -79,6 +81,7 @@ public class JSFunctionImpl extends JSFunctionBaseImpl<JSFunctionStub, JSFunctio
 		return node != null && node != findNameIdentifier();
 	}
 
+	@Override
 	public boolean isConstructor()
 	{
 		final JSFunctionStub stub = getStub();
@@ -94,11 +97,13 @@ public class JSFunctionImpl extends JSFunctionBaseImpl<JSFunctionStub, JSFunctio
 		return false;
 	}
 
+	@Override
 	public JSAttributeList getAttributeList()
 	{
 		return getStubOrPsiChild(JSElementTypes.ATTRIBUTE_LIST);
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -130,11 +135,13 @@ public class JSFunctionImpl extends JSFunctionBaseImpl<JSFunctionStub, JSFunctio
 		return AllIcons.Nodes.Function;
 	}
 
+	@Override
 	public void delete() throws IncorrectOperationException
 	{
 		getNode().getTreeParent().removeChild(getNode());
 	}
 
+	@Override
 	public String getQualifiedName()
 	{
 		final JSFunctionStub jsFunctionStub = getStub();
@@ -154,6 +161,7 @@ public class JSFunctionImpl extends JSFunctionBaseImpl<JSFunctionStub, JSFunctio
 		}
 	}
 
+	@Override
 	@NotNull
 	public SearchScope getUseScope()
 	{

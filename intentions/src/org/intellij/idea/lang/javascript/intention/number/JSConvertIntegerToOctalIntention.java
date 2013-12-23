@@ -26,19 +26,22 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 
 public class JSConvertIntegerToOctalIntention extends JSIntention {
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new ConvertIntegerToOctalPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final JSLiteralExpression exp = (JSLiteralExpression) element;
 
         JSElementFactory.replaceExpression(exp, '0' + NumberUtil.getLiteralNumber(exp).toString(8));
     }
 
     private static class ConvertIntegerToOctalPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof JSLiteralExpression)) {
                 return false;
             }

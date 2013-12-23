@@ -19,6 +19,7 @@ import com.intellij.psi.PsiManager;
 
 public class JSSyntaxHighlighterProvider implements SyntaxHighlighterProvider
 {
+	@Override
 	public SyntaxHighlighter create(FileType fileType, @Nullable final Project project, @Nullable final VirtualFile virtualFile)
 	{
 		Language lang = null;
@@ -36,6 +37,7 @@ public class JSSyntaxHighlighterProvider implements SyntaxHighlighterProvider
 		{
 			PsiFile psiFile = ApplicationManager.getApplication().runReadAction(new Computable<PsiFile>()
 			{
+				@Override
 				public PsiFile compute()
 				{
 					return PsiManager.getInstance(project).findFile(virtualFile);

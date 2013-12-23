@@ -31,16 +31,19 @@ import com.intellij.util.IncorrectOperationException;
  */
 public class JSIntroduceFieldHandler extends JSBaseIntroduceHandler<JSElement, JSIntroduceFieldSettings, JSIntroduceFieldDialog>
 {
+	@Override
 	protected String getRefactoringName()
 	{
 		return JSBundle.message("javascript.introduce.field.title");
 	}
 
+	@Override
 	protected String getCannotIntroduceMessagePropertyKey()
 	{
 		return "javascript.introduce.field.error.no.expression.selected";
 	}
 
+	@Override
 	protected JSIntroduceFieldDialog createDialog(final Project project, final JSExpression expression, final JSExpression[] occurrences)
 	{
 		return new JSIntroduceFieldDialog(project, occurrences, expression);
@@ -52,6 +55,7 @@ public class JSIntroduceFieldHandler extends JSBaseIntroduceHandler<JSElement, J
 		return findClassAnchor(context.expression);
 	}
 
+	@Override
 	protected JSElement addStatementBefore(final JSElement anchorStatement, final JSVarStatement declaration) throws IncorrectOperationException
 	{
 		return addToClassAnchor(anchorStatement, declaration);
@@ -83,6 +87,7 @@ public class JSIntroduceFieldHandler extends JSBaseIntroduceHandler<JSElement, J
 		return super.findIntroducedExpression(file, start, end, editor);
 	}
 
+	@Override
 	protected JSVarStatement prepareDeclaration(final String varDeclText, BaseIntroduceContext<JSIntroduceFieldSettings> context,
 			final Project project, final JSLanguageDialect languageDialect) throws IncorrectOperationException
 	{

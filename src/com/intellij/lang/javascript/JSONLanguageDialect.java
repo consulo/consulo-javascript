@@ -12,6 +12,7 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
 
 public class JSONLanguageDialect extends JSLanguageDialect
 {
+	@Override
 	public String getFileExtension()
 	{
 		return JsonFileType.INSTANCE.getDefaultExtension();
@@ -23,11 +24,13 @@ public class JSONLanguageDialect extends JSLanguageDialect
 
 		SyntaxHighlighterFactory.LANGUAGE_FACTORY.addExplicitExtension(this, new SingleLazyInstanceSyntaxHighlighterFactory()
 		{
+			@Override
 			@NotNull
 			protected SyntaxHighlighter createHighlighter()
 			{
 				return new JSHighlighter(JavascriptLanguage.DIALECT_OPTION_HOLDER)
 				{
+					@Override
 					@NotNull
 					public Lexer getHighlightingLexer()
 					{

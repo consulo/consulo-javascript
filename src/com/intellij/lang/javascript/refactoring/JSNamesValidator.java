@@ -44,12 +44,14 @@ class JSNamesValidator implements NamesValidator
 		return new JavaScriptLexer(optionHolder);
 	}
 
+	@Override
 	public synchronized boolean isKeyword(String name, Project project)
 	{
 		myLexer.start(name, 0, name.length(), 0);
 		return JSTokenTypes.KEYWORDS.contains(myLexer.getTokenType()) && myLexer.getTokenEnd() == name.length();
 	}
 
+	@Override
 	public synchronized boolean isIdentifier(String name, Project project)
 	{
 		myLexer.start(name, 0, name.length(), 0);

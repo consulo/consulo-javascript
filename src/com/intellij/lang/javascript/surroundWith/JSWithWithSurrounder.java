@@ -31,22 +31,26 @@ import com.intellij.psi.PsiElement;
  */
 public class JSWithWithSurrounder extends JSStatementSurrounder
 {
+	@Override
 	public String getTemplateDescription()
 	{
 		return JSBundle.message("javascript.surround.with.with");
 	}
 
+	@Override
 	protected String getStatementTemplate(final Project project, PsiElement context)
 	{
 		return "with(a) { }";
 	}
 
+	@Override
 	protected ASTNode getInsertBeforeNode(final ASTNode statementNode)
 	{
 		JSWithStatement stmt = (JSWithStatement) statementNode.getPsi();
 		return stmt.getStatement().getLastChild().getNode();
 	}
 
+	@Override
 	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
 	{
 		JSWithStatement stmt = (JSWithStatement) statementNode.getPsi();

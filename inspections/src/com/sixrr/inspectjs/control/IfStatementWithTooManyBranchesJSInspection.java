@@ -20,12 +20,14 @@ public class IfStatementWithTooManyBranchesJSInspection extends JavaScriptInspec
      */
     public int m_limit = DEFAULT_BRANCH_LIMIT;  //this is public for the DefaultJDOMExternalizer thingy
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("if.statement.with.too.many.branches.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
@@ -34,12 +36,14 @@ public class IfStatementWithTooManyBranchesJSInspection extends JavaScriptInspec
         return m_limit;
     }
 
-    public JComponent createOptionsPanel() {
+    @Override
+	public JComponent createOptionsPanel() {
         return new SingleIntegerFieldOptionsPanel(InspectionJSBundle.message("maximum.number.of.branches.parameter"),
                 this, "m_limit");
     }
 
-    protected String buildErrorString(Object... args) {
+    @Override
+	protected String buildErrorString(Object... args) {
         final JSIfStatement statement = (JSIfStatement) args[0];
         final int branches = calculateNumBranches(statement);
         return InspectionJSBundle.message("if.statement.with.too.many.branches.error.string", branches);
@@ -56,7 +60,8 @@ public class IfStatementWithTooManyBranchesJSInspection extends JavaScriptInspec
         return 1 + calculateNumBranches((JSIfStatement) branch);
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 

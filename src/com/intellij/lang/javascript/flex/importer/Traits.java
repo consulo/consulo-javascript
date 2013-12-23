@@ -22,6 +22,7 @@ class Traits
 	Map<Integer, MethodInfo> methods = new LinkedHashMap<Integer, MethodInfo>();
 	Map<Integer, MemberInfo> members = new LinkedHashMap<Integer, MemberInfo>();
 
+	@Override
 	public String toString()
 	{
 		return name.toString();

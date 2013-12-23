@@ -21,6 +21,7 @@ import com.intellij.psi.tree.IElementType;
  */
 public class JSReadWriteAccessDetector extends ReadWriteAccessDetector
 {
+	@Override
 	public boolean isReadWriteAccessible(PsiElement element)
 	{
 		return element instanceof JSVariable ||
@@ -28,16 +29,19 @@ public class JSReadWriteAccessDetector extends ReadWriteAccessDetector
 				element instanceof JSDefinitionExpression;
 	}
 
+	@Override
 	public boolean isDeclarationWriteAccess(PsiElement element)
 	{
 		return (element instanceof JSVariable && ((JSVariable) element).getInitializer() != null);
 	}
 
+	@Override
 	public Access getReferenceAccess(PsiElement referencedElement, PsiReference reference)
 	{
 		return getExpressionAccess(reference.getElement());
 	}
 
+	@Override
 	public Access getExpressionAccess(PsiElement expression)
 	{
 		expression = expression.getParent();

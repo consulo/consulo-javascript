@@ -19,6 +19,7 @@ public class JSCodeStyleSettingsProvider extends CodeStyleSettingsProvider
 		return new JSCodeStyleSettings(settings);
 	}
 
+	@Override
 	@NotNull
 	public Configurable createSettingsPage(final CodeStyleSettings settings, final CodeStyleSettings originalSettings)
 	{

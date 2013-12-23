@@ -37,12 +37,14 @@ public class JSThrowStatementImpl extends JSStatementImpl implements JSThrowStat
 		super(node);
 	}
 
+	@Override
 	public JSExpression getExpression()
 	{
 		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
 		return node != null ? (JSExpression) node.getPsi() : null;
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)

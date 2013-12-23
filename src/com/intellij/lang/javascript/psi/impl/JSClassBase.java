@@ -79,6 +79,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 		super(stub, aClass);
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -91,6 +92,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 		}
 	}
 
+	@Override
 	public void subtreeChanged()
 	{
 		dropCaches();
@@ -98,6 +100,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 		super.subtreeChanged();
 	}
 
+	@Override
 	protected Object clone()
 	{
 		final JSClassBase o = (JSClassBase) super.clone();
@@ -114,6 +117,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 		}
 	}
 
+	@Override
 	public JSFunction[] getFunctions()
 	{
 		final JSClassStub classStub = getStub();
@@ -126,6 +130,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 			final List<JSFunction> functions = new ArrayList<JSFunction>();
 			processDeclarations(new PsiScopeProcessor()
 			{
+				@Override
 				public boolean execute(final PsiElement element, final ResolveState state)
 				{
 					if(element instanceof JSFunction)
@@ -135,11 +140,13 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 					return true;
 				}
 
+				@Override
 				public <T> T getHint(final Key<T> hintClass)
 				{
 					return null;
 				}
 
+				@Override
 				public void handleEvent(final Event event, final Object associated)
 				{
 				}
@@ -148,6 +155,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 		}
 	}
 
+	@Override
 	public JSFunction findFunctionByName(String functionName)
 	{
 		if(functionName == null)
@@ -167,6 +175,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 		return null;
 	}
 
+	@Override
 	public JSVariable[] getFields()
 	{
 		final JSClassStub classStub = getStub();
@@ -176,6 +185,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 		{
 			for(JSVarStatement var : getStubChildrenByType(classStub, JSElementTypes.VAR_STATEMENT, new ArrayFactory<JSVarStatement>()
 			{
+				@Override
 				public JSVarStatement[] create(final int count)
 				{
 					return new JSVarStatement[count];
@@ -189,6 +199,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 		{
 			processDeclarations(new PsiScopeProcessor()
 			{
+				@Override
 				public boolean execute(final PsiElement element, final ResolveState state)
 				{
 					if(element instanceof JSVariable)
@@ -198,11 +209,13 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 					return true;
 				}
 
+				@Override
 				public <T> T getHint(final Key<T> hintClass)
 				{
 					return null;
 				}
 
+				@Override
 				public void handleEvent(final Event event, final Object associated)
 				{
 				}
@@ -211,6 +224,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 		return vars.toArray(JSVariable.EMPTY_ARRAY);
 	}
 
+	@Override
 	public JSVariable findFieldByName(String name)
 	{
 		return initFields().get(name);
@@ -295,6 +309,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 		return name2FunctionMap;
 	}
 
+	@Override
 	public JSFunction findFunctionByNameAndKind(final String name, JSFunction.FunctionKind kind)
 	{
 		if(name == null)
@@ -322,6 +337,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 		return null;
 	}
 
+	@Override
 	public JSClass[] getSupers()
 	{
 		List<JSClass> superClasses = new ArrayList<JSClass>(getClassesFromReferenceList(getExtendsList(), JSElementTypes.EXTENDS_LIST));
@@ -343,6 +359,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 		}
 	}
 
+	@Override
 	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState substitutor,
 			final PsiElement lastParent, @NotNull final PsiElement place)
 	{
@@ -398,6 +415,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 	protected abstract boolean processMembers(final PsiScopeProcessor processor, final ResolveState substitutor, final PsiElement lastParent,
 			final PsiElement place);
 
+	@Override
 	public JSClass[] getSuperClasses()
 	{
 		final JSReferenceList extendsList = getExtendsList();
@@ -435,6 +453,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 		return buildIcon(isInterface() ? AllIcons.Nodes.Interface : blendModifierFlags(AllIcons.Nodes.Class, attributeList), type.getIcon());
 	}
 
+	@Override
 	public JSClass[] getImplementedInterfaces()
 	{
 		final JSReferenceList implementsList = getImplementsList();
@@ -446,6 +465,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 		return classes.toArray(new JSClass[classes.size()]);
 	}
 
+	@Override
 	public PsiElement getNameIdentifier()
 	{
 		final ASTNode node = findNameIdentifier();
@@ -485,6 +505,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 			return CachedValuesManager.getManager(jsClassBase.getProject()).createParameterizedCachedValue(new
 																												   ParameterizedCachedValueProvider<List<JSClass>, Object>()
 			{
+				@Override
 				public CachedValueProvider.Result<List<JSClass>> compute(Object list)
 				{
 					return new CachedValueProvider.Result<List<JSClass>>(doCompute(list), PsiModificationTracker.MODIFICATION_COUNT);
@@ -522,6 +543,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 		ArrayList<E> result = new ArrayList<E>(Arrays.asList(stub.getChildrenByType(elementType, f)));
 		JSIncludeDirective[] includes = stub.getChildrenByType(JSElementTypes.INCLUDE_DIRECTIVE, new ArrayFactory<JSIncludeDirective>()
 		{
+			@Override
 			public JSIncludeDirective[] create(final int count)
 			{
 				return new JSIncludeDirective[count];

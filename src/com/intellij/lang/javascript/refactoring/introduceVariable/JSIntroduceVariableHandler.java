@@ -12,21 +12,25 @@ import com.intellij.openapi.project.Project;
 public class JSIntroduceVariableHandler extends JSBaseIntroduceHandler<JSStatement, Settings, JSIntroduceVariableDialog>
 {
 
+	@Override
 	protected String getRefactoringName()
 	{
 		return JSBundle.message("javascript.introduce.variable.title");
 	}
 
+	@Override
 	protected String getCannotIntroduceMessagePropertyKey()
 	{
 		return "javascript.introduce.variable.error.no.expression.selected";
 	}
 
+	@Override
 	protected String getDeclText(Settings settings)
 	{
 		return settings.getIntroducedVarType().toString().toLowerCase() + " " + settings.getVariableName();
 	}
 
+	@Override
 	protected JSIntroduceVariableDialog createDialog(final Project project, final JSExpression expression, final JSExpression[] occurrences)
 	{
 		return new JSIntroduceVariableDialog(project, occurrences, expression);

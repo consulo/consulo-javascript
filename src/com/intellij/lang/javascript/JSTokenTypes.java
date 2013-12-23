@@ -52,6 +52,7 @@ public interface JSTokenTypes
 
 	IElementType DOC_COMMENT = new JSChameleonElementType("DOC_COMMENT")
 	{
+		@Override
 		protected void doParse(final PsiBuilder builder)
 		{
 			JSDocParsing.parseJSDoc(builder);
@@ -139,6 +140,7 @@ public interface JSTokenTypes
 	IElementType XML_ATTR_VALUE_END = new JSElementType("XML_ATTR_VALUE_END");
 	IElementType XML_JS_SCRIPT = new JSChameleonElementType("XML_JS_SCRIPT")
 	{
+		@Override
 		protected void doParse(final PsiBuilder builder)
 		{
 			ExpressionParsing.parseScriptExpression(builder);

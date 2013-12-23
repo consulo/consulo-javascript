@@ -20,6 +20,7 @@ import com.intellij.psi.util.PsiUtilBase;
  */
 abstract class BaseJSGenerateAction extends AnAction
 {
+	@Override
 	public void actionPerformed(final AnActionEvent e)
 	{
 		Editor editor = e.getData(PlatformDataKeys.EDITOR);

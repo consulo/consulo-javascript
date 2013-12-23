@@ -74,6 +74,7 @@ public class JSPackageIndex extends CustomImplementationFileBasedIndexExtension<
 	private final DataIndexer<String, List<JSPackageIndexInfo>, FileContent> myIndexer = new DataIndexer<String, List<JSPackageIndexInfo>,
 			FileContent>()
 	{
+		@Override
 		@NotNull
 		public Map<String, List<JSPackageIndexInfo>> map(FileContent inputData)
 		{
@@ -225,6 +226,7 @@ public class JSPackageIndex extends CustomImplementationFileBasedIndexExtension<
 	{
 		final FileType swfFileType = FileTypeManager.getInstance().getFileTypeByExtension("swf");
 
+		@Override
 		public boolean acceptInput(final Project project, final VirtualFile file)
 		{
 			FileType type = file.getFileType();
@@ -238,6 +240,7 @@ public class JSPackageIndex extends CustomImplementationFileBasedIndexExtension<
 		private final byte[] buffer = IOUtil.allocReadWriteUTFBuffer();
 		private final JSPackageIndexInfo.Kind[] kinds = JSPackageIndexInfo.Kind.values();
 
+		@Override
 		public void save(DataOutput out, List<JSPackageIndexInfo> value) throws IOException
 		{
 			out.writeInt(value.size());
@@ -248,6 +251,7 @@ public class JSPackageIndex extends CustomImplementationFileBasedIndexExtension<
 			}
 		}
 
+		@Override
 		public List<JSPackageIndexInfo> read(DataInput in) throws IOException
 		{
 			int size = in.readInt();
@@ -263,46 +267,55 @@ public class JSPackageIndex extends CustomImplementationFileBasedIndexExtension<
 		}
 	};
 
+	@Override
 	public ID<String, List<JSPackageIndexInfo>> getName()
 	{
 		return INDEX_ID;
 	}
 
+	@Override
 	public DataIndexer<String, List<JSPackageIndexInfo>, FileContent> getIndexer()
 	{
 		return myIndexer;
 	}
 
+	@Override
 	public KeyDescriptor<String> getKeyDescriptor()
 	{
 		return myKeyDescriptor;
 	}
 
+	@Override
 	public DataExternalizer<List<JSPackageIndexInfo>> getValueExternalizer()
 	{
 		return myDataExternalizer;
 	}
 
+	@Override
 	public FileBasedIndex.InputFilter getInputFilter()
 	{
 		return myInputFilter;
 	}
 
+	@Override
 	public boolean dependsOnFileContent()
 	{
 		return true;
 	}
 
+	@Override
 	public int getVersion()
 	{
 		return myVersion;
 	}
 
+	@Override
 	public int getCacheSize()
 	{
 		return FileBasedIndexExtension.DEFAULT_CACHE_SIZE;
 	}
 
+	@Override
 	public UpdatableIndex<String, List<JSPackageIndexInfo>, FileContent> createIndexImplementation(ID<String, List<JSPackageIndexInfo>> indexId,
 			FileBasedIndex owner, IndexStorage<String, List<JSPackageIndexInfo>> indexStorage)
 	{
@@ -319,6 +332,7 @@ public class JSPackageIndex extends CustomImplementationFileBasedIndexExtension<
 	{
 		FileBasedIndex.ValueProcessor<List<JSPackageIndexInfo>> indexProcessor = new FileBasedIndex.ValueProcessor<List<JSPackageIndexInfo>>()
 		{
+			@Override
 			public boolean process(VirtualFile file, List<JSPackageIndexInfo> members)
 			{
 				if(targetName != null)
@@ -353,6 +367,7 @@ public class JSPackageIndex extends CustomImplementationFileBasedIndexExtension<
 		{
 			Processor<VirtualFile> vfileProcessor = new Processor<VirtualFile>()
 			{
+				@Override
 				public boolean process(VirtualFile virtualFile)
 				{
 					JSPackageIndexInfo.Kind kind = null;

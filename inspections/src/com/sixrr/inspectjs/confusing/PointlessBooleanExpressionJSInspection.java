@@ -25,25 +25,30 @@ public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection
     private final BooleanLiteralComparisonFix fix =
             new BooleanLiteralComparisonFix();
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("pointless.boolean.expression.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
-    public boolean isEnabledByDefault() {
+    @Override
+	public boolean isEnabledByDefault() {
         return true;
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new PointlessBooleanExpressionVisitor();
     }
 
-    public String buildErrorString(Object... args) {
+    @Override
+	public String buildErrorString(Object... args) {
         if ( args[0]instanceof JSBinaryExpression) {
             return InspectionJSBundle.message("pointless.boolean.error.string", calculateSimplifiedBinaryExpression((JSBinaryExpression) args[0]));
         } else {
@@ -135,18 +140,21 @@ public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection
         }
     }
 
-    public InspectionJSFix buildFix(PsiElement location) {
+    @Override
+	public InspectionJSFix buildFix(PsiElement location) {
         return fix;
     }
 
     private class BooleanLiteralComparisonFix
             extends InspectionJSFix {
-        @NotNull
+        @Override
+		@NotNull
         public String getName() {
             return InspectionJSBundle.message("simplify.fix");
         }
 
-        public void doFix(Project project, ProblemDescriptor descriptor)
+        @Override
+		public void doFix(Project project, ProblemDescriptor descriptor)
                 throws IncorrectOperationException {
             final PsiElement element = descriptor.getPsiElement();
             if (element instanceof JSBinaryExpression) {

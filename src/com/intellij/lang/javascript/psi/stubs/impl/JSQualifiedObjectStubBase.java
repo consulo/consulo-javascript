@@ -74,12 +74,14 @@ abstract class JSQualifiedObjectStubBase<T extends JSQualifiedNamedElement> exte
 		myQualifiedName = readString(dataStream);
 	}
 
+	@Override
 	public void serialize(final StubOutputStream dataStream) throws IOException
 	{
 		super.serialize(dataStream);
 		writeString(myQualifiedName, dataStream);
 	}
 
+	@Override
 	public String getQualifiedName()
 	{
 		return myQualifiedName;

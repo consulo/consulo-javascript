@@ -9,30 +9,36 @@ import com.sixrr.inspectjs.utils.ControlFlowUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class ReturnFromFinallyBlockJSInspection extends JavaScriptInspection {
-    @NotNull
+    @Override
+	@NotNull
     public String getID() {
         return "ReturnInsideFinallyBlockJS";
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("return.inside.finally.block.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.ERRORHANDLING_GROUP_NAME;
     }
 
-    public boolean isEnabledByDefault() {
+    @Override
+	public boolean isEnabledByDefault() {
         return true;
     }
 
-    public String buildErrorString(Object... args) {
+    @Override
+	public String buildErrorString(Object... args) {
         return InspectionJSBundle.message("return.inside.finally.block.error.string");
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 

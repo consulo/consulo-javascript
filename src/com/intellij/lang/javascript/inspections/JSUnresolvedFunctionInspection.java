@@ -58,18 +58,21 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 	@NonNls
 	private static final String SHORT_NAME = "JSUnresolvedFunction";
 
+	@Override
 	@NotNull
 	public String getGroupDisplayName()
 	{
 		return JSBundle.message("js.inspection.group.name");
 	}
 
+	@Override
 	@NotNull
 	public String getDisplayName()
 	{
 		return JSBundle.message("js.unresolved.function.inspection.name");
 	}
 
+	@Override
 	@NotNull
 	@NonNls
 	public String getShortName()
@@ -77,6 +80,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 		return SHORT_NAME;
 	}
 
+	@Override
 	protected JSElementVisitor createVisitor(final ProblemsHolder holder)
 	{
 		return new JSElementVisitor()
@@ -602,18 +606,21 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 			myIntentionNameKey = nameKey;
 		}
 
+		@Override
 		@NotNull
 		public String getName()
 		{
 			return JSBundle.message(myIntentionNameKey, myName);
 		}
 
+		@Override
 		@NotNull
 		public String getFamilyName()
 		{
 			return JSBundle.message("javascript.create.function.intention.family");
 		}
 
+		@Override
 		protected void buildTemplate(Template template, JSReferenceExpression referenceExpression, boolean ecma, boolean staticContext, PsiFile file,
 				PsiElement anchorParent)
 		{
@@ -683,6 +690,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 			}
 		}
 
+		@Override
 		protected void addParameters(Template template, JSReferenceExpression referenceExpression, PsiFile file, boolean ecma)
 		{
 			JSCallExpression methodInvokation = (JSCallExpression) referenceExpression.getParent();
@@ -722,16 +730,19 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 
 		}
 
+		@Override
 		protected void addReturnType(Template template, JSReferenceExpression referenceExpression, PsiFile file)
 		{
 			guessTypeAndAddTemplateVariable(template, referenceExpression, file);
 		}
 
+		@Override
 		protected void addBody(Template template, JSReferenceExpression refExpr, PsiFile file)
 		{
 			template.addEndVariable();
 		}
 
+		@Override
 		protected void buildTemplate(final Template template, JSReferenceExpression referenceExpression, boolean ecma, boolean staticContext,
 				PsiFile file, PsiElement anchorParent)
 		{
@@ -753,18 +764,21 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 			this.type = type;
 		}
 
+		@Override
 		@NotNull
 		public String getName()
 		{
 			return JSBundle.message("javascript.insert.cast.fix");
 		}
 
+		@Override
 		@NotNull
 		public String getFamilyName()
 		{
 			return getName();
 		}
 
+		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor)
 		{
 			final PsiElement element = descriptor.getPsiElement();

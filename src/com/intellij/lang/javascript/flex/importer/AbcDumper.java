@@ -17,11 +17,13 @@ class AbcDumper extends AbstractDumpProcessor
 		dumpCode = _dumpCode;
 	}
 
+	@Override
 	public void dumpStat(@NotNull final String stat)
 	{
 		sb.append(stat);
 	}
 
+	@Override
 	public void hasError(@NotNull final String error)
 	{
 		sb.append(error);
@@ -34,16 +36,19 @@ class AbcDumper extends AbstractDumpProcessor
 		return attr;
 	}
 
+	@Override
 	public void processMultinameAsPackageName(@NotNull final Multiname name, @Nullable final String parentName, final boolean referenceNameRequested)
 	{
 		append(name.toString());
 	}
 
+	@Override
 	public void dumpToplevelAnonymousMethod(final @NotNull Abc abc, final @NotNull MethodInfo m)
 	{
 		m.dump(abc, "", "", this);
 	}
 
+	@Override
 	public void dumpTopLevelTraits(final Abc abc, final @NotNull Traits t, final String indent)
 	{
 		sb.append(indent + t.name + "\n");
@@ -51,55 +56,66 @@ class AbcDumper extends AbstractDumpProcessor
 		t.init.dump(abc, indent, "", this);
 	}
 
+	@Override
 	public boolean doDumpMember(final @NotNull MemberInfo memberInfo)
 	{
 		return true;
 	}
 
+	@Override
 	public void appendMethodSeparator()
 	{
 		append("\n");
 	}
 
+	@Override
 	public void appendFieldSeparator()
 	{
 		append("");
 	}
 
+	@Override
 	public String getAbcInSwfIndent()
 	{
 		return "  ";
 	}
 
+	@Override
 	public void processValue(final Multiname type, final Object value)
 	{
 		append(" = " + String.valueOf(value instanceof String ? ('"' + value.toString() + '"') : value));
 	}
 
+	@Override
 	public boolean doDumpMetaData(final @NotNull MetaData md)
 	{
 		return true;
 	}
 
+	@Override
 	public void processParameter(@NotNull String name, @Nullable Multiname type, String parentName, @Nullable Multiname value, boolean rest)
 	{
 		processMultinameAsPackageName(type, parentName, true);
 	}
 
+	@Override
 	public boolean doStarTypeDumpInExtends()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean doStarMetaAttrNameDump()
 	{
 		return true;
 	}
 
+	@Override
 	public void setProcessingInterface(final boolean anInterface)
 	{
 	}
 
+	@Override
 	protected boolean dumpRestParameter()
 	{
 		return false;

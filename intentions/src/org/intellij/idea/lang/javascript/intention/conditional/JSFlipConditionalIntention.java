@@ -29,12 +29,14 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 
 public class JSFlipConditionalIntention extends JSIntention {
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new FlipConditionalPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final JSConditionalExpression exp            = (JSConditionalExpression) element;
         final JSExpression            condition      = exp.getCondition();
         final JSExpression            elseExpression = exp.getElse();
@@ -50,7 +52,8 @@ public class JSFlipConditionalIntention extends JSIntention {
     }
 
     private static class FlipConditionalPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof JSConditionalExpression)) {
                 return false;
             }

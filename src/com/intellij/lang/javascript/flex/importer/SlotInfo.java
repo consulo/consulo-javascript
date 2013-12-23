@@ -10,6 +10,7 @@ class SlotInfo extends MemberInfo
 	Multiname type;
 	Object value;
 
+	@Override
 	void dump(Abc abc, String indent, String attr, final FlexByteCodeInformationProcessor processor)
 	{
 		if(!processor.doDumpMember(this))

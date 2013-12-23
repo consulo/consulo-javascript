@@ -36,11 +36,13 @@ import com.intellij.psi.PsiElement;
  */
 public class JSWithTryCatchFinallySurrounder extends JSStatementSurrounder
 {
+	@Override
 	public String getTemplateDescription()
 	{
 		return JSBundle.message("javascript.surround.with.try.catch.finally");
 	}
 
+	@Override
 	@NonNls
 	protected String getStatementTemplate(final Project project, PsiElement context)
 	{
@@ -56,12 +58,14 @@ public class JSWithTryCatchFinallySurrounder extends JSStatementSurrounder
 		return "";
 	}
 
+	@Override
 	protected ASTNode getInsertBeforeNode(final ASTNode statementNode)
 	{
 		JSTryStatement stmt = (JSTryStatement) statementNode.getPsi();
 		return stmt.getStatement().getLastChild().getNode();
 	}
 
+	@Override
 	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
 	{
 		JSTryStatement stmt = (JSTryStatement) statementNode.getPsi();

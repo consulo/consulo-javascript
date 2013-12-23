@@ -37,12 +37,14 @@ public class JSFlexAdapter extends FlexAdapter
 		assert lexer instanceof _JavaScriptLexer;
 	}
 
+	@Override
 	public void start(final CharSequence buffer, final int startOffset, final int endOffset, final int initialState)
 	{
 		super.start(buffer, startOffset, endOffset, initialState & BASE_STATE_MASK);
 		((_JavaScriptLexer) getFlex()).setTagCount(initialState >> TAG_COUNT_SHIFT);
 	}
 
+	@Override
 	public int getState()
 	{
 		return getStateInternal() + (((_JavaScriptLexer) getFlex()).getTagCount() << TAG_COUNT_SHIFT);

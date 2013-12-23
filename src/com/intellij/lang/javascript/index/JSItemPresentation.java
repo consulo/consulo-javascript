@@ -49,11 +49,13 @@ public class JSItemPresentation implements ItemPresentation
 		this.myNamespace = namespace;
 	}
 
+	@Override
 	public String getPresentableText()
 	{
 		return myElement.getName();
 	}
 
+	@Override
 	@Nullable
 	public String getLocationString()
 	{
@@ -111,6 +113,7 @@ public class JSItemPresentation implements ItemPresentation
 		return s;
 	}
 
+	@Override
 	@Nullable
 	public Icon getIcon(boolean open)
 	{

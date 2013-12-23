@@ -25,7 +25,8 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.psi.PsiElement;
 
 class ComparisonPredicate implements JSElementPredicate {
-    public boolean satisfiedBy(@NotNull PsiElement element) {
+    @Override
+	public boolean satisfiedBy(@NotNull PsiElement element) {
         if (!(element instanceof JSBinaryExpression)) {
             return false;
         }

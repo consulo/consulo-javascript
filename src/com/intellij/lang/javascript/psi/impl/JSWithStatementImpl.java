@@ -38,18 +38,21 @@ public class JSWithStatementImpl extends JSStatementImpl implements JSWithStatem
 		super(node);
 	}
 
+	@Override
 	public JSExpression getExpression()
 	{
 		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
 		return node != null ? (JSExpression) node.getPsi() : null;
 	}
 
+	@Override
 	public JSStatement getStatement()
 	{
 		final ASTNode node = getNode().findChildByType(JSElementTypes.STATEMENTS);
 		return node != null ? (JSStatement) node.getPsi() : null;
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)

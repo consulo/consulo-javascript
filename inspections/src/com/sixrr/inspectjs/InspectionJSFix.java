@@ -20,12 +20,14 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class InspectionJSFix implements LocalQuickFix {
     //to appear in "Apply Fix" statement when multiple Quick Fixes exist
-    @NotNull
+    @Override
+	@NotNull
     public String getFamilyName() {
         return "";
     }
 
-    public void applyFix(@NotNull Project project,
+    @Override
+	public void applyFix(@NotNull Project project,
                          @NotNull ProblemDescriptor descriptor) {
         final PsiElement problemElement = descriptor.getPsiElement();
         if (problemElement == null || !problemElement.isValid()) {

@@ -28,12 +28,14 @@ import org.intellij.idea.lang.javascript.psiutil.TreeUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class JSMoveCommentToSeparateLineIntention extends JSIntention {
-    @NotNull
+    @Override
+	@NotNull
     protected JSElementPredicate getElementPredicate() {
         return new CommentOnLineWithSourcePredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final PsiComment    selectedComment = (PsiComment) element;
         PsiElement          elementToCheck  = selectedComment;
         final PsiWhiteSpace whiteSpace;
@@ -67,7 +69,8 @@ public class JSMoveCommentToSeparateLineIntention extends JSIntention {
 
     private static class CommentOnLineWithSourcePredicate implements JSElementPredicate {
 
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof PsiComment)) {
                 return false;
             }

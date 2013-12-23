@@ -43,11 +43,13 @@ public class JSParameterListImpl extends JSStubElementImpl<JSParameterListStub> 
 		super(stub, JSElementTypes.PARAMETER_LIST);
 	}
 
+	@Override
 	public JSParameter[] getParameters()
 	{
 		return getStubOrPsiChildren(JSElementTypes.FORMAL_PARAMETER, JSParameter.EMPTY_ARRAY);
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)

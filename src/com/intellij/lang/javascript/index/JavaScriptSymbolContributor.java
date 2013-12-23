@@ -14,12 +14,14 @@ import com.intellij.util.ArrayUtil;
  */
 public class JavaScriptSymbolContributor implements ChooseByNameContributor
 {
+	@Override
 	public String[] getNames(Project project, boolean includeNonProjectItems)
 	{
 		JavaScriptIndex index = JavaScriptIndex.getInstance(project);
 		return index != null ? index.getSymbolNames(includeNonProjectItems) : ArrayUtil.EMPTY_STRING_ARRAY;
 	}
 
+	@Override
 	public NavigationItem[] getItemsByName(String name, final String pattern, Project project, boolean includeNonProjectItems)
 	{
 		JavaScriptIndex index = JavaScriptIndex.getInstance(project);

@@ -29,12 +29,14 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 
 public class JSMergeElseIfIntention extends JSIntention {
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new MergeElseIfPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final JSIfStatement parentStatement = (JSIfStatement) element.getParent();
 
         assert (parentStatement != null);
@@ -46,7 +48,8 @@ public class JSMergeElseIfIntention extends JSIntention {
     }
 
     private static class MergeElseIfPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof JSElement)) {
                 return false;
             }

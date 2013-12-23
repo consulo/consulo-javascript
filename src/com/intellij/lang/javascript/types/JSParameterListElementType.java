@@ -19,12 +19,14 @@ public class JSParameterListElementType extends JSStubElementType<JSParameterLis
 	private static final JSStubGenerator<JSParameterListStub, JSParameterList> ourStubGenerator = new JSStubGenerator<JSParameterListStub,
 			JSParameterList>()
 	{
+		@Override
 		public JSParameterListStub newInstance(final StubInputStream dataStream, final StubElement parentStub,
 				final JSStubElementType<JSParameterListStub, JSParameterList> elementType) throws IOException
 		{
 			return new JSParameterListStubImpl(dataStream, parentStub, elementType);
 		}
 
+		@Override
 		public JSParameterListStub newInstance(final JSParameterList psi, final StubElement parentStub, final JSStubElementType<JSParameterListStub,
 				JSParameterList> elementType)
 		{

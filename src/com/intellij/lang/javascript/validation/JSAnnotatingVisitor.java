@@ -78,6 +78,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 {
 	private AnnotationHolder myHolder;
 
+	@Override
 	public synchronized void annotate(PsiElement psiElement, AnnotationHolder holder)
 	{
 		myHolder = holder;
@@ -245,6 +246,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 		{
 			ImplementMethodsFix implementMethodsFix = null;
 
+			@Override
 			protected void addNonimplementedFunction(final JSFunction function)
 			{
 				final ASTNode node = myJsClass.findNameIdentifier();
@@ -261,6 +263,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 						((JSClass) JSResolveUtil.findParent(function)).getQualifiedName()), ErrorReportingClient.ProblemKind.ERROR, implementMethodsFix);
 			}
 
+			@Override
 			protected void addImplementedFunction(final JSFunction interfaceFunction, final JSFunction implementationFunction)
 			{
 				final JSAttributeList attributeList = implementationFunction.getAttributeList();
@@ -654,6 +657,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 		return nodes.toArray(new ASTNode[nodes.size()]);
 	}
 
+	@Override
 	public void visitJSPackageStatement(final JSPackageStatement packageStatement)
 	{
 		for(PsiElement el = packageStatement.getPrevSibling(); el != null; el = el.getPrevSibling())
@@ -790,6 +794,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 		}
 	}
 
+	@Override
 	public void visitJSThisExpression(final JSThisExpression node)
 	{
 		checkClassReferenceInStaticContext(node, "javascript.validation.message.this.referenced.from.static.context");
@@ -820,6 +825,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 		}
 	}
 
+	@Override
 	public void visitJSSuperExpression(final JSSuperExpression node)
 	{
 		checkClassReferenceInStaticContext(node, "javascript.validation.message.super.referenced.from.static.context");
@@ -868,6 +874,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 				final Ref<JSFunction> set = new Ref<JSFunction>();
 				boolean b = JSResolveUtil.iterateType(node, parent, qName, new JSResolveUtil.OverrideHandler()
 				{
+					@Override
 					public boolean process(final ResolveProcessor processor, final PsiElement scope, final String className)
 					{
 						if(qName == className || (qName != null && qName.equals(className)))
@@ -1161,28 +1168,33 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 					, JSBundle.message("javascript.validation.message.incorrect.package.name", s, expected));
 			annotation.registerFix(new IntentionAction()
 			{
+				@Override
 				@NotNull
 				public String getText()
 				{
 					return JSBundle.message("javascript.fix.package.name", expected);
 				}
 
+				@Override
 				@NotNull
 				public String getFamilyName()
 				{
 					return getText();
 				}
 
+				@Override
 				public boolean isAvailable(@NotNull final Project project, final Editor editor, final PsiFile file)
 				{
 					return packageStatement.isValid();
 				}
 
+				@Override
 				public void invoke(@NotNull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException
 				{
 					JSPackageStatementImpl.doChangeName(project, packageStatement, expected);
 				}
 
+				@Override
 				public boolean startInWriteAction()
 				{
 					return true;
@@ -1230,29 +1242,34 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 			myAstNodes = astNodes;
 		}
 
+		@Override
 		@NotNull
 		public String getText()
 		{
 			return JSBundle.message(myPropKey);
 		}
 
+		@Override
 		@NotNull
 		public String getName()
 		{
 			return getText();
 		}
 
+		@Override
 		@NotNull
 		public String getFamilyName()
 		{
 			return getText();
 		}
 
+		@Override
 		public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor)
 		{
 			invoke(project, null, descriptor.getPsiElement().getContainingFile());
 		}
 
+		@Override
 		public boolean isAvailable(@NotNull final Project project, final Editor editor, final PsiFile file)
 		{
 			for(ASTNode astNode : myAstNodes)
@@ -1266,6 +1283,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 			return true;
 		}
 
+		@Override
 		public void invoke(@NotNull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException
 		{
 			if(!CodeInsightUtilBase.getInstance().prepareFileForWrite(file))
@@ -1281,6 +1299,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 			}
 		}
 
+		@Override
 		public boolean startInWriteAction()
 		{
 			return true;
@@ -1296,23 +1315,27 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 			myNode = node;
 		}
 
+		@Override
 		@NotNull
 		public String getText()
 		{
 			return JSBundle.message("javascript.fix.add.override.modifier");
 		}
 
+		@Override
 		@NotNull
 		public String getFamilyName()
 		{
 			return getText();
 		}
 
+		@Override
 		public boolean isAvailable(@NotNull final Project project, final Editor editor, final PsiFile file)
 		{
 			return myNode.isValid();
 		}
 
+		@Override
 		public void invoke(@NotNull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException
 		{
 			if(!CodeInsightUtilBase.getInstance().prepareFileForWrite(file))
@@ -1333,6 +1356,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 			}
 		}
 
+		@Override
 		public boolean startInWriteAction()
 		{
 			return true;
@@ -1341,6 +1365,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 
 	private class SimpleErrorReportingClient implements ErrorReportingClient
 	{
+		@Override
 		public void reportError(final ASTNode nameIdentifier, final String s, ProblemKind kind, final IntentionAction implementMethodsFix)
 		{
 			final Annotation annotation = kind == ProblemKind.ERROR ? myHolder.createErrorAnnotation(nameIdentifier,
@@ -1363,23 +1388,27 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 			this.superConstructor = superConstructor;
 		}
 
+		@Override
 		@NotNull
 		public String getText()
 		{
 			return JSBundle.message("javascript.fix.create.invoke.super");
 		}
 
+		@Override
 		@NotNull
 		public String getFamilyName()
 		{
 			return getText();
 		}
 
+		@Override
 		public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file)
 		{
 			return superConstructor.isValid() && node.isValid();
 		}
 
+		@Override
 		public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException
 		{
 			if(!CodeInsightUtilBase.getInstance().prepareFileForWrite(file))
@@ -1423,6 +1452,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 			}
 		}
 
+		@Override
 		public boolean startInWriteAction()
 		{
 			return false;
@@ -1440,23 +1470,27 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 			superConstructor = _superCall;
 		}
 
+		@Override
 		@NotNull
 		public String getText()
 		{
 			return JSBundle.message("javascript.fix.create.constructor.invoke.super");
 		}
 
+		@Override
 		@NotNull
 		public String getFamilyName()
 		{
 			return getText();
 		}
 
+		@Override
 		public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file)
 		{
 			return node.isValid() && superConstructor.isValid();
 		}
 
+		@Override
 		public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException
 		{
 			if(!CodeInsightUtilBase.getInstance().prepareFileForWrite(file))
@@ -1498,6 +1532,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 			jsClass.add(JSChangeUtil.createJSTreeFromText(project, fun, JavaScriptSupportLoader.ECMA_SCRIPT_L4).getPsi());
 		}
 
+		@Override
 		public boolean startInWriteAction()
 		{
 			return true;

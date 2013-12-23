@@ -55,11 +55,13 @@ public class JSIndexEntry
 
 	private static final ProxyProcessor<Set<String>> myCollectClassNamesProcessor = new ProxyProcessor<Set<String>>()
 	{
+		@Override
 		public boolean accepts(final PsiFile psiFile)
 		{
 			return true;
 		}
 
+		@Override
 		public void process(final JSNamedElementProxy proxy, JavaScriptIndex index, final Set<String> classNames)
 		{
 			if(proxy.getType() == NamedItemType.Clazz)
@@ -71,11 +73,13 @@ public class JSIndexEntry
 
 	private final static ProxyProcessor<Set<NavigationItem>> myFindClassesByName = new ProxyProcessor<Set<NavigationItem>>()
 	{
+		@Override
 		public boolean accepts(final PsiFile psiFile)
 		{
 			return !JavaScriptIndex.isFromPredefinedFile(psiFile) || ApplicationManager.getApplication().isUnitTestMode();
 		}
 
+		@Override
 		public void process(final JSNamedElementProxy proxy, final JavaScriptIndex index, final Set<NavigationItem> param)
 		{
 			if(proxy.getType() == NamedItemType.Clazz)
@@ -87,11 +91,13 @@ public class JSIndexEntry
 
 	private static final ProxyProcessor<Set<String>> myCollectSymbolNamesProcessor = new ProxyProcessor<Set<String>>()
 	{
+		@Override
 		public boolean accepts(final PsiFile psiFile)
 		{
 			return true;
 		}
 
+		@Override
 		public void process(final JSNamedElementProxy proxy, final JavaScriptIndex index, final Set<String> param)
 		{
 			if(proxy.getType() != NamedItemType.Clazz)
@@ -103,11 +109,13 @@ public class JSIndexEntry
 
 	private static final ProxyProcessor<Set<NavigationItem>> myFindSymbolsByNameProcessor = new ProxyProcessor<Set<NavigationItem>>()
 	{
+		@Override
 		public boolean accepts(final PsiFile psiFile)
 		{
 			return !JavaScriptIndex.isFromPredefinedFile(psiFile) || ApplicationManager.getApplication().isUnitTestMode();
 		}
 
+		@Override
 		public void process(final JSNamedElementProxy proxy, final JavaScriptIndex index, final Set<NavigationItem> param)
 		{
 			if(proxy.getType() != NamedItemType.Clazz)
@@ -252,12 +260,14 @@ public class JSIndexEntry
 			boolean computeFirstTime = true;
 			final ModificationTracker tracker = new ModificationTracker()
 			{
+				@Override
 				public long getModificationCount()
 				{
 					return myFile != null ? getFile().getModificationStamp() : -1;
 				}
 			};
 
+			@Override
 			public Result<IndexEntryContent> compute()
 			{
 				final PsiFile psiFile = myFile != null ? getFile() : null;
@@ -311,6 +321,7 @@ public class JSIndexEntry
 				{
 					private JSSymbolUtil.JavaScriptSymbolProcessingHost myProcessingHost;
 
+					@Override
 					public boolean processFunction(JSNamespace namespace, final int nameId, JSNamedElement function)
 					{
 						final PsiElement parent = function.getParent();
@@ -319,30 +330,35 @@ public class JSIndexEntry
 						return true;
 					}
 
+					@Override
 					public boolean processClass(final JSNamespace namespace, final int nameId, final JSNamedElement clazz)
 					{
 						addSymbol(nameId, clazz, NamedItemType.Clazz, namespace);
 						return true;
 					}
 
+					@Override
 					public boolean processNamespace(final JSNamespace namespace, final int nameId, final JSNamedElement ns)
 					{
 						addSymbol(nameId, ns, NamedItemType.Namespace, namespace);
 						return true;
 					}
 
+					@Override
 					public boolean processImplicitNamespace(final JSNamespace namespace, final int nameId, final PsiElement refExpr, boolean finalReference)
 					{
 						addSymbol(nameId, refExpr, NamedItemType.Namespace, namespace, finalReference);
 						return true;
 					}
 
+					@Override
 					public boolean processImplicitFunction(final JSNamespace namespace, final int nameId, final PsiElement refExpr)
 					{
 						addSymbol(nameId, refExpr, NamedItemType.ImplicitFunction, namespace);
 						return true;
 					}
 
+					@Override
 					public boolean processImplicitVariable(final JSNamespace namespace, final int nameId, final PsiElement refExpr)
 					{
 						addSymbol(nameId, refExpr, NamedItemType.ImplicitVariable, namespace);
@@ -456,6 +472,7 @@ public class JSIndexEntry
 						doAddNamedItemProxy(nameId, myElement, toCheckUniqueness, namespace, myContent);
 					}
 
+					@Override
 					public boolean processVariable(JSNamespace namespace, final int nameId, JSNamedElement variable)
 					{
 						PsiElement parent = variable.getParent();
@@ -468,22 +485,26 @@ public class JSIndexEntry
 						return true;
 					}
 
+					@Override
 					public boolean acceptsFile(PsiFile file)
 					{
 						return true;
 					}
 
+					@Override
 					public PsiFile getBaseFile()
 					{
 						return null;
 					}
 
+					@Override
 					public boolean processProperty(final JSNamespace namespace, final int nameId, final JSNamedElement property)
 					{
 						addSymbol(nameId, property, NamedItemType.Property, namespace);
 						return true;
 					}
 
+					@Override
 					public boolean processDefinition(final JSNamespace namespace, final int nameId, final JSNamedElement expression)
 					{
 						//if (namespace.length > 0) {
@@ -493,12 +514,14 @@ public class JSIndexEntry
 						return true;
 					}
 
+					@Override
 					@Nullable
 					public int getRequiredNameId()
 					{
 						return -1;
 					}
 
+					@Override
 					public boolean processTag(JSNamespace namespace, final int nameId, PsiNamedElement namedElement, final String attrName)
 					{
 						if(psiFile instanceof XmlFile)
@@ -515,6 +538,7 @@ public class JSIndexEntry
 						return true;
 					}
 
+					@Override
 					public void setProcessingHost(final JSSymbolUtil.JavaScriptSymbolProcessingHost processingHost)
 					{
 						myProcessingHost = processingHost;

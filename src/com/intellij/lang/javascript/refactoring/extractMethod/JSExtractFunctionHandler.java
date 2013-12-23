@@ -20,6 +20,7 @@ import com.intellij.refactoring.util.CommonRefactoringUtil;
  */
 public class JSExtractFunctionHandler implements RefactoringActionHandler
 {
+	@Override
 	public void invoke(@NotNull final Project project, final Editor editor, PsiFile file, DataContext dataContext)
 	{
 		if(!editor.getSelectionModel().hasSelection())
@@ -42,10 +43,12 @@ public class JSExtractFunctionHandler implements RefactoringActionHandler
 
 		CommandProcessor.getInstance().executeCommand(project, new Runnable()
 		{
+			@Override
 			public void run()
 			{
 				ApplicationManager.getApplication().runWriteAction(new Runnable()
 				{
+					@Override
 					public void run()
 					{
 						doRefactoring(project, editor, settings);
@@ -70,6 +73,7 @@ public class JSExtractFunctionHandler implements RefactoringActionHandler
 	{
 	}
 
+	@Override
 	public void invoke(@NotNull final Project project, @NotNull final PsiElement[] elements, final DataContext dataContext)
 	{
 		throw new UnsupportedOperationException();

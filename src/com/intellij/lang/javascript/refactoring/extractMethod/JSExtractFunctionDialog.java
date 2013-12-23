@@ -25,11 +25,13 @@ public class JSExtractFunctionDialog extends DialogWrapper implements JSExtractF
 		init();
 	}
 
+	@Override
 	protected JComponent createCenterPanel()
 	{
 		return myPanel;
 	}
 
+	@Override
 	public String getMethodName()
 	{
 		return myFunctionName.getText();

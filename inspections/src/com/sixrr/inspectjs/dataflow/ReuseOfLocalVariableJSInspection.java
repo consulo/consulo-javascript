@@ -16,25 +16,29 @@ import org.jetbrains.annotations.Nullable;
 public class ReuseOfLocalVariableJSInspection
         extends JavaScriptInspection {
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message(
                 "reuse.of.local.variable.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.DATA_FLOW_ISSUES;
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String buildErrorString(Object... args) {
         return InspectionJSBundle.message(
                 "reuse.of.local.variable.problem.descriptor");
     }
 
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new ReuseOfLocalVariableVisitor();
     }
 

@@ -233,11 +233,13 @@ public class JSDocumentationUtils
 			{
 				ASTNode commentNode = initialComment;
 
+				@Override
 				public boolean hasMoreElements()
 				{
 					return commentNode != null;
 				}
 
+				@Override
 				public String nextElement()
 				{
 					ASTNode resultCommentNode = commentNode;
@@ -614,16 +616,19 @@ public class JSDocumentationUtils
 				final String name = parameter.getName();
 				final boolean isparameter = parameter instanceof JSParameter;
 
+				@Override
 				public boolean needsPlainCommentData()
 				{
 					return false;
 				}
 
+				@Override
 				public boolean onCommentLine(@NotNull final String line)
 				{
 					return true;
 				}
 
+				@Override
 				public boolean onPatternMatch(@NotNull final MetaDocType type, @Nullable final String matchName, @Nullable final String matchValue,
 						@Nullable final String remainingLineContent, @NotNull final String line, final String patternMatched)
 				{
@@ -669,16 +674,19 @@ public class JSDocumentationUtils
 				final PsiElement anchor1 = anchor;
 				processDocumentationTextFromComment(docComment.getNode(), new JSDocumentationProcessor()
 				{
+					@Override
 					public boolean needsPlainCommentData()
 					{
 						return false;
 					}
 
+					@Override
 					public boolean onCommentLine(@NotNull final String line)
 					{
 						return true;
 					}
 
+					@Override
 					public boolean onPatternMatch(@NotNull final MetaDocType type, @Nullable final String matchName, @Nullable final String matchValue,
 							@Nullable final String remainingLineContent, @NotNull final String line, final String patternMatched)
 					{
@@ -762,16 +770,19 @@ public class JSDocumentationUtils
 
 			processDocumentationTextFromComment(docComment.getNode(), new JSDocumentationProcessor()
 			{
+				@Override
 				public boolean needsPlainCommentData()
 				{
 					return false;
 				}
 
+				@Override
 				public boolean onCommentLine(@NotNull final String line)
 				{
 					return true;
 				}
 
+				@Override
 				public boolean onPatternMatch(@NotNull final MetaDocType type, @Nullable final String matchName, @Nullable final String matchValue,
 						@Nullable final String remainingLineContent, @NotNull final String line, final String patternMatched)
 				{
@@ -929,16 +940,19 @@ public class JSDocumentationUtils
 		{
 			final String name = parameter.getName();
 
+			@Override
 			public boolean needsPlainCommentData()
 			{
 				return false;
 			}
 
+			@Override
 			public boolean onCommentLine(@NotNull final String line)
 			{
 				return true;
 			}
 
+			@Override
 			public boolean onPatternMatch(@NotNull final MetaDocType type, @Nullable final String matchName, @Nullable final String matchValue,
 					@Nullable final String remainingLineContent, @NotNull final String line, final String patternMatched)
 			{

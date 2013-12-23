@@ -24,12 +24,14 @@ import com.intellij.util.QueryExecutor;
  */
 class JSDefinitionsSearchExecutor implements QueryExecutor<PsiElement, PsiElement>
 {
+	@Override
 	public boolean execute(final PsiElement sourceElement, final Processor<PsiElement> consumer)
 	{
 		if(sourceElement instanceof PsiNamedElement && sourceElement.getLanguage().isKindOf(Language.findInstance(JavascriptLanguage.class)))
 		{
 			ReferencesSearch.search(sourceElement, GlobalSearchScope.projectScope(sourceElement.getProject())).forEach(new Processor<PsiReference>()
 			{
+				@Override
 				public boolean process(final PsiReference t)
 				{
 					if(t instanceof JSReferenceExpression)
@@ -83,6 +85,7 @@ class JSDefinitionsSearchExecutor implements QueryExecutor<PsiElement, PsiElemen
 
 				final Processor<JSClass> delegatingProcessor = new Processor<JSClass>()
 				{
+					@Override
 					public boolean process(final JSClass jsClass)
 					{
 						return consumer.process(jsClass);
@@ -100,6 +103,7 @@ class JSDefinitionsSearchExecutor implements QueryExecutor<PsiElement, PsiElemen
 				final JSFunction baseFunction = (JSFunction) sourceElement;
 				final Processor<JSFunction> delegatingProcessor = new Processor<JSFunction>()
 				{
+					@Override
 					public boolean process(final JSFunction jsFunction)
 					{
 						return consumer.process(jsFunction);

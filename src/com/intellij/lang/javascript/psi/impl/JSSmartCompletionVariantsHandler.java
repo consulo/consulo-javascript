@@ -92,6 +92,7 @@ public class JSSmartCompletionVariantsHandler
 			return true;
 		}
 
+		@Override
 		public boolean execute(final PsiElement element, final ResolveState state)
 		{
 			if(element instanceof JSVariable)
@@ -184,6 +185,7 @@ public class JSSmartCompletionVariantsHandler
 			}
 		}
 
+		@Override
 		public boolean process(final @NotNull JSAttribute jsAttribute)
 		{
 			if("Event".equals(jsAttribute.getName()))
@@ -206,6 +208,7 @@ public class JSSmartCompletionVariantsHandler
 			return true;
 		}
 
+		@Override
 		public boolean handleOtherElement(final PsiElement el, final PsiElement context, final Ref<PsiElement> continuePassElement)
 		{
 			return true;
@@ -213,6 +216,7 @@ public class JSSmartCompletionVariantsHandler
 
 		private class MyJSInjectedFilesVisitor extends JSResolveUtil.JSInjectedFilesVisitor
 		{
+			@Override
 			protected void process(final JSFile file)
 			{
 				for(PsiElement element : file.getChildren())

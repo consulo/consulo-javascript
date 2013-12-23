@@ -30,6 +30,7 @@ public class JavaScriptCodeContextType extends TemplateContextType
 		super(JAVA_SCRIPT, JSBundle.message("javascript.template.context.type"));
 	}
 
+	@Override
 	public boolean isInContext(@NotNull final PsiFile file, final int offset)
 	{
 		PsiElement at = file.findElementAt(offset);
@@ -49,6 +50,7 @@ public class JavaScriptCodeContextType extends TemplateContextType
 
 				InjectedLanguageUtil.enumerate(host, new JSResolveUtil.JSInjectedFilesVisitor()
 				{
+					@Override
 					protected void process(final JSFile file)
 					{
 						hasJsInjection.set(Boolean.TRUE);
@@ -69,9 +71,9 @@ public class JavaScriptCodeContextType extends TemplateContextType
 		return fileType instanceof JavaScriptFileType;
 	}
 
+	@Override
 	public SyntaxHighlighter createHighlighter()
 	{
-		final SyntaxHighlighterFactory factory = SyntaxHighlighterFactory.LANGUAGE_FACTORY.forLanguage(JavaScriptSupportLoader.ECMA_SCRIPT_L4);
-		return factory.getSyntaxHighlighter(JavaScriptSupportLoader.ECMA_SCRIPT_L4, null, null);
+		return SyntaxHighlighterFactory.getSyntaxHighlighter(JavaScriptSupportLoader.ECMA_SCRIPT_L4, null, null);
 	}
 }

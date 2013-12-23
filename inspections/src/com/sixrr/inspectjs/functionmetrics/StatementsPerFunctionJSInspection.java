@@ -10,30 +10,36 @@ import org.jetbrains.annotations.NotNull;
 
 public class StatementsPerFunctionJSInspection
         extends FunctionMetricsInspection {
-    @NotNull
+    @Override
+	@NotNull
     public String getID() {
         return "FunctionTooLongJS";
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("overly.long.function.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
     }
 
-    protected int getDefaultLimit() {
+    @Override
+	protected int getDefaultLimit() {
         return 30;
     }
 
-    protected String getConfigurationLabel() {
+    @Override
+	protected String getConfigurationLabel() {
         return InspectionJSBundle.message("maximum.statements.per.function");
     }
 
-    public String buildErrorString(Object... args) {
+    @Override
+	public String buildErrorString(Object... args) {
         final JSFunction function = (JSFunction) ((PsiElement) args[0]).getParent();
         assert function != null;
         final PsiElement lastChild = function.getLastChild();
@@ -48,7 +54,8 @@ public class StatementsPerFunctionJSInspection
         }
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 

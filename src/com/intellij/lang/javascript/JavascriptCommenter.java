@@ -26,6 +26,7 @@ import com.intellij.psi.tree.IElementType;
 public class JavascriptCommenter implements CodeDocumentationAwareCommenter
 {
 
+	@Override
 	public String getLineCommentPrefix()
 	{
 		return "//";
@@ -36,11 +37,13 @@ public class JavascriptCommenter implements CodeDocumentationAwareCommenter
 		return false;
 	}
 
+	@Override
 	public String getBlockCommentPrefix()
 	{
 		return "/*";
 	}
 
+	@Override
 	public String getBlockCommentSuffix()
 	{
 		return "*/";
@@ -60,38 +63,45 @@ public class JavascriptCommenter implements CodeDocumentationAwareCommenter
 		return null;
 	}
 
+	@Override
 	@Nullable
 	public IElementType getLineCommentTokenType()
 	{
 		return JSTokenTypes.END_OF_LINE_COMMENT;
 	}
 
+	@Override
 	@Nullable
 	public IElementType getBlockCommentTokenType()
 	{
 		return JSTokenTypes.C_STYLE_COMMENT;
 	}
 
+	@Override
 	public String getDocumentationCommentPrefix()
 	{
 		return "/**";
 	}
 
+	@Override
 	public String getDocumentationCommentLinePrefix()
 	{
 		return "*";
 	}
 
+	@Override
 	public String getDocumentationCommentSuffix()
 	{
 		return "*/";
 	}
 
+	@Override
 	public boolean isDocumentationComment(final PsiComment element)
 	{
 		return element.getTokenType() == JSTokenTypes.DOC_COMMENT;
 	}
 
+	@Override
 	@Nullable
 	public IElementType getDocumentationCommentTokenType()
 	{

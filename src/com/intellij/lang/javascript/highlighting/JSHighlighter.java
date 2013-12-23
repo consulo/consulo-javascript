@@ -56,6 +56,7 @@ public class JSHighlighter extends SyntaxHighlighterBase
 		myDialectOptionsHolder = dialectOptionsHolder;
 	}
 
+	@Override
 	@NotNull
 	public Lexer getHighlightingLexer()
 	{
@@ -165,6 +166,7 @@ public class JSHighlighter extends SyntaxHighlighterBase
 
 		IElementType[] javadoc = IElementType.enumerate(new IElementType.Predicate()
 		{
+			@Override
 			public boolean matches(IElementType type)
 			{
 				return type instanceof JSDocElementType;
@@ -195,6 +197,7 @@ public class JSHighlighter extends SyntaxHighlighterBase
 		keys1.put(JSTokenTypes.XML_TAG_CONTENT, XmlHighlighterColors.XML_TAG_DATA);
 	}
 
+	@Override
 	@NotNull
 	public TextAttributesKey[] getTokenHighlights(IElementType tokenType)
 	{

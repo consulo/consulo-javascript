@@ -33,41 +33,49 @@ class JSIntroduceConstantDialog extends JSBaseClassBasedIntroduceDialog implemen
 		doInit();
 	}
 
+	@Override
 	protected JRadioButton getPrivateRadioButton()
 	{
 		return myPrivate;
 	}
 
+	@Override
 	protected JRadioButton getPublicRadioButton()
 	{
 		return myPublic;
 	}
 
+	@Override
 	protected JRadioButton getProtectedRadioButton()
 	{
 		return myProtected;
 	}
 
+	@Override
 	protected JRadioButton getPackageLocalRadioButton()
 	{
 		return myPackageLocal;
 	}
 
+	@Override
 	protected JTextField getNameField()
 	{
 		return myNameField;
 	}
 
+	@Override
 	protected JPanel getPanel()
 	{
 		return myPanel;
 	}
 
+	@Override
 	protected JCheckBox getReplaceAllCheckBox()
 	{
 		return myReplaceAllCheckBox;
 	}
 
+	@Override
 	public JComboBox getVarTypeField()
 	{
 		return myVarType;

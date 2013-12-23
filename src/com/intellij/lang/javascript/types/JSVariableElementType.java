@@ -21,12 +21,14 @@ public class JSVariableElementType extends JSStubElementType<JSVariableStub, JSV
 {
 	private static final JSStubGenerator<JSVariableStub, JSVariable> ourStubGenerator = new JSStubGenerator<JSVariableStub, JSVariable>()
 	{
+		@Override
 		public JSVariableStub newInstance(final StubInputStream dataStream, final StubElement parentStub, final JSStubElementType<JSVariableStub,
 				JSVariable> elementType) throws IOException
 		{
 			return new JSVariableStubImpl(dataStream, parentStub, elementType);
 		}
 
+		@Override
 		public JSVariableStub newInstance(final JSVariable psi, final StubElement parentStub, final JSStubElementType<JSVariableStub,
 				JSVariable> elementType)
 		{

@@ -64,12 +64,14 @@ public class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElemen
 		super(t, type);
 	}
 
+	@Override
 	@NotNull
 	public Language getLanguage()
 	{
 		return JavaScriptSupportLoader.JAVASCRIPT.getLanguage();
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -87,6 +89,7 @@ public class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElemen
 		return super.getUseScope();
 	}
 
+	@Override
 	public String toString()
 	{
 		String classname = getClass().getName();
@@ -100,6 +103,7 @@ public class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElemen
 	}
 
 
+	@Override
 	public ItemPresentation getPresentation()
 	{
 		if(this instanceof JSNamedElement)
@@ -114,6 +118,7 @@ public class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElemen
 		return null;
 	}
 
+	@Override
 	public PsiElement addBefore(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException
 	{
 		if(JSChangeUtil.isStatementOrComment(element))
@@ -131,6 +136,7 @@ public class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElemen
 		return super.addBefore(element, anchor);
 	}
 
+	@Override
 	public PsiElement addAfter(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException
 	{
 		if(JSChangeUtil.isStatementOrComment(element))
@@ -147,6 +153,7 @@ public class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElemen
 		return super.addAfter(element, anchor);
 	}
 
+	@Override
 	public PsiElement addRangeBefore(@NotNull PsiElement first, @NotNull PsiElement last, PsiElement anchor) throws IncorrectOperationException
 	{
 		if(JSChangeUtil.isStatementOrComment(first))
@@ -163,6 +170,7 @@ public class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElemen
 		return super.addRangeBefore(first, last, anchor);
 	}
 
+	@Override
 	public PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor) throws IncorrectOperationException
 	{
 		if(JSChangeUtil.isStatementOrComment(first))
@@ -180,16 +188,19 @@ public class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElemen
 		return super.addRangeAfter(first, last, anchor);
 	}
 
+	@Override
 	public PsiElement add(@NotNull PsiElement element) throws IncorrectOperationException
 	{
 		return addAfter(element, null);
 	}
 
+	@Override
 	public PsiElement addRange(PsiElement first, PsiElement last) throws IncorrectOperationException
 	{
 		return addRangeAfter(first, last, null);
 	}
 
+	@Override
 	public PsiElement replace(@NotNull PsiElement newElement) throws IncorrectOperationException
 	{
 		final ASTNode myNode = getNode();

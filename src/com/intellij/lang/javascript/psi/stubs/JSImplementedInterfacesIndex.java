@@ -10,6 +10,7 @@ public class JSImplementedInterfacesIndex extends StringStubIndexExtension<JSCla
 	public static final StubIndexKey<String, JSClass> KEY = StubIndexKey.createIndexKey("JS.class.implements");
 	private static final int VERSION = 1;
 
+	@Override
 	public StubIndexKey<String, JSClass> getKey()
 	{
 		return KEY;

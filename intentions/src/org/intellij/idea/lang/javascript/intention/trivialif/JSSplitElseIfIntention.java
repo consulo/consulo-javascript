@@ -27,12 +27,14 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 
 public class JSSplitElseIfIntention extends JSIntention {
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new SplitElseIfPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final JSIfStatement parentStatement = (JSIfStatement) element.getParent();
 
         assert (parentStatement != null);
@@ -44,7 +46,8 @@ public class JSSplitElseIfIntention extends JSIntention {
     }
 
     private static class SplitElseIfPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             final PsiElement parent = element.getParent();
 
             if (!(parent instanceof JSIfStatement)) {

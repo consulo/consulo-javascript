@@ -13,25 +13,30 @@ import org.jetbrains.annotations.NotNull;
 
 public class ExceptionCaughtLocallyJSInspection extends JavaScriptInspection {
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("exception.used.for.local.control.flow.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.ERRORHANDLING_GROUP_NAME;
     }
 
-    public boolean isEnabledByDefault() {
+    @Override
+	public boolean isEnabledByDefault() {
         return true;
     }
 
-    public String buildErrorString(Object... args) {
+    @Override
+	public String buildErrorString(Object... args) {
         return InspectionJSBundle.message("exception.caught.locally.error.string");
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 

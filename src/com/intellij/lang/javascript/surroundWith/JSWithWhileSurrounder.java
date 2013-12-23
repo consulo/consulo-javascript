@@ -31,22 +31,26 @@ import com.intellij.psi.PsiElement;
  */
 public class JSWithWhileSurrounder extends JSStatementSurrounder
 {
+	@Override
 	public String getTemplateDescription()
 	{
 		return JSBundle.message("javascript.surround.with.while");
 	}
 
+	@Override
 	protected String getStatementTemplate(final Project project, PsiElement context)
 	{
 		return "while(true) { }";
 	}
 
+	@Override
 	protected ASTNode getInsertBeforeNode(ASTNode statementNode)
 	{
 		JSWhileStatement stmt = (JSWhileStatement) statementNode.getPsi();
 		return stmt.getBody().getLastChild().getNode();
 	}
 
+	@Override
 	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
 	{
 		JSWhileStatement stmt = (JSWhileStatement) statementNode.getPsi();

@@ -30,6 +30,7 @@ import com.intellij.util.IncorrectOperationException;
 
 abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler
 {
+	@Override
 	public void invoke(final Project project, final Editor editor, final PsiFile file)
 	{
 		JSClass clazz = findClass(file, editor);
@@ -93,10 +94,12 @@ abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler
 		final Collection<JSNamedElementNode> selectedElements1 = selectedElements;
 		Runnable runnable = new Runnable()
 		{
+			@Override
 			public void run()
 			{
 				ApplicationManager.getApplication().runWriteAction(new Runnable()
 				{
+					@Override
 					public void run()
 					{
 						try
@@ -167,11 +170,13 @@ abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler
 
 	protected abstract void collectCandidates(final JSClass clazz, final Collection<JSNamedElementNode> candidates);
 
+	@Override
 	public boolean startInWriteAction()
 	{
 		return false;
 	}
 
+	@Override
 	public boolean isValidFor(final Editor editor, final PsiFile file)
 	{
 		return true;

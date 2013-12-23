@@ -35,36 +35,43 @@ public abstract class JSStubElementType<StubT extends JSStubElement<PsiT>, PsiT 
 		return "JS:" + super.toString();
 	}
 
+	@Override
 	public void indexStub(final StubT stub, final IndexSink sink)
 	{
 		stub.index(sink);
 	}
 
+	@Override
 	public String getExternalId()
 	{
 		return toString();
 	}
 
+	@Override
 	public PsiT createPsi(final StubT stub)
 	{
 		return stub.createPsi();
 	}
 
+	@Override
 	public StubT createStub(final PsiT psi, final StubElement parentStub)
 	{
 		return myStubGenerator.newInstance(psi, parentStub, this);
 	}
 
+	@Override
 	public void serialize(final StubT stub, final StubOutputStream dataStream) throws IOException
 	{
 		stub.serialize(dataStream);
 	}
 
+	@Override
 	public StubT deserialize(final StubInputStream dataStream, final StubElement parentStub) throws IOException
 	{
 		return myStubGenerator.newInstance(dataStream, parentStub, this);
 	}
 
+	@Override
 	public PsiElement construct(final ASTNode node)
 	{
 		return myStubGenerator.construct(node);

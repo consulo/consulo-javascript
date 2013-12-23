@@ -45,12 +45,14 @@ public class JSExpressionStatementImpl extends JSStatementImpl implements JSExpr
 		super(node);
 	}
 
+	@Override
 	public JSExpression getExpression()
 	{
 		final ASTNode expressionNode = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
 		return expressionNode != null ? (JSExpression) expressionNode.getPsi() : null;
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -63,6 +65,7 @@ public class JSExpressionStatementImpl extends JSStatementImpl implements JSExpr
 		}
 	}
 
+	@Override
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
 			@NotNull PsiElement place)
 	{
@@ -78,15 +81,18 @@ public class JSExpressionStatementImpl extends JSStatementImpl implements JSExpr
 		return super.processDeclarations(processor, state, lastParent, place);
 	}
 
+	@Override
 	public ItemPresentation getPresentation()
 	{
 		return new ItemPresentation()
 		{
+			@Override
 			public String getPresentableText()
 			{
 				return getText();
 			}
 
+			@Override
 			public String getLocationString()
 			{
 				return "";
@@ -97,6 +103,7 @@ public class JSExpressionStatementImpl extends JSStatementImpl implements JSExpr
 				return null;
 			}
 
+			@Override
 			public Icon getIcon(boolean open)
 			{
 				return IconDescriptorUpdaters.getIcon(JSExpressionStatementImpl.this, 0);

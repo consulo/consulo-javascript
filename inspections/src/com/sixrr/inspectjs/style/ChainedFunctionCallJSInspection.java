@@ -14,24 +14,28 @@ public class ChainedFunctionCallJSInspection extends JavaScriptInspection {
 
 
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.STYLE_GROUP_NAME;
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message(
                 "chained.function.call.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     protected String buildErrorString(Object... args) {
         return InspectionJSBundle.message(
                 "chained.function.call.problem.descriptor");
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new NestedMethodCallVisitor();
     }
 

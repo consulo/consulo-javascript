@@ -13,26 +13,31 @@ import org.jetbrains.annotations.Nullable;
 
 public class DebuggerStatementJSInspection extends JavaScriptInspection {
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("debugger.statement.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.VALIDITY_GROUP_NAME;
     }
 
-    public boolean isEnabledByDefault() {
+    @Override
+	public boolean isEnabledByDefault() {
         return false;
     }
 
-    @Nullable
+    @Override
+	@Nullable
     protected String buildErrorString(Object... args) {
         return InspectionJSBundle.message("debugger.statement.error.string");
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 

@@ -60,6 +60,7 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
 		myEditor = editor;
 	}
 
+	@Override
 	public boolean showHint(final Editor editor)
 	{
 		myEditor = editor;
@@ -69,29 +70,34 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
 		return true;
 	}
 
+	@Override
 	@NotNull
 	public String getText()
 	{
 		return JSBundle.message(isFunction ? "flex.import.function" : "flex.import.class", calculatedClass);
 	}
 
+	@Override
 	@NotNull
 	public String getName()
 	{
 		return getText();
 	}
 
+	@Override
 	@NotNull
 	public String getFamilyName()
 	{
 		return getText();
 	}
 
+	@Override
 	public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor)
 	{
 		invoke(project, myEditor, descriptor.getPsiElement().getContainingFile());
 	}
 
+	@Override
 	public boolean isAvailable(@NotNull final Project project, final Editor editor, final PsiFile file)
 	{
 		if(!myReference.getElement().isValid())
@@ -195,6 +201,7 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
 		}
 	}
 
+	@Override
 	public void invoke(@NotNull final Project project, final Editor editor, final PsiFile file)
 	{
 		final Collection<JSQualifiedNamedElement> candidates = getCandidates(editor, file);
@@ -206,11 +213,13 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
 				NavigationUtil.getPsiElementPopup(candidates.toArray(new JSQualifiedNamedElement[candidates.size()]),
 						new PsiElementListCellRenderer<JSQualifiedNamedElement>()
 						{
+							@Override
 							public String getElementText(final JSQualifiedNamedElement element)
 							{
 								return element.getName();
 							}
 
+							@Override
 							protected String getContainerText(final JSQualifiedNamedElement element, final String name)
 							{
 								final String qName = element.getQualifiedName();
@@ -223,16 +232,19 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
 								return "( " + s + " )";
 							}
 
+							@Override
 							protected int getIconFlags()
 							{
 								return 0;
 							}
 						}, JSBundle.message("choose.class.title"), new PsiElementProcessor<JSQualifiedNamedElement>()
 						{
+							@Override
 							public boolean execute(final JSQualifiedNamedElement element)
 							{
 								CommandProcessor.getInstance().executeCommand(project, new Runnable()
 								{
+									@Override
 									public void run()
 									{
 										doImport(editor, element.getQualifiedName());
@@ -255,6 +267,7 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
 	{
 		ApplicationManager.getApplication().runWriteAction(new Runnable()
 		{
+			@Override
 			public void run()
 			{
 				final PsiElement element = myReference.getElement();
@@ -263,11 +276,13 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
 		});
 	}
 
+	@Override
 	public boolean startInWriteAction()
 	{
 		return false;
 	}
 
+	@Override
 	public boolean execute()
 	{
 		final PsiFile containingFile = myReference.getElement().getContainingFile();

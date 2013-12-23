@@ -32,6 +32,7 @@ public class JSDocCommentImpl extends JSElementImpl implements JSDocComment
 		super(node);
 	}
 
+	@Override
 	public IElementType getTokenType()
 	{
 		return getNode().getElementType();
@@ -50,6 +51,7 @@ public class JSDocCommentImpl extends JSElementImpl implements JSDocComment
 		}
 	}
 
+	@Override
 	public JSDocTag[] getTags()
 	{
 		final PsiElement firstChild = getFirstChild();

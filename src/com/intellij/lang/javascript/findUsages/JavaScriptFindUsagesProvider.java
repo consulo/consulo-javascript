@@ -44,16 +44,19 @@ import com.intellij.psi.xml.XmlToken;
  */
 public class JavaScriptFindUsagesProvider implements FindUsagesProvider
 {
+	@Override
 	public boolean canFindUsagesFor(@NotNull PsiElement psiElement)
 	{
 		return psiElement instanceof PsiNamedElement;
 	}
 
+	@Override
 	public String getHelpId(@NotNull PsiElement psiElement)
 	{
 		return null;
 	}
 
+	@Override
 	@NotNull
 	public String getType(@NotNull PsiElement element)
 	{
@@ -108,6 +111,7 @@ public class JavaScriptFindUsagesProvider implements FindUsagesProvider
 		return "";
 	}
 
+	@Override
 	@NotNull
 	public String getDescriptiveName(@NotNull PsiElement element)
 	{
@@ -115,12 +119,14 @@ public class JavaScriptFindUsagesProvider implements FindUsagesProvider
 		return name != null ? name : "";
 	}
 
+	@Override
 	@NotNull
 	public String getNodeText(@NotNull PsiElement element, boolean useFullName)
 	{
 		return getDescriptiveName(element);
 	}
 
+	@Override
 	public WordsScanner getWordsScanner()
 	{
 		return new JSWordsScanner();

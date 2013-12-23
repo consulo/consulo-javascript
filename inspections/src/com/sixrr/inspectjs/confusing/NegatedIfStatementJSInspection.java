@@ -21,37 +21,44 @@ import org.jetbrains.annotations.Nullable;
 public class NegatedIfStatementJSInspection extends JavaScriptInspection {
     private final NegatedIfElseFix fix = new NegatedIfElseFix();
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("negated.if.statement.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
-    @Nullable
+    @Override
+	@Nullable
     protected String buildErrorString(Object... args) {
         return InspectionJSBundle.message("negated.ref.statement.error.string");
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
-    protected InspectionJSFix buildFix(PsiElement location) {
+    @Override
+	protected InspectionJSFix buildFix(PsiElement location) {
         return fix;
     }
 
     private static class NegatedIfElseFix extends InspectionJSFix {
 
-        @NotNull
+        @Override
+		@NotNull
         public String getName() {
             return InspectionJSBundle.message("invert.if.condition.fix");
         }
 
-        public void doFix(Project project, ProblemDescriptor descriptor)
+        @Override
+		public void doFix(Project project, ProblemDescriptor descriptor)
                 throws IncorrectOperationException {
             final PsiElement ifToken = descriptor.getPsiElement();
             final JSIfStatement ifStatement = (JSIfStatement) ifToken.getParent();

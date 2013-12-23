@@ -42,6 +42,7 @@ public class JSArrayLiteralExpressionImpl extends JSExpressionImpl implements JS
 		super(node);
 	}
 
+	@Override
 	public JSExpression[] getExpressions()
 	{
 		List<JSExpression> result = new ArrayList<JSExpression>();
@@ -72,6 +73,7 @@ public class JSArrayLiteralExpressionImpl extends JSExpressionImpl implements JS
 		return result.toArray(new JSExpression[result.size()]);
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)

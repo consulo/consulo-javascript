@@ -44,6 +44,7 @@ public class JSTryStatementImpl extends JSStatementImpl implements JSTryStatemen
 		super(node);
 	}
 
+	@Override
 	public JSStatement getStatement()
 	{
 		ASTNode child = getNode().getFirstChildNode();
@@ -63,6 +64,7 @@ public class JSTryStatementImpl extends JSStatementImpl implements JSTryStatemen
 		return null;
 	}
 
+	@Override
 	@Nullable
 	public JSCatchBlock getCatchBlock()
 	{
@@ -74,11 +76,13 @@ public class JSTryStatementImpl extends JSStatementImpl implements JSTryStatemen
 		return (JSCatchBlock) catchChild.getPsi();
 	}
 
+	@Override
 	public JSCatchBlock[] getAllCatchBlocks()
 	{
 		return findChildrenByClass(JSCatchBlock.class);
 	}
 
+	@Override
 	public JSStatement getFinallyStatement()
 	{
 		ASTNode child = getNode().getFirstChildNode();
@@ -99,6 +103,7 @@ public class JSTryStatementImpl extends JSStatementImpl implements JSTryStatemen
 		return null;
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)

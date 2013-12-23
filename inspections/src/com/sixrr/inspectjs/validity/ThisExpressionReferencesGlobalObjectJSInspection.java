@@ -16,26 +16,31 @@ import org.jetbrains.annotations.Nullable;
 
 public class ThisExpressionReferencesGlobalObjectJSInspection extends JavaScriptInspection {
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("this.expression.which.references.the.global.object.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.VALIDITY_GROUP_NAME;
     }
 
-    public boolean isEnabledByDefault() {
+    @Override
+	public boolean isEnabledByDefault() {
         return true;
     }
 
-    @Nullable
+    @Override
+	@Nullable
     protected String buildErrorString(Object... args) {
         return InspectionJSBundle.message("this.expression.references.global.object.error.string");
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 

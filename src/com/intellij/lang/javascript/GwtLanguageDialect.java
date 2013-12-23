@@ -43,6 +43,7 @@ public class GwtLanguageDialect extends JSLanguageDialect
 
 		SyntaxHighlighterFactory.LANGUAGE_FACTORY.addExplicitExtension(this, new SingleLazyInstanceSyntaxHighlighterFactory()
 		{
+			@Override
 			@NotNull
 			protected SyntaxHighlighter createHighlighter()
 			{
@@ -51,6 +52,7 @@ public class GwtLanguageDialect extends JSLanguageDialect
 		});
 	}
 
+	@Override
 	@NonNls
 	public String getFileExtension()
 	{
@@ -70,6 +72,7 @@ public class GwtLanguageDialect extends JSLanguageDialect
 			myKeysMap.put(JSTokenTypes.IDENTIFIER, DefaultLanguageHighlighterColors.CLASS_NAME);
 		}
 
+		@Override
 		@NotNull
 		public TextAttributesKey[] getTokenHighlights(final IElementType tokenType)
 		{

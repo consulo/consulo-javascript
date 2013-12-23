@@ -23,6 +23,7 @@ import com.intellij.refactoring.RefactoringActionHandler;
 
 public class JavascriptRefactoringSupportProvider extends RefactoringSupportProvider
 {
+	@Override
 	public boolean isSafeDeleteAvailable(PsiElement element)
 	{
 		boolean simpleElement = element instanceof JSFunction || element instanceof JSVariable || element instanceof JSDefinitionExpression ||
@@ -38,12 +39,14 @@ public class JavascriptRefactoringSupportProvider extends RefactoringSupportProv
 		return simpleElement && ((JSNamedElement) element).getName() != null;
 	}
 
+	@Override
 	@Nullable
 	public RefactoringActionHandler getIntroduceVariableHandler()
 	{
 		return new JSIntroduceVariableHandler();
 	}
 
+	@Override
 	@Nullable
 	public RefactoringActionHandler getExtractMethodHandler()
 	{

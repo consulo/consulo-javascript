@@ -134,6 +134,7 @@ public final class JavaScriptIndex implements ProjectComponent
 
 	private static final MyEntryProcessor<Set<String>, Object> myCollectingClassNamesProcessor = new MyEntryProcessor<Set<String>, Object>()
 	{
+		@Override
 		public void process(final JSIndexEntry entry, final Set<String> classNames, final Object o1)
 		{
 			entry.fillClassNames(classNames);
@@ -141,6 +142,7 @@ public final class JavaScriptIndex implements ProjectComponent
 	};
 	private static final MyEntryProcessor<Set<NavigationItem>, String> myFindClassByNameProcessor = new MyEntryProcessor<Set<NavigationItem>, String>()
 	{
+		@Override
 		public void process(final JSIndexEntry entry, final Set<NavigationItem> classes, final String name)
 		{
 			entry.fillClassByName(name, classes);
@@ -149,6 +151,7 @@ public final class JavaScriptIndex implements ProjectComponent
 
 	private static final MyEntryProcessor<Set<String>, Object> myCollectSymbolNamesProcessor = new MyEntryProcessor<Set<String>, Object>()
 	{
+		@Override
 		public void process(final JSIndexEntry entry, final Set<String> symbolNames, final Object o1)
 		{
 			entry.fillSymbolNames(symbolNames);
@@ -156,6 +159,7 @@ public final class JavaScriptIndex implements ProjectComponent
 	};
 	private static final MyEntryProcessor<Set<NavigationItem>, String> myFindSymbolByNameProcessor = new MyEntryProcessor<Set<NavigationItem>, String>()
 	{
+		@Override
 		public void process(final JSIndexEntry entry, final Set<NavigationItem> navigationItems, final String s)
 		{
 			entry.fillSymbolsByName(s, navigationItems);
@@ -164,6 +168,7 @@ public final class JavaScriptIndex implements ProjectComponent
 
 	private final static MyEntryProcessor<Set<NavigationItem>, String> myFindFileByNameProcessor = new MyEntryProcessor<Set<NavigationItem>, String>()
 	{
+		@Override
 		public void process(final JSIndexEntry entry, final Set<NavigationItem> navigationItems, final String s)
 		{
 			if(s.equals(entry.getFile().getName()))
@@ -184,11 +189,13 @@ public final class JavaScriptIndex implements ProjectComponent
 		myScopeForPackages = GlobalSearchScope.allScope(project);
 	}
 
+	@Override
 	public void projectOpened()
 	{
 		myLoadingProject = true;
 		myUpdateRunnable = new Runnable()
 		{
+			@Override
 			public void run()
 			{
 				try
@@ -205,6 +212,7 @@ public final class JavaScriptIndex implements ProjectComponent
 
 					processModulesThatContainExternalJSDefinitions(new Processor<VirtualFile>()
 					{
+						@Override
 						public boolean process(final VirtualFile home)
 						{
 							if(home.isDirectory())
@@ -225,6 +233,7 @@ public final class JavaScriptIndex implements ProjectComponent
 
 					fileIndex.iterateContent(new ContentIterator()
 					{
+						@Override
 						public boolean processFile(VirtualFile fileOrDir)
 						{
 							if(isAcceptableFile(fileOrDir) &&
@@ -239,6 +248,7 @@ public final class JavaScriptIndex implements ProjectComponent
 
 					processModulesThatContainExternalJSDefinitions(new Processor<VirtualFile>()
 					{
+						@Override
 						public boolean process(final VirtualFile home)
 						{
 							collectFilesUnderDirectory(home, filesToProcess, !ApplicationManager.getApplication().isCommandLine());
@@ -323,6 +333,7 @@ public final class JavaScriptIndex implements ProjectComponent
 				}
 			}
 
+			@Override
 			public void fileCreated(VirtualFileEvent event)
 			{
 				if(this != myFileListener)
@@ -401,6 +412,7 @@ public final class JavaScriptIndex implements ProjectComponent
 				}
 			}
 
+			@Override
 			public void beforeFileDeletion(VirtualFileEvent event)
 			{
 				if(this != myFileListener)
@@ -411,6 +423,7 @@ public final class JavaScriptIndex implements ProjectComponent
 				propagateEvent(fileOrDir, fileRemovedCallback, true);
 			}
 
+			@Override
 			public void beforeContentsChange(final VirtualFileEvent event)
 			{
 				if(this != myFileListener)
@@ -420,6 +433,7 @@ public final class JavaScriptIndex implements ProjectComponent
 				propagateEvent(event.getFile(), fileChangedCallback, false);
 			}
 
+			@Override
 			public void beforePropertyChange(final VirtualFilePropertyEvent event)
 			{
 				if(this != myFileListener)
@@ -432,6 +446,7 @@ public final class JavaScriptIndex implements ProjectComponent
 				}
 			}
 
+			@Override
 			public void propertyChanged(final VirtualFilePropertyEvent event)
 			{
 				if(this != myFileListener)
@@ -444,6 +459,7 @@ public final class JavaScriptIndex implements ProjectComponent
 				}
 			}
 
+			@Override
 			public void beforeFileMovement(final VirtualFileMoveEvent event)
 			{
 				if(this != myFileListener)
@@ -453,6 +469,7 @@ public final class JavaScriptIndex implements ProjectComponent
 				propagateEvent(event.getFile(), fileRemovedCallback, false);
 			}
 
+			@Override
 			public void fileMoved(final VirtualFileMoveEvent event)
 			{
 				if(this != myFileListener)
@@ -469,10 +486,12 @@ public final class JavaScriptIndex implements ProjectComponent
 
 		myConnection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener()
 		{
+			@Override
 			public void beforeRootsChange(ModuleRootEvent event)
 			{
 			}
 
+			@Override
 			public void rootsChanged(ModuleRootEvent event)
 			{
 				requestUpdateCaches();
@@ -489,6 +508,7 @@ public final class JavaScriptIndex implements ProjectComponent
 	{
 		Runnable runnable = new Runnable()
 		{
+			@Override
 			public void run()
 			{
 				if(myProject.isDisposed())
@@ -903,6 +923,7 @@ public final class JavaScriptIndex implements ProjectComponent
 		}
 	}
 
+	@Override
 	public void projectClosed()
 	{
 		if(myFileListener != null)
@@ -988,16 +1009,19 @@ public final class JavaScriptIndex implements ProjectComponent
 		}
 	}
 
+	@Override
 	@NonNls
 	public String getComponentName()
 	{
 		return "JavaScriptIndex";
 	}
 
+	@Override
 	public void initComponent()
 	{
 	}
 
+	@Override
 	public void disposeComponent()
 	{
 		if(myFileListener != null)
@@ -1290,16 +1314,19 @@ public final class JavaScriptIndex implements ProjectComponent
 
 		indexEntry.processSymbolsNoLock(new JavaScriptSymbolProcessor.DefaultSymbolProcessor()
 		{
+			@Override
 			public PsiFile getBaseFile()
 			{
 				return indexEntry.getFile();
 			}
 
+			@Override
 			public int getRequiredNameId()
 			{
 				return nameId;
 			}
 
+			@Override
 			public final boolean process(PsiElement element, JSNamespace ns)
 			{
 				if(element.getTextOffset() == offset)
@@ -1426,6 +1453,7 @@ public final class JavaScriptIndex implements ProjectComponent
 
 	private class JSTreeChangeListener extends PsiTreeChangeAdapter
 	{
+		@Override
 		public void childAdded(PsiTreeChangeEvent event)
 		{
 			final PsiElement child = event.getChild();
@@ -1439,11 +1467,13 @@ public final class JavaScriptIndex implements ProjectComponent
 			}
 		}
 
+		@Override
 		public void childrenChanged(PsiTreeChangeEvent event)
 		{
 			process(event);
 		}
 
+		@Override
 		public void childRemoved(PsiTreeChangeEvent event)
 		{
 			if(event.getChild() instanceof JSFile)
@@ -1456,6 +1486,7 @@ public final class JavaScriptIndex implements ProjectComponent
 			}
 		}
 
+		@Override
 		public void childReplaced(PsiTreeChangeEvent event)
 		{
 			process(event);

@@ -11,7 +11,8 @@ public class RegExFormatter extends DefaultFormatter {
         setOverwriteMode(false);
     }
 
-    public Object stringToValue(String text) throws ParseException {
+    @Override
+	public Object stringToValue(String text) throws ParseException {
         try {
             return Pattern.compile(text);
         } catch (final PatternSyntaxException e) {
@@ -19,7 +20,8 @@ public class RegExFormatter extends DefaultFormatter {
         }
     }
 
-    public String valueToString(Object value) throws ParseException {
+    @Override
+	public String valueToString(Object value) throws ParseException {
         if (value == null) {
             return "";
         }

@@ -25,11 +25,13 @@ class JSStubbedStatementImpl<T extends StubElement> extends JSStubElementImpl<T>
 		super(t, type);
 	}
 
+	@Override
 	public JSStatement addStatementBefore(JSStatement toAdd) throws IncorrectOperationException
 	{
 		return addStatementImpl(toAdd, true);
 	}
 
+	@Override
 	public JSStatement addStatementAfter(JSStatement toAdd) throws IncorrectOperationException
 	{
 		return addStatementImpl(toAdd, false);
@@ -68,11 +70,13 @@ class JSStubbedStatementImpl<T extends StubElement> extends JSStubElementImpl<T>
 		CodeStyleManager.getInstance(getProject()).reformatNewlyAddedElement(block, addedElement);
 	}
 
+	@Override
 	public JSStatement replace(JSStatement newStatement)
 	{
 		return JSChangeUtil.replaceStatement(this, newStatement);
 	}
 
+	@Override
 	public void delete() throws IncorrectOperationException
 	{
 		getNode().getTreeParent().removeChild(getNode());

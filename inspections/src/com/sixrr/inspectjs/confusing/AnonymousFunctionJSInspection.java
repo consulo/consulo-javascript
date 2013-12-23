@@ -13,22 +13,26 @@ import org.jetbrains.annotations.Nullable;
 
 public class AnonymousFunctionJSInspection extends JavaScriptInspection{
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName(){
         return InspectionJSBundle.message("anonymous.function.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName(){
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
-    @Nullable
+    @Override
+	@Nullable
     protected String buildErrorString(Object... args){
         return InspectionJSBundle.message("anonymous.function.error.string");
     }
 
-    public BaseInspectionVisitor buildVisitor(){
+    @Override
+	public BaseInspectionVisitor buildVisitor(){
         return new Visitor();
     }
 

@@ -50,6 +50,7 @@ class CreateClassOrInterfaceAction implements LocalQuickFix
 		myIsInterface = isInterface;
 	}
 
+	@Override
 	@NotNull
 	public String getName()
 	{
@@ -57,12 +58,14 @@ class CreateClassOrInterfaceAction implements LocalQuickFix
 		return JSBundle.message(key, classNameToCreate);
 	}
 
+	@Override
 	@NotNull
 	public String getFamilyName()
 	{
 		return getName();
 	}
 
+	@Override
 	public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor)
 	{
 		PsiFile contextFile = myContext.getContainingFile();
@@ -92,6 +95,7 @@ class CreateClassOrInterfaceAction implements LocalQuickFix
 		final PsiFile contextFile1 = contextFile;
 		ApplicationManager.getApplication().runWriteAction(new Runnable()
 		{
+			@Override
 			public void run()
 			{
 				try

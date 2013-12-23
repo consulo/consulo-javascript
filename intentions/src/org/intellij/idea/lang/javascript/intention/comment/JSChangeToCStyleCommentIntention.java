@@ -31,12 +31,14 @@ import java.util.List;
 
 public class JSChangeToCStyleCommentIntention extends JSIntention {
 
-    @NotNull
+    @Override
+	@NotNull
     protected JSElementPredicate getElementPredicate() {
         return new EndOfLineCommentPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         PsiComment firstComment = (PsiComment) element;
 
         while (true) {
@@ -103,7 +105,8 @@ public class JSChangeToCStyleCommentIntention extends JSIntention {
 
     private static class EndOfLineCommentPredicate implements JSElementPredicate {
 
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof PsiComment)) {
                 return false;
             }

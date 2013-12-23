@@ -19,19 +19,23 @@ class AS3InterfaceDumper extends AbstractDumpProcessor
 	private int memberCount;
 	private boolean isInterface;
 
+	@Override
 	public void dumpStat(@NotNull final String stat)
 	{
 	}
 
+	@Override
 	public void dumpToplevelAnonymousMethod(final @NotNull Abc abc, final @NotNull MethodInfo m)
 	{
 	}
 
+	@Override
 	public void dumpTopLevelTraits(final Abc abc, final @NotNull Traits t, final String indent)
 	{
 		t.dump(abc, indent, "", this);
 	}
 
+	@Override
 	public boolean doDumpMember(final @NotNull MemberInfo memberInfo)
 	{
 		if(memberInfo.name == null)
@@ -45,21 +49,25 @@ class AS3InterfaceDumper extends AbstractDumpProcessor
 		return true;
 	}
 
+	@Override
 	public void appendMethodSeparator()
 	{
 		append((++memberCount % 5) == 0 ? "\n" : "");
 	}
 
+	@Override
 	public void appendFieldSeparator()
 	{
 		appendMethodSeparator();
 	}
 
+	@Override
 	public String getAbcInSwfIndent()
 	{
 		return "";
 	}
 
+	@Override
 	public void processValue(final Multiname typeName, final Object valueObject)
 	{
 		append(" = ");
@@ -120,11 +128,13 @@ class AS3InterfaceDumper extends AbstractDumpProcessor
 		return !doNotNeedQoting.contains(value);
 	}
 
+	@Override
 	public boolean doDumpMetaData(final @NotNull MetaData md)
 	{
 		return md.name.indexOf("__") == -1;
 	}
 
+	@Override
 	public void processParameter(@NotNull String name, @Nullable Multiname type, String parentName, @Nullable Multiname value, boolean rest)
 	{
 		if(rest)
@@ -144,26 +154,31 @@ class AS3InterfaceDumper extends AbstractDumpProcessor
 		}
 	}
 
+	@Override
 	public boolean doStarTypeDumpInExtends()
 	{
 		return false;
 	}
 
+	@Override
 	public boolean doStarMetaAttrNameDump()
 	{
 		return false;
 	}
 
+	@Override
 	public void setProcessingInterface(final boolean anInterface)
 	{
 		isInterface = anInterface;
 	}
 
+	@Override
 	public void hasError(@NotNull final String error)
 	{
 		sb.append("/*" + error + "*/");
 	}
 
+	@Override
 	public void processMultinameAsPackageName(Multiname name, String parentName, boolean verbose)
 	{
 		append(getMultinameAsPackageName(name, parentName, verbose));
@@ -185,6 +200,7 @@ class AS3InterfaceDumper extends AbstractDumpProcessor
 		return name.toString();
 	}
 
+	@Override
 	protected String appendModifiers(MemberInfo member, String attr)
 	{
 		@NonNls String s = attr;
@@ -239,6 +255,7 @@ class AS3InterfaceDumper extends AbstractDumpProcessor
 		append(";\n");
 	}
 
+	@Override
 	protected boolean dumpRestParameter()
 	{
 		return true;

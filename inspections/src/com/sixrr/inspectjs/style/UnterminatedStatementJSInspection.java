@@ -21,36 +21,43 @@ public class UnterminatedStatementJSInspection extends JavaScriptInspection {
 
   private final TerminateStatementFix fix = new TerminateStatementFix();
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("unterminated.statement.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.STYLE_GROUP_NAME;
     }
 
-    @Nullable
+    @Override
+	@Nullable
     protected String buildErrorString(Object... args) {
         return InspectionJSBundle.message("unterminated.statement.error.string");
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
-    public InspectionJSFix buildFix(PsiElement location) {
+    @Override
+	public InspectionJSFix buildFix(PsiElement location) {
         return fix;
     }
 
     private static class TerminateStatementFix extends InspectionJSFix {
-        @NotNull
+        @Override
+		@NotNull
         public String getName() {
             return InspectionJSBundle.message("terminate.statement.fix");
         }
 
-        public void doFix(Project project, ProblemDescriptor descriptor)
+        @Override
+		public void doFix(Project project, ProblemDescriptor descriptor)
                 throws IncorrectOperationException {
             JSStatement expression = PsiTreeUtil.getParentOfType(descriptor.getPsiElement(), JSStatement.class);
             if (expression instanceof JSBlockStatement && expression.getParent() instanceof JSFunctionExpression) {
@@ -119,7 +126,8 @@ public class UnterminatedStatementJSInspection extends JavaScriptInspection {
             registerError(jsVarStatement);
         }
 
-        protected PsiElement getEditorErrorLocation(final PsiElement location) {
+        @Override
+		protected PsiElement getEditorErrorLocation(final PsiElement location) {
           PsiElement editorErrorLocation = PsiTreeUtil.lastChild(location);
           while (editorErrorLocation instanceof PsiErrorElement || (editorErrorLocation != null && editorErrorLocation.getTextLength() == 0)) {
             editorErrorLocation = PsiTreeUtil.prevLeaf(editorErrorLocation);

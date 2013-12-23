@@ -35,6 +35,7 @@ public class JSEmptyStatementImpl extends JSStatementImpl implements JSEmptyStat
 		super(node);
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)

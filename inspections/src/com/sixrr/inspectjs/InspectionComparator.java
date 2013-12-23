@@ -10,7 +10,8 @@ class InspectionComparator implements Comparator<Class<? extends LocalInspection
         super();
     }
 
-    public int compare(Class<? extends LocalInspectionTool> class1,
+    @Override
+	public int compare(Class<? extends LocalInspectionTool> class1,
                        Class<? extends LocalInspectionTool> class2) {
         final LocalInspectionTool inspection1;
         final LocalInspectionTool inspection2;

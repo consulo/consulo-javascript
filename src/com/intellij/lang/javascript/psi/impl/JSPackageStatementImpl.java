@@ -54,6 +54,7 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 		super(stub, JSElementTypes.PACKAGE_STATEMENT);
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -66,6 +67,7 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 		}
 	}
 
+	@Override
 	public String getName()
 	{
 		final JSPackageStatementStub stub = getStub();
@@ -81,6 +83,7 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 		return null;
 	}
 
+	@Override
 	public String getQualifiedName()
 	{
 		final JSPackageStatementStub stub = getStub();
@@ -97,16 +100,19 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 		return null;
 	}
 
+	@Override
 	public JSSourceElement[] getStatements()
 	{
 		return getStubOrPsiChildren(JSElementTypes.SOURCE_ELEMENTS, JSSourceElement.EMPTY_ARRAY);
 	}
 
+	@Override
 	public void setQualifiedName(final String expectedPackageNameFromFile)
 	{
 		doChangeName(getProject(), this, expectedPackageNameFromFile);
 	}
 
+	@Override
 	public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException
 	{
 		VirtualFile virtualFile = getContainingFile().getVirtualFile();
@@ -137,6 +143,7 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 		return this;
 	}
 
+	@Override
 	public ASTNode findNameIdentifier()
 	{
 		return getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
@@ -156,12 +163,14 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 		}
 	}
 
+	@Override
 	public PsiElement getNameIdentifier()
 	{
 		final ASTNode node = findNameIdentifier();
 		return node != null ? node.getPsi() : null;
 	}
 
+	@Override
 	public PsiElement addBefore(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException
 	{
 		if(JSChangeUtil.isStatementOrComment(element))
@@ -173,6 +182,7 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 		return super.addBefore(element, anchor);
 	}
 
+	@Override
 	public PsiElement addAfter(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException
 	{
 		if(JSChangeUtil.isStatementOrComment(element))

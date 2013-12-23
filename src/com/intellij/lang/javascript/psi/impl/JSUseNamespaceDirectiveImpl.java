@@ -42,6 +42,7 @@ public class JSUseNamespaceDirectiveImpl extends JSStubbedStatementImpl<JSUseNam
 		super(stub, JSElementTypes.USE_NAMESPACE_DIRECTIVE);
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -54,6 +55,7 @@ public class JSUseNamespaceDirectiveImpl extends JSStubbedStatementImpl<JSUseNam
 		}
 	}
 
+	@Override
 	public String getNamespaceToBeUsed()
 	{
 		final JSUseNamespaceDirectiveStub stub = getStub();

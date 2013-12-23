@@ -78,16 +78,19 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 	{
 		INTERFACE_IMPLEMENTATIONS_QUERY_FACTORY.registerExecutor(new JSClassSearch()
 		{
+			@Override
 			protected StubIndexKey<String, JSClass> getIndexKey()
 			{
 				return JSImplementedInterfacesIndex.KEY;
 			}
 
+			@Override
 			protected JSClass[] getSupers(final JSClass candidate)
 			{
 				return candidate.getImplementedInterfaces();
 			}
 
+			@Override
 			public boolean execute(final SearchParameters queryParameters, Processor<JSClass> consumer)
 			{
 				final THashSet<JSClass> visited = new THashSet<JSClass>();         // no abstract classes in ActionScript !
@@ -97,6 +100,7 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 					final Processor<JSClass> consumerCopy = consumer;
 					consumer = new Processor<JSClass>()
 					{
+						@Override
 						public boolean process(JSClass jsClass)
 						{
 							return consumerCopy.process(jsClass) && OUR_CLASS_SEARCH_EXECUTOR.processDirectInheritors(jsClass, this, false, visited,
@@ -112,6 +116,7 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 				{
 					return searchClassInheritors(queryParameters.getTargetClass(), queryParameters.isCheckDeepInheritance()).forEach(new Processor<JSClass>()
 					{
+						@Override
 						public boolean process(final JSClass jsClass)
 						{
 							return processDirectInheritors(jsClass, consumerToUse, queryParameters.isCheckDeepInheritance(), visited, queryParameters.getScope());
@@ -121,6 +126,7 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 				return b;
 			}
 
+			@Override
 			protected Collection<JSClass> getInheritors(JSClassInheritorsProvider provider, String parentName, Project project, GlobalSearchScope scope)
 			{
 				return provider.getImplementingClasses(parentName, project, scope);
@@ -129,16 +135,19 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 
 		CLASS_INHERITORS_QUERY_FACTORY.registerExecutor(OUR_CLASS_SEARCH_EXECUTOR = new JSClassSearch()
 		{
+			@Override
 			protected StubIndexKey<String, JSClass> getIndexKey()
 			{
 				return JSSuperClassIndex.KEY;
 			}
 
+			@Override
 			protected JSClass[] getSupers(final JSClass candidate)
 			{
 				return candidate.getSuperClasses();
 			}
 
+			@Override
 			protected Collection<JSClass> getInheritors(JSClassInheritorsProvider provider, String parentName, Project project, GlobalSearchScope scope)
 			{
 				return provider.getExtendingClasses(parentName, project, scope);
@@ -148,6 +157,7 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 	}
 
 
+	@Override
 	public boolean execute(final SearchParameters queryParameters, final Processor<JSClass> consumer)
 	{
 		return processDirectInheritors(queryParameters.getTargetClass(), consumer, queryParameters.isCheckDeepInheritance(), null,

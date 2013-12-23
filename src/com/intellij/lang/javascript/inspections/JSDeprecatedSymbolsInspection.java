@@ -37,18 +37,21 @@ public class JSDeprecatedSymbolsInspection extends JSInspection
 	@NonNls
 	private static final String SHORT_NAME = "JSDeprecatedSymbols";
 
+	@Override
 	@NotNull
 	public String getGroupDisplayName()
 	{
 		return JSBundle.message("js.inspection.group.name");
 	}
 
+	@Override
 	@NotNull
 	public String getDisplayName()
 	{
 		return JSBundle.message("js.deprecated.symbols.inspection.name");
 	}
 
+	@Override
 	@NotNull
 	@NonNls
 	public String getShortName()
@@ -56,6 +59,7 @@ public class JSDeprecatedSymbolsInspection extends JSInspection
 		return SHORT_NAME;
 	}
 
+	@Override
 	protected JSElementVisitor createVisitor(final ProblemsHolder holder)
 	{
 		return new JSElementVisitor()

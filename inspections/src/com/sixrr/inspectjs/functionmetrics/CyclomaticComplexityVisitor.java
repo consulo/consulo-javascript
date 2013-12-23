@@ -25,7 +25,8 @@ class CyclomaticComplexityVisitor extends JSRecursiveElementVisitor {
         complexity++;
     }
 
-    public void visitJSForInStatement(@NotNull JSForInStatement statement) {
+    @Override
+	public void visitJSForInStatement(@NotNull JSForInStatement statement) {
         super.visitJSForInStatement(statement);
         complexity++;
     }

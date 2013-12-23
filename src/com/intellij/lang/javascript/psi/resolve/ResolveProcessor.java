@@ -205,6 +205,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 		return myResults;
 	}
 
+	@Override
 	public boolean execute(PsiElement element, ResolveState state)
 	{
 		if((element instanceof JSVariable && !(element instanceof JSParameter)) || element instanceof JSFunction)
@@ -514,6 +515,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 		return null;
 	}
 
+	@Override
 	public <T> T getHint(Key<T> hintClass)
 	{
 		return null;
@@ -537,6 +539,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 		}
 	}
 
+	@Override
 	public void handleEvent(Event event, Object associated)
 	{
 		if(event == Event.SET_DECLARATION_HOLDER)

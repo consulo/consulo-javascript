@@ -19,6 +19,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 
 public class JSClassNameMacro extends Macro
 {
+	@Override
 	@NonNls
 	public String getName()
 	{
@@ -31,12 +32,14 @@ public class JSClassNameMacro extends Macro
 		return JSBundle.message("js.classname.macro.description");
 	}
 
+	@Override
 	@NonNls
 	public String getDefaultValue()
 	{
 		return "";
 	}
 
+	@Override
 	public Result calculateResult(@NotNull final Expression[] params, final ExpressionContext context)
 	{
 		final PsiElement elementAtCaret = findElementAtCaret(context);
@@ -73,11 +76,13 @@ public class JSClassNameMacro extends Macro
 		return file.findElementAt(offset);
 	}
 
+	@Override
 	public Result calculateQuickResult(@NotNull final Expression[] params, final ExpressionContext context)
 	{
 		return null;
 	}
 
+	@Override
 	public LookupElement[] calculateLookupItems(@NotNull final Expression[] params, final ExpressionContext context)
 	{
 		return null;

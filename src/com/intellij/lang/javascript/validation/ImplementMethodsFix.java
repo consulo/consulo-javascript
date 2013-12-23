@@ -25,23 +25,27 @@ public class ImplementMethodsFix extends BaseCreateMethodsFix<JSFunction> implem
 		super(jsClass);
 	}
 
+	@Override
 	@NotNull
 	public String getText()
 	{
 		return JSBundle.message("javascript.fix.implement.methods");
 	}
 
+	@Override
 	@NotNull
 	public String getFamilyName()
 	{
 		return getText();
 	}
 
+	@Override
 	public boolean isAvailable(@NotNull final Project project, final Editor editor, final PsiFile file)
 	{
 		return myJsClass.isValid();
 	}
 
+	@Override
 	protected
 	@NonNls
 	String buildFunctionAttrText(@NonNls String attrText, final JSAttributeList attributeList, final JSFunction function)
@@ -81,6 +85,7 @@ public class ImplementMethodsFix extends BaseCreateMethodsFix<JSFunction> implem
 		return "null";
 	}
 
+	@Override
 	public boolean startInWriteAction()
 	{
 		return true;

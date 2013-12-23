@@ -37,6 +37,7 @@ import com.intellij.psi.tree.IElementType;
  */
 public class JavaScriptFoldingBuilder implements FoldingBuilder
 {
+	@Override
 	public FoldingDescriptor[] buildFoldRegions(ASTNode node, Document document)
 	{
 		List<FoldingDescriptor> descriptors = new ArrayList<FoldingDescriptor>();
@@ -145,6 +146,7 @@ public class JavaScriptFoldingBuilder implements FoldingBuilder
 		}
 	}
 
+	@Override
 	public String getPlaceholderText(ASTNode node)
 	{
 		final IElementType type = node.getElementType();
@@ -182,6 +184,7 @@ public class JavaScriptFoldingBuilder implements FoldingBuilder
 		return null;
 	}
 
+	@Override
 	public boolean isCollapsedByDefault(ASTNode node)
 	{
 		if(node.getTreeParent().getElementType() instanceof JSFileElementType && node.getTreePrev() == null &&

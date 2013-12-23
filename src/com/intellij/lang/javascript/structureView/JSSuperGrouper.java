@@ -34,6 +34,7 @@ class JSSuperGrouper implements Grouper
 	@NonNls
 	private static final String SHOW_CLASSES = "SHOW_CLASSES";
 
+	@Override
 	@NotNull
 	public Collection<Group> group(final AbstractTreeNode parent, final Collection<TreeElement> children)
 	{
@@ -121,6 +122,7 @@ class JSSuperGrouper implements Grouper
 		group.addChild(_child);
 	}
 
+	@Override
 	@NotNull
 	public ActionPresentation getPresentation()
 	{
@@ -128,6 +130,7 @@ class JSSuperGrouper implements Grouper
 				IconLoader.getIcon("/general/implementingMethod.png"));
 	}
 
+	@Override
 	@NotNull
 	public String getName()
 	{

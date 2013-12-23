@@ -25,38 +25,45 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection {
      */
     public boolean m_ignoreAnnotatedVariables = false;
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message(
                 "redundant.local.variable.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.DATA_FLOW_ISSUES;
     }
 
-    public JComponent createOptionsPanel() {
+    @Override
+	public JComponent createOptionsPanel() {
 
         return new SingleCheckboxOptionsPanel(InspectionJSBundle.message(
                 "redundant.local.variable.ignore.option"), this, "m_ignoreImmediatelyReturnedVariables");
     }
 
-    public boolean isEnabledByDefault() {
+    @Override
+	public boolean isEnabledByDefault() {
         return true;
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String buildErrorString(Object... args) {
         return InspectionJSBundle.message(
                 "unnecessary.local.variable.problem.descriptor");
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new UnnecessaryLocalVariableVisitor();
     }
 
-    protected boolean buildQuickFixesOnlyForOnTheFlyErrors() {
+    @Override
+	protected boolean buildQuickFixesOnlyForOnTheFlyErrors() {
         return true;
     }
 

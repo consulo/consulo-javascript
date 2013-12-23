@@ -23,6 +23,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 
 public class JavaScriptGotoSuperHandler implements LanguageCodeInsightActionHandler
 {
+	@Override
 	public void invoke(final Project project, final Editor editor, final PsiFile file)
 	{
 		final PsiElement at = file.findElementAt(editor.getCaretModel().getOffset());
@@ -63,6 +64,7 @@ public class JavaScriptGotoSuperHandler implements LanguageCodeInsightActionHand
 				boolean result = JSResolveUtil.iterateType(function, parent instanceof JSClass ? parent : parent.getContainingFile(), qName,
 						new JSResolveUtil.OverrideHandler()
 				{
+					@Override
 					public boolean process(final ResolveProcessor processor, final PsiElement scope, final String className)
 					{
 						((NavigationItem) processor.getResult()).navigate(true);
@@ -80,6 +82,7 @@ public class JavaScriptGotoSuperHandler implements LanguageCodeInsightActionHand
 			{
 				JSResolveUtil.processInterfaceMethods((JSClass) parent, new JSResolveUtil.CollectMethodsToImplementProcessor(function.getName(), function)
 				{
+					@Override
 					protected boolean process(final ResolveProcessor processor)
 					{
 						((NavigationItem) processor.getResult()).navigate(true);
@@ -108,11 +111,13 @@ public class JavaScriptGotoSuperHandler implements LanguageCodeInsightActionHand
 		}
 	}
 
+	@Override
 	public boolean startInWriteAction()
 	{
 		return false;
 	}
 
+	@Override
 	public boolean isValidFor(final Editor editor, final PsiFile file)
 	{
 		return true;

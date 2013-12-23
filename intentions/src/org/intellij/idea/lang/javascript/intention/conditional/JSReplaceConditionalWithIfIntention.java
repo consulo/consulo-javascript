@@ -25,18 +25,21 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 
 public class JSReplaceConditionalWithIfIntention extends JSIntention {
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new ReplaceConditionalWithIfPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         assert (element instanceof JSConditionalExpression);
         ConditionalUtils.replaceConditionalWithIf((JSConditionalExpression) element);
     }
 
     private static class ReplaceConditionalWithIfPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             return (element instanceof JSConditionalExpression);
         }
     }

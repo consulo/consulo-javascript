@@ -41,12 +41,14 @@ public class JSSwitchStatementImpl extends JSStatementImpl implements JSSwitchSt
 		super(node);
 	}
 
+	@Override
 	public JSExpression getSwitchExpression()
 	{
 		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
 		return node != null ? (JSExpression) node.getPsi() : null;
 	}
 
+	@Override
 	public JSCaseClause[] getCaseClauses()
 	{
 		final ASTNode[] nodes = getNode().getChildren(CASE_CLAUSE_FILTER);
@@ -58,6 +60,7 @@ public class JSSwitchStatementImpl extends JSStatementImpl implements JSSwitchSt
 		return clauses;
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)

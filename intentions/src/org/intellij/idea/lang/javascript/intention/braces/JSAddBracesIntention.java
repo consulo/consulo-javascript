@@ -30,12 +30,14 @@ public class JSAddBracesIntention extends JSMutablyNamedIntention {
     @NonNls private static final String IF_KEYWORD   = "if";
     @NonNls private static final String ELSE_KEYWORD = "else";
 
-    @NotNull
+    @Override
+	@NotNull
     protected JSElementPredicate getElementPredicate() {
         return new AddBracesPredicate();
     }
 
-    protected String getTextForElement(PsiElement element) {
+    @Override
+	protected String getTextForElement(PsiElement element) {
         final JSElement parent = (JSElement) element.getParent();
         final String    keyword;
 
@@ -56,7 +58,8 @@ public class JSAddBracesIntention extends JSMutablyNamedIntention {
         return this.getText(keyword);
     }
 
-    protected void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	protected void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         if (!(element instanceof JSStatement)) { return; }
         final JSStatement  statement = (JSStatement) element;
         final JSElement    parent    = (JSElement) element.getParent();
@@ -72,7 +75,8 @@ public class JSAddBracesIntention extends JSMutablyNamedIntention {
     }
 
     private static class AddBracesPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof JSStatement)) {
                 return false;
             }

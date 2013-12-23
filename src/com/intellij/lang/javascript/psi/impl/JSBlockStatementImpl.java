@@ -42,6 +42,7 @@ public class JSBlockStatementImpl extends JSStatementImpl implements JSBlockStat
 		super(node);
 	}
 
+	@Override
 	public JSStatement[] getStatements()
 	{
 		final ASTNode[] nodes = getNode().getChildren(JSElementTypes.STATEMENTS);
@@ -58,6 +59,7 @@ public class JSBlockStatementImpl extends JSStatementImpl implements JSBlockStat
 		throw new UnsupportedOperationException("TODO: implement");
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)

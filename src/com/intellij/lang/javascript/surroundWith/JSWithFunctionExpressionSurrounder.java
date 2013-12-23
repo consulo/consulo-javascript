@@ -27,16 +27,19 @@ import com.intellij.psi.PsiElement;
 
 public class JSWithFunctionExpressionSurrounder extends JSStatementSurrounder
 {
+	@Override
 	public String getTemplateDescription()
 	{
 		return JSBundle.message("javascript.surround.with.function.expression");
 	}
 
+	@Override
 	protected String getStatementTemplate(final Project project, PsiElement context)
 	{
 		return "aaa = function () { }" + JSChangeUtil.getSemicolon(project);
 	}
 
+	@Override
 	protected ASTNode getInsertBeforeNode(final ASTNode statementNode)
 	{
 		JSFunctionExpression stmt = getFunctionExpr(statementNode);
@@ -48,6 +51,7 @@ public class JSWithFunctionExpressionSurrounder extends JSStatementSurrounder
 		return (JSFunctionExpression) ((JSAssignmentExpression) ((JSExpressionStatement) statementNode.getPsi()).getExpression()).getROperand();
 	}
 
+	@Override
 	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
 	{
 		JSFunctionExpression stmt = getFunctionExpr(statementNode);

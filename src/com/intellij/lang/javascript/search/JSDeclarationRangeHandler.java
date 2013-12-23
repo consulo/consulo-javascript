@@ -15,6 +15,7 @@ import com.intellij.psi.PsiElement;
  */
 public class JSDeclarationRangeHandler implements DeclarationRangeHandler
 {
+	@Override
 	@NotNull
 	public TextRange getDeclarationRange(@NotNull PsiElement container)
 	{

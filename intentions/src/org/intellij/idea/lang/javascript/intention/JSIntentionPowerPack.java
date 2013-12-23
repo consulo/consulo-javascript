@@ -34,20 +34,25 @@ public class JSIntentionPowerPack implements ProjectComponent {
         this.project = project;
     }
 
-    @NotNull public String getComponentName() {
+    @Override
+	@NotNull public String getComponentName() {
         return JSIntentionBundle.message("plugin.JSIntentionPowerPack.name");
     }
 
-    public void projectOpened() {
+    @Override
+	public void projectOpened() {
         //noinspection ConstantConditions
         if (RUN_TEST) {
             JSIntentionTestManager.runTest(project);
         }
     }
 
-    public void projectClosed() {}
+    @Override
+	public void projectClosed() {}
 
-    public void initComponent() {}
+    @Override
+	public void initComponent() {}
 
-    public void disposeComponent() {}
+    @Override
+	public void disposeComponent() {}
 }

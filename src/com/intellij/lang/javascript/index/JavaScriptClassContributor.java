@@ -24,6 +24,7 @@ import com.intellij.util.indexing.FileBasedIndex;
  */
 public class JavaScriptClassContributor implements ChooseByNameContributor
 {
+	@Override
 	public String[] getNames(Project project, boolean includeNonProjectItems)
 	{
 		final Set<String> result = new HashSet<String>();
@@ -32,6 +33,7 @@ public class JavaScriptClassContributor implements ChooseByNameContributor
 
 		FileBasedIndex.getInstance().processAllKeys(FilenameIndex.NAME, new Processor<String>()
 		{
+			@Override
 			public boolean process(String s)
 			{
 				if(JavaScriptSupportLoader.isFlexMxmFile(s))
@@ -44,6 +46,7 @@ public class JavaScriptClassContributor implements ChooseByNameContributor
 		return result.toArray(new String[result.size()]);
 	}
 
+	@Override
 	public NavigationItem[] getItemsByName(String name, final String pattern, Project project, boolean includeNonProjectItems)
 	{
 		GlobalSearchScope scope = includeNonProjectItems ? ProjectScope.getAllScope(project) : ProjectScope.getProjectScope(project);

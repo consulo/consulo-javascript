@@ -69,11 +69,13 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStubBase<T2>, T2 extends J
 		referencesArguments = false;
 	}
 
+	@Override
 	public JSParameterList getParameterList()
 	{
 		return getStubOrPsiChild(JSElementTypes.PARAMETER_LIST);
 	}
 
+	@Override
 	public JSSourceElement[] getBody()
 	{
 		final ASTNode[] children = getNode().getChildren(JSElementTypes.SOURCE_ELEMENTS);
@@ -89,6 +91,7 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStubBase<T2>, T2 extends J
 		return result;
 	}
 
+	@Override
 	public String getReturnTypeString()
 	{
 		final T stub = getStub();
@@ -99,12 +102,14 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStubBase<T2>, T2 extends J
 		return JSPsiImplUtils.getType(this);
 	}
 
+	@Override
 	public PsiElement getReturnTypeElement()
 	{
 		ASTNode node = JSPsiImplUtils.getTypeExpressionFromDeclaration(this);
 		return node != null ? node.getPsi() : null;
 	}
 
+	@Override
 	public PsiElement setName(@NotNull String name) throws IncorrectOperationException
 	{
 		final boolean isConstructor = isConstructor();
@@ -124,6 +129,7 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStubBase<T2>, T2 extends J
 		return JSChangeUtil.createExpressionFromText(getProject(), name);
 	}
 
+	@Override
 	public String getName()
 	{
 		final JSFunctionStubBase stub = getStub();
@@ -148,6 +154,7 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStubBase<T2>, T2 extends J
 		return null;
 	}
 
+	@Override
 	public ASTNode findNameIdentifier()
 	{
 		final ASTNode myNode = getNode();
@@ -195,12 +202,14 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStubBase<T2>, T2 extends J
 		return astNode;
 	}
 
+	@Override
 	public int getTextOffset()
 	{
 		final ASTNode name = findNameIdentifier();
 		return name != null ? name.getStartOffset() : super.getTextOffset();
 	}
 
+	@Override
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
 			@NotNull PsiElement place)
 	{
@@ -245,6 +254,7 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStubBase<T2>, T2 extends J
 		return super.addBefore(element, anchor);
 	}
 
+	@Override
 	public FunctionKind getKind()
 	{
 		if(isGetProperty())
@@ -262,6 +272,7 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStubBase<T2>, T2 extends J
 		return FunctionKind.SIMPLE;
 	}
 
+	@Override
 	public boolean isDeprecated()
 	{
 		final T stub = getStub();
@@ -272,6 +283,7 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStubBase<T2>, T2 extends J
 		return JSDocumentationUtils.calculateDeprecated(this);
 	}
 
+	@Override
 	public boolean isReferencesArguments()
 	{
 		final T stub = getStub();
@@ -286,6 +298,7 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStubBase<T2>, T2 extends J
 			{
 				boolean continueVisiting = true;
 
+				@Override
 				public void visitJSReferenceExpression(final JSReferenceExpression node)
 				{
 					if(isInJS(node) && node.getQualifier() == null)
@@ -300,6 +313,7 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStubBase<T2>, T2 extends J
 					super.visitJSReferenceExpression(node);
 				}
 
+				@Override
 				public void visitJSElement(final JSElement node)
 				{
 					if(continueVisiting)
@@ -325,6 +339,7 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStubBase<T2>, T2 extends J
 		return true;
 	}
 
+	@Override
 	public PsiElement getNameIdentifier()
 	{
 		final ASTNode node = findNameIdentifier();

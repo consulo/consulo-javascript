@@ -26,19 +26,22 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 
 public class JSConvertIntegerToHexIntention extends JSIntention {
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new ConvertIntegerToHexPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final JSLiteralExpression exp = (JSLiteralExpression) element;
 
         JSElementFactory.replaceExpression(exp, "0x" + NumberUtil.getLiteralNumber(exp).toString(16));
     }
 
     private static class ConvertIntegerToHexPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof JSLiteralExpression)) {
                 return false;
             }

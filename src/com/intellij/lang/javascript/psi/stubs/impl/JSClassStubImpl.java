@@ -40,26 +40,31 @@ public class JSClassStubImpl extends JSQualifiedObjectStubBase<JSClass> implemen
 		super(dataStream, parentStub, elementType);
 	}
 
+	@Override
 	protected int buildFlags(final JSClass clazz)
 	{
 		return (clazz.isInterface() ? INTERFACE_MASK : 0) | (clazz.isDeprecated() ? DEPRECATED_MASK : 0);
 	}
 
+	@Override
 	public boolean isInterface()
 	{
 		return (myFlags & INTERFACE_MASK) != 0;
 	}
 
+	@Override
 	public boolean isDeprecated()
 	{
 		return (myFlags & DEPRECATED_MASK) != 0;
 	}
 
+	@Override
 	public String getName()
 	{
 		return myName;
 	}
 
+	@Override
 	public void index(final IndexSink sink)
 	{
 		super.index(sink);
@@ -86,6 +91,7 @@ public class JSClassStubImpl extends JSQualifiedObjectStubBase<JSClass> implemen
 		}
 	}
 
+	@Override
 	public JSClass createPsi()
 	{
 		return new JSClassImpl(this);

@@ -11,22 +11,26 @@ import org.jetbrains.annotations.NotNull;
 
 public class ThreeNegationsPerFunctionJSInspection extends JavaScriptInspection {
 
-    @NotNull
+    @Override
+	@NotNull
     public String getID() {
         return "FunctionWithMoreThanThreeNegationsJS";
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("function.with.more.than.three.negations.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
     }
 
-    public String buildErrorString(Object... args) {
+    @Override
+	public String buildErrorString(Object... args) {
         final JSFunction function = (JSFunction) ((PsiElement) args[0]).getParent();
         assert function != null;
         final PsiElement lastChild = function.getLastChild();
@@ -41,7 +45,8 @@ public class ThreeNegationsPerFunctionJSInspection extends JavaScriptInspection 
         }
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 

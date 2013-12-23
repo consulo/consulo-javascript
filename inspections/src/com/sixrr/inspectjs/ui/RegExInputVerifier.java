@@ -7,11 +7,13 @@ import javax.swing.*;
 import java.text.ParseException;
 
 public class RegExInputVerifier extends InputVerifier {
-    public boolean verify(JComponent input) {
+    @Override
+	public boolean verify(JComponent input) {
         return true;
     }
 
-    public boolean shouldYieldFocus(JComponent input) {
+    @Override
+	public boolean shouldYieldFocus(JComponent input) {
         if (input instanceof JFormattedTextField) {
             final JFormattedTextField ftf = (JFormattedTextField) input;
             final JFormattedTextField.AbstractFormatter formatter = ftf.getFormatter();
@@ -20,7 +22,8 @@ public class RegExInputVerifier extends InputVerifier {
                     formatter.stringToValue(ftf.getText());
                 } catch (final ParseException e) {
                     SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
+                        @Override
+						public void run() {
                             Messages.showErrorDialog(e.getMessage(), InspectionJSBundle.message("malformed.naming.pattern.alert"));
                         }
                     });

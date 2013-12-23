@@ -13,6 +13,7 @@ public class JSQualifiedElementIndex extends IntStubIndexExtension<JSQualifiedNa
 	public static final StubIndexKey<Integer, JSQualifiedNamedElement> KEY = StubIndexKey.createIndexKey("js.element.qualifiedName");
 	private static final int VERSION = 2;
 
+	@Override
 	public StubIndexKey<Integer, JSQualifiedNamedElement> getKey()
 	{
 		return KEY;

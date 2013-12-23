@@ -57,14 +57,17 @@ public class JSTypeEvaluateManager implements ProjectComponent
 		myIndex = index;
 	}
 
+	@Override
 	public void projectOpened()
 	{
 	}
 
+	@Override
 	public void projectClosed()
 	{
 	}
 
+	@Override
 	@NonNls
 	@NotNull
 	public String getComponentName()
@@ -72,10 +75,12 @@ public class JSTypeEvaluateManager implements ProjectComponent
 		return "JS.TypeEvaluateManager";
 	}
 
+	@Override
 	public void initComponent()
 	{
 	}
 
+	@Override
 	public void disposeComponent()
 	{
 	}
@@ -402,6 +407,7 @@ public class JSTypeEvaluateManager implements ProjectComponent
 			{
 				final int nameIndex = myIndex.getIndexOf(s);
 
+				@Override
 				public boolean execute(final JSNamespace a, final int b)
 				{
 					if(nameIndex == b)

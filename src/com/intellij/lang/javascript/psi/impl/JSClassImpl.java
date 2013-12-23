@@ -52,17 +52,20 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder
 		super(stub, JSElementTypes.CLASS);
 	}
 
+	@Override
 	public int getTextOffset()
 	{
 		ASTNode node = findNameIdentifier();
 		return node == null ? super.getTextOffset() : node.getStartOffset();
 	}
 
+	@Override
 	public JSAttributeList getAttributeList()
 	{
 		return getStubOrPsiChild(JSElementTypes.ATTRIBUTE_LIST);
 	}
 
+	@Override
 	public String getName()
 	{
 		final JSClassStub classStub = getStub();
@@ -79,6 +82,7 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder
 		return null;
 	}
 
+	@Override
 	public PsiElement setName(@NonNls @NotNull String newName) throws IncorrectOperationException
 	{
 		newName = newName.substring(newName.lastIndexOf('.') + 1);
@@ -101,22 +105,26 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder
 		return this;
 	}
 
+	@Override
 	@Nullable
 	public ASTNode findNameIdentifier()
 	{
 		return getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
 	}
 
+	@Override
 	public JSReferenceList getExtendsList()
 	{
 		return getStubOrPsiChild(JSElementTypes.EXTENDS_LIST);
 	}
 
+	@Override
 	public JSReferenceList getImplementsList()
 	{
 		return getStubOrPsiChild(JSElementTypes.IMPLEMENTS_LIST);
 	}
 
+	@Override
 	public
 	@NonNls
 	String getQualifiedName()
@@ -129,6 +137,7 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder
 		return JSPsiImplUtils.getQName(this);
 	}
 
+	@Override
 	public boolean isInterface()
 	{
 		final JSClassStub classStub = getStub();
@@ -139,11 +148,13 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder
 		return getNode().findChildByType(JSTokenTypes.INTERFACE_KEYWORD) != null;
 	}
 
+	@Override
 	public void delete() throws IncorrectOperationException
 	{
 		getNode().getTreeParent().removeChild(getNode());
 	}
 
+	@Override
 	public boolean isDeprecated()
 	{
 		final JSClassStub stub = getStub();
@@ -154,6 +165,7 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder
 		return JSDocumentationUtils.calculateDeprecated(this);
 	}
 
+	@Override
 	protected boolean processMembers(final PsiScopeProcessor processor, final ResolveState substitutor, final PsiElement lastParent,
 			final PsiElement place)
 	{

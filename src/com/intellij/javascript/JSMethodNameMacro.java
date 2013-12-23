@@ -17,6 +17,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 public class JSMethodNameMacro extends Macro
 {
 
+	@Override
 	@NonNls
 	public String getName()
 	{
@@ -30,12 +31,14 @@ public class JSMethodNameMacro extends Macro
 	}
 
 
+	@Override
 	@NonNls
 	public String getDefaultValue()
 	{
 		return "";
 	}
 
+	@Override
 	public Result calculateResult(@NotNull Expression[] params, ExpressionContext context)
 	{
 		final PsiElement elementAtCaret = JSClassNameMacro.findElementAtCaret(context);
@@ -59,11 +62,13 @@ public class JSMethodNameMacro extends Macro
 		return null;
 	}
 
+	@Override
 	public Result calculateQuickResult(@NotNull Expression[] params, ExpressionContext context)
 	{
 		return null;
 	}
 
+	@Override
 	public LookupElement[] calculateLookupItems(@NotNull Expression[] params, ExpressionContext context)
 	{
 		return null;

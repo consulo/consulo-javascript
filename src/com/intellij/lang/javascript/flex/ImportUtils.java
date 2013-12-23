@@ -348,6 +348,7 @@ public class ImportUtils
 		List<String> sorted = new ArrayList<String>(fqns);
 		Collections.sort(sorted, new Comparator<String>()
 		{
+			@Override
 			public int compare(final String o1, final String o2)
 			{
 				return compareImports(o1, o2);

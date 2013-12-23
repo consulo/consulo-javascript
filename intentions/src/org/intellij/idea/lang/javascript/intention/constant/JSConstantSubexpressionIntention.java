@@ -35,12 +35,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention {
-    @NotNull
+    @Override
+	@NotNull
     protected JSElementPredicate getElementPredicate() {
         return new ConstantSubexpressionPredicate();
     }
 
-    protected String getTextForElement(PsiElement element) {
+    @Override
+	protected String getTextForElement(PsiElement element) {
         final PsiElement         parent           = element.getParent();
         final JSBinaryExpression binaryExpression = (JSBinaryExpression) (parent instanceof JSBinaryExpression ? parent : element);
         final JSExpression       lhs              = binaryExpression.getLOperand();
@@ -60,7 +62,8 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention {
         return this.getText(leftSide.getText(), BinaryOperatorUtils.getOperatorText(operationSign), rhs.getText());
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final PsiElement   parent        = element.getParent();
         final JSExpression expression    = (JSExpression) (parent instanceof JSBinaryExpression ? parent : element);
         String             newExpression = "";
@@ -145,7 +148,8 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention {
     }
 
     private static class ConstantSubexpressionPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof JSElement ||
                   element.getPrevSibling() instanceof JSElement)) {
                 return false;

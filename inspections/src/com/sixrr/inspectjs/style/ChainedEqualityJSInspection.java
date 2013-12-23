@@ -12,27 +12,32 @@ import org.jetbrains.annotations.NotNull;
 
 public class ChainedEqualityJSInspection extends JavaScriptInspection {
 
-    @NotNull
+    @Override
+	@NotNull
     public String getID() {
         return "ChainedEqualityComparisonsJS";
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("chained.equality.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.STYLE_GROUP_NAME;
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String buildErrorString(Object... args) {
         return InspectionJSBundle.message("chained.equality.error.string");
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new ChainedEqualityVisitor();
     }
 

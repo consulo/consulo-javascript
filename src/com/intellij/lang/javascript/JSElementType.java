@@ -73,12 +73,14 @@ public class JSElementType extends IElementType implements PsiGenerator<JSElemen
 		}
 	}
 
+	@Override
 	@SuppressWarnings({"HardCodedStringLiteral"})
 	public String toString()
 	{
 		return "JS:" + super.toString();
 	}
 
+	@Override
 	public JSElement construct(ASTNode node)
 	{
 		if(constructor == null)

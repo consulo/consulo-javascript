@@ -125,6 +125,7 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
 		}
 	}
 
+	@Override
 	public void invoke(@NotNull final Project project, final Editor editor, PsiFile file, DataContext dataContext)
 	{
 		if(!editor.getSelectionModel().hasSelection())
@@ -157,10 +158,12 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
 
 		CommandProcessor.getInstance().executeCommand(project, new Runnable()
 		{
+			@Override
 			public void run()
 			{
 				ApplicationManager.getApplication().runWriteAction(new Runnable()
 				{
+					@Override
 					public void run()
 					{
 						doRefactoring(project, editor, new BaseIntroduceContext<S>(expression, occurrences, settings));
@@ -464,6 +467,7 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
 		return (JSElement) anchorStatement.add(declaration);
 	}
 
+	@Override
 	public void invoke(@NotNull Project project, @NotNull PsiElement[] elements, DataContext dataContext)
 	{
 		throw new RuntimeException("Not implemented");

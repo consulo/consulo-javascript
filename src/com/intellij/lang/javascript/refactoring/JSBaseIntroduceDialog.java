@@ -72,6 +72,7 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
 
 		nameField.addKeyListener(new KeyAdapter()
 		{
+			@Override
 			public void keyPressed(KeyEvent e)
 			{
 				initiateValidation();
@@ -92,6 +93,7 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
 
 		SwingUtilities.invokeLater(new Runnable()
 		{
+			@Override
 			public void run()
 			{
 				initiateValidation();
@@ -175,6 +177,7 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
 		myAlarm.cancelAllRequests();
 		myAlarm.addRequest(new Runnable()
 		{
+			@Override
 			public void run()
 			{
 				final String nameCandidate = getNameField().getText();
@@ -183,16 +186,19 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
 		}, 100, ModalityState.current());
 	}
 
+	@Override
 	public JComponent getPreferredFocusedComponent()
 	{
 		return getNameField();
 	}
 
+	@Override
 	protected JComponent createCenterPanel()
 	{
 		return getPanel();
 	}
 
+	@Override
 	protected void doOKAction()
 	{
 		final String name = getVariableName();
@@ -281,16 +287,19 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
 		return conflictsDialog.isOK();
 	}
 
+	@Override
 	public boolean isReplaceAllOccurences()
 	{
 		return getReplaceAllCheckBox().isSelected();
 	}
 
+	@Override
 	public String getVariableName()
 	{
 		return getNameField().getText().trim();
 	}
 
+	@Override
 	public String getVariableType()
 	{
 		return (String) getVarTypeField().getSelectedItem();

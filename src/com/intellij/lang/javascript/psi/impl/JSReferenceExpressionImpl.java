@@ -61,6 +61,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		super(node);
 	}
 
+	@Override
 	@Nullable
 	public JSExpression getQualifier()
 	{
@@ -68,6 +69,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		return node != null ? (JSExpression) node.getPsi() : null;
 	}
 
+	@Override
 	@Nullable
 	public String getReferencedName()
 	{
@@ -75,6 +77,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		return nameElement != null ? nameElement.getText() : null;
 	}
 
+	@Override
 	@Nullable
 	public PsiElement getReferenceNameElement()
 	{
@@ -82,16 +85,19 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		return element != null ? element.getPsi() : null;
 	}
 
+	@Override
 	public PsiElement getElement()
 	{
 		return this;
 	}
 
+	@Override
 	public PsiReference getReference()
 	{
 		return this;
 	}
 
+	@Override
 	public TextRange getRangeInElement()
 	{
 		final ASTNode nameElement = getNameElement();
@@ -104,6 +110,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		return getNode().findChildByType(IDENTIFIER_TOKENS_SET);
 	}
 
+	@Override
 	public PsiElement resolve()
 	{
 		final ResolveResult[] resolveResults = multiResolve(true);
@@ -111,11 +118,13 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		return resolveResults.length == 0 || resolveResults.length > 1 ? null : resolveResults[0].getElement();
 	}
 
+	@Override
 	public String getCanonicalText()
 	{
 		return getText();
 	}
 
+	@Override
 	public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException
 	{
 		final ResolveResult[] results = multiResolve(false);
@@ -162,6 +171,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		return getParent();
 	}
 
+	@Override
 	public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException
 	{
 		final PsiElement parent = getParent();
@@ -205,6 +215,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		return this;
 	}
 
+	@Override
 	public boolean isReferenceTo(PsiElement element)
 	{
 		if(element instanceof PsiNamedElement || element instanceof XmlAttributeValue)
@@ -362,6 +373,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		return jsClass;
 	}
 
+	@Override
 	public Object[] getVariants()
 	{
 		final PsiFile containingFile = getContainingFile();
@@ -429,11 +441,13 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		return processor.getResult();
 	}
 
+	@Override
 	public boolean isSoft()
 	{
 		return false;
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -446,6 +460,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		}
 	}
 
+	@Override
 	@NotNull
 	public ResolveResult[] multiResolve(final boolean incompleteCode)
 	{
@@ -456,6 +471,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 	{
 		private static final MyResolver INSTANCE = new MyResolver();
 
+		@Override
 		public ResolveResult[] doResolve(final JSReferenceExpressionImpl jsReferenceExpression, PsiFile file)
 		{
 			return jsReferenceExpression.doResolve(file);
@@ -637,6 +653,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		return qualifier == null || qualifier instanceof JSThisExpression || qualifier instanceof JSSuperExpression;
 	}
 
+	@Override
 	public boolean shouldCheckReferences()
 	{
 		return true;
@@ -663,6 +680,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 
 		TypeResolveState resolved = TypeResolveState.Unknown;
 
+		@Override
 		public void process(String type, @NotNull final BaseJSSymbolProcessor.EvaluateContext evaluateContext, PsiElement source)
 		{
 			if(evaluateContext.visitedTypes.contains(type))
@@ -778,11 +796,13 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 			return b;
 		}
 
+		@Override
 		public boolean ecma()
 		{
 			return myEcma;
 		}
 
+		@Override
 		public void setUnknownElement(@NotNull final PsiElement element)
 		{
 			if(!(element instanceof XmlToken))

@@ -13,31 +13,37 @@ import org.jetbrains.annotations.NotNull;
 public class ConditionalExpressionWithIdenticalBranchesJSInspection extends JavaScriptInspection {
     private InspectionJSFix fix = new CollapseConditional();
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("conditional.expression.with.identical.branches.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
-    public String buildErrorString(Object... args) {
+    @Override
+	public String buildErrorString(Object... args) {
         return InspectionJSBundle.message("conditional.expression.with.identical.branches.error.string");
     }
 
-    public InspectionJSFix buildFix(PsiElement location) {
+    @Override
+	public InspectionJSFix buildFix(PsiElement location) {
         return fix;
     }
 
     private static class CollapseConditional extends InspectionJSFix {
-        @NotNull
+        @Override
+		@NotNull
         public String getName() {
             return InspectionJSBundle.message("collapse.conditional.expression.fix");
         }
 
-        public void doFix(Project project, ProblemDescriptor descriptor)
+        @Override
+		public void doFix(Project project, ProblemDescriptor descriptor)
                 throws IncorrectOperationException {
             final JSConditionalExpression expression =
                     (JSConditionalExpression) descriptor.getPsiElement();
@@ -49,7 +55,8 @@ public class ConditionalExpressionWithIdenticalBranchesJSInspection extends Java
         }
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new ConditionalExpressionWithIdenticalBranchesVisitor();
     }
 

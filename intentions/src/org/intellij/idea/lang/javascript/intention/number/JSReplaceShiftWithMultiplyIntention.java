@@ -33,7 +33,8 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 
 public class JSReplaceShiftWithMultiplyIntention extends JSMutablyNamedIntention {
-    protected String getTextForElement(PsiElement element) {
+    @Override
+	protected String getTextForElement(PsiElement element) {
         final IElementType  tokenType = ((JSBinaryExpression) element).getOperationSign();
         final String        operatorString;
 
@@ -46,12 +47,14 @@ public class JSReplaceShiftWithMultiplyIntention extends JSMutablyNamedIntention
         return this.getText(BinaryOperatorUtils.getOperatorText(tokenType), operatorString);
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new ShiftByLiteralPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         if (element instanceof JSAssignmentExpression) {
             this.replaceShiftAssignWithMultiplyOrDivideAssign((JSAssignmentExpression) element);
         } else {
@@ -92,7 +95,8 @@ public class JSReplaceShiftWithMultiplyIntention extends JSMutablyNamedIntention
     }
 
     private static class ShiftByLiteralPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (element instanceof JSAssignmentExpression) {
                 return this.isAssignmentShiftByLiteral((JSAssignmentExpression) element);
             } else if (element instanceof JSBinaryExpression) {

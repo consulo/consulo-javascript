@@ -51,16 +51,19 @@ public class JSPackageWrapper extends PsiElementBase implements JSPackage
 		scope = _scope;
 	}
 
+	@Override
 	public String getName()
 	{
 		return name.substring(name.lastIndexOf('.') + 1);
 	}
 
+	@Override
 	public String getQualifiedName()
 	{
 		return name;
 	}
 
+	@Override
 	public PsiElement setName(@NonNls @NotNull final String newName) throws IncorrectOperationException
 	{
 		final Ref<IOException> exception = new Ref<IOException>();
@@ -69,6 +72,7 @@ public class JSPackageWrapper extends PsiElementBase implements JSPackage
 		JSPackageIndex.processElementsInScope(index == -1 ? "" : name.substring(0, index), name.substring(index + 1),
 				new JSPackageIndex.PackageElementsProcessor()
 		{
+			@Override
 			public boolean process(VirtualFile file, String name, JSPackageIndexInfo.Kind kind)
 			{
 				if(kind != JSPackageIndexInfo.Kind.PACKAGE)
@@ -117,23 +121,27 @@ public class JSPackageWrapper extends PsiElementBase implements JSPackage
 		return new JSPackageWrapper(newPackageName, project, scope);
 	}
 
+	@Override
 	public PsiElement getNameIdentifier()
 	{
 		return null;
 	}
 
+	@Override
 	@NotNull
 	public Language getLanguage()
 	{
 		return JavaScriptSupportLoader.JAVASCRIPT.getLanguage();
 	}
 
+	@Override
 	@NotNull
 	public PsiElement[] getChildren()
 	{
 		return PsiElement.EMPTY_ARRAY;
 	}
 
+	@Override
 	public PsiElement getParent()
 	{
 		//int dotPos = name.lastIndexOf('.');
@@ -142,88 +150,105 @@ public class JSPackageWrapper extends PsiElementBase implements JSPackage
 		return null;
 	}
 
+	@Override
 	public PsiFile getContainingFile()
 	{
 		return null;
 	}
 
+	@Override
 	public PsiElement getFirstChild()
 	{
 		return null;
 	}
 
+	@Override
 	public boolean isValid()
 	{
 		return true;
 	}
 
+	@Override
 	public PsiElement getLastChild()
 	{
 		return null;
 	}
 
+	@Override
 	public PsiElement getNextSibling()
 	{
 		return null;
 	}
 
+	@Override
 	public PsiElement getPrevSibling()
 	{
 		return null;
 	}
 
+	@Override
 	public TextRange getTextRange()
 	{
 		return null;
 	}
 
+	@Override
 	public int getStartOffsetInParent()
 	{
 		return 0;
 	}
 
+	@Override
 	@NotNull
 	public Project getProject()
 	{
 		return project;
 	}
 
+	@Override
 	public int getTextLength()
 	{
 		return 0;
 	}
 
+	@Override
 	public PsiElement findElementAt(final int offset)
 	{
 		return null;
 	}
 
+	@Override
 	public int getTextOffset()
 	{
 		return 0;
 	}
 
+	@Override
 	public String getText()
 	{
 		return null;
 	}
 
+	@Override
 	@NotNull
 	public char[] textToCharArray()
 	{
 		return new char[0];
 	}
 
+	@Override
 	public boolean textContains(final char c)
 	{
 		return false;
 	}
 
+	@Override
 	public ASTNode getNode()
 	{
 		return null;
 	}
 
+	@Override
 	public ASTNode findNameIdentifier()
 	{
 		return null;
@@ -243,6 +268,7 @@ public class JSPackageWrapper extends PsiElementBase implements JSPackage
 		String name = ((ResolveProcessor) processor).getName();
 		boolean b = JSPackageIndex.processElementsInScope(this.name, name, new JSPackageIndex.PackageElementsProcessor()
 		{
+			@Override
 			public boolean process(VirtualFile file, String name, JSPackageIndexInfo.Kind kind)
 			{
 				String qName = JSPackageIndex.buildQualifiedName(JSPackageWrapper.this.name, name);

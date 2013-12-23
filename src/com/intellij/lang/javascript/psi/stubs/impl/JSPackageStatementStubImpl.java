@@ -28,11 +28,13 @@ public class JSPackageStatementStubImpl extends JSQualifiedObjectStubBase<JSPack
 		super(psi, parentStub, type);
 	}
 
+	@Override
 	public JSPackageStatement createPsi()
 	{
 		return new JSPackageStatementImpl(this);
 	}
 
+	@Override
 	protected int buildFlags(final JSPackageStatement clazz)
 	{
 		return 0;

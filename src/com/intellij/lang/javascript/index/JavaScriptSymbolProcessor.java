@@ -41,57 +41,68 @@ public interface JavaScriptSymbolProcessor
 	{
 		protected PsiFile currentFile;
 
+		@Override
 		public boolean processFunction(final JSNamespace namespace, final int nameId, final JSNamedElement function)
 		{
 			return process(function, namespace);
 		}
 
+		@Override
 		public boolean processClass(final JSNamespace namespace, final int nameId, final JSNamedElement clazz)
 		{
 			return process(clazz, namespace);
 		}
 
+		@Override
 		public boolean processVariable(final JSNamespace namespace, final int nameId, final JSNamedElement variable)
 		{
 			return process(variable, namespace);
 		}
 
+		@Override
 		public boolean acceptsFile(final PsiFile file)
 		{
 			currentFile = file;
 			return true;
 		}
 
+		@Override
 		public boolean processProperty(final JSNamespace namespace, final int nameId, final JSNamedElement property)
 		{
 			return process(property, namespace);
 		}
 
+		@Override
 		public boolean processDefinition(final JSNamespace namespace, final int nameId, final JSNamedElement refExpr)
 		{
 			return process(refExpr, namespace);
 		}
 
+		@Override
 		public boolean processNamespace(final JSNamespace namespace, final int nameId, final JSNamedElement refExpr)
 		{
 			return process(refExpr, namespace);
 		}
 
+		@Override
 		public boolean processImplicitNamespace(final JSNamespace namespace, final int nameId, final PsiElement refExpr, boolean finalReference)
 		{
 			return process(refExpr, namespace);
 		}
 
+		@Override
 		public boolean processImplicitFunction(final JSNamespace namespace, final int nameId, final PsiElement refExpr)
 		{
 			return process(refExpr, namespace);
 		}
 
+		@Override
 		public boolean processImplicitVariable(final JSNamespace namespace, final int nameId, final PsiElement refExpr)
 		{
 			return process(refExpr, namespace);
 		}
 
+		@Override
 		public boolean processTag(final JSNamespace namespace, final int nameId, final PsiNamedElement namedElement, @NonNls final String attrName)
 		{
 			return process(namedElement, namespace);

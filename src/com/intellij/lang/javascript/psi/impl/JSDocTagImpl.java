@@ -53,6 +53,7 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag
 		return element != null ? element.getText().substring(1) : null;
 	}
 
+	@Override
 	public PsiElement setName(@NonNls @NotNull final String name) throws IncorrectOperationException
 	{
 		throw new IncorrectOperationException();
@@ -71,6 +72,7 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag
 		}
 	}
 
+	@Override
 	public JSDocTagValue getValue()
 	{
 		return findChildByClass(JSDocTagValue.class);
@@ -164,22 +166,26 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag
 			myRange = new TextRange(offsetInParent, offsetInParent + textLength);
 		}
 
+		@Override
 		public PsiElement getElement()
 		{
 			return myJsDocTagValue.getParent();
 		}
 
+		@Override
 		public TextRange getRangeInElement()
 		{
 			return myRange;
 		}
 
+		@Override
 		public String getCanonicalText()
 		{
 			final int offsetInText = myRange.getStartOffset() - myJsDocTagValue.getStartOffsetInParent();
 			return myJsDocTagValue.getText().substring(offsetInText, offsetInText + myRange.getLength());
 		}
 
+		@Override
 		public PsiElement handleElementRename(final String newElementName) throws IncorrectOperationException
 		{
 			JSDocTag jsDocTag = (JSDocTag) myJsDocTagValue.getParent();
@@ -189,11 +195,13 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag
 			return myJsDocTagValue;
 		}
 
+		@Override
 		public PsiElement bindToElement(@NotNull final PsiElement element) throws IncorrectOperationException
 		{
 			return null;
 		}
 
+		@Override
 		public boolean isReferenceTo(final PsiElement element)
 		{
 			return element.isEquivalentTo(resolve());
@@ -285,6 +293,7 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag
 			return null;
 		}
 
+		@Override
 		public PsiElement resolve()
 		{
 			final JSParameterList parameterList = findParameterList(getElement());
@@ -304,6 +313,7 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag
 			return null;
 		}
 
+		@Override
 		public Object[] getVariants()
 		{
 			final PsiElement elt = getElement();
@@ -324,11 +334,13 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag
 			return ArrayUtil.EMPTY_OBJECT_ARRAY;
 		}
 
+		@Override
 		public boolean isSoft()
 		{
 			return false;
 		}
 
+		@Override
 		public String getUnresolvedMessagePattern()
 		{
 			return JSBundle.message("javascript.validation.message.incorrect.parameter.name");

@@ -18,37 +18,43 @@ public class ConfusingFloatingPointLiteralJSInspection extends JavaScriptInspect
     private static final Pattern pickyFloatingPointPattern =
             Pattern.compile("[0-9]+\\.[0-9]+((e|E)(-)?[0-9]+)?(f|F|d|D)?");
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message(
                 "confusing.floating.point.literal.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     protected String buildErrorString(Object... args) {
         return InspectionJSBundle.message(
                 "confusing.floating.point.literal.problem.descriptor");
     }
 
-    public InspectionJSFix buildFix(PsiElement location) {
+    @Override
+	public InspectionJSFix buildFix(PsiElement location) {
         return new ConfusingFloatingPointLiteralFix();
     }
 
     private static class ConfusingFloatingPointLiteralFix
             extends InspectionJSFix {
 
-        @NotNull
+        @Override
+		@NotNull
         public String getName() {
             return InspectionJSBundle.message(
                     "confusing.floating.point.literal.change.quickfix");
         }
 
-        public void doFix(Project project, ProblemDescriptor descriptor)
+        @Override
+		public void doFix(Project project, ProblemDescriptor descriptor)
                 throws IncorrectOperationException {
             final JSExpression literalExpression =
                     (JSExpression) descriptor.getPsiElement();
@@ -100,7 +106,8 @@ public class ConfusingFloatingPointLiteralJSInspection extends JavaScriptInspect
         }
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new ConfusingFloatingPointLiteralVisitor();
     }
 

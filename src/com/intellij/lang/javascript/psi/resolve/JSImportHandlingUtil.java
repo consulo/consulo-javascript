@@ -49,11 +49,13 @@ public class JSImportHandlingUtil
 	public static final UserDataCache<CachedValue<Map<String, JSImportedElementResolveResult>>, PsiElement,
 			Object> myImportResolveCache = new UserDataCache<CachedValue<Map<String, JSImportedElementResolveResult>>, PsiElement, Object>()
 	{
+		@Override
 		protected CachedValue<Map<String, JSImportedElementResolveResult>> compute(final PsiElement psiElement, final Object p)
 		{
 			return CachedValuesManager.getManager(psiElement.getProject()).createCachedValue(new CachedValueProvider<Map<String,
 					JSImportedElementResolveResult>>()
 			{
+				@Override
 				public Result<Map<String, JSImportedElementResolveResult>> compute()
 				{
 					return new Result<Map<String, JSImportedElementResolveResult>>(new ConcurrentHashMap<String, JSImportedElementResolveResult>(),
@@ -105,6 +107,7 @@ public class JSImportHandlingUtil
 		final String name1 = name;
 		JSResolveUtil.walkOverStructure(context, new Processor<PsiNamedElement>()
 		{
+			@Override
 			public boolean process(PsiNamedElement context)
 			{
 				JSImportedElementResolveResult resolved = null;
@@ -337,6 +340,7 @@ public class JSImportHandlingUtil
 			final Ref<JSImportedElementResolveResult> result = new Ref<JSImportedElementResolveResult>();
 			processInlineComponentsInScope((XmlBackedJSClassImpl) parent, new Processor<XmlBackedJSClassImpl>()
 			{
+				@Override
 				public boolean process(XmlBackedJSClassImpl inlineComponent)
 				{
 					if(referencedName.equals(inlineComponent.getExplicitName()))
@@ -425,6 +429,7 @@ public class JSImportHandlingUtil
 			{
 				if(!processInlineComponentsInScope((XmlBackedJSClassImpl) parent, new Processor<XmlBackedJSClassImpl>()
 				{
+					@Override
 					public boolean process(XmlBackedJSClassImpl inlineComponent)
 					{
 						return processor.execute(inlineComponent, ResolveState.initial());
@@ -509,10 +514,12 @@ public class JSImportHandlingUtil
 
 	private static class ImportListDataCache extends UserDataCache<CachedValue<Map<String, Object>>, PsiElement, Object>
 	{
+		@Override
 		protected final CachedValue<Map<String, Object>> compute(final PsiElement owner, Object o)
 		{
 			return CachedValuesManager.getManager(owner.getProject()).createCachedValue(new CachedValueProvider<Map<String, Object>>()
 			{
+				@Override
 				public Result<Map<String, Object>> compute()
 				{
 					final Map<String, Object> result = new THashMap<String, Object>();

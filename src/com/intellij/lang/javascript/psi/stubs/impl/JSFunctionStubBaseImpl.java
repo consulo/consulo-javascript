@@ -32,6 +32,7 @@ abstract class JSFunctionStubBaseImpl<T extends JSFunction> extends JSQualifiedO
 		myReturnType = function.getReturnTypeString();
 	}
 
+	@Override
 	protected int buildFlags(final T clazz)
 	{
 		final int val = clazz.isConstructor() ? CONSTRUCTOR_MASK : clazz.isGetProperty() ? GET_PROPERTY_MASK : clazz.isSetProperty() ? SET_PROPERTY_MASK
@@ -53,31 +54,37 @@ abstract class JSFunctionStubBaseImpl<T extends JSFunction> extends JSQualifiedO
 		myReturnType = returnType;
 	}
 
+	@Override
 	public boolean isGetProperty()
 	{
 		return (myFlags & GET_PROPERTY_MASK) != 0;
 	}
 
+	@Override
 	public boolean isSetProperty()
 	{
 		return (myFlags & SET_PROPERTY_MASK) != 0;
 	}
 
+	@Override
 	public boolean isConstructor()
 	{
 		return (myFlags & CONSTRUCTOR_MASK) != 0;
 	}
 
+	@Override
 	public boolean isDeprecated()
 	{
 		return (myFlags & DEPRECATED_MASK) != 0;
 	}
 
+	@Override
 	public boolean isReferencesArguments()
 	{
 		return (myFlags & REFERENCES_ARGUMENTS_MASK) != 0;
 	}
 
+	@Override
 	protected boolean doIndexName(final String name, final String fqn)
 	{
 		final IStubElementType type = getStubType();
@@ -107,6 +114,7 @@ abstract class JSFunctionStubBaseImpl<T extends JSFunction> extends JSQualifiedO
 		writeString(myReturnType, dataStream);
 	}
 
+	@Override
 	public String getReturnTypeString()
 	{
 		return myReturnType;

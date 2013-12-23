@@ -361,16 +361,19 @@ class _JSDocLexer implements FlexLexer
 		return map;
 	}
 
+	@Override
 	public final int getTokenStart()
 	{
 		return zzStartRead;
 	}
 
+	@Override
 	public final int getTokenEnd()
 	{
 		return getTokenStart() + yylength();
 	}
 
+	@Override
 	public void reset(CharSequence buffer, int start, int end, int initialState)
 	{
 		zzBuffer = buffer;
@@ -411,6 +414,7 @@ class _JSDocLexer implements FlexLexer
 	/**
 	 * Returns the current lexical state.
 	 */
+	@Override
 	public final int yystate()
 	{
 		return zzLexicalState;
@@ -422,6 +426,7 @@ class _JSDocLexer implements FlexLexer
 	 *
 	 * @param newState the new lexical state
 	 */
+	@Override
 	public final void yybegin(int newState)
 	{
 		zzLexicalState = newState;
@@ -532,6 +537,7 @@ class _JSDocLexer implements FlexLexer
 	 * @return the next token
 	 * @throws java.io.IOException if any I/O-Error occurs
 	 */
+	@Override
 	public IElementType advance() throws java.io.IOException
 	{
 		int zzInput;

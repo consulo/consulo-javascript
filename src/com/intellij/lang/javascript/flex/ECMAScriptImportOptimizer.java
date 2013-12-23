@@ -46,11 +46,13 @@ import com.intellij.util.containers.MultiMap;
 public class ECMAScriptImportOptimizer implements ImportOptimizer
 {
 
+	@Override
 	public boolean supports(PsiFile file)
 	{
 		return file.getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4 || JavaScriptSupportLoader.isFlexMxmFile(file);
 	}
 
+	@Override
 	@NotNull
 	public Runnable processFile(final PsiFile file)
 	{
@@ -61,6 +63,7 @@ public class ECMAScriptImportOptimizer implements ImportOptimizer
 
 		return new Runnable()
 		{
+			@Override
 			public void run()
 			{
 				final JSUnusedImportsHelper.Results unusedImportsResults = JSUnusedImportsHelper.getUnusedImports(file);

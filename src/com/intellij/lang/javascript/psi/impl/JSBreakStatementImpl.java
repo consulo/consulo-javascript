@@ -39,6 +39,7 @@ public class JSBreakStatementImpl extends JSStatementWithLabelReferenceImpl impl
 		super(node);
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -51,6 +52,7 @@ public class JSBreakStatementImpl extends JSStatementWithLabelReferenceImpl impl
 		}
 	}
 
+	@Override
 	public JSStatement getStatementToBreak()
 	{
 		String label = getLabel();

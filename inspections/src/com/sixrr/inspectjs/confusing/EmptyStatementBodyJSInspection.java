@@ -16,26 +16,31 @@ public class EmptyStatementBodyJSInspection extends JavaScriptInspection {
      */
     public boolean m_reportEmptyBlocks = false;
 
-    @NotNull
+    @Override
+	@NotNull
     public String getID() {
         return "StatementWithEmptyBodyJS";
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("statement.with.empty.body.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
-    public boolean isEnabledByDefault() {
+    @Override
+	public boolean isEnabledByDefault() {
         return true;
     }
 
-    public String buildErrorString(Object... args) {
+    @Override
+	public String buildErrorString(Object... args) {
         if (args[0] instanceof JSIfStatement) {
             return InspectionJSBundle.message("statement.has.empty.branch.error.string");
         } else {
@@ -43,12 +48,14 @@ public class EmptyStatementBodyJSInspection extends JavaScriptInspection {
         }
     }
 
-    public JComponent createOptionsPanel() {
+    @Override
+	public JComponent createOptionsPanel() {
         return new SingleCheckboxOptionsPanel(InspectionJSBundle.message("include.statement.bodies.that.are.empty.code.blocks.parameter"),
                 this, "m_reportEmptyBlocks");
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new EmptyStatementVisitor();
     }
 
@@ -93,7 +100,8 @@ public class EmptyStatementBodyJSInspection extends JavaScriptInspection {
             registerStatementError(statement, statement);
         }
 
-        public void visitJSForInStatement(@NotNull JSForInStatement statement) {
+        @Override
+		public void visitJSForInStatement(@NotNull JSForInStatement statement) {
             super.visitJSForInStatement(statement);
 
             final JSStatement body = statement.getBody();

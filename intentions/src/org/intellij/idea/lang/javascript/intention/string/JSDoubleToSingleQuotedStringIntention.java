@@ -25,12 +25,14 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 
 public class JSDoubleToSingleQuotedStringIntention extends JSIntention {
-    @NotNull
+    @Override
+	@NotNull
     protected JSElementPredicate getElementPredicate() {
         return new DoubleToSingleQuotedStringPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final JSLiteralExpression stringLiteral = (JSLiteralExpression) element;
 
         JSElementFactory.replaceExpression(stringLiteral, changeQuotes(stringLiteral.getText()));
@@ -62,7 +64,8 @@ public class JSDoubleToSingleQuotedStringIntention extends JSIntention {
 
     private static class DoubleToSingleQuotedStringPredicate implements JSElementPredicate {
 
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof JSLiteralExpression)) {
                 return false;
             }

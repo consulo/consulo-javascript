@@ -47,6 +47,7 @@ public class PredefinedJSIndexEntry extends JSIndexEntry
 		return loadText(fileName, "xml".equals(fileName.substring(fileName.indexOf('.') + 1)));
 	}
 
+	@Override
 	protected PsiFile buildPsiFileFromFile()
 	{
 		String fileName = myFile.getName();
@@ -310,6 +311,7 @@ public class PredefinedJSIndexEntry extends JSIndexEntry
 		}
 	}
 
+	@Override
 	public long getTimeStamp()
 	{
 		return -1;

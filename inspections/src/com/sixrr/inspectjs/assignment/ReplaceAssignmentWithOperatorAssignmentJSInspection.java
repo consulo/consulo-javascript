@@ -18,22 +18,26 @@ import org.jetbrains.annotations.NotNull;
 
 public class ReplaceAssignmentWithOperatorAssignmentJSInspection
         extends JavaScriptInspection {
-    @NotNull
+    @Override
+	@NotNull
     public String getID() {
         return "AssignmentReplaceableWithOperatorAssignmentJS";
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("assignment.replaceable.with.operator.assignment.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.ASSIGNMENT_GROUP_NAME;
     }
 
-    public String buildErrorString(Object... args) {
+    @Override
+	public String buildErrorString(Object... args) {
         return InspectionJSBundle.message(
                 "assignment.replaceable.with.operator.assignment.error.string",
                 calculateReplacementExpression((JSAssignmentExpression) args[0]));
@@ -52,11 +56,13 @@ public class ReplaceAssignmentWithOperatorAssignmentJSInspection
         return lhs.getText() + ' ' + signText + "= " + rhsRhs.getText();
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new ReplaceAssignmentWithOperatorAssignmentVisitor();
     }
 
-    public InspectionJSFix buildFix(PsiElement location) {
+    @Override
+	public InspectionJSFix buildFix(PsiElement location) {
         return new ReplaceAssignmentWithOperatorAssignmentFix(
                 (JSAssignmentExpression) location);
     }
@@ -76,12 +82,14 @@ public class ReplaceAssignmentWithOperatorAssignmentJSInspection
             m_name = InspectionJSBundle.message("replace.with.operator.assign.fix", signText);
         }
 
-        @NotNull
+        @Override
+		@NotNull
         public String getName() {
             return m_name;
         }
 
-        public void doFix(Project project, ProblemDescriptor descriptor)
+        @Override
+		public void doFix(Project project, ProblemDescriptor descriptor)
                 throws IncorrectOperationException {
             final JSAssignmentExpression expression =
                     (JSAssignmentExpression) descriptor.getPsiElement();

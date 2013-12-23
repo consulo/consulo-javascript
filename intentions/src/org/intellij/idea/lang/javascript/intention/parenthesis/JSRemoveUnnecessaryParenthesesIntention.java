@@ -28,12 +28,14 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 
 public class JSRemoveUnnecessaryParenthesesIntention extends JSIntention {
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new UnnecessaryParenthesesPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         JSExpression exp = (JSExpression) element;
 
         while (exp.getParent() instanceof JSExpression) {
@@ -47,7 +49,8 @@ public class JSRemoveUnnecessaryParenthesesIntention extends JSIntention {
     }
 
     private static class UnnecessaryParenthesesPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof JSParenthesizedExpression)) {
                 return false;
             }

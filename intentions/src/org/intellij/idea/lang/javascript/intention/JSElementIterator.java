@@ -126,7 +126,8 @@ public abstract class JSElementIterator implements Iterator<PsiElement> {
         }
     }
 
-    public boolean hasNext() {
+    @Override
+	public boolean hasNext() {
         if (this.retrieveNext) {
             this.findNext();
         }
@@ -134,7 +135,8 @@ public abstract class JSElementIterator implements Iterator<PsiElement> {
         return (this.next != null);
     }
 
-    public PsiElement next() {
+    @Override
+	public PsiElement next() {
         if (this.retrieveNext) {
             this.findNext();  // hasNext() has not been called
         }
@@ -146,7 +148,8 @@ public abstract class JSElementIterator implements Iterator<PsiElement> {
         return this.next;
     }
 
-    public void remove() {
+    @Override
+	public void remove() {
         throw new UnsupportedOperationException();
     }
 }

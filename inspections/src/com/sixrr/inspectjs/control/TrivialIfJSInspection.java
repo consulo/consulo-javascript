@@ -20,44 +20,53 @@ import org.jetbrains.annotations.NotNull;
 public class TrivialIfJSInspection extends JavaScriptInspection {
     private final TrivialIfFix fix = new TrivialIfFix();
 
-    @NotNull
+    @Override
+	@NotNull
     public String getID() {
         return "RedundantIfStatementJS";
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("redundant.if.statement.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new TrivialIfVisitor();
     }
 
-    public boolean isEnabledByDefault() {
+    @Override
+	public boolean isEnabledByDefault() {
         return true;
     }
 
-    public String buildErrorString(Object... args) {
+    @Override
+	public String buildErrorString(Object... args) {
         return InspectionJSBundle.message("trivial.if.error.string");
     }
 
-    public InspectionJSFix buildFix(PsiElement location) {
+    @Override
+	public InspectionJSFix buildFix(PsiElement location) {
         return fix;
     }
 
     private static class TrivialIfFix extends InspectionJSFix {
-        @NotNull
+        @Override
+		@NotNull
         public String getName() {
             return InspectionJSBundle.message("simplify.fix");
         }
 
-        public void doFix(Project project, ProblemDescriptor descriptor)
+        @Override
+		public void doFix(Project project, ProblemDescriptor descriptor)
                 throws IncorrectOperationException {
             final PsiElement ifKeywordElement = descriptor.getPsiElement();
             final JSIfStatement statement =

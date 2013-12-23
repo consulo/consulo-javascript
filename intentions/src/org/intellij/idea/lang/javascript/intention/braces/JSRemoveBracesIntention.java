@@ -38,12 +38,14 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention {
     @NonNls private static final String IF_KEYWORD   = "if";
     @NonNls private static final String ELSE_KEYWORD = "else";
 
-    @NotNull
+    @Override
+	@NotNull
     protected JSElementPredicate getElementPredicate() {
         return new RemoveBracesPredicate();
     }
 
-    protected String getTextForElement(PsiElement element) {
+    @Override
+	protected String getTextForElement(PsiElement element) {
         final JSElement parent = (JSElement) element.getParent();
         final String    keyword;
 
@@ -64,7 +66,8 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention {
         return this.getText(keyword);
     }
 
-    protected void processIntention(@NotNull PsiElement element)
+    @Override
+	protected void processIntention(@NotNull PsiElement element)
         throws IncorrectOperationException {
         final JSBlockStatement blockStatement = (JSBlockStatement) element;
         final JSStatement[]    statements     = blockStatement.getStatements();
@@ -104,7 +107,8 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention {
     }
 
     public static class RemoveBracesPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof JSBlockStatement)) {
                 return false;
             }

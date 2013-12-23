@@ -19,12 +19,14 @@ public class JSImportStatementElementType extends JSStubElementType<JSImportStat
 	private static final JSStubGenerator<JSImportStatementStub, JSImportStatement> ourStubGenerator = new JSStubGenerator<JSImportStatementStub,
 			JSImportStatement>()
 	{
+		@Override
 		public JSImportStatementStub newInstance(final StubInputStream dataStream, final StubElement parentStub,
 				final JSStubElementType<JSImportStatementStub, JSImportStatement> type) throws IOException
 		{
 			return new JSImportStatementStubImpl(dataStream, parentStub, type);
 		}
 
+		@Override
 		public JSImportStatementStub newInstance(final JSImportStatement psi, final StubElement parentStub, final JSStubElementType<JSImportStatementStub,
 				JSImportStatement> type)
 		{

@@ -161,21 +161,25 @@ public class JSSymbolUtil
 			final JSReferenceExpression expr1 = expr;
 			visitReferenceExpressionComponentsInRootFirstOrder(expr, contextNamespace, new ReferenceExpressionProcessor()
 			{
+				@Override
 				public void processNamespace(JSNamespace ns)
 				{
 					nameComponents.add(ns.getNameId());
 				}
 
+				@Override
 				public void processExpression(JSReferenceExpression expr)
 				{
 					nameComponents.add(index.getIndexOf(expr.getReferencedName()));
 				}
 
+				@Override
 				public void processUnresolvedThis()
 				{
 					nameComponents.add(index.getIndexOf(""));
 				}
 
+				@Override
 				public boolean isTopLevel(final JSReferenceExpression expression)
 				{
 					return expr1 == expression;
@@ -293,6 +297,7 @@ public class JSSymbolUtil
 					.doProcessAllTags((XmlFile) myFile));
 		}
 
+		@Override
 		public void processNamespace(JSNamespace ns)
 		{
 			if(ns.getNameId() == -1)
@@ -305,6 +310,7 @@ public class JSSymbolUtil
 			}
 		}
 
+		@Override
 		public void processExpression(JSReferenceExpression expr)
 		{
 			if(expr != topExpression)
@@ -338,11 +344,13 @@ public class JSSymbolUtil
 			}
 		}
 
+		@Override
 		public void processUnresolvedThis()
 		{
 			currentNamespace = myFileNamespace.getChildNamespace(myIndex.getIndexOf(""));
 		}
 
+		@Override
 		public boolean isTopLevel(final JSReferenceExpression expression)
 		{
 			return expression == topExpression;
@@ -396,6 +404,7 @@ public class JSSymbolUtil
 			}
 		}
 
+		@Override
 		public void resetState()
 		{
 			myDeprecated = false;
@@ -612,6 +621,7 @@ public class JSSymbolUtil
 		{
 		}
 
+		@Override
 		public void visitElement(final PsiElement element)
 		{
 			if(element instanceof XmlDocument)
@@ -1392,16 +1402,19 @@ public class JSSymbolUtil
 			}
 		}
 
+		@Override
 		public boolean needsPlainCommentData()
 		{
 			return false;
 		}
 
+		@Override
 		public boolean onCommentLine(@NotNull String line)
 		{
 			return true;
 		}
 
+		@Override
 		public boolean onPatternMatch(@NotNull MetaDocType type, @Nullable String matchName, @Nullable final String matchValue,
 				@Nullable String remainingLineContent, @NotNull final String line, final String patternMatched)
 		{
@@ -1450,16 +1463,19 @@ public class JSSymbolUtil
 			return true;
 		}
 
+		@Override
 		public boolean isCurrentItemDeprecated()
 		{
 			return myDeprecated;
 		}
 
+		@Override
 		public String getCurrentItemType()
 		{
 			return myType;
 		}
 
+		@Override
 		public JSAttributeList.AccessType getAccessType()
 		{
 			if(myAccessType == null)

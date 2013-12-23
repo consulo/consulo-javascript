@@ -98,11 +98,13 @@ public abstract class JSIntention extends PsiElementBaseIntentionAction {
     }
 
 
-    public boolean isAvailable(@NotNull Project project, Editor editor, @Nullable PsiElement element) {
+    @Override
+	public boolean isAvailable(@NotNull Project project, Editor editor, @Nullable PsiElement element) {
       return element != null && findMatchingElement(element) != null;
     }
 
-    public boolean startInWriteAction() {
+    @Override
+	public boolean startInWriteAction() {
         return true;
     }
 
@@ -111,7 +113,8 @@ public abstract class JSIntention extends PsiElementBaseIntentionAction {
                                         INTENTION_SUFFIX, null, suffixes);
     }
 
-    @SuppressWarnings({"UnresolvedPropertyKey"})
+    @Override
+	@SuppressWarnings({"UnresolvedPropertyKey"})
     @NotNull public String getText() {
         return JSIntentionBundle.message(this.getTextKey(DISPLAY_NAME));
     }
@@ -126,7 +129,8 @@ public abstract class JSIntention extends PsiElementBaseIntentionAction {
         return JSIntentionBundle.message(this.getTextKey(DISPLAY_NAME, '.', suffix), arguments);
     }
 
-    @SuppressWarnings({"UnresolvedPropertyKey"})
+    @Override
+	@SuppressWarnings({"UnresolvedPropertyKey"})
     @NotNull public String getFamilyName() {
         return JSIntentionBundle.message(this.getTextKey(FAMILY_NAME));
     }

@@ -45,14 +45,17 @@ public class BrowserSupportManager implements ProjectComponent
 		return project.getComponent(BrowserSupportManager.class);
 	}
 
+	@Override
 	public void projectOpened()
 	{
 	}
 
+	@Override
 	public void projectClosed()
 	{
 	}
 
+	@Override
 	@NonNls
 	@NotNull
 	public String getComponentName()
@@ -60,10 +63,12 @@ public class BrowserSupportManager implements ProjectComponent
 		return "JS.BrowserSupportManager";
 	}
 
+	@Override
 	public void initComponent()
 	{
 	}
 
+	@Override
 	public void disposeComponent()
 	{
 	}

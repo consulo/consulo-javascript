@@ -22,7 +22,8 @@ import com.intellij.psi.util.PsiTreeUtil;
 public abstract class BaseInspection extends LocalInspectionTool implements CustomSuppressableInspectionTool {
     private final String m_shortName = null;
 
-    @NotNull
+    @Override
+	@NotNull
     public String getShortName() {
         if (m_shortName == null) {
             final Class<? extends BaseInspection> aClass = getClass();
@@ -34,6 +35,7 @@ public abstract class BaseInspection extends LocalInspectionTool implements Cust
         return m_shortName;
     }
 
+  @Override
   @NotNull
     public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder problemsHolder, boolean onTheFly){
         final BaseInspectionVisitor visitor = buildVisitor();
@@ -86,13 +88,15 @@ public abstract class BaseInspection extends LocalInspectionTool implements Cust
         return PsiTreeUtil.getNonStrictParentOfType(psiElement, PsiFile.class);
     }
 
-    public SuppressIntentionAction[] getSuppressActions(@Nullable final PsiElement element) {
+    @Override
+	public SuppressIntentionAction[] getSuppressActions(@Nullable final PsiElement element) {
         return new SuppressIntentionAction[] {
            /* new AddNoInspectionCommentFix(HighlightDisplayKey.find(getShortName()), JSSuppressionHolder.class),  */
         };
     }
 
-    public boolean isSuppressedFor(final PsiElement element) {
+    @Override
+	public boolean isSuppressedFor(final PsiElement element) {
         return SuppressionUtil.isSuppressedInStatement(element, getID(), JSSuppressionHolder.class);
     }
 }

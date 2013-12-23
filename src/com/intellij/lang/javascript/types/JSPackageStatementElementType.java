@@ -19,12 +19,14 @@ public class JSPackageStatementElementType extends JSStubElementType<JSPackageSt
 	private static final JSStubGenerator<JSPackageStatementStub, JSPackageStatement> ourStubGenerator = new JSStubGenerator<JSPackageStatementStub,
 			JSPackageStatement>()
 	{
+		@Override
 		public JSPackageStatementStub newInstance(final StubInputStream dataStream, final StubElement parentStub,
 				final JSStubElementType<JSPackageStatementStub, JSPackageStatement> type) throws IOException
 		{
 			return new JSPackageStatementStubImpl(dataStream, parentStub, type);
 		}
 
+		@Override
 		public JSPackageStatementStub newInstance(final JSPackageStatement psi, final StubElement parentStub,
 				final JSStubElementType<JSPackageStatementStub, JSPackageStatement> type)
 		{

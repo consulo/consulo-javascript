@@ -14,34 +14,40 @@ import org.jetbrains.annotations.Nullable;
 
 public class NonShortCircuitBooleanExpressionJSInspection extends JavaScriptInspection {
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("non.short.circuit.boolean.expression.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.BUGS_GROUP_NAME;
     }
 
-    @Nullable
+    @Override
+	@Nullable
     protected String buildErrorString(Object... args) {
         return InspectionJSBundle.message("non.short.circuit.boolean.expression.error.string");
     }
 
-    public InspectionJSFix buildFix(PsiElement location) {
+    @Override
+	public InspectionJSFix buildFix(PsiElement location) {
         return new NonShortCircuitBooleanFix();
     }
 
     private static class NonShortCircuitBooleanFix
             extends InspectionJSFix {
 
-        @NotNull
+        @Override
+		@NotNull
         public String getName() {
             return InspectionJSBundle.message("replace.with.short.circuit.expression.fix.string");
         }
 
-        public void doFix(Project project, ProblemDescriptor descriptor)
+        @Override
+		public void doFix(Project project, ProblemDescriptor descriptor)
                 throws IncorrectOperationException {
             final JSBinaryExpression expression =
                     (JSBinaryExpression) descriptor.getPsiElement();
@@ -64,7 +70,8 @@ public class NonShortCircuitBooleanExpressionJSInspection extends JavaScriptInsp
 
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new NonShortCircuitBooleanVisitor();
     }
 

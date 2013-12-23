@@ -45,11 +45,13 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 {
 	private static final Set<Class> ourArgumentListAllowedParentClassesSet = new HashSet<Class>(Arrays.asList(JSCallExpression.class));
 
+	@Override
 	public boolean couldShowInLookup()
 	{
 		return true;
 	}
 
+	@Override
 	public Object[] getParametersForLookup(final LookupElement item, final ParameterInfoContext context)
 	{
 		if(!(item instanceof MutableLookupElement))
@@ -112,6 +114,7 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 		}
 	}
 
+	@Override
 	public Object[] getParametersForDocumentation(final JSFunction p, final ParameterInfoContext context)
 	{
 		final JSParameterList list = p.getParameterList();
@@ -122,6 +125,7 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 		return ArrayUtil.EMPTY_OBJECT_ARRAY;
 	}
 
+	@Override
 	public JSArgumentList findElementForParameterInfo(final CreateParameterInfoContext context)
 	{
 		JSArgumentList argList = findArgumentList(context.getFile(), context.getOffset());
@@ -202,16 +206,19 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 		return null;
 	}
 
+	@Override
 	public void showParameterInfo(@NotNull final JSArgumentList element, final CreateParameterInfoContext context)
 	{
 		context.showHint(element, element.getTextOffset(), this);
 	}
 
+	@Override
 	public JSArgumentList findElementForUpdatingParameterInfo(final UpdateParameterInfoContext context)
 	{
 		return findArgumentList(context.getFile(), context.getOffset());
 	}
 
+	@Override
 	public void updateParameterInfo(@NotNull final JSArgumentList o, final UpdateParameterInfoContext context)
 	{
 		if(context.getParameterOwner() != o)
@@ -223,17 +230,20 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 		context.setCurrentParameter(currentParameterIndex);
 	}
 
+	@Override
 	@NotNull
 	public String getParameterCloseChars()
 	{
 		return ",){";
 	}
 
+	@Override
 	public boolean tracksParameterIndex()
 	{
 		return true;
 	}
 
+	@Override
 	public void updateUI(final JSFunction p, final ParameterInfoUIContext context)
 	{
 		final JSParameterList parameterList = p.getParameterList();
@@ -320,24 +330,28 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 		return p.getName();
 	}
 
+	@Override
 	@NotNull
 	public JSExpression[] getActualParameters(@NotNull final JSArgumentList jsArgumentList)
 	{
 		return jsArgumentList.getArguments();
 	}
 
+	@Override
 	@NotNull
 	public IElementType getActualParameterDelimiterType()
 	{
 		return JSTokenTypes.COMMA;
 	}
 
+	@Override
 	@NotNull
 	public IElementType getActualParametersRBraceType()
 	{
 		return JSTokenTypes.RBRACE;
 	}
 
+	@Override
 	@NotNull
 	public Set<Class> getArgumentListAllowedParentClasses()
 	{
@@ -351,6 +365,7 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 		return Collections.emptySet();
 	}
 
+	@Override
 	@NotNull
 	public Class<JSArgumentList> getArgumentListClass()
 	{

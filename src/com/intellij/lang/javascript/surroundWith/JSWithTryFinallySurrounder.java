@@ -28,11 +28,13 @@ import com.intellij.psi.PsiElement;
  */
 public class JSWithTryFinallySurrounder extends JSWithTryCatchFinallySurrounder
 {
+	@Override
 	public String getTemplateDescription()
 	{
 		return JSBundle.message("javascript.surround.with.try.finally");
 	}
 
+	@Override
 	protected String getStatementTemplate(final Project project, PsiElement context)
 	{
 		return "try { } finally { }";

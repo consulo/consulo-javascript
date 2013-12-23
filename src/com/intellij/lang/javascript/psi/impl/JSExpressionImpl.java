@@ -13,6 +13,7 @@ public abstract class JSExpressionImpl extends JSElementImpl implements JSExpres
 		super(node);
 	}
 
+	@Override
 	public JSExpression replace(JSExpression newExpr)
 	{
 		return JSChangeUtil.replaceExpression(this, newExpr);

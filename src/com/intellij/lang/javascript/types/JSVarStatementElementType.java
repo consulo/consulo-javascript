@@ -24,12 +24,14 @@ public class JSVarStatementElementType extends JSStubElementType<JSVarStatementS
 	private static final JSStubGenerator<JSVarStatementStub, JSVarStatement> ourStubGenerator = new JSStubGenerator<JSVarStatementStub,
 			JSVarStatement>()
 	{
+		@Override
 		public JSVarStatementStub newInstance(final StubInputStream dataStream, final StubElement parentStub, final JSStubElementType<JSVarStatementStub,
 				JSVarStatement> type) throws IOException
 		{
 			return new JSVarStatementStubImpl(dataStream, parentStub, type);
 		}
 
+		@Override
 		public JSVarStatementStub newInstance(final JSVarStatement psi, final StubElement parentStub, final JSStubElementType<JSVarStatementStub,
 				JSVarStatement> type)
 		{
@@ -42,6 +44,7 @@ public class JSVarStatementElementType extends JSStubElementType<JSVarStatementS
 		super("VAR_STATEMENT", ourStubGenerator);
 	}
 
+	@Override
 	public boolean shouldCreateStub(ASTNode node)
 	{
 		final PsiElement element = node.getTreeParent().getPsi();

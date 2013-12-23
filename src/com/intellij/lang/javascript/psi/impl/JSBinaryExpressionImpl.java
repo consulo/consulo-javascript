@@ -46,6 +46,7 @@ public class JSBinaryExpressionImpl extends JSExpressionImpl implements JSBinary
 		super(node);
 	}
 
+	@Override
 	public JSExpression getLOperand()
 	{
 		final ASTNode astNode = getNode();
@@ -57,6 +58,7 @@ public class JSBinaryExpressionImpl extends JSExpressionImpl implements JSBinary
 		return firstExpression != null ? (JSExpression) firstExpression.getPsi() : null;
 	}
 
+	@Override
 	public JSExpression getROperand()
 	{
 		final ASTNode myNode = getNode();
@@ -64,12 +66,14 @@ public class JSBinaryExpressionImpl extends JSExpressionImpl implements JSBinary
 		return secondExpression != null ? (JSExpression) secondExpression.getPsi() : null;
 	}
 
+	@Override
 	public IElementType getOperationSign()
 	{
 		final ASTNode operationASTNode = getNode().findChildByType(BINARY_OPERATIONS);
 		return operationASTNode != null ? operationASTNode.getElementType() : null;
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -82,6 +86,7 @@ public class JSBinaryExpressionImpl extends JSExpressionImpl implements JSBinary
 		}
 	}
 
+	@Override
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
 			@NotNull PsiElement place)
 	{

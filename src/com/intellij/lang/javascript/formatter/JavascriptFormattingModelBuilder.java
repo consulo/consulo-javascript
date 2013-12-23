@@ -16,6 +16,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
 
 public class JavascriptFormattingModelBuilder implements FormattingModelBuilder
 {
+	@Override
 	@NotNull
 	public FormattingModel createModel(final PsiElement element, final CodeStyleSettings settings)
 	{
@@ -25,6 +26,7 @@ public class JavascriptFormattingModelBuilder implements FormattingModelBuilder
 				settings));
 	}
 
+	@Override
 	public TextRange getRangeAffectingIndent(PsiFile file, int offset, ASTNode elementAtOffset)
 	{
 		return null;

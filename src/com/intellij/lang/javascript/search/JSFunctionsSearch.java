@@ -52,6 +52,7 @@ public abstract class JSFunctionsSearch implements QueryExecutor<JSFunction, JSF
 	{
 		OVERRIDDEN_FUNCTIONS_QUERY_FACTORY.registerExecutor(new JSFunctionsSearch()
 		{
+			@Override
 			protected Query<JSClass> makeQuery(final SearchParameters queryParameters, final PsiElement parent)
 			{
 				return JSClassSearch.searchClassInheritors((JSClass) parent, queryParameters.isCheckDeepInheritance());
@@ -61,6 +62,7 @@ public abstract class JSFunctionsSearch implements QueryExecutor<JSFunction, JSF
 		IMPLEMENTING_FUNCTIONS_QUERY_FACTORY.registerExecutor(new ImplementingFunctionsSearch());
 	}
 
+	@Override
 	public boolean execute(final SearchParameters queryParameters, final Processor<JSFunction> consumer)
 	{
 		final JSFunction baseFunction = queryParameters.getBaseFunction();
@@ -73,6 +75,7 @@ public abstract class JSFunctionsSearch implements QueryExecutor<JSFunction, JSF
 
 		return makeQuery(queryParameters, clazz).forEach(new Processor<JSClass>()
 		{
+			@Override
 			public boolean process(final JSClass jsClass)
 			{
 				JSFunction function = jsClass.findFunctionByNameAndKind(baseFunction.getName(), baseFunction.getKind());
@@ -89,6 +92,7 @@ public abstract class JSFunctionsSearch implements QueryExecutor<JSFunction, JSF
 
 	private static class ImplementingFunctionsSearch extends JSFunctionsSearch
 	{
+		@Override
 		protected Query<JSClass> makeQuery(final SearchParameters queryParameters, final PsiElement parent)
 		{
 			return JSClassSearch.searchInterfaceImplementations((JSClass) parent, true);

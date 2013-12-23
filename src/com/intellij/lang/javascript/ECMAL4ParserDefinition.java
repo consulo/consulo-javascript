@@ -13,18 +13,21 @@ import com.intellij.psi.tree.IFileElementType;
 
 public class ECMAL4ParserDefinition extends JavascriptParserDefinition
 {
+	@Override
 	@NotNull
 	public Lexer createLexer(final Project project, LanguageVersion languageVersion)
 	{
 		return new JavaScriptParsingLexer(ECMAL4LanguageDialect.DIALECT_OPTION_HOLDER);
 	}
 
+	@Override
 	public IFileElementType getFileNodeType()
 	{
 		return JSElementTypes.ECMA4_FILE;
 	}
 
 
+	@Override
 	@NotNull
 	public PsiParser createParser(final Project project, LanguageVersion languageVersion)
 	{

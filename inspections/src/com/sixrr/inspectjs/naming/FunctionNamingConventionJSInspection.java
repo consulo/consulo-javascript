@@ -17,25 +17,30 @@ public class FunctionNamingConventionJSInspection extends ConventionInspection {
     private static final int DEFAULT_MAX_LENGTH = 32;
     private final RenameFix fix = new RenameFix();
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("function.naming.convention.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.NAMING_CONVENTIONS_GROUP_NAME;
     }
 
-    protected InspectionJSFix buildFix(PsiElement location) {
+    @Override
+	protected InspectionJSFix buildFix(PsiElement location) {
         return fix;
     }
 
-    protected boolean buildQuickFixesOnlyForOnTheFlyErrors() {
+    @Override
+	protected boolean buildQuickFixesOnlyForOnTheFlyErrors() {
         return true;
     }
 
-    public String buildErrorString(Object... args) {
+    @Override
+	public String buildErrorString(Object... args) {
         final String functionName = ((PsiElement) args[0]).getText();
 
         assert functionName != null;
@@ -47,20 +52,24 @@ public class FunctionNamingConventionJSInspection extends ConventionInspection {
         return InspectionJSBundle.message("function.name.doesnt.match.regex.error.string", functionName, getRegex());
     }
 
-    @NonNls
+    @Override
+	@NonNls
     protected String getDefaultRegex() {
         return "[a-z][A-Za-z]*";
     }
 
-    protected int getDefaultMinLength() {
+    @Override
+	protected int getDefaultMinLength() {
         return DEFAULT_MIN_LENGTH;
     }
 
-    protected int getDefaultMaxLength() {
+    @Override
+	protected int getDefaultMaxLength() {
         return DEFAULT_MAX_LENGTH;
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 

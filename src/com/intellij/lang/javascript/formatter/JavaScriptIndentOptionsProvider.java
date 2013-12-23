@@ -13,21 +13,25 @@ import com.intellij.psi.codeStyle.FileTypeIndentOptionsProvider;
  */
 public class JavaScriptIndentOptionsProvider implements FileTypeIndentOptionsProvider
 {
+	@Override
 	public CodeStyleSettings.IndentOptions createIndentOptions()
 	{
 		return new CodeStyleSettings.IndentOptions();
 	}
 
+	@Override
 	public FileType getFileType()
 	{
 		return JavaScriptSupportLoader.JAVASCRIPT;
 	}
 
+	@Override
 	public IndentOptionsEditor createOptionsEditor()
 	{
 		return new SmartIndentOptionsEditor();
 	}
 
+	@Override
 	public String getPreviewText()
 	{
 		return "function a() {\n" +
@@ -35,6 +39,7 @@ public class JavaScriptIndentOptionsProvider implements FileTypeIndentOptionsPro
 				"}";
 	}
 
+	@Override
 	public void prepareForReformat(final PsiFile psiFile)
 	{
 	}

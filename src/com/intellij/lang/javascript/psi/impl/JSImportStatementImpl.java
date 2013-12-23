@@ -41,6 +41,7 @@ public class JSImportStatementImpl extends JSStubbedStatementImpl<JSImportStatem
 		super(stub, JSElementTypes.IMPORT_STATEMENT);
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -53,12 +54,14 @@ public class JSImportStatementImpl extends JSStubbedStatementImpl<JSImportStatem
 		}
 	}
 
+	@Override
 	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState state, final PsiElement lastParent,
 			@NotNull final PsiElement place)
 	{
 		return true;
 	}
 
+	@Override
 	public String getImportText()
 	{
 		final JSImportStatementStub stub = getStub();

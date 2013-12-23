@@ -13,6 +13,7 @@ public class JSNameIndex extends StringStubIndexExtension<JSQualifiedNamedElemen
 	public static final StubIndexKey<String, JSQualifiedNamedElement> KEY = StubIndexKey.createIndexKey("js.qualified.shortName");
 	private static final int VERSION = 2;
 
+	@Override
 	public StubIndexKey<String, JSQualifiedNamedElement> getKey()
 	{
 		return KEY;

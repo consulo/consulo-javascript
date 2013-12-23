@@ -36,16 +36,19 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 
 public class JSExtractIncrementIntention extends JSMutablyNamedIntention {
-    public String getTextForElement(PsiElement element) {
+    @Override
+	public String getTextForElement(PsiElement element) {
         return this.getText(BinaryOperatorUtils.getOperatorText(getOperationSign(element)));
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new ExtractIncrementPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final boolean      isPostfix = (element instanceof JSPostfixExpression);
         final JSExpression operand   = (isPostfix ? ((JSPostfixExpression) element).getExpression()
                                                   : ((JSPrefixExpression)  element).getExpression());
@@ -68,7 +71,8 @@ public class JSExtractIncrementIntention extends JSMutablyNamedIntention {
     }
 
     private static class ExtractIncrementPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!ExpressionUtil.isIncrementDecrementExpression(element)) {
                 return false;
             }

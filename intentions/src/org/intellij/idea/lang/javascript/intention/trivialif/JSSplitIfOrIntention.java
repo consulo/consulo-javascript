@@ -36,12 +36,14 @@ public class JSSplitIfOrIntention extends JSIntention {
     @NonNls private static final String ELSE_IF_STATEMENT_PREFIX = "else if (";
     @NonNls private static final String ELSE_KEYWORD             = "else ";
 
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new SplitIfOrPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final PsiElement jsElement = (element.getParent() instanceof JSIfStatement ? element.getParent() : element);
 
         assert (jsElement != null);
@@ -79,7 +81,8 @@ public class JSSplitIfOrIntention extends JSIntention {
     }
 
     private static class SplitIfOrPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             PsiElement parent = element.getParent();
 
             if (!(parent instanceof JSIfStatement)) {

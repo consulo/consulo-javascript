@@ -39,18 +39,21 @@ public class JSPostfixExpressionImpl extends JSExpressionImpl implements JSPostf
 		super(node);
 	}
 
+	@Override
 	public JSExpression getExpression()
 	{
 		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
 		return node != null ? (JSExpression) node.getPsi() : null;
 	}
 
+	@Override
 	public IElementType getOperationSign()
 	{
 		final ASTNode[] nodes = getNode().getChildren(JSTokenTypes.OPERATIONS);
 		return nodes.length == 1 ? nodes[0].getElementType() : null;
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)

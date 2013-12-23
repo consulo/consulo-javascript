@@ -20,11 +20,13 @@ public class JSONNamesValidator extends JSNamesValidator
 		super(JavascriptLanguage.DIALECT_OPTION_HOLDER);
 	}
 
+	@Override
 	protected Lexer createLexer(final DialectOptionHolder optionHolder)
 	{
 		return new JSONLexer(new JavaScriptLexer(optionHolder));
 	}
 
+	@Override
 	public synchronized boolean isIdentifier(String name, final Project project)
 	{
 		if(!StringUtil.startsWithChar(name, '\'') && !StringUtil.startsWithChar(name, '\"'))

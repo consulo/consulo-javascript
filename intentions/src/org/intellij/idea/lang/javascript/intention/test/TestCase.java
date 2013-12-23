@@ -132,7 +132,8 @@ public abstract class TestCase {
             this.offset    = offset;
         }
 
-        public void run() {
+        @Override
+		public void run() {
             final Document document = this.editor.getDocument();
 
             document.deleteString(0, document.getTextLength());
@@ -150,7 +151,8 @@ public abstract class TestCase {
             this.runnable = runnable;
         }
 
-        public void run() {
+        @Override
+		public void run() {
             ApplicationManager.getApplication().runWriteAction(this.runnable);
         }
     }

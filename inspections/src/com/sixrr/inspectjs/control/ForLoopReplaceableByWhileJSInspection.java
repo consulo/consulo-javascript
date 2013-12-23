@@ -22,46 +22,54 @@ public class ForLoopReplaceableByWhileJSInspection extends JavaScriptInspection 
      */
     public boolean m_ignoreLoopsWithoutConditions = false;
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("for.loop.replaceable.by.while.display.name");
 
     }
-    @NotNull
+    @Override
+	@NotNull
     public String getID() {
         return "ForLoopReplaceableByWhile";
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
-    @NotNull
+    @Override
+	@NotNull
     protected String buildErrorString(Object... args) {
         return InspectionJSBundle.message(
                 "for.loop.replaceable.by.while.problem.descriptor");
     }
 
-    public JComponent createOptionsPanel() {
+    @Override
+	public JComponent createOptionsPanel() {
         return new SingleCheckboxOptionsPanel(InspectionJSBundle.message(
                 "for.loop.replaceable.by.while.ignore.option"),
                 this, "m_ignoreLoopsWithoutConditions");
     }
 
-    public InspectionJSFix buildFix(PsiElement location) {
+    @Override
+	public InspectionJSFix buildFix(PsiElement location) {
         return new ReplaceForByWhileFix();
     }
 
     private static class ReplaceForByWhileFix extends InspectionJSFix {
 
-        @NotNull
+        @Override
+		@NotNull
         public String getName() {
             return InspectionJSBundle.message(
                     "for.loop.replaceable.by.while.replace.quickfix");
         }
 
-        public void doFix(Project project, ProblemDescriptor descriptor)
+        @Override
+		public void doFix(Project project, ProblemDescriptor descriptor)
                 throws IncorrectOperationException {
             final PsiElement forKeywordElement = descriptor.getPsiElement();
             final JSForStatement forStatement =
@@ -87,7 +95,8 @@ public class ForLoopReplaceableByWhileJSInspection extends JavaScriptInspection 
         }
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new ForLoopReplaceableByWhileVisitor();
     }
 

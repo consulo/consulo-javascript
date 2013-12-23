@@ -24,22 +24,26 @@ import com.intellij.psi.PsiElement;
 
 public class JSWithFunctionSurrounder extends JSStatementSurrounder
 {
+	@Override
 	public String getTemplateDescription()
 	{
 		return JSBundle.message("javascript.surround.with.function");
 	}
 
+	@Override
 	protected String getStatementTemplate(final Project project, PsiElement context)
 	{
 		return "function $name$() { }";
 	}
 
+	@Override
 	protected ASTNode getInsertBeforeNode(final ASTNode statementNode)
 	{
 		JSFunction stmt = (JSFunction) statementNode.getPsi();
 		return stmt.getBody()[0].getLastChild().getNode();
 	}
 
+	@Override
 	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
 	{
 		JSFunction stmt = (JSFunction) statementNode.getPsi();

@@ -19,6 +19,7 @@ public abstract class JSBaseClassBasedIntroduceDialog extends JSBaseIntroduceDia
 		super(project, occurences, mainOccurence, titleKey);
 	}
 
+	@Override
 	protected void doInit()
 	{
 		super.doInit();

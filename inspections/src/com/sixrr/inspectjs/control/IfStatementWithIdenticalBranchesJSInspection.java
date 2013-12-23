@@ -13,31 +13,37 @@ import org.jetbrains.annotations.NotNull;
 public class IfStatementWithIdenticalBranchesJSInspection extends JavaScriptInspection {
     private InspectionJSFix fix = new CollapseIfFix();
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("if.statement.with.identical.branches.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
-    public String buildErrorString(Object... args) {
+    @Override
+	public String buildErrorString(Object... args) {
         return InspectionJSBundle.message("ref.statement.with.identical.branches.error.string");
     }
 
-    public InspectionJSFix buildFix(PsiElement location) {
+    @Override
+	public InspectionJSFix buildFix(PsiElement location) {
         return fix;
     }
 
     private static class CollapseIfFix extends InspectionJSFix {
-        @NotNull
+        @Override
+		@NotNull
         public String getName() {
             return InspectionJSBundle.message("collapse.if.statement.fix");
         }
 
-        public void doFix(Project project, ProblemDescriptor descriptor)
+        @Override
+		public void doFix(Project project, ProblemDescriptor descriptor)
                 throws IncorrectOperationException {
             final PsiElement identifier = descriptor.getPsiElement();
             final JSIfStatement statement =
@@ -49,7 +55,8 @@ public class IfStatementWithIdenticalBranchesJSInspection extends JavaScriptInsp
         }
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new IfStatementWithIdenticalBranchesVisitor();
     }
 

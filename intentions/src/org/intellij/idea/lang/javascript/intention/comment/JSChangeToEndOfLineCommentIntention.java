@@ -28,12 +28,14 @@ import org.intellij.idea.lang.javascript.psiutil.TreeUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class JSChangeToEndOfLineCommentIntention extends JSIntention {
-    @NotNull
+    @Override
+	@NotNull
     protected JSElementPredicate getElementPredicate() {
         return new CStyleCommentPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final PsiElement parent  = element.getParent();
 
         assert (parent != null);
@@ -95,7 +97,8 @@ public class JSChangeToEndOfLineCommentIntention extends JSIntention {
 
     private static class CStyleCommentPredicate implements JSElementPredicate {
 
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof PsiComment)) {
                 return false;
             }

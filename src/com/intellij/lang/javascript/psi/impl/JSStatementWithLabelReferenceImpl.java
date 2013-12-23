@@ -39,6 +39,7 @@ class JSStatementWithLabelReferenceImpl extends JSStatementImpl
 		return label != null ? label.getText() : null;
 	}
 
+	@Override
 	@NotNull
 	public PsiReference[] getReferences()
 	{
@@ -69,17 +70,20 @@ class JSStatementWithLabelReferenceImpl extends JSStatementImpl
 			labelNode = _labelNode;
 		}
 
+		@Override
 		public PsiElement getElement()
 		{
 			return JSStatementWithLabelReferenceImpl.this;
 		}
 
+		@Override
 		public TextRange getRangeInElement()
 		{
 			final int startOffsetInParent = labelNode.getStartOffsetInParent();
 			return new TextRange(startOffsetInParent, startOffsetInParent + labelNode.getTextLength());
 		}
 
+		@Override
 		@Nullable
 		public PsiElement resolve()
 		{
@@ -89,6 +93,7 @@ class JSStatementWithLabelReferenceImpl extends JSStatementImpl
 			{
 				private final String label = getCanonicalText();
 
+				@Override
 				public boolean execute(final JSLabeledStatement element)
 				{
 					if(label.equals(element.getLabel()))
@@ -103,32 +108,38 @@ class JSStatementWithLabelReferenceImpl extends JSStatementImpl
 			return result[0];
 		}
 
+		@Override
 		public String getCanonicalText()
 		{
 			return labelNode.getText();
 		}
 
+		@Override
 		public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException
 		{
 			JSChangeUtil.doIdentifierReplacement(getElement(), labelNode, newElementName);
 			return getElement();
 		}
 
+		@Override
 		public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException
 		{
 			return null;
 		}
 
+		@Override
 		public boolean isReferenceTo(PsiElement element)
 		{
 			return getManager().areElementsEquivalent(resolve(), element);
 		}
 
+		@Override
 		public Object[] getVariants()
 		{
 			final List<String> labels = new ArrayList<String>(1);
 			processElements(new PsiElementProcessor<JSLabeledStatement>()
 			{
+				@Override
 				public boolean execute(final JSLabeledStatement element)
 				{
 					labels.add(element.getLabel());
@@ -159,6 +170,7 @@ class JSStatementWithLabelReferenceImpl extends JSStatementImpl
 			}
 		}
 
+		@Override
 		public boolean isSoft()
 		{
 			return false;

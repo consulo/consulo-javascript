@@ -12,10 +12,12 @@ import com.intellij.psi.PsiFile;
 
 public class JSStructureViewBuilderFactory implements PsiStructureViewFactory
 {
+	@Override
 	public StructureViewBuilder getStructureViewBuilder(final PsiFile psiFile)
 	{
 		return new TreeBasedStructureViewBuilder()
 		{
+			@Override
 			@NotNull
 			public StructureViewModel createStructureViewModel()
 			{

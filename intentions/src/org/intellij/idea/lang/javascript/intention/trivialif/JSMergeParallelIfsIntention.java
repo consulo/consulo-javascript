@@ -34,12 +34,14 @@ public class JSMergeParallelIfsIntention extends JSIntention {
     @NonNls private static final String IF_STATEMENT_PREFIX = "if (";
     @NonNls private static final String ELSE_KEYWORD        = "else ";
 
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new MergeParallelIfsPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final PsiElement  nextElement = JSElementFactory.getNonWhiteSpaceSibling(element, true);
 
         assert (nextElement != null);
@@ -83,7 +85,8 @@ public class JSMergeParallelIfsIntention extends JSIntention {
     }
 
     private static class MergeParallelIfsPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof JSIfStatement) || ErrorUtil.containsError(element)) {
                 return false;
             }

@@ -66,12 +66,14 @@ public class JSBlock implements Block
 		return myNode;
 	}
 
+	@Override
 	@NotNull
 	public TextRange getTextRange()
 	{
 		return myNode.getTextRange();
 	}
 
+	@Override
 	@NotNull
 	public List<Block> getSubBlocks()
 	{
@@ -84,24 +86,28 @@ public class JSBlock implements Block
 		return mySubBlocks;
 	}
 
+	@Override
 	@Nullable
 	public Wrap getWrap()
 	{
 		return myWrap;
 	}
 
+	@Override
 	@Nullable
 	public Indent getIndent()
 	{
 		return myIndent;
 	}
 
+	@Override
 	@Nullable
 	public Alignment getAlignment()
 	{
 		return myAlignment;
 	}
 
+	@Override
 	@Nullable
 	public Spacing getSpacing(Block child1, Block child2)
 	{
@@ -112,6 +118,7 @@ public class JSBlock implements Block
 		return new JSSpacingProcessor(getNode(), ((JSBlock) child1).getNode(), ((JSBlock) child2).getNode(), mySettings).getResult();
 	}
 
+	@Override
 	@NotNull
 	public ChildAttributes getChildAttributes(final int newChildIndex)
 	{
@@ -185,6 +192,7 @@ public class JSBlock implements Block
 		return new ChildAttributes(indent, alignment);
 	}
 
+	@Override
 	public boolean isIncomplete()
 	{
 		return isIncomplete(myNode);
@@ -214,6 +222,7 @@ public class JSBlock implements Block
 		return mySettings;
 	}
 
+	@Override
 	public boolean isLeaf()
 	{
 		if(myNode.getElementType() == JSTokenTypes.DOC_COMMENT)

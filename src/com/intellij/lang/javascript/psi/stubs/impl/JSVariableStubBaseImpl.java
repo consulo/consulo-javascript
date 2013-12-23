@@ -46,6 +46,7 @@ public abstract class JSVariableStubBaseImpl<T extends JSVariable> extends JSQua
 		myInitializerText = initial;
 	}
 
+	@Override
 	protected int buildFlags(final T clazz)
 	{
 		return (clazz.isDeprecated() ? DEPRECATED_MASK : 0) | (clazz.isConst() ? CONST_MASK : clazz.isLocal() ? LOCAL_MASK : 0);
@@ -60,31 +61,37 @@ public abstract class JSVariableStubBaseImpl<T extends JSVariable> extends JSQua
 		writeString(myInitializerText, dataStream);
 	}
 
+	@Override
 	public String getTypeString()
 	{
 		return myTypeString;
 	}
 
+	@Override
 	public boolean isDeprecated()
 	{
 		return (myFlags & DEPRECATED_MASK) != 0;
 	}
 
+	@Override
 	public boolean isConst()
 	{
 		return (myFlags & CONST_MASK) != 0;
 	}
 
+	@Override
 	public String getInitializerText()
 	{
 		return myInitializerText;
 	}
 
+	@Override
 	public boolean isLocal()
 	{
 		return (myFlags & LOCAL_MASK) != 0;
 	}
 
+	@Override
 	protected boolean doIndexName(final String name, final String fqn)
 	{
 		final IStubElementType stubType = getParentStub().getParentStub().getStubType();

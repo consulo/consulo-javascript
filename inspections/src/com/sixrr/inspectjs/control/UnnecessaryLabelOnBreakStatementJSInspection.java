@@ -17,31 +17,37 @@ public class UnnecessaryLabelOnBreakStatementJSInspection extends JavaScriptInsp
     private final UnnecessaryLabelOnBreakStatementFix fix =
             new UnnecessaryLabelOnBreakStatementFix();
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("unnecessary.label.on.break.statement.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
-    public boolean isEnabledByDefault() {
+    @Override
+	public boolean isEnabledByDefault() {
         return true;
     }
 
-    public InspectionJSFix buildFix(PsiElement location) {
+    @Override
+	public InspectionJSFix buildFix(PsiElement location) {
         return fix;
     }
 
     private static class UnnecessaryLabelOnBreakStatementFix extends InspectionJSFix {
-        @NotNull
+        @Override
+		@NotNull
         public String getName() {
             return InspectionJSBundle.message("remove.label.fix");
         }
 
-        public void doFix(Project project, ProblemDescriptor descriptor)
+        @Override
+		public void doFix(Project project, ProblemDescriptor descriptor)
                 throws IncorrectOperationException {
             final PsiElement breakKeywordElement = descriptor.getPsiElement();
             final JSBreakStatement breakStatement =
@@ -49,12 +55,14 @@ public class UnnecessaryLabelOnBreakStatementJSInspection extends JavaScriptInsp
             replaceStatement(breakStatement, "break;");
         }
     }
-    @Nullable
+    @Override
+	@Nullable
     protected String buildErrorString(Object... args) {
         return InspectionJSBundle.message("unnecessary.label.on.break.error.string");
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 

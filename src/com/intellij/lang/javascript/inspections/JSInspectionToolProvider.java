@@ -7,6 +7,7 @@ import com.intellij.codeInspection.InspectionToolProvider;
  */
 public class JSInspectionToolProvider implements InspectionToolProvider
 {
+	@Override
 	public Class[] getInspectionClasses()
 	{
 		return new Class[]{

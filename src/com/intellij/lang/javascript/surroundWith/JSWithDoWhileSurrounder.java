@@ -31,22 +31,26 @@ import com.intellij.psi.PsiElement;
  */
 public class JSWithDoWhileSurrounder extends JSStatementSurrounder
 {
+	@Override
 	public String getTemplateDescription()
 	{
 		return JSBundle.message("javascript.surround.with.do.while");
 	}
 
+	@Override
 	protected String getStatementTemplate(final Project project, PsiElement context)
 	{
 		return "do { } while (true);";
 	}
 
+	@Override
 	protected ASTNode getInsertBeforeNode(final ASTNode statementNode)
 	{
 		JSDoWhileStatement stmt = (JSDoWhileStatement) statementNode.getPsi();
 		return stmt.getBody().getLastChild().getNode();
 	}
 
+	@Override
 	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
 	{
 		JSDoWhileStatement stmt = (JSDoWhileStatement) statementNode.getPsi();

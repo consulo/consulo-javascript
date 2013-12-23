@@ -54,6 +54,7 @@ public class JSFileImpl extends PsiFileBase implements JSFile
 		super(fileViewProvider, JavaScriptSupportLoader.JAVASCRIPT.getLanguage());
 	}
 
+	@Override
 	@NotNull
 	public FileType getFileType()
 	{
@@ -65,11 +66,13 @@ public class JSFileImpl extends PsiFileBase implements JSFile
 		return virtualFile.getFileType();
 	}
 
+	@Override
 	public String toString()
 	{
 		return "JSFile:" + getName();
 	}
 
+	@Override
 	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState state, @Nullable PsiElement lastParent,
 			@NotNull PsiElement place)
 	{
@@ -100,6 +103,7 @@ public class JSFileImpl extends PsiFileBase implements JSFile
 		return result;
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -112,6 +116,7 @@ public class JSFileImpl extends PsiFileBase implements JSFile
 		}
 	}
 
+	@Override
 	public PsiElement addRangeBefore(@NotNull PsiElement first, @NotNull PsiElement last, PsiElement anchor) throws IncorrectOperationException
 	{
 		if(JSChangeUtil.isStatementOrComment(first))
@@ -121,11 +126,13 @@ public class JSFileImpl extends PsiFileBase implements JSFile
 		return super.addRangeBefore(first, last, anchor);
 	}
 
+	@Override
 	public PsiElement addRange(PsiElement first, PsiElement last) throws IncorrectOperationException
 	{
 		return addRangeAfter(first, last, null);
 	}
 
+	@Override
 	public PsiElement addAfter(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException
 	{
 		if(JSChangeUtil.isStatementOrComment(element))
@@ -135,6 +142,7 @@ public class JSFileImpl extends PsiFileBase implements JSFile
 		return super.addAfter(element, anchor);
 	}
 
+	@Override
 	public PsiElement addBefore(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException
 	{
 		if(JSChangeUtil.isStatementOrComment(element))
@@ -144,11 +152,13 @@ public class JSFileImpl extends PsiFileBase implements JSFile
 		return super.addBefore(element, anchor);
 	}
 
+	@Override
 	public boolean isWritable()
 	{
 		return super.isWritable() && !isPredefined();
 	}
 
+	@Override
 	public PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor) throws IncorrectOperationException
 	{
 		if(JSChangeUtil.isStatementOrComment(first))
@@ -159,11 +169,13 @@ public class JSFileImpl extends PsiFileBase implements JSFile
 		return super.addRangeAfter(first, last, anchor);
 	}
 
+	@Override
 	public PsiElement add(@NotNull PsiElement element) throws IncorrectOperationException
 	{
 		return addAfter(element, null);
 	}
 
+	@Override
 	public StubBasedPsiElement findStubbedElementAtOffset(final int offset, final Class<? extends StubBasedPsiElement> clazz)
 	{
 		final StubElement stub = getStub();
@@ -185,6 +197,7 @@ public class JSFileImpl extends PsiFileBase implements JSFile
 		return null;
 	}
 
+	@Override
 	public JSSourceElement[] getStatements()
 	{
 		final StubElement stub = getStub();
@@ -195,6 +208,7 @@ public class JSFileImpl extends PsiFileBase implements JSFile
 		return findChildrenByClass(JSSourceElement.class);
 	}
 
+	@Override
 	public boolean isPredefined()
 	{
 		return getUserData(JavaScriptIndex.READONLY_JS_FILE_KEY) != null;

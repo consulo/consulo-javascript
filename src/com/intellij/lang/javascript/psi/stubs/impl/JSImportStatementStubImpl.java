@@ -37,20 +37,24 @@ public class JSImportStatementStubImpl extends StubBase<JSImportStatement> imple
 		myImportText = psi.getImportText();
 	}
 
+	@Override
 	public JSImportStatement createPsi()
 	{
 		return new JSImportStatementImpl(this);
 	}
 
+	@Override
 	public void index(final IndexSink sink)
 	{
 	}
 
+	@Override
 	public void serialize(final StubOutputStream dataStream) throws IOException
 	{
 		dataStream.writeInt(myImportText != null ? dataStream.getStringId(myImportText) : -1);
 	}
 
+	@Override
 	public String getImportText()
 	{
 		return myImportText;

@@ -21,12 +21,14 @@ public class OverlyComplexArithmeticExpressionJSInspection extends JavaScriptIns
     @SuppressWarnings({"PublicField"})
     public int m_limit = TERM_LIMIT;
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("overly.complex.arithmetic.expression.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
@@ -35,16 +37,19 @@ public class OverlyComplexArithmeticExpressionJSInspection extends JavaScriptIns
         return m_limit;
     }
 
-    public JComponent createOptionsPanel() {
+    @Override
+	public JComponent createOptionsPanel() {
         return new SingleIntegerFieldOptionsPanel(InspectionJSBundle.message("maximum.number.of.terms.parameter"),
                 this, "m_limit");
     }
 
-    protected String buildErrorString(Object... args) {
+    @Override
+	protected String buildErrorString(Object... args) {
         return InspectionJSBundle.message("overly.complex.arithmetic.expression.error.string");
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 

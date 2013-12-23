@@ -31,12 +31,14 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 
 public class JSConstantExpressionIntention extends JSIntention {
-    @NotNull
+    @Override
+	@NotNull
     protected JSElementPredicate getElementPredicate() {
         return new ConstantExpressionPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final JSExpression  expression = (JSExpression) element;
         final Object        value      = ExpressionUtil.computeConstantExpression(expression);
         final String        newExpression;
@@ -50,7 +52,8 @@ public class JSConstantExpressionIntention extends JSIntention {
     }
 
     private static class ConstantExpressionPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof JSExpression)) {
                 return false;
             }

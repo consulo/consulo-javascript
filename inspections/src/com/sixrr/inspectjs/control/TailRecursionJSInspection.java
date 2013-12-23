@@ -11,18 +11,21 @@ import org.jetbrains.annotations.NotNull;
 
 public class TailRecursionJSInspection extends JavaScriptInspection {
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message(
                 "tail.recursion.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     protected String buildErrorString(Object... args) {
         return InspectionJSBundle.message(
                 "tail.recursion.problem.descriptor");
@@ -166,7 +169,8 @@ public class TailRecursionJSInspection extends JavaScriptInspection {
     }
     */
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new TailRecursionVisitor();
     }
 

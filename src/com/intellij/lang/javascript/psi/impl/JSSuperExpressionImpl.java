@@ -53,6 +53,7 @@ public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperEx
 		super(node);
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -82,16 +83,19 @@ public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperEx
 		PsiReference[] refs = {
 				new PsiReference()
 				{
+					@Override
 					public PsiElement getElement()
 					{
 						return JSSuperExpressionImpl.this;
 					}
 
+					@Override
 					public TextRange getRangeInElement()
 					{
 						return new TextRange(0, getTextLength());
 					}
 
+					@Override
 					@Nullable
 					public PsiElement resolve()
 					{
@@ -140,31 +144,37 @@ public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperEx
 						return null;
 					}
 
+					@Override
 					public String getCanonicalText()
 					{
 						return getText();
 					}
 
+					@Override
 					public PsiElement handleElementRename(final String newElementName) throws IncorrectOperationException
 					{
 						return null;
 					}
 
+					@Override
 					public PsiElement bindToElement(@NotNull final PsiElement element) throws IncorrectOperationException
 					{
 						return null;
 					}
 
+					@Override
 					public boolean isReferenceTo(final PsiElement element)
 					{
 						return false;
 					}
 
+					@Override
 					public Object[] getVariants()
 					{
 						return ArrayUtil.EMPTY_OBJECT_ARRAY;
 					}
 
+					@Override
 					public boolean isSoft()
 					{
 						return true;

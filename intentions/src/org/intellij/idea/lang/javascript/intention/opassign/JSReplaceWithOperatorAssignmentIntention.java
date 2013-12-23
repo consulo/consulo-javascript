@@ -34,7 +34,8 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 
 public class JSReplaceWithOperatorAssignmentIntention extends JSMutablyNamedIntention {
-    public String getTextForElement(PsiElement element) {
+    @Override
+	public String getTextForElement(PsiElement element) {
         final JSAssignmentExpression exp = (JSAssignmentExpression) element;
         final JSBinaryExpression     rhs = (JSBinaryExpression) exp.getROperand();
         assert (rhs != null);
@@ -43,12 +44,14 @@ public class JSReplaceWithOperatorAssignmentIntention extends JSMutablyNamedInte
         return this.getText(BinaryOperatorUtils.getOperatorText(sign));
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new Predicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final JSAssignmentExpression exp = (JSAssignmentExpression) element;
         final JSBinaryExpression     rhs = (JSBinaryExpression) exp.getROperand();
         final JSExpression           lhs = exp.getLOperand();
@@ -65,7 +68,8 @@ public class JSReplaceWithOperatorAssignmentIntention extends JSMutablyNamedInte
     }
 
     private static class Predicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof JSAssignmentExpression)) {
                 return false;
             }

@@ -19,6 +19,7 @@ public class ECMAL4LanguageDialect extends JSLanguageDialect
 
 		SyntaxHighlighterFactory.LANGUAGE_FACTORY.addExplicitExtension(this, new SingleLazyInstanceSyntaxHighlighterFactory()
 		{
+			@Override
 			@NotNull
 			protected SyntaxHighlighter createHighlighter()
 			{
@@ -27,6 +28,7 @@ public class ECMAL4LanguageDialect extends JSLanguageDialect
 		});
 	}
 
+	@Override
 	public String getFileExtension()
 	{
 		return EcmaScriptFileType.INSTANCE.getDefaultExtension();

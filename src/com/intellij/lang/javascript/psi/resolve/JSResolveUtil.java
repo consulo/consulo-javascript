@@ -675,6 +675,7 @@ public class JSResolveUtil
 	{
 		return JSPackageIndex.processElementsInScope("", processor.getName(), new JSPackageIndex.PackageElementsProcessor()
 		{
+			@Override
 			public boolean process(VirtualFile file, String name, JSPackageIndexInfo.Kind kind)
 			{
 				if(kind != JSPackageIndexInfo.Kind.PACKAGE)
@@ -825,6 +826,7 @@ public class JSResolveUtil
 			return CachedValuesManager.getManager(jsElement.getProject()).createParameterizedCachedValue(new ParameterizedCachedValueProvider<Set<String>,
 					JSElement>()
 			{
+				@Override
 				public CachedValueProvider.Result<Set<String>> compute(JSElement context)
 				{
 					class MyProcessor extends ResolveProcessor implements Processor<PsiNamedElement>
@@ -837,6 +839,7 @@ public class JSResolveUtil
 							putUserData(LOOKING_FOR_USE_NAMESPACES, true);
 						}
 
+						@Override
 						public boolean process(PsiNamedElement psiNamedElement)
 						{
 							if(psiNamedElement instanceof JSElement)
@@ -878,6 +881,7 @@ public class JSResolveUtil
 		final Ref<Set<String>> result = new Ref<Set<String>>();
 		walkOverStructure(place, new Processor<PsiNamedElement>()
 		{
+			@Override
 			public boolean process(PsiNamedElement psiNamedElement)
 			{
 				if(psiNamedElement instanceof JSElement)
@@ -954,6 +958,7 @@ public class JSResolveUtil
 
 	public static abstract class JSInjectedFilesVisitor implements PsiLanguageInjectionHost.InjectedPsiVisitor, XmlBackedJSClassImpl.InjectedFileVisitor
 	{
+		@Override
 		public void visit(@NotNull final PsiFile injectedPsi, @NotNull final List<PsiLanguageInjectionHost.Shred> places)
 		{
 			if(injectedPsi instanceof JSFile)
@@ -964,6 +969,7 @@ public class JSResolveUtil
 
 		protected abstract void process(JSFile file);
 
+		@Override
 		public void visit(XmlTag rootTag, JSFile file)
 		{
 			process(file);
@@ -1169,6 +1175,7 @@ public class JSResolveUtil
 		{
 			return CachedValuesManager.getManager(xmlFile.getProject()).createCachedValue(new CachedValueProvider<List<JSVariable>>()
 			{
+				@Override
 				public Result<List<JSVariable>> compute()
 				{
 					SmartList<JSVariable> vars = new SmartList<JSVariable>();
@@ -1205,6 +1212,7 @@ public class JSResolveUtil
 		{
 			value = CachedValuesManager.getManager(element.getProject()).createCachedValue(new CachedValueProvider<PsiElement[]>()
 			{
+				@Override
 				public Result<PsiElement[]> compute()
 				{
 					return new Result<PsiElement[]>(element.getChildren(), element);
@@ -1268,6 +1276,7 @@ public class JSResolveUtil
 		final Ref<JSClass> lastVisitedClass = new Ref<JSClass>();
 		iterateOverridenMethodsUp(method, new Processor<JSClass>()
 		{
+			@Override
 			public boolean process(JSClass jsClass)
 			{
 				lastVisitedClass.set(jsClass);
@@ -1279,6 +1288,7 @@ public class JSResolveUtil
 		Collection<JSClass> visited = new THashSet<JSClass>();
 		visitAllImplementedInterfaces(lastVisitedClass.get(), visited, new Processor<JSClass>()
 		{
+			@Override
 			public boolean process(JSClass jsClass)
 			{
 				// hierarchy may contain maximum one interface declaring a certain method
@@ -1470,12 +1480,14 @@ public class JSResolveUtil
 							final Collection<JSClass> visitedInterfaces = new THashSet<JSClass>();
 							return iterateOverridenMethodsUp((JSFunction) resolvedElement, new Processor<JSClass>()
 							{
+								@Override
 								public boolean process(JSClass jsClass)
 								{
 									if(anotherClass.isInterface())
 									{
 										return !visitAllImplementedInterfaces(jsClass, visitedInterfaces, new Processor<JSClass>()
 										{
+											@Override
 											public boolean process(JSClass jsClass)
 											{
 												return !jsClass.isEquivalentTo(anotherClass);
@@ -1569,6 +1581,7 @@ public class JSResolveUtil
 
 		iterateType((JSFunction) resolvedElement, resolvedElementClass, null, new OverrideHandler()
 		{
+			@Override
 			public boolean process(ResolveProcessor processor, PsiElement scope, String className)
 			{
 				PsiElement result = processor.getResult();
@@ -1611,11 +1624,13 @@ public class JSResolveUtil
 			Object> ourCachedResolveCache = new UserDataCache<CachedValue<Map<PsiPolyVariantReference, ResolveResult[]>>, PsiFile, Object>()
 	{
 
+		@Override
 		protected CachedValue<Map<PsiPolyVariantReference, ResolveResult[]>> compute(PsiFile file, Object o)
 		{
 			return CachedValuesManager.getManager(file.getProject()).createCachedValue(new CachedValueProvider<Map<PsiPolyVariantReference,
 					ResolveResult[]>>()
 			{
+				@Override
 				public Result<Map<PsiPolyVariantReference, ResolveResult[]>> compute()
 				{
 					return new Result<Map<PsiPolyVariantReference, ResolveResult[]>>(Collections.synchronizedMap(new HashMap<PsiPolyVariantReference,
@@ -1909,120 +1924,143 @@ public class JSResolveUtil
 			project = _project;
 		}
 
+		@Override
 		public String getName()
 		{
 			return JavaScriptIndex.getInstance(project).getStringByIndex(myPackage.getNameId());
 		}
 
+		@Override
 		public PsiElement setName(@NonNls @NotNull final String name) throws IncorrectOperationException
 		{
 			throw new IncorrectOperationException();
 		}
 
+		@Override
 		public PsiElement getNameIdentifier()
 		{
 			return null;
 		}
 
+		@Override
 		@NotNull
 		public Language getLanguage()
 		{
 			return JavaScriptSupportLoader.JAVASCRIPT.getLanguage();
 		}
 
+		@Override
 		@NotNull
 		public PsiElement[] getChildren()
 		{
 			return PsiElement.EMPTY_ARRAY;
 		}
 
+		@Override
 		public PsiElement getParent()
 		{
 			return null;
 		}
 
+		@Override
 		public PsiFile getContainingFile()
 		{
 			return null;
 		}
 
+		@Override
 		public PsiElement getFirstChild()
 		{
 			return null;
 		}
 
+		@Override
 		public boolean isValid()
 		{
 			return true;
 		}
 
+		@Override
 		public PsiElement getLastChild()
 		{
 			return null;
 		}
 
+		@Override
 		public PsiElement getNextSibling()
 		{
 			return null;
 		}
 
+		@Override
 		public PsiElement getPrevSibling()
 		{
 			return null;
 		}
 
+		@Override
 		public TextRange getTextRange()
 		{
 			return null;
 		}
 
+		@Override
 		public int getStartOffsetInParent()
 		{
 			return 0;
 		}
 
+		@Override
 		@NotNull
 		public Project getProject()
 		{
 			return project;
 		}
 
+		@Override
 		public int getTextLength()
 		{
 			return 0;
 		}
 
+		@Override
 		public PsiElement findElementAt(final int offset)
 		{
 			return null;
 		}
 
+		@Override
 		public int getTextOffset()
 		{
 			return 0;
 		}
 
+		@Override
 		public String getText()
 		{
 			return null;
 		}
 
+		@Override
 		@NotNull
 		public char[] textToCharArray()
 		{
 			return new char[0];
 		}
 
+		@Override
 		public boolean textContains(final char c)
 		{
 			return false;
 		}
 
+		@Override
 		public ASTNode getNode()
 		{
 			return null;
 		}
 
+		@Override
 		public ASTNode findNameIdentifier()
 		{
 			return null;
@@ -2095,6 +2133,7 @@ public class JSResolveUtil
 			final JavaScriptIndex index = JavaScriptIndex.getInstance(project);
 			final Set<JSNamespace> visited = new THashSet<JSNamespace>();
 
+			@Override
 			public boolean process(final JSNamespace jsNamespace)
 			{
 				if(visited.contains(jsNamespace))
@@ -2133,16 +2172,19 @@ public class JSResolveUtil
 
 					jsNamespace.processDeclarations(new JavaScriptSymbolProcessor.DefaultSymbolProcessor()
 					{
+						@Override
 						protected boolean process(final PsiElement namedElement, final JSNamespace namespace)
 						{
 							return processor.execute(namedElement, ResolveState.initial());
 						}
 
+						@Override
 						public PsiFile getBaseFile()
 						{
 							return null;
 						}
 
+						@Override
 						public int getRequiredNameId()
 						{
 							return index.getIndexOf(node.getName());
@@ -2642,11 +2684,13 @@ public class JSResolveUtil
 			myImportUsed = importUsed;
 		}
 
+		@Override
 		public PsiElement getElement()
 		{
 			return myFunction;
 		}
 
+		@Override
 		public boolean isValidResult()
 		{
 			return myValidResult;
@@ -2668,10 +2712,12 @@ public class JSResolveUtil
 	public static class RelevantDefsUserDataCache extends UserDataCache<CachedValue<TIntObjectHashMap<Object>>, JSElement, Object>
 	{
 
+		@Override
 		protected CachedValue<TIntObjectHashMap<Object>> compute(final JSElement jsElement, final Object o)
 		{
 			return CachedValuesManager.getManager(jsElement.getProject()).createCachedValue(new CachedValueProvider<TIntObjectHashMap<Object>>()
 			{
+				@Override
 				public Result<TIntObjectHashMap<Object>> compute()
 				{
 					final TIntObjectHashMap<Object> relevantDefs = new TIntObjectHashMap<Object>();
@@ -2875,6 +2921,7 @@ public class JSResolveUtil
 				// do not expand tree
 			}
 
+			@Override
 			public void visitJSUseNamespaceDirective(final JSUseNamespaceDirective useNamespaceDirective)
 			{
 				final String namespaceToBeUsed = useNamespaceDirective.getNamespaceToBeUsed();
@@ -3193,6 +3240,7 @@ public class JSResolveUtil
 			setTypeContext(true);
 		}
 
+		@Override
 		public boolean execute(final PsiElement element, final ResolveState state)
 		{
 			final ResolveProcessor processor = new ResolveProcessor(myName, place)
@@ -3315,6 +3363,7 @@ public class JSResolveUtil
 			myType = qName;
 		}
 
+		@Override
 		public JSAttributeList getAttributeList()
 		{
 			return null;
@@ -3338,11 +3387,13 @@ public class JSResolveUtil
 			return myContainingFile;
 		}
 
+		@Override
 		public String getText()
 		{
 			return null;
 		}
 
+		@Override
 		public void accept(@NotNull PsiElementVisitor visitor)
 		{
 			if(visitor instanceof JSElementVisitor)
@@ -3355,6 +3406,7 @@ public class JSResolveUtil
 			}
 		}
 
+		@Override
 		public PsiElement copy()
 		{
 			return new ImplicitJSVariableImpl(myName, myType, myContainingFile);
@@ -3379,90 +3431,108 @@ public class JSResolveUtil
 			return null;
 		}
 
+		@Override
 		public IStubElementType getElementType()
 		{
 			return JSElementTypes.VARIABLE;
 		}
 
+		@Override
 		public JSVariableStubBase getStub()
 		{
 			return null;
 		}
 
+		@Override
 		public boolean hasInitializer()
 		{
 			return false;
 		}
 
+		@Override
 		public JSExpression getInitializer()
 		{
 			return null;
 		}
 
+		@Override
 		public String getInitializerText()
 		{
 			return null;
 		}
 
+		@Override
 		public void setInitializer(JSExpression expr) throws IncorrectOperationException
 		{
 		}
 
+		@Override
 		public JSType getType()
 		{
 			return null;
 		}
 
+		@Override
 		public String getTypeString()
 		{
 			return myType;
 		}
 
+		@Override
 		public PsiElement getTypeElement()
 		{
 			return null;
 		}
 
+		@Override
 		public boolean isConst()
 		{
 			return false;
 		}
 
+		@Override
 		public boolean isLocal()
 		{
 			return false;
 		}
 
+		@Override
 		public boolean isDeprecated()
 		{
 			return false;
 		}
 
+		@Override
 		public String getQualifiedName()
 		{
 			return myName;
 		}
 
+		@Override
 		public ASTNode findNameIdentifier()
 		{
 			return null;
 		}
 
+		@Override
 		public String getName()
 		{
 			return myName;
 		}
 
+		@Override
 		public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException
 		{
 			throw new IncorrectOperationException();
 		}
 
+		@Override
 		public PsiElement getNameIdentifier()
 		{
 			return null;
 		}
 
+		@Override
 		public String toString()
 		{
 			return "js_implicit_var:" + myName + ", type:" + myType + ", file:" + myContainingFile;

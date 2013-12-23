@@ -39,6 +39,7 @@ public class JSCompletionContributor extends CompletionContributor
 			final CompletionParameters newParams = parameters.withType(CompletionType.BASIC);
 			CompletionService.getCompletionService().getVariantsFromContributors(newParams, this, new Consumer<CompletionResult>()
 			{
+				@Override
 				public void consume(final CompletionResult lookupElement)
 				{
 					result.addElement(lookupElement.getLookupElement());
@@ -51,6 +52,7 @@ public class JSCompletionContributor extends CompletionContributor
 	{
 		return ApplicationManager.getApplication().runReadAction(new Computable<Language>()
 		{
+			@Override
 			public Language compute()
 			{
 				return PsiUtilBase.getLanguageAtOffset(parameters.getPosition().getContainingFile(), parameters.getOffset());

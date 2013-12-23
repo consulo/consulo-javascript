@@ -21,6 +21,7 @@ import com.intellij.util.QueryExecutor;
  */
 class JSReferencesSearchExecutor implements QueryExecutor<PsiReference, ReferencesSearch.SearchParameters>
 {
+	@Override
 	public boolean execute(final ReferencesSearch.SearchParameters queryParameters, final Processor<PsiReference> consumer)
 	{
 		final PsiElement sourceElement = queryParameters.getElementToSearch();
@@ -39,6 +40,7 @@ class JSReferencesSearchExecutor implements QueryExecutor<PsiReference, Referenc
 					GlobalSearchScope.getScopeRestrictedByFileTypes(GlobalSearchScope.projectScope(sourceElement.getProject()),
 							JavaScriptSupportLoader.JAVASCRIPT), new Processor<PsiFile>()
 			{
+				@Override
 				public boolean process(final PsiFile psiFile)
 				{
 					if(psiFile.getLanguage() == JavaScriptSupportLoader.JSON)

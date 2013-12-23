@@ -39,6 +39,7 @@ public class JSConditionalExpressionImpl extends JSExpressionImpl implements JSC
 		super(node);
 	}
 
+	@Override
 	public JSExpression getCondition()
 	{
 		ASTNode child = getNode().getFirstChildNode();
@@ -58,6 +59,7 @@ public class JSConditionalExpressionImpl extends JSExpressionImpl implements JSC
 		return null;
 	}
 
+	@Override
 	public JSExpression getThen()
 	{
 		boolean questPassed = false;
@@ -83,6 +85,7 @@ public class JSConditionalExpressionImpl extends JSExpressionImpl implements JSC
 		return null;
 	}
 
+	@Override
 	public JSExpression getElse()
 	{
 		boolean questPassed = false;
@@ -109,6 +112,7 @@ public class JSConditionalExpressionImpl extends JSExpressionImpl implements JSC
 		return null;
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)

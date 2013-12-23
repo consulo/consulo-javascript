@@ -33,53 +33,62 @@ public class JSDocCommentBlock implements Block
 		myIndent = indent;
 	}
 
+	@Override
 	@NotNull
 	public TextRange getTextRange()
 	{
 		return new TextRange(myNode.getStartOffset() + myStartOffset, myNode.getStartOffset() + myEndOffset);
 	}
 
+	@Override
 	@NotNull
 	public List<Block> getSubBlocks()
 	{
 		return EMPTY_BLOCK_LIST;
 	}
 
+	@Override
 	@Nullable
 	public Wrap getWrap()
 	{
 		return null;
 	}
 
+	@Override
 	@Nullable
 	public Indent getIndent()
 	{
 		return myIndent;
 	}
 
+	@Override
 	@Nullable
 	public Alignment getAlignment()
 	{
 		return null;
 	}
 
+	@Override
 	@Nullable
 	public Spacing getSpacing(Block child1, Block child2)
 	{
 		return null;
 	}
 
+	@Override
 	@NotNull
 	public ChildAttributes getChildAttributes(final int newChildIndex)
 	{
 		return null;
 	}
 
+	@Override
 	public boolean isIncomplete()
 	{
 		return false;
 	}
 
+	@Override
 	public boolean isLeaf()
 	{
 		return true;

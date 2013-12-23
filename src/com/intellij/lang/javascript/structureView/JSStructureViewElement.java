@@ -78,6 +78,7 @@ public class JSStructureViewElement implements StructureViewTreeElement
 		myProxy = proxy;
 	}
 
+	@Override
 	public PsiElement getValue()
 	{
 		if(myProxy != null)
@@ -92,21 +93,25 @@ public class JSStructureViewElement implements StructureViewTreeElement
 		return myElement;
 	}
 
+	@Override
 	public void navigate(boolean requestFocus)
 	{
 		((Navigatable) myElement).navigate(requestFocus);
 	}
 
+	@Override
 	public boolean canNavigate()
 	{
 		return ((Navigatable) myElement).canNavigate();
 	}
 
+	@Override
 	public boolean canNavigateToSource()
 	{
 		return canNavigate();
 	}
 
+	@Override
 	public StructureViewTreeElement[] getChildren()
 	{
 		final PsiElement element = getUpToDateElement();
@@ -181,11 +186,13 @@ public class JSStructureViewElement implements StructureViewTreeElement
 
 			final MyProcessor processor = new MyProcessor(index, visitedTypes)
 			{
+				@Override
 				public boolean acceptsFile(final PsiFile file)
 				{
 					return !JSResolveUtil.isPredefinedFile(file) && super.acceptsFile(file);
 				}
 
+				@Override
 				protected boolean process(final PsiElement namedElement, final JSNamespace namespace)
 				{
 					final JSNamedElementProxy elementProxy = (JSNamedElementProxy) namedElement;
@@ -237,6 +244,7 @@ public class JSStructureViewElement implements StructureViewTreeElement
 
 		Collections.sort(children, new Comparator<StructureViewTreeElement>()
 		{
+			@Override
 			public int compare(final StructureViewTreeElement _o1, final StructureViewTreeElement _o2)
 			{
 				PsiElement e = getPsiElement(_o1);
@@ -336,6 +344,7 @@ public class JSStructureViewElement implements StructureViewTreeElement
 				final boolean shouldFindNsInDepth = (myElementIsFile && ((JSFile) myElement).getLanguage() != JavaScriptSupportLoader.ECMA_SCRIPT_L4) ||
 						myElement instanceof VariantsProcessor.MyElementWrapper;
 
+				@Override
 				protected boolean process(final PsiElement sym, JSNamespace namespace)
 				{
 					int textOffset = sym.getTextOffset();
@@ -382,11 +391,13 @@ public class JSStructureViewElement implements StructureViewTreeElement
 					return null;
 				}
 
+				@Override
 				public int getRequiredNameId()
 				{
 					return -1;
 				}
 
+				@Override
 				public PsiFile getBaseFile()
 				{
 					return entry1.getFile();
@@ -454,6 +465,7 @@ public class JSStructureViewElement implements StructureViewTreeElement
 		final List<StructureViewTreeElement> children = new ArrayList<StructureViewTreeElement>(offset2Element.size());
 		offset2Element.forEachEntry(new TIntObjectProcedure<PsiElement>()
 		{
+			@Override
 			public boolean execute(int textOffset, PsiElement element)
 			{
 				final PsiElement psiElement = offset2Proxy.get(textOffset);
@@ -658,6 +670,7 @@ public class JSStructureViewElement implements StructureViewTreeElement
 		});
 	}
 
+	@Override
 	public ItemPresentation getPresentation()
 	{
 		if(myElement instanceof JSExpressionStatement && myProxy != null)
@@ -666,11 +679,13 @@ public class JSStructureViewElement implements StructureViewTreeElement
 			{
 				final ItemPresentation originalPresentation = ((NavigationItem) myProxy).getPresentation();
 
+				@Override
 				public String getPresentableText()
 				{
 					return originalPresentation.getPresentableText();
 				}
 
+				@Override
 				@Nullable
 				public Icon getIcon(final boolean open)
 				{
@@ -728,6 +743,7 @@ public class JSStructureViewElement implements StructureViewTreeElement
 			myVisitedTypes = visitedTypes;
 		}
 
+		@Override
 		public boolean process(final JSNamespace jsNamespace)
 		{
 			final String qName = jsNamespace.getQualifiedName(myIndex);
@@ -739,11 +755,13 @@ public class JSStructureViewElement implements StructureViewTreeElement
 			return true;
 		}
 
+		@Override
 		public PsiFile getBaseFile()
 		{
 			return null;
 		}
 
+		@Override
 		public int getRequiredNameId()
 		{
 			return -1;
@@ -772,6 +790,7 @@ public class JSStructureViewElement implements StructureViewTreeElement
 			return null;
 		}
 
+		@Override
 		public String getLocationString()
 		{
 			return null;

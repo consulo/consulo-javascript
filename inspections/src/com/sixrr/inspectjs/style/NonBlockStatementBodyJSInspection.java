@@ -11,21 +11,25 @@ import org.jetbrains.annotations.NotNull;
 public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
     private InspectionJSFix fix = new WrapBodyFix();
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("non.block.statement.body.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.STYLE_GROUP_NAME;
     }
 
-    public boolean isEnabledByDefault() {
+    @Override
+	public boolean isEnabledByDefault() {
         return false;
     }
 
-    public String buildErrorString(Object... args) {
+    @Override
+	public String buildErrorString(Object... args) {
         if (args[0] instanceof JSIfStatement) {
             return InspectionJSBundle.message("non.block.branch.error.string");
         } else {
@@ -33,17 +37,20 @@ public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
         }
     }
 
-    public InspectionJSFix buildFix(PsiElement location) {
+    @Override
+	public InspectionJSFix buildFix(PsiElement location) {
         return fix;
     }
 
     private static class WrapBodyFix extends InspectionJSFix {
-        @NotNull
+        @Override
+		@NotNull
         public String getName() {
             return InspectionJSBundle.message("wrap.statement.body.fix");
         }
 
-        public void doFix(Project project, ProblemDescriptor descriptor)
+        @Override
+		public void doFix(Project project, ProblemDescriptor descriptor)
                 throws IncorrectOperationException {
             final PsiElement statementIdentifier = descriptor.getPsiElement();
             final JSStatement statement = (JSStatement) statementIdentifier.getParent();
@@ -69,7 +76,8 @@ public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
         }
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 

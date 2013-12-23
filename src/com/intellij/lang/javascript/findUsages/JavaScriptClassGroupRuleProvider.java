@@ -12,11 +12,13 @@ import com.intellij.usages.UsageGroup;
  */
 public class JavaScriptClassGroupRuleProvider extends JavaScriptGroupRuleProviderBase<JSClass>
 {
+	@Override
 	protected Class<? extends JSNamedElement> getUsageClass()
 	{
 		return JSClass.class;
 	}
 
+	@Override
 	protected UsageGroup createUsageGroup(final JSClass clazz)
 	{
 		return new ClassUsageGroup(clazz);

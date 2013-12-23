@@ -19,12 +19,14 @@ public class JSNamespaceDeclarationElementType extends JSStubElementType<JSNames
 	private static final JSStubGenerator<JSNamespaceDeclarationStub, JSNamespaceDeclaration> ourStubGenerator = new
 			JSStubGenerator<JSNamespaceDeclarationStub, JSNamespaceDeclaration>()
 	{
+		@Override
 		public JSNamespaceDeclarationStub newInstance(final StubInputStream dataStream, final StubElement parentStub,
 				final JSStubElementType<JSNamespaceDeclarationStub, JSNamespaceDeclaration> type) throws IOException
 		{
 			return new JSNamespaceDeclarationStubImpl(dataStream, parentStub, type);
 		}
 
+		@Override
 		public JSNamespaceDeclarationStub newInstance(final JSNamespaceDeclaration psi, final StubElement parentStub,
 				final JSStubElementType<JSNamespaceDeclarationStub, JSNamespaceDeclaration> type)
 		{

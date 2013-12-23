@@ -33,11 +33,13 @@ public class JSNamespaceDeclarationStubImpl extends JSQualifiedObjectStubBase<JS
 		myInitialValueString = psi.getInitialValueString();
 	}
 
+	@Override
 	public JSNamespaceDeclaration createPsi()
 	{
 		return new JSNamespaceDeclarationImpl(this);
 	}
 
+	@Override
 	protected int buildFlags(final JSNamespaceDeclaration clazz)
 	{
 		return 0;
@@ -50,6 +52,7 @@ public class JSNamespaceDeclarationStubImpl extends JSQualifiedObjectStubBase<JS
 		writeString(myInitialValueString, dataStream);
 	}
 
+	@Override
 	public String getInitialValueString()
 	{
 		return myInitialValueString;

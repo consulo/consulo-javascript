@@ -60,6 +60,7 @@ public class JavaScriptColorsAndFontsPage implements ColorSettingsPage
 		};
 	}
 
+	@Override
 	@NotNull
 	public String getDisplayName()
 	{
@@ -67,29 +68,34 @@ public class JavaScriptColorsAndFontsPage implements ColorSettingsPage
 		return "JavaScript";
 	}
 
+	@Override
 	public Icon getIcon()
 	{
 		return JavaScriptSupportLoader.JAVASCRIPT.getIcon();
 	}
 
+	@Override
 	@NotNull
 	public AttributesDescriptor[] getAttributeDescriptors()
 	{
 		return ATTRS;
 	}
 
+	@Override
 	@NotNull
 	public ColorDescriptor[] getColorDescriptors()
 	{
 		return ColorDescriptor.EMPTY_ARRAY;
 	}
 
+	@Override
 	@NotNull
 	public SyntaxHighlighter getHighlighter()
 	{
 		return SyntaxHighlighter.PROVIDER.create(JavaScriptSupportLoader.JAVASCRIPT, null, null);
 	}
 
+	@Override
 	@NotNull
 	public String getDemoText()
 	{
@@ -124,6 +130,7 @@ public class JavaScriptColorsAndFontsPage implements ColorSettingsPage
 		ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("parameter", JSHighlighter.JS_PARAMETER);
 	}
 
+	@Override
 	public Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap()
 	{
 		return ADDITIONAL_HIGHLIGHT_DESCRIPTORS;

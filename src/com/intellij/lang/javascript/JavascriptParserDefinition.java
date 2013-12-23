@@ -47,46 +47,54 @@ public class JavascriptParserDefinition implements ParserDefinition
 {
 	private static Function<ASTNode, PsiElement> ourGwtReferenceExpressionCreator;
 
+	@Override
 	@NotNull
 	public Lexer createLexer(Project project, LanguageVersion languageVersion)
 	{
 		return new JavaScriptParsingLexer(JavascriptLanguage.DIALECT_OPTION_HOLDER);
 	}
 
+	@Override
 	public IFileElementType getFileNodeType()
 	{
 		return JSElementTypes.FILE;
 	}
 
+	@Override
 	@NotNull
 	public TokenSet getWhitespaceTokens(LanguageVersion languageVersion)
 	{
 		return TokenSet.create(JSTokenTypes.WHITE_SPACE);
 	}
 
+	@Override
 	@NotNull
 	public TokenSet getCommentTokens(LanguageVersion languageVersion)
 	{
 		return JSTokenTypes.COMMENTS;
 	}
 
+	@Override
 	@NotNull
 	public TokenSet getStringLiteralElements(LanguageVersion languageVersion)
 	{
 		return TokenSet.EMPTY;
 	}
 
+	@Override
 	@NotNull
 	public PsiParser createParser(final Project project, LanguageVersion languageVersion)
 	{
 		return new JSParser(null);
 	}
 
+	@Override
 	public PsiFile createFile(FileViewProvider viewProvider)
 	{
 		return new JSFileImpl(viewProvider);
 	}
 
+	@Override
 	public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right)
 	{
 		final Lexer lexer = createLexer(left.getPsi().getProject(), null);
@@ -98,6 +106,7 @@ public class JavascriptParserDefinition implements ParserDefinition
 		ourGwtReferenceExpressionCreator = gwtReferenceExpressionCreator;
 	}
 
+	@Override
 	@NotNull
 	public PsiElement createElement(ASTNode node)
 	{

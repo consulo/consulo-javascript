@@ -18,12 +18,14 @@ public class JSFunctionElementType extends JSStubElementType<JSFunctionStub, JSF
 {
 	private static final JSStubGenerator<JSFunctionStub, JSFunction> ourStubGenerator = new JSStubGenerator<JSFunctionStub, JSFunction>()
 	{
+		@Override
 		public JSFunctionStub newInstance(final StubInputStream dataStream, final StubElement parentStub, final JSStubElementType<JSFunctionStub,
 				JSFunction> elementType) throws IOException
 		{
 			return new JSFunctionStubImpl(dataStream, parentStub, elementType);
 		}
 
+		@Override
 		public JSFunctionStub newInstance(final JSFunction psi, final StubElement parentStub, final JSStubElementType<JSFunctionStub,
 				JSFunction> elementType)
 		{

@@ -17,7 +17,8 @@ public abstract class FunctionMetricsInspection extends JavaScriptInspection {
         return m_limit;
     }
 
-    public JComponent createOptionsPanel() {
+    @Override
+	public JComponent createOptionsPanel() {
         final String configurationLabel = getConfigurationLabel();
         return new SingleIntegerFieldOptionsPanel(configurationLabel, this, "m_limit");
     }

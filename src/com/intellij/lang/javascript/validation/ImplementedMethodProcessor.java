@@ -29,6 +29,7 @@ public abstract class ImplementedMethodProcessor extends JSResolveUtil.CollectMe
 		myJsClass = jsClass;
 	}
 
+	@Override
 	protected boolean process(final ResolveProcessor processor)
 	{
 		Map<String, Object> functions = null;
@@ -46,6 +47,7 @@ public abstract class ImplementedMethodProcessor extends JSResolveUtil.CollectMe
 			{
 				functions = collectAllVisibleClassFunctions(myJsClass, null, new Function<JSFunction, Boolean>()
 				{
+					@Override
 					public Boolean fun(final JSFunction jsFunction)
 					{
 						final JSAttributeList attributeList = jsFunction.getAttributeList();

@@ -33,7 +33,8 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 
 public class JSReplaceMultiplyWithShiftIntention extends JSMutablyNamedIntention {
-    protected String getTextForElement(PsiElement element) {
+    @Override
+	protected String getTextForElement(PsiElement element) {
         final IElementType  tokenType = ((JSBinaryExpression) element).getOperationSign();
         final String        operatorString;
 
@@ -46,12 +47,14 @@ public class JSReplaceMultiplyWithShiftIntention extends JSMutablyNamedIntention
         return this.getText(BinaryOperatorUtils.getOperatorText(tokenType), operatorString);
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new MultiplyByPowerOfTwoPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element)
+    @Override
+	public void processIntention(@NotNull PsiElement element)
             throws IncorrectOperationException {
         if (element instanceof JSAssignmentExpression) {
             this.replaceMultiplyOrDivideAssignWithShiftAssign((JSAssignmentExpression) element);
@@ -100,7 +103,8 @@ public class JSReplaceMultiplyWithShiftIntention extends JSMutablyNamedIntention
     }
 
     private static class MultiplyByPowerOfTwoPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (element instanceof JSAssignmentExpression) {
                 return isMultiplyByPowerOfTwo((JSAssignmentExpression) element);
             } else if (element instanceof JSBinaryExpression) {

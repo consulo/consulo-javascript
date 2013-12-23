@@ -63,6 +63,7 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 	{
 		private Comparator myComparator = new Comparator()
 		{
+			@Override
 			public int compare(final Object o, final Object o2)
 			{
 				return getWeight(o) - getWeight(o2);
@@ -125,22 +126,26 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 			}
 		};
 
+		@Override
 		public Comparator getComparator()
 		{
 			return myComparator;
 		}
 
+		@Override
 		public boolean isVisible()
 		{
 			return false;
 		}
 
+		@Override
 		@NotNull
 		public ActionPresentation getPresentation()
 		{
 			return null; // will not be shown
 		}
 
+		@Override
 		@NotNull
 		public String getName()
 		{
@@ -158,6 +163,7 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 		@NonNls
 		public static final String ID = "SHOW_FIELDS";
 
+		@Override
 		public boolean isVisible(TreeElement treeNode)
 		{
 			if(!(treeNode instanceof JSStructureViewElement))
@@ -176,17 +182,20 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 					element instanceof JSObjectLiteralExpression;
 		}
 
+		@Override
 		public boolean isReverted()
 		{
 			return true;
 		}
 
+		@Override
 		@NotNull
 		public ActionPresentation getPresentation()
 		{
 			return new ActionPresentationData(IdeBundle.message("action.structureview.show.fields"), null, AllIcons.Nodes.Variable);
 		}
 
+		@Override
 		@NotNull
 		public String getName()
 		{
@@ -199,6 +208,7 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 		@NonNls
 		public static final String ID = "SHOW_INHERITED";
 
+		@Override
 		public boolean isVisible(TreeElement treeNode)
 		{
 			if(treeNode instanceof JSStructureViewElement)
@@ -211,6 +221,7 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 			}
 		}
 
+		@Override
 		@NotNull
 		public ActionPresentation getPresentation()
 		{
@@ -218,22 +229,26 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 					".png"));
 		}
 
+		@Override
 		@NotNull
 		public String getName()
 		{
 			return ID;
 		}
 
+		@Override
 		public boolean isReverted()
 		{
 			return true;
 		}
 
+		@Override
 		public String getCheckBoxText()
 		{
 			return IdeBundle.message("file.structure.toggle.show.inherited");
 		}
 
+		@Override
 		public Shortcut[] getShortcut()
 		{
 			return KeymapManager.getInstance().getActiveKeymap().getShortcuts("FileStructurePopup");
@@ -265,35 +280,41 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 		myRoot = root;
 	}
 
+	@Override
 	@NotNull
 	public StructureViewTreeElement getRoot()
 	{
 		return new JSStructureViewElement(myRoot);
 	}
 
+	@Override
 	@NotNull
 	public Grouper[] getGroupers()
 	{
 		return myGroupers;
 	}
 
+	@Override
 	@NotNull
 	public Sorter[] getSorters()
 	{
 		return mySorters;
 	}
 
+	@Override
 	@NotNull
 	public Filter[] getFilters()
 	{
 		return myFilters;
 	}
 
+	@Override
 	protected boolean isSuitable(final PsiElement element)
 	{
 		return super.isSuitable(element) && (!(element instanceof JSVariable) || PsiTreeUtil.getParentOfType(element, JSFunction.class) == null);
 	}
 
+	@Override
 	public Object getCurrentEditorElement()
 	{
 		Object editorElement = super.getCurrentEditorElement();
@@ -310,6 +331,7 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 				final Ref<PsiElement> ref = new Ref<PsiElement>();
 				InjectedLanguageUtil.enumerate(injectionHost, new PsiLanguageInjectionHost.InjectedPsiVisitor()
 				{
+					@Override
 					public void visit(@NotNull final PsiFile injectedPsi, @NotNull final List<PsiLanguageInjectionHost.Shred> places)
 					{
 						final PsiLanguageInjectionHost.Shred shred = places.get(0);
@@ -369,11 +391,13 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 		return editorElement;
 	}
 
+	@Override
 	protected PsiFile getPsiFile()
 	{
 		return myRoot.getContainingFile();
 	}
 
+	@Override
 	@NotNull
 	protected Class[] getSuitableClasses()
 	{
@@ -395,6 +419,7 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 		mySorters = sorters;
 	}
 
+	@Override
 	public boolean shouldEnterElement(final Object element)
 	{
 		return shouldEnterElementStatic(element);

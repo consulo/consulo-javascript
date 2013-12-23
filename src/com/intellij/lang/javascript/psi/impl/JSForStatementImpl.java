@@ -39,12 +39,14 @@ public class JSForStatementImpl extends JSStatementImpl implements JSForStatemen
 		super(node);
 	}
 
+	@Override
 	public JSVarStatement getVarDeclaration()
 	{
 		final ASTNode node = getNode().findChildByType(JSElementTypes.VAR_STATEMENT);
 		return (JSVarStatement) (node != null ? node.getPsi() : null);
 	}
 
+	@Override
 	public JSExpression getInitialization()
 	{
 		ASTNode child = getNode().getFirstChildNode();
@@ -63,6 +65,7 @@ public class JSForStatementImpl extends JSStatementImpl implements JSForStatemen
 		return null;
 	}
 
+	@Override
 	public JSExpression getCondition()
 	{
 		ASTNode child = getNode().getFirstChildNode();
@@ -86,6 +89,7 @@ public class JSForStatementImpl extends JSStatementImpl implements JSForStatemen
 		return null;
 	}
 
+	@Override
 	public JSExpression getUpdate()
 	{
 		ASTNode child = getNode().getFirstChildNode();
@@ -105,6 +109,7 @@ public class JSForStatementImpl extends JSStatementImpl implements JSForStatemen
 		return null;
 	}
 
+	@Override
 	public JSStatement getBody()
 	{
 		ASTNode child = getNode().getFirstChildNode();
@@ -125,6 +130,7 @@ public class JSForStatementImpl extends JSStatementImpl implements JSForStatemen
 		return null;
 	}
 
+	@Override
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
 			@NotNull PsiElement place)
 	{
@@ -147,6 +153,7 @@ public class JSForStatementImpl extends JSStatementImpl implements JSForStatemen
 		return true;
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)

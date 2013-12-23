@@ -25,6 +25,7 @@ import com.intellij.psi.PsiFile;
  */
 public class JavaScriptTypeDeclarationProvider implements TypeDeclarationProvider
 {
+	@Override
 	public PsiElement[] getSymbolTypeDeclarations(final PsiElement symbol)
 	{
 		if(!(symbol instanceof JSNamedElement))
@@ -62,6 +63,7 @@ public class JavaScriptTypeDeclarationProvider implements TypeDeclarationProvide
 
 				index.processAllSymbols(new JavaScriptSymbolProcessor.DefaultSymbolProcessor()
 				{
+					@Override
 					protected boolean process(final PsiElement namedElement, final JSNamespace namespace)
 					{
 						if(namedElement.isPhysical())
@@ -75,11 +77,13 @@ public class JavaScriptTypeDeclarationProvider implements TypeDeclarationProvide
 						return true;
 					}
 
+					@Override
 					public PsiFile getBaseFile()
 					{
 						return containingFile;
 					}
 
+					@Override
 					public int getRequiredNameId()
 					{
 						return index.getIndexOf(s1);

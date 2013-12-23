@@ -34,6 +34,7 @@ public class JSLetStatementImpl extends JSStatementImpl implements JSLetStatemen
 		super(node);
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -46,6 +47,7 @@ public class JSLetStatementImpl extends JSStatementImpl implements JSLetStatemen
 		}
 	}
 
+	@Override
 	public JSExpression[] getExpressions()
 	{
 		final ASTNode[] children = getNode().getChildren(JSElementTypes.EXPRESSIONS);
@@ -61,6 +63,7 @@ public class JSLetStatementImpl extends JSStatementImpl implements JSLetStatemen
 		return result;
 	}
 
+	@Override
 	public JSBlockStatement getBody()
 	{
 		final ASTNode child = getNode().findChildByType(JSElementTypes.BLOCK_STATEMENT);

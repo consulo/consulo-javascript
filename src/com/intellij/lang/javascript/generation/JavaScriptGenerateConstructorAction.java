@@ -7,6 +7,7 @@ package com.intellij.lang.javascript.generation;
  */
 public class JavaScriptGenerateConstructorAction extends BaseJSGenerateAction
 {
+	@Override
 	protected JavaScriptGenerateAccessorHandler.GenerationMode getGenerationMode()
 	{
 		return JavaScriptGenerateAccessorHandler.GenerationMode.CONSTRUCTOR;

@@ -29,21 +29,25 @@ import com.intellij.psi.PsiElement;
  */
 public class JSWithBlockSurrounder extends JSStatementSurrounder
 {
+	@Override
 	public String getTemplateDescription()
 	{
 		return "{ }";
 	}
 
+	@Override
 	protected String getStatementTemplate(final Project project, PsiElement context)
 	{
 		return "{ }";
 	}
 
+	@Override
 	protected ASTNode getInsertBeforeNode(final ASTNode statementNode)
 	{
 		return statementNode.getLastChildNode();
 	}
 
+	@Override
 	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
 	{
 		int endOffset = statementNode.getTextRange().getEndOffset();

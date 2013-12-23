@@ -49,6 +49,7 @@ public class JSNamespaceDeclarationImpl extends JSStubbedStatementImpl<JSNamespa
 		super(node, JSElementTypes.NAMESPACE_DECLARATION);
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -61,11 +62,13 @@ public class JSNamespaceDeclarationImpl extends JSStubbedStatementImpl<JSNamespa
 		}
 	}
 
+	@Override
 	public JSAttributeList getAttributeList()
 	{
 		return getStubOrPsiChild(JSElementTypes.ATTRIBUTE_LIST);
 	}
 
+	@Override
 	public PsiElement setName(@NonNls @NotNull String newName) throws IncorrectOperationException
 	{
 		final String oldName = getName();
@@ -80,6 +83,7 @@ public class JSNamespaceDeclarationImpl extends JSStubbedStatementImpl<JSNamespa
 		return this;
 	}
 
+	@Override
 	public String getName()
 	{
 		final JSNamespaceDeclarationStub stub = getStub();
@@ -91,17 +95,20 @@ public class JSNamespaceDeclarationImpl extends JSStubbedStatementImpl<JSNamespa
 		return node != null ? node.getText() : null;
 	}
 
+	@Override
 	public int getTextOffset()
 	{
 		final ASTNode node = findNameIdentifier();
 		return node == null ? super.getTextOffset() : node.getStartOffset();
 	}
 
+	@Override
 	public ASTNode findNameIdentifier()
 	{
 		return getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
 	}
 
+	@Override
 	public String getQualifiedName()
 	{
 		final JSNamespaceDeclarationStub stub = getStub();
@@ -112,12 +119,14 @@ public class JSNamespaceDeclarationImpl extends JSStubbedStatementImpl<JSNamespa
 		return JSPsiImplUtils.getQName(this);
 	}
 
+	@Override
 	public PsiElement getNameIdentifier()
 	{
 		final ASTNode node = findNameIdentifier();
 		return node != null ? node.getPsi() : null;
 	}
 
+	@Override
 	public String getInitialValueString()
 	{
 		final JSNamespaceDeclarationStub stub = getStub();
@@ -145,6 +154,7 @@ public class JSNamespaceDeclarationImpl extends JSStubbedStatementImpl<JSNamespa
 		return null;
 	}
 
+	@Override
 	public boolean isDeprecated()
 	{
 		return false;

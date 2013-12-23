@@ -34,12 +34,14 @@ import com.intellij.util.IncorrectOperationException;
 public class JSMergeParallelForLoopsIntention extends JSIntention {
     @NonNls private static final String FOR_STATEMENT_PREFIX = "for (";
 
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new MergeParallelForLoopsPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final PsiElement  nextElement = JSElementFactory.getNonWhiteSpaceSibling(element, true);
 
         assert (nextElement != null);
@@ -74,7 +76,8 @@ public class JSMergeParallelForLoopsIntention extends JSIntention {
     }
 
     private static class MergeParallelForLoopsPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof JSForStatement) || ErrorUtil.containsError(element)) {
                 return false;
             }

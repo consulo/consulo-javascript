@@ -36,20 +36,24 @@ public class JSIncludeDirectiveStubImpl extends StubBase<JSIncludeDirective> imp
 		myIncludeText = psi.getIncludeText();
 	}
 
+	@Override
 	public JSIncludeDirective createPsi()
 	{
 		return new JSIncludeDirectiveImpl(this);
 	}
 
+	@Override
 	public void index(final IndexSink sink)
 	{
 	}
 
+	@Override
 	public void serialize(final StubOutputStream dataStream) throws IOException
 	{
 		dataStream.writeInt(myIncludeText != null ? dataStream.getStringId(myIncludeText) : -1);
 	}
 
+	@Override
 	public String getIncludeText()
 	{
 		return myIncludeText;

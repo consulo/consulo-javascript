@@ -8,17 +8,20 @@ import org.jetbrains.annotations.NotNull;
 
 public class FunctionWithMultipleReturnPointsJSInspection extends JavaScriptInspection {
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("function.with.multiple.return.points.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
     }
 
-    public String buildErrorString(Object... args) {
+    @Override
+	public String buildErrorString(Object... args) {
         final JSFunction function = (JSFunction) ((PsiElement) args[0]).getParent();
         assert function != null;
         final int returnPointCount = countReturnPoints(function);
@@ -49,7 +52,8 @@ public class FunctionWithMultipleReturnPointsJSInspection extends JavaScriptInsp
         }
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 

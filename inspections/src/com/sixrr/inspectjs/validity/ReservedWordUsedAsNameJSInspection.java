@@ -81,39 +81,47 @@ public class ReservedWordUsedAsNameJSInspection extends JavaScriptInspection {
 
         reservedWordExclusionsForECMAScript.add("int");
     }
-    @NotNull
+    @Override
+	@NotNull
     public String getID() {
         return "ReservedWordAsName";
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("reserved.word.used.as.name.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.VALIDITY_GROUP_NAME;
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String buildErrorString(Object... args) {
         return InspectionJSBundle.message("reserved.word.used.as.name.error.string");
     }
 
-    protected InspectionJSFix buildFix(PsiElement location) {
+    @Override
+	protected InspectionJSFix buildFix(PsiElement location) {
         return new RenameFix();
     }
 
-    protected boolean buildQuickFixesOnlyForOnTheFlyErrors() {
+    @Override
+	protected boolean buildQuickFixesOnlyForOnTheFlyErrors() {
         return true;
     }
 
-    public boolean isEnabledByDefault() {
+    @Override
+	public boolean isEnabledByDefault() {
         return  true;
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new ReservedWordAsNameVisitor();
     }
 

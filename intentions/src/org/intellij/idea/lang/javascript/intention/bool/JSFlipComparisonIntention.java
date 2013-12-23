@@ -28,7 +28,8 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 
 public class JSFlipComparisonIntention extends JSMutablyNamedIntention {
-    public String getTextForElement(PsiElement element) {
+    @Override
+	public String getTextForElement(PsiElement element) {
         final JSBinaryExpression exp                 = (JSBinaryExpression) element;
         String                   operatorText        = null;
         String                   flippedOperatorText = null;
@@ -47,11 +48,13 @@ public class JSFlipComparisonIntention extends JSMutablyNamedIntention {
         }
     }
 
-    @NotNull public JSElementPredicate getElementPredicate() {
+    @Override
+	@NotNull public JSElementPredicate getElementPredicate() {
         return new ComparisonPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final JSBinaryExpression exp  = (JSBinaryExpression) element;
         final JSExpression       lhs  = exp.getLOperand();
         final JSExpression       rhs  = exp.getROperand();

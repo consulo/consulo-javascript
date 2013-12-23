@@ -32,11 +32,13 @@ import com.intellij.usages.rules.UsageGroupingRule;
  */
 abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> implements FileStructureGroupRuleProvider
 {
+	@Override
 	@Nullable
 	public UsageGroupingRule getUsageGroupingRule(final Project project)
 	{
 		return new UsageGroupingRule()
 		{
+			@Override
 			@Nullable
 			public UsageGroup groupUsage(final Usage usage)
 			{
@@ -90,6 +92,7 @@ abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> impleme
 			myElementPointer = SmartPointerManager.getInstance(element.getProject()).createLazyPointer(element);
 		}
 
+		@Override
 		public Icon getIcon(boolean isOpen)
 		{
 			return myIcon;
@@ -100,23 +103,27 @@ abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> impleme
 			return (T) myElementPointer.getElement();
 		}
 
+		@Override
 		@NotNull
 		public String getText(UsageView view)
 		{
 			return myName;
 		}
 
+		@Override
 		public FileStatus getFileStatus()
 		{
 			return isValid() ? FileStatusManager.getInstance(getElement().getProject()).getStatus(getElement().getContainingFile().getVirtualFile()) : null;
 		}
 
+		@Override
 		public boolean isValid()
 		{
 			final T element = getElement();
 			return element != null && element.isValid();
 		}
 
+		@Override
 		public void navigate(boolean focus) throws UnsupportedOperationException
 		{
 			if(canNavigate())
@@ -125,25 +132,30 @@ abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> impleme
 			}
 		}
 
+		@Override
 		public boolean canNavigate()
 		{
 			return isValid();
 		}
 
+		@Override
 		public boolean canNavigateToSource()
 		{
 			return canNavigate();
 		}
 
+		@Override
 		public void update()
 		{
 		}
 
+		@Override
 		public int compareTo(final UsageGroup o)
 		{
 			return myName.compareTo(((PsiNamedElementUsageGroupBase) o).myName);
 		}
 
+		@Override
 		public boolean equals(final Object obj)
 		{
 			if(!(obj instanceof PsiNamedElementUsageGroupBase))
@@ -158,6 +170,7 @@ abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> impleme
 			return Comparing.equal(myName, ((PsiNamedElementUsageGroupBase) obj).myName);
 		}
 
+		@Override
 		public int hashCode()
 		{
 			return myName.hashCode();

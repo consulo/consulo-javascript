@@ -13,25 +13,30 @@ import org.jetbrains.annotations.NotNull;
 public class ConstantConditionalExpressionJSInspection
         extends JavaScriptInspection {
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("constant.conditional.expression.display.name");
     }
 
-    public boolean isEnabledByDefault() {
+    @Override
+	public boolean isEnabledByDefault() {
         return true;
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new ConstantConditionalExpressionVisitor();
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String buildErrorString(Object... args) {
         return InspectionJSBundle.message("constant.conditional.expression.error.string");
     }
@@ -50,18 +55,21 @@ public class ConstantConditionalExpressionJSInspection
         }
     }
 
-    public InspectionJSFix buildFix(PsiElement location) {
+    @Override
+	public InspectionJSFix buildFix(PsiElement location) {
         return new ConstantConditionalFix();
     }
 
     private static class ConstantConditionalFix extends InspectionJSFix {
 
-        @NotNull
+        @Override
+		@NotNull
         public String getName() {
             return InspectionJSBundle.message("simplify.fix");
         }
 
-        public void doFix(Project project, ProblemDescriptor descriptor)
+        @Override
+		public void doFix(Project project, ProblemDescriptor descriptor)
                 throws IncorrectOperationException {
             final JSConditionalExpression expression =
                     (JSConditionalExpression) descriptor.getPsiElement();

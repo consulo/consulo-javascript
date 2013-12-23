@@ -51,7 +51,8 @@ public abstract class InfoDialog extends JFrame {
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {
-                public void windowClosing(WindowEvent e) {}
+                @Override
+				public void windowClosing(WindowEvent e) {}
             });
 
         this.showDialog();
@@ -72,7 +73,8 @@ public abstract class InfoDialog extends JFrame {
         this.setVisible(true);
     }
 
-    public Dimension getMinimumSize() {
+    @Override
+	public Dimension getMinimumSize() {
         FontMetrics metrics = this.processingLabel.getFontMetrics(this.processingLabel.getFont());
 
         return new Dimension(300, 3 * metrics.getHeight());
@@ -97,7 +99,8 @@ public abstract class InfoDialog extends JFrame {
 
     public void close() {
       JobScheduler.getScheduler().schedule(new Runnable() {
-        public void run() {
+        @Override
+		public void run() {
           InfoDialog.this.setVisible(false);
           InfoDialog.this.dispose();
         }

@@ -17,7 +17,8 @@ public class SingleCheckboxOptionsPanel extends JPanel {
         final ButtonModel model = checkBox.getModel();
         model.addChangeListener(new ChangeListener() {
 
-            public void stateChanged(ChangeEvent e) {
+            @Override
+			public void stateChanged(ChangeEvent e) {
                 setPropertyValue(owner, property, model.isSelected());
             }
         });

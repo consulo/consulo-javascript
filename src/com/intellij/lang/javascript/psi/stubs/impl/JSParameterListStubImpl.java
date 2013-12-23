@@ -36,15 +36,18 @@ public class JSParameterListStubImpl extends StubBase<JSParameterList> implement
 		super(parentStub, JSElementTypes.PARAMETER_LIST);
 	}
 
+	@Override
 	public JSParameterList createPsi()
 	{
 		return new JSParameterListImpl(this);
 	}
 
+	@Override
 	public void index(final IndexSink sink)
 	{
 	}
 
+	@Override
 	public void serialize(final StubOutputStream dataStream) throws IOException
 	{
 	}

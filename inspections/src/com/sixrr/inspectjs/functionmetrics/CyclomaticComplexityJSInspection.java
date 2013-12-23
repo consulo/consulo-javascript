@@ -10,30 +10,36 @@ import org.jetbrains.annotations.NotNull;
 
 public class CyclomaticComplexityJSInspection
         extends FunctionMetricsInspection {
-    @NotNull
+    @Override
+	@NotNull
     public String getID() {
         return "OverlyComplexFunctionJS";
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("overly.complex.function.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
     }
 
-    protected int getDefaultLimit() {
+    @Override
+	protected int getDefaultLimit() {
         return 10;
     }
 
-    protected String getConfigurationLabel() {
+    @Override
+	protected String getConfigurationLabel() {
         return InspectionJSBundle.message("function.complexity.limit.parameter");
     }
 
-    public String buildErrorString(Object... args) {
+    @Override
+	public String buildErrorString(Object... args) {
         final JSFunction function = (JSFunction) ((PsiElement) args[0]).getParent();
         assert function != null;
         final CyclomaticComplexityVisitor visitor = new CyclomaticComplexityVisitor();
@@ -48,7 +54,8 @@ public class CyclomaticComplexityJSInspection
         }
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 

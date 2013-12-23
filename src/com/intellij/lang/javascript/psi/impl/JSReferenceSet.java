@@ -187,16 +187,19 @@ public class JSReferenceSet
 			myMethodRef = methodRef;
 		}
 
+		@Override
 		public PsiElement getElement()
 		{
 			return element;
 		}
 
+		@Override
 		public TextRange getRangeInElement()
 		{
 			return new TextRange(myOffset, myOffset + myText.length());
 		}
 
+		@Override
 		@Nullable
 		public PsiElement resolve()
 		{
@@ -204,11 +207,13 @@ public class JSReferenceSet
 			return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
 		}
 
+		@Override
 		public String getCanonicalText()
 		{
 			return myText;
 		}
 
+		@Override
 		public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException
 		{
 			int i = newElementName.lastIndexOf('.');
@@ -219,6 +224,7 @@ public class JSReferenceSet
 			return handleContentChange(getElement(), getRangeInElement(), newElementName);
 		}
 
+		@Override
 		public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException
 		{
 			String qName = JSPsiImplUtils.getQNameForMove(getElement(), element);
@@ -230,6 +236,7 @@ public class JSReferenceSet
 			return null;
 		}
 
+		@Override
 		public boolean isReferenceTo(PsiElement element)
 		{
 			if(element instanceof PsiNamedElement || element instanceof XmlAttributeValue)
@@ -239,6 +246,7 @@ public class JSReferenceSet
 			return false;
 		}
 
+		@Override
 		public Object[] getVariants()
 		{
 			final PsiFile containingFile = element.getContainingFile();
@@ -328,11 +336,13 @@ public class JSReferenceSet
 			return contextIds;
 		}
 
+		@Override
 		public boolean isSoft()
 		{
 			return JSReferenceSet.this.isSoft();
 		}
 
+		@Override
 		@NotNull
 		public ResolveResult[] multiResolve(final boolean incompleteCode)
 		{
@@ -537,6 +547,7 @@ public class JSReferenceSet
 			return processor.getResults();
 		}
 
+		@Override
 		public String getUnresolvedMessagePattern()
 		{
 			String text = getCanonicalText();
@@ -549,6 +560,7 @@ public class JSReferenceSet
 	{
 		private static final MyResolver INSTANCE = new MyResolver();
 
+		@Override
 		public ResolveResult[] doResolve(final MyPsiReference literalExpression, PsiFile psiFile)
 		{
 			return literalExpression.doResolve(psiFile);

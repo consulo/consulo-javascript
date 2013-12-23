@@ -46,6 +46,7 @@ public class JSIncludeDirectiveImpl extends JSStubbedStatementImpl<JSIncludeDire
 		super(stub, JSElementTypes.INCLUDE_DIRECTIVE);
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -58,6 +59,7 @@ public class JSIncludeDirectiveImpl extends JSStubbedStatementImpl<JSIncludeDire
 		}
 	}
 
+	@Override
 	@NotNull
 	public PsiReference[] getReferences()
 	{
@@ -81,6 +83,7 @@ public class JSIncludeDirectiveImpl extends JSStubbedStatementImpl<JSIncludeDire
 		return node;
 	}
 
+	@Override
 	public String getIncludeText()
 	{
 		final JSIncludeDirectiveStub stub = getStub();
@@ -93,6 +96,7 @@ public class JSIncludeDirectiveImpl extends JSStubbedStatementImpl<JSIncludeDire
 		return astNode != null ? StringUtil.stripQuotesAroundValue(astNode.getText()) : null;
 	}
 
+	@Override
 	public PsiFile resolveFile()
 	{
 		final String includeText = getIncludeText();

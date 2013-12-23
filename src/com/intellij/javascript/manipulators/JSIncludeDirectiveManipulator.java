@@ -14,6 +14,7 @@ import com.intellij.openapi.project.Project;
  */
 public class JSIncludeDirectiveManipulator extends JSAbstractElementManipulator<JSIncludeDirectiveImpl>
 {
+	@Override
 	protected JSIncludeDirectiveImpl createTree(final String newText, final JSLanguageDialect languageDialect, final Project project)
 	{
 		return (JSIncludeDirectiveImpl) JSChangeUtil.createStatementFromText(project, newText, languageDialect).getPsi();

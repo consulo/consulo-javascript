@@ -10,22 +10,26 @@ import org.jetbrains.annotations.NotNull;
 
 public class DefaultNotLastCaseInSwitchJSInspection extends JavaScriptInspection {
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("default.not.last.case.in.switch.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     protected String buildErrorString(Object... args) {
         return InspectionJSBundle.message("default.branch.not.last.case.in.switch.error.string");
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new DefaultNotLastCaseInSwitchVisitor();
     }
 

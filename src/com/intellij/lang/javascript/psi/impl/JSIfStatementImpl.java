@@ -39,18 +39,21 @@ public class JSIfStatementImpl extends JSStatementImpl implements JSIfStatement
 		super(node);
 	}
 
+	@Override
 	public JSExpression getCondition()
 	{
 		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
 		return node != null ? (JSExpression) node.getPsi() : null;
 	}
 
+	@Override
 	public JSStatement getThen()
 	{
 		final ASTNode node = getNode().findChildByType(JSElementTypes.STATEMENTS);
 		return node != null ? (JSStatement) node.getPsi() : null;
 	}
 
+	@Override
 	public JSStatement getElse()
 	{
 		final ASTNode myNode = getNode();
@@ -59,21 +62,25 @@ public class JSIfStatementImpl extends JSStatementImpl implements JSIfStatement
 		return node != null ? (JSStatement) node.getPsi() : null;
 	}
 
+	@Override
 	public void setThen(JSStatement statement)
 	{
 		throw new UnsupportedOperationException("TODO: implement");
 	}
 
+	@Override
 	public void setElse(JSStatement statement)
 	{
 		throw new UnsupportedOperationException("TODO: implement");
 	}
 
+	@Override
 	public void setCondition(JSExpression expr)
 	{
 		throw new UnsupportedOperationException("TODO: implement");
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)

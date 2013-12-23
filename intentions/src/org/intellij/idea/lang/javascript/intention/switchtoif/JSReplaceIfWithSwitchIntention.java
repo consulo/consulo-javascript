@@ -39,12 +39,14 @@ public class JSReplaceIfWithSwitchIntention extends JSIntention {
     @NonNls private static final String LABELED_BREAK_STATEMENT_PREFIX = "break ";
     @NonNls private static final String BREAK_STATEMENT                = "\nbreak;";
 
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new IfToSwitchPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element)
+    @Override
+	public void processIntention(@NotNull PsiElement element)
             throws IncorrectOperationException {
         JSIfStatement ifStatement = (JSIfStatement) element.getParent();
 
@@ -314,7 +316,8 @@ public class JSReplaceIfWithSwitchIntention extends JSIntention {
 
     private static class IfToSwitchPredicate implements JSElementPredicate {
 
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             final PsiElement parent = element.getParent();
             if (!(parent instanceof JSIfStatement)) {
                 return false;

@@ -263,6 +263,7 @@ public class JSUnusedImportsHelper
 			final PsiFile containingFile1 = containingFile;
 			data = CachedValuesManager.getManager(file.getProject()).createCachedValue(new CachedValueProvider<Results>()
 			{
+				@Override
 				public Result<Results> compute()
 				{
 					final Map<XmlTag, Collection<PsiElement>> allElements = new HashMap<XmlTag, Collection<PsiElement>>();
@@ -324,6 +325,7 @@ public class JSUnusedImportsHelper
 
 			PsiTreeUtil.processElements(file, new PsiElementProcessor()
 			{
+				@Override
 				public boolean execute(PsiElement element)
 				{
 					if(element instanceof JSIncludeDirective)
@@ -354,6 +356,7 @@ public class JSUnusedImportsHelper
 		{
 			XmlBackedJSClassImpl.visitInjectedFiles((XmlFile) file, new XmlBackedJSClassImpl.InjectedFileVisitor()
 			{
+				@Override
 				public void visit(XmlTag rootTag, JSFile jsFile)
 				{
 					collectElements(rootTag, jsFile, result, processedFiles);

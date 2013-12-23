@@ -8,18 +8,21 @@ import org.jetbrains.annotations.NotNull;
 public class ForLoopThatDoesntUseLoopVariableJSInspection
         extends JavaScriptInspection {
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message(
                 "for.loop.not.use.loop.variable.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.BUGS_GROUP_NAME;
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String buildErrorString(Object... args) {
         final boolean condition = (Boolean) args[0];
         final boolean update = (Boolean) args[1];
@@ -35,7 +38,8 @@ public class ForLoopThatDoesntUseLoopVariableJSInspection
                 "for.loop.not.use.loop.variable.problem.descriptor.update");
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new ForLoopThatDoesntUseLoopVariableVisitor();
     }
 

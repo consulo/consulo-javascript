@@ -58,6 +58,7 @@ public class EqualityComparisonWithCoercionJSInspection extends JavaScriptInspec
 			this.sign = sign;
 		}
 
+		@Override
 		@NotNull
 		public String getName() {
 			return InspectionJSBundle.message("equality.comparison.with.coercion.fix", sign);

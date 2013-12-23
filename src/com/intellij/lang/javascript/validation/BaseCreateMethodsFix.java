@@ -246,6 +246,7 @@ public abstract class BaseCreateMethodsFix<T extends JSNamedElement & JSAttribut
 		final T[] objects = (T[]) elementsToProcess.toArray(new JSNamedElement[elementsToProcess.size()]);
 		final Comparator<T> tComparator = new Comparator<T>()
 		{
+			@Override
 			public int compare(final T o1, final T o2)
 			{
 				return o1.getTextOffset() - o2.getTextOffset();

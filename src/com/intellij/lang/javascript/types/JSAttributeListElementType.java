@@ -19,12 +19,14 @@ public class JSAttributeListElementType extends JSStubElementType<JSAttributeLis
 	private static final JSStubGenerator<JSAttributeListStub, JSAttributeList> ourStubGenerator = new JSStubGenerator<JSAttributeListStub,
 			JSAttributeList>()
 	{
+		@Override
 		public JSAttributeListStub newInstance(final StubInputStream dataStream, final StubElement parentStub,
 				final JSStubElementType<JSAttributeListStub, JSAttributeList> elementType) throws IOException
 		{
 			return new JSAttributeListStubImpl(dataStream, parentStub, elementType);
 		}
 
+		@Override
 		public JSAttributeListStub newInstance(final JSAttributeList psi, final StubElement parentStub, final JSStubElementType<JSAttributeListStub,
 				JSAttributeList> elementType)
 		{

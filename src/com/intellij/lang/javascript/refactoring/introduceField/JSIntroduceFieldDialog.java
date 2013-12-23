@@ -109,46 +109,55 @@ class JSIntroduceFieldDialog extends JSBaseClassBasedIntroduceDialog implements 
 		}
 	}
 
+	@Override
 	protected JTextField getNameField()
 	{
 		return myNameField;
 	}
 
+	@Override
 	protected JPanel getPanel()
 	{
 		return myPanel;
 	}
 
+	@Override
 	protected JCheckBox getReplaceAllCheckBox()
 	{
 		return myReplaceAllCheckBox;
 	}
 
+	@Override
 	public JComboBox getVarTypeField()
 	{
 		return myVarType;
 	}
 
+	@Override
 	protected JRadioButton getPrivateRadioButton()
 	{
 		return myPrivate;
 	}
 
+	@Override
 	protected JRadioButton getPublicRadioButton()
 	{
 		return myPublic;
 	}
 
+	@Override
 	protected JRadioButton getProtectedRadioButton()
 	{
 		return myProtected;
 	}
 
+	@Override
 	protected JRadioButton getPackageLocalRadioButton()
 	{
 		return myPackageLocal;
 	}
 
+	@Override
 	public InitializationPlace getInitializationPlace()
 	{
 		return myFieldDeclaration.isSelected() ? InitializationPlace.FieldDeclaration : myCurrentMethod.isSelected() ? InitializationPlace.CurrentMethod :

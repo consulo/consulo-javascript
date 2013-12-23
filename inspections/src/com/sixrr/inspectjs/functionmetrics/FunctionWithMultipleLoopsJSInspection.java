@@ -11,17 +11,20 @@ import org.jetbrains.annotations.NotNull;
 
 public class FunctionWithMultipleLoopsJSInspection extends JavaScriptInspection {
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("function.with.multiple.loops.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
     }
 
-    public String buildErrorString(Object... args) {
+    @Override
+	public String buildErrorString(Object... args) {
         final JSFunction function = (JSFunction) ((PsiElement) args[0]).getParent();
         assert function != null;
         final LoopCountVisitor visitor = new LoopCountVisitor();
@@ -37,7 +40,8 @@ public class FunctionWithMultipleLoopsJSInspection extends JavaScriptInspection 
         }
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 

@@ -27,16 +27,19 @@ import com.intellij.util.IncorrectOperationException;
  */
 public class JSIntroduceConstantHandler extends JSBaseIntroduceHandler<JSElement, JSIntroduceConstantSettings, JSIntroduceConstantDialog>
 {
+	@Override
 	protected String getRefactoringName()
 	{
 		return JSBundle.message("javascript.introduce.constant.title");
 	}
 
+	@Override
 	protected String getCannotIntroduceMessagePropertyKey()
 	{
 		return "javascript.introduce.constant.error.no.expression.selected";
 	}
 
+	@Override
 	protected JSIntroduceConstantDialog createDialog(final Project project, final JSExpression expression, final JSExpression[] occurrences)
 	{
 		return new JSIntroduceConstantDialog(project, occurrences, expression);
@@ -61,6 +64,7 @@ public class JSIntroduceConstantHandler extends JSBaseIntroduceHandler<JSElement
 		return findClassAnchor(context.expression);
 	}
 
+	@Override
 	protected JSElement addStatementBefore(final JSElement anchorStatement, final JSVarStatement declaration) throws IncorrectOperationException
 	{
 		return addToClassAnchor(anchorStatement, declaration);

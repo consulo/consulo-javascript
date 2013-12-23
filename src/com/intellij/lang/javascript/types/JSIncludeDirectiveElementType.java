@@ -19,12 +19,14 @@ public class JSIncludeDirectiveElementType extends JSStubElementType<JSIncludeDi
 	private static final JSStubGenerator<JSIncludeDirectiveStub, JSIncludeDirective> ourStubGenerator = new JSStubGenerator<JSIncludeDirectiveStub,
 			JSIncludeDirective>()
 	{
+		@Override
 		public JSIncludeDirectiveStub newInstance(final StubInputStream dataStream, final StubElement parentStub,
 				final JSStubElementType<JSIncludeDirectiveStub, JSIncludeDirective> type) throws IOException
 		{
 			return new JSIncludeDirectiveStubImpl(dataStream, parentStub, type);
 		}
 
+		@Override
 		public JSIncludeDirectiveStub newInstance(final JSIncludeDirective psi, final StubElement parentStub,
 				final JSStubElementType<JSIncludeDirectiveStub, JSIncludeDirective> type)
 		{

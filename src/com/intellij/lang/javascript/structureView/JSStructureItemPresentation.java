@@ -32,6 +32,7 @@ class JSStructureItemPresentation extends JSStructureViewElement.JSStructureItem
 		super(jsStructureViewElement);
 	}
 
+	@Override
 	public String getPresentableText()
 	{
 		PsiElement psiElement = element.getUpToDateElement();
@@ -143,6 +144,7 @@ class JSStructureItemPresentation extends JSStructureViewElement.JSStructureItem
 		return name;
 	}
 
+	@Override
 	public Icon getIcon(boolean open)
 	{
 		final PsiElement psiElement = this.element.getRealElement();

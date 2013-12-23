@@ -73,6 +73,7 @@ public class JSAttributeImpl extends JSStubElementImpl<JSAttributeStub> implemen
 		super(node, JSElementTypes.ATTRIBUTE);
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -85,6 +86,7 @@ public class JSAttributeImpl extends JSStubElementImpl<JSAttributeStub> implemen
 		}
 	}
 
+	@Override
 	public String getName()
 	{
 		final JSAttributeStub attributeStub = getStub();
@@ -96,16 +98,19 @@ public class JSAttributeImpl extends JSStubElementImpl<JSAttributeStub> implemen
 		return node != null ? node.getText() : null;
 	}
 
+	@Override
 	public PsiElement setName(@NonNls @NotNull final String name) throws IncorrectOperationException
 	{
 		throw new IncorrectOperationException();
 	}
 
+	@Override
 	public JSAttributeNameValuePair[] getValues()
 	{
 		return getStubOrPsiChildren(JSElementTypes.ATTRIBUTE_NAME_VALUE_PAIR, JSAttributeNameValuePair.EMPTY_ARRAY);
 	}
 
+	@Override
 	public JSAttributeNameValuePair getValueByName(final String name)
 	{
 		for(JSAttributeNameValuePair p : getValues())
@@ -152,37 +157,44 @@ public class JSAttributeImpl extends JSStubElementImpl<JSAttributeStub> implemen
 			myRange = range;
 		}
 
+		@Override
 		public PsiElement getElement()
 		{
 			return JSAttributeImpl.this;
 		}
 
+		@Override
 		public TextRange getRangeInElement()
 		{
 			return myRange;
 		}
 
+		@Override
 		public PsiElement resolve()
 		{
 			final String s = getCanonicalText();
 			return ArrayUtil.indexOf(myPossibleMetaData, s) >= 0 ? JSAttributeImpl.this : null;
 		}
 
+		@Override
 		public String getCanonicalText()
 		{
 			return getName();
 		}
 
+		@Override
 		public PsiElement handleElementRename(final String newElementName) throws IncorrectOperationException
 		{
 			return null;
 		}
 
+		@Override
 		public PsiElement bindToElement(@NotNull final PsiElement element) throws IncorrectOperationException
 		{
 			return null;
 		}
 
+		@Override
 		public boolean isReferenceTo(final PsiElement element)
 		{
 			if(element instanceof JSAttribute)
@@ -193,16 +205,19 @@ public class JSAttributeImpl extends JSStubElementImpl<JSAttributeStub> implemen
 			return false;
 		}
 
+		@Override
 		public Object[] getVariants()
 		{
 			return myPossibleMetaData;
 		}
 
+		@Override
 		public boolean isSoft()
 		{
 			return true;
 		}
 
+		@Override
 		public String getUnresolvedMessagePattern()
 		{
 			return "Unknown metadata tag";

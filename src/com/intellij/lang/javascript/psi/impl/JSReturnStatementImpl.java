@@ -37,12 +37,14 @@ public class JSReturnStatementImpl extends JSStatementImpl implements JSReturnSt
 		super(node);
 	}
 
+	@Override
 	public JSExpression getExpression()
 	{
 		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
 		return node != null ? (JSExpression) node.getPsi() : null;
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)

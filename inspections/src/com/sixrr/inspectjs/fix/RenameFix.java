@@ -25,7 +25,8 @@ public class RenameFix extends InspectionJSFix {
         m_targetName = targetName;
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getName() {
         if (m_targetName == null) {
             return InspectionJSBundle.message("rename.fix");
@@ -34,7 +35,8 @@ public class RenameFix extends InspectionJSFix {
         }
     }
 
-    public void doFix(Project project, ProblemDescriptor descriptor) {
+    @Override
+	public void doFix(Project project, ProblemDescriptor descriptor) {
         final PsiElement nameIdentifier = descriptor.getPsiElement();
         final PsiElement elementToRename = nameIdentifier.getParent();
         if (m_targetName == null) {

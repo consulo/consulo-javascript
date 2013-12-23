@@ -134,11 +134,13 @@ class JSDocumentationBuilder implements JSDocumentationProcessor
 
 	private static final Pattern ourTagStartPattern = Pattern.compile("<(/)?(\\w+)");
 
+	@Override
 	public boolean needsPlainCommentData()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean onCommentLine(@NotNull String line)
 	{
 		String trimmedLine = line.trim();
@@ -220,6 +222,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor
 		myNewLinesPendingCount = 0;
 	}
 
+	@Override
 	public boolean onPatternMatch(@NotNull MetaDocType metaDocType, @Nullable String matchName, @Nullable String matchValue,
 			@Nullable String remainingLineContent, @NotNull final String line, final String patternMatched)
 	{

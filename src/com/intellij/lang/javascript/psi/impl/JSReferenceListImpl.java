@@ -51,6 +51,7 @@ public class JSReferenceListImpl extends JSStubElementImpl<JSReferenceListStub> 
 		super(stub, stub.getStubType());
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -63,11 +64,13 @@ public class JSReferenceListImpl extends JSStubElementImpl<JSReferenceListStub> 
 		}
 	}
 
+	@Override
 	public JSReferenceExpression[] getExpressions()
 	{
 		return findChildrenByClass(JSReferenceExpression.class);
 	}
 
+	@Override
 	public String[] getReferenceTexts()
 	{
 		final JSReferenceListStub stub = getStub();
@@ -91,6 +94,7 @@ public class JSReferenceListImpl extends JSStubElementImpl<JSReferenceListStub> 
 		return result;
 	}
 
+	@Override
 	public JSClass[] getReferencedClasses()
 	{
 		@NonNls String[] texts = getReferenceTexts();

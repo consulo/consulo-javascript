@@ -57,6 +57,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler
 		mode = _mode;
 	}
 
+	@Override
 	protected String getTitleKey()
 	{
 		return mode == GenerationMode.GETTERS ? "generate.getter.fields.chooser.title" : mode == GenerationMode.SETTERS ? "generate.setter.fields.chooser" +
@@ -78,6 +79,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler
 		}
 	}
 
+	@Override
 	protected BaseCreateMethodsFix createFix(final JSClass jsClass)
 	{
 		if(mode == GenerationMode.GETTERS_AND_SETTERS)
@@ -197,6 +199,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler
 					final boolean[] needOverride = new boolean[1];
 					JSResolveUtil.processOverrides(jsClass, new JSResolveUtil.OverrideHandler()
 					{
+						@Override
 						public boolean process(final ResolveProcessor processor, final PsiElement scope, final String className)
 						{
 							needOverride[0] = !"Object".equals(className);
@@ -231,6 +234,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler
 	}
 
 
+	@Override
 	protected void collectCandidates(final JSClass clazz, final Collection<JSNamedElementNode> candidates)
 	{
 		final LinkedHashMap<String, JSNamedElement> candidatesMap = new LinkedHashMap<String, JSNamedElement>();
@@ -301,6 +305,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler
 			bindableProperties = _bindableProperties;
 		}
 
+		@Override
 		protected String buildFunctionBodyText(final String retType, final JSParameterList parameterList, final JSVariable func)
 		{
 			final String semicolon = codeStyleSettings.USE_SEMICOLON_AFTER_STATEMENT ? ";" : "";
@@ -324,6 +329,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler
 			return " {}";
 		}
 
+		@Override
 		protected String buildFunctionAttrText(final String attrText, final JSAttributeList attributeList, final JSVariable function)
 		{
 			String baseText = "public" + (attributeList != null && attributeList.hasModifier(JSAttributeList.ModifierType.STATIC) ? " static" : "");
@@ -355,6 +361,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler
 			return super.buildFunctionKind(fun);
 		}
 
+		@Override
 		protected String buildReturnType(final String typeString)
 		{
 			if(myMode == GenerationMode.SETTERS)
@@ -370,6 +377,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler
 			return transformVarNameToAccessorName(super.buildName(fun), codeStyleSettings);
 		}
 
+		@Override
 		protected String buildParameterList(final JSParameterList parameterList, final JSVariable fun)
 		{
 			if(myMode == GenerationMode.SETTERS)
@@ -391,6 +399,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler
 		return s;
 	}
 
+	@Override
 	protected boolean canHaveEmptySelectedElements()
 	{
 		return mode == GenerationMode.CONSTRUCTOR;

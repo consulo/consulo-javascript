@@ -26,6 +26,7 @@ public interface JSAttribute extends JSElement, PsiNamedElement, StubBasedPsiEle
 {
 	JSAttribute[] EMPTY = new JSAttribute[0];
 
+	@Override
 	String getName();
 
 	JSAttributeNameValuePair[] getValues();

@@ -47,6 +47,7 @@ public class JSCodeStylePanel extends CodeStyleAbstractPanel
 
 		myUseSemicolon.addItemListener(new ItemListener()
 		{
+			@Override
 			public void itemStateChanged(final ItemEvent e)
 			{
 				if(!myInsideUpdate)
@@ -59,6 +60,7 @@ public class JSCodeStylePanel extends CodeStyleAbstractPanel
 
 		final DocumentAdapter adapter = new DocumentAdapter()
 		{
+			@Override
 			protected void textChanged(final DocumentEvent e)
 			{
 				if(!myInsideUpdate)
@@ -73,26 +75,31 @@ public class JSCodeStylePanel extends CodeStyleAbstractPanel
 		myPropertyPrefixTextField.getDocument().addDocumentListener(adapter);
 	}
 
+	@Override
 	protected EditorHighlighter createHighlighter(final EditorColorsScheme scheme)
 	{
 		return EditorHighlighterFactory.getInstance().createEditorHighlighter(new LightVirtualFile("a.as"), scheme, null);
 	}
 
+	@Override
 	protected int getRightMargin()
 	{
 		return 60;
 	}
 
+	@Override
 	protected void prepareForReformat(final PsiFile psiFile)
 	{
 	}
 
+	@Override
 	@NotNull
 	protected FileType getFileType()
 	{
 		return JavaScriptSupportLoader.JAVASCRIPT;
 	}
 
+	@Override
 	protected String getPreviewText()
 	{
 		final JSCodeStyleSettings jsCodeStyleSettings = mySettings.getCustomSettings(JSCodeStyleSettings.class);
@@ -108,6 +115,7 @@ public class JSCodeStylePanel extends CodeStyleAbstractPanel
 				"}\n}\n}";
 	}
 
+	@Override
 	public void apply(final CodeStyleSettings settings)
 	{
 		final JSCodeStyleSettings jsCodeStyleSettings = settings.getCustomSettings(JSCodeStyleSettings.class);
@@ -118,6 +126,7 @@ public class JSCodeStylePanel extends CodeStyleAbstractPanel
 		jsCodeStyleSettings.USE_SEMICOLON_AFTER_STATEMENT = myUseSemicolon.isSelected();
 	}
 
+	@Override
 	public boolean isModified(final CodeStyleSettings settings)
 	{
 		final JSCodeStyleSettings jsCodeStyleSettings = settings.getCustomSettings(JSCodeStyleSettings.class);
@@ -127,11 +136,13 @@ public class JSCodeStylePanel extends CodeStyleAbstractPanel
 				jsCodeStyleSettings.USE_SEMICOLON_AFTER_STATEMENT != (myUseSemicolon.isSelected());
 	}
 
+	@Override
 	public JComponent getPanel()
 	{
 		return myPanel;
 	}
 
+	@Override
 	protected void resetImpl(final CodeStyleSettings settings)
 	{
 		try

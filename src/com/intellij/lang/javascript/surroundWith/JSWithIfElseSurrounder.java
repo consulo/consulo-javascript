@@ -28,11 +28,13 @@ import com.intellij.psi.PsiElement;
  */
 public class JSWithIfElseSurrounder extends JSWithIfSurrounder
 {
+	@Override
 	public String getTemplateDescription()
 	{
 		return JSBundle.message("javascript.surround.with.if.else");
 	}
 
+	@Override
 	protected String getStatementTemplate(final Project project, PsiElement context)
 	{
 		return "if (a) { } else { }";

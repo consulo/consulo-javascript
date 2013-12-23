@@ -47,11 +47,13 @@ public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionExpre
 		super(stub, type);
 	}
 
+	@Override
 	public JSFunction getFunction()
 	{
 		return this;
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -64,16 +66,19 @@ public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionExpre
 		}
 	}
 
+	@Override
 	protected ASTNode createNameIdentifier(final String name)
 	{
 		return JSChangeUtil.createNameIdentifier(getProject(), name);
 	}
 
+	@Override
 	public JSExpression replace(JSExpression newExpr)
 	{
 		return JSChangeUtil.replaceExpression(this, newExpr);
 	}
 
+	@Override
 	public ASTNode findNameIdentifier()
 	{
 		final ASTNode treeParent = getNode().getTreeParent();
@@ -113,17 +118,20 @@ public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionExpre
 		return null;
 	}
 
+	@Override
 	public JSAttributeList getAttributeList()
 	{
 		return null;
 	}
 
+	@Override
 	public int getTextOffset()
 	{
 		final ASTNode name = findNameIdentifier();
 		return name != null ? name.getStartOffset() : super.getTextOffset();
 	}
 
+	@Override
 	public void delete() throws IncorrectOperationException
 	{
 		final PsiElement parent = getParent();
@@ -140,21 +148,25 @@ public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionExpre
 		return AllIcons.Nodes.Function;
 	}
 
+	@Override
 	public boolean isGetProperty()
 	{
 		return false;
 	}
 
+	@Override
 	public boolean isSetProperty()
 	{
 		return false;
 	}
 
+	@Override
 	public boolean isConstructor()
 	{
 		return false;
 	}
 
+	@Override
 	public String getQualifiedName()
 	{
 		return getName();

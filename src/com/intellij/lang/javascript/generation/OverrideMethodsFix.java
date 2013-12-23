@@ -23,6 +23,7 @@ public class OverrideMethodsFix extends BaseCreateMethodsFix<JSFunction>
 		super(jsClass);
 	}
 
+	@Override
 	protected String buildFunctionBodyText(final String retType, final JSParameterList parameterList, final JSFunction func)
 	{
 		@NonNls String functionText = "";
@@ -67,6 +68,7 @@ public class OverrideMethodsFix extends BaseCreateMethodsFix<JSFunction>
 		return functionText;
 	}
 
+	@Override
 	protected String buildFunctionAttrText(String attrText, final JSAttributeList attributeList, final JSFunction function)
 	{
 		attrText = super.buildFunctionAttrText(attrText, attributeList, function);

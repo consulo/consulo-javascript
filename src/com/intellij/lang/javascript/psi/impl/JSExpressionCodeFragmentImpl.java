@@ -32,6 +32,7 @@ public class JSExpressionCodeFragmentImpl extends JSFileImpl implements JSExpres
 	}
 
 	//todo[nik] extract these methods from PsiCodeFragmentImpl?
+	@Override
 	protected JSExpressionCodeFragmentImpl clone()
 	{
 		final JSExpressionCodeFragmentImpl clone = (JSExpressionCodeFragmentImpl) cloneImpl((FileElement) calcTreeElement().clone());
@@ -45,11 +46,13 @@ public class JSExpressionCodeFragmentImpl extends JSFileImpl implements JSExpres
 		return clone;
 	}
 
+	@Override
 	public PsiElement getContext()
 	{
 		return myContext;
 	}
 
+	@Override
 	@NotNull
 	public FileViewProvider getViewProvider()
 	{
@@ -60,6 +63,7 @@ public class JSExpressionCodeFragmentImpl extends JSFileImpl implements JSExpres
 		return super.getViewProvider();
 	}
 
+	@Override
 	public boolean isValid()
 	{
 		if(!super.isValid())
@@ -73,6 +77,7 @@ public class JSExpressionCodeFragmentImpl extends JSFileImpl implements JSExpres
 		return true;
 	}
 
+	@Override
 	public boolean isPhysical()
 	{
 		return myPhysical;

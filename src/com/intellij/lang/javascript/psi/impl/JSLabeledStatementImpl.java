@@ -41,27 +41,32 @@ public class JSLabeledStatementImpl extends JSStatementImpl implements JSLabeled
 		super(node);
 	}
 
+	@Override
 	public String getLabel()
 	{
 		return findNameIdentifier().getText();
 	}
 
+	@Override
 	public ASTNode findNameIdentifier()
 	{
 		return getNode().findChildByType(JSTokenTypes.IDENTIFIER);
 	}
 
+	@Override
 	public PsiElement getLabelIdentifier()
 	{
 		return findNameIdentifier().getPsi();
 	}
 
+	@Override
 	public JSStatement getStatement()
 	{
 		final ASTNode node = getNode().findChildByType(JSElementTypes.STATEMENTS);
 		return node != null ? (JSStatement) node.getPsi() : null;
 	}
 
+	@Override
 	public JSStatement unlabel()
 	{
 		throw new UnsupportedOperationException("TODO: implement");
@@ -72,6 +77,7 @@ public class JSLabeledStatementImpl extends JSStatementImpl implements JSLabeled
 		throw new UnsupportedOperationException("TODO: implement");
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -84,17 +90,20 @@ public class JSLabeledStatementImpl extends JSStatementImpl implements JSLabeled
 		}
 	}
 
+	@Override
 	public String getName()
 	{
 		return getLabel();
 	}
 
+	@Override
 	public PsiElement setName(@NotNull String name) throws IncorrectOperationException
 	{
 		JSChangeUtil.doIdentifierReplacement(this, getLabelIdentifier(), name);
 		return this;
 	}
 
+	@Override
 	public PsiElement getNameIdentifier()
 	{
 		final ASTNode node = findNameIdentifier();

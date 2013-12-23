@@ -68,6 +68,7 @@ public class JSDebuggerSupportUtils
 
 				InjectedLanguageUtil.enumerate(psiLanguageInjectionHost, new PsiLanguageInjectionHost.InjectedPsiVisitor()
 				{
+					@Override
 					public void visit(@NotNull final PsiFile injectedPsi, @NotNull final List<PsiLanguageInjectionHost.Shred> places)
 					{
 						final PsiLanguageInjectionHost.Shred shred = places.get(0);
@@ -189,6 +190,7 @@ public class JSDebuggerSupportUtils
 
 				InjectedLanguageUtil.enumerate(parent, new PsiLanguageInjectionHost.InjectedPsiVisitor()
 				{
+					@Override
 					public void visit(@NotNull final PsiFile injectedPsi, @NotNull final List<PsiLanguageInjectionHost.Shred> places)
 					{
 						final PsiLanguageInjectionHost.Shred shred = places.get(0);

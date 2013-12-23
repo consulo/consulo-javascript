@@ -53,18 +53,21 @@ public class JSUnresolvedVariableInspection extends JSInspection
 	@NonNls
 	private static final String SHORT_NAME = "JSUnresolvedVariable";
 
+	@Override
 	@NotNull
 	public String getGroupDisplayName()
 	{
 		return JSBundle.message("js.inspection.group.name");
 	}
 
+	@Override
 	@NotNull
 	public String getDisplayName()
 	{
 		return JSBundle.message("js.unresolved.variable.inspection.name");
 	}
 
+	@Override
 	@NotNull
 	@NonNls
 	public String getShortName()
@@ -72,6 +75,7 @@ public class JSUnresolvedVariableInspection extends JSInspection
 		return SHORT_NAME;
 	}
 
+	@Override
 	protected JSElementVisitor createVisitor(final ProblemsHolder holder)
 	{
 		return new JSElementVisitor()
@@ -262,6 +266,7 @@ public class JSUnresolvedVariableInspection extends JSInspection
 			myReferencedName = referencedName;
 		}
 
+		@Override
 		@NotNull
 		public String getFamilyName()
 		{
@@ -276,12 +281,14 @@ public class JSUnresolvedVariableInspection extends JSInspection
 			super(referencedName);
 		}
 
+		@Override
 		@NotNull
 		public String getName()
 		{
 			return JSBundle.message("javascript.create.namespace.intention.name", myReferencedName);
 		}
 
+		@Override
 		protected void buildTemplate(final Template template, final JSReferenceExpression referenceExpression, final boolean ecma, boolean staticContext,
 				final PsiFile file, final PsiElement anchorParent)
 		{
@@ -307,6 +314,7 @@ public class JSUnresolvedVariableInspection extends JSInspection
 			this.isConstant = isConstant;
 		}
 
+		@Override
 		@NotNull
 		public String getName()
 		{
@@ -314,6 +322,7 @@ public class JSUnresolvedVariableInspection extends JSInspection
 					isConstant ? "javascript.create.constant.intention.name" : "javascript.create.variable.intention.name", myReferencedName);
 		}
 
+		@Override
 		protected void buildTemplate(final Template template, final JSReferenceExpression referenceExpression, final boolean ecma, boolean staticContext,
 				final PsiFile file, final PsiElement anchorParent)
 		{
@@ -370,6 +379,7 @@ public class JSUnresolvedVariableInspection extends JSInspection
 			template.addTextSegment(referencedName);
 		}
 
+		@Override
 		protected void addParameters(Template template, JSReferenceExpression refExpr, PsiFile file, boolean ecma)
 		{
 			if(!myIsGetter)
@@ -379,6 +389,7 @@ public class JSUnresolvedVariableInspection extends JSInspection
 			}
 		}
 
+		@Override
 		protected void addReturnType(Template template, JSReferenceExpression referenceExpression, PsiFile file)
 		{
 			if(myIsGetter)
@@ -391,6 +402,7 @@ public class JSUnresolvedVariableInspection extends JSInspection
 			}
 		}
 
+		@Override
 		protected void addBody(Template template, JSReferenceExpression refExpr, PsiFile file)
 		{
 			String varName = refExpr.getReferencedName();
@@ -439,17 +451,20 @@ public class JSUnresolvedVariableInspection extends JSInspection
 		}
 
 
+		@Override
 		protected void addParameters(Template template, JSReferenceExpression refExpr, PsiFile file, boolean ecma)
 		{
 			template.addTextSegment("event:");
 			template.addTextSegment(myEventQualifier.getText());
 		}
 
+		@Override
 		protected void addReturnType(Template template, JSReferenceExpression referenceExpression, PsiFile psifile)
 		{
 			template.addTextSegment("void");
 		}
 
+		@Override
 		protected void addBody(Template template, JSReferenceExpression refExpr, PsiFile file)
 		{
 			template.addEndVariable();

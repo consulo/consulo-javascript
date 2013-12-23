@@ -32,23 +32,27 @@ import com.intellij.psi.PsiElement;
  */
 public class JSWithIfSurrounder extends JSStatementSurrounder
 {
+	@Override
 	public String getTemplateDescription()
 	{
 		return JSBundle.message("javascript.surround.with.if");
 	}
 
+	@Override
 	@NonNls
 	protected String getStatementTemplate(final Project project, PsiElement context)
 	{
 		return "if(a) { }";
 	}
 
+	@Override
 	protected ASTNode getInsertBeforeNode(final ASTNode statementNode)
 	{
 		JSIfStatement stmt = (JSIfStatement) statementNode.getPsi();
 		return stmt.getThen().getNode().getLastChildNode();
 	}
 
+	@Override
 	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
 	{
 		JSIfStatement stmt = (JSIfStatement) statementNode.getPsi();

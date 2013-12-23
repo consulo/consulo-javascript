@@ -66,6 +66,7 @@ public class ReferenceSupport
 
 		base.addCustomization(FileReferenceSet.DEFAULT_PATH_EVALUATOR_OPTION, new Function<PsiFile, Collection<PsiFileSystemItem>>()
 		{
+			@Override
 			public Collection<PsiFileSystemItem> fun(PsiFile psiFile)
 			{
 				final PsiElement context = psiFile.getContext();

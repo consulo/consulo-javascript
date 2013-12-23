@@ -50,18 +50,21 @@ public class JSUndeclaredVariableInspection extends JSInspection
 	@NonNls
 	public static final String SHORT_NAME = "JSUndeclaredVariable";
 
+	@Override
 	@NotNull
 	public String getGroupDisplayName()
 	{
 		return JSBundle.message("js.inspection.group.name");
 	}
 
+	@Override
 	@NotNull
 	public String getDisplayName()
 	{
 		return JSBundle.message("js.undeclared.variable.inspection.name");
 	}
 
+	@Override
 	@NotNull
 	@NonNls
 	public String getShortName()
@@ -69,6 +72,7 @@ public class JSUndeclaredVariableInspection extends JSInspection
 		return SHORT_NAME;
 	}
 
+	@Override
 	protected JSElementVisitor createVisitor(final ProblemsHolder holder)
 	{
 		return new JSElementVisitor()
@@ -158,18 +162,21 @@ public class JSUndeclaredVariableInspection extends JSInspection
 			myFile = expression.getContainingFile();
 		}
 
+		@Override
 		@NotNull
 		public String getName()
 		{
 			return JSBundle.message("javascript.declare.variable.intention.name", myReferenceExpression.getReferencedName());
 		}
 
+		@Override
 		@NotNull
 		public String getFamilyName()
 		{
 			return JSBundle.message("javascript.create.variable.intention.family");
 		}
 
+		@Override
 		public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor)
 		{
 			if(!CodeInsightUtilBase.getInstance().prepareFileForWrite(myFile))

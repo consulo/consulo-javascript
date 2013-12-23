@@ -36,12 +36,14 @@ public class JSMergeIfOrIntention extends JSIntention {
     @NonNls private static final String IF_STATEMENT_PREFIX = "if (";
     @NonNls private static final String ELSE_KEYWORD        = "else ";
 
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new MergeIfOrPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         assert (element instanceof JSElement);
         JSElement jsElement = (JSElement) element;
         if (MergeIfOrPredicate.isMergableExplicitIf(jsElement)) {
@@ -111,7 +113,8 @@ public class JSMergeIfOrIntention extends JSIntention {
     }
 
     private static class MergeIfOrPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof JSElement)) {
                 return false;
             }

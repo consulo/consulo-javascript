@@ -18,12 +18,14 @@ public class JSClassElementType extends JSStubElementType<JSClassStub, JSClass>
 {
 	private static final JSStubGenerator<JSClassStub, JSClass> ourStubGenerator = new JSStubGenerator<JSClassStub, JSClass>()
 	{
+		@Override
 		public JSClassStub newInstance(final StubInputStream dataStream, final StubElement parentStub, final JSStubElementType<JSClassStub,
 				JSClass> elementType) throws IOException
 		{
 			return new JSClassStubImpl(dataStream, parentStub, elementType);
 		}
 
+		@Override
 		public JSClassStub newInstance(final JSClass psi, final StubElement parentStub, final JSStubElementType<JSClassStub, JSClass> elementType)
 		{
 			return new JSClassStubImpl(psi, parentStub, elementType);

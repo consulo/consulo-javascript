@@ -37,20 +37,24 @@ public class JSUseNamespaceDirectiveStubImpl extends StubBase<JSUseNamespaceDire
 		myNamespaceToUse = psi.getNamespaceToBeUsed();
 	}
 
+	@Override
 	public JSUseNamespaceDirective createPsi()
 	{
 		return new JSUseNamespaceDirectiveImpl(this);
 	}
 
+	@Override
 	public void index(final IndexSink sink)
 	{
 	}
 
+	@Override
 	public void serialize(final StubOutputStream dataStream) throws IOException
 	{
 		dataStream.writeInt(myNamespaceToUse != null ? dataStream.getStringId(myNamespaceToUse) : -1);
 	}
 
+	@Override
 	public String getNamespaceToUse()
 	{
 		return myNamespaceToUse;

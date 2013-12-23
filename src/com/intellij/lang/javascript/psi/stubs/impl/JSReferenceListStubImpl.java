@@ -67,15 +67,18 @@ public class JSReferenceListStubImpl extends StubBase<JSReferenceList> implement
 		}
 	}
 
+	@Override
 	public JSReferenceList createPsi()
 	{
 		return new JSReferenceListImpl(this);
 	}
 
+	@Override
 	public void index(final IndexSink sink)
 	{
 	}
 
+	@Override
 	public void serialize(final StubOutputStream dataStream) throws IOException
 	{
 		dataStream.writeInt(myRefs.length);
@@ -85,6 +88,7 @@ public class JSReferenceListStubImpl extends StubBase<JSReferenceList> implement
 		}
 	}
 
+	@Override
 	public String[] getReferenceTexts()
 	{
 		return myRefs;

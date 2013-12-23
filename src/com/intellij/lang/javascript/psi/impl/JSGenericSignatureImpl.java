@@ -28,6 +28,7 @@ public class JSGenericSignatureImpl extends JSElementImpl implements JSGenericSi
 		super(node);
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)

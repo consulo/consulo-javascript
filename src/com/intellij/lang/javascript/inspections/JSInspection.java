@@ -45,6 +45,7 @@ public abstract class JSInspection extends LocalInspectionTool implements Custom
 
 	protected abstract JSElementVisitor createVisitor(final ProblemsHolder holder);
 
+	@Override
 	@NotNull
 	public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly)
 	{
@@ -52,22 +53,26 @@ public abstract class JSInspection extends LocalInspectionTool implements Custom
 		return createVisitor(holder);
 	}
 
+	@Override
 	public boolean isEnabledByDefault()
 	{
 		return true;
 	}
 
+	@Override
 	@NotNull
 	public HighlightDisplayLevel getDefaultLevel()
 	{
 		return HighlightDisplayLevel.INFO;
 	}
 
+	@Override
 	public PsiNamedElement getProblemElement(final PsiElement psiElement)
 	{
 		return PsiTreeUtil.getNonStrictParentOfType(psiElement, JSNamedElement.class);
 	}
 
+	@Override
 	@Nullable
 	public SuppressIntentionAction[] getSuppressActions(final PsiElement element)
 	{
@@ -76,6 +81,7 @@ public abstract class JSInspection extends LocalInspectionTool implements Custom
 		};
 	}
 
+	@Override
 	public boolean isSuppressedFor(final PsiElement element)
 	{
 		return SuppressionUtil.isSuppressedInStatement(element, getID(), JSSuppressionHolder.class);

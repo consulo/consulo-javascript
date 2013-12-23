@@ -13,17 +13,20 @@ import com.intellij.psi.tree.IFileElementType;
 
 public class JSONParserDefinition extends JavascriptParserDefinition
 {
+	@Override
 	@NotNull
 	public Lexer createLexer(final Project project, LanguageVersion languageVersion)
 	{
 		return new JSONLexer(new JavaScriptParsingLexer(JavascriptLanguage.DIALECT_OPTION_HOLDER));
 	}
 
+	@Override
 	public IFileElementType getFileNodeType()
 	{
 		return JSElementTypes.JSON_FILE;
 	}
 
+	@Override
 	@NotNull
 	public PsiParser createParser(final Project project, LanguageVersion languageVersion)
 	{

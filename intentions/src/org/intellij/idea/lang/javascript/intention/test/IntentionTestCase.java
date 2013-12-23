@@ -44,7 +44,8 @@ class IntentionTestCase extends TestCase {
         this.manager = (JSIntentionTestManager) manager;
     }
 
-    public void process(InfoDialog infoDialog) {
+    @Override
+	public void process(InfoDialog infoDialog) {
         infoDialog.setProcessedCaseName(this.familyName);
 
         final Project  project = this.manager.getProject();

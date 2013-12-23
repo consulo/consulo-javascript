@@ -34,22 +34,26 @@ import com.intellij.psi.PsiWhiteSpace;
  */
 public class JSWithForSurrounder extends JSStatementSurrounder
 {
+	@Override
 	public String getTemplateDescription()
 	{
 		return JSBundle.message("javascript.surround.with.for");
 	}
 
+	@Override
 	protected String getStatementTemplate(final Project project, PsiElement context)
 	{
 		return "for(i=0; i<1; i++) { }";
 	}
 
+	@Override
 	protected ASTNode getInsertBeforeNode(final ASTNode statementNode)
 	{
 		JSForStatement forStatement = (JSForStatement) statementNode.getPsi();
 		return forStatement.getBody().getLastChild().getNode();
 	}
 
+	@Override
 	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
 	{
 		for(ASTNode childNode : statementNode.getChildren(null))

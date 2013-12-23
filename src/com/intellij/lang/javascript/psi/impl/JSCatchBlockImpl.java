@@ -42,18 +42,21 @@ public class JSCatchBlockImpl extends JSElementImpl implements JSCatchBlock
 		super(node);
 	}
 
+	@Override
 	public JSParameter getParameter()
 	{
 		final ASTNode node = getNode().findChildByType(JSElementTypes.FORMAL_PARAMETER);
 		return node != null ? (JSParameter) node.getPsi() : null;
 	}
 
+	@Override
 	public JSStatement getStatement()
 	{
 		final ASTNode node = getNode().findChildByType(JSElementTypes.STATEMENTS);
 		return node != null ? (JSStatement) node.getPsi() : null;
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -66,6 +69,7 @@ public class JSCatchBlockImpl extends JSElementImpl implements JSCatchBlock
 		}
 	}
 
+	@Override
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
 			@NotNull PsiElement place)
 	{

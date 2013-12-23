@@ -57,11 +57,13 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 		super(stub, elementType);
 	}
 
+	@Override
 	public boolean hasInitializer()
 	{
 		return getInitializerText() != null;
 	}
 
+	@Override
 	public JSExpression getInitializer()
 	{
 		final ASTNode eqNode = getNode().findChildByType(JSTokenTypes.EQ);
@@ -69,6 +71,7 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 		return node != null ? (JSExpression) node.getPsi() : null;
 	}
 
+	@Override
 	public String getInitializerText()
 	{
 		final T stub = getStub();
@@ -81,12 +84,14 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 		return expression != null ? expression.getText() : null;
 	}
 
+	@Override
 	@NotNull
 	public SearchScope getUseScope()
 	{
 		return JSResolveUtil.findUseScope(this);
 	}
 
+	@Override
 	public String getName()
 	{
 		final T stub = getStub();
@@ -108,26 +113,31 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 		return name != null ? name.getText() : "";
 	}
 
+	@Override
 	public ASTNode findNameIdentifier()
 	{
 		return getNode().findChildByType(IDENTIFIER_TOKENS_SET);
 	}
 
+	@Override
 	public JSAttributeList getAttributeList()
 	{
 		return ((JSVarStatementImpl) getParent()).getStubOrPsiChild(JSElementTypes.ATTRIBUTE_LIST);
 	}
 
+	@Override
 	public void setInitializer(JSExpression expr) throws IncorrectOperationException
 	{
 		throw new UnsupportedOperationException("TODO: implement");
 	}
 
+	@Override
 	public JSType getType()
 	{
 		return null;
 	}
 
+	@Override
 	public String getTypeString()
 	{
 		final T stub = getStub();
@@ -138,6 +148,7 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 		return doGetType();
 	}
 
+	@Override
 	public PsiElement getTypeElement()
 	{
 		ASTNode node = JSPsiImplUtils.getTypeExpressionFromDeclaration(this);
@@ -149,6 +160,7 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 		return JSPsiImplUtils.getType(this);
 	}
 
+	@Override
 	public PsiElement setName(@NotNull String name) throws IncorrectOperationException
 	{
 		final ASTNode nameNode = findNameIdentifier();
@@ -161,6 +173,7 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 		return this;
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -173,12 +186,14 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 		}
 	}
 
+	@Override
 	public int getTextOffset()
 	{
 		final ASTNode name = findNameIdentifier();
 		return name != null ? name.getStartOffset() : super.getTextOffset();
 	}
 
+	@Override
 	public boolean isConst()
 	{
 		final T stub = getStub();
@@ -208,6 +223,7 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 		return false;
 	}
 
+	@Override
 	public boolean isLocal()
 	{
 		final T stub = getStub();
@@ -219,6 +235,7 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 		return parent.getElementType() == JSElementTypes.VAR_STATEMENT && parent.getFirstChildNode().getElementType() == JSTokenTypes.LET_KEYWORD;
 	}
 
+	@Override
 	public boolean isDeprecated()
 	{
 		final T stub = getStub();
@@ -248,6 +265,7 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 		return AllIcons.Nodes.Variable;
 	}
 
+	@Override
 	public void delete() throws IncorrectOperationException
 	{
 		final ASTNode myNode = getNode();
@@ -271,6 +289,7 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 		throw new IncorrectOperationException("Cannot delete variable from parent : " + parent.getElementType());
 	}
 
+	@Override
 	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState state, final PsiElement lastParent,
 			@NotNull final PsiElement place)
 	{
@@ -281,6 +300,7 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 		return processor.execute(this, state);
 	}
 
+	@Override
 	public String getQualifiedName()
 	{
 		final T stub = getStub();
@@ -291,6 +311,7 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 		return JSPsiImplUtils.getQName(this);
 	}
 
+	@Override
 	public PsiElement getNameIdentifier()
 	{
 		final ASTNode node = findNameIdentifier();

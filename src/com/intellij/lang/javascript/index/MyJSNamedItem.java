@@ -154,67 +154,79 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 		}
 	}
 
+	@Override
 	@NotNull
 	public Language getLanguage()
 	{
 		return JavaScriptSupportLoader.JAVASCRIPT.getLanguage();
 	}
 
+	@Override
 	@NotNull
 	public PsiElement[] getChildren()
 	{
 		return PsiElement.EMPTY_ARRAY;
 	}
 
+	@Override
 	public PsiElement getParent()
 	{
 		return null;
 	}
 
+	@Override
 	@Nullable
 	public PsiElement getFirstChild()
 	{
 		return null;
 	}
 
+	@Override
 	@Nullable
 	public PsiElement getLastChild()
 	{
 		return null;
 	}
 
+	@Override
 	@Nullable
 	public PsiElement getNextSibling()
 	{
 		return null;
 	}
 
+	@Override
 	public boolean isPhysical()
 	{
 		return getContainingFile().isPhysical();
 	}
 
+	@Override
 	@Nullable
 	public PsiElement getPrevSibling()
 	{
 		return null;
 	}
 
+	@Override
 	public TextRange getTextRange()
 	{
 		return new TextRange(myOffset, myOffset + 1);
 	}
 
+	@Override
 	public int getStartOffsetInParent()
 	{
 		return 0;
 	}
 
+	@Override
 	public int getTextLength()
 	{
 		return 1;
 	}
 
+	@Override
 	public boolean equals(final Object obj)
 	{
 		if(obj == this)
@@ -230,42 +242,50 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 		return myJsIndexEntry == item.myJsIndexEntry && myNameId == item.myNameId && myOffset == item.myOffset;
 	}
 
+	@Override
 	public int hashCode()
 	{
 		return (myNameId << 7) + myOffset;
 	}
 
+	@Override
 	public PsiElement findElementAt(int offset)
 	{
 		return null;
 	}
 
+	@Override
 	public int getTextOffset()
 	{
 		return myOffset;
 	}
 
+	@Override
 	public String getText()
 	{
 		return null;
 	}
 
+	@Override
 	@NotNull
 	public char[] textToCharArray()
 	{
 		return new char[0];
 	}
 
+	@Override
 	public boolean textContains(char c)
 	{
 		return false;
 	}
 
+	@Override
 	public ASTNode getNode()
 	{
 		return null;
 	}
 
+	@Override
 	public PsiElement setName(@NotNull String name) throws IncorrectOperationException
 	{
 		final PsiElement element = getElement();
@@ -288,6 +308,7 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 		return Comparing.equal(element, another);
 	}
 
+	@Override
 	public void write(SerializationContext context) throws IOException
 	{
 		context.outputStream.writeInt(myOffset);
@@ -308,6 +329,7 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 		context.outputStream.writeInt(context.myNames.get(elementType));
 	}
 
+	@Override
 	public void enumerateNames(final SerializationContext context)
 	{
 		context.addName(context.myIndex.getStringByIndex(myNameId));
@@ -315,11 +337,13 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 		context.addName(elementType != null ? elementType : "");
 	}
 
+	@Override
 	public String getName()
 	{
 		return JavaScriptIndex.getInstance(getProject()).getStringByIndex(myNameId);
 	}
 
+	@Override
 	public String getQualifiedName()
 	{
 		JSNamespace namespace = getNamespace();
@@ -329,27 +353,32 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 		return classPackage != null && classPackage.length() > 0 ? classPackage.concat(".").concat(className) : className;
 	}
 
+	@Override
 	public PsiFile getContainingFile()
 	{
 		return myJsIndexEntry.getFile();
 	}
 
+	@Override
 	public boolean isValid()
 	{
 		return getContainingFile().isValid();
 	}
 
+	@Override
 	@NotNull
 	public Project getProject()
 	{
 		return getContainingFile().getProject();
 	}
 
+	@Override
 	public PsiManager getManager()
 	{
 		return getContainingFile().getManager();
 	}
 
+	@Override
 	public PsiElement getNavigationElement()
 	{
 		final PsiElement element = getElement();
@@ -360,6 +389,7 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 		return element;
 	}
 
+	@Override
 	public PsiElement getElement()
 	{
 		PsiElement element = myCachedElement != null ? myCachedElement.get() : null;
@@ -455,6 +485,7 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 		return AllIcons.Nodes.Variable;
 	}
 
+	@Override
 	public NamedItemType getType()
 	{
 		final int valueTag = myFlags & VALUE_TAG_MASK;
@@ -472,17 +503,20 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 		return valueType;
 	}
 
+	@Override
 	@Nullable
 	public ItemPresentation getPresentation()
 	{
 		return new JSItemPresentation(this, myJsIndexEntry.getNamespace(this));
 	}
 
+	@Override
 	public JSNamespace getNamespace()
 	{
 		return myJsIndexEntry.getNamespace(this);
 	}
 
+	@Override
 	public JSIndexEntry getEntry()
 	{
 		return myJsIndexEntry;
@@ -493,6 +527,7 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 		return FileStatusManager.getInstance(getProject()).getStatus(myJsIndexEntry.getVirtualFile());
 	}
 
+	@Override
 	public void navigate(boolean requestFocus)
 	{
 		Navigatable navItem = getNavigatable();
@@ -502,6 +537,7 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 		}
 	}
 
+	@Override
 	public boolean canNavigate()
 	{
 		Navigatable navItem = getNavigatable();
@@ -514,27 +550,32 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 		return element instanceof Navigatable ? (Navigatable) element : null;
 	}
 
+	@Override
 	public boolean canNavigateToSource()
 	{
 		return canNavigate();
 	}
 
+	@Override
 	public int getNameId()
 	{
 		return myNameId;
 	}
 
+	@Override
 	public boolean isDeprecated()
 	{
 		return ((myFlags >> DEPRECATED_TAG_SHIFT) & DEPRECATED_TAG_MASK) != 0;
 	}
 
+	@Override
 	public JSAttributeList.AccessType getAccessType()
 	{
 		final int i = (myFlags >> VISIBILITY_TAG_SHIFT) & VISIBILITY_TAG_MASK;
 		return types[i];
 	}
 
+	@Override
 	public boolean hasProperty(final Property property)
 	{
 		return ((myFlags >> getPropertyShift(property)) & 0x1) != 0;
@@ -594,16 +635,19 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 		}
 	}
 
+	@Override
 	public boolean isWritable()
 	{
 		return getContainingFile().isWritable();
 	}
 
+	@Override
 	public void delete() throws IncorrectOperationException
 	{
 		getElement().delete();
 	}
 
+	@Override
 	public long getModificationCount()
 	{
 		return myJsIndexEntry.getFile().getModificationStamp();
@@ -631,12 +675,14 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 
 	private static final JSAttributeList.AccessType[] types = JSAttributeList.AccessType.values();
 
+	@Override
 	@Nullable
 	public ASTNode findNameIdentifier()
 	{
 		return null;
 	}
 
+	@Override
 	public PsiElement getNameIdentifier()
 	{
 		return null;

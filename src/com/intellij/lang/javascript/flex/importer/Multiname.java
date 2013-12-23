@@ -16,6 +16,7 @@ class Multiname
 		this.name = name;
 	}
 
+	@Override
 	public String toString()
 	{
 		String s = "";

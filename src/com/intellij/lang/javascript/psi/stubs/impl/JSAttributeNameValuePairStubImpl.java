@@ -45,20 +45,24 @@ public class JSAttributeNameValuePairStubImpl extends JSNamedObjectStubBase<JSAt
 		myValue = value;
 	}
 
+	@Override
 	public JSAttributeNameValuePair createPsi()
 	{
 		return new JSAttributeNameValuePairImpl(this);
 	}
 
+	@Override
 	public void index(final IndexSink sink)
 	{
 	}
 
+	@Override
 	protected int buildFlags(final JSAttributeNameValuePair clazz)
 	{
 		return 0;
 	}
 
+	@Override
 	public String getValue()
 	{
 		return myValue;

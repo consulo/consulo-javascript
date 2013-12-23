@@ -157,6 +157,7 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 		return nameId == -1 || ((nameId == myWindowIndex || nameId == myFunctionIndex) && namespace.getParent().getParent() == null);
 	}
 
+	@Override
 	public boolean acceptsFile(PsiFile file)
 	{
 		if(mySkipDclsInTargetFile && file == myTargetFile)
@@ -907,6 +908,7 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 
 				index.getEntryForFile(containingFile).processSymbols(new DefaultSymbolProcessor()
 				{
+					@Override
 					protected boolean process(final PsiElement namedElement, final JSNamespace namespace)
 					{
 						return true;
@@ -928,11 +930,13 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 						return false;
 					}
 
+					@Override
 					public PsiFile getBaseFile()
 					{
 						return containingFile;
 					}
 
+					@Override
 					public int getRequiredNameId()
 					{
 						return index.getIndexOf(val);
@@ -1104,11 +1108,13 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 		typeProcessor.process(type, context, source);
 	}
 
+	@Override
 	public <T> T getHint(final Key<T> hintClass)
 	{
 		return null;
 	}
 
+	@Override
 	public void handleEvent(Event event, Object associated)
 	{
 	}
@@ -1183,6 +1189,7 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 		final Set<String> visitedTypes = new HashSet<String>();
 		JSTypeEvaluateManager.getInstance(myContext.getProject()).iterateTypeHierarchy(typeName, new JSTypeEvaluateManager.NamespaceProcessor()
 		{
+			@Override
 			public boolean process(final JSNamespace element)
 			{
 				final String qname = element.getQualifiedName(myIndex);
@@ -1273,6 +1280,7 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 			ecma = _ecma;
 		}
 
+		@Override
 		public void process(@NotNull final String _type, @NotNull final EvaluateContext evaluateContext, final PsiElement _source)
 		{
 			setType(type != null && !type.equals(_type) ? ANY_TYPE : _type, _source);
@@ -1284,6 +1292,7 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 			source = _source;
 		}
 
+		@Override
 		public boolean ecma()
 		{
 			return ecma;
@@ -1296,6 +1305,7 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 			return true;
 		}
 
+		@Override
 		public void setUnknownElement(@NotNull final PsiElement _element)
 		{
 			setType(ANY_TYPE, _element);

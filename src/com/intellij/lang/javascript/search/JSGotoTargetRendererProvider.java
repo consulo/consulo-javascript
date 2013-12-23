@@ -18,17 +18,20 @@ public class JSGotoTargetRendererProvider implements GotoTargetRendererProvider
 {
 	static class JSClassListCellRenderer extends PsiElementListCellRenderer<JSNamedElement>
 	{
+		@Override
 		public String getElementText(final JSNamedElement element)
 		{
 			return element.getName();
 		}
 
+		@Override
 		protected String getContainerText(final JSNamedElement element, final String name)
 		{
 			final ItemPresentation presentation = ((NavigationItem) element).getPresentation();
 			return presentation != null ? presentation.getLocationString() : null;
 		}
 
+		@Override
 		protected int getIconFlags()
 		{
 			return 0;

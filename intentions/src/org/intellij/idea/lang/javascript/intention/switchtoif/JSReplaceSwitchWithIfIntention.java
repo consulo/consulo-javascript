@@ -50,12 +50,14 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
     @NonNls private static final String BREAK_KEYWORD      = "break ";
     @NonNls private static final String DEFAULT_LABEL_NAME = "Label";
 
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new SwitchPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final JSSwitchStatement switchStatement = (JSSwitchStatement) element.getParent();
 
         assert (switchStatement != null);
@@ -333,7 +335,8 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
     }
 
     private static class SwitchPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             final PsiElement parent = element.getParent();
 
             if (!(parent instanceof JSSwitchStatement)) {

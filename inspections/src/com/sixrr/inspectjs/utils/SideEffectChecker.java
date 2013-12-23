@@ -34,7 +34,8 @@ public class SideEffectChecker {
             mayHaveSideEffects = true;
         }
       
-        public void visitJSCallExpression(@NotNull JSCallExpression expression) {
+        @Override
+		public void visitJSCallExpression(@NotNull JSCallExpression expression) {
             if (mayHaveSideEffects) {
                 return;
             }

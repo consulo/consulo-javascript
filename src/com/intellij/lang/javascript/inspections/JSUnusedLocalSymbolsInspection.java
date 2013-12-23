@@ -58,18 +58,21 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 	@NonNls
 	public static final String SHORT_NAME = "JSUnusedLocalSymbols";
 
+	@Override
 	@NotNull
 	public String getGroupDisplayName()
 	{
 		return JSBundle.message("js.inspection.group.name");
 	}
 
+	@Override
 	@NotNull
 	public String getDisplayName()
 	{
 		return JSBundle.message("js.unused.local.symbol.inspection.name");
 	}
 
+	@Override
 	@NotNull
 	@NonNls
 	public String getShortName()
@@ -80,6 +83,7 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 	private static final Key<Set<PsiElement>> ourUnusedLocalDeclarationsSetKey = Key.create("js unused local dcls key");
 	private static final Key<Set<PsiElement>> ourUsedLocalDeclarationsSetKey = Key.create("js used local functions key");
 
+	@Override
 	protected JSElementVisitor createVisitor(final ProblemsHolder holder)
 	{
 		return new JSElementVisitor()
@@ -423,6 +427,7 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 		unusedParametersSet.add(node);
 	}
 
+	@Override
 	@NotNull
 	public HighlightDisplayLevel getDefaultLevel()
 	{
@@ -431,18 +436,21 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 
 	private static class RemoveElementLocalQuickFix implements LocalQuickFix
 	{
+		@Override
 		@NotNull
 		public String getName()
 		{
 			return JSBundle.message("js.unused.symbol.remove");
 		}
 
+		@Override
 		@NotNull
 		public String getFamilyName()
 		{
 			return getName();
 		}
 
+		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor)
 		{
 			try

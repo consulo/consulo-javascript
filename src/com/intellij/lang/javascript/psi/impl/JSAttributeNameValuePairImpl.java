@@ -50,6 +50,7 @@ public class JSAttributeNameValuePairImpl extends JSStubElementImpl<JSAttributeN
 		super(node, JSElementTypes.ATTRIBUTE_NAME_VALUE_PAIR);
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -62,6 +63,7 @@ public class JSAttributeNameValuePairImpl extends JSStubElementImpl<JSAttributeN
 		}
 	}
 
+	@Override
 	public String getName()
 	{
 		final JSAttributeNameValuePairStub stub = getStub();
@@ -73,17 +75,20 @@ public class JSAttributeNameValuePairImpl extends JSStubElementImpl<JSAttributeN
 		return node != null ? node.getText() : null;
 	}
 
+	@Override
 	public PsiElement setName(@NonNls @NotNull final String name) throws IncorrectOperationException
 	{
 		throw new IncorrectOperationException();
 	}
 
+	@Override
 	public JSExpression getValue()
 	{
 		final ASTNode astNode = findValueNode();
 		return astNode != null ? (JSExpression) astNode.getPsi() : null;
 	}
 
+	@Override
 	public String getSimpleValue()
 	{
 		final JSAttributeNameValuePairStub stub = getStub();
@@ -105,6 +110,7 @@ public class JSAttributeNameValuePairImpl extends JSStubElementImpl<JSAttributeN
 		return valueNode;
 	}
 
+	@Override
 	@NotNull
 	public PsiReference[] getReferences()
 	{

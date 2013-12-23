@@ -24,12 +24,14 @@ public class OverlyComplexBooleanExpressionJSInspection extends JavaScriptInspec
      */
     public int m_limit = TERM_LIMIT;
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("overly.complex.boolean.expression.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
@@ -38,20 +40,24 @@ public class OverlyComplexBooleanExpressionJSInspection extends JavaScriptInspec
         return m_limit;
     }
 
-    public JComponent createOptionsPanel() {
+    @Override
+	public JComponent createOptionsPanel() {
         return new SingleIntegerFieldOptionsPanel(InspectionJSBundle.message("maximum.number.of.terms.parameter"),
                 this, "m_limit");
     }
 
-    protected boolean buildQuickFixesOnlyForOnTheFlyErrors() {
+    @Override
+	protected boolean buildQuickFixesOnlyForOnTheFlyErrors() {
         return true;
     }
 
-    protected String buildErrorString(Object... args) {
+    @Override
+	protected String buildErrorString(Object... args) {
         return InspectionJSBundle.message("overly.complex.boolean.expression.error.string");
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 

@@ -35,6 +35,7 @@ public class JSCommaExpressionImpl extends JSBinaryExpressionImpl implements JSC
 		super(node);
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)

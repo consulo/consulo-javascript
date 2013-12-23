@@ -19,12 +19,14 @@ public class JSAttributeNameValuePairType extends JSStubElementType<JSAttributeN
 	private static final JSStubGenerator<JSAttributeNameValuePairStub, JSAttributeNameValuePair> ourStubGenerator = new
 			JSStubGenerator<JSAttributeNameValuePairStub, JSAttributeNameValuePair>()
 	{
+		@Override
 		public JSAttributeNameValuePairStub newInstance(final StubInputStream dataStream, final StubElement parentStub,
 				final JSStubElementType<JSAttributeNameValuePairStub, JSAttributeNameValuePair> type) throws IOException
 		{
 			return new JSAttributeNameValuePairStubImpl(dataStream, parentStub, type);
 		}
 
+		@Override
 		public JSAttributeNameValuePairStub newInstance(final JSAttributeNameValuePair psi, final StubElement parentStub,
 				final JSStubElementType<JSAttributeNameValuePairStub, JSAttributeNameValuePair> type)
 		{

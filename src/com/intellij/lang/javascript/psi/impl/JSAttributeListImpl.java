@@ -44,6 +44,7 @@ public class JSAttributeListImpl extends JSStubElementImpl<JSAttributeListStub> 
 			JSTokenTypes.PROTECTED_KEYWORD, JSTokenTypes.INTERNAL_KEYWORD);
 	private static final ArrayFactory<JSAttribute> myArrayFactory = new ArrayFactory<JSAttribute>()
 	{
+		@Override
 		public JSAttribute[] create(final int count)
 		{
 			return new JSAttribute[count];
@@ -60,6 +61,7 @@ public class JSAttributeListImpl extends JSStubElementImpl<JSAttributeListStub> 
 		super(stub, JSElementTypes.ATTRIBUTE_LIST);
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -72,6 +74,7 @@ public class JSAttributeListImpl extends JSStubElementImpl<JSAttributeListStub> 
 		}
 	}
 
+	@Override
 	@Nullable
 	public String getNamespace()
 	{
@@ -84,17 +87,20 @@ public class JSAttributeListImpl extends JSStubElementImpl<JSAttributeListStub> 
 		return namespaceElement != null ? namespaceElement.getText() : null;
 	}
 
+	@Override
 	public JSReferenceExpression getNamespaceElement()
 	{
 		final ASTNode node = getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
 		return node != null ? (JSReferenceExpression) node.getPsi() : null;
 	}
 
+	@Override
 	public JSAttribute[] getAttributes()
 	{
 		return getStubOrPsiChildren(JSElementTypes.ATTRIBUTE, myArrayFactory);
 	}
 
+	@Override
 	public JSAttribute[] getAttributesByName(final @NotNull String name)
 	{
 		List<JSAttribute> attributes = null;
@@ -112,6 +118,7 @@ public class JSAttributeListImpl extends JSStubElementImpl<JSAttributeListStub> 
 		return attributes != null ? attributes.toArray(new JSAttribute[attributes.size()]) : JSAttribute.EMPTY;
 	}
 
+	@Override
 	public AccessType getAccessType()
 	{
 		final JSAttributeListStub stub = getStub();
@@ -144,12 +151,14 @@ public class JSAttributeListImpl extends JSStubElementImpl<JSAttributeListStub> 
 		return AccessType.PACKAGE_LOCAL;
 	}
 
+	@Override
 	public PsiElement findAccessTypeElement()
 	{
 		final ASTNode modifier = getNode().findChildByType(ourModifiersTypeSet);
 		return modifier != null ? modifier.getPsi() : null;
 	}
 
+	@Override
 	public boolean hasModifier(final ModifierType modifier)
 	{
 		final JSAttributeListStub stub = getStub();

@@ -8,6 +8,7 @@ package com.intellij.lang.javascript.generation;
 public class JavaScriptGenerateGetSetAccessorAction extends BaseJSGenerateAction
 {
 
+	@Override
 	protected JavaScriptGenerateAccessorHandler.GenerationMode getGenerationMode()
 	{
 		return JavaScriptGenerateAccessorHandler.GenerationMode.GETTERS_AND_SETTERS;

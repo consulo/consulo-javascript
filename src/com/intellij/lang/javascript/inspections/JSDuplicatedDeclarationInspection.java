@@ -43,18 +43,21 @@ public class JSDuplicatedDeclarationInspection extends JSInspection
 	@NonNls
 	private static final String SHORT_NAME = "JSDuplicatedDeclaration";
 
+	@Override
 	@NotNull
 	public String getGroupDisplayName()
 	{
 		return JSBundle.message("js.inspection.group.name");
 	}
 
+	@Override
 	@NotNull
 	public String getDisplayName()
 	{
 		return JSBundle.message("js.duplicated.declaration.inspection.name");
 	}
 
+	@Override
 	@NotNull
 	@NonNls
 	public String getShortName()
@@ -62,6 +65,7 @@ public class JSDuplicatedDeclarationInspection extends JSInspection
 		return SHORT_NAME;
 	}
 
+	@Override
 	protected JSElementVisitor createVisitor(final ProblemsHolder holder)
 	{
 		return new JSElementVisitor()
@@ -108,6 +112,7 @@ public class JSDuplicatedDeclarationInspection extends JSInspection
 
 				final ResolveProcessor processor = new ResolveProcessor(name, scope)
 				{
+					@Override
 					public boolean execute(PsiElement element, ResolveState state)
 					{
 						if(element == decl)
@@ -232,6 +237,7 @@ public class JSDuplicatedDeclarationInspection extends JSInspection
 		};
 	}
 
+	@Override
 	@NotNull
 	public HighlightDisplayLevel getDefaultLevel()
 	{

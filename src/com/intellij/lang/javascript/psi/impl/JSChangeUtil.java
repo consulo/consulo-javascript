@@ -333,6 +333,7 @@ public class JSChangeUtil
 	{
 		BlockAddContext addContext = new BlockAddContext(anchor)
 		{
+			@Override
 			PsiElement doAddElement(PsiElement... element) throws IncorrectOperationException
 			{
 				return newlyAddedBlock.addRangeBefore(element[0], element[1], codeBlockAnchor);
@@ -347,6 +348,7 @@ public class JSChangeUtil
 	{
 		BlockAddContext addContext = new BlockAddContext(anchor)
 		{
+			@Override
 			PsiElement doAddElement(PsiElement... element) throws IncorrectOperationException
 			{
 				return newlyAddedBlock.addRangeAfter(element[0], element[1], codeBlockAnchor);
@@ -360,6 +362,7 @@ public class JSChangeUtil
 	{
 		BlockAddContext addContext = new BlockAddContext(anchor)
 		{
+			@Override
 			PsiElement doAddElement(PsiElement... element) throws IncorrectOperationException
 			{
 				return newlyAddedBlock.addAfter(element[0], codeBlockAnchor);
@@ -373,6 +376,7 @@ public class JSChangeUtil
 	{
 		BlockAddContext addContext = new BlockAddContext(anchor)
 		{
+			@Override
 			PsiElement doAddElement(PsiElement... element) throws IncorrectOperationException
 			{
 				return newlyAddedBlock.addBefore(element[0], codeBlockAnchor);

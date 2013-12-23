@@ -34,12 +34,14 @@ import com.intellij.util.IncorrectOperationException;
 public class JSMergeIfAndIntention extends JSIntention {
     @NonNls private static final String IF_STATEMENT_PREFIX = "if (";
 
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new MergeIfAndPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         assert (element.getParent() != null);
         assert (element.getParent() instanceof JSIfStatement || element instanceof JSIfStatement);
 
@@ -58,7 +60,8 @@ public class JSMergeIfAndIntention extends JSIntention {
 
     private static class MergeIfAndPredicate implements JSElementPredicate {
 
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof JSElement)) {
                 return false;
             }

@@ -28,6 +28,7 @@ public class JSFunctionExpressionStubImpl extends JSFunctionStubBaseImpl<JSFunct
 		super(dataStream, parentStub, elementType);
 	}
 
+	@Override
 	public JSFunctionExpression createPsi()
 	{
 		return new JSFunctionExpressionImpl(this, JSElementTypes.FUNCTION_EXPRESSION);

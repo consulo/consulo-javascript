@@ -31,6 +31,7 @@ import com.intellij.util.IncorrectOperationException;
  */
 public class JSSmartEnterProcessor extends SmartEnterProcessor
 {
+	@Override
 	public boolean process(@NotNull final Project project, @NotNull final Editor editor, @NotNull final PsiFile psiFile)
 	{
 		int offset = editor.getCaretModel().getOffset();

@@ -27,19 +27,22 @@ import com.intellij.util.IncorrectOperationException;
 
 
 public class JSConvertIntegerToDecimalIntention extends JSIntention {
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new ConvertIntegerToDecimalPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final JSLiteralExpression exp = (JSLiteralExpression) element;
 
         JSElementFactory.replaceExpression(exp, NumberUtil.getLiteralNumber(exp).toString());
     }
 
     private static class ConvertIntegerToDecimalPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof JSLiteralExpression)) {
                 return false;
             }

@@ -35,6 +35,7 @@ public class JSAssignmentExpressionImpl extends JSBinaryExpressionImpl implement
 		super(node);
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)

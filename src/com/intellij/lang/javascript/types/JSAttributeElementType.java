@@ -20,12 +20,14 @@ public class JSAttributeElementType extends JSStubElementType<JSAttributeStub, J
 	{
 		super("ATTRIBUTE", new JSStubGenerator<JSAttributeStub, JSAttribute>()
 		{
+			@Override
 			public JSAttributeStub newInstance(final StubInputStream dataStream, final StubElement parentStub, final JSStubElementType<JSAttributeStub,
 					JSAttribute> elementType) throws IOException
 			{
 				return new JSAttributeStubImpl(dataStream, parentStub, elementType);
 			}
 
+			@Override
 			public JSAttributeStub newInstance(final JSAttribute psi, final StubElement parentStub, final JSStubElementType<JSAttributeStub,
 					JSAttribute> elementType)
 			{

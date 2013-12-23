@@ -50,21 +50,25 @@ public class JSIntroduceVariableDialog extends JSBaseIntroduceDialog implements 
 		doInit();
 	}
 
+	@Override
 	protected JTextField getNameField()
 	{
 		return myNameField;
 	}
 
+	@Override
 	protected JPanel getPanel()
 	{
 		return myPanel;
 	}
 
+	@Override
 	protected JCheckBox getReplaceAllCheckBox()
 	{
 		return myReplaceAllCheckBox;
 	}
 
+	@Override
 	protected void doOKAction()
 	{
 		super.doOKAction();
@@ -78,11 +82,13 @@ public class JSIntroduceVariableDialog extends JSBaseIntroduceDialog implements 
 		}
 	}
 
+	@Override
 	public JComboBox getVarTypeField()
 	{
 		return myVarType;
 	}
 
+	@Override
 	public IntroducedVarType getIntroducedVarType()
 	{
 		return myIntroducedVarType;

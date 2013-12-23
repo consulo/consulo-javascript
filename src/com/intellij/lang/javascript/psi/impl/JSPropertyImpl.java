@@ -59,6 +59,7 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 		super(node);
 	}
 
+	@Override
 	@NotNull
 	public PsiReference[] getReferences()
 	{
@@ -75,6 +76,7 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 		return myReferences = new PsiReference[]{new PropertyNameReference()};
 	}
 
+	@Override
 	public String getName()
 	{
 		final ASTNode node = findNameIdentifier();
@@ -85,6 +87,7 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 		return null;
 	}
 
+	@Override
 	public ASTNode findNameIdentifier()
 	{
 		ASTNode node = getNode().findChildByType(IDENTIFIER_TOKENS_SET);
@@ -119,18 +122,21 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 		return type == JSTokenTypes.SET_KEYWORD || type == JSTokenTypes.IDENTIFIER && "set".equals(node.getText());
 	}
 
+	@Override
 	public boolean isGetProperty()
 	{
 		final ASTNode node = getNode().findChildByType(IDENTIFIER_TOKENS_SET);
 		return node != null && isGetIdentifier(node) && getNode().findChildByType(IDENTIFIER_TOKENS_SET, node) != null;
 	}
 
+	@Override
 	public boolean isSetProperty()
 	{
 		final ASTNode node = getNode().findChildByType(IDENTIFIER_TOKENS_SET);
 		return node != null && isSetIdentifier(node) && getNode().findChildByType(IDENTIFIER_TOKENS_SET, node) != null;
 	}
 
+	@Override
 	public PsiElement setName(@NotNull String name) throws IncorrectOperationException
 	{
 		final ASTNode nameNode = findNameIdentifier();
@@ -139,12 +145,14 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 		return this;
 	}
 
+	@Override
 	public JSExpression getValue()
 	{
 		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
 		return node != null ? (JSExpression) node.getPsi() : null;
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -157,6 +165,7 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 		}
 	}
 
+	@Override
 	public int getTextOffset()
 	{
 		final ASTNode name = findNameIdentifier();
@@ -170,11 +179,13 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 
 	private class PropertyNameReference implements PsiReference
 	{
+		@Override
 		public PsiElement getElement()
 		{
 			return getFirstChild();
 		}
 
+		@Override
 		public TextRange getRangeInElement()
 		{
 			final PsiElement firstChild = getFirstChild();
@@ -183,28 +194,33 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 			return new TextRange(startOffsetInParent + quotesDelta, startOffsetInParent + firstChild.getTextLength() - quotesDelta);
 		}
 
+		@Override
 		@Nullable
 		public PsiElement resolve()
 		{
 			return JSPropertyImpl.this;
 		}
 
+		@Override
 		public String getCanonicalText()
 		{
 			return StringUtil.stripQuotesAroundValue(getFirstChild().getText());
 		}
 
+		@Override
 		public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException
 		{
 			setName(newElementName);
 			return null;
 		}
 
+		@Override
 		public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException
 		{
 			return null;
 		}
 
+		@Override
 		public boolean isReferenceTo(PsiElement element)
 		{
 			final PsiElement element2 = resolve();
@@ -232,6 +248,7 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 			return proxyExpanded && element == element2;
 		}
 
+		@Override
 		public Object[] getVariants()
 		{
 			final VariantsProcessor processor = new VariantsProcessor(null, getContainingFile(), false, JSPropertyImpl.this);
@@ -240,18 +257,21 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 			return processor.getResult();
 		}
 
+		@Override
 		public boolean isSoft()
 		{
 			return true;
 		}
 	}
 
+	@Override
 	public void delete() throws IncorrectOperationException
 	{
 		final ASTNode myNode = getNode();
 		JSChangeUtil.removeRangeWithRemovalOfCommas(myNode, myNode.getTreeParent());
 	}
 
+	@Override
 	public PsiElement getNameIdentifier()
 	{
 		final ASTNode node = findNameIdentifier();

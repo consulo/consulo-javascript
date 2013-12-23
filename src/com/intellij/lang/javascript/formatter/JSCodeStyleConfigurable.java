@@ -19,11 +19,13 @@ public class JSCodeStyleConfigurable extends CodeStyleAbstractConfigurable
 		super(settings, codeStyleSettings, JSBundle.message("js.code.style.tab.name"));
 	}
 
+	@Override
 	protected CodeStyleAbstractPanel createPanel(final CodeStyleSettings settings)
 	{
 		return new JSCodeStylePanel(settings);
 	}
 
+	@Override
 	public String getHelpTopic()
 	{
 		return null; // TODO

@@ -39,6 +39,7 @@ public class JSContinueStatementImpl extends JSStatementWithLabelReferenceImpl i
 		super(node);
 	}
 
+	@Override
 	public JSStatement getStatementToContinue()
 	{
 		String label = getLabel();
@@ -52,6 +53,7 @@ public class JSContinueStatementImpl extends JSStatementWithLabelReferenceImpl i
 		}
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)

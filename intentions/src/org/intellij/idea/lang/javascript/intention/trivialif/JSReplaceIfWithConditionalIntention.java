@@ -43,12 +43,14 @@ public class JSReplaceIfWithConditionalIntention extends JSIntention {
     private         static final char   TERNARY_SEMICOLON = ':';
     @NonNls private static final String RETURN_KEYWORD    = "return ";
 
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new ReplaceIfWithConditionalPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final JSIfStatement ifStatement = (JSIfStatement) (element.getParent() instanceof JSIfStatement ? element.getParent() : element);
 
         assert (ifStatement != null);
@@ -147,7 +149,8 @@ public class JSReplaceIfWithConditionalIntention extends JSIntention {
     }
 
     private static class ReplaceIfWithConditionalPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof JSElement)) {
                 return false;
             }

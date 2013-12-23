@@ -33,16 +33,19 @@ public class JSAttributeStubImpl extends JSNamedObjectStubBase<JSAttribute> impl
 		super(name, 0, parentStub, JSElementTypes.ATTRIBUTE);
 	}
 
+	@Override
 	protected int buildFlags(final JSAttribute clazz)
 	{
 		return 0;
 	}
 
+	@Override
 	public JSAttribute createPsi()
 	{
 		return new JSAttributeImpl(this);
 	}
 
+	@Override
 	public void index(final IndexSink sink)
 	{
 	}

@@ -22,12 +22,14 @@ public class JSLetExpressionImpl extends JSExpressionImpl implements JSLetExpres
 		super(node);
 	}
 
+	@Override
 	public JSExpression getExpression()
 	{
 		final ASTNode expressionNode = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
 		return expressionNode != null ? (JSExpression) expressionNode.getPsi() : null;
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)

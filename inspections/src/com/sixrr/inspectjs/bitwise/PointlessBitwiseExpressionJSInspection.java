@@ -37,18 +37,21 @@ public class PointlessBitwiseExpressionJSInspection extends JavaScriptInspection
         bitwiseTokens.add(JSTokenTypes.GTGTGT);
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message(
                 "pointless.bitwise.expression.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.BITWISE_GROUP_NAME;
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String buildErrorString(Object... args) {
         final String replacementExpression =
                 calculateReplacementExpression((JSExpression) args[0]);
@@ -57,11 +60,13 @@ public class PointlessBitwiseExpressionJSInspection extends JavaScriptInspection
                 replacementExpression);
     }
 
-    public boolean isEnabledByDefault() {
+    @Override
+	public boolean isEnabledByDefault() {
         return true;
     }
 
-    public JComponent createOptionsPanel() {
+    @Override
+	public JComponent createOptionsPanel() {
         return new SingleCheckboxOptionsPanel(
                 InspectionJSBundle.message(
                         "pointless.bitwise.expression.ignore.option"),
@@ -105,23 +110,27 @@ public class PointlessBitwiseExpressionJSInspection extends JavaScriptInspection
         }
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new PointlessBitwiseVisitor();
     }
 
-    public InspectionJSFix buildFix(PsiElement location) {
+    @Override
+	public InspectionJSFix buildFix(PsiElement location) {
         return new PointlessBitwiseFix();
     }
 
     private class PointlessBitwiseFix extends InspectionJSFix {
 
-        @NotNull
+        @Override
+		@NotNull
         public String getName() {
             return InspectionJSBundle.message(
                     "pointless.bitwise.expression.simplify.quickfix");
         }
 
-        public void doFix(Project project, ProblemDescriptor descriptor)
+        @Override
+		public void doFix(Project project, ProblemDescriptor descriptor)
                 throws IncorrectOperationException {
             final JSExpression expression = (JSExpression) descriptor
                     .getPsiElement();

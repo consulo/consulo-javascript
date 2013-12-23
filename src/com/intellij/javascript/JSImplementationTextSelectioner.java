@@ -14,11 +14,13 @@ import com.intellij.psi.util.PsiTreeUtil;
 
 public class JSImplementationTextSelectioner implements ImplementationTextSelectioner
 {
+	@Override
 	public int getTextStartOffset(@NotNull PsiElement element)
 	{
 		return element.getTextOffset();
 	}
 
+	@Override
 	public int getTextEndOffset(@NotNull PsiElement element)
 	{
 		if(element instanceof JSNamedElementProxy)

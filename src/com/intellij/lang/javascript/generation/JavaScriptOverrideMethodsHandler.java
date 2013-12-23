@@ -18,21 +18,25 @@ import com.intellij.util.Function;
 
 public class JavaScriptOverrideMethodsHandler extends BaseJSGenerateHandler
 {
+	@Override
 	protected String getTitleKey()
 	{
 		return "methods.to.override.chooser.title";
 	}
 
+	@Override
 	protected BaseCreateMethodsFix createFix(final JSClass clazz)
 	{
 		return new OverrideMethodsFix(clazz);
 	}
 
+	@Override
 	protected void collectCandidates(final JSClass clazz, final Collection<JSNamedElementNode> candidates)
 	{
 		Map<String, Object> _functionsToOverride = null;
 		final Function<JSFunction, Boolean> functionFilter = new Function<JSFunction, Boolean>()
 		{
+			@Override
 			public Boolean fun(final JSFunction function)
 			{
 				final JSAttributeList attributeList = function.getAttributeList();

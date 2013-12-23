@@ -82,6 +82,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 		super(tag.getNode());
 	}
 
+	@Override
 	@Nullable
 	public JSReferenceList getExtendsList()
 	{
@@ -109,6 +110,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 		return 0;
 	}
 
+	@Override
 	@Nullable
 	public JSReferenceList getImplementsList()
 	{
@@ -156,6 +158,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 		return parent.getAttributeValue(CLASS_NAME_ATTRIBUTE_NAME, parent.getNamespace());
 	}
 
+	@Override
 	public String getQualifiedName()
 	{
 		final String name = getName();
@@ -174,22 +177,26 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 		return name;
 	}
 
+	@Override
 	public boolean isInterface()
 	{
 		return false;
 	}
 
+	@Override
 	public boolean isDeprecated()
 	{
 		return false;
 	}
 
+	@Override
 	@Nullable
 	public ASTNode findNameIdentifier()
 	{
 		return getParent().getNode();
 	}
 
+	@Override
 	public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException
 	{
 		final int i = name.lastIndexOf('.');
@@ -201,12 +208,14 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 		return null;
 	}
 
+	@Override
 	@Nullable
 	public JSAttributeList getAttributeList()
 	{
 		return null;
 	}
 
+	@Override
 	protected boolean processMembers(final PsiScopeProcessor processor, final ResolveState substitutor, final PsiElement lastParent,
 			final PsiElement place)
 	{
@@ -234,16 +243,19 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 
 			b = indexEntry.processSymbolsInNs(new JavaScriptSymbolProcessor.DefaultSymbolProcessor()
 			{
+				@Override
 				protected boolean process(final PsiElement namedElement, final JSNamespace namespace)
 				{
 					return processor.execute(namedElement, ResolveState.initial());
 				}
 
+				@Override
 				public PsiFile getBaseFile()
 				{
 					return xmlFile;
 				}
 
+				@Override
 				public int getRequiredNameId()
 				{
 					if(processor instanceof ResolveProcessor)
@@ -365,10 +377,12 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 	private static final UserDataCache<CachedValue<JSFile[]>, XmlTag, Object> ourCachedScripts = new UserDataCache<CachedValue<JSFile[]>, XmlTag,
 			Object>()
 	{
+		@Override
 		protected CachedValue<JSFile[]> compute(final XmlTag tag, final Object p)
 		{
 			return CachedValuesManager.getManager(tag.getProject()).createCachedValue(new CachedValueProvider<JSFile[]>()
 			{
+				@Override
 				public Result<JSFile[]> compute()
 				{
 					final List<JSFile> injectedFiles = new ArrayList<JSFile>(2);
@@ -376,6 +390,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 					dependencies.add(tag);
 					new InjectedScriptsVisitor(tag, doProcessAllTags(tag), false, false, new InjectedFileVisitor()
 					{
+						@Override
 						public void visit(XmlTag rootTag, JSFile file)
 						{
 							injectedFiles.add(file);
@@ -391,10 +406,12 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 	private static final UserDataCache<CachedValue<Map<String, String>>, XmlFile, Object> myCachedComponentImportsCache = new
 			UserDataCache<CachedValue<Map<String, String>>, XmlFile, Object>()
 	{
+		@Override
 		protected CachedValue<Map<String, String>> compute(final XmlFile file, final Object p)
 		{
 			return CachedValuesManager.getManager(file.getProject()).createCachedValue(new CachedValueProvider<Map<String, String>>()
 			{
+				@Override
 				public Result<Map<String, String>> compute()
 				{
 					final Map<String, String> cachedComponentImports = new THashMap<String, String>();
@@ -504,11 +521,13 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 	private static final UserDataCache<ParameterizedCachedValue<XmlBackedJSClassImpl, XmlTag>, XmlTag,
 			Object> myCachedClassCache = new UserDataCache<ParameterizedCachedValue<XmlBackedJSClassImpl, XmlTag>, XmlTag, Object>()
 	{
+		@Override
 		protected ParameterizedCachedValue<XmlBackedJSClassImpl, XmlTag> compute(final XmlTag tag, final Object p)
 		{
 			return CachedValuesManager.getManager(tag.getProject()).createParameterizedCachedValue(new ParameterizedCachedValueProvider<XmlBackedJSClassImpl,
 					XmlTag>()
 			{
+				@Override
 				public CachedValueProvider.Result<XmlBackedJSClassImpl> compute(XmlTag tag)
 				{
 					return new CachedValueProvider.Result<XmlBackedJSClassImpl>(new XmlBackedJSClassImpl(tag), tag);
@@ -523,6 +542,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 		return (XmlTag) getNode().getPsi();
 	}
 
+	@Override
 	public boolean isEquivalentTo(final PsiElement element2)
 	{
 		return this == element2 ||
@@ -661,6 +681,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 		final Collection<XmlBackedJSClassImpl> result = new ArrayList<XmlBackedJSClassImpl>();
 		rootTag.processElements(new PsiElementProcessor()
 		{
+			@Override
 			public boolean execute(PsiElement element)
 			{
 				if(element instanceof XmlTag)
@@ -713,6 +734,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 			myRootTag.processElements(this, null);
 		}
 
+		@Override
 		public boolean execute(final PsiElement element)
 		{
 			if(element instanceof XmlTag)
@@ -739,6 +761,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 					{
 						JSResolveUtil.processInjectedFileForTag(tag, new JSResolveUtil.JSInjectedFilesVisitor()
 						{
+							@Override
 							protected void process(final JSFile file)
 							{
 								myVisitor.visit(myRootTag, file);
@@ -765,6 +788,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 				{
 					InjectedLanguageUtil.enumerate(value, new PsiLanguageInjectionHost.InjectedPsiVisitor()
 					{
+						@Override
 						public void visit(@NotNull PsiFile injectedPsi, @NotNull List<PsiLanguageInjectionHost.Shred> places)
 						{
 							if(places.get(0).getHost() instanceof XmlAttributeValue)

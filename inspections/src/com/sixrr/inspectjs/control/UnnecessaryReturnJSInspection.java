@@ -13,44 +13,53 @@ import org.jetbrains.annotations.NotNull;
 public class  UnnecessaryReturnJSInspection extends JavaScriptInspection {
     private final UnnecessaryReturnFix fix = new UnnecessaryReturnFix();
 
-    @NotNull
+    @Override
+	@NotNull
     public String getID() {
         return "UnnecessaryReturnStatementJS";
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("unnecessary.return.statement.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
-    public boolean isEnabledByDefault() {
+    @Override
+	public boolean isEnabledByDefault() {
         return true;
     }
 
-    public String buildErrorString(Object... args) {
+    @Override
+	public String buildErrorString(Object... args) {
         return InspectionJSBundle.message("unnecessary.return.error.string");
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new UnnecessaryReturnVisitor();
     }
 
-    public InspectionJSFix buildFix(PsiElement location) {
+    @Override
+	public InspectionJSFix buildFix(PsiElement location) {
         return fix;
     }
 
     private static class UnnecessaryReturnFix extends InspectionJSFix {
-        @NotNull
+        @Override
+		@NotNull
         public String getName() {
             return InspectionJSBundle.message("remove.unnecessary.return.fix");
         }
 
-        public void doFix(Project project, ProblemDescriptor descriptor)
+        @Override
+		public void doFix(Project project, ProblemDescriptor descriptor)
                 throws IncorrectOperationException {
             final PsiElement returnKeywordElement = descriptor.getPsiElement();
             final PsiElement returnStatement = returnKeywordElement.getParent();

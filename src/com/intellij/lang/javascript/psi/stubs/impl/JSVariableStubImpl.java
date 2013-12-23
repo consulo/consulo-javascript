@@ -32,6 +32,7 @@ public class JSVariableStubImpl extends JSVariableStubBaseImpl<JSVariable> imple
 		super(name, flags, type, initial, qName, parentStub, JSElementTypes.VARIABLE);
 	}
 
+	@Override
 	public JSVariable createPsi()
 	{
 		return new JSVariableImpl(this);

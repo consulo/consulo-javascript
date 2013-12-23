@@ -28,27 +28,32 @@ public class JSSuperGroup implements Group, ItemPresentation
 		myChildren = new ArrayList<TreeElement>();
 	}
 
+	@Override
 	public ItemPresentation getPresentation()
 	{
 		return this;
 	}
 
+	@Override
 	public Collection<TreeElement> getChildren()
 	{
 		return myChildren;
 	}
 
+	@Override
 	public String getPresentableText()
 	{
 		return myName;
 	}
 
+	@Override
 	@Nullable
 	public String getLocationString()
 	{
 		return null;
 	}
 
+	@Override
 	@Nullable
 	public Icon getIcon(final boolean open)
 	{

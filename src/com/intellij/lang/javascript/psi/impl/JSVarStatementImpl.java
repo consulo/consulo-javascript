@@ -49,16 +49,19 @@ public class JSVarStatementImpl extends JSStubbedStatementImpl<JSVarStatementStu
 		super(node, JSElementTypes.VAR_STATEMENT);
 	}
 
+	@Override
 	public JSVariable[] getVariables()
 	{
 		return getStubOrPsiChildren(JSElementTypes.VARIABLE, JSVariable.EMPTY_ARRAY);
 	}
 
+	@Override
 	public void declareVariable(String name, JSExpression initializer)
 	{
 		throw new UnsupportedOperationException("TODO: implement");
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -71,6 +74,7 @@ public class JSVarStatementImpl extends JSStubbedStatementImpl<JSVarStatementStu
 		}
 	}
 
+	@Override
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
 			@NotNull PsiElement place)
 	{

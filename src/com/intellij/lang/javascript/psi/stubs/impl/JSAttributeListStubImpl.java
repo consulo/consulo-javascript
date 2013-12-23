@@ -71,21 +71,25 @@ public class JSAttributeListStubImpl extends StubBase<JSAttributeList> implement
 		myNamespace = namespace;
 	}
 
+	@Override
 	public JSAttributeList createPsi()
 	{
 		return new JSAttributeListImpl(this);
 	}
 
+	@Override
 	public void index(final IndexSink sink)
 	{
 	}
 
+	@Override
 	public void serialize(final StubOutputStream dataStream) throws IOException
 	{
 		dataStream.writeInt(myFlags);
 		dataStream.writeInt(myNamespace != null ? dataStream.getStringId(myNamespace) : -1);
 	}
 
+	@Override
 	public JSAttributeList.AccessType getAccessType()
 	{
 		final int i = (myFlags >> VISIBILITY_TAG_SHIFT) & VISIBILITY_TAG_MASK;
@@ -94,11 +98,13 @@ public class JSAttributeListStubImpl extends StubBase<JSAttributeList> implement
 
 	private static final JSAttributeList.AccessType[] types = JSAttributeList.AccessType.values();
 
+	@Override
 	public boolean hasModifier(final JSAttributeList.ModifierType modifier)
 	{
 		return ((myFlags >> getFlagShift(modifier)) & 0x1) != 0;
 	}
 
+	@Override
 	public String getNamespace()
 	{
 		return myNamespace;

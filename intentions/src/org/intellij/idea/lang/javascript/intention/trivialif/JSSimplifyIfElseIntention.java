@@ -28,19 +28,22 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 
 public class JSSimplifyIfElseIntention extends JSIntention {
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new SimplifyIfElsePredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final PsiElement statement = (element.getParent() instanceof JSIfStatement ? element.getParent() : element);
 
         ConditionalUtils.replaceAssignmentOrReturnIfSimplifiable((JSIfStatement) statement);
     }
 
     private static class SimplifyIfElsePredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof JSElement)) {
                 return false;
             }

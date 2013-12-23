@@ -40,6 +40,7 @@ public class JSArgumentListImpl extends JSElementImpl implements JSArgumentList
 		super(node);
 	}
 
+	@Override
 	public JSExpression[] getArguments()
 	{
 		final ASTNode[] nodes = getNode().getChildren(JSElementTypes.EXPRESSIONS);
@@ -51,6 +52,7 @@ public class JSArgumentListImpl extends JSElementImpl implements JSArgumentList
 		return exprs;
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)

@@ -37,6 +37,7 @@ public class JSParser implements PsiParser
 		myDialect = dialect;
 	}
 
+	@Override
 	@NotNull
 	public ASTNode parse(IElementType root, PsiBuilder builder, LanguageVersion languageVersion)
 	{

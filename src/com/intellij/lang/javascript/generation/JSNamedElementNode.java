@@ -108,6 +108,7 @@ public class JSNamedElementNode extends PsiElementMemberChooserObject implements
 		return text;
 	}
 
+	@Override
 	public MemberChooserObject getParentNodeDelegate()
 	{
 		final PsiElement element = getPsiElement();

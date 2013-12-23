@@ -38,16 +38,19 @@ import com.intellij.util.IncorrectOperationException;
  */
 public class JSWithParenthesesSurrounder implements Surrounder
 {
+	@Override
 	public String getTemplateDescription()
 	{
 		return JSBundle.message("javascript.surround.with.parenthesis");
 	}
 
+	@Override
 	public boolean isApplicable(@NotNull PsiElement[] elements)
 	{
 		return true;
 	}
 
+	@Override
 	@Nullable
 	public TextRange surroundElements(@NotNull Project project, @NotNull Editor editor, @NotNull PsiElement[] elements) throws
 			IncorrectOperationException

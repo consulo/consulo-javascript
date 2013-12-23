@@ -16,30 +16,36 @@ public class TrivialConditionalJSInspection
         extends JavaScriptInspection {
     private final TrivialConditionalFix fix = new TrivialConditionalFix();
 
-    @NotNull
+    @Override
+	@NotNull
     public String getID() {
         return "RedundantConditionalExpressionJS";
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("redundant.conditional.expression.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
-    public boolean isEnabledByDefault() {
+    @Override
+	public boolean isEnabledByDefault() {
         return true;
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new UnnecessaryConditionalExpressionVisitor();
     }
 
-    public String buildErrorString(Object... args) {
+    @Override
+	public String buildErrorString(Object... args) {
         final JSConditionalExpression exp = (JSConditionalExpression) args[0];
         return InspectionJSBundle.message("trivial.conditional.error.string", exp.getText(), calculateReplacementExpression(exp));
     }
@@ -56,18 +62,21 @@ public class TrivialConditionalJSInspection
         }
     }
 
-    public InspectionJSFix buildFix(PsiElement location) {
+    @Override
+	public InspectionJSFix buildFix(PsiElement location) {
         return fix;
     }
 
     private static class
             TrivialConditionalFix extends InspectionJSFix {
-        @NotNull
+        @Override
+		@NotNull
         public String getName() {
             return InspectionJSBundle.message("simplify.fix");
         }
 
-        public void doFix(Project project, ProblemDescriptor descriptor)
+        @Override
+		public void doFix(Project project, ProblemDescriptor descriptor)
                 throws IncorrectOperationException {
             final JSConditionalExpression expression = (JSConditionalExpression) descriptor.getPsiElement();
             final String newExpression = calculateReplacementExpression(expression);

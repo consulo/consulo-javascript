@@ -18,32 +18,38 @@ import org.jetbrains.annotations.Nullable;
 public class NegatedConditionalExpressionJSInspection extends JavaScriptInspection {
     private final NegatedConditionalFix fix = new NegatedConditionalFix();
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("negated.conditional.expression.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
-    @Nullable
+    @Override
+	@Nullable
     protected String buildErrorString(Object... args) {
         return InspectionJSBundle.message("negated.conditional.expression.error.string");
     }
 
-    protected InspectionJSFix buildFix(PsiElement location) {
+    @Override
+	protected InspectionJSFix buildFix(PsiElement location) {
         return fix;
     }
 
     private static class NegatedConditionalFix extends InspectionJSFix {
-        @NotNull
+        @Override
+		@NotNull
         public String getName() {
             return InspectionJSBundle.message("invert.condition.fix");
         }
 
-        public void doFix(Project project,
+        @Override
+		public void doFix(Project project,
                           ProblemDescriptor descriptor)
                 throws IncorrectOperationException {
             final JSConditionalExpression exp =
@@ -63,7 +69,8 @@ public class NegatedConditionalExpressionJSInspection extends JavaScriptInspecti
         }
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 

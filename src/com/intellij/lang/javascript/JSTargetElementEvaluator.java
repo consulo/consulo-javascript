@@ -15,6 +15,7 @@ import com.intellij.psi.PsiReference;
  */
 public class JSTargetElementEvaluator implements TargetElementEvaluator
 {
+	@Override
 	public boolean includeSelfInGotoImplementation(@NotNull final PsiElement element)
 	{
 		if(element instanceof JSFunction)
@@ -32,6 +33,7 @@ public class JSTargetElementEvaluator implements TargetElementEvaluator
 		return true;
 	}
 
+	@Override
 	public PsiElement getElementByReference(final PsiReference ref, final int flags)
 	{
 		return null;

@@ -32,12 +32,14 @@ import com.intellij.util.IncorrectOperationException;
 public class JSRemoveRedundantElseIntention extends JSIntention {
     @NonNls private static final String IF_STATEMENT_PREFIX = "if (";
 
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new RemoveRedundantElsePredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final JSIfStatement ifStatement = (JSIfStatement) element;
         final JSStatement   thenBranch  = ifStatement.getThen();
         final JSStatement   elseBranch  = ifStatement.getElse();
@@ -56,7 +58,8 @@ public class JSRemoveRedundantElseIntention extends JSIntention {
     }
 
     private static class RemoveRedundantElsePredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof JSIfStatement)) {
                 return false;
             }

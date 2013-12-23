@@ -27,11 +27,13 @@ public abstract class JSMutablyNamedIntention extends JSIntention {
 
     @NonNls protected abstract String getTextForElement(PsiElement element);
 
-    @NotNull public String getText() {
+    @Override
+	@NotNull public String getText() {
       return text;
     }
 
-    public boolean isAvailable(@NotNull Project project, Editor editor, @Nullable PsiElement node) {
+    @Override
+	public boolean isAvailable(@NotNull Project project, Editor editor, @Nullable PsiElement node) {
       final PsiElement element = findMatchingElement(node);
       if (element != null) {
         text = getTextForElement(element);

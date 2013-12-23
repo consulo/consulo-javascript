@@ -32,6 +32,7 @@ public class JSFunctionStubImpl extends JSFunctionStubBaseImpl<JSFunction> imple
 		super(name, flags, qName, returnType, parentStub, JSElementTypes.FUNCTION_DECLARATION);
 	}
 
+	@Override
 	public JSFunction createPsi()
 	{
 		return new JSFunctionImpl(this, JSElementTypes.FUNCTION_DECLARATION);

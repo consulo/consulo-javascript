@@ -19,12 +19,14 @@ public class JSFunctionExpressionElementType extends JSStubElementType<JSFunctio
 	private static final JSStubGenerator<JSFunctionExpressionStub, JSFunctionExpression> ourStubGenerator = new
 			JSStubGenerator<JSFunctionExpressionStub, JSFunctionExpression>()
 	{
+		@Override
 		public JSFunctionExpressionStub newInstance(final StubInputStream dataStream, final StubElement parentStub,
 				final JSStubElementType<JSFunctionExpressionStub, JSFunctionExpression> elementType) throws IOException
 		{
 			return new JSFunctionExpressionStubImpl(dataStream, parentStub, elementType);
 		}
 
+		@Override
 		public JSFunctionExpressionStub newInstance(final JSFunctionExpression psi, final StubElement parentStub,
 				final JSStubElementType<JSFunctionExpressionStub, JSFunctionExpression> elementType)
 		{

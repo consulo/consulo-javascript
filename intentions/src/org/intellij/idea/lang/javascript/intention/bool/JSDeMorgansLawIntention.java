@@ -36,17 +36,20 @@ public class JSDeMorgansLawIntention extends JSMutablyNamedIntention {
     @NonNls private static final String AND_SUFFIX   = "ANDAND";
     @NonNls private static final String OR_SUFFIX    = "OROR";
 
-    protected String getTextForElement(PsiElement element) {
+    @Override
+	protected String getTextForElement(PsiElement element) {
         final IElementType tokenType = ((JSBinaryExpression) element).getOperationSign();
 
         return this.getSuffixedDisplayName(tokenType.equals(JSTokenTypes.ANDAND) ? AND_SUFFIX : OR_SUFFIX);
     }
 
-    @NotNull public JSElementPredicate getElementPredicate() {
+    @Override
+	@NotNull public JSElementPredicate getElementPredicate() {
         return new ConjunctionPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         JSBinaryExpression  exp       = (JSBinaryExpression) element;
         final IElementType  tokenType = exp.getOperationSign();
         JSElement           parent    = (JSElement) exp.getParent();

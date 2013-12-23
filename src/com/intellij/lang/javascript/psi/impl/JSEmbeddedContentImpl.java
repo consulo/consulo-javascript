@@ -42,6 +42,7 @@ public class JSEmbeddedContentImpl extends JSElementImpl implements XmlTagChild
 		super(node);
 	}
 
+	@Override
 	public XmlTag getParentTag()
 	{
 		final PsiElement parent = getParent();
@@ -52,6 +53,7 @@ public class JSEmbeddedContentImpl extends JSElementImpl implements XmlTagChild
 		return null;
 	}
 
+	@Override
 	public XmlTagChild getNextSiblingInTag()
 	{
 		PsiElement nextSibling = getNextSibling();
@@ -62,6 +64,7 @@ public class JSEmbeddedContentImpl extends JSElementImpl implements XmlTagChild
 		return null;
 	}
 
+	@Override
 	public XmlTagChild getPrevSiblingInTag()
 	{
 		final PsiElement prevSibling = getPrevSibling();
@@ -72,18 +75,21 @@ public class JSEmbeddedContentImpl extends JSElementImpl implements XmlTagChild
 		return null;
 	}
 
+	@Override
 	public boolean processElements(PsiElementProcessor processor, PsiElement place)
 	{
 		// TODO
 		return true;
 	}
 
+	@Override
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
 			@NotNull PsiElement place)
 	{
 		return JSResolveUtil.processDeclarationsInScope(this, processor, state, lastParent, place);
 	}
 
+	@Override
 	public String toString()
 	{
 		String s = super.toString();

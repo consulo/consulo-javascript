@@ -25,7 +25,8 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.PsiElement;
 
 class ConjunctionPredicate implements JSElementPredicate {
-    public boolean satisfiedBy(@NotNull PsiElement element) {
+    @Override
+	public boolean satisfiedBy(@NotNull PsiElement element) {
         if (!(element instanceof JSBinaryExpression)) {
             return false;
         }

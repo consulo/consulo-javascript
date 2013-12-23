@@ -31,12 +31,14 @@ import java.util.Iterator;
 public class JSMergeDeclarationAndInitializationIntention extends JSIntention {
     @NonNls private static final String JS_VAR_PREFIX = "var ";
 
-    @NotNull
+    @Override
+	@NotNull
     protected JSElementPredicate getElementPredicate() {
         return new Predicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         assert (element instanceof JSVarStatement);
 
         final JSVarStatement varStatement      = (JSVarStatement) element;
@@ -76,7 +78,8 @@ public class JSMergeDeclarationAndInitializationIntention extends JSIntention {
     }
 
     private static class Predicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof JSVarStatement)) {
                 return false;
             }

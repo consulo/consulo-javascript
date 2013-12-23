@@ -28,6 +28,7 @@ public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JS
 	JSFunction[] EMPTY_ARRAY = new JSFunction[0];
 	ArrayFactory<JSFunction> ARRAY_FACTORY = new ArrayFactory<JSFunction>()
 	{
+		@Override
 		public JSFunction[] create(int count)
 		{
 			return count == 0 ? EMPTY_ARRAY : new JSFunction[count];

@@ -15,40 +15,48 @@ import org.jetbrains.annotations.NotNull;
 public class ConstantOnLHSOfComparisonJSInspection extends JavaScriptInspection {
     private final SwapComparisonFix fix = new SwapComparisonFix();
 
-    @NotNull
+    @Override
+	@NotNull
     public String getID() {
         return "ConstantOnLefSideOfComparisonJS";
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("constant.on.left.side.of.comparison.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.STYLE_GROUP_NAME;
     }
 
-    public String buildErrorString(Object... args) {
+    @Override
+	public String buildErrorString(Object... args) {
         return InspectionJSBundle.message("constant.on.left.side.of.comparison.error.string");
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new ConstantOnRHSOfComparisonVisitor();
     }
 
-    public InspectionJSFix buildFix(PsiElement location) {
+    @Override
+	public InspectionJSFix buildFix(PsiElement location) {
         return fix;
     }
 
     private static class SwapComparisonFix extends InspectionJSFix {
-        @NotNull
+        @Override
+		@NotNull
         public String getName() {
             return InspectionJSBundle.message("flip.comparison.fix");
         }
 
-        public void doFix(Project project, ProblemDescriptor descriptor)
+        @Override
+		public void doFix(Project project, ProblemDescriptor descriptor)
                 throws IncorrectOperationException {
             final JSBinaryExpression expression = (JSBinaryExpression) descriptor.getPsiElement();
             final JSExpression rhs = expression.getROperand();

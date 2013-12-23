@@ -195,6 +195,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 
 			doIterateTypeHierarchy(nameIds, new HierarchyProcessor()
 			{
+				@Override
 				public boolean processNamespace(final JSNamespace ns)
 				{
 					updateCanUseOnlyCompleteMatchesFromNs(ns);
@@ -202,6 +203,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 					return true;
 				}
 
+				@Override
 				public boolean processClass(final JSClass clazz)
 				{
 					updateCanUseOnlyCompleteMatchesFromString(clazz.getQualifiedName(), clazz, clazz);
@@ -338,6 +340,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			possibleNameIds = _possibleNameIds;
 		}
 
+		@Override
 		public void process(String type, final EvaluateContext context, final PsiElement source)
 		{
 			if(context.visitedTypes.contains(type))
@@ -354,11 +357,13 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			addSupers(type, possibleNameIds, context);
 		}
 
+		@Override
 		public boolean ecma()
 		{
 			return ecmal4;
 		}
 
+		@Override
 		public void setUnknownElement(PsiElement element)
 		{
 			myUnknownElement = element;
@@ -376,6 +381,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 		myIteratedTypeName = type;
 		doIterateHierarchy(type, new HierarchyProcessor()
 		{
+			@Override
 			public boolean processNamespace(final JSNamespace ns)
 			{
 				final String qname = ns.getQualifiedName(myIndex);
@@ -388,6 +394,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 				return true;
 			}
 
+			@Override
 			public boolean processClass(final JSClass clazz)
 			{
 				String qname = clazz.getQualifiedName();
@@ -443,6 +450,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 		return results;
 	}
 
+	@Override
 	public boolean execute(PsiElement element, ResolveState state)
 	{
 		if(element instanceof JSNamedElement)
@@ -455,6 +463,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 		return true;
 	}
 
+	@Override
 	public boolean processFunction(JSNamespace namespace, final int nameId, JSNamedElement function)
 	{
 		if(myCurrentFile != myTargetFile ||
@@ -467,59 +476,69 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 		return true;
 	}
 
+	@Override
 	public boolean processClass(final JSNamespace namespace, final int nameId, final JSNamedElement clazz)
 	{
 		doAdd(namespace, nameId, clazz);
 		return true;
 	}
 
+	@Override
 	public boolean processProperty(JSNamespace namespace, final int nameId, JSNamedElement property)
 	{
 		doAdd(namespace, nameId, property);
 		return true;
 	}
 
+	@Override
 	public boolean processDefinition(final JSNamespace namespace, final int nameId, final JSNamedElement refExpr)
 	{
 		doAdd(namespace, nameId, refExpr);
 		return true;
 	}
 
+	@Override
 	public boolean processNamespace(final JSNamespace namespace, final int nameId, final JSNamedElement refExpr)
 	{
 		doAdd(namespace, nameId, refExpr);
 		return true;
 	}
 
+	@Override
 	public boolean processImplicitNamespace(final JSNamespace namespace, final int nameId, final PsiElement refExpr, boolean finalReference)
 	{
 		doAdd(namespace, nameId, refExpr);
 		return true;
 	}
 
+	@Override
 	public boolean processImplicitFunction(final JSNamespace namespace, final int nameId, final PsiElement refExpr)
 	{
 		doAdd(namespace, nameId, refExpr);
 		return true;
 	}
 
+	@Override
 	public boolean processImplicitVariable(final JSNamespace namespace, final int nameId, final PsiElement refExpr)
 	{
 		doAdd(namespace, nameId, refExpr);
 		return true;
 	}
 
+	@Override
 	public int getRequiredNameId()
 	{
 		return -1;
 	}
 
+	@Override
 	public boolean processTag(JSNamespace namespace, final int nameId, PsiNamedElement namedElement, final String attrName)
 	{
 		doAdd(namespace, nameId, namedElement);
 		return true;
 	}
 
+	@Override
 	public boolean processVariable(JSNamespace namespace, final int nameId, JSNamedElement variable)
 	{
 		if(myCurrentFile != myTargetFile ||
@@ -531,6 +550,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 		return true;
 	}
 
+	@Override
 	public PsiFile getBaseFile()
 	{
 		return myTargetFile;
@@ -668,11 +688,13 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 	}
 
 
+	@Override
 	protected int[] calculateContextIds(final JSReferenceExpression jsReferenceExpression)
 	{
 		return JSResolveUtil.buildNameIdsForQualifier(JSResolveUtil.getRealRefExprQualifier(jsReferenceExpression), myIndex);
 	}
 
+	@Override
 	protected boolean isFromRelevantFileOrDirectory()
 	{
 		return super.isFromRelevantFileOrDirectory(); // || myTargetFiles.contains(myCurrentFile);
@@ -933,6 +955,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 		private int myOffset;
 		private PsiFile myCurrentFile;
 
+		@Override
 		public boolean equals(final Object obj)
 		{
 			if(!(obj instanceof MyElementWrapper))
@@ -944,6 +967,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			return elementWrapper.myOffset == myOffset;
 		}
 
+		@Override
 		public int hashCode()
 		{
 			return myOffset;
@@ -974,79 +998,93 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			myArtificialName = null;
 		}
 
+		@Override
 		@NotNull
 		public Language getLanguage()
 		{
 			return JavaScriptSupportLoader.JAVASCRIPT.getLanguage();
 		}
 
+		@Override
 		@NotNull
 		public PsiElement[] getChildren()
 		{
 			return PsiElement.EMPTY_ARRAY;
 		}
 
+		@Override
 		public PsiElement getParent()
 		{
 			return myCurrentFile != null ? myCurrentFile : myProxy.getContainingFile();
 		}
 
+		@Override
 		@Nullable
 		public PsiElement getFirstChild()
 		{
 			return null;
 		}
 
+		@Override
 		@Nullable
 		public PsiElement getLastChild()
 		{
 			return null;
 		}
 
+		@Override
 		@NotNull
 		public Project getProject()
 		{
 			return getParent().getProject();
 		}
 
+		@Override
 		@Nullable
 		public PsiElement getNextSibling()
 		{
 			return null;
 		}
 
+		@Override
 		@Nullable
 		public PsiElement getPrevSibling()
 		{
 			return null;
 		}
 
+		@Override
 		public TextRange getTextRange()
 		{
 			return new TextRange(myOffset, myOffset);
 		}
 
+		@Override
 		public int getStartOffsetInParent()
 		{
 			return myOffset;
 		}
 
+		@Override
 		public int getTextLength()
 		{
 			return 0;
 		}
 
+		@Override
 		@Nullable
 		public PsiElement findElementAt(final int offset)
 		{
 			return null;
 		}
 
+		@Override
 		public int getTextOffset()
 		{
 			return myOffset;
 		}
 
+		@Override
 		@NonNls
 		public String getText()
 		{
@@ -1058,33 +1096,39 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			return myIndex.getStringByIndex(myJsNamespace != null ? myJsNamespace.getNameId() : myProxy.getNameId());
 		}
 
+		@Override
 		@NotNull
 		public char[] textToCharArray()
 		{
 			return new char[0];
 		}
 
+		@Override
 		public boolean textContains(final char c)
 		{
 			return false;
 		}
 
+		@Override
 		@Nullable
 		public ASTNode getNode()
 		{
 			return null;
 		}
 
+		@Override
 		public String getName()
 		{
 			return getText();
 		}
 
+		@Override
 		public boolean isPhysical()
 		{
 			return true;
 		}
 
+		@Override
 		public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException
 		{
 			throw new UnsupportedOperationException();
@@ -1100,11 +1144,13 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			return myProxy != null ? IconDescriptorUpdaters.getIcon(myProxy, flags) : AllIcons.Nodes.Class;
 		}
 
+		@Override
 		public PsiElement getNameIdentifier()
 		{
 			return null;
 		}
 
+		@Override
 		public ItemPresentation getPresentation()
 		{
 			if(myArtificialName != null)
@@ -1115,17 +1161,20 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			{
 				final JavaScriptIndex myIndex = JavaScriptIndex.getInstance(getProject());
 
+				@Override
 				public String getPresentableText()
 				{
 					return myJsNamespace.getQualifiedName(myIndex);
 				}
 
+				@Override
 				@Nullable
 				public String getLocationString()
 				{
 					return myJsNamespace.getParent().getQualifiedName(myIndex);
 				}
 
+				@Override
 				@Nullable
 				public Icon getIcon(final boolean open)
 				{
@@ -1145,6 +1194,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			return myJsNamespace;
 		}
 
+		@Override
 		@Nullable
 		public ASTNode findNameIdentifier()
 		{

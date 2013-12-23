@@ -17,6 +17,7 @@ import com.intellij.psi.PsiElement;
  */
 public class JSAttributeNameValuePairManipulator extends JSAbstractElementManipulator<JSAttributeNameValuePair>
 {
+	@Override
 	protected JSAttributeNameValuePair createTree(final String newText, final JSLanguageDialect languageDialect, final Project project)
 	{
 		@NonNls String ToCreate = "[A(" + newText + ")] class C {}";

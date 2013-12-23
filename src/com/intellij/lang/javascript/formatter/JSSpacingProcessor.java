@@ -58,6 +58,7 @@ public class JSSpacingProcessor extends JSNodeVisitor
 		return myResult;
 	}
 
+	@Override
 	public void visitObjectLiteralExpression(final ASTNode node)
 	{
 		if(((type1 == JSTokenTypes.LBRACE && type2 != JSTokenTypes.RBRACE) ||
@@ -79,6 +80,7 @@ public class JSSpacingProcessor extends JSNodeVisitor
 		return false;
 	}
 
+	@Override
 	public void visitArrayLiteralExpression(final ASTNode node)
 	{
 		if(((type1 == JSTokenTypes.LBRACKET && type2 != JSTokenTypes.RBRACKET) ||
@@ -100,6 +102,7 @@ public class JSSpacingProcessor extends JSNodeVisitor
 		return false;
 	}
 
+	@Override
 	public void visitXmlLiteralExpression(ASTNode node)
 	{
 		if((type2 == JSElementTypes.XML_LITERAL_EXPRESSION ||
@@ -115,6 +118,7 @@ public class JSSpacingProcessor extends JSNodeVisitor
 		return true;
 	}
 
+	@Override
 	public void visitAttributeList(final ASTNode node)
 	{
 		if(type1 == JSElementTypes.ATTRIBUTE || type2 == JSElementTypes.ATTRIBUTE)

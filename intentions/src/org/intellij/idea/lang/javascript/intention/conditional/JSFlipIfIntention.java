@@ -35,12 +35,14 @@ public class JSFlipIfIntention extends JSIntention {
     @NonNls private static final String IF_PREFIX    = "if (";
     @NonNls private static final String ELSE_KEYWORD = "else ";
 
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new FlipIfPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final JSIfStatement exp             = (JSIfStatement) element;
         final JSExpression  condition       = exp.getCondition();
         final JSStatement   thenBranch      = exp.getThen();
@@ -58,7 +60,8 @@ public class JSFlipIfIntention extends JSIntention {
     }
 
     private static class FlipIfPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof JSIfStatement) ||
                 ErrorUtil.containsError(element)) {
                 return false;

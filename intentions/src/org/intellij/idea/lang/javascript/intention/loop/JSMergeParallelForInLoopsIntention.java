@@ -39,12 +39,14 @@ public class JSMergeParallelForInLoopsIntention extends JSIntention {
     @NonNls private static final String FOR_IN_PREFIX            = "for (";
     @NonNls private static final String FOR_IN_COLLECTION_PREFIX = " in ";
 
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new MergeParallelForInLoopsPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final PsiElement  nextElement = JSElementFactory.getNonWhiteSpaceSibling(element, true);
 
         assert (nextElement != null);
@@ -76,7 +78,8 @@ public class JSMergeParallelForInLoopsIntention extends JSIntention {
     }
 
     private static class MergeParallelForInLoopsPredicate implements JSElementPredicate {
-        public boolean satisfiedBy(@NotNull PsiElement element) {
+        @Override
+		public boolean satisfiedBy(@NotNull PsiElement element) {
             if (!(element instanceof JSForInStatement) || ErrorUtil.containsError(element)) {
                 return false;
             }

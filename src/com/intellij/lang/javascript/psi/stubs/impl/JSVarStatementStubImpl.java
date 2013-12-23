@@ -35,15 +35,18 @@ public class JSVarStatementStubImpl extends StubBase<JSVarStatement> implements 
 		super(parentStub, JSElementTypes.VAR_STATEMENT);
 	}
 
+	@Override
 	public JSVarStatement createPsi()
 	{
 		return new JSVarStatementImpl(this);
 	}
 
+	@Override
 	public void index(final IndexSink sink)
 	{
 	}
 
+	@Override
 	public void serialize(final StubOutputStream dataStream) throws IOException
 	{
 	}

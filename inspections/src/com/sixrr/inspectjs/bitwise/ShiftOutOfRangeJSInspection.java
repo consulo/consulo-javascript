@@ -13,18 +13,21 @@ import org.jetbrains.annotations.NotNull;
 
 public class ShiftOutOfRangeJSInspection extends JavaScriptInspection {
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message(
                 "shift.operation.by.inappropriate.constant.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.BITWISE_GROUP_NAME;
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String buildErrorString(Object... args) {
         final Integer value = (Integer) args[0];
         if (value > 0) {
@@ -36,11 +39,13 @@ public class ShiftOutOfRangeJSInspection extends JavaScriptInspection {
         }
     }
 
-    public boolean isEnabledByDefault() {
+    @Override
+	public boolean isEnabledByDefault() {
         return true;
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new ShiftOutOfRange();
     }
 

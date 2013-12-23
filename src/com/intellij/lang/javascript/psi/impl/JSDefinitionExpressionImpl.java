@@ -35,12 +35,14 @@ public class JSDefinitionExpressionImpl extends JSExpressionImpl implements JSDe
 		super(node);
 	}
 
+	@Override
 	public JSExpression getExpression()
 	{
 		final ASTNode expressionNode = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
 		return expressionNode != null ? (JSExpression) expressionNode.getPsi() : null;
 	}
 
+	@Override
 	public String getName()
 	{
 		final JSExpression expression = getExpression();
@@ -51,6 +53,7 @@ public class JSDefinitionExpressionImpl extends JSExpressionImpl implements JSDe
 		return null;
 	}
 
+	@Override
 	public PsiElement setName(@NotNull String name) throws IncorrectOperationException
 	{
 		final JSExpression expression = getExpression();
@@ -61,6 +64,7 @@ public class JSDefinitionExpressionImpl extends JSExpressionImpl implements JSDe
 		return null;
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
@@ -78,6 +82,7 @@ public class JSDefinitionExpressionImpl extends JSExpressionImpl implements JSDe
 		return AllIcons.Nodes.Variable;
 	}
 
+	@Override
 	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
 			@NotNull PsiElement place)
 	{
@@ -88,6 +93,7 @@ public class JSDefinitionExpressionImpl extends JSExpressionImpl implements JSDe
 		return true;
 	}
 
+	@Override
 	public void delete() throws IncorrectOperationException
 	{
 		final PsiElement parent = getParent();
@@ -116,12 +122,14 @@ public class JSDefinitionExpressionImpl extends JSExpressionImpl implements JSDe
 		super.delete();
 	}
 
+	@Override
 	@Nullable
 	public ASTNode findNameIdentifier()
 	{
 		return null;
 	}
 
+	@Override
 	public PsiElement getNameIdentifier()
 	{
 		final ASTNode node = findNameIdentifier();

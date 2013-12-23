@@ -11,30 +11,36 @@ import org.jetbrains.annotations.NotNull;
 
 public class ParametersPerFunctionJSInspection
         extends FunctionMetricsInspection {
-    @NotNull
+    @Override
+	@NotNull
     public String getID() {
         return "OverlyComplexFunctionJS";
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getDisplayName() {
         return InspectionJSBundle.message("function.with.too.many.parameters.display.name");
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public String getGroupDisplayName() {
         return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
     }
 
-    protected int getDefaultLimit() {
+    @Override
+	protected int getDefaultLimit() {
         return 5;
     }
 
-    protected String getConfigurationLabel() {
+    @Override
+	protected String getConfigurationLabel() {
         return InspectionJSBundle.message("function.parameter.limit");
     }
 
-    public String buildErrorString(Object... args) {
+    @Override
+	public String buildErrorString(Object... args) {
         final JSFunction function = (JSFunction) ((PsiElement) args[0]).getParent();
         assert function != null;
         final JSParameterList parameterList = function.getParameterList();
@@ -47,7 +53,8 @@ public class ParametersPerFunctionJSInspection
         }
     }
 
-    public BaseInspectionVisitor buildVisitor() {
+    @Override
+	public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 

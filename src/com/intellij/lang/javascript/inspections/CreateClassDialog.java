@@ -36,6 +36,7 @@ class CreateClassDialog extends DialogWrapper
 
 		myPackageName.getDocument().addDocumentListener(new DocumentAdapter()
 		{
+			@Override
 			protected void textChanged(final DocumentEvent e)
 			{
 				String text = getPackageName();
@@ -64,6 +65,7 @@ class CreateClassDialog extends DialogWrapper
 		init();
 	}
 
+	@Override
 	protected JComponent createCenterPanel()
 	{
 		return myPanel;

@@ -15,6 +15,7 @@ class JSRootNamespace extends JSNamespace
 		myEntry = entry;
 	}
 
+	@Override
 	public int getQualifiedNameId(final JavaScriptIndex index)
 	{
 		return -1;

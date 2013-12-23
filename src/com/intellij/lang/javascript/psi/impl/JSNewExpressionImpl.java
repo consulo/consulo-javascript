@@ -38,18 +38,21 @@ public class JSNewExpressionImpl extends JSExpressionImpl implements JSNewExpres
 		super(node);
 	}
 
+	@Override
 	public JSExpression getMethodExpression()
 	{
 		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
 		return node != null ? (JSExpression) node.getPsi() : null;
 	}
 
+	@Override
 	public JSArgumentList getArgumentList()
 	{
 		final ASTNode node = getNode().findChildByType(JSElementTypes.ARGUMENT_LIST);
 		return node != null ? (JSArgumentList) node.getPsi() : null;
 	}
 
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)

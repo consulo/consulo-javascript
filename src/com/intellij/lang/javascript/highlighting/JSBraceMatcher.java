@@ -38,11 +38,13 @@ public class JSBraceMatcher implements PairedBraceMatcher
 			new BracePair(JSTokenTypes.LBRACE, JSTokenTypes.RBRACE, true)
 	};
 
+	@Override
 	public BracePair[] getPairs()
 	{
 		return PAIRS;
 	}
 
+	@Override
 	public boolean isPairedBracesAllowedBeforeType(@NotNull final IElementType lbraceType, @Nullable final IElementType tokenType)
 	{
 		return JSTokenTypes.WHITE_SPACE == tokenType || JSTokenTypes.COMMENTS.contains(tokenType) || tokenType == JSTokenTypes.SEMICOLON || tokenType ==
@@ -50,6 +52,7 @@ public class JSBraceMatcher implements PairedBraceMatcher
 				tokenType;
 	}
 
+	@Override
 	public int getCodeConstructStart(final PsiFile file, int openingBraceOffset)
 	{
 		return openingBraceOffset;

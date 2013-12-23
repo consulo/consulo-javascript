@@ -55,12 +55,14 @@ public class JSUntypedDeclarationInspection extends JSInspection
 	@NonNls
 	public static final String SHORT_NAME = "JSUntypedDeclaration";
 
+	@Override
 	@NotNull
 	public String getGroupDisplayName()
 	{
 		return JSBundle.message("js.inspection.group.name");
 	}
 
+	@Override
 	@NotNull
 	public String getDisplayName()
 	{
@@ -74,6 +76,7 @@ public class JSUntypedDeclarationInspection extends JSInspection
 		return HighlightDisplayLevel.WARNING;
 	}
 
+	@Override
 	@NotNull
 	@NonNls
 	public String getShortName()
@@ -81,6 +84,7 @@ public class JSUntypedDeclarationInspection extends JSInspection
 		return SHORT_NAME;
 	}
 
+	@Override
 	protected JSElementVisitor createVisitor(final ProblemsHolder holder)
 	{
 		return new JSElementVisitor()
@@ -129,18 +133,21 @@ public class JSUntypedDeclarationInspection extends JSInspection
 	private static class AddTypeToDclFix implements LocalQuickFix
 	{
 
+		@Override
 		@NotNull
 		public String getName()
 		{
 			return JSBundle.message("js.untyped.declaration.problem.addtype.fix");
 		}
 
+		@Override
 		@NotNull
 		public String getFamilyName()
 		{
 			return getName();
 		}
 
+		@Override
 		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor)
 		{
 			PsiElement anchor = descriptor.getPsiElement();

@@ -28,11 +28,13 @@ import com.intellij.psi.PsiElement;
  */
 public class JSWithTryCatchSurrounder extends JSWithTryCatchFinallySurrounder
 {
+	@Override
 	public String getTemplateDescription()
 	{
 		return JSBundle.message("javascript.surround.with.try.catch");
 	}
 
+	@Override
 	protected String getStatementTemplate(final Project project, PsiElement context)
 	{
 		return "try { } catch(e" + getExceptionVarTypeBasedOnContext(context) + ") { }";

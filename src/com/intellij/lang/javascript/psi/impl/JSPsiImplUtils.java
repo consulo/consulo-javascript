@@ -359,11 +359,13 @@ public class JSPsiImplUtils
 	public static final TObjectHashingStrategy<JSQualifiedNamedElement> QUALIFIED_NAME_HASHING_STRATEGY = new
 			TObjectHashingStrategy<JSQualifiedNamedElement>()
 	{
+		@Override
 		public int computeHashCode(final JSQualifiedNamedElement object)
 		{
 			return object == null || object.getQualifiedName() == null ? 0 : object.getQualifiedName().hashCode();
 		}
 
+		@Override
 		public boolean equals(final JSQualifiedNamedElement o1, final JSQualifiedNamedElement o2)
 		{
 			return Comparing.equal(o1.getQualifiedName(), o2.getQualifiedName());

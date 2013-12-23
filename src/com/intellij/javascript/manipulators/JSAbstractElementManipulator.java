@@ -18,6 +18,7 @@ import com.intellij.util.IncorrectOperationException;
  */
 abstract class JSAbstractElementManipulator<T extends PsiElement> extends AbstractElementManipulator<T>
 {
+	@Override
 	public T handleContentChange(final T element, final TextRange range, String newContent) throws IncorrectOperationException
 	{
 		String oldText = element.getText();

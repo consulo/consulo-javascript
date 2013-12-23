@@ -35,22 +35,26 @@ public class JSParameterStubImpl extends JSVariableStubBaseImpl<JSParameter> imp
 		super(name, flags | (initial != null ? OPTIONAL_MASK : 0), type, initial, null, parentStub, JSElementTypes.FORMAL_PARAMETER);
 	}
 
+	@Override
 	public JSParameter createPsi()
 	{
 		return new JSParameterImpl(this);
 	}
 
+	@Override
 	protected int buildFlags(final JSParameter clazz)
 	{
 		final int i = super.buildFlags(clazz);
 		return i | (clazz.isRest() ? REST_MASK : 0) | (clazz.isOptional() ? OPTIONAL_MASK : 0);
 	}
 
+	@Override
 	public boolean isRest()
 	{
 		return (myFlags & REST_MASK) != 0;
 	}
 
+	@Override
 	public boolean isOptional()
 	{
 		return (myFlags & OPTIONAL_MASK) != 0;

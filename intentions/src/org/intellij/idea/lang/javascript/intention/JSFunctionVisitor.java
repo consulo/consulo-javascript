@@ -73,7 +73,8 @@ public class JSFunctionVisitor extends JSElementVisitor {
 
     static Iterable<JSElement> getEmbeddedJSElements(final XmlFile file) {
         return new Iterable<JSElement>() {
-                public Iterator<JSElement> iterator() {
+                @Override
+				public Iterator<JSElement> iterator() {
                     return new EmbeddedJSElementIterator(file);
                 }
             };
@@ -103,11 +104,13 @@ public class JSFunctionVisitor extends JSElementVisitor {
             this.findNext();
         }
 
-        public boolean hasNext() {
+        @Override
+		public boolean hasNext() {
             return (this.next != null);
         }
 
-        public JSElement next() {
+        @Override
+		public JSElement next() {
             if (this.next == null) {
                 throw new NoSuchElementException();
             }
@@ -160,7 +163,8 @@ public class JSFunctionVisitor extends JSElementVisitor {
             } while (this.next == null);
         }
 
-        public void remove() {
+        @Override
+		public void remove() {
             throw new UnsupportedOperationException();
         }
     }

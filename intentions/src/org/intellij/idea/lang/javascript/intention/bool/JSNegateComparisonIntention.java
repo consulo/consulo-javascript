@@ -28,7 +28,8 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 
 public class JSNegateComparisonIntention extends JSMutablyNamedIntention {
-    public String getTextForElement(PsiElement element) {
+    @Override
+	public String getTextForElement(PsiElement element) {
         final JSBinaryExpression expression          = (JSBinaryExpression) element;
         String                   operatorText        = "";
         String                   negatedOperatorText = "";
@@ -47,12 +48,14 @@ public class JSNegateComparisonIntention extends JSMutablyNamedIntention {
         }
     }
 
-    @NotNull
+    @Override
+	@NotNull
     public JSElementPredicate getElementPredicate() {
         return new ComparisonPredicate();
     }
 
-    public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+    @Override
+	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final JSBinaryExpression exp             = (JSBinaryExpression) element;
         final JSExpression       lhs             = exp.getLOperand();
         final JSExpression       rhs             = exp.getROperand();

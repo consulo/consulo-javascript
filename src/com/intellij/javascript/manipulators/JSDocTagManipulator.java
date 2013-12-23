@@ -14,6 +14,7 @@ import com.intellij.psi.PsiElement;
 
 public class JSDocTagManipulator extends JSAbstractElementManipulator<JSDocTag>
 {
+	@Override
 	protected JSDocTag createTree(final String newText, final JSLanguageDialect languageDialect, final Project project)
 	{
 		@NonNls String ToCreate = "/** " + newText + " */";
