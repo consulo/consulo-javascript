@@ -57,15 +57,6 @@ public class JavaScriptSupportLoader extends FileTypeFactory
 
 	public static final
 	@NonNls
-	String ECMA_SCRIPT_L4_FILE_EXTENSION2 = "js2";
-	private static final
-	@NonNls
-	String ECMA_SCRIPT_L4_FILE_EXTENSION3 = "es";
-	public static final
-	@NonNls
-	String JSON_FILE_EXTENSION = "json";
-	public static final
-	@NonNls
 	String MXML_FILE_EXTENSION_DOT = ".mxml";
 	public static final
 	@NonNls
@@ -115,12 +106,7 @@ public class JavaScriptSupportLoader extends FileTypeFactory
 		if(file != null)
 		{
 			final String extension = file.getExtension();
-			if(ECMA_SCRIPT_L4_FILE_EXTENSION2.equals(extension) ||
-					ECMA_SCRIPT_L4_FILE_EXTENSION3.equals(extension))
-			{
-				return ECMA_SCRIPT_L4;
-			}
-			else if(file.getFileType() == ActionScriptFileType.INSTANCE)
+			if(file.getFileType() == ActionScriptFileType.INSTANCE || file.getFileType() == EcmaScriptFileType.INSTANCE)
 			{
 				return ECMA_SCRIPT_L4;
 			}
@@ -139,9 +125,9 @@ public class JavaScriptSupportLoader extends FileTypeFactory
 	@Override
 	public void createFileTypes(final @NotNull FileTypeConsumer consumer)
 	{
-		consumer.consume(JavaScriptFileType.INSTANCE, "js;" + ECMA_SCRIPT_L4_FILE_EXTENSION2 + ";" +
-				ECMA_SCRIPT_L4_FILE_EXTENSION3);
+		consumer.consume(JavaScriptFileType.INSTANCE);
 		consumer.consume(JsonFileType.INSTANCE);
+		consumer.consume(EcmaScriptFileType.INSTANCE, "es;js2");
 		consumer.consume(ActionScriptFileType.INSTANCE);
 	}
 

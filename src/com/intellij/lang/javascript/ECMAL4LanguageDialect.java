@@ -29,7 +29,7 @@ public class ECMAL4LanguageDialect extends JSLanguageDialect
 
 	public String getFileExtension()
 	{
-		return JavaScriptSupportLoader.ECMA_SCRIPT_L4_FILE_EXTENSION2;
+		return EcmaScriptFileType.INSTANCE.getDefaultExtension();
 	}
 
 }

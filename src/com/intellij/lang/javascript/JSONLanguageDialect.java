@@ -14,7 +14,7 @@ public class JSONLanguageDialect extends JSLanguageDialect
 {
 	public String getFileExtension()
 	{
-		return JavaScriptSupportLoader.JSON_FILE_EXTENSION;
+		return JsonFileType.INSTANCE.getDefaultExtension();
 	}
 
 	public JSONLanguageDialect()
