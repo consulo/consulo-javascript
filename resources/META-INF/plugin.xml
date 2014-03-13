@@ -108,7 +108,7 @@
 
 		<inspectionToolProvider implementation="com.intellij.lang.javascript.inspections.JSInspectionToolProvider"/>
 		<targetElementEvaluator language="JavaScript" implementationClass="com.intellij.lang.javascript.JSTargetElementEvaluator"/>
-		<indexedRootsProvider implementation="com.intellij.lang.javascript.index.JSIndexedRootProvider"/>
+		<indexedRootsContributor implementation="com.intellij.lang.javascript.index.JSIndexedRootProvider"/>
 	</extensions>
 
 	<extensionPoints>
