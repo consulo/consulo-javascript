@@ -2,7 +2,7 @@
 	<id>org.mustbe.consulo.javascript</id>
 	<name>JavaScript Support</name>
 	<version>SNAPSHOT</version>
-	<category>Custom Language</category>
+	<category>Custom Languages</category>
 	<vendor>JetBrains</vendor>
 	<resource-bundle>com.intellij.lang.javascript.JavaScriptBundle</resource-bundle>
 	<depends>com.intellij.xml</depends>
