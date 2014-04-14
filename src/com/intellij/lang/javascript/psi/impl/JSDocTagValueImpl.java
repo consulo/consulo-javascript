@@ -112,7 +112,7 @@ public class JSDocTagValueImpl extends JSElementImpl implements JSDocTagValue
 					if(!"void".equals(textFragment))
 					{
 						final JSReferenceSet set = new JSReferenceSet(this, textFragment, localOffset, soft, false, false);
-						result = ArrayUtil.mergeArrays(result, set.getReferences(), PsiReference.class);
+						result = ArrayUtil.mergeArrays(result, set.getReferences(), PsiReference.ARRAY_FACTORY);
 					}
 				}
 			}
