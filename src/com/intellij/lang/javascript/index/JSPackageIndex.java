@@ -41,15 +41,7 @@ import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubTree;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
-import com.intellij.util.indexing.CustomImplementationFileBasedIndexExtension;
-import com.intellij.util.indexing.DataIndexer;
-import com.intellij.util.indexing.FileBasedIndex;
-import com.intellij.util.indexing.FileBasedIndexExtension;
-import com.intellij.util.indexing.FileContent;
-import com.intellij.util.indexing.ID;
-import com.intellij.util.indexing.IndexStorage;
-import com.intellij.util.indexing.MapReduceIndex;
-import com.intellij.util.indexing.UpdatableIndex;
+import com.intellij.util.indexing.*;
 import com.intellij.util.io.DataExternalizer;
 import com.intellij.util.io.EnumeratorStringDescriptor;
 import com.intellij.util.io.IOUtil;
@@ -315,11 +307,15 @@ public class JSPackageIndex extends CustomImplementationFileBasedIndexExtension<
 		return FileBasedIndexExtension.DEFAULT_CACHE_SIZE;
 	}
 
+	@NotNull
 	@Override
-	public UpdatableIndex<String, List<JSPackageIndexInfo>, FileContent> createIndexImplementation(ID<String, List<JSPackageIndexInfo>> indexId,
-			FileBasedIndex owner, IndexStorage<String, List<JSPackageIndexInfo>> indexStorage)
+	public UpdatableIndex<String, List<JSPackageIndexInfo>, FileContent> createIndexImplementation(
+			ID<String, List<JSPackageIndexInfo>> indexId,
+			@NotNull FileBasedIndex owner,
+			@NotNull IndexStorage<String, List<JSPackageIndexInfo>> storage) throws StorageException, IOException
 	{
-		return new MapReduceIndex<String, List<JSPackageIndexInfo>, FileContent>(indexId, myIndexer, indexStorage);
+
+		return new MapReduceIndex<String, List<JSPackageIndexInfo>, FileContent>(indexId, myIndexer, storage);
 	}
 
 	public interface PackageElementsProcessor
