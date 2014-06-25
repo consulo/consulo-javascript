@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.intellij.lang.javascript.formatter.blocks;
 
 import java.util.ArrayList;
