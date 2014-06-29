@@ -112,7 +112,7 @@
 		<bundledSdkProvider implementation="org.mustbe.consulo.javascript.client.module.sdk.ClientJavaScriptBundledSdkProvider" />
 		<moduleExtensionProvider key="client-javascript"
 				icon="/icons/javaScript.png"
-				name="Client JavaScript(Any Browser)"
+				name="JavaScript (Client)"
 				allowMixin="true"
 				immutableClass="org.mustbe.consulo.javascript.client.module.extension.ClientJavaScriptModuleExtension"
 				mutableClass="org.mustbe.consulo.javascript.client.module.extension.ClientJavaScriptMutableModuleExtension"/>
