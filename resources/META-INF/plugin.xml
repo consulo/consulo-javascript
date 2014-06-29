@@ -108,7 +108,14 @@
 
 		<inspectionToolProvider implementation="com.intellij.lang.javascript.inspections.JSInspectionToolProvider"/>
 		<targetElementEvaluator language="JavaScript" implementationClass="com.intellij.lang.javascript.JSTargetElementEvaluator"/>
-		<indexedRootsContributor implementation="com.intellij.lang.javascript.index.JSIndexedRootProvider"/>
+
+		<bundledSdkProvider implementation="org.mustbe.consulo.javascript.client.module.sdk.ClientJavaScriptBundledSdkProvider" />
+		<moduleExtensionProvider key="client-javascript"
+				icon="/icons/javaScript.png"
+				name="Client JavaScript(Any Browser)"
+				allowMixin="true"
+				immutableClass="org.mustbe.consulo.javascript.client.module.extension.ClientJavaScriptModuleExtension"
+				mutableClass="org.mustbe.consulo.javascript.client.module.extension.ClientJavaScriptMutableModuleExtension"/>
 	</extensions>
 
 	<extensionPoints>

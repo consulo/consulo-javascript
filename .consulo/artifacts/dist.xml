@@ -11,8 +11,10 @@
             <element id="module-production-resource-output" name="inspections" />
             <element id="module-output" name="intentions" />
             <element id="module-production-resource-output" name="intentions" />
+            <element id="module-output" name="client-javascript-impl" />
           </element>
         </element>
+        <element id="dir-copy" path="$PROJECT_DIR$/dist" />
       </element>
     </root>
   </artifact>

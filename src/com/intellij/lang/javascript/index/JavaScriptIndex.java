@@ -32,12 +32,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -49,10 +47,10 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.ProjectTopics;
 import com.intellij.javaee.UriUtil;
 import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.flex.FlexModuleExtension;
 import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
-import com.intellij.lang.javascript.index.predefined.Marker;
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.navigation.NavigationItem;
@@ -109,8 +107,6 @@ public final class JavaScriptIndex implements ProjectComponent
 	private final FileTypeManager myFileTypeManager;
 	private THashMap<String, JSIndexEntry> myOldJavaScriptFiles;
 	private THashMap<String, JSIndexEntry> myJavaScriptFiles = new THashMap<String, JSIndexEntry>();
-	private THashMap<String, JSIndexEntry> myPredefinedJavaScriptFiles = new THashMap<String, JSIndexEntry>();
-	private final THashSet<VirtualFile> myPredefinedJavaScriptVirtualFiles = new THashSet<VirtualFile>();
 
 	private final JSPackage myRootPackage = new JSPackage();
 	private static Key<JSIndexEntry> ourEntryKey = Key.create("js.indexentry");
@@ -129,16 +125,12 @@ public final class JavaScriptIndex implements ProjectComponent
 
 	@NonNls
 	private static final String JS_CACHES_DIR_NAME = "js_caches";
-	private static final byte CURRENT_VERSION = 127;
+	private static final int CURRENT_VERSION = 128;
 	static final Logger LOG = Logger.getInstance("#com.intellij.lang.javascript.index.JavaScriptIndex");
 
 	@NonNls
 	static final String DHTML_XML_FILE_NAME = "DHTML.xml";
 	public static final String ECMASCRIPT_JS2 = "ECMAScript.js2";
-	private static
-	@NonNls
-	Set<String> ourPredefinedFileNames = new LinkedHashSet<String>(Arrays.asList(ECMASCRIPT_JS2, "DOMCore.xml", DHTML_XML_FILE_NAME, "AJAX.xml",
-			"DOMEvents.xml", "DOMTraversalAndRange.xml", "DOMXPath.xml", "E4X.js2"));
 	@NonNls
 	static final String PREDEFINES_PREFIX = "predefines.";
 	private MessageBusConnection myConnection;
@@ -517,7 +509,7 @@ public final class JavaScriptIndex implements ProjectComponent
 
 	private boolean isAcceptableFile(final VirtualFile fileOrDir)
 	{
-		return myFileTypeManager.getFileTypeByFile(fileOrDir) == JavaScriptSupportLoader.JAVASCRIPT;
+		return fileOrDir.getFileType() == JavaScriptFileType.INSTANCE;
 	}
 
 	private void requestUpdateCaches()
@@ -601,33 +593,6 @@ public final class JavaScriptIndex implements ProjectComponent
 		return null;
 	}
 
-	private void initPredefines(ProgressIndicator progress)
-	{
-		for(String name : ourPredefinedFileNames)
-		{
-			initPredefinedFile(progress, name);
-		}
-	}
-
-	private void initPredefinedFile(final ProgressIndicator progress, final String name)
-	{
-		PsiFile file;
-		final JSIndexEntry indexEntry = myPredefinedJavaScriptFiles.get(name);
-
-		if(indexEntry == null)
-		{
-			if(progress != null)
-			{
-				progress.setText2(name);
-			}
-			file = createPredefinesFromModel(name);
-		}
-		else
-		{
-			file = indexEntry.getFile();
-		}
-	}
-
 	public synchronized void loadCaches(final ProgressIndicator progress)
 	{
 		DataInputStream input = null;
@@ -688,57 +653,48 @@ public final class JavaScriptIndex implements ProjectComponent
 					progress.setFraction(((double) i) / fileCount);
 				}
 
-				boolean predefined = ourPredefinedFileNames.contains(url);
 				boolean outdated = false;
 				final JSIndexEntry value;
 
-				if(!predefined)
+				VirtualFile relativeFile = UriUtil.findRelativeFile(url, null);
+
+				if(relativeFile == null || stamp != relativeFile.getTimeStamp())
 				{
-					VirtualFile relativeFile = UriUtil.findRelativeFile(url, null);
+					outdated = true;
+				}
 
-					if(relativeFile == null || stamp != relativeFile.getTimeStamp())
+				PsiFile psiFile = relativeFile != null ? manager.findFile(relativeFile) : null;
+				if(!(psiFile instanceof PsiFile))
+				{
+					outdated = true;
+				}
+
+				if(relativeFile != null && !outdated)
+				{
+					Module module = ProjectRootManager.getInstance(myProject).getFileIndex().getModuleForFile(relativeFile);
+
+					if(module == null)
 					{
-						outdated = true;
-					}
+						boolean ancestorOfUsedJdk = false;
 
-					PsiFile psiFile = relativeFile != null ? manager.findFile(relativeFile) : null;
-					if(!(psiFile instanceof PsiFile))
-					{
-						outdated = true;
-					}
-
-					if(relativeFile != null && !outdated)
-					{
-						Module module = ProjectRootManager.getInstance(myProject).getFileIndex().getModuleForFile(relativeFile);
-
-						if(module == null)
+						for(VirtualFile file : setOfExternalDefsRoots)
 						{
-							boolean ancestorOfUsedJdk = false;
-
-							for(VirtualFile file : setOfExternalDefsRoots)
+							if(VfsUtil.isAncestor(file, relativeFile, true))
 							{
-								if(VfsUtil.isAncestor(file, relativeFile, true))
-								{
-									ancestorOfUsedJdk = true;
-								}
+								ancestorOfUsedJdk = true;
 							}
-
-							outdated = !ancestorOfUsedJdk;
 						}
+
+						outdated = !ancestorOfUsedJdk;
 					}
-
-					final VirtualFile effectiveVirtualFile = outdated ? null : relativeFile;
-					value = new JSIndexEntry(context, effectiveVirtualFile);
-
 				}
-				else
-				{
-					value = new PredefinedJSIndexEntry(context, url);
-				}
+
+				final VirtualFile effectiveVirtualFile = outdated ? null : relativeFile;
+				value = new JSIndexEntry(context, effectiveVirtualFile);
 
 				if(!outdated)
 				{
-					((predefined) ? myPredefinedJavaScriptFiles : myJavaScriptFiles).put(url, value);
+					(myJavaScriptFiles).put(url, value);
 				}
 				else
 				{
@@ -786,8 +742,6 @@ public final class JavaScriptIndex implements ProjectComponent
 			{
 				progress.popState();
 			}
-
-			initPredefines(progress);
 		}
 	}
 
@@ -808,14 +762,12 @@ public final class JavaScriptIndex implements ProjectComponent
 			output = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(cacheFile)));
 			SerializationContext context = new SerializationContext(output, myProject, myJavaScriptFiles.size());
 
-			enumerateNames(myPredefinedJavaScriptFiles, context);
 			enumerateNames(myJavaScriptFiles, context);
 			myRootPackage.enumerateNames(context); // we need to enumerate packages AFTER passing all entries since revalidation of old files cause package
 			// update
 
 			output.writeByte(CURRENT_VERSION);
-			output.writeInt(context.getFilesCount() + myPredefinedJavaScriptFiles.size());
-
+			output.writeInt(context.getFilesCount());
 			int namesCount = context.myNames.size();
 			output.writeInt(namesCount);
 
@@ -831,7 +783,6 @@ public final class JavaScriptIndex implements ProjectComponent
 			assert namesCount == 0;
 
 			myRootPackage.serialize(context);
-			writeEntries(myPredefinedJavaScriptFiles, output, context);
 			writeEntries(myJavaScriptFiles, output, context);
 			output.close();
 		}
@@ -900,14 +851,6 @@ public final class JavaScriptIndex implements ProjectComponent
 			}
 			value.enumerateNames(context);
 		}
-	}
-
-	private PsiFile createPredefinesFromModel(final String fileName)
-	{
-		final JSIndexEntry value = new PredefinedJSIndexEntry(fileName, myProject, false);
-		myPredefinedJavaScriptFiles.put(fileName, value);
-		value.initTypesAndBrowserSpecifics();
-		return value.getFile();
 	}
 
 	private void fileAdded(final VirtualFile fileOrDir)
@@ -1054,7 +997,6 @@ public final class JavaScriptIndex implements ProjectComponent
 	public synchronized void clear()
 	{
 		myJavaScriptFiles.clear();
-		myPredefinedJavaScriptFiles.clear();
 		JSTypeEvaluateManager.getInstance(myProject).clear();
 		BrowserSupportManager.getInstance(myProject).clear();
 
@@ -1074,8 +1016,6 @@ public final class JavaScriptIndex implements ProjectComponent
 	{
 		assert processor.getBaseFile() != null;
 		boolean ecmaL4 = processor.getBaseFile().getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
-
-		processPredefinedEntries(processor, ecmaL4);
 
 		final PsiFile psiFile = processor.getBaseFile();
 		VirtualFile virtualFile = psiFile.getVirtualFile();
@@ -1174,18 +1114,6 @@ public final class JavaScriptIndex implements ProjectComponent
 					getEntryForNonJavaScriptFile(contextFile).processSymbolsNoLock(processor);
 				}
 			}
-		}
-	}
-
-	public synchronized void processPredefinedEntries(JavaScriptSymbolProcessor processor, boolean ecmaL4)
-	{
-		for(Map.Entry<String, JSIndexEntry> entry : myPredefinedJavaScriptFiles.entrySet())
-		{
-			if(ecmaL4 && entry.getValue().getFile().getLanguage() != JavaScriptSupportLoader.ECMA_SCRIPT_L4)
-			{
-				continue;
-			}
-			entry.getValue().processSymbolsNoLock(processor);
 		}
 	}
 
@@ -1303,13 +1231,7 @@ public final class JavaScriptIndex implements ProjectComponent
 		JSIndexEntry indexEntry = myJavaScriptFiles.get(fileName);
 		if(indexEntry == null)
 		{
-			String s = fileName;
-			if(s.startsWith(PREDEFINES_PREFIX))
-			{
-				s = fileName.substring(PREDEFINES_PREFIX.length());
-				s = s.substring(0, s.length() - PREDEFINED_SCRIPTS_FILE_EXTENSION.length() + 1) + "xml";
-			}
-			indexEntry = myPredefinedJavaScriptFiles.get(s);
+			return null;
 		}
 		return findSymbolWithNameAndOffsetInEntryNoLock(getIndexOf(name), offset, indexEntry);
 	}
@@ -1381,31 +1303,6 @@ public final class JavaScriptIndex implements ProjectComponent
 	public final Project getProject()
 	{
 		return myProject;
-	}
-
-	public Set<VirtualFile> getECMAScriptFilesSetFromEntries()
-	{
-		if(myPredefinedJavaScriptVirtualFiles.isEmpty())
-		{
-			for(String s : ourPredefinedFileNames)
-			{
-				if(s.endsWith(".xml"))
-				{
-					continue;
-				}
-				addOneFile(s);
-			}
-			addOneFile("ECMAScript_Additional.js2");
-		}
-		return myPredefinedJavaScriptVirtualFiles;
-	}
-
-	private void addOneFile(String s)
-	{
-		URL resource = Marker.class.getResource(s);
-		VirtualFile path = VfsUtil.findFileByURL(resource);
-		assert path != null;
-		myPredefinedJavaScriptVirtualFiles.add(path);
 	}
 
 	interface MyEntryProcessor<T, T2>

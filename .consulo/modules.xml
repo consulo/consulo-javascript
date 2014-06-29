@@ -75,6 +75,17 @@
         </orderEntry>
         <orderEntry type="module" module-name="consulo-javascript" />
       </module>
+      <module name="client-javascript-impl" dirurl="file://$PROJECT_DIR$/client-javascript-impl">
+        <extension id="consulo-plugin" sdk-module-name="consulo-javascript" sdk-name="" />
+        <extension id="java" sdk-module-name="consulo-javascript" sdk-name="" language-level-module-name="consulo-javascript" language-level-name="" special-dir-location="SOURCE_DIR" />
+        <content url="file://$MODULE_DIR$">
+          <content-folder type="PRODUCTION" url="file://$MODULE_DIR$/src" />
+        </content>
+        <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
+        <orderEntry type="module-extension-sdk" extension-id="java" />
+        <orderEntry type="sourceFolder" forTests="false" />
+        <orderEntry type="module" module-name="consulo-javascript" />
+      </module>
     </modules>
   </component>
 </project>
