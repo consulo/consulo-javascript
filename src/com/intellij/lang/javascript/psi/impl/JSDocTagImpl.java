@@ -215,7 +215,10 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag
 				return null;
 			}
 			PsiComment psiComment = PsiTreeUtil.getParentOfType(elt, PsiComment.class);
-			assert psiComment != null;
+			if(psiComment == null)
+			{
+				return null;
+			}
 			final PsiElement parent = psiComment.getParent();
 			if(parent instanceof PsiComment)
 			{
