@@ -15,14 +15,12 @@
           <orderEntry type="sourceFolder" forTests="false" />
           <orderEntry type="module-library">
             <library name="consulo:XML">
-              <CLASSES>
+              <binaries>
                 <root url="jar://$MODULE_DIR$/dep/xml/lib/jsr173_1.0_api.jar!/" />
                 <root url="jar://$MODULE_DIR$/dep/xml/lib/resolver.jar!/" />
                 <root url="jar://$MODULE_DIR$/dep/xml/lib/xerces.jar!/" />
                 <root url="jar://$MODULE_DIR$/dep/xml/lib/xml.jar!/" />
-              </CLASSES>
-              <DOCUMENTATION />
-              <SOURCES />
+              </binaries>
             </library>
           </orderEntry>
           <orderEntry type="module" module-name="inspections" />
@@ -43,14 +41,12 @@
           <orderEntry type="module" module-name="consulo-javascript" />
           <orderEntry type="module-library">
             <library name="consulo:XML">
-              <CLASSES>
+              <binaries>
                 <root url="jar://$MODULE_DIR$/../dep/xml/lib/jsr173_1.0_api.jar!/" />
                 <root url="jar://$MODULE_DIR$/../dep/xml/lib/resolver.jar!/" />
                 <root url="jar://$MODULE_DIR$/../dep/xml/lib/xerces.jar!/" />
                 <root url="jar://$MODULE_DIR$/../dep/xml/lib/xml.jar!/" />
-              </CLASSES>
-              <DOCUMENTATION />
-              <SOURCES />
+              </binaries>
             </library>
           </orderEntry>
         </module-layer>
@@ -68,14 +64,12 @@
           <orderEntry type="sourceFolder" forTests="false" />
           <orderEntry type="module-library">
             <library name="consulo:XML">
-              <CLASSES>
+              <binaries>
                 <root url="jar://$MODULE_DIR$/../dep/xml/lib/jsr173_1.0_api.jar!/" />
                 <root url="jar://$MODULE_DIR$/../dep/xml/lib/resolver.jar!/" />
                 <root url="jar://$MODULE_DIR$/../dep/xml/lib/xerces.jar!/" />
                 <root url="jar://$MODULE_DIR$/../dep/xml/lib/xml.jar!/" />
-              </CLASSES>
-              <DOCUMENTATION />
-              <SOURCES />
+              </binaries>
             </library>
           </orderEntry>
           <orderEntry type="module" module-name="consulo-javascript" />

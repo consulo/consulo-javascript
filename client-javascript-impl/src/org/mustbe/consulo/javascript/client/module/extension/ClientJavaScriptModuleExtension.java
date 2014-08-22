@@ -14,7 +14,7 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModuleRootLayer;
 
 /**
  * @author VISTALL
@@ -25,7 +25,7 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionImpl<ClientJ
 {
 	private ModuleInheritableNamedPointerImpl<Sdk> myPointer;
 
-	public ClientJavaScriptModuleExtension(@NotNull String id, @NotNull ModifiableRootModel rootModel)
+	public ClientJavaScriptModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootModel)
 	{
 		super(id, rootModel);
 		myPointer = new ModuleInheritableNamedPointerImpl<Sdk>(getProject(), id)
