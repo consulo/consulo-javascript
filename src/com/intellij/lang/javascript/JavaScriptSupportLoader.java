@@ -19,6 +19,7 @@ package com.intellij.lang.javascript;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.lang.DependentLanguage;
 import com.intellij.lang.LanguageParserDefinitions;
 import com.intellij.lang.LanguageVersion;
@@ -31,7 +32,6 @@ import com.intellij.openapi.fileTypes.FileTypeFactory;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.fileTypes.SingleLazyInstanceSyntaxHighlighterFactory;
-import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
 import com.intellij.openapi.project.Project;
@@ -134,12 +134,12 @@ public class JavaScriptSupportLoader extends FileTypeFactory
 
 	public static boolean isFlexMxmFile(final PsiFile file)
 	{
-		return file.getFileType() == StdFileTypes.XML && nameHasMxmlExtension(file.getName());
+		return file.getFileType() == XmlFileType.INSTANCE && nameHasMxmlExtension(file.getName());
 	}
 
 	public static boolean isFlexMxmFile(final VirtualFile file)
 	{
-		return file.getFileType() == StdFileTypes.XML && nameHasMxmlExtension(file.getName());
+		return file.getFileType() == XmlFileType.INSTANCE && nameHasMxmlExtension(file.getName());
 	}
 
 	private static boolean nameHasMxmlExtension(final String s)
@@ -149,7 +149,7 @@ public class JavaScriptSupportLoader extends FileTypeFactory
 
 	public static boolean isFlexMxmFile(String filename)
 	{
-		return FileTypeManager.getInstance().getFileTypeByFileName(filename) == StdFileTypes.XML && nameHasMxmlExtension(filename);
+		return FileTypeManager.getInstance().getFileTypeByFileName(filename) == XmlFileType.INSTANCE && nameHasMxmlExtension(filename);
 	}
 
 	public static boolean isBindowsFile(final PsiElement element)
