@@ -73,6 +73,7 @@
 
 		<fileTypeIndentOptionsProvider implementation="com.intellij.lang.javascript.formatter.JavaScriptIndentOptionsProvider"/>
 		<codeStyleSettingsProvider implementation="com.intellij.lang.javascript.formatter.JSCodeStyleSettingsProvider"/>
+		<langCodeStyleSettingsProvider implementation="com.intellij.lang.javascript.formatter.JavaScriptLanguageCodeStyleSettingsProvider" />
 		<liveTemplateContext implementation="com.intellij.lang.javascript.JavaScriptCodeContextType"/>
 
 		<codeInsight.lineMarkerProvider language="JavaScript"

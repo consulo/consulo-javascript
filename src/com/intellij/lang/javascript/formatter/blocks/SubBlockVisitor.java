@@ -31,7 +31,6 @@ import com.intellij.lang.javascript.JSNodeVisitor;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.formatter.JSCodeStyleSettings;
 import com.intellij.lang.javascript.formatter.JSSpacingProcessor;
-import com.intellij.lang.javascript.formatter.Util;
 import com.intellij.lang.javascript.psi.JSAssignmentExpression;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -354,7 +353,7 @@ public class SubBlockVisitor extends JSNodeVisitor
 			if(child.getElementType() == assignment.getOperationSign() && mySettings.PLACE_ASSIGNMENT_SIGN_ON_NEXT_LINE || child.getPsi() == assignment
 					.getROperand() && !mySettings.PLACE_ASSIGNMENT_SIGN_ON_NEXT_LINE)
 			{
-				wrapType = Util.getWrapType(mySettings.ASSIGNMENT_WRAP);
+				wrapType = WrapType.byLegacyRepresentation(mySettings.ASSIGNMENT_WRAP);
 			}
 		}
 		else if(node.getElementType() == JSElementTypes.BINARY_EXPRESSION)
@@ -363,7 +362,7 @@ public class SubBlockVisitor extends JSNodeVisitor
 			if(child.getElementType() == binary.getOperationSign() && mySettings.BINARY_OPERATION_SIGN_ON_NEXT_LINE || child.getPsi() == binary.getROperand()
 					&& !mySettings.BINARY_OPERATION_SIGN_ON_NEXT_LINE)
 			{
-				wrapType = Util.getWrapType(mySettings.BINARY_OPERATION_WRAP);
+				wrapType = WrapType.byLegacyRepresentation(mySettings.BINARY_OPERATION_WRAP);
 			}
 		}
 		else if(node.getElementType() == JSElementTypes.PARENTHESIZED_EXPRESSION)
@@ -394,7 +393,7 @@ public class SubBlockVisitor extends JSNodeVisitor
 			if((mySettings.TERNARY_OPERATION_SIGNS_ON_NEXT_LINE && (elementType == JSTokenTypes.QUEST || elementType == JSTokenTypes.COLON)) || (!mySettings
 					.TERNARY_OPERATION_SIGNS_ON_NEXT_LINE && child.getPsi() instanceof JSExpression))
 			{
-				wrapType = Util.getWrapType(mySettings.TERNARY_OPERATION_WRAP);
+				wrapType = WrapType.byLegacyRepresentation(mySettings.TERNARY_OPERATION_WRAP);
 			}
 		}
 		else if(node.getElementType() == JSElementTypes.CALL_EXPRESSION)
@@ -412,14 +411,14 @@ public class SubBlockVisitor extends JSNodeVisitor
 		{
 			if(child.getElementType() == JSElementTypes.FORMAL_PARAMETER)
 			{
-				wrapType = Util.getWrapType(mySettings.METHOD_PARAMETERS_WRAP);
+				wrapType = WrapType.byLegacyRepresentation(mySettings.METHOD_PARAMETERS_WRAP);
 			}
 		}
 		else if(node.getElementType() == JSElementTypes.FOR_STATEMENT || node.getElementType() == JSElementTypes.FOR_IN_STATEMENT)
 		{
 			if(JSElementTypes.EXPRESSIONS.contains(child.getElementType()))
 			{
-				wrapType = Util.getWrapType(mySettings.FOR_STATEMENT_WRAP);
+				wrapType = WrapType.byLegacyRepresentation(mySettings.FOR_STATEMENT_WRAP);
 			}
 		}
 
