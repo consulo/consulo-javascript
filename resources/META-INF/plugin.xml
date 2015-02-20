@@ -12,6 +12,8 @@
 
 	<extensions defaultExtensionNs="com.intellij">
 		<errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
+		<copyright.updater filetype="JavaScript" implementationClass="org.mustbe.consulo.javascript.copyright.UpdateJavaScriptFileCopyrightProvider"/>
+
 		<colorSettingsPage implementation="com.intellij.lang.javascript.highlighting.JavaScriptColorsAndFontsPage"/>
 		<gotoSymbolContributor implementation="com.intellij.lang.javascript.index.JavaScriptSymbolContributor"/>
 		<gotoClassContributor implementation="com.intellij.lang.javascript.index.JavaScriptClassContributor"/>
@@ -73,6 +75,7 @@
 
 		<fileTypeIndentOptionsProvider implementation="com.intellij.lang.javascript.formatter.JavaScriptIndentOptionsProvider"/>
 		<codeStyleSettingsProvider implementation="com.intellij.lang.javascript.formatter.JSCodeStyleSettingsProvider"/>
+		<langCodeStyleSettingsProvider implementation="com.intellij.lang.javascript.formatter.JavaScriptLanguageCodeStyleSettingsProvider"/>
 		<liveTemplateContext implementation="com.intellij.lang.javascript.JavaScriptCodeContextType"/>
 
 		<codeInsight.lineMarkerProvider language="JavaScript"
@@ -109,13 +112,13 @@
 		<inspectionToolProvider implementation="com.intellij.lang.javascript.inspections.JSInspectionToolProvider"/>
 		<targetElementEvaluator language="JavaScript" implementationClass="com.intellij.lang.javascript.JSTargetElementEvaluator"/>
 
-		<bundledSdkProvider implementation="org.mustbe.consulo.javascript.client.module.sdk.ClientJavaScriptBundledSdkProvider" />
+		<bundledSdkProvider implementation="org.mustbe.consulo.javascript.client.module.sdk.ClientJavaScriptBundledSdkProvider"/>
 		<moduleExtensionProvider key="client-javascript"
-				icon="/icons/javaScript.png"
-				name="JavaScript (Client)"
-				allowMixin="true"
-				immutableClass="org.mustbe.consulo.javascript.client.module.extension.ClientJavaScriptModuleExtension"
-				mutableClass="org.mustbe.consulo.javascript.client.module.extension.ClientJavaScriptMutableModuleExtension"/>
+								 icon="/icons/javaScript.png"
+								 name="JavaScript (Client)"
+								 allowMixin="true"
+								 immutableClass="org.mustbe.consulo.javascript.client.module.extension.ClientJavaScriptModuleExtension"
+								 mutableClass="org.mustbe.consulo.javascript.client.module.extension.ClientJavaScriptMutableModuleExtension"/>
 	</extensions>
 
 	<extensionPoints>
