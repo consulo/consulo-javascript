@@ -6,7 +6,7 @@ import org.consulo.module.extension.impl.ModuleInheritableNamedPointerImpl;
 import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.javascript.client.module.sdk.ClientJavaScriptBundledSdkProvider;
+import org.mustbe.consulo.javascript.client.module.sdk.ClientJavaScriptPredefinedBundlesProvider;
 import org.mustbe.consulo.javascript.module.extension.JavaScriptModuleExtension;
 import org.mustbe.consulo.sdk.SdkUtil;
 import com.intellij.openapi.module.Module;
@@ -61,7 +61,7 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionImpl<ClientJ
 				return SdkUtil.createPointer(name);
 			}
 		};
-		myPointer.set(null, ClientJavaScriptBundledSdkProvider.ANY_JAVASCRIPT_SDK);
+		myPointer.set(null, ClientJavaScriptPredefinedBundlesProvider.ANY_JAVASCRIPT_SDK);
 	}
 
 	@NotNull

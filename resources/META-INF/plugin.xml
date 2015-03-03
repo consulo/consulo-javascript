@@ -112,7 +112,7 @@
 		<inspectionToolProvider implementation="com.intellij.lang.javascript.inspections.JSInspectionToolProvider"/>
 		<targetElementEvaluator language="JavaScript" implementationClass="com.intellij.lang.javascript.JSTargetElementEvaluator"/>
 
-		<bundledSdkProvider implementation="org.mustbe.consulo.javascript.client.module.sdk.ClientJavaScriptBundledSdkProvider"/>
+		<predefinedBundlesProvider implementation="org.mustbe.consulo.javascript.client.module.sdk.ClientJavaScriptPredefinedBundlesProvider"/>
 		<moduleExtensionProvider key="client-javascript"
 								 icon="/icons/javaScript.png"
 								 name="JavaScript (Client)"
