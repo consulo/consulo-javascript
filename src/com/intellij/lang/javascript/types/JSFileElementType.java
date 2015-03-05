@@ -15,6 +15,7 @@
  */
 package com.intellij.lang.javascript.types;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.Language;
 import com.intellij.psi.tree.IStubFileElementType;
 
@@ -23,13 +24,14 @@ import com.intellij.psi.tree.IStubFileElementType;
  */
 public class JSFileElementType extends IStubFileElementType
 {
-	public static final int VERSION = 22;
+	public static final int VERSION = 23;
 
 	public JSFileElementType(final Language language)
 	{
 		super(language);
 	}
 
+	@NotNull
 	@Override
 	public String getExternalId()
 	{

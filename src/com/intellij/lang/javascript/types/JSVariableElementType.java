@@ -18,12 +18,15 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.JSVariable;
+import com.intellij.lang.javascript.psi.impl.JSVariableImpl;
 import com.intellij.lang.javascript.psi.stubs.JSVariableStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSVariableStubImpl;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.tree.IElementType;
@@ -35,26 +38,9 @@ import com.intellij.psi.tree.IElementType;
  */
 public class JSVariableElementType extends JSStubElementType<JSVariableStub, JSVariable>
 {
-	private static final JSStubGenerator<JSVariableStub, JSVariable> ourStubGenerator = new JSStubGenerator<JSVariableStub, JSVariable>()
-	{
-		@Override
-		public JSVariableStub newInstance(final StubInputStream dataStream, final StubElement parentStub, final JSStubElementType<JSVariableStub,
-				JSVariable> elementType) throws IOException
-		{
-			return new JSVariableStubImpl(dataStream, parentStub, elementType);
-		}
-
-		@Override
-		public JSVariableStub newInstance(final JSVariable psi, final StubElement parentStub, final JSStubElementType<JSVariableStub,
-				JSVariable> elementType)
-		{
-			return new JSVariableStubImpl(psi, parentStub, elementType);
-		}
-	};
-
 	public JSVariableElementType()
 	{
-		super("VARIABLE", ourStubGenerator);
+		super("VARIABLE");
 	}
 
 	@Override
@@ -64,5 +50,34 @@ public class JSVariableElementType extends JSStubElementType<JSVariableStub, JSV
 		return discriminatingParentType == JSElementTypes.PACKAGE_STATEMENT ||
 				discriminatingParentType == JSElementTypes.CLASS ||
 				discriminatingParentType instanceof JSFileElementType;
+	}
+
+	@Override
+	public JSVariableStub newInstance(final StubInputStream dataStream,
+			final StubElement parentStub,
+			final JSStubElementType<JSVariableStub, JSVariable> elementType) throws IOException
+	{
+		return new JSVariableStubImpl(dataStream, parentStub, elementType);
+	}
+
+	@Override
+	public JSVariableStub newInstance(final JSVariable psi,
+			final StubElement parentStub,
+			final JSStubElementType<JSVariableStub, JSVariable> elementType)
+	{
+		return new JSVariableStubImpl(psi, parentStub, elementType);
+	}
+
+	@NotNull
+	@Override
+	public PsiElement createElement(@NotNull ASTNode astNode)
+	{
+		return new JSVariableImpl(astNode);
+	}
+
+	@Override
+	public JSVariable createPsi(@NotNull JSVariableStub stub)
+	{
+		return new JSVariableImpl(stub);
 	}
 }

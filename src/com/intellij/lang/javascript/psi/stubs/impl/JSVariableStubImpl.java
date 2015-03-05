@@ -20,7 +20,6 @@ import java.io.IOException;
 
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSVariable;
-import com.intellij.lang.javascript.psi.impl.JSVariableImpl;
 import com.intellij.lang.javascript.psi.stubs.JSVariableStub;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
@@ -46,11 +45,5 @@ public class JSVariableStubImpl extends JSVariableStubBaseImpl<JSVariable> imple
 	public JSVariableStubImpl(final String name, int flags, String type, String initial, String qName, final StubElement parentStub)
 	{
 		super(name, flags, type, initial, qName, parentStub, JSElementTypes.VARIABLE);
-	}
-
-	@Override
-	public JSVariable createPsi()
-	{
-		return new JSVariableImpl(this);
 	}
 }

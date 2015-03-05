@@ -18,10 +18,14 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
+import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSFunctionExpression;
 import com.intellij.lang.javascript.psi.JSStubElementType;
+import com.intellij.lang.javascript.psi.impl.JSFunctionExpressionImpl;
 import com.intellij.lang.javascript.psi.stubs.JSFunctionExpressionStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSFunctionExpressionStubImpl;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 
@@ -32,26 +36,37 @@ import com.intellij.psi.stubs.StubInputStream;
  */
 public class JSFunctionExpressionElementType extends JSStubElementType<JSFunctionExpressionStub, JSFunctionExpression>
 {
-	private static final JSStubGenerator<JSFunctionExpressionStub, JSFunctionExpression> ourStubGenerator = new
-			JSStubGenerator<JSFunctionExpressionStub, JSFunctionExpression>()
-	{
-		@Override
-		public JSFunctionExpressionStub newInstance(final StubInputStream dataStream, final StubElement parentStub,
-				final JSStubElementType<JSFunctionExpressionStub, JSFunctionExpression> elementType) throws IOException
-		{
-			return new JSFunctionExpressionStubImpl(dataStream, parentStub, elementType);
-		}
-
-		@Override
-		public JSFunctionExpressionStub newInstance(final JSFunctionExpression psi, final StubElement parentStub,
-				final JSStubElementType<JSFunctionExpressionStub, JSFunctionExpression> elementType)
-		{
-			return new JSFunctionExpressionStubImpl(psi, parentStub, elementType);
-		}
-	};
-
 	public JSFunctionExpressionElementType()
 	{
-		super("FUNCTION_EXPRESSION", ourStubGenerator);
+		super("FUNCTION_EXPRESSION");
+	}
+
+	@Override
+	public JSFunctionExpressionStub newInstance(final StubInputStream dataStream,
+			final StubElement parentStub,
+			final JSStubElementType<JSFunctionExpressionStub, JSFunctionExpression> elementType) throws IOException
+	{
+		return new JSFunctionExpressionStubImpl(dataStream, parentStub, elementType);
+	}
+
+	@Override
+	public JSFunctionExpressionStub newInstance(final JSFunctionExpression psi,
+			final StubElement parentStub,
+			final JSStubElementType<JSFunctionExpressionStub, JSFunctionExpression> elementType)
+	{
+		return new JSFunctionExpressionStubImpl(psi, parentStub, elementType);
+	}
+
+	@NotNull
+	@Override
+	public PsiElement createElement(@NotNull ASTNode astNode)
+	{
+		return new JSFunctionExpressionImpl(astNode);
+	}
+
+	@Override
+	public JSFunctionExpression createPsi(@NotNull JSFunctionExpressionStub stub)
+	{
+		return new JSFunctionExpressionImpl(stub, this);
 	}
 }

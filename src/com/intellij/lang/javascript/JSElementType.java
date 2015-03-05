@@ -16,14 +16,8 @@
 
 package com.intellij.lang.javascript;
 
-import java.lang.reflect.Constructor;
-
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.psi.JSElement;
-import com.intellij.lang.javascript.types.PsiGenerator;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.tree.IElementType;
 
 /**
@@ -31,71 +25,11 @@ import com.intellij.psi.tree.IElementType;
  * User: max
  * Date: Jan 27, 2005
  * Time: 6:38:56 PM
- * To change this template use File | Settings | File Templates.
  */
-public class JSElementType extends IElementType implements PsiGenerator<JSElement>
+public class JSElementType extends IElementType
 {
-	private Constructor<JSElement> constructor;
-	private static final Logger LOG = Logger.getInstance("JSElementType.PsiGenerator");
-
 	public JSElementType(@NonNls @NotNull String debugName)
 	{
-		this(debugName, true);
-	}
-
-	public JSElementType(@NonNls @NotNull String debugName, boolean register)
-	{
-		super(debugName, JavaScriptSupportLoader.JAVASCRIPT.getLanguage(), null, register);
-
-		final StringBuilder builder = new StringBuilder("com.intellij.lang.javascript.psi.impl.JS");
-		boolean doUp = false;
-		for(int i = 0; i < debugName.length(); ++i)
-		{
-			final char ch = debugName.charAt(i);
-			if(ch == '_')
-			{
-				doUp = true;
-				continue;
-			}
-
-			builder.append(i == 0 || doUp ? Character.toUpperCase(ch) : Character.toLowerCase(ch));
-			doUp = false;
-		}
-
-		builder.append("Impl");
-
-		final String s = builder.toString();
-		try
-		{
-			constructor = (Constructor<JSElement>) Class.forName(s).getConstructor(ASTNode.class);
-		}
-		catch(Exception e)
-		{
-		}
-	}
-
-	@Override
-	@SuppressWarnings({"HardCodedStringLiteral"})
-	public String toString()
-	{
-		return "JS:" + super.toString();
-	}
-
-	@Override
-	public JSElement construct(ASTNode node)
-	{
-		if(constructor == null)
-		{
-			return null;
-		}
-		try
-		{
-			return constructor.newInstance(node);
-		}
-		catch(Exception ex)
-		{
-			LOG.error(ex);
-			throw new RuntimeException(ex);
-		}
+		super(debugName, JavascriptLanguage.INSTANCE);
 	}
 }

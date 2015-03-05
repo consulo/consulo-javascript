@@ -21,7 +21,6 @@ import java.io.IOException;
 
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSVarStatement;
-import com.intellij.lang.javascript.psi.impl.JSVarStatementImpl;
 import com.intellij.lang.javascript.psi.stubs.JSVarStatementStub;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.IndexSink;
@@ -49,12 +48,6 @@ public class JSVarStatementStubImpl extends StubBase<JSVarStatement> implements 
 	public JSVarStatementStubImpl(final StubElement parentStub)
 	{
 		super(parentStub, JSElementTypes.VAR_STATEMENT);
-	}
-
-	@Override
-	public JSVarStatement createPsi()
-	{
-		return new JSVarStatementImpl(this);
 	}
 
 	@Override

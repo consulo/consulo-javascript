@@ -20,7 +20,6 @@ import java.io.IOException;
 
 import com.intellij.lang.javascript.psi.JSNamespaceDeclaration;
 import com.intellij.lang.javascript.psi.JSStubElementType;
-import com.intellij.lang.javascript.psi.impl.JSNamespaceDeclarationImpl;
 import com.intellij.lang.javascript.psi.stubs.JSNamespaceDeclarationStub;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -47,12 +46,6 @@ public class JSNamespaceDeclarationStubImpl extends JSQualifiedObjectStubBase<JS
 	{
 		super(psi, parentStub, type);
 		myInitialValueString = psi.getInitialValueString();
-	}
-
-	@Override
-	public JSNamespaceDeclaration createPsi()
-	{
-		return new JSNamespaceDeclarationImpl(this);
 	}
 
 	@Override

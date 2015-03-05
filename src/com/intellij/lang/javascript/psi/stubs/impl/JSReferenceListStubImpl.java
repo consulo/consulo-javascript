@@ -21,7 +21,6 @@ import java.io.IOException;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.lang.javascript.psi.JSReferenceList;
 import com.intellij.lang.javascript.psi.JSStubElementType;
-import com.intellij.lang.javascript.psi.impl.JSReferenceListImpl;
 import com.intellij.lang.javascript.psi.stubs.JSReferenceListStub;
 import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubBase;
@@ -81,12 +80,6 @@ public class JSReferenceListStubImpl extends StubBase<JSReferenceList> implement
 		{
 			myRefs = ArrayUtil.EMPTY_STRING_ARRAY;
 		}
-	}
-
-	@Override
-	public JSReferenceList createPsi()
-	{
-		return new JSReferenceListImpl(this);
 	}
 
 	@Override

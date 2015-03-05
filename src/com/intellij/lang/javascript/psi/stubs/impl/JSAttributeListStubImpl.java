@@ -20,7 +20,6 @@ import java.io.IOException;
 
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSAttributeList;
-import com.intellij.lang.javascript.psi.impl.JSAttributeListImpl;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeListStub;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.IndexSink;
@@ -85,12 +84,6 @@ public class JSAttributeListStubImpl extends StubBase<JSAttributeList> implement
 			setFlag(type, true);
 		}
 		myNamespace = namespace;
-	}
-
-	@Override
-	public JSAttributeList createPsi()
-	{
-		return new JSAttributeListImpl(this);
 	}
 
 	@Override

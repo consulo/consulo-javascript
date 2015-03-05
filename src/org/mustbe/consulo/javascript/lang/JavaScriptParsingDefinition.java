@@ -13,7 +13,6 @@ import com.intellij.lang.javascript.psi.impl.JSFileImpl;
 import com.intellij.lang.javascript.psi.impl.JSFunctionImpl;
 import com.intellij.lang.javascript.psi.impl.JSParameterImpl;
 import com.intellij.lang.javascript.psi.impl.JSReferenceListImpl;
-import com.intellij.lang.javascript.types.PsiGenerator;
 import com.intellij.lexer.Lexer;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
@@ -39,28 +38,8 @@ public class JavaScriptParsingDefinition extends LanguageVersionableParserDefini
 	public PsiElement createElement(ASTNode node)
 	{
 		final IElementType type = node.getElementType();
-		if(type instanceof PsiGenerator)
-		{
-			final PsiElement element = ((PsiGenerator) type).construct(node);
-			if(element != null)
-			{
-				return element;
-			}
-		}
 
-		if(type == JSElementTypes.FUNCTION_DECLARATION)
-		{
-			return new JSFunctionImpl(node);
-		}
-		else if(type == JSElementTypes.EXTENDS_LIST || type == JSElementTypes.IMPLEMENTS_LIST)
-		{
-			return new JSReferenceListImpl(node);
-		}
-		else if(type == JSElementTypes.FORMAL_PARAMETER)
-		{
-			return new JSParameterImpl(node);
-		}
-		else if(type == JSElementTypes.EMBEDDED_CONTENT)
+		if(type == JSElementTypes.EMBEDDED_CONTENT)
 		{
 			return new JSEmbeddedContentImpl(node);
 		}

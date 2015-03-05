@@ -20,7 +20,6 @@ import java.io.IOException;
 
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSParameter;
-import com.intellij.lang.javascript.psi.impl.JSParameterImpl;
 import com.intellij.lang.javascript.psi.stubs.JSParameterStub;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
@@ -49,12 +48,6 @@ public class JSParameterStubImpl extends JSVariableStubBaseImpl<JSParameter> imp
 	public JSParameterStubImpl(final String name, int flags, String type, String initial, final StubElement parentStub)
 	{
 		super(name, flags | (initial != null ? OPTIONAL_MASK : 0), type, initial, null, parentStub, JSElementTypes.FORMAL_PARAMETER);
-	}
-
-	@Override
-	public JSParameter createPsi()
-	{
-		return new JSParameterImpl(this);
 	}
 
 	@Override

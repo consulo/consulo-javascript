@@ -43,7 +43,6 @@ import com.intellij.util.IncorrectOperationException;
  * User: max
  * Date: Jan 30, 2005
  * Time: 11:24:42 PM
- * To change this template use File | Settings | File Templates.
  */
 public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperExpression
 {

@@ -20,7 +20,6 @@ import java.io.IOException;
 
 import com.intellij.lang.javascript.psi.JSPackageStatement;
 import com.intellij.lang.javascript.psi.JSStubElementType;
-import com.intellij.lang.javascript.psi.impl.JSPackageStatementImpl;
 import com.intellij.lang.javascript.psi.stubs.JSPackageStatementStub;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -42,12 +41,6 @@ public class JSPackageStatementStubImpl extends JSQualifiedObjectStubBase<JSPack
 			JSPackageStatement> type)
 	{
 		super(psi, parentStub, type);
-	}
-
-	@Override
-	public JSPackageStatement createPsi()
-	{
-		return new JSPackageStatementImpl(this);
 	}
 
 	@Override

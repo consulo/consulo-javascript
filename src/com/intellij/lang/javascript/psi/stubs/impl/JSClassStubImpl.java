@@ -22,7 +22,6 @@ import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSReferenceList;
 import com.intellij.lang.javascript.psi.JSStubElementType;
-import com.intellij.lang.javascript.psi.impl.JSClassImpl;
 import com.intellij.lang.javascript.psi.stubs.JSClassStub;
 import com.intellij.lang.javascript.psi.stubs.JSImplementedInterfacesIndex;
 import com.intellij.lang.javascript.psi.stubs.JSSuperClassIndex;
@@ -105,11 +104,5 @@ public class JSClassStubImpl extends JSQualifiedObjectStubBase<JSClass> implemen
 				sink.occurrence(indexKey, s.substring(s.lastIndexOf('.') + 1));
 			}
 		}
-	}
-
-	@Override
-	public JSClass createPsi()
-	{
-		return new JSClassImpl(this);
 	}
 }

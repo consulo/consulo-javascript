@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.psi.stubs;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.types.JSFileElementType;
 import com.intellij.psi.stubs.StringStubIndexExtension;
@@ -26,6 +27,7 @@ public class JSSuperClassIndex extends StringStubIndexExtension<JSClass>
 	public static final StubIndexKey<String, JSClass> KEY = StubIndexKey.createIndexKey("JS.class.super");
 	private static final int VERSION = 1;
 
+	@NotNull
 	@Override
 	public StubIndexKey<String, JSClass> getKey()
 	{

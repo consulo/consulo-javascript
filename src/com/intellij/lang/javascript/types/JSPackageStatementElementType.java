@@ -18,10 +18,14 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
+import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSPackageStatement;
 import com.intellij.lang.javascript.psi.JSStubElementType;
+import com.intellij.lang.javascript.psi.impl.JSPackageStatementImpl;
 import com.intellij.lang.javascript.psi.stubs.JSPackageStatementStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSPackageStatementStubImpl;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 
@@ -32,26 +36,37 @@ import com.intellij.psi.stubs.StubInputStream;
  */
 public class JSPackageStatementElementType extends JSStubElementType<JSPackageStatementStub, JSPackageStatement>
 {
-	private static final JSStubGenerator<JSPackageStatementStub, JSPackageStatement> ourStubGenerator = new JSStubGenerator<JSPackageStatementStub,
-			JSPackageStatement>()
-	{
-		@Override
-		public JSPackageStatementStub newInstance(final StubInputStream dataStream, final StubElement parentStub,
-				final JSStubElementType<JSPackageStatementStub, JSPackageStatement> type) throws IOException
-		{
-			return new JSPackageStatementStubImpl(dataStream, parentStub, type);
-		}
-
-		@Override
-		public JSPackageStatementStub newInstance(final JSPackageStatement psi, final StubElement parentStub,
-				final JSStubElementType<JSPackageStatementStub, JSPackageStatement> type)
-		{
-			return new JSPackageStatementStubImpl(psi, parentStub, type);
-		}
-	};
-
 	public JSPackageStatementElementType()
 	{
-		super("PACKAGE_STATEMENT", ourStubGenerator);
+		super("PACKAGE_STATEMENT");
+	}
+
+	@Override
+	public JSPackageStatementStub newInstance(final StubInputStream dataStream,
+			final StubElement parentStub,
+			final JSStubElementType<JSPackageStatementStub, JSPackageStatement> type) throws IOException
+	{
+		return new JSPackageStatementStubImpl(dataStream, parentStub, type);
+	}
+
+	@Override
+	public JSPackageStatementStub newInstance(final JSPackageStatement psi,
+			final StubElement parentStub,
+			final JSStubElementType<JSPackageStatementStub, JSPackageStatement> type)
+	{
+		return new JSPackageStatementStubImpl(psi, parentStub, type);
+	}
+
+	@NotNull
+	@Override
+	public PsiElement createElement(@NotNull ASTNode astNode)
+	{
+		return new JSPackageStatementImpl(astNode);
+	}
+
+	@Override
+	public JSPackageStatement createPsi(@NotNull JSPackageStatementStub stub)
+	{
+		return new JSPackageStatementImpl(stub);
 	}
 }

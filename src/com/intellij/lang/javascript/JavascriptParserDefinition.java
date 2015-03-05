@@ -27,10 +27,6 @@ import com.intellij.lang.javascript.parsing.JSParser;
 import com.intellij.lang.javascript.psi.impl.JSDocCommentImpl;
 import com.intellij.lang.javascript.psi.impl.JSEmbeddedContentImpl;
 import com.intellij.lang.javascript.psi.impl.JSFileImpl;
-import com.intellij.lang.javascript.psi.impl.JSFunctionImpl;
-import com.intellij.lang.javascript.psi.impl.JSParameterImpl;
-import com.intellij.lang.javascript.psi.impl.JSReferenceListImpl;
-import com.intellij.lang.javascript.types.PsiGenerator;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
@@ -56,6 +52,7 @@ public class JavascriptParserDefinition implements ParserDefinition
 		return new JavaScriptParsingLexer(JavascriptLanguage.DIALECT_OPTION_HOLDER);
 	}
 
+	@NotNull
 	@Override
 	public IFileElementType getFileNodeType()
 	{
@@ -96,6 +93,7 @@ public class JavascriptParserDefinition implements ParserDefinition
 		return new JSFileImpl(viewProvider);
 	}
 
+	@NotNull
 	@Override
 	public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right)
 	{
@@ -113,28 +111,8 @@ public class JavascriptParserDefinition implements ParserDefinition
 	public PsiElement createElement(ASTNode node)
 	{
 		final IElementType type = node.getElementType();
-		if(type instanceof PsiGenerator)
-		{
-			final PsiElement element = ((PsiGenerator) type).construct(node);
-			if(element != null)
-			{
-				return element;
-			}
-		}
 
-		if(type == JSElementTypes.FUNCTION_DECLARATION)
-		{
-			return new JSFunctionImpl(node);
-		}
-		else if(type == JSElementTypes.EXTENDS_LIST || type == JSElementTypes.IMPLEMENTS_LIST)
-		{
-			return new JSReferenceListImpl(node);
-		}
-		else if(type == JSElementTypes.FORMAL_PARAMETER)
-		{
-			return new JSParameterImpl(node);
-		}
-		else if(type == JSElementTypes.GWT_REFERENCE_EXPRESSION)
+		if(type == JSElementTypes.GWT_REFERENCE_EXPRESSION)
 		{
 			return ourGwtReferenceExpressionCreator.fun(node);
 		}

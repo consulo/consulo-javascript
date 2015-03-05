@@ -19,8 +19,10 @@ package com.intellij.lang.javascript;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.Language;
 import com.intellij.lang.javascript.psi.*;
+import com.intellij.lang.javascript.psi.impl.*;
 import com.intellij.lang.javascript.psi.stubs.*;
 import com.intellij.lang.javascript.types.*;
+import com.intellij.psi.tree.ElementTypeAsPsiFactory;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.ILazyParseableElementType;
@@ -66,31 +68,32 @@ public interface JSElementTypes
 	JSStubElementType<JSUseNamespaceDirectiveStub, JSUseNamespaceDirective> USE_NAMESPACE_DIRECTIVE = new JSUseNamespaceDirectiveType();
 	JSStubElementType<JSIncludeDirectiveStub, JSIncludeDirective> INCLUDE_DIRECTIVE = new JSIncludeDirectiveElementType();
 	JSStubElementType<JSNamespaceDeclarationStub, JSNamespaceDeclaration> NAMESPACE_DECLARATION = new JSNamespaceDeclarationElementType();
-	IElementType SUPER_EXPRESSION = new JSElementType("SUPER_EXPRESSION");
-	IElementType GENERIC_SIGNATURE = new JSElementType("GENERIC_SIGNATURE");
+	IElementType SUPER_EXPRESSION = new ElementTypeAsPsiFactory("SUPER_EXPRESSION", JavascriptLanguage.INSTANCE, JSSuperExpressionImpl.class);
+	IElementType GENERIC_SIGNATURE = new ElementTypeAsPsiFactory("GENERIC_SIGNATURE", JavascriptLanguage.INSTANCE, JSGenericSignatureImpl.class);
 
 	// Statements
-	IElementType BLOCK_STATEMENT = new JSElementType("BLOCK_STATEMENT");
-	IElementType LABELED_STATEMENT = new JSElementType("LABELED_STATEMENT");
-	IElementType EXPRESSION_STATEMENT = new JSElementType("EXPRESSION_STATEMENT");
-	IElementType YIELD_STATEMENT = new JSElementType("YIELD_STATEMENT");
-	IElementType LET_STATEMENT = new JSElementType("LET_STATEMENT");
+	IElementType BLOCK_STATEMENT = new ElementTypeAsPsiFactory("BLOCK_STATEMENT", JavascriptLanguage.INSTANCE, JSBlockStatementImpl.class);
+	IElementType LABELED_STATEMENT = new ElementTypeAsPsiFactory("LABELED_STATEMENT", JavascriptLanguage.INSTANCE, JSLabeledStatementImpl.class);
+	IElementType EXPRESSION_STATEMENT = new ElementTypeAsPsiFactory("EXPRESSION_STATEMENT", JavascriptLanguage.INSTANCE,
+			JSExpressionStatementImpl.class);
+	IElementType YIELD_STATEMENT = new ElementTypeAsPsiFactory("YIELD_STATEMENT", JavascriptLanguage.INSTANCE, JSYieldStatementImpl.class);
+	IElementType LET_STATEMENT = new ElementTypeAsPsiFactory("LET_STATEMENT", JavascriptLanguage.INSTANCE, JSLetStatementImpl.class);
 	JSStubElementType<JSVarStatementStub, JSVarStatement> VAR_STATEMENT = new JSVarStatementElementType();
-	IElementType EMPTY_STATEMENT = new JSElementType("EMPTY_STATEMENT");
-	IElementType IF_STATEMENT = new JSElementType("IF_STATEMENT");
-	IElementType CONTINUE_STATEMENT = new JSElementType("CONTINUE_STATEMENT");
-	IElementType BREAK_STATEMENT = new JSElementType("BREAK_STATEMENT");
-	IElementType WITH_STATEMENT = new JSElementType("WITH_STATEMENT");
-	IElementType RETURN_STATEMENT = new JSElementType("RETURN_STATEMENT");
-	IElementType THROW_STATEMENT = new JSElementType("THROW_STATEMENT");
-	IElementType TRY_STATEMENT = new JSElementType("TRY_STATEMENT");
-	IElementType CATCH_BLOCK = new JSElementType("CATCH_BLOCK");
-	IElementType CASE_CLAUSE = new JSElementType("CASE_CLAUSE");
-	IElementType SWITCH_STATEMENT = new JSElementType("SWITCH_STATEMENT");
-	IElementType FOR_STATEMENT = new JSElementType("FOR_STATEMENT");
-	IElementType FOR_IN_STATEMENT = new JSElementType("FOR_IN_STATEMENT");
-	IElementType WHILE_STATEMENT = new JSElementType("WHILE_STATEMENT");
-	IElementType DOWHILE_STATEMENT = new JSElementType("DO_WHILE_STATEMENT");
+	IElementType EMPTY_STATEMENT = new ElementTypeAsPsiFactory("EMPTY_STATEMENT", JavascriptLanguage.INSTANCE, JSEmptyStatementImpl.class);
+	IElementType IF_STATEMENT = new ElementTypeAsPsiFactory("IF_STATEMENT", JavascriptLanguage.INSTANCE, JSIfStatementImpl.class);
+	IElementType CONTINUE_STATEMENT = new ElementTypeAsPsiFactory("CONTINUE_STATEMENT", JavascriptLanguage.INSTANCE, JSContinueStatementImpl.class);
+	IElementType BREAK_STATEMENT = new ElementTypeAsPsiFactory("BREAK_STATEMENT", JavascriptLanguage.INSTANCE, JSBreakStatementImpl.class);
+	IElementType WITH_STATEMENT = new ElementTypeAsPsiFactory("WITH_STATEMENT", JavascriptLanguage.INSTANCE, JSWithStatementImpl.class);
+	IElementType RETURN_STATEMENT = new ElementTypeAsPsiFactory("RETURN_STATEMENT", JavascriptLanguage.INSTANCE, JSReturnStatementImpl.class);
+	IElementType THROW_STATEMENT = new ElementTypeAsPsiFactory("THROW_STATEMENT", JavascriptLanguage.INSTANCE, JSThrowStatementImpl.class);
+	IElementType TRY_STATEMENT = new ElementTypeAsPsiFactory("TRY_STATEMENT", JavascriptLanguage.INSTANCE, JSCatchBlockImpl.class);
+	IElementType CATCH_BLOCK = new ElementTypeAsPsiFactory("CATCH_BLOCK", JavascriptLanguage.INSTANCE, JSCatchBlockImpl.class);
+	IElementType CASE_CLAUSE = new ElementTypeAsPsiFactory("CASE_CLAUSE", JavascriptLanguage.INSTANCE, JSCaseClauseImpl.class);
+	IElementType SWITCH_STATEMENT = new ElementTypeAsPsiFactory("SWITCH_STATEMENT", JavascriptLanguage.INSTANCE, JSSwitchStatementImpl.class);
+	IElementType FOR_STATEMENT = new ElementTypeAsPsiFactory("FOR_STATEMENT", JavascriptLanguage.INSTANCE, JSForStatementImpl.class);
+	IElementType FOR_IN_STATEMENT = new ElementTypeAsPsiFactory("FOR_IN_STATEMENT", JavascriptLanguage.INSTANCE, JSForInStatementImpl.class);
+	IElementType WHILE_STATEMENT = new ElementTypeAsPsiFactory("WHILE_STATEMENT", JavascriptLanguage.INSTANCE, JSWhileStatementImpl.class);
+	IElementType DOWHILE_STATEMENT = new ElementTypeAsPsiFactory("DO_WHILE_STATEMENT", JavascriptLanguage.INSTANCE, JSDoWhileStatementImpl.class);
 
 	TokenSet STATEMENTS = TokenSet.create(BLOCK_STATEMENT, LABELED_STATEMENT, VAR_STATEMENT, EMPTY_STATEMENT, IF_STATEMENT, CONTINUE_STATEMENT,
 			BREAK_STATEMENT, WITH_STATEMENT, RETURN_STATEMENT, THROW_STATEMENT, TRY_STATEMENT, SWITCH_STATEMENT, FOR_IN_STATEMENT, FOR_STATEMENT,
@@ -101,31 +104,40 @@ public interface JSElementTypes
 			USE_NAMESPACE_DIRECTIVE));
 
 	// Expressions
-	IElementType THIS_EXPRESSION = new JSElementType("THIS_EXPRESSION");
-	IElementType REFERENCE_EXPRESSION = new JSElementType("REFERENCE_EXPRESSION");
+	IElementType THIS_EXPRESSION = new ElementTypeAsPsiFactory("THIS_EXPRESSION", JavascriptLanguage.INSTANCE, JSThisExpressionImpl.class);
+	IElementType REFERENCE_EXPRESSION = new ElementTypeAsPsiFactory("REFERENCE_EXPRESSION", JavascriptLanguage.INSTANCE,
+			JSReferenceExpressionImpl.class);
 	IElementType GWT_REFERENCE_EXPRESSION = new JSElementType("GWT_REFERENCE_EXPRESSION");
-	IElementType LITERAL_EXPRESSION = new JSElementType("LITERAL_EXPRESSION");
-	IElementType XML_LITERAL_EXPRESSION = new JSElementType("XML_LITERAL_EXPRESSION");
-	IElementType PARENTHESIZED_EXPRESSION = new JSElementType("PARENTHESIZED_EXPRESSION");
-	IElementType ARRAY_LITERAL_EXPRESSION = new JSElementType("ARRAY_LITERAL_EXPRESSION");
-	IElementType PROPERTY = new JSElementType("PROPERTY");
-	IElementType OBJECT_LITERAL_EXPRESSION = new JSElementType("OBJECT_LITERAL_EXPRESSION");
-	IElementType ASSIGNMENT_EXPRESSION = new JSElementType("ASSIGNMENT_EXPRESSION");
-	IElementType CONDITIONAL_EXPRESSION = new JSElementType("CONDITIONAL_EXPRESSION");
-	IElementType BINARY_EXPRESSION = new JSElementType("BINARY_EXPRESSION");
-	IElementType PREFIX_EXPRESSION = new JSElementType("PREFIX_EXPRESSION");
-	IElementType POSTFIX_EXPRESSION = new JSElementType("POSTFIX_EXPRESSION");
-	IElementType COMMA_EXPRESSION = new JSElementType("COMMA_EXPRESSION");
+	IElementType LITERAL_EXPRESSION = new ElementTypeAsPsiFactory("LITERAL_EXPRESSION", JavascriptLanguage.INSTANCE, JSLiteralExpressionImpl.class);
+	IElementType XML_LITERAL_EXPRESSION = new ElementTypeAsPsiFactory("XML_LITERAL_EXPRESSION", JavascriptLanguage.INSTANCE,
+			JSXmlLiteralExpressionImpl.class);
+	IElementType PARENTHESIZED_EXPRESSION = new ElementTypeAsPsiFactory("PARENTHESIZED_EXPRESSION", JavascriptLanguage.INSTANCE,
+			JSParenthesizedExpressionImpl.class);
+	IElementType ARRAY_LITERAL_EXPRESSION = new ElementTypeAsPsiFactory("ARRAY_LITERAL_EXPRESSION", JavascriptLanguage.INSTANCE,
+			JSArrayLiteralExpressionImpl.class);
+	IElementType PROPERTY = new ElementTypeAsPsiFactory("PROPERTY", JavascriptLanguage.INSTANCE, JSPropertyImpl.class);
+	IElementType OBJECT_LITERAL_EXPRESSION = new ElementTypeAsPsiFactory("OBJECT_LITERAL_EXPRESSION", JavascriptLanguage.INSTANCE,
+			JSObjectLiteralExpressionImpl.class);
+	IElementType ASSIGNMENT_EXPRESSION = new ElementTypeAsPsiFactory("ASSIGNMENT_EXPRESSION", JavascriptLanguage.INSTANCE,
+			JSAssignmentExpressionImpl.class);
+	IElementType CONDITIONAL_EXPRESSION = new ElementTypeAsPsiFactory("CONDITIONAL_EXPRESSION", JavascriptLanguage.INSTANCE,
+			JSConditionalExpressionImpl.class);
+	IElementType BINARY_EXPRESSION = new ElementTypeAsPsiFactory("BINARY_EXPRESSION", JavascriptLanguage.INSTANCE, JSBinaryExpressionImpl.class);
+	IElementType PREFIX_EXPRESSION = new ElementTypeAsPsiFactory("PREFIX_EXPRESSION", JavascriptLanguage.INSTANCE, JSPrefixExpressionImpl.class);
+	IElementType POSTFIX_EXPRESSION = new ElementTypeAsPsiFactory("POSTFIX_EXPRESSION", JavascriptLanguage.INSTANCE, JSPostfixExpressionImpl.class);
+	IElementType COMMA_EXPRESSION = new ElementTypeAsPsiFactory("COMMA_EXPRESSION", JavascriptLanguage.INSTANCE, JSCommaExpressionImpl.class);
 	JSStubElementType<JSFunctionExpressionStub, JSFunctionExpression> FUNCTION_EXPRESSION = new JSFunctionExpressionElementType();
-	IElementType NEW_EXPRESSION = new JSElementType("NEW_EXPRESSION");
-	IElementType INDEXED_PROPERTY_ACCESS_EXPRESSION = new JSElementType("INDEXED_PROPERTY_ACCESS_EXPRESSION");
-	IElementType CALL_EXPRESSION = new JSElementType("CALL_EXPRESSION");
-	IElementType DEFINITION_EXPRESSION = new JSElementType("DEFINITION_EXPRESSION");
-	IElementType LET_EXPRESSION = new JSElementType("LET_EXPRESSION");
+	IElementType NEW_EXPRESSION = new ElementTypeAsPsiFactory("NEW_EXPRESSION", JavascriptLanguage.INSTANCE, JSNewExpressionImpl.class);
+	IElementType INDEXED_PROPERTY_ACCESS_EXPRESSION = new ElementTypeAsPsiFactory("INDEXED_PROPERTY_ACCESS_EXPRESSION", JavascriptLanguage.INSTANCE,
+			JSIndexedPropertyAccessExpressionImpl.class);
+	IElementType CALL_EXPRESSION = new ElementTypeAsPsiFactory("CALL_EXPRESSION", JavascriptLanguage.INSTANCE, JSCallExpressionImpl.class);
+	IElementType DEFINITION_EXPRESSION = new ElementTypeAsPsiFactory("DEFINITION_EXPRESSION", JavascriptLanguage.INSTANCE,
+			JSDefinitionExpressionImpl.class);
+	IElementType LET_EXPRESSION = new ElementTypeAsPsiFactory("LET_EXPRESSION", JavascriptLanguage.INSTANCE, JSLetExpressionImpl.class);
 
 	TokenSet EXPRESSIONS = TokenSet.create(THIS_EXPRESSION, REFERENCE_EXPRESSION, LITERAL_EXPRESSION, PARENTHESIZED_EXPRESSION,
-			ARRAY_LITERAL_EXPRESSION, OBJECT_LITERAL_EXPRESSION, ASSIGNMENT_EXPRESSION, CONDITIONAL_EXPRESSION, BINARY_EXPRESSION, PREFIX_EXPRESSION,
-			POSTFIX_EXPRESSION, COMMA_EXPRESSION, FUNCTION_EXPRESSION, NEW_EXPRESSION, INDEXED_PROPERTY_ACCESS_EXPRESSION, CALL_EXPRESSION,
-			DEFINITION_EXPRESSION, XML_LITERAL_EXPRESSION, SUPER_EXPRESSION, LET_EXPRESSION);
+			ARRAY_LITERAL_EXPRESSION, OBJECT_LITERAL_EXPRESSION, ASSIGNMENT_EXPRESSION, CONDITIONAL_EXPRESSION, BINARY_EXPRESSION,
+			PREFIX_EXPRESSION, POSTFIX_EXPRESSION, COMMA_EXPRESSION, FUNCTION_EXPRESSION, NEW_EXPRESSION, INDEXED_PROPERTY_ACCESS_EXPRESSION,
+			CALL_EXPRESSION, DEFINITION_EXPRESSION, XML_LITERAL_EXPRESSION, SUPER_EXPRESSION, LET_EXPRESSION);
 
 }

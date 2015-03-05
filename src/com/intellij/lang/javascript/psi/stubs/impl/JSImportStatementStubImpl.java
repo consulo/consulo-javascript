@@ -20,7 +20,6 @@ import java.io.IOException;
 
 import com.intellij.lang.javascript.psi.JSImportStatement;
 import com.intellij.lang.javascript.psi.JSStubElementType;
-import com.intellij.lang.javascript.psi.impl.JSImportStatementImpl;
 import com.intellij.lang.javascript.psi.stubs.JSImportStatementStub;
 import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubBase;
@@ -51,12 +50,6 @@ public class JSImportStatementStubImpl extends StubBase<JSImportStatement> imple
 		super(parentStub, type);
 
 		myImportText = psi.getImportText();
-	}
-
-	@Override
-	public JSImportStatement createPsi()
-	{
-		return new JSImportStatementImpl(this);
 	}
 
 	@Override

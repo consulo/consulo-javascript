@@ -18,10 +18,14 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
+import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSAttribute;
 import com.intellij.lang.javascript.psi.JSStubElementType;
+import com.intellij.lang.javascript.psi.impl.JSAttributeImpl;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSAttributeStubImpl;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 
@@ -34,21 +38,33 @@ public class JSAttributeElementType extends JSStubElementType<JSAttributeStub, J
 {
 	public JSAttributeElementType()
 	{
-		super("ATTRIBUTE", new JSStubGenerator<JSAttributeStub, JSAttribute>()
-		{
-			@Override
-			public JSAttributeStub newInstance(final StubInputStream dataStream, final StubElement parentStub, final JSStubElementType<JSAttributeStub,
-					JSAttribute> elementType) throws IOException
-			{
-				return new JSAttributeStubImpl(dataStream, parentStub, elementType);
-			}
+		super("ATTRIBUTE");
+	}
 
-			@Override
-			public JSAttributeStub newInstance(final JSAttribute psi, final StubElement parentStub, final JSStubElementType<JSAttributeStub,
-					JSAttribute> elementType)
-			{
-				return new JSAttributeStubImpl(psi, parentStub, elementType);
-			}
-		});
+	@Override
+	public JSAttributeStub newInstance(final StubInputStream dataStream, final StubElement parentStub, final JSStubElementType<JSAttributeStub,
+			JSAttribute> elementType) throws IOException
+	{
+		return new JSAttributeStubImpl(dataStream, parentStub, elementType);
+	}
+
+	@Override
+	public JSAttributeStub newInstance(final JSAttribute psi, final StubElement parentStub, final JSStubElementType<JSAttributeStub,
+			JSAttribute> elementType)
+	{
+		return new JSAttributeStubImpl(psi, parentStub, elementType);
+	}
+
+	@NotNull
+	@Override
+	public PsiElement createElement(@NotNull ASTNode astNode)
+	{
+		return new JSAttributeImpl(astNode);
+	}
+
+	@Override
+	public JSAttribute createPsi(@NotNull JSAttributeStub stub)
+	{
+		return new JSAttributeImpl(stub);
 	}
 }

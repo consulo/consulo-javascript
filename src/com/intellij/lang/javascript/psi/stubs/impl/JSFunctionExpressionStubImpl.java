@@ -18,10 +18,8 @@ package com.intellij.lang.javascript.psi.stubs.impl;
 
 import java.io.IOException;
 
-import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSFunctionExpression;
 import com.intellij.lang.javascript.psi.JSStubElementType;
-import com.intellij.lang.javascript.psi.impl.JSFunctionExpressionImpl;
 import com.intellij.lang.javascript.psi.stubs.JSFunctionExpressionStub;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -42,11 +40,5 @@ public class JSFunctionExpressionStubImpl extends JSFunctionStubBaseImpl<JSFunct
 			IOException
 	{
 		super(dataStream, parentStub, elementType);
-	}
-
-	@Override
-	public JSFunctionExpression createPsi()
-	{
-		return new JSFunctionExpressionImpl(this, JSElementTypes.FUNCTION_EXPRESSION);
 	}
 }

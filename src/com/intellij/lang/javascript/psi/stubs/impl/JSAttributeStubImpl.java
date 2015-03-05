@@ -20,7 +20,6 @@ import java.io.IOException;
 
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSAttribute;
-import com.intellij.lang.javascript.psi.impl.JSAttributeImpl;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeStub;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.IndexSink;
@@ -53,12 +52,6 @@ public class JSAttributeStubImpl extends JSNamedObjectStubBase<JSAttribute> impl
 	protected int buildFlags(final JSAttribute clazz)
 	{
 		return 0;
-	}
-
-	@Override
-	public JSAttribute createPsi()
-	{
-		return new JSAttributeImpl(this);
 	}
 
 	@Override

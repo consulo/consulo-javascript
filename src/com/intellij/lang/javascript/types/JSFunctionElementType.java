@@ -18,10 +18,14 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
+import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSStubElementType;
+import com.intellij.lang.javascript.psi.impl.JSFunctionImpl;
 import com.intellij.lang.javascript.psi.stubs.JSFunctionStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSFunctionStubImpl;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 
@@ -32,25 +36,35 @@ import com.intellij.psi.stubs.StubInputStream;
  */
 public class JSFunctionElementType extends JSStubElementType<JSFunctionStub, JSFunction>
 {
-	private static final JSStubGenerator<JSFunctionStub, JSFunction> ourStubGenerator = new JSStubGenerator<JSFunctionStub, JSFunction>()
-	{
-		@Override
-		public JSFunctionStub newInstance(final StubInputStream dataStream, final StubElement parentStub, final JSStubElementType<JSFunctionStub,
-				JSFunction> elementType) throws IOException
-		{
-			return new JSFunctionStubImpl(dataStream, parentStub, elementType);
-		}
-
-		@Override
-		public JSFunctionStub newInstance(final JSFunction psi, final StubElement parentStub, final JSStubElementType<JSFunctionStub,
-				JSFunction> elementType)
-		{
-			return new JSFunctionStubImpl(psi, parentStub, elementType);
-		}
-	};
-
 	public JSFunctionElementType()
 	{
-		super("FUNCTION_DECLARATION", ourStubGenerator);
+		super("FUNCTION_DECLARATION");
+	}
+
+	@Override
+	public JSFunctionStub newInstance(final StubInputStream dataStream, final StubElement parentStub, final JSStubElementType<JSFunctionStub,
+			JSFunction> elementType) throws IOException
+	{
+		return new JSFunctionStubImpl(dataStream, parentStub, elementType);
+	}
+
+	@Override
+	public JSFunctionStub newInstance(final JSFunction psi, final StubElement parentStub, final JSStubElementType<JSFunctionStub,
+			JSFunction> elementType)
+	{
+		return new JSFunctionStubImpl(psi, parentStub, elementType);
+	}
+
+	@NotNull
+	@Override
+	public PsiElement createElement(@NotNull ASTNode astNode)
+	{
+		return new JSFunctionImpl(astNode);
+	}
+
+	@Override
+	public JSFunction createPsi(@NotNull JSFunctionStub stub)
+	{
+		return new JSFunctionImpl(stub, this);
 	}
 }

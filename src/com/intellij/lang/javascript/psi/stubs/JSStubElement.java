@@ -30,8 +30,6 @@ import com.intellij.psi.stubs.StubOutputStream;
  */
 public interface JSStubElement<T extends JSElement> extends StubElement<T>
 {
-	T createPsi();
-
 	void index(final IndexSink sink);
 
 	void serialize(final StubOutputStream dataStream) throws IOException;

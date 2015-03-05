@@ -18,10 +18,14 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
+import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSNamespaceDeclaration;
 import com.intellij.lang.javascript.psi.JSStubElementType;
+import com.intellij.lang.javascript.psi.impl.JSNamespaceDeclarationImpl;
 import com.intellij.lang.javascript.psi.stubs.JSNamespaceDeclarationStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSNamespaceDeclarationStubImpl;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 
@@ -32,26 +36,37 @@ import com.intellij.psi.stubs.StubInputStream;
  */
 public class JSNamespaceDeclarationElementType extends JSStubElementType<JSNamespaceDeclarationStub, JSNamespaceDeclaration>
 {
-	private static final JSStubGenerator<JSNamespaceDeclarationStub, JSNamespaceDeclaration> ourStubGenerator = new
-			JSStubGenerator<JSNamespaceDeclarationStub, JSNamespaceDeclaration>()
-	{
-		@Override
-		public JSNamespaceDeclarationStub newInstance(final StubInputStream dataStream, final StubElement parentStub,
-				final JSStubElementType<JSNamespaceDeclarationStub, JSNamespaceDeclaration> type) throws IOException
-		{
-			return new JSNamespaceDeclarationStubImpl(dataStream, parentStub, type);
-		}
-
-		@Override
-		public JSNamespaceDeclarationStub newInstance(final JSNamespaceDeclaration psi, final StubElement parentStub,
-				final JSStubElementType<JSNamespaceDeclarationStub, JSNamespaceDeclaration> type)
-		{
-			return new JSNamespaceDeclarationStubImpl(psi, parentStub, type);
-		}
-	};
-
 	public JSNamespaceDeclarationElementType()
 	{
-		super("NAMESPACE_DECLARATION", ourStubGenerator);
+		super("NAMESPACE_DECLARATION");
+	}
+
+	@Override
+	public JSNamespaceDeclarationStub newInstance(final StubInputStream dataStream,
+			final StubElement parentStub,
+			final JSStubElementType<JSNamespaceDeclarationStub, JSNamespaceDeclaration> type) throws IOException
+	{
+		return new JSNamespaceDeclarationStubImpl(dataStream, parentStub, type);
+	}
+
+	@Override
+	public JSNamespaceDeclarationStub newInstance(final JSNamespaceDeclaration psi,
+			final StubElement parentStub,
+			final JSStubElementType<JSNamespaceDeclarationStub, JSNamespaceDeclaration> type)
+	{
+		return new JSNamespaceDeclarationStubImpl(psi, parentStub, type);
+	}
+
+	@NotNull
+	@Override
+	public PsiElement createElement(@NotNull ASTNode astNode)
+	{
+		return new JSNamespaceDeclarationImpl(astNode);
+	}
+
+	@Override
+	public JSNamespaceDeclaration createPsi(@NotNull JSNamespaceDeclarationStub stub)
+	{
+		return new JSNamespaceDeclarationImpl(stub);
 	}
 }

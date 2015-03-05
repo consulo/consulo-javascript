@@ -21,7 +21,6 @@ import java.io.IOException;
 
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSParameterList;
-import com.intellij.lang.javascript.psi.impl.JSParameterListImpl;
 import com.intellij.lang.javascript.psi.stubs.JSParameterListStub;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.IndexSink;
@@ -50,12 +49,6 @@ public class JSParameterListStubImpl extends StubBase<JSParameterList> implement
 	public JSParameterListStubImpl(final StubElement parentStub)
 	{
 		super(parentStub, JSElementTypes.PARAMETER_LIST);
-	}
-
-	@Override
-	public JSParameterList createPsi()
-	{
-		return new JSParameterListImpl(this);
 	}
 
 	@Override

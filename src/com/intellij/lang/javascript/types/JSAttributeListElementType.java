@@ -18,10 +18,14 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
+import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSAttributeList;
 import com.intellij.lang.javascript.psi.JSStubElementType;
+import com.intellij.lang.javascript.psi.impl.JSAttributeListImpl;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeListStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSAttributeListStubImpl;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 
@@ -32,26 +36,37 @@ import com.intellij.psi.stubs.StubInputStream;
  */
 public class JSAttributeListElementType extends JSStubElementType<JSAttributeListStub, JSAttributeList>
 {
-	private static final JSStubGenerator<JSAttributeListStub, JSAttributeList> ourStubGenerator = new JSStubGenerator<JSAttributeListStub,
-			JSAttributeList>()
-	{
-		@Override
-		public JSAttributeListStub newInstance(final StubInputStream dataStream, final StubElement parentStub,
-				final JSStubElementType<JSAttributeListStub, JSAttributeList> elementType) throws IOException
-		{
-			return new JSAttributeListStubImpl(dataStream, parentStub, elementType);
-		}
-
-		@Override
-		public JSAttributeListStub newInstance(final JSAttributeList psi, final StubElement parentStub, final JSStubElementType<JSAttributeListStub,
-				JSAttributeList> elementType)
-		{
-			return new JSAttributeListStubImpl(psi, parentStub, elementType);
-		}
-	};
-
 	public JSAttributeListElementType()
 	{
-		super("ATTRIBUTE_LIST", ourStubGenerator);
+		super("ATTRIBUTE_LIST");
+	}
+
+	@Override
+	public JSAttributeListStub newInstance(final StubInputStream dataStream,
+			final StubElement parentStub,
+			final JSStubElementType<JSAttributeListStub, JSAttributeList> elementType) throws IOException
+	{
+		return new JSAttributeListStubImpl(dataStream, parentStub, elementType);
+	}
+
+	@Override
+	public JSAttributeListStub newInstance(final JSAttributeList psi,
+			final StubElement parentStub,
+			final JSStubElementType<JSAttributeListStub, JSAttributeList> elementType)
+	{
+		return new JSAttributeListStubImpl(psi, parentStub, elementType);
+	}
+
+	@NotNull
+	@Override
+	public PsiElement createElement(@NotNull ASTNode astNode)
+	{
+		return new JSAttributeListImpl(astNode);
+	}
+
+	@Override
+	public JSAttributeList createPsi(@NotNull JSAttributeListStub stub)
+	{
+		return new JSAttributeListImpl(stub);
 	}
 }
