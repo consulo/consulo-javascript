@@ -28,7 +28,7 @@ import javax.swing.event.DocumentEvent;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.application.options.CodeStyleAbstractPanel;
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
+import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
@@ -51,12 +51,11 @@ public class JSCodeStylePanel extends CodeStyleAbstractPanel
 	private JTextField myFieldPrefixTextField;
 	private JTextField myPropertyPrefixTextField;
 	private JCheckBox myUseSemicolon;
-	private static CodeStyleSettings mySettings;
 	private boolean myInsideUpdate = false;
 
 	public JSCodeStylePanel(final CodeStyleSettings settings)
 	{
-		super(mySettings = settings);
+		super(settings);
 
 		installPreviewPanel(myPreviewPanel);
 		addPanelToWatch(myPanel);
@@ -112,13 +111,13 @@ public class JSCodeStylePanel extends CodeStyleAbstractPanel
 	@NotNull
 	protected FileType getFileType()
 	{
-		return JavaScriptSupportLoader.JAVASCRIPT;
+		return JavaScriptFileType.INSTANCE;
 	}
 
 	@Override
 	protected String getPreviewText()
 	{
-		final JSCodeStyleSettings jsCodeStyleSettings = mySettings.getCustomSettings(JSCodeStyleSettings.class);
+		final JSCodeStyleSettings jsCodeStyleSettings = getSettings().getCustomSettings(JSCodeStyleSettings.class);
 		@NonNls String baseName = "field";
 		@NonNls String propertyName = (myPropertyPrefixTextField != null ? myPropertyPrefixTextField.getText() : jsCodeStyleSettings.PROPERTY_PREFIX) +
 				baseName;

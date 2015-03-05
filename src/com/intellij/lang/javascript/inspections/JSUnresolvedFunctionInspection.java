@@ -30,6 +30,7 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.lang.javascript.JSBundle;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
@@ -42,7 +43,6 @@ import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.util.JSUtils;
 import com.intellij.lang.javascript.validation.JSAnnotatingVisitor;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -453,7 +453,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 		final boolean ecmaL4File = containingFile.getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
 
 		if(jsClass != null && ecmaL4File &&
-				(!(jsClass instanceof XmlBackedJSClassImpl) || jsClass.getContainingFile().getFileType() == StdFileTypes.XML))
+				(!(jsClass instanceof XmlBackedJSClassImpl) || jsClass.getContainingFile().getFileType() == XmlFileType.INSTANCE))
 		{
 			final JSAttributeList attributeList = jsClass.getAttributeList();
 			if(attributeList == null || !attributeList.hasModifier(JSAttributeList.ModifierType.DYNAMIC))

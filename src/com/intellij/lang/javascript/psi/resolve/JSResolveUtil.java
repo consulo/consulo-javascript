@@ -37,6 +37,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.extapi.psi.PsiElementBase;
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.javascript.documentation.JSDocumentationProvider;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
@@ -66,7 +67,6 @@ import com.intellij.lang.javascript.psi.stubs.JSNameIndex;
 import com.intellij.lang.javascript.psi.stubs.JSQualifiedElementIndex;
 import com.intellij.lang.javascript.psi.stubs.JSVariableStubBase;
 import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
@@ -1117,7 +1117,7 @@ public class JSResolveUtil
 				}
 				else
 				{
-					if(rootTag != null && xmlFile.getFileType() == StdFileTypes.XML)
+					if(rootTag != null && xmlFile.getFileType() == XmlFileType.INSTANCE)
 					{ // TODO this is bindows specific
 						processAllGlobals(processor, xmlFile, place);
 					}

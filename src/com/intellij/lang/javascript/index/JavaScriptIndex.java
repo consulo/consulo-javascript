@@ -20,23 +20,10 @@ import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TObjectIntHashMap;
-import gnu.trove.TObjectIntIterator;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.ref.SoftReference;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -44,9 +31,6 @@ import java.util.Set;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.ProjectTopics;
-import com.intellij.javaee.UriUtil;
-import com.intellij.lang.javascript.JSBundle;
 import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.flex.FlexModuleExtension;
@@ -55,48 +39,27 @@ import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ContentIterator;
-import com.intellij.openapi.roots.ModuleRootEvent;
-import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileAdapter;
-import com.intellij.openapi.vfs.VirtualFileEvent;
-import com.intellij.openapi.vfs.VirtualFileListener;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.VirtualFileMoveEvent;
-import com.intellij.openapi.vfs.VirtualFilePropertyEvent;
-import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.psi.MultiplePsiFilesPerDocumentFileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiTreeChangeAdapter;
-import com.intellij.psi.PsiTreeChangeEvent;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.Processor;
 import com.intellij.util.containers.HashSet;
-import com.intellij.util.messages.MessageBusConnection;
 
 /**
  * @by maxim, yole
@@ -104,28 +67,15 @@ import com.intellij.util.messages.MessageBusConnection;
 public final class JavaScriptIndex implements ProjectComponent
 {
 	private Project myProject;
-	private final FileTypeManager myFileTypeManager;
-	private THashMap<String, JSIndexEntry> myOldJavaScriptFiles;
 	private THashMap<String, JSIndexEntry> myJavaScriptFiles = new THashMap<String, JSIndexEntry>();
 
 	private final JSPackage myRootPackage = new JSPackage();
 	private static Key<JSIndexEntry> ourEntryKey = Key.create("js.indexentry");
 
-	private JSTreeChangeListener myTreeChangeListener;
-	private final Set<VirtualFile> setOfExternalDefsRoots = new java.util.HashSet<VirtualFile>();
-	private VirtualFileListener myFileListener;
-
-	private Runnable myUpdateRunnable;
-	private boolean myLoadingProject;
-	private boolean myDoingFilesRescan;
-
 	private TObjectIntHashMap<String> myNames2Index = new TObjectIntHashMap<String>(50);
 	private TIntObjectHashMap<String> myIndex2Names = new TIntObjectHashMap<String>(50);
 	private THashSet<JSIndexEntry> myFilesToUpdate = new THashSet<JSIndexEntry>(50);
 
-	@NonNls
-	private static final String JS_CACHES_DIR_NAME = "js_caches";
-	private static final int CURRENT_VERSION = 128;
 	static final Logger LOG = Logger.getInstance("#com.intellij.lang.javascript.index.JavaScriptIndex");
 
 	@NonNls
@@ -133,7 +83,6 @@ public final class JavaScriptIndex implements ProjectComponent
 	public static final String ECMASCRIPT_JS2 = "ECMAScript.js2";
 	@NonNls
 	static final String PREDEFINES_PREFIX = "predefines.";
-	private MessageBusConnection myConnection;
 	static final
 	@NonNls
 	String PREDEFINED_SCRIPTS_FILE_EXTENSION = ".js";
@@ -191,391 +140,17 @@ public final class JavaScriptIndex implements ProjectComponent
 	public JavaScriptIndex(final Project project, final FileTypeManager fileTypeManager)
 	{
 		myProject = project;
-		myFileTypeManager = fileTypeManager;
-		myTreeChangeListener = new JSTreeChangeListener();
-		PsiManager.getInstance(myProject).addPsiTreeChangeListener(myTreeChangeListener);
 		myScopeForPackages = GlobalSearchScope.allScope(project);
 	}
 
 	@Override
 	public void projectOpened()
 	{
-		myLoadingProject = true;
-		myUpdateRunnable = new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				try
-				{
-					final ProgressIndicator progress = ProgressManager.getInstance().getProgressIndicator();
-					myDoingFilesRescan = true;
-
-					if(progress != null)
-					{
-						progress.pushState();
-						progress.setIndeterminate(true);
-						progress.setText(JSBundle.message("building.index.message"));
-					}
-
-					processModulesThatContainExternalJSDefinitions(new Processor<VirtualFile>()
-					{
-						@Override
-						public boolean process(final VirtualFile home)
-						{
-							if(home.isDirectory())
-							{
-								setOfExternalDefsRoots.add(home);
-							}
-							return true;
-						}
-					}, myProject);
-
-					if(myLoadingProject)
-					{
-						loadCaches(progress);
-					}
-
-					final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
-					final List<VirtualFile> filesToProcess = new ArrayList<VirtualFile>(5);
-
-					fileIndex.iterateContent(new ContentIterator()
-					{
-						@Override
-						public boolean processFile(VirtualFile fileOrDir)
-						{
-							if(isAcceptableFile(fileOrDir) &&
-									myJavaScriptFiles.get(fileOrDir.getPath()) == null &&
-									!fileOrDir.isDirectory())
-							{
-								filesToProcess.add(fileOrDir);
-							}
-							return true;
-						}
-					});
-
-					processModulesThatContainExternalJSDefinitions(new Processor<VirtualFile>()
-					{
-						@Override
-						public boolean process(final VirtualFile home)
-						{
-							collectFilesUnderDirectory(home, filesToProcess, !ApplicationManager.getApplication().isCommandLine());
-							return true;
-						}
-					}, myProject);
-
-					if(progress != null)
-					{
-						progress.setIndeterminate(false);
-					}
-
-					int processed = 0;
-
-					for(VirtualFile f : filesToProcess)
-					{
-						fileAdded(f);
-
-						++processed;
-						if(progress != null)
-						{
-							progress.setFraction((double) processed / filesToProcess.size());
-							ProgressManager.getInstance().checkCanceled();
-						}
-					}
-
-					if(progress != null)
-					{
-						progress.setFraction(1.0);
-						progress.setText("");
-						progress.setText2("");
-						progress.popState();
-					}
-				}
-				finally
-				{
-					myLoadingProject = false;
-					myDoingFilesRescan = false;
-				}
-			}
-		};
-
-		if(ApplicationManager.getApplication().isCommandLine())
-		{
-			if(myProject.isOpen())
-			{
-				StartupManager.getInstance(myProject).registerStartupActivity(myUpdateRunnable);
-			}
-			else
-			{
-				clear();
-				myUpdateRunnable.run();
-			}
-		}
-		else
-		{
-			StartupManager.getInstance(myProject).registerStartupActivity(myUpdateRunnable);
-		}
-
-		myFileListener = new VirtualFileAdapter()
-		{
-			final Method fileAddedCallback;
-			final Method fileChangedCallback;
-			final Method fileRemovedCallback;
-			final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
-			final boolean unitTestMode = ApplicationManager.getApplication().isCommandLine();
-
-			{
-				try
-				{
-					fileAddedCallback = JavaScriptIndex.class.getDeclaredMethod("fileAdded", VirtualFile.class);
-					fileAddedCallback.setAccessible(true);
-					fileRemovedCallback = JavaScriptIndex.class.getDeclaredMethod("fileRemoved", VirtualFile.class);
-					fileRemovedCallback.setAccessible(true);
-
-					fileChangedCallback = JavaScriptIndex.class.getDeclaredMethod("fileChanged", VirtualFile.class);
-					fileChangedCallback.setAccessible(true);
-				}
-				catch(Exception e)
-				{
-					throw new RuntimeException(e);
-				}
-			}
-
-			@Override
-			public void fileCreated(VirtualFileEvent event)
-			{
-				if(this != myFileListener)
-				{
-					return; // disposed
-				}
-				propagateEvent(event.getFile(), fileAddedCallback, false);
-			}
-
-			private void propagateEvent(final VirtualFile file, Method callback, boolean propagateViaCachedChildren)
-			{
-				if(!file.isInLocalFileSystem() || myProject.isDisposed() || (!unitTestMode && !myProject.isInitialized()) || fileIndex.isIgnored(file))
-				{
-					return;
-				}
-				final VirtualFile contentRoot = fileIndex.getContentRootForFile(file);
-
-				if(contentRoot == null)
-				{
-					if(callback == fileAddedCallback)
-					{
-						return;
-					}
-
-					if(!isAcceptableFile(file) && !file.isDirectory())
-					{
-						return;
-					}
-					if(!ApplicationManager.getApplication().isCommandLine())
-					{
-						boolean hasSdkAncestor = false;
-
-						for(VirtualFile root : setOfExternalDefsRoots)
-						{
-							if(VfsUtil.isAncestor(root, file, true))
-							{
-								hasSdkAncestor = true;
-								break;
-							}
-						}
-
-						if(!hasSdkAncestor)
-						{
-							return;
-						}
-					}
-				}
-
-				if(file.isDirectory())
-				{
-					if(propagateViaCachedChildren && file instanceof NewVirtualFile)
-					{
-						for(VirtualFile child : ((NewVirtualFile) file).getCachedChildren())
-						{
-							propagateEvent(child, callback, propagateViaCachedChildren);
-						}
-					}
-					else
-					{
-						for(VirtualFile child : file.getChildren())
-						{
-							propagateEvent(child, callback, propagateViaCachedChildren);
-						}
-					}
-				}
-				else
-				{
-					try
-					{
-						callback.invoke(JavaScriptIndex.this, file);
-					}
-					catch(Exception e)
-					{
-						throw new RuntimeException(e);
-					}
-				}
-			}
-
-			@Override
-			public void beforeFileDeletion(VirtualFileEvent event)
-			{
-				if(this != myFileListener)
-				{
-					return; // disposed
-				}
-				final VirtualFile fileOrDir = event.getFile();
-				propagateEvent(fileOrDir, fileRemovedCallback, true);
-			}
-
-			@Override
-			public void beforeContentsChange(final VirtualFileEvent event)
-			{
-				if(this != myFileListener)
-				{
-					return; // disposed
-				}
-				propagateEvent(event.getFile(), fileChangedCallback, false);
-			}
-
-			@Override
-			public void beforePropertyChange(final VirtualFilePropertyEvent event)
-			{
-				if(this != myFileListener)
-				{
-					return; // disposed
-				}
-				if(VirtualFile.PROP_NAME.equals(event.getPropertyName()))
-				{
-					propagateEvent(event.getFile(), fileRemovedCallback, false);
-				}
-			}
-
-			@Override
-			public void propertyChanged(final VirtualFilePropertyEvent event)
-			{
-				if(this != myFileListener)
-				{
-					return; // disposed
-				}
-				if(VirtualFile.PROP_NAME.equals(event.getPropertyName()))
-				{
-					propagateEvent(event.getFile(), fileAddedCallback, false);
-				}
-			}
-
-			@Override
-			public void beforeFileMovement(final VirtualFileMoveEvent event)
-			{
-				if(this != myFileListener)
-				{
-					return; // disposed
-				}
-				propagateEvent(event.getFile(), fileRemovedCallback, false);
-			}
-
-			@Override
-			public void fileMoved(final VirtualFileMoveEvent event)
-			{
-				if(this != myFileListener)
-				{
-					return; // disposed
-				}
-				propagateEvent(event.getFile(), fileAddedCallback, false);
-			}
-		};
-
-		myConnection = myProject.getMessageBus().connect();
-
-		VirtualFileManager.getInstance().addVirtualFileListener(myFileListener);
-
-		myConnection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener()
-		{
-			@Override
-			public void beforeRootsChange(ModuleRootEvent event)
-			{
-			}
-
-			@Override
-			public void rootsChanged(ModuleRootEvent event)
-			{
-				requestUpdateCaches();
-			}
-		});
 	}
 
 	private boolean isAcceptableFile(final VirtualFile fileOrDir)
 	{
 		return fileOrDir.getFileType() == JavaScriptFileType.INSTANCE;
-	}
-
-	private void requestUpdateCaches()
-	{
-		Runnable runnable = new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				if(myProject.isDisposed())
-				{
-					return;
-				}
-
-				myOldJavaScriptFiles = myJavaScriptFiles;
-				myJavaScriptFiles = new THashMap<String, JSIndexEntry>(myOldJavaScriptFiles != null ? myOldJavaScriptFiles.size() : 10);
-
-				if(ApplicationManager.getApplication().isCommandLine())
-				{
-					myUpdateRunnable.run();
-				}
-				else
-				{
-					ProgressManager.getInstance().runProcessWithProgressSynchronously(myUpdateRunnable, JSBundle.message("building.index.message"), false,
-							myProject);
-				}
-
-				if(myOldJavaScriptFiles != null)
-				{
-					for(JSIndexEntry entry : myOldJavaScriptFiles.values())
-					{
-						entry.invalidate();
-					}
-					myOldJavaScriptFiles = null;
-				}
-			}
-		};
-
-		if(ApplicationManager.getApplication().isHeadlessEnvironment() && !ApplicationManager.getApplication().isUnitTestMode())
-		{
-			runnable.run();
-		}
-		else
-		{
-			ApplicationManager.getApplication().invokeLater(runnable, ModalityState.NON_MODAL);
-		}
-	}
-
-	private static void processModulesThatContainExternalJSDefinitions(@NotNull Processor<VirtualFile> processor, @NotNull Project project)
-	{
-		Set<VirtualFile> processed = new java.util.HashSet<VirtualFile>();
-
-		for(Module module : ModuleManager.getInstance(project).getModules())
-		{
-			final VirtualFile file = getFlexSdkLocation(module);
-			if(file == null)
-			{
-				continue;
-			}
-
-			if(!processed.contains(file))
-			{ // index source files
-				processed.add(file);
-				processor.process(file);
-			}
-		}
 	}
 
 	@Nullable
@@ -593,381 +168,13 @@ public final class JavaScriptIndex implements ProjectComponent
 		return null;
 	}
 
-	public synchronized void loadCaches(final ProgressIndicator progress)
-	{
-		DataInputStream input = null;
-		final File cacheFile = getCacheLocation(JS_CACHES_DIR_NAME);
-
-		boolean rebuildCachesRequested = true;
-		boolean loadingCachesStarted = false;
-
-		try
-		{
-			if(!cacheFile.exists())
-			{
-				return; // should be in try to ensure 'predefines' initialized
-			}
-
-			input = new DataInputStream(new BufferedInputStream(new FileInputStream(cacheFile)));
-			int version = input.readByte();
-			if(version != CURRENT_VERSION)
-			{
-				return;
-			}
-
-			if(progress != null)
-			{
-				progress.pushState();
-				progress.setText(JSBundle.message("loading.index.message"));
-				loadingCachesStarted = true;
-			}
-
-			final int fileCount = input.readInt();
-			final PsiManager manager = PsiManager.getInstance(myProject);
-			final int namesCount = input.readInt();
-			DeserializationContext context = new DeserializationContext(input, manager, myIndex2Names);
-
-			myIndex2Names.ensureCapacity(namesCount);
-			myNames2Index.ensureCapacity(namesCount);
-
-			for(int i = 0; i < namesCount; ++i)
-			{
-				final String name = input.readUTF();
-				final int index = input.readInt();
-				myIndex2Names.put(index, name);
-				myNames2Index.put(name, index);
-			}
-
-			myRootPackage.deserialize(context);
-
-			List<JSIndexEntry> indexEntriesToInvalidate = null;
-
-			for(int i = 0; i < fileCount; i++)
-			{
-				final String url = input.readUTF();
-				final long stamp = input.readLong();
-
-				if(progress != null)
-				{
-					progress.setText2(url);
-					progress.setFraction(((double) i) / fileCount);
-				}
-
-				boolean outdated = false;
-				final JSIndexEntry value;
-
-				VirtualFile relativeFile = UriUtil.findRelativeFile(url, null);
-
-				if(relativeFile == null || stamp != relativeFile.getTimeStamp())
-				{
-					outdated = true;
-				}
-
-				PsiFile psiFile = relativeFile != null ? manager.findFile(relativeFile) : null;
-				if(!(psiFile instanceof PsiFile))
-				{
-					outdated = true;
-				}
-
-				if(relativeFile != null && !outdated)
-				{
-					Module module = ProjectRootManager.getInstance(myProject).getFileIndex().getModuleForFile(relativeFile);
-
-					if(module == null)
-					{
-						boolean ancestorOfUsedJdk = false;
-
-						for(VirtualFile file : setOfExternalDefsRoots)
-						{
-							if(VfsUtil.isAncestor(file, relativeFile, true))
-							{
-								ancestorOfUsedJdk = true;
-							}
-						}
-
-						outdated = !ancestorOfUsedJdk;
-					}
-				}
-
-				final VirtualFile effectiveVirtualFile = outdated ? null : relativeFile;
-				value = new JSIndexEntry(context, effectiveVirtualFile);
-
-				if(!outdated)
-				{
-					(myJavaScriptFiles).put(url, value);
-				}
-				else
-				{
-					if(indexEntriesToInvalidate == null)
-					{
-						indexEntriesToInvalidate = new ArrayList<JSIndexEntry>(5);
-					}
-					indexEntriesToInvalidate.add(value); // we delay invalidation since it might cause package structure corruption
-				}
-			}
-
-			if(indexEntriesToInvalidate != null)
-			{
-				for(JSIndexEntry entry : indexEntriesToInvalidate)
-				{
-					entry.invalidate(myProject);
-				}
-			}
-			rebuildCachesRequested = false;
-		}
-		catch(IOException e)
-		{
-
-		}
-		finally
-		{
-			if(input != null)
-			{
-				try
-				{
-					input.close();
-				}
-				catch(IOException e1)
-				{
-				}
-			}
-
-			if(rebuildCachesRequested)
-			{
-				cacheFile.delete();
-				clear();
-			}
-
-			if(progress != null && loadingCachesStarted)
-			{
-				progress.popState();
-			}
-		}
-	}
-
-	private File getCacheLocation(final String dirName)
-	{
-		final String cacheFileName = myProject.getName() + "." + myProject.getLocationHash();
-		return new File(PathManager.getSystemPath() + File.separator + dirName + File.separator + cacheFileName);
-	}
-
-	public synchronized void saveCaches()
-	{
-		final File cacheFile = getCacheLocation(JS_CACHES_DIR_NAME);
-		FileUtil.createParentDirs(cacheFile);
-		DataOutputStream output = null;
-
-		try
-		{
-			output = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(cacheFile)));
-			SerializationContext context = new SerializationContext(output, myProject, myJavaScriptFiles.size());
-
-			enumerateNames(myJavaScriptFiles, context);
-			myRootPackage.enumerateNames(context); // we need to enumerate packages AFTER passing all entries since revalidation of old files cause package
-			// update
-
-			output.writeByte(CURRENT_VERSION);
-			output.writeInt(context.getFilesCount());
-			int namesCount = context.myNames.size();
-			output.writeInt(namesCount);
-
-			TObjectIntIterator<String> iterator = context.myNames.iterator();
-			while(iterator.hasNext())
-			{
-				iterator.advance();
-				output.writeUTF(iterator.key());
-				output.writeInt(iterator.value());
-				--namesCount;
-			}
-
-			assert namesCount == 0;
-
-			myRootPackage.serialize(context);
-			writeEntries(myJavaScriptFiles, output, context);
-			output.close();
-		}
-		catch(IOException e)
-		{
-			LOG.debug(e);
-			if(output != null)
-			{
-				try
-				{
-					output.close();
-					output = null;
-				}
-				catch(IOException e1)
-				{
-				}
-			}
-			cacheFile.delete();
-		}
-		finally
-		{
-			if(output != null)
-			{
-				try
-				{
-					output.close();
-				}
-				catch(IOException e1)
-				{
-				}
-			}
-		}
-	}
-
-	private static void writeEntries(final Map<String, JSIndexEntry> entries, final DataOutputStream output,
-			final SerializationContext context) throws IOException
-	{
-		for(final String key : entries.keySet())
-		{
-			final JSIndexEntry value = entries.get(key);
-			if(!value.isUpToDate())
-			{
-				continue;
-			}
-
-			output.writeUTF(key);
-			output.writeLong(value.getTimeStamp());
-
-			value.write(context);
-		}
-	}
-
-	private void enumerateNames(final Map<String, JSIndexEntry> entries, final SerializationContext context)
-	{
-		for(Iterator<JSIndexEntry> i = entries.values().iterator(); i.hasNext(); )
-		{
-			JSIndexEntry value = i.next();
-
-			if(!value.isUpToDate())
-			{
-				value.invalidate();
-				myFilesToUpdate.remove(value);
-				context.decFileCount();
-				i.remove();
-				continue;
-			}
-			value.enumerateNames(context);
-		}
-	}
-
-	private void fileAdded(final VirtualFile fileOrDir)
-	{
-		if(isAcceptableFile(fileOrDir) && !myProject.isDisposed())
-		{
-			processFileAdded(fileOrDir);
-		}
-	}
-
-	// invoked via reflection
-	private void fileRemoved(final VirtualFile fileOrDir)
-	{
-		if(isAcceptableFile(fileOrDir))
-		{
-			if(!myProject.isDisposed())
-			{
-				processFileRemoved(fileOrDir);
-			}
-		}
-	}
-
-	// invoked via reflection
-	private void fileChanged(final VirtualFile fileOrDir)
-	{
-		if(isAcceptableFile(fileOrDir) && !myProject.isDisposed())
-		{
-			processFileChanged(fileOrDir);
-		}
-	}
-
 	@Override
 	public void projectClosed()
 	{
-		if(myFileListener != null)
-		{
-			VirtualFileManager.getInstance().removeVirtualFileListener(myFileListener);
-			PsiManager.getInstance(myProject).removePsiTreeChangeListener(myTreeChangeListener);
-
-			myConnection.disconnect();
-
-			if(!ApplicationManager.getApplication().isCommandLine())
-			{
-				saveCaches();
-			}
-
-			myFileListener = null;
-		}
 		clear();
 	}
 
-	public synchronized void processFileAdded(final VirtualFile file)
-	{
-		final String url = file.getPath();
-
-		if(myOldJavaScriptFiles != null)
-		{
-			final JSIndexEntry jsIndexEntry = myOldJavaScriptFiles.get(url);
-
-			if(jsIndexEntry != null)
-			{
-				myJavaScriptFiles.put(url, jsIndexEntry);
-				myOldJavaScriptFiles.remove(url);
-				return;
-			}
-		}
-
-		final ProgressIndicator progress = ProgressManager.getInstance().getProgressIndicator();
-		if(progress != null)
-		{
-			progress.setText2(file.getPresentableUrl());
-		}
-
-		if(!myJavaScriptFiles.contains(url))
-		{
-			try
-			{
-				final JSIndexEntry value = new JSIndexEntry(file, myProject, !myDoingFilesRescan, null);
-				final JSIndexEntry indexEntry = myJavaScriptFiles.put(url, value);  // psi file event child (file) created after virtual file event file created
-				// might cause duplication of index entries
-				if(!myDoingFilesRescan && indexEntry == null)
-				{
-					myFilesToUpdate.add(value);
-				}
-			}
-			catch(AssertionError ae)
-			{
-				// could not retrieve psi file for some reason
-				LOG.error(ae);
-			}
-		}
-	}
-
-	private synchronized void processFileChanged(final VirtualFile file)
-	{
-		final JSIndexEntry indexEntry = myJavaScriptFiles.get(file.getPath());
-
-		if(indexEntry == null)
-		{
-			processFileAdded(file);
-		}
-		else
-		{
-			myFilesToUpdate.add(indexEntry);
-		}
-	}
-
-	private synchronized void processFileRemoved(final @NotNull VirtualFile file)
-	{
-		final JSIndexEntry jsIndexEntry = myJavaScriptFiles.remove(file.getPath());
-		if(jsIndexEntry != null)
-		{
-			jsIndexEntry.invalidate();
-			myFilesToUpdate.remove(jsIndexEntry);
-		}
-	}
-
+	@NotNull
 	@Override
 	@NonNls
 	public String getComponentName()
@@ -983,10 +190,6 @@ public final class JavaScriptIndex implements ProjectComponent
 	@Override
 	public void disposeComponent()
 	{
-		if(myFileListener != null)
-		{
-			projectClosed();
-		}
 	}
 
 	public static JavaScriptIndex getInstance(final Project project)
@@ -1113,59 +316,6 @@ public final class JavaScriptIndex implements ProjectComponent
 				{
 					getEntryForNonJavaScriptFile(contextFile).processSymbolsNoLock(processor);
 				}
-			}
-		}
-	}
-
-	private void collectFilesUnderDirectory(final VirtualFile homeDirectory, final Collection<VirtualFile> additionalFiles,
-			final boolean searchForSourceDir)
-	{
-		if(searchForSourceDir)
-		{
-			if(homeDirectory.isDirectory())
-			{
-				for(VirtualFile f : homeDirectory.getChildren())
-				{
-					if(f.isDirectory())
-					{
-						final @NonNls String nameWOExtension = f.getNameWithoutExtension();
-						if("source".equals(nameWOExtension) ||
-								"src".equals(nameWOExtension) ||
-								"libs".equals(nameWOExtension))
-						{
-							collectFilesUnderDirectory(f, additionalFiles, false);
-						}
-						else
-						{
-							collectFilesUnderDirectory(f, additionalFiles, true);
-						}
-					}
-				}
-			}
-			else if(isAcceptableFile(homeDirectory) && myJavaScriptFiles.get(homeDirectory.getPath()) == null)
-			{
-				additionalFiles.add(homeDirectory);
-			}
-		}
-		else
-		{
-			if(homeDirectory.isDirectory())
-			{
-				for(VirtualFile f : homeDirectory.getChildren())
-				{
-					if(f.isDirectory())
-					{
-						collectFilesUnderDirectory(f, additionalFiles, false);
-					}
-					else if((isAcceptableFile(f) && myJavaScriptFiles.get(f.getPath()) == null))
-					{
-						additionalFiles.add(f);
-					}
-				}
-			}
-			else if(isAcceptableFile(homeDirectory) && myJavaScriptFiles.get(homeDirectory.getPath()) == null)
-			{
-				additionalFiles.add(homeDirectory);
 			}
 		}
 	}
@@ -1362,67 +512,6 @@ public final class JavaScriptIndex implements ProjectComponent
 		processEntries(myFindClassByNameProcessor, includeNonProjectItems, classes, name);
 
 		return classes.toArray(new NavigationItem[classes.size()]);
-	}
-
-	private class JSTreeChangeListener extends PsiTreeChangeAdapter
-	{
-		@Override
-		public void childAdded(PsiTreeChangeEvent event)
-		{
-			final PsiElement child = event.getChild();
-			if(child instanceof JSFile && child.isPhysical())
-			{
-				processFileAdded(((JSFile) child).getVirtualFile());
-			}
-			else
-			{
-				process(event);
-			}
-		}
-
-		@Override
-		public void childrenChanged(PsiTreeChangeEvent event)
-		{
-			process(event);
-		}
-
-		@Override
-		public void childRemoved(PsiTreeChangeEvent event)
-		{
-			if(event.getChild() instanceof JSFile)
-			{
-				processFileRemoved(((JSFile) event.getChild()).getVirtualFile());
-			}
-			else
-			{
-				process(event);
-			}
-		}
-
-		@Override
-		public void childReplaced(PsiTreeChangeEvent event)
-		{
-			process(event);
-		}
-
-		private void process(final PsiTreeChangeEvent event)
-		{
-			final PsiElement psiElement = event.getParent();
-
-			if(psiElement != null && psiElement.isValid())
-			{
-				final PsiFile psiFile = psiElement.getContainingFile();
-
-				if(psiFile instanceof JSFile && psiFile.isPhysical() && isAcceptableFile(psiFile.getVirtualFile()))
-				{
-					final VirtualFile file = psiFile.getVirtualFile();
-					if(file.isValid())
-					{
-						processFileChanged(file);
-					}
-				}
-			}
-		}
 	}
 
 	private static final Object cachesLock = new Object(); // guards myNames2Index, myIndexToNames, myPackageResolveResult, myToplevelResolveResult

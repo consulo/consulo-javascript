@@ -17,6 +17,9 @@
 package com.intellij.lang.javascript.formatter;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import com.intellij.lang.Language;
+import com.intellij.lang.javascript.JavascriptLanguage;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsProvider;
@@ -35,10 +38,17 @@ public class JSCodeStyleSettingsProvider extends CodeStyleSettingsProvider
 		return new JSCodeStyleSettings(settings);
 	}
 
+	@Nullable
+	@Override
+	public Language getLanguage()
+	{
+		return JavascriptLanguage.INSTANCE;
+	}
+
 	@Override
 	@NotNull
 	public Configurable createSettingsPage(final CodeStyleSettings settings, final CodeStyleSettings originalSettings)
 	{
-		return new JSCodeStyleConfigurable(settings, originalSettings);
+		return new JavaScriptCodeStyleConfigurable(settings, originalSettings);
 	}
 }

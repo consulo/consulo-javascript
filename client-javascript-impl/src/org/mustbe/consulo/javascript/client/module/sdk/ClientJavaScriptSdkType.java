@@ -7,6 +7,8 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
+import com.intellij.openapi.roots.types.SourcesOrderRootType;
 
 /**
  * @author VISTALL
@@ -24,7 +26,7 @@ public class ClientJavaScriptSdkType extends SdkType
 	@Override
 	public boolean isRootTypeApplicable(OrderRootType type)
 	{
-		return type == OrderRootType.CLASSES || type == OrderRootType.SOURCES;
+		return type == BinariesOrderRootType.getInstance() || type == SourcesOrderRootType.getInstance();
 	}
 
 	@Nullable
@@ -32,13 +34,6 @@ public class ClientJavaScriptSdkType extends SdkType
 	public Icon getIcon()
 	{
 		return JavaScriptIcons.JavaScript;
-	}
-
-	@Nullable
-	@Override
-	public String suggestHomePath()
-	{
-		return null;
 	}
 
 	@Override

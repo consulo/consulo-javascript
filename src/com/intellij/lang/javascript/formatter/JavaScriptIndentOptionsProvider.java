@@ -18,7 +18,7 @@ package com.intellij.lang.javascript.formatter;
 
 import com.intellij.application.options.IndentOptionsEditor;
 import com.intellij.application.options.SmartIndentOptionsEditor;
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
+import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
@@ -38,7 +38,7 @@ public class JavaScriptIndentOptionsProvider implements FileTypeIndentOptionsPro
 	@Override
 	public FileType getFileType()
 	{
-		return JavaScriptSupportLoader.JAVASCRIPT;
+		return JavaScriptFileType.INSTANCE;
 	}
 
 	@Override

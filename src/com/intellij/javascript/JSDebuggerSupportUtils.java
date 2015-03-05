@@ -25,9 +25,9 @@ import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.JSElementFactory;
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.JSNamedElement;
+import com.intellij.lang.xml.XMLLanguage;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TextRange;
@@ -195,7 +195,7 @@ public class JSDebuggerSupportUtils
 			result = file.findElementAt(startOffset);
 		}
 
-		if(result != null && StdFileTypes.XML.getLanguage().equals(result.getLanguage()))
+		if(result != null && result.getLanguage() == XMLLanguage.INSTANCE)
 		{
 			PsiLanguageInjectionHost parent = PsiTreeUtil.getParentOfType(result, PsiLanguageInjectionHost.class);
 
