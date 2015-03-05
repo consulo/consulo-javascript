@@ -120,7 +120,7 @@ public class JavascriptParserDefinition implements ParserDefinition
 		{
 			return new JSEmbeddedContentImpl(node);
 		}
-		else if(type == JSTokenTypes.XML_JS_SCRIPT || type == JSElementTypes.EMBEDDED_EXPRESSION)
+		else if(type == JSTokenTypes.XML_JS_SCRIPT)
 		{
 			return new JSEmbeddedContentImpl(node);
 		}

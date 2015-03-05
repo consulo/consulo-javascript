@@ -10,9 +10,6 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.impl.JSDocCommentImpl;
 import com.intellij.lang.javascript.psi.impl.JSEmbeddedContentImpl;
 import com.intellij.lang.javascript.psi.impl.JSFileImpl;
-import com.intellij.lang.javascript.psi.impl.JSFunctionImpl;
-import com.intellij.lang.javascript.psi.impl.JSParameterImpl;
-import com.intellij.lang.javascript.psi.impl.JSReferenceListImpl;
 import com.intellij.lexer.Lexer;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
@@ -43,7 +40,7 @@ public class JavaScriptParsingDefinition extends LanguageVersionableParserDefini
 		{
 			return new JSEmbeddedContentImpl(node);
 		}
-		else if(type == JSTokenTypes.XML_JS_SCRIPT || type == JSElementTypes.EMBEDDED_EXPRESSION)
+		else if(type == JSTokenTypes.XML_JS_SCRIPT)
 		{
 			return new JSEmbeddedContentImpl(node);
 		}

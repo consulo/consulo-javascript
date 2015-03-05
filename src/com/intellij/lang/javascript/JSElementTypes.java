@@ -49,13 +49,13 @@ public interface JSElementTypes
 			return JavaScriptSupportLoader.JS_IN_HTML_DIALECT;
 		}
 	};
-	IElementType EMBEDDED_EXPRESSION = new JSElementType("EMBEDDED_EXPRESSION");
+	IElementType EMBEDDED_EXPRESSION = new ElementTypeAsPsiFactory("EMBEDDED_EXPRESSION", JavascriptLanguage.INSTANCE, JSEmbeddedContentImpl.class);
 	JSStubElementType<JSFunctionStub, JSFunction> FUNCTION_DECLARATION = new JSFunctionElementType();
 	JSStubElementType<JSParameterListStub, JSParameterList> PARAMETER_LIST = new JSParameterListElementType();
 
 	JSStubElementType<JSParameterStub, JSParameter> FORMAL_PARAMETER = new JSParameterElementType();
 	JSStubElementType<JSVariableStub, JSVariable> VARIABLE = new JSVariableElementType();
-	IElementType ARGUMENT_LIST = new JSElementType("ARGUMENT_LIST");
+	IElementType ARGUMENT_LIST = new ElementTypeAsPsiFactory("ARGUMENT_LIST", JavascriptLanguage.INSTANCE, JSArgumentListImpl.class);
 
 	JSStubElementType<JSAttributeStub, JSAttribute> ATTRIBUTE = new JSAttributeElementType();
 	JSStubElementType<JSAttributeNameValuePairStub, JSAttributeNameValuePair> ATTRIBUTE_NAME_VALUE_PAIR = new JSAttributeNameValuePairType();
