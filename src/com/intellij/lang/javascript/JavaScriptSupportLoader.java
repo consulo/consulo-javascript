@@ -18,7 +18,6 @@ package com.intellij.lang.javascript;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.lang.DependentLanguage;
 import com.intellij.lang.LanguageParserDefinitions;
@@ -26,7 +25,6 @@ import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.javascript.flex.ActionScriptFileType;
 import com.intellij.lang.javascript.highlighting.JSHighlighter;
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileTypes.FileTypeConsumer;
 import com.intellij.openapi.fileTypes.FileTypeFactory;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -50,9 +48,9 @@ public class JavaScriptSupportLoader extends FileTypeFactory
 	@Deprecated
 	public static final LanguageFileType JAVASCRIPT = JavaScriptFileType.INSTANCE;
 
-	public static final JSLanguageDialect ECMA_SCRIPT_L4 = new ECMAL4LanguageDialect();
-	public static final JSLanguageDialect JSON = new JSONLanguageDialect();
-	public static final JSLanguageDialect GWT_DIALECT = new GwtLanguageDialect();
+	@Deprecated
+	public static final JSLanguageDialect ECMA_SCRIPT_L4 = new JSLanguageDialect("ECMA4_DEPRECATED");
+	@Deprecated
 	public static final JSLanguageDialect JS_IN_HTML_DIALECT = new JsInHtmlLanguageDialect();
 
 
@@ -100,35 +98,12 @@ public class JavaScriptSupportLoader extends FileTypeFactory
 	@NonNls
 	public static final String MXML_COMPONENT_TEMPLATE_NAME = "Mxml Component";
 
-	public static
-	@Nullable
-	JSLanguageDialect getLanguageDialect(VirtualFile file)
-	{
-		if(file != null)
-		{
-			final String extension = file.getExtension();
-			if(file.getFileType() == ActionScriptFileType.INSTANCE || file.getFileType() == EcmaScriptFileType.INSTANCE)
-			{
-				return ECMA_SCRIPT_L4;
-			}
-			else if(file.getFileType() == JsonFileType.INSTANCE)
-			{
-				return JSON;
-			}
-			else if(ApplicationManager.getApplication().isUnitTestMode() && GWT_DIALECT.getFileExtension().equals(extension))
-			{
-				return GWT_DIALECT;
-			}
-		}
-		return null;
-	}
-
 	@Override
 	public void createFileTypes(final @NotNull FileTypeConsumer consumer)
 	{
 		consumer.consume(JavaScriptFileType.INSTANCE);
-		consumer.consume(JsonFileType.INSTANCE);
-		consumer.consume(EcmaScriptFileType.INSTANCE, "es;js2");
+		//consumer.consume(JsonFileType.INSTANCE);
+		//consumer.consume(EcmaScriptFileType.INSTANCE, "es;js2");
 		consumer.consume(ActionScriptFileType.INSTANCE);
 	}
 

@@ -23,12 +23,12 @@ import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
 import com.intellij.lang.javascript.JSLanguageDialect;
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.psi.tree.IElementType;
 
 /**
  * @by max
  */
+@Deprecated
 public class JSParser implements PsiParser
 {
 	private final JSLanguageDialect myDialect;
@@ -43,11 +43,7 @@ public class JSParser implements PsiParser
 	public ASTNode parse(IElementType root, PsiBuilder builder, LanguageVersion languageVersion)
 	{
 		final PsiBuilder.Marker rootMarker = builder.mark();
-		if(myDialect == JavaScriptSupportLoader.JSON)
-		{
-			ExpressionParsing.parseJSON(builder);
-		}
-		else
+
 		{
 			builder.putUserData(Parsing.JS_DIALECT_KEY, myDialect);
 			while(!builder.eof())

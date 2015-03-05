@@ -22,8 +22,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.lang.javascript.JSElementTypes;
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
-import com.intellij.lang.javascript.index.JavaScriptIndex;
+import com.intellij.lang.javascript.JavaScriptFileType;
+import com.intellij.lang.javascript.JavascriptLanguage;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.JSPackageStatement;
@@ -52,7 +52,7 @@ public class JSFileImpl extends PsiFileBase implements JSFile
 {
 	public JSFileImpl(FileViewProvider fileViewProvider)
 	{
-		super(fileViewProvider, JavaScriptSupportLoader.JAVASCRIPT.getLanguage());
+		super(fileViewProvider, JavascriptLanguage.INSTANCE);
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class JSFileImpl extends PsiFileBase implements JSFile
 		VirtualFile virtualFile = getVirtualFile();
 		if(virtualFile == null)
 		{
-			return JavaScriptSupportLoader.JAVASCRIPT;
+			return JavaScriptFileType.INSTANCE;
 		}
 		return virtualFile.getFileType();
 	}
@@ -154,12 +154,6 @@ public class JSFileImpl extends PsiFileBase implements JSFile
 	}
 
 	@Override
-	public boolean isWritable()
-	{
-		return super.isWritable() && !isPredefined();
-	}
-
-	@Override
 	public PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor) throws IncorrectOperationException
 	{
 		if(JSChangeUtil.isStatementOrComment(first))
@@ -208,21 +202,5 @@ public class JSFileImpl extends PsiFileBase implements JSFile
 		}
 		return findChildrenByClass(JSSourceElement.class);
 	}
-
-	@Override
-	public boolean isPredefined()
-	{
-		return getUserData(JavaScriptIndex.READONLY_JS_FILE_KEY) != null;
-	}
-
-	@Override
-	public VirtualFile getVirtualFile()
-	{
-		VirtualFile file = super.getVirtualFile();
-		if(file == null && isPredefined())
-		{
-			file = getViewProvider().getVirtualFile();
-		}
-		return file;
-	}
 }
+

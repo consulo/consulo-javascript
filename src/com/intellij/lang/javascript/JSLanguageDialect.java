@@ -23,14 +23,18 @@ import com.intellij.lang.Language;
 /**
  * @by Maxim.Mossienko
  */
-public abstract class JSLanguageDialect extends Language
+@Deprecated
+public class JSLanguageDialect extends Language
 {
 	public JSLanguageDialect(@NonNls @NotNull String id)
 	{
 		super(JavaScriptSupportLoader.JAVASCRIPT.getLanguage(), id);
 	}
 
-	public abstract
+	public
 	@NonNls
-	String getFileExtension();
+	String getFileExtension()
+	{
+		return "js";
+	}
 }

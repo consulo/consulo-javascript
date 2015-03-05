@@ -27,6 +27,7 @@ import com.intellij.psi.tree.IElementType;
 /**
  * @author max
  */
+@Deprecated
 public class FunctionParsing extends Parsing
 {
 	static final Key<String> allowEmptyMethodsKey = Key.create("allowEmptyMethodsKey");

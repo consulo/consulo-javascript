@@ -34,6 +34,7 @@ import com.intellij.psi.tree.IElementType;
  * Time: 1:18:22 PM
  * To change this template use File | Settings | File Templates.
  */
+@Deprecated
 public class ExpressionParsing extends Parsing
 {
 	private static final Logger LOG = Logger.getInstance("#com.intellij.lang.javascript.parsing.ExpressionParsing");

@@ -12,6 +12,13 @@
             <element id="module-output" name="intentions" />
             <element id="module-production-resource-output" name="intentions" />
             <element id="module-output" name="client-javascript-impl" />
+            <element id="module-output" name="ecmascript-level4-impl" />
+          </element>
+          <element id="zip-archive" name="json-impl.jar">
+            <element id="module-output" name="json-javascript-impl" />
+          </element>
+          <element id="zip-archive" name="gwt-impl.jar">
+            <element id="module-output" name="gwt-javascript-impl" />
           </element>
         </element>
         <element id="dir-copy" path="$PROJECT_DIR$/dist" />

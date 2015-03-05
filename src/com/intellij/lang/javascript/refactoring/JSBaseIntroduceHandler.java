@@ -92,10 +92,10 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
 		{
 			return null;
 		}
-		if(file.getLanguage() == JavaScriptSupportLoader.JSON)
+		/*if(file.getLanguage() == JavaScriptSupportLoader.JSON)
 		{
 			expression = null; // there is no vars in json
-		}
+		}*/
 		return expression;
 	}
 

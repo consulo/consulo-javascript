@@ -16,12 +16,7 @@
 
 package com.intellij.lang.javascript;
 
-import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.Language;
-import com.intellij.lang.javascript.highlighting.JSHighlighter;
-import com.intellij.openapi.fileTypes.SingleLazyInstanceSyntaxHighlighterFactory;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
 
 /**
  * User: max
@@ -30,22 +25,12 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
  */
 public class JavascriptLanguage extends Language
 {
+	@Deprecated
 	public static final DialectOptionHolder DIALECT_OPTION_HOLDER = new DialectOptionHolder(false, false);
 	public static final JavascriptLanguage INSTANCE = new JavascriptLanguage();
 
 	public JavascriptLanguage()
 	{
 		super("JavaScript", "text/javascript", "application/javascript");
-
-		SyntaxHighlighterFactory.LANGUAGE_FACTORY.addExplicitExtension(this, new SingleLazyInstanceSyntaxHighlighterFactory()
-		{
-			@Override
-			@NotNull
-			protected SyntaxHighlighter createHighlighter()
-			{
-				return new JSHighlighter(DIALECT_OPTION_HOLDER);
-			}
-		});
 	}
-
 }

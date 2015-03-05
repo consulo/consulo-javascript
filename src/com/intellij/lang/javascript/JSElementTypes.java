@@ -36,9 +36,7 @@ import com.intellij.psi.tree.TokenSet;
 public interface JSElementTypes
 {
 	IFileElementType FILE = new JSFileElementType(JavaScriptSupportLoader.JAVASCRIPT.getLanguage());
-	IFileElementType JSON_FILE = new JSFileElementType(JavaScriptSupportLoader.JSON);
 	IFileElementType ECMA4_FILE = new JSFileElementType(JavaScriptSupportLoader.ECMA_SCRIPT_L4);
-	IFileElementType GWT_FILE = new JSFileElementType(JavaScriptSupportLoader.GWT_DIALECT);
 
 	IElementType EMBEDDED_CONTENT = new ILazyParseableElementType("EMBEDDED_CONTENT", Language.findInstance(JavascriptLanguage.class))
 	{

@@ -59,10 +59,10 @@ class JSReferencesSearchExecutor implements QueryExecutor<PsiReference, Referenc
 				@Override
 				public boolean process(final PsiFile psiFile)
 				{
-					if(psiFile.getLanguage() == JavaScriptSupportLoader.JSON)
+					/*if(psiFile.getLanguage() == JavaScriptSupportLoader.JSON)
 					{
 						ReferencesSearch.search(sourceElement, new LocalSearchScope(psiFile)).forEach(consumer);
-					}
+					}         */
 					return true;
 				}
 			});

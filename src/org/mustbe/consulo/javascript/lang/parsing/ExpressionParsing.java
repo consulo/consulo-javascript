@@ -263,7 +263,7 @@ public class ExpressionParsing extends Parsing
 		return escapes || escaped;
 	}
 
-	private void parseObjectLiteralExpression(final PsiBuilder builder)
+	public void parseObjectLiteralExpression(final PsiBuilder builder)
 	{
 		LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.LBRACE);
 		final PsiBuilder.Marker expr = builder.mark();
@@ -353,7 +353,7 @@ public class ExpressionParsing extends Parsing
 		property.done(JSElementTypes.PROPERTY);
 	}
 
-	private void parseArrayLiteralExpression(final PsiBuilder builder)
+	public void parseArrayLiteralExpression(final PsiBuilder builder)
 	{
 		LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.LBRACKET);
 		final PsiBuilder.Marker expr = builder.mark();

@@ -1843,10 +1843,6 @@ public class JSResolveUtil
 
 	public static boolean isPredefinedFile(PsiFile file)
 	{
-		if(file instanceof JSFile)
-		{
-			return ((JSFile) file).isPredefined();
-		}
 		return false;
 	}
 

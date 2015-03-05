@@ -17,8 +17,8 @@
 package com.intellij.lang.javascript.refactoring;
 
 import com.intellij.lang.javascript.DialectOptionHolder;
+import com.intellij.lang.javascript.JSFlexAdapter;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.JavaScriptLexer;
 import com.intellij.lang.refactoring.NamesValidator;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
@@ -41,7 +41,7 @@ class JSNamesValidator implements NamesValidator
 
 	protected Lexer createLexer(final DialectOptionHolder optionHolder)
 	{
-		return new JavaScriptLexer(optionHolder);
+		return new JSFlexAdapter(false, optionHolder);
 	}
 
 	@Override

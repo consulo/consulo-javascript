@@ -41,7 +41,7 @@ public class JavaScriptHighlightingLexer extends LayeredLexer
 
 	private JavaScriptHighlightingLexer(DialectOptionHolder optionHolder, boolean withEmbeddments)
 	{
-		super(new JSFlexAdapter(new _JavaScriptLexer(true, optionHolder)));
+		super(new JSFlexAdapter(true, optionHolder));
 
 		if(withEmbeddments)
 		{

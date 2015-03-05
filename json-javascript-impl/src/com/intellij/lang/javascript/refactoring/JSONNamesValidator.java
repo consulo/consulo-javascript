@@ -20,9 +20,9 @@
 package com.intellij.lang.javascript.refactoring;
 
 import com.intellij.lang.javascript.DialectOptionHolder;
+import com.intellij.lang.javascript.JSFlexAdapter;
 import com.intellij.lang.javascript.JSONLexer;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.JavaScriptLexer;
 import com.intellij.lang.javascript.JavascriptLanguage;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
@@ -39,7 +39,7 @@ public class JSONNamesValidator extends JSNamesValidator
 	@Override
 	protected Lexer createLexer(final DialectOptionHolder optionHolder)
 	{
-		return new JSONLexer(new JavaScriptLexer(optionHolder));
+		return new JSONLexer(new JSFlexAdapter(false, optionHolder));
 	}
 
 	@Override

@@ -120,14 +120,7 @@ public class JSChangeUtil
 		@NonNls String ext = dialect == null ? "js" : dialect.getFileExtension();
 		String name = DUMMY + ext;
 		final PsiFile dummyFile;
-		if(dialect != null && JavaScriptSupportLoader.GWT_DIALECT.equals(dialect))
-		{
-			dummyFile = PsiFileFactory.getInstance(project).createFileFromText(name, dialect, text);
-		}
-		else
-		{
-			dummyFile = PsiFileFactory.getInstance(project).createFileFromText(name, text);
-		}
+		dummyFile = PsiFileFactory.getInstance(project).createFileFromText(name, text);
 
 		return dummyFile.getFirstChild();
 	}

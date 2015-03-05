@@ -1,0 +1,6 @@
+<idea-plugin>
+	<extensions defaultExtensionNs="com.intellij">
+		<fileTypeFactory implementation="org.mustbe.consulo.javascript.lang.EcmaScriptFileTypeFactory" />
+		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.EcmaScript4JavaScriptVersion" />
+	</extensions>
+</idea-plugin>

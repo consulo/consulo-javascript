@@ -44,7 +44,6 @@ import com.intellij.psi.tree.IElementType;
  * User: max
  * Date: Jan 27, 2005
  * Time: 11:22:04 PM
- * To change this template use File | Settings | File Templates.
  */
 public class JSHighlighter extends SyntaxHighlighterBase
 {

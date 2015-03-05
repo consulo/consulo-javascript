@@ -14,52 +14,54 @@
  * limitations under the License.
  */
 
-package com.intellij.lang.javascript;
+package org.mustbe.consulo.javascript.lang;
 
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.lang.javascript.JavaScriptIcons;
+import com.intellij.lang.javascript.JavascriptLanguage;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 
 /**
  * @author VISTALL
- * @since 02.12.13.
+ * @since 23.12.13.
  */
-public class JsonFileType extends LanguageFileType
+public class EcmaScriptFileType extends LanguageFileType
 {
-	public static final JsonFileType INSTANCE = new JsonFileType();
+	public static final EcmaScriptFileType INSTANCE = new EcmaScriptFileType();
 
-	private JsonFileType()
+	private EcmaScriptFileType()
 	{
-		super(JavaScriptSupportLoader.JSON);
+		super(JavascriptLanguage.INSTANCE);
 	}
 
 	@NotNull
 	@Override
 	public String getName()
 	{
-		return "JSON";
+		return "ECMASCRIPT";
 	}
 
 	@NotNull
 	@Override
 	public String getDescription()
 	{
-		return "Json files";
+		return "EcmaScript files";
 	}
 
 	@NotNull
 	@Override
 	public String getDefaultExtension()
 	{
-		return "json";
+		return "es";
 	}
 
 	@Nullable
 	@Override
 	public Icon getIcon()
 	{
-		return JavaScriptIcons.Json;
+		return JavaScriptIcons.JavaScript;
 	}
 }

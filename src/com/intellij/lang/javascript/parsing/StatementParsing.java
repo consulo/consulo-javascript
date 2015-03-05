@@ -28,6 +28,7 @@ import com.intellij.psi.tree.IElementType;
 /**
  * @author max
  */
+@Deprecated
 public class StatementParsing extends Parsing
 {
 	private static final Logger LOG = Logger.getInstance("#com.intellij.lang.javascript.parsing.StatementParsing");

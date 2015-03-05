@@ -17,7 +17,6 @@
 package com.intellij.lang.javascript;
 
 import com.intellij.lexer.FlexAdapter;
-import com.intellij.lexer.FlexLexer;
 
 /**
  * @author Maxim.Mossienko
@@ -27,15 +26,9 @@ public class JSFlexAdapter extends FlexAdapter
 	private static final int BASE_STATE_MASK = 0xF;
 	private static final int TAG_COUNT_SHIFT = 4;
 
-	public JSFlexAdapter(DialectOptionHolder optionHolder)
+	public JSFlexAdapter(boolean highlight, DialectOptionHolder optionHolder)
 	{
-		this(new _JavaScriptLexer(false, optionHolder));
-	}
-
-	public JSFlexAdapter(FlexLexer lexer)
-	{
-		super(lexer);
-		assert lexer instanceof _JavaScriptLexer;
+		super(new _JavaScriptLexer(highlight, optionHolder));
 	}
 
 	@Override

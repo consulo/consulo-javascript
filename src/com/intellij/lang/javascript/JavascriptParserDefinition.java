@@ -44,6 +44,7 @@ import com.intellij.util.Function;
 /**
  * @author max
  */
+@Deprecated
 public class JavascriptParserDefinition implements ParserDefinition
 {
 	private static Function<ASTNode, PsiElement> ourGwtReferenceExpressionCreator;

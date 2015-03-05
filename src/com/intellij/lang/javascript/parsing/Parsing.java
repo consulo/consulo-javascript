@@ -30,6 +30,7 @@ import com.intellij.psi.tree.IElementType;
  * Time: 7:03:42 PM
  * To change this template use File | Settings | File Templates.
  */
+@Deprecated
 public class Parsing
 {
 	public static final Key<JSLanguageDialect> JS_DIALECT_KEY = Key.create("JS_DIALECT");
@@ -59,7 +60,7 @@ public class Parsing
 
 	protected static boolean isGwt(final PsiBuilder builder)
 	{
-		return builder.getUserData(JS_DIALECT_KEY) == JavaScriptSupportLoader.GWT_DIALECT;
+		return false;
 	}
 
 	static boolean isIdentifierToken(final IElementType tokenType)

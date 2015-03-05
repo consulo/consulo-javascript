@@ -86,7 +86,9 @@ public final class JavaScriptIndex implements ProjectComponent
 	static final
 	@NonNls
 	String PREDEFINED_SCRIPTS_FILE_EXTENSION = ".js";
+	@Deprecated
 	public static final Key<String> READONLY_JS_FILE_KEY = Key.create("ReadOnly.JavaScript.File");
+	@Deprecated
 	public static final Key<String> PREDEFINED_JS_FILE_KEY = Key.create("Predefined.JavaScript.File");
 
 	private static final MyEntryProcessor<Set<String>, Object> myCollectingClassNamesProcessor = new MyEntryProcessor<Set<String>, Object>()

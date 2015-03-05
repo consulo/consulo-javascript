@@ -1,0 +1,6 @@
+<idea-plugin>
+	<extensions defaultExtensionNs="com.intellij">
+		<fileTypeFactory implementation="org.mustbe.consulo.json.JsonFileTypeFactory" />
+		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.json.lang.JsonJavaScriptVersion" />
+	</extensions>
+</idea-plugin>

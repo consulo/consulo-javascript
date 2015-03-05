@@ -31,7 +31,7 @@ public class JavaScriptParsingLexer extends JSFlexAdapter
 
 	public JavaScriptParsingLexer(DialectOptionHolder dialectOptionsHolder)
 	{
-		super(dialectOptionsHolder);
+		super(false, dialectOptionsHolder);
 	}
 
 	@Override

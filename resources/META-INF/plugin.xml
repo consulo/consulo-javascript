@@ -9,9 +9,15 @@
 
 	<xi:include href="/META-INF/Inspections.xml" xpointer="xpointer(/idea-plugin/*)"/>
 	<xi:include href="/META-INF/Intentions.xml" xpointer="xpointer(/idea-plugin/*)"/>
+	<xi:include href="/META-INF/json.xml" xpointer="xpointer(/idea-plugin/*)"/>
+	<xi:include href="/META-INF/ecma4.xml" xpointer="xpointer(/idea-plugin/*)"/>
 
 	<extensions defaultExtensionNs="com.intellij">
 		<errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
+
+		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.DefaultJavaScriptLanguageVersion"
+							id="defaultJavaScript" order="first"/>
+
 		<copyright.updater filetype="JavaScript" implementationClass="org.mustbe.consulo.javascript.copyright.UpdateJavaScriptFileCopyrightProvider"/>
 
 		<colorSettingsPage implementation="com.intellij.lang.javascript.highlighting.JavaScriptColorsAndFontsPage"/>
@@ -19,15 +25,10 @@
 		<gotoClassContributor implementation="com.intellij.lang.javascript.index.JavaScriptClassContributor"/>
 
 		<fileTypeFactory implementation="com.intellij.lang.javascript.JavaScriptSupportLoader"/>
-		<syntaxHighlighter key="JavaScript" factoryClass="com.intellij.lang.javascript.highlighting.JSSyntaxHighlighterProvider"/>
 
 		<highlightVisitor implementation="com.intellij.lang.javascript.highlighting.JavaScriptHighlightVisitor"/>
-		<lang.substitutor language="JavaScript" implementationClass="com.intellij.lang.javascript.psi.impl.JSLanguageSubstitor"/>
 
-		<lang.parserDefinition language="JavaScript" implementationClass="com.intellij.lang.javascript.JavascriptParserDefinition"/>
-		<lang.parserDefinition language="GWT JavaScript" implementationClass="com.intellij.lang.javascript.GwtParserDefinition"/>
-		<lang.parserDefinition language="ECMA Script Level 4" implementationClass="com.intellij.lang.javascript.ECMAL4ParserDefinition"/>
-		<lang.parserDefinition language="JavaScript Object Notation" implementationClass="com.intellij.lang.javascript.JSONParserDefinition"/>
+		<lang.parserDefinition language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScriptParsingDefinition"/>
 
 		<fileBasedIndex implementation="com.intellij.lang.javascript.index.JSPackageIndex"/>
 		<annotator language="JavaScript" implementationClass="com.intellij.lang.javascript.validation.JSAnnotatingVisitor"/>
@@ -37,9 +38,6 @@
 		<lang.formatter language="JavaScript" implementationClass="com.intellij.lang.javascript.formatter.JavascriptFormattingModelBuilder"/>
 		<lang.documentationProvider language="JavaScript" implementationClass="com.intellij.javascript.documentation.JSDocumentationProvider"/>
 
-		<lang.namesValidator language="GWT JavaScript" implementationClass="com.intellij.lang.javascript.refactoring.GwtNamesValidator"/>
-		<lang.namesValidator language="JavaScript Object Notation" implementationClass="com.intellij.lang.javascript.refactoring.JSONNamesValidator"/>
-		<lang.namesValidator language="ECMA Script Level 4" implementationClass="com.intellij.lang.javascript.refactoring.ECMAL4NamesValidator"/>
 		<lang.namesValidator language="JavaScript" implementationClass="com.intellij.lang.javascript.refactoring.BasicJavascriptNamesValidator"/>
 
 		<lang.surroundDescriptor language="JavaScript"
@@ -55,7 +53,8 @@
 
 		<lang.findUsagesProvider language="JavaScript" implementationClass="com.intellij.lang.javascript.findUsages.JavaScriptFindUsagesProvider"/>
 
-		<lang.commenter language="JavaScript Object Notation" implementationClass="com.intellij.lang.javascript.JavascriptCommenter"/>
+		<lang.syntaxHighlighterFactory key="JavaScript"
+									   implementationClass="org.mustbe.consulo.javascript.ide.hightlight.JavaScriptSyntaxHighlightFactory"/>
 		<lang.commenter language="JavaScript" implementationClass="com.intellij.lang.javascript.JavascriptCommenter"/>
 
 		<lang.braceMatcher language="JavaScript" implementationClass="com.intellij.lang.javascript.highlighting.JSBraceMatcher"/>
@@ -89,10 +88,9 @@
 		<multiHostInjector forClass="com.intellij.psi.xml.XmlText" implementationClass="com.intellij.lang.javascript.JSLanguageInjector"/>
 		<multiHostInjector forClass="com.intellij.psi.xml.XmlAttributeValue" implementationClass="com.intellij.lang.javascript.JSLanguageInjector"/>
 		<stubElementTypeHolder class="com.intellij.lang.javascript.JSElementTypes"/>
-		<lang.importOptimizer language="ECMA Script Level 4" implementationClass="com.intellij.lang.javascript.flex.ECMAScriptImportOptimizer"/>
+
 		<lang.importOptimizer language="XML" implementationClass="com.intellij.lang.javascript.flex.ECMAScriptImportOptimizer"/>
 		<lang.smartEnterProcessor language="JavaScript" implementationClass="com.intellij.lang.javascript.JSSmartEnterProcessor"/>
-		<lang.smartEnterProcessor language="ECMA Script Level 4" implementationClass="com.intellij.lang.javascript.JSSmartEnterProcessor"/>
 
 		<lang.implementationTextSelectioner language="JavaScript" implementationClass="com.intellij.javascript.JSImplementationTextSelectioner"/>
 		<lang.elementManipulator forClass="com.intellij.lang.javascript.psi.impl.JSIncludeDirectiveImpl"
@@ -103,8 +101,6 @@
 								 implementationClass="com.intellij.javascript.manipulators.JSDocTagManipulator"/>
 
 		<completion.contributor language="JavaScript" implementationClass="com.intellij.javascript.JSCompletionContributor"/>
-		<completion.contributor language="ECMA Script Level 4" implementationClass="com.intellij.javascript.JSCompletionContributor"/>
-		<completion.contributor language="GWT JavaScript" implementationClass="com.intellij.javascript.JSCompletionContributor"/>
 
 		<liveTemplateMacro implementation="com.intellij.javascript.JSClassNameMacro"/>
 		<liveTemplateMacro implementation="com.intellij.javascript.JSMethodNameMacro"/>

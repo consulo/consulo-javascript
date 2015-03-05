@@ -1,5 +1,7 @@
-package org.mustbe.consulo.javascript.lang.parsing;
+package org.mustbe.consulo.google.gwt.javascript.lang.parsing;
 
+import org.mustbe.consulo.javascript.lang.parsing.ExpressionParsing;
+import org.mustbe.consulo.javascript.lang.parsing.JavaScriptParsingContext;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSBundle;
 import com.intellij.lang.javascript.JSElementTypes;

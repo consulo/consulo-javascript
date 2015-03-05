@@ -19,6 +19,7 @@ package com.intellij.lang.javascript;
 /**
  * @author Maxim.Mossienko
  */
+@Deprecated
 public final class DialectOptionHolder
 {
 	public final boolean isECMAL4Level;
