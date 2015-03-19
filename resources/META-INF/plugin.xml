@@ -116,6 +116,8 @@
 								 allowMixin="true"
 								 immutableClass="org.mustbe.consulo.javascript.client.module.extension.ClientJavaScriptModuleExtension"
 								 mutableClass="org.mustbe.consulo.javascript.client.module.extension.ClientJavaScriptMutableModuleExtension"/>
+
+		<xdebugger.breakpointType implementation="org.mustbe.consulo.javascript.run.debug.JavaScriptLineBreakpointType" />
 	</extensions>
 
 	<extensionPoints>

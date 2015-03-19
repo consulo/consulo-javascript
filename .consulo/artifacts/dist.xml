@@ -20,6 +20,11 @@
           <element id="zip-archive" name="gwt-impl.jar">
             <element id="module-output" name="gwt-javascript-impl" />
           </element>
+          <element id="zip-archive" name="debugger-impl.jar">
+            <element id="module-output" name="debugger-impl" />
+            <element id="module-output" name="v8-debugger-impl" />
+          </element>
+          <element id="dir-copy" path="$PROJECT_DIR$/v8-debugger-impl/lib" />
         </element>
         <element id="dir-copy" path="$PROJECT_DIR$/dist" />
       </element>
