@@ -17,9 +17,6 @@
           <element id="zip-archive" name="json-impl.jar">
             <element id="module-output" name="json-javascript-impl" />
           </element>
-          <element id="zip-archive" name="gwt-impl.jar">
-            <element id="module-output" name="gwt-javascript-impl" />
-          </element>
           <element id="zip-archive" name="debugger-impl.jar">
             <element id="module-output" name="debugger-impl" />
             <element id="module-output" name="v8-debugger-impl" />

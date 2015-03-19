@@ -107,7 +107,6 @@ public interface JSElementTypes
 	IElementType THIS_EXPRESSION = new ElementTypeAsPsiFactory("THIS_EXPRESSION", JavascriptLanguage.INSTANCE, JSThisExpressionImpl.class);
 	IElementType REFERENCE_EXPRESSION = new ElementTypeAsPsiFactory("REFERENCE_EXPRESSION", JavascriptLanguage.INSTANCE,
 			JSReferenceExpressionImpl.class);
-	IElementType GWT_REFERENCE_EXPRESSION = new JSElementType("GWT_REFERENCE_EXPRESSION");
 	IElementType LITERAL_EXPRESSION = new ElementTypeAsPsiFactory("LITERAL_EXPRESSION", JavascriptLanguage.INSTANCE, JSLiteralExpressionImpl.class);
 	IElementType XML_LITERAL_EXPRESSION = new ElementTypeAsPsiFactory("XML_LITERAL_EXPRESSION", JavascriptLanguage.INSTANCE,
 			JSXmlLiteralExpressionImpl.class);
