@@ -35,7 +35,6 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
-import com.intellij.util.Function;
 
 /**
  * @author max
@@ -43,8 +42,6 @@ import com.intellij.util.Function;
 @Deprecated
 public class JavascriptParserDefinition implements ParserDefinition
 {
-	private static Function<ASTNode, PsiElement> ourGwtReferenceExpressionCreator;
-
 	@Override
 	@NotNull
 	public Lexer createLexer(Project project, LanguageVersion languageVersion)
@@ -101,22 +98,13 @@ public class JavascriptParserDefinition implements ParserDefinition
 		return LanguageUtil.canStickTokensTogetherByLexer(left, right, lexer);
 	}
 
-	public static void setGwtReferenceExpressionCreator(final Function<ASTNode, PsiElement> gwtReferenceExpressionCreator)
-	{
-		ourGwtReferenceExpressionCreator = gwtReferenceExpressionCreator;
-	}
-
 	@Override
 	@NotNull
 	public PsiElement createElement(ASTNode node)
 	{
 		final IElementType type = node.getElementType();
 
-		if(type == JSElementTypes.GWT_REFERENCE_EXPRESSION)
-		{
-			return ourGwtReferenceExpressionCreator.fun(node);
-		}
-		else if(type == JSElementTypes.EMBEDDED_CONTENT)
+		if(type == JSElementTypes.EMBEDDED_CONTENT)
 		{
 			return new JSEmbeddedContentImpl(node);
 		}

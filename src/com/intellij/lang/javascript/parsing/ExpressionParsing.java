@@ -421,148 +421,107 @@ public class ExpressionParsing extends Parsing
 
 	private static boolean parseMemberExpression(PsiBuilder builder, boolean allowCallSyntax)
 	{
-		final boolean gwt = isGwt(builder);
-		PsiBuilder.Marker gwtExprMark = null;
 
 		PsiBuilder.Marker expr = builder.mark();
 		boolean isNew;
 
-		try
+		final IElementType type = builder.getTokenType();
+
+		if(type == JSTokenTypes.NEW_KEYWORD)
 		{
-			final IElementType type = builder.getTokenType();
-			if(type == JSTokenTypes.AT && gwt)
-			{
-				gwtExprMark = builder.mark();
-			}
+			isNew = true;
+			final boolean isfunction = parseNewExpression(builder);
 
-			if(type == JSTokenTypes.NEW_KEYWORD)
+			if(isfunction)
 			{
-				isNew = true;
-				final boolean isfunction = parseNewExpression(builder);
-
-				if(isfunction)
+				expr.done(JSElementTypes.NEW_EXPRESSION);
+				if(builder.getTokenType() != JSTokenTypes.LPAR)
 				{
-					expr.done(JSElementTypes.NEW_EXPRESSION);
-					if(builder.getTokenType() != JSTokenTypes.LPAR)
-					{
-						return true;
-					}
-					expr = expr.precede();
-					isNew = false;
+					return true;
 				}
-			}
-			else
-			{
+				expr = expr.precede();
 				isNew = false;
-				if(gwtExprMark != null)
-				{
-					builder.advanceLexer();
-					if(isIdentifierToken(builder.getTokenType()))
-					{
-						builder.advanceLexer();
-					}
-				}
-				else if(!parsePrimaryExpression(builder))
-				{
-					expr.drop();
-					return false;
-				}
 			}
-
-			boolean currentlyAllowCallSyntax = allowCallSyntax && (type != JSTokenTypes.LBRACE && type != JSTokenTypes.LBRACKET);
-
-			while(true)
+		}
+		else
+		{
+			isNew = false;
+			if(!parsePrimaryExpression(builder))
 			{
-				IElementType tokenType = builder.getTokenType();
-				if(tokenType == JSTokenTypes.DOT || (tokenType == JSTokenTypes.COLON_COLON || tokenType == JSTokenTypes.DOT_DOT))
+				expr.drop();
+				return false;
+			}
+		}
+
+		boolean currentlyAllowCallSyntax = allowCallSyntax && (type != JSTokenTypes.LBRACE && type != JSTokenTypes.LBRACKET);
+
+		while(true)
+		{
+			IElementType tokenType = builder.getTokenType();
+			if(tokenType == JSTokenTypes.DOT || (tokenType == JSTokenTypes.COLON_COLON || tokenType == JSTokenTypes.DOT_DOT))
+			{
+				currentlyAllowCallSyntax = allowCallSyntax;
+				builder.advanceLexer();
+
+				if(builder.getTokenType() == JSTokenTypes.AT)
 				{
-					currentlyAllowCallSyntax = allowCallSyntax;
+
 					builder.advanceLexer();
-
-					if(builder.getTokenType() == JSTokenTypes.AT)
-					{
-						if(gwt && gwtExprMark == null)
-						{
-							gwtExprMark = builder.mark();
-						}
-
-						builder.advanceLexer();
-					}
-
-					tokenType = builder.getTokenType();
-
-					if(tokenType == JSTokenTypes.LT && isECMAL4(builder))
-					{
-						parseGenericSignature(builder);
-						expr.done(JSElementTypes.REFERENCE_EXPRESSION);
-						expr = expr.precede();
-						continue;
-					}
-
-					if(tokenType == JSTokenTypes.LBRACKET || tokenType == JSTokenTypes.LPAR)
-					{
-						continue;
-					}
-
-					if(tokenType == JSTokenTypes.ANY_IDENTIFIER || isIdentifierToken(tokenType))
-					{
-						builder.advanceLexer();
-					}
-					else
-					{
-						builder.error(JSBundle.message("javascript.parser.message.expected.name"));
-					}
-
-					if(gwtExprMark == null)
-					{
-						expr.done(JSElementTypes.REFERENCE_EXPRESSION);
-						expr = expr.precede();
-					}
-					else if(tokenType == JSTokenTypes.GWT_FIELD_OR_METHOD)
-					{
-						if(gwtExprMark != null)
-						{
-							gwtExprMark.done(JSElementTypes.GWT_REFERENCE_EXPRESSION);
-							gwtExprMark = null;
-							expr.done(JSElementTypes.REFERENCE_EXPRESSION);
-							expr = expr.precede();
-						}
-					}
 				}
-				else if(tokenType == JSTokenTypes.LBRACKET)
+
+				tokenType = builder.getTokenType();
+
+				if(tokenType == JSTokenTypes.LT && isECMAL4(builder))
+				{
+					parseGenericSignature(builder);
+					expr.done(JSElementTypes.REFERENCE_EXPRESSION);
+					expr = expr.precede();
+					continue;
+				}
+
+				if(tokenType == JSTokenTypes.LBRACKET || tokenType == JSTokenTypes.LPAR)
+				{
+					continue;
+				}
+
+				if(tokenType == JSTokenTypes.ANY_IDENTIFIER || isIdentifierToken(tokenType))
 				{
 					builder.advanceLexer();
-					parseExpression(builder);
-					checkMatches(builder, JSTokenTypes.RBRACKET, JSBundle.message("javascript.parser.message.expected.rbracket"));
-					expr.done(JSElementTypes.INDEXED_PROPERTY_ACCESS_EXPRESSION);
-					expr = expr.precede();
-				}
-				else if(currentlyAllowCallSyntax && tokenType == JSTokenTypes.LPAR)
-				{
-					parseArgumentList(builder);
-					expr.done(isNew ? JSElementTypes.NEW_EXPRESSION : JSElementTypes.CALL_EXPRESSION);
-					expr = expr.precede();
-					isNew = false;
 				}
 				else
 				{
-					if(isNew)
-					{
-						expr.done(JSElementTypes.NEW_EXPRESSION);
-					}
-					else
-					{
-						expr.drop();
-					}
-					break;
+					builder.error(JSBundle.message("javascript.parser.message.expected.name"));
 				}
+
+				expr.done(JSElementTypes.REFERENCE_EXPRESSION);
+				expr = expr.precede();
 			}
-		}
-		finally
-		{
-			if(gwtExprMark != null)
+			else if(tokenType == JSTokenTypes.LBRACKET)
 			{
-				gwtExprMark.done(JSElementTypes.GWT_REFERENCE_EXPRESSION);
+				builder.advanceLexer();
+				parseExpression(builder);
+				checkMatches(builder, JSTokenTypes.RBRACKET, JSBundle.message("javascript.parser.message.expected.rbracket"));
+				expr.done(JSElementTypes.INDEXED_PROPERTY_ACCESS_EXPRESSION);
+				expr = expr.precede();
+			}
+			else if(currentlyAllowCallSyntax && tokenType == JSTokenTypes.LPAR)
+			{
+				parseArgumentList(builder);
+				expr.done(isNew ? JSElementTypes.NEW_EXPRESSION : JSElementTypes.CALL_EXPRESSION);
+				expr = expr.precede();
+				isNew = false;
+			}
+			else
+			{
+				if(isNew)
+				{
+					expr.done(JSElementTypes.NEW_EXPRESSION);
+				}
+				else
+				{
+					expr.drop();
+				}
+				break;
 			}
 		}
 
