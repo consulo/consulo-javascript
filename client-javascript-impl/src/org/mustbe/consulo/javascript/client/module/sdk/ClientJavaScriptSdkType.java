@@ -2,6 +2,7 @@ package org.mustbe.consulo.javascript.client.module.sdk;
 
 import javax.swing.Icon;
 
+import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.javascript.JavaScriptIcons;
@@ -16,11 +17,22 @@ import com.intellij.openapi.roots.types.SourcesOrderRootType;
  */
 public class ClientJavaScriptSdkType extends SdkType
 {
-	public static ClientJavaScriptSdkType INSTANCE = new ClientJavaScriptSdkType();
+	@NotNull
+	@LazyInstance
+	public static ClientJavaScriptSdkType getInstance()
+	{
+		return EP_NAME.findExtension(ClientJavaScriptSdkType.class);
+	}
 
 	public ClientJavaScriptSdkType()
 	{
 		super("CLIENT_JAVASCRIPT_SDK_TYPE");
+	}
+
+	@Override
+	public boolean supportsUserAdd()
+	{
+		return false;
 	}
 
 	@Override

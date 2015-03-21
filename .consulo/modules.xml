@@ -99,7 +99,7 @@
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
-          <orderEntry type="module" module-name="consulo-javascript" />
+          <orderEntry type="module" module-name="consulo-javascript" exported="" />
         </module-layer>
       </module>
       <module name="ecmascript-level4-impl" dirurl="file://$PROJECT_DIR$/ecmascript-level4-impl" current-layer="Default">

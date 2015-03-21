@@ -59,7 +59,7 @@ public class ClientJavaScriptPredefinedBundlesProvider extends PredefinedBundles
 			{
 				continue;
 			}
-			SdkImpl sdk = createSdkWithName(ClientJavaScriptSdkType.INSTANCE, name);
+			SdkImpl sdk = createSdkWithName(ClientJavaScriptSdkType.getInstance(), name);
 			sdk.setHomePath(fileByIoFile.getPath());
 			sdk.setVersionString("1");
 
