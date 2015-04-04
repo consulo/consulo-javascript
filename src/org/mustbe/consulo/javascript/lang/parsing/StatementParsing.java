@@ -224,7 +224,7 @@ public class StatementParsing extends Parsing
 		final PsiBuilder.Marker marker = builder.mark();
 		builder.advanceLexer();
 
-		getExpressionParsing().parseExpression(builder);
+		getExpressionParsing().parseExpressionOptional(builder);
 		checkForSemicolon(builder);
 		marker.done(JSElementTypes.YIELD_STATEMENT);
 	}
