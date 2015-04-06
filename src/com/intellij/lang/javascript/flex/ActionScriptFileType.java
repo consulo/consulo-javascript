@@ -21,7 +21,7 @@ import javax.swing.Icon;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.javascript.JavaScriptIcons;
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
+import com.intellij.lang.javascript.JavascriptLanguage;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 
 /**
@@ -34,7 +34,7 @@ public class ActionScriptFileType extends LanguageFileType
 
 	private ActionScriptFileType()
 	{
-		super(JavaScriptSupportLoader.ECMA_SCRIPT_L4);
+		super(JavascriptLanguage.INSTANCE);
 	}
 
 	@NotNull
