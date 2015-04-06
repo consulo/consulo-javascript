@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.intellij.lang.javascript.flex;
+package org.mustbe.consulo.actionscript;
 
 import javax.swing.Icon;
 

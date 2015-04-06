@@ -1,0 +1,7 @@
+<idea-plugin>
+	<extensions defaultExtensionNs="com.intellij">
+		<fileTypeFactory implementation="org.mustbe.consulo.actionscript.ActionScriptFileTypeFactory" />
+
+		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.actionscript.lang.ActionScriptLanguageVersion" />
+	</extensions>
+</idea-plugin>

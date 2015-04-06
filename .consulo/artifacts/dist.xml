@@ -13,6 +13,7 @@
             <element id="module-production-resource-output" name="intentions" />
             <element id="module-output" name="client-javascript-impl" />
             <element id="module-output" name="ecmascript-level4-impl" />
+            <element id="module-output" name="actionscript-impl" />
           </element>
           <element id="zip-archive" name="json-impl.jar">
             <element id="module-output" name="json-javascript-impl" />

@@ -22,7 +22,6 @@ import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.lang.DependentLanguage;
 import com.intellij.lang.LanguageParserDefinitions;
 import com.intellij.lang.LanguageVersion;
-import com.intellij.lang.javascript.flex.ActionScriptFileType;
 import com.intellij.lang.javascript.highlighting.JSHighlighter;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.fileTypes.FileTypeConsumer;
@@ -104,7 +103,7 @@ public class JavaScriptSupportLoader extends FileTypeFactory
 		consumer.consume(JavaScriptFileType.INSTANCE);
 		//consumer.consume(JsonFileType.INSTANCE);
 		//consumer.consume(EcmaScriptFileType.INSTANCE, "es;js2");
-		consumer.consume(ActionScriptFileType.INSTANCE);
+		//consumer.consume(ActionScriptFileType.INSTANCE);
 	}
 
 	public static boolean isFlexMxmFile(final PsiFile file)
