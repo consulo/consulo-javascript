@@ -38,6 +38,7 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.StringEscapesTokenTypes;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.util.Processor;
 
 /**
  * Created by IntelliJ IDEA.
@@ -164,10 +165,10 @@ public class JSHighlighter extends SyntaxHighlighterBase
 		keys1.put(JSDocTokenTypes.DOC_TAG_NAME, JS_DOC_COMMENT);
 		keys2.put(JSDocTokenTypes.DOC_TAG_NAME, JS_DOC_TAG);
 
-		IElementType[] javadoc = IElementType.enumerate(new IElementType.Predicate()
+		IElementType[] javadoc = IElementType.enumerate(new Processor<IElementType>()
 		{
 			@Override
-			public boolean matches(IElementType type)
+			public boolean process(IElementType type)
 			{
 				return type instanceof JSDocElementType;
 			}
