@@ -41,6 +41,12 @@ public abstract class BaseInspection extends LocalInspectionTool implements Cust
 	@NotNull
 	public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder problemsHolder, boolean onTheFly)
 	{
+		if(!canBuildVisitor(problemsHolder.getFile()))
+		{
+			return new PsiElementVisitor()
+			{
+			};
+		}
 		final BaseInspectionVisitor visitor = buildVisitor();
 		visitor.setProblemsHolder(problemsHolder);
 		visitor.setOnTheFly(onTheFly);
@@ -48,6 +54,10 @@ public abstract class BaseInspection extends LocalInspectionTool implements Cust
 		return visitor;
 	}
 
+	public boolean canBuildVisitor(@NotNull PsiFile psiFile)
+	{
+		return true;
+	}
 
 	@Nullable
 	protected String buildErrorString(Object... args)
