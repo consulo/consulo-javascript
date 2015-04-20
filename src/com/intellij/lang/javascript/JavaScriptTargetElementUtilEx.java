@@ -17,21 +17,22 @@
 package com.intellij.lang.javascript;
 
 import org.jetbrains.annotations.NotNull;
-import com.intellij.codeInsight.TargetElementEvaluator;
+import org.mustbe.consulo.extensions.CompositeExtensionPointName;
+import com.intellij.codeInsight.TargetElementUtilEx;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
 
 /**
  * @author Maxim.Mossienko
  *         Date: Oct 13, 2008
  *         Time: 3:53:42 PM
  */
-public class JSTargetElementEvaluator implements TargetElementEvaluator
+public class JavaScriptTargetElementUtilEx extends TargetElementUtilEx.Adapter
 {
 	@Override
+	@CompositeExtensionPointName.BooleanBreakResult(breakValue = false)
 	public boolean includeSelfInGotoImplementation(@NotNull final PsiElement element)
 	{
 		if(element instanceof JSFunction)
@@ -47,11 +48,5 @@ public class JSTargetElementEvaluator implements TargetElementEvaluator
 			return false;
 		}
 		return true;
-	}
-
-	@Override
-	public PsiElement getElementByReference(final PsiReference ref, final int flags)
-	{
-		return null;
 	}
 }

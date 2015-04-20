@@ -107,7 +107,7 @@
 		<liveTemplateMacro implementation="com.intellij.javascript.JSMethodNameMacro"/>
 
 		<inspectionToolProvider implementation="com.intellij.lang.javascript.inspections.JSInspectionToolProvider"/>
-		<targetElementEvaluator language="JavaScript" implementationClass="com.intellij.lang.javascript.JSTargetElementEvaluator"/>
+		<targetElementUtilEx implementation="com.intellij.lang.javascript.JavaScriptTargetElementUtilEx"/>
 
 		<sdkType implementation="org.mustbe.consulo.javascript.client.module.sdk.ClientJavaScriptSdkType" />
 		<predefinedBundlesProvider implementation="org.mustbe.consulo.javascript.client.module.sdk.ClientJavaScriptPredefinedBundlesProvider"/>
