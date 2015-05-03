@@ -19,18 +19,20 @@
  */
 package com.intellij.lang.javascript.psi.stubs;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
 import com.intellij.lang.javascript.types.JSFileElementType;
-import com.intellij.psi.stubs.IntStubIndexExtension;
+import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;
 
-public class JSQualifiedElementIndex extends IntStubIndexExtension<JSQualifiedNamedElement>
+public class JSQualifiedElementIndex extends StringStubIndexExtension<JSQualifiedNamedElement>
 {
-	public static final StubIndexKey<Integer, JSQualifiedNamedElement> KEY = StubIndexKey.createIndexKey("js.element.qualifiedName");
+	public static final StubIndexKey<String, JSQualifiedNamedElement> KEY = StubIndexKey.createIndexKey("js.element.qualifiedName");
 	private static final int VERSION = 2;
 
+	@NotNull
 	@Override
-	public StubIndexKey<Integer, JSQualifiedNamedElement> getKey()
+	public StubIndexKey<String, JSQualifiedNamedElement> getKey()
 	{
 		return KEY;
 	}

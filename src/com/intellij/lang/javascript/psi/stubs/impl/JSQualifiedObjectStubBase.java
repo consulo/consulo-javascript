@@ -68,7 +68,7 @@ abstract class JSQualifiedObjectStubBase<T extends JSQualifiedNamedElement> exte
 
 		if(fqn != null && doIndexQualifiedName(name, fqn))
 		{
-			sink.occurrence(JSQualifiedElementIndex.KEY, fqn.hashCode());
+			sink.occurrence(JSQualifiedElementIndex.KEY, fqn);
 		}
 	}
 

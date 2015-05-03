@@ -114,7 +114,7 @@ public class JSReferenceListImpl extends JSStubElementImpl<JSReferenceListStub> 
 
 			text = JSImportHandlingUtil.resolveTypeName(text, this);
 
-			final Collection<JSQualifiedNamedElement> candidates = StubIndex.getInstance().get(JSQualifiedElementIndex.KEY, text.hashCode(), project,
+			final Collection<JSQualifiedNamedElement> candidates = StubIndex.getInstance().get(JSQualifiedElementIndex.KEY, text, project,
 					ProjectScope.getAllScope(project));
 			for(JSQualifiedNamedElement _clazz : candidates)
 			{

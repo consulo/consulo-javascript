@@ -745,7 +745,7 @@ public class JSResolveUtil
 		}
 		else
 		{
-			for(JSQualifiedNamedElement e : StubIndex.getInstance().get(JSQualifiedElementIndex.KEY, resolvedName.hashCode(), project, scope))
+			for(JSQualifiedNamedElement e : StubIndex.getInstance().get(JSQualifiedElementIndex.KEY, resolvedName, project, scope))
 			{
 				if(!e.getName().equals(resolvedName))
 				{
@@ -1799,7 +1799,7 @@ public class JSResolveUtil
 
 			final PsiElement[] result = new PsiElement[1];
 
-			final Collection<JSQualifiedNamedElement> candidates = StubIndex.getInstance().get(JSQualifiedElementIndex.KEY, link.hashCode(),
+			final Collection<JSQualifiedNamedElement> candidates = StubIndex.getInstance().get(JSQualifiedElementIndex.KEY, link,
 					index.getProject(), searchScope);
 			for(JSQualifiedNamedElement clazz : candidates)
 			{
