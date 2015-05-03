@@ -22,7 +22,6 @@ import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSAttributeList;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeListStub;
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -84,11 +83,6 @@ public class JSAttributeListStubImpl extends StubBase<JSAttributeList> implement
 			setFlag(type, true);
 		}
 		myNamespace = namespace;
-	}
-
-	@Override
-	public void index(final IndexSink sink)
-	{
 	}
 
 	@Override

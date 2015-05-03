@@ -21,7 +21,6 @@ import java.io.IOException;
 import com.intellij.lang.javascript.psi.JSImportStatement;
 import com.intellij.lang.javascript.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.stubs.JSImportStatementStub;
-import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -50,11 +49,6 @@ public class JSImportStatementStubImpl extends StubBase<JSImportStatement> imple
 		super(parentStub, type);
 
 		myImportText = psi.getImportText();
-	}
-
-	@Override
-	public void index(final IndexSink sink)
-	{
 	}
 
 	@Override

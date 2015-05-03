@@ -22,7 +22,6 @@ import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.lang.javascript.psi.JSReferenceList;
 import com.intellij.lang.javascript.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.stubs.JSReferenceListStub;
-import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -80,11 +79,6 @@ public class JSReferenceListStubImpl extends StubBase<JSReferenceList> implement
 		{
 			myRefs = ArrayUtil.EMPTY_STRING_ARRAY;
 		}
-	}
-
-	@Override
-	public void index(final IndexSink sink)
-	{
 	}
 
 	@Override

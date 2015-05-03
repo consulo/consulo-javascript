@@ -18,12 +18,9 @@ package com.intellij.lang.javascript.psi.stubs.impl;
 
 import java.io.IOException;
 
-import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.stubs.JSFunctionStubBase;
-import com.intellij.lang.javascript.types.JSPackageStatementElementType;
-import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
@@ -98,29 +95,6 @@ abstract class JSFunctionStubBaseImpl<T extends JSFunction> extends JSQualifiedO
 	public boolean isReferencesArguments()
 	{
 		return (myFlags & REFERENCES_ARGUMENTS_MASK) != 0;
-	}
-
-	@Override
-	protected boolean doIndexName(final String name, final String fqn)
-	{
-		final IStubElementType type = getStubType();
-		if(type != JSElementTypes.FUNCTION_DECLARATION)
-		{
-			return false;
-		}
-		final IStubElementType stubType = getParentStub().getStubType();
-
-		if(stubType instanceof JSPackageStatementElementType || stubType == null)
-		{
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	protected boolean doIndexQualifiedName(final String name, final String fqn)
-	{
-		return doIndexName(name, fqn);
 	}
 
 	@Override

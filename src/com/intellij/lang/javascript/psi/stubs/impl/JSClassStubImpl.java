@@ -20,14 +20,9 @@ import java.io.IOException;
 
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSClass;
-import com.intellij.lang.javascript.psi.JSReferenceList;
 import com.intellij.lang.javascript.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.stubs.JSClassStub;
-import com.intellij.lang.javascript.psi.stubs.JSImplementedInterfacesIndex;
-import com.intellij.lang.javascript.psi.stubs.JSSuperClassIndex;
-import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubIndexKey;
 import com.intellij.psi.stubs.StubInputStream;
 
 /**
@@ -71,38 +66,5 @@ public class JSClassStubImpl extends JSQualifiedObjectStubBase<JSClass> implemen
 	public boolean isDeprecated()
 	{
 		return (myFlags & DEPRECATED_MASK) != 0;
-	}
-
-	@Override
-	public String getName()
-	{
-		return myName;
-	}
-
-	@Override
-	public void index(final IndexSink sink)
-	{
-		super.index(sink);
-		JSClass psi = getPsi();
-
-		doIndex(sink, psi.getExtendsList(), JSSuperClassIndex.KEY);
-		doIndex(sink, psi.getImplementsList(), JSImplementedInterfacesIndex.KEY);
-	}
-
-	private static void doIndex(IndexSink sink, JSReferenceList extendsList, StubIndexKey<String, JSClass> indexKey)
-	{
-		String[] referenceExpressions = extendsList != null ? extendsList.getReferenceTexts() : null;
-		if(referenceExpressions == null)
-		{
-			return;
-		}
-
-		for(String s : referenceExpressions)
-		{
-			if(s != null)
-			{
-				sink.occurrence(indexKey, s.substring(s.lastIndexOf('.') + 1));
-			}
-		}
 	}
 }

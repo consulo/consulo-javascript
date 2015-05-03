@@ -34,7 +34,7 @@ import com.intellij.psi.stubs.StubInputStream;
  *         Date: Jun 6, 2008
  *         Time: 7:49:06 PM
  */
-public class JSNamespaceDeclarationElementType extends JSStubElementType<JSNamespaceDeclarationStub, JSNamespaceDeclaration>
+public class JSNamespaceDeclarationElementType extends JSQualifiedStubElementType<JSNamespaceDeclarationStub, JSNamespaceDeclaration>
 {
 	public JSNamespaceDeclarationElementType()
 	{

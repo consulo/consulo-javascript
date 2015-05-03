@@ -20,7 +20,6 @@ import java.io.IOException;
 
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.stubs.JSVariableStubBase;
-import com.intellij.lang.javascript.types.JSPackageStatementElementType;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -105,23 +104,5 @@ public abstract class JSVariableStubBaseImpl<T extends JSVariable> extends JSQua
 	public boolean isLocal()
 	{
 		return (myFlags & LOCAL_MASK) != 0;
-	}
-
-	@Override
-	protected boolean doIndexName(final String name, final String fqn)
-	{
-		final IStubElementType stubType = getParentStub().getParentStub().getStubType();
-
-		if(stubType instanceof JSPackageStatementElementType || stubType == null)
-		{
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	protected boolean doIndexQualifiedName(final String name, final String fqn)
-	{
-		return doIndexName(name, fqn);
 	}
 }

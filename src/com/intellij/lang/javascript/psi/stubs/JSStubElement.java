@@ -19,7 +19,6 @@ package com.intellij.lang.javascript.psi.stubs;
 import java.io.IOException;
 
 import com.intellij.lang.javascript.psi.JSElement;
-import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubOutputStream;
 
@@ -30,7 +29,5 @@ import com.intellij.psi.stubs.StubOutputStream;
  */
 public interface JSStubElement<T extends JSElement> extends StubElement<T>
 {
-	void index(final IndexSink sink);
-
 	void serialize(final StubOutputStream dataStream) throws IOException;
 }

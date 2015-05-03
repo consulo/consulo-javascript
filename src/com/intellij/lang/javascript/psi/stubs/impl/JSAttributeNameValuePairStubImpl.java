@@ -22,7 +22,6 @@ import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSAttributeNameValuePair;
 import com.intellij.lang.javascript.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeNameValuePairStub;
-import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
@@ -58,11 +57,6 @@ public class JSAttributeNameValuePairStubImpl extends JSNamedObjectStubBase<JSAt
 	{
 		super(name, 0, parentStub, JSElementTypes.ATTRIBUTE_NAME_VALUE_PAIR);
 		myValue = value;
-	}
-
-	@Override
-	public void index(final IndexSink sink)
-	{
 	}
 
 	@Override

@@ -34,7 +34,7 @@ import com.intellij.psi.stubs.StubInputStream;
  *         Date: Mar 25, 2008
  *         Time: 10:30:14 PM
  */
-public class JSClassElementType extends JSStubElementType<JSClassStub, JSClass>
+public class JSClassElementType extends JSQualifiedStubElementType<JSClassStub, JSClass>
 {
 	public JSClassElementType()
 	{

@@ -48,16 +48,4 @@ public class JSPackageStatementStubImpl extends JSQualifiedObjectStubBase<JSPack
 	{
 		return 0;
 	}
-
-	@Override
-	protected boolean doIndexName(String name, String fqn)
-	{
-		return false;
-	}
-
-	@Override
-	protected boolean doIndexQualifiedName(String name, String fqn)
-	{
-		return false;
-	}
 }

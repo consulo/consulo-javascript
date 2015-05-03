@@ -19,11 +19,8 @@ package com.intellij.lang.javascript.psi.stubs.impl;
 import java.io.IOException;
 
 import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
-import com.intellij.lang.javascript.psi.stubs.JSNameIndex;
-import com.intellij.lang.javascript.psi.stubs.JSQualifiedElementIndex;
 import com.intellij.lang.javascript.psi.stubs.JSQualifiedStub;
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
@@ -54,32 +51,6 @@ abstract class JSQualifiedObjectStubBase<T extends JSQualifiedNamedElement> exte
 	protected String doGetQualifiedName(final T clazz)
 	{
 		return clazz.getQualifiedName();
-	}
-
-	public void index(final IndexSink sink)
-	{
-		final String name = getName();
-		final String fqn = getQualifiedName();
-
-		if(name != null && doIndexName(name, fqn))
-		{
-			sink.occurrence(JSNameIndex.KEY, name);
-		}
-
-		if(fqn != null && doIndexQualifiedName(name, fqn))
-		{
-			sink.occurrence(JSQualifiedElementIndex.KEY, fqn);
-		}
-	}
-
-	protected boolean doIndexQualifiedName(final String name, final String fqn)
-	{
-		return true;
-	}
-
-	protected boolean doIndexName(final String name, final String fqn)
-	{
-		return true;
 	}
 
 	protected JSQualifiedObjectStubBase(final StubInputStream dataStream, final StubElement parentStub, final IStubElementType elementType) throws

@@ -27,6 +27,7 @@ import com.intellij.lang.javascript.psi.impl.JSVariableImpl;
 import com.intellij.lang.javascript.psi.stubs.JSVariableStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSVariableStubImpl;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.tree.IElementType;
@@ -36,11 +37,29 @@ import com.intellij.psi.tree.IElementType;
  *         Date: Mar 25, 2008
  *         Time: 10:30:10 PM
  */
-public class JSVariableElementType extends JSStubElementType<JSVariableStub, JSVariable>
+public class JSVariableElementType extends JSQualifiedStubElementType<JSVariableStub, JSVariable>
 {
 	public JSVariableElementType()
 	{
 		super("VARIABLE");
+	}
+
+	@Override
+	protected boolean doIndexName(JSVariableStub stub, String name, String fqn)
+	{
+		final IStubElementType stubType = stub.getParentStub().getParentStub().getStubType();
+
+		if(stubType instanceof JSPackageStatementElementType || stubType == null)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	protected boolean doIndexQualifiedName(JSVariableStub stub, String name, String fqn)
+	{
+		return doIndexName(stub, name, fqn);
 	}
 
 	@Override

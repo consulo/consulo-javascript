@@ -68,16 +68,4 @@ public class JSParameterStubImpl extends JSVariableStubBaseImpl<JSParameter> imp
 	{
 		return (myFlags & OPTIONAL_MASK) != 0;
 	}
-
-	@Override
-	protected boolean doIndexName(final String name, final String fqn)
-	{
-		return false;
-	}
-
-	@Override
-	protected boolean doIndexQualifiedName(final String name, final String fqn)
-	{
-		return false;
-	}
 }

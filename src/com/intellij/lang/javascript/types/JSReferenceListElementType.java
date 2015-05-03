@@ -21,13 +21,20 @@ import java.io.IOException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.javascript.JSElementTypes;
+import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSReferenceList;
 import com.intellij.lang.javascript.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.impl.JSReferenceListImpl;
+import com.intellij.lang.javascript.psi.stubs.JSImplementedInterfacesIndex;
 import com.intellij.lang.javascript.psi.stubs.JSReferenceListStub;
+import com.intellij.lang.javascript.psi.stubs.JSSuperClassIndex;
 import com.intellij.lang.javascript.psi.stubs.impl.JSReferenceListStubImpl;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
+import com.intellij.psi.stubs.StubIndexKey;
 import com.intellij.psi.stubs.StubInputStream;
 
 /**
@@ -40,6 +47,30 @@ public class JSReferenceListElementType extends JSStubElementType<JSReferenceLis
 	public JSReferenceListElementType(@NonNls String name)
 	{
 		super(name);
+	}
+
+	@Override
+	public void indexStub(@NotNull JSReferenceListStub stub, @NotNull IndexSink sink)
+	{
+		if(this == JSElementTypes.EXTENDS_LIST)
+		{
+			doIndex(sink, stub, JSSuperClassIndex.KEY);
+		}
+		else if(this == JSElementTypes.IMPLEMENTS_LIST)
+		{
+			doIndex(sink, stub, JSImplementedInterfacesIndex.KEY);
+		}
+	}
+
+	private static void doIndex(IndexSink sink, JSReferenceListStub stub, StubIndexKey<String, JSClass> indexKey)
+	{
+		for(String s : stub.getReferenceTexts())
+		{
+			if(s != null)
+			{
+				sink.occurrence(indexKey, StringUtil.getShortName(s));
+			}
+		}
 	}
 
 	@Override

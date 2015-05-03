@@ -21,7 +21,6 @@ import java.io.IOException;
 import com.intellij.lang.javascript.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.JSUseNamespaceDirective;
 import com.intellij.lang.javascript.psi.stubs.JSUseNamespaceDirectiveStub;
-import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -50,11 +49,6 @@ public class JSUseNamespaceDirectiveStubImpl extends StubBase<JSUseNamespaceDire
 		super(parentStub, type);
 
 		myNamespaceToUse = psi.getNamespaceToBeUsed();
-	}
-
-	@Override
-	public void index(final IndexSink sink)
-	{
 	}
 
 	@Override

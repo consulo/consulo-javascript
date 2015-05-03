@@ -23,7 +23,6 @@ import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSParameterList;
 import com.intellij.lang.javascript.psi.stubs.JSParameterListStub;
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubOutputStream;
@@ -49,11 +48,6 @@ public class JSParameterListStubImpl extends StubBase<JSParameterList> implement
 	public JSParameterListStubImpl(final StubElement parentStub)
 	{
 		super(parentStub, JSElementTypes.PARAMETER_LIST);
-	}
-
-	@Override
-	public void index(final IndexSink sink)
-	{
 	}
 
 	@Override

@@ -26,6 +26,7 @@ import com.intellij.lang.javascript.psi.impl.JSFunctionImpl;
 import com.intellij.lang.javascript.psi.stubs.JSFunctionStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSFunctionStubImpl;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 
@@ -34,11 +35,29 @@ import com.intellij.psi.stubs.StubInputStream;
  *         Date: Mar 25, 2008
  *         Time: 10:50:34 PM
  */
-public class JSFunctionElementType extends JSStubElementType<JSFunctionStub, JSFunction>
+public class JSFunctionElementType extends JSQualifiedStubElementType<JSFunctionStub, JSFunction>
 {
 	public JSFunctionElementType()
 	{
 		super("FUNCTION_DECLARATION");
+	}
+
+	@Override
+	protected boolean doIndexName(JSFunctionStub stub, final String name, final String fqn)
+	{
+		final IStubElementType stubType = stub.getParentStub().getStubType();
+
+		if(stubType instanceof JSPackageStatementElementType || stubType == null)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	protected boolean doIndexQualifiedName(JSFunctionStub stub, String name, String fqn)
+	{
+		return doIndexName(stub, name, fqn);
 	}
 
 	@Override

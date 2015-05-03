@@ -21,7 +21,6 @@ import java.io.IOException;
 import com.intellij.lang.javascript.psi.JSIncludeDirective;
 import com.intellij.lang.javascript.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.stubs.JSIncludeDirectiveStub;
-import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -49,11 +48,6 @@ public class JSIncludeDirectiveStubImpl extends StubBase<JSIncludeDirective> imp
 	{
 		super(parentStub, type);
 		myIncludeText = psi.getIncludeText();
-	}
-
-	@Override
-	public void index(final IndexSink sink)
-	{
 	}
 
 	@Override

@@ -22,7 +22,6 @@ import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSAttribute;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeStub;
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 
@@ -52,10 +51,5 @@ public class JSAttributeStubImpl extends JSNamedObjectStubBase<JSAttribute> impl
 	protected int buildFlags(final JSAttribute clazz)
 	{
 		return 0;
-	}
-
-	@Override
-	public void index(final IndexSink sink)
-	{
 	}
 }
