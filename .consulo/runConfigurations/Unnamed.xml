@@ -5,14 +5,20 @@
     <option name="USE_ALT_CONSULO_SDK" value="false" />
     <option name="ALT_CONSULO_SDK_PATH" />
     <java-sdk name="1.7" />
-    <consulo-sdk name="Consulo 1.SNAPSHOT" />
+    <consulo-sdk name="Consulo SNAPSHOT" />
     <artifact name="plugin" />
     <predefined_log_file id="IDEA_LOG" enabled="true" />
+    <RunnerSettings RunnerId="ConsuloDebuggerRunner">
+      <option name="DEBUG_PORT" value="" />
+      <option name="TRANSPORT" value="0" />
+      <option name="LOCAL" value="true" />
+    </RunnerSettings>
     <RunnerSettings RunnerId="Debug">
       <option name="DEBUG_PORT" value="" />
       <option name="TRANSPORT" value="0" />
       <option name="LOCAL" value="true" />
     </RunnerSettings>
+    <ConfigurationWrapper RunnerId="ConsuloDebuggerRunner" />
     <ConfigurationWrapper RunnerId="Debug" />
     <method>
       <option name="BuildArtifacts" enabled="true">
