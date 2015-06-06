@@ -19,6 +19,9 @@ package com.intellij.lang.javascript.navigation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.codeInsight.navigation.actions.TypeDeclarationProvider;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.index.JSNamedElementProxy;
@@ -31,6 +34,7 @@ import com.intellij.lang.javascript.psi.JSNamedElement;
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.resolve.BaseJSSymbolProcessor;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 
@@ -39,10 +43,11 @@ import com.intellij.psi.PsiFile;
  *         Date: May 29, 2008
  *         Time: 8:27:42 PM
  */
-public class JavaScriptTypeDeclarationProvider implements TypeDeclarationProvider
+public class JavaScriptTypeDeclarationProvider extends TypeDeclarationProvider
 {
+	@RequiredReadAction
 	@Override
-	public PsiElement[] getSymbolTypeDeclarations(final PsiElement symbol)
+	public PsiElement[] getSymbolTypeDeclarations(@NotNull PsiElement symbol, @Nullable Editor editor, int offset)
 	{
 		if(!(symbol instanceof JSNamedElement))
 		{
