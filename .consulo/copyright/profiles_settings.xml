@@ -1,5 +1,7 @@
 <component name="CopyrightManager">
-  <settings default="">
-    <module2copyright />
+  <settings default="must-be">
+    <module2copyright>
+      <element module="package:com.intellij" copyright="jetbrains+must-be" />
+    </module2copyright>
   </settings>
 </component>
