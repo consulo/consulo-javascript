@@ -1,5 +1,6 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2000-2005 JetBrains s.r.o
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +17,10 @@
 
 package com.intellij.lang.javascript.psi.stubs.impl;
 
-import java.io.IOException;
-
 import com.intellij.lang.javascript.psi.JSPackageStatement;
-import com.intellij.lang.javascript.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.stubs.JSPackageStatementStub;
+import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
 
 /**
  * @author Maxim.Mossienko
@@ -31,21 +29,8 @@ import com.intellij.psi.stubs.StubInputStream;
  */
 public class JSPackageStatementStubImpl extends JSQualifiedObjectStubBase<JSPackageStatement> implements JSPackageStatementStub
 {
-	public JSPackageStatementStubImpl(final StubInputStream dataStream, final StubElement parentStub, final JSStubElementType<JSPackageStatementStub,
-			JSPackageStatement> type) throws IOException
+	public JSPackageStatementStubImpl(String name, String qName, StubElement parent, IStubElementType elementType)
 	{
-		super(dataStream, parentStub, type);
-	}
-
-	public JSPackageStatementStubImpl(final JSPackageStatement psi, final StubElement parentStub, final JSStubElementType<JSPackageStatementStub,
-			JSPackageStatement> type)
-	{
-		super(psi, parentStub, type);
-	}
-
-	@Override
-	protected int buildFlags(final JSPackageStatement clazz)
-	{
-		return 0;
+		super(name, 0, qName, parent, elementType);
 	}
 }

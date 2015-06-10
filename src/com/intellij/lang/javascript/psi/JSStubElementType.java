@@ -19,17 +19,12 @@
  */
 package com.intellij.lang.javascript.psi;
 
-import java.io.IOException;
-
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.javascript.JavascriptLanguage;
 import com.intellij.lang.javascript.psi.stubs.JSStubElement;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.IndexSink;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.psi.tree.IElementTypeAsPsiFactory;
 
 public abstract class JSStubElementType<StubT extends JSStubElement<PsiT>, PsiT extends JSElement> extends IStubElementType<StubT,
@@ -57,29 +52,4 @@ public abstract class JSStubElementType<StubT extends JSStubElement<PsiT>, PsiT 
 	{
 		return toString();
 	}
-
-	@Override
-	public StubT createStub(@NotNull final PsiT psi, final StubElement parentStub)
-	{
-		return newInstance(psi, parentStub, this);
-	}
-
-	@Override
-	public void serialize(@NotNull final StubT stub, @NotNull final StubOutputStream dataStream) throws IOException
-	{
-		stub.serialize(dataStream);
-	}
-
-	@NotNull
-	@Override
-	public StubT deserialize(@NotNull final StubInputStream dataStream, final StubElement parentStub) throws IOException
-	{
-		return newInstance(dataStream, parentStub, this);
-	}
-
-	public abstract StubT newInstance(final StubInputStream dataStream,
-			final StubElement parentStub,
-			final JSStubElementType<StubT, PsiT> elementType) throws IOException;
-
-	public abstract StubT newInstance(final PsiT psi, final StubElement parentStub, final JSStubElementType<StubT, PsiT> elementType);
 }

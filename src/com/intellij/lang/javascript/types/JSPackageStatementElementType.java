@@ -1,5 +1,6 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2000-2005 JetBrains s.r.o
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +20,7 @@ package com.intellij.lang.javascript.types;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSPackageStatement;
 import com.intellij.lang.javascript.psi.JSStubElementType;
@@ -28,6 +30,8 @@ import com.intellij.lang.javascript.psi.stubs.impl.JSPackageStatementStubImpl;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
+import com.intellij.psi.stubs.StubOutputStream;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author Maxim.Mossienko
@@ -41,22 +45,6 @@ public class JSPackageStatementElementType extends JSStubElementType<JSPackageSt
 		super("PACKAGE_STATEMENT");
 	}
 
-	@Override
-	public JSPackageStatementStub newInstance(final StubInputStream dataStream,
-			final StubElement parentStub,
-			final JSStubElementType<JSPackageStatementStub, JSPackageStatement> type) throws IOException
-	{
-		return new JSPackageStatementStubImpl(dataStream, parentStub, type);
-	}
-
-	@Override
-	public JSPackageStatementStub newInstance(final JSPackageStatement psi,
-			final StubElement parentStub,
-			final JSStubElementType<JSPackageStatementStub, JSPackageStatement> type)
-	{
-		return new JSPackageStatementStubImpl(psi, parentStub, type);
-	}
-
 	@NotNull
 	@Override
 	public PsiElement createElement(@NotNull ASTNode astNode)
@@ -68,5 +56,30 @@ public class JSPackageStatementElementType extends JSStubElementType<JSPackageSt
 	public JSPackageStatement createPsi(@NotNull JSPackageStatementStub stub)
 	{
 		return new JSPackageStatementImpl(stub);
+	}
+
+	@RequiredReadAction
+	@Override
+	public JSPackageStatementStub createStub(@NotNull JSPackageStatement psi, StubElement parentStub)
+	{
+		String name = psi.getName();
+		String qualifiedName = psi.getQualifiedName();
+		return new JSPackageStatementStubImpl(name, qualifiedName, parentStub, this);
+	}
+
+	@Override
+	public void serialize(@NotNull JSPackageStatementStub stub, @NotNull StubOutputStream dataStream) throws IOException
+	{
+		dataStream.writeName(stub.getName());
+		dataStream.writeName(stub.getQualifiedName());
+	}
+
+	@NotNull
+	@Override
+	public JSPackageStatementStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException
+	{
+		StringRef nameRef = dataStream.readName();
+		StringRef qualifiedRef = dataStream.readName();
+		return new JSPackageStatementStubImpl(StringRef.toString(nameRef), StringRef.toString(qualifiedRef), parentStub, this);
 	}
 }

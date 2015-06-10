@@ -1,5 +1,6 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2000-2005 JetBrains s.r.o
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +20,7 @@ package com.intellij.lang.javascript.types;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSAttributeNameValuePair;
 import com.intellij.lang.javascript.psi.JSStubElementType;
@@ -28,6 +30,8 @@ import com.intellij.lang.javascript.psi.stubs.impl.JSAttributeNameValuePairStubI
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
+import com.intellij.psi.stubs.StubOutputStream;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author Maxim.Mossienko
@@ -41,22 +45,6 @@ public class JSAttributeNameValuePairType extends JSStubElementType<JSAttributeN
 		super("ATTRIBUTE_NAME_VALUE_PAIR");
 	}
 
-	@Override
-	public JSAttributeNameValuePairStub newInstance(final StubInputStream dataStream,
-			final StubElement parentStub,
-			final JSStubElementType<JSAttributeNameValuePairStub, JSAttributeNameValuePair> type) throws IOException
-	{
-		return new JSAttributeNameValuePairStubImpl(dataStream, parentStub, type);
-	}
-
-	@Override
-	public JSAttributeNameValuePairStub newInstance(final JSAttributeNameValuePair psi,
-			final StubElement parentStub,
-			final JSStubElementType<JSAttributeNameValuePairStub, JSAttributeNameValuePair> type)
-	{
-		return new JSAttributeNameValuePairStubImpl(psi, parentStub, type);
-	}
-
 	@NotNull
 	@Override
 	public PsiElement createElement(@NotNull ASTNode astNode)
@@ -68,5 +56,30 @@ public class JSAttributeNameValuePairType extends JSStubElementType<JSAttributeN
 	public JSAttributeNameValuePair createPsi(@NotNull JSAttributeNameValuePairStub stub)
 	{
 		return new JSAttributeNameValuePairImpl(stub);
+	}
+
+	@RequiredReadAction
+	@Override
+	public JSAttributeNameValuePairStub createStub(@NotNull JSAttributeNameValuePair psi, StubElement parentStub)
+	{
+		String name = psi.getName();
+		String simpleValue = psi.getSimpleValue();
+		return new JSAttributeNameValuePairStubImpl(name, simpleValue, parentStub);
+	}
+
+	@Override
+	public void serialize(@NotNull JSAttributeNameValuePairStub stub, @NotNull StubOutputStream dataStream) throws IOException
+	{
+		dataStream.writeName(stub.getName());
+		dataStream.writeName(stub.getValue());
+	}
+
+	@NotNull
+	@Override
+	public JSAttributeNameValuePairStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException
+	{
+		StringRef name = dataStream.readName();
+		StringRef value = dataStream.readName();
+		return new JSAttributeNameValuePairStubImpl(StringRef.toString(name), StringRef.toString(value), parentStub);
 	}
 }

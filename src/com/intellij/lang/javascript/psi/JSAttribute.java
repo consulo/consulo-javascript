@@ -16,17 +16,17 @@
 
 package com.intellij.lang.javascript.psi;
 
+import org.consulo.lombok.annotations.ArrayFactoryFields;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeStub;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.StubBasedPsiElement;
 
 /**
- * @by Maxim.Mossienko
+ * @author  Maxim.Mossienko
  */
+@ArrayFactoryFields
 public interface JSAttribute extends JSElement, PsiNamedElement, StubBasedPsiElement<JSAttributeStub>
 {
-	JSAttribute[] EMPTY = new JSAttribute[0];
-
 	@Override
 	String getName();
 

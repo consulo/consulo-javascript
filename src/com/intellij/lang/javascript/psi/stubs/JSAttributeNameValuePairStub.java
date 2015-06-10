@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.psi.stubs;
 
+import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.javascript.psi.JSAttributeNameValuePair;
 import com.intellij.psi.stubs.StubElement;
 
@@ -26,6 +27,7 @@ import com.intellij.psi.stubs.StubElement;
  */
 public interface JSAttributeNameValuePairStub extends JSStubElement<JSAttributeNameValuePair>, StubElement<JSAttributeNameValuePair>
 {
+	@Nullable
 	String getValue();
 
 	String getName();

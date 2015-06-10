@@ -33,24 +33,15 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
-import com.intellij.util.ArrayFactory;
 import com.intellij.util.IncorrectOperationException;
 
 /**
- * @by Maxim.Mossienko
+ * @author  Maxim.Mossienko
  */
 public class JSAttributeListImpl extends JSStubElementImpl<JSAttributeListStub> implements JSAttributeList
 {
 	private static final TokenSet ourModifiersTypeSet = TokenSet.create(JSTokenTypes.PUBLIC_KEYWORD, JSTokenTypes.PRIVATE_KEYWORD,
 			JSTokenTypes.PROTECTED_KEYWORD, JSTokenTypes.INTERNAL_KEYWORD);
-	private static final ArrayFactory<JSAttribute> myArrayFactory = new ArrayFactory<JSAttribute>()
-	{
-		@Override
-		public JSAttribute[] create(final int count)
-		{
-			return new JSAttribute[count];
-		}
-	};
 
 	public JSAttributeListImpl(final ASTNode node)
 	{
@@ -98,9 +89,10 @@ public class JSAttributeListImpl extends JSStubElementImpl<JSAttributeListStub> 
 	@Override
 	public JSAttribute[] getAttributes()
 	{
-		return getStubOrPsiChildren(JSElementTypes.ATTRIBUTE, myArrayFactory);
+		return getStubOrPsiChildren(JSElementTypes.ATTRIBUTE, JSAttribute.ARRAY_FACTORY);
 	}
 
+	@NotNull
 	@Override
 	public JSAttribute[] getAttributesByName(final @NotNull String name)
 	{
@@ -116,7 +108,7 @@ public class JSAttributeListImpl extends JSStubElementImpl<JSAttributeListStub> 
 				attributes.add(attr);
 			}
 		}
-		return attributes != null ? attributes.toArray(new JSAttribute[attributes.size()]) : JSAttribute.EMPTY;
+		return attributes != null ? attributes.toArray(new JSAttribute[attributes.size()]) : JSAttribute.EMPTY_ARRAY;
 	}
 
 	@Override

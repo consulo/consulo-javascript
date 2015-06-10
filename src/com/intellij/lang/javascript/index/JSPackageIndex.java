@@ -33,7 +33,6 @@ import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.flex.JSResolveHelper;
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.stubs.JSClassStub;
-import com.intellij.lang.javascript.psi.stubs.JSFunctionExpressionStub;
 import com.intellij.lang.javascript.psi.stubs.JSFunctionStub;
 import com.intellij.lang.javascript.psi.stubs.JSNamespaceDeclarationStub;
 import com.intellij.lang.javascript.psi.stubs.JSPackageStatementStub;
@@ -142,10 +141,10 @@ public class JSPackageIndex extends CustomImplementationFileBasedIndexExtension<
 				{
 					element = null;
 				}
-				else if(e instanceof JSFunctionExpressionStub)
+				/*else if(e instanceof JSFunctionExpressionStub)
 				{
 					element = null;
-				}
+				}      */
 				else if(e instanceof JSFunctionStub || e instanceof JSVariableStub)
 				{
 					StubElement parentStub = e.getParentStub();

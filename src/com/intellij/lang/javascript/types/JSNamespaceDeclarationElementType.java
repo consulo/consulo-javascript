@@ -1,5 +1,6 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2000-2005 JetBrains s.r.o
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,15 +20,17 @@ package com.intellij.lang.javascript.types;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSNamespaceDeclaration;
-import com.intellij.lang.javascript.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.impl.JSNamespaceDeclarationImpl;
 import com.intellij.lang.javascript.psi.stubs.JSNamespaceDeclarationStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSNamespaceDeclarationStubImpl;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
+import com.intellij.psi.stubs.StubOutputStream;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author Maxim.Mossienko
@@ -41,22 +44,6 @@ public class JSNamespaceDeclarationElementType extends JSQualifiedStubElementTyp
 		super("NAMESPACE_DECLARATION");
 	}
 
-	@Override
-	public JSNamespaceDeclarationStub newInstance(final StubInputStream dataStream,
-			final StubElement parentStub,
-			final JSStubElementType<JSNamespaceDeclarationStub, JSNamespaceDeclaration> type) throws IOException
-	{
-		return new JSNamespaceDeclarationStubImpl(dataStream, parentStub, type);
-	}
-
-	@Override
-	public JSNamespaceDeclarationStub newInstance(final JSNamespaceDeclaration psi,
-			final StubElement parentStub,
-			final JSStubElementType<JSNamespaceDeclarationStub, JSNamespaceDeclaration> type)
-	{
-		return new JSNamespaceDeclarationStubImpl(psi, parentStub, type);
-	}
-
 	@NotNull
 	@Override
 	public PsiElement createElement(@NotNull ASTNode astNode)
@@ -68,5 +55,34 @@ public class JSNamespaceDeclarationElementType extends JSQualifiedStubElementTyp
 	public JSNamespaceDeclaration createPsi(@NotNull JSNamespaceDeclarationStub stub)
 	{
 		return new JSNamespaceDeclarationImpl(stub);
+	}
+
+	@RequiredReadAction
+	@Override
+	public JSNamespaceDeclarationStub createStub(@NotNull JSNamespaceDeclaration psi, StubElement parentStub)
+	{
+		String name = psi.getName();
+		String qualifiedName = psi.getQualifiedName();
+		String initialValueString = psi.getInitialValueString();
+		return new JSNamespaceDeclarationStubImpl(name, qualifiedName, initialValueString, parentStub, this);
+	}
+
+	@Override
+	public void serialize(@NotNull JSNamespaceDeclarationStub stub, @NotNull StubOutputStream dataStream) throws IOException
+	{
+		dataStream.writeName(stub.getName());
+		dataStream.writeName(stub.getQualifiedName());
+		dataStream.writeName(stub.getInitialValueString());
+	}
+
+	@NotNull
+	@Override
+	public JSNamespaceDeclarationStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException
+	{
+		StringRef nameRef = dataStream.readName();
+		StringRef qualifiedRef = dataStream.readName();
+		StringRef initialValueRef = dataStream.readName();
+		return new JSNamespaceDeclarationStubImpl(StringRef.toString(nameRef), StringRef.toString(qualifiedRef),
+				StringRef.toString(initialValueRef), parentStub, this);
 	}
 }

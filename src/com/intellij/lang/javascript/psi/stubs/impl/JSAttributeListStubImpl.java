@@ -1,5 +1,6 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2000-2005 JetBrains s.r.o
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +17,11 @@
 
 package com.intellij.lang.javascript.psi.stubs.impl;
 
-import java.io.IOException;
-
-import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSAttributeList;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeListStub;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
 
 /**
  * @author Maxim.Mossienko
@@ -46,50 +42,11 @@ public class JSAttributeListStubImpl extends StubBase<JSAttributeList> implement
 	private int myFlags;
 	private String myNamespace;
 
-	public JSAttributeListStubImpl(JSAttributeList clazz, final StubElement parent, final IStubElementType elementType)
+	public JSAttributeListStubImpl(String namespace, int flags, final StubElement parent, final IStubElementType elementType)
 	{
 		super(parent, elementType);
-
-		final JSAttributeList.AccessType accessType = clazz.getAccessType();
-		final int ord = accessType.ordinal();
-
-		myFlags |= (ord << VISIBILITY_TAG_SHIFT);
-
-		for(JSAttributeList.ModifierType type : JSAttributeList.ModifierType.values())
-		{
-			setFlag(type, clazz.hasModifier(type));
-		}
-
-		myNamespace = clazz.getNamespace();
-	}
-
-	public JSAttributeListStubImpl(final StubInputStream dataStream, final StubElement parentStub, final IStubElementType elementType) throws
-			IOException
-	{
-		super(parentStub, elementType);
-		myFlags = dataStream.readInt();
-		final int idx = dataStream.readInt();
-		myNamespace = idx != -1 ? dataStream.stringFromId(idx) : null;
-	}
-
-	public JSAttributeListStubImpl(final StubElement parentStub, String namespace, JSAttributeList.AccessType accessType,
-			JSAttributeList.ModifierType... modifiers)
-	{
-		super(parentStub, JSElementTypes.ATTRIBUTE_LIST);
-		myFlags |= ((accessType != null ? accessType : JSAttributeList.AccessType.PACKAGE_LOCAL).ordinal() << VISIBILITY_TAG_SHIFT);
-
-		for(JSAttributeList.ModifierType type : modifiers)
-		{
-			setFlag(type, true);
-		}
 		myNamespace = namespace;
-	}
-
-	@Override
-	public void serialize(final StubOutputStream dataStream) throws IOException
-	{
-		dataStream.writeInt(myFlags);
-		dataStream.writeInt(myNamespace != null ? dataStream.getStringId(myNamespace) : -1);
+		myFlags = flags;
 	}
 
 	@Override
@@ -111,6 +68,26 @@ public class JSAttributeListStubImpl extends StubBase<JSAttributeList> implement
 	public String getNamespace()
 	{
 		return myNamespace;
+	}
+
+	@Override
+	public int getFlags()
+	{
+		return myFlags;
+	}
+
+	public static int getFlags(JSAttributeList attributeList)
+	{
+		final JSAttributeList.AccessType accessType = attributeList.getAccessType();
+		final int ord = accessType.ordinal();
+
+		int flags = (ord << VISIBILITY_TAG_SHIFT);
+
+		for(JSAttributeList.ModifierType type : JSAttributeList.ModifierType.values())
+		{
+			flags = setFlag(flags, type, attributeList.hasModifier(type));
+		}
+		return flags;
 	}
 
 	private static int getFlagShift(final JSAttributeList.ModifierType modifier)
@@ -147,15 +124,15 @@ public class JSAttributeListStubImpl extends StubBase<JSAttributeList> implement
 		return shift;
 	}
 
-	private void setFlag(final JSAttributeList.ModifierType modifier, boolean value)
+	private static int setFlag(int old, final JSAttributeList.ModifierType modifier, boolean value)
 	{
 		if(value)
 		{
-			myFlags |= (1 << getFlagShift(modifier));
+			return old | (1 << getFlagShift(modifier));
 		}
 		else
 		{
-			myFlags &= ~(1 << getFlagShift(modifier));
+			return old & ~(1 << getFlagShift(modifier));
 		}
 	}
 }

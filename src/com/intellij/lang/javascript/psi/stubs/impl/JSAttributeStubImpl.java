@@ -1,5 +1,6 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2000-2005 JetBrains s.r.o
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +17,10 @@
 
 package com.intellij.lang.javascript.psi.stubs.impl;
 
-import java.io.IOException;
-
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSAttribute;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeStub;
-import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
 
 /**
  * @author Maxim.Mossienko
@@ -32,24 +29,8 @@ import com.intellij.psi.stubs.StubInputStream;
  */
 public class JSAttributeStubImpl extends JSNamedObjectStubBase<JSAttribute> implements JSAttributeStub
 {
-	public JSAttributeStubImpl(JSAttribute clazz, final StubElement parent, final IStubElementType elementType)
+	public JSAttributeStubImpl(final String name, int flags, final StubElement parentStub)
 	{
-		super(clazz, parent, elementType);
-	}
-
-	public JSAttributeStubImpl(final StubInputStream dataStream, final StubElement parentStub, final IStubElementType elementType) throws IOException
-	{
-		super(dataStream, parentStub, elementType);
-	}
-
-	public JSAttributeStubImpl(final String name, final StubElement parentStub)
-	{
-		super(name, 0, parentStub, JSElementTypes.ATTRIBUTE);
-	}
-
-	@Override
-	protected int buildFlags(final JSAttribute clazz)
-	{
-		return 0;
+		super(name, flags, parentStub, JSElementTypes.ATTRIBUTE);
 	}
 }

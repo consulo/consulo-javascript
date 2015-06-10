@@ -65,6 +65,7 @@ public class JSReferenceListImpl extends JSStubElementImpl<JSReferenceListStub> 
 		}
 	}
 
+	@NotNull
 	@Override
 	public JSReferenceExpression[] getExpressions()
 	{
@@ -81,12 +82,12 @@ public class JSReferenceListImpl extends JSStubElementImpl<JSReferenceListStub> 
 		}
 
 		final JSReferenceExpression[] referenceExpressions = getExpressions();
-		if(referenceExpressions == null || referenceExpressions.length == 0)
+		if(referenceExpressions.length == 0)
 		{
 			return ArrayUtil.EMPTY_STRING_ARRAY;
 		}
 		int count = referenceExpressions.length;
-		final String[] result = new String[count];
+		final String[] result = ArrayUtil.newStringArray(count);
 
 		for(int i = 0; i < count; ++i)
 		{

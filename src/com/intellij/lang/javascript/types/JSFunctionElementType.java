@@ -1,5 +1,6 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2000-2005 JetBrains s.r.o
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,27 +20,26 @@ package com.intellij.lang.javascript.types;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
-import com.intellij.lang.ASTNode;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.lang.javascript.psi.JSFunction;
-import com.intellij.lang.javascript.psi.JSStubElementType;
-import com.intellij.lang.javascript.psi.impl.JSFunctionImpl;
 import com.intellij.lang.javascript.psi.stubs.JSFunctionStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSFunctionStubImpl;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
+import com.intellij.psi.stubs.StubOutputStream;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author Maxim.Mossienko
  *         Date: Mar 25, 2008
  *         Time: 10:50:34 PM
  */
-public class JSFunctionElementType extends JSQualifiedStubElementType<JSFunctionStub, JSFunction>
+public abstract class JSFunctionElementType extends JSQualifiedStubElementType<JSFunctionStub, JSFunction>
 {
-	public JSFunctionElementType()
+	public JSFunctionElementType(@NotNull String name)
 	{
-		super("FUNCTION_DECLARATION");
+		super(name);
 	}
 
 	@Override
@@ -60,30 +60,35 @@ public class JSFunctionElementType extends JSQualifiedStubElementType<JSFunction
 		return doIndexName(stub, name, fqn);
 	}
 
+	@RequiredReadAction
 	@Override
-	public JSFunctionStub newInstance(final StubInputStream dataStream, final StubElement parentStub, final JSStubElementType<JSFunctionStub,
-			JSFunction> elementType) throws IOException
+	public JSFunctionStub createStub(@NotNull JSFunction psi, StubElement parentStub)
 	{
-		return new JSFunctionStubImpl(dataStream, parentStub, elementType);
+		String name = psi.getName();
+		String qualifiedName = psi.getQualifiedName();
+		String returnTypeString = psi.getReturnTypeString();
+		int flags = JSFunctionStubImpl.buildFlags(psi);
+		return new JSFunctionStubImpl(name, flags, qualifiedName, returnTypeString, parentStub, this);
 	}
 
 	@Override
-	public JSFunctionStub newInstance(final JSFunction psi, final StubElement parentStub, final JSStubElementType<JSFunctionStub,
-			JSFunction> elementType)
+	public void serialize(@NotNull JSFunctionStub stub, @NotNull StubOutputStream dataStream) throws IOException
 	{
-		return new JSFunctionStubImpl(psi, parentStub, elementType);
+		dataStream.writeName(stub.getName());
+		dataStream.writeName(stub.getQualifiedName());
+		dataStream.writeName(stub.getReturnTypeString());
+		dataStream.writeVarInt(stub.getFlags());
 	}
 
 	@NotNull
 	@Override
-	public PsiElement createElement(@NotNull ASTNode astNode)
+	public JSFunctionStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException
 	{
-		return new JSFunctionImpl(astNode);
-	}
-
-	@Override
-	public JSFunction createPsi(@NotNull JSFunctionStub stub)
-	{
-		return new JSFunctionImpl(stub, this);
+		StringRef nameRef = dataStream.readName();
+		StringRef qualifiedRef = dataStream.readName();
+		StringRef returnTypeRef = dataStream.readName();
+		int flags = dataStream.readVarInt();
+		return new JSFunctionStubImpl(StringRef.toString(nameRef), flags, StringRef.toString(qualifiedRef), StringRef.toString(returnTypeRef),
+				parentStub, this);
 	}
 }

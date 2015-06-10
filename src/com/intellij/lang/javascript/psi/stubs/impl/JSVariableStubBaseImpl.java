@@ -1,5 +1,6 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2000-2005 JetBrains s.r.o
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +17,10 @@
 
 package com.intellij.lang.javascript.psi.stubs.impl;
 
-import java.io.IOException;
-
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.stubs.JSVariableStubBase;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
 
 /**
  * @author Maxim.Mossienko
@@ -39,20 +36,6 @@ public abstract class JSVariableStubBaseImpl<T extends JSVariable> extends JSQua
 	static final int LAST_USED_MASK = LOCAL_MASK;
 	private String myInitializerText;
 
-	public JSVariableStubBaseImpl(T var, final StubElement parent, final IStubElementType elementType)
-	{
-		super(var, parent, elementType);
-		myTypeString = var.getTypeString();
-		myInitializerText = var.getInitializerText();
-	}
-
-	public JSVariableStubBaseImpl(final StubInputStream dataStream, final StubElement parentStub, final IStubElementType elementType) throws IOException
-	{
-		super(dataStream, parentStub, elementType);
-		myTypeString = readString(dataStream);
-		myInitializerText = readString(dataStream);
-	}
-
 	public JSVariableStubBaseImpl(final String name, int flags, String type, String initial, String qName, final StubElement parentStub,
 			final IStubElementType elementType)
 	{
@@ -61,19 +44,9 @@ public abstract class JSVariableStubBaseImpl<T extends JSVariable> extends JSQua
 		myInitializerText = initial;
 	}
 
-	@Override
-	protected int buildFlags(final T clazz)
+	public static int buildFlags(final JSVariable clazz)
 	{
 		return (clazz.isDeprecated() ? DEPRECATED_MASK : 0) | (clazz.isConst() ? CONST_MASK : clazz.isLocal() ? LOCAL_MASK : 0);
-	}
-
-	@Override
-	public void serialize(final StubOutputStream dataStream) throws IOException
-	{
-		super.serialize(dataStream);
-
-		writeString(myTypeString, dataStream);
-		writeString(myInitializerText, dataStream);
 	}
 
 	@Override

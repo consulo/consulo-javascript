@@ -1,5 +1,6 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2000-2005 JetBrains s.r.o
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,16 +20,18 @@ package com.intellij.lang.javascript.types;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSImportStatement;
 import com.intellij.lang.javascript.psi.JSStubElementType;
-import com.intellij.lang.javascript.psi.impl.JSFunctionImpl;
 import com.intellij.lang.javascript.psi.impl.JSImportStatementImpl;
 import com.intellij.lang.javascript.psi.stubs.JSImportStatementStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSImportStatementStubImpl;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
+import com.intellij.psi.stubs.StubOutputStream;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author Maxim.Mossienko
@@ -42,32 +45,38 @@ public class JSImportStatementElementType extends JSStubElementType<JSImportStat
 		super("IMPORT_STATEMENT");
 	}
 
-	@Override
-	public JSImportStatementStub newInstance(final StubInputStream dataStream,
-			final StubElement parentStub,
-			final JSStubElementType<JSImportStatementStub, JSImportStatement> type) throws IOException
-	{
-		return new JSImportStatementStubImpl(dataStream, parentStub, type);
-	}
-
-	@Override
-	public JSImportStatementStub newInstance(final JSImportStatement psi,
-			final StubElement parentStub,
-			final JSStubElementType<JSImportStatementStub, JSImportStatement> type)
-	{
-		return new JSImportStatementStubImpl(psi, parentStub, type);
-	}
-
 	@NotNull
 	@Override
 	public PsiElement createElement(@NotNull ASTNode astNode)
 	{
-		return new JSFunctionImpl(astNode);
+		return new JSImportStatementImpl(astNode);
 	}
 
 	@Override
 	public JSImportStatement createPsi(@NotNull JSImportStatementStub stub)
 	{
 		return new JSImportStatementImpl(stub);
+	}
+
+	@RequiredReadAction
+	@Override
+	public JSImportStatementStub createStub(@NotNull JSImportStatement psi, StubElement parentStub)
+	{
+		String importText = psi.getImportText();
+		return new JSImportStatementStubImpl(importText, parentStub, this);
+	}
+
+	@Override
+	public void serialize(@NotNull JSImportStatementStub stub, @NotNull StubOutputStream dataStream) throws IOException
+	{
+		dataStream.writeName(stub.getImportText());
+	}
+
+	@NotNull
+	@Override
+	public JSImportStatementStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException
+	{
+		StringRef importText = dataStream.readName();
+		return new JSImportStatementStubImpl(StringRef.toString(importText), parentStub, this);
 	}
 }

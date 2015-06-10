@@ -1,5 +1,6 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2000-2005 JetBrains s.r.o
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +25,7 @@ import com.intellij.psi.tree.IStubFileElementType;
  */
 public class JSFileElementType extends IStubFileElementType
 {
-	public static final int VERSION = 23;
+	public static final int VERSION = 25;
 
 	public JSFileElementType(final Language language)
 	{

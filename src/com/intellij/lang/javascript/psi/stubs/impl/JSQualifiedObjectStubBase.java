@@ -1,5 +1,6 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2000-2005 JetBrains s.r.o
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +17,10 @@
 
 package com.intellij.lang.javascript.psi.stubs.impl;
 
-import java.io.IOException;
-
 import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
 import com.intellij.lang.javascript.psi.stubs.JSQualifiedStub;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
 
 /**
  * @author Maxim.Mossienko
@@ -34,38 +31,11 @@ abstract class JSQualifiedObjectStubBase<T extends JSQualifiedNamedElement> exte
 {
 	protected final String myQualifiedName;
 
-	protected JSQualifiedObjectStubBase(T clazz, final StubElement parent, final IStubElementType elementType)
-	{
-		super(clazz, parent, elementType);
-
-		myQualifiedName = doGetQualifiedName(clazz);
-	}
-
 	protected JSQualifiedObjectStubBase(String name, int flags, String qName, final StubElement parent, final IStubElementType elementType)
 	{
 		super(name, flags, parent, elementType);
 
 		myQualifiedName = qName;
-	}
-
-	protected String doGetQualifiedName(final T clazz)
-	{
-		return clazz.getQualifiedName();
-	}
-
-	protected JSQualifiedObjectStubBase(final StubInputStream dataStream, final StubElement parentStub, final IStubElementType elementType) throws
-			IOException
-	{
-		super(dataStream, parentStub, elementType);
-
-		myQualifiedName = readString(dataStream);
-	}
-
-	@Override
-	public void serialize(final StubOutputStream dataStream) throws IOException
-	{
-		super.serialize(dataStream);
-		writeString(myQualifiedName, dataStream);
 	}
 
 	@Override

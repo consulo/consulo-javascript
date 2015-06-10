@@ -1,5 +1,6 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2000-2005 JetBrains s.r.o
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +17,11 @@
 
 package com.intellij.lang.javascript.psi.stubs.impl;
 
-import java.io.DataInputStream;
-import java.io.IOException;
-
-import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSVarStatement;
 import com.intellij.lang.javascript.psi.stubs.JSVarStatementStub;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubOutputStream;
 
 /**
  * @author Maxim.Mossienko
@@ -34,23 +30,8 @@ import com.intellij.psi.stubs.StubOutputStream;
  */
 public class JSVarStatementStubImpl extends StubBase<JSVarStatement> implements JSVarStatementStub
 {
-	public JSVarStatementStubImpl(JSVarStatement clazz, final StubElement parent, final IStubElementType elementType)
+	public JSVarStatementStubImpl(StubElement parent, IStubElementType elementType)
 	{
 		super(parent, elementType);
-	}
-
-	public JSVarStatementStubImpl(final DataInputStream dataStream, final StubElement parentStub, final IStubElementType elementType) throws IOException
-	{
-		super(parentStub, elementType);
-	}
-
-	public JSVarStatementStubImpl(final StubElement parentStub)
-	{
-		super(parentStub, JSElementTypes.VAR_STATEMENT);
-	}
-
-	@Override
-	public void serialize(final StubOutputStream dataStream) throws IOException
-	{
 	}
 }

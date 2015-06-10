@@ -1,5 +1,6 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2000-2005 JetBrains s.r.o
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,15 +20,17 @@ package com.intellij.lang.javascript.types;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSClass;
-import com.intellij.lang.javascript.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.impl.JSClassImpl;
 import com.intellij.lang.javascript.psi.stubs.JSClassStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSClassStubImpl;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
+import com.intellij.psi.stubs.StubOutputStream;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author Maxim.Mossienko
@@ -41,20 +44,6 @@ public class JSClassElementType extends JSQualifiedStubElementType<JSClassStub, 
 		super("CLASS");
 	}
 
-	@Override
-	public JSClassStub newInstance(final StubInputStream dataStream,
-			final StubElement parentStub,
-			final JSStubElementType<JSClassStub, JSClass> elementType) throws IOException
-	{
-		return new JSClassStubImpl(dataStream, parentStub, elementType);
-	}
-
-	@Override
-	public JSClassStub newInstance(final JSClass psi, final StubElement parentStub, final JSStubElementType<JSClassStub, JSClass> elementType)
-	{
-		return new JSClassStubImpl(psi, parentStub, elementType);
-	}
-
 	@NotNull
 	@Override
 	public PsiElement createElement(@NotNull ASTNode astNode)
@@ -66,5 +55,33 @@ public class JSClassElementType extends JSQualifiedStubElementType<JSClassStub, 
 	public JSClass createPsi(@NotNull JSClassStub stub)
 	{
 		return new JSClassImpl(stub);
+	}
+
+	@RequiredReadAction
+	@Override
+	public JSClassStub createStub(@NotNull JSClass psi, StubElement parentStub)
+	{
+		String name = psi.getName();
+		int flags = JSClassStubImpl.getFlags(psi);
+		String qualifiedName = psi.getQualifiedName();
+		return new JSClassStubImpl(name, flags, qualifiedName, parentStub, this);
+	}
+
+	@Override
+	public void serialize(@NotNull JSClassStub stub, @NotNull StubOutputStream dataStream) throws IOException
+	{
+		dataStream.writeName(stub.getName());
+		dataStream.writeName(stub.getQualifiedName());
+		dataStream.writeInt(stub.getFlags());
+	}
+
+	@NotNull
+	@Override
+	public JSClassStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException
+	{
+		StringRef nameRef = dataStream.readName();
+		StringRef qualifiedRef = dataStream.readName();
+		int flags = dataStream.readInt();
+		return new JSClassStubImpl(StringRef.toString(nameRef), flags, StringRef.toString(qualifiedRef), parentStub, this);
 	}
 }

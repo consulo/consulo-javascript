@@ -1,5 +1,6 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2000-2005 JetBrains s.r.o
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +21,7 @@ import java.io.IOException;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSClass;
@@ -36,6 +38,9 @@ import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubIndexKey;
 import com.intellij.psi.stubs.StubInputStream;
+import com.intellij.psi.stubs.StubOutputStream;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author Maxim.Mossienko
@@ -73,22 +78,6 @@ public class JSReferenceListElementType extends JSStubElementType<JSReferenceLis
 		}
 	}
 
-	@Override
-	public JSReferenceListStub newInstance(final StubInputStream dataStream,
-			final StubElement parentStub,
-			final JSStubElementType<JSReferenceListStub, JSReferenceList> type) throws IOException
-	{
-		return new JSReferenceListStubImpl(dataStream, parentStub, type);
-	}
-
-	@Override
-	public JSReferenceListStub newInstance(final JSReferenceList psi,
-			final StubElement parentStub,
-			final JSStubElementType<JSReferenceListStub, JSReferenceList> type)
-	{
-		return new JSReferenceListStubImpl(psi, parentStub, type);
-	}
-
 	@NotNull
 	@Override
 	public PsiElement createElement(@NotNull ASTNode astNode)
@@ -100,5 +89,37 @@ public class JSReferenceListElementType extends JSStubElementType<JSReferenceLis
 	public JSReferenceList createPsi(@NotNull JSReferenceListStub stub)
 	{
 		return new JSReferenceListImpl(stub);
+	}
+
+	@RequiredReadAction
+	@Override
+	public JSReferenceListStub createStub(@NotNull JSReferenceList psi, StubElement parentStub)
+	{
+		String[] referenceTexts = psi.getReferenceTexts();
+		return new JSReferenceListStubImpl(referenceTexts, parentStub, this);
+	}
+
+	@Override
+	public void serialize(@NotNull JSReferenceListStub stub, @NotNull StubOutputStream dataStream) throws IOException
+	{
+		String[] referenceTexts = stub.getReferenceTexts();
+		dataStream.writeVarInt(referenceTexts.length);
+		for(String referenceText : referenceTexts)
+		{
+			dataStream.writeName(referenceText);
+		}
+	}
+
+	@NotNull
+	@Override
+	public JSReferenceListStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException
+	{
+		int count = dataStream.readVarInt();
+		String[] refs = ArrayUtil.newStringArray(count);
+		for(int i = 0; i < count; i++)
+		{
+			refs[i] = StringRef.toString(dataStream.readName());
+		}
+		return new JSReferenceListStubImpl(refs, parentStub, this);
 	}
 }

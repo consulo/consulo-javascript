@@ -23,6 +23,17 @@ import com.intellij.lang.javascript.psi.JSFunction;
  *         Date: Mar 25, 2008
  *         Time: 4:00:16 PM
  */
-public interface JSFunctionStub extends JSFunctionStubBase<JSFunction>
+public interface JSFunctionStub extends JSStubElement<JSFunction>, JSQualifiedStub<JSFunction>
 {
+	String getReturnTypeString();
+
+	boolean isGetProperty();
+
+	boolean isSetProperty();
+
+	boolean isConstructor();
+
+	boolean isDeprecated();
+
+	boolean isReferencesArguments();
 }

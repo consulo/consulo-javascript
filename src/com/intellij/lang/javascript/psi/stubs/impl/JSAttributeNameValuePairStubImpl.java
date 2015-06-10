@@ -1,5 +1,6 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2000-2005 JetBrains s.r.o
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +17,10 @@
 
 package com.intellij.lang.javascript.psi.stubs.impl;
 
-import java.io.IOException;
-
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSAttributeNameValuePair;
-import com.intellij.lang.javascript.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeNameValuePairStub;
 import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
 
 /**
  * @author Maxim.Mossienko
@@ -35,24 +31,6 @@ public class JSAttributeNameValuePairStubImpl extends JSNamedObjectStubBase<JSAt
 {
 	private String myValue;
 
-	public JSAttributeNameValuePairStubImpl(final StubInputStream dataStream, final StubElement parentStub,
-			final JSStubElementType<JSAttributeNameValuePairStub, JSAttributeNameValuePair> type) throws IOException
-	{
-		super(dataStream, parentStub, type);
-		final int i = dataStream.readInt();
-		if(i != -1)
-		{
-			myValue = dataStream.stringFromId(i);
-		}
-	}
-
-	public JSAttributeNameValuePairStubImpl(final JSAttributeNameValuePair psi, final StubElement parentStub,
-			final JSStubElementType<JSAttributeNameValuePairStub, JSAttributeNameValuePair> type)
-	{
-		super(psi, parentStub, type);
-		myValue = psi.getSimpleValue();
-	}
-
 	public JSAttributeNameValuePairStubImpl(String name, final String value, final StubElement parentStub)
 	{
 		super(name, 0, parentStub, JSElementTypes.ATTRIBUTE_NAME_VALUE_PAIR);
@@ -60,21 +38,8 @@ public class JSAttributeNameValuePairStubImpl extends JSNamedObjectStubBase<JSAt
 	}
 
 	@Override
-	protected int buildFlags(final JSAttributeNameValuePair clazz)
-	{
-		return 0;
-	}
-
-	@Override
 	public String getValue()
 	{
 		return myValue;
-	}
-
-	@Override
-	public void serialize(final StubOutputStream dataStream) throws IOException
-	{
-		super.serialize(dataStream);
-		dataStream.writeInt(myValue != null ? dataStream.getStringId(myValue) : -1);
 	}
 }

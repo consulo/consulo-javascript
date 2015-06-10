@@ -29,5 +29,5 @@ import com.intellij.psi.stubs.StubOutputStream;
  */
 public interface JSStubElement<T extends JSElement> extends StubElement<T>
 {
-	void serialize(final StubOutputStream dataStream) throws IOException;
+
 }

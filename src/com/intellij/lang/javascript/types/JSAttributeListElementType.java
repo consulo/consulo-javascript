@@ -1,5 +1,6 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2000-2005 JetBrains s.r.o
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +20,7 @@ package com.intellij.lang.javascript.types;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSAttributeList;
 import com.intellij.lang.javascript.psi.JSStubElementType;
@@ -28,6 +30,8 @@ import com.intellij.lang.javascript.psi.stubs.impl.JSAttributeListStubImpl;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
+import com.intellij.psi.stubs.StubOutputStream;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author Maxim.Mossienko
@@ -41,22 +45,6 @@ public class JSAttributeListElementType extends JSStubElementType<JSAttributeLis
 		super("ATTRIBUTE_LIST");
 	}
 
-	@Override
-	public JSAttributeListStub newInstance(final StubInputStream dataStream,
-			final StubElement parentStub,
-			final JSStubElementType<JSAttributeListStub, JSAttributeList> elementType) throws IOException
-	{
-		return new JSAttributeListStubImpl(dataStream, parentStub, elementType);
-	}
-
-	@Override
-	public JSAttributeListStub newInstance(final JSAttributeList psi,
-			final StubElement parentStub,
-			final JSStubElementType<JSAttributeListStub, JSAttributeList> elementType)
-	{
-		return new JSAttributeListStubImpl(psi, parentStub, elementType);
-	}
-
 	@NotNull
 	@Override
 	public PsiElement createElement(@NotNull ASTNode astNode)
@@ -68,5 +56,30 @@ public class JSAttributeListElementType extends JSStubElementType<JSAttributeLis
 	public JSAttributeList createPsi(@NotNull JSAttributeListStub stub)
 	{
 		return new JSAttributeListImpl(stub);
+	}
+
+	@RequiredReadAction
+	@Override
+	public JSAttributeListStub createStub(@NotNull JSAttributeList psi, StubElement parentStub)
+	{
+		String namespace = psi.getNamespace();
+		int flags = JSAttributeListStubImpl.getFlags(psi);
+		return new JSAttributeListStubImpl(namespace, flags, parentStub, this);
+	}
+
+	@Override
+	public void serialize(@NotNull JSAttributeListStub stub, @NotNull StubOutputStream dataStream) throws IOException
+	{
+		dataStream.writeName(stub.getNamespace());
+		dataStream.writeInt(stub.getFlags());
+	}
+
+	@NotNull
+	@Override
+	public JSAttributeListStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException
+	{
+		StringRef namespaceRef = dataStream.readName();
+		int i = dataStream.readInt();
+		return new JSAttributeListStubImpl(StringRef.toString(namespaceRef), i, parentStub, this);
 	}
 }

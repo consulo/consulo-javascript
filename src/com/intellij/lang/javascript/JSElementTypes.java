@@ -17,11 +17,13 @@
 package com.intellij.lang.javascript;
 
 import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.*;
 import com.intellij.lang.javascript.psi.stubs.*;
 import com.intellij.lang.javascript.types.*;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.ElementTypeAsPsiFactory;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
@@ -49,7 +51,21 @@ public interface JSElementTypes
 		}
 	};
 	IElementType EMBEDDED_EXPRESSION = new ElementTypeAsPsiFactory("EMBEDDED_EXPRESSION", JavascriptLanguage.INSTANCE, JSEmbeddedContentImpl.class);
-	JSStubElementType<JSFunctionStub, JSFunction> FUNCTION_DECLARATION = new JSFunctionElementType();
+	JSStubElementType<JSFunctionStub, JSFunction> FUNCTION_DECLARATION = new JSFunctionElementType("FUNCTION_DECLARATION")
+	{
+		@Override
+		public JSFunction createPsi(@NotNull JSFunctionStub stub)
+		{
+			return new JSFunctionImpl(stub, this);
+		}
+
+		@NotNull
+		@Override
+		public PsiElement createElement(@NotNull ASTNode astNode)
+		{
+			return new JSFunctionImpl(astNode);
+		}
+	};
 	JSStubElementType<JSParameterListStub, JSParameterList> PARAMETER_LIST = new JSParameterListElementType();
 
 	JSStubElementType<JSParameterStub, JSParameter> FORMAL_PARAMETER = new JSParameterElementType();
@@ -124,7 +140,21 @@ public interface JSElementTypes
 	IElementType PREFIX_EXPRESSION = new ElementTypeAsPsiFactory("PREFIX_EXPRESSION", JavascriptLanguage.INSTANCE, JSPrefixExpressionImpl.class);
 	IElementType POSTFIX_EXPRESSION = new ElementTypeAsPsiFactory("POSTFIX_EXPRESSION", JavascriptLanguage.INSTANCE, JSPostfixExpressionImpl.class);
 	IElementType COMMA_EXPRESSION = new ElementTypeAsPsiFactory("COMMA_EXPRESSION", JavascriptLanguage.INSTANCE, JSCommaExpressionImpl.class);
-	JSStubElementType<JSFunctionExpressionStub, JSFunctionExpression> FUNCTION_EXPRESSION = new JSFunctionExpressionElementType();
+	JSStubElementType<JSFunctionStub, JSFunction> FUNCTION_EXPRESSION = new JSFunctionElementType("FUNCTION_EXPRESSION")
+	{
+		@Override
+		public JSFunction createPsi(@NotNull JSFunctionStub stub)
+		{
+			return new JSFunctionExpressionImpl(stub, this);
+		}
+
+		@NotNull
+		@Override
+		public PsiElement createElement(@NotNull ASTNode astNode)
+		{
+			return new JSFunctionExpressionImpl(astNode);
+		}
+	};
 	IElementType NEW_EXPRESSION = new ElementTypeAsPsiFactory("NEW_EXPRESSION", JavascriptLanguage.INSTANCE, JSNewExpressionImpl.class);
 	IElementType INDEXED_PROPERTY_ACCESS_EXPRESSION = new ElementTypeAsPsiFactory("INDEXED_PROPERTY_ACCESS_EXPRESSION", JavascriptLanguage.INSTANCE,
 			JSIndexedPropertyAccessExpressionImpl.class);

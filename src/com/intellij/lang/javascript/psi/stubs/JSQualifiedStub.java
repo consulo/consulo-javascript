@@ -27,4 +27,6 @@ import com.intellij.psi.stubs.NamedStub;
 public interface JSQualifiedStub<T extends JSQualifiedNamedElement> extends NamedStub<T>, JSStubElement<T>
 {
 	String getQualifiedName();
+
+	int getFlags();
 }

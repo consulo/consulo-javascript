@@ -1,5 +1,6 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2000-2005 JetBrains s.r.o
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +17,10 @@
 
 package com.intellij.lang.javascript.psi.stubs.impl;
 
-import java.io.IOException;
-
-import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSClass;
-import com.intellij.lang.javascript.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.stubs.JSClassStub;
+import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
 
 /**
  * @author Maxim.Mossienko
@@ -35,25 +32,18 @@ public class JSClassStubImpl extends JSQualifiedObjectStubBase<JSClass> implemen
 	public static final int INTERFACE_MASK = 1;
 	private static final int DEPRECATED_MASK = 4;
 
-	public JSClassStubImpl(JSClass clazz, final StubElement parent, final JSStubElementType elementType)
+	public JSClassStubImpl(String name,
+			int flags,
+			String qName,
+			final StubElement parentStub,
+			final IStubElementType<JSClassStub, JSClass> elementType)
 	{
-		super(clazz, parent, elementType);
+		super(name, flags, qName, parentStub, elementType);
 	}
 
-	public JSClassStubImpl(String name, int flags, String qName, final StubElement parentStub)
+	public static int getFlags(JSClass jsClass)
 	{
-		super(name, flags, qName, parentStub, JSElementTypes.CLASS);
-	}
-
-	public JSClassStubImpl(final StubInputStream dataStream, final StubElement parentStub, final JSStubElementType elementType) throws IOException
-	{
-		super(dataStream, parentStub, elementType);
-	}
-
-	@Override
-	protected int buildFlags(final JSClass clazz)
-	{
-		return (clazz.isInterface() ? INTERFACE_MASK : 0) | (clazz.isDeprecated() ? DEPRECATED_MASK : 0);
+		return (jsClass.isInterface() ? INTERFACE_MASK : 0) | (jsClass.isDeprecated() ? DEPRECATED_MASK : 0);
 	}
 
 	@Override

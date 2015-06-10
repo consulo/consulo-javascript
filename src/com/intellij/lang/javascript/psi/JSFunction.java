@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript.psi;
 
-import com.intellij.lang.javascript.psi.stubs.JSFunctionStubBase;
+import com.intellij.lang.javascript.psi.stubs.JSFunctionStub;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.StubBasedPsiElement;
 import com.intellij.util.ArrayFactory;
@@ -24,7 +24,7 @@ import com.intellij.util.ArrayFactory;
 /**
  * @author max
  */
-public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JSAttributeListOwner, StubBasedPsiElement<JSFunctionStubBase>
+public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JSAttributeListOwner, StubBasedPsiElement<JSFunctionStub>
 {
 	JSFunction[] EMPTY_ARRAY = new JSFunction[0];
 	ArrayFactory<JSFunction> ARRAY_FACTORY = new ArrayFactory<JSFunction>()

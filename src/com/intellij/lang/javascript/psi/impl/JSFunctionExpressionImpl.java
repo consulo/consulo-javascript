@@ -23,7 +23,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.lang.javascript.psi.stubs.JSFunctionExpressionStub;
+import com.intellij.lang.javascript.psi.stubs.JSFunctionStub;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.stubs.IStubElementType;
@@ -36,14 +36,14 @@ import com.intellij.util.IncorrectOperationException;
  * Time: 11:55:33 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionExpressionStub, JSFunctionExpression> implements JSFunctionExpression
+public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionStub, JSFunctionExpression> implements JSFunctionExpression
 {
 	public JSFunctionExpressionImpl(final ASTNode node)
 	{
 		super(node);
 	}
 
-	public JSFunctionExpressionImpl(final JSFunctionExpressionStub stub, IStubElementType type)
+	public JSFunctionExpressionImpl(final JSFunctionStub stub, IStubElementType type)
 	{
 		super(stub, type);
 	}

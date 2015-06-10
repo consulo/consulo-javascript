@@ -31,4 +31,6 @@ public interface JSAttributeListStub extends StubElement<JSAttributeList>, JSStu
 	boolean hasModifier(final JSAttributeList.ModifierType modifier);
 
 	String getNamespace();
+
+	int getFlags();
 }

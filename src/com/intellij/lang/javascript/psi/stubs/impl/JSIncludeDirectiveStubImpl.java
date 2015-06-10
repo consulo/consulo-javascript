@@ -1,5 +1,6 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2000-2005 JetBrains s.r.o
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +17,11 @@
 
 package com.intellij.lang.javascript.psi.stubs.impl;
 
-import java.io.IOException;
-
 import com.intellij.lang.javascript.psi.JSIncludeDirective;
 import com.intellij.lang.javascript.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.stubs.JSIncludeDirectiveStub;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
 
 /**
  * @author Maxim.Mossienko
@@ -33,27 +30,14 @@ import com.intellij.psi.stubs.StubOutputStream;
  */
 public class JSIncludeDirectiveStubImpl extends StubBase<JSIncludeDirective> implements JSIncludeDirectiveStub
 {
-	private String myIncludeText;
+	private final String myIncludeText;
 
-	public JSIncludeDirectiveStubImpl(final StubInputStream dataStream, final StubElement parentStub, final JSStubElementType<JSIncludeDirectiveStub,
-			JSIncludeDirective> type) throws IOException
+	public JSIncludeDirectiveStubImpl(final String includeText,
+			final StubElement parentStub,
+			final JSStubElementType<JSIncludeDirectiveStub, JSIncludeDirective> type)
 	{
 		super(parentStub, type);
-		final int nameIndex = dataStream.readInt();
-		myIncludeText = nameIndex != -1 ? dataStream.stringFromId(nameIndex) : null;
-	}
-
-	public JSIncludeDirectiveStubImpl(final JSIncludeDirective psi, final StubElement parentStub, final JSStubElementType<JSIncludeDirectiveStub,
-			JSIncludeDirective> type)
-	{
-		super(parentStub, type);
-		myIncludeText = psi.getIncludeText();
-	}
-
-	@Override
-	public void serialize(final StubOutputStream dataStream) throws IOException
-	{
-		dataStream.writeInt(myIncludeText != null ? dataStream.getStringId(myIncludeText) : -1);
+		myIncludeText = includeText;
 	}
 
 	@Override

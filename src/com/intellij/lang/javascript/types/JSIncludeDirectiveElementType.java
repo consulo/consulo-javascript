@@ -1,5 +1,6 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2000-2005 JetBrains s.r.o
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +20,7 @@ package com.intellij.lang.javascript.types;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSIncludeDirective;
 import com.intellij.lang.javascript.psi.JSStubElementType;
@@ -28,6 +30,8 @@ import com.intellij.lang.javascript.psi.stubs.impl.JSIncludeDirectiveStubImpl;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
+import com.intellij.psi.stubs.StubOutputStream;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author Maxim.Mossienko
@@ -42,19 +46,25 @@ public class JSIncludeDirectiveElementType extends JSStubElementType<JSIncludeDi
 	}
 
 	@Override
-	public JSIncludeDirectiveStub newInstance(final StubInputStream dataStream,
-			final StubElement parentStub,
-			final JSStubElementType<JSIncludeDirectiveStub, JSIncludeDirective> type) throws IOException
+	public void serialize(@NotNull JSIncludeDirectiveStub stub, @NotNull StubOutputStream dataStream) throws IOException
 	{
-		return new JSIncludeDirectiveStubImpl(dataStream, parentStub, type);
+		dataStream.writeName(stub.getIncludeText());
 	}
 
+	@NotNull
 	@Override
-	public JSIncludeDirectiveStub newInstance(final JSIncludeDirective psi,
-			final StubElement parentStub,
-			final JSStubElementType<JSIncludeDirectiveStub, JSIncludeDirective> type)
+	public JSIncludeDirectiveStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException
 	{
-		return new JSIncludeDirectiveStubImpl(psi, parentStub, type);
+		StringRef includeText = dataStream.readName();
+		return new JSIncludeDirectiveStubImpl(StringRef.toString(includeText), parentStub, this);
+	}
+
+	@RequiredReadAction
+	@Override
+	public JSIncludeDirectiveStub createStub(@NotNull JSIncludeDirective psi, StubElement parentStub)
+	{
+		String includeText = psi.getIncludeText();
+		return new JSIncludeDirectiveStubImpl(includeText, parentStub, this);
 	}
 
 	@NotNull

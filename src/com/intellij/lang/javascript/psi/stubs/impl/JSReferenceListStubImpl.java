@@ -1,5 +1,6 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2000-2005 JetBrains s.r.o
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +17,11 @@
 
 package com.intellij.lang.javascript.psi.stubs.impl;
 
-import java.io.IOException;
-
-import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.lang.javascript.psi.JSReferenceList;
 import com.intellij.lang.javascript.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.stubs.JSReferenceListStub;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
-import com.intellij.util.ArrayUtil;
 
 /**
  * @author Maxim.Mossienko
@@ -37,58 +32,11 @@ public class JSReferenceListStubImpl extends StubBase<JSReferenceList> implement
 {
 	private String[] myRefs;
 
-	public JSReferenceListStubImpl(final StubInputStream dataStream, final StubElement parentStub, final JSStubElementType<JSReferenceListStub,
-			JSReferenceList> type) throws IOException
-	{
-		super(parentStub, type);
-
-		final int count = dataStream.readInt();
-
-		myRefs = ArrayUtil.newStringArray(count);
-		for(int i = 0; i < count; ++i)
-		{
-			myRefs[i] = dataStream.stringFromId(dataStream.readInt());
-		}
-	}
-
 	public JSReferenceListStubImpl(final String[] refs, final StubElement parentStub, final JSStubElementType<JSReferenceListStub,
 			JSReferenceList> type)
 	{
 		super(parentStub, type);
 		myRefs = refs;
-	}
-
-	public JSReferenceListStubImpl(final JSReferenceList psi, final StubElement parentStub, final JSStubElementType<JSReferenceListStub,
-			JSReferenceList> type)
-	{
-		super(parentStub, type);
-
-		final JSReferenceExpression[] referenceExpressions = psi.getExpressions();
-
-		if(referenceExpressions != null)
-		{
-			myRefs = ArrayUtil.newStringArray(referenceExpressions.length);
-			int i = 0;
-
-			for(JSReferenceExpression expr : referenceExpressions)
-			{
-				myRefs[i++] = expr.getText();
-			}
-		}
-		else
-		{
-			myRefs = ArrayUtil.EMPTY_STRING_ARRAY;
-		}
-	}
-
-	@Override
-	public void serialize(final StubOutputStream dataStream) throws IOException
-	{
-		dataStream.writeInt(myRefs.length);
-		for(String s : myRefs)
-		{
-			dataStream.writeInt(dataStream.getStringId(s));
-		}
 	}
 
 	@Override

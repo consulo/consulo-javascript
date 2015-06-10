@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.psi;
 
+import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeNameValuePairStub;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.StubBasedPsiElement;
@@ -29,5 +30,6 @@ public interface JSAttributeNameValuePair extends JSElement, PsiNamedElement, St
 
 	JSExpression getValue();
 
+	@Nullable
 	String getSimpleValue();
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2000-2005 JetBrains s.r.o
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +20,7 @@ package com.intellij.lang.javascript.types;
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.JSUseNamespaceDirective;
@@ -28,6 +30,8 @@ import com.intellij.lang.javascript.psi.stubs.impl.JSUseNamespaceDirectiveStubIm
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
+import com.intellij.psi.stubs.StubOutputStream;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author Maxim.Mossienko
@@ -41,20 +45,6 @@ public class JSUseNamespaceDirectiveType extends JSStubElementType<JSUseNamespac
 		super("USE_NAMESPACE_DIRECTIVE");
 	}
 
-	@Override
-	public JSUseNamespaceDirectiveStub newInstance(final StubInputStream dataStream, final StubElement parentStub,
-			final JSStubElementType<JSUseNamespaceDirectiveStub, JSUseNamespaceDirective> type) throws IOException
-	{
-		return new JSUseNamespaceDirectiveStubImpl(dataStream, parentStub, type);
-	}
-
-	@Override
-	public JSUseNamespaceDirectiveStub newInstance(final JSUseNamespaceDirective psi, final StubElement parentStub,
-			final JSStubElementType<JSUseNamespaceDirectiveStub, JSUseNamespaceDirective> type)
-	{
-		return new JSUseNamespaceDirectiveStubImpl(psi, parentStub, type);
-	}
-
 	@NotNull
 	@Override
 	public PsiElement createElement(@NotNull ASTNode astNode)
@@ -66,5 +56,26 @@ public class JSUseNamespaceDirectiveType extends JSStubElementType<JSUseNamespac
 	public JSUseNamespaceDirective createPsi(@NotNull JSUseNamespaceDirectiveStub stub)
 	{
 		return new JSUseNamespaceDirectiveImpl(stub);
+	}
+
+	@RequiredReadAction
+	@Override
+	public JSUseNamespaceDirectiveStub createStub(@NotNull JSUseNamespaceDirective psi, StubElement parentStub)
+	{
+		return new JSUseNamespaceDirectiveStubImpl(psi.getNamespaceToBeUsed(), parentStub, this);
+	}
+
+	@Override
+	public void serialize(@NotNull JSUseNamespaceDirectiveStub stub, @NotNull StubOutputStream dataStream) throws IOException
+	{
+		dataStream.writeName(stub.getNamespaceToUse());
+	}
+
+	@NotNull
+	@Override
+	public JSUseNamespaceDirectiveStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException
+	{
+		StringRef nameRef = dataStream.readName();
+		return new JSUseNamespaceDirectiveStubImpl(StringRef.toString(nameRef), parentStub, this);
 	}
 }

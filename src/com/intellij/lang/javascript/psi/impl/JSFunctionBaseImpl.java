@@ -33,7 +33,7 @@ import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.lang.javascript.psi.JSSourceElement;
 import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.lang.javascript.psi.stubs.JSFunctionStubBase;
+import com.intellij.lang.javascript.psi.stubs.JSFunctionStub;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
@@ -47,7 +47,7 @@ import com.intellij.util.IncorrectOperationException;
  * Date: Jan 30, 2005
  * Time: 8:25:27 PM
  */
-abstract class JSFunctionBaseImpl<T extends JSFunctionStubBase<T2>, T2 extends JSFunction> extends JSStubElementImpl<T> implements JSFunction
+abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunction> extends JSStubElementImpl<T> implements JSFunction
 {
 	private boolean referencesArgumentsCalculated;
 	private boolean referencesArguments;
@@ -133,7 +133,7 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStubBase<T2>, T2 extends J
 	@Override
 	public String getName()
 	{
-		final JSFunctionStubBase stub = getStub();
+		final JSFunctionStub stub = getStub();
 		if(stub != null)
 		{
 			return stub.getName();

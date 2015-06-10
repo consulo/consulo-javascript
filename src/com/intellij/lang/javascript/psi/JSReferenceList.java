@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript.psi;
 
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.javascript.psi.stubs.JSReferenceListStub;
 import com.intellij.psi.StubBasedPsiElement;
 
@@ -25,7 +25,7 @@ import com.intellij.psi.StubBasedPsiElement;
  */
 public interface JSReferenceList extends JSElement, StubBasedPsiElement<JSReferenceListStub>
 {
-	@Nullable
+	@NotNull
 	JSReferenceExpression[] getExpressions();
 
 	String[] getReferenceTexts();

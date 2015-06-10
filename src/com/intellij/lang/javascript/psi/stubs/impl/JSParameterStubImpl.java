@@ -1,5 +1,6 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2000-2005 JetBrains s.r.o
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +17,10 @@
 
 package com.intellij.lang.javascript.psi.stubs.impl;
 
-import java.io.IOException;
-
-import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSParameter;
 import com.intellij.lang.javascript.psi.stubs.JSParameterStub;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
 
 /**
  * @author Maxim.Mossienko
@@ -35,25 +32,21 @@ public class JSParameterStubImpl extends JSVariableStubBaseImpl<JSParameter> imp
 	public static final int REST_MASK = LAST_USED_MASK << 1;
 	public static final int OPTIONAL_MASK = LAST_USED_MASK << 2;
 
-	public JSParameterStubImpl(JSParameter clazz, final StubElement parent, final IStubElementType elementType)
+	public JSParameterStubImpl(String name,
+			int flags,
+			String type,
+			String initial,
+			String qName,
+			StubElement parentStub,
+			IStubElementType elementType)
 	{
-		super(clazz, parent, elementType);
+		super(name, flags, type, initial, qName, parentStub, elementType);
 	}
 
-	public JSParameterStubImpl(final StubInputStream dataStream, final StubElement parentStub, final IStubElementType elementType) throws IOException
-	{
-		super(dataStream, parentStub, elementType);
-	}
 
-	public JSParameterStubImpl(final String name, int flags, String type, String initial, final StubElement parentStub)
+	public static int buildFlags(final JSParameter clazz)
 	{
-		super(name, flags | (initial != null ? OPTIONAL_MASK : 0), type, initial, null, parentStub, JSElementTypes.FORMAL_PARAMETER);
-	}
-
-	@Override
-	protected int buildFlags(final JSParameter clazz)
-	{
-		final int i = super.buildFlags(clazz);
+		final int i = JSVariableStubBaseImpl.buildFlags(clazz);
 		return i | (clazz.isRest() ? REST_MASK : 0) | (clazz.isOptional() ? OPTIONAL_MASK : 0);
 	}
 
