@@ -48,18 +48,22 @@ public class V8ExecutionStack extends XExecutionStack
 	}
 
 	@Override
-	public void computeStackFrames(int i, XStackFrameContainer frameContainer)
+	public void computeStackFrames(XStackFrameContainer frameContainer)
 	{
 		List<? extends CallFrame> callFrames = myDebugContext.getCallFrames();
 		List<V8StackFrame> stackFrames = new ArrayList<V8StackFrame>(callFrames.size());
 
-		for(int a = i; i < callFrames.size(); i ++)
+		for(CallFrame callFrame : callFrames)
 		{
-			CallFrame callFrame = callFrames.get(a);
-
 			stackFrames.add(new V8StackFrame(callFrame));
 		}
 
 		frameContainer.addStackFrames(stackFrames, true);
+	}
+
+	@Override
+	public void computeStackFrames(int firstFrameIndex, XStackFrameContainer container)
+	{
+		throw new UnsupportedOperationException();
 	}
 }
