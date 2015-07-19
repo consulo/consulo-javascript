@@ -1,6 +1,6 @@
 <idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
 	<id>org.mustbe.consulo.javascript</id>
-	<name>JavaScript Support</name>
+	<name>JavaScript</name>
 	<version>SNAPSHOT</version>
 	<category>Custom Languages</category>
 	<vendor>JetBrains</vendor>
@@ -122,6 +122,8 @@
 	</extensions>
 
 	<extensionPoints>
+		<extensionPoint name="indexer" interface="com.intellij.lang.javascript.index.JavaScriptIndexer"/>
+
 		<extensionPoint name="resolveHelper" interface="com.intellij.lang.javascript.flex.JSResolveHelper"/>
 		<extensionPoint name="classInheritorsProvider" interface="com.intellij.lang.javascript.search.JSClassInheritorsProvider"/>
 	</extensionPoints>

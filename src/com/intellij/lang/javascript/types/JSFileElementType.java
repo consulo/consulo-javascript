@@ -16,20 +16,66 @@
  */
 package com.intellij.lang.javascript.types;
 
+import java.io.IOException;
+
 import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.Language;
+import com.intellij.lang.javascript.index.JavaScriptIndexer;
+import com.intellij.lang.javascript.psi.JSFile;
+import com.intellij.lang.javascript.psi.stubs.JSFileStub;
+import com.intellij.lang.javascript.psi.stubs.impl.JSFileStubImpl;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.StubBuilder;
+import com.intellij.psi.stubs.DefaultStubBuilder;
+import com.intellij.psi.stubs.IndexSink;
+import com.intellij.psi.stubs.StubElement;
+import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.tree.IStubFileElementType;
 
 /**
  * @author peter
  */
-public class JSFileElementType extends IStubFileElementType
+public class JSFileElementType extends IStubFileElementType<JSFileStub>
 {
-	public static final int VERSION = 25;
+	public static final int VERSION = 27;
 
 	public JSFileElementType(final Language language)
 	{
 		super(language);
+	}
+
+	@Override
+	public void indexStub(@NotNull final JSFileStub stub, @NotNull final IndexSink sink)
+	{
+		for(JavaScriptIndexer javaScriptIndexer : JavaScriptIndexer.EP_NAME.getExtensions())
+		{
+			javaScriptIndexer.indexFile(stub.getPsi(), sink);
+		}
+	}
+
+	@Override
+	public StubBuilder getBuilder()
+	{
+		return new DefaultStubBuilder()
+		{
+			@NotNull
+			@Override
+			protected StubElement createStubForFile(@NotNull PsiFile file)
+			{
+				if(file instanceof JSFile)
+				{
+					return new JSFileStubImpl((JSFile) file);
+				}
+				return super.createStubForFile(file);
+			}
+		};
+	}
+
+	@NotNull
+	@Override
+	public JSFileStub deserialize(@NotNull final StubInputStream dataStream, final StubElement parentStub) throws IOException
+	{
+		return new JSFileStubImpl(null);
 	}
 
 	@NotNull
@@ -42,6 +88,11 @@ public class JSFileElementType extends IStubFileElementType
 	@Override
 	public int getStubVersion()
 	{
-		return VERSION;
+		int version = VERSION;
+		for(JavaScriptIndexer javaScriptIndexer : JavaScriptIndexer.EP_NAME.getExtensions())
+		{
+			version += javaScriptIndexer.getVersion();
+		}
+		return version;
 	}
 }

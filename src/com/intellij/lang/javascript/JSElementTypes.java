@@ -26,8 +26,8 @@ import com.intellij.lang.javascript.types.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.ElementTypeAsPsiFactory;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.ILazyParseableElementType;
+import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.psi.tree.TokenSet;
 
 /**
@@ -39,7 +39,7 @@ import com.intellij.psi.tree.TokenSet;
  */
 public interface JSElementTypes
 {
-	IFileElementType FILE = new JSFileElementType(JavascriptLanguage.INSTANCE);
+	IStubFileElementType<JSFileStub> FILE = new JSFileElementType(JavascriptLanguage.INSTANCE);
 
 	IElementType EMBEDDED_CONTENT = new ILazyParseableElementType("EMBEDDED_CONTENT", Language.findInstance(JavascriptLanguage.class))
 	{
