@@ -30,14 +30,16 @@ import com.intellij.psi.stubs.DefaultStubBuilder;
 import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
+import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.psi.tree.IStubFileElementType;
+import com.intellij.util.io.StringRef;
 
 /**
  * @author peter
  */
 public class JSFileElementType extends IStubFileElementType<JSFileStub>
 {
-	public static final int VERSION = 27;
+	public static final int VERSION = 28;
 
 	public JSFileElementType(final Language language)
 	{
@@ -49,7 +51,7 @@ public class JSFileElementType extends IStubFileElementType<JSFileStub>
 	{
 		for(JavaScriptIndexer javaScriptIndexer : JavaScriptIndexer.EP_NAME.getExtensions())
 		{
-			javaScriptIndexer.indexFile(stub.getPsi(), sink);
+			javaScriptIndexer.indexFile(stub, sink);
 		}
 	}
 
@@ -64,18 +66,25 @@ public class JSFileElementType extends IStubFileElementType<JSFileStub>
 			{
 				if(file instanceof JSFile)
 				{
-					return new JSFileStubImpl((JSFile) file);
+					return new JSFileStubImpl((JSFile) file, file.getName());
 				}
 				return super.createStubForFile(file);
 			}
 		};
 	}
 
+	@Override
+	public void serialize(@NotNull JSFileStub stub, @NotNull StubOutputStream dataStream) throws IOException
+	{
+		dataStream.writeName(stub.getName());
+	}
+
 	@NotNull
 	@Override
 	public JSFileStub deserialize(@NotNull final StubInputStream dataStream, final StubElement parentStub) throws IOException
 	{
-		return new JSFileStubImpl(null);
+		StringRef name = dataStream.readName();
+		return new JSFileStubImpl(null, name);
 	}
 
 	@NotNull

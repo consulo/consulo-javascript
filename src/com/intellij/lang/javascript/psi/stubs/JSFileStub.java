@@ -1,5 +1,6 @@
 package com.intellij.lang.javascript.psi.stubs;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.psi.stubs.PsiFileStub;
 
@@ -9,4 +10,6 @@ import com.intellij.psi.stubs.PsiFileStub;
  */
 public interface JSFileStub extends PsiFileStub<JSFile>
 {
+	@NotNull
+	String getName();
 }

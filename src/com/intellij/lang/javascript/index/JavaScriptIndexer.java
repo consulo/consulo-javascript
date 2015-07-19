@@ -1,7 +1,7 @@
 package com.intellij.lang.javascript.index;
 
 import org.jetbrains.annotations.NotNull;
-import com.intellij.lang.javascript.psi.JSFile;
+import com.intellij.lang.javascript.psi.stubs.JSFileStub;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.stubs.IndexSink;
 
@@ -13,7 +13,7 @@ public abstract class JavaScriptIndexer
 {
 	public static final ExtensionPointName<JavaScriptIndexer> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.javascript.indexer");
 
-	public void indexFile(@NotNull JSFile file, @NotNull final IndexSink sink)
+	public void indexFile(@NotNull JSFileStub fileStub, @NotNull final IndexSink sink)
 	{
 	}
 
