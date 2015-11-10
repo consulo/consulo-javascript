@@ -19,6 +19,7 @@ package org.mustbe.consulo.json.jom;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -94,9 +95,23 @@ public class JomModeAsJsonFileDescriptorProvider implements JsonFileDescriptorPr
 				{
 					objectDescriptor.addSimpleProperty(propertyName, JsonSimplePropertyType.String);
 				}
-				else if(actualTypeArgument == Integer.class)
+				else if(actualTypeArgument == Boolean.class)
 				{
-					objectDescriptor.addSimpleProperty(propertyName, JsonSimplePropertyType.Integer);
+					objectDescriptor.addSimpleProperty(propertyName, JsonSimplePropertyType.Boolean);
+				}
+				else if(actualTypeArgument == Void.class)
+				{
+					objectDescriptor.addSimpleProperty(propertyName, JsonSimplePropertyType.Null);
+				}
+				else if(actualTypeArgument == Byte.class ||
+						actualTypeArgument == Short.class ||
+						actualTypeArgument == Integer.class ||
+						actualTypeArgument == Long.class ||
+						actualTypeArgument == Float.class ||
+						actualTypeArgument == Double.class ||
+						actualTypeArgument == BigInteger.class)
+				{
+					objectDescriptor.addSimpleProperty(propertyName, JsonSimplePropertyType.Number);
 				}
 			}
 			else

@@ -22,7 +22,8 @@ package org.mustbe.consulo.json.validation.descriptor;
  */
 public enum JsonSimplePropertyType
 {
-	Integer,
-	String
-
+	Number,
+	String,
+	Null,
+	Boolean
 }
