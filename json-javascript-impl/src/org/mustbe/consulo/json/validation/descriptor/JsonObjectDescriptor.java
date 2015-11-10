@@ -33,27 +33,32 @@ public class JsonObjectDescriptor implements JsonNodeDescriptor
 	private Map<String, JsonPropertyDescriptor> myProperties = new HashMap<String, JsonPropertyDescriptor>();
 
 	@NotNull
-	public JsonSimplePropertyDescriptor addSimpleProperty(@NotNull final String propertyName, @NotNull final JsonSimplePropertyType value)
+	public JsonPropertyDescriptor addSimpleProperty(@NotNull final String propertyName, @NotNull final JsonPropertyType value)
 	{
-		return (JsonSimplePropertyDescriptor) ContainerUtil.getOrCreate(myProperties, propertyName, new Factory<JsonPropertyDescriptor>()
+		if(value == JsonPropertyType.Object)
+		{
+			throw new IllegalArgumentException("We cant add object type as simple");
+		}
+
+		return ContainerUtil.getOrCreate(myProperties, propertyName, new Factory<JsonPropertyDescriptor>()
 		{
 			@Override
 			public JsonPropertyDescriptor create()
 			{
-				return new JsonSimplePropertyDescriptor(propertyName, value);
+				return new JsonPropertyDescriptor(propertyName, value);
 			}
 		});
 	}
 
 	@NotNull
-	public JsonObjectPropertyDescriptor addObjectProperty(@NotNull final String propertyName, @NotNull final JsonObjectDescriptor value)
+	public JsonPropertyDescriptor addObjectProperty(@NotNull final String propertyName, @NotNull final JsonObjectDescriptor value)
 	{
-		return (JsonObjectPropertyDescriptor) ContainerUtil.getOrCreate(myProperties, propertyName, new Factory<JsonPropertyDescriptor>()
+		return ContainerUtil.getOrCreate(myProperties, propertyName, new Factory<JsonPropertyDescriptor>()
 		{
 			@Override
 			public JsonPropertyDescriptor create()
 			{
-				return new JsonObjectPropertyDescriptor(propertyName, value);
+				return new JsonPropertyDescriptor(propertyName, value);
 			}
 		});
 	}

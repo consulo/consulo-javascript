@@ -16,17 +16,33 @@
 
 package org.mustbe.consulo.json.validation.descriptor;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @author VISTALL
  * @since 10.11.2015
  */
-public abstract class JsonPropertyDescriptor implements JsonNodeDescriptor
+public class JsonPropertyDescriptor implements JsonNodeDescriptor
 {
 	private String myName;
+	private Object myValue;
 
-	public JsonPropertyDescriptor(String name)
+	public JsonPropertyDescriptor(@NotNull String name, @NotNull Object value)
 	{
 		myName = name;
+		myValue = value;
+	}
+
+	@NotNull
+	public Object getValue()
+	{
+		return myValue;
+	}
+
+	@NotNull
+	public JsonPropertyType getType()
+	{
+		return myValue instanceof JsonPropertyType ? (JsonPropertyType) myValue : JsonPropertyType.Object;
 	}
 
 	public String getName()

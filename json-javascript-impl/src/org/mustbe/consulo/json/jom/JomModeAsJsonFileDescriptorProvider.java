@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.json.validation.JsonFileDescriptorProvider;
 import org.mustbe.consulo.json.validation.descriptor.JsonObjectDescriptor;
-import org.mustbe.consulo.json.validation.descriptor.JsonSimplePropertyType;
+import org.mustbe.consulo.json.validation.descriptor.JsonPropertyType;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ObjectUtil;
@@ -93,15 +93,15 @@ public class JomModeAsJsonFileDescriptorProvider implements JsonFileDescriptorPr
 				Class<?> actualTypeArgument = (Class<?>) actualTypeArguments[0];
 				if(actualTypeArgument == String.class)
 				{
-					objectDescriptor.addSimpleProperty(propertyName, JsonSimplePropertyType.String);
+					objectDescriptor.addSimpleProperty(propertyName, JsonPropertyType.String);
 				}
 				else if(actualTypeArgument == Boolean.class)
 				{
-					objectDescriptor.addSimpleProperty(propertyName, JsonSimplePropertyType.Boolean);
+					objectDescriptor.addSimpleProperty(propertyName, JsonPropertyType.Boolean);
 				}
 				else if(actualTypeArgument == Void.class)
 				{
-					objectDescriptor.addSimpleProperty(propertyName, JsonSimplePropertyType.Null);
+					objectDescriptor.addSimpleProperty(propertyName, JsonPropertyType.Null);
 				}
 				else if(actualTypeArgument == Byte.class ||
 						actualTypeArgument == Short.class ||
@@ -111,7 +111,7 @@ public class JomModeAsJsonFileDescriptorProvider implements JsonFileDescriptorPr
 						actualTypeArgument == Double.class ||
 						actualTypeArgument == BigInteger.class)
 				{
-					objectDescriptor.addSimpleProperty(propertyName, JsonSimplePropertyType.Number);
+					objectDescriptor.addSimpleProperty(propertyName, JsonPropertyType.Number);
 				}
 			}
 			else

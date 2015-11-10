@@ -16,25 +16,23 @@
 
 package org.mustbe.consulo.json.validation.descriptor;
 
-import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.util.text.StringUtil;
 
 /**
  * @author VISTALL
  * @since 10.11.2015
  */
-public class JsonObjectPropertyDescriptor extends JsonPropertyDescriptor
+public enum JsonPropertyType
 {
-	private JsonObjectDescriptor myObjectDescriptor;
+	Object,
+	Number,
+	String,
+	Null,
+	Boolean;
 
-	public JsonObjectPropertyDescriptor(String name, JsonObjectDescriptor objectDescriptor)
+	@Override
+	public String toString()
 	{
-		super(name);
-		myObjectDescriptor = objectDescriptor;
-	}
-
-	@NotNull
-	public JsonObjectDescriptor getObjectDescriptor()
-	{
-		return myObjectDescriptor;
+		return StringUtil.decapitalize(name());
 	}
 }
