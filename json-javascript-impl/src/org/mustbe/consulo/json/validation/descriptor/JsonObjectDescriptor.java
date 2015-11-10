@@ -68,4 +68,9 @@ public class JsonObjectDescriptor implements JsonNodeDescriptor
 	{
 		return myProperties.get(propertyName);
 	}
+
+	public Map<String, JsonPropertyDescriptor> getProperties()
+	{
+		return myProperties;
+	}
 }

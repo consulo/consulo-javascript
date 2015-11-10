@@ -17,9 +17,12 @@
 package org.mustbe.consulo.json.validation.inspections;
 
 import java.util.ArrayDeque;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.json.validation.JsonFileDescriptorProviders;
 import org.mustbe.consulo.json.validation.descriptor.JsonObjectDescriptor;
@@ -105,22 +108,14 @@ public class PropertyValidationInspection extends LocalInspectionTool
 					return;
 				}
 
-				final Deque<JSProperty> queue = new ArrayDeque<JSProperty>();
-				PsiTreeUtil.treeWalkUp(node, null, new PairProcessor<PsiElement, PsiElement>()
+				Collection<JSProperty> jsProperties = buildPropertiesAsTree(node, rootDescriptor);
+				if(jsProperties.isEmpty())
 				{
-					@Override
-					public boolean process(PsiElement element, PsiElement element2)
-					{
-						if(element instanceof JSProperty)
-						{
-							queue.addFirst((JSProperty) element);
-						}
-						return true;
-					}
-				});
+					return;
+				}
 
 				JsonObjectDescriptor currentObject = rootDescriptor;
-				for(JSProperty property : queue)
+				for(JSProperty property : jsProperties)
 				{
 					String name = property.getName();
 					if(name == null)
@@ -154,6 +149,31 @@ public class PropertyValidationInspection extends LocalInspectionTool
 	}
 
 	@RequiredReadAction
+	public static Collection<JSProperty> buildPropertiesAsTree(PsiElement element, @Nullable JsonObjectDescriptor objectDescriptor)
+	{
+		JsonObjectDescriptor rootDescriptor = objectDescriptor == null ? JsonFileDescriptorProviders.getRootDescriptor(element.getContainingFile()) : objectDescriptor;
+		if(rootDescriptor == null)
+		{
+			return Collections.emptyList();
+		}
+
+		final Deque<JSProperty> queue = new ArrayDeque<JSProperty>();
+		PsiTreeUtil.treeWalkUp(element, null, new PairProcessor<PsiElement, PsiElement>()
+		{
+			@Override
+			public boolean process(PsiElement element, PsiElement element2)
+			{
+				if(element instanceof JSProperty)
+				{
+					queue.addFirst((JSProperty) element);
+				}
+				return true;
+			}
+		});
+		return queue;
+	}
+
+	@RequiredReadAction
 	private static void validateValue(PsiElement value, JsonPropertyType actualType, ProblemsHolder holder)
 	{
 		PsiElement parent = value.getParent();
@@ -168,23 +188,15 @@ public class PropertyValidationInspection extends LocalInspectionTool
 			return;
 		}
 
-		final Deque<JSProperty> queue = new ArrayDeque<JSProperty>();
-		PsiTreeUtil.treeWalkUp(value, null, new PairProcessor<PsiElement, PsiElement>()
+		Collection<JSProperty> jsProperties = buildPropertiesAsTree(value, rootDescriptor);
+		if(jsProperties.isEmpty())
 		{
-			@Override
-			public boolean process(PsiElement element, PsiElement element2)
-			{
-				if(element instanceof JSProperty)
-				{
-					queue.addFirst((JSProperty) element);
-				}
-				return true;
-			}
-		});
+			return;
+		}
 
 		JsonPropertyDescriptor currentProperty = null;
 		JsonObjectDescriptor currentObject = rootDescriptor;
-		for(JSProperty property : queue)
+		for(JSProperty property : jsProperties)
 		{
 			String name = property.getName();
 			if(name == null)
