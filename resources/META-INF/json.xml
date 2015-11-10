@@ -1,6 +1,38 @@
 <idea-plugin>
+	<extensionPoints>
+		<extensionPoint name="jomFileDescriptor" interface="org.mustbe.consulo.json.jom.JomFileDescriptor" />
+		<extensionPoint name="jsonFileDescriptorProvider" interface="org.mustbe.consulo.json.validation.JsonFileDescriptorProvider" />
+	</extensionPoints>
+
 	<extensions defaultExtensionNs="com.intellij">
 		<fileTypeFactory implementation="org.mustbe.consulo.json.JsonFileTypeFactory" />
 		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.json.lang.JsonJavaScriptVersion" />
+
+		<iconDescriptorUpdater implementation="org.mustbe.consulo.json.jom.JomIconDescriptorUpdater" />
+
+		<projectService serviceImplementation="org.mustbe.consulo.json.jom.JomManager" />
+
+		<localInspection language="JavaScript"
+						 displayName="Property validation"
+						 groupName="JSON"
+						 enabledByDefault="true"
+						 implementationClass="org.mustbe.consulo.json.validation.inspections.PropertyValidationInspection" />
+	</extensions>
+
+	<extensions defaultExtensionNs="org.mustbe.consulo.javascript">
+		<jsonFileDescriptorProvider implementation="org.mustbe.consulo.json.jom.JomModeAsJsonFileDescriptorProvider" />
+
+
+
+
+
+
+
+
+
+
+
+		<!--FIXME [VISTALL] test-->
+		<jomFileDescriptor implementation="test.PackageFileDescriptor" />
 	</extensions>
 </idea-plugin>
