@@ -19,8 +19,7 @@ package test;
 import java.util.Map;
 
 import org.mustbe.consulo.json.jom.JomElement;
-import org.mustbe.consulo.json.jom.JomProperty;
-import org.mustbe.consulo.json.jom.JomPropertyValue;
+import org.mustbe.consulo.json.jom.JomPropertyGetter;
 
 /**
  * @author VISTALL
@@ -28,12 +27,12 @@ import org.mustbe.consulo.json.jom.JomPropertyValue;
  */
 public interface PackagesRoot extends JomElement
 {
-	@JomProperty
-	JomPropertyValue<String> getUrl();
+	@JomPropertyGetter
+	String getUrl();
 
-	@JomProperty
+	@JomPropertyGetter
 	PackagesObject getObject();
 
-	@JomProperty
-	Map<String, JomPropertyValue<String>> getDependencies();
+	@JomPropertyGetter
+	Map<String, String> getDependencies();
 }

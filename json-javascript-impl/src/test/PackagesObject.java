@@ -16,8 +16,7 @@
 
 package test;
 
-import org.mustbe.consulo.json.jom.JomProperty;
-import org.mustbe.consulo.json.jom.JomPropertyValue;
+import org.mustbe.consulo.json.jom.JomPropertyGetter;
 
 /**
  * @author VISTALL
@@ -25,9 +24,9 @@ import org.mustbe.consulo.json.jom.JomPropertyValue;
  */
 public interface PackagesObject
 {
-	@JomProperty
-	JomPropertyValue<Integer> getKey();
+	@JomPropertyGetter
+	int getKey();
 
-	@JomProperty
-	JomPropertyValue<Integer> getValue();
+	@JomPropertyGetter
+	int getValue();
 }

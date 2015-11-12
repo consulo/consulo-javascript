@@ -70,7 +70,7 @@ public class JomModeAsJsonFileDescriptorProvider implements JsonFileDescriptorPr
 
 		for(Method method : methods)
 		{
-			JomProperty jomProperty = method.getAnnotation(JomProperty.class);
+			JomPropertyGetter jomProperty = method.getAnnotation(JomPropertyGetter.class);
 			if(jomProperty == null)
 			{
 				continue;
@@ -87,48 +87,44 @@ public class JomModeAsJsonFileDescriptorProvider implements JsonFileDescriptorPr
 		}
 	}
 
-	private static void fillObjectDescriptor(JsonObjectDescriptor objectDescriptor, Class<?> classType, Type genericType, @Nullable String propertyName)
+	private static void fillObjectDescriptor(JsonObjectDescriptor objectDescriptor, @NotNull Class<?> classType, @NotNull Type genericType, @Nullable String propertyName)
 	{
-		if(classType == JomPropertyValue.class)
-		{
-			if(!(genericType instanceof ParameterizedType))
-			{
-				throw new IllegalArgumentException();
-			}
-
-			Type[] actualTypeArguments = ((ParameterizedType) genericType).getActualTypeArguments();
-
-			Class<?> actualTypeArgument = (Class<?>) actualTypeArguments[0];
-			if(actualTypeArgument == String.class)
-			{
-				objectDescriptor.addSimpleProperty(propertyName, JsonPropertyType.String);
-			}
-			else if(actualTypeArgument == Boolean.class)
-			{
-				objectDescriptor.addSimpleProperty(propertyName, JsonPropertyType.Boolean);
-			}
-			else if(actualTypeArgument == Void.class)
-			{
-				objectDescriptor.addSimpleProperty(propertyName, JsonPropertyType.Null);
-			}
-			else if(actualTypeArgument == Byte.class ||
-					actualTypeArgument == Short.class ||
-					actualTypeArgument == Integer.class ||
-					actualTypeArgument == Long.class ||
-					actualTypeArgument == Float.class ||
-					actualTypeArgument == Double.class ||
-					actualTypeArgument == BigInteger.class)
-			{
-				objectDescriptor.addSimpleProperty(propertyName, JsonPropertyType.Number);
-			}
-		}
-		else if(classType.isArray())
+		if(classType.isArray())
 		{
 			Class<?> componentType = classType.getComponentType();
 		}
 		else if(classType == Collection.class || classType == Set.class || classType == List.class)
 		{
 
+		}
+		else if(classType == Null.class)
+		{
+			objectDescriptor.addSimpleProperty(propertyName, JsonPropertyType.Null);
+		}
+		else if(classType == boolean.class || classType == Boolean.class)
+		{
+			objectDescriptor.addSimpleProperty(propertyName, JsonPropertyType.Boolean);
+		}
+		else if(classType == String.class)
+		{
+			objectDescriptor.addSimpleProperty(propertyName, JsonPropertyType.String);
+		}
+		else if(classType == byte.class ||
+				classType == short.class ||
+				classType == int.class ||
+				classType == long.class ||
+				classType == float.class ||
+				classType == double.class ||
+				classType == BigInteger.class ||
+				classType == Byte.class ||
+				classType == Short.class ||
+				classType == Integer.class ||
+				classType == Long.class ||
+				classType == Float.class ||
+				classType == Double.class ||
+				classType == BigInteger.class)
+		{
+			objectDescriptor.addSimpleProperty(propertyName, JsonPropertyType.Number);
 		}
 		else if(classType == Map.class)
 		{
@@ -144,6 +140,10 @@ public class JomModeAsJsonFileDescriptorProvider implements JsonFileDescriptorPr
 			if(actualTypeArgument instanceof ParameterizedType)
 			{
 				rawType = (Class) ((ParameterizedType) actualTypeArgument).getRawType();
+			}
+			else
+			{
+				rawType = (Class) actualTypeArgument;
 			}
 
 			JsonObjectDescriptor child = new JsonObjectDescriptor();

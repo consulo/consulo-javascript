@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface JomProperty
+public @interface JomPropertyGetter
 {
 	String value() default "";
 }

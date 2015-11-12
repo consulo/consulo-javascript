@@ -16,14 +16,15 @@
 
 package org.mustbe.consulo.json.jom;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * @author VISTALL
- * @since 10.11.2015
+ * @since 12.11.2015
  */
-public interface JomPropertyValue<T>
+public class Null
 {
-	@NotNull
-	T getValue();
+	public static final Null INSTANCE = new Null();
+
+	private Null()
+	{
+	}
 }
