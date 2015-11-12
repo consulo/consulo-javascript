@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.json.jom.Null;
 import org.mustbe.consulo.json.validation.JsonFileDescriptorProviders;
 import org.mustbe.consulo.json.validation.descriptor.JsonObjectDescriptor;
 import org.mustbe.consulo.json.validation.descriptor.JsonPropertyDescriptor;
@@ -156,7 +157,8 @@ public class JsonCompletionContributor extends CompletionContributor
 							public void handleInsert(InsertionContext context, LookupElement item)
 							{
 								JsonPropertyDescriptor value = entry.getValue();
-								if(value.getType() == Object.class)
+								Class<?> type = value.getType();
+								if(type == Object.class)
 								{
 									context.getDocument().insertString(context.getTailOffset(), ": {\n}");
 									context.getEditor().getCaretModel().moveToOffset(context.getTailOffset() - 2);
@@ -164,7 +166,27 @@ public class JsonCompletionContributor extends CompletionContributor
 									context.commitDocument();
 									CodeStyleManager.getInstance(context.getProject()).reformatRange(originalFile, context.getStartOffset(), context.getTailOffset());
 								}
-								else if(value.getType().isArray())
+								else if(type == Null.class)
+								{
+									context.getDocument().insertString(context.getTailOffset(), ": null");
+									context.getEditor().getCaretModel().moveToOffset(context.getTailOffset());
+								}
+								else if(type == Boolean.class)
+								{
+									context.getDocument().insertString(context.getTailOffset(), ": false");
+									context.getEditor().getCaretModel().moveToOffset(context.getTailOffset());
+								}
+								else if(type == String.class)
+								{
+									context.getDocument().insertString(context.getTailOffset(), ": \"\"");
+									context.getEditor().getCaretModel().moveToOffset(context.getTailOffset() - 1);
+								}
+								else if(type == Number.class)
+								{
+									context.getDocument().insertString(context.getTailOffset(), ": 0");
+									context.getEditor().getCaretModel().moveToOffset(context.getTailOffset());
+								}
+								else if(type.isArray())
 								{
 									context.getDocument().insertString(context.getTailOffset(), ": []");
 									context.getEditor().getCaretModel().moveToOffset(context.getTailOffset() - 1);
