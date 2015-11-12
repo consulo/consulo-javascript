@@ -141,13 +141,16 @@ public class JsonCompletionContributor extends CompletionContributor
 				for(final Map.Entry<String, JsonPropertyDescriptor> entry : properties.entrySet())
 				{
 					String key = entry.getKey();
-					if(alreadyDefined.contains(key))
+					if(key == null || alreadyDefined.contains(key))
 					{
 						continue;
 					}
 					LookupElementBuilder builder = LookupElementBuilder.create(StringUtil.QUOTER.fun(key));
 					builder = builder.withPresentableText(key);
 					builder = builder.withIcon(AllIcons.Nodes.Property);
+					final JsonPropertyDescriptor value = entry.getValue();
+					Class type = value.getType();
+					builder = builder.withTypeText(StringUtil.decapitalize(type.getSimpleName()), true);
 
 					if(((JSProperty) jsProperty).getValue() == null)
 					{
@@ -156,7 +159,6 @@ public class JsonCompletionContributor extends CompletionContributor
 							@Override
 							public void handleInsert(InsertionContext context, LookupElement item)
 							{
-								JsonPropertyDescriptor value = entry.getValue();
 								Class<?> type = value.getType();
 								if(type == Object.class)
 								{
