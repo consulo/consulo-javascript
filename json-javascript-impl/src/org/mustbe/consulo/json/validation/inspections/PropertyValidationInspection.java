@@ -228,6 +228,50 @@ public class PropertyValidationInspection extends LocalInspectionTool
 		return null;
 	}
 
+	@Nullable
+	@RequiredReadAction
+	public static JsonPropertyDescriptor findPropertyDescriptor(@NotNull JSProperty jsProperty)
+	{
+		JsonObjectDescriptor rootDescriptor = JsonFileDescriptorProviders.getRootDescriptor(jsProperty.getContainingFile());
+		if(rootDescriptor == null)
+		{
+			return null;
+		}
+
+		Collection<JSProperty> jsProperties = buildPropertiesAsTree(jsProperty, rootDescriptor);
+		if(jsProperties.isEmpty())
+		{
+			return null;
+		}
+
+		JsonPropertyDescriptor currentProperty = null;
+		JsonObjectDescriptor currentObject = rootDescriptor;
+		for(JSProperty property : jsProperties)
+		{
+			String name = property.getName();
+			if(name == null)
+			{
+				return null;
+			}
+
+			currentProperty = currentObject.getProperty(name);
+			if(currentProperty == null)
+			{
+				return null;
+			}
+			else if(currentProperty.getValue() instanceof JsonObjectDescriptor)
+			{
+				currentObject = (JsonObjectDescriptor) currentProperty.getValue();
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		return currentProperty;
+	}
+
 	@RequiredReadAction
 	private static void validateValue(@NotNull PsiElement value, @NotNull ProblemsHolder holder)
 	{
@@ -242,43 +286,7 @@ public class PropertyValidationInspection extends LocalInspectionTool
 			return;
 		}
 
-		JsonObjectDescriptor rootDescriptor = JsonFileDescriptorProviders.getRootDescriptor(value.getContainingFile());
-		if(rootDescriptor == null)
-		{
-			return;
-		}
-
-		Collection<JSProperty> jsProperties = buildPropertiesAsTree(value, rootDescriptor);
-		if(jsProperties.isEmpty())
-		{
-			return;
-		}
-
-		JsonPropertyDescriptor currentProperty = null;
-		JsonObjectDescriptor currentObject = rootDescriptor;
-		for(JSProperty property : jsProperties)
-		{
-			String name = property.getName();
-			if(name == null)
-			{
-				return;
-			}
-
-			currentProperty = currentObject.getProperty(name);
-			if(currentProperty == null)
-			{
-				return;
-			}
-			else if(currentProperty.getValue() instanceof JsonObjectDescriptor)
-			{
-				currentObject = (JsonObjectDescriptor) currentProperty.getValue();
-			}
-			else
-			{
-				break;
-			}
-		}
-
+		JsonPropertyDescriptor currentProperty = findPropertyDescriptor((JSProperty) parent);
 		if(currentProperty == null)
 		{
 			return;

@@ -18,6 +18,10 @@ package org.mustbe.consulo.json.validation.descriptor;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.Exported;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.SmartPointerManager;
+import com.intellij.psi.SmartPsiElementPointer;
 
 /**
  * @author VISTALL
@@ -25,6 +29,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public class JsonPropertyDescriptor implements JsonNodeDescriptor
 {
+	private SmartPsiElementPointer<?> myNavigationElement;
+
 	private String myName;
 	private Object myValue;
 
@@ -50,5 +56,17 @@ public class JsonPropertyDescriptor implements JsonNodeDescriptor
 	public String getName()
 	{
 		return myName;
+	}
+
+	@Exported
+	public void setNavigationElement(@NotNull PsiElement element)
+	{
+		myNavigationElement = SmartPointerManager.getInstance(element.getProject()).createSmartPsiElementPointer(element);
+	}
+
+	@Nullable
+	public PsiElement getNavigationElement()
+	{
+		return myNavigationElement == null ? null : myNavigationElement.getElement();
 	}
 }

@@ -21,6 +21,8 @@
 		<projectService serviceImplementation="org.mustbe.consulo.json.validation.descriptionByAnotherPsiElement.DescriptionByAnotherPsiElementService"/>
 		<projectService serviceImplementation="org.mustbe.consulo.json.jom.JomManager"/>
 
+		<gotoDeclarationHandler implementation="org.mustbe.consulo.json.validation.JsonFileDescriptorGotoDeclarationHandler" />
+
 		<completion.contributor language="JavaScript" implementationClass="org.mustbe.consulo.json.validation.completion.JsonCompletionContributor"/>
 
 		<localInspection language="JavaScript"
