@@ -17,6 +17,7 @@
 package org.mustbe.consulo.json.validation.descriptor;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -27,7 +28,7 @@ public class JsonPropertyDescriptor implements JsonNodeDescriptor
 	private String myName;
 	private Object myValue;
 
-	public JsonPropertyDescriptor(@NotNull String name, @NotNull Object value)
+	public JsonPropertyDescriptor(@Nullable String name, @NotNull Object value)
 	{
 		myName = name;
 		myValue = value;
@@ -45,6 +46,7 @@ public class JsonPropertyDescriptor implements JsonNodeDescriptor
 		return myValue instanceof JsonPropertyType ? (JsonPropertyType) myValue : JsonPropertyType.Object;
 	}
 
+	@Nullable
 	public String getName()
 	{
 		return myName;

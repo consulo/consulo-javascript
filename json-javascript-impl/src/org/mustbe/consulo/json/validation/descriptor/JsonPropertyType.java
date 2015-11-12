@@ -25,6 +25,7 @@ import com.intellij.openapi.util.text.StringUtil;
 public enum JsonPropertyType
 {
 	Object,
+	Array,
 	Number,
 	String,
 	Null,

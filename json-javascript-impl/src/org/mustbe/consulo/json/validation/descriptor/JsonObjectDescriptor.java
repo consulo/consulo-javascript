@@ -33,7 +33,7 @@ public class JsonObjectDescriptor implements JsonNodeDescriptor
 	private Map<String, JsonPropertyDescriptor> myProperties = new HashMap<String, JsonPropertyDescriptor>();
 
 	@NotNull
-	public JsonPropertyDescriptor addSimpleProperty(@NotNull final String propertyName, @NotNull final JsonPropertyType value)
+	public JsonPropertyDescriptor addSimpleProperty(@Nullable final String propertyName, @NotNull final JsonPropertyType value)
 	{
 		if(value == JsonPropertyType.Object)
 		{
@@ -51,7 +51,7 @@ public class JsonObjectDescriptor implements JsonNodeDescriptor
 	}
 
 	@NotNull
-	public JsonPropertyDescriptor addObjectProperty(@NotNull final String propertyName, @NotNull final JsonObjectDescriptor value)
+	public JsonPropertyDescriptor addObjectProperty(@Nullable final String propertyName, @NotNull final JsonObjectDescriptor value)
 	{
 		return ContainerUtil.getOrCreate(myProperties, propertyName, new Factory<JsonPropertyDescriptor>()
 		{
@@ -66,7 +66,13 @@ public class JsonObjectDescriptor implements JsonNodeDescriptor
 	@Nullable
 	public JsonPropertyDescriptor getProperty(@NotNull final String propertyName)
 	{
-		return myProperties.get(propertyName);
+		JsonPropertyDescriptor propertyDescriptor = myProperties.get(propertyName);
+		if(propertyDescriptor != null)
+		{
+			return propertyDescriptor;
+		}
+
+		return myProperties.get(null);
 	}
 
 	public Map<String, JsonPropertyDescriptor> getProperties()

@@ -16,6 +16,8 @@
 
 package test;
 
+import java.util.Map;
+
 import org.mustbe.consulo.json.jom.JomElement;
 import org.mustbe.consulo.json.jom.JomProperty;
 import org.mustbe.consulo.json.jom.JomPropertyValue;
@@ -31,4 +33,7 @@ public interface PackagesRoot extends JomElement
 
 	@JomProperty
 	PackagesObject getObject();
+
+	@JomProperty
+	Map<String, JomPropertyValue<String>> getDependencies();
 }

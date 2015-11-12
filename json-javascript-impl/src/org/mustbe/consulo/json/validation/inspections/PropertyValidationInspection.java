@@ -32,6 +32,7 @@ import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.lang.javascript.JSTokenTypes;
+import com.intellij.lang.javascript.psi.JSArrayLiteralExpression;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
 import com.intellij.lang.javascript.psi.JSObjectLiteralExpression;
@@ -96,6 +97,13 @@ public class PropertyValidationInspection extends LocalInspectionTool
 			public void visitJSObjectLiteralExpression(JSObjectLiteralExpression node)
 			{
 				validateValue(node, JsonPropertyType.Object, holder);
+			}
+
+			@Override
+			@RequiredReadAction
+			public void visitJSArrayLiteralExpression(JSArrayLiteralExpression node)
+			{
+				validateValue(node, JsonPropertyType.Array, holder);
 			}
 
 			@Override

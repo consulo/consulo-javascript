@@ -20,10 +20,14 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.json.validation.JsonFileDescriptorProvider;
 import org.mustbe.consulo.json.validation.descriptor.JsonObjectDescriptor;
@@ -79,47 +83,79 @@ public class JomModeAsJsonFileDescriptorProvider implements JsonFileDescriptorPr
 				propertyName = jomProperty.value();
 			}
 
-			Class<?> returnType = method.getReturnType();
-			if(returnType == JomPropertyValue.class)
-			{
-				Type genericReturnType = method.getGenericReturnType();
-				if(!(genericReturnType instanceof ParameterizedType))
-				{
-					throw new IllegalArgumentException("No generic arguments for method: " + method.getName() + ", class: " + method.getDeclaringClass().getName());
-				}
+			fillObjectDescriptor(objectDescriptor, method.getReturnType(), method.getGenericReturnType(), propertyName);
+		}
+	}
 
-				Type[] actualTypeArguments = ((ParameterizedType) genericReturnType).getActualTypeArguments();
-
-				Class<?> actualTypeArgument = (Class<?>) actualTypeArguments[0];
-				if(actualTypeArgument == String.class)
-				{
-					objectDescriptor.addSimpleProperty(propertyName, JsonPropertyType.String);
-				}
-				else if(actualTypeArgument == Boolean.class)
-				{
-					objectDescriptor.addSimpleProperty(propertyName, JsonPropertyType.Boolean);
-				}
-				else if(actualTypeArgument == Void.class)
-				{
-					objectDescriptor.addSimpleProperty(propertyName, JsonPropertyType.Null);
-				}
-				else if(actualTypeArgument == Byte.class ||
-						actualTypeArgument == Short.class ||
-						actualTypeArgument == Integer.class ||
-						actualTypeArgument == Long.class ||
-						actualTypeArgument == Float.class ||
-						actualTypeArgument == Double.class ||
-						actualTypeArgument == BigInteger.class)
-				{
-					objectDescriptor.addSimpleProperty(propertyName, JsonPropertyType.Number);
-				}
-			}
-			else
+	private static void fillObjectDescriptor(JsonObjectDescriptor objectDescriptor, Class<?> classType, Type genericType, @Nullable String propertyName)
+	{
+		if(classType == JomPropertyValue.class)
+		{
+			if(!(genericType instanceof ParameterizedType))
 			{
-				JsonObjectDescriptor another = new JsonObjectDescriptor();
-				fillDescriptor(another, returnType);
-				objectDescriptor.addObjectProperty(propertyName, another);
+				throw new IllegalArgumentException();
 			}
+
+			Type[] actualTypeArguments = ((ParameterizedType) genericType).getActualTypeArguments();
+
+			Class<?> actualTypeArgument = (Class<?>) actualTypeArguments[0];
+			if(actualTypeArgument == String.class)
+			{
+				objectDescriptor.addSimpleProperty(propertyName, JsonPropertyType.String);
+			}
+			else if(actualTypeArgument == Boolean.class)
+			{
+				objectDescriptor.addSimpleProperty(propertyName, JsonPropertyType.Boolean);
+			}
+			else if(actualTypeArgument == Void.class)
+			{
+				objectDescriptor.addSimpleProperty(propertyName, JsonPropertyType.Null);
+			}
+			else if(actualTypeArgument == Byte.class ||
+					actualTypeArgument == Short.class ||
+					actualTypeArgument == Integer.class ||
+					actualTypeArgument == Long.class ||
+					actualTypeArgument == Float.class ||
+					actualTypeArgument == Double.class ||
+					actualTypeArgument == BigInteger.class)
+			{
+				objectDescriptor.addSimpleProperty(propertyName, JsonPropertyType.Number);
+			}
+		}
+		else if(classType.isArray())
+		{
+			Class<?> componentType = classType.getComponentType();
+		}
+		else if(classType == Collection.class || classType == Set.class || classType == List.class)
+		{
+
+		}
+		else if(classType == Map.class)
+		{
+			if(!(genericType instanceof ParameterizedType))
+			{
+				throw new IllegalArgumentException();
+			}
+
+			Type[] actualTypeArguments = ((ParameterizedType) genericType).getActualTypeArguments();
+
+			Class rawType = null;
+			Type actualTypeArgument = actualTypeArguments[1];
+			if(actualTypeArgument instanceof ParameterizedType)
+			{
+				rawType = (Class) ((ParameterizedType) actualTypeArgument).getRawType();
+			}
+
+			JsonObjectDescriptor child = new JsonObjectDescriptor();
+			fillObjectDescriptor(child, rawType, actualTypeArguments[1], null);
+
+			objectDescriptor.addObjectProperty(propertyName, child);
+		}
+		else
+		{
+			JsonObjectDescriptor another = new JsonObjectDescriptor();
+			fillDescriptor(another, classType);
+			objectDescriptor.addObjectProperty(propertyName, another);
 		}
 	}
 
