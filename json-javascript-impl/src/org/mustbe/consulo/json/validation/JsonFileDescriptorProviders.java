@@ -23,6 +23,7 @@ import org.mustbe.consulo.json.validation.descriptor.JsonObjectDescriptor;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
+import com.intellij.psi.util.PsiModificationTracker;
 
 /**
  * @author VISTALL
@@ -52,7 +53,7 @@ public class JsonFileDescriptorProviders
 						JsonObjectDescriptor objectDescriptor = new JsonObjectDescriptor();
 						provider.fillRootObject(objectDescriptor, file);
 
-						return Result.create(objectDescriptor, file);
+						return Result.create(objectDescriptor, file, PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT);
 					}
 				}
 				return null;

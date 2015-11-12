@@ -1,40 +1,37 @@
 <idea-plugin>
+	<application-components>
+		<component>
+			<implementation-class>org.mustbe.consulo.json.validation.descriptionByAnotherPsiElement.DescriptionByAnotherPsiElementRegistrar</implementation-class>
+		</component>
+	</application-components>
+
 	<extensionPoints>
-		<extensionPoint name="jomFileDescriptor" interface="org.mustbe.consulo.json.jom.JomFileDescriptor" />
-		<extensionPoint name="jsonFileDescriptorProvider" interface="org.mustbe.consulo.json.validation.JsonFileDescriptorProvider" />
+		<extensionPoint name="jomFileDescriptor" interface="org.mustbe.consulo.json.jom.JomFileDescriptor"/>
+		<extensionPoint name="jsonFileDescriptorProvider" interface="org.mustbe.consulo.json.validation.JsonFileDescriptorProvider"/>
+		<extensionPoint name="jsonDescriptionByAnotherPsiElementProvider"
+						interface="org.mustbe.consulo.json.validation.descriptionByAnotherPsiElement.DescriptionByAnotherPsiElementProvider"/>
 	</extensionPoints>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<fileTypeFactory implementation="org.mustbe.consulo.json.JsonFileTypeFactory" />
-		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.json.lang.JsonJavaScriptVersion" />
+		<fileTypeFactory implementation="org.mustbe.consulo.json.JsonFileTypeFactory"/>
+		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.json.lang.JsonJavaScriptVersion"/>
 
-		<iconDescriptorUpdater implementation="org.mustbe.consulo.json.jom.JomIconDescriptorUpdater" />
+		<iconDescriptorUpdater implementation="org.mustbe.consulo.json.jom.JomIconDescriptorUpdater"/>
 
-		<projectService serviceImplementation="org.mustbe.consulo.json.jom.JomManager" />
+		<projectService serviceImplementation="org.mustbe.consulo.json.validation.descriptionByAnotherPsiElement.DescriptionByAnotherPsiElementService"/>
+		<projectService serviceImplementation="org.mustbe.consulo.json.jom.JomManager"/>
 
-		<completion.contributor language="JavaScript" implementationClass="org.mustbe.consulo.json.validation.completion.JsonCompletionContributor" />
+		<completion.contributor language="JavaScript" implementationClass="org.mustbe.consulo.json.validation.completion.JsonCompletionContributor"/>
 
 		<localInspection language="JavaScript"
 						 displayName="Property validation"
 						 groupName="JSON"
 						 enabledByDefault="true"
-						 implementationClass="org.mustbe.consulo.json.validation.inspections.PropertyValidationInspection" />
+						 implementationClass="org.mustbe.consulo.json.validation.inspections.PropertyValidationInspection"/>
 	</extensions>
 
 	<extensions defaultExtensionNs="org.mustbe.consulo.javascript">
-		<jsonFileDescriptorProvider implementation="org.mustbe.consulo.json.jom.JomModeAsJsonFileDescriptorProvider" />
-
-
-
-
-
-
-
-
-
-
-
-		<!--FIXME [VISTALL] test-->
-		<jomFileDescriptor implementation="test.PackageFileDescriptor" />
+		<jsonFileDescriptorProvider implementation="org.mustbe.consulo.json.jom.JomModeAsJsonFileDescriptorProvider"/>
+		<jsonFileDescriptorProvider implementation="org.mustbe.consulo.json.validation.descriptionByAnotherPsiElement.DescriptionByAnotherPsiElementJsonDescriptionProvider"/>
 	</extensions>
 </idea-plugin>
