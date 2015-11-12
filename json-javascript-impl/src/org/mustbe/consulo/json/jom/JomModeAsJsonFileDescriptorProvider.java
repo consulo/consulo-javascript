@@ -70,17 +70,17 @@ public class JomModeAsJsonFileDescriptorProvider implements JsonFileDescriptorPr
 
 		for(Method method : methods)
 		{
-			JomPropertyGetter jomProperty = method.getAnnotation(JomPropertyGetter.class);
-			if(jomProperty == null)
+			JomPropertyGetter annotation = method.getAnnotation(JomPropertyGetter.class);
+			if(annotation == null)
 			{
 				continue;
 			}
 
 			String propertyName = StringUtil.getPropertyName(method.getName());
 			propertyName = ObjectUtil.notNull(propertyName, method.getName());
-			if(!StringUtil.isEmpty(jomProperty.value()))
+			if(!StringUtil.isEmpty(annotation.value()))
 			{
-				propertyName = jomProperty.value();
+				propertyName = annotation.value();
 			}
 
 			fillObjectDescriptor(objectDescriptor, method.getReturnType(), method.getGenericReturnType(), propertyName);
