@@ -41,9 +41,9 @@ public class JsonPropertyDescriptor implements JsonNodeDescriptor
 	}
 
 	@NotNull
-	public JsonPropertyType getType()
+	public Class getType()
 	{
-		return myValue instanceof JsonPropertyType ? (JsonPropertyType) myValue : JsonPropertyType.Object;
+		return myValue instanceof Class ? (Class) myValue : Object.class;
 	}
 
 	@Nullable

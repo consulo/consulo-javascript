@@ -33,11 +33,11 @@ public class JsonObjectDescriptor implements JsonNodeDescriptor
 	private Map<String, JsonPropertyDescriptor> myProperties = new HashMap<String, JsonPropertyDescriptor>();
 
 	@NotNull
-	public JsonPropertyDescriptor addSimpleProperty(@Nullable final String propertyName, @NotNull final JsonPropertyType value)
+	public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @NotNull final Class<?> value)
 	{
-		if(value == JsonPropertyType.Object)
+		if(value == Object.class)
 		{
-			throw new IllegalArgumentException("We cant add object type as simple");
+			throw new IllegalArgumentException("We cant add object type, use JsonObjectDescriptor as parameter");
 		}
 
 		return ContainerUtil.getOrCreate(myProperties, propertyName, new Factory<JsonPropertyDescriptor>()
@@ -51,7 +51,7 @@ public class JsonObjectDescriptor implements JsonNodeDescriptor
 	}
 
 	@NotNull
-	public JsonPropertyDescriptor addObjectProperty(@Nullable final String propertyName, @NotNull final JsonObjectDescriptor value)
+	public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @NotNull final JsonObjectDescriptor value)
 	{
 		return ContainerUtil.getOrCreate(myProperties, propertyName, new Factory<JsonPropertyDescriptor>()
 		{

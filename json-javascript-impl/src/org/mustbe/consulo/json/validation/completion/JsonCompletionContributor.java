@@ -27,7 +27,6 @@ import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.json.validation.JsonFileDescriptorProviders;
 import org.mustbe.consulo.json.validation.descriptor.JsonObjectDescriptor;
 import org.mustbe.consulo.json.validation.descriptor.JsonPropertyDescriptor;
-import org.mustbe.consulo.json.validation.descriptor.JsonPropertyType;
 import org.mustbe.consulo.json.validation.inspections.PropertyValidationInspection;
 import com.intellij.codeInsight.completion.CompletionContributor;
 import com.intellij.codeInsight.completion.CompletionParameters;
@@ -157,13 +156,18 @@ public class JsonCompletionContributor extends CompletionContributor
 							public void handleInsert(InsertionContext context, LookupElement item)
 							{
 								JsonPropertyDescriptor value = entry.getValue();
-								if(value.getType() == JsonPropertyType.Object)
+								if(value.getType() == Object.class)
 								{
 									context.getDocument().insertString(context.getTailOffset(), ": {\n}");
 									context.getEditor().getCaretModel().moveToOffset(context.getTailOffset() - 2);
 
 									context.commitDocument();
 									CodeStyleManager.getInstance(context.getProject()).reformatRange(originalFile, context.getStartOffset(), context.getTailOffset());
+								}
+								else if(value.getType().isArray())
+								{
+									context.getDocument().insertString(context.getTailOffset(), ": []");
+									context.getEditor().getCaretModel().moveToOffset(context.getTailOffset() - 1);
 								}
 								else
 								{

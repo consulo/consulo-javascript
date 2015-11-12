@@ -31,6 +31,9 @@ public interface PackagesRoot extends JomElement
 	String getUrl();
 
 	@JomPropertyGetter
+	String[] getAuthors();
+
+	@JomPropertyGetter
 	PackagesObject getObject();
 
 	@JomPropertyGetter
