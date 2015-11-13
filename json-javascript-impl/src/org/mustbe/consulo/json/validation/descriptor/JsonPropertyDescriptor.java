@@ -27,7 +27,7 @@ import com.intellij.psi.SmartPsiElementPointer;
  * @author VISTALL
  * @since 10.11.2015
  */
-public class JsonPropertyDescriptor implements JsonNodeDescriptor
+public class JsonPropertyDescriptor
 {
 	private SmartPsiElementPointer<?> myNavigationElement;
 

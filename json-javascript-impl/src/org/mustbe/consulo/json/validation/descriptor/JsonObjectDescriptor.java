@@ -28,7 +28,7 @@ import com.intellij.util.containers.ContainerUtil;
  * @author VISTALL
  * @since 10.11.2015
  */
-public class JsonObjectDescriptor implements JsonNodeDescriptor
+public class JsonObjectDescriptor
 {
 	private Map<String, JsonPropertyDescriptor> myProperties = new HashMap<String, JsonPropertyDescriptor>();
 
