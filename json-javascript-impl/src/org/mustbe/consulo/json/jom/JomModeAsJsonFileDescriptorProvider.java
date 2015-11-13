@@ -32,9 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.json.validation.JsonFileDescriptorProvider;
 import org.mustbe.consulo.json.validation.descriptor.JsonObjectDescriptor;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiFile;
-import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 
 /**
@@ -70,20 +68,13 @@ public class JomModeAsJsonFileDescriptorProvider implements JsonFileDescriptorPr
 
 		for(Method method : methods)
 		{
-			JomPropertyGetter annotation = method.getAnnotation(JomPropertyGetter.class);
-			if(annotation == null)
+			String jsonGetPropertyName = JomUtil.getJsonGetPropertyName(method);
+			if(jsonGetPropertyName == null)
 			{
 				continue;
 			}
 
-			String propertyName = StringUtil.getPropertyName(method.getName());
-			propertyName = ObjectUtil.notNull(propertyName, method.getName());
-			if(!StringUtil.isEmpty(annotation.value()))
-			{
-				propertyName = annotation.value();
-			}
-
-			fillObjectDescriptor(objectDescriptor, method.getReturnType(), method.getGenericReturnType(), propertyName);
+			fillObjectDescriptor(objectDescriptor, method.getReturnType(), method.getGenericReturnType(), jsonGetPropertyName);
 		}
 	}
 

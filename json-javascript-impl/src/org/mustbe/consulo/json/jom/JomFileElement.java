@@ -16,13 +16,12 @@
 
 package org.mustbe.consulo.json.jom;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.json.jom.proxy.JomProxyInvocationHandler;
 import com.intellij.lang.javascript.psi.JSFile;
+import com.intellij.lang.javascript.psi.JSObjectLiteralExpression;
 import com.intellij.openapi.util.NotNullLazyValue;
+import com.intellij.psi.util.PsiTreeUtil;
 
 /**
  * @author VISTALL
@@ -39,7 +38,7 @@ public class JomFileElement<T extends JomElement>
 		protected T compute()
 		{
 			//noinspection unchecked
-			return (T) createProxy(JomFileElement.class.getClassLoader(), myFileDescriptor.getDefinitionClass());
+			return (T) JomProxyInvocationHandler.createProxy(myFileDescriptor.getDefinitionClass(), PsiTreeUtil.findChildOfType(myPsiFile, JSObjectLiteralExpression.class));
 		}
 	};
 
@@ -65,18 +64,5 @@ public class JomFileElement<T extends JomElement>
 	public JSFile getFile()
 	{
 		return myPsiFile;
-	}
-
-	@NotNull
-	public static JomElement createProxy(@NotNull ClassLoader classLoader, @NotNull Class<?> interfaceClass)
-	{
-		return (JomElement) Proxy.newProxyInstance(classLoader, new Class[]{interfaceClass}, new InvocationHandler()
-		{
-			@Override
-			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
-			{
-				return null;
-			}
-		});
 	}
 }
