@@ -19,31 +19,28 @@ package com.intellij.lang.javascript.highlighting;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.HighlightVisitor;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder;
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.index.JSNamespace;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.ResolveResult;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.util.PsiUtilCore;
 
 public class JavaScriptHighlightVisitor extends JSElementVisitor implements HighlightVisitor
 {
 	@NonNls
 	private static final String PARAMETER_MESSAGE = "parameter";
-	@NonNls
-	private static final String INSTANCE_FIELD = "instance field";
-	@NonNls
-	private static final String INSTANCE_METHOD = "instance method";
-
-	private final boolean myUnitTestMode = ApplicationManager.getApplication().isUnitTestMode();
 
 	private HighlightInfoHolder myHighlightInfoHolder;
 
@@ -54,42 +51,47 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 	}
 
 	@Override
-	public void visitJSProperty(JSProperty property)
+	@RequiredReadAction
+	public void visitElement(PsiElement element)
 	{
-		super.visitJSProperty(property);
+		super.visitElement(element);
 
+		PsiElement parent = element.getParent();
+		IElementType elementType = PsiUtilCore.getElementType(element);
+		if((elementType == JSTokenTypes.STRING_LITERAL || elementType == JSTokenTypes.IDENTIFIER) && parent instanceof JSProperty && ((JSProperty) parent).getNameIdentifier() == element)
+		{
+			highlightPropertyName((JSProperty) parent, element);
+		}
+	}
+
+	@RequiredReadAction
+	private void highlightPropertyName(@NotNull JSProperty property, @NotNull PsiElement nameIdentifier)
+	{
 		final JSExpression expression = property.getValue();
 		TextAttributesKey type = null;
-		@NonNls String text = null;
 
 		if(expression instanceof JSFunctionExpression)
 		{
 			type = JSHighlighter.JS_INSTANCE_MEMBER_FUNCTION;
-			if(myUnitTestMode)
-			{
-				text = INSTANCE_METHOD;
-			}
 		}
 		else
 		{
 			type = JSHighlighter.JS_INSTANCE_MEMBER_VARIABLE;
-			if(myUnitTestMode)
-			{
-				text = INSTANCE_FIELD;
-			}
 		}
-		myHighlightInfoHolder.add(createLineMarker(property, type, text));
+		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(nameIdentifier).textAttributes(type).create());
 	}
 
 	@Override
+	@RequiredReadAction
 	public void visitJSAttribute(JSAttribute jsAttribute)
 	{
 		super.visitJSAttribute(jsAttribute);
 
-		myHighlightInfoHolder.add(createLineMarker(jsAttribute, JSHighlighter.JS_METADATA, myUnitTestMode ? "attribute" : null));
+		myHighlightInfoHolder.add(createHighlightInfo(jsAttribute, JSHighlighter.JS_METADATA, null));
 	}
 
 	@Override
+	@RequiredReadAction
 	public void visitJSReferenceExpression(JSReferenceExpression element)
 	{
 		super.visitJSReferenceExpression(element);
@@ -121,8 +123,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 				{
 					isStatic |= elementProxy.hasProperty(JSNamedElementProxy.Property.Static);
 
-					isMethod |= (namedItemType == JSNamedElementProxy.NamedItemType.MemberFunction || namedItemType == JSNamedElementProxy.NamedItemType
-							.FunctionProperty);
+					isMethod |= (namedItemType == JSNamedElementProxy.NamedItemType.MemberFunction || namedItemType == JSNamedElementProxy.NamedItemType.FunctionProperty);
 					isFunction |= namedItemType == JSNamedElementProxy.NamedItemType.Function;
 					isVariable |= namedItemType == JSNamedElementProxy.NamedItemType.Variable;
 					isField |= namedItemType == JSNamedElementProxy.NamedItemType.Definition || namedItemType == JSNamedElementProxy.NamedItemType.Property;
@@ -199,49 +200,30 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 			if(isStatic)
 			{
 				type = JSHighlighter.JS_STATIC_MEMBER_FUNCTION;
-				if(myUnitTestMode)
-				{
-					text = "static method";
-				}
 			}
 			else
 			{
 				type = JSHighlighter.JS_INSTANCE_MEMBER_FUNCTION;
-				if(myUnitTestMode)
-				{
-					text = INSTANCE_METHOD;
-				}
 			}
 		}
 		else if(isFunction)
 		{
 			type = JSHighlighter.JS_GLOBAL_FUNCTION;
-			if(myUnitTestMode)
-			{
-				text = "global function";
-			}
 		}
 		else if(isVariable)
 		{
 			type = JSHighlighter.JS_GLOBAL_VARIABLE;
-			if(myUnitTestMode)
-			{
-				text = "global variable";
-			}
 		}
 		else if(isField)
 		{
 			type = JSHighlighter.JS_INSTANCE_MEMBER_VARIABLE;
-			if(myUnitTestMode)
-			{
-				text = INSTANCE_FIELD;
-			}
 		}
 
-		myHighlightInfoHolder.add(createLineMarker(element, type, text));
+		myHighlightInfoHolder.add(createHighlightInfo(element, type, text));
 	}
 
 	@Nullable
+	@RequiredReadAction
 	private static HighlightInfo buildHighlightForVariable(@NotNull final PsiElement element, @NotNull final PsiElement markerAddTo)
 	{
 		TextAttributesKey type;
@@ -276,7 +258,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 			}
 		}
 
-		return createLineMarker(markerAddTo, type, text);
+		return createHighlightInfo(markerAddTo, type, text);
 	}
 
 	@Override
@@ -320,8 +302,8 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 	}
 
 	@Nullable
-	private static HighlightInfo createLineMarker(@NotNull final PsiElement element, @Nullable final TextAttributesKey type,
-			@Nullable @NonNls final String text)
+	@RequiredReadAction
+	private static HighlightInfo createHighlightInfo(@NotNull final PsiElement element, @Nullable final TextAttributesKey type, @Nullable @NonNls final String text)
 	{
 		if(type == null)
 		{
