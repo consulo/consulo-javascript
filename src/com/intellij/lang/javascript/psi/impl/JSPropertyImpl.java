@@ -20,6 +20,7 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
@@ -187,12 +188,19 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 		}
 
 		@Override
+		@RequiredReadAction
 		public TextRange getRangeInElement()
 		{
 			final PsiElement firstChild = getFirstChild();
 			int quotesDelta = firstChild.getNode().getElementType() == JSTokenTypes.STRING_LITERAL ? 1 : 0;
 			final int startOffsetInParent = firstChild.getStartOffsetInParent();
-			return new TextRange(startOffsetInParent + quotesDelta, startOffsetInParent + firstChild.getTextLength() - quotesDelta);
+			int startOffset = startOffsetInParent + quotesDelta;
+			int endOffset = startOffsetInParent + firstChild.getTextLength() - quotesDelta;
+			if(endOffset <= startOffset)
+			{
+				return new TextRange(0, getTextLength());
+			}
+			return new TextRange(startOffset, endOffset);
 		}
 
 		@Override
