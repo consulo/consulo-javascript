@@ -136,7 +136,7 @@ public class JomModeAsJsonFileDescriptorProvider implements JsonFileDescriptorPr
 
 			Type[] actualTypeArguments = ((ParameterizedType) genericType).getActualTypeArguments();
 
-			Class rawType = null;
+			Class rawType;
 			Type actualTypeArgument = actualTypeArguments[1];
 			if(actualTypeArgument instanceof ParameterizedType)
 			{
