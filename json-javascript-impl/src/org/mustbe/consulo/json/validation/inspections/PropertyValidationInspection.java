@@ -41,10 +41,15 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
 import com.intellij.lang.javascript.psi.JSObjectLiteralExpression;
 import com.intellij.lang.javascript.psi.JSProperty;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.util.CachedValue;
+import com.intellij.psi.util.CachedValueProvider;
+import com.intellij.psi.util.CachedValuesManager;
+import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.PairProcessor;
@@ -56,6 +61,8 @@ import com.intellij.util.containers.ContainerUtil;
  */
 public class PropertyValidationInspection extends LocalInspectionTool
 {
+	private static final Key<CachedValue<JsonPropertyDescriptor>> JSON_PROPERTY_DESCRIPTOR_KEY = Key.create("JsonPropertyDescriptor");
+
 	@NotNull
 	@Override
 	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly)
@@ -227,7 +234,23 @@ public class PropertyValidationInspection extends LocalInspectionTool
 
 	@Nullable
 	@RequiredReadAction
-	public static JsonPropertyDescriptor findPropertyDescriptor(@NotNull JSProperty jsProperty)
+	public static JsonPropertyDescriptor findPropertyDescriptor(@NotNull final JSProperty jsProperty)
+	{
+		return CachedValuesManager.getManager(jsProperty.getProject()).createCachedValue(new CachedValueProvider<JsonPropertyDescriptor>()
+		{
+			@Nullable
+			@Override
+			@RequiredReadAction
+			public Result<JsonPropertyDescriptor> compute()
+			{
+				return Result.create(findPropertyDescriptorImpl(jsProperty), jsProperty, PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT);
+			}
+		}, false).getValue();
+	}
+
+	@Nullable
+	@RequiredReadAction
+	private static JsonPropertyDescriptor findPropertyDescriptorImpl(@NotNull JSProperty jsProperty)
 	{
 		JsonObjectDescriptor rootDescriptor = JsonFileDescriptorProviders.getRootDescriptor(jsProperty.getContainingFile());
 		if(rootDescriptor == null)
