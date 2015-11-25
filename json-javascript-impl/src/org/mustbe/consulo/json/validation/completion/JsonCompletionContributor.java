@@ -25,6 +25,7 @@ import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.json.validation.JsonFileDescriptorProviders;
+import org.mustbe.consulo.json.validation.NativeArray;
 import org.mustbe.consulo.json.validation.descriptor.JsonObjectDescriptor;
 import org.mustbe.consulo.json.validation.descriptor.JsonPropertyDescriptor;
 import org.mustbe.consulo.json.validation.inspections.PropertyValidationInspection;
@@ -112,6 +113,18 @@ public class JsonCompletionContributor extends CompletionContributor
 					{
 						currentObject = (JsonObjectDescriptor) currentProperty.getValue();
 					}
+					else if(currentProperty.getValue() instanceof NativeArray)
+					{
+						Object componentType = ((NativeArray) currentProperty.getValue()).getComponentType();
+						if(componentType instanceof JsonObjectDescriptor)
+						{
+							currentObject = (JsonObjectDescriptor) componentType;
+						}
+						else
+						{
+							return;
+						}
+					}
 					else
 					{
 						break;
@@ -182,7 +195,7 @@ public class JsonCompletionContributor extends CompletionContributor
 									context.getDocument().insertString(context.getTailOffset(), ": 0");
 									context.getEditor().getCaretModel().moveToOffset(context.getTailOffset());
 								}
-								else if(type.isArray())
+								else if(value.getValue() instanceof NativeArray)
 								{
 									context.getDocument().insertString(context.getTailOffset(), ": []");
 									context.getEditor().getCaretModel().moveToOffset(context.getTailOffset() - 1);

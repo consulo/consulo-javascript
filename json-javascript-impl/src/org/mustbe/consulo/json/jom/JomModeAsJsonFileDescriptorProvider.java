@@ -16,7 +16,6 @@
 
 package org.mustbe.consulo.json.jom;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -31,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.json.validation.JsonFileDescriptorProvider;
+import org.mustbe.consulo.json.validation.NativeArray;
 import org.mustbe.consulo.json.validation.descriptor.JsonObjectDescriptor;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
@@ -82,7 +82,9 @@ public class JomModeAsJsonFileDescriptorProvider implements JsonFileDescriptorPr
 	{
 		if(classType.isArray())
 		{
-			objectDescriptor.addProperty(propertyName, classType);
+			Class<?> componentType = classType.getComponentType();
+
+			objectDescriptor.addProperty(propertyName, new NativeArray(componentType));
 		}
 		else if(classType == Collection.class || classType == Set.class || classType == List.class)
 		{
@@ -92,9 +94,8 @@ public class JomModeAsJsonFileDescriptorProvider implements JsonFileDescriptorPr
 			}
 
 			Type[] actualTypeArguments = ((ParameterizedType) genericType).getActualTypeArguments();
-			Object o = Array.newInstance((Class<?>) actualTypeArguments[0], 0);
 
-			objectDescriptor.addProperty(propertyName, o.getClass());
+			objectDescriptor.addProperty(propertyName, new NativeArray(actualTypeArguments[0]));
 		}
 		else if(classType == boolean.class)
 		{

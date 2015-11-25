@@ -18,7 +18,6 @@ package org.mustbe.consulo.json.validation.inspections;
 
 import gnu.trove.THashSet;
 
-import java.lang.reflect.Array;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.json.validation.JsonFileDescriptorProviders;
+import org.mustbe.consulo.json.validation.NativeArray;
 import org.mustbe.consulo.json.validation.descriptor.JsonObjectDescriptor;
 import org.mustbe.consulo.json.validation.descriptor.JsonPropertyDescriptor;
 import com.intellij.codeInspection.LocalInspectionTool;
@@ -160,7 +160,7 @@ public class PropertyValidationInspection extends LocalInspectionTool
 
 	@Nullable
 	@RequiredReadAction
-	private static Class<?> getTypeOfExpression(@NotNull PsiElement node)
+	private static Object getTypeOfExpression(@NotNull PsiElement node)
 	{
 		if(node instanceof JSLiteralExpression)
 		{
@@ -201,11 +201,11 @@ public class PropertyValidationInspection extends LocalInspectionTool
 		}
 		else if(node instanceof JSArrayLiteralExpression)
 		{
-			Set<Class<?>> types = new THashSet<Class<?>>();
+			Set<Object> types = new THashSet<Object>();
 			JSExpression[] expressions = ((JSArrayLiteralExpression) node).getExpressions();
 			for(JSExpression expression : expressions)
 			{
-				Class<?> typeOfExpression = getTypeOfExpression(expression);
+				Object typeOfExpression = getTypeOfExpression(expression);
 				ContainerUtil.addIfNotNull(types, typeOfExpression);
 			}
 
@@ -215,13 +215,11 @@ public class PropertyValidationInspection extends LocalInspectionTool
 				case 0:
 					return null;
 				case 1:
-					Class<?> firstItem = ContainerUtil.getFirstItem(types);
+					Object firstItem = ContainerUtil.getFirstItem(types);
 					assert firstItem != null;
-					// calc
-					Object arrayOfZero = Array.newInstance(firstItem, 0);
-					return arrayOfZero.getClass();
+					return new NativeArray(firstItem);
 				default:
-					return Object[].class;
+					return new NativeArray(Object.class);
 			}
 		}
 		return null;
@@ -258,9 +256,19 @@ public class PropertyValidationInspection extends LocalInspectionTool
 			{
 				return null;
 			}
-			else if(currentProperty.getValue() instanceof JsonObjectDescriptor)
+
+			Object value = currentProperty.getValue();
+			if(value instanceof JsonObjectDescriptor)
 			{
-				currentObject = (JsonObjectDescriptor) currentProperty.getValue();
+				currentObject = (JsonObjectDescriptor) value;
+			}
+			else if(value instanceof NativeArray)
+			{
+				Object componentType = ((NativeArray) value).getComponentType();
+				if(componentType instanceof JsonObjectDescriptor)
+				{
+					currentObject = (JsonObjectDescriptor) componentType;
+				}
 			}
 			else
 			{
@@ -274,7 +282,7 @@ public class PropertyValidationInspection extends LocalInspectionTool
 	@RequiredReadAction
 	private static void validateValue(@NotNull PsiElement value, @NotNull ProblemsHolder holder)
 	{
-		Class<?> actualType = getTypeOfExpression(value);
+		Object actualType = getTypeOfExpression(value);
 		if(actualType == null)
 		{
 			return;
@@ -291,17 +299,57 @@ public class PropertyValidationInspection extends LocalInspectionTool
 			return;
 		}
 
-		// null value
-		if(currentProperty.isAllowNull() && actualType == Void.class)
+		Object expectedValue = currentProperty.getValue();
+		if(!isInheritable(currentProperty, expectedValue, actualType))
 		{
-			return;
+			holder.registerProblem(value, "Wrong property value. Expected: " + getSimpleName(expectedValue) + ", actual: " + getSimpleName(actualType), ProblemHighlightType.GENERIC_ERROR);
+		}
+	}
+
+	public static boolean isInheritable(JsonPropertyDescriptor currentProperty, Object expected, Object actual)
+	{
+		// null value
+		if(currentProperty.isAllowNull() && actual == Void.class)
+		{
+			return true;
 		}
 
-		Class type = currentProperty.getType();
-		if(type != actualType)
+		if(expected instanceof Class && actual instanceof Class)
 		{
-			holder.registerProblem(value, "Wrong property value. Expected: " + StringUtil.decapitalize(type.getSimpleName()) + ", actual: " + StringUtil.decapitalize(actualType.getSimpleName()),
-					ProblemHighlightType.GENERIC_ERROR);
+			return expected == actual;
 		}
+
+		if(expected instanceof JsonObjectDescriptor && actual == Object.class)
+		{
+			return true;
+		}
+
+		if(expected instanceof NativeArray && actual instanceof NativeArray)
+		{
+			return isInheritable(currentProperty, ((NativeArray) expected).getComponentType(), ((NativeArray) actual).getComponentType());
+		}
+		return false;
+	}
+
+	@NotNull
+	private static String getSimpleName(Object o)
+	{
+		if(o instanceof Class)
+		{
+			if(o == Void.class)
+			{
+				return "null";
+			}
+			return StringUtil.decapitalize(((Class) o).getSimpleName());
+		}
+		else if(o instanceof JsonObjectDescriptor)
+		{
+			return getSimpleName(Object.class);
+		}
+		else if(o instanceof NativeArray)
+		{
+			return getSimpleName(((NativeArray) o).getComponentType()) + "[]";
+		}
+		return "null";
 	}
 }

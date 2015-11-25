@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.json.validation.NativeArray;
 import com.intellij.openapi.util.Factory;
 import com.intellij.util.containers.ContainerUtil;
 
@@ -64,6 +65,25 @@ public class JsonObjectDescriptor
 
 	@NotNull
 	public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @NotNull final JsonObjectDescriptor value, final boolean allowNull)
+	{
+		return ContainerUtil.getOrCreate(myProperties, propertyName, new Factory<JsonPropertyDescriptor>()
+		{
+			@Override
+			public JsonPropertyDescriptor create()
+			{
+				return new JsonPropertyDescriptor(propertyName, value, allowNull);
+			}
+		});
+	}
+
+	@NotNull
+	public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @NotNull final NativeArray value)
+	{
+		return addProperty(propertyName, value, true);
+	}
+
+	@NotNull
+	public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @NotNull final NativeArray value, final boolean allowNull)
 	{
 		return ContainerUtil.getOrCreate(myProperties, propertyName, new Factory<JsonPropertyDescriptor>()
 		{
