@@ -161,6 +161,10 @@ public class JsonCompletionContributor extends CompletionContributor
 					builder = builder.withPresentableText(key);
 					builder = builder.withIcon(AllIcons.Nodes.Property);
 					final JsonPropertyDescriptor value = entry.getValue();
+					if(value.isDeprecated())
+					{
+						builder = builder.strikeout();
+					}
 					final Class type = value.getType();
 					builder = builder.withTypeText(StringUtil.decapitalize(type.getSimpleName()), true);
 
