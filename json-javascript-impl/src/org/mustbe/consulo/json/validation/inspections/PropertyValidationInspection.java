@@ -304,12 +304,19 @@ public class PropertyValidationInspection extends LocalInspectionTool
 		{
 			holder.registerProblem(value, "Wrong property value. Expected: " + getSimpleName(expectedValue) + ", actual: " + getSimpleName(actualType), ProblemHighlightType.GENERIC_ERROR);
 		}
+
+		if(currentProperty.isDeprecated())
+		{
+			PsiElement nameIdentifier = ((JSProperty) parent).getNameIdentifier();
+			assert nameIdentifier != null;
+			holder.registerProblem(nameIdentifier, "Deprecated property", ProblemHighlightType.LIKE_DEPRECATED);
+		}
 	}
 
 	public static boolean isInheritable(JsonPropertyDescriptor currentProperty, Object expected, Object actual)
 	{
 		// null value
-		if(currentProperty.isAllowNull() && actual == Void.class)
+		if(currentProperty.isNullable() && actual == Void.class)
 		{
 			return true;
 		}

@@ -32,6 +32,7 @@ import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.json.validation.JsonFileDescriptorProvider;
 import org.mustbe.consulo.json.validation.NativeArray;
 import org.mustbe.consulo.json.validation.descriptor.JsonObjectDescriptor;
+import org.mustbe.consulo.json.validation.descriptor.JsonPropertyDescriptor;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;
 
@@ -74,17 +75,23 @@ public class JomModeAsJsonFileDescriptorProvider implements JsonFileDescriptorPr
 				continue;
 			}
 
-			fillObjectDescriptor(objectDescriptor, method.getReturnType(), method.getGenericReturnType(), jsonGetPropertyName);
+			JsonPropertyDescriptor propertyDescriptor = fillObjectDescriptor(objectDescriptor, method.getReturnType(), method.getGenericReturnType(), jsonGetPropertyName);
+
+			if(method.isAnnotationPresent(Deprecated.class))
+			{
+				propertyDescriptor.deprecated();
+			}
 		}
 	}
 
-	private static void fillObjectDescriptor(JsonObjectDescriptor objectDescriptor, @NotNull Class<?> classType, @NotNull Type genericType, @Nullable String propertyName)
+	@NotNull
+	private static JsonPropertyDescriptor fillObjectDescriptor(JsonObjectDescriptor objectDescriptor, @NotNull Class<?> classType, @NotNull Type genericType, @Nullable String propertyName)
 	{
 		if(classType.isArray())
 		{
 			Class<?> componentType = classType.getComponentType();
 
-			objectDescriptor.addProperty(propertyName, new NativeArray(componentType));
+			return objectDescriptor.addProperty(propertyName, new NativeArray(componentType));
 		}
 		else if(classType == Collection.class || classType == Set.class || classType == List.class)
 		{
@@ -95,19 +102,19 @@ public class JomModeAsJsonFileDescriptorProvider implements JsonFileDescriptorPr
 
 			Type[] actualTypeArguments = ((ParameterizedType) genericType).getActualTypeArguments();
 
-			objectDescriptor.addProperty(propertyName, new NativeArray(actualTypeArguments[0]));
+			return objectDescriptor.addProperty(propertyName, new NativeArray(actualTypeArguments[0]));
 		}
 		else if(classType == boolean.class)
 		{
-			objectDescriptor.addProperty(propertyName, Boolean.class);
+			return objectDescriptor.addProperty(propertyName, Boolean.class);
 		}
 		else if(classType == Boolean.class)
 		{
-			objectDescriptor.addProperty(propertyName, Boolean.class, false);
+			return objectDescriptor.addProperty(propertyName, Boolean.class).notNull();
 		}
 		else if(classType == String.class)
 		{
-			objectDescriptor.addProperty(propertyName, String.class);
+			return objectDescriptor.addProperty(propertyName, String.class);
 		}
 		else if(classType == byte.class ||
 				classType == short.class ||
@@ -116,7 +123,7 @@ public class JomModeAsJsonFileDescriptorProvider implements JsonFileDescriptorPr
 				classType == float.class ||
 				classType == double.class)
 		{
-			objectDescriptor.addProperty(propertyName, Number.class, false);
+			return objectDescriptor.addProperty(propertyName, Number.class).notNull();
 		}
 		else if(classType == Byte.class ||
 				classType == Short.class ||
@@ -126,7 +133,7 @@ public class JomModeAsJsonFileDescriptorProvider implements JsonFileDescriptorPr
 				classType == Double.class ||
 				classType == BigInteger.class)
 		{
-			objectDescriptor.addProperty(propertyName, Number.class);
+			return objectDescriptor.addProperty(propertyName, Number.class);
 		}
 		else if(classType == Map.class)
 		{
@@ -151,13 +158,13 @@ public class JomModeAsJsonFileDescriptorProvider implements JsonFileDescriptorPr
 			JsonObjectDescriptor child = new JsonObjectDescriptor();
 			fillObjectDescriptor(child, rawType, actualTypeArguments[1], null);
 
-			objectDescriptor.addProperty(propertyName, child);
+			return objectDescriptor.addProperty(propertyName, child);
 		}
 		else
 		{
 			JsonObjectDescriptor another = new JsonObjectDescriptor();
 			fillDescriptor(another, classType);
-			objectDescriptor.addProperty(propertyName, another);
+			return objectDescriptor.addProperty(propertyName, another);
 		}
 	}
 

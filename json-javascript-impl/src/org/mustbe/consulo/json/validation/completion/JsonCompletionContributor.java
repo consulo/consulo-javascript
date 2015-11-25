@@ -161,7 +161,7 @@ public class JsonCompletionContributor extends CompletionContributor
 					builder = builder.withPresentableText(key);
 					builder = builder.withIcon(AllIcons.Nodes.Property);
 					final JsonPropertyDescriptor value = entry.getValue();
-					Class type = value.getType();
+					final Class type = value.getType();
 					builder = builder.withTypeText(StringUtil.decapitalize(type.getSimpleName()), true);
 
 					if(((JSProperty) jsProperty).getValue() == null)
@@ -171,7 +171,6 @@ public class JsonCompletionContributor extends CompletionContributor
 							@Override
 							public void handleInsert(InsertionContext context, LookupElement item)
 							{
-								Class<?> type = value.getType();
 								if(type == Object.class)
 								{
 									context.getDocument().insertString(context.getTailOffset(), ": {\n}");

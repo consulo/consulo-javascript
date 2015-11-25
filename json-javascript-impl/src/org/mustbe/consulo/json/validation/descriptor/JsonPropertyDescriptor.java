@@ -33,18 +33,37 @@ public class JsonPropertyDescriptor
 
 	private String myName;
 	private Object myValue;
-	private boolean myAllowNull;
+	private boolean myDeprecated;
+	private boolean myNullable = true;
 
-	public JsonPropertyDescriptor(@Nullable String name, @NotNull Object value, boolean allowNull)
+	public JsonPropertyDescriptor(@Nullable String name, @NotNull Object value)
 	{
 		myName = name;
 		myValue = value;
-		myAllowNull = allowNull;
 	}
 
-	public boolean isAllowNull()
+	public boolean isNullable()
 	{
-		return myAllowNull;
+		return myNullable;
+	}
+
+	public boolean isDeprecated()
+	{
+		return myDeprecated;
+	}
+
+	@NotNull
+	public JsonPropertyDescriptor deprecated()
+	{
+		myDeprecated = true;
+		return this;
+	}
+
+	@NotNull
+	public JsonPropertyDescriptor notNull()
+	{
+		myNullable = false;
+		return this;
 	}
 
 	@NotNull
