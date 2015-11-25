@@ -28,7 +28,6 @@ import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.json.jom.Null;
 import org.mustbe.consulo.json.validation.JsonFileDescriptorProviders;
 import org.mustbe.consulo.json.validation.descriptor.JsonObjectDescriptor;
 import org.mustbe.consulo.json.validation.descriptor.JsonPropertyDescriptor;
@@ -183,7 +182,7 @@ public class PropertyValidationInspection extends LocalInspectionTool
 			}
 			else if(elementType == JSTokenTypes.NULL_KEYWORD)
 			{
-				propertyType = Null.class;
+				propertyType = Void.class;
 			}
 			else if(elementType == JSTokenTypes.TRUE_KEYWORD || elementType == JSTokenTypes.FALSE_KEYWORD)
 			{
@@ -288,6 +287,12 @@ public class PropertyValidationInspection extends LocalInspectionTool
 
 		JsonPropertyDescriptor currentProperty = findPropertyDescriptor((JSProperty) parent);
 		if(currentProperty == null)
+		{
+			return;
+		}
+
+		// null value
+		if(currentProperty.isAllowNull() && actualType == Void.class)
 		{
 			return;
 		}

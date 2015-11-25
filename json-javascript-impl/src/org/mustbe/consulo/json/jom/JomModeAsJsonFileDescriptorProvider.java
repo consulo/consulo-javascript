@@ -96,13 +96,13 @@ public class JomModeAsJsonFileDescriptorProvider implements JsonFileDescriptorPr
 
 			objectDescriptor.addProperty(propertyName, o.getClass());
 		}
-		else if(classType == Null.class)
-		{
-			objectDescriptor.addProperty(propertyName, Null.class);
-		}
-		else if(classType == boolean.class || classType == Boolean.class)
+		else if(classType == boolean.class)
 		{
 			objectDescriptor.addProperty(propertyName, Boolean.class);
+		}
+		else if(classType == Boolean.class)
+		{
+			objectDescriptor.addProperty(propertyName, Boolean.class, false);
 		}
 		else if(classType == String.class)
 		{
@@ -113,9 +113,11 @@ public class JomModeAsJsonFileDescriptorProvider implements JsonFileDescriptorPr
 				classType == int.class ||
 				classType == long.class ||
 				classType == float.class ||
-				classType == double.class ||
-				classType == BigInteger.class ||
-				classType == Byte.class ||
+				classType == double.class)
+		{
+			objectDescriptor.addProperty(propertyName, Number.class, false);
+		}
+		else if(classType == Byte.class ||
 				classType == Short.class ||
 				classType == Integer.class ||
 				classType == Long.class ||

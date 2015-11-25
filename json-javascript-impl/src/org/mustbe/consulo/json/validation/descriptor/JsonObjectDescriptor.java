@@ -35,6 +35,12 @@ public class JsonObjectDescriptor
 	@NotNull
 	public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @NotNull final Class<?> value)
 	{
+		return addProperty(propertyName, value, true);
+	}
+
+	@NotNull
+	public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @NotNull final Class<?> value, final boolean allowNull)
+	{
 		if(value == Object.class)
 		{
 			throw new IllegalArgumentException("We cant add object type, use JsonObjectDescriptor as parameter");
@@ -45,7 +51,7 @@ public class JsonObjectDescriptor
 			@Override
 			public JsonPropertyDescriptor create()
 			{
-				return new JsonPropertyDescriptor(propertyName, value);
+				return new JsonPropertyDescriptor(propertyName, value, allowNull);
 			}
 		});
 	}
@@ -53,12 +59,18 @@ public class JsonObjectDescriptor
 	@NotNull
 	public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @NotNull final JsonObjectDescriptor value)
 	{
+		return addProperty(propertyName, value, true);
+	}
+
+	@NotNull
+	public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @NotNull final JsonObjectDescriptor value, final boolean allowNull)
+	{
 		return ContainerUtil.getOrCreate(myProperties, propertyName, new Factory<JsonPropertyDescriptor>()
 		{
 			@Override
 			public JsonPropertyDescriptor create()
 			{
-				return new JsonPropertyDescriptor(propertyName, value);
+				return new JsonPropertyDescriptor(propertyName, value, allowNull);
 			}
 		});
 	}

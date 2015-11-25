@@ -24,7 +24,6 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.json.jom.Null;
 import org.mustbe.consulo.json.validation.JsonFileDescriptorProviders;
 import org.mustbe.consulo.json.validation.descriptor.JsonObjectDescriptor;
 import org.mustbe.consulo.json.validation.descriptor.JsonPropertyDescriptor;
@@ -167,11 +166,6 @@ public class JsonCompletionContributor extends CompletionContributor
 
 									context.commitDocument();
 									CodeStyleManager.getInstance(context.getProject()).reformatRange(originalFile, context.getStartOffset(), context.getTailOffset());
-								}
-								else if(type == Null.class)
-								{
-									context.getDocument().insertString(context.getTailOffset(), ": null");
-									context.getEditor().getCaretModel().moveToOffset(context.getTailOffset());
 								}
 								else if(type == Boolean.class)
 								{

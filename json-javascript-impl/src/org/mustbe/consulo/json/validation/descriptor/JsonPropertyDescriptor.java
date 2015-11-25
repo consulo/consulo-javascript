@@ -33,11 +33,18 @@ public class JsonPropertyDescriptor
 
 	private String myName;
 	private Object myValue;
+	private boolean myAllowNull;
 
-	public JsonPropertyDescriptor(@Nullable String name, @NotNull Object value)
+	public JsonPropertyDescriptor(@Nullable String name, @NotNull Object value, boolean allowNull)
 	{
 		myName = name;
 		myValue = value;
+		myAllowNull = allowNull;
+	}
+
+	public boolean isAllowNull()
+	{
+		return myAllowNull;
 	}
 
 	@NotNull
