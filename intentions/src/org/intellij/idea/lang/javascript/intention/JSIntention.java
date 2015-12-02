@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
 import com.intellij.lang.Language;
-import com.intellij.openapi.editor.CaretModel;
+import com.intellij.lang.javascript.JavascriptLanguage;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
@@ -28,110 +28,111 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.util.IncorrectOperationException;
 
-public abstract class JSIntention extends PsiElementBaseIntentionAction {
-    private static Language JS_LANGUAGE;
+public abstract class JSIntention extends PsiElementBaseIntentionAction
+{
+	@NonNls
+	private static final String INTENTION_SUFFIX = "Intention";
+	@NonNls
+	private static final String DISPLAY_NAME = ".display-name";
+	@NonNls
+	private static final String FAMILY_NAME = ".family-name";
+	private static final String PACKAGE_NAME = JSIntention.class.getPackage().getName();
 
-    private static void initJSLanguage() {
-        for(Language lang:Language.getRegisteredLanguages()) {
-            if ("JavaScript".equals(lang.getID())) {
-                JS_LANGUAGE = lang;
-                break;
-            }
-        }
-    }
+	private final JSElementPredicate predicate;
 
-  @NonNls private static final String INTENTION_SUFFIX = "Intention";
-    @NonNls private static final String DISPLAY_NAME     = ".display-name";
-    @NonNls private static final String FAMILY_NAME      = ".family-name";
-    private         static final String PACKAGE_NAME     = JSIntention.class.getPackage().getName();
-
-    private final JSElementPredicate predicate;
-
-    /** @noinspection AbstractMethodCallInConstructor,OverridableMethodCallInConstructor*/
-    protected JSIntention() {
-        if (JS_LANGUAGE == null) initJSLanguage();
-        this.predicate = this.getElementPredicate();
-    }
+	protected JSIntention()
+	{
+		this.predicate = this.getElementPredicate();
+	}
 
 	@Override
 	public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement element) throws IncorrectOperationException
 	{
-		this.processIntention(element);
+		PsiElement matchingElement = findMatchingElement(element);
+		if(matchingElement == null)
+		{
+			return;
+		}
+		processIntention(matchingElement);
 	}
 
-    protected abstract void processIntention(@NotNull PsiElement element)
-            throws IncorrectOperationException;
+	protected abstract void processIntention(@NotNull PsiElement element) throws IncorrectOperationException;
 
-    @NotNull
-    protected abstract JSElementPredicate getElementPredicate();
+	@NotNull
+	protected abstract JSElementPredicate getElementPredicate();
 
-    @Nullable
-    private PsiElement findMatchingElement(PsiFile file, Editor editor) {
-        final CaretModel caretModel = editor.getCaretModel();
-        final int        position   = caretModel.getOffset();
-        PsiElement       element    = file.findElementAt(position);
+	@Nullable
+	protected PsiElement findMatchingElement(@Nullable PsiElement element)
+	{
+		if(element == null || element instanceof PsiFile)
+		{
+			return null;
+		}
 
-        return findMatchingElement(element);
-    }
+		final Language language = element.getLanguage();
+		if(language != Language.ANY && language != JavascriptLanguage.INSTANCE)
+		{
+			return null;
+		}
 
-    @Nullable
-    protected PsiElement findMatchingElement(@Nullable PsiElement element) {
-        if (element == null || element instanceof PsiFile) {
-            return null;
-        }
-
-        final Language language = element.getLanguage();
-        if (language != Language.ANY && language != JS_LANGUAGE) return null;
-
-        while (element != null) {
-            if (this.predicate.satisfiedBy(element)) {
-                return element;
-            }
-            element = element.getParent();
-            if (element instanceof PsiFile ||
-                element instanceof XmlElement
-               ) {
-              break;
-            }
-        }
-        return null;
-    }
+		while(element != null)
+		{
+			if(this.predicate.satisfiedBy(element))
+			{
+				return element;
+			}
+			element = element.getParent();
+			if(element instanceof PsiFile || element instanceof XmlElement)
+			{
+				break;
+			}
+		}
+		return null;
+	}
 
 
-    @Override
-	public boolean isAvailable(@NotNull Project project, Editor editor, @Nullable PsiElement element) {
-      return element != null && findMatchingElement(element) != null;
-    }
+	@Override
+	public boolean isAvailable(@NotNull Project project, Editor editor, @Nullable PsiElement element)
+	{
+		return element != null && findMatchingElement(element) != null;
+	}
 
-    @Override
-	public boolean startInWriteAction() {
-        return true;
-    }
+	@Override
+	public boolean startInWriteAction()
+	{
+		return true;
+	}
 
-    protected String getTextKey(@NonNls Object... suffixes) {
-        return JSIntentionBundle.getKey(this.getClass().getName().substring(PACKAGE_NAME.length() + 1).replace("JS", ""),
-                                        INTENTION_SUFFIX, null, suffixes);
-    }
+	protected String getTextKey(@NonNls Object... suffixes)
+	{
+		return JSIntentionBundle.getKey(this.getClass().getName().substring(PACKAGE_NAME.length() + 1).replace("JS", ""), INTENTION_SUFFIX, null, suffixes);
+	}
 
-    @Override
+	@Override
 	@SuppressWarnings({"UnresolvedPropertyKey"})
-    @NotNull public String getText() {
-        return JSIntentionBundle.message(this.getTextKey(DISPLAY_NAME));
-    }
+	@NotNull
+	public String getText()
+	{
+		return JSIntentionBundle.message(this.getTextKey(DISPLAY_NAME));
+	}
 
-    @SuppressWarnings({"UnresolvedPropertyKey"})
-    public String getText(@NonNls Object... arguments) {
-        return JSIntentionBundle.message(this.getTextKey(DISPLAY_NAME), arguments);
-    }
-
-    @SuppressWarnings({"UnresolvedPropertyKey"})
-    protected String getSuffixedDisplayName(@NonNls String suffix, @NonNls Object... arguments) {
-        return JSIntentionBundle.message(this.getTextKey(DISPLAY_NAME, '.', suffix), arguments);
-    }
-
-    @Override
 	@SuppressWarnings({"UnresolvedPropertyKey"})
-    @NotNull public String getFamilyName() {
-        return JSIntentionBundle.message(this.getTextKey(FAMILY_NAME));
-    }
+	public String getText(@NonNls Object... arguments)
+	{
+		return JSIntentionBundle.message(this.getTextKey(DISPLAY_NAME), arguments);
+	}
+
+	@SuppressWarnings({"UnresolvedPropertyKey"})
+	protected String getSuffixedDisplayName(@NonNls String suffix, @NonNls Object... arguments)
+	{
+		return JSIntentionBundle.message(this.getTextKey(DISPLAY_NAME, '.', suffix), arguments);
+	}
+
+	@Override
+	@SuppressWarnings({"UnresolvedPropertyKey"})
+	@NotNull
+	public String getFamilyName()
+	{
+		return JSIntentionBundle.message(this.getTextKey(FAMILY_NAME));
+	}
 }
