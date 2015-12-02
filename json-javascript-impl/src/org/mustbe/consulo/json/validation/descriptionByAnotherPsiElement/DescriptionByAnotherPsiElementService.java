@@ -170,7 +170,7 @@ public class DescriptionByAnotherPsiElementService implements PersistentStateCom
 					@Override
 					public PsiElement compute()
 					{
-						PsiElement element = myElementPointer.getElement();
+						PsiElement element = myElementPointer == null ? null : myElementPointer.getElement();
 						if(element == null)
 						{
 							return null;
