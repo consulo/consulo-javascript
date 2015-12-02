@@ -16,12 +16,9 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.swing.Icon;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
-import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -44,7 +41,7 @@ import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.IncorrectOperationException;
 
 /**
- * @by max
+ * @author max
  */
 public class JSPropertyImpl extends JSElementImpl implements JSProperty
 {
@@ -172,11 +169,6 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 	{
 		final ASTNode name = findNameIdentifier();
 		return name != null ? name.getStartOffset() : super.getTextOffset();
-	}
-
-	public Icon getIcon(int flags)
-	{
-		return AllIcons.Nodes.Property;
 	}
 
 	private class PropertyNameReference implements PsiReference
