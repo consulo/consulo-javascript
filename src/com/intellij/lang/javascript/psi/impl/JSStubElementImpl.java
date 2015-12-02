@@ -21,9 +21,8 @@ import javax.swing.Icon;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.extapi.psi.StubBasedPsiElementBase;
+import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.index.JSItemPresentation;
 import com.intellij.lang.javascript.psi.JSAttributeList;
 import com.intellij.lang.javascript.psi.JSElement;
@@ -31,7 +30,6 @@ import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSNamedElement;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
@@ -63,13 +61,6 @@ public class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElemen
 	public JSStubElementImpl(final T t, IStubElementType type)
 	{
 		super(t, type);
-	}
-
-	@Override
-	@NotNull
-	public Language getLanguage()
-	{
-		return JavaScriptSupportLoader.JAVASCRIPT.getLanguage();
 	}
 
 	@Override
@@ -229,9 +220,6 @@ public class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElemen
 		return super.getParent();
 	}
 
-	private static final Icon STATIC_MARK_ICON = IconLoader.getIcon("/nodes/staticMark.png");
-	private static final Icon FINAL_MARK_ICON = IconLoader.getIcon("/nodes/finalMark.png");
-
 	protected static Icon blendModifierFlags(Icon baseIcon, JSAttributeList attrList)
 	{
 		if(attrList == null)
@@ -241,11 +229,11 @@ public class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElemen
 		if(attrList.hasModifier(JSAttributeList.ModifierType.STATIC) || attrList.hasModifier(JSAttributeList.ModifierType.DYNAMIC) // ?
 				)
 		{
-			baseIcon = blend(baseIcon, STATIC_MARK_ICON);
+			baseIcon = blend(baseIcon, AllIcons.Nodes.StaticMark);
 		}
 		if(attrList.hasModifier(JSAttributeList.ModifierType.FINAL))
 		{
-			baseIcon = blend(baseIcon, FINAL_MARK_ICON);
+			baseIcon = blend(baseIcon, AllIcons.Nodes.FinalMark);
 		}
 		return baseIcon;
 	}

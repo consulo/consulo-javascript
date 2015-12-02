@@ -20,11 +20,8 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.StubElement;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 8:23:10 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since Jan 30, 2005 8:23:10 PM
  */
 public class JSElementImpl extends JSStubElementImpl<StubElement>
 {
