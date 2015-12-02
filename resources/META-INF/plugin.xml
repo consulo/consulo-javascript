@@ -109,7 +109,7 @@
 		<inspectionToolProvider implementation="com.intellij.lang.javascript.inspections.JSInspectionToolProvider"/>
 		<targetElementUtilEx implementation="com.intellij.lang.javascript.JavaScriptTargetElementUtilEx"/>
 
-		<sdkType implementation="org.mustbe.consulo.javascript.client.module.sdk.ClientJavaScriptSdkType" />
+		<sdkType implementation="org.mustbe.consulo.javascript.client.module.sdk.ClientJavaScriptSdkType"/>
 		<predefinedBundlesProvider implementation="org.mustbe.consulo.javascript.client.module.sdk.ClientJavaScriptPredefinedBundlesProvider"/>
 		<moduleExtensionProvider key="client-javascript"
 								 icon="/icons/javaScript.png"
@@ -118,7 +118,7 @@
 								 immutableClass="org.mustbe.consulo.javascript.client.module.extension.ClientJavaScriptModuleExtension"
 								 mutableClass="org.mustbe.consulo.javascript.client.module.extension.ClientJavaScriptMutableModuleExtension"/>
 
-		<xdebugger.breakpointType implementation="org.mustbe.consulo.javascript.run.debug.JavaScriptLineBreakpointType" />
+		<xdebugger.breakpointType implementation="org.mustbe.consulo.javascript.run.debug.JavaScriptLineBreakpointType"/>
 	</extensions>
 
 	<extensionPoints>
@@ -126,7 +126,13 @@
 
 		<extensionPoint name="resolveHelper" interface="com.intellij.lang.javascript.flex.JSResolveHelper"/>
 		<extensionPoint name="classInheritorsProvider" interface="com.intellij.lang.javascript.search.JSClassInheritorsProvider"/>
+
+		<extensionPoint name="propertyNameReferenceProvider" interface="com.intellij.lang.javascript.psi.impl.reference.JSPropertyNameReferenceProvider"/>
 	</extensionPoints>
+
+	<extensions defaultExtensionNs="org.mustbe.consulo.javascript">
+		<propertyNameReferenceProvider implementation="com.intellij.lang.javascript.psi.impl.reference.DefaultJSPropertyNameReferenceProvider" id="default"/>
+	</extensions>
 
 	<project-components>
 		<component>

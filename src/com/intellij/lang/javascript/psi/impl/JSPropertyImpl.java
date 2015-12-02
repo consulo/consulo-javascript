@@ -22,22 +22,19 @@ import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.index.JSNamedElementProxy;
-import com.intellij.lang.javascript.index.JavaScriptIndex;
-import com.intellij.lang.javascript.psi.JSDefinitionExpression;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSProperty;
-import com.intellij.lang.javascript.psi.JSReferenceExpression;
-import com.intellij.lang.javascript.psi.resolve.VariantsProcessor;
-import com.intellij.openapi.util.TextRange;
+import com.intellij.lang.javascript.psi.impl.reference.JSPropertyNameReferenceProvider;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
+import com.intellij.psi.util.CachedValueProvider;
+import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.IncorrectOperationException;
 
 /**
@@ -50,9 +47,6 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 
 	private static TokenSet FUNCTION_TOKEN_SET = TokenSet.create(JSElementTypes.FUNCTION_DECLARATION);
 
-	private PsiReference[] myReferences;
-	private String myReferenceText;
-
 	public JSPropertyImpl(final ASTNode node)
 	{
 		super(node);
@@ -62,17 +56,33 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 	@NotNull
 	public PsiReference[] getReferences()
 	{
-		final String text = getText();
-
-		if(myReferences != null &&
-				myReferenceText != null &&
-				myReferenceText.equals(text))
+		return CachedValuesManager.getCachedValue(this, new CachedValueProvider<PsiReference[]>()
 		{
-			return myReferences;
-		}
+			@Nullable
+			@Override
+			@RequiredReadAction
+			public Result<PsiReference[]> compute()
+			{
+				return Result.create(buildReferences(), JSPropertyImpl.this);
+			}
+		});
+	}
 
-		myReferenceText = text;
-		return myReferences = new PsiReference[]{new PropertyNameReference()};
+	@NotNull
+	@RequiredReadAction
+	private PsiReference[] buildReferences()
+	{
+		PsiElement nameIdentifier = getNameIdentifier();
+		if(nameIdentifier == null)
+		{
+			return PsiReference.EMPTY_ARRAY;
+		}
+		PsiReference reference = JSPropertyNameReferenceProvider.EP_NAME.composite().getReference(this);
+		if(reference != null)
+		{
+			return new PsiReference[] {reference};
+		}
+		return PsiReference.EMPTY_ARRAY;
 	}
 
 	@Override
@@ -169,100 +179,6 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 	{
 		final ASTNode name = findNameIdentifier();
 		return name != null ? name.getStartOffset() : super.getTextOffset();
-	}
-
-	private class PropertyNameReference implements PsiReference
-	{
-		@Override
-		public PsiElement getElement()
-		{
-			return getFirstChild();
-		}
-
-		@Override
-		@RequiredReadAction
-		public TextRange getRangeInElement()
-		{
-			final PsiElement firstChild = getFirstChild();
-			int quotesDelta = firstChild.getNode().getElementType() == JSTokenTypes.STRING_LITERAL ? 1 : 0;
-			final int startOffsetInParent = firstChild.getStartOffsetInParent();
-			int startOffset = startOffsetInParent + quotesDelta;
-			int endOffset = startOffsetInParent + firstChild.getTextLength() - quotesDelta;
-			if(endOffset <= startOffset)
-			{
-				return new TextRange(0, getTextLength());
-			}
-			return new TextRange(startOffset, endOffset);
-		}
-
-		@Override
-		@Nullable
-		public PsiElement resolve()
-		{
-			return JSPropertyImpl.this;
-		}
-
-		@Override
-		public String getCanonicalText()
-		{
-			return StringUtil.stripQuotesAroundValue(getFirstChild().getText());
-		}
-
-		@Override
-		public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException
-		{
-			setName(newElementName);
-			return null;
-		}
-
-		@Override
-		public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException
-		{
-			return null;
-		}
-
-		@Override
-		public boolean isReferenceTo(PsiElement element)
-		{
-			final PsiElement element2 = resolve();
-			boolean proxyExpanded = false;
-
-			if(element instanceof JSDefinitionExpression)
-			{
-				final JSExpression expression = ((JSDefinitionExpression) element).getExpression();
-				if(expression instanceof JSReferenceExpression)
-				{
-					return ((JSReferenceExpression) expression).isReferenceTo(element2);
-				}
-			}
-
-			if(element instanceof JSNamedElementProxy)
-			{
-				element = ((JSNamedElementProxy) element).getElement();
-				proxyExpanded = true;
-			}
-
-			if(element != element2 && element instanceof JSProperty && element2 instanceof JSProperty)
-			{
-				return ((JSProperty) element).getName().equals(((JSProperty) element2).getName());
-			}
-			return proxyExpanded && element == element2;
-		}
-
-		@Override
-		public Object[] getVariants()
-		{
-			final VariantsProcessor processor = new VariantsProcessor(null, getContainingFile(), false, JSPropertyImpl.this);
-			JavaScriptIndex.getInstance(getProject()).processAllSymbols(processor);
-
-			return processor.getResult();
-		}
-
-		@Override
-		public boolean isSoft()
-		{
-			return true;
-		}
 	}
 
 	@Override

@@ -21,8 +21,6 @@
 		<projectService serviceImplementation="org.mustbe.consulo.json.validation.descriptionByAnotherPsiElement.DescriptionByAnotherPsiElementService"/>
 		<projectService serviceImplementation="org.mustbe.consulo.json.jom.JomManager"/>
 
-		<gotoDeclarationHandler implementation="org.mustbe.consulo.json.validation.JsonFileDescriptorGotoDeclarationHandler" />
-
 		<completion.contributor language="JavaScript" implementationClass="org.mustbe.consulo.json.validation.completion.JsonCompletionContributor"/>
 
 		<localInspection language="JavaScript"
@@ -33,7 +31,10 @@
 	</extensions>
 
 	<extensions defaultExtensionNs="org.mustbe.consulo.javascript">
+		<propertyNameReferenceProvider implementation="org.mustbe.consulo.json.validation.psi.reference.JsonPropertyNameReferenceProvider" order="before default"/>
+
 		<jsonFileDescriptorProvider implementation="org.mustbe.consulo.json.jom.JomModeAsJsonFileDescriptorProvider"/>
+
 		<jsonFileDescriptorProvider implementation="org.mustbe.consulo.json.validation.descriptionByAnotherPsiElement.DescriptionByAnotherPsiElementJsonDescriptionProvider"/>
 	</extensions>
 </idea-plugin>

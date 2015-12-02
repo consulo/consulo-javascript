@@ -14,45 +14,37 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.json.validation;
+package org.mustbe.consulo.json.validation.psi.reference;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.json.validation.descriptor.JsonPropertyDescriptor;
 import org.mustbe.consulo.json.validation.inspections.PropertyValidationInspection;
-import com.intellij.codeInsight.navigation.actions.GotoDeclarationHandlerBase;
-import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSProperty;
-import com.intellij.openapi.editor.Editor;
+import com.intellij.lang.javascript.psi.impl.reference.JSPropertyNameReferenceProvider;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiUtilCore;
+import com.intellij.psi.PsiReference;
 
 /**
  * @author VISTALL
- * @since 12.11.2015
+ * @since 02.12.2015
  */
-public class JsonFileDescriptorGotoDeclarationHandler extends GotoDeclarationHandlerBase
+public class JsonPropertyNameReferenceProvider implements JSPropertyNameReferenceProvider
 {
+	@RequiredReadAction
 	@Nullable
 	@Override
-	@RequiredDispatchThread
-	public PsiElement getGotoDeclarationTarget(PsiElement sourceElement, Editor editor)
+	public PsiReference getReference(@NotNull JSProperty property)
 	{
-		if(PsiUtilCore.getElementType(sourceElement) == JSTokenTypes.STRING_LITERAL)
+		JsonPropertyDescriptor propertyDescriptor = PropertyValidationInspection.findPropertyDescriptor(property);
+		if(propertyDescriptor == null)
 		{
-			PsiElement parent = sourceElement.getParent();
-			if(!(parent instanceof JSProperty))
-			{
-				return null;
-			}
-
-			JsonPropertyDescriptor propertyDescriptor = PropertyValidationInspection.findPropertyDescriptor((JSProperty) parent);
-			if(propertyDescriptor != null)
-			{
-				return propertyDescriptor.getNavigationElement();
-			}
+			return null;
 		}
 
-		return null;
+		PsiElement nameIdentifier = property.getNameIdentifier();
+		assert nameIdentifier != null;
+		return new JsonPropertyNameReference(property, nameIdentifier, propertyDescriptor);
 	}
 }
