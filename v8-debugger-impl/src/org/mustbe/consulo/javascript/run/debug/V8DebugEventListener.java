@@ -19,6 +19,7 @@ package org.mustbe.consulo.javascript.run.debug;
 import org.chromium.sdk.DebugContext;
 import org.chromium.sdk.DebugEventListener;
 import org.chromium.sdk.Script;
+import com.intellij.openapi.application.ApplicationManager;
 
 /**
  * @author VISTALL
@@ -41,7 +42,14 @@ public class V8DebugEventListener implements DebugEventListener
 		if(myFirstPausing)
 		{
 			myFirstPausing = false;
-			myV8DebugProcess.getSession().initBreakpoints();
+			ApplicationManager.getApplication().runReadAction(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					myV8DebugProcess.getSession().initBreakpoints();
+				}
+			});
 			debugContext.continueVm(DebugContext.StepAction.CONTINUE, 0, null, null);
 			return;
 		}
