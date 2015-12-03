@@ -12,7 +12,6 @@ import com.intellij.lang.javascript.JSBundle;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.util.containers.Stack;
 
 /**
  * @author VISTALL
@@ -21,7 +20,7 @@ import com.intellij.util.containers.Stack;
 @Logger
 public class JsonJavaScriptParser implements PsiParser
 {
-	private final Stack<IElementType> myPropertiesNamesStack = new Stack<IElementType>();
+	private int myPropertyDepth;
 
 	@NotNull
 	@Override
@@ -64,7 +63,7 @@ public class JsonJavaScriptParser implements PsiParser
 
 	private void parseProperty(final PsiBuilder builder)
 	{
-		if(myPropertiesNamesStack.size() > 1000)
+		if(myPropertyDepth > 1000)
 		{
 			builder.error("Too big depth for property");
 			int braceCount = 0;
@@ -104,7 +103,7 @@ public class JsonJavaScriptParser implements PsiParser
 
 		final IElementType nameToken = builder.getTokenType();
 		final PsiBuilder.Marker property = builder.mark();
-		myPropertiesNamesStack.push(nameToken);
+		myPropertyDepth ++;
 
 		if(ExpressionParsing.isNotPropertyStart(nameToken))
 		{
@@ -117,7 +116,7 @@ public class JsonJavaScriptParser implements PsiParser
 		{
 			builder.error(JSBundle.message("javascript.parser.message.expected.expression"));
 		}
-		myPropertiesNamesStack.pop();
+		myPropertyDepth --;
 
 		property.done(JSElementTypes.PROPERTY);
 	}
