@@ -49,7 +49,14 @@ public class Parsing
 		return myContext.getExpressionParsing();
 	}
 
-	protected boolean checkMatches(final PsiBuilder builder, final IElementType token, final String message)
+	public static void buildTokenElement(IElementType type, PsiBuilder builder)
+	{
+		final PsiBuilder.Marker marker = builder.mark();
+		builder.advanceLexer();
+		marker.done(type);
+	}
+
+	public static boolean checkMatches(final PsiBuilder builder, final IElementType token, final String message)
 	{
 		if(builder.getTokenType() == token)
 		{
@@ -63,7 +70,7 @@ public class Parsing
 		}
 	}
 
-	public boolean isIdentifierToken(final IElementType tokenType)
+	public static boolean isIdentifierToken(final IElementType tokenType)
 	{
 		return JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(tokenType);
 	}

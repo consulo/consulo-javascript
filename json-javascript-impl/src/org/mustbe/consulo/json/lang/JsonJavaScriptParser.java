@@ -1,12 +1,15 @@
 package org.mustbe.consulo.json.lang;
 
+import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.javascript.lang.parsing.JavaScriptParser;
-import org.mustbe.consulo.javascript.lang.parsing.JavaScriptParsingContext;
+import org.mustbe.consulo.javascript.lang.parsing.ExpressionParsing;
+import org.mustbe.consulo.javascript.lang.parsing.Parsing;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.PsiBuilder;
+import com.intellij.lang.PsiParser;
 import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.psi.tree.IElementType;
 
@@ -14,24 +17,24 @@ import com.intellij.psi.tree.IElementType;
  * @author VISTALL
  * @since 05.03.2015
  */
-public class JsonJavaScriptParser extends JavaScriptParser
+@Logger
+public class JsonJavaScriptParser implements PsiParser
 {
 	@NotNull
 	@Override
 	public ASTNode parse(@NotNull IElementType root, @NotNull PsiBuilder builder, @NotNull LanguageVersion languageVersion)
 	{
 		final PsiBuilder.Marker rootMarker = builder.mark();
-		JavaScriptParsingContext parsingContext = createParsingContext();
-		parseRoot(builder, parsingContext.getExpressionParsing());
+		parseRoot(builder);
 		rootMarker.done(root);
 		return builder.getTreeBuilt();
 	}
 
-	private void parseRoot(PsiBuilder builder, org.mustbe.consulo.javascript.lang.parsing.ExpressionParsing expressionParsing)
+	private void parseRoot(PsiBuilder builder)
 	{
 		if(builder.getTokenType() == JSTokenTypes.LBRACKET)
 		{
-			expressionParsing.parseArrayLiteralExpression(builder);
+			parseArrayLiteralExpression(builder);
 			if(builder.getTokenType() != null)
 			{
 				builder.error(JSBundle.message("javascript.parser.message.expected.eof"));
@@ -39,7 +42,7 @@ public class JsonJavaScriptParser extends JavaScriptParser
 		}
 		else if(builder.getTokenType() == JSTokenTypes.LBRACE)
 		{
-			expressionParsing.parseObjectLiteralExpression(builder);
+			parseObjectLiteralExpression(builder);
 			if(builder.getTokenType() != null)
 			{
 				builder.error(JSBundle.message("javascript.parser.message.expected.eof"));
@@ -53,6 +56,141 @@ public class JsonJavaScriptParser extends JavaScriptParser
 		while(builder.getTokenType() != null)
 		{
 			builder.advanceLexer();
+		}
+	}
+
+	private void parseProperty(final PsiBuilder builder)
+	{
+		final IElementType nameToken = builder.getTokenType();
+		final PsiBuilder.Marker property = builder.mark();
+
+		if(ExpressionParsing.isNotPropertyStart(nameToken))
+		{
+			builder.error(JSBundle.message("javascript.parser.message.expected.identifier.string.literal.or.numeric.literal"));
+		}
+		builder.advanceLexer();
+		Parsing.checkMatches(builder, JSTokenTypes.COLON, JSBundle.message("javascript.parser.message.expected.colon"));
+
+		if(!parseValue(builder))
+		{
+			builder.error(JSBundle.message("javascript.parser.message.expected.expression"));
+		}
+
+		property.done(JSElementTypes.PROPERTY);
+	}
+
+	public void parseObjectLiteralExpression(final PsiBuilder builder)
+	{
+		LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.LBRACE);
+		final PsiBuilder.Marker expr = builder.mark();
+		builder.advanceLexer();
+
+		IElementType elementType = builder.getTokenType();
+
+		while(elementType != JSTokenTypes.RBRACE && elementType != null)
+		{
+			parseProperty(builder);
+
+			elementType = builder.getTokenType();
+			if(elementType == JSTokenTypes.RBRACE)
+			{
+				break;
+			}
+			else if(elementType == JSTokenTypes.COMMA)
+			{
+				builder.advanceLexer();
+			}
+			else
+			{
+				builder.error(JSBundle.message("javascript.parser.message.expected.comma"));
+			}
+
+			elementType = builder.getTokenType();
+			if(elementType == JSTokenTypes.RBRACE)
+			{
+				builder.error(JSBundle.message("javascript.parser.property.expected"));
+			}
+			else if(ExpressionParsing.isNotPropertyStart(elementType))
+			{
+				break;
+			}
+		}
+
+		Parsing.checkMatches(builder, JSTokenTypes.RBRACE, JSBundle.message("javascript.parser.message.expected.rbrace"));
+		expr.done(JSElementTypes.OBJECT_LITERAL_EXPRESSION);
+	}
+
+	public void parseArrayLiteralExpression(final PsiBuilder builder)
+	{
+		LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.LBRACKET);
+		final PsiBuilder.Marker expr = builder.mark();
+		builder.advanceLexer();
+		boolean commaExpected = false;
+
+		while(builder.getTokenType() != JSTokenTypes.RBRACKET)
+		{
+			if(commaExpected)
+			{
+				final boolean b = Parsing.checkMatches(builder, JSTokenTypes.COMMA, JSBundle.message("javascript.parser.message.expected.comma"));
+				if(!b)
+				{
+					break;
+				}
+			}
+
+			while(builder.getTokenType() == JSTokenTypes.COMMA)
+			{
+				builder.advanceLexer();
+			}
+
+			commaExpected = false;
+			if(builder.getTokenType() != JSTokenTypes.RBRACKET)
+			{
+				if(!parseValue(builder))
+				{
+					builder.error(JSBundle.message("javascript.parser.message.expected.expression"));
+					break;
+				}
+				else
+				{
+					commaExpected = true;
+				}
+			}
+		}
+		Parsing.checkMatches(builder, JSTokenTypes.RBRACKET, JSBundle.message("javascript.parser.message.expected.rbracket"));
+		expr.done(JSElementTypes.ARRAY_LITERAL_EXPRESSION);
+	}
+
+	private boolean parseValue(PsiBuilder builder)
+	{
+		final IElementType firstToken = builder.getTokenType();
+		if(firstToken == JSTokenTypes.NUMERIC_LITERAL ||
+				firstToken == JSTokenTypes.STRING_LITERAL ||
+				firstToken == JSTokenTypes.NULL_KEYWORD ||
+				firstToken == JSTokenTypes.FALSE_KEYWORD ||
+				firstToken == JSTokenTypes.TRUE_KEYWORD)
+		{
+			String errorMessage = ExpressionParsing.validateLiteral(builder);
+			Parsing.buildTokenElement(JSElementTypes.LITERAL_EXPRESSION, builder);
+			if(errorMessage != null)
+			{
+				builder.error(errorMessage);
+			}
+			return true;
+		}
+		if(firstToken == JSTokenTypes.LBRACKET)
+		{
+			parseArrayLiteralExpression(builder);
+			return true;
+		}
+		else if(firstToken == JSTokenTypes.LBRACE)
+		{
+			parseObjectLiteralExpression(builder);
+			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
 }

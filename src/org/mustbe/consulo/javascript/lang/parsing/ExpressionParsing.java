@@ -222,7 +222,7 @@ public class ExpressionParsing extends Parsing
 	}
 
 	@Nullable
-	private String validateLiteral(final PsiBuilder builder)
+	public static String validateLiteral(final PsiBuilder builder)
 	{
 		final IElementType ttype = builder.getTokenType();
 		if(ttype == JSTokenTypes.STRING_LITERAL)
@@ -241,7 +241,7 @@ public class ExpressionParsing extends Parsing
 		return null;
 	}
 
-	private boolean lastSymbolEscaped(String text)
+	private static boolean lastSymbolEscaped(String text)
 	{
 		boolean escapes = false;
 		boolean escaped = true;
@@ -304,7 +304,7 @@ public class ExpressionParsing extends Parsing
 		expr.done(JSElementTypes.OBJECT_LITERAL_EXPRESSION);
 	}
 
-	private boolean isNotPropertyStart(final IElementType elementType)
+	public static boolean isNotPropertyStart(final IElementType elementType)
 	{
 		return !JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(elementType) && elementType != JSTokenTypes.STRING_LITERAL && elementType !=
 				JSTokenTypes.NUMERIC_LITERAL;
@@ -1054,13 +1054,6 @@ public class ExpressionParsing extends Parsing
 		expr.drop();
 
 		return true;
-	}
-
-	protected void buildTokenElement(IElementType type, PsiBuilder builder)
-	{
-		final PsiBuilder.Marker marker = builder.mark();
-		builder.advanceLexer();
-		marker.done(type);
 	}
 
 	protected boolean tryParseType(final PsiBuilder builder)
