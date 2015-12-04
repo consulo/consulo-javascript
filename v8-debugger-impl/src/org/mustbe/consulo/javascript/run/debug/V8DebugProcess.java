@@ -72,7 +72,7 @@ public class V8DebugProcess extends XDebugProcess
 
 	private final XBreakpointManager myXBreakpointManager;
 
-	private Map<XLineBreakpoint, Breakpoint> myBreakpoints = new HashMap<XLineBreakpoint, Breakpoint>();
+	private Map<Breakpoint, XLineBreakpoint> myBreakpoints = new HashMap<Breakpoint, XLineBreakpoint>();
 
 	public V8DebugProcess(@NotNull XDebugSession session, ExecutionResult result, int port) throws ExecutionException
 	{
@@ -163,7 +163,7 @@ public class V8DebugProcess extends XDebugProcess
 							@Override
 							public void success(Breakpoint breakpoint)
 							{
-								myBreakpoints.put(xBreakpoint, breakpoint);
+								myBreakpoints.put(breakpoint, xBreakpoint);
 								myXBreakpointManager.updateBreakpointPresentation(xBreakpoint, AllIcons.Debugger.Db_verified_breakpoint, null);
 							}
 
@@ -321,6 +321,12 @@ public class V8DebugProcess extends XDebugProcess
 				myScriptListPanel.add(script);
 			}
 		});
+	}
+
+	@Nullable
+	public XLineBreakpoint<?> getXBreakpointByVmBreakpoint(Breakpoint breakpoint)
+	{
+		return myBreakpoints.get(breakpoint);
 	}
 
 	public void setCurrentDebugContext(DebugContext debugContext)

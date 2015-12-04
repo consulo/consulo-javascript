@@ -16,10 +16,14 @@
 
 package org.mustbe.consulo.javascript.run.debug;
 
+import java.util.Collection;
+
+import org.chromium.sdk.Breakpoint;
 import org.chromium.sdk.DebugContext;
 import org.chromium.sdk.DebugEventListener;
 import org.chromium.sdk.Script;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 
 /**
  * @author VISTALL
@@ -55,6 +59,17 @@ public class V8DebugEventListener implements DebugEventListener
 		}
 
 		myV8DebugProcess.setCurrentDebugContext(debugContext);
+
+		Collection<? extends Breakpoint> breakpointsHit = debugContext.getBreakpointsHit();
+		if(!breakpointsHit.isEmpty())
+		{
+			XLineBreakpoint<?> lineBreakpoint = myV8DebugProcess.getXBreakpointByVmBreakpoint(breakpointsHit.iterator().next());
+			if(lineBreakpoint != null)
+			{
+				myV8DebugProcess.getSession().breakpointReached(lineBreakpoint, null, new V8SuspendContext(debugContext));
+				return;
+			}
+		}
 		myV8DebugProcess.getSession().positionReached(new V8SuspendContext(debugContext));
 	}
 
