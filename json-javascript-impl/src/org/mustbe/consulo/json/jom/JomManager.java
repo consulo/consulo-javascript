@@ -29,6 +29,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
+import com.intellij.psi.util.PsiModificationTracker;
 
 /**
  * @author VISTALL
@@ -60,21 +61,19 @@ public class JomManager
 		CachedValue<JomFileElement<?>> cachedValue = psiFile.getUserData(JOM_FILE_ELEMENT);
 		if(cachedValue == null)
 		{
-			JomFileDescriptor jomFileDescriptor = findFileDescriptor(psiFile);
-
-			if(jomFileDescriptor == null)
-			{
-				return null;
-			}
-
-			final JomFileDescriptor finalJomFileDescriptor = jomFileDescriptor;
 			cachedValue = CachedValuesManager.getManager(myProject).createCachedValue(new CachedValueProvider<JomFileElement<?>>()
 			{
 				@Nullable
 				@Override
 				public Result<JomFileElement<?>> compute()
 				{
-					return Result.<JomFileElement<?>>create(new JomFileElement((JSFile) psiFile, finalJomFileDescriptor), psiFile);
+					JomFileElement<?> value = null;
+					JomFileDescriptor fileDescriptor = findFileDescriptor(psiFile);
+					if(fileDescriptor != null)
+					{
+						value = new JomFileElement((JSFile) psiFile, fileDescriptor);
+					}
+					return Result.<JomFileElement<?>>create(value, psiFile, PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT);
 				}
 			}, false);
 
