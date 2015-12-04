@@ -27,6 +27,7 @@ import org.chromium.sdk.Script;
 import org.chromium.sdk.StandaloneVm;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.Exported;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.process.ProcessHandler;
@@ -88,14 +89,12 @@ public class V8DebugProcess extends XDebugProcess
 		myXBreakpointManager = XDebuggerManager.getInstance(getSession().getProject()).getBreakpointManager();
 		getSession().setPauseActionSupported(true);
 		myVm = BrowserFactory.getInstance().createStandalone(new InetSocketAddress("localhost", port), null);
-		try
-		{
-			myVm.attach(new V8DebugEventListener(this));
-		}
-		catch(Exception e)
-		{
-			throw new ExecutionException(e);
-		}
+	}
+
+	@Exported
+	public void attach() throws Exception
+	{
+		myVm.attach(new V8DebugEventListener(this));
 	}
 
 	@Nullable
