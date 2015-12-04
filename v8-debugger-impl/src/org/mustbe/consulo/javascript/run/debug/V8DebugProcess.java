@@ -206,19 +206,28 @@ public class V8DebugProcess extends XDebugProcess
 	@Override
 	public void startStepOver()
 	{
-
+		if(myCurrentDebugContext != null)
+		{
+			myCurrentDebugContext.continueVm(DebugContext.StepAction.OVER, 0, null, null);
+		}
 	}
 
 	@Override
 	public void startStepInto()
 	{
-
+		if(myCurrentDebugContext != null)
+		{
+			myCurrentDebugContext.continueVm(DebugContext.StepAction.IN, 0, null, null);
+		}
 	}
 
 	@Override
 	public void startStepOut()
 	{
-
+		if(myCurrentDebugContext != null)
+		{
+			myCurrentDebugContext.continueVm(DebugContext.StepAction.OUT, 0, null, null);
+		}
 	}
 
 	@Override
