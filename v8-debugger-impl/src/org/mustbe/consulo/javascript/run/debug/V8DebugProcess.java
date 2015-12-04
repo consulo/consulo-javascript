@@ -18,6 +18,8 @@ package org.mustbe.consulo.javascript.run.debug;
 
 import java.net.InetSocketAddress;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.chromium.sdk.Breakpoint;
 import org.chromium.sdk.BrowserFactory;
@@ -39,7 +41,6 @@ import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -64,14 +65,14 @@ import com.intellij.xdebugger.ui.XDebugTabLayouter;
  */
 public class V8DebugProcess extends XDebugProcess
 {
-	private static final Key<Breakpoint> V8_BREAKPOINT = Key.create("v8.breakpoint");
-
 	private final ExecutionResult myResult;
 	private final StandaloneVm myVm;
 	private DebugContext myCurrentDebugContext;
 	private JavaScriptListPanel<Script> myScriptListPanel;
 
 	private final XBreakpointManager myXBreakpointManager;
+
+	private Map<XLineBreakpoint, Breakpoint> myBreakpoints = new HashMap<XLineBreakpoint, Breakpoint>();
 
 	public V8DebugProcess(@NotNull XDebugSession session, ExecutionResult result, int port) throws ExecutionException
 	{
@@ -162,7 +163,7 @@ public class V8DebugProcess extends XDebugProcess
 							@Override
 							public void success(Breakpoint breakpoint)
 							{
-								xBreakpoint.putUserData(V8_BREAKPOINT, breakpoint);
+								myBreakpoints.put(xBreakpoint, breakpoint);
 								myXBreakpointManager.updateBreakpointPresentation(xBreakpoint, AllIcons.Debugger.Db_verified_breakpoint, null);
 							}
 
@@ -234,6 +235,8 @@ public class V8DebugProcess extends XDebugProcess
 	public void stop()
 	{
 		myVm.detach();
+		myBreakpoints.clear();
+
 		ApplicationManager.getApplication().runReadAction(new Runnable()
 		{
 			@Override
@@ -243,8 +246,6 @@ public class V8DebugProcess extends XDebugProcess
 						.class);
 				for(XLineBreakpoint<XBreakpointProperties> breakpoint : breakpoints)
 				{
-					breakpoint.putUserData(V8_BREAKPOINT, null);
-
 					myXBreakpointManager.updateBreakpointPresentation(breakpoint, null, null);
 				}
 			}
