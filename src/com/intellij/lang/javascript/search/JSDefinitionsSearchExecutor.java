@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.search;
 
+import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
@@ -28,6 +29,7 @@ import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.search.searches.DefinitionsScopedSearch;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.util.Processor;
 import com.intellij.util.QueryExecutor;
@@ -37,11 +39,12 @@ import com.intellij.util.QueryExecutor;
  *         Date: Apr 28, 2008
  *         Time: 8:34:30 PM
  */
-class JSDefinitionsSearchExecutor implements QueryExecutor<PsiElement, PsiElement>
+class JSDefinitionsSearchExecutor implements QueryExecutor<PsiElement, DefinitionsScopedSearch.SearchParameters>
 {
 	@Override
-	public boolean execute(final PsiElement sourceElement, final Processor<PsiElement> consumer)
+	public boolean execute(@NotNull final DefinitionsScopedSearch.SearchParameters parameters, @NotNull final Processor<PsiElement> consumer)
 	{
+		final PsiElement sourceElement = parameters.getElement();
 		if(sourceElement instanceof PsiNamedElement && sourceElement.getLanguage().isKindOf(JavaScriptLanguage.INSTANCE))
 		{
 			ReferencesSearch.search(sourceElement, GlobalSearchScope.projectScope(sourceElement.getProject())).forEach(new Processor<PsiReference>()

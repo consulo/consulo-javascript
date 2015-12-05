@@ -25,7 +25,7 @@
 		<gotoSymbolContributor implementation="com.intellij.lang.javascript.index.JavaScriptSymbolContributor"/>
 		<gotoClassContributor implementation="com.intellij.lang.javascript.index.JavaScriptClassContributor"/>
 
-		<iconDescriptorUpdater implementation="org.mustbe.consulo.javascript.ide.JavaScriptIconDescriptorUpdater" />
+		<iconDescriptorUpdater implementation="org.mustbe.consulo.javascript.ide.JavaScriptIconDescriptorUpdater"/>
 
 		<fileTypeFactory implementation="com.intellij.lang.javascript.JavaScriptSupportLoader"/>
 
@@ -84,7 +84,7 @@
 										implementationClass="com.intellij.lang.javascript.highlighting.JavaScriptLineMarkerProvider"/>
 		<typeDeclarationProvider implementation="com.intellij.lang.javascript.navigation.JavaScriptTypeDeclarationProvider"/>
 		<gotoTargetRendererProvider implementation="com.intellij.lang.javascript.search.JSGotoTargetRendererProvider"/>
-		<definitionsSearch implementation="com.intellij.lang.javascript.search.JSDefinitionsSearchExecutor"/>
+		<definitionsScopedSearch implementation="com.intellij.lang.javascript.search.JSDefinitionsSearchExecutor"/>
 		<referencesSearch implementation="com.intellij.lang.javascript.search.JSReferencesSearchExecutor"/>
 		<declarationRangeHandler key="com.intellij.lang.javascript.psi.JSNamedElement"
 								 implementationClass="com.intellij.lang.javascript.search.JSDeclarationRangeHandler"/>
