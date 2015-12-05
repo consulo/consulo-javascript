@@ -16,26 +16,21 @@
 
 package com.intellij.lang.javascript.psi;
 
+import org.consulo.lombok.annotations.ArrayFactoryFields;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.lang.javascript.psi.stubs.JSFunctionStub;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.StubBasedPsiElement;
-import com.intellij.util.ArrayFactory;
 
 /**
  * @author max
  */
+@ArrayFactoryFields
 public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JSAttributeListOwner, StubBasedPsiElement<JSFunctionStub>
 {
-	JSFunction[] EMPTY_ARRAY = new JSFunction[0];
-	ArrayFactory<JSFunction> ARRAY_FACTORY = new ArrayFactory<JSFunction>()
-	{
-		@Override
-		public JSFunction[] create(int count)
-		{
-			return count == 0 ? EMPTY_ARRAY : new JSFunction[count];
-		}
-	};
-
+	@Nullable
+	@RequiredReadAction
 	JSParameterList getParameterList();
 
 	JSSourceElement[] getBody();

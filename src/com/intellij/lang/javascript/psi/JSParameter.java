@@ -16,17 +16,16 @@
 
 package com.intellij.lang.javascript.psi;
 
+import org.consulo.lombok.annotations.ArrayFactoryFields;
+
 /**
- * Created by IntelliJ IDEA.
  * User: max
  * Date: Jan 30, 2005
  * Time: 6:43:02 PM
- * To change this template use File | Settings | File Templates.
  */
+@ArrayFactoryFields
 public interface JSParameter extends JSVariable
 {
-	JSParameter[] EMPTY_ARRAY = new JSParameter[0];
-
 	JSFunction getDeclaringFunction();
 
 	boolean isRest();

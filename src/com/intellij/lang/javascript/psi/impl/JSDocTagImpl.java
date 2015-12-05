@@ -330,7 +330,7 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag
 
 				for(int i = 0; i < parameters.length; ++i)
 				{
-					result[i] = JSLookupUtil.createPrioritizedLookupItem(parameters[i], parameters[i].getName(), 3);
+					result[i] = JSLookupUtil.createLookupItem(parameters[i], parameters[i].getName(), JSLookupUtil.LookupPriority.HIGHEST);
 				}
 				return result;
 			}

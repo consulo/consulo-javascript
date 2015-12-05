@@ -29,6 +29,7 @@ import javax.swing.Icon;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.extapi.psi.PsiElementBase;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptorUpdaters;
@@ -44,7 +45,6 @@ import com.intellij.lang.javascript.psi.impl.JSElementImpl;
 import com.intellij.lang.javascript.psi.util.JSLookupUtil;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
@@ -653,15 +653,9 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 		}
 	}
 
-	enum LookupPriority
-	{
-		HIGHEST,
-		HIGH,
-		HIGHER,
-		NORMAL
-	}
 
-	private Object addLookupValue(PsiElement _element, final int nameId, LookupPriority priority)
+
+	private Object addLookupValue(PsiElement _element, final int nameId, JSLookupUtil.LookupPriority priority)
 	{
 		PsiElement element = _element;
 		boolean proxyExpanded = false;
@@ -676,8 +670,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			}
 		}
 
-		final Object item = JSLookupUtil.createPrioritizedLookupItem(element, myIndex.getStringByIndex(nameId),
-				priority == LookupPriority.HIGHEST ? 3 : (priority == LookupPriority.HIGH ? 2 : (priority == LookupPriority.HIGHER ? 1 : 0)));
+		final Object item = JSLookupUtil.createLookupItem(element, myIndex.getStringByIndex(nameId), priority);
 
 		if(item != null && proxyExpanded)
 		{
@@ -726,7 +719,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 
 		if(isFromRelevantFileOrDirectory() && !myAddOnlyCompleteMatches)
 		{
-			final Object o = addLookupValue(element, nameId, LookupPriority.HIGHEST);
+			final Object o = addLookupValue(element, nameId, JSLookupUtil.LookupPriority.HIGHEST);
 			if(o != null)
 			{
 				myNamesList.add(myThisFileNameListCount++, o);
@@ -738,7 +731,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 		}
 		else
 		{
-			final Object o = addLookupValue(element, nameId, LookupPriority.HIGH);
+			final Object o = addLookupValue(element, nameId, JSLookupUtil.LookupPriority.HIGH);
 			if(o != null)
 			{
 				myNamesList.add(o);
@@ -805,16 +798,16 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 		PsiElement element = updateElement(_element);
 
 		final TIntObjectHashMap<Object> targetNamesMap;
-		final LookupPriority priority;
+		final JSLookupUtil.LookupPriority priority;
 
 		if(isFromRelevantFileOrDirectory())
 		{
-			priority = hasSomeSmartnessAvailable ? LookupPriority.HIGHER : LookupPriority.HIGHEST;
+			priority = hasSomeSmartnessAvailable ? JSLookupUtil.LookupPriority.HIGHER : JSLookupUtil.LookupPriority.HIGHEST;
 			targetNamesMap = myPartialMatchNamesMapFromSameFile;
 		}
 		else
 		{
-			priority = hasSomeSmartnessAvailable ? LookupPriority.NORMAL : LookupPriority.HIGH;
+			priority = hasSomeSmartnessAvailable ? JSLookupUtil.LookupPriority.NORMAL : JSLookupUtil.LookupPriority.HIGH;
 
 			targetNamesMap = myPartialMatchNamesMap;
 		}
@@ -998,6 +991,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			myArtificialName = null;
 		}
 
+		@RequiredReadAction
 		@Override
 		@NotNull
 		public Language getLanguage()
@@ -1005,6 +999,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			return JavaScriptSupportLoader.JAVASCRIPT.getLanguage();
 		}
 
+		@RequiredReadAction
 		@Override
 		@NotNull
 		public PsiElement[] getChildren()
@@ -1018,6 +1013,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			return myCurrentFile != null ? myCurrentFile : myProxy.getContainingFile();
 		}
 
+		@RequiredReadAction
 		@Override
 		@Nullable
 		public PsiElement getFirstChild()
@@ -1025,6 +1021,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			return null;
 		}
 
+		@RequiredReadAction
 		@Override
 		@Nullable
 		public PsiElement getLastChild()
@@ -1039,6 +1036,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			return getParent().getProject();
 		}
 
+		@RequiredReadAction
 		@Override
 		@Nullable
 		public PsiElement getNextSibling()
@@ -1046,6 +1044,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			return null;
 		}
 
+		@RequiredReadAction
 		@Override
 		@Nullable
 		public PsiElement getPrevSibling()
@@ -1053,24 +1052,28 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			return null;
 		}
 
+		@RequiredReadAction
 		@Override
 		public TextRange getTextRange()
 		{
 			return new TextRange(myOffset, myOffset);
 		}
 
+		@RequiredReadAction
 		@Override
 		public int getStartOffsetInParent()
 		{
 			return myOffset;
 		}
 
+		@RequiredReadAction
 		@Override
 		public int getTextLength()
 		{
 			return 0;
 		}
 
+		@RequiredReadAction
 		@Override
 		@Nullable
 		public PsiElement findElementAt(final int offset)
@@ -1084,6 +1087,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			return myOffset;
 		}
 
+		@RequiredReadAction
 		@Override
 		@NonNls
 		public String getText()
@@ -1096,6 +1100,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			return myIndex.getStringByIndex(myJsNamespace != null ? myJsNamespace.getNameId() : myProxy.getNameId());
 		}
 
+		@RequiredReadAction
 		@Override
 		@NotNull
 		public char[] textToCharArray()
@@ -1103,6 +1108,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			return new char[0];
 		}
 
+		@RequiredReadAction
 		@Override
 		public boolean textContains(final char c)
 		{
@@ -1180,13 +1186,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 				{
 					return AllIcons.Nodes.Class;
 				}
-
-				@Nullable
-				public TextAttributesKey getTextAttributesKey()
-				{
-					return null;
-				}
-			} : ((NavigationItem) myProxy).getPresentation();
+			} : myProxy.getPresentation();
 		}
 
 		public JSNamespace getNamespace()

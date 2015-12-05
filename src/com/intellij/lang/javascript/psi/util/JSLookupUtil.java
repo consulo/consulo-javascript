@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,27 +16,57 @@
 
 package com.intellij.lang.javascript.psi.util;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
+import com.intellij.codeInsight.completion.PrioritizedLookupElement;
+import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler;
+import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.ide.IconDescriptorUpdaters;
+import com.intellij.lang.javascript.psi.JSFunction;
+import com.intellij.lang.javascript.psi.JSParameter;
+import com.intellij.lang.javascript.psi.JSParameterList;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
+import com.intellij.util.Function;
 
-/**
- * Created by IntelliJ IDEA.
- * User: maxim.mossienko
- * Date: Dec 6, 2005
- * Time: 8:35:58 PM
- * To change this template use File | Settings | File Templates.
- */
 public class JSLookupUtil
 {
+	public static enum LookupPriority
+	{
+		NORMAL,
+		HIGHER,
+		HIGH,
+		HIGHEST
+	}
 
 	@Nullable
-	public static Object createPrioritizedLookupItem(PsiElement value, String name, int priority)
+	@RequiredDispatchThread
+	public static LookupElement createLookupItem(@NotNull PsiElement value, @NotNull String name, @NotNull LookupPriority priority)
 	{
 		LookupElementBuilder builder = LookupElementBuilder.create(name);
 		builder = builder.withTypeText(value.getContainingFile().getName(), true);
 		builder = builder.withIcon(IconDescriptorUpdaters.getIcon(value, 0));
-		return builder;
+		if(value instanceof JSFunction)
+		{
+			JSParameterList parameterList = ((JSFunction) value).getParameterList();
+			JSParameter[] jsParameters = parameterList == null ? JSParameter.EMPTY_ARRAY : parameterList.getParameters();
+			builder = builder.withPresentableText(name + "(" + StringUtil.join(jsParameters, new Function<JSParameter, String>()
+			{
+				@Override
+				public String fun(JSParameter jsParameter)
+				{
+					return jsParameter.getName();
+				}
+			}, ", ") + ")");
+			builder = builder.withInsertHandler(ParenthesesInsertHandler.getInstance(jsParameters.length > 0));
+		}
+
+		if(priority == LookupPriority.NORMAL)
+		{
+			return builder;
+		}
+		return PrioritizedLookupElement.withPriority(builder, priority.ordinal());
 	}
 }

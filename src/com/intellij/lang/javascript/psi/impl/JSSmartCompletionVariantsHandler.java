@@ -216,8 +216,8 @@ public class JSSmartCompletionVariantsHandler
 					if(variable != null)
 					{
 						myCandidatesMap.remove(value);
-						myVariants.add(JSLookupUtil.createPrioritizedLookupItem(variable, ((JSClass) variable.getParent().getParent()).getName() + "." + variable
-								.getName(), 3));
+						myVariants.add(JSLookupUtil.createLookupItem(variable, ((JSClass) variable.getParent().getParent()).getName() + "." + variable
+								.getName(), JSLookupUtil.LookupPriority.HIGHER));
 					}
 				}
 			}

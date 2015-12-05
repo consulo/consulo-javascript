@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -706,6 +707,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 		return getResultsAsObjects(null);
 	}
 
+	@RequiredReadAction
 	public Object[] getResultsAsObjects(String qualifiedNameToSkip)
 	{
 		final List<PsiElement> processorResults = getResults();
@@ -735,7 +737,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 				continue;
 			}
 
-			objects.add(JSLookupUtil.createPrioritizedLookupItem(namedElement, name, 3));
+			objects.add(JSLookupUtil.createLookupItem(namedElement, name, JSLookupUtil.LookupPriority.HIGHEST));
 		}
 		return ArrayUtil.toObjectArray(objects);
 	}
