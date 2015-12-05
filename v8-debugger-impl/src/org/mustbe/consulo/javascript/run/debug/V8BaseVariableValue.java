@@ -28,7 +28,6 @@ import org.chromium.sdk.JsVariable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XNamedValue;
 import com.intellij.xdebugger.frame.XValueChildrenList;
@@ -143,11 +142,11 @@ public abstract class V8BaseVariableValue extends XNamedValue
 					default:
 						if(value instanceof JsArray)
 						{
-							return StringUtil.decapitalize(((JsArray) value).getClassName()) + "[" + ((JsArray) value).getLength() + "]";
+							return ((JsArray) value).getClassName() + "[" + ((JsArray) value).getLength() + "]";
 						}
 						else if(value instanceof JsObject)
 						{
-							return StringUtil.decapitalize(((JsObject) value).getClassName());
+							return ((JsObject) value).getClassName();
 						}
 						return null;
 				}
