@@ -147,8 +147,7 @@ public class JSPsiImplUtils
 		return JSDocumentationUtils.findTypeFromComments(element);
 	}
 
-	public static void updateFileName(JSQualifiedNamedElement jsClassBase, final String newName,
-			final String oldName) throws IncorrectOperationException
+	public static void updateFileName(JSQualifiedNamedElement jsClassBase, final String newName, final String oldName) throws IncorrectOperationException
 	{
 		final PsiFile containingFile = jsClassBase.getContainingFile();
 
@@ -193,10 +192,8 @@ public class JSPsiImplUtils
 		return jsClass;
 	}
 
-	public static
 	@Nullable
-	PsiElement findTopLevelNavigatableElementWithSource(@NotNull JSQualifiedNamedElement jsClass, @Nullable Consumer<JSQualifiedNamedElement>
-			candidatesConsumer)
+	public static PsiElement findTopLevelNavigatableElementWithSource(@NotNull JSQualifiedNamedElement jsClass, @Nullable Consumer<JSQualifiedNamedElement> candidatesConsumer)
 	{
 		if(candidatesConsumer != null)
 		{
@@ -211,8 +208,7 @@ public class JSPsiImplUtils
 
 		GlobalSearchScope searchScope = JSResolveUtil.getSearchScope(jsClass);
 		final String qName = jsClass.getQualifiedName();
-		final Collection<JSQualifiedNamedElement> candidates = StubIndex.getInstance().get(JSQualifiedElementIndex.KEY, qName,
-				jsClass.getProject(), searchScope);
+		final Collection<JSQualifiedNamedElement> candidates = StubIndex.getElements(JSQualifiedElementIndex.KEY, qName, jsClass.getProject(), searchScope, JSQualifiedNamedElement.class);
 		for(Iterator<JSQualifiedNamedElement> i = candidates.iterator(); i.hasNext(); )
 		{
 			if(!qName.equals(i.next().getQualifiedName()))
@@ -372,8 +368,7 @@ public class JSPsiImplUtils
 		return false;
 	}
 
-	public static final TObjectHashingStrategy<JSQualifiedNamedElement> QUALIFIED_NAME_HASHING_STRATEGY = new
-			TObjectHashingStrategy<JSQualifiedNamedElement>()
+	public static final TObjectHashingStrategy<JSQualifiedNamedElement> QUALIFIED_NAME_HASHING_STRATEGY = new TObjectHashingStrategy<JSQualifiedNamedElement>()
 	{
 		@Override
 		public int computeHashCode(final JSQualifiedNamedElement object)
@@ -419,8 +414,8 @@ public class JSPsiImplUtils
 			if(targetElement instanceof JSReferenceExpression)
 			{
 				JSExpression qualifier = ((JSReferenceExpression) targetElement).getQualifier();
-				String targetElementPackageName = qualifier != null ? qualifier.getText() : JSResolveUtil.getExpectedPackageNameFromFile(targetElement
-						.getContainingFile().getVirtualFile(), project, false);
+				String targetElementPackageName = qualifier != null ? qualifier.getText() : JSResolveUtil.getExpectedPackageNameFromFile(targetElement.getContainingFile().getVirtualFile(), project,
+						false);
 				if(!differentPackageName(targetElementPackageName, packageName))
 				{
 					return null;

@@ -33,7 +33,6 @@ import com.intellij.lang.javascript.psi.stubs.JSReferenceListStub;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.search.ProjectScope;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.util.ArrayUtil;
 
@@ -115,8 +114,7 @@ public class JSReferenceListImpl extends JSStubElementImpl<JSReferenceListStub> 
 
 			text = JSImportHandlingUtil.resolveTypeName(text, this);
 
-			final Collection<JSQualifiedNamedElement> candidates = StubIndex.getInstance().get(JSQualifiedElementIndex.KEY, text, project,
-					ProjectScope.getAllScope(project));
+			final Collection<JSQualifiedNamedElement> candidates = StubIndex.getElements(JSQualifiedElementIndex.KEY, text, project, getResolveScope(), JSQualifiedNamedElement.class);
 			for(JSQualifiedNamedElement _clazz : candidates)
 			{
 				if(!(_clazz instanceof JSClass))

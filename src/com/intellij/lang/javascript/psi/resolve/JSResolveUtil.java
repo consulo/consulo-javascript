@@ -281,8 +281,7 @@ public class JSResolveUtil
 
 	public static <T extends JSNamedElement & JSAttributeListOwner> SearchScope findUseScope(final T jsVariableBase)
 	{
-		PsiElement element = PsiTreeUtil.getParentOfType(jsVariableBase, JSFunction.class, JSCatchBlock.class, JSClass.class,
-				JSObjectLiteralExpression.class, JSFile.class);
+		PsiElement element = PsiTreeUtil.getParentOfType(jsVariableBase, JSFunction.class, JSCatchBlock.class, JSClass.class, JSObjectLiteralExpression.class, JSFile.class);
 		PsiElement scopeElement = element;
 
 		if(element instanceof JSFile)
@@ -379,8 +378,7 @@ public class JSResolveUtil
 		}
 		if(ARRAY_TYPE_NAME.equals(type))
 		{
-			if(ARGUMENTS_TYPE_NAME.equals(expectedType) || expectedType.startsWith(ARRAY_TYPE_NAME) /*Array[*/ || JSTypeEvaluateManager.isArrayType
-					(expectedType))
+			if(ARGUMENTS_TYPE_NAME.equals(expectedType) || expectedType.startsWith(ARRAY_TYPE_NAME) /*Array[*/ || JSTypeEvaluateManager.isArrayType(expectedType))
 			{
 				return true;
 			}
@@ -618,7 +616,7 @@ public class JSResolveUtil
 	public static Collection<JSQualifiedNamedElement> findElementsByName(String name, Project project, GlobalSearchScope scope)
 	{
 		final Set<JSQualifiedNamedElement> result = new HashSet<JSQualifiedNamedElement>();
-		Collection<JSQualifiedNamedElement> jsQualifiedNamedElements = StubIndex.getInstance().get(JSNameIndex.KEY, name, project, scope);
+		Collection<JSQualifiedNamedElement> jsQualifiedNamedElements = StubIndex.getElements(JSNameIndex.KEY, name, project, scope, JSQualifiedNamedElement.class);
 
 		for(JSQualifiedNamedElement e : jsQualifiedNamedElements)
 		{
@@ -668,8 +666,7 @@ public class JSResolveUtil
 		return jsParameters[0].getTypeString();
 	}
 
-	public static boolean processTopPackages(final ResolveProcessor processor, final ResolveState state, final Project project,
-			final GlobalSearchScope scope)
+	public static boolean processTopPackages(final ResolveProcessor processor, final ResolveState state, final Project project, final GlobalSearchScope scope)
 	{
 		return JSPackageIndex.processElementsInScope("", processor.getName(), new JSPackageIndex.PackageElementsProcessor()
 		{
@@ -707,8 +704,7 @@ public class JSResolveUtil
 				((ResolveProcessor) processor).specificallyAskingToResolveQualifiedNames());
 	}
 
-	public static boolean processTopLevelClasses(PsiScopeProcessor processor, ResolveState state, Project project, GlobalSearchScope scope,
-			boolean acceptOnlyClasses, boolean acceptQualifiedElements)
+	public static boolean processTopLevelClasses(PsiScopeProcessor processor, ResolveState state, Project project, GlobalSearchScope scope, boolean acceptOnlyClasses, boolean acceptQualifiedElements)
 	{
 		boolean result = true;
 		final String resolvedName = ((ResolveProcessor) processor).getName();
@@ -717,7 +713,7 @@ public class JSResolveUtil
 		{
 			for(String s : StubIndex.getInstance().getAllKeys(JSNameIndex.KEY, project))
 			{
-				for(JSQualifiedNamedElement e : StubIndex.getInstance().get(JSNameIndex.KEY, s, project, scope))
+				for(JSQualifiedNamedElement e : StubIndex.getElements(JSNameIndex.KEY, s, project, scope, JSQualifiedNamedElement.class))
 				{
 					if(ARGUMENTS_TYPE_NAME.equals(e.getName()))
 					{
@@ -742,7 +738,7 @@ public class JSResolveUtil
 		}
 		else
 		{
-			for(JSQualifiedNamedElement e : StubIndex.getInstance().get(JSQualifiedElementIndex.KEY, resolvedName, project, scope))
+			for(JSQualifiedNamedElement e : StubIndex.getElements(JSQualifiedElementIndex.KEY, resolvedName, project, scope, JSQualifiedNamedElement.class))
 			{
 				if(!e.getName().equals(resolvedName))
 				{
@@ -815,14 +811,13 @@ public class JSResolveUtil
 
 	private static final Key<ParameterizedCachedValue<Set<String>, JSElement>> ourCachedOpenedNsesKey = Key.create("opened.nses");
 
-	private static final UserDataCache<ParameterizedCachedValue<Set<String>, JSElement>, JSElement, Object> ourCachedOpenedNsesCache = new
-			UserDataCache<ParameterizedCachedValue<Set<String>, JSElement>, JSElement, Object>()
+	private static final UserDataCache<ParameterizedCachedValue<Set<String>, JSElement>, JSElement, Object> ourCachedOpenedNsesCache = new UserDataCache<ParameterizedCachedValue<Set<String>,
+			JSElement>, JSElement, Object>()
 	{
 		@Override
 		protected ParameterizedCachedValue<Set<String>, JSElement> compute(JSElement jsElement, Object p)
 		{
-			return CachedValuesManager.getManager(jsElement.getProject()).createParameterizedCachedValue(new ParameterizedCachedValueProvider<Set<String>,
-					JSElement>()
+			return CachedValuesManager.getManager(jsElement.getProject()).createParameterizedCachedValue(new ParameterizedCachedValueProvider<Set<String>, JSElement>()
 			{
 				@Override
 				public CachedValueProvider.Result<Set<String>> compute(JSElement context)
@@ -994,8 +989,7 @@ public class JSResolveUtil
 		treeWalkUp(processor, elt, lastParent, place, terminatingParent, null);
 	}
 
-	private static void treeWalkUp(final PsiScopeProcessor processor, PsiElement elt, PsiElement lastParent, PsiElement place,
-			PsiElement terminatingParent, PsiElement currentScope)
+	private static void treeWalkUp(final PsiScopeProcessor processor, PsiElement elt, PsiElement lastParent, PsiElement place, PsiElement terminatingParent, PsiElement currentScope)
 	{
 		if(elt == null)
 		{
@@ -1165,8 +1159,7 @@ public class JSResolveUtil
 		treeWalkUp(processor, parentElement, elt, place, terminatingParent, currentScope);
 	}
 
-	private static UserDataCache<CachedValue<List<JSVariable>>, XmlFile, Object> ourCachedPredefinedVars = new
-			UserDataCache<CachedValue<List<JSVariable>>, XmlFile, Object>()
+	private static UserDataCache<CachedValue<List<JSVariable>>, XmlFile, Object> ourCachedPredefinedVars = new UserDataCache<CachedValue<List<JSVariable>>, XmlFile, Object>()
 	{
 		@Override
 		protected CachedValue<List<JSVariable>> compute(final XmlFile xmlFile, Object p)
@@ -1420,9 +1413,8 @@ public class JSResolveUtil
 								resolvedElement != null &&
 								resolvedElement.getParent() == element))
 				{
-					if(reference instanceof JSReferenceExpression && ((((JSReferenceExpression) reference).getParent() == resolvedElement && resolvedElement
-							instanceof JSDefinitionExpression) || resolvedElement instanceof JSFunctionExpression && ((JSFunctionExpression) resolvedElement).getFunction
-							().findNameIdentifier().getTreeParent().getPsi() == reference))
+					if(reference instanceof JSReferenceExpression && ((((JSReferenceExpression) reference).getParent() == resolvedElement && resolvedElement instanceof JSDefinitionExpression) ||
+							resolvedElement instanceof JSFunctionExpression && ((JSFunctionExpression) resolvedElement).getFunction().findNameIdentifier().getTreeParent().getPsi() == reference))
 					{
 						return false; // do not include self to usages
 					}
@@ -1509,8 +1501,7 @@ public class JSResolveUtil
 				if((resolvedElement instanceof JSClass ||
 						resolvedElement instanceof JSNamespaceDeclaration ||
 						resolvedElement instanceof JSFunction ||
-						resolvedElement instanceof JSVariable) && ((element instanceof XmlFile && resolvedElement.getParent().getContainingFile() == element) ||
-						(element instanceof JSFile &&
+						resolvedElement instanceof JSVariable) && ((element instanceof XmlFile && resolvedElement.getParent().getContainingFile() == element) || (element instanceof JSFile &&
 						reference.getElement().getParent() != resolvedElement &&
 						isPublicEntityReferenceToJSFile(resolvedElement, element))))
 				{
@@ -1618,21 +1609,20 @@ public class JSResolveUtil
 	}
 
 	private static final Key<CachedValue<Map<PsiPolyVariantReference, ResolveResult[]>>> MY_RESOLVED_CACHED_KEY = Key.create("JS.AllResolvedKey");
-	private static UserDataCache<CachedValue<Map<PsiPolyVariantReference, ResolveResult[]>>, PsiFile,
-			Object> ourCachedResolveCache = new UserDataCache<CachedValue<Map<PsiPolyVariantReference, ResolveResult[]>>, PsiFile, Object>()
+	private static UserDataCache<CachedValue<Map<PsiPolyVariantReference, ResolveResult[]>>, PsiFile, Object> ourCachedResolveCache = new UserDataCache<CachedValue<Map<PsiPolyVariantReference,
+			ResolveResult[]>>, PsiFile, Object>()
 	{
 
 		@Override
 		protected CachedValue<Map<PsiPolyVariantReference, ResolveResult[]>> compute(PsiFile file, Object o)
 		{
-			return CachedValuesManager.getManager(file.getProject()).createCachedValue(new CachedValueProvider<Map<PsiPolyVariantReference,
-					ResolveResult[]>>()
+			return CachedValuesManager.getManager(file.getProject()).createCachedValue(new CachedValueProvider<Map<PsiPolyVariantReference, ResolveResult[]>>()
 			{
 				@Override
 				public Result<Map<PsiPolyVariantReference, ResolveResult[]>> compute()
 				{
-					return new Result<Map<PsiPolyVariantReference, ResolveResult[]>>(Collections.synchronizedMap(new HashMap<PsiPolyVariantReference,
-							ResolveResult[]>()), PsiModificationTracker.MODIFICATION_COUNT);
+					return new Result<Map<PsiPolyVariantReference, ResolveResult[]>>(Collections.synchronizedMap(new HashMap<PsiPolyVariantReference, ResolveResult[]>()),
+							PsiModificationTracker.MODIFICATION_COUNT);
 				}
 			}, false);
 		}
@@ -1701,8 +1691,7 @@ public class JSResolveUtil
 		final PsiElement parent = expr.getParent();
 		boolean parentIsVar;
 
-		return (((parentIsVar = (parent instanceof JSVariable)) || parent instanceof JSFunction) && parent.getNode().findChildByType(JSTokenTypes.COLON)
-				!= null &&
+		return (((parentIsVar = (parent instanceof JSVariable)) || parent instanceof JSFunction) && parent.getNode().findChildByType(JSTokenTypes.COLON) != null &&
 				(!parentIsVar || ((JSVariable) parent).getInitializer() != expr)) ||
 				parent instanceof JSAttributeList ||
 				parent instanceof JSGenericSignature ||
@@ -1719,8 +1708,7 @@ public class JSResolveUtil
 				parent instanceof JSUseNamespaceDirective ||
 				(parent instanceof JSBinaryExpression &&
 						((JSBinaryExpression) parent).getROperand() == expr &&
-						(((JSBinaryExpression) parent).getOperationSign() == JSTokenTypes.IS_KEYWORD || ((JSBinaryExpression) parent).getOperationSign() ==
-								JSTokenTypes.AS_KEYWORD));
+						(((JSBinaryExpression) parent).getOperationSign() == JSTokenTypes.IS_KEYWORD || ((JSBinaryExpression) parent).getOperationSign() == JSTokenTypes.AS_KEYWORD));
 	}
 
 	public static PsiElement findClassByQName(final String link, final @NotNull PsiElement context)
@@ -1750,8 +1738,7 @@ public class JSResolveUtil
 		GlobalSearchScope allScope = (module != null ? module : project).getUserData(MY_SCOPE_KEY);
 		if(allScope == null)
 		{
-			final GlobalSearchScope searchScope = module != null ? GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module) : GlobalSearchScope
-					.allScope(project);
+			final GlobalSearchScope searchScope = module != null ? GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module) : GlobalSearchScope.allScope(project);
 			allScope = new GlobalSearchScope()
 			{
 				@Override
@@ -1796,14 +1783,13 @@ public class JSResolveUtil
 
 			final PsiElement[] result = new PsiElement[1];
 
-			final Collection<JSQualifiedNamedElement> candidates = StubIndex.getInstance().get(JSQualifiedElementIndex.KEY, link,
-					index.getProject(), searchScope);
+			final Collection<JSQualifiedNamedElement> candidates = StubIndex.getElements(JSQualifiedElementIndex.KEY, link, index.getProject(), searchScope, JSQualifiedNamedElement.class);
 			for(JSQualifiedNamedElement clazz : candidates)
 			{
 				if(link.equals(clazz.getQualifiedName()))
 				{
 					if("Object".equals(link) && !JavaScriptIndex.ECMASCRIPT_JS2.equals(clazz.getContainingFile().getVirtualFile().getName()) // object from swf do
-					// not contain necessary members!
+						// not contain necessary members!
 							)
 					{
 						continue;
@@ -1844,8 +1830,7 @@ public class JSResolveUtil
 	}
 
 	@Nullable
-	private static PsiElement findClassByQNameViaHelper(final String link, final JavaScriptIndex index, final String className,
-			final GlobalSearchScope scope)
+	private static PsiElement findClassByQNameViaHelper(final String link, final JavaScriptIndex index, final String className, final GlobalSearchScope scope)
 	{
 		for(JSResolveHelper helper : Extensions.getExtensions(JSResolveHelper.EP_NAME))
 		{
@@ -2207,8 +2192,7 @@ public class JSResolveUtil
 
 	//public static Object ANY_NAMESPACE_MARKER = new Object();
 
-	public static boolean processOverrides(final PsiElement jsClass, final OverrideHandler handler, String name, final Object namespace,
-			final PsiElement context)
+	public static boolean processOverrides(final PsiElement jsClass, final OverrideHandler handler, String name, final Object namespace, final PsiElement context)
 	{
 		JSClass clazz = (JSClass) jsClass;
 		final ResolveProcessor resolveProcessor = new ResolveProcessor(name, context)
@@ -2231,8 +2215,8 @@ public class JSResolveUtil
 					return false;
 				}
 
-				if((namespace == null && attributeList != null && attributeList.getNamespace() != null) || (namespace != null && (attributeList == null ||
-						!namespace.equals(attributeList.getNamespace()))))
+				if((namespace == null && attributeList != null && attributeList.getNamespace() != null) || (namespace != null && (attributeList == null || !namespace.equals(attributeList
+						.getNamespace()))))
 				{
 					return true;
 				}
@@ -2323,8 +2307,7 @@ public class JSResolveUtil
 	public static boolean isPlaceWhereNsCanBe(final PsiElement parent)
 	{
 		final PsiElement grandParent = parent.getParent();
-		return grandParent instanceof JSClass || grandParent instanceof JSPackageStatement || (grandParent instanceof JSFile && grandParent.getContext()
-				== null);
+		return grandParent instanceof JSClass || grandParent instanceof JSPackageStatement || (grandParent instanceof JSFile && grandParent.getContext() == null);
 	}
 
 	public static
@@ -2377,8 +2360,7 @@ public class JSResolveUtil
 		return doProcessMetaAttributesForClass(unwrapProxy(jsClass), processor, null, true);
 	}
 
-	private static boolean doProcessMetaAttributesForClass(final PsiElement jsClass, final MetaDataProcessor processor, PsiElement lastParent,
-			boolean forward)
+	private static boolean doProcessMetaAttributesForClass(final PsiElement jsClass, final MetaDataProcessor processor, PsiElement lastParent, boolean forward)
 	{
 		if(jsClass instanceof JSClass)
 		{
@@ -2471,8 +2453,7 @@ public class JSResolveUtil
 		return true;
 	}
 
-	public static boolean processAttributeList(final MetaDataProcessor processor, final PsiElement el, final JSAttributeList attributeList,
-			boolean forward)
+	public static boolean processAttributeList(final MetaDataProcessor processor, final PsiElement el, final JSAttributeList attributeList, boolean forward)
 	{
 		final PsiElement[] elements = getStubbedChildren(attributeList);
 		for(int i = forward ? 0 : elements.length - 1; i < elements.length && i >= 0; i += (forward ? 1 : -1))
@@ -2507,8 +2488,7 @@ public class JSResolveUtil
 		return true;
 	}
 
-	private static boolean processIncludeDirective(final MetaDataProcessor processor, final PsiElement lastParent, final JSIncludeDirective el,
-			boolean forward)
+	private static boolean processIncludeDirective(final MetaDataProcessor processor, final PsiElement lastParent, final JSIncludeDirective el, boolean forward)
 	{
 		final PsiFile file = el.resolveFile();
 
@@ -2573,8 +2553,7 @@ public class JSResolveUtil
 		return null;
 	}
 
-	public static boolean processDeclarationsInScope(final JSElement _scope, final PsiScopeProcessor processor, final ResolveState state,
-			final PsiElement lastParent, final PsiElement place)
+	public static boolean processDeclarationsInScope(final JSElement _scope, final PsiScopeProcessor processor, final ResolveState state, final PsiElement lastParent, final PsiElement place)
 	{
 		JSElement scope = PsiUtilBase.getOriginalElement(_scope, _scope.getClass());
 		if(scope == null)
@@ -2612,8 +2591,7 @@ public class JSResolveUtil
 		return result;
 	}
 
-	private static boolean dispatchResolve(final PsiScopeProcessor processor, final ResolveState state, final PsiElement place, boolean result,
-			final Object o)
+	private static boolean dispatchResolve(final PsiScopeProcessor processor, final ResolveState state, final PsiElement place, boolean result, final Object o)
 	{
 		if(o instanceof JSElement[])
 		{
@@ -2985,8 +2963,7 @@ public class JSResolveUtil
 			}
 			else
 			{
-				qualifyingExpression = expr instanceof JSReferenceExpression ? JSSymbolUtil.findReferenceExpressionUsedForClassExtending((JSReferenceExpression)
-						expr) : expr;
+				qualifyingExpression = expr instanceof JSReferenceExpression ? JSSymbolUtil.findReferenceExpressionUsedForClassExtending((JSReferenceExpression) expr) : expr;
 			}
 		}
 
@@ -3010,8 +2987,7 @@ public class JSResolveUtil
 					if(parentContainerParent instanceof JSAssignmentExpression)
 					{
 						final JSExpression jsExpression = ((JSAssignmentExpression) parentContainerParent).getLOperand();
-						final JSElement functionExpressionName = jsExpression instanceof JSDefinitionExpression ? ((JSDefinitionExpression) jsExpression)
-								.getExpression() : null;
+						final JSElement functionExpressionName = jsExpression instanceof JSDefinitionExpression ? ((JSDefinitionExpression) jsExpression).getExpression() : null;
 						qualifyingExpression = functionExpressionName;
 
 						if(functionExpressionName instanceof JSReferenceExpression)
@@ -3037,8 +3013,8 @@ public class JSResolveUtil
 								{
 									String referencedName;
 
-									if(((JSReferenceExpression) functionExpressionNameQualifier).getQualifier() == null && ((referencedName = ((JSReferenceExpression)
-											functionExpressionName).getReferencedName()) == null ||
+									if(((JSReferenceExpression) functionExpressionNameQualifier).getQualifier() == null && ((referencedName = ((JSReferenceExpression) functionExpressionName)
+											.getReferencedName()) == null ||
 											referencedName.length() == 0 ||
 											!Character.isUpperCase(referencedName.charAt(0))))
 									{
@@ -3050,8 +3026,7 @@ public class JSResolveUtil
 					}
 					else if(parentContainerParent instanceof JSProperty)
 					{
-						final JSElement element = PsiTreeUtil.getParentOfType(parentContainerParent, JSVariable.class, JSAssignmentExpression.class,
-								JSArgumentList.class);
+						final JSElement element = PsiTreeUtil.getParentOfType(parentContainerParent, JSVariable.class, JSAssignmentExpression.class, JSArgumentList.class);
 						if(element instanceof JSVariable)
 						{
 							qualifyingExpression = element;
@@ -3071,8 +3046,7 @@ public class JSResolveUtil
 					}
 					else if(parentContainerParent instanceof JSNewExpression)
 					{
-						final JSElement element = PsiTreeUtil.getParentOfType(parentContainerParent, JSVariable.class, JSAssignmentExpression.class,
-								JSArgumentList.class);
+						final JSElement element = PsiTreeUtil.getParentOfType(parentContainerParent, JSVariable.class, JSAssignmentExpression.class, JSArgumentList.class);
 
 						if(element instanceof JSVariable)
 						{
@@ -3339,9 +3313,8 @@ public class JSResolveUtil
 		return result;
 	}
 
-	private static final TokenSet ourStubbedFilter = TokenSet.create(JSElementTypes.CLASS, JSElementTypes.VAR_STATEMENT,
-			JSElementTypes.FUNCTION_DECLARATION, JSElementTypes.ATTRIBUTE_LIST, JSElementTypes.INCLUDE_DIRECTIVE, JSElementTypes.ATTRIBUTE,
-			JSElementTypes.PACKAGE_STATEMENT);
+	private static final TokenSet ourStubbedFilter = TokenSet.create(JSElementTypes.CLASS, JSElementTypes.VAR_STATEMENT, JSElementTypes.FUNCTION_DECLARATION, JSElementTypes.ATTRIBUTE_LIST,
+			JSElementTypes.INCLUDE_DIRECTIVE, JSElementTypes.ATTRIBUTE, JSElementTypes.PACKAGE_STATEMENT);
 
 	private static class ImplicitJSVariableImpl extends LightElement implements JSVariable
 	{

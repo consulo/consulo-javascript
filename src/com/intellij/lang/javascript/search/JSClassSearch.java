@@ -181,7 +181,7 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 	}
 
 	protected boolean processDirectInheritors(final JSClass superClass, final Processor<JSClass> consumer, final boolean checkDeep,
-			Set<JSClass> processed, GlobalSearchScope scope)
+			Set<JSClass> processed, final GlobalSearchScope scope)
 	{
 		if(processed != null)
 		{
@@ -203,31 +203,48 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 			return true;
 		}
 
-		final Collection<JSClass> candidates = StubIndex.getInstance().get(getIndexKey(), name, project, scope);
+		final Set<JSClass> temp = processed;
+		Processor<JSClass> processor = new Processor<JSClass>()
+		{
+			@Override
+			public boolean process(JSClass candidate)
+			{
+				final JSClass[] classes = getSupers(candidate);
+				if(classes != null)
+				{
+					for(JSClass superClassCandidate : classes)
+					{
+						if(superClassCandidate.isEquivalentTo(superClass))
+						{
+							if(!consumer.process(candidate))
+							{
+								return false;
+							}
+							if(checkDeep && !processDirectInheritors(candidate, consumer, checkDeep, temp, scope))
+							{
+								return false;
+							}
+						}
+					}
+				}
+
+				return true;
+			}
+		};
+
+		if(!StubIndex.getInstance().processElements(getIndexKey(), name, project, scope, JSClass.class, processor))
+		{
+			return false;
+		}
 
 		for(JSClassInheritorsProvider provider : Extensions.getExtensions(JSClassInheritorsProvider.EP_NAME))
 		{
-			candidates.addAll(getInheritors(provider, name, project, scope));
-		}
-
-		for(JSClass candidate : candidates)
-		{
-			final JSClass[] classes = getSupers(candidate);
-			if(classes != null)
+			Collection<JSClass> inheritors = getInheritors(provider, name, project, scope);
+			for(JSClass inheritor : inheritors)
 			{
-				for(JSClass superClassCandidate : classes)
+				if(!processor.process(inheritor))
 				{
-					if(superClassCandidate.isEquivalentTo(superClass))
-					{
-						if(!consumer.process(candidate))
-						{
-							return false;
-						}
-						if(checkDeep && !processDirectInheritors(candidate, consumer, checkDeep, processed, scope))
-						{
-							return false;
-						}
-					}
+					return false;
 				}
 			}
 		}
