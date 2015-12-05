@@ -23,7 +23,6 @@ import com.intellij.lang.javascript.DialectOptionHolder;
 import com.intellij.lang.javascript.JSFlexAdapter;
 import com.intellij.lang.javascript.JSONLexer;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.JavascriptLanguage;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
@@ -33,7 +32,7 @@ public class JSONNamesValidator extends JSNamesValidator
 {
 	public JSONNamesValidator()
 	{
-		super(JavascriptLanguage.DIALECT_OPTION_HOLDER);
+		super(DialectOptionHolder.dummy());
 	}
 
 	@Override

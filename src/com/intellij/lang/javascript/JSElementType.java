@@ -18,6 +18,7 @@ package com.intellij.lang.javascript;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.psi.tree.IElementType;
 
 /**
@@ -30,6 +31,6 @@ public class JSElementType extends IElementType
 {
 	public JSElementType(@NonNls @NotNull String debugName)
 	{
-		super(debugName, JavascriptLanguage.INSTANCE);
+		super(debugName, JavaScriptLanguage.INSTANCE);
 	}
 }

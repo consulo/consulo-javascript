@@ -22,6 +22,11 @@ package com.intellij.lang.javascript;
 @Deprecated
 public final class DialectOptionHolder
 {
+	public static DialectOptionHolder dummy()
+	{
+		return new DialectOptionHolder(false, false);
+	}
+
 	public final boolean isECMAL4Level;
 	public final boolean isJavaScript1_6_OrBetter;
 	public final boolean hasE4X;

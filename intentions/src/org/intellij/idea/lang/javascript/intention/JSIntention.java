@@ -18,9 +18,9 @@ package org.intellij.idea.lang.javascript.intention;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
 import com.intellij.lang.Language;
-import com.intellij.lang.javascript.JavascriptLanguage;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
@@ -70,7 +70,7 @@ public abstract class JSIntention extends PsiElementBaseIntentionAction
 		}
 
 		final Language language = element.getLanguage();
-		if(language != Language.ANY && language != JavascriptLanguage.INSTANCE)
+		if(language != Language.ANY && language != JavaScriptLanguage.INSTANCE)
 		{
 			return null;
 		}

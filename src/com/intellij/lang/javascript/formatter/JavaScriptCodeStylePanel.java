@@ -1,7 +1,7 @@
 package com.intellij.lang.javascript.formatter;
 
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.application.options.TabbedLanguageCodeStylePanel;
-import com.intellij.lang.javascript.JavascriptLanguage;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 
 /**
@@ -12,7 +12,7 @@ public class JavaScriptCodeStylePanel extends TabbedLanguageCodeStylePanel
 {
 	public JavaScriptCodeStylePanel(CodeStyleSettings currentSettings, CodeStyleSettings cloneSettings)
 	{
-		super(JavascriptLanguage.INSTANCE, currentSettings, cloneSettings);
+		super(JavaScriptLanguage.INSTANCE, currentSettings, cloneSettings);
 	}
 
 	@Override

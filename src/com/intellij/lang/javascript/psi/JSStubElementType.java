@@ -21,7 +21,7 @@ package com.intellij.lang.javascript.psi;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import com.intellij.lang.javascript.JavascriptLanguage;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.lang.javascript.psi.stubs.JSStubElement;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.IndexSink;
@@ -32,7 +32,7 @@ public abstract class JSStubElementType<StubT extends JSStubElement<PsiT>, PsiT 
 {
 	public JSStubElementType(@NonNls String debugName)
 	{
-		super(debugName, JavascriptLanguage.INSTANCE);
+		super(debugName, JavaScriptLanguage.INSTANCE);
 	}
 
 	@Override

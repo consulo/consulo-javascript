@@ -20,10 +20,10 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JavaScriptFileType;
-import com.intellij.lang.javascript.JavascriptLanguage;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.JSPackageStatement;
@@ -52,7 +52,7 @@ public class JSFileImpl extends PsiFileBase implements JSFile
 {
 	public JSFileImpl(FileViewProvider fileViewProvider)
 	{
-		super(fileViewProvider, JavascriptLanguage.INSTANCE);
+		super(fileViewProvider, JavaScriptLanguage.INSTANCE);
 	}
 
 	@Override

@@ -19,6 +19,7 @@ package com.intellij.lang.javascript;
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 
 /**
@@ -32,7 +33,7 @@ public class JavaScriptFileType extends LanguageFileType
 
 	public JavaScriptFileType()
 	{
-		super(JavascriptLanguage.INSTANCE);
+		super(JavaScriptLanguage.INSTANCE);
 	}
 
 	@Override

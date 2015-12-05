@@ -30,12 +30,12 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.extapi.psi.PsiElementBase;
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.javascript.JSElementTypes;
-import com.intellij.lang.javascript.JavascriptLanguage;
 import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.index.JSNamespace;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
@@ -991,7 +991,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 		@NotNull
 		public Language getLanguage()
 		{
-			return JavascriptLanguage.INSTANCE;
+			return JavaScriptLanguage.INSTANCE;
 		}
 
 		@RequiredReadAction

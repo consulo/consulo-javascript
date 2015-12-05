@@ -3,8 +3,8 @@ package org.mustbe.consulo.javascript.ide.hightlight;
 import org.consulo.fileTypes.LanguageVersionableSyntaxHighlighterFactory;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.javascript.lang.BaseJavaScriptLanguageVersion;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.lang.LanguageVersion;
-import com.intellij.lang.javascript.JavascriptLanguage;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 
 /**
@@ -15,7 +15,7 @@ public class JavaScriptSyntaxHighlightFactory extends LanguageVersionableSyntaxH
 {
 	public JavaScriptSyntaxHighlightFactory()
 	{
-		super(JavascriptLanguage.INSTANCE);
+		super(JavaScriptLanguage.INSTANCE);
 	}
 
 	@NotNull

@@ -17,6 +17,7 @@
 package org.mustbe.consulo.javascript.lang.psi.impl.fragment;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import org.mustbe.consulo.javascript.lang.parsing.ExpressionParsing;
 import org.mustbe.consulo.javascript.lang.parsing.JavaScriptParsingContext;
 import com.intellij.lang.ASTNode;
@@ -26,7 +27,6 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilderFactory;
 import com.intellij.lang.PsiParser;
 import com.intellij.lang.javascript.JavaScriptFileType;
-import com.intellij.lang.javascript.JavascriptLanguage;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -63,7 +63,7 @@ public class JavaScriptFragmentFactory
 		}
 	};
 
-	private static final IFileElementType ourExpressionFileElementType = new IFileElementType("CSHARP_EXPRESSION_FRAGMENT", JavascriptLanguage.INSTANCE)
+	private static final IFileElementType ourExpressionFileElementType = new IFileElementType("CSHARP_EXPRESSION_FRAGMENT", JavaScriptLanguage.INSTANCE)
 	{
 		@Override
 		protected ASTNode doParseContents(@NotNull final ASTNode chameleon, @NotNull final PsiElement psi)

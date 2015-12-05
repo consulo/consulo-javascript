@@ -46,7 +46,7 @@ public class JavascriptParserDefinition implements ParserDefinition
 	@NotNull
 	public Lexer createLexer(Project project, LanguageVersion languageVersion)
 	{
-		return new JavaScriptParsingLexer(JavascriptLanguage.DIALECT_OPTION_HOLDER);
+		return new JavaScriptParsingLexer(DialectOptionHolder.dummy());
 	}
 
 	@NotNull

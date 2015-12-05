@@ -20,8 +20,8 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.lang.javascript.JavaScriptIcons;
-import com.intellij.lang.javascript.JavascriptLanguage;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 
 /**
@@ -34,7 +34,7 @@ public class JsonFileType extends LanguageFileType
 
 	private JsonFileType()
 	{
-		super(JavascriptLanguage.INSTANCE);
+		super(JavaScriptLanguage.INSTANCE);
 	}
 
 	@NotNull
