@@ -7,7 +7,6 @@ import com.intellij.lang.LanguageVersionWithDefinition;
 import com.intellij.lang.PsiParser;
 import com.intellij.lang.javascript.DialectOptionHolder;
 import com.intellij.lang.javascript.JavaScriptParsingLexer;
-import com.intellij.lang.javascript.JavascriptLanguage;
 import com.intellij.lang.javascript.highlighting.JSHighlighter;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
@@ -18,7 +17,7 @@ import com.intellij.psi.PsiElement;
  * @author VISTALL
  * @since 05.03.2015
  */
-public class EcmaScript4JavaScriptVersion extends BaseJavaScriptLanguageVersion implements LanguageVersionWithDefinition<JavascriptLanguage>
+public class EcmaScript4JavaScriptVersion extends BaseJavaScriptLanguageVersion implements LanguageVersionWithDefinition<JavaScriptLanguage>
 {
 	private final DialectOptionHolder myDialectOptionHolder = new DialectOptionHolder(true, false);
 

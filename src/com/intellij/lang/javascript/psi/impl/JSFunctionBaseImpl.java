@@ -18,11 +18,11 @@ package com.intellij.lang.javascript.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.JavascriptLanguage;
 import com.intellij.lang.javascript.psi.JSAttributeList;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSElement;
@@ -335,7 +335,7 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
 	private static boolean isInJS(final JSReferenceExpression node)
 	{
 		final PsiElement parent = node.getParent();
-		if(parent != null && !(parent.getLanguage() instanceof JavascriptLanguage))
+		if(parent != null && !(parent.getLanguage() instanceof JavaScriptLanguage))
 		{
 			return false;
 		}

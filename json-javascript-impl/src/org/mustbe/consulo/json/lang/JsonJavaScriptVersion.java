@@ -3,13 +3,13 @@ package org.mustbe.consulo.json.lang;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.javascript.lang.BaseJavaScriptLanguageVersion;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import org.mustbe.consulo.json.JsonFileType;
 import com.intellij.lang.LanguageVersionWithDefinition;
 import com.intellij.lang.PsiParser;
 import com.intellij.lang.javascript.DialectOptionHolder;
 import com.intellij.lang.javascript.JSONLexer;
 import com.intellij.lang.javascript.JavaScriptParsingLexer;
-import com.intellij.lang.javascript.JavascriptLanguage;
 import com.intellij.lang.javascript.highlighting.JSHighlighter;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
@@ -20,7 +20,7 @@ import com.intellij.psi.PsiElement;
  * @author VISTALL
  * @since 05.03.2015
  */
-public class JsonJavaScriptVersion extends BaseJavaScriptLanguageVersion implements LanguageVersionWithDefinition<JavascriptLanguage>
+public class JsonJavaScriptVersion extends BaseJavaScriptLanguageVersion implements LanguageVersionWithDefinition<JavaScriptLanguage>
 {
 	private DialectOptionHolder myDialectOptionHolder = new DialectOptionHolder(false, false);
 

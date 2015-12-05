@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,26 @@
  * limitations under the License.
  */
 
-package com.intellij.lang.javascript;
+package org.mustbe.consulo.javascript.lang;
 
-import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
+import com.intellij.lang.Language;
 
 /**
- * User: max
- * Date: Jan 27, 2005
- * Time: 6:03:49 PM
+ * @author VISTALL
+ * @since 05.12.2015
  */
-@Deprecated
-public class JavascriptLanguage
+public class JavaScriptLanguage extends Language
 {
-	@Deprecated
-	public static final DialectOptionHolder DIALECT_OPTION_HOLDER = new DialectOptionHolder(false, false);
-	public static final JavaScriptLanguage INSTANCE = JavaScriptLanguage.INSTANCE;
+	public static final JavaScriptLanguage INSTANCE = new JavaScriptLanguage();
+
+	public JavaScriptLanguage()
+	{
+		super("JavaScript", "text/javascript", "application/javascript");
+	}
+
+	@Override
+	public boolean isCaseSensitive()
+	{
+		return true;
+	}
 }

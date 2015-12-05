@@ -4,12 +4,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.actionscript.ActionScriptFileType;
 import org.mustbe.consulo.javascript.lang.BaseJavaScriptLanguageVersion;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import org.mustbe.consulo.javascript.lang.parsing.EcmaScript4Parser;
 import com.intellij.lang.LanguageVersionWithDefinition;
 import com.intellij.lang.PsiParser;
 import com.intellij.lang.javascript.DialectOptionHolder;
 import com.intellij.lang.javascript.JavaScriptParsingLexer;
-import com.intellij.lang.javascript.JavascriptLanguage;
 import com.intellij.lang.javascript.highlighting.JSHighlighter;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
@@ -20,7 +20,7 @@ import com.intellij.psi.PsiElement;
  * @author VISTALL
  * @since 06.04.2015
  */
-public class ActionScriptLanguageVersion extends BaseJavaScriptLanguageVersion implements LanguageVersionWithDefinition<JavascriptLanguage>
+public class ActionScriptLanguageVersion extends BaseJavaScriptLanguageVersion implements LanguageVersionWithDefinition<JavaScriptLanguage>
 {
 	private final DialectOptionHolder myDialectOptionHolder = new DialectOptionHolder(true, false);
 

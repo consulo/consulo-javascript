@@ -5,7 +5,6 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.LanguageVersionWithDefinition;
 import com.intellij.lang.javascript.DialectOptionHolder;
 import com.intellij.lang.javascript.JavaScriptParsingLexer;
-import com.intellij.lang.javascript.JavascriptLanguage;
 import com.intellij.lang.javascript.highlighting.JSHighlighter;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
@@ -16,7 +15,7 @@ import com.intellij.psi.PsiElement;
  * @author VISTALL
  * @since 05.03.2015
  */
-public class DefaultJavaScriptLanguageVersion extends BaseJavaScriptLanguageVersion implements LanguageVersionWithDefinition<JavascriptLanguage>
+public class DefaultJavaScriptLanguageVersion extends BaseJavaScriptLanguageVersion implements LanguageVersionWithDefinition<JavaScriptLanguage>
 {
 	public DefaultJavaScriptLanguageVersion()
 	{

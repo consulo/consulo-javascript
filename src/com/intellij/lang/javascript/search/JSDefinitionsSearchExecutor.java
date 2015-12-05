@@ -16,8 +16,7 @@
 
 package com.intellij.lang.javascript.search;
 
-import com.intellij.lang.Language;
-import com.intellij.lang.javascript.JavascriptLanguage;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.psi.JSClass;
@@ -43,7 +42,7 @@ class JSDefinitionsSearchExecutor implements QueryExecutor<PsiElement, PsiElemen
 	@Override
 	public boolean execute(final PsiElement sourceElement, final Processor<PsiElement> consumer)
 	{
-		if(sourceElement instanceof PsiNamedElement && sourceElement.getLanguage().isKindOf(Language.findInstance(JavascriptLanguage.class)))
+		if(sourceElement instanceof PsiNamedElement && sourceElement.getLanguage().isKindOf(JavaScriptLanguage.INSTANCE))
 		{
 			ReferencesSearch.search(sourceElement, GlobalSearchScope.projectScope(sourceElement.getProject())).forEach(new Processor<PsiReference>()
 			{

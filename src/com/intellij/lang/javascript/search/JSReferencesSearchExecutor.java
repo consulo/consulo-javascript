@@ -16,9 +16,8 @@
 
 package com.intellij.lang.javascript.search;
 
-import com.intellij.lang.Language;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
-import com.intellij.lang.javascript.JavascriptLanguage;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNamedElement;
@@ -43,7 +42,7 @@ class JSReferencesSearchExecutor implements QueryExecutor<PsiReference, Referenc
 		final PsiElement sourceElement = queryParameters.getElementToSearch();
 
 		if(sourceElement instanceof PsiNamedElement &&
-				sourceElement.getLanguage().isKindOf(Language.findInstance(JavascriptLanguage.class)) &&
+				sourceElement.getLanguage().isKindOf(JavaScriptLanguage.INSTANCE) &&
 				queryParameters.getScope() instanceof GlobalSearchScope &&
 				!(sourceElement.getUseScope() instanceof LocalSearchScope))
 		{
