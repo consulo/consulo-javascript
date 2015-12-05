@@ -32,6 +32,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XNamedValue;
 import com.intellij.xdebugger.frame.XValueChildrenList;
+import com.intellij.xdebugger.frame.XValueModifier;
 import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.XValuePlace;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
@@ -59,6 +60,54 @@ public class V8VariableValue extends XNamedValue
 	{
 		super(jsVariable.getName());
 		myJsVariable = jsVariable;
+	}
+
+	@Nullable
+	@Override
+	public XValueModifier getModifier()
+	{
+		final JsValue value = myJsVariable.getValue();
+		if(!myJsVariable.isMutable())
+		{
+			return null;
+		}
+		final JsValue.Type valueType = value.getType();
+		switch(valueType)
+		{
+			case TYPE_NUMBER:
+			case TYPE_NULL:
+			case TYPE_STRING:
+			case TYPE_BOOLEAN:
+				return new XValueModifier()
+				{
+					@Override
+					public void setValue(@NotNull String expression, @NotNull final XModificationCallback callback)
+					{
+						myJsVariable.setValue(expression, new JsVariable.SetValueCallback()
+						{
+							@Override
+							public void success()
+							{
+								callback.valueModified();
+							}
+
+							@Override
+							public void failure(String s)
+							{
+								callback.errorOccurred(s);
+							}
+						});
+					}
+
+					@Override
+					public void calculateInitialValueEditorText(XInitialValueCallback callback)
+					{
+						callback.setValue(value.getValueString());
+					}
+				};
+			default:
+				return null;
+		}
 	}
 
 	@Override

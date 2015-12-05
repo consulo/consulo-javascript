@@ -30,6 +30,7 @@ import org.chromium.sdk.StandaloneVm;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.Exported;
+import org.mustbe.consulo.javascript.lang.psi.impl.fragment.JavaScriptFragmentFactory;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.process.ProcessHandler;
@@ -118,9 +119,9 @@ public class V8DebugProcess extends XDebugProcess
 		return new XDebuggerEditorsProviderBase()
 		{
 			@Override
-			protected PsiFile createExpressionCodeFragment(@NotNull Project project, @NotNull String s, @Nullable PsiElement element, boolean b)
+			protected PsiFile createExpressionCodeFragment(@NotNull Project project, @NotNull String text, @Nullable PsiElement element, boolean b)
 			{
-				return null;
+				return JavaScriptFragmentFactory.createExpressionFragment(project, text);
 			}
 
 			@NotNull
