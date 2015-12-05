@@ -97,14 +97,6 @@ public class V8DebugProcess extends XDebugProcess
 	public void attach() throws Exception
 	{
 		myVm.attach(new V8DebugEventListener(this));
-		ApplicationManager.getApplication().runReadAction(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				getSession().initBreakpoints();
-			}
-		});
 	}
 
 	@Nullable

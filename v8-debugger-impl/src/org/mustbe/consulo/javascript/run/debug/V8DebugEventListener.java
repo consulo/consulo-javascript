@@ -46,6 +46,14 @@ public class V8DebugEventListener implements DebugEventListener
 		if(myFirstPausing)
 		{
 			myFirstPausing = false;
+			ApplicationManager.getApplication().runReadAction(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					myV8DebugProcess.getSession().initBreakpoints();
+				}
+			});
 			debugContext.continueVm(DebugContext.StepAction.CONTINUE, 0, null, null);
 			return;
 		}
