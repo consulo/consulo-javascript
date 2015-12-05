@@ -50,7 +50,7 @@ import com.intellij.lang.parameterInfo.UpdateParameterInfoContext;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.ResolveResult;
-import com.intellij.psi.search.searches.DefinitionsSearch;
+import com.intellij.psi.search.searches.DefinitionsScopedSearch;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.ArrayUtil;
 
@@ -91,7 +91,7 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 				final List<JSFunction> lookupItems = new ArrayList<JSFunction>();
 				Set<String> availableSignatures = new HashSet<String>();
 
-				for(PsiElement el : DefinitionsSearch.search(originalFunction))
+				for(PsiElement el : DefinitionsScopedSearch.search(originalFunction))
 				{
 					doAddSignature(lookupItems, availableSignatures, el);
 				}
