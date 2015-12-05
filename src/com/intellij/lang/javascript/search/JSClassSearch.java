@@ -21,9 +21,8 @@ import gnu.trove.THashSet;
 import java.util.Collection;
 import java.util.Set;
 
+import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import com.intellij.lang.javascript.psi.JSClass;
-import com.intellij.lang.javascript.psi.stubs.JSImplementedInterfacesIndex;
-import com.intellij.lang.javascript.psi.stubs.JSSuperClassIndex;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -97,7 +96,7 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 			@Override
 			protected StubIndexKey<String, JSClass> getIndexKey()
 			{
-				return JSImplementedInterfacesIndex.KEY;
+				return JavaScriptIndexKeys.IMPLEMENTED_INDEX;
 			}
 
 			@Override
@@ -154,7 +153,7 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 			@Override
 			protected StubIndexKey<String, JSClass> getIndexKey()
 			{
-				return JSSuperClassIndex.KEY;
+				return JavaScriptIndexKeys.EXTENDS_INDEX;
 			}
 
 			@Override

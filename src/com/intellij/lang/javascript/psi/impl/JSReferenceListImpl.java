@@ -21,6 +21,7 @@ import java.util.Collection;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -28,11 +29,11 @@ import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.lang.javascript.psi.JSReferenceList;
 import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
-import com.intellij.lang.javascript.psi.stubs.JSQualifiedElementIndex;
 import com.intellij.lang.javascript.psi.stubs.JSReferenceListStub;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.util.ArrayUtil;
 
@@ -46,9 +47,9 @@ public class JSReferenceListImpl extends JSStubElementImpl<JSReferenceListStub> 
 		super(node);
 	}
 
-	public JSReferenceListImpl(final JSReferenceListStub stub)
+	public JSReferenceListImpl(final JSReferenceListStub stub, IStubElementType stubElementType)
 	{
-		super(stub, stub.getStubType());
+		super(stub, stubElementType);
 	}
 
 	@Override
@@ -114,7 +115,7 @@ public class JSReferenceListImpl extends JSStubElementImpl<JSReferenceListStub> 
 
 			text = JSImportHandlingUtil.resolveTypeName(text, this);
 
-			final Collection<JSQualifiedNamedElement> candidates = StubIndex.getElements(JSQualifiedElementIndex.KEY, text, project, getResolveScope(), JSQualifiedNamedElement.class);
+			final Collection<JSQualifiedNamedElement> candidates = StubIndex.getElements(JavaScriptIndexKeys.ELEMENTS_BY_QNAME, text, project, getResolveScope(), JSQualifiedNamedElement.class);
 			for(JSQualifiedNamedElement _clazz : candidates)
 			{
 				if(!(_clazz instanceof JSClass))

@@ -62,7 +62,7 @@ import com.intellij.util.ArrayFactory;
 import com.intellij.util.ArrayUtil;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
 public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> implements JSClass
 {

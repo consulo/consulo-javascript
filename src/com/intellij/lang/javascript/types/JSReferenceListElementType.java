@@ -22,15 +22,14 @@ import java.io.IOException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSReferenceList;
 import com.intellij.lang.javascript.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.impl.JSReferenceListImpl;
-import com.intellij.lang.javascript.psi.stubs.JSImplementedInterfacesIndex;
 import com.intellij.lang.javascript.psi.stubs.JSReferenceListStub;
-import com.intellij.lang.javascript.psi.stubs.JSSuperClassIndex;
 import com.intellij.lang.javascript.psi.stubs.impl.JSReferenceListStubImpl;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
@@ -59,11 +58,11 @@ public class JSReferenceListElementType extends JSStubElementType<JSReferenceLis
 	{
 		if(this == JSElementTypes.EXTENDS_LIST)
 		{
-			doIndex(sink, stub, JSSuperClassIndex.KEY);
+			doIndex(sink, stub, JavaScriptIndexKeys.EXTENDS_INDEX);
 		}
 		else if(this == JSElementTypes.IMPLEMENTS_LIST)
 		{
-			doIndex(sink, stub, JSImplementedInterfacesIndex.KEY);
+			doIndex(sink, stub, JavaScriptIndexKeys.IMPLEMENTED_INDEX);
 		}
 	}
 
@@ -88,7 +87,7 @@ public class JSReferenceListElementType extends JSStubElementType<JSReferenceLis
 	@Override
 	public JSReferenceList createPsi(@NotNull JSReferenceListStub stub)
 	{
-		return new JSReferenceListImpl(stub);
+		return new JSReferenceListImpl(stub, this);
 	}
 
 	@RequiredReadAction

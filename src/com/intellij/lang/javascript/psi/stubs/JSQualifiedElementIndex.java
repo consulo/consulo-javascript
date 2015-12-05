@@ -20,26 +20,17 @@
 package com.intellij.lang.javascript.psi.stubs;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
-import com.intellij.lang.javascript.types.JSFileElementType;
 import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;
 
 public class JSQualifiedElementIndex extends StringStubIndexExtension<JSQualifiedNamedElement>
 {
-	public static final StubIndexKey<String, JSQualifiedNamedElement> KEY = StubIndexKey.createIndexKey("js.element.qualifiedName");
-	private static final int VERSION = 2;
-
 	@NotNull
 	@Override
 	public StubIndexKey<String, JSQualifiedNamedElement> getKey()
 	{
-		return KEY;
-	}
-
-	@Override
-	public int getVersion()
-	{
-		return super.getVersion() + VERSION + JSFileElementType.VERSION;
+		return JavaScriptIndexKeys.ELEMENTS_BY_QNAME;
 	}
 }

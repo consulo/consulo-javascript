@@ -54,7 +54,7 @@ public class JSClassElementType extends JSQualifiedStubElementType<JSClassStub, 
 	@Override
 	public JSClass createPsi(@NotNull JSClassStub stub)
 	{
-		return new JSClassImpl(stub);
+		return new JSClassImpl(stub, this);
 	}
 
 	@RequiredReadAction

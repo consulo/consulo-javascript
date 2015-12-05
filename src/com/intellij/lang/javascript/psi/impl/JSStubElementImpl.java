@@ -35,11 +35,9 @@ import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.IncorrectOperationException;
 
 /**
- * Created by IntelliJ IDEA.
  * User: max
  * Date: Jan 30, 2005
  * Time: 8:23:10 PM
- * To change this template use File | Settings | File Templates.
  */
 public class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElementBase<T> implements JSElement
 {
@@ -197,11 +195,6 @@ public class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElemen
 	@Override
 	public PsiElement getParent()
 	{
-		final T stub = getStub();
-		if(stub != null)
-		{
-			return stub.getParentStub().getPsi();
-		}
-		return super.getParent();
+		return getParentByStub();
 	}
 }

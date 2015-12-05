@@ -26,6 +26,7 @@ import java.util.List;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -33,7 +34,6 @@ import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
 import com.intellij.lang.javascript.index.JSPackageIndex;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.lang.javascript.psi.stubs.JSQualifiedElementIndex;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.OrderRootType;
@@ -208,7 +208,7 @@ public class JSPsiImplUtils
 
 		GlobalSearchScope searchScope = JSResolveUtil.getSearchScope(jsClass);
 		final String qName = jsClass.getQualifiedName();
-		final Collection<JSQualifiedNamedElement> candidates = StubIndex.getElements(JSQualifiedElementIndex.KEY, qName, jsClass.getProject(), searchScope, JSQualifiedNamedElement.class);
+		final Collection<JSQualifiedNamedElement> candidates = StubIndex.getElements(JavaScriptIndexKeys.ELEMENTS_BY_QNAME, qName, jsClass.getProject(), searchScope, JSQualifiedNamedElement.class);
 		for(Iterator<JSQualifiedNamedElement> i = candidates.iterator(); i.hasNext(); )
 		{
 			if(!qName.equals(i.next().getQualifiedName()))

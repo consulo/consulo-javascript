@@ -20,10 +20,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.lang.javascript.psi.stubs.JSNameIndex;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
@@ -45,7 +45,7 @@ public class JavaScriptClassContributor implements ChooseByNameContributor
 	{
 		final Set<String> result = new HashSet<String>();
 
-		result.addAll(StubIndex.getInstance().getAllKeys(JSNameIndex.KEY, project));
+		result.addAll(StubIndex.getInstance().getAllKeys(JavaScriptIndexKeys.ELEMENTS_BY_NAME, project));
 
 		FileBasedIndex.getInstance().processAllKeys(FilenameIndex.NAME, new Processor<String>()
 		{

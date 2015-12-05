@@ -33,6 +33,7 @@ import java.util.Set;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import com.intellij.extapi.psi.PsiElementBase;
 import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.injected.editor.VirtualFileWindow;
@@ -60,8 +61,6 @@ import com.intellij.lang.javascript.psi.impl.JSFileImpl;
 import com.intellij.lang.javascript.psi.impl.JSPackageWrapper;
 import com.intellij.lang.javascript.psi.impl.JSReferenceExpressionImpl;
 import com.intellij.lang.javascript.psi.impl.JSStubElementImpl;
-import com.intellij.lang.javascript.psi.stubs.JSNameIndex;
-import com.intellij.lang.javascript.psi.stubs.JSQualifiedElementIndex;
 import com.intellij.lang.javascript.psi.stubs.JSVariableStubBase;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
@@ -616,7 +615,7 @@ public class JSResolveUtil
 	public static Collection<JSQualifiedNamedElement> findElementsByName(String name, Project project, GlobalSearchScope scope)
 	{
 		final Set<JSQualifiedNamedElement> result = new HashSet<JSQualifiedNamedElement>();
-		Collection<JSQualifiedNamedElement> jsQualifiedNamedElements = StubIndex.getElements(JSNameIndex.KEY, name, project, scope, JSQualifiedNamedElement.class);
+		Collection<JSQualifiedNamedElement> jsQualifiedNamedElements = StubIndex.getElements(JavaScriptIndexKeys.ELEMENTS_BY_NAME, name, project, scope, JSQualifiedNamedElement.class);
 
 		for(JSQualifiedNamedElement e : jsQualifiedNamedElements)
 		{
@@ -711,9 +710,9 @@ public class JSResolveUtil
 
 		if(resolvedName == null)
 		{
-			for(String s : StubIndex.getInstance().getAllKeys(JSNameIndex.KEY, project))
+			for(String s : StubIndex.getInstance().getAllKeys(JavaScriptIndexKeys.ELEMENTS_BY_NAME, project))
 			{
-				for(JSQualifiedNamedElement e : StubIndex.getElements(JSNameIndex.KEY, s, project, scope, JSQualifiedNamedElement.class))
+				for(JSQualifiedNamedElement e : StubIndex.getElements(JavaScriptIndexKeys.ELEMENTS_BY_NAME, s, project, scope, JSQualifiedNamedElement.class))
 				{
 					if(ARGUMENTS_TYPE_NAME.equals(e.getName()))
 					{
@@ -738,7 +737,7 @@ public class JSResolveUtil
 		}
 		else
 		{
-			for(JSQualifiedNamedElement e : StubIndex.getElements(JSQualifiedElementIndex.KEY, resolvedName, project, scope, JSQualifiedNamedElement.class))
+			for(JSQualifiedNamedElement e : StubIndex.getElements(JavaScriptIndexKeys.ELEMENTS_BY_QNAME, resolvedName, project, scope, JSQualifiedNamedElement.class))
 			{
 				if(!e.getName().equals(resolvedName))
 				{
@@ -1783,7 +1782,7 @@ public class JSResolveUtil
 
 			final PsiElement[] result = new PsiElement[1];
 
-			final Collection<JSQualifiedNamedElement> candidates = StubIndex.getElements(JSQualifiedElementIndex.KEY, link, index.getProject(), searchScope, JSQualifiedNamedElement.class);
+			final Collection<JSQualifiedNamedElement> candidates = StubIndex.getElements(JavaScriptIndexKeys.ELEMENTS_BY_QNAME, link, index.getProject(), searchScope, JSQualifiedNamedElement.class);
 			for(JSQualifiedNamedElement clazz : candidates)
 			{
 				if(link.equals(clazz.getQualifiedName()))

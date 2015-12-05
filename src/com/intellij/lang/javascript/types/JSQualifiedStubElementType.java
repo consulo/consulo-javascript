@@ -19,10 +19,9 @@ package com.intellij.lang.javascript.types;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
 import com.intellij.lang.javascript.psi.JSStubElementType;
-import com.intellij.lang.javascript.psi.stubs.JSNameIndex;
-import com.intellij.lang.javascript.psi.stubs.JSQualifiedElementIndex;
 import com.intellij.lang.javascript.psi.stubs.JSQualifiedStub;
 import com.intellij.psi.stubs.IndexSink;
 
@@ -46,12 +45,12 @@ public abstract class JSQualifiedStubElementType<StubT extends JSQualifiedStub<P
 
 		if(name != null && doIndexName(stub, name, fqn))
 		{
-			sink.occurrence(JSNameIndex.KEY, name);
+			sink.occurrence(JavaScriptIndexKeys.ELEMENTS_BY_NAME, name);
 		}
 
 		if(fqn != null && doIndexQualifiedName(stub, name, fqn))
 		{
-			sink.occurrence(JSQualifiedElementIndex.KEY, fqn);
+			sink.occurrence(JavaScriptIndexKeys.ELEMENTS_BY_QNAME, fqn);
 		}
 	}
 

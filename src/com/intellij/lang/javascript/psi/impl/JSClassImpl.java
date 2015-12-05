@@ -19,15 +19,18 @@ package com.intellij.lang.javascript.psi.impl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSAttributeList;
+import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.lang.javascript.psi.JSReferenceList;
+import com.intellij.lang.javascript.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.JSSuppressionHolder;
 import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
@@ -48,11 +51,12 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder
 		super(node);
 	}
 
-	public JSClassImpl(final JSClassStub stub)
+	public JSClassImpl(final JSClassStub stub, JSStubElementType<JSClassStub, JSClass> elementType)
 	{
-		super(stub, JSElementTypes.CLASS);
+		super(stub, elementType);
 	}
 
+	@RequiredReadAction
 	@Override
 	public int getTextOffset()
 	{
@@ -167,15 +171,13 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder
 	}
 
 	@Override
-	protected boolean processMembers(final PsiScopeProcessor processor, final ResolveState substitutor, final PsiElement lastParent,
-			final PsiElement place)
+	protected boolean processMembers(final PsiScopeProcessor processor, final ResolveState substitutor, final PsiElement lastParent, final PsiElement place)
 	{
 		return JSResolveUtil.processDeclarationsInScope(this, processor, substitutor, lastParent, place);
 	}
 
 	@Override
-	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState substitutor,
-			final PsiElement lastParent, @NotNull final PsiElement place)
+	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState substitutor, final PsiElement lastParent, @NotNull final PsiElement place)
 	{
 		boolean b = super.processDeclarations(processor, substitutor, lastParent, place);
 
