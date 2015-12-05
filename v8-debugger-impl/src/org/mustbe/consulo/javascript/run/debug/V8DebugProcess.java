@@ -22,9 +22,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.chromium.sdk.Breakpoint;
-import org.chromium.sdk.BrowserFactory;
 import org.chromium.sdk.DebugContext;
 import org.chromium.sdk.JavascriptVm;
+import org.chromium.sdk.JavascriptVmFactory;
 import org.chromium.sdk.Script;
 import org.chromium.sdk.StandaloneVm;
 import org.jetbrains.annotations.NotNull;
@@ -90,7 +90,7 @@ public class V8DebugProcess extends XDebugProcess
 		myResult = result;
 		myXBreakpointManager = XDebuggerManager.getInstance(getSession().getProject()).getBreakpointManager();
 		getSession().setPauseActionSupported(true);
-		myVm = BrowserFactory.getInstance().createStandalone(new InetSocketAddress("localhost", port), null);
+		myVm = JavascriptVmFactory.getInstance().createStandalone(new InetSocketAddress("localhost", port), null);
 	}
 
 	@Exported

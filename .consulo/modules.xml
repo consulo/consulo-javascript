@@ -157,13 +157,6 @@
               </binaries>
             </library>
           </orderEntry>
-          <orderEntry type="module-library">
-            <library>
-              <binaries>
-                <root url="jar://$MODULE_DIR$/lib/lib.org.chromium.sdk.wipbackend.protocol_1_0.jar!/" />
-              </binaries>
-            </library>
-          </orderEntry>
         </module-layer>
       </module>
       <module name="actionscript-impl" dirurl="file://$PROJECT_DIR$/actionscript-impl" current-layer="Default">

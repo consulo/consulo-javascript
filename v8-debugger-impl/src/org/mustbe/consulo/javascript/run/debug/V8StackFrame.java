@@ -19,6 +19,7 @@ package org.mustbe.consulo.javascript.run.debug;
 import java.util.List;
 
 import org.chromium.sdk.CallFrame;
+import org.chromium.sdk.JsEvaluateContext;
 import org.chromium.sdk.JsScope;
 import org.chromium.sdk.JsVariable;
 import org.chromium.sdk.TextStreamPosition;
@@ -49,35 +50,24 @@ public class V8StackFrame extends XStackFrame
 	@Override
 	public void computeChildren(@NotNull XCompositeNode node)
 	{
+		JsEvaluateContext evaluateContext = myCallFrame.getEvaluateContext();
 		List<? extends JsScope> variableScopes = myCallFrame.getVariableScopes();
 
 		XValueChildrenList valueChildrenList = new XValueChildrenList();
 
 		for(JsScope variableScope : variableScopes)
 		{
-			List<? extends JsVariable> variables = variableScope.getVariables();
-			if(variables.isEmpty())
-			{
-				continue;
-			}
-
 			switch(variableScope.getType())
 			{
 				case LOCAL:
-					break;
-				default:
-					valueChildrenList.add(new V8ScopeValue(variableScope));
-					break;
-			}
-		}
-		for(JsScope variableScope : variableScopes)
-		{
-			switch(variableScope.getType())
-			{
-				case LOCAL:
-					for(JsVariable jsVariable : variableScope.getVariables())
+					JsScope.Declarative declarative = variableScope.asDeclarativeScope();
+					if(declarative == null)
 					{
-						V8VariableValue.addValue(valueChildrenList, jsVariable);
+						break;
+					}
+					for(JsVariable jsVariable : declarative.getVariables())
+					{
+						V8VariableValue.addValue(valueChildrenList, evaluateContext, jsVariable);
 					}
 					break;
 			}
@@ -113,7 +103,6 @@ public class V8StackFrame extends XStackFrame
 		{
 			return null;
 		}
-		return XDebuggerUtil.getInstance().createPosition(V8ScriptUtil.toVirtualFile(myCallFrame.getScript(), true),
-				statementStartPosition.getLine());
+		return XDebuggerUtil.getInstance().createPosition(V8ScriptUtil.toVirtualFile(myCallFrame.getScript(), true), statementStartPosition.getLine());
 	}
 }

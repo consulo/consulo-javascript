@@ -21,6 +21,8 @@ import java.util.Collection;
 import javax.swing.Icon;
 
 import org.chromium.sdk.JsArray;
+import org.chromium.sdk.JsDeclarativeVariable;
+import org.chromium.sdk.JsEvaluateContext;
 import org.chromium.sdk.JsFunction;
 import org.chromium.sdk.JsObject;
 import org.chromium.sdk.JsValue;
@@ -43,22 +45,25 @@ import com.intellij.xdebugger.frame.presentation.XValuePresentation;
  */
 public class V8VariableValue extends XNamedValue
 {
-	public static void addValue(@NotNull XValueChildrenList valueChildrenList, @NotNull JsVariable jsVariable)
+	public static void addValue(@NotNull XValueChildrenList valueChildrenList, @NotNull JsEvaluateContext debugContext, @NotNull JsVariable jsVariable)
 	{
 		JsValue value = jsVariable.getValue();
 		if(value instanceof JsFunction)
 		{
 			return;
 		}
-		valueChildrenList.add(new V8VariableValue(jsVariable));
+		valueChildrenList.add(new V8VariableValue(debugContext, jsVariable));
 	}
 
 	@NotNull
+	private final JsEvaluateContext myEvaluateContext;
+	@NotNull
 	private final JsVariable myJsVariable;
 
-	private V8VariableValue(@NotNull JsVariable jsVariable)
+	private V8VariableValue(@NotNull JsEvaluateContext evaluateContext, @NotNull JsVariable jsVariable)
 	{
 		super(jsVariable.getName());
+		myEvaluateContext = evaluateContext;
 		myJsVariable = jsVariable;
 	}
 
@@ -66,8 +71,13 @@ public class V8VariableValue extends XNamedValue
 	@Override
 	public XValueModifier getModifier()
 	{
+		final JsDeclarativeVariable declarativeVariable = myJsVariable.asDeclarativeVariable();
+		if(declarativeVariable == null)
+		{
+			return null;
+		}
 		final JsValue value = myJsVariable.getValue();
-		if(!myJsVariable.isMutable())
+		if(!declarativeVariable.isMutable())
 		{
 			return null;
 		}
@@ -83,7 +93,53 @@ public class V8VariableValue extends XNamedValue
 					@Override
 					public void setValue(@NotNull String expression, @NotNull final XModificationCallback callback)
 					{
-						myJsVariable.setValue(expression, new JsVariable.SetValueCallback()
+						JsEvaluateContext.PrimitiveValueFactory valueFactory = myEvaluateContext.getValueFactory();
+						JsValue value = null;
+						try
+						{
+							if(expression.equals("null"))
+							{
+								value = valueFactory.getNull();
+							}
+							else if(expression.equals("undefined"))
+							{
+								value = valueFactory.getUndefined();
+							}
+							else
+							{
+								switch(valueType)
+								{
+									case TYPE_NUMBER:
+										value = valueFactory.createNumber(expression);
+										break;
+									case TYPE_STRING:
+										value = valueFactory.createString(expression);
+										break;
+									case TYPE_BOOLEAN:
+										value = valueFactory.createBoolean(Boolean.valueOf(expression));
+										break;
+									case TYPE_ERROR:
+										break;
+									case TYPE_REGEXP:
+										break;
+									case TYPE_DATE:
+										break;
+									case TYPE_ARRAY:
+										break;
+									case TYPE_UNDEFINED:
+										break;
+									case TYPE_NULL:
+										break;
+								}
+							}
+						}
+						catch(Exception e)
+						{
+							callback.errorOccurred("Bad value");
+							return;
+						}
+
+						declarativeVariable.setValue(value, new JsDeclarativeVariable.SetValueCallback()
 						{
 							@Override
 							public void success()
@@ -92,11 +148,11 @@ public class V8VariableValue extends XNamedValue
 							}
 
 							@Override
-							public void failure(String s)
+							public void failure(Exception e)
 							{
-								callback.errorOccurred(s);
+								callback.errorOccurred(e.getMessage());
 							}
-						});
+						}, null);
 					}
 
 					@Override
@@ -118,10 +174,10 @@ public class V8VariableValue extends XNamedValue
 		JsValue value = myJsVariable.getValue();
 		if(value instanceof JsArray)
 		{
-			int length = ((JsArray) value).length();
+			long length = ((JsArray) value).getLength();
 			for(int i = 0; i < length; i++)
 			{
-				V8VariableValue.addValue(valueChildrenList, ((JsArray) value).get(i));
+				V8VariableValue.addValue(valueChildrenList, myEvaluateContext, ((JsArray) value).get(i));
 			}
 		}
 		else if(value instanceof JsObject)
@@ -129,7 +185,7 @@ public class V8VariableValue extends XNamedValue
 			Collection<? extends JsVariable> properties = ((JsObject) value).getProperties();
 			for(JsVariable property : properties)
 			{
-				V8VariableValue.addValue(valueChildrenList, property);
+				V8VariableValue.addValue(valueChildrenList, myEvaluateContext, property);
 			}
 		}
 		node.addChildren(valueChildrenList, true);
@@ -159,7 +215,7 @@ public class V8VariableValue extends XNamedValue
 	{
 		if(value instanceof JsArray)
 		{
-			return ((JsArray) value).length() > 0;
+			return ((JsArray) value).getLength() > 0;
 		}
 		switch(valueType)
 		{
@@ -199,7 +255,7 @@ public class V8VariableValue extends XNamedValue
 					default:
 						if(value instanceof JsArray)
 						{
-							return StringUtil.decapitalize(((JsArray) value).getClassName()) + "[" + ((JsArray) value).length() + "]";
+							return StringUtil.decapitalize(((JsArray) value).getClassName()) + "[" + ((JsArray) value).getLength() + "]";
 						}
 						else if(value instanceof JsObject)
 						{
