@@ -16,15 +16,19 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.swing.Icon;
-
 import org.jetbrains.annotations.NotNull;
-import com.intellij.icons.AllIcons;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.psi.*;
+import com.intellij.lang.javascript.psi.JSAttributeList;
+import com.intellij.lang.javascript.psi.JSElementVisitor;
+import com.intellij.lang.javascript.psi.JSExpression;
+import com.intellij.lang.javascript.psi.JSReferenceExpression;
+import com.intellij.lang.javascript.psi.JSStubElementType;
+import com.intellij.lang.javascript.psi.JSType;
+import com.intellij.lang.javascript.psi.JSVarStatement;
+import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.stubs.JSVariableStubBase;
 import com.intellij.psi.PsiElement;
@@ -245,25 +249,6 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 			return stub.isDeprecated();
 		}
 		return JSDocumentationUtils.calculateDeprecated(this);
-	}
-
-	public Icon getIcon(int flags)
-	{
-		final PsiElement grandParent = JSResolveUtil.findParent(this);
-
-		if(grandParent instanceof JSClass)
-		{
-			final JSAttributeList attributeList = getAttributeList();
-			if(attributeList != null)
-			{
-				return buildIcon(blendModifierFlags(AllIcons.Nodes.Variable, attributeList), attributeList.getAccessType().getIcon());
-			}
-		}
-		else if(grandParent instanceof JSBlockStatement || grandParent instanceof JSLoopStatement)
-		{
-			return buildIcon(AllIcons.Nodes.Variable, AllIcons.Nodes.C_private);
-		}
-		return AllIcons.Nodes.Variable;
 	}
 
 	@Override

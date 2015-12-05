@@ -30,13 +30,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.Icon;
-
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.extapi.psi.PsiElementBase;
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.javascript.documentation.JSDocumentationProvider;
@@ -3541,12 +3538,6 @@ public class JSResolveUtil
 			return another == this || (another instanceof ImplicitJSVariableImpl &&
 					myContainingFile == ((ImplicitJSVariableImpl) another).myContainingFile &&
 					myName.equals(((ImplicitJSVariableImpl) another).myName));
-		}
-
-		//@Override
-		public Icon getIcon(int flags)
-		{
-			return JSStubElementImpl.buildIcon(AllIcons.Nodes.Variable, AllIcons.Nodes.C_private);
 		}
 	}
 }

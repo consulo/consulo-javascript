@@ -25,6 +25,8 @@
 		<gotoSymbolContributor implementation="com.intellij.lang.javascript.index.JavaScriptSymbolContributor"/>
 		<gotoClassContributor implementation="com.intellij.lang.javascript.index.JavaScriptClassContributor"/>
 
+		<iconDescriptorUpdater implementation="org.mustbe.consulo.javascript.ide.JavaScriptIconDescriptorUpdater" />
+
 		<fileTypeFactory implementation="com.intellij.lang.javascript.JavaScriptSupportLoader"/>
 
 		<highlightVisitor implementation="com.intellij.lang.javascript.highlighting.JavaScriptHighlightVisitor"/>

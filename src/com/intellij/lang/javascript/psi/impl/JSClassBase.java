@@ -26,15 +26,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.Icon;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.index.JSNamedElementProxy;
-import com.intellij.lang.javascript.psi.*;
+import com.intellij.lang.javascript.psi.JSClass;
+import com.intellij.lang.javascript.psi.JSElementVisitor;
+import com.intellij.lang.javascript.psi.JSFile;
+import com.intellij.lang.javascript.psi.JSFunction;
+import com.intellij.lang.javascript.psi.JSIncludeDirective;
+import com.intellij.lang.javascript.psi.JSReferenceList;
+import com.intellij.lang.javascript.psi.JSStubElementType;
+import com.intellij.lang.javascript.psi.JSVarStatement;
+import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
@@ -444,14 +449,6 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 			realClazz = clazz;
 		}
 		return realClazz;
-	}
-
-	@Nullable
-	public Icon getIcon(int flags)
-	{
-		final JSAttributeList attributeList = getAttributeList();
-		final JSAttributeList.AccessType type = attributeList != null ? attributeList.getAccessType() : JSAttributeList.AccessType.PACKAGE_LOCAL;
-		return buildIcon(isInterface() ? AllIcons.Nodes.Interface : blendModifierFlags(AllIcons.Nodes.Class, attributeList), type.getIcon());
 	}
 
 	@Override

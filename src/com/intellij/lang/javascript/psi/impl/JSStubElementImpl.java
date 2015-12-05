@@ -16,15 +16,11 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.swing.Icon;
-
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.extapi.psi.StubBasedPsiElementBase;
-import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.index.JSItemPresentation;
-import com.intellij.lang.javascript.psi.JSAttributeList;
 import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSNamedElement;
@@ -36,8 +32,6 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
-import com.intellij.ui.LayeredIcon;
-import com.intellij.ui.RowIcon;
 import com.intellij.util.IncorrectOperationException;
 
 /**
@@ -93,7 +87,6 @@ public class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElemen
 		classname = classname.substring(classname.lastIndexOf(".") + 1);
 		return classname;
 	}
-
 
 	@Override
 	public ItemPresentation getPresentation()
@@ -201,14 +194,6 @@ public class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElemen
 		return result.getPsi();
 	}
 
-	public static RowIcon buildIcon(final Icon visibilityIcon, Icon baseIcon)
-	{
-		RowIcon icon = new RowIcon(2);
-		icon.setIcon(visibilityIcon, 0);
-		icon.setIcon(baseIcon, 1);
-		return icon;
-	}
-
 	@Override
 	public PsiElement getParent()
 	{
@@ -218,32 +203,5 @@ public class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElemen
 			return stub.getParentStub().getPsi();
 		}
 		return super.getParent();
-	}
-
-	protected static Icon blendModifierFlags(Icon baseIcon, JSAttributeList attrList)
-	{
-		if(attrList == null)
-		{
-			return baseIcon;
-		}
-		if(attrList.hasModifier(JSAttributeList.ModifierType.STATIC) || attrList.hasModifier(JSAttributeList.ModifierType.DYNAMIC) // ?
-				)
-		{
-			baseIcon = blend(baseIcon, AllIcons.Nodes.StaticMark);
-		}
-		if(attrList.hasModifier(JSAttributeList.ModifierType.FINAL))
-		{
-			baseIcon = blend(baseIcon, AllIcons.Nodes.FinalMark);
-		}
-		return baseIcon;
-	}
-
-	private static Icon blend(Icon baseIcon, final Icon staticMarkIcon)
-	{
-		final LayeredIcon icon = new LayeredIcon(2);
-		icon.setIcon(staticMarkIcon, 1);
-		icon.setIcon(baseIcon, 0);
-		baseIcon = icon;
-		return baseIcon;
 	}
 }

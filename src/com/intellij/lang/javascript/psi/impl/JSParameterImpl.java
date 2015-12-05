@@ -16,10 +16,7 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.swing.Icon;
-
 import org.jetbrains.annotations.NotNull;
-import com.intellij.icons.AllIcons;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
@@ -95,12 +92,6 @@ public class JSParameterImpl extends JSVariableBaseImpl<JSParameterStub, JSParam
 		{
 			visitor.visitElement(this);
 		}
-	}
-
-	@Override
-	public Icon getIcon(int flags)
-	{
-		return AllIcons.Nodes.Parameter;
 	}
 
 	@Override

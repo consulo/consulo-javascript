@@ -16,15 +16,11 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.swing.Icon;
-
 import org.jetbrains.annotations.NotNull;
-import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSAttributeList;
-import com.intellij.lang.javascript.psi.JSBlockStatement;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSFile;
@@ -115,25 +111,6 @@ public class JSFunctionImpl extends JSFunctionBaseImpl<JSFunctionStub, JSFunctio
 		{
 			visitor.visitElement(this);
 		}
-	}
-
-	public Icon getIcon(int flags)
-	{
-		final PsiElement parent = JSResolveUtil.findParent(this);
-		if(parent instanceof JSBlockStatement)
-		{
-			return buildIcon(AllIcons.Nodes.Function, AllIcons.Nodes.C_private);
-		}
-		else if(parent instanceof JSClass)
-		{
-			final JSAttributeList attributeList = getAttributeList();
-			if(attributeList != null)
-			{
-				return buildIcon(blendModifierFlags(AllIcons.Nodes.Function, attributeList), attributeList.getAccessType().getIcon());
-			}
-		}
-
-		return AllIcons.Nodes.Function;
 	}
 
 	@Override

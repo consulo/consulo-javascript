@@ -16,10 +16,7 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.swing.Icon;
-
 import org.jetbrains.annotations.NotNull;
-import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
@@ -142,11 +139,6 @@ public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionStub,
 			return;
 		}
 		super.delete();
-	}
-
-	public Icon getIcon(final int flags)
-	{
-		return AllIcons.Nodes.Function;
 	}
 
 	@Override
