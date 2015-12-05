@@ -39,8 +39,6 @@ import com.intellij.util.io.StringRef;
  */
 public class JSFileElementType extends IStubFileElementType<JSFileStub>
 {
-	public static final int VERSION = 28;
-
 	public JSFileElementType(final Language language)
 	{
 		super(language);
@@ -97,7 +95,7 @@ public class JSFileElementType extends IStubFileElementType<JSFileStub>
 	@Override
 	public int getStubVersion()
 	{
-		int version = VERSION;
+		int version = 29;
 		for(JavaScriptIndexer javaScriptIndexer : JavaScriptIndexer.EP_NAME.getExtensions())
 		{
 			version += javaScriptIndexer.getVersion();

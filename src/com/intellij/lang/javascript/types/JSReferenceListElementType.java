@@ -25,7 +25,6 @@ import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
-import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSReferenceList;
 import com.intellij.lang.javascript.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.impl.JSReferenceListImpl;
@@ -66,7 +65,7 @@ public class JSReferenceListElementType extends JSStubElementType<JSReferenceLis
 		}
 	}
 
-	private static void doIndex(IndexSink sink, JSReferenceListStub stub, StubIndexKey<String, JSClass> indexKey)
+	private static void doIndex(IndexSink sink, JSReferenceListStub stub, StubIndexKey<String, JSReferenceList> indexKey)
 	{
 		for(String s : stub.getReferenceTexts())
 		{

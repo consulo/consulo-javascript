@@ -21,6 +21,7 @@ import java.util.Collection;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSClass;
@@ -38,7 +39,7 @@ import com.intellij.psi.stubs.StubIndex;
 import com.intellij.util.ArrayUtil;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
 public class JSReferenceListImpl extends JSStubElementImpl<JSReferenceListStub> implements JSReferenceList
 {
@@ -65,6 +66,7 @@ public class JSReferenceListImpl extends JSStubElementImpl<JSReferenceListStub> 
 		}
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public JSReferenceExpression[] getExpressions()
@@ -72,7 +74,9 @@ public class JSReferenceListImpl extends JSStubElementImpl<JSReferenceListStub> 
 		return findChildrenByClass(JSReferenceExpression.class);
 	}
 
+	@NotNull
 	@Override
+	@RequiredReadAction
 	public String[] getReferenceTexts()
 	{
 		final JSReferenceListStub stub = getStub();
@@ -96,6 +100,8 @@ public class JSReferenceListImpl extends JSStubElementImpl<JSReferenceListStub> 
 		return result;
 	}
 
+	@NotNull
+	@RequiredReadAction
 	@Override
 	public JSClass[] getReferencedClasses()
 	{

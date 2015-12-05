@@ -16,8 +16,8 @@
 
 package org.mustbe.consulo.javascript.lang.psi.stubs;
 
-import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
+import com.intellij.lang.javascript.psi.JSReferenceList;
 import com.intellij.psi.stubs.StubIndexKey;
 
 /**
@@ -28,7 +28,7 @@ public interface JavaScriptIndexKeys
 {
 	public static final StubIndexKey<String, JSQualifiedNamedElement> ELEMENTS_BY_NAME = StubIndexKey.createIndexKey("js.qualified.shortName");
 	public static final StubIndexKey<String, JSQualifiedNamedElement> ELEMENTS_BY_QNAME = StubIndexKey.createIndexKey("js.element.qualifiedName");
-	public static final StubIndexKey<String, JSClass> EXTENDS_INDEX = StubIndexKey.createIndexKey("JS.class.super");
-	public static final StubIndexKey<String, JSClass> IMPLEMENTED_INDEX = StubIndexKey.createIndexKey("JS.class.implements");
 
+	public static final StubIndexKey<String, JSReferenceList> EXTENDS_INDEX = StubIndexKey.createIndexKey("JS.class.super");
+	public static final StubIndexKey<String, JSReferenceList> IMPLEMENTED_INDEX = StubIndexKey.createIndexKey("JS.class.implements");
 }

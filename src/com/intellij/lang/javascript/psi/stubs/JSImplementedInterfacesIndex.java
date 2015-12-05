@@ -18,15 +18,15 @@ package com.intellij.lang.javascript.psi.stubs;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
-import com.intellij.lang.javascript.psi.JSClass;
+import com.intellij.lang.javascript.psi.JSReferenceList;
 import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;
 
-public class JSImplementedInterfacesIndex extends StringStubIndexExtension<JSClass>
+public class JSImplementedInterfacesIndex extends StringStubIndexExtension<JSReferenceList>
 {
 	@NotNull
 	@Override
-	public StubIndexKey<String, JSClass> getKey()
+	public StubIndexKey<String, JSReferenceList> getKey()
 	{
 		return JavaScriptIndexKeys.IMPLEMENTED_INDEX;
 	}

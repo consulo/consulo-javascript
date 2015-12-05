@@ -21,8 +21,10 @@ import gnu.trove.THashSet;
 import java.util.Collection;
 import java.util.Set;
 
+import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import com.intellij.lang.javascript.psi.JSClass;
+import com.intellij.lang.javascript.psi.JSReferenceList;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -94,7 +96,7 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 		INTERFACE_IMPLEMENTATIONS_QUERY_FACTORY.registerExecutor(new JSClassSearch()
 		{
 			@Override
-			protected StubIndexKey<String, JSClass> getIndexKey()
+			protected StubIndexKey<String, JSReferenceList> getIndexKey()
 			{
 				return JavaScriptIndexKeys.IMPLEMENTED_INDEX;
 			}
@@ -106,7 +108,7 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 			}
 
 			@Override
-			public boolean execute(final SearchParameters queryParameters, Processor<JSClass> consumer)
+			public boolean execute(@NotNull final SearchParameters queryParameters, @NotNull Processor<JSClass> consumer)
 			{
 				final THashSet<JSClass> visited = new THashSet<JSClass>();         // no abstract classes in ActionScript !
 
@@ -151,7 +153,7 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 		CLASS_INHERITORS_QUERY_FACTORY.registerExecutor(OUR_CLASS_SEARCH_EXECUTOR = new JSClassSearch()
 		{
 			@Override
-			protected StubIndexKey<String, JSClass> getIndexKey()
+			protected StubIndexKey<String, JSReferenceList> getIndexKey()
 			{
 				return JavaScriptIndexKeys.EXTENDS_INDEX;
 			}
@@ -171,9 +173,8 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 		});
 	}
 
-
 	@Override
-	public boolean execute(final SearchParameters queryParameters, final Processor<JSClass> consumer)
+	public boolean execute(@NotNull final SearchParameters queryParameters, @NotNull final Processor<JSClass> consumer)
 	{
 		return processDirectInheritors(queryParameters.getTargetClass(), consumer, queryParameters.isCheckDeepInheritance(), null,
 				queryParameters.getScope());
@@ -203,7 +204,7 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 		}
 
 		final Set<JSClass> temp = processed;
-		Processor<JSClass> processor = new Processor<JSClass>()
+		final Processor<JSClass> processor = new Processor<JSClass>()
 		{
 			@Override
 			public boolean process(JSClass candidate)
@@ -231,7 +232,15 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 			}
 		};
 
-		if(!StubIndex.getInstance().processElements(getIndexKey(), name, project, scope, JSClass.class, processor))
+		if(!StubIndex.getInstance().processElements(getIndexKey(), name, project, scope, JSReferenceList.class, new Processor<JSReferenceList>()
+		{
+			@Override
+			public boolean process(JSReferenceList referenceList)
+			{
+				JSClass parent = (JSClass) referenceList.getParent();
+				return processor.process(parent);
+			}
+		}))
 		{
 			return false;
 		}
@@ -253,7 +262,7 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 	protected abstract Collection<JSClass> getInheritors(JSClassInheritorsProvider provider, String parentName, Project project,
 			GlobalSearchScope scope);
 
-	protected abstract StubIndexKey<String, JSClass> getIndexKey();
+	protected abstract StubIndexKey<String, JSReferenceList> getIndexKey();
 
 	protected abstract JSClass[] getSupers(final JSClass candidate);
 }
