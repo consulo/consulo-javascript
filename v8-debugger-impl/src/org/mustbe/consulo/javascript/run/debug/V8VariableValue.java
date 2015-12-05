@@ -18,6 +18,9 @@ package org.mustbe.consulo.javascript.run.debug;
 
 import java.util.Collection;
 
+import javax.swing.Icon;
+
+import org.chromium.sdk.JsArray;
 import org.chromium.sdk.JsFunction;
 import org.chromium.sdk.JsObject;
 import org.chromium.sdk.JsValue;
@@ -25,13 +28,13 @@ import org.chromium.sdk.JsVariable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XNamedValue;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.XValuePlace;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -39,10 +42,20 @@ import lombok.val;
  */
 public class V8VariableValue extends XNamedValue
 {
+	public static void addValue(@NotNull XValueChildrenList valueChildrenList, @NotNull JsVariable jsVariable)
+	{
+		JsValue value = jsVariable.getValue();
+		if(value instanceof JsFunction)
+		{
+			return;
+		}
+		valueChildrenList.add(new V8VariableValue(jsVariable));
+	}
+
 	@NotNull
 	private final JsVariable myJsVariable;
 
-	public V8VariableValue(@NotNull JsVariable jsVariable)
+	private V8VariableValue(@NotNull JsVariable jsVariable)
 	{
 		super(jsVariable.getName());
 		myJsVariable = jsVariable;
@@ -51,42 +64,75 @@ public class V8VariableValue extends XNamedValue
 	@Override
 	public void computeChildren(@NotNull XCompositeNode node)
 	{
+		XValueChildrenList valueChildrenList = new XValueChildrenList();
+
 		JsValue value = myJsVariable.getValue();
-		if(value instanceof JsObject)
+		if(value instanceof JsArray)
+		{
+			int length = ((JsArray) value).length();
+			for(int i = 0; i < length; i++)
+			{
+				V8VariableValue.addValue(valueChildrenList, ((JsArray) value).get(i));
+			}
+		}
+		else if(value instanceof JsObject)
 		{
 			Collection<? extends JsVariable> properties = ((JsObject) value).getProperties();
-			XValueChildrenList valueChildrenList = new XValueChildrenList();
 			for(JsVariable property : properties)
 			{
-				valueChildrenList.add(new V8VariableValue(property));
+				V8VariableValue.addValue(valueChildrenList, property);
 			}
-			node.addChildren(valueChildrenList, true);
 		}
-		else
+		node.addChildren(valueChildrenList, true);
+	}
+
+	@NotNull
+	private static Icon getIconForValue(JsValue value, JsValue.Type valueType)
+	{
+		if(value instanceof JsArray)
 		{
-			node.addChildren(XValueChildrenList.EMPTY, true);
+			return AllIcons.Debugger.Db_array;
 		}
+		switch(valueType)
+		{
+			case TYPE_NUMBER:
+			case TYPE_NULL:
+			case TYPE_REGEXP:
+			case TYPE_UNDEFINED:
+			case TYPE_BOOLEAN:
+			case TYPE_STRING:
+				return AllIcons.Debugger.Db_primitive;
+		}
+		return AllIcons.Debugger.Value;
+	}
+
+	private static boolean canHaveChildren(JsValue value, JsValue.Type valueType)
+	{
+		if(value instanceof JsArray)
+		{
+			return ((JsArray) value).length() > 0;
+		}
+		switch(valueType)
+		{
+			case TYPE_NUMBER:
+			case TYPE_NULL:
+			case TYPE_REGEXP:
+			case TYPE_UNDEFINED:
+			case TYPE_STRING:
+			case TYPE_BOOLEAN:
+				return false;
+		}
+		return true;
 	}
 
 	@Override
 	public void computePresentation(@NotNull XValueNode xValueNode, @NotNull XValuePlace xValuePlace)
 	{
-		val value = myJsVariable.getValue();
-		val valueType = value.getType();
+		final JsValue value = myJsVariable.getValue();
+		final JsValue.Type valueType = value.getType();
 
-		xValueNode.setPresentation(AllIcons.Nodes.Variable, new XValuePresentation()
+		xValueNode.setPresentation(getIconForValue(value, valueType), new XValuePresentation()
 		{
-			@NotNull
-			@Override
-			public String getSeparator()
-			{
-				if(value instanceof JsObject)
-				{
-					return "";
-				}
-				return super.getSeparator();
-			}
-
 			@Nullable
 			@Override
 			public String getType()
@@ -102,50 +148,50 @@ public class V8VariableValue extends XNamedValue
 					case TYPE_BOOLEAN:
 						return null;
 					default:
-						if(value instanceof JsFunction)
+						if(value instanceof JsArray)
 						{
-							return "Function";
+							return StringUtil.decapitalize(((JsArray) value).getClassName()) + "[" + ((JsArray) value).length() + "]";
 						}
 						else if(value instanceof JsObject)
 						{
-							return ((JsObject) value).getClassName();
+							return StringUtil.decapitalize(((JsObject) value).getClassName());
 						}
 						return null;
 				}
 			}
 
 			@Override
-			public void renderValue(@NotNull XValueTextRenderer xValueTextRenderer)
+			public void renderValue(@NotNull XValueTextRenderer textRenderer)
 			{
 				switch(myJsVariable.getValue().getType())
 				{
 					case TYPE_NUMBER:
-						xValueTextRenderer.renderNumericValue(myJsVariable.getValue().getValueString());
+						textRenderer.renderValue(myJsVariable.getValue().getValueString());
 						break;
 					case TYPE_STRING:
-						xValueTextRenderer.renderStringValue(myJsVariable.getValue().getValueString());
+						textRenderer.renderStringValue(myJsVariable.getValue().getValueString());
 						break;
 					case TYPE_FUNCTION:
 						break;
 					case TYPE_BOOLEAN:
-						xValueTextRenderer.renderKeywordValue(myJsVariable.getValue().getValueString());
+						textRenderer.renderValue(myJsVariable.getValue().getValueString());
 						break;
 					case TYPE_ERROR:
 						break;
 					case TYPE_REGEXP:
-						xValueTextRenderer.renderStringValue(myJsVariable.getValue().getValueString());
+						textRenderer.renderStringValue(myJsVariable.getValue().getValueString());
 						break;
 					case TYPE_DATE:
-						xValueTextRenderer.renderValue(myJsVariable.getValue().getValueString());
+						textRenderer.renderValue(myJsVariable.getValue().getValueString());
 						break;
 					case TYPE_UNDEFINED:
-						xValueTextRenderer.renderKeywordValue("undefined");
+						textRenderer.renderValue("undefined");
 						break;
 					case TYPE_NULL:
-						xValueTextRenderer.renderKeywordValue("null");
+						textRenderer.renderValue("null");
 						break;
 				}
 			}
-		}, true);
+		}, canHaveChildren(value, valueType));
 	}
 }

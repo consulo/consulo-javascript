@@ -27,12 +27,10 @@ import com.intellij.xdebugger.frame.XSuspendContext;
  */
 public class V8SuspendContext extends XSuspendContext
 {
-	private final DebugContext myDebugContext;
 	private V8ExecutionStack myStack;
 
 	public V8SuspendContext(DebugContext debugContext)
 	{
-		myDebugContext = debugContext;
 		myStack = new V8ExecutionStack(debugContext);
 	}
 
@@ -47,10 +45,5 @@ public class V8SuspendContext extends XSuspendContext
 	public XExecutionStack[] getExecutionStacks()
 	{
 		return new XExecutionStack[] {myStack};
-	}
-
-	public DebugContext getDebugContext()
-	{
-		return myDebugContext;
 	}
 }

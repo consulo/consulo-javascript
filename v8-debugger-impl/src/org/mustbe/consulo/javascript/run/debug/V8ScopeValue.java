@@ -51,7 +51,7 @@ public class V8ScopeValue extends XNamedValue
 		XValueChildrenList valueChildrenList = new XValueChildrenList();
 		for(JsVariable variable : variables)
 		{
-			valueChildrenList.add(new V8VariableValue(variable));
+			V8VariableValue.addValue(valueChildrenList, variable);
 		}
 		node.addChildren(valueChildrenList, true);
 	}
@@ -59,7 +59,7 @@ public class V8ScopeValue extends XNamedValue
 	@Override
 	public void computePresentation(@NotNull XValueNode xValueNode, @NotNull XValuePlace xValuePlace)
 	{
-		xValueNode.setPresentation(AllIcons.Ide.SharedScope, new XValuePresentation()
+		xValueNode.setPresentation(AllIcons.Debugger.Db_db_object, new XValuePresentation()
 		{
 			@NotNull
 			@Override

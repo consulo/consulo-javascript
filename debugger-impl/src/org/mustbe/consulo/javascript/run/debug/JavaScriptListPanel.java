@@ -35,7 +35,6 @@ import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.SortedListModel;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
-import lombok.val;
 
 /**
  * @author VISTALL
@@ -69,7 +68,7 @@ public abstract class JavaScriptListPanel<T> extends JPanel
 
 	private void init()
 	{
-		val jbList = new JBList(myModel);
+		final JBList jbList = new JBList(myModel);
 		jbList.setCellRenderer(new ListCellRendererWrapper<T>()
 		{
 			@Override

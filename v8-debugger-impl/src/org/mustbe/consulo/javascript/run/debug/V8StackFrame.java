@@ -51,16 +51,22 @@ public class V8StackFrame extends XStackFrame
 	{
 		List<? extends JsScope> variableScopes = myCallFrame.getVariableScopes();
 
-		XValueChildrenList xValueChildrenList = new XValueChildrenList();
+		XValueChildrenList valueChildrenList = new XValueChildrenList();
 
 		for(JsScope variableScope : variableScopes)
 		{
+			List<? extends JsVariable> variables = variableScope.getVariables();
+			if(variables.isEmpty())
+			{
+				continue;
+			}
+
 			switch(variableScope.getType())
 			{
 				case LOCAL:
 					break;
 				default:
-					xValueChildrenList.add(new V8ScopeValue(variableScope));
+					valueChildrenList.add(new V8ScopeValue(variableScope));
 					break;
 			}
 		}
@@ -71,12 +77,12 @@ public class V8StackFrame extends XStackFrame
 				case LOCAL:
 					for(JsVariable jsVariable : variableScope.getVariables())
 					{
-						xValueChildrenList.add(new V8VariableValue(jsVariable));
+						V8VariableValue.addValue(valueChildrenList, jsVariable);
 					}
 					break;
 			}
 		}
-		node.addChildren(xValueChildrenList, true);
+		node.addChildren(valueChildrenList, true);
 	}
 
 	@Override
