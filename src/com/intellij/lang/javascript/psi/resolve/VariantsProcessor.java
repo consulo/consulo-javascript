@@ -32,11 +32,10 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.extapi.psi.PsiElementBase;
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.javascript.JSElementTypes;
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
+import com.intellij.lang.javascript.JavascriptLanguage;
 import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.index.JSNamespace;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
@@ -139,8 +138,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 				{
 					myProcessOnlyTypes = true;
 				}
-				else if((strictTypeContext = JSResolveUtil.isExprInTypeContext(refExpr)) || (ecmal4 && JSResolveUtil.isInPlaceWhereTypeCanBeDuringCompletion
-						(refExpr)))
+				else if((strictTypeContext = JSResolveUtil.isExprInTypeContext(refExpr)) || (ecmal4 && JSResolveUtil.isInPlaceWhereTypeCanBeDuringCompletion(refExpr)))
 				{
 					myAddOnlyCompleteMatches = myAddOnlyCompleteMatchesSet = true;
 					myProcessOnlyTypes = true;
@@ -288,8 +286,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 
 	private static boolean isObjectSourceThatDoesNotGiveExactKnowledgeAboutFunctionType(final Object source)
 	{
-		return source instanceof JSFunctionExpression || source instanceof JSNamedElementProxy && ((JSNamedElementProxy) source).getType() !=
-				JSNamedElementProxy.NamedItemType.Function;
+		return source instanceof JSFunctionExpression || source instanceof JSNamedElementProxy && ((JSNamedElementProxy) source).getType() != JSNamedElementProxy.NamedItemType.Function;
 	}
 
 	private void updateCanUseOnlyCompleteMatches(final JSClass jsClass)
@@ -468,8 +465,8 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 	{
 		if(myCurrentFile != myTargetFile ||
 				myDefinitelyGlobalReference ||
-				((function instanceof JSNamedElementProxy && (((JSNamedElementProxy) function).getType() != JSNamedElementProxy.NamedItemType.Function ||
-						!isGlobalNS(namespace))) || function instanceof JSFunctionExpression))
+				((function instanceof JSNamedElementProxy && (((JSNamedElementProxy) function).getType() != JSNamedElementProxy.NamedItemType.Function || !isGlobalNS(namespace))) || function
+						instanceof JSFunctionExpression))
 		{
 			doAdd(namespace, nameId, function);
 		}
@@ -599,8 +596,8 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			if(type != null)
 			{
 
-				boolean nonAcceptableItem = (type != JSNamedElementProxy.NamedItemType.Clazz && type != JSNamedElementProxy.NamedItemType.Namespace) ||
-						"Arguments".equals(((JSNamedElement) element).getName());
+				boolean nonAcceptableItem = (type != JSNamedElementProxy.NamedItemType.Clazz && type != JSNamedElementProxy.NamedItemType.Namespace) || "Arguments".equals(((JSNamedElement) element)
+						.getName());
 				if(nonAcceptableItem && !myStrictTypeContext)
 				{
 					nonAcceptableItem = type != JSNamedElementProxy.NamedItemType.Function && type != JSNamedElementProxy.NamedItemType.Variable;
@@ -627,8 +624,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 
 		if(matchType == MatchType.COMPLETE && !ecmal4 && myProcessOnlyTypes)
 		{
-			if(((name != null && name.length() > 0 && Character.isLowerCase(name.charAt(0))) || seemsToBePrivateSymbol) && (type == null || type !=
-					JSNamedElementProxy.NamedItemType.Namespace))
+			if(((name != null && name.length() > 0 && Character.isLowerCase(name.charAt(0))) || seemsToBePrivateSymbol) && (type == null || type != JSNamedElementProxy.NamedItemType.Namespace))
 			{
 				matchType = MatchType.PARTIAL;
 			}
@@ -652,7 +648,6 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			addCompleteMatch(element, nameId);
 		}
 	}
-
 
 
 	private Object addLookupValue(PsiElement _element, final int nameId, JSLookupUtil.LookupPriority priority)
@@ -996,7 +991,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 		@NotNull
 		public Language getLanguage()
 		{
-			return JavaScriptSupportLoader.JAVASCRIPT.getLanguage();
+			return JavascriptLanguage.INSTANCE;
 		}
 
 		@RequiredReadAction
@@ -1140,16 +1135,6 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			throw new UnsupportedOperationException();
 		}
 
-		@Nullable
-		public Icon getIcon(final int flags)
-		{
-			if(myArtificialName != null)
-			{
-				return null;
-			}
-			return myProxy != null ? IconDescriptorUpdaters.getIcon(myProxy, flags) : AllIcons.Nodes.Class;
-		}
-
 		@Override
 		public PsiElement getNameIdentifier()
 		{
@@ -1182,11 +1167,22 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 
 				@Override
 				@Nullable
+				@RequiredReadAction
 				public Icon getIcon(final boolean open)
 				{
 					return AllIcons.Nodes.Class;
 				}
 			} : myProxy.getPresentation();
+		}
+
+		public JSNamedElementProxy getProxy()
+		{
+			return myProxy;
+		}
+
+		public String getArtificialName()
+		{
+			return myArtificialName;
 		}
 
 		public JSNamespace getNamespace()

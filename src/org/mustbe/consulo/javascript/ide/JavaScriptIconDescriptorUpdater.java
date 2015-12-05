@@ -24,6 +24,7 @@ import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptor;
 import com.intellij.ide.IconDescriptorUpdater;
+import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.psi.JSAttributeList;
 import com.intellij.lang.javascript.psi.JSBlockStatement;
@@ -34,6 +35,7 @@ import com.intellij.lang.javascript.psi.JSNamespaceDeclaration;
 import com.intellij.lang.javascript.psi.JSParameter;
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
+import com.intellij.lang.javascript.psi.resolve.VariantsProcessor;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -46,7 +48,24 @@ public class JavaScriptIconDescriptorUpdater implements IconDescriptorUpdater
 	@Override
 	public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags)
 	{
-		if(element instanceof JSNamedElementProxy)
+		if(element instanceof VariantsProcessor.MyElementWrapper)
+		{
+			String artificialName = ((VariantsProcessor.MyElementWrapper) element).getArtificialName();
+			if(artificialName == null)
+			{
+				return;
+			}
+			JSNamedElementProxy proxy = ((VariantsProcessor.MyElementWrapper) element).getProxy();
+			if(proxy != null)
+			{
+				IconDescriptorUpdaters.processExistingDescriptor(iconDescriptor, proxy, flags);
+			}
+			else
+			{
+				iconDescriptor.setMainIcon(AllIcons.Nodes.Class);
+			}
+		}
+		else if(element instanceof JSNamedElementProxy)
 		{
 			iconDescriptor.setMainIcon(getIconForProxy((JSNamedElementProxy) element));
 			iconDescriptor.setRightIcon(getAccessIcon(((JSNamedElementProxy) element).getAccessType()));
