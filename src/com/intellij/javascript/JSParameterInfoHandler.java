@@ -17,7 +17,6 @@
 package com.intellij.javascript;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -27,7 +26,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupValueWithPsiElement;
 import com.intellij.codeInsight.lookup.MutableLookupElement;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
@@ -53,13 +51,14 @@ import com.intellij.psi.ResolveResult;
 import com.intellij.psi.search.searches.DefinitionsScopedSearch;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.ArrayUtil;
+import com.intellij.util.containers.ContainerUtil;
 
 /**
  * @author Maxim.Mossienko
  */
 public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabActionSupport<JSArgumentList, JSFunction, JSExpression>
 {
-	private static final Set<Class> ourArgumentListAllowedParentClassesSet = new HashSet<Class>(Arrays.asList(JSCallExpression.class));
+	private static final Set<Class> ourArgumentListAllowedParentClassesSet = ContainerUtil.<Class>newHashSet(JSCallExpression.class);
 
 	@Override
 	public boolean couldShowInLookup()
@@ -75,34 +74,29 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 			return null;
 		}
 
-		final Object o = item.getObject();
-
-		if(o instanceof LookupValueWithPsiElement)
+		PsiElement element = item.getPsiElement();
+		if(element instanceof JSNamedElementProxy)
 		{
-			PsiElement element = ((LookupValueWithPsiElement) o).getElement();
-			if(element instanceof JSNamedElementProxy)
+			element = ((JSNamedElementProxy) element).getElement();
+		}
+
+		if(element instanceof JSFunction)
+		{
+			final JSFunction originalFunction = (JSFunction) element;
+			final List<JSFunction> lookupItems = new ArrayList<JSFunction>();
+			Set<String> availableSignatures = new HashSet<String>();
+
+			for(PsiElement el : DefinitionsScopedSearch.search(originalFunction))
 			{
-				element = ((JSNamedElementProxy) element).getElement();
+				doAddSignature(lookupItems, availableSignatures, el);
 			}
 
-			if(element instanceof JSFunction)
+			if(lookupItems.size() == 0)
 			{
-				final JSFunction originalFunction = (JSFunction) element;
-				final List<JSFunction> lookupItems = new ArrayList<JSFunction>();
-				Set<String> availableSignatures = new HashSet<String>();
-
-				for(PsiElement el : DefinitionsScopedSearch.search(originalFunction))
-				{
-					doAddSignature(lookupItems, availableSignatures, el);
-				}
-
-				if(lookupItems.size() == 0)
-				{
-					lookupItems.add(originalFunction);
-				}
-
-				return lookupItems.toArray(new Object[lookupItems.size()]);
+				lookupItems.add(originalFunction);
 			}
+
+			return lookupItems.toArray(new Object[lookupItems.size()]);
 		}
 
 		return ArrayUtil.EMPTY_OBJECT_ARRAY;
