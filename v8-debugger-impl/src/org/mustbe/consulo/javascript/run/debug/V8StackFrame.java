@@ -16,11 +16,13 @@
 
 package org.mustbe.consulo.javascript.run.debug;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.chromium.sdk.CallFrame;
 import org.chromium.sdk.JsEvaluateContext;
 import org.chromium.sdk.JsScope;
+import org.chromium.sdk.JsValue;
 import org.chromium.sdk.JsVariable;
 import org.chromium.sdk.TextStreamPosition;
 import org.jetbrains.annotations.NotNull;
@@ -30,6 +32,7 @@ import com.intellij.ui.ColoredTextContainer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XSourcePosition;
+import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XStackFrame;
 import com.intellij.xdebugger.frame.XValueChildrenList;
@@ -45,6 +48,48 @@ public class V8StackFrame extends XStackFrame
 	public V8StackFrame(CallFrame callFrame)
 	{
 		myCallFrame = callFrame;
+	}
+
+	@Nullable
+	@Override
+	public XDebuggerEvaluator getEvaluator()
+	{
+		return new XDebuggerEvaluator()
+		{
+			@Override
+			public void evaluate(@NotNull final String expression, @NotNull final XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition)
+			{
+				final JsEvaluateContext evaluateContext = myCallFrame.getEvaluateContext();
+				evaluateContext.evaluateSync(expression, Collections.<String, JsValue>emptyMap(), new JsEvaluateContext.EvaluateCallback()
+				{
+					@Override
+					public void success(JsEvaluateContext.ResultOrException e)
+					{
+						JsValue result = e.getResult() == null ? e.getException() : e.getResult();
+						if(result != null)
+						{
+							callback.evaluated(new V8WatchValue(evaluateContext, expression, result));
+						}
+						else
+						{
+							callback.errorOccurred("bad expression");
+						}
+					}
+
+					@Override
+					public void failure(Exception e)
+					{
+						callback.errorOccurred(e.getMessage());
+					}
+				});
+			}
+
+			@Override
+			public boolean isCodeFragmentEvaluationSupported()
+			{
+				return false;
+			}
+		};
 	}
 
 	@Override
