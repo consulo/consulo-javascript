@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.codeInsight.PsiEquivalenceUtil;
 import com.intellij.codeInsight.highlighting.HighlightManager;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JSLanguageDialect;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
@@ -218,7 +218,7 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
 		final JSExpression expression = findExpressionInRange(file, start, end);
 		if(expression == null)
 		{
-			CommonRefactoringUtil.showErrorHint(file.getProject(), editor, JSBundle.message(getCannotIntroduceMessagePropertyKey()), getRefactoringName(),
+			CommonRefactoringUtil.showErrorHint(file.getProject(), editor, JavaScriptBundle.message(getCannotIntroduceMessagePropertyKey()), getRefactoringName(),
 					null);
 		}
 		return expression;

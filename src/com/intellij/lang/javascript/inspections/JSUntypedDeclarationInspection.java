@@ -29,7 +29,7 @@ import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -59,14 +59,14 @@ public class JSUntypedDeclarationInspection extends JSInspection
 	@NotNull
 	public String getGroupDisplayName()
 	{
-		return JSBundle.message("js.inspection.group.name");
+		return JavaScriptBundle.message("js.inspection.group.name");
 	}
 
 	@Override
 	@NotNull
 	public String getDisplayName()
 	{
-		return JSBundle.message("js.untyped.declaration.inspection.name");
+		return JavaScriptBundle.message("js.untyped.declaration.inspection.name");
 	}
 
 	@NotNull
@@ -125,7 +125,7 @@ public class JSUntypedDeclarationInspection extends JSInspection
 				JSPsiImplUtils.getTypeFromDeclaration(node) == null &&
 				(!(node instanceof JSParameter) || !((JSParameter) node).isRest()))
 		{
-			holder.registerProblem(nameIdentifier.getPsi(), JSBundle.message(node instanceof JSFunction ? "js.untyped.function.problem" : "js.untyped" +
+			holder.registerProblem(nameIdentifier.getPsi(), JavaScriptBundle.message(node instanceof JSFunction ? "js.untyped.function.problem" : "js.untyped" +
 					".variable.problem", nameIdentifier.getText()), ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new AddTypeToDclFix());
 		}
 	}
@@ -137,7 +137,7 @@ public class JSUntypedDeclarationInspection extends JSInspection
 		@NotNull
 		public String getName()
 		{
-			return JSBundle.message("js.untyped.declaration.problem.addtype.fix");
+			return JavaScriptBundle.message("js.untyped.declaration.problem.addtype.fix");
 		}
 
 		@Override

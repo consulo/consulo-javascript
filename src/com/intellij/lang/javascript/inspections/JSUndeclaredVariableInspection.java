@@ -26,7 +26,7 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.psi.*;
@@ -54,14 +54,14 @@ public class JSUndeclaredVariableInspection extends JSInspection
 	@NotNull
 	public String getGroupDisplayName()
 	{
-		return JSBundle.message("js.inspection.group.name");
+		return JavaScriptBundle.message("js.inspection.group.name");
 	}
 
 	@Override
 	@NotNull
 	public String getDisplayName()
 	{
-		return JSBundle.message("js.undeclared.variable.inspection.name");
+		return JavaScriptBundle.message("js.undeclared.variable.inspection.name");
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class JSUndeclaredVariableInspection extends JSInspection
 									fixes.add(new DeclareJSVariableIntentionAction(node));
 								}
 
-								holder.registerProblem(nameIdentifier, JSBundle.message("javascript.undeclared.variable.name.message", node.getReferencedName()),
+								holder.registerProblem(nameIdentifier, JavaScriptBundle.message("javascript.undeclared.variable.name.message", node.getReferencedName()),
 										ProblemHighlightType.GENERIC_ERROR_OR_WARNING, !fixes.isEmpty() ? fixes.toArray(new LocalQuickFix[fixes.size()]) : null);
 							}
 						}
@@ -166,14 +166,14 @@ public class JSUndeclaredVariableInspection extends JSInspection
 		@NotNull
 		public String getName()
 		{
-			return JSBundle.message("javascript.declare.variable.intention.name", myReferenceExpression.getReferencedName());
+			return JavaScriptBundle.message("javascript.declare.variable.intention.name", myReferenceExpression.getReferencedName());
 		}
 
 		@Override
 		@NotNull
 		public String getFamilyName()
 		{
-			return JSBundle.message("javascript.create.variable.intention.family");
+			return JavaScriptBundle.message("javascript.create.variable.intention.family");
 		}
 
 		@Override

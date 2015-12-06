@@ -29,7 +29,7 @@ import javax.swing.JComponent;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.formatter.JSCodeStyleSettings;
 import com.intellij.lang.javascript.psi.JSAttributeList;
 import com.intellij.lang.javascript.psi.JSClass;
@@ -89,7 +89,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler
 		{
 			if(!ApplicationManager.getApplication().isUnitTestMode())
 			{
-				myCreateBindableProperties = new NonFocusableCheckBox(JSBundle.message("generate.getter.fields.bindable.properties"));
+				myCreateBindableProperties = new NonFocusableCheckBox(JavaScriptBundle.message("generate.getter.fields.bindable.properties"));
 				jComponentList.add(myCreateBindableProperties);
 			}
 		}

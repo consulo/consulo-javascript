@@ -18,7 +18,7 @@ package com.intellij.lang.javascript.parsing;
 
 import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.openapi.diagnostic.Logger;
@@ -76,7 +76,7 @@ public class StatementParsing extends Parsing
 
 		if(builder.getTokenType() != JSTokenTypes.LBRACE)
 		{
-			builder.error(JSBundle.message("javascript.parser.message.expected.name.or.lbrace"));
+			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.name.or.lbrace"));
 		}
 		else
 		{
@@ -96,7 +96,7 @@ public class StatementParsing extends Parsing
 
 		if(firstToken == null)
 		{
-			builder.error(JSBundle.message("javascript.parser.message.expected.statement"));
+			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.statement"));
 			return;
 		}
 
@@ -296,7 +296,7 @@ public class StatementParsing extends Parsing
 						}
 						else
 						{
-							builder.error(JSBundle.message("javascript.parser.message.expected.function.var.class.interface.namespace"));
+							builder.error(JavaScriptBundle.message("javascript.parser.message.expected.function.var.class.interface.namespace"));
 							marker.drop();
 						}
 					}
@@ -343,7 +343,7 @@ public class StatementParsing extends Parsing
 			return;
 		}
 
-		builder.error(JSBundle.message("javascript.parser.message.expected.statement"));
+		builder.error(JavaScriptBundle.message("javascript.parser.message.expected.statement"));
 		builder.advanceLexer();
 	}
 
@@ -404,7 +404,7 @@ public class StatementParsing extends Parsing
 					}
 				}
 			}
-			checkMatches(builder, JSTokenTypes.RPAR, JSBundle.message("javascript.parser.message.expected.rparen"));
+			checkMatches(builder, JSTokenTypes.RPAR, JavaScriptBundle.message("javascript.parser.message.expected.rparen"));
 		}
 		return marker;
 	}
@@ -419,9 +419,9 @@ public class StatementParsing extends Parsing
 		{
 			builder.advanceLexer();
 
-			if(checkMatches(builder, JSTokenTypes.NAMESPACE_KEYWORD, JSBundle.message("javascript.parser.message.expected.namespace")))
+			if(checkMatches(builder, JSTokenTypes.NAMESPACE_KEYWORD, JavaScriptBundle.message("javascript.parser.message.expected.namespace")))
 			{
-				if(checkMatches(builder, JSTokenTypes.EQ, JSBundle.message("javascript.parser.message.expected.equal")))
+				if(checkMatches(builder, JSTokenTypes.EQ, JavaScriptBundle.message("javascript.parser.message.expected.equal")))
 				{
 					ExpressionParsing.parseExpression(builder);
 				}
@@ -429,7 +429,7 @@ public class StatementParsing extends Parsing
 		}
 		else
 		{
-			builder.error(JSBundle.message("javascript.parser.message.expected.xml"));
+			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.xml"));
 		}
 		marker.done(JSElementTypes.ASSIGNMENT_EXPRESSION);
 	}
@@ -447,12 +447,12 @@ public class StatementParsing extends Parsing
 
 		if(!ExpressionParsing.parseQualifiedTypeName(builder))
 		{
-			builder.error(JSBundle.message("javascript.parser.message.expected.typename"));
+			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.typename"));
 		}
 		if(builder.getTokenType() == JSTokenTypes.EQ)
 		{
 			builder.advanceLexer();
-			checkMatches(builder, JSTokenTypes.STRING_LITERAL, JSBundle.message("javascript.parser.message.expected.string.literal"));
+			checkMatches(builder, JSTokenTypes.STRING_LITERAL, JavaScriptBundle.message("javascript.parser.message.expected.string.literal"));
 		}
 		checkForSemicolon(builder);
 		useNSStatement.done(JSElementTypes.NAMESPACE_DECLARATION);
@@ -464,7 +464,7 @@ public class StatementParsing extends Parsing
 		LOG.assertTrue(builder.getTokenType() == JSTokenTypes.INCLUDE_KEYWORD);
 		final PsiBuilder.Marker useNSStatement = builder.mark();
 		builder.advanceLexer();
-		checkMatches(builder, JSTokenTypes.STRING_LITERAL, JSBundle.message("javascript.parser.message.expected.string.literal"));
+		checkMatches(builder, JSTokenTypes.STRING_LITERAL, JavaScriptBundle.message("javascript.parser.message.expected.string.literal"));
 		checkForSemicolon(builder);
 
 		useNSStatement.done(JSElementTypes.INCLUDE_DIRECTIVE);
@@ -477,7 +477,7 @@ public class StatementParsing extends Parsing
 
 		if(builder.getTokenType() != JSTokenTypes.NAMESPACE_KEYWORD)
 		{
-			builder.error(JSBundle.message("javascript.parser.message.expected.namespace"));
+			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.namespace"));
 		}
 		else
 		{
@@ -485,7 +485,7 @@ public class StatementParsing extends Parsing
 
 			if(!ExpressionParsing.parseQualifiedTypeName(builder))
 			{
-				builder.error(JSBundle.message("javascript.parser.message.expected.typename"));
+				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.typename"));
 			}
 
 			while(builder.getTokenType() == JSTokenTypes.COMMA)
@@ -493,7 +493,7 @@ public class StatementParsing extends Parsing
 				builder.advanceLexer();
 				if(!ExpressionParsing.parseQualifiedTypeName(builder))
 				{
-					builder.error(JSBundle.message("javascript.parser.message.expected.typename"));
+					builder.error(JavaScriptBundle.message("javascript.parser.message.expected.typename"));
 					break;
 				}
 			}
@@ -512,7 +512,7 @@ public class StatementParsing extends Parsing
 			final PsiBuilder.Marker nsAssignment = builder.mark();
 			if(!ExpressionParsing.parseQualifiedTypeName(builder, true))
 			{
-				builder.error(JSBundle.message("javascript.parser.message.expected.typename"));
+				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.typename"));
 				nsAssignment.drop();
 				return;
 			}
@@ -522,7 +522,7 @@ public class StatementParsing extends Parsing
 				builder.advanceLexer();
 				if(!ExpressionParsing.parseQualifiedTypeName(builder))
 				{
-					builder.error(JSBundle.message("javascript.parser.message.expected.typename"));
+					builder.error(JavaScriptBundle.message("javascript.parser.message.expected.typename"));
 				}
 
 				nsAssignment.done(JSElementTypes.ASSIGNMENT_EXPRESSION);
@@ -560,7 +560,7 @@ public class StatementParsing extends Parsing
 			builder.advanceLexer();
 			if(!ExpressionParsing.parseQualifiedTypeName(builder))
 			{
-				builder.error(JSBundle.message("javascript.parser.message.expected.typename"));
+				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.typename"));
 			}
 
 			if(builder.getTokenType() == JSTokenTypes.EXTENDS_KEYWORD)
@@ -630,7 +630,7 @@ public class StatementParsing extends Parsing
 		LOG.assertTrue(builder.getTokenType() == JSTokenTypes.CATCH_KEYWORD);
 		final PsiBuilder.Marker block = builder.mark();
 		builder.advanceLexer();
-		checkMatches(builder, JSTokenTypes.LPAR, JSBundle.message("javascript.parser.message.expected.lparen"));
+		checkMatches(builder, JSTokenTypes.LPAR, JavaScriptBundle.message("javascript.parser.message.expected.lparen"));
 
 		final IElementType identifierType = builder.getTokenType();
 
@@ -644,19 +644,19 @@ public class StatementParsing extends Parsing
 				if(builder.getTokenType() == JSTokenTypes.IF_KEYWORD)
 				{
 					builder.advanceLexer();
-					checkMatches(builder, identifierType, JSBundle.message("javascript.parser.message.expected.identifier"));
-					checkMatches(builder, JSTokenTypes.INSTANCEOF_KEYWORD, JSBundle.message("javascript.parser.message.expected.instanceof"));
-					checkMatches(builder, JSTokenTypes.IDENTIFIER, JSBundle.message("javascript.parser.message.expected.identifier"));
+					checkMatches(builder, identifierType, JavaScriptBundle.message("javascript.parser.message.expected.identifier"));
+					checkMatches(builder, JSTokenTypes.INSTANCEOF_KEYWORD, JavaScriptBundle.message("javascript.parser.message.expected.instanceof"));
+					checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptBundle.message("javascript.parser.message.expected.identifier"));
 				}
 			}
 			param.done(JSElementTypes.FORMAL_PARAMETER);
 		}
 		else
 		{
-			builder.error(JSBundle.message("javascript.parser.message.expected.parameter.name"));
+			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.parameter.name"));
 		}
 
-		checkMatches(builder, JSTokenTypes.RPAR, JSBundle.message("javascript.parser.message.expected.rparen"));
+		checkMatches(builder, JSTokenTypes.RPAR, JavaScriptBundle.message("javascript.parser.message.expected.rparen"));
 
 		parseBlock(builder);
 
@@ -681,16 +681,16 @@ public class StatementParsing extends Parsing
 		final PsiBuilder.Marker statement = builder.mark();
 		builder.advanceLexer();
 
-		checkMatches(builder, JSTokenTypes.LPAR, JSBundle.message("javascript.parser.message.expected.lparen"));
+		checkMatches(builder, JSTokenTypes.LPAR, JavaScriptBundle.message("javascript.parser.message.expected.lparen"));
 		ExpressionParsing.parseExpression(builder);
-		checkMatches(builder, JSTokenTypes.RPAR, JSBundle.message("javascript.parser.message.expected.rparen"));
+		checkMatches(builder, JSTokenTypes.RPAR, JavaScriptBundle.message("javascript.parser.message.expected.rparen"));
 
-		checkMatches(builder, JSTokenTypes.LBRACE, JSBundle.message("javascript.parser.message.expected.lbrace"));
+		checkMatches(builder, JSTokenTypes.LBRACE, JavaScriptBundle.message("javascript.parser.message.expected.lbrace"));
 		while(builder.getTokenType() != JSTokenTypes.RBRACE)
 		{
 			if(builder.eof())
 			{
-				builder.error(JSBundle.message("javascript.parser.message.unexpected.end.of.file"));
+				builder.error(JavaScriptBundle.message("javascript.parser.message.unexpected.end.of.file"));
 				statement.done(JSElementTypes.SWITCH_STATEMENT);
 				return;
 			}
@@ -707,14 +707,14 @@ public class StatementParsing extends Parsing
 		final PsiBuilder.Marker clause = builder.mark();
 		if(firstToken != JSTokenTypes.CASE_KEYWORD && firstToken != JSTokenTypes.DEFAULT_KEYWORD)
 		{
-			builder.error(JSBundle.message("javascript.parser.message.expected.catch.or.default"));
+			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.catch.or.default"));
 		}
 		builder.advanceLexer();
 		if(firstToken == JSTokenTypes.CASE_KEYWORD)
 		{
 			ExpressionParsing.parseExpression(builder);
 		}
-		checkMatches(builder, JSTokenTypes.COLON, JSBundle.message("javascript.parser.message.expected.colon"));
+		checkMatches(builder, JSTokenTypes.COLON, JavaScriptBundle.message("javascript.parser.message.expected.colon"));
 		while(true)
 		{
 			IElementType token = builder.getTokenType();
@@ -733,9 +733,9 @@ public class StatementParsing extends Parsing
 		final PsiBuilder.Marker statement = builder.mark();
 		builder.advanceLexer();
 
-		checkMatches(builder, JSTokenTypes.LPAR, JSBundle.message("javascript.parser.message.expected.lparen"));
+		checkMatches(builder, JSTokenTypes.LPAR, JavaScriptBundle.message("javascript.parser.message.expected.lparen"));
 		ExpressionParsing.parseExpression(builder);
-		checkMatches(builder, JSTokenTypes.RPAR, JSBundle.message("javascript.parser.message.expected.rparen"));
+		checkMatches(builder, JSTokenTypes.RPAR, JavaScriptBundle.message("javascript.parser.message.expected.rparen"));
 
 		parseStatement(builder);
 
@@ -839,7 +839,7 @@ public class StatementParsing extends Parsing
 			builder.advanceLexer();
 		}
 
-		checkMatches(builder, JSTokenTypes.LPAR, JSBundle.message("javascript.parser.message.expected.lparen"));
+		checkMatches(builder, JSTokenTypes.LPAR, JavaScriptBundle.message("javascript.parser.message.expected.lparen"));
 		final boolean empty;
 		if(builder.getTokenType() == JSTokenTypes.VAR_KEYWORD || builder.getTokenType() == JSTokenTypes.LET_KEYWORD)
 		{
@@ -863,7 +863,7 @@ public class StatementParsing extends Parsing
 			}
 			else
 			{
-				builder.error(JSBundle.message("javascript.parser.message.expected.semicolon"));
+				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.semicolon"));
 			}
 			ExpressionParsing.parseExpressionOptional(builder);
 		}
@@ -872,17 +872,17 @@ public class StatementParsing extends Parsing
 			forin = true;
 			if(empty)
 			{
-				builder.error(JSBundle.message("javascript.parser.message.expected.forloop.left.hand.side.expression.or.variable.declaration"));
+				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.forloop.left.hand.side.expression.or.variable.declaration"));
 			}
 			builder.advanceLexer();
 			ExpressionParsing.parseExpression(builder);
 		}
 		else
 		{
-			builder.error(JSBundle.message("javascript.parser.message.expected.forloop.in.or.semicolon"));
+			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.forloop.in.or.semicolon"));
 		}
 
-		checkMatches(builder, JSTokenTypes.RPAR, JSBundle.message("javascript.parser.message.expected.rparen"));
+		checkMatches(builder, JSTokenTypes.RPAR, JavaScriptBundle.message("javascript.parser.message.expected.rparen"));
 		return forin;
 	}
 
@@ -892,9 +892,9 @@ public class StatementParsing extends Parsing
 		final PsiBuilder.Marker statement = builder.mark();
 		builder.advanceLexer();
 
-		checkMatches(builder, JSTokenTypes.LPAR, JSBundle.message("javascript.parser.message.expected.lparen"));
+		checkMatches(builder, JSTokenTypes.LPAR, JavaScriptBundle.message("javascript.parser.message.expected.lparen"));
 		ExpressionParsing.parseExpression(builder);
-		checkMatches(builder, JSTokenTypes.RPAR, JSBundle.message("javascript.parser.message.expected.rparen"));
+		checkMatches(builder, JSTokenTypes.RPAR, JavaScriptBundle.message("javascript.parser.message.expected.rparen"));
 
 		parseStatement(builder);
 		statement.done(JSElementTypes.WHILE_STATEMENT);
@@ -907,10 +907,10 @@ public class StatementParsing extends Parsing
 		builder.advanceLexer();
 
 		parseStatement(builder);
-		checkMatches(builder, JSTokenTypes.WHILE_KEYWORD, JSBundle.message("javascript.parser.message.expected.while.keyword"));
-		checkMatches(builder, JSTokenTypes.LPAR, JSBundle.message("javascript.parser.message.expected.lparen"));
+		checkMatches(builder, JSTokenTypes.WHILE_KEYWORD, JavaScriptBundle.message("javascript.parser.message.expected.while.keyword"));
+		checkMatches(builder, JSTokenTypes.LPAR, JavaScriptBundle.message("javascript.parser.message.expected.lparen"));
 		ExpressionParsing.parseExpression(builder);
-		checkMatches(builder, JSTokenTypes.RPAR, JSBundle.message("javascript.parser.message.expected.rparen"));
+		checkMatches(builder, JSTokenTypes.RPAR, JavaScriptBundle.message("javascript.parser.message.expected.rparen"));
 		checkForSemicolon(builder);
 
 		statement.done(JSElementTypes.DOWHILE_STATEMENT);
@@ -922,7 +922,7 @@ public class StatementParsing extends Parsing
 		final PsiBuilder.Marker ifStatement = builder.mark();
 		builder.advanceLexer();
 
-		checkMatches(builder, JSTokenTypes.LPAR, JSBundle.message("javascript.parser.message.expected.lparen"));
+		checkMatches(builder, JSTokenTypes.LPAR, JavaScriptBundle.message("javascript.parser.message.expected.lparen"));
 		ExpressionParsing.parseExpression(builder);
 
 		// handle empty expressions inside
@@ -931,7 +931,7 @@ public class StatementParsing extends Parsing
 			builder.advanceLexer();
 		}
 
-		checkMatches(builder, JSTokenTypes.RPAR, JSBundle.message("javascript.parser.message.expected.rparen"));
+		checkMatches(builder, JSTokenTypes.RPAR, JavaScriptBundle.message("javascript.parser.message.expected.rparen"));
 
 		parseStatement(builder);
 
@@ -967,7 +967,7 @@ public class StatementParsing extends Parsing
 				declType == JSTokenTypes.LET_KEYWORD);
 		if(builder.getUserData(withinInterfaceKey) != null)
 		{
-			builder.error(JSBundle.message("interface.should.have.no.variable.declarations"));
+			builder.error(JavaScriptBundle.message("interface.should.have.no.variable.declarations"));
 		}
 
 		builder.advanceLexer();
@@ -980,7 +980,7 @@ public class StatementParsing extends Parsing
 			}
 			else
 			{
-				checkMatches(builder, JSTokenTypes.COMMA, JSBundle.message("javascript.parser.message.expected.comma"));
+				checkMatches(builder, JSTokenTypes.COMMA, JavaScriptBundle.message("javascript.parser.message.expected.comma"));
 			}
 
 			parseVarDeclaration(builder, !inForInitializationContext);
@@ -1011,7 +1011,7 @@ public class StatementParsing extends Parsing
 	{
 		if(!JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(builder.getTokenType()))
 		{
-			builder.error(JSBundle.message("javascript.parser.message.expected.variable.name"));
+			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.variable.name"));
 			builder.advanceLexer();
 			return;
 		}
@@ -1036,14 +1036,14 @@ public class StatementParsing extends Parsing
 			{
 				if(!ExpressionParsing.parseAssignmentExpression(builder))
 				{
-					builder.error(JSBundle.message("javascript.parser.message.expected.expression"));
+					builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
 				}
 			}
 			else
 			{
 				if(!ExpressionParsing.parseAssignmentExpressionNoIn(builder))
 				{
-					builder.error(JSBundle.message("javascript.parser.message.expected.expression"));
+					builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
 				}
 			}
 		}
@@ -1074,7 +1074,7 @@ public class StatementParsing extends Parsing
 			{
 				block.rollbackTo();
 			}
-			builder.error(JSBundle.message("javascript.parser.message.expected.lbrace"));
+			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.lbrace"));
 			return;
 		}
 
@@ -1083,7 +1083,7 @@ public class StatementParsing extends Parsing
 		{
 			if(builder.eof())
 			{
-				builder.error(JSBundle.message("javascript.parser.message.missing.rbrace"));
+				builder.error(JavaScriptBundle.message("javascript.parser.message.missing.rbrace"));
 				if(block != null)
 				{
 					block.done(JSElementTypes.BLOCK_STATEMENT);

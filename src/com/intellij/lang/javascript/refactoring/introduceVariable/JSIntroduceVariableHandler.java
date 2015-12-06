@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript.refactoring.introduceVariable;
 
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.refactoring.JSBaseIntroduceHandler;
@@ -31,7 +31,7 @@ public class JSIntroduceVariableHandler extends JSBaseIntroduceHandler<JSStateme
 	@Override
 	protected String getRefactoringName()
 	{
-		return JSBundle.message("javascript.introduce.variable.title");
+		return JavaScriptBundle.message("javascript.introduce.variable.title");
 	}
 
 	@Override

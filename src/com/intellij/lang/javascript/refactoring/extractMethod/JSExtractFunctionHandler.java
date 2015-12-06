@@ -17,7 +17,7 @@
 package com.intellij.lang.javascript.refactoring.extractMethod;
 
 import org.jetbrains.annotations.NotNull;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
@@ -71,7 +71,7 @@ public class JSExtractFunctionHandler implements RefactoringActionHandler
 					}
 				});
 			}
-		}, JSBundle.message("javascript.extract.method.title"), null);
+		}, JavaScriptBundle.message("javascript.extract.method.title"), null);
 	}
 
 	protected JSExtractFunctionSettings getSettings(final Project project, final Editor editor)

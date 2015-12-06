@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSAssignmentExpression;
 import com.intellij.lang.javascript.psi.JSDefinitionExpression;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -41,14 +41,14 @@ public class JSDeprecatedSymbolsInspection extends JSInspection
 	@NotNull
 	public String getGroupDisplayName()
 	{
-		return JSBundle.message("js.inspection.group.name");
+		return JavaScriptBundle.message("js.inspection.group.name");
 	}
 
 	@Override
 	@NotNull
 	public String getDisplayName()
 	{
-		return JSBundle.message("js.deprecated.symbols.inspection.name");
+		return JavaScriptBundle.message("js.deprecated.symbols.inspection.name");
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class JSDeprecatedSymbolsInspection extends JSInspection
 					}
 					if(JSDocumentationUtils.isDeprecated(element))
 					{
-						holder.registerProblem(node.getReferenceNameElement(), JSBundle.message("javascript.deprecated.symbol.used.name.message"),
+						holder.registerProblem(node.getReferenceNameElement(), JavaScriptBundle.message("javascript.deprecated.symbol.used.name.message"),
 								ProblemHighlightType.LIKE_DEPRECATED);
 						break;
 					}

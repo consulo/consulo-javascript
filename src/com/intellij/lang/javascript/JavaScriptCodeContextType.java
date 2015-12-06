@@ -43,7 +43,7 @@ public class JavaScriptCodeContextType extends TemplateContextType
 
 	public JavaScriptCodeContextType()
 	{
-		super(JAVA_SCRIPT, JSBundle.message("javascript.template.context.type"));
+		super(JAVA_SCRIPT, JavaScriptBundle.message("javascript.template.context.type"));
 	}
 
 	@Override

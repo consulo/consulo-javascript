@@ -20,7 +20,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.openapi.ui.DialogWrapper;
 
 /**
@@ -37,7 +37,7 @@ public class JSExtractFunctionDialog extends DialogWrapper implements JSExtractF
 	{
 		super(false);
 
-		setTitle(JSBundle.message("javascript.extract.method.title"));
+		setTitle(JavaScriptBundle.message("javascript.extract.method.title"));
 		init();
 	}
 

@@ -4,7 +4,7 @@
 	<version>SNAPSHOT</version>
 	<category>Custom Languages</category>
 	<vendor>JetBrains</vendor>
-	<resource-bundle>com.intellij.lang.javascript.JavaScriptBundle</resource-bundle>
+	<resource-bundle>messages.JavaScriptBundle</resource-bundle>
 	<depends>com.intellij.xml</depends>
 
 	<xi:include href="/META-INF/Inspections.xml" xpointer="xpointer(/idea-plugin/*)"/>
@@ -13,8 +13,16 @@
 	<xi:include href="/META-INF/ecma4.xml" xpointer="xpointer(/idea-plugin/*)"/>
 	<xi:include href="/META-INF/actionscript.xml" xpointer="xpointer(/idea-plugin/*)"/>
 
+	<actions>
+		<action id="JavaScript.File" class="org.mustbe.consulo.javascript.ide.actions.JavaScriptCreateFileAction">
+			<add-to-group group-id="NewGroup1" anchor="after" relative-to-action="NewClass"/>
+		</action>
+	</actions>
+
 	<extensions defaultExtensionNs="com.intellij">
 		<errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
+
+		<internalFileTemplate name="JavaScriptFile"/>
 
 		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.DefaultJavaScriptLanguageVersion"
 							id="defaultJavaScript" order="first"/>

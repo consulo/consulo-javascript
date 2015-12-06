@@ -18,7 +18,7 @@ package com.intellij.lang.javascript.surroundWith;
 
 import org.jetbrains.annotations.NonNls;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSIfStatement;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
@@ -36,7 +36,7 @@ public class JSWithIfSurrounder extends JSStatementSurrounder
 	@Override
 	public String getTemplateDescription()
 	{
-		return JSBundle.message("javascript.surround.with.if");
+		return JavaScriptBundle.message("javascript.surround.with.if");
 	}
 
 	@Override

@@ -17,7 +17,7 @@
 package com.intellij.lang.javascript.refactoring.introduceField;
 
 import org.jetbrains.annotations.NonNls;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JSLanguageDialect;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
@@ -50,7 +50,7 @@ public class JSIntroduceFieldHandler extends JSBaseIntroduceHandler<JSElement, J
 	@Override
 	protected String getRefactoringName()
 	{
-		return JSBundle.message("javascript.introduce.field.title");
+		return JavaScriptBundle.message("javascript.introduce.field.title");
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class JSIntroduceFieldHandler extends JSBaseIntroduceHandler<JSElement, J
 	{
 		if(file.getLanguage() != JavaScriptSupportLoader.ECMA_SCRIPT_L4)
 		{
-			CommonRefactoringUtil.showErrorHint(file.getProject(), editor, JSBundle.message("javascript.introduce.field.error.not.available.in.javascript" +
+			CommonRefactoringUtil.showErrorHint(file.getProject(), editor, JavaScriptBundle.message("javascript.introduce.field.error.not.available.in.javascript" +
 					".code"), getRefactoringName(), null);
 			return null;
 		}

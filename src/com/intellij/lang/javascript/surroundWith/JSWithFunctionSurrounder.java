@@ -17,7 +17,7 @@
 package com.intellij.lang.javascript.surroundWith;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
@@ -28,7 +28,7 @@ public class JSWithFunctionSurrounder extends JSStatementSurrounder
 	@Override
 	public String getTemplateDescription()
 	{
-		return JSBundle.message("javascript.surround.with.function");
+		return JavaScriptBundle.message("javascript.surround.with.function");
 	}
 
 	@Override

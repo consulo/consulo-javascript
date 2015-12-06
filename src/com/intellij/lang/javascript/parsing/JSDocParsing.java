@@ -18,7 +18,7 @@ package com.intellij.lang.javascript.parsing;
 
 import org.jetbrains.annotations.NonNls;
 import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JSDocTokenTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.psi.tree.IElementType;
@@ -67,7 +67,7 @@ public class JSDocParsing
 
 				if(isInvalidTokenType(builder))
 				{
-					builder.error(JSBundle.message("javascript.parser.message.expected.doc.tag.name"));
+					builder.error(JavaScriptBundle.message("javascript.parser.message.expected.doc.tag.name"));
 					return false;
 				}
 
@@ -106,7 +106,7 @@ public class JSDocParsing
 
 				if(isInvalidTokenType(builder))
 				{
-					builder.error(JSBundle.message("javascript.parser.message.expected.doc.tag.value"));
+					builder.error(JavaScriptBundle.message("javascript.parser.message.expected.doc.tag.value"));
 					return false;
 				}
 			}

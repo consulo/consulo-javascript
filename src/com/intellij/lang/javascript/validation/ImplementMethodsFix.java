@@ -19,7 +19,7 @@ package com.intellij.lang.javascript.validation;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.codeInsight.intention.IntentionAction;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSAttributeList;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSFunction;
@@ -45,7 +45,7 @@ public class ImplementMethodsFix extends BaseCreateMethodsFix<JSFunction> implem
 	@NotNull
 	public String getText()
 	{
-		return JSBundle.message("javascript.fix.implement.methods");
+		return JavaScriptBundle.message("javascript.fix.implement.methods");
 	}
 
 	@Override

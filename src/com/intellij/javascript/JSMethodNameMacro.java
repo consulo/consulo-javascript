@@ -24,7 +24,7 @@ import com.intellij.codeInsight.template.ExpressionContext;
 import com.intellij.codeInsight.template.Macro;
 import com.intellij.codeInsight.template.Result;
 import com.intellij.codeInsight.template.TextResult;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSFunctionExpression;
 import com.intellij.psi.PsiElement;
@@ -43,7 +43,7 @@ public class JSMethodNameMacro extends Macro
 	@Override
 	public String getPresentableName()
 	{
-		return JSBundle.message("js.methodname.macro.description");
+		return JavaScriptBundle.message("js.methodname.macro.description");
 	}
 
 

@@ -19,7 +19,7 @@ package com.intellij.lang.javascript.surroundWith;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import com.intellij.lang.javascript.psi.util.JSUtils;
@@ -42,7 +42,7 @@ public class JSWithParenthesesSurrounder implements Surrounder
 	@Override
 	public String getTemplateDescription()
 	{
-		return JSBundle.message("javascript.surround.with.parenthesis");
+		return JavaScriptBundle.message("javascript.surround.with.parenthesis");
 	}
 
 	@Override

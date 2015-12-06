@@ -47,7 +47,7 @@ public class JavaScriptFileType extends LanguageFileType
 	@NotNull
 	public String getDescription()
 	{
-		return JSBundle.message("javascript.filetype.description");
+		return JavaScriptBundle.message("javascript.filetype.description");
 	}
 
 	@Override

@@ -32,7 +32,7 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.ide.util.PsiElementListCellRenderer;
 import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
@@ -90,7 +90,7 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
 	@NotNull
 	public String getText()
 	{
-		return JSBundle.message(isFunction ? "flex.import.function" : "flex.import.class", calculatedClass);
+		return JavaScriptBundle.message(isFunction ? "flex.import.function" : "flex.import.class", calculatedClass);
 	}
 
 	@Override
@@ -253,7 +253,7 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
 							{
 								return 0;
 							}
-						}, JSBundle.message("choose.class.title"), new PsiElementProcessor<JSQualifiedNamedElement>()
+						}, JavaScriptBundle.message("choose.class.title"), new PsiElementProcessor<JSQualifiedNamedElement>()
 						{
 							@Override
 							public boolean execute(final JSQualifiedNamedElement element)

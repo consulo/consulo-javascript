@@ -19,7 +19,7 @@ package com.intellij.lang.javascript.findUsages;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.cacheBuilder.WordsScanner;
 import com.intellij.lang.findUsages.FindUsagesProvider;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSDefinitionExpression;
@@ -67,47 +67,47 @@ public class JavaScriptFindUsagesProvider implements FindUsagesProvider
 		}
 		if(element instanceof JSFunction)
 		{
-			return JSBundle.message("javascript.language.term.function");
+			return JavaScriptBundle.message("javascript.language.term.function");
 		}
 		if(element instanceof JSClass)
 		{
-			return JSBundle.message("javascript.language.term.class");
+			return JavaScriptBundle.message("javascript.language.term.class");
 		}
 		if(element instanceof JSNamespaceDeclaration)
 		{
-			return JSBundle.message("javascript.language.term.namespace");
+			return JavaScriptBundle.message("javascript.language.term.namespace");
 		}
 		if(element instanceof JSParameter)
 		{
-			return JSBundle.message("javascript.language.term.parameter");
+			return JavaScriptBundle.message("javascript.language.term.parameter");
 		}
 		if(element instanceof JSProperty)
 		{
-			return JSBundle.message("javascript.language.term.property");
+			return JavaScriptBundle.message("javascript.language.term.property");
 		}
 		if(element instanceof JSVariable)
 		{
-			return JSBundle.message("javascript.language.term.variable");
+			return JavaScriptBundle.message("javascript.language.term.variable");
 		}
 		if(element instanceof JSLabeledStatement)
 		{
-			return JSBundle.message("javascript.language.term.label");
+			return JavaScriptBundle.message("javascript.language.term.label");
 		}
 		if(element instanceof JSDefinitionExpression)
 		{
-			return JSBundle.message("javascript.language.term.value");
+			return JavaScriptBundle.message("javascript.language.term.value");
 		}
 		if(element instanceof XmlTag)
 		{
-			return JSBundle.message("javascript.language.term.tag");
+			return JavaScriptBundle.message("javascript.language.term.tag");
 		}
 		if(element instanceof XmlToken)
 		{
-			return JSBundle.message("javascript.language.term.attribute.value");
+			return JavaScriptBundle.message("javascript.language.term.attribute.value");
 		}
 		if(element instanceof JSPackageWrapper || element instanceof JSPackageStatement)
 		{
-			return JSBundle.message("javascript.language.term.package");
+			return JavaScriptBundle.message("javascript.language.term.package");
 		}
 		return "";
 	}

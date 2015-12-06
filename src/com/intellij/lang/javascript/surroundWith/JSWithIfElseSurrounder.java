@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript.surroundWith;
 
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 
@@ -32,7 +32,7 @@ public class JSWithIfElseSurrounder extends JSWithIfSurrounder
 	@Override
 	public String getTemplateDescription()
 	{
-		return JSBundle.message("javascript.surround.with.if.else");
+		return JavaScriptBundle.message("javascript.surround.with.if.else");
 	}
 
 	@Override

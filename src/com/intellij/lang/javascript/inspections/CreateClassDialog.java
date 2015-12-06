@@ -23,7 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSExpressionStatement;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
@@ -47,7 +47,7 @@ class CreateClassDialog extends DialogWrapper
 	{
 		super(project, false);
 
-		setTitle(JSBundle.message(isInterface ? "create.interface.dialog.title" : "create.class.dialog.title"));
+		setTitle(JavaScriptBundle.message(isInterface ? "create.interface.dialog.title" : "create.class.dialog.title"));
 		setModal(true);
 
 		myPackageName.getDocument().addDocumentListener(new DocumentAdapter()

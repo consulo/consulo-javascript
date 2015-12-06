@@ -17,7 +17,7 @@
 package com.intellij.lang.javascript.refactoring.introduceConstant;
 
 import org.jetbrains.annotations.NonNls;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.JSAttributeList;
 import com.intellij.lang.javascript.psi.JSAttributeListOwner;
@@ -46,7 +46,7 @@ public class JSIntroduceConstantHandler extends JSBaseIntroduceHandler<JSElement
 	@Override
 	protected String getRefactoringName()
 	{
-		return JSBundle.message("javascript.introduce.constant.title");
+		return JavaScriptBundle.message("javascript.introduce.constant.title");
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public class JSIntroduceConstantHandler extends JSBaseIntroduceHandler<JSElement
 	{
 		if(file.getLanguage() != JavaScriptSupportLoader.ECMA_SCRIPT_L4)
 		{
-			CommonRefactoringUtil.showErrorHint(file.getProject(), editor, JSBundle.message("javascript.introduce.constant.error.not.available.in.javascript" +
+			CommonRefactoringUtil.showErrorHint(file.getProject(), editor, JavaScriptBundle.message("javascript.introduce.constant.error.not.available.in.javascript" +
 					".code"), getRefactoringName(), null);
 			return null;
 		}
@@ -137,7 +137,7 @@ public class JSIntroduceConstantHandler extends JSBaseIntroduceHandler<JSElement
 
 		if(Boolean.TRUE.equals(hasAccesibilityProblem.get()))
 		{
-			CommonRefactoringUtil.showErrorHint(file.getProject(), editor, JSBundle.message("javascript.introduce.constant.error.not.constant.expression" +
+			CommonRefactoringUtil.showErrorHint(file.getProject(), editor, JavaScriptBundle.message("javascript.introduce.constant.error.not.constant.expression" +
 					".selected"), getRefactoringName(), null);
 			return null;
 		}

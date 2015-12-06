@@ -25,7 +25,7 @@ import javax.swing.ImageIcon;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptorUpdaters;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.psi.*;
@@ -66,7 +66,7 @@ class JSStructureItemPresentation extends JSStructureViewElement.JSStructureItem
 			}
 			else
 			{
-				return JSBundle.message("javascript.language.term.prototype");
+				return JavaScriptBundle.message("javascript.language.term.prototype");
 			}
 		}
 

@@ -23,7 +23,7 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
@@ -45,34 +45,34 @@ public class JavaScriptColorsAndFontsPage implements ColorSettingsPage
 	static
 	{
 		ATTRS = new AttributesDescriptor[]{
-				new AttributesDescriptor(JSBundle.message("javascript.keyword"), JSHighlighter.JS_KEYWORD),
-				new AttributesDescriptor(JSBundle.message("javascript.string"), JSHighlighter.JS_STRING),
-				new AttributesDescriptor(JSBundle.message("javascript.valid.string.escape"), JSHighlighter.JS_VALID_STRING_ESCAPE),
-				new AttributesDescriptor(JSBundle.message("javascript.invalid.string.escape"), JSHighlighter.JS_INVALID_STRING_ESCAPE),
-				new AttributesDescriptor(JSBundle.message("javascript.number"), JSHighlighter.JS_NUMBER),
-				new AttributesDescriptor(JSBundle.message("javascript.regexp"), JSHighlighter.JS_REGEXP),
-				new AttributesDescriptor(JSBundle.message("javascript.linecomment"), JSHighlighter.JS_LINE_COMMENT),
-				new AttributesDescriptor(JSBundle.message("javascript.blockcomment"), JSHighlighter.JS_BLOCK_COMMENT),
-				new AttributesDescriptor(JSBundle.message("javascript.doccomment"), JSHighlighter.JS_DOC_COMMENT),
-				new AttributesDescriptor(JSBundle.message("javascript.operation"), JSHighlighter.JS_OPERATION_SIGN),
-				new AttributesDescriptor(JSBundle.message("javascript.parens"), JSHighlighter.JS_PARENTHS),
-				new AttributesDescriptor(JSBundle.message("javascript.brackets"), JSHighlighter.JS_BRACKETS),
-				new AttributesDescriptor(JSBundle.message("javascript.braces"), JSHighlighter.JS_BRACES),
-				new AttributesDescriptor(JSBundle.message("javascript.comma"), JSHighlighter.JS_COMMA),
-				new AttributesDescriptor(JSBundle.message("javascript.dot"), JSHighlighter.JS_DOT),
-				new AttributesDescriptor(JSBundle.message("javascript.semicolon"), JSHighlighter.JS_SEMICOLON),
-				new AttributesDescriptor(JSBundle.message("javascript.badcharacter"), JSHighlighter.JS_BAD_CHARACTER),
-				new AttributesDescriptor(JSBundle.message("javascript.docmarkup"), JSHighlighter.JS_DOC_MARKUP),
-				new AttributesDescriptor(JSBundle.message("javascript.doctag"), JSHighlighter.JS_DOC_TAG),
-				new AttributesDescriptor(JSBundle.message("javascript.parameter"), JSHighlighter.JS_PARAMETER),
-				new AttributesDescriptor(JSBundle.message("javascript.local.variable"), JSHighlighter.JS_LOCAL_VARIABLE),
-				new AttributesDescriptor(JSBundle.message("javascript.global.variable"), JSHighlighter.JS_GLOBAL_VARIABLE),
-				new AttributesDescriptor(JSBundle.message("javascript.global.function"), JSHighlighter.JS_GLOBAL_FUNCTION),
-				new AttributesDescriptor(JSBundle.message("javascript.instance.member.function"), JSHighlighter.JS_INSTANCE_MEMBER_FUNCTION),
-				new AttributesDescriptor(JSBundle.message("javascript.static.member.function"), JSHighlighter.JS_STATIC_MEMBER_FUNCTION),
-				new AttributesDescriptor(JSBundle.message("javascript.static.member.variable"), JSHighlighter.JS_STATIC_MEMBER_VARIABLE),
-				new AttributesDescriptor(JSBundle.message("javascript.instance.member.variable"), JSHighlighter.JS_INSTANCE_MEMBER_VARIABLE),
-				new AttributesDescriptor(JSBundle.message("javascript.metadata"), JSHighlighter.JS_METADATA),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.keyword"), JSHighlighter.JS_KEYWORD),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.string"), JSHighlighter.JS_STRING),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.valid.string.escape"), JSHighlighter.JS_VALID_STRING_ESCAPE),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.invalid.string.escape"), JSHighlighter.JS_INVALID_STRING_ESCAPE),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.number"), JSHighlighter.JS_NUMBER),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.regexp"), JSHighlighter.JS_REGEXP),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.linecomment"), JSHighlighter.JS_LINE_COMMENT),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.blockcomment"), JSHighlighter.JS_BLOCK_COMMENT),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.doccomment"), JSHighlighter.JS_DOC_COMMENT),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.operation"), JSHighlighter.JS_OPERATION_SIGN),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.parens"), JSHighlighter.JS_PARENTHS),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.brackets"), JSHighlighter.JS_BRACKETS),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.braces"), JSHighlighter.JS_BRACES),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.comma"), JSHighlighter.JS_COMMA),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.dot"), JSHighlighter.JS_DOT),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.semicolon"), JSHighlighter.JS_SEMICOLON),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.badcharacter"), JSHighlighter.JS_BAD_CHARACTER),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.docmarkup"), JSHighlighter.JS_DOC_MARKUP),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.doctag"), JSHighlighter.JS_DOC_TAG),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.parameter"), JSHighlighter.JS_PARAMETER),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.local.variable"), JSHighlighter.JS_LOCAL_VARIABLE),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.global.variable"), JSHighlighter.JS_GLOBAL_VARIABLE),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.global.function"), JSHighlighter.JS_GLOBAL_FUNCTION),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.instance.member.function"), JSHighlighter.JS_INSTANCE_MEMBER_FUNCTION),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.static.member.function"), JSHighlighter.JS_STATIC_MEMBER_FUNCTION),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.static.member.variable"), JSHighlighter.JS_STATIC_MEMBER_VARIABLE),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.instance.member.variable"), JSHighlighter.JS_INSTANCE_MEMBER_VARIABLE),
+				new AttributesDescriptor(JavaScriptBundle.message("javascript.metadata"), JSHighlighter.JS_METADATA),
 		};
 	}
 

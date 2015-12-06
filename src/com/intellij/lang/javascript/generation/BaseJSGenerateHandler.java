@@ -29,7 +29,7 @@ import javax.swing.JComponent;
 import org.jetbrains.annotations.NonNls;
 import com.intellij.ide.util.MemberChooser;
 import com.intellij.lang.LanguageCodeInsightActionHandler;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.validation.BaseCreateMethodsFix;
@@ -90,7 +90,7 @@ abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler
           } */
 				};
 
-				chooser.setTitle(JSBundle.message(getTitleKey()));
+				chooser.setTitle(JavaScriptBundle.message(getTitleKey()));
 				chooser.setCopyJavadocVisible(false);
 				chooser.show();
 				if(chooser.getExitCode() != DialogWrapper.OK_EXIT_CODE)

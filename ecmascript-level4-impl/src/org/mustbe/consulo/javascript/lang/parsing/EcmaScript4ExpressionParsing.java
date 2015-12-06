@@ -1,7 +1,7 @@
 package org.mustbe.consulo.javascript.lang.parsing;
 
 import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.psi.tree.IElementType;
@@ -87,7 +87,7 @@ public class EcmaScript4ExpressionParsing extends ExpressionParsing
 				}
 				else
 				{
-					builder.error(JSBundle.message("javascript.parser.message.expected.name"));
+					builder.error(JavaScriptBundle.message("javascript.parser.message.expected.name"));
 				}
 
 				expr.done(JSElementTypes.REFERENCE_EXPRESSION);
@@ -97,7 +97,7 @@ public class EcmaScript4ExpressionParsing extends ExpressionParsing
 			{
 				builder.advanceLexer();
 				parseExpression(builder);
-				checkMatches(builder, JSTokenTypes.RBRACKET, JSBundle.message("javascript.parser.message.expected.rbracket"));
+				checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptBundle.message("javascript.parser.message.expected.rbracket"));
 				expr.done(JSElementTypes.INDEXED_PROPERTY_ACCESS_EXPRESSION);
 				expr = expr.precede();
 			}
@@ -160,7 +160,7 @@ public class EcmaScript4ExpressionParsing extends ExpressionParsing
 			}
 			else
 			{
-				checkMatches(builder, JSTokenTypes.IDENTIFIER, JSBundle.message("javascript.parser.message.expected.name"));
+				checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptBundle.message("javascript.parser.message.expected.name"));
 			}
 			expr.done(JSElementTypes.REFERENCE_EXPRESSION);
 			expr = expr.precede();
@@ -202,7 +202,7 @@ public class EcmaScript4ExpressionParsing extends ExpressionParsing
 		PsiBuilder.Marker genericTypeSignature = builder.mark();
 		builder.advanceLexer();
 		parseType(builder);
-		checkMatches(builder, JSTokenTypes.GT, JSBundle.message("javascript.parser.message.expected.lt"));
+		checkMatches(builder, JSTokenTypes.GT, JavaScriptBundle.message("javascript.parser.message.expected.lt"));
 		genericTypeSignature.done(JSElementTypes.GENERIC_SIGNATURE);
 	}
 }

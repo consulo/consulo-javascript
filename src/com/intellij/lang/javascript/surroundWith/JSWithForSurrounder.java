@@ -17,7 +17,7 @@
 package com.intellij.lang.javascript.surroundWith;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSForStatement;
@@ -38,7 +38,7 @@ public class JSWithForSurrounder extends JSStatementSurrounder
 	@Override
 	public String getTemplateDescription()
 	{
-		return JSBundle.message("javascript.surround.with.for");
+		return JavaScriptBundle.message("javascript.surround.with.for");
 	}
 
 	@Override

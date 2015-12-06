@@ -19,7 +19,7 @@ package com.intellij.lang.javascript.surroundWith;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.JSCatchBlock;
 import com.intellij.lang.javascript.psi.JSStatement;
@@ -40,7 +40,7 @@ public class JSWithTryCatchFinallySurrounder extends JSStatementSurrounder
 	@Override
 	public String getTemplateDescription()
 	{
-		return JSBundle.message("javascript.surround.with.try.catch.finally");
+		return JavaScriptBundle.message("javascript.surround.with.try.catch.finally");
 	}
 
 	@Override

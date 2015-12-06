@@ -17,7 +17,7 @@
 package com.intellij.lang.javascript.surroundWith;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSWhileStatement;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
@@ -35,7 +35,7 @@ public class JSWithWhileSurrounder extends JSStatementSurrounder
 	@Override
 	public String getTemplateDescription()
 	{
-		return JSBundle.message("javascript.surround.with.while");
+		return JavaScriptBundle.message("javascript.surround.with.while");
 	}
 
 	@Override

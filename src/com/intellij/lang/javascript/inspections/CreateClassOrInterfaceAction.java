@@ -25,7 +25,7 @@ import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.flex.ImportUtils;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
@@ -71,7 +71,7 @@ class CreateClassOrInterfaceAction implements LocalQuickFix
 	public String getName()
 	{
 		final String key = myIsInterface ? "javascript.create.interface.intention.name" : "javascript.create.class.intention.name";
-		return JSBundle.message(key, classNameToCreate);
+		return JavaScriptBundle.message(key, classNameToCreate);
 	}
 
 	@Override

@@ -18,7 +18,7 @@ package com.intellij.lang.javascript.parsing;
 
 import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.openapi.util.Key;
@@ -74,7 +74,7 @@ public class FunctionParsing extends Parsing
 		{
 			if(!expressionContext && builder.getTokenType() != JSTokenTypes.LPAR /*get/set as name*/)
 			{
-				builder.error(JSBundle.message("javascript.parser.message.expected.function.name"));
+				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.function.name"));
 			}
 		}
 
@@ -95,7 +95,7 @@ public class FunctionParsing extends Parsing
 
 			if(builder.getTokenType() == JSTokenTypes.LBRACE)
 			{
-				builder.error(JSBundle.message("interface.function.declaration.should.have.no.body"));
+				builder.error(JavaScriptBundle.message("interface.function.declaration.should.have.no.body"));
 			}
 		}
 
@@ -105,7 +105,7 @@ public class FunctionParsing extends Parsing
 	public static void parseAttributeWithoutBrackets(final PsiBuilder builder)
 	{
 		final PsiBuilder.Marker attribute = builder.mark();
-		if(!checkMatches(builder, JSTokenTypes.IDENTIFIER, JSBundle.message("javascript.parser.message.expected.identifier")))
+		if(!checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptBundle.message("javascript.parser.message.expected.identifier")))
 		{
 			attribute.drop();
 			return;
@@ -140,7 +140,7 @@ public class FunctionParsing extends Parsing
 
 					builder.advanceLexer();
 
-					if(builder.eof() || (!checkMatches(builder, JSTokenTypes.IDENTIFIER, JSBundle.message("javascript.parser.message.expected.identifier")) &&
+					if(builder.eof() || (!checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptBundle.message("javascript.parser.message.expected.identifier")) &&
 							builder.getTokenType() != JSTokenTypes.RBRACKET))
 					{
 						attribute.drop();
@@ -154,7 +154,7 @@ public class FunctionParsing extends Parsing
 						if(builder.eof())
 						{
 							attribute.done(JSElementTypes.ATTRIBUTE);
-							builder.error(JSBundle.message("javascript.parser.message.expected.rbracket"));
+							builder.error(JavaScriptBundle.message("javascript.parser.message.expected.rbracket"));
 							return;
 						}
 					}
@@ -218,7 +218,7 @@ public class FunctionParsing extends Parsing
 
 	private static void parseAttributeBody(final PsiBuilder builder)
 	{
-		final boolean haveLParen = checkMatches(builder, JSTokenTypes.LPAR, JSBundle.message("javascript.parser.message.expected.lparen"));
+		final boolean haveLParen = checkMatches(builder, JSTokenTypes.LPAR, JavaScriptBundle.message("javascript.parser.message.expected.lparen"));
 		boolean hasName;
 
 		while(haveLParen)
@@ -228,7 +228,7 @@ public class FunctionParsing extends Parsing
 
 			if(builder.getTokenType() == JSTokenTypes.COMMA)
 			{
-				builder.error(JSBundle.message("javascript.parser.message.expected.identifer.or.value"));
+				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.identifer.or.value"));
 				break;
 			}
 			if(builder.getTokenType() == JSTokenTypes.RBRACKET)
@@ -241,7 +241,7 @@ public class FunctionParsing extends Parsing
 
 			if(hasName && builder.getTokenType() != JSTokenTypes.COMMA && builder.getTokenType() != JSTokenTypes.RPAR)
 			{
-				checkMatches(builder, JSTokenTypes.EQ, JSBundle.message("javascript.parser.message.expected.equal"));
+				checkMatches(builder, JSTokenTypes.EQ, JavaScriptBundle.message("javascript.parser.message.expected.equal"));
 
 				if(builder.getTokenType() != JSTokenTypes.COMMA && builder.getTokenType() != JSTokenTypes.RBRACKET && builder.getTokenType() != JSTokenTypes
 						.RPAR)
@@ -250,7 +250,7 @@ public class FunctionParsing extends Parsing
 				}
 				else
 				{
-					builder.error(JSBundle.message("javascript.parser.message.expected.value"));
+					builder.error(JavaScriptBundle.message("javascript.parser.message.expected.value"));
 				}
 			}
 
@@ -266,14 +266,14 @@ public class FunctionParsing extends Parsing
 
 			if(builder.eof())
 			{
-				builder.error(JSBundle.message("javascript.parser.message.expected.rparen"));
+				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.rparen"));
 				return;
 			}
 		}
 
 		if(haveLParen)
 		{
-			checkMatches(builder, JSTokenTypes.RPAR, JSBundle.message("javascript.parser.message.expected.rparen"));
+			checkMatches(builder, JSTokenTypes.RPAR, JavaScriptBundle.message("javascript.parser.message.expected.rparen"));
 		}
 		else
 		{
@@ -286,7 +286,7 @@ public class FunctionParsing extends Parsing
 		final PsiBuilder.Marker parameterList;
 		if(builder.getTokenType() != JSTokenTypes.LPAR)
 		{
-			builder.error(JSBundle.message("javascript.parser.message.expected.lparen"));
+			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.lparen"));
 			parameterList = builder.mark(); // To have non-empty parameters list at all the time.
 			parameterList.done(JSElementTypes.PARAMETER_LIST);
 			return;
@@ -312,7 +312,7 @@ public class FunctionParsing extends Parsing
 				}
 				else
 				{
-					builder.error(JSBundle.message("javascript.parser.message.expected.comma.or.rparen"));
+					builder.error(JavaScriptBundle.message("javascript.parser.message.expected.comma.or.rparen"));
 					break;
 				}
 			}
@@ -335,7 +335,7 @@ public class FunctionParsing extends Parsing
 			}
 			else
 			{
-				builder.error(JSBundle.message("javascript.parser.message.expected.formal.parameter.name"));
+				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.formal.parameter.name"));
 				parameter.drop();
 			}
 		}

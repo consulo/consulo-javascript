@@ -115,8 +115,8 @@ public class JSSmartEnterProcessor extends SmartEnterProcessor
 			element = prevMeaningfulElement;
 		}
 
-		if(element instanceof PsiErrorElement && (JSBundle.message("javascript.parser.message.expected.lbrace").equals(errorDescription = (
-				(PsiErrorElement) element).getErrorDescription()) || JSBundle.message("javascript.parser.message.expected.statement").equals(errorDescription)))
+		if(element instanceof PsiErrorElement && (JavaScriptBundle.message("javascript.parser.message.expected.lbrace").equals(errorDescription = (
+				(PsiErrorElement) element).getErrorDescription()) || JavaScriptBundle.message("javascript.parser.message.expected.statement").equals(errorDescription)))
 		{
 			String semicolon = "";
 
@@ -131,7 +131,7 @@ public class JSSmartEnterProcessor extends SmartEnterProcessor
 			insertCommitReformat(project, editor, psiFile, offset, "{\n\n}" + semicolon, 2, true);
 			return true;
 		}
-		else if(JSBundle.message("javascript.parser.message.expected.lparen").equals(errorDescription) || JSBundle.message("javascript.parser.message" +
+		else if(JavaScriptBundle.message("javascript.parser.message.expected.lparen").equals(errorDescription) || JavaScriptBundle.message("javascript.parser.message" +
 				".expected.function.name").equals(errorDescription))
 		{
 			insertCommitReformat(project, editor, psiFile, offset, "()", 1, false);

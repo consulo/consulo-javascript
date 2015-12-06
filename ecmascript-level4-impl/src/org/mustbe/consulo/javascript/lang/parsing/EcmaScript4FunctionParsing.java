@@ -1,7 +1,7 @@
 package org.mustbe.consulo.javascript.lang.parsing;
 
 import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.psi.tree.IElementType;
@@ -20,7 +20,7 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 	public void parseAttributeWithoutBrackets(final PsiBuilder builder)
 	{
 		final PsiBuilder.Marker attribute = builder.mark();
-		if(!checkMatches(builder, JSTokenTypes.IDENTIFIER, JSBundle.message("javascript.parser.message.expected.identifier")))
+		if(!checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptBundle.message("javascript.parser.message.expected.identifier")))
 		{
 			attribute.drop();
 			return;
@@ -51,7 +51,7 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 
 					builder.advanceLexer();
 
-					if(builder.eof() || (!checkMatches(builder, JSTokenTypes.IDENTIFIER, JSBundle.message("javascript.parser.message.expected.identifier")) &&
+					if(builder.eof() || (!checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptBundle.message("javascript.parser.message.expected.identifier")) &&
 							builder.getTokenType() != JSTokenTypes.RBRACKET))
 					{
 						attribute.drop();
@@ -65,7 +65,7 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 						if(builder.eof())
 						{
 							attribute.done(JSElementTypes.ATTRIBUTE);
-							builder.error(JSBundle.message("javascript.parser.message.expected.rbracket"));
+							builder.error(JavaScriptBundle.message("javascript.parser.message.expected.rbracket"));
 							return;
 						}
 					}
@@ -129,7 +129,7 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 
 	private void parseAttributeBody(final PsiBuilder builder)
 	{
-		final boolean haveLParen = checkMatches(builder, JSTokenTypes.LPAR, JSBundle.message("javascript.parser.message.expected.lparen"));
+		final boolean haveLParen = checkMatches(builder, JSTokenTypes.LPAR, JavaScriptBundle.message("javascript.parser.message.expected.lparen"));
 		boolean hasName;
 
 		while(haveLParen)
@@ -139,7 +139,7 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 
 			if(builder.getTokenType() == JSTokenTypes.COMMA)
 			{
-				builder.error(JSBundle.message("javascript.parser.message.expected.identifer.or.value"));
+				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.identifer.or.value"));
 				break;
 			}
 			if(builder.getTokenType() == JSTokenTypes.RBRACKET)
@@ -152,7 +152,7 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 
 			if(hasName && builder.getTokenType() != JSTokenTypes.COMMA && builder.getTokenType() != JSTokenTypes.RPAR)
 			{
-				checkMatches(builder, JSTokenTypes.EQ, JSBundle.message("javascript.parser.message.expected.equal"));
+				checkMatches(builder, JSTokenTypes.EQ, JavaScriptBundle.message("javascript.parser.message.expected.equal"));
 
 				if(builder.getTokenType() != JSTokenTypes.COMMA && builder.getTokenType() != JSTokenTypes.RBRACKET && builder.getTokenType() !=
 						JSTokenTypes.RPAR)
@@ -161,7 +161,7 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 				}
 				else
 				{
-					builder.error(JSBundle.message("javascript.parser.message.expected.value"));
+					builder.error(JavaScriptBundle.message("javascript.parser.message.expected.value"));
 				}
 			}
 
@@ -177,14 +177,14 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 
 			if(builder.eof())
 			{
-				builder.error(JSBundle.message("javascript.parser.message.expected.rparen"));
+				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.rparen"));
 				return;
 			}
 		}
 
 		if(haveLParen)
 		{
-			checkMatches(builder, JSTokenTypes.RPAR, JSBundle.message("javascript.parser.message.expected.rparen"));
+			checkMatches(builder, JSTokenTypes.RPAR, JavaScriptBundle.message("javascript.parser.message.expected.rparen"));
 		}
 		else
 		{

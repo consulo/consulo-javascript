@@ -31,7 +31,7 @@ import javax.swing.SwingUtilities;
 
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageNamesValidation;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSEmbeddedContentImpl;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
@@ -67,7 +67,7 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
 		myProject = project;
 		myOccurences = occurences;
 		myMainOccurence = mainOccurence;
-		setTitle(JSBundle.message(titleKey));
+		setTitle(JavaScriptBundle.message(titleKey));
 	}
 
 	protected void doInit()
@@ -75,7 +75,7 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
 		JCheckBox replaceAllCheckBox = getReplaceAllCheckBox();
 		if(myOccurences.length > 1)
 		{
-			replaceAllCheckBox.setText(JSBundle.message("javascript.introduce.variable.replace.all.occurrences", myOccurences.length));
+			replaceAllCheckBox.setText(JavaScriptBundle.message("javascript.introduce.variable.replace.all.occurrences", myOccurences.length));
 		}
 		else
 		{
@@ -220,8 +220,8 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
 		final String name = getVariableName();
 		if(name.length() == 0 || !isValidName(name))
 		{
-			Messages.showErrorDialog(myProject, JSBundle.message("javascript.introduce.variable.invalid.name"),
-					JSBundle.message("javascript.introduce.variable.title"));
+			Messages.showErrorDialog(myProject, JavaScriptBundle.message("javascript.introduce.variable.invalid.name"),
+					JavaScriptBundle.message("javascript.introduce.variable.title"));
 			getNameField().requestFocus();
 			return;
 		}
@@ -295,8 +295,8 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
 
 	private boolean showConflictsDialog(final JSNamedElement existing, final String name)
 	{
-		final String message = existing instanceof JSFunction ? JSBundle.message("javascript.introduce.variable.function.already.exists",
-				CommonRefactoringUtil.htmlEmphasize(name)) : JSBundle.message("javascript.introduce.variable.variable.already.exists",
+		final String message = existing instanceof JSFunction ? JavaScriptBundle.message("javascript.introduce.variable.function.already.exists",
+				CommonRefactoringUtil.htmlEmphasize(name)) : JavaScriptBundle.message("javascript.introduce.variable.variable.already.exists",
 				CommonRefactoringUtil.htmlEmphasize(name));
 		final ConflictsDialog conflictsDialog = new ConflictsDialog(myProject, message);
 		conflictsDialog.show();

@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import com.intellij.codeInsight.template.Template;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.flex.AddImportECMAScriptClassOrFunctionAction;
 import com.intellij.lang.javascript.formatter.JSCodeStyleSettings;
@@ -57,14 +57,14 @@ public class JSUnresolvedVariableInspection extends JSInspection
 	@NotNull
 	public String getGroupDisplayName()
 	{
-		return JSBundle.message("js.inspection.group.name");
+		return JavaScriptBundle.message("js.inspection.group.name");
 	}
 
 	@Override
 	@NotNull
 	public String getDisplayName()
 	{
-		return JSBundle.message("js.unresolved.variable.inspection.name");
+		return JavaScriptBundle.message("js.unresolved.variable.inspection.name");
 	}
 
 	@Override
@@ -246,7 +246,7 @@ public class JSUnresolvedVariableInspection extends JSInspection
 							final String key = node.getQualifier() == null ? JSResolveUtil.isExprInTypeContext(node) ? "javascript.unresolved.type.name.message" :
 									"javascript.unresolved.variable.or.type.name.message" : "javascript.unresolved.variable.name.message";
 
-							holder.registerProblem(nameIdentifier, JSBundle.message(key, node.getReferencedName()),
+							holder.registerProblem(nameIdentifier, JavaScriptBundle.message(key, node.getReferencedName()),
 									JSUnresolvedFunctionInspection.getUnresolveReferenceHighlightType(qualifier, node),
 									fixes.size() > 0 ? fixes.toArray(new LocalQuickFix[fixes.size()]) : null);
 						}
@@ -270,7 +270,7 @@ public class JSUnresolvedVariableInspection extends JSInspection
 		@NotNull
 		public String getFamilyName()
 		{
-			return JSBundle.message("javascript.create.variable.intention.family");
+			return JavaScriptBundle.message("javascript.create.variable.intention.family");
 		}
 	}
 
@@ -285,7 +285,7 @@ public class JSUnresolvedVariableInspection extends JSInspection
 		@NotNull
 		public String getName()
 		{
-			return JSBundle.message("javascript.create.namespace.intention.name", myReferencedName);
+			return JavaScriptBundle.message("javascript.create.namespace.intention.name", myReferencedName);
 		}
 
 		@Override
@@ -318,7 +318,7 @@ public class JSUnresolvedVariableInspection extends JSInspection
 		@NotNull
 		public String getName()
 		{
-			return JSBundle.message(isField ? isConstant ? "javascript.create.constant.field.intention.name" : "javascript.create.property.intention.name" :
+			return JavaScriptBundle.message(isField ? isConstant ? "javascript.create.constant.field.intention.name" : "javascript.create.property.intention.name" :
 					isConstant ? "javascript.create.constant.intention.name" : "javascript.create.variable.intention.name", myReferencedName);
 		}
 

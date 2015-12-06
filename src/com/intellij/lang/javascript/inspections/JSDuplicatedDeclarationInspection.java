@@ -22,7 +22,7 @@ import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JSElementType;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.*;
@@ -47,14 +47,14 @@ public class JSDuplicatedDeclarationInspection extends JSInspection
 	@NotNull
 	public String getGroupDisplayName()
 	{
-		return JSBundle.message("js.inspection.group.name");
+		return JavaScriptBundle.message("js.inspection.group.name");
 	}
 
 	@Override
 	@NotNull
 	public String getDisplayName()
 	{
-		return JSBundle.message("js.duplicated.declaration.inspection.name");
+		return JavaScriptBundle.message("js.duplicated.declaration.inspection.name");
 	}
 
 	@Override
@@ -201,7 +201,7 @@ public class JSDuplicatedDeclarationInspection extends JSInspection
 
 				if(processor.getResult() != null && processor.getResult() != scope)
 				{
-					holder.registerProblem(nameIdentifier.getPsi(), JSBundle.message("javascript.validation.message.duplicate.declaration"),
+					holder.registerProblem(nameIdentifier.getPsi(), JavaScriptBundle.message("javascript.validation.message.duplicate.declaration"),
 							originalScope.getContainingFile().getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4 ? ProblemHighlightType.ERROR : ProblemHighlightType
 									.GENERIC_ERROR_OR_WARNING);
 				}

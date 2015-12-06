@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.codeInsight.daemon.EmptyResolveMessageProvider;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JSDocTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.util.JSLookupUtil;
@@ -347,7 +347,7 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag
 		@Override
 		public String getUnresolvedMessagePattern()
 		{
-			return JSBundle.message("javascript.validation.message.incorrect.parameter.name");
+			return JavaScriptBundle.message("javascript.validation.message.incorrect.parameter.name");
 		}
 	}
 

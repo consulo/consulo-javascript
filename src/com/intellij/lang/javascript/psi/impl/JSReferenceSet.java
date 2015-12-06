@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.codeInsight.daemon.EmptyResolveMessageProvider;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
@@ -568,7 +568,7 @@ public class JSReferenceSet
 		{
 			String text = getCanonicalText();
 			text = "'" + text.replace("'", "''") + "'";
-			return JSBundle.message("javascript.unresolved.variable.or.type.name.message2", text);
+			return JavaScriptBundle.message("javascript.unresolved.variable.or.type.name.message2", text);
 		}
 	}
 

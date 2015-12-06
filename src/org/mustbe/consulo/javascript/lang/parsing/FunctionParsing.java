@@ -18,7 +18,7 @@ package org.mustbe.consulo.javascript.lang.parsing;
 
 import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.parsing.ExpressionParsing;
@@ -75,7 +75,7 @@ public class FunctionParsing extends Parsing
 		{
 			if(!expressionContext && builder.getTokenType() != JSTokenTypes.LPAR /*get/set as name*/)
 			{
-				builder.error(JSBundle.message("javascript.parser.message.expected.function.name"));
+				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.function.name"));
 			}
 		}
 
@@ -96,7 +96,7 @@ public class FunctionParsing extends Parsing
 
 			if(builder.getTokenType() == JSTokenTypes.LBRACE)
 			{
-				builder.error(JSBundle.message("interface.function.declaration.should.have.no.body"));
+				builder.error(JavaScriptBundle.message("interface.function.declaration.should.have.no.body"));
 			}
 		}
 
@@ -108,7 +108,7 @@ public class FunctionParsing extends Parsing
 		final PsiBuilder.Marker parameterList;
 		if(builder.getTokenType() != JSTokenTypes.LPAR)
 		{
-			builder.error(JSBundle.message("javascript.parser.message.expected.lparen"));
+			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.lparen"));
 			parameterList = builder.mark(); // To have non-empty parameters list at all the time.
 			parameterList.done(JSElementTypes.PARAMETER_LIST);
 			return;
@@ -134,7 +134,7 @@ public class FunctionParsing extends Parsing
 				}
 				else
 				{
-					builder.error(JSBundle.message("javascript.parser.message.expected.comma.or.rparen"));
+					builder.error(JavaScriptBundle.message("javascript.parser.message.expected.comma.or.rparen"));
 					break;
 				}
 			}
@@ -157,7 +157,7 @@ public class FunctionParsing extends Parsing
 			}
 			else
 			{
-				builder.error(JSBundle.message("javascript.parser.message.expected.formal.parameter.name"));
+				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.formal.parameter.name"));
 				parameter.drop();
 			}
 		}

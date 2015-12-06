@@ -32,7 +32,7 @@ import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.highlighting.JavaScriptLineMarkerProvider;
@@ -63,14 +63,14 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 	@NotNull
 	public String getGroupDisplayName()
 	{
-		return JSBundle.message("js.inspection.group.name");
+		return JavaScriptBundle.message("js.inspection.group.name");
 	}
 
 	@Override
 	@NotNull
 	public String getDisplayName()
 	{
-		return JSBundle.message("js.unused.local.symbol.inspection.name");
+		return JavaScriptBundle.message("js.unused.local.symbol.inspection.name");
 	}
 
 	@Override
@@ -269,7 +269,7 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 				{
 					continue;
 				}
-				final @NonNls @PropertyKey(resourceBundle = JSBundle.BUNDLE) String messageId;
+				final @NonNls @PropertyKey(resourceBundle = JavaScriptBundle.BUNDLE) String messageId;
 				final @NotNull PsiElement highlightedElement;
 
 				if(p instanceof JSParameter)
@@ -390,11 +390,11 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 
 				if(p.getParent() instanceof JSCatchBlock)
 				{
-					holder.registerProblem(highlightedElement, JSBundle.message(messageId), ProblemHighlightType.LIKE_UNUSED_SYMBOL);
+					holder.registerProblem(highlightedElement, JavaScriptBundle.message(messageId), ProblemHighlightType.LIKE_UNUSED_SYMBOL);
 				}
 				else
 				{
-					holder.registerProblem(highlightedElement, JSBundle.message(messageId), ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveElementLocalQuickFix());
+					holder.registerProblem(highlightedElement, JavaScriptBundle.message(messageId), ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveElementLocalQuickFix());
 				}
 			}
 		}
@@ -441,7 +441,7 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 		@NotNull
 		public String getName()
 		{
-			return JSBundle.message("js.unused.symbol.remove");
+			return JavaScriptBundle.message("js.unused.symbol.remove");
 		}
 
 		@Override

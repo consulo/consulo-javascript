@@ -31,7 +31,7 @@ import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.ide.highlighter.XmlFileType;
-import com.intellij.lang.javascript.JSBundle;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.flex.AddImportECMAScriptClassOrFunctionAction;
@@ -62,14 +62,14 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 	@NotNull
 	public String getGroupDisplayName()
 	{
-		return JSBundle.message("js.inspection.group.name");
+		return JavaScriptBundle.message("js.inspection.group.name");
 	}
 
 	@Override
 	@NotNull
 	public String getDisplayName()
 	{
-		return JSBundle.message("js.unresolved.function.inspection.name");
+		return JavaScriptBundle.message("js.unresolved.function.inspection.name");
 	}
 
 	@Override
@@ -114,7 +114,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 								{
 									if(!allowMemberReference(inNewExpression, typeText))
 									{
-										holder.registerProblem(((JSReferenceExpression) methodExpression).getReferenceNameElement(), JSBundle.message("javascript.term.does.not" +
+										holder.registerProblem(((JSReferenceExpression) methodExpression).getReferenceNameElement(), JavaScriptBundle.message("javascript.term.does.not" +
 												".evaluate.to.function"), getHighlightTypeForTypeOrSignatureProblem(node));
 									}
 								}
@@ -135,7 +135,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 										};
 									}
 
-									holder.registerProblem(((JSReferenceExpression) methodExpression).getReferenceNameElement(), JSBundle.message("javascript.term.does.not" +
+									holder.registerProblem(((JSReferenceExpression) methodExpression).getReferenceNameElement(), JavaScriptBundle.message("javascript.term.does.not" +
 											".evaluate.to.function2"), getHighlightTypeForTypeOrSignatureProblem(node), fixes);
 								}
 							}
@@ -182,7 +182,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 
 						if(referenceNameElement != null)
 						{
-							holder.registerProblem(referenceNameElement, JSBundle.message(inNewExpression ? "javascript.unresolved.type.name.message" : "javascript" +
+							holder.registerProblem(referenceNameElement, JavaScriptBundle.message(inNewExpression ? "javascript.unresolved.type.name.message" : "javascript" +
 									".unresolved.function.name.message", refName), getUnresolveReferenceHighlightType(qualifier, node),
 									quickFixes.size() > 0 ? quickFixes.toArray(new LocalQuickFix[quickFixes.size()]) : null);
 						}
@@ -195,7 +195,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 						{
 							final PsiElement referenceNameElement = referenceExpression.getReferenceNameElement();
 
-							holder.registerProblem(referenceNameElement, JSBundle.message("javascript.interface.can.not.be.instantiated.message"),
+							holder.registerProblem(referenceNameElement, JavaScriptBundle.message("javascript.interface.can.not.be.instantiated.message"),
 									getUnresolveReferenceHighlightType(referenceExpression.getQualifier(), node));
 						}
 						else
@@ -225,7 +225,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 						if(results.length > 0 && ((elt = results[0].getElement()) instanceof JSFunction && ((JSFunction) elt).isConstructor() || elt instanceof
 								JSClass))
 						{
-							holder.registerProblem(methodExpression, JSBundle.message("javascript.term.does.not.evaluate.to.function"),
+							holder.registerProblem(methodExpression, JavaScriptBundle.message("javascript.term.does.not.evaluate.to.function"),
 									getUnresolveReferenceHighlightType(null, node));
 						}
 					}
@@ -362,7 +362,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 									"Array".equals(expressionType) &&
 									("Object".equals(typeElementText = typeElement.getText()) || "*".equals(typeElementText)))
 							{
-								holder.registerProblem(typeElement, JSBundle.message("javascript.incorrect.array.type.in.for-in"),
+								holder.registerProblem(typeElement, JavaScriptBundle.message("javascript.incorrect.array.type.in.for-in"),
 										ProblemHighlightType.GENERIC_ERROR_OR_WARNING);
 								continue;
 							}
@@ -393,7 +393,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 		}
 		else if(type != null)
 		{
-			holder.registerProblem(node, JSBundle.message(key, typeName, type.getText()), getHighlightTypeForTypeOrSignatureProblem(node));
+			holder.registerProblem(node, JavaScriptBundle.message(key, typeName, type.getText()), getHighlightTypeForTypeOrSignatureProblem(node));
 		}
 	}
 
@@ -402,7 +402,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 		String expressionType = JSResolveUtil.getQualifiedExpressionType(rOperand, rOperand.getContainingFile());
 		if(!typeName.equals(expressionType))
 		{
-			holder.registerProblem(node, JSBundle.message(key, typeName, expressionType), getHighlightTypeForTypeOrSignatureProblem(node));
+			holder.registerProblem(node, JavaScriptBundle.message(key, typeName, expressionType), getHighlightTypeForTypeOrSignatureProblem(node));
 		}
 	}
 
@@ -495,7 +495,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 				JSArgumentList argumentList = node.getArgumentList();
 				if(argumentList == null || argumentList.getArguments().length != 1)
 				{
-					holder.registerProblem(argumentList != null ? argumentList : node, JSBundle.message("javascript.invalid.number.of.parameters", "one"),
+					holder.registerProblem(argumentList != null ? argumentList : node, JavaScriptBundle.message("javascript.invalid.number.of.parameters", "one"),
 							getHighlightTypeForTypeOrSignatureProblem(node));
 				}
 			}
@@ -539,7 +539,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 		{
 			final String s = (lastIsRest ? minParameterLength + " or more " : String.valueOf(minParameterLength) + (minParameterLength != maxParameterLength
 					? ".." + maxParameterLength : ""));
-			holder.registerProblem(argumentList != null ? argumentList : node, JSBundle.message("javascript.invalid.number.of.parameters", s),
+			holder.registerProblem(argumentList != null ? argumentList : node, JavaScriptBundle.message("javascript.invalid.number.of.parameters", s),
 					getHighlightTypeForTypeOrSignatureProblem(node));
 		}
 		else
@@ -564,7 +564,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 	}
 
 	private static void checkExpressionIsAssignableToVariable(final JSVariable p, JSExpression expr, final ProblemsHolder holder,
-			final PsiFile containingFile, @PropertyKey(resourceBundle = JSBundle.BUNDLE) String problemKey)
+			final PsiFile containingFile, @PropertyKey(resourceBundle = JavaScriptBundle.BUNDLE) String problemKey)
 	{
 		final String parameterTypeResolved = JSImportHandlingUtil.resolveTypeName(p.getTypeString(), p);
 		checkExpressionIsAssignableToType(expr, parameterTypeResolved, holder, containingFile, problemKey);
@@ -581,7 +581,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 
 		if(!JSResolveUtil.isAssignableType(type, expressionType, containingFile))
 		{
-			holder.registerProblem(expr, JSBundle.message(problemKey, type, expressionType), getHighlightTypeForTypeOrSignatureProblem(expr),
+			holder.registerProblem(expr, JavaScriptBundle.message(problemKey, type, expressionType), getHighlightTypeForTypeOrSignatureProblem(expr),
 					new JSInsertCastFix(type));
 		}
 	}
@@ -600,7 +600,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 		private final String myName;
 		private final String myIntentionNameKey;
 
-		CreateJSFunctionIntentionActionBase(String name, @PropertyKey(resourceBundle = JSBundle.BUNDLE) String nameKey)
+		CreateJSFunctionIntentionActionBase(String name, @PropertyKey(resourceBundle = JavaScriptBundle.BUNDLE) String nameKey)
 		{
 			myName = name;
 			myIntentionNameKey = nameKey;
@@ -610,14 +610,14 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 		@NotNull
 		public String getName()
 		{
-			return JSBundle.message(myIntentionNameKey, myName);
+			return JavaScriptBundle.message(myIntentionNameKey, myName);
 		}
 
 		@Override
 		@NotNull
 		public String getFamilyName()
 		{
-			return JSBundle.message("javascript.create.function.intention.family");
+			return JavaScriptBundle.message("javascript.create.function.intention.family");
 		}
 
 		@Override
@@ -768,7 +768,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 		@NotNull
 		public String getName()
 		{
-			return JSBundle.message("javascript.insert.cast.fix");
+			return JavaScriptBundle.message("javascript.insert.cast.fix");
 		}
 
 		@Override
