@@ -29,6 +29,7 @@ import org.jetbrains.annotations.PropertyKey;
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
+import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSBundle;
@@ -389,11 +390,11 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 
 				if(p.getParent() instanceof JSCatchBlock)
 				{
-					holder.registerProblem(highlightedElement, JSBundle.message(messageId));
+					holder.registerProblem(highlightedElement, JSBundle.message(messageId), ProblemHighlightType.LIKE_UNUSED_SYMBOL);
 				}
 				else
 				{
-					holder.registerProblem(highlightedElement, JSBundle.message(messageId), new RemoveElementLocalQuickFix());
+					holder.registerProblem(highlightedElement, JSBundle.message(messageId), ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveElementLocalQuickFix());
 				}
 			}
 		}
