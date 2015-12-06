@@ -154,6 +154,7 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 		return this;
 	}
 
+	@RequiredReadAction
 	@Override
 	public JSExpression getValue()
 	{

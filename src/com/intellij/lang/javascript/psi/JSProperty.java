@@ -17,6 +17,7 @@
 package com.intellij.lang.javascript.psi;
 
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,6 +29,7 @@ import org.jetbrains.annotations.Nullable;
 public interface JSProperty extends JSNamedElement
 {
 	@Nullable
+	@RequiredReadAction
 	JSExpression getValue();
 
 	boolean isGetProperty();

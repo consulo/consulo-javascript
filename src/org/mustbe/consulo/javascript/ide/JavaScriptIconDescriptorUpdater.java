@@ -26,17 +26,12 @@ import com.intellij.ide.IconDescriptor;
 import com.intellij.ide.IconDescriptorUpdater;
 import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.lang.javascript.index.JSNamedElementProxy;
-import com.intellij.lang.javascript.psi.JSAttributeList;
-import com.intellij.lang.javascript.psi.JSBlockStatement;
-import com.intellij.lang.javascript.psi.JSClass;
-import com.intellij.lang.javascript.psi.JSFunction;
-import com.intellij.lang.javascript.psi.JSLoopStatement;
-import com.intellij.lang.javascript.psi.JSNamespaceDeclaration;
-import com.intellij.lang.javascript.psi.JSParameter;
-import com.intellij.lang.javascript.psi.JSVariable;
+import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.VariantsProcessor;
+import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
+import com.intellij.util.BitUtil;
 
 /**
  * @author VISTALL
@@ -65,6 +60,20 @@ public class JavaScriptIconDescriptorUpdater implements IconDescriptorUpdater
 				iconDescriptor.setMainIcon(AllIcons.Nodes.Class);
 			}
 		}
+		else if(element instanceof JSProperty)
+		{
+			iconDescriptor.setMainIcon(AllIcons.Nodes.Property);
+			JSExpression value = ((JSProperty) element).getValue();
+			if(value instanceof JSFunctionExpression)
+			{
+				iconDescriptor.setMainIcon(AllIcons.Nodes.Function);
+			}
+
+			if(BitUtil.isSet(flags, Iconable.ICON_FLAG_VISIBILITY))
+			{
+				iconDescriptor.setRightIcon(AllIcons.Nodes.C_public);
+			}
+		}
 		else if(element instanceof JSNamedElementProxy)
 		{
 			iconDescriptor.setMainIcon(getIconForProxy((JSNamedElementProxy) element));
@@ -73,15 +82,23 @@ public class JavaScriptIconDescriptorUpdater implements IconDescriptorUpdater
 		else if(element instanceof JSClass)
 		{
 			final JSAttributeList attributeList = ((JSClass) element).getAttributeList();
-			final JSAttributeList.AccessType accessType = attributeList != null ? attributeList.getAccessType() : JSAttributeList.AccessType.PACKAGE_LOCAL;
 
 			iconDescriptor.setMainIcon(((JSClass) element).isInterface() ? AllIcons.Nodes.Interface : AllIcons.Nodes.Class);
-			iconDescriptor.setRightIcon(getAccessIcon(accessType));
 			addStaticAndFinalIcons(iconDescriptor, attributeList);
+
+			if(BitUtil.isSet(flags, Iconable.ICON_FLAG_VISIBILITY))
+			{
+				final JSAttributeList.AccessType accessType = attributeList != null ? attributeList.getAccessType() : JSAttributeList.AccessType.PACKAGE_LOCAL;
+				iconDescriptor.setRightIcon(getAccessIcon(accessType));
+			}
 		}
 		else if(element instanceof JSParameter)
 		{
 			iconDescriptor.setMainIcon(AllIcons.Nodes.Parameter);
+			if(BitUtil.isSet(flags, Iconable.ICON_FLAG_VISIBILITY))
+			{
+				iconDescriptor.setRightIcon(AllIcons.Nodes.C_plocal);
+			}
 		}
 		else if(element instanceof JSVariable)
 		{
@@ -95,12 +112,33 @@ public class JavaScriptIconDescriptorUpdater implements IconDescriptorUpdater
 				if(attributeList != null)
 				{
 					addStaticAndFinalIcons(iconDescriptor, attributeList);
-					iconDescriptor.setRightIcon(getAccessIcon(attributeList.getAccessType()));
+
+					if(BitUtil.isSet(flags, Iconable.ICON_FLAG_VISIBILITY))
+					{
+						iconDescriptor.setRightIcon(getAccessIcon(attributeList.getAccessType()));
+					}
+				}
+				else
+				{
+					if(BitUtil.isSet(flags, Iconable.ICON_FLAG_VISIBILITY))
+					{
+						iconDescriptor.setRightIcon(getAccessIcon(JSAttributeList.AccessType.PUBLIC));
+					}
 				}
 			}
 			else if(grandParent instanceof JSBlockStatement || grandParent instanceof JSLoopStatement)
 			{
-				iconDescriptor.setRightIcon(AllIcons.Nodes.C_private);
+				if(BitUtil.isSet(flags, Iconable.ICON_FLAG_VISIBILITY))
+				{
+					iconDescriptor.setRightIcon(AllIcons.Nodes.C_private);
+				}
+			}
+			else
+			{
+				if(BitUtil.isSet(flags, Iconable.ICON_FLAG_VISIBILITY))
+				{
+					iconDescriptor.setRightIcon(AllIcons.Nodes.C_public);
+				}
 			}
 		}
 		else if(element instanceof JSNamespaceDeclaration)
@@ -114,7 +152,10 @@ public class JavaScriptIconDescriptorUpdater implements IconDescriptorUpdater
 			final PsiElement parent = JSResolveUtil.findParent(element);
 			if(parent instanceof JSBlockStatement)
 			{
-				iconDescriptor.setRightIcon(AllIcons.Nodes.C_private);
+				if(BitUtil.isSet(flags, Iconable.ICON_FLAG_VISIBILITY))
+				{
+					iconDescriptor.setRightIcon(AllIcons.Nodes.C_private);
+				}
 			}
 			else if(parent instanceof JSClass)
 			{
@@ -122,7 +163,24 @@ public class JavaScriptIconDescriptorUpdater implements IconDescriptorUpdater
 				if(attributeList != null)
 				{
 					addStaticAndFinalIcons(iconDescriptor, attributeList);
-					iconDescriptor.setRightIcon(getAccessIcon(attributeList.getAccessType()));
+					if(BitUtil.isSet(flags, Iconable.ICON_FLAG_VISIBILITY))
+					{
+						iconDescriptor.setRightIcon(getAccessIcon(attributeList.getAccessType()));
+					}
+				}
+				else
+				{
+					if(BitUtil.isSet(flags, Iconable.ICON_FLAG_VISIBILITY))
+					{
+						iconDescriptor.setRightIcon(getAccessIcon(JSAttributeList.AccessType.PUBLIC));
+					}
+				}
+			}
+			else
+			{
+				if(BitUtil.isSet(flags, Iconable.ICON_FLAG_VISIBILITY))
+				{
+					iconDescriptor.setRightIcon(getAccessIcon(JSAttributeList.AccessType.PUBLIC));
 				}
 			}
 		}

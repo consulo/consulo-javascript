@@ -45,6 +45,7 @@ public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionStub,
 		super(stub, type);
 	}
 
+	@NotNull
 	@Override
 	public JSFunction getFunction()
 	{

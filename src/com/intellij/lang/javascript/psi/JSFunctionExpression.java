@@ -16,14 +16,14 @@
 
 package com.intellij.lang.javascript.psi;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 7:42:48 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 7:42:48 PM Jan 30, 2005
  */
 public interface JSFunctionExpression extends JSFunction, JSExpression
 {
+	@NotNull
 	JSFunction getFunction();
 }

@@ -24,9 +24,13 @@ import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.ide.IconDescriptorUpdaters;
+import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSFunction;
+import com.intellij.lang.javascript.psi.JSFunctionExpression;
 import com.intellij.lang.javascript.psi.JSParameter;
 import com.intellij.lang.javascript.psi.JSParameterList;
+import com.intellij.lang.javascript.psi.JSProperty;
+import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.Function;
@@ -47,10 +51,18 @@ public class JSLookupUtil
 	{
 		LookupElementBuilder builder = LookupElementBuilder.create(name);
 		builder = builder.withTypeText(value.getContainingFile().getName(), true);
-		builder = builder.withIcon(IconDescriptorUpdaters.getIcon(value, 0));
-		if(value instanceof JSFunction)
+		builder = builder.withIcon(IconDescriptorUpdaters.getIcon(value, Iconable.ICON_FLAG_VISIBILITY));
+
+		JSFunction function = value instanceof JSFunction ? (JSFunction) value : null;
+		if(value instanceof JSProperty)
 		{
-			JSParameterList parameterList = ((JSFunction) value).getParameterList();
+			JSExpression expression = ((JSProperty) value).getValue();
+			function = expression instanceof JSFunctionExpression ? ((JSFunctionExpression) expression).getFunction()  : null;
+		}
+
+		if(function != null)
+		{
+			JSParameterList parameterList = function.getParameterList();
 			JSParameter[] jsParameters = parameterList == null ? JSParameter.EMPTY_ARRAY : parameterList.getParameters();
 			builder = builder.withPresentableText(name + "(" + StringUtil.join(jsParameters, new Function<JSParameter, String>()
 			{
