@@ -17,6 +17,7 @@
 package com.intellij.lang.javascript;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.codeInsight.editorActions.smartEnter.SmartEnterProcessor;
 import com.intellij.idea.LoggerFactory;
 import com.intellij.lang.javascript.psi.JSArgumentList;
@@ -48,6 +49,7 @@ import com.intellij.util.IncorrectOperationException;
 public class JSSmartEnterProcessor extends SmartEnterProcessor
 {
 	@Override
+	@RequiredReadAction
 	public boolean process(@NotNull final Project project, @NotNull final Editor editor, @NotNull final PsiFile psiFile)
 	{
 		int offset = editor.getCaretModel().getOffset();
@@ -99,10 +101,10 @@ public class JSSmartEnterProcessor extends SmartEnterProcessor
 					}
 				}
 			}
-			if(semicolon.length() > 0)
+			if(!semicolon.isEmpty())
 			{
 				insertCommitReformat(project, editor, psiFile, offset, semicolon, shiftOffset, false);
-				return semicolon.length() > 1 && shiftOffset == 1;
+				return true;
 			}
 		}
 
@@ -138,6 +140,7 @@ public class JSSmartEnterProcessor extends SmartEnterProcessor
 		return false;
 	}
 
+	@RequiredReadAction
 	private void insertCommitReformat(final Project project, final Editor editor, final PsiFile psiFile, final int offset, final String str,
 			final int shiftOffset, boolean adjustLineIndent)
 	{
