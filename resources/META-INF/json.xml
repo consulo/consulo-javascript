@@ -30,6 +30,10 @@
 						 implementationClass="org.mustbe.consulo.json.validation.inspections.PropertyValidationInspection"/>
 	</extensions>
 
+	<extensions defaultExtensionNs="com.intellij.xml">
+		<breadcrumbsInfoProvider implementation="org.mustbe.consulo.json.breadcrumbs.JsonBreadcrumbsInfoProvider" />
+	</extensions>
+
 	<extensions defaultExtensionNs="org.mustbe.consulo.javascript">
 		<propertyNameReferenceProvider implementation="org.mustbe.consulo.json.validation.psi.reference.JsonPropertyNameReferenceProvider" order="before default"/>
 

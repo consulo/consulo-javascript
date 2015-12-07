@@ -20,6 +20,7 @@
       <option name="LOCAL" value="true" />
     </RunnerSettings>
     <ConfigurationWrapper RunnerId="ConsuloDebuggerRunner" />
+    <ConfigurationWrapper RunnerId="Cover" />
     <ConfigurationWrapper RunnerId="Debug" />
     <method>
       <option name="BuildArtifacts" enabled="true">

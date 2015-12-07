@@ -91,7 +91,7 @@
       </module>
       <module name="json-javascript-impl" dirurl="file://$PROJECT_DIR$/json-javascript-impl" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-javascript" sdk-name="" />
+          <extension id="consulo-plugin" sdk-module-name="consulo-javascript" sdk-name="" custom-plugin-dir-url="file://$MODULE_DIR$/../dep" />
           <extension id="java" sdk-module-name="consulo-javascript" sdk-name="" language-level-module-name="consulo-javascript" language-level-name="" special-dir-location="SOURCE_DIR" />
           <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
@@ -101,6 +101,16 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="consulo-javascript" exported="" />
+          <orderEntry type="module-library">
+            <library name="consulo:XML">
+              <binaries>
+                <root url="jar://$MODULE_DIR$/../dep/xml/lib/jsr173_1.0_api.jar!/" />
+                <root url="jar://$MODULE_DIR$/../dep/xml/lib/resolver.jar!/" />
+                <root url="jar://$MODULE_DIR$/../dep/xml/lib/xerces.jar!/" />
+                <root url="jar://$MODULE_DIR$/../dep/xml/lib/xml.jar!/" />
+              </binaries>
+            </library>
+          </orderEntry>
         </module-layer>
       </module>
       <module name="ecmascript-level4-impl" dirurl="file://$PROJECT_DIR$/ecmascript-level4-impl" current-layer="Default">
