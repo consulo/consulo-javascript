@@ -16,7 +16,6 @@
 
 package com.intellij.lang.javascript.highlighting;
 
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
@@ -39,9 +38,6 @@ import com.intellij.psi.util.PsiUtilCore;
 
 public class JavaScriptHighlightVisitor extends JSElementVisitor implements HighlightVisitor
 {
-	@NonNls
-	private static final String PARAMETER_MESSAGE = "parameter";
-
 	private HighlightInfoHolder myHighlightInfoHolder;
 
 	@Override
@@ -68,7 +64,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 	private void highlightPropertyName(@NotNull JSProperty property, @NotNull PsiElement nameIdentifier)
 	{
 		final JSExpression expression = property.getValue();
-		TextAttributesKey type = null;
+		TextAttributesKey type;
 
 		if(expression instanceof JSFunctionExpression)
 		{
@@ -87,7 +83,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 	{
 		super.visitJSAttribute(jsAttribute);
 
-		myHighlightInfoHolder.add(createHighlightInfo(jsAttribute, JSHighlighter.JS_METADATA, null));
+		myHighlightInfoHolder.add(createHighlightInfo(jsAttribute, JSHighlighter.JS_METADATA));
 	}
 
 	@Override
@@ -103,7 +99,6 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 		boolean isVariable = false;
 		boolean isField = false;
 		TextAttributesKey type = null;
-		@NonNls String text = null;
 
 		for(ResolveResult r : results)
 		{
@@ -117,7 +112,6 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 				if(namedItemType == JSNamedElementProxy.NamedItemType.AttributeValue)
 				{
 					type = JSHighlighter.JS_INSTANCE_MEMBER_VARIABLE;
-					text = "field";
 				}
 				else
 				{
@@ -219,7 +213,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 			type = JSHighlighter.JS_INSTANCE_MEMBER_VARIABLE;
 		}
 
-		myHighlightInfoHolder.add(createHighlightInfo(element, type, text));
+		myHighlightInfoHolder.add(createHighlightInfo(element, type));
 	}
 
 	@Nullable
@@ -227,12 +221,10 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 	private static HighlightInfo buildHighlightForVariable(@NotNull final PsiElement element, @NotNull final PsiElement markerAddTo)
 	{
 		TextAttributesKey type;
-		@NonNls String text;
 
 		if(element instanceof JSParameter)
 		{
 			type = JSHighlighter.JS_PARAMETER;
-			text = PARAMETER_MESSAGE;
 		}
 		else
 		{
@@ -241,24 +233,21 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 				final JSAttributeList attributeList = ((JSAttributeListOwner) element).getAttributeList();
 				final boolean isStatic = attributeList != null && attributeList.hasModifier(JSAttributeList.ModifierType.STATIC);
 				type = isStatic ? JSHighlighter.JS_STATIC_MEMBER_VARIABLE : JSHighlighter.JS_INSTANCE_MEMBER_VARIABLE;
-				text = (isStatic ? "static " : "") + "field";
 			}
 			else
 			{
 				if(PsiTreeUtil.getParentOfType(element, JSFunction.class) != null)
 				{
 					type = JSHighlighter.JS_LOCAL_VARIABLE;
-					text = "local variable";
 				}
 				else
 				{
 					type = JSHighlighter.JS_GLOBAL_VARIABLE;
-					text = "global variable";
 				}
 			}
 		}
 
-		return createHighlightInfo(markerAddTo, type, text);
+		return createHighlightInfo(markerAddTo, type);
 	}
 
 	@Override
@@ -290,20 +279,12 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
 	private static boolean isClass(final PsiElement element)
 	{
-		if(element instanceof JSClass)
-		{
-			return true;
-		}
-		if(element instanceof JSFile && element.getContext() != null)
-		{
-			return true;
-		}
-		return false;
+		return element instanceof JSClass || element instanceof JSFile && element.getContext() != null;
 	}
 
 	@Nullable
 	@RequiredReadAction
-	private static HighlightInfo createHighlightInfo(@NotNull final PsiElement element, @Nullable final TextAttributesKey type, @Nullable @NonNls final String text)
+	private static HighlightInfo createHighlightInfo(@NotNull final PsiElement element, @Nullable final TextAttributesKey type)
 	{
 		if(type == null)
 		{
@@ -329,11 +310,6 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 		}
 
 		HighlightInfo.Builder builder = HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(markedNode).textAttributes(type);
-
-		if(text != null)
-		{
-			builder = builder.descriptionAndTooltip(text);
-		}
 
 		return builder.create();
 	}
