@@ -225,6 +225,21 @@ public class JsonJavaScriptParser implements PsiParser
 			parseArrayLiteralExpression(builder);
 			return true;
 		}
+		else if(firstToken == JSTokenTypes.MINUS)
+		{
+			PsiBuilder.Marker marker = builder.mark();
+			builder.advanceLexer();
+			if(builder.getTokenType() == JSTokenTypes.NUMERIC_LITERAL)
+			{
+				builder.advanceLexer();
+				marker.done(JSElementTypes.PREFIX_EXPRESSION);
+			}
+			else
+			{
+				marker.error("Unexpected token");
+			}
+			return true;
+		}
 		else if(firstToken == JSTokenTypes.LBRACE)
 		{
 			parseObjectLiteralExpression(builder);
