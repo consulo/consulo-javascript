@@ -33,6 +33,7 @@ import java.util.Set;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import com.intellij.extapi.psi.PsiElementBase;
 import com.intellij.ide.highlighter.XmlFileType;
@@ -1920,6 +1921,7 @@ public class JSResolveUtil
 			return null;
 		}
 
+		@RequiredReadAction
 		@Override
 		@NotNull
 		public Language getLanguage()
@@ -1927,6 +1929,7 @@ public class JSResolveUtil
 			return JavaScriptSupportLoader.JAVASCRIPT.getLanguage();
 		}
 
+		@RequiredReadAction
 		@Override
 		@NotNull
 		public PsiElement[] getChildren()
@@ -1946,6 +1949,7 @@ public class JSResolveUtil
 			return null;
 		}
 
+		@RequiredReadAction
 		@Override
 		public PsiElement getFirstChild()
 		{
@@ -1958,30 +1962,36 @@ public class JSResolveUtil
 			return true;
 		}
 
+		@RequiredReadAction
 		@Override
 		public PsiElement getLastChild()
 		{
 			return null;
 		}
 
+		@RequiredReadAction
 		@Override
 		public PsiElement getNextSibling()
 		{
 			return null;
 		}
 
+		@RequiredReadAction
 		@Override
 		public PsiElement getPrevSibling()
 		{
 			return null;
 		}
 
+		@NotNull
+		@RequiredReadAction
 		@Override
 		public TextRange getTextRange()
 		{
 			return null;
 		}
 
+		@RequiredReadAction
 		@Override
 		public int getStartOffsetInParent()
 		{
@@ -1995,12 +2005,14 @@ public class JSResolveUtil
 			return project;
 		}
 
+		@RequiredReadAction
 		@Override
 		public int getTextLength()
 		{
 			return 0;
 		}
 
+		@RequiredReadAction
 		@Override
 		public PsiElement findElementAt(final int offset)
 		{
@@ -2013,12 +2025,14 @@ public class JSResolveUtil
 			return 0;
 		}
 
+		@RequiredReadAction
 		@Override
 		public String getText()
 		{
 			return null;
 		}
 
+		@RequiredReadAction
 		@Override
 		@NotNull
 		public char[] textToCharArray()
@@ -2026,6 +2040,7 @@ public class JSResolveUtil
 			return new char[0];
 		}
 
+		@RequiredReadAction
 		@Override
 		public boolean textContains(final char c)
 		{
@@ -3353,6 +3368,7 @@ public class JSResolveUtil
 			return myContainingFile;
 		}
 
+		@RequiredReadAction
 		@Override
 		public String getText()
 		{
