@@ -24,6 +24,7 @@ import java.util.List;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.codeInsight.daemon.EmptyResolveMessageProvider;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JavaScriptBundle;
@@ -48,6 +49,7 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.ResolveState;
+import com.intellij.psi.impl.source.resolve.ResolveCache;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
@@ -360,9 +362,15 @@ public class JSReferenceSet
 
 		@Override
 		@NotNull
+		@RequiredReadAction
 		public ResolveResult[] multiResolve(final boolean incompleteCode)
 		{
-			return JSResolveUtil.resolve(element.getContainingFile(), this, MyResolver.INSTANCE);
+			PsiFile containingFile = element.getContainingFile();
+			if(containingFile == null)
+			{
+				return ResolveResult.EMPTY_ARRAY;
+			}
+			return ResolveCache.getInstance(containingFile.getProject()).resolveWithCaching(this, MyResolver.INSTANCE, true, incompleteCode, containingFile);
 		}
 
 		private ResolveResult[] doResolve(PsiFile psiFile)
@@ -572,14 +580,15 @@ public class JSReferenceSet
 		}
 	}
 
-	static class MyResolver implements JSResolveUtil.Resolver<MyPsiReference>
+	static class MyResolver implements ResolveCache.PolyVariantContextResolver<MyPsiReference>
 	{
 		private static final MyResolver INSTANCE = new MyResolver();
 
+		@NotNull
 		@Override
-		public ResolveResult[] doResolve(final MyPsiReference literalExpression, PsiFile psiFile)
+		public ResolveResult[] resolve(@NotNull MyPsiReference ref, @NotNull PsiFile containingFile, boolean incompleteCode)
 		{
-			return literalExpression.doResolve(psiFile);
+			return ref.doResolve(containingFile);
 		}
 	}
 

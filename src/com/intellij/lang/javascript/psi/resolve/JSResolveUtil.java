@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.jetbrains.annotations.NonNls;
@@ -1608,26 +1607,6 @@ public class JSResolveUtil
 		return false;
 	}
 
-	private static final Key<CachedValue<Map<PsiPolyVariantReference, ResolveResult[]>>> MY_RESOLVED_CACHED_KEY = Key.create("JS.AllResolvedKey");
-	private static UserDataCache<CachedValue<Map<PsiPolyVariantReference, ResolveResult[]>>, PsiFile, Object> ourCachedResolveCache = new UserDataCache<CachedValue<Map<PsiPolyVariantReference,
-			ResolveResult[]>>, PsiFile, Object>()
-	{
-
-		@Override
-		protected CachedValue<Map<PsiPolyVariantReference, ResolveResult[]>> compute(PsiFile file, Object o)
-		{
-			return CachedValuesManager.getManager(file.getProject()).createCachedValue(new CachedValueProvider<Map<PsiPolyVariantReference, ResolveResult[]>>()
-			{
-				@Override
-				public Result<Map<PsiPolyVariantReference, ResolveResult[]>> compute()
-				{
-					return new Result<Map<PsiPolyVariantReference, ResolveResult[]>>(Collections.synchronizedMap(new HashMap<PsiPolyVariantReference, ResolveResult[]>()),
-							PsiModificationTracker.MODIFICATION_COUNT);
-				}
-			}, false);
-		}
-	};
-
 	public static
 	@Nullable
 	JSExpression getRealRefExprQualifier(final JSReferenceExpression expr)
@@ -2524,36 +2503,6 @@ public class JSResolveUtil
 			jsClass = ((JSNamedElementProxy) jsClass).getElement();
 		}
 		return jsClass;
-	}
-
-	public static interface Resolver<T extends PsiPolyVariantReference>
-	{
-		ResolveResult[] doResolve(T t, PsiFile contextFile);
-	}
-
-	public static <T extends PsiPolyVariantReference> ResolveResult[] resolve(final PsiFile file, T instance, Resolver<T> resolver)
-	{
-		if(file == null)
-		{
-			return ResolveResult.EMPTY_ARRAY;
-		}
-
-		final Map<PsiPolyVariantReference, ResolveResult[]> resultsMap = ourCachedResolveCache.get(MY_RESOLVED_CACHED_KEY, file, null).getValue();
-		ResolveResult[] results = resultsMap.get(instance);
-		if(results != null)
-		{
-			return results;
-		}
-
-		results = resolver.doResolve(instance, file);
-		resultsMap.put(instance, results);
-
-		return results;
-	}
-
-	public static void clearResolveCaches(final PsiFile file)
-	{
-		file.putUserData(MY_RESOLVED_CACHED_KEY, null);
 	}
 
 	public static JSDefinitionExpression getDefinitionExpr(JSExpressionStatement exprStatement)

@@ -41,6 +41,7 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.ResolveState;
+import com.intellij.psi.impl.source.resolve.ResolveCache;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilBase;
@@ -465,22 +466,24 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 	@NotNull
 	public ResolveResult[] multiResolve(final boolean incompleteCode)
 	{
-		return JSResolveUtil.resolve(getContainingFile(), this, MyResolver.INSTANCE);
+		return ResolveCache.getInstance(getContainingFile().getProject()).resolveWithCaching(this, MyResolver.INSTANCE, true, incompleteCode);
 	}
 
-	static class MyResolver implements JSResolveUtil.Resolver<JSReferenceExpressionImpl>
+	private static class MyResolver implements ResolveCache.PolyVariantResolver<JSReferenceExpressionImpl>
 	{
 		private static final MyResolver INSTANCE = new MyResolver();
 
+		@NotNull
 		@Override
-		public ResolveResult[] doResolve(final JSReferenceExpressionImpl jsReferenceExpression, PsiFile file)
+		public ResolveResult[] resolve(@NotNull JSReferenceExpressionImpl referenceExpression, boolean incompleteCode)
 		{
-			return jsReferenceExpression.doResolve(file);
+			return referenceExpression.doResolve();
 		}
 	}
 
-	private ResolveResult[] doResolve(PsiFile containingFile)
+	private ResolveResult[] doResolve()
 	{
+		PsiFile containingFile = getContainingFile();
 		final String referencedName = getReferencedName();
 		if(referencedName == null)
 		{
