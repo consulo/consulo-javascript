@@ -102,7 +102,7 @@ public interface JSElementTypes
 	IElementType WITH_STATEMENT = new ElementTypeAsPsiFactory("WITH_STATEMENT", JavaScriptLanguage.INSTANCE, JSWithStatementImpl.class);
 	IElementType RETURN_STATEMENT = new ElementTypeAsPsiFactory("RETURN_STATEMENT", JavaScriptLanguage.INSTANCE, JSReturnStatementImpl.class);
 	IElementType THROW_STATEMENT = new ElementTypeAsPsiFactory("THROW_STATEMENT", JavaScriptLanguage.INSTANCE, JSThrowStatementImpl.class);
-	IElementType TRY_STATEMENT = new ElementTypeAsPsiFactory("TRY_STATEMENT", JavaScriptLanguage.INSTANCE, JSCatchBlockImpl.class);
+	IElementType TRY_STATEMENT = new ElementTypeAsPsiFactory("TRY_STATEMENT", JavaScriptLanguage.INSTANCE, JSTryStatementImpl.class);
 	IElementType CATCH_BLOCK = new ElementTypeAsPsiFactory("CATCH_BLOCK", JavaScriptLanguage.INSTANCE, JSCatchBlockImpl.class);
 	IElementType CASE_CLAUSE = new ElementTypeAsPsiFactory("CASE_CLAUSE", JavaScriptLanguage.INSTANCE, JSCaseClauseImpl.class);
 	IElementType SWITCH_STATEMENT = new ElementTypeAsPsiFactory("SWITCH_STATEMENT", JavaScriptLanguage.INSTANCE, JSSwitchStatementImpl.class);
