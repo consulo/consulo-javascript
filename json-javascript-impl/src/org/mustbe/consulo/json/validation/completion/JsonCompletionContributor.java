@@ -64,156 +64,181 @@ public class JsonCompletionContributor extends CompletionContributor
 			@Override
 			protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result)
 			{
-				final PsiFile originalFile = parameters.getOriginalFile();
-
-				JsonObjectDescriptor rootDescriptor = JsonFileDescriptorProviders.getRootDescriptor(originalFile);
-				if(rootDescriptor == null)
-				{
-					return;
-				}
-
-				PsiElement position = parameters.getPosition();
-				final PsiElement jsProperty = position.getParent();
-				if(!(jsProperty instanceof JSProperty))
-				{
-					return;
-				}
-
-				Collection<JSProperty> jsProperties = PropertyValidationInspection.buildPropertiesAsTree(position, rootDescriptor);
-				if(jsProperties.isEmpty())
-				{
-					return;
-				}
-
-				JsonObjectDescriptor parentObject = null;
-				JsonPropertyDescriptor currentProperty = null;
-				JsonObjectDescriptor currentObject = rootDescriptor;
-				for(JSProperty property : jsProperties)
-				{
-					String name = property.getName();
-					if(name == null)
-					{
-						return;
-					}
-
-					currentProperty = currentObject.getProperty(name);
-					if(currentProperty == null)
-					{
-						if(property == jsProperty)
-						{
-							parentObject = currentObject;
-							break;
-						}
-						else
-						{
-							return;
-						}
-					}
-					else if(currentProperty.getValue() instanceof JsonObjectDescriptor)
-					{
-						currentObject = (JsonObjectDescriptor) currentProperty.getValue();
-					}
-					else if(currentProperty.getValue() instanceof NativeArray)
-					{
-						Object componentType = ((NativeArray) currentProperty.getValue()).getComponentType();
-						if(componentType instanceof JsonObjectDescriptor)
-						{
-							currentObject = (JsonObjectDescriptor) componentType;
-						}
-						else
-						{
-							return;
-						}
-					}
-					else
-					{
-						break;
-					}
-				}
-
-				if(parentObject == null)
-				{
-					return;
-				}
-
-				Map<String, JsonPropertyDescriptor> properties = parentObject.getProperties();
-
-				Set<String> alreadyDefined = Collections.emptySet();
-				PsiElement parent = jsProperty.getParent();
-				if(parent instanceof JSObjectLiteralExpression)
-				{
-					JSProperty[] parentProperties = ((JSObjectLiteralExpression) parent).getProperties();
-					alreadyDefined = new HashSet<String>(parentProperties.length);
-					for(JSProperty parentProperty : parentProperties)
-					{
-						ContainerUtil.addIfNotNull(alreadyDefined, parentProperty.getName());
-					}
-				}
-
-				for(final Map.Entry<String, JsonPropertyDescriptor> entry : properties.entrySet())
-				{
-					String key = entry.getKey();
-					if(key == null || alreadyDefined.contains(key))
-					{
-						continue;
-					}
-					LookupElementBuilder builder = LookupElementBuilder.create(StringUtil.QUOTER.fun(key));
-					builder = builder.withPresentableText(key);
-					builder = builder.withIcon(AllIcons.Nodes.Property);
-					final JsonPropertyDescriptor value = entry.getValue();
-					if(value.isDeprecated())
-					{
-						builder = builder.strikeout();
-					}
-					final Class type = value.getType();
-					builder = builder.withTypeText(StringUtil.decapitalize(type.getSimpleName()), true);
-
-					if(((JSProperty) jsProperty).getValue() == null)
-					{
-						builder = builder.withInsertHandler(new InsertHandler<LookupElement>()
-						{
-							@Override
-							public void handleInsert(InsertionContext context, LookupElement item)
-							{
-								if(type == Object.class)
-								{
-									context.getDocument().insertString(context.getTailOffset(), ": {\n}");
-									context.getEditor().getCaretModel().moveToOffset(context.getTailOffset() - 2);
-
-									context.commitDocument();
-									CodeStyleManager.getInstance(context.getProject()).reformatRange(originalFile, context.getStartOffset(), context.getTailOffset());
-								}
-								else if(type == Boolean.class)
-								{
-									context.getDocument().insertString(context.getTailOffset(), ": false");
-									context.getEditor().getCaretModel().moveToOffset(context.getTailOffset());
-								}
-								else if(type == String.class)
-								{
-									context.getDocument().insertString(context.getTailOffset(), ": \"\"");
-									context.getEditor().getCaretModel().moveToOffset(context.getTailOffset() - 1);
-								}
-								else if(type == Number.class)
-								{
-									context.getDocument().insertString(context.getTailOffset(), ": 0");
-									context.getEditor().getCaretModel().moveToOffset(context.getTailOffset());
-								}
-								else if(value.getValue() instanceof NativeArray)
-								{
-									context.getDocument().insertString(context.getTailOffset(), ": []");
-									context.getEditor().getCaretModel().moveToOffset(context.getTailOffset() - 1);
-								}
-								else
-								{
-									context.getDocument().insertString(context.getTailOffset(), ": ");
-									context.getEditor().getCaretModel().moveToOffset(context.getTailOffset());
-								}
-							}
-						});
-					}
-					result.addElement(builder);
-				}
+				addVariants(parameters, result, true);
 			}
 		});
+
+		extend(CompletionType.BASIC, StandardPatterns.psiElement(JSTokenTypes.STRING_LITERAL), new CompletionProvider<CompletionParameters>()
+		{
+			@RequiredReadAction
+			@Override
+			protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result)
+			{
+				PsiElement originalPosition = parameters.getOriginalPosition();
+				if(originalPosition == null)
+				{
+					return;
+				}
+				if(!"\"\"".equals(originalPosition.getText()))
+				{
+					return;
+				}
+				addVariants(parameters, result, false);
+			}
+		});
+	}
+
+	@RequiredReadAction
+	private static void addVariants(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result, boolean quotes)
+	{
+		final PsiFile originalFile = parameters.getOriginalFile();
+
+		JsonObjectDescriptor rootDescriptor = JsonFileDescriptorProviders.getRootDescriptor(originalFile);
+		if(rootDescriptor == null)
+		{
+			return;
+		}
+
+		PsiElement position = parameters.getPosition();
+		final PsiElement jsProperty = position.getParent();
+		if(!(jsProperty instanceof JSProperty))
+		{
+			return;
+		}
+
+		Collection<JSProperty> jsProperties = PropertyValidationInspection.buildPropertiesAsTree(position, rootDescriptor);
+		if(jsProperties.isEmpty())
+		{
+			return;
+		}
+
+		JsonObjectDescriptor parentObject = null;
+		JsonPropertyDescriptor currentProperty = null;
+		JsonObjectDescriptor currentObject = rootDescriptor;
+		for(JSProperty property : jsProperties)
+		{
+			String name = property.getName();
+			if(name == null)
+			{
+				return;
+			}
+
+			currentProperty = currentObject.getProperty(name);
+			if(currentProperty == null)
+			{
+				if(property == jsProperty)
+				{
+					parentObject = currentObject;
+					break;
+				}
+				else
+				{
+					return;
+				}
+			}
+			else if(currentProperty.getValue() instanceof JsonObjectDescriptor)
+			{
+				currentObject = (JsonObjectDescriptor) currentProperty.getValue();
+			}
+			else if(currentProperty.getValue() instanceof NativeArray)
+			{
+				Object componentType = ((NativeArray) currentProperty.getValue()).getComponentType();
+				if(componentType instanceof JsonObjectDescriptor)
+				{
+					currentObject = (JsonObjectDescriptor) componentType;
+				}
+				else
+				{
+					return;
+				}
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		if(parentObject == null)
+		{
+			return;
+		}
+
+		Map<String, JsonPropertyDescriptor> properties = parentObject.getProperties();
+
+		Set<String> alreadyDefined = Collections.emptySet();
+		PsiElement parent = jsProperty.getParent();
+		if(parent instanceof JSObjectLiteralExpression)
+		{
+			JSProperty[] parentProperties = ((JSObjectLiteralExpression) parent).getProperties();
+			alreadyDefined = new HashSet<String>(parentProperties.length);
+			for(JSProperty parentProperty : parentProperties)
+			{
+				ContainerUtil.addIfNotNull(alreadyDefined, parentProperty.getName());
+			}
+		}
+
+		for(final Map.Entry<String, JsonPropertyDescriptor> entry : properties.entrySet())
+		{
+			String key = entry.getKey();
+			if(key == null || alreadyDefined.contains(key))
+			{
+				continue;
+			}
+			LookupElementBuilder builder = LookupElementBuilder.create(quotes ? StringUtil.QUOTER.fun(key) : key);
+			builder = builder.withPresentableText(quotes ? StringUtil.QUOTER.fun(key) : key);
+			builder = builder.withIcon(AllIcons.Nodes.Property);
+			final JsonPropertyDescriptor value = entry.getValue();
+			if(value.isDeprecated())
+			{
+				builder = builder.strikeout();
+			}
+			final Class type = value.getType();
+			builder = builder.withTypeText(StringUtil.decapitalize(type.getSimpleName()), true);
+
+			if(quotes && ((JSProperty) jsProperty).getValue() == null)
+			{
+				builder = builder.withInsertHandler(new InsertHandler<LookupElement>()
+				{
+					@Override
+					public void handleInsert(InsertionContext context, LookupElement item)
+					{
+						if(type == Object.class)
+						{
+							context.getDocument().insertString(context.getTailOffset(), ": {\n}");
+							context.getEditor().getCaretModel().moveToOffset(context.getTailOffset() - 2);
+
+							context.commitDocument();
+							CodeStyleManager.getInstance(context.getProject()).reformatRange(originalFile, context.getStartOffset(), context.getTailOffset());
+						}
+						else if(type == Boolean.class)
+						{
+							context.getDocument().insertString(context.getTailOffset(), ": false");
+							context.getEditor().getCaretModel().moveToOffset(context.getTailOffset());
+						}
+						else if(type == String.class)
+						{
+							context.getDocument().insertString(context.getTailOffset(), ": \"\"");
+							context.getEditor().getCaretModel().moveToOffset(context.getTailOffset() - 1);
+						}
+						else if(type == Number.class)
+						{
+							context.getDocument().insertString(context.getTailOffset(), ": 0");
+							context.getEditor().getCaretModel().moveToOffset(context.getTailOffset());
+						}
+						else if(value.getValue() instanceof NativeArray)
+						{
+							context.getDocument().insertString(context.getTailOffset(), ": []");
+							context.getEditor().getCaretModel().moveToOffset(context.getTailOffset() - 1);
+						}
+						else
+						{
+							context.getDocument().insertString(context.getTailOffset(), ": ");
+							context.getEditor().getCaretModel().moveToOffset(context.getTailOffset());
+						}
+					}
+				});
+			}
+			result.addElement(builder);
+		}
 	}
 }
