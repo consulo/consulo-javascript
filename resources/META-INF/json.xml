@@ -23,6 +23,8 @@
 
 		<completion.contributor language="JavaScript" implementationClass="org.mustbe.consulo.json.validation.completion.JsonCompletionContributor"/>
 
+		<quoteHandler fileType="JSON" className="org.mustbe.consulo.javascript.lang.JavaScriptQuoteHandler" />
+
 		<localInspection language="JavaScript"
 						 displayName="Property validation"
 						 groupName="JSON"

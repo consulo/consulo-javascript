@@ -113,6 +113,8 @@
 
 		<completion.contributor language="JavaScript" implementationClass="com.intellij.javascript.JSCompletionContributor"/>
 
+		<quoteHandler fileType="JavaScript" className="org.mustbe.consulo.javascript.lang.JavaScriptQuoteHandler" />
+
 		<liveTemplateMacro implementation="com.intellij.javascript.JSClassNameMacro"/>
 		<liveTemplateMacro implementation="com.intellij.javascript.JSMethodNameMacro"/>
 
