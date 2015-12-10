@@ -19,18 +19,18 @@ package com.intellij.lang.javascript.psi.impl;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
+import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
+import com.intellij.psi.LiteralTextEscaper;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.PsiReference;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 11:24:42 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 11:24:42 PM Jan 30, 2005
  */
-public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSLiteralExpression
+public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSLiteralExpression, PsiLanguageInjectionHost
 {
 	private volatile JSReferenceSet myReferenceSet;
 	private volatile long myModCount;
@@ -92,4 +92,23 @@ public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSLiter
 		}
 	}
 
+	@Override
+	public boolean isValidHost()
+	{
+		return true;
+	}
+
+	@Override
+	public PsiLanguageInjectionHost updateText(@NotNull String text)
+	{
+		JSExpression expressionFromText = JSChangeUtil.createExpressionFromText(getProject(), text, null);
+		return (PsiLanguageInjectionHost) replace(expressionFromText);
+	}
+
+	@NotNull
+	@Override
+	public LiteralTextEscaper<? extends PsiLanguageInjectionHost> createLiteralTextEscaper()
+	{
+		return LiteralTextEscaper.createSimple(this);
+	}
 }

@@ -344,7 +344,7 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
 				}
 			}
 
-			final JSExpression refExpr = (JSExpression) JSChangeUtil.createExpressionFromText(project, settings.getVariableName(), languageDialect).getPsi();
+			final JSExpression refExpr = (JSExpression) JSChangeUtil.createExpressionFromText(project, settings.getVariableName(), languageDialect);
 			if(replaceAllOccurences)
 			{
 				List<JSExpression> toHighight = new ArrayList<JSExpression>();

@@ -218,7 +218,7 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 		}
 		else
 		{
-			final ASTNode child = JSChangeUtil.createExpressionFromText(project, expected);
+			final ASTNode child = JSChangeUtil.createExpressionFromText(project, expected).getNode();
 			if(node != null)
 			{
 				parent.replaceChild(node, child);

@@ -129,7 +129,7 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
 
 	protected ASTNode createNameIdentifier(final String name)
 	{
-		return JSChangeUtil.createExpressionFromText(getProject(), name);
+		return JSChangeUtil.createExpressionFromText(getProject(), name).getNode();
 	}
 
 	@Override

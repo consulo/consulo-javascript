@@ -75,7 +75,7 @@ public class JSNamespaceDeclarationImpl extends JSStubbedStatementImpl<JSNamespa
 			return this;
 		}
 
-		getNode().replaceChild(findNameIdentifier(), JSChangeUtil.createExpressionFromText(getProject(), newName));
+		getNode().replaceChild(findNameIdentifier(), JSChangeUtil.createExpressionFromText(getProject(), newName).getNode());
 
 		JSPsiImplUtils.updateFileName(this, newName, oldName);
 		return this;

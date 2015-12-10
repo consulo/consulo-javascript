@@ -57,7 +57,7 @@ public class JSWithParenthesesSurrounder implements Surrounder
 			IncorrectOperationException
 	{
 		JSExpression expr = (JSExpression) elements[0];
-		ASTNode parenthExprNode = JSChangeUtil.createExpressionFromText(project, "(" + expr.getText() + ")", JSUtils.getDialect(expr.getContainingFile()));
+		ASTNode parenthExprNode = JSChangeUtil.createExpressionFromText(project, "(" + expr.getText() + ")", JSUtils.getDialect(expr.getContainingFile())).getNode();
 		expr.getNode().getTreeParent().replaceChild(expr.getNode(), parenthExprNode);
 		int offset = parenthExprNode.getTextRange().getEndOffset();
 		return new TextRange(offset, offset);

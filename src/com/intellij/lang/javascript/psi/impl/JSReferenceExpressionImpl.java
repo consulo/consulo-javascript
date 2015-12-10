@@ -197,9 +197,9 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 
 		if(qName != null)
 		{
-			ASTNode newChild = JSChangeUtil.createExpressionFromText(getProject(), qName);
-			getParent().getNode().replaceChild(getNode(), newChild);
-			return newChild.getPsi();
+			PsiElement newChild = JSChangeUtil.createExpressionFromText(getProject(), qName);
+			getParent().getNode().replaceChild(getNode(), newChild.getNode());
+			return newChild;
 		}
 
 		String newName = ((PsiNamedElement) element).getName();

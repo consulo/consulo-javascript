@@ -1633,7 +1633,7 @@ public class JSResolveUtil
 
 	public static JSExpression getRealRefExprQualifierFromResult(final JSReferenceExpression expr, final JSImportedElementResolveResult resolved)
 	{
-		return ((JSReferenceExpression) JSChangeUtil.createExpressionFromText(expr.getProject(), resolved.qualifiedName).getPsi()).getQualifier();
+		return ((JSReferenceExpression) JSChangeUtil.createExpressionFromText(expr.getProject(), resolved.qualifiedName)).getQualifier();
 	}
 
 	public static String findPackageStatementQualifier(final PsiElement context)

@@ -16,8 +16,6 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import gnu.trove.TIntArrayList;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -612,7 +610,7 @@ public class JSReferenceSet
 		Project project = elt.getProject();
 		if(elt instanceof JSExpression)
 		{
-			expressionFromText = JSChangeUtil.createExpressionFromText(project, newLiteralText);
+			expressionFromText = JSChangeUtil.createExpressionFromText(project, newLiteralText).getNode();
 		}
 		else if(elt instanceof JSAttributeNameValuePair)
 		{

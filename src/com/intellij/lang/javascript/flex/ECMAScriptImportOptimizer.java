@@ -254,7 +254,7 @@ public class ECMAScriptImportOptimizer implements ImportOptimizer
 							continue;
 						}
 						String name = fqn.getReferencedName().substring(fqn.getReferencedName().lastIndexOf('.') + 1);
-						fqn.replace(JSChangeUtil.createExpressionFromText(project, name).getPsi());
+						fqn.replace(JSChangeUtil.createExpressionFromText(project, name));
 					}
 				}
 				catch(IncorrectOperationException ex)

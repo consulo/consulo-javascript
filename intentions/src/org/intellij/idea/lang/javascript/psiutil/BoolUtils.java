@@ -15,13 +15,17 @@
  */
 package org.intellij.idea.lang.javascript.psiutil;
 
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.psi.*;
+import com.intellij.lang.javascript.psi.JSBinaryExpression;
+import com.intellij.lang.javascript.psi.JSExpression;
+import com.intellij.lang.javascript.psi.JSLiteralExpression;
+import com.intellij.lang.javascript.psi.JSParenthesizedExpression;
+import com.intellij.lang.javascript.psi.JSPrefixExpression;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import com.intellij.lang.javascript.psi.util.JSUtils;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
 
 public class BoolUtils {
 
@@ -106,7 +110,7 @@ public class BoolUtils {
               condition.getProject(),
               negatedText,
               JSUtils.getDialect(condition.getContainingFile())
-            ).getPsi();
+            );
         } else if (condition instanceof JSParenthesizedExpression) {
             return getNegated(((JSParenthesizedExpression) condition).getInnerExpression());
         }

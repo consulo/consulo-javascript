@@ -98,7 +98,7 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder
 		}
 		final JSFunction constructor = findFunctionByName(oldName);
 
-		getNode().replaceChild(findNameIdentifier(), JSChangeUtil.createExpressionFromText(getProject(), newName));
+		getNode().replaceChild(findNameIdentifier(), JSChangeUtil.createExpressionFromText(getProject(), newName).getNode());
 
 		if(constructor != null)
 		{

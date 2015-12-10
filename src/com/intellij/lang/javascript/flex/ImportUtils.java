@@ -121,7 +121,7 @@ public class ImportUtils
 			final JSReferenceExpression refExpr = PsiTreeUtil.getNonStrictParentOfType(subject, JSReferenceExpression.class);
 			if(refExpr != null && JSResolveUtil.referenceExpressionShouldBeQualified(refExpr))
 			{
-				refExpr.replace(JSChangeUtil.createExpressionFromText(project, fqn).getPsi()); // TODO should commit corresponding document before?
+				refExpr.replace(JSChangeUtil.createExpressionFromText(project, fqn)); // TODO should commit corresponding document before?
 				return;
 			}
 

@@ -66,11 +66,11 @@ public class JSChangeUtil
 		}
 		else if(type == JSTokenTypes.STRING_LITERAL && !StringUtil.isQuotedString(name))
 		{
-			return createExpressionFromText(project, "\"" + name + "\"").getFirstChildNode();
+			return createExpressionFromText(project, "\"" + name + "\"").getNode().getFirstChildNode();
 		}
 		else
 		{
-			return createExpressionFromText(project, name).getFirstChildNode();
+			return createExpressionFromText(project, name).getNode().getFirstChildNode();
 		}
 	}
 
@@ -82,20 +82,21 @@ public class JSChangeUtil
 		return refExpression.getNode().getFirstChildNode();
 	}
 
-	public static ASTNode createExpressionFromText(Project project, @NonNls String text)
+	@NotNull
+	public static JSExpression createExpressionFromText(Project project, @NonNls String text)
 	{
 		return createExpressionFromText(project, text, null);
 	}
 
-	public static ASTNode createExpressionFromText(Project project, @NonNls String text, @Nullable JSLanguageDialect dialect)
+	@NotNull
+	public static JSExpression createExpressionFromText(Project project, @NonNls String text, @Nullable JSLanguageDialect dialect)
 	{
 		text = "{\n" + text + "\n}";
 		PsiElement element = createJSTreeFromTextImpl(project, text, dialect);
 		assert element instanceof JSBlockStatement : "\"" + text + "\" was not parsed as BlockStatement";
 		element = ((JSBlockStatement) element).getStatements()[0];
 		final JSExpressionStatement expressionStatement = (JSExpressionStatement) element;
-		final JSExpression expr = (JSExpression) expressionStatement.getFirstChild();
-		return expr.getNode();
+		return (JSExpression) expressionStatement.getFirstChild();
 	}
 
 	public static ASTNode createStatementFromText(Project project, @NonNls String text)
@@ -144,7 +145,7 @@ public class JSChangeUtil
 	{
 		if(JSUtils.isNeedParenthesis(oldExpr, newExpr))
 		{
-			ASTNode parenthesized = createExpressionFromText(oldExpr.getProject(), "(a)");
+			ASTNode parenthesized = createExpressionFromText(oldExpr.getProject(), "(a)").getNode();
 			final JSParenthesizedExpression parenthPsi = (JSParenthesizedExpression) parenthesized.getPsi();
 			parenthesized.replaceChild(parenthPsi.getInnerExpression().getNode(), newExpr.getNode().copyElement());
 			oldExpr.getParent().getNode().replaceChild(oldExpr.getNode(), parenthesized);

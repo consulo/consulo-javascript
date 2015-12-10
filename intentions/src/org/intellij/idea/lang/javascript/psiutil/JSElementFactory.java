@@ -136,13 +136,13 @@ public class JSElementFactory {
     public static JSExpression replaceExpression(@NotNull JSExpression   expression,
                                                  @NonNls @NotNull String text)
             throws IncorrectOperationException {
-        final ASTNode newExpressionNode = JSChangeUtil.createExpressionFromText(
+        final JSExpression newExpressionNode = JSChangeUtil.createExpressionFromText(
           expression.getProject(),
           text,
           JSUtils.getDialect(expression.getContainingFile())
         );
 
-        return replaceExpression(expression, (JSExpression) newExpressionNode.getPsi());
+        return replaceExpression(expression, newExpressionNode);
     }
 
     public static JSExpression replaceExpression(@NotNull JSExpression expression,

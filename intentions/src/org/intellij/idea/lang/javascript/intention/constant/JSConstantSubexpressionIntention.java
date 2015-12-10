@@ -15,7 +15,14 @@
  */
 package org.intellij.idea.lang.javascript.intention.constant;
 
-import com.intellij.lang.ASTNode;
+import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
+import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
+import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
+import org.intellij.idea.lang.javascript.psiutil.ExpressionUtil;
+import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
+import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -25,14 +32,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
-import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
-import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
-import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
-import org.intellij.idea.lang.javascript.psiutil.ExpressionUtil;
-import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention {
     @Override
@@ -137,11 +136,11 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention {
         try {
             final String  subExpressionText = leftSide.getText() + BinaryOperatorUtils.getOperatorText(sign) +
                                               rhs.getText();
-            final ASTNode subExpression     = JSChangeUtil.createExpressionFromText(expression.getProject(),
+            final JSExpression subExpression     = JSChangeUtil.createExpressionFromText(expression.getProject(),
                                                                                     subExpressionText,
                                                                                     JSUtils.getDialect(expression.getContainingFile())                                                                                    );
 
-            return (JSBinaryExpression) subExpression.getPsi();
+            return (JSBinaryExpression) subExpression;
         } catch (Throwable ignore) {
             return null;
         }
