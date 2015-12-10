@@ -30,7 +30,6 @@ import org.chromium.sdk.StandaloneVm;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.Exported;
-import org.mustbe.consulo.javascript.lang.psi.impl.fragment.JavaScriptFragmentFactory;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.process.ProcessHandler;
@@ -39,6 +38,7 @@ import com.intellij.execution.ui.RunnerLayoutUi;
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.lang.javascript.JavaScriptIcons;
+import com.intellij.lang.javascript.psi.JSElementFactory;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
@@ -119,9 +119,9 @@ public class V8DebugProcess extends XDebugProcess
 		return new XDebuggerEditorsProviderBase()
 		{
 			@Override
-			protected PsiFile createExpressionCodeFragment(@NotNull Project project, @NotNull String text, @Nullable PsiElement element, boolean b)
+			protected PsiFile createExpressionCodeFragment(@NotNull Project project, @NotNull String text, @Nullable PsiElement element, boolean isPhysical)
 			{
-				return JavaScriptFragmentFactory.createExpressionFragment(project, text);
+				return JSElementFactory.createExpressionCodeFragment(project, text, element, isPhysical);
 			}
 
 			@NotNull
