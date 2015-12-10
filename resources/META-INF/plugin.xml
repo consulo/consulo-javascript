@@ -151,9 +151,6 @@
 			<implementation-class>com.intellij.lang.javascript.index.JavaScriptIndex</implementation-class>
 		</component>
 		<component>
-			<implementation-class>com.intellij.lang.javascript.index.BrowserSupportManager</implementation-class>
-		</component>
-		<component>
 			<implementation-class>com.intellij.lang.javascript.index.JSTypeEvaluateManager</implementation-class>
 		</component>
 	</project-components>

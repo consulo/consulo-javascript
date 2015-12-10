@@ -39,7 +39,6 @@ import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.MultiplePsiFilesPerDocumentFileViewProvider;
-import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
@@ -47,7 +46,6 @@ import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlFile;
@@ -761,79 +759,6 @@ public class JSIndexEntry
 			assert false : "Invalid type:" + itemType;
 		}
 		return true;
-	}
-
-	public void initTypesAndBrowserSpecifics()
-	{
-		final BrowserSupportManager browserSupportManager = BrowserSupportManager.getInstance(myIndex.getProject());
-		final JSTypeEvaluateManager typeEvaluateManager = JSTypeEvaluateManager.getInstance(myIndex.getProject());
-
-		for(JSNamedElement el : myIndexValue.getValue().mySymbolNameComponents.keySet())
-		{
-			JSElement realElement = PsiTreeUtil.getParentOfType(((JSNamedElementProxy) el).getElement(), JSStatement.class);
-			if(realElement == null)
-			{
-				continue;
-			}
-			final PsiElement lastChild = realElement.getNextSibling();
-
-			if(lastChild instanceof PsiComment)
-			{
-				final String s = lastChild.getText().substring(2);
-				final int typeIndex = s.indexOf(',');
-				final int deprecatedIndex = s.indexOf(',', typeIndex + 1);
-				final boolean deprecated = s.endsWith(DEPRECATED_TAG);
-				final String browserType = typeIndex != -1 ? s.substring(0, typeIndex).toLowerCase() : "";
-
-				if(browserType.equals("ie"))
-				{
-					browserSupportManager.addIESpecificSymbol(el);
-				}
-				else if(browserType.equals("gecko"))
-				{
-					browserSupportManager.addGeckoSpecificSymbol(el);
-				}
-				else if(browserType.equals("opera"))
-				{
-					browserSupportManager.addOperaSpecificSymbol(el);
-				}
-
-				((MyJSNamedItem) el).setDeprecated(deprecated);
-				typeEvaluateManager.setElementType(el, s.substring(typeIndex + 1, deprecatedIndex != -1 ? deprecatedIndex : s.length()));
-			}
-		}
-	}
-
-	public static void encodeBrowserSpecificsAndType(StringBuilder builder, String browserSpecific, String type, boolean deprecated)
-	{
-		if(type == null)
-		{
-			type = "Object";
-		}
-		builder.append("//");
-		final int length = builder.length();
-
-		if(browserSpecific != null)
-		{
-			builder.append(browserSpecific);
-		}
-		if(type != null)
-		{
-			if(length != builder.length())
-			{
-				builder.append(',');
-			}
-			builder.append(type);
-		}
-
-		if(deprecated)
-		{
-			if(length != builder.length())
-			{
-				builder.append(',');
-			}
-			builder.append(DEPRECATED_TAG);
-		}
 	}
 
 	public final

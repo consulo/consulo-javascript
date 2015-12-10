@@ -192,7 +192,6 @@ public final class JavaScriptIndex implements ProjectComponent
 	{
 		myJavaScriptFiles.clear();
 		JSTypeEvaluateManager.getInstance(myProject).clear();
-		BrowserSupportManager.getInstance(myProject).clear();
 
 		myRootPackage.clear();
 		myFilesToUpdate.clear();
