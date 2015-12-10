@@ -31,8 +31,9 @@
 		<copyright.updater filetype="JavaScript" implementationClass="org.mustbe.consulo.javascript.copyright.UpdateJavaScriptFileCopyrightProvider"/>
 
 		<colorSettingsPage implementation="com.intellij.lang.javascript.highlighting.JavaScriptColorsAndFontsPage"/>
-		<gotoSymbolContributor implementation="com.intellij.lang.javascript.index.JavaScriptSymbolContributor"/>
-		<gotoClassContributor implementation="com.intellij.lang.javascript.index.JavaScriptClassContributor"/>
+
+		<gotoClassContributor implementation="org.mustbe.consulo.javascript.lang.navigation.JavaScriptClassContributor"/>
+		<gotoSymbolContributor implementation="com.intellij.lang.javascript.navigation.JavaScriptSymbolContributor"/>
 
 		<iconDescriptorUpdater implementation="org.mustbe.consulo.javascript.ide.JavaScriptIconDescriptorUpdater"/>
 
@@ -80,6 +81,7 @@
 		<fileStructureGroupRuleProvider implementation="com.intellij.lang.javascript.findUsages.JavaScriptFunctionGroupRuleProvider"/>
 
 		<stubIndex implementation="com.intellij.lang.javascript.psi.stubs.JSNameIndex"/>
+		<stubIndex implementation="org.mustbe.consulo.javascript.psi.stubs.index.JavaScriptClassNameIndex"/>
 		<stubIndex implementation="com.intellij.lang.javascript.psi.stubs.JSQualifiedElementIndex"/>
 		<stubIndex implementation="com.intellij.lang.javascript.psi.stubs.JSSuperClassIndex"/>
 		<stubIndex implementation="com.intellij.lang.javascript.psi.stubs.JSImplementedInterfacesIndex"/>

@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.intellij.lang.javascript.index;
+package com.intellij.lang.javascript.navigation;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
@@ -38,8 +39,9 @@ import com.intellij.util.indexing.FileBasedIndex;
 /**
  * @author maxim
  */
-public class JavaScriptClassContributor implements ChooseByNameContributor
+public class JavaScriptSymbolContributor implements ChooseByNameContributor
 {
+	@NotNull
 	@Override
 	public String[] getNames(Project project, boolean includeNonProjectItems)
 	{
@@ -62,6 +64,7 @@ public class JavaScriptClassContributor implements ChooseByNameContributor
 		return result.toArray(new String[result.size()]);
 	}
 
+	@NotNull
 	@Override
 	public NavigationItem[] getItemsByName(String name, final String pattern, Project project, boolean includeNonProjectItems)
 	{
@@ -69,5 +72,4 @@ public class JavaScriptClassContributor implements ChooseByNameContributor
 		Collection<JSQualifiedNamedElement> result = JSResolveUtil.findElementsByName(name, project, scope);
 		return result.toArray(new NavigationItem[result.size()]);
 	}
-
 }

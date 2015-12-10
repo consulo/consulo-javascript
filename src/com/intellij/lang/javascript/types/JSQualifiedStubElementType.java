@@ -38,7 +38,7 @@ public abstract class JSQualifiedStubElementType<StubT extends JSQualifiedStub<P
 	}
 
 	@Override
-	public final void indexStub(@NotNull StubT stub, @NotNull IndexSink sink)
+	public void indexStub(@NotNull StubT stub, @NotNull IndexSink sink)
 	{
 		final String name = stub.getName();
 		final String fqn = stub.getQualifiedName();

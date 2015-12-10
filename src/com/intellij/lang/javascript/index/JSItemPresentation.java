@@ -19,6 +19,7 @@ package com.intellij.lang.javascript.index;
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredDispatchThread;
 import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSFunction;
@@ -26,17 +27,13 @@ import com.intellij.lang.javascript.psi.JSNamedElement;
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.editor.colors.CodeInsightColors;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Maxim.Mossienko
- * Date: Apr 7, 2006
- * Time: 9:55:49 PM
- * To change this template use File | Settings | File Templates.
+ * @author Maxim.Mossienko
+ * @since 9:55:49 PM Apr 7, 2006
  */
 public class JSItemPresentation implements ItemPresentation
 {
@@ -115,18 +112,9 @@ public class JSItemPresentation implements ItemPresentation
 
 	@Override
 	@Nullable
+	@RequiredDispatchThread
 	public Icon getIcon(boolean open)
 	{
-		return IconDescriptorUpdaters.getIcon(myElement, 0);
-	}
-
-	@Nullable
-	public TextAttributesKey getTextAttributesKey()
-	{
-		if(myElement instanceof JSNamedElementProxy)
-		{
-			return ((JSNamedElementProxy) myElement).isDeprecated() ? CodeInsightColors.DEPRECATED_ATTRIBUTES : null;
-		}
-		return null;
+		return IconDescriptorUpdaters.getIcon(myElement, Iconable.ICON_FLAG_VISIBILITY);
 	}
 }

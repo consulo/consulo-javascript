@@ -21,12 +21,15 @@ import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.impl.JSClassImpl;
 import com.intellij.lang.javascript.psi.stubs.JSClassStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSClassStubImpl;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
@@ -34,14 +37,25 @@ import com.intellij.util.io.StringRef;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Mar 25, 2008
- *         Time: 10:30:14 PM
+ * @since 10:30:14 PM Mar 25, 2008
  */
 public class JSClassElementType extends JSQualifiedStubElementType<JSClassStub, JSClass>
 {
 	public JSClassElementType()
 	{
 		super("CLASS");
+	}
+
+	@Override
+	public void indexStub(@NotNull JSClassStub stub, @NotNull IndexSink sink)
+	{
+		super.indexStub(stub, sink);
+
+		String name = stub.getName();
+		if(!StringUtil.isEmpty(name))
+		{
+			sink.occurrence(JavaScriptIndexKeys.CLASSES_BY_NAME, name);
+		}
 	}
 
 	@NotNull
