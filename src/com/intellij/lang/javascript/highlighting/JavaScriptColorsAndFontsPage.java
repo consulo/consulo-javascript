@@ -23,8 +23,8 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.javascript.DialectOptionHolder;
 import com.intellij.lang.javascript.JavaScriptBundle;
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
@@ -41,6 +41,9 @@ import com.intellij.openapi.options.colors.ColorSettingsPage;
 public class JavaScriptColorsAndFontsPage implements ColorSettingsPage
 {
 	private static final AttributesDescriptor[] ATTRS;
+
+	@NonNls
+	private static Map<String, TextAttributesKey> ADDITIONAL_HIGHLIGHT_DESCRIPTORS = new HashMap<String, TextAttributesKey>();
 
 	static
 	{
@@ -74,20 +77,26 @@ public class JavaScriptColorsAndFontsPage implements ColorSettingsPage
 				new AttributesDescriptor(JavaScriptBundle.message("javascript.instance.member.variable"), JSHighlighter.JS_INSTANCE_MEMBER_VARIABLE),
 				new AttributesDescriptor(JavaScriptBundle.message("javascript.metadata"), JSHighlighter.JS_METADATA),
 		};
+		ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("local_variable", JSHighlighter.JS_LOCAL_VARIABLE);
+		ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("global_variable", JSHighlighter.JS_GLOBAL_VARIABLE);
+		ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("instance_variable", JSHighlighter.JS_INSTANCE_MEMBER_VARIABLE);
+		ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("instance_method", JSHighlighter.JS_INSTANCE_MEMBER_FUNCTION);
+		ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("global_function", JSHighlighter.JS_GLOBAL_FUNCTION);
+		ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("parameter", JSHighlighter.JS_PARAMETER);
 	}
+
 
 	@Override
 	@NotNull
 	public String getDisplayName()
 	{
-		//noinspection HardCodedStringLiteral
 		return "JavaScript";
 	}
 
 	@Override
 	public Icon getIcon()
 	{
-		return JavaScriptSupportLoader.JAVASCRIPT.getIcon();
+		return null;
 	}
 
 	@Override
@@ -108,7 +117,7 @@ public class JavaScriptColorsAndFontsPage implements ColorSettingsPage
 	@NotNull
 	public SyntaxHighlighter getHighlighter()
 	{
-		return SyntaxHighlighter.PROVIDER.create(JavaScriptSupportLoader.JAVASCRIPT, null, null);
+		return new JSHighlighter(DialectOptionHolder.dummy());
 	}
 
 	@Override
@@ -130,20 +139,6 @@ public class JavaScriptColorsAndFontsPage implements ColorSettingsPage
 				"  <instance_method>foo</instance_method>();\n" +
 				"  #\n" +
 				"}";
-	}
-
-	private static
-	@NonNls
-	Map<String, TextAttributesKey> ADDITIONAL_HIGHLIGHT_DESCRIPTORS = new HashMap<String, TextAttributesKey>();
-
-	static
-	{
-		ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("local_variable", JSHighlighter.JS_LOCAL_VARIABLE);
-		ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("global_variable", JSHighlighter.JS_GLOBAL_VARIABLE);
-		ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("instance_variable", JSHighlighter.JS_INSTANCE_MEMBER_VARIABLE);
-		ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("instance_method", JSHighlighter.JS_INSTANCE_MEMBER_FUNCTION);
-		ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("global_function", JSHighlighter.JS_GLOBAL_FUNCTION);
-		ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("parameter", JSHighlighter.JS_PARAMETER);
 	}
 
 	@Override

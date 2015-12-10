@@ -32,7 +32,6 @@ import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.XmlHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.StringEscapesTokenTypes;
@@ -96,8 +95,8 @@ public class JSHighlighter extends SyntaxHighlighterBase
 	static final TextAttributesKey JS_DOC_MARKUP = TextAttributesKey.createTextAttributesKey("JS.DOC_MARKUP", DefaultLanguageHighlighterColors.DOC_COMMENT_MARKUP);
 	static final TextAttributesKey JS_VALID_STRING_ESCAPE = TextAttributesKey.createTextAttributesKey("JS.VALID_STRING_ESCAPE", DefaultLanguageHighlighterColors.VALID_STRING_ESCAPE);
 	static final TextAttributesKey JS_INVALID_STRING_ESCAPE = TextAttributesKey.createTextAttributesKey("JS.INVALID_STRING_ESCAPE", DefaultLanguageHighlighterColors.INVALID_STRING_ESCAPE);
-	static final TextAttributesKey JS_LOCAL_VARIABLE = TextAttributesKey.createTextAttributesKey("JS.LOCAL_VARIABLE", new TextAttributes(new Color(69, 131, 131), Color.white, null, null, 0));
-	static final TextAttributesKey JS_PARAMETER = TextAttributesKey.createTextAttributesKey("JS.PARAMETER", new TextAttributes(Color.black, Color.white, Color.black, EffectType.LINE_UNDERSCORE, 0));
+	static final TextAttributesKey JS_LOCAL_VARIABLE = TextAttributesKey.createTextAttributesKey("JS.LOCAL_VARIABLE", DefaultLanguageHighlighterColors.LOCAL_VARIABLE);
+	static final TextAttributesKey JS_PARAMETER = TextAttributesKey.createTextAttributesKey("JS.PARAMETER", DefaultLanguageHighlighterColors.PARAMETER);
 	static final TextAttributesKey JS_INSTANCE_MEMBER_VARIABLE = TextAttributesKey.createTextAttributesKey("JS.INSTANCE_MEMBER_VARIABLE", DefaultLanguageHighlighterColors.INSTANCE_FIELD);
 	static final TextAttributesKey JS_STATIC_MEMBER_VARIABLE = TextAttributesKey.createTextAttributesKey("JS.STATIC_MEMBER_VARIABLE", DefaultLanguageHighlighterColors.STATIC_FIELD);
 	static final TextAttributesKey JS_GLOBAL_VARIABLE = TextAttributesKey.createTextAttributesKey("JS.GLOBAL_VARIABLE", DefaultLanguageHighlighterColors.STATIC_FIELD);
@@ -185,29 +184,5 @@ public class JSHighlighter extends SyntaxHighlighterBase
 	public TextAttributesKey[] getTokenHighlights(IElementType tokenType)
 	{
 		return pack(keys1.get(tokenType), keys2.get(tokenType));
-	}
-
-	public Map<IElementType, TextAttributesKey> getKeys1()
-	{
-		return (Map<IElementType, TextAttributesKey>) ((HashMap) keys1).clone();
-	}
-
-	public Map<IElementType, TextAttributesKey> getKeys2()
-	{
-		return (Map<IElementType, TextAttributesKey>) ((HashMap) keys2).clone();
-	}
-
-	public static void registerHtmlMarkup(IElementType[] htmlTokens, IElementType[] htmlTokens2)
-	{
-		for(IElementType idx : htmlTokens)
-		{
-			keys1.put(idx, JS_DOC_COMMENT);
-			keys2.put(idx, JS_DOC_MARKUP);
-		}
-
-		for(IElementType idx : htmlTokens2)
-		{
-			keys1.put(idx, JS_DOC_COMMENT);
-		}
 	}
 }
