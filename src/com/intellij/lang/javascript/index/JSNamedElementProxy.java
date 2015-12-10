@@ -16,21 +16,15 @@
 
 package com.intellij.lang.javascript.index;
 
-import java.io.IOException;
-
 import com.intellij.lang.javascript.psi.JSAttributeList;
 import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
 import com.intellij.psi.PsiElement;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
 public interface JSNamedElementProxy extends JSQualifiedNamedElement
 {
-	void write(SerializationContext context) throws IOException;
-
-	void enumerateNames(final SerializationContext context);
-
 	String getNameId();
 
 	boolean isDeprecated();

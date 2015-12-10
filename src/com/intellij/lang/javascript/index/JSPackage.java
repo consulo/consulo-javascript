@@ -127,21 +127,6 @@ public class JSPackage
 		return buf.toString();
 	}
 
-	public void enumerateNames(final SerializationContext context)
-	{
-		if(myNameId != null)
-		{
-			context.addName(myNameId);
-		}
-		if(myChildPackages != null)
-		{
-			for(JSPackage jsPackage : myChildPackages.values())
-			{
-				jsPackage.enumerateNames(context);
-			}
-		}
-	}
-
 	public synchronized boolean processDeclarations(final JavaScriptSymbolProcessor myProcessor)
 	{
 		if(myInstances != null)

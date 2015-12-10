@@ -87,34 +87,6 @@ public class JSNamespace
 		return myParent;
 	}
 
-	public void enumerateNames(final SerializationContext context)
-	{
-		if(myParent != null)
-		{
-			context.addName(context.typeEvaluateManager.getBaseType(this));
-		}
-
-		if(myChildNamespaces != null)
-		{
-			for(JSNamespace o : myChildNamespaces.values())
-			{
-				o.enumerateNames(context);
-			}
-		}
-	}
-
-
-	private static int doEnumerateNS(JSNamespace ns, final SerializationContext context)
-	{
-		int i = context.myNameSpaces.get(ns);
-		if(i == 0)
-		{
-			context.myNameSpaces.put(ns, i = context.myNameSpaces.size() + 1);
-		}
-		return i;
-	}
-
-
 	public String[] getIndices()
 	{
 		int count = 0;

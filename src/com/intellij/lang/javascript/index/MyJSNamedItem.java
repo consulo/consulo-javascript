@@ -16,7 +16,6 @@
 
 package com.intellij.lang.javascript.index;
 
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import org.jetbrains.annotations.NotNull;
@@ -287,35 +286,6 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 			element = PsiTreeUtil.getParentOfType(element, XmlAttributeValue.class);
 		}
 		return Comparing.equal(element, another);
-	}
-
-	@Override
-	public void write(SerializationContext context) throws IOException
-	{
-		context.outputStream.writeInt(myOffset);
-		context.outputStream.writeInt(context.myNames.get(myNameId));
-
-		final int valueTag = myFlags & VALUE_AND_INLINE_ATTRS_MASK;
-
-		final int browserSpecific = (context.browserSupportManager.isGeckoSpecificSymbol(this) ? GECKO_SPECIFIC_ITEM_TAG : context.browserSupportManager
-				.isIESpecificSymbol(this) ? IE_SPECIFIC_ITEM_TAG : context.browserSupportManager.isOperaSpecificSymbol(this) ? OPERA_SPECIFIC_ITEM_TAG : 0) <<
-				BROWSER_TAG_SHIFT;
-		context.outputStream.writeShort(valueTag | browserSpecific);
-
-		String elementType = context.typeEvaluateManager.getElementType(this);
-		if(elementType == null)
-		{
-			elementType = "";
-		}
-		context.outputStream.writeInt(context.myNames.get(elementType));
-	}
-
-	@Override
-	public void enumerateNames(final SerializationContext context)
-	{
-		context.addName(myNameId);
-		final String elementType = context.typeEvaluateManager.getElementType(this);
-		context.addName(elementType != null ? elementType : "");
 	}
 
 	@Override
