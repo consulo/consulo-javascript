@@ -3,7 +3,7 @@
   <grid id="ea5f6" binding="myPanel" layout-manager="GridLayoutManager" row-count="5" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="65" y="100" width="260" height="187"/>
+      <xy x="65" y="100" width="645" height="214"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -15,7 +15,7 @@
         <properties>
           <labelFor value="2c355"/>
           <requestFocusEnabled value="false"/>
-          <text resource-bundle="com/intellij/lang/javascript/JavaScriptBundle" key="javascript.introduce.variable.name.prompt"/>
+          <text resource-bundle="messages/JavaScriptBundle" key="javascript.introduce.variable.name.prompt"/>
         </properties>
       </component>
       <component id="2c355" class="javax.swing.JTextField" binding="myNameField">
