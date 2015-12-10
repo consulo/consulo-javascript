@@ -26,6 +26,13 @@
           </orderEntry>
           <orderEntry type="module" module-name="inspections" />
           <orderEntry type="module" module-name="intentions" />
+          <orderEntry type="module-library">
+            <library name="consulo:Regexp">
+              <binaries>
+                <root url="jar://$MODULE_DIR$/dep/regexp/lib/regexp.jar!/" />
+              </binaries>
+            </library>
+          </orderEntry>
         </module-layer>
       </module>
       <module name="inspections" dirurl="file://$PROJECT_DIR$/inspections" current-layer="Default">

@@ -1,5 +1,6 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2000-2005 JetBrains s.r.o
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +17,17 @@
 
 package com.intellij.lang.javascript.psi;
 
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
+import com.intellij.psi.tree.IElementType;
+
 /**
- * @author max
- * @since 7:29:31 PM Jan 30, 2005
+ * @author VISTALL
+ * @since 11.12.2015
  */
-public interface JSLiteralExpression extends JSExpression
+public interface JSSimpleLiteralExpression extends JSLiteralExpression
 {
+	@NotNull
+	@RequiredReadAction
+	IElementType getLiteralElementType();
 }

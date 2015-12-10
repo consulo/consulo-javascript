@@ -6,6 +6,7 @@
 	<vendor>JetBrains</vendor>
 	<resource-bundle>messages.JavaScriptBundle</resource-bundle>
 	<depends>com.intellij.xml</depends>
+	<depends config-file="regexp.xml" optional="true">com.intellij.regexp</depends>
 
 	<xi:include href="/META-INF/Inspections.xml" xpointer="xpointer(/idea-plugin/*)"/>
 	<xi:include href="/META-INF/Intentions.xml" xpointer="xpointer(/idea-plugin/*)"/>

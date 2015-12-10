@@ -17,11 +17,12 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.javascript.psi.JSLiteralExpression;
 
 /**
- * @by Maxim.Mossienko
+ * @since Maxim.Mossienko
  */
-public class JSXmlLiteralExpressionImpl extends JSLiteralExpressionImpl
+public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLiteralExpression
 {
 	public JSXmlLiteralExpressionImpl(final ASTNode node)
 	{

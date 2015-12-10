@@ -17,20 +17,23 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSLiteralExpression;
+import com.intellij.lang.javascript.psi.JSSimpleLiteralExpression;
 import com.intellij.psi.LiteralTextEscaper;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.tree.IElementType;
 
 /**
  * @author max
  * @since 11:24:42 PM Jan 30, 2005
  */
-public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSLiteralExpression, PsiLanguageInjectionHost
+public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSSimpleLiteralExpression, PsiLanguageInjectionHost
 {
 	private volatile JSReferenceSet myReferenceSet;
 	private volatile long myModCount;
@@ -38,6 +41,16 @@ public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSLiter
 	public JSLiteralExpressionImpl(final ASTNode node)
 	{
 		super(node);
+	}
+
+	@RequiredReadAction
+	@NotNull
+	@Override
+	public IElementType getLiteralElementType()
+	{
+		PsiElement firstChild = getFirstChild();
+		assert firstChild != null;
+		return firstChild.getNode().getElementType();
 	}
 
 	@Override
