@@ -17,8 +17,9 @@
 package com.intellij.lang.javascript.index;
 
 import gnu.trove.THashSet;
-import gnu.trove.TIntArrayList;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.jetbrains.annotations.NonNls;
@@ -152,19 +153,19 @@ public class JSSymbolUtil
 		return null;
 	}
 
-	public static int[] buildNameIndexArray(final JSElement _expr, JSNamespace contextNamespace, final JavaScriptIndex index)
+	public static String[] buildNameIndexArray(final JSElement _expr, JSNamespace contextNamespace, final JavaScriptIndex index)
 	{
-		final TIntArrayList nameComponents = new TIntArrayList();
+		final List<String> nameComponents = new ArrayList<String>();
 
 		JSElement nameComponent = findNameComponent(_expr);
 		JSReferenceExpression expr = null;
 
 		if(nameComponent instanceof JSVariable)
 		{
-			String varName = ((JSVariable) nameComponent).getName();
+			String varName = nameComponent.getName();
 			if(varName != null)
 			{
-				nameComponents.add(index.getIndexOf(varName));
+				nameComponents.add(varName);
 			}
 		}
 		else if(nameComponent instanceof JSReferenceExpression)
@@ -186,13 +187,13 @@ public class JSSymbolUtil
 				@Override
 				public void processExpression(JSReferenceExpression expr)
 				{
-					nameComponents.add(index.getIndexOf(expr.getReferencedName()));
+					nameComponents.add(expr.getReferencedName());
 				}
 
 				@Override
 				public void processUnresolvedThis()
 				{
-					nameComponents.add(index.getIndexOf(""));
+					nameComponents.add("");
 				}
 
 				@Override
@@ -203,7 +204,7 @@ public class JSSymbolUtil
 			});
 		}
 
-		return nameComponents.toNativeArray();
+		return nameComponents.toArray(new String[nameComponents.size()]);
 	}
 
 	interface ReferenceExpressionProcessor
@@ -316,7 +317,7 @@ public class JSSymbolUtil
 		@Override
 		public void processNamespace(JSNamespace ns)
 		{
-			if(ns.getNameId() == -1)
+			if(ns.getNameId() == null)
 			{
 				currentNamespace = myFileNamespace;
 			}
@@ -354,7 +355,7 @@ public class JSSymbolUtil
 					}
 				}
 
-				final int referencedNamedId = myIndex.getIndexOf(reference != null ? reference : "");
+				final String referencedNamedId = reference != null ? reference : "";
 
 				currentNamespace = jsNamespace.getChildNamespace(referencedNamedId);
 			}
@@ -363,7 +364,7 @@ public class JSSymbolUtil
 		@Override
 		public void processUnresolvedThis()
 		{
-			currentNamespace = myFileNamespace.getChildNamespace(myIndex.getIndexOf(""));
+			currentNamespace = myFileNamespace.getChildNamespace("");
 		}
 
 		@Override
@@ -440,7 +441,7 @@ public class JSSymbolUtil
 				final JSNamespace previousNs = myNamespace;
 				try
 				{
-					int nameId = myIndex.getIndexOf(node.getName());
+					String nameId = node.getName();
 					final PsiElement parentElement = node.getParent();
 
 					final String nameNodeText = nameNode.getText();
@@ -490,7 +491,7 @@ public class JSSymbolUtil
 				return;
 			}
 			final String s = node.getName();
-			final int nameId = myIndex.getIndexOf(s != null ? s : "");
+			final String nameId = s != null ? s : "";
 
 			if(myFunction == null)
 			{
@@ -551,7 +552,7 @@ public class JSSymbolUtil
 
 			if(namespace.getParent() == null && myInsideWithStatement)
 			{
-				namespace = namespace.getChildNamespace(myIndex.getIndexOf(""));
+				namespace = namespace.getChildNamespace("");
 			}
 
 			String name = element.getReferencedName();
@@ -559,7 +560,7 @@ public class JSSymbolUtil
 			{
 				return;
 			}
-			final int nameId = myIndex.getIndexOf(name);
+			final String nameId = name;
 
 			try
 			{
@@ -659,9 +660,9 @@ public class JSSymbolUtil
 				JSNamespace ns = myNamespace;
 				if(ns == myFileNamespace && myNamedTagsAreMembersOfDocument)
 				{
-					ns = myFileNamespace.getChildNamespace(myIndex.getIndexOf("document"));
+					ns = myFileNamespace.getChildNamespace("document");
 				}
-				int nameId = myIndex.getIndexOf(element.getAttributeValue("name"));
+				String nameId = element.getAttributeValue("name");
 				mySymbolVisitor.processTag(ns, nameId, element, "name");
 				visitWithNamespace(ns.getChildNamespace(nameId), element, true);
 			}
@@ -670,7 +671,7 @@ public class JSSymbolUtil
 				String id = element.getAttributeValue("id");
 				if(id != null)
 				{
-					mySymbolVisitor.processTag(myFileNamespace, myIndex.getIndexOf(id), element, "id");
+					mySymbolVisitor.processTag(myFileNamespace, id, element, "id");
 				}
 
 				//name = element.getAttributeValue("class");
@@ -711,7 +712,7 @@ public class JSSymbolUtil
 
 				if(candidateNs == null)
 				{
-					candidateNs = namespace.getChildNamespace(myIndex.getIndexOf(""));
+					candidateNs = namespace.getChildNamespace("");
 				}
 				namespace = candidateNs;
 			}
@@ -793,7 +794,7 @@ public class JSSymbolUtil
 			IElementType type;
 			boolean toProcessProperty = (nameIdentifier != null ? ((type = nameIdentifier.getElementType()) != JSTokenTypes.NUMERIC_LITERAL && (type !=
 					JSTokenTypes.STRING_LITERAL || isIdentifier(name))) : false);
-			final int nameId = myIndex.getIndexOf(name);
+			final String nameId = name;
 
 			if(value instanceof JSFunction)
 			{
@@ -802,7 +803,7 @@ public class JSSymbolUtil
 				{
 					mySymbolVisitor.processFunction(myNamespace, nameId, function);
 				}
-				final JSNamespace childNs = nameId != -1 && toProcessProperty ? myNamespace.getChildNamespace(nameId) : myNamespace;
+				final JSNamespace childNs = nameId != null && toProcessProperty ? myNamespace.getChildNamespace(nameId) : myNamespace;
 				processFunctionBody(childNs, function);
 			}
 			else if(value != null)
@@ -814,7 +815,7 @@ public class JSSymbolUtil
 						toProcessProperty = false;
 					}
 
-					final JSNamespace childNs = nameId != -1 && toProcessProperty ? myNamespace.getChildNamespace(nameId) : myNamespace;
+					final JSNamespace childNs = nameId != null && toProcessProperty ? myNamespace.getChildNamespace(nameId) : myNamespace;
 					visitWithNamespace(childNs, node, true);
 				}
 				else
@@ -968,7 +969,7 @@ public class JSSymbolUtil
 						}
 						if(namespace.indexOf('.') == -1)
 						{
-							mySymbolVisitor.processImplicitNamespace(myFileNamespace, myIndex.getIndexOf(namespace), node, false);
+							mySymbolVisitor.processImplicitNamespace(myFileNamespace, namespace, node, false);
 						}
 						else
 						{
@@ -987,14 +988,14 @@ public class JSSymbolUtil
 
 						if(type.indexOf("read") != -1)
 						{
-							mySymbolVisitor.processImplicitFunction(namespace, myIndex.getIndexOf(suggestGetterName(propertyName)), node);
+							mySymbolVisitor.processImplicitFunction(namespace, suggestGetterName(propertyName), node);
 						}
 						if(type.indexOf("write") != -1)
 						{
-							mySymbolVisitor.processImplicitFunction(namespace, myIndex.getIndexOf(suggestSetterName(propertyName)), node);
+							mySymbolVisitor.processImplicitFunction(namespace, suggestSetterName(propertyName), node);
 						}
 
-						mySymbolVisitor.processImplicitVariable(namespace, myIndex.getIndexOf("_" + propertyName), node);
+						mySymbolVisitor.processImplicitVariable(namespace, "_" + propertyName, node);
 					}
 				}
 				else if(("__defineGetter__".equals(calledMethodName) || "__defineSetter__".equals(calledMethodName)) && qualifier != null)
@@ -1005,7 +1006,7 @@ public class JSSymbolUtil
 						final JSNamespace namespace = findNsForExpr(qualifier);
 						String propertyName = StringUtil.stripQuotesAroundValue(jsExpressions[0].getText());
 
-						mySymbolVisitor.processImplicitVariable(namespace, myIndex.getIndexOf(propertyName), node);
+						mySymbolVisitor.processImplicitVariable(namespace, propertyName, node);
 					}
 				}
 				else if("declare".equals(calledMethodName) &&
@@ -1070,7 +1071,7 @@ public class JSSymbolUtil
 
 				while(i != -1)
 				{
-					final int id = myIndex.getIndexOf(namespace.substring(lastI, i));
+					final String id = namespace.substring(lastI, i);
 					if(candidateNs.findChildNamespace(id) == null)
 					{
 						mySymbolVisitor.processImplicitNamespace(candidateNs, id, node, false);
@@ -1082,7 +1083,7 @@ public class JSSymbolUtil
 
 				if(i != namespace.length())
 				{
-					final int id = myIndex.getIndexOf(namespace.substring(lastI, namespace.length()));
+					final String id = namespace.substring(lastI, namespace.length());
 					if(candidateNs.findChildNamespace(id) == null)
 					{
 						mySymbolVisitor.processImplicitNamespace(candidateNs, id, node, false);
@@ -1090,7 +1091,7 @@ public class JSSymbolUtil
 					candidateNs = candidateNs.getChildNamespace(id);
 				}
 
-				mySymbolVisitor.processImplicitNamespace(candidateNs, myIndex.getIndexOf(nsName), node, true);
+				mySymbolVisitor.processImplicitNamespace(candidateNs, nsName, node, true);
 			}
 			return candidateNs;
 		}
@@ -1153,7 +1154,7 @@ public class JSSymbolUtil
 								final JSProperty prop = (JSProperty) el;
 								final JSExpression expression = prop.getValue();
 								final String s = prop.getName();
-								final int nameId = myIndex.getIndexOf(s != null ? s : "");
+								final String nameId = s != null ? s : "";
 
 								if(expression instanceof JSFunction)
 								{
@@ -1234,7 +1235,7 @@ public class JSSymbolUtil
 		{
 			final JSNamespace namespace = suggestedNamespace != null ? suggestedNamespace : findNamespace(lOperand, myThisNamespace);
 			final String s = lOperand.getReferencedName();
-			final int nameId = myIndex.getIndexOf(s != null ? s : "");
+			final String nameId = s != null ? s : "";
 			final JSNamespace childNamespace = namespace.getChildNamespace(nameId);
 
 			if(lqualifier instanceof JSReferenceExpression)
@@ -1282,7 +1283,7 @@ public class JSSymbolUtil
 			JSNamespace thisns = myThisNamespace;
 			try
 			{
-				mySymbolVisitor.processNamespace(myNamespace, myIndex.getIndexOf(nsName), namespaceDeclaration);
+				mySymbolVisitor.processNamespace(myNamespace, nsName, namespaceDeclaration);
 			}
 			finally
 			{
@@ -1321,7 +1322,7 @@ public class JSSymbolUtil
 				myNamespace = node != null ? getNestedNsWithName(fullName, myNamespace) : myNamespace;
 				updateNsFromAttributeList(clazz);
 				final String className = clazz.getName();
-				mySymbolVisitor.processClass(myNamespace.getParent(), myIndex.getIndexOf(className), clazz);
+				mySymbolVisitor.processClass(myNamespace.getParent(), className, clazz);
 				myThisNamespace = myNamespace;
 				myClazz = clazz;
 
@@ -1756,14 +1757,14 @@ public class JSSymbolUtil
 
 			while(i != -1)
 			{
-				contextNs = contextNs.getChildNamespace(myIndex.getIndexOf(name.substring(lastI, i)));
+				contextNs = contextNs.getChildNamespace(name.substring(lastI, i));
 				lastI = i + 1;
 				i = name.indexOf('.', lastI);
 			}
 
 			if(i != name.length())
 			{
-				contextNs = contextNs.getChildNamespace(myIndex.getIndexOf(name.substring(lastI, name.length())));
+				contextNs = contextNs.getChildNamespace(name.substring(lastI, name.length()));
 			}
 		}
 		return contextNs;
@@ -1780,7 +1781,7 @@ public class JSSymbolUtil
 
 			while(i != -1)
 			{
-				contextNs = contextNs.findChildNamespace(myIndex.getIndexOf(name.substring(lastI, i)));
+				contextNs = contextNs.findChildNamespace(name.substring(lastI, i));
 				if(contextNs == null)
 				{
 					return null;
@@ -1791,7 +1792,7 @@ public class JSSymbolUtil
 
 			if(i != name.length())
 			{
-				contextNs = contextNs.findChildNamespace(myIndex.getIndexOf(name.substring(lastI, name.length())));
+				contextNs = contextNs.findChildNamespace(name.substring(lastI, name.length()));
 			}
 		}
 		return contextNs;

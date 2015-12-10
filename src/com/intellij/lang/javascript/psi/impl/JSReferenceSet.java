@@ -55,6 +55,7 @@ import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.psi.xml.XmlTagChild;
 import com.intellij.psi.xml.XmlToken;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 
 /**
@@ -285,8 +286,8 @@ public class JSReferenceSet
 		{
 			final JavaScriptIndex index = JavaScriptIndex.getInstance(element.getProject());
 
-			final TIntArrayList contextIds = fillContextIds(index);
-			final VariantsProcessor processor = new VariantsProcessor(contextIds != null ? contextIds.toNativeArray() : null, containingFile, false, element);
+			final List<String> contextIds = fillContextIds(index);
+			final VariantsProcessor processor = new VariantsProcessor(contextIds != null ? ArrayUtil.toStringArray(contextIds) : null, containingFile, false, element);
 
 			processor.setAddOnlyCompleteMatches(contextIds != null || !(element instanceof JSLiteralExpression));
 			if(localProcessor != null)
@@ -306,9 +307,9 @@ public class JSReferenceSet
 
 		private
 		@Nullable
-		TIntArrayList fillContextIds(final JavaScriptIndex index)
+		List<String> fillContextIds(final JavaScriptIndex index)
 		{
-			TIntArrayList contextIds = null;
+			List<String> contextIds = null;
 			PsiReference prevContextReference = null;
 			for(final PsiReference ref : myReferences)
 			{
@@ -318,9 +319,9 @@ public class JSReferenceSet
 				}
 				if(contextIds == null)
 				{
-					contextIds = new TIntArrayList(3);
+					contextIds = new ArrayList<String>(3);
 				}
-				contextIds.add(index.getIndexOf(ref.getCanonicalText()));
+				contextIds.add(ref.getCanonicalText());
 				prevContextReference = ref;
 			}
 
@@ -331,7 +332,7 @@ public class JSReferenceSet
 				if(elt instanceof JSClass && !(getElement() instanceof JSLiteralExpression))
 				{
 					final String qName = ((JSClass) elt).getQualifiedName();
-					BaseJSSymbolProcessor.addIndexListFromQName(qName, elt, contextIds = new TIntArrayList(), index);
+					BaseJSSymbolProcessor.addIndexListFromQName(qName, elt, contextIds = new ArrayList<String>(), index);
 				}
 			}
 			else if(contextIds != null)
@@ -347,7 +348,7 @@ public class JSReferenceSet
 				if(psiElement instanceof JSClass)
 				{
 					final String qName = ((JSClass) psiElement).getQualifiedName();
-					BaseJSSymbolProcessor.addIndexListFromQName(qName, psiElement, contextIds = new TIntArrayList(), index);
+					BaseJSSymbolProcessor.addIndexListFromQName(qName, psiElement, contextIds = new ArrayList<String>(), index);
 				}
 			}
 
@@ -527,7 +528,7 @@ public class JSReferenceSet
 			}
 			final JavaScriptIndex index = JavaScriptIndex.getInstance(psiFile.getProject());
 
-			final TIntArrayList contextIds = fillContextIds(index);
+			final List<String> contextIds = fillContextIds(index);
 
 			String text = myText;
 
@@ -541,7 +542,7 @@ public class JSReferenceSet
 				}
 			}
 
-			final WalkUpResolveProcessor processor = new WalkUpResolveProcessor(index.getIndexOf(text), contextIds != null ? contextIds.toNativeArray() :
+			final WalkUpResolveProcessor processor = new WalkUpResolveProcessor(text, contextIds != null ? ArrayUtil.toStringArray(contextIds) :
 					null, psiFile, false, element);
 
 			processor.setAddOnlyCompleteMatches(contextIds != null || !(element instanceof JSLiteralExpression));

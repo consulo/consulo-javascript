@@ -17,8 +17,8 @@
 package com.intellij.lang.javascript.psi.resolve;
 
 import gnu.trove.THashSet;
-import gnu.trove.TIntArrayList;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -54,6 +54,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.psi.xml.XmlToken;
+import com.intellij.util.ArrayUtil;
 
 /**
  * @author Maxim.Mossienko
@@ -65,10 +66,10 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 	protected final boolean mySkipDclsInTargetFile;
 	protected final PsiElement myContext;
 	protected final JavaScriptIndex myIndex;
-	protected final int myWindowIndex;
-	protected final int myFunctionIndex;
+	protected final String myWindowIndex;
+	protected final String myFunctionIndex;
 
-	protected int[] myContextNameIds;
+	protected String[] myContextNameIds;
 	protected boolean ecmal4;
 	protected boolean myDefinitelyGlobalReference;
 	protected boolean myDefinitelyNonglobalReference;
@@ -99,7 +100,7 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 	private static final String BOOLEAN_TYPE_NAME = "Boolean";
 	protected String myIteratedTypeName;
 
-	protected BaseJSSymbolProcessor(final PsiFile targetFile, final boolean skipDclsInTargetFile, final PsiElement context, int[] contextIds)
+	protected BaseJSSymbolProcessor(final PsiFile targetFile, final boolean skipDclsInTargetFile, final PsiElement context, String[] contextIds)
 	{
 		myTargetFile = targetFile;
 		mySkipDclsInTargetFile = skipDclsInTargetFile;
@@ -107,8 +108,8 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 
 		myIndex = JavaScriptIndex.getInstance(targetFile.getProject());
 
-		myWindowIndex = myIndex.getIndexOf("window");
-		myFunctionIndex = myIndex.getIndexOf("Function");
+		myWindowIndex = "window";
+		myFunctionIndex = "Function";
 
 		ecmal4 = myTargetFile.getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
 
@@ -119,7 +120,7 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 
 		if(contextIds == null)
 		{ // TODO: workaround for NPE
-			contextIds = new int[0];
+			contextIds = new String[0];
 		}
 
 		myContextNameIds = contextIds;
@@ -130,20 +131,20 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 				myContext instanceof JSReferenceExpression &&
 				((JSReferenceExpression) myContext).getQualifier() == null && notWithinWithStatement &&
 				JSResolveUtil.getRealRefExprQualifier((JSReferenceExpression) myContext) == null) || (contextIds != null && contextIds.length == 1 &&
-				contextIds[0] == myWindowIndex && notWithinWithStatement))
+				contextIds[0].equals(myWindowIndex) && notWithinWithStatement))
 		{
 			myDefinitelyGlobalReference = true;
 		}
 
 		if(contextIds != null && (contextIds.length > 1 || (contextIds.length == 1 &&
-				myIndex.getStringByIndex(contextIds[0]).length() > 0 &&
-				contextIds[0] != myWindowIndex)))
+				contextIds[0].length() > 0 &&
+				!contextIds[0].equals(myWindowIndex))))
 		{
 			myDefinitelyNonglobalReference = true;
 		}
 	}
 
-	protected abstract int[] calculateContextIds(final JSReferenceExpression jsReferenceExpression);
+	protected abstract String[] calculateContextIds(final JSReferenceExpression jsReferenceExpression);
 
 	public void setAddOnlyCompleteMatches(final boolean addOnlyCompleteMatches)
 	{
@@ -153,8 +154,8 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 
 	protected final boolean isGlobalNS(final JSNamespace namespace)
 	{
-		final int nameId = namespace.getNameId();
-		return nameId == -1 || ((nameId == myWindowIndex || nameId == myFunctionIndex) && namespace.getParent().getParent() == null);
+		final String nameId = namespace.getNameId();
+		return nameId == null || ((nameId == myWindowIndex || nameId == myFunctionIndex) && namespace.getParent().getParent() == null);
 	}
 
 	@Override
@@ -915,7 +916,7 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 					}
 
 					@Override
-					public boolean processTag(final JSNamespace namespace, final int nameId, final PsiNamedElement namedElement, @NonNls final String attrName)
+					public boolean processTag(final JSNamespace namespace, final String nameId, final PsiNamedElement namedElement, @NonNls final String attrName)
 					{
 						final PsiElement val = ((JSNamedElementProxy) namedElement).getElement();
 						if(val != null)
@@ -937,9 +938,9 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 					}
 
 					@Override
-					public int getRequiredNameId()
+					public String getRequiredNameId()
 					{
-						return index.getIndexOf(val);
+						return val;
 					}
 				});
 			}
@@ -1020,7 +1021,7 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 		}
 	}
 
-	protected void addPackageScope(final List<int[]> possibleNameIds, final JSClass jsClass, final PsiElement expression)
+	protected void addPackageScope(final List<String[]> possibleNameIds, final JSClass jsClass, final PsiElement expression)
 	{
 		final String packageQualifier = JSResolveUtil.findPackageStatementQualifier(expression);
 		String qName;
@@ -1047,23 +1048,23 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 		}
 	}
 
-	protected String buildIndexListFromQNameAndCorrectQName(String type, final PsiElement source, List<int[]> possibleNameIds)
+	protected String buildIndexListFromQNameAndCorrectQName(String type, final PsiElement source, List<String[]> possibleNameIds)
 	{
-		final TIntArrayList list = new TIntArrayList(1);
+		final List<String> list = new ArrayList<String>();
 		type = addIndexListFromQName(type, source, list, myIndex);
 
-		possibleNameIds.add(list.toNativeArray());
+		possibleNameIds.add(ArrayUtil.toStringArray(list));
 		return type;
 	}
 
-	public static String addIndexListFromQName(String type, final PsiElement source, final TIntArrayList list, JavaScriptIndex myIndex)
+	public static String addIndexListFromQName(String type, final PsiElement source, final List<String> list, JavaScriptIndex myIndex)
 	{
 		int i = type.indexOf('.');
 		int lastI = 0;
 
 		while(i != -1)
 		{
-			list.add(myIndex.getIndexOf(type.substring(lastI, i)));
+			list.add(type.substring(lastI, i));
 			lastI = i + 1;
 			i = type.indexOf('.', lastI);
 		}
@@ -1079,7 +1080,7 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 			{
 				type = s;
 			}
-			list.add(myIndex.getIndexOf(s));
+			list.add(s);
 		}
 		return type;
 	}
@@ -1131,16 +1132,16 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 		boolean processClass(JSClass clazz);
 	}
 
-	protected void doIterateTypeHierarchy(final int[] contextIds, final HierarchyProcessor processor)
+	protected void doIterateTypeHierarchy(final String[] contextIds, final HierarchyProcessor processor)
 	{
 		StringBuilder builder = new StringBuilder();
-		for(int cnameId : contextIds)
+		for(String cnameId : contextIds)
 		{
 			if(builder.length() > 0)
 			{
 				builder.append('.');
 			}
-			builder.append(myIndex.getStringByIndex(cnameId));
+			builder.append(cnameId);
 		}
 
 		final String typeName = builder.toString();

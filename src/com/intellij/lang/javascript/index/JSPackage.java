@@ -16,12 +16,11 @@
 
 package com.intellij.lang.javascript.index;
 
+import gnu.trove.THashMap;
 import gnu.trove.THashSet;
-import gnu.trove.TIntObjectHashMap;
-import gnu.trove.TIntObjectIterator;
 
-import java.io.IOException;
 import java.util.Collection;
+import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,25 +31,24 @@ import org.jetbrains.annotations.Nullable;
 public class JSPackage
 {
 	private JSPackage myParent;
-	private int myNameId;
-	private TIntObjectHashMap<JSPackage> myChildPackages;
+	private String myNameId;
+	private Map<String, JSPackage> myChildPackages;
 	private THashSet<JSNamespace> myInstances;
 	private boolean myRootPackage;
 
 	public JSPackage()
 	{
 		myParent = null;
-		myNameId = -1;
 		myRootPackage = true;
 	}
 
-	public JSPackage(@NotNull final JSPackage parent, final int nameId)
+	public JSPackage(@NotNull final JSPackage parent, final String nameId)
 	{
 		myParent = parent;
 		myNameId = nameId;
 	}
 
-	synchronized void removeSubPackage(int nameId)
+	synchronized void removeSubPackage(String nameId)
 	{
 		if(myChildPackages != null)
 		{
@@ -60,11 +58,11 @@ public class JSPackage
 
 	synchronized
 	@NotNull
-	JSPackage findSubPackage(int nameId)
+	JSPackage findSubPackage(String nameId)
 	{
 		if(myChildPackages == null)
 		{
-			myChildPackages = new TIntObjectHashMap<JSPackage>(5);
+			myChildPackages = new THashMap<String, JSPackage>(5);
 		}
 		JSPackage jsPackage = myChildPackages.get(nameId);
 		if(jsPackage == null)
@@ -108,51 +106,7 @@ public class JSPackage
 		myChildPackages = null;
 	}
 
-	public void serialize(final SerializationContext context) throws IOException
-	{
-		context.outputStream.writeInt(myNameId != -1 ? context.myNames.get(context.myIndex.getStringByIndex(myNameId)) : -1);
-		final int packageId = context.myPackages.size() + 1;
-		context.myPackages.put(this, packageId);
-		context.outputStream.writeInt(packageId);
-
-		if(myChildPackages != null)
-		{
-			final Object[] objects = myChildPackages.getValues(); // stable copy
-			context.outputStream.writeInt(objects.length);
-
-			for(Object o : objects)
-			{
-				((JSPackage) o).serialize(context);
-			}
-		}
-		else
-		{
-			context.outputStream.writeInt(0);
-		}
-	}
-
-	public void deserialize(final DeserializationContext context) throws IOException
-	{
-		myNameId = context.inputStream.readInt();
-		final int packageId = context.inputStream.readInt();
-		context.myPackages.put(packageId, this);
-		final int childCount = context.inputStream.readInt();
-
-		//context.myPackages.put(context.myPackages.size() + 1, this);
-
-		if(childCount != 0)
-		{
-			myChildPackages = new TIntObjectHashMap<JSPackage>(childCount);
-			for(int i = 0; i < childCount; ++i)
-			{
-				final JSPackage jsPackage = new JSPackage(this, -1);
-				jsPackage.deserialize(context);
-				myChildPackages.put(jsPackage.myNameId, jsPackage);
-			}
-		}
-	}
-
-	public int getNameId()
+	public String getNameId()
 	{
 		return myNameId;
 	}
@@ -167,7 +121,7 @@ public class JSPackage
 			{
 				buf.insert(0, '.');
 			}
-			buf.insert(0, index.getStringByIndex(ns.getNameId()));
+			buf.insert(0, ns.getNameId());
 		}
 
 		return buf.toString();
@@ -175,18 +129,15 @@ public class JSPackage
 
 	public void enumerateNames(final SerializationContext context)
 	{
-		if(myNameId != -1)
+		if(myNameId != null)
 		{
-			context.addName(context.myIndex.getStringByIndex(myNameId));
+			context.addName(myNameId);
 		}
 		if(myChildPackages != null)
 		{
-			final TIntObjectIterator<JSPackage> iterator = myChildPackages.iterator();
-
-			while(iterator.hasNext())
+			for(JSPackage jsPackage : myChildPackages.values())
 			{
-				iterator.advance();
-				iterator.value().enumerateNames(context);
+				jsPackage.enumerateNames(context);
 			}
 		}
 	}
@@ -212,8 +163,8 @@ public class JSPackage
 				return true;
 			}
 
-			final int requiredNameId = myProcessor.getRequiredNameId();
-			if(requiredNameId != -1)
+			final String requiredNameId = myProcessor.getRequiredNameId();
+			if(requiredNameId != null)
 			{
 				final JSPackage jsPackage = myChildPackages.get(requiredNameId);
 				if(jsPackage != null)
@@ -223,12 +174,9 @@ public class JSPackage
 			}
 			else
 			{
-				final TIntObjectIterator<JSPackage> tIntObjectIterator = myChildPackages.iterator();
-				while(tIntObjectIterator.hasNext())
+				for(JSPackage jsPackage : myChildPackages.values())
 				{
-					tIntObjectIterator.advance();
-
-					if(!processor.processPackage(tIntObjectIterator.value()))
+					if(!processor.processPackage(jsPackage))
 					{
 						return false;
 					}
@@ -240,7 +188,7 @@ public class JSPackage
 
 	public synchronized
 	@Nullable
-	JSPackage findPackageWithNameId(final int packageIndex)
+	JSPackage findPackageWithNameId(final String packageIndex)
 	{
 		if(myChildPackages == null)
 		{

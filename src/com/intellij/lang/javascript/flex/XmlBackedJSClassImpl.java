@@ -272,18 +272,18 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 				}
 
 				@Override
-				public int getRequiredNameId()
+				public String getRequiredNameId()
 				{
 					if(processor instanceof ResolveProcessor)
 					{
 						final String name = ((ResolveProcessor) processor).getName();
-						return name != null ? index.getIndexOf(name) : -1;
+						return name;
 					}
 					else if(processor instanceof WalkUpResolveProcessor)
 					{
 						return ((WalkUpResolveProcessor) processor).getRequiredNameId();
 					}
-					return -1;
+					return null;
 				}
 			}, indexEntry.getTopLevelNs());
 		}

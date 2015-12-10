@@ -19,11 +19,9 @@ package com.intellij.lang.javascript.index;
 import static com.intellij.lang.javascript.index.JSNamedElementProxy.NamedItemType;
 
 import gnu.trove.THashMap;
-import gnu.trove.TIntObjectHashMap;
-import gnu.trove.TIntObjectIterator;
 import gnu.trove.TObjectHashingStrategy;
 
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -82,7 +80,7 @@ public class JSIndexEntry
 		{
 			if(proxy.getType() == NamedItemType.Clazz)
 			{
-				classNames.add(index.getStringByIndex(proxy.getNameId()));
+				classNames.add(proxy.getNameId());
 			}
 		}
 	};
@@ -118,7 +116,7 @@ public class JSIndexEntry
 		{
 			if(proxy.getType() != NamedItemType.Clazz)
 			{
-				param.add(index.getStringByIndex(proxy.getNameId()));
+				param.add(proxy.getNameId());
 			}
 		}
 	};
@@ -154,17 +152,17 @@ public class JSIndexEntry
 
 	public void fillClassNames(final Set<String> classNames)
 	{
-		process(-1, myCollectClassNamesProcessor, classNames);
+		process(null, myCollectClassNamesProcessor, classNames);
 	}
 
 	public void fillClassByName(final String name, final Set<NavigationItem> classes)
 	{
-		process(myIndex.getIndexOf(name), myFindClassesByName, classes);
+		process(name, myFindClassesByName, classes);
 	}
 
 	static class IndexEntryContent
 	{
-		private final TIntObjectHashMap<Object> mySymbols = new TIntObjectHashMap<Object>();
+		private final Map<String, Object> mySymbols = new HashMap<String, Object>();
 		private final Map<JSNamedElement, JSNamespace> mySymbolNameComponents = new THashMap<JSNamedElement, JSNamespace>(TObjectHashingStrategy.IDENTITY);
 		private final JSRootNamespace myNamespace;
 		private long timestamp;
@@ -178,26 +176,6 @@ public class JSIndexEntry
 	private CachedValue<IndexEntryContent> myIndexValue;
 	private IndexEntryContent myContent;
 
-	public JSIndexEntry(final DeserializationContext context, @Nullable VirtualFile constructionData) throws IOException
-	{
-		myIndex = context.index;
-		myFile = constructionData;
-
-		final IndexEntryContent indexEntryContent = new IndexEntryContent(context.manager.getProject(), this);
-		indexEntryContent.myNamespace.read(context, null);
-
-		int mySymbolNameComponentsSize = context.inputStream.readInt();
-
-		for(int i = 0; i < mySymbolNameComponentsSize; ++i)
-		{
-			JSNamedElementProxy proxy = new MyJSNamedItem(this, context);
-
-			final JSNamespace namespace = context.myNameSpaces.get(context.inputStream.readInt());
-			doAddNamedItemProxy(proxy.getNameId(), proxy, false, namespace, indexEntryContent);
-		}
-
-		doInitFor(indexEntryContent);
-	}
 
 	public JSIndexEntry(final @Nullable VirtualFile constructionData, Project project, boolean lazy, Language language)
 	{
@@ -217,7 +195,7 @@ public class JSIndexEntry
 		return myContent != null && myContent.timestamp == file.getModificationStamp() && file.isValid();
 	}
 
-	private static void doAddNamedItemProxy(final int nameId, final JSNamedElement myElement, final boolean toCheckUniqueness,
+	private static void doAddNamedItemProxy(final String nameId, final JSNamedElement myElement, final boolean toCheckUniqueness,
 			final JSNamespace namespace, IndexEntryContent myContent)
 	{
 		final Object o = myContent.mySymbols.get(nameId);
@@ -338,7 +316,7 @@ public class JSIndexEntry
 					private JSSymbolUtil.JavaScriptSymbolProcessingHost myProcessingHost;
 
 					@Override
-					public boolean processFunction(JSNamespace namespace, final int nameId, JSNamedElement function)
+					public boolean processFunction(JSNamespace namespace, final String nameId, JSNamedElement function)
 					{
 						final PsiElement parent = function.getParent();
 						addSymbol(nameId, function, parent instanceof JSClass ? NamedItemType.MemberFunction : function instanceof JSFunctionExpression ? (parent
@@ -347,35 +325,35 @@ public class JSIndexEntry
 					}
 
 					@Override
-					public boolean processClass(final JSNamespace namespace, final int nameId, final JSNamedElement clazz)
+					public boolean processClass(final JSNamespace namespace, final String nameId, final JSNamedElement clazz)
 					{
 						addSymbol(nameId, clazz, NamedItemType.Clazz, namespace);
 						return true;
 					}
 
 					@Override
-					public boolean processNamespace(final JSNamespace namespace, final int nameId, final JSNamedElement ns)
+					public boolean processNamespace(final JSNamespace namespace, final String nameId, final JSNamedElement ns)
 					{
 						addSymbol(nameId, ns, NamedItemType.Namespace, namespace);
 						return true;
 					}
 
 					@Override
-					public boolean processImplicitNamespace(final JSNamespace namespace, final int nameId, final PsiElement refExpr, boolean finalReference)
+					public boolean processImplicitNamespace(final JSNamespace namespace, final String nameId, final PsiElement refExpr, boolean finalReference)
 					{
 						addSymbol(nameId, refExpr, NamedItemType.Namespace, namespace, finalReference);
 						return true;
 					}
 
 					@Override
-					public boolean processImplicitFunction(final JSNamespace namespace, final int nameId, final PsiElement refExpr)
+					public boolean processImplicitFunction(final JSNamespace namespace, final String nameId, final PsiElement refExpr)
 					{
 						addSymbol(nameId, refExpr, NamedItemType.ImplicitFunction, namespace);
 						return true;
 					}
 
 					@Override
-					public boolean processImplicitVariable(final JSNamespace namespace, final int nameId, final PsiElement refExpr)
+					public boolean processImplicitVariable(final JSNamespace namespace, final String nameId, final PsiElement refExpr)
 					{
 						addSymbol(nameId, refExpr, NamedItemType.ImplicitVariable, namespace);
 						return true;
@@ -383,14 +361,14 @@ public class JSIndexEntry
 
 					final JSTypeEvaluateManager typeEvaluateManager = JSTypeEvaluateManager.getInstance(myIndex.getProject());
 
-					private final void addSymbol(final int nameId, final PsiElement element, NamedItemType type, JSNamespace namespace)
+					private final void addSymbol(final String nameId, final PsiElement element, NamedItemType type, JSNamespace namespace)
 					{
 						addSymbol(nameId, element, type, namespace, true);
 					}
 
-					private final void addSymbol(final int nameId, final PsiElement element, NamedItemType type, JSNamespace namespace, boolean finalReference)
+					private final void addSymbol(final String nameId, final PsiElement element, NamedItemType type, JSNamespace namespace, boolean finalReference)
 					{
-						if(nameId == -1)
+						if(nameId == null)
 						{
 							return;
 						}
@@ -489,7 +467,7 @@ public class JSIndexEntry
 					}
 
 					@Override
-					public boolean processVariable(JSNamespace namespace, final int nameId, JSNamedElement variable)
+					public boolean processVariable(JSNamespace namespace, final String nameId, JSNamedElement variable)
 					{
 						PsiElement parent = variable.getParent();
 						if(parent instanceof JSVarStatement)
@@ -514,14 +492,14 @@ public class JSIndexEntry
 					}
 
 					@Override
-					public boolean processProperty(final JSNamespace namespace, final int nameId, final JSNamedElement property)
+					public boolean processProperty(final JSNamespace namespace, final String nameId, final JSNamedElement property)
 					{
 						addSymbol(nameId, property, NamedItemType.Property, namespace);
 						return true;
 					}
 
 					@Override
-					public boolean processDefinition(final JSNamespace namespace, final int nameId, final JSNamedElement expression)
+					public boolean processDefinition(final JSNamespace namespace, final String nameId, final JSNamedElement expression)
 					{
 						//if (namespace.length > 0) {
 						final JSDefinitionExpression element = (JSDefinitionExpression) expression;
@@ -532,13 +510,13 @@ public class JSIndexEntry
 
 					@Override
 					@Nullable
-					public int getRequiredNameId()
+					public String getRequiredNameId()
 					{
-						return -1;
+						return null;
 					}
 
 					@Override
-					public boolean processTag(JSNamespace namespace, final int nameId, PsiNamedElement namedElement, final String attrName)
+					public boolean processTag(JSNamespace namespace, final String nameId, PsiNamedElement namedElement, final String attrName)
 					{
 						if(psiFile instanceof XmlFile)
 						{
@@ -611,7 +589,7 @@ public class JSIndexEntry
 		void process(JSNamedElementProxy proxy, JavaScriptIndex index, T param);
 	}
 
-	private <T> void process(int requiredFieldId, ProxyProcessor<T> processor, T param)
+	private <T> void process(String requiredFieldId, ProxyProcessor<T> processor, T param)
 	{
 		PsiFile myPsiFile = getFile();
 		if(myPsiFile == null || !processor.accepts(myPsiFile))
@@ -621,7 +599,7 @@ public class JSIndexEntry
 
 		final IndexEntryContent index = myIndexValue.getValue();
 
-		if(requiredFieldId != -1)
+		if(requiredFieldId != null)
 		{
 			final Object value = index.mySymbols.get(requiredFieldId);
 			if(value instanceof Object[])
@@ -647,12 +625,12 @@ public class JSIndexEntry
 
 	void fillSymbolNames(final Set<String> symbolNames)
 	{
-		process(-1, myCollectSymbolNamesProcessor, symbolNames);
+		process(null, myCollectSymbolNamesProcessor, symbolNames);
 	}
 
 	void fillSymbolsByName(final String name, final Set<NavigationItem> symbolNavItems)
 	{
-		process(myIndex.getIndexOf(name), myFindSymbolsByNameProcessor, symbolNavItems);
+		process(name, myFindSymbolsByNameProcessor, symbolNavItems);
 	}
 
 	public void processSymbols(JavaScriptSymbolProcessor processor)
@@ -679,8 +657,8 @@ public class JSIndexEntry
 			return;
 		}
 
-		final int requiredNameId = processor.getRequiredNameId();
-		if(requiredNameId != -1)
+		final String requiredNameId = processor.getRequiredNameId();
+		if(requiredNameId != null)
 		{
 			final Object value = index.mySymbols.get(requiredNameId);
 
@@ -706,11 +684,9 @@ public class JSIndexEntry
 		}
 		else
 		{ // full scan
-			final TIntObjectIterator<Object> iterator = index.mySymbols.iterator();
-			while(iterator.hasNext())
+			for(Map.Entry<String, Object> entry : index.mySymbols.entrySet())
 			{
-				iterator.advance();
-				final Object value = iterator.value();
+				final Object value = entry.getValue();
 
 				if(value instanceof Object[])
 				{
@@ -739,7 +715,7 @@ public class JSIndexEntry
 		final JSNamespace namespace = index.mySymbolNameComponents.get(item);
 
 		final NamedItemType itemType = item.getType();
-		final int nameId = item.getNameId();
+		final String nameId = item.getNameId();
 
 		if(itemType == NamedItemType.Variable || itemType == NamedItemType.MemberVariable)
 		{
@@ -874,33 +850,6 @@ public class JSIndexEntry
 		return psiFile;
 	}
 
-	public void write(final SerializationContext context) throws IOException
-	{
-		assert isUpToDate();
-		final IndexEntryContent indexEntryContent = myIndexValue.getValue();
-		indexEntryContent.myNamespace.write(context);
-
-		final Map<JSNamedElement, JSNamespace> components = indexEntryContent.mySymbolNameComponents;
-		context.outputStream.writeInt(components.size());
-
-		for(JSNamedElement key : components.keySet())
-		{
-			((JSNamedElementProxy) key).write(context);
-			context.outputStream.writeInt(context.myNameSpaces.get(components.get(key)));
-		}
-	}
-
-	public void enumerateNames(final SerializationContext context)
-	{
-		assert isUpToDate();
-		final IndexEntryContent indexEntryContent = myIndexValue.getValue();
-		for(JSNamedElement item : indexEntryContent.mySymbolNameComponents.keySet())
-		{
-			((JSNamedElementProxy) item).enumerateNames(context);
-		}
-		indexEntryContent.myNamespace.enumerateNames(context);
-	}
-
 	JSNamespace getNamespace(final JSNamedElement myJSNamedItem)
 	{
 		synchronized(myIndex)
@@ -966,9 +915,9 @@ public class JSIndexEntry
 		synchronized(myIndex)
 		{
 			final IndexEntryContent index = myIndexValue.getValue();
-			final int requiredNameId = myProcessor.getRequiredNameId();
+			final String requiredNameId = myProcessor.getRequiredNameId();
 
-			if(requiredNameId == -1)
+			if(requiredNameId == null)
 			{
 				for(Map.Entry<JSNamedElement, JSNamespace> e : index.mySymbolNameComponents.entrySet())
 				{

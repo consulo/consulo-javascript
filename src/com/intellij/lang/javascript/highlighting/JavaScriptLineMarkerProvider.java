@@ -611,7 +611,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 		private LinkedList<String> myDescendants = new LinkedList<String>();
 		private final Set<String> myProcessed = new THashSet<String>();
 		protected JSFunction function;
-		private int myDescendantNameId;
+		private String myDescendantNameId;
 
 		public MyNamespaceProcessor(Set<JSFunction> functions)
 		{
@@ -643,7 +643,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 				if(function instanceof JSFunctionExpression && funName != null && funName.length() > 0 && (Character.isLowerCase(funName.charAt(0)) || '_' ==
 						funName.charAt(0)))
 				{
-					myDescendantNameId = index.getIndexOf(funName);
+					myDescendantNameId = funName;
 				}
 				else
 				{
@@ -677,20 +677,19 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 		}
 
 		@Override
-		public int getRequiredNameId()
+		public String getRequiredNameId()
 		{
 			return myDescendantNameId;
 		}
 
 		public void processDescendantsOf(String qName, Project project)
 		{
-			ProgressManager progressManager = ProgressManager.getInstance();
-			progressManager.checkCanceled();
+			ProgressManager.checkCanceled();
 			boolean b = JSTypeEvaluateManager.getInstance(project).iterateSubclasses(qName, this);
 
 			while(b && myDescendants.size() > 0)
 			{
-				progressManager.checkCanceled();
+				ProgressManager.checkCanceled();
 				b = JSTypeEvaluateManager.getInstance(project).iterateSubclasses(myDescendants.removeFirst(), this);
 			}
 		}

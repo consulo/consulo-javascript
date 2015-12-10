@@ -105,9 +105,9 @@ public class JavaScriptTypeDeclarationProvider extends TypeDeclarationProvider
 					}
 
 					@Override
-					public int getRequiredNameId()
+					public String getRequiredNameId()
 					{
-						return index.getIndexOf(s1);
+						return s1;
 					}
 				});
 				if(!result.isEmpty())

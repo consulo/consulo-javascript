@@ -21,6 +21,7 @@ import java.lang.ref.WeakReference;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.extapi.psi.PsiElementBase;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
@@ -59,7 +60,7 @@ import com.intellij.util.IncorrectOperationException;
 final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy, ModificationTracker
 {
 	private final int myOffset;
-	private int myNameId;
+	private String myNameId;
 	private int myFlags;
 	private WeakReference<PsiElement> myCachedElement;
 	private JSIndexEntry myJsIndexEntry;
@@ -105,7 +106,7 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 
 	// WE ARE LIMITED BY SHORT
 
-	MyJSNamedItem(final JSIndexEntry jsIndexEntry, int _offset, int _nameId, NamedItemType _type)
+	MyJSNamedItem(final JSIndexEntry jsIndexEntry, int _offset, String _nameId, NamedItemType _type)
 	{
 		myJsIndexEntry = jsIndexEntry;
 		myOffset = _offset;
@@ -120,36 +121,7 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 		myFlags = valueTag;
 	}
 
-	MyJSNamedItem(final JSIndexEntry jsIndexEntry, DeserializationContext context) throws IOException
-	{
-		myJsIndexEntry = jsIndexEntry;
-		myOffset = context.inputStream.readInt();
-		myNameId = context.inputStream.readInt();
-		final int attributes = context.inputStream.readShort();
-
-		myFlags = attributes & VALUE_AND_INLINE_ATTRS_MASK;
-
-		final byte browserSpecific = (byte) ((attributes & BROWSER_TAG_MASK) >> BROWSER_TAG_SHIFT);
-		if(browserSpecific == IE_SPECIFIC_ITEM_TAG)
-		{
-			context.browserSupportManager.addIESpecificSymbol(this);
-		}
-		else if(browserSpecific == GECKO_SPECIFIC_ITEM_TAG)
-		{
-			context.browserSupportManager.addGeckoSpecificSymbol(this);
-		}
-		else if(browserSpecific == OPERA_SPECIFIC_ITEM_TAG)
-		{
-			context.browserSupportManager.addOperaSpecificSymbol(this);
-		}
-
-		String type = context.myNames.get(context.inputStream.readInt());
-		if(type.length() > 0)
-		{
-			context.typeEvaluateManager.setElementType(this, type);
-		}
-	}
-
+	@RequiredReadAction
 	@Override
 	@NotNull
 	public Language getLanguage()
@@ -157,6 +129,7 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 		return JavaScriptSupportLoader.JAVASCRIPT.getLanguage();
 	}
 
+	@RequiredReadAction
 	@Override
 	@NotNull
 	public PsiElement[] getChildren()
@@ -170,6 +143,7 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 		return null;
 	}
 
+	@RequiredReadAction
 	@Override
 	@Nullable
 	public PsiElement getFirstChild()
@@ -177,6 +151,7 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 		return null;
 	}
 
+	@RequiredReadAction
 	@Override
 	@Nullable
 	public PsiElement getLastChild()
@@ -184,6 +159,7 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 		return null;
 	}
 
+	@RequiredReadAction
 	@Override
 	@Nullable
 	public PsiElement getNextSibling()
@@ -197,6 +173,7 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 		return getContainingFile().isPhysical();
 	}
 
+	@RequiredReadAction
 	@Override
 	@Nullable
 	public PsiElement getPrevSibling()
@@ -204,18 +181,22 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 		return null;
 	}
 
+	@NotNull
+	@RequiredReadAction
 	@Override
 	public TextRange getTextRange()
 	{
 		return new TextRange(myOffset, myOffset + 1);
 	}
 
+	@RequiredReadAction
 	@Override
 	public int getStartOffsetInParent()
 	{
 		return 0;
 	}
 
+	@RequiredReadAction
 	@Override
 	public int getTextLength()
 	{
@@ -241,9 +222,10 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 	@Override
 	public int hashCode()
 	{
-		return (myNameId << 7) + myOffset;
+		return myNameId.hashCode() + myOffset;
 	}
 
+	@RequiredReadAction
 	@Override
 	public PsiElement findElementAt(int offset)
 	{
@@ -256,12 +238,14 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 		return myOffset;
 	}
 
+	@RequiredReadAction
 	@Override
 	public String getText()
 	{
 		return null;
 	}
 
+	@RequiredReadAction
 	@Override
 	@NotNull
 	public char[] textToCharArray()
@@ -269,6 +253,7 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 		return new char[0];
 	}
 
+	@RequiredReadAction
 	@Override
 	public boolean textContains(char c)
 	{
@@ -289,7 +274,7 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 		{
 			((PsiNamedElement) element).setName(name);
 		}
-		myNameId = JavaScriptIndex.getInstance(getProject()).getIndexOf(name);
+		myNameId = name;
 		return this;
 	}
 
@@ -308,7 +293,7 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 	public void write(SerializationContext context) throws IOException
 	{
 		context.outputStream.writeInt(myOffset);
-		context.outputStream.writeInt(context.myNames.get(context.myIndex.getStringByIndex(myNameId)));
+		context.outputStream.writeInt(context.myNames.get(myNameId));
 
 		final int valueTag = myFlags & VALUE_AND_INLINE_ATTRS_MASK;
 
@@ -328,7 +313,7 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 	@Override
 	public void enumerateNames(final SerializationContext context)
 	{
-		context.addName(context.myIndex.getStringByIndex(myNameId));
+		context.addName(myNameId);
 		final String elementType = context.typeEvaluateManager.getElementType(this);
 		context.addName(elementType != null ? elementType : "");
 	}
@@ -336,7 +321,7 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 	@Override
 	public String getName()
 	{
-		return JavaScriptIndex.getInstance(getProject()).getStringByIndex(myNameId);
+		return myNameId;
 	}
 
 	@Override
@@ -374,6 +359,7 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 		return getContainingFile().getManager();
 	}
 
+	@NotNull
 	@Override
 	public PsiElement getNavigationElement()
 	{
@@ -507,7 +493,7 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 	}
 
 	@Override
-	public int getNameId()
+	public String getNameId()
 	{
 		return myNameId;
 	}

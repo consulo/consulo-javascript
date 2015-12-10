@@ -27,50 +27,50 @@ import com.intellij.psi.PsiNamedElement;
  */
 public interface JavaScriptSymbolProcessor
 {
-	boolean processFunction(JSNamespace namespace, final int nameId, JSNamedElement function);
+	boolean processFunction(JSNamespace namespace, final String nameId, JSNamedElement function);
 
-	boolean processClass(JSNamespace namespace, final int nameId, JSNamedElement clazz);
+	boolean processClass(JSNamespace namespace, final String nameId, JSNamedElement clazz);
 
-	boolean processVariable(JSNamespace namespace, final int nameId, JSNamedElement variable);
+	boolean processVariable(JSNamespace namespace, final String nameId, JSNamedElement variable);
 
 	boolean acceptsFile(PsiFile file);
 
 	PsiFile getBaseFile();
 
-	boolean processProperty(final JSNamespace namespace, final int nameId, final JSNamedElement property);
+	boolean processProperty(final JSNamespace namespace, final String nameId, final JSNamedElement property);
 
-	boolean processDefinition(final JSNamespace namespace, final int nameId, final JSNamedElement refExpr);
+	boolean processDefinition(final JSNamespace namespace, final String nameId, final JSNamedElement refExpr);
 
-	boolean processNamespace(final JSNamespace namespace, final int nameId, final JSNamedElement refExpr);
+	boolean processNamespace(final JSNamespace namespace, final String nameId, final JSNamedElement refExpr);
 
-	boolean processImplicitNamespace(final JSNamespace namespace, final int nameId, final PsiElement refExpr, boolean finalReference);
+	boolean processImplicitNamespace(final JSNamespace namespace, final String nameId, final PsiElement refExpr, boolean finalReference);
 
-	boolean processImplicitFunction(final JSNamespace namespace, final int nameId, final PsiElement refExpr);
+	boolean processImplicitFunction(final JSNamespace namespace, final String nameId, final PsiElement refExpr);
 
-	boolean processImplicitVariable(final JSNamespace namespace, final int nameId, final PsiElement refExpr);
+	boolean processImplicitVariable(final JSNamespace namespace, final String nameId, final PsiElement refExpr);
 
-	int getRequiredNameId();
+	String getRequiredNameId();
 
-	boolean processTag(JSNamespace namespace, final int nameId, PsiNamedElement namedElement, @NonNls final String attrName);
+	boolean processTag(JSNamespace namespace, final String nameId, PsiNamedElement namedElement, @NonNls final String attrName);
 
 	abstract class DefaultSymbolProcessor implements JavaScriptSymbolProcessor
 	{
 		protected PsiFile currentFile;
 
 		@Override
-		public boolean processFunction(final JSNamespace namespace, final int nameId, final JSNamedElement function)
+		public boolean processFunction(final JSNamespace namespace, final String nameId, final JSNamedElement function)
 		{
 			return process(function, namespace);
 		}
 
 		@Override
-		public boolean processClass(final JSNamespace namespace, final int nameId, final JSNamedElement clazz)
+		public boolean processClass(final JSNamespace namespace, final String nameId, final JSNamedElement clazz)
 		{
 			return process(clazz, namespace);
 		}
 
 		@Override
-		public boolean processVariable(final JSNamespace namespace, final int nameId, final JSNamedElement variable)
+		public boolean processVariable(final JSNamespace namespace, final String nameId, final JSNamedElement variable)
 		{
 			return process(variable, namespace);
 		}
@@ -83,43 +83,43 @@ public interface JavaScriptSymbolProcessor
 		}
 
 		@Override
-		public boolean processProperty(final JSNamespace namespace, final int nameId, final JSNamedElement property)
+		public boolean processProperty(final JSNamespace namespace, final String nameId, final JSNamedElement property)
 		{
 			return process(property, namespace);
 		}
 
 		@Override
-		public boolean processDefinition(final JSNamespace namespace, final int nameId, final JSNamedElement refExpr)
+		public boolean processDefinition(final JSNamespace namespace, final String nameId, final JSNamedElement refExpr)
 		{
 			return process(refExpr, namespace);
 		}
 
 		@Override
-		public boolean processNamespace(final JSNamespace namespace, final int nameId, final JSNamedElement refExpr)
+		public boolean processNamespace(final JSNamespace namespace, final String nameId, final JSNamedElement refExpr)
 		{
 			return process(refExpr, namespace);
 		}
 
 		@Override
-		public boolean processImplicitNamespace(final JSNamespace namespace, final int nameId, final PsiElement refExpr, boolean finalReference)
+		public boolean processImplicitNamespace(final JSNamespace namespace, final String nameId, final PsiElement refExpr, boolean finalReference)
 		{
 			return process(refExpr, namespace);
 		}
 
 		@Override
-		public boolean processImplicitFunction(final JSNamespace namespace, final int nameId, final PsiElement refExpr)
+		public boolean processImplicitFunction(final JSNamespace namespace, final String nameId, final PsiElement refExpr)
 		{
 			return process(refExpr, namespace);
 		}
 
 		@Override
-		public boolean processImplicitVariable(final JSNamespace namespace, final int nameId, final PsiElement refExpr)
+		public boolean processImplicitVariable(final JSNamespace namespace, final String nameId, final PsiElement refExpr)
 		{
 			return process(refExpr, namespace);
 		}
 
 		@Override
-		public boolean processTag(final JSNamespace namespace, final int nameId, final PsiNamedElement namedElement, @NonNls final String attrName)
+		public boolean processTag(final JSNamespace namespace, final String nameId, final PsiNamedElement namedElement, @NonNls final String attrName)
 		{
 			return process(namedElement, namespace);
 		}

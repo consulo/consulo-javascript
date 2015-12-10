@@ -126,7 +126,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 					{
 						final JSNamespace namespace = elementProxy.getNamespace();
 
-						if(namespace.getNameId() == -1)
+						if(namespace.getNameId() == null)
 						{
 							isFunction = true;
 						}

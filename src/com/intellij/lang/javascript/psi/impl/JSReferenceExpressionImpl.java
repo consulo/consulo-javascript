@@ -641,7 +641,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 			// Fallback for finding some assignment in global scope
 		}
 
-		final WalkUpResolveProcessor processor = new WalkUpResolveProcessor(index.getIndexOf(referencedName), null, containingFile, false, this);
+		final WalkUpResolveProcessor processor = new WalkUpResolveProcessor(referencedName, null, containingFile, false, this);
 
 		if(localProcessor != null)
 		{

@@ -16,14 +16,13 @@
 
 package com.intellij.lang.javascript.index;
 
-import gnu.trove.TIntHashSet;
-import gnu.trove.TIntObjectHashMap;
-import gnu.trove.TObjectIntHashMap;
-import gnu.trove.TObjectIntProcedure;
-
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -41,11 +40,11 @@ import com.intellij.psi.ResolveResult;
  */
 public class JSTypeEvaluateManager implements ProjectComponent
 {
-	private TObjectIntHashMap<JSNamedElement> myTypeMap = new TObjectIntHashMap<JSNamedElement>(30);
-	private TObjectIntHashMap<JSNamespace> myNsToSuperMap = new TObjectIntHashMap<JSNamespace>(50);
-	private TIntObjectHashMap<List<JSNamespace>> myName2ElementMap = new TIntObjectHashMap<List<JSNamespace>>(30);
+	private Map<JSNamedElement, String> myTypeMap = new HashMap<JSNamedElement, String>();
+	private Map<JSNamespace, String> myNsToSuperMap = new HashMap<JSNamespace, String>();
+	private Map<String, List<JSNamespace>> myName2ElementMap = new HashMap<String, List<JSNamespace>>();
 	private final JavaScriptIndex myIndex;
-	private int myObjectNameIndex = -1;
+	private String myObjectNameIndex;
 
 	public static JSTypeEvaluateManager getInstance(Project project)
 	{
@@ -89,7 +88,7 @@ public class JSTypeEvaluateManager implements ProjectComponent
 	{
 		synchronized(myIndex)
 		{
-			myTypeMap.put(element, myIndex.getIndexOf(type));
+			myTypeMap.put(element, type);
 		}
 	}
 
@@ -99,42 +98,31 @@ public class JSTypeEvaluateManager implements ProjectComponent
 		{
 			if(element instanceof JSNamedElement)
 			{
-				int i = myTypeMap.get((JSNamedElement) element);
-				if(i == 0)
+				String i = myTypeMap.get((JSNamedElement) element);
+				if(i == null)
 				{
 					return null;
 				}
-				return myIndex.getStringByIndex(i);
+				return i;
 			}
 			return null;
 		}
 	}
 
-	public void setBaseType(JSNamespace namespace, int fqtypeIndex, int fqSuperIndex)
+	public void setBaseType(JSNamespace namespace, String fqtypeIndex, String fqSuperIndex)
 	{
 		synchronized(myIndex)
 		{
-			if(myObjectNameIndex == -1)
+			if(myObjectNameIndex == null)
 			{
-				myObjectNameIndex = myIndex.getIndexOf(JSResolveUtil.OBJECT_CLASS_NAME);
+				myObjectNameIndex = JSResolveUtil.OBJECT_CLASS_NAME;
 			}
-			if(fqSuperIndex != myObjectNameIndex)
+			if(!fqSuperIndex.equals(myObjectNameIndex))
 			{
 				myNsToSuperMap.put(namespace, fqSuperIndex);
 			}
 			doAddNsWithType(fqtypeIndex, namespace);
 		}
-	}
-
-	public void setBaseType(JSNamespace namespace, String fqtype, String superFQType)
-	{
-		final int of = myIndex.getIndexOf(superFQType);
-		if(myObjectNameIndex == -1 && JSResolveUtil.OBJECT_CLASS_NAME.equals(superFQType))
-		{
-			myObjectNameIndex = of;
-		}
-
-		setBaseType(namespace, myIndex.getIndexOf(fqtype), of);
 	}
 
 	public interface NamespaceProcessor
@@ -153,7 +141,7 @@ public class JSTypeEvaluateManager implements ProjectComponent
 		synchronized(myIndex)
 		{
 			myIndex.getDefaultPackage();
-			final int key = myIndex.getIndexOf(fqTypeName);
+			final String key = fqTypeName;
 
 			List<JSNamespace> namedElements = myName2ElementMap.get(key);
 			if(namedElements != null)
@@ -161,7 +149,7 @@ public class JSTypeEvaluateManager implements ProjectComponent
 
 				for(JSNamespace namespace : namedElements)
 				{
-					result &= doIterateTypeImpl(namespace, processor, new TIntHashSet());
+					result &= doIterateTypeImpl(namespace, processor, new HashSet<String>());
 				}
 			}
 			else
@@ -179,13 +167,13 @@ public class JSTypeEvaluateManager implements ProjectComponent
 		return result;
 	}
 
-	private boolean doIterateTypeImpl(final JSNamespace namespace, final NamespaceProcessor processor, TIntHashSet visited)
+	private boolean doIterateTypeImpl(final JSNamespace namespace, final NamespaceProcessor processor, Set<String> visited)
 	{
-		int superNameId = myNsToSuperMap.get(namespace);
+		String superNameId = myNsToSuperMap.get(namespace);
 
-		if(superNameId == 0)
+		if(superNameId == null)
 		{
-			if(namespace.getNameId() != myObjectNameIndex || !namespace.getQualifiedName(myIndex).equals(JSResolveUtil.OBJECT_CLASS_NAME))
+			if(!namespace.getNameId().equals(myObjectNameIndex) || !namespace.getQualifiedName(myIndex).equals(JSResolveUtil.OBJECT_CLASS_NAME))
 			{
 				superNameId = myObjectNameIndex;
 			}
@@ -195,14 +183,14 @@ public class JSTypeEvaluateManager implements ProjectComponent
 			}
 		}
 
-		if(superNameId != 0 && !visited.contains(superNameId))
+		if(superNameId != null && !visited.contains(superNameId))
 		{
 			visited.add(superNameId);
 			Collection<JSNamespace> superNamedElements = myName2ElementMap.get(superNameId);
 
 			if(superNamedElements == null)
 			{
-				final JSPackage aPackage = JSResolveUtil.findPackageByText(myIndex.getStringByIndex(superNameId), myIndex);
+				final JSPackage aPackage = JSResolveUtil.findPackageByText(superNameId, myIndex);
 
 				if(aPackage != null)
 				{
@@ -322,7 +310,7 @@ public class JSTypeEvaluateManager implements ProjectComponent
 			myTypeMap.clear();
 			myNsToSuperMap.clear();
 			myName2ElementMap.clear();
-			myObjectNameIndex = -1;
+			myObjectNameIndex = null;
 		}
 	}
 
@@ -338,7 +326,7 @@ public class JSTypeEvaluateManager implements ProjectComponent
 
 	private void remove(final JSNamespace el)
 	{
-		final int ourId = el.getQualifiedNameId(myIndex);
+		final String ourId = el.getQualifiedNameId(myIndex);
 		List<JSNamespace> list = myName2ElementMap.get(ourId);
 
 		if(list != null)
@@ -368,16 +356,16 @@ public class JSTypeEvaluateManager implements ProjectComponent
 	{
 		synchronized(myIndex)
 		{
-			int i = myNsToSuperMap.get(namespace);
-			if(i == 0)
+			String i = myNsToSuperMap.get(namespace);
+			if(i == null)
 			{
 				return JSResolveUtil.OBJECT_CLASS_NAME;
 			}
-			return myIndex.getStringByIndex(i);
+			return i;
 		}
 	}
 
-	private void doAddNsWithType(final int key, final JSNamespace superNs)
+	private void doAddNsWithType(final String key, final JSNamespace superNs)
 	{
 		List<JSNamespace> namespaces = myName2ElementMap.get(key);
 
@@ -403,20 +391,17 @@ public class JSTypeEvaluateManager implements ProjectComponent
 		synchronized(myIndex)
 		{
 			myIndex.getDefaultPackage();
-			return myNsToSuperMap.forEachEntry(new TObjectIntProcedure<JSNamespace>()
+			for(Map.Entry<JSNamespace, String> jsNamespaceStringEntry : myNsToSuperMap.entrySet())
 			{
-				final int nameIndex = myIndex.getIndexOf(s);
-
-				@Override
-				public boolean execute(final JSNamespace a, final int b)
+				if(jsNamespaceStringEntry.getValue().equals(s))
 				{
-					if(nameIndex == b)
+					if(!processor.process(jsNamespaceStringEntry.getKey()))
 					{
-						return processor.process(a);
+						return false;
 					}
-					return true;
 				}
-			});
+			}
+			return true;
 		}
 	}
 }

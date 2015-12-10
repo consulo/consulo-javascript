@@ -82,7 +82,7 @@ class JSSuperGrouper implements Grouper
 					continue;
 				}
 				final JSNamespace ns = ((JSNamedElementProxy) value).getNamespace();
-				if(ns.getNameId() == -1)
+				if(ns.getNameId() == null)
 				{
 					continue;
 				}

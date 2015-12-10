@@ -16,9 +16,8 @@
 
 package com.intellij.lang.javascript.index;
 
-import gnu.trove.TIntObjectHashMap;
-
-import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @by yole, maxim
@@ -27,7 +26,7 @@ public class JSNamespace
 {
 	private JSNamespace myParent;
 	private JSPackage myPackage;
-	private TIntObjectHashMap<JSNamespace> myChildNamespaces;
+	private Map<String, JSNamespace> myChildNamespaces;
 
 	public JSNamespace(JSPackage _package)
 	{
@@ -38,10 +37,10 @@ public class JSNamespace
 		}
 	}
 
-	public JSNamespace(final JSNamespace parent, final int nameId)
+	public JSNamespace(final JSNamespace parent, final String nameId)
 	{
 		myParent = parent;
-		myPackage = nameId == -1 ? parent.getPackage() : parent.getPackage().findSubPackage(nameId);
+		myPackage = nameId == null ? parent.getPackage() : parent.getPackage().findSubPackage(nameId);
 		myPackage.addInstance(this);
 	}
 
@@ -53,7 +52,7 @@ public class JSNamespace
 		}
 	}
 
-	public final JSNamespace findChildNamespace(final int nameId)
+	public final JSNamespace findChildNamespace(final String nameId)
 	{
 		if(myChildNamespaces == null)
 		{
@@ -63,11 +62,11 @@ public class JSNamespace
 		return myChildNamespaces.get(nameId);
 	}
 
-	public JSNamespace getChildNamespace(final int nameId)
+	public JSNamespace getChildNamespace(final String nameId)
 	{
 		if(myChildNamespaces == null)
 		{
-			myChildNamespaces = new TIntObjectHashMap<JSNamespace>();
+			myChildNamespaces = new ConcurrentHashMap<String, JSNamespace>();
 		}
 		JSNamespace ns = myChildNamespaces.get(nameId);
 		if(ns == null)
@@ -78,7 +77,7 @@ public class JSNamespace
 		return ns;
 	}
 
-	public int getNameId()
+	public String getNameId()
 	{
 		return myPackage.getNameId();
 	}
@@ -97,38 +96,13 @@ public class JSNamespace
 
 		if(myChildNamespaces != null)
 		{
-			final Object[] objects = myChildNamespaces.getValues(); // stable copy
-			for(Object o : objects)
+			for(JSNamespace o : myChildNamespaces.values())
 			{
-				((JSNamespace) o).enumerateNames(context);
+				o.enumerateNames(context);
 			}
 		}
 	}
 
-	public void write(SerializationContext context) throws IOException
-	{
-		context.outputStream.writeInt(doEnumerateNS(this, context));
-		final int packageIndex = context.myPackages.get(myPackage);
-
-		context.outputStream.writeInt(packageIndex);
-		final int myBaseType = myParent != null ? context.myNames.get(context.typeEvaluateManager.getBaseType(this)) : -1;
-		context.outputStream.writeInt(myBaseType);
-
-		if(myChildNamespaces != null)
-		{
-			final Object[] objects = myChildNamespaces.getValues(); // stable copy
-			context.outputStream.writeInt(objects.length);
-
-			for(Object o : objects)
-			{
-				((JSNamespace) o).write(context);
-			}
-		}
-		else
-		{
-			context.outputStream.writeInt(0);
-		}
-	}
 
 	private static int doEnumerateNS(JSNamespace ns, final SerializationContext context)
 	{
@@ -140,45 +114,8 @@ public class JSNamespace
 		return i;
 	}
 
-	public void read(final DeserializationContext context, JSNamespace parent) throws IOException
-	{
-		final int nsIndex = context.inputStream.readInt();
 
-		context.myNameSpaces.put(nsIndex, this);
-		doRead(context, parent);
-	}
-
-	private void doRead(final DeserializationContext context, JSNamespace parent) throws IOException
-	{
-		myParent = parent;
-		final int packageIndex = context.inputStream.readInt();
-		myPackage = context.myPackages.get(packageIndex);
-		assert myPackage != null;
-		myPackage.addInstance(this);
-
-		final int superNsType = context.inputStream.readInt();
-
-		if(myParent != null)
-		{
-			context.typeEvaluateManager.setBaseType(this, getQualifiedNameId(context.index), superNsType);
-		}
-
-		int childCount = context.inputStream.readInt();
-
-		while(childCount > 0)
-		{
-			JSNamespace item = new JSNamespace(null);
-			item.read(context, this);
-			if(myChildNamespaces == null)
-			{
-				myChildNamespaces = new TIntObjectHashMap<JSNamespace>(childCount);
-			}
-			myChildNamespaces.put(item.getNameId(), item);
-			--childCount;
-		}
-	}
-
-	public int[] getIndices()
+	public String[] getIndices()
 	{
 		int count = 0;
 
@@ -187,7 +124,7 @@ public class JSNamespace
 			++count;
 		}
 
-		final int[] result = new int[count];
+		final String[] result = new String[count];
 		for(JSNamespace ns = this; ns.getParent() != null; ns = ns.getParent())
 		{
 			result[--count] = ns.getNameId();
@@ -206,19 +143,19 @@ public class JSNamespace
 			{
 				buf.insert(0, '.');
 			}
-			buf.insert(0, index.getStringByIndex(ns.getNameId()));
+			buf.insert(0,ns.getNameId());
 		}
 
 		return buf.toString();
 	}
 
-	public int getQualifiedNameId(JavaScriptIndex index)
+	public String getQualifiedNameId(JavaScriptIndex index)
 	{
 		if(myParent instanceof JSRootNamespace)
 		{
 			return getNameId();
 		}
-		return index.getIndexOf(getQualifiedName(index));
+		return getQualifiedName(index);
 	}
 
 	public void invalidate(final JSTypeEvaluateManager typeEvaluateManager)
@@ -227,11 +164,9 @@ public class JSNamespace
 
 		if(myChildNamespaces != null)
 		{
-			final Object[] objects = myChildNamespaces.getValues(); // stable copy
-
-			for(Object o : objects)
+			for(JSNamespace jsNamespace : myChildNamespaces.values())
 			{
-				((JSNamespace) o).invalidate(typeEvaluateManager);
+				jsNamespace.invalidate(typeEvaluateManager);
 			}
 		}
 

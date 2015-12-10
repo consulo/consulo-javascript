@@ -31,7 +31,7 @@ public interface JSNamedElementProxy extends JSQualifiedNamedElement
 
 	void enumerateNames(final SerializationContext context);
 
-	int getNameId();
+	String getNameId();
 
 	boolean isDeprecated();
 

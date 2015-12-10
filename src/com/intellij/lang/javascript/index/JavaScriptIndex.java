@@ -18,14 +18,11 @@ package com.intellij.lang.javascript.index;
 
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
-import gnu.trove.TIntObjectHashMap;
-import gnu.trove.TObjectIntHashMap;
 
 import java.lang.ref.SoftReference;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.jetbrains.annotations.NonNls;
@@ -72,8 +69,6 @@ public final class JavaScriptIndex implements ProjectComponent
 	private final JSPackage myRootPackage = new JSPackage();
 	private static Key<JSIndexEntry> ourEntryKey = Key.create("js.indexentry");
 
-	private TObjectIntHashMap<String> myNames2Index = new TObjectIntHashMap<String>(50);
-	private TIntObjectHashMap<String> myIndex2Names = new TIntObjectHashMap<String>(50);
 	private THashSet<JSIndexEntry> myFilesToUpdate = new THashSet<JSIndexEntry>(50);
 
 	static final Logger LOG = Logger.getInstance("#com.intellij.lang.javascript.index.JavaScriptIndex");
@@ -81,13 +76,7 @@ public final class JavaScriptIndex implements ProjectComponent
 	@NonNls
 	static final String DHTML_XML_FILE_NAME = "DHTML.xml";
 	public static final String ECMASCRIPT_JS2 = "ECMAScript.js2";
-	@NonNls
-	static final String PREDEFINES_PREFIX = "predefines.";
-	static final
-	@NonNls
-	String PREDEFINED_SCRIPTS_FILE_EXTENSION = ".js";
-	@Deprecated
-	public static final Key<String> READONLY_JS_FILE_KEY = Key.create("ReadOnly.JavaScript.File");
+
 	@Deprecated
 	public static final Key<String> PREDEFINED_JS_FILE_KEY = Key.create("Predefined.JavaScript.File");
 
@@ -210,8 +199,6 @@ public final class JavaScriptIndex implements ProjectComponent
 
 		synchronized(cachesLock)
 		{
-			myIndex2Names.clear();
-			myNames2Index.clear();
 			myPackageResolveResult.clear();
 			myTopLevelResolveResult.clear();
 		}
@@ -385,15 +372,15 @@ public final class JavaScriptIndex implements ProjectComponent
 		{
 			return null;
 		}
-		return findSymbolWithNameAndOffsetInEntryNoLock(getIndexOf(name), offset, indexEntry);
+		return findSymbolWithNameAndOffsetInEntryNoLock(name, offset, indexEntry);
 	}
 
-	public synchronized PsiElement findSymbolWithNameAndOffsetInEntry(final int nameId, final int offset, final JSIndexEntry indexEntry)
+	public synchronized PsiElement findSymbolWithNameAndOffsetInEntry(final String nameId, final int offset, final JSIndexEntry indexEntry)
 	{
 		return findSymbolWithNameAndOffsetInEntryNoLock(nameId, offset, indexEntry);
 	}
 
-	private PsiElement findSymbolWithNameAndOffsetInEntryNoLock(final int nameId, final int offset, final JSIndexEntry indexEntry)
+	private PsiElement findSymbolWithNameAndOffsetInEntryNoLock(final String nameId, final int offset, final JSIndexEntry indexEntry)
 	{
 		if(indexEntry == null)
 		{
@@ -411,7 +398,7 @@ public final class JavaScriptIndex implements ProjectComponent
 			}
 
 			@Override
-			public int getRequiredNameId()
+			public String getRequiredNameId()
 			{
 				return nameId;
 			}
@@ -518,42 +505,6 @@ public final class JavaScriptIndex implements ProjectComponent
 
 	private static final Object cachesLock = new Object(); // guards myNames2Index, myIndexToNames, myPackageResolveResult, myToplevelResolveResult
 
-	public int getIndexOf(@NonNls String s)
-	{
-		if(s == null)
-		{
-			return -1;
-		}
-		synchronized(cachesLock)
-		{
-			final int i = myNames2Index.get(s);
-			if(i > 0)
-			{
-				return i;
-			}
-			final int value = myNames2Index.size() + 1;
-			myNames2Index.put(s, value);
-			myIndex2Names.put(value, s);
-			return value;
-		}
-	}
-
-	public String getStringByIndex(int i)
-	{
-		if(i == -1)
-		{
-			return null;
-		}
-		synchronized(cachesLock)
-		{
-			final String s = myIndex2Names.get(i);
-			if(s != null)
-			{
-				return s;
-			}
-			throw new NoSuchElementException("" + i);
-		}
-	}
 
 	private final Map<GlobalSearchScope, Map<String, PsiElement>> myPackageResolveResult = new THashMap<GlobalSearchScope, Map<String, PsiElement>>();
 	private final Map<GlobalSearchScope, Map<String, SoftReference<PsiElement>>> myTopLevelResolveResult = new THashMap<GlobalSearchScope, Map<String,

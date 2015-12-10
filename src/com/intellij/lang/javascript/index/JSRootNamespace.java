@@ -32,9 +32,9 @@ class JSRootNamespace extends JSNamespace
 	}
 
 	@Override
-	public int getQualifiedNameId(final JavaScriptIndex index)
+	public String getQualifiedNameId(final JavaScriptIndex index)
 	{
-		return -1;
+		return null;
 	}
 
 	void validate()

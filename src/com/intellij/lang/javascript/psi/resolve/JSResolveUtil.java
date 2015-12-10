@@ -17,7 +17,6 @@
 package com.intellij.lang.javascript.psi.resolve;
 
 import gnu.trove.THashSet;
-import gnu.trove.TIntArrayList;
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TIntObjectIterator;
 
@@ -104,6 +103,7 @@ import com.intellij.psi.xml.XmlTag;
 import com.intellij.psi.xml.XmlTagChild;
 import com.intellij.psi.xml.XmlText;
 import com.intellij.testFramework.LightVirtualFile;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.Processor;
 import com.intellij.util.SmartList;
@@ -1852,7 +1852,7 @@ public class JSResolveUtil
 				String nextElement = tokenizer.nextElement();
 				if(nextElement != null)
 				{
-					jsPackage = jsPackage.findPackageWithNameId(index.getIndexOf(nextElement));
+					jsPackage = jsPackage.findPackageWithNameId(nextElement);
 				}
 
 				if(jsPackage == null || nextElement == null)
@@ -1885,7 +1885,7 @@ public class JSResolveUtil
 		@Override
 		public String getName()
 		{
-			return JavaScriptIndex.getInstance(project).getStringByIndex(myPackage.getNameId());
+			return myPackage.getNameId();
 		}
 
 		@Override
@@ -2044,9 +2044,9 @@ public class JSResolveUtil
 		}
 	}
 
-	public static int[] buildNameIdsForQualifier(final JSExpression qualifier, final JavaScriptIndex index)
+	public static String[] buildNameIdsForQualifier(final JSExpression qualifier, final JavaScriptIndex index)
 	{
-		int[] nameIds = null;
+		String[] nameIds = null;
 
 		if(qualifier == null)
 		{
@@ -2059,7 +2059,7 @@ public class JSResolveUtil
 
 			if(nameIds == null)
 			{
-				nameIds = new int[]{index.getIndexOf("")};
+				nameIds = new String[]{""};
 			}
 		}
 
@@ -2157,9 +2157,9 @@ public class JSResolveUtil
 						}
 
 						@Override
-						public int getRequiredNameId()
+						public String getRequiredNameId()
 						{
-							return index.getIndexOf(node.getName());
+							return node.getName();
 						}
 					});
 				}
@@ -3110,16 +3110,15 @@ public class JSResolveUtil
 			return typeName;
 		}
 
-		public
 		@Nullable
-		int[] getQualifierAsNameIndex(@NotNull JavaScriptIndex index)
+		public String[] getQualifierAsNameIndex(@NotNull JavaScriptIndex index)
 		{
 			String qualifierAsString = getQualifierAsString();
 			if(qualifierAsString != null)
 			{
-				TIntArrayList tIntArrayList = new TIntArrayList();
-				qualifierAsString = BaseJSSymbolProcessor.addIndexListFromQName(qualifierAsString, qualifyingExpression, tIntArrayList, index);
-				return tIntArrayList.toNativeArray();
+				List<String> list = new ArrayList<String>();
+				qualifierAsString = BaseJSSymbolProcessor.addIndexListFromQName(qualifierAsString, qualifyingExpression, list, index);
+				return ArrayUtil.toStringArray(list);
 			}
 
 			return null;

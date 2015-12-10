@@ -18,7 +18,6 @@ package com.intellij.lang.javascript.structureView;
 
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
-import gnu.trove.TIntHashSet;
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TIntObjectIterator;
 import gnu.trove.TIntObjectProcedure;
@@ -26,6 +25,7 @@ import gnu.trove.TIntObjectProcedure;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -123,7 +123,7 @@ public class JSStructureViewElement implements StructureViewTreeElement
 		}
 
 		final JavaScriptIndex index = JavaScriptIndex.getInstance(element.getProject());
-		final TIntHashSet referencedNamedIds = new TIntHashSet();
+		final Set<String> referencedNamedIds = new HashSet<String>();
 		JSIndexEntry entry = null;
 		JSNamespace ns = null;
 
@@ -328,11 +328,10 @@ public class JSStructureViewElement implements StructureViewTreeElement
 	}
 
 
-	protected List<StructureViewTreeElement> collectMyElements(final TIntHashSet referencedNamedIds, final JSIndexEntry entry, final JSNamespace ns,
-			final JavaScriptIndex index)
+	protected List<StructureViewTreeElement> collectMyElements(final Set<String> referencedNamedIds, final JSIndexEntry entry, final JSNamespace ns, final JavaScriptIndex index)
 	{
 		final TIntObjectHashMap<PsiElement> offset2Proxy = new TIntObjectHashMap<PsiElement>();
-		final TIntObjectHashMap<PsiElement> nameId2NsProxy = new TIntObjectHashMap<PsiElement>();
+		final Map<String, PsiElement> nameId2NsProxy = new HashMap<String, PsiElement>();
 
 		if(entry != null && ns != null)
 		{
@@ -342,8 +341,8 @@ public class JSStructureViewElement implements StructureViewTreeElement
 			entry.processSymbols(new JavaScriptSymbolProcessor.DefaultSymbolProcessor()
 			{
 				final boolean myElementIsFile = myElement instanceof JSFile;
-				final boolean shouldFindNsInDepth = (myElementIsFile && ((JSFile) myElement).getLanguage() != JavaScriptSupportLoader.ECMA_SCRIPT_L4) ||
-						myElement instanceof VariantsProcessor.MyElementWrapper;
+				final boolean shouldFindNsInDepth = (myElementIsFile && ((JSFile) myElement).getLanguage() != JavaScriptSupportLoader.ECMA_SCRIPT_L4) || myElement instanceof VariantsProcessor
+						.MyElementWrapper;
 
 				@Override
 				protected boolean process(final PsiElement sym, JSNamespace namespace)
@@ -366,7 +365,7 @@ public class JSStructureViewElement implements StructureViewTreeElement
 						offset2Proxy.put(textOffset, sym);
 					}
 					else if((namespace.getParent() == ns1 || (shouldFindNsInDepth && (namespace = findNsInParents(namespace, ns1)) != null)) &&
-							(nsName = index.getStringByIndex(namespace.getNameId())).length() > 0 &&
+							(nsName = namespace.getNameId()).length() > 0 &&
 							type != JSNamedElementProxy.NamedItemType.Clazz &&
 							nameId2NsProxy.get(namespace.getNameId()) == null)
 					{
@@ -393,9 +392,9 @@ public class JSStructureViewElement implements StructureViewTreeElement
 				}
 
 				@Override
-				public int getRequiredNameId()
+				public String getRequiredNameId()
 				{
-					return -1;
+					return null;
 				}
 
 				@Override
@@ -415,7 +414,7 @@ public class JSStructureViewElement implements StructureViewTreeElement
 		{
 			tIntObjectIterator.advance();
 			final JSNamedElementProxy elementProxy = (JSNamedElementProxy) tIntObjectIterator.value();
-			int nameId = elementProxy.getNameId();
+			String nameId = elementProxy.getNameId();
 			PsiElement element = null;
 
 			final JSNamedElementProxy.NamedItemType namedItemType = elementProxy.getType();
@@ -426,11 +425,10 @@ public class JSStructureViewElement implements StructureViewTreeElement
 				if(element != jsExpression)
 				{
 					element = jsExpression;
-					nameId = index.getIndexOf(jsExpression.getText());
+					nameId = jsExpression.getText();
 				}
 			}
-			else if(namedItemType == JSNamedElementProxy.NamedItemType.ImplicitFunction || namedItemType == JSNamedElementProxy.NamedItemType
-					.ImplicitVariable)
+			else if(namedItemType == JSNamedElementProxy.NamedItemType.ImplicitFunction || namedItemType == JSNamedElementProxy.NamedItemType.ImplicitVariable)
 			{
 				element = elementProxy;
 			}
@@ -449,12 +447,10 @@ public class JSStructureViewElement implements StructureViewTreeElement
 			}
 		}
 
-		tIntObjectIterator = nameId2NsProxy.iterator();
-		while(tIntObjectIterator.hasNext())
+		for(Map.Entry<String, PsiElement> elementEntry : nameId2NsProxy.entrySet())
 		{
-			tIntObjectIterator.advance();
-			final JSNamedElement e = (JSNamedElement) tIntObjectIterator.value();
-			final int nameId = tIntObjectIterator.key();
+			final JSNamedElement e = (JSNamedElement) elementEntry.getValue();
+			final String nameId = elementEntry.getKey();
 
 			if(!referencedNamedIds.contains(nameId))
 			{
@@ -509,8 +505,7 @@ public class JSStructureViewElement implements StructureViewTreeElement
 		return true;
 	}
 
-	private static void collectChildrenFromElement(final PsiElement element, final TIntHashSet referencedNamedIds, final JavaScriptIndex index,
-			final TIntObjectHashMap<PsiElement> offset2Element)
+	private static void collectChildrenFromElement(final PsiElement element, final Set<String> referencedNamedIds, final JavaScriptIndex index, final TIntObjectHashMap<PsiElement> offset2Element)
 	{
 		element.acceptChildren(new JSElementVisitor()
 		{
@@ -659,7 +654,7 @@ public class JSStructureViewElement implements StructureViewTreeElement
 			{
 				if(lOperand instanceof JSNamedElement)
 				{
-					final int namedId = index.getIndexOf(((JSNamedElement) lOperand).getName());
+					final String namedId = ((JSNamedElement) lOperand).getName();
 					if(referencedNamedIds.contains(namedId))
 					{
 						return;
@@ -732,8 +727,7 @@ public class JSStructureViewElement implements StructureViewTreeElement
 	}
 
 
-	private abstract static class MyProcessor extends JavaScriptSymbolProcessor.DefaultSymbolProcessor implements JSTypeEvaluateManager
-			.NamespaceProcessor
+	private abstract static class MyProcessor extends JavaScriptSymbolProcessor.DefaultSymbolProcessor implements JSTypeEvaluateManager.NamespaceProcessor
 	{
 		private final JavaScriptIndex myIndex;
 		private final Set<String> myVisitedTypes;
@@ -763,9 +757,9 @@ public class JSStructureViewElement implements StructureViewTreeElement
 		}
 
 		@Override
-		public int getRequiredNameId()
+		public String getRequiredNameId()
 		{
-			return -1;
+			return null;
 		}
 	}
 
