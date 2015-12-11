@@ -43,7 +43,6 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.flex.JSResolveHelper;
 import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
-import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.index.JSSymbolUtil;
 import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
@@ -1367,19 +1366,12 @@ public class JSResolveUtil
 		if(Comparing.equal(referencedName, elementName, true))
 		{
 			PsiElement element = _element;
-			if(element instanceof JSNamedElementProxy)
-			{
-				element = ((JSNamedElementProxy) element).getElement();
-			}
+
 			final ResolveResult[] resolveResults = reference.multiResolve(true);
 
 			for(ResolveResult r : resolveResults)
 			{
 				PsiElement resolvedElement = r.getElement();
-				if(resolvedElement instanceof JSNamedElementProxy)
-				{
-					resolvedElement = ((JSNamedElementProxy) resolvedElement).getElement();
-				}
 
 				if(resolvedElement.isEquivalentTo(element) ||
 						element.isEquivalentTo(resolvedElement) ||
@@ -1986,10 +1978,6 @@ public class JSResolveUtil
 			if(descriptor != null)
 			{
 				PsiElement decl = descriptor.getDeclaration();
-				if(decl instanceof JSNamedElementProxy)
-				{
-					decl = ((JSNamedElementProxy) decl).getElement();
-				}
 				if(decl instanceof JSClass)
 				{
 					return ((JSClass) decl);
@@ -2159,10 +2147,6 @@ public class JSResolveUtil
 
 	public static PsiElement unwrapProxy(PsiElement jsClass)
 	{
-		if(jsClass instanceof JSNamedElementProxy)
-		{
-			jsClass = ((JSNamedElementProxy) jsClass).getElement();
-		}
 		return jsClass;
 	}
 

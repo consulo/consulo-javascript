@@ -24,7 +24,6 @@ import com.intellij.lang.LanguageNamesValidation;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
-import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.psi.*;
@@ -48,7 +47,6 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlFile;
-import com.intellij.psi.xml.XmlTag;
 import com.intellij.psi.xml.XmlToken;
 import com.intellij.refactoring.rename.BindablePsiReference;
 import com.intellij.util.ArrayUtil;
@@ -135,16 +133,6 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		for(ResolveResult r : results)
 		{
 			PsiElement element = r.getElement();
-
-			if(element instanceof JSNamedElementProxy)
-			{
-				JSNamedElementProxy.NamedItemType namedItemType = ((JSNamedElementProxy) element).getType();
-
-				if(namedItemType == JSNamedElementProxy.NamedItemType.AttributeValue)
-				{
-					return handleElementRenameInternal(newElementName);
-				}
-			}
 		}
 
 		throw new IncorrectOperationException("Unexpected rename request"); // bindToElement should be called
@@ -709,10 +697,6 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 			}
 
 			PsiElement typeSource = evaluateContext.getSource();
-			if(typeSource instanceof JSNamedElementProxy && ((JSNamedElementProxy) typeSource).getType() == JSNamedElementProxy.NamedItemType.Clazz)
-			{
-				typeSource = JSResolveUtil.unwrapProxy(typeSource);
-			}
 
 			setProcessStatics(false);
 
@@ -724,23 +708,6 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 			if(clazz instanceof JSClass)
 			{
 				final JSClass jsClass = (JSClass) clazz;
-
-				if("RemoteObject".equals(jsClass.getName()) &&
-						typeSource instanceof JSNamedElementProxy &&
-						((JSNamedElementProxy) typeSource).getType() == JSNamedElementProxy.NamedItemType.AttributeValue)
-				{
-					final XmlTag tag = PsiTreeUtil.getParentOfType(((JSNamedElementProxy) typeSource).getElement(), XmlTag.class);
-					for(XmlTag method : tag.findSubTags("method", tag.getNamespace()))
-					{
-						if(!execute(method, ResolveState.initial()))
-						{
-							break;
-						}
-					}
-
-					resolved = TypeResolveState.Resolved;
-					return;
-				}
 
 				final boolean statics = myEcma && JSPsiImplUtils.isTheSameClass(typeSource, jsClass) && !(((JSReferenceExpression) place).getQualifier()
 						instanceof JSCallExpression);

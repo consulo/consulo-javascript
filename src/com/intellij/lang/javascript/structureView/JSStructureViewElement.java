@@ -19,33 +19,24 @@ package com.intellij.lang.javascript.structureView;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 import gnu.trove.TIntObjectHashMap;
-import gnu.trove.TIntObjectIterator;
 import gnu.trove.TIntObjectProcedure;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.Icon;
-
 import org.jetbrains.annotations.Nullable;
-import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.index.JSSymbolUtil;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.navigation.ItemPresentation;
-import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.editor.colors.CodeInsightColors;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
@@ -58,27 +49,16 @@ import com.intellij.psi.util.PsiTreeUtil;
 public class JSStructureViewElement implements StructureViewTreeElement
 {
 	protected PsiElement myElement;
-	private final JSNamedElementProxy myProxy;
 	private boolean myInherited;
 
 	public JSStructureViewElement(final PsiElement element)
 	{
-		this(element, null);
-	}
-
-	private JSStructureViewElement(final PsiElement element, JSNamedElementProxy proxy)
-	{
 		myElement = element;
-		myProxy = proxy;
 	}
 
 	@Override
 	public PsiElement getValue()
 	{
-		if(myProxy != null)
-		{
-			return myProxy;
-		}
 		return myElement;
 	}
 
@@ -127,7 +107,7 @@ public class JSStructureViewElement implements StructureViewTreeElement
 		{
 			for(JSClass clazz : ((JSClass) element).getSuperClasses())
 			{
-				final StructureViewTreeElement[] structureViewTreeElements = createStructureViewElement(clazz, null).getChildren();
+				final StructureViewTreeElement[] structureViewTreeElements = createStructureViewElement(clazz).getChildren();
 
 				if(elementsFromSupers == null)
 				{
@@ -211,9 +191,9 @@ public class JSStructureViewElement implements StructureViewTreeElement
 		return children.toArray(new StructureViewTreeElement[children.size()]);
 	}
 
-	protected JSStructureViewElement createStructureViewElement(PsiElement element, JSNamedElementProxy proxy)
+	protected JSStructureViewElement createStructureViewElement(PsiElement element)
 	{
-		return new JSStructureViewElement(element, proxy);
+		return new JSStructureViewElement(element);
 	}
 
 	private static PsiElement getPsiElement(StructureViewTreeElement element)
@@ -222,7 +202,7 @@ public class JSStructureViewElement implements StructureViewTreeElement
 		if(element instanceof JSStructureViewElement)
 		{
 			final JSStructureViewElement o1 = (JSStructureViewElement) element;
-			e = o1.myProxy != null ? o1.myProxy : o1.myElement;
+			e = o1.myElement;
 		}
 		else
 		{
@@ -233,73 +213,16 @@ public class JSStructureViewElement implements StructureViewTreeElement
 
 	public static PsiElement getPsiElementResolveProxy(StructureViewTreeElement element)
 	{
-		PsiElement e = getPsiElement(element);
-		if(e instanceof JSNamedElementProxy)
-		{
-			e = ((JSNamedElementProxy) e).getElement();
-		}
-		return e;
+		return getPsiElement(element);
 	}
 
 
 	protected List<StructureViewTreeElement> collectMyElements(final Set<String> referencedNamedIds, final JavaScriptIndex index)
 	{
-		final TIntObjectHashMap<PsiElement> offset2Proxy = new TIntObjectHashMap<PsiElement>();
-		final Map<String, PsiElement> nameId2NsProxy = new HashMap<String, PsiElement>();
-
 		final TIntObjectHashMap<PsiElement> offset2Element = new TIntObjectHashMap<PsiElement>();
 
 		collectChildrenFromElement(myElement, referencedNamedIds, index, offset2Element);
 
-		TIntObjectIterator<PsiElement> tIntObjectIterator = offset2Proxy.iterator();
-		while(tIntObjectIterator.hasNext())
-		{
-			tIntObjectIterator.advance();
-			final JSNamedElementProxy elementProxy = (JSNamedElementProxy) tIntObjectIterator.value();
-			String nameId = elementProxy.getNameId();
-			PsiElement element = null;
-
-			final JSNamedElementProxy.NamedItemType namedItemType = elementProxy.getType();
-			if(namedItemType == JSNamedElementProxy.NamedItemType.Definition)
-			{
-				element = ((JSDefinitionExpression) elementProxy.getElement()).getExpression();
-				final JSExpression jsExpression = JSResolveUtil.findClassIdentifier((JSExpression) element);
-				if(element != jsExpression)
-				{
-					element = jsExpression;
-					nameId = jsExpression.getText();
-				}
-			}
-			else if(namedItemType == JSNamedElementProxy.NamedItemType.ImplicitFunction || namedItemType == JSNamedElementProxy.NamedItemType.ImplicitVariable)
-			{
-				element = elementProxy;
-			}
-			else if(namedItemType == JSNamedElementProxy.NamedItemType.Clazz)
-			{
-				if(myElement instanceof JSFile && elementProxy.getElement().getParent() instanceof JSClass)
-				{
-					continue;
-				}
-			}
-
-			if(!referencedNamedIds.contains(nameId))
-			{
-				referencedNamedIds.add(nameId);
-				offset2Element.put(tIntObjectIterator.key(), element == null ? elementProxy.getElement() : element);
-			}
-		}
-
-		for(Map.Entry<String, PsiElement> elementEntry : nameId2NsProxy.entrySet())
-		{
-			final JSNamedElement e = (JSNamedElement) elementEntry.getValue();
-			final String nameId = elementEntry.getKey();
-
-			if(!referencedNamedIds.contains(nameId))
-			{
-				referencedNamedIds.add(nameId);
-				offset2Element.put(e.getTextOffset(), e);
-			}
-		}
 
 		final List<StructureViewTreeElement> children = new ArrayList<StructureViewTreeElement>(offset2Element.size());
 		offset2Element.forEachEntry(new TIntObjectProcedure<PsiElement>()
@@ -307,8 +230,7 @@ public class JSStructureViewElement implements StructureViewTreeElement
 			@Override
 			public boolean execute(int textOffset, PsiElement element)
 			{
-				final PsiElement psiElement = offset2Proxy.get(textOffset);
-				children.add(createStructureViewElement(element, psiElement instanceof JSNamedElementProxy ? (JSNamedElementProxy) psiElement : null));
+				children.add(createStructureViewElement(element));
 				return true;
 			}
 		});
@@ -317,10 +239,6 @@ public class JSStructureViewElement implements StructureViewTreeElement
 
 	private static boolean isVisible(PsiElement namedElement, final PsiElement element)
 	{
-		if(namedElement instanceof JSNamedElementProxy)
-		{
-			namedElement = ((JSNamedElementProxy) namedElement).getElement();
-		}
 		if(namedElement instanceof JSAttributeListOwner)
 		{
 			final JSAttributeListOwner attributeListOwner = (JSAttributeListOwner) namedElement;
@@ -511,26 +429,6 @@ public class JSStructureViewElement implements StructureViewTreeElement
 	@Override
 	public ItemPresentation getPresentation()
 	{
-		if(myElement instanceof JSExpressionStatement && myProxy != null)
-		{
-			return new JSStructureItemPresentationBase(JSStructureViewElement.this)
-			{
-				final ItemPresentation originalPresentation = ((NavigationItem) myProxy).getPresentation();
-
-				@Override
-				public String getPresentableText()
-				{
-					return originalPresentation.getPresentableText();
-				}
-
-				@Override
-				@Nullable
-				public Icon getIcon(final boolean open)
-				{
-					return IconDescriptorUpdaters.getIcon(myProxy, 0);
-				}
-			};
-		}
 		return new JSStructureItemPresentation(this);
 	}
 
@@ -549,16 +447,6 @@ public class JSStructureViewElement implements StructureViewTreeElement
 	PsiElement getUpToDateElement()
 	{
 		boolean isValid = myElement.isValid();
-
-		if(!isValid && myProxy != null)
-		{
-			if(!myProxy.isValid())
-			{
-				return null;
-			}
-			myElement = myProxy.getElement();
-			isValid = myElement != null && myElement.isValid();
-		}
 
 		if(!isValid)
 		{
@@ -579,28 +467,10 @@ public class JSStructureViewElement implements StructureViewTreeElement
 			element = _element;
 		}
 
-		public TextAttributesKey getTextAttributesKey()
-		{
-			if(element.myInherited)
-			{
-				return CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES;
-			}
-			if(element.getProxy() != null && element.getProxy().isDeprecated())
-			{
-				return CodeInsightColors.DEPRECATED_ATTRIBUTES;
-			}
-			return null;
-		}
-
 		@Override
 		public String getLocationString()
 		{
 			return null;
 		}
-	}
-
-	public JSNamedElementProxy getProxy()
-	{
-		return myProxy;
 	}
 }

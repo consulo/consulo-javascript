@@ -28,7 +28,6 @@ import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.flex.FlexImportSupport;
 import com.intellij.lang.javascript.flex.JSResolveHelper;
 import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
-import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSClassBase;
 import com.intellij.lang.javascript.psi.impl.JSStubElementImpl;
@@ -61,20 +60,18 @@ public class JSImportHandlingUtil
 	public static final Key<CachedValue<Map<String, Object>>> ourImportListCache = Key.create("js.import.list.cache");
 	public static final UserDataCache<CachedValue<Map<String, Object>>, PsiElement, Object> myImportListCache = new ImportListDataCache();
 	public static final Key<CachedValue<Map<String, JSImportedElementResolveResult>>> ourImportResolveCache = Key.create("js.import.resolve");
-	public static final UserDataCache<CachedValue<Map<String, JSImportedElementResolveResult>>, PsiElement,
-			Object> myImportResolveCache = new UserDataCache<CachedValue<Map<String, JSImportedElementResolveResult>>, PsiElement, Object>()
+	public static final UserDataCache<CachedValue<Map<String, JSImportedElementResolveResult>>, PsiElement, Object> myImportResolveCache = new UserDataCache<CachedValue<Map<String,
+			JSImportedElementResolveResult>>, PsiElement, Object>()
 	{
 		@Override
 		protected CachedValue<Map<String, JSImportedElementResolveResult>> compute(final PsiElement psiElement, final Object p)
 		{
-			return CachedValuesManager.getManager(psiElement.getProject()).createCachedValue(new CachedValueProvider<Map<String,
-					JSImportedElementResolveResult>>()
+			return CachedValuesManager.getManager(psiElement.getProject()).createCachedValue(new CachedValueProvider<Map<String, JSImportedElementResolveResult>>()
 			{
 				@Override
 				public Result<Map<String, JSImportedElementResolveResult>> compute()
 				{
-					return new Result<Map<String, JSImportedElementResolveResult>>(new ConcurrentHashMap<String, JSImportedElementResolveResult>(),
-							PsiModificationTracker.MODIFICATION_COUNT);
+					return new Result<Map<String, JSImportedElementResolveResult>>(new ConcurrentHashMap<String, JSImportedElementResolveResult>(), PsiModificationTracker.MODIFICATION_COUNT);
 				}
 			}, false);
 		}
@@ -137,8 +134,7 @@ public class JSImportHandlingUtil
 						element = XmlBackedJSClassImpl.getXmlBackedClass((XmlFile) element);
 					}
 
-					final String s = element instanceof JSNamedElementProxy ? ((JSNamedElementProxy) element).getQualifiedName() : element instanceof JSClass ? (
-							(JSClass) element).getQualifiedName() : rootTag.getLocalName();
+					final String s = element instanceof JSClass ? ((JSClass) element).getQualifiedName() : rootTag.getLocalName();
 					resolved = new JSImportedElementResolveResult(s);
 				}
 				else if(context instanceof JSQualifiedNamedElement)
@@ -154,8 +150,7 @@ public class JSImportHandlingUtil
 						if(resolved == null)
 						{
 							final String qName = ((JSQualifiedNamedElement) context).getQualifiedName();
-							final String packageName = qName != null ? context instanceof JSPackageStatement ? qName + "." : qName.substring(0,
-									qName.lastIndexOf('.') + 1) : "";
+							final String packageName = qName != null ? context instanceof JSPackageStatement ? qName + "." : qName.substring(0, qName.lastIndexOf('.') + 1) : "";
 
 							if(packageName.length() != 0)
 							{
@@ -177,8 +172,7 @@ public class JSImportHandlingUtil
 					if(resolved == null && context instanceof JSFile && (contextOfContext = context.getContext()) != null)
 					{
 						PsiFile containingFile = contextOfContext.getContainingFile();
-						XmlBackedJSClassImpl clazz = containingFile instanceof XmlFile ? (XmlBackedJSClassImpl) XmlBackedJSClassImpl.getXmlBackedClass((XmlFile)
-								containingFile) : null;
+						XmlBackedJSClassImpl clazz = containingFile instanceof XmlFile ? (XmlBackedJSClassImpl) XmlBackedJSClassImpl.getXmlBackedClass((XmlFile) containingFile) : null;
 
 						if(clazz != null)
 						{

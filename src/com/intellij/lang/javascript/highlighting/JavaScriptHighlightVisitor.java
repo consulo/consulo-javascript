@@ -24,7 +24,6 @@ import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.HighlightVisitor;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
@@ -129,31 +128,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 		boolean isField = false;
 		TextAttributesKey type = null;
 
-		if(resolvedElement instanceof JSNamedElementProxy)
-		{
-			final JSNamedElementProxy elementProxy = (JSNamedElementProxy) resolvedElement;
-			final JSNamedElementProxy.NamedItemType namedItemType = elementProxy.getType();
-
-			if(namedItemType == JSNamedElementProxy.NamedItemType.AttributeValue)
-			{
-				type = JSHighlighter.JS_INSTANCE_MEMBER_VARIABLE;
-			}
-			else
-			{
-				isStatic = elementProxy.hasProperty(JSNamedElementProxy.Property.Static);
-
-				isMethod = (namedItemType == JSNamedElementProxy.NamedItemType.MemberFunction || namedItemType == JSNamedElementProxy.NamedItemType.FunctionProperty);
-				isFunction = namedItemType == JSNamedElementProxy.NamedItemType.Function;
-				isVariable = namedItemType == JSNamedElementProxy.NamedItemType.Variable;
-				isField = namedItemType == JSNamedElementProxy.NamedItemType.Definition || namedItemType == JSNamedElementProxy.NamedItemType.Property;
-
-				if(namedItemType == JSNamedElementProxy.NamedItemType.FunctionExpression)
-				{
-					isFunction = true;
-				}
-			}
-		}
-		else if(resolvedElement instanceof JSAttributeListOwner)
+		if(resolvedElement instanceof JSAttributeListOwner)
 		{
 			final JSAttributeList attributeList = ((JSAttributeListOwner) resolvedElement).getAttributeList();
 

@@ -32,7 +32,6 @@ import com.intellij.ide.util.treeView.smartTree.Filter;
 import com.intellij.ide.util.treeView.smartTree.Grouper;
 import com.intellij.ide.util.treeView.smartTree.Sorter;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
-import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.VariantsProcessor;
@@ -78,12 +77,6 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 				}
 				Object o = ((StructureViewTreeElement) s).getValue();
 
-				JSNamedElementProxy.NamedItemType type = null;
-				if(o instanceof JSNamedElementProxy)
-				{
-					type = ((JSNamedElementProxy) o).getType();
-				}
-
 				if(o instanceof JSProperty)
 				{
 					JSElement propertyValue = ((JSProperty) o).getValue();
@@ -93,33 +86,11 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 					}
 				}
 
-				if(o instanceof JSFunction ||
-						type == JSNamedElementProxy.NamedItemType.ImplicitFunction ||
-						type == JSNamedElementProxy.NamedItemType.FunctionExpression ||
-						type == JSNamedElementProxy.NamedItemType.Function ||
-						type == JSNamedElementProxy.NamedItemType.MemberFunction ||
-						type == JSNamedElementProxy.NamedItemType.FunctionProperty)
-				{
-					return 10;
-				}
-
-				if(o instanceof JSVariable ||
-						o instanceof JSProperty ||
-						type == JSNamedElementProxy.NamedItemType.ImplicitVariable ||
-						type == JSNamedElementProxy.NamedItemType.Variable ||
-						type == JSNamedElementProxy.NamedItemType.Property ||
-						type == JSNamedElementProxy.NamedItemType.MemberVariable ||
-						type == JSNamedElementProxy.NamedItemType.Definition ||
-						type == JSNamedElementProxy.NamedItemType.AttributeValue)
-				{
-					return 20;
-				}
-
 				if(o instanceof VariantsProcessor.MyElementWrapper)
 				{
 					return 6;
 				}
-				if(o instanceof JSClass || type == JSNamedElementProxy.NamedItemType.Clazz)
+				if(o instanceof JSClass)
 				{
 					return 7;
 				}
@@ -427,7 +398,6 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 
 	public static boolean shouldEnterElementStatic(final Object element)
 	{
-		return element instanceof JSClass || (element instanceof JSNamedElementProxy && ((JSNamedElementProxy) element).getType() == JSNamedElementProxy
-				.NamedItemType.Clazz);
+		return element instanceof JSClass;
 	}
 }

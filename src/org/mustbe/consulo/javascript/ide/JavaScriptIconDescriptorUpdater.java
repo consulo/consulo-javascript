@@ -24,8 +24,6 @@ import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptor;
 import com.intellij.ide.IconDescriptorUpdater;
-import com.intellij.ide.IconDescriptorUpdaters;
-import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.VariantsProcessor;
@@ -50,15 +48,7 @@ public class JavaScriptIconDescriptorUpdater implements IconDescriptorUpdater
 			{
 				return;
 			}
-			JSNamedElementProxy proxy = ((VariantsProcessor.MyElementWrapper) element).getProxy();
-			if(proxy != null)
-			{
-				IconDescriptorUpdaters.processExistingDescriptor(iconDescriptor, proxy, flags);
-			}
-			else
-			{
-				iconDescriptor.setMainIcon(AllIcons.Nodes.Class);
-			}
+			iconDescriptor.setMainIcon(AllIcons.Nodes.Class);
 		}
 		else if(element instanceof JSProperty)
 		{
@@ -73,11 +63,6 @@ public class JavaScriptIconDescriptorUpdater implements IconDescriptorUpdater
 			{
 				iconDescriptor.setRightIcon(AllIcons.Nodes.C_public);
 			}
-		}
-		else if(element instanceof JSNamedElementProxy)
-		{
-			iconDescriptor.setMainIcon(getIconForProxy((JSNamedElementProxy) element));
-			iconDescriptor.setRightIcon(getAccessIcon(((JSNamedElementProxy) element).getAccessType()));
 		}
 		else if(element instanceof JSClass)
 		{
@@ -184,47 +169,6 @@ public class JavaScriptIconDescriptorUpdater implements IconDescriptorUpdater
 				}
 			}
 		}
-	}
-
-	@NotNull
-	private static Icon getIconForProxy(JSNamedElementProxy proxy)
-	{
-		final JSNamedElementProxy.NamedItemType valueType = proxy.getType();
-
-		if(valueType == JSNamedElementProxy.NamedItemType.Function ||
-				valueType == JSNamedElementProxy.NamedItemType.FunctionExpression ||
-				valueType == JSNamedElementProxy.NamedItemType.MemberFunction ||
-				valueType == JSNamedElementProxy.NamedItemType.ImplicitFunction ||
-				valueType == JSNamedElementProxy.NamedItemType.FunctionProperty)
-		{
-			if(valueType == JSNamedElementProxy.NamedItemType.MemberFunction && (proxy.hasProperty(JSNamedElementProxy.Property.GetFunction) || proxy.hasProperty(JSNamedElementProxy.Property
-					.SetFunction)))
-			{
-				return AllIcons.Nodes.Property;
-			}
-			return AllIcons.Nodes.Function;
-		}
-
-		if(valueType == JSNamedElementProxy.NamedItemType.Variable ||
-				valueType == JSNamedElementProxy.NamedItemType.MemberVariable ||
-				valueType == JSNamedElementProxy.NamedItemType.ImplicitVariable)
-		{
-			return AllIcons.Nodes.Variable;
-		}
-		if(valueType == JSNamedElementProxy.NamedItemType.Property)
-		{
-			return AllIcons.Nodes.Property;
-		}
-		if(valueType == JSNamedElementProxy.NamedItemType.AttributeValue)
-		{
-			return AllIcons.Nodes.Tag;
-		}
-		if(valueType == JSNamedElementProxy.NamedItemType.Clazz || valueType == JSNamedElementProxy.NamedItemType.Namespace)
-		{
-			return proxy.hasProperty(JSNamedElementProxy.Property.Interface) ? AllIcons.Nodes.Interface : AllIcons.Nodes.Class;
-		}
-
-		return AllIcons.Nodes.Variable;
 	}
 
 	@Nullable

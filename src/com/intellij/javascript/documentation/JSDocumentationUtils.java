@@ -36,7 +36,6 @@ import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.openapi.util.Ref;
@@ -748,11 +747,7 @@ public class JSDocumentationUtils
 
 	public static boolean isDeprecated(PsiElement element)
 	{
-		if(element instanceof JSNamedElementProxy)
-		{
-			return ((JSNamedElementProxy) element).isDeprecated();
-		}
-		else if(element instanceof JSClass)
+		if(element instanceof JSClass)
 		{
 			return ((JSClass) element).isDeprecated();
 		}

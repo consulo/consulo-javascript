@@ -21,7 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.psi.JSDefinitionExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -108,12 +107,6 @@ public class JSPropertyNameReference implements PsiReference
 			{
 				return ((JSReferenceExpression) expression).isReferenceTo(element2);
 			}
-		}
-
-		if(element instanceof JSNamedElementProxy)
-		{
-			element = ((JSNamedElementProxy) element).getElement();
-			proxyExpanded = true;
 		}
 
 		if(element != element2 && element instanceof JSProperty && element2 instanceof JSProperty)

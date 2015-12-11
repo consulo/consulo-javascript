@@ -30,7 +30,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
-import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSFile;
@@ -434,20 +433,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 		PsiElement realClazz = null;
 		final PsiElement clazz = JSResolveUtil.findClassByQName(qname, context);
 
-		if(clazz instanceof JSNamedElementProxy)
-		{
-			final JSNamedElementProxy elementProxy = (JSNamedElementProxy) clazz;
-			final JSNamedElementProxy.NamedItemType itemType = elementProxy.getType();
-
-			if(itemType == JSNamedElementProxy.NamedItemType.Clazz)
-			{
-				realClazz = elementProxy.getElement();
-			}
-		}
-		else
-		{
-			realClazz = clazz;
-		}
+		realClazz = clazz;
 		return realClazz;
 	}
 

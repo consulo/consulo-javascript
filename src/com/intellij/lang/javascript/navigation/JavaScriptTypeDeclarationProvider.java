@@ -24,7 +24,6 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.codeInsight.navigation.actions.TypeDeclarationProvider;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
-import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.index.JavaScriptSymbolProcessor;
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -115,10 +114,6 @@ public class JavaScriptTypeDeclarationProvider extends TypeDeclarationProvider
 				}
 			}
 
-			if(item instanceof JSNamedElementProxy)
-			{
-				item = ((JSNamedElementProxy) item).getElement();
-			}
 			if(item != null && item.isPhysical())
 			{
 				return new PsiElement[]{item};

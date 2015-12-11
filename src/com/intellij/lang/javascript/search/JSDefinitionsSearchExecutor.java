@@ -18,7 +18,6 @@ package com.intellij.lang.javascript.search;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
-import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSDefinitionExpression;
@@ -65,11 +64,6 @@ class JSDefinitionsSearchExecutor implements QueryExecutor<PsiElement, Definitio
 									!JavaScriptIndex.isFromPredefinedFile(psiElement.getContainingFile()) &&
 									sourceElement != psiElement)
 							{
-								if(psiElement instanceof JSNamedElementProxy)
-								{
-									psiElement = ((JSNamedElementProxy) psiElement).getElement();
-								}
-
 								if((psiElement instanceof JSFunction) && sourceElement instanceof JSFunction)
 								{
 									JSFunction fun = (JSFunction) psiElement;

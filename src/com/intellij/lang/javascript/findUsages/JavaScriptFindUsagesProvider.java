@@ -20,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.cacheBuilder.WordsScanner;
 import com.intellij.lang.findUsages.FindUsagesProvider;
 import com.intellij.lang.javascript.JavaScriptBundle;
-import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSDefinitionExpression;
 import com.intellij.lang.javascript.psi.JSFunction;
@@ -60,10 +59,6 @@ public class JavaScriptFindUsagesProvider implements FindUsagesProvider
 	@NotNull
 	public String getType(@NotNull PsiElement element)
 	{
-		if(element instanceof JSNamedElementProxy)
-		{
-			element = ((JSNamedElementProxy) element).getElement();
-		}
 		if(element instanceof JSFunction)
 		{
 			return JavaScriptBundle.message("javascript.language.term.function");

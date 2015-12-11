@@ -20,7 +20,6 @@
 package com.intellij.lang.javascript.refactoring;
 
 import org.jetbrains.annotations.Nullable;
-import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSDefinitionExpression;
 import com.intellij.lang.javascript.psi.JSFunction;
@@ -44,13 +43,6 @@ public class JavascriptRefactoringSupportProvider extends RefactoringSupportProv
 	{
 		boolean simpleElement = element instanceof JSFunction || element instanceof JSVariable || element instanceof JSDefinitionExpression ||
 				element instanceof JSProperty || element instanceof JSClass;
-
-		if(element instanceof JSNamedElementProxy)
-		{
-			final JSNamedElementProxy.NamedItemType namedItemType = ((JSNamedElementProxy) element).getType();
-
-			simpleElement = namedItemType != JSNamedElementProxy.NamedItemType.AttributeValue;
-		}
 
 		return simpleElement && ((JSNamedElement) element).getName() != null;
 	}

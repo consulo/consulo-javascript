@@ -26,9 +26,8 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.index.JSNamedElementProxy;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.util.JSUtils;
 import com.intellij.openapi.editor.Document;
@@ -92,16 +91,11 @@ public class JSUndeclaredVariableInspection extends JSInspection
 						boolean varReferenceWithoutVar = true;
 						final ResolveResult[] resolveResults = node.multiResolve(false);
 
-						JSNamedElementProxy proxy;
-
 						for(ResolveResult r : resolveResults)
 						{
 							final PsiElement resolveResult = r.getElement();
 							if(resolveResult instanceof JSVariable ||
-									resolveResult instanceof JSFunction ||
-									(resolveResult instanceof JSNamedElementProxy && ((proxy = ((JSNamedElementProxy) resolveResult)).getType() == JSNamedElementProxy
-											.NamedItemType.MemberVariable || proxy.getType() == JSNamedElementProxy.NamedItemType.MemberFunction && (proxy.hasProperty
-											(JSNamedElementProxy.Property.GetFunction) || proxy.hasProperty(JSNamedElementProxy.Property.SetFunction)))))
+									resolveResult instanceof JSFunction)
 							{
 								varReferenceWithoutVar = false;
 								break;

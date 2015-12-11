@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.index.JSSymbolUtil;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSClassImpl;
@@ -238,26 +237,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor
 
 		if(partialMatch)
 		{
-			if(myInNewExpression)
-			{
-				final JSNamedElementProxy proxy = (JSNamedElementProxy) element;
-				final JSNamedElementProxy.NamedItemType type = proxy.getType();
 
-				final boolean qualifiedContext = ((JSReferenceExpression) myContext).getQualifier() != null;
-
-				if(type == JSNamedElementProxy.NamedItemType.MemberFunction && proxy.hasProperty(JSNamedElementProxy.Property.Constructor))
-				{
-					final boolean inglobalNs = true;
-					final boolean canResolveToElement = !qualifiedContext == inglobalNs;
-					return canResolveToElement ? MatchType.COMPLETE : MatchType.NOMATCH;
-				}
-				else if(type == JSNamedElementProxy.NamedItemType.Clazz)
-				{
-					final boolean inglobalNs = true;
-					final boolean canResolveToElement = !qualifiedContext == inglobalNs;
-					return proxy.hasProperty(JSNamedElementProxy.Property.HasConstructor) || !canResolveToElement ? MatchType.NOMATCH : MatchType.COMPLETE;
-				}
-			}
 
 			int i = -1;
 
@@ -302,24 +282,6 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor
 
 		if(matchType == MatchType.PARTIAL)
 		{
-			JSNamedElementProxy.NamedItemType type;
-
-			if(myDefinitelyGlobalReference && ((element instanceof JSNamedElementProxy && ((type = ((JSNamedElementProxy) element).getType()) == JSNamedElementProxy.NamedItemType.FunctionProperty ||
-					type == JSNamedElementProxy.NamedItemType.Property ||
-					type == JSNamedElementProxy.NamedItemType.MemberFunction ||
-					type == JSNamedElementProxy.NamedItemType.MemberVariable ||
-					(type == JSNamedElementProxy.NamedItemType.Definition && !true))) || (element instanceof JSFunctionExpression ||
-					element instanceof JSProperty ||
-					(element instanceof JSDefinitionExpression && !true))))
-			{
-				return; // nonqualified item could not be resolved into property
-			}
-
-			if(myDefinitelyNonglobalReference && (element instanceof JSNamedElementProxy && ((type = ((JSNamedElementProxy) element).getType()) == JSNamedElementProxy.NamedItemType.Variable || type
-					== JSNamedElementProxy.NamedItemType.Function)) || (element instanceof JSVariable || (element instanceof JSFunction && !(element instanceof JSFunctionExpression))))
-			{
-				return; // qualified item could not be resolved into function/variable
-			}
 			addPartialResult(element);
 		}
 		else if(matchType == MatchType.COMPLETE)
@@ -442,8 +404,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor
 
 	protected boolean shouldProcessVariable(final String nameId, JSNamedElement var)
 	{
-		return (myReferenceName.equals(nameId) && (!myDefinitelyNonglobalReference || (var instanceof JSNamedElementProxy && ((JSNamedElementProxy) var).getType() == JSNamedElementProxy
-				.NamedItemType.MemberVariable)));
+		return myReferenceName.equals(nameId) && !myDefinitelyNonglobalReference;
 	}
 
 	public ResolveResult[] getResults()
@@ -476,14 +437,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor
 			for(int i = 0; i < myPartialMatchResults.size(); ++i)
 			{
 				final JSResolveUtil.MyResolveResult resolveResult = (JSResolveUtil.MyResolveResult) myPartialMatchResults.get(i);
-				JSNamedElementProxy.NamedItemType type;
 
-				if(myCompleteMatchResults == null && (myCanHaveValidPartialMatches || (resolveResult.getElement() instanceof JSNamedElementProxy && (//(type = (
-						// (JSNamedElementProxy)resolveResult.getElement()).getType()) == JSNamedElementProxy.NamedItemType.Namespace ||
-						(((JSNamedElementProxy) resolveResult.getElement()).getType() == JSNamedElementProxy.NamedItemType.FunctionExpression && embeddedToHtmlAttr)))))
-				{
-					resolveResult.setValid(true);
-				}
 				assert resolveResult != null;
 				result[offset + i] = resolveResult;
 			}

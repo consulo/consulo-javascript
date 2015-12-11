@@ -29,7 +29,6 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.MutableLookupElement;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
-import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.psi.JSArgumentList;
 import com.intellij.lang.javascript.psi.JSCallExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -75,11 +74,6 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 		}
 
 		PsiElement element = item.getPsiElement();
-		if(element instanceof JSNamedElementProxy)
-		{
-			element = ((JSNamedElementProxy) element).getElement();
-		}
-
 		if(element instanceof JSFunction)
 		{
 			final JSFunction originalFunction = (JSFunction) element;
@@ -186,12 +180,6 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 				for(ResolveResult r : resolveResults)
 				{
 					PsiElement element = r.getElement();
-
-					if(element instanceof JSNamedElementProxy)
-					{
-						element = ((JSNamedElementProxy) element).getElement();
-					}
-
 					if(element instanceof JSProperty)
 					{
 						element = ((JSProperty) element).getValue();

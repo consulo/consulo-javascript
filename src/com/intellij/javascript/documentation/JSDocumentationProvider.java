@@ -26,13 +26,11 @@ import java.util.Map;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.codeInsight.lookup.LookupValueWithPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.documentation.CodeDocumentationProvider;
 import com.intellij.lang.documentation.DocumentationProvider;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
-import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSPsiImplUtils;
@@ -98,13 +96,8 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 	}
 
 	@Nullable
-	public String getQuickNavigateInfo(PsiElement element)
+	public String getQuickNavigateInfo(PsiElement element, PsiElement element2)
 	{
-		if(element instanceof JSNamedElementProxy)
-		{
-			element = ((JSNamedElementProxy) element).getElement();
-		}
-
 		if(element instanceof JSFunction)
 		{
 			final JSFunction function = (JSFunction) element;
@@ -446,13 +439,6 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 		return result == null ? null : result.toString();
 	}
 
-	@Nullable
-	@Override
-	public String getQuickNavigateInfo(PsiElement element, PsiElement element2)
-	{
-		return null;
-	}
-
 	@Override
 	public List<String> getUrlFor(PsiElement element, PsiElement originalElement)
 	{
@@ -501,11 +487,6 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 				buffer.append("<br/>\n");
 			}
 			return buffer != null ? buffer.toString() : "have no idea :)";
-		}
-
-		if(_element instanceof JSNamedElementProxy)
-		{
-			_element = ((JSNamedElementProxy) _element).getElement();
 		}
 
 		_element = _element.getNavigationElement();
@@ -681,14 +662,6 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 	@Override
 	public PsiElement getDocumentationElementForLookupItem(PsiManager psiManager, Object object, PsiElement element)
 	{
-		if(object instanceof LookupValueWithPsiElement)
-		{
-			object = ((LookupValueWithPsiElement) object).getElement();
-		}
-		if(object instanceof JSNamedElementProxy)
-		{
-			object = ((JSNamedElementProxy) object).getElement();
-		}
 		final PsiElement psiElement = findElementForWhichPreviousCommentWillBeSearched(object);
 		if(psiElement != null && JSDocumentationUtils.findDocComment(psiElement) != null)
 		{

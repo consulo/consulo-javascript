@@ -27,13 +27,11 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
-import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlTag;
 
 /**
@@ -78,16 +76,6 @@ class JSStructureItemPresentation extends JSStructureViewElement.JSStructureItem
 		if(psiElement instanceof JSReferenceExpression)
 		{
 			JSReferenceExpression expression = (JSReferenceExpression) psiElement;
-
-			if(element.getProxy() != null && element.getProxy().getType() == JSNamedElementProxy.NamedItemType.Namespace)
-			{
-				final JSExpression jsExpression = expression.getQualifier();
-				if(jsExpression instanceof JSReferenceExpression)
-				{
-
-					expression = (JSReferenceExpression) jsExpression;
-				}
-			}
 
 			String s = expression.getReferencedName();
 
@@ -186,19 +174,6 @@ class JSStructureItemPresentation extends JSStructureViewElement.JSStructureItem
 			return AllIcons.Nodes.Variable;
 		}
 
-		if(psiElement instanceof JSNamedElementProxy && ((JSNamedElementProxy) psiElement).getType() == JSNamedElementProxy.NamedItemType.AttributeValue)
-		{
-			final Icon icon = getIcon(PsiTreeUtil.getParentOfType(((JSNamedElementProxy) psiElement).getElement(), XmlTag.class));
-			if(icon != null)
-			{
-				return icon;
-			}
-		}
-
-		if(element.getProxy() != null)
-		{
-			return IconDescriptorUpdaters.getIcon(element.getProxy(), 0);
-		}
 		return IconDescriptorUpdaters.getIcon(psiElement, 0);
 	}
 

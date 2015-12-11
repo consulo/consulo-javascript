@@ -29,7 +29,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
-import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.index.JSSymbolUtil;
 import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
@@ -437,12 +436,6 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 						{
 							boolean hasSomeType = false;
 
-							if(psiElement instanceof JSNamedElementProxy && (psiElement.getContainingFile() == context.targetFile || psiElement.getContainingFile()
-									instanceof XmlFile // injected
-							))
-							{
-								psiElement = ((JSNamedElementProxy) psiElement).getElement();
-							}
 							if(psiElement instanceof JSProperty)
 							{
 								psiElement = ((JSProperty) psiElement).getValue();
@@ -451,11 +444,6 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 							if(psiElement instanceof JSClass)
 							{
 								addType(((JSClass) psiElement).getQualifiedName(), typeProcessor, context, psiElement);
-								hasSomeType = true;
-							}
-							else if(psiElement instanceof JSNamedElementProxy && ((JSNamedElementProxy) psiElement).getType() == JSNamedElementProxy.NamedItemType.Clazz)
-							{
-								addType(((JSNamedElementProxy) psiElement).getQualifiedName(), typeProcessor, context, null);
 								hasSomeType = true;
 							}
 							else if(psiElement instanceof JSObjectLiteralExpression && typeProcessor instanceof ResolveProcessor)
@@ -558,24 +546,6 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 								{
 									boolean hasTypeKnowledge = false;
 									boolean passSource = false;
-
-									if(!(rawqualifier.getParent() instanceof JSCallExpression) && psiElement instanceof JSNamedElementProxy)
-									{
-										final JSNamedElementProxy proxy = (JSNamedElementProxy) psiElement;
-										final JSNamedElementProxy.NamedItemType namedItemType = proxy.getType();
-
-										if(namedItemType == JSNamedElementProxy.NamedItemType.MemberFunction ||
-												namedItemType == JSNamedElementProxy.NamedItemType.Function ||
-												namedItemType == JSNamedElementProxy.NamedItemType.FunctionProperty ||
-												namedItemType == JSNamedElementProxy.NamedItemType.FunctionExpression
-
-												)
-										{
-											hasTypeKnowledge = true;
-											addType(FUNCTION_TYPE_NAME, typeProcessor, context, psiElement);
-											hasSomeType = true;
-										}
-									}
 
 									if(!hasTypeKnowledge || wasPrototype)
 									{

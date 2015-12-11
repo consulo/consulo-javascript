@@ -33,7 +33,6 @@ import com.intellij.extapi.psi.PsiElementBase;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.javascript.JSElementTypes;
-import com.intellij.lang.javascript.index.JSNamedElementProxy;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSElementImpl;
 import com.intellij.lang.javascript.psi.util.JSLookupUtil;
@@ -232,25 +231,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 					clazz = JSResolveUtil.findClassByQName(qName, myContext);
 				}
 
-				if(clazz instanceof JSNamedElementProxy)
-				{
-					final JSNamedElementProxy elementProxy = (JSNamedElementProxy) clazz;
-					final JSNamedElementProxy.NamedItemType itemType = elementProxy.getType();
-
-					if(!wasSet && (itemType == JSNamedElementProxy.NamedItemType.Clazz))
-					{
-						myAddOnlyCompleteMatches = true;
-					}
-
-					if(itemType == JSNamedElementProxy.NamedItemType.Clazz)
-					{
-						if(elementProxy.hasProperty(JSNamedElementProxy.Property.Dynamic) && !OBJECT_CLASS_NAME.equals(qName))
-						{
-							myAddOnlyCompleteMatches = false;
-						}
-					}
-				}
-				else if(clazz instanceof JSClass)
+				if(clazz instanceof JSClass)
 				{
 					if(!wasSet)
 					{
@@ -269,7 +250,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 
 	private static boolean isObjectSourceThatDoesNotGiveExactKnowledgeAboutFunctionType(final Object source)
 	{
-		return source instanceof JSFunctionExpression || source instanceof JSNamedElementProxy && ((JSNamedElementProxy) source).getType() != JSNamedElementProxy.NamedItemType.Function;
+		return source instanceof JSFunctionExpression;
 	}
 
 	private void updateCanUseOnlyCompleteMatches(final JSClass jsClass)
@@ -428,8 +409,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 	{
 		if(myCurrentFile != myTargetFile ||
 				myDefinitelyGlobalReference ||
-				((function instanceof JSNamedElementProxy && (((JSNamedElementProxy) function).getType() != JSNamedElementProxy.NamedItemType.Function)) || function
-						instanceof JSFunctionExpression))
+				(function instanceof JSFunctionExpression))
 		{
 			doAdd(nameId, function);
 		}
@@ -501,9 +481,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 	@Override
 	public boolean processVariable(final String nameId, JSNamedElement variable)
 	{
-		if(myCurrentFile != myTargetFile ||
-				myDefinitelyGlobalReference ||
-				(variable instanceof JSNamedElementProxy && ((JSNamedElementProxy) variable).getType() == JSNamedElementProxy.NamedItemType.MemberVariable))
+		if(myCurrentFile != myTargetFile || myDefinitelyGlobalReference)
 		{
 			doAdd(nameId, variable);
 		}
@@ -531,63 +509,18 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 				return;
 			}
 
-			if(myContextNameIds == null || myContextNameIds.length == 0 )
+			if(myContextNameIds == null || myContextNameIds.length == 0)
 			{
 				privateSymbol = false;
 			}
 		}
 
-		JSNamedElementProxy.NamedItemType type = null;
-		if(element instanceof JSNamedElementProxy)
-		{
-			type = ((JSNamedElementProxy) element).getType();
-		}
 
-		if(myProcessOnlyProperties)
-		{
-			if(type != null)
-			{
-				if(type != JSNamedElementProxy.NamedItemType.Property && type != JSNamedElementProxy.NamedItemType.Definition)
-				{
-					return; // no interest when complete existing property name
-				}
-			}
-		}
-
-		if(myProcessOnlyTypes && ecmal4)
-		{
-			if(type != null)
-			{
-
-				boolean nonAcceptableItem = (type != JSNamedElementProxy.NamedItemType.Clazz && type != JSNamedElementProxy.NamedItemType.Namespace) || "Arguments".equals(((JSNamedElement) element)
-						.getName());
-				if(nonAcceptableItem && !myStrictTypeContext)
-				{
-					nonAcceptableItem = type != JSNamedElementProxy.NamedItemType.Function && type != JSNamedElementProxy.NamedItemType.Variable;
-				}
-
-				if(!nonAcceptableItem && type == JSNamedElementProxy.NamedItemType.Clazz)
-				{
-					final boolean isInterface = ((JSNamedElementProxy) element).hasProperty(JSNamedElementProxy.Property.Interface);
-
-					if((isInterface && myProcessOnlyClasses) || (!isInterface && myProcessOnlyInterfaces))
-					{
-						nonAcceptableItem = true;
-					}
-				}
-
-				if(nonAcceptableItem)
-				{
-					return;
-				}
-			}
-		}
-
-		MatchType matchType = isAcceptableQualifiedItem(type);
+		MatchType matchType = MatchType.COMPLETE;
 
 		if(matchType == MatchType.COMPLETE && !ecmal4 && myProcessOnlyTypes)
 		{
-			if(((name != null && name.length() > 0 && Character.isLowerCase(name.charAt(0))) || seemsToBePrivateSymbol) && (type == null || type != JSNamedElementProxy.NamedItemType.Namespace))
+			if(((name != null && name.length() > 0 && Character.isLowerCase(name.charAt(0))) || seemsToBePrivateSymbol))
 			{
 				matchType = MatchType.PARTIAL;
 			}
@@ -609,16 +542,6 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 	{
 		PsiElement element = _element;
 		boolean proxyExpanded = false;
-
-		if(element instanceof JSNamedElementProxy && element.getContainingFile() == myTargetFile)
-		{ // expand proxies from completion target file, since they will be invalidated by typing
-			element = ((JSNamedElementProxy) element).getElement();
-			proxyExpanded = true;
-			if(element == null)
-			{
-				return null; // something weird happened
-			}
-		}
 
 		final Object item = JSLookupUtil.createLookupItem(element, nameId, priority);
 
@@ -696,20 +619,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 	private PsiElement updateElement(final Object _element)
 	{
 		PsiElement element;
-		if(_element instanceof JSNamedElementProxy)
-		{
-			final JSNamedElementProxy proxy = (JSNamedElementProxy) _element;
-
-			if(proxy.getType() == JSNamedElementProxy.NamedItemType.ImplicitVariable || proxy.getType() == JSNamedElementProxy.NamedItemType.ImplicitFunction)
-			{
-				element = new MyElementWrapper(proxy);
-			}
-			else
-			{
-				element = proxy;
-			}
-		}
-		else if(_element instanceof PsiElement)
+		if(_element instanceof PsiElement)
 		{
 			element = (PsiElement) _element;
 		}
@@ -774,28 +684,9 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 		}
 	}
 
-	private MatchType isAcceptableQualifiedItem(final JSNamedElementProxy.NamedItemType type)
-	{
-		if(myProcessOnlyTypes && ecmal4)
-		{
-			return MatchType.COMPLETE;
-		}
-
-		if(!hasSomeInfoAvailable || myDefinitelyGlobalReference)
-		{
-			return (ecmal4 && (type == JSNamedElementProxy.NamedItemType.Variable ||
-					type == JSNamedElementProxy.NamedItemType.Function ||
-					type == JSNamedElementProxy.NamedItemType.Clazz)) ? MatchType.COMPLETE : (myDefinitelyGlobalReference ? MatchType.NOMATCH : MatchType.PARTIAL);
-		}
-
-		return MatchType.PARTIAL;
-	}
-
-
 	public static class MyElementWrapper extends PsiElementBase implements JSNamedElement
 	{
 		private final String myArtificialName;
-		private final JSNamedElementProxy myProxy;
 		private int myOffset;
 		private PsiFile myCurrentFile;
 
@@ -819,16 +710,9 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 
 		public MyElementWrapper(final String name, PsiFile file, int offset)
 		{
-			myProxy = null;
 			myOffset = offset;
 			myCurrentFile = file;
 			myArtificialName = name;
-		}
-
-		public MyElementWrapper(JSNamedElementProxy _proxy)
-		{
-			myProxy = _proxy;
-			myArtificialName = null;
 		}
 
 		@RequiredReadAction
@@ -850,7 +734,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 		@Override
 		public PsiElement getParent()
 		{
-			return myCurrentFile != null ? myCurrentFile : myProxy.getContainingFile();
+			return myCurrentFile != null ? myCurrentFile : null;
 		}
 
 		@RequiredReadAction
@@ -936,7 +820,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			{
 				return myArtificialName;
 			}
-			return myProxy.getNameId();
+			return null;
 		}
 
 		@RequiredReadAction
@@ -992,12 +876,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			{
 				return null;
 			}
-			return myProxy.getPresentation();
-		}
-
-		public JSNamedElementProxy getProxy()
-		{
-			return myProxy;
+			return null;
 		}
 
 		public String getArtificialName()
