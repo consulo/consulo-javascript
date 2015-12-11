@@ -121,7 +121,7 @@ public class JSPropertyNameReference implements PsiReference
 	public Object[] getVariants()
 	{
 		final VariantsProcessor processor = new VariantsProcessor(null, myProperty.getContainingFile(), false, myProperty);
-		JavaScriptIndex.getInstance(myProperty.getProject()).processAllSymbols(processor);
+		JavaScriptIndex.processAllSymbols(processor);
 
 		return processor.getResult();
 	}

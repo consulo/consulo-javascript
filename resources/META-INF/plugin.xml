@@ -153,15 +153,6 @@
 		<propertyNameReferenceProvider implementation="com.intellij.lang.javascript.psi.impl.reference.DefaultJSPropertyNameReferenceProvider" id="default"/>
 	</extensions>
 
-	<project-components>
-		<component>
-			<implementation-class>com.intellij.lang.javascript.index.JavaScriptIndex</implementation-class>
-		</component>
-		<component>
-			<implementation-class>com.intellij.lang.javascript.index.JSTypeEvaluateManager</implementation-class>
-		</component>
-	</project-components>
-
 	<actions>
 		<action id="Generate.GetAccessor.Actionscript" class="com.intellij.lang.javascript.generation.JavaScriptGenerateGetAccessorAction"
 				text="Getter">

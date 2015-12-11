@@ -342,16 +342,15 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 			final PsiFile containingFile = ((PsiElement) editorElement).getContainingFile();
 			final PsiElement context = containingFile.getContext();
 			final int offset = ((PsiElement) editorElement).getTextOffset();
-			final JavaScriptIndex scriptIndex = JavaScriptIndex.getInstance(containingFile.getProject());
 			final PsiElement element;
 
 			if(context != null)
 			{
-				element = scriptIndex.findSymbolWithNameAndOffsetInEntry(((JSNamedElement) editorElement).getName(), offset);
+				element = JavaScriptIndex.findSymbolWithNameAndOffsetInEntry(((JSNamedElement) editorElement).getName(), offset);
 			}
 			else
 			{
-				element = scriptIndex.findSymbolByFileAndNameAndOffset(containingFile.getVirtualFile().getPath(), ((JSNamedElement) editorElement).getName(),
+				element = JavaScriptIndex.findSymbolByFileAndNameAndOffset(containingFile.getVirtualFile().getPath(), ((JSNamedElement) editorElement).getName(),
 						offset);
 			}
 			if(element != null)

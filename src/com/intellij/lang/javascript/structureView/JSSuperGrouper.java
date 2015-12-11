@@ -31,7 +31,6 @@ import com.intellij.ide.util.treeView.smartTree.ActionPresentationData;
 import com.intellij.ide.util.treeView.smartTree.Group;
 import com.intellij.ide.util.treeView.smartTree.Grouper;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
-import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSVarStatement;
@@ -57,7 +56,6 @@ class JSSuperGrouper implements Grouper
 			return Collections.emptyList();
 		}
 		final Map<String, Group> groups = new THashMap<String, Group>();
-		JavaScriptIndex index = JavaScriptIndex.getInstance(((JSStructureViewElement) parent.getValue()).getValue().getProject());
 
 		for(TreeElement _child : children)
 		{

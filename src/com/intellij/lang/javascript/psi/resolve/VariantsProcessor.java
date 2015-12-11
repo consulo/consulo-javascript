@@ -33,6 +33,7 @@ import com.intellij.extapi.psi.PsiElementBase;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.javascript.JSElementTypes;
+import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSElementImpl;
 import com.intellij.lang.javascript.psi.util.JSLookupUtil;
@@ -309,7 +310,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 				return;
 			}
 			context.visitedTypes.add(type);
-			if(context.typeEvaluateManager.isArrayType(type))
+			if(JSTypeEvaluateManager.isArrayType(type))
 			{
 				type = ARRAY_TYPE_NAME;
 			}
@@ -557,7 +558,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 	@Override
 	protected String[] calculateContextIds(final JSReferenceExpression jsReferenceExpression)
 	{
-		return JSResolveUtil.buildNameIdsForQualifier(JSResolveUtil.getRealRefExprQualifier(jsReferenceExpression), myIndex);
+		return JSResolveUtil.buildNameIdsForQualifier(JSResolveUtil.getRealRefExprQualifier(jsReferenceExpression));
 	}
 
 	@Override

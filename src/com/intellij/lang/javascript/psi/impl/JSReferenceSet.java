@@ -282,9 +282,7 @@ public class JSReferenceSet
 
 		private Object[] getOldVariants(PsiFile containingFile, ResolveProcessor localProcessor)
 		{
-			final JavaScriptIndex index = JavaScriptIndex.getInstance(element.getProject());
-
-			final List<String> contextIds = fillContextIds(index);
+			final List<String> contextIds = fillContextIds();
 			final VariantsProcessor processor = new VariantsProcessor(contextIds != null ? ArrayUtil.toStringArray(contextIds) : null, containingFile, false, element);
 
 			processor.setAddOnlyCompleteMatches(contextIds != null || !(element instanceof JSLiteralExpression));
@@ -292,7 +290,7 @@ public class JSReferenceSet
 			{
 				processor.addLocalResults(localProcessor.getResults());  // TODO: remove this stuff as we create new js index
 			}
-			index.processAllSymbols(processor);
+			JavaScriptIndex.processAllSymbols(processor);
 
 			final PsiElement context = containingFile.getContext();
 			if(context != null)
@@ -303,9 +301,8 @@ public class JSReferenceSet
 			return processor.getResult();
 		}
 
-		private
 		@Nullable
-		List<String> fillContextIds(final JavaScriptIndex index)
+		private List<String> fillContextIds()
 		{
 			List<String> contextIds = null;
 			PsiReference prevContextReference = null;
@@ -330,7 +327,7 @@ public class JSReferenceSet
 				if(elt instanceof JSClass && !(getElement() instanceof JSLiteralExpression))
 				{
 					final String qName = ((JSClass) elt).getQualifiedName();
-					BaseJSSymbolProcessor.addIndexListFromQName(qName, elt, contextIds = new ArrayList<String>(), index);
+					BaseJSSymbolProcessor.addIndexListFromQName(qName, elt, contextIds = new ArrayList<String>());
 				}
 			}
 			else if(contextIds != null)
@@ -346,7 +343,7 @@ public class JSReferenceSet
 				if(psiElement instanceof JSClass)
 				{
 					final String qName = ((JSClass) psiElement).getQualifiedName();
-					BaseJSSymbolProcessor.addIndexListFromQName(qName, psiElement, contextIds = new ArrayList<String>(), index);
+					BaseJSSymbolProcessor.addIndexListFromQName(qName, psiElement, contextIds = new ArrayList<String>());
 				}
 			}
 
@@ -524,9 +521,7 @@ public class JSReferenceSet
 			{
 				return new ResolveResult[]{new JSResolveUtil.MyResolveResult(element)};
 			}
-			final JavaScriptIndex index = JavaScriptIndex.getInstance(psiFile.getProject());
-
-			final List<String> contextIds = fillContextIds(index);
+			final List<String> contextIds = fillContextIds();
 
 			String text = myText;
 
@@ -544,7 +539,7 @@ public class JSReferenceSet
 					null, psiFile, false, element);
 
 			processor.setAddOnlyCompleteMatches(contextIds != null || !(element instanceof JSLiteralExpression));
-			index.processAllSymbols(processor);
+			JavaScriptIndex.processAllSymbols(processor);
 			final StringBuilder b = new StringBuilder();
 
 			for(final PsiReference ref : myReferences)

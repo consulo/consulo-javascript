@@ -16,94 +16,19 @@
 
 package com.intellij.lang.javascript.index;
 
-import java.util.Arrays;
-import java.util.Set;
-
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
-import com.intellij.lang.javascript.flex.FlexModuleExtension;
-import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.openapi.components.ProjectComponent;
-import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.search.GlobalSearchScope;
 
 /**
- * @by maxim, yole
+ * @author maxim, yole
  */
-public final class JavaScriptIndex implements ProjectComponent
+public final class JavaScriptIndex
 {
-	private Project myProject;
-
 	public static final String ECMASCRIPT_JS2 = "ECMAScript.js2";
 
-	public JavaScriptIndex(final Project project, final FileTypeManager fileTypeManager)
+	public static void processAllSymbols(JavaScriptSymbolProcessor processor)
 	{
-		myProject = project;
-	}
-
-	@Override
-	public void projectOpened()
-	{
-	}
-
-	@Nullable
-	public static VirtualFile getFlexSdkLocation(final Module module)
-	{
-		FlexModuleExtension extension = ModuleUtilCore.getExtension(module, FlexModuleExtension.class);
-		if(extension != null)
-		{
-			Sdk sdk = extension.getSdk();
-			if(sdk != null)
-			{
-				return sdk.getHomeDirectory();
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public void projectClosed()
-	{
-	}
-
-	@NotNull
-	@Override
-	@NonNls
-	public String getComponentName()
-	{
-		return "JavaScriptIndex";
-	}
-
-	@Override
-	public void initComponent()
-	{
-	}
-
-	@Override
-	public void disposeComponent()
-	{
-	}
-
-	public static JavaScriptIndex getInstance(final Project project)
-	{
-		return project.getComponent(JavaScriptIndex.class);
-	}
-
-	public synchronized void processAllSymbols(JavaScriptSymbolProcessor processor)
-	{
-		assert processor.getBaseFile() != null;
+		/*assert processor.getBaseFile() != null;
 		boolean ecmaL4 = processor.getBaseFile().getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
 
 		final PsiFile psiFile = processor.getBaseFile();
@@ -144,7 +69,7 @@ public final class JavaScriptIndex implements ProjectComponent
 		else
 		{
 
-		}
+		} */
 	}
 
 	public static boolean isFromPredefinedFile(final PsiFile containingFile)

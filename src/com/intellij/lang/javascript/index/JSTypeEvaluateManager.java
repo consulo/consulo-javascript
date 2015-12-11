@@ -16,52 +16,13 @@
 
 package com.intellij.lang.javascript.index;
 
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.javascript.psi.resolve.BaseJSSymbolProcessor;
-import com.intellij.openapi.components.ProjectComponent;
-import com.intellij.openapi.project.Project;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
-public class JSTypeEvaluateManager implements ProjectComponent
+public class JSTypeEvaluateManager
 {
-
-	public static JSTypeEvaluateManager getInstance(Project project)
-	{
-		return project.getComponent(JSTypeEvaluateManager.class);
-	}
-
-	@Override
-	public void projectOpened()
-	{
-	}
-
-	@Override
-	public void projectClosed()
-	{
-	}
-
-	@Override
-	@NonNls
-	@NotNull
-	public String getComponentName()
-	{
-		return "JS.TypeEvaluateManager";
-	}
-
-	@Override
-	public void initComponent()
-	{
-	}
-
-	@Override
-	public void disposeComponent()
-	{
-	}
-
-
 	public static boolean isArrayType(String s)
 	{
 		if(s == null)

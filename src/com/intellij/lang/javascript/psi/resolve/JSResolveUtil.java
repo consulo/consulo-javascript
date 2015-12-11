@@ -1779,7 +1779,7 @@ public class JSResolveUtil
 		return null;
 	}
 
-	public static String[] buildNameIdsForQualifier(final JSExpression qualifier, final JavaScriptIndex index)
+	public static String[] buildNameIdsForQualifier(final JSExpression qualifier)
 	{
 		String[] nameIds = null;
 
@@ -1790,7 +1790,7 @@ public class JSResolveUtil
 		else
 		{
 			ContextResolver resolver = new ContextResolver(qualifier);
-			nameIds = resolver.getQualifierAsNameIndex(index);
+			nameIds = resolver.getQualifierAsNameIndex();
 
 			if(nameIds == null)
 			{
@@ -2756,13 +2756,13 @@ public class JSResolveUtil
 		}
 
 		@Nullable
-		public String[] getQualifierAsNameIndex(@NotNull JavaScriptIndex index)
+		public String[] getQualifierAsNameIndex()
 		{
 			String qualifierAsString = getQualifierAsString();
 			if(qualifierAsString != null)
 			{
 				List<String> list = new ArrayList<String>();
-				qualifierAsString = BaseJSSymbolProcessor.addIndexListFromQName(qualifierAsString, qualifyingExpression, list, index);
+				qualifierAsString = BaseJSSymbolProcessor.addIndexListFromQName(qualifierAsString, qualifyingExpression, list);
 				return ArrayUtil.toStringArray(list);
 			}
 

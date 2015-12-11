@@ -377,7 +377,6 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		final JSExpression qualifier = getResolveQualifier();
 
 		ResolveProcessor localProcessor;
-		final JavaScriptIndex index = JavaScriptIndex.getInstance(getProject());
 
 		if(isLocalResolveQualifier(qualifier))
 		{
@@ -427,7 +426,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 			processor.addLocalResults(localProcessor.getResults());
 		}
 
-		index.processAllSymbols(processor);
+		JavaScriptIndex.processAllSymbols(processor);
 
 		return processor.getResult();
 	}
@@ -484,8 +483,6 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		final boolean ecma = containingFile.getLanguage().isKindOf(JavaScriptSupportLoader.ECMA_SCRIPT_L4);
 		final boolean localResolve = isLocalResolveQualifier(qualifier);
 		final boolean parentIsDefinition = parent instanceof JSDefinitionExpression;
-
-		final JavaScriptIndex index = JavaScriptIndex.getInstance(containingFile.getProject());
 
 		// Handle self references
 		PsiElement currentParent = JSResolveUtil.getTopReferenceParent(parent);
@@ -553,8 +550,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		//  return localProcessor.getResultsAsResolveResults();
 		//}
 
-		ResolveResult[] results = doOldResolve(containingFile, referencedName, parent, qualifier, ecma, localResolve, parentIsDefinition, index,
-				localProcessor);
+		ResolveResult[] results = doOldResolve(containingFile, referencedName, parent, qualifier, ecma, localResolve, parentIsDefinition, localProcessor);
 
 		return results;
 	}
@@ -612,8 +608,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 	}
 
 	private ResolveResult[] doOldResolve(final PsiFile containingFile, final String referencedName, final PsiElement parent,
-			final JSExpression qualifier, final boolean ecma, final boolean localResolve, final boolean parentIsDefinition, final JavaScriptIndex index,
-			ResolveProcessor localProcessor)
+			final JSExpression qualifier, final boolean ecma, final boolean localResolve, final boolean parentIsDefinition, ResolveProcessor localProcessor)
 	{
 		if(parentIsDefinition && ((ecma && !localResolve) || (!ecma && qualifier != null)))
 		{
@@ -637,7 +632,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 			processor.addLocalResults(localProcessor.getResultsAsResolveResults());
 		}
 
-		JavaScriptIndex.getInstance(containingFile.getProject()).processAllSymbols(processor);
+		JavaScriptIndex.processAllSymbols(processor);
 		return processor.getResults();
 	}
 

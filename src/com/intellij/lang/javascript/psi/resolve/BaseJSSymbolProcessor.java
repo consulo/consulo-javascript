@@ -60,7 +60,6 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 	protected PsiFile myCurrentFile;
 	protected final boolean mySkipDclsInTargetFile;
 	protected final PsiElement myContext;
-	protected final JavaScriptIndex myIndex;
 	protected final String myWindowIndex;
 	protected final String myFunctionIndex;
 
@@ -100,8 +99,6 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 		myTargetFile = targetFile;
 		mySkipDclsInTargetFile = skipDclsInTargetFile;
 		myContext = context;
-
-		myIndex = JavaScriptIndex.getInstance(targetFile.getProject());
 
 		myWindowIndex = "window";
 		myFunctionIndex = "Function";
@@ -961,13 +958,13 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 	protected String buildIndexListFromQNameAndCorrectQName(String type, final PsiElement source, List<String[]> possibleNameIds)
 	{
 		final List<String> list = new ArrayList<String>();
-		type = addIndexListFromQName(type, source, list, myIndex);
+		type = addIndexListFromQName(type, source, list);
 
 		possibleNameIds.add(ArrayUtil.toStringArray(list));
 		return type;
 	}
 
-	public static String addIndexListFromQName(String type, final PsiElement source, final List<String> list, JavaScriptIndex myIndex)
+	public static String addIndexListFromQName(String type, final PsiElement source, final List<String> list)
 	{
 		int i = type.indexOf('.');
 		int lastI = 0;
@@ -1014,7 +1011,7 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 
 		if(!typeProcessor.ecma())
 		{
-			type = context.typeEvaluateManager.getInstanceNameByType(type);
+			type = JSTypeEvaluateManager.getInstanceNameByType(type);
 		}
 		typeProcessor.process(type, context, source);
 	}
@@ -1103,15 +1100,11 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 		public final PsiFile targetFile;
 		public final Set<String> visitedTypes = new THashSet<String>();
 		private Set<JSExpression> processingItems;
-		public final JSTypeEvaluateManager typeEvaluateManager;
-		public final JavaScriptIndex index;
 		private PsiElement source;
 
 		public EvaluateContext(final PsiFile targetFile)
 		{
 			this.targetFile = targetFile;
-			typeEvaluateManager = JSTypeEvaluateManager.getInstance(targetFile.getProject());
-			index = JavaScriptIndex.getInstance(targetFile.getProject());
 		}
 
 		public boolean isAlreadyProcessingItem(final JSExpression rawqualifier)

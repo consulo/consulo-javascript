@@ -33,7 +33,6 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.lang.javascript.index.JSSymbolUtil;
-import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.navigation.ItemPresentation;
@@ -95,11 +94,10 @@ public class JSStructureViewElement implements StructureViewTreeElement
 			return EMPTY_ARRAY;
 		}
 
-		final JavaScriptIndex index = JavaScriptIndex.getInstance(element.getProject());
 		final Set<String> referencedNamedIds = new HashSet<String>();
 
 
-		List<StructureViewTreeElement> children = collectMyElements(referencedNamedIds, index);
+		List<StructureViewTreeElement> children = collectMyElements(referencedNamedIds);
 
 		ArrayList<StructureViewTreeElement> elementsFromSupers = null;
 
@@ -217,11 +215,11 @@ public class JSStructureViewElement implements StructureViewTreeElement
 	}
 
 
-	protected List<StructureViewTreeElement> collectMyElements(final Set<String> referencedNamedIds, final JavaScriptIndex index)
+	protected List<StructureViewTreeElement> collectMyElements(final Set<String> referencedNamedIds)
 	{
 		final TIntObjectHashMap<PsiElement> offset2Element = new TIntObjectHashMap<PsiElement>();
 
-		collectChildrenFromElement(myElement, referencedNamedIds, index, offset2Element);
+		collectChildrenFromElement(myElement, referencedNamedIds, offset2Element);
 
 
 		final List<StructureViewTreeElement> children = new ArrayList<StructureViewTreeElement>(offset2Element.size());
@@ -265,7 +263,7 @@ public class JSStructureViewElement implements StructureViewTreeElement
 		return true;
 	}
 
-	private static void collectChildrenFromElement(final PsiElement element, final Set<String> referencedNamedIds, final JavaScriptIndex index, final TIntObjectHashMap<PsiElement> offset2Element)
+	private static void collectChildrenFromElement(final PsiElement element, final Set<String> referencedNamedIds, final TIntObjectHashMap<PsiElement> offset2Element)
 	{
 		element.acceptChildren(new JSElementVisitor()
 		{

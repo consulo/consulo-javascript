@@ -116,7 +116,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor
 
 					if(expression != null)
 					{
-						possibleNameIds.add(JSResolveUtil.buildNameIdsForQualifier(JSResolveUtil.getRealRefExprQualifierFromResult(refExpr, expression), myIndex));
+						possibleNameIds.add(JSResolveUtil.buildNameIdsForQualifier(JSResolveUtil.getRealRefExprQualifierFromResult(refExpr, expression)));
 					}
 					else
 					{
@@ -458,7 +458,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor
 		}
 		else if(qualifier instanceof JSThisExpression || qualifier instanceof JSSuperExpression)
 		{
-			contextNameIds = JSResolveUtil.buildNameIdsForQualifier(qualifier, myIndex);
+			contextNameIds = JSResolveUtil.buildNameIdsForQualifier(qualifier);
 		}
 
 		return contextNameIds;

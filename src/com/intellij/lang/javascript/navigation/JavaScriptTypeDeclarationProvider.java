@@ -72,7 +72,6 @@ public class JavaScriptTypeDeclarationProvider extends TypeDeclarationProvider
 		// TODO: BaseJSSymbolProcessor.doEvalForExpr does all above !
 		if(s != null)
 		{
-			final JavaScriptIndex index = JavaScriptIndex.getInstance(symbol.getProject());
 			PsiElement item = JSResolveUtil.findClassByQName(s, symbol);
 
 			if(item == null)
@@ -80,7 +79,7 @@ public class JavaScriptTypeDeclarationProvider extends TypeDeclarationProvider
 				final String s1 = s;
 				final List<PsiElement> result = new ArrayList<PsiElement>();
 
-				index.processAllSymbols(new JavaScriptSymbolProcessor.DefaultSymbolProcessor()
+				JavaScriptIndex.processAllSymbols(new JavaScriptSymbolProcessor.DefaultSymbolProcessor()
 				{
 					@Override
 					protected boolean process(final PsiElement namedElement)
