@@ -25,8 +25,13 @@
 
 		<internalFileTemplate name="JavaScriptFile"/>
 
-		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.DefaultJavaScriptLanguageVersion"
-							id="defaultJavaScript" order="first"/>
+		<lang.versionResolver language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScriptLanguageVersionResolver" />
+
+		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScript15LanguageVersion" />
+		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScript16LanguageVersion" />
+		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScript17LanguageVersion" />
+		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScript18LanguageVersion" />
+		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScript185LanguageVersion" />
 
 		<copyright.updater filetype="JavaScript" implementationClass="org.mustbe.consulo.javascript.copyright.UpdateJavaScriptFileCopyrightProvider"/>
 

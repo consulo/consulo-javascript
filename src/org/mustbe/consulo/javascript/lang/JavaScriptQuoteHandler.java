@@ -32,7 +32,7 @@ public class JavaScriptQuoteHandler extends SimpleTokenSetQuoteHandler implement
 {
 	public JavaScriptQuoteHandler()
 	{
-		super(JSTokenSets.STRING_LITERALS);
+		super(JavaScriptTokenSets.STRING_LITERALS);
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class JavaScriptQuoteHandler extends SimpleTokenSetQuoteHandler implement
 	@Override
 	public boolean isAppropriateElementTypeForLiteral(@NotNull IElementType tokenType)
 	{
-		return JSTokenSets.COMMENTS.contains(tokenType) ||
+		return JavaScriptTokenSets.COMMENTS.contains(tokenType) ||
 				tokenType == JSTokenTypes.WHITE_SPACE ||
 				tokenType == JSTokenTypes.SEMICOLON ||
 				tokenType == JSTokenTypes.COMMA ||

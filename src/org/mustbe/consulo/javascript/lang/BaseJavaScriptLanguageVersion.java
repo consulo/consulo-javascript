@@ -36,7 +36,7 @@ public abstract class BaseJavaScriptLanguageVersion extends BaseLanguageVersion<
 	@Override
 	public TokenSet getWhitespaceTokens()
 	{
-		return JSTokenSets.WHITE_SPACES;
+		return JavaScriptTokenSets.WHITE_SPACES;
 	}
 
 	@NotNull
@@ -50,6 +50,6 @@ public abstract class BaseJavaScriptLanguageVersion extends BaseLanguageVersion<
 	@Override
 	public TokenSet getStringLiteralElements()
 	{
-		return JSTokenSets.STRING_LITERALS;
+		return JavaScriptTokenSets.STRING_LITERALS;
 	}
 }

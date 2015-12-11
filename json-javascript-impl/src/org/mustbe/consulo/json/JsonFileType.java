@@ -20,15 +20,19 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.javascript.lang.JavaScriptFileTypeWithVersion;
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
+import org.mustbe.consulo.json.lang.JsonJavaScriptVersion;
 import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 
 /**
  * @author VISTALL
  * @since 02.12.13.
  */
-public class JsonFileType extends LanguageFileType
+public class JsonFileType extends LanguageFileType implements JavaScriptFileTypeWithVersion
 {
 	public static final JsonFileType INSTANCE = new JsonFileType();
 
@@ -63,5 +67,12 @@ public class JsonFileType extends LanguageFileType
 	public Icon getIcon()
 	{
 		return JavaScriptIcons.Json;
+	}
+
+	@NotNull
+	@Override
+	public JsonJavaScriptVersion getLanguageVersion(@Nullable Project project, @Nullable VirtualFile virtualFile)
+	{
+		return JsonJavaScriptVersion.getInstance();
 	}
 }

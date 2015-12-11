@@ -20,15 +20,20 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.actionscript.lang.ActionScriptLanguageVersion;
+import org.mustbe.consulo.javascript.lang.JavaScriptFileTypeWithVersion;
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 
 /**
  * @author VISTALL
  * @since 02.12.13.
  */
-public class ActionScriptFileType extends LanguageFileType
+public class ActionScriptFileType extends LanguageFileType implements JavaScriptFileTypeWithVersion
 {
 	public static final ActionScriptFileType INSTANCE = new ActionScriptFileType();
 
@@ -63,5 +68,12 @@ public class ActionScriptFileType extends LanguageFileType
 	public Icon getIcon()
 	{
 		return JavaScriptIcons.As;
+	}
+
+	@NotNull
+	@Override
+	public LanguageVersion<JavaScriptLanguage> getLanguageVersion(@Nullable Project project, @Nullable VirtualFile virtualFile)
+	{
+		return ActionScriptLanguageVersion.getInstance();
 	}
 }

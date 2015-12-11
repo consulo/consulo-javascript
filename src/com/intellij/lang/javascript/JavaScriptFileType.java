@@ -19,15 +19,21 @@ package com.intellij.lang.javascript;
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.javascript.lang.JavaScript15LanguageVersion;
+import org.mustbe.consulo.javascript.lang.JavaScriptFileTypeWithVersion;
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 
 /**
  * User: max
  * Date: Jan 27, 2005
  * Time: 6:02:59 PM
  */
-public class JavaScriptFileType extends LanguageFileType
+public class JavaScriptFileType extends LanguageFileType implements JavaScriptFileTypeWithVersion
 {
 	public static final JavaScriptFileType INSTANCE = new JavaScriptFileType();
 
@@ -61,5 +67,12 @@ public class JavaScriptFileType extends LanguageFileType
 	public Icon getIcon()
 	{
 		return JavaScriptIcons.JavaScript;
+	}
+
+	@NotNull
+	@Override
+	public LanguageVersion<JavaScriptLanguage> getLanguageVersion(@Nullable Project project, @Nullable VirtualFile virtualFile)
+	{
+		return JavaScript15LanguageVersion.getInstance();
 	}
 }
