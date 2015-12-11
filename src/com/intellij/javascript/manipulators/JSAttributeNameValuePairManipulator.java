@@ -16,7 +16,6 @@
 package com.intellij.javascript.manipulators;
 
 import org.jetbrains.annotations.NonNls;
-import com.intellij.lang.javascript.JSLanguageDialect;
 import com.intellij.lang.javascript.psi.JSAttributeNameValuePair;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
@@ -29,10 +28,10 @@ import com.intellij.psi.PsiElement;
 public class JSAttributeNameValuePairManipulator extends JSAbstractElementManipulator<JSAttributeNameValuePair>
 {
 	@Override
-	protected JSAttributeNameValuePair createTree(final String newText, final JSLanguageDialect languageDialect, final Project project)
+	protected JSAttributeNameValuePair createTree(final String newText, final Project project)
 	{
 		@NonNls String ToCreate = "[A(" + newText + ")] class C {}";
-		final PsiElement element = JSChangeUtil.createStatementFromText(project, ToCreate, languageDialect).getPsi();
+		final PsiElement element = JSChangeUtil.createStatementFromText(project, ToCreate).getPsi();
 		return ((JSClass) element).getAttributeList().getAttributes()[0].getValues()[0];
 	}
 }

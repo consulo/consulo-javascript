@@ -30,10 +30,8 @@ import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
 import org.intellij.idea.lang.javascript.psiutil.SideEffectChecker;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import com.intellij.lang.javascript.JSLanguageDialect;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
-import com.intellij.lang.javascript.psi.util.JSUtils;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiWhiteSpace;
@@ -203,18 +201,17 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
                               pendingVariableDeclarations);
         }
 
-      JSLanguageDialect dialect = JSUtils.getDialect(element.getContainingFile());
       if (hadSideEffects) {
             final String      ifStatementString    = ifStatementBuffer.toString();
-            final JSStatement declarationStatement = (JSStatement) JSChangeUtil.createStatementFromText(element.getProject(), declarationString,dialect).getPsi();
-            final JSStatement ifStatement          = (JSStatement) JSChangeUtil.createStatementFromText(element.getProject(), ifStatementString, dialect).getPsi();
+            final JSStatement declarationStatement = (JSStatement) JSChangeUtil.createStatementFromText(element.getProject(), declarationString).getPsi();
+            final JSStatement ifStatement          = (JSStatement) JSChangeUtil.createStatementFromText(element.getProject(), ifStatementString).getPsi();
 
             codeStyleMgr.reformat(declarationStatement);
             codeStyleMgr.reformat(ifStatement);
             JSElementFactory.replaceStatement(switchStatement, declarationStatement.getText() + '\n' + ifStatement.getText());
         } else {
             final String      ifStatementString = ifStatementBuffer.toString();
-            final JSStatement newStatement = (JSStatement) JSChangeUtil.createStatementFromText(element.getProject(), ifStatementString, dialect).getPsi();
+            final JSStatement newStatement = (JSStatement) JSChangeUtil.createStatementFromText(element.getProject(), ifStatementString).getPsi();
 
             codeStyleMgr.reformat(newStatement);
             JSElementFactory.replaceStatement(switchStatement, newStatement.getText());

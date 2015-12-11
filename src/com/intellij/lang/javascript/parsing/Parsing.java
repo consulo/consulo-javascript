@@ -17,10 +17,7 @@
 package com.intellij.lang.javascript.parsing;
 
 import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.javascript.JSLanguageDialect;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
-import com.intellij.openapi.util.Key;
 import com.intellij.psi.tree.IElementType;
 
 /**
@@ -33,7 +30,6 @@ import com.intellij.psi.tree.IElementType;
 @Deprecated
 public class Parsing
 {
-	public static final Key<JSLanguageDialect> JS_DIALECT_KEY = Key.create("JS_DIALECT");
 
 	protected Parsing()
 	{
@@ -55,7 +51,7 @@ public class Parsing
 
 	protected static boolean isECMAL4(final PsiBuilder builder)
 	{
-		return builder.getUserData(JS_DIALECT_KEY) == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
+		return false;
 	}
 
 	protected static boolean isGwt(final PsiBuilder builder)

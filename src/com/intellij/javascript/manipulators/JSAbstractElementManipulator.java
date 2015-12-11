@@ -15,8 +15,6 @@
  */
 package com.intellij.javascript.manipulators;
 
-import com.intellij.lang.javascript.JSLanguageDialect;
-import com.intellij.lang.javascript.psi.util.JSUtils;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
@@ -35,10 +33,9 @@ abstract class JSAbstractElementManipulator<T extends PsiElement> extends Abstra
 		String oldText = element.getText();
 		newContent = StringUtil.escapeStringCharacters(newContent);
 		String newText = oldText.substring(0, range.getStartOffset()) + newContent + oldText.substring(range.getEndOffset());
-		final JSLanguageDialect languageDialect = JSUtils.getDialect(element.getContainingFile());
 
-		return (T) element.replace(createTree(newText, languageDialect, element.getProject()));
+		return (T) element.replace(createTree(newText, element.getProject()));
 	}
 
-	protected abstract T createTree(final String newText, final JSLanguageDialect languageDialect, final Project project);
+	protected abstract T createTree(final String newText, final Project project);
 }

@@ -19,12 +19,11 @@ package com.intellij.lang.javascript.psi.impl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageParserDefinitions;
 import com.intellij.lang.ParserDefinition;
-import com.intellij.lang.javascript.JSLanguageDialect;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.formatter.JSCodeStyleSettings;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.util.JSUtils;
@@ -51,9 +50,6 @@ import com.intellij.util.IncorrectOperationException;
  */
 public class JSChangeUtil
 {
-	@NonNls
-	private static final String DUMMY = "dummy.";
-
 	private JSChangeUtil()
 	{
 	}
@@ -76,7 +72,7 @@ public class JSChangeUtil
 
 	public static ASTNode createNameIdentifier(Project project, String name)
 	{
-		final JSExpressionStatement expressionStatement = (JSExpressionStatement) createJSTreeFromTextImpl(project, name + ";", null);
+		final JSExpressionStatement expressionStatement = (JSExpressionStatement) createJSTreeFromTextImpl(project, name + ";");
 		final JSReferenceExpressionImpl refExpression = (JSReferenceExpressionImpl) expressionStatement.getFirstChild();
 
 		return refExpression.getNode().getFirstChildNode();
@@ -85,55 +81,34 @@ public class JSChangeUtil
 	@NotNull
 	public static JSExpression createExpressionFromText(Project project, @NonNls String text)
 	{
-		return createExpressionFromText(project, text, null);
-	}
-
-	@NotNull
-	public static JSExpression createExpressionFromText(Project project, @NonNls String text, @Nullable JSLanguageDialect dialect)
-	{
 		text = "{\n" + text + "\n}";
-		PsiElement element = createJSTreeFromTextImpl(project, text, dialect);
+		PsiElement element = createJSTreeFromTextImpl(project, text);
 		assert element instanceof JSBlockStatement : "\"" + text + "\" was not parsed as BlockStatement";
 		element = ((JSBlockStatement) element).getStatements()[0];
 		final JSExpressionStatement expressionStatement = (JSExpressionStatement) element;
 		return (JSExpression) expressionStatement.getFirstChild();
 	}
 
+
 	public static ASTNode createStatementFromText(Project project, @NonNls String text)
 	{
-		return createStatementFromText(project, text, null);
-	}
-
-	public static ASTNode createStatementFromText(Project project, @NonNls String text, @Nullable JSLanguageDialect dialect)
-	{
-		final PsiElement element = createJSTreeFromTextImpl(project, text, dialect);
+		final PsiElement element = createJSTreeFromTextImpl(project, text);
 		final JSSourceElement stmt = element instanceof JSSourceElement ? (JSSourceElement) element : null;
 		return stmt != null ? stmt.getNode() : null;
 	}
 
-	private static
 	@Nullable
-	PsiElement createJSTreeFromTextImpl(Project project, @NonNls String text, @Nullable JSLanguageDialect dialect)
+	private static PsiElement createJSTreeFromTextImpl(Project project, @NonNls String text)
 	{
-		ParserDefinition def = dialect != null ? LanguageParserDefinitions.INSTANCE.forLanguage(dialect) : LanguageParserDefinitions.INSTANCE.forLanguage
-				(JavaScriptSupportLoader.JAVASCRIPT.getLanguage());
-		assert def != null;
-		@NonNls String ext = dialect == null ? "js" : dialect.getFileExtension();
-		String name = DUMMY + ext;
 		final PsiFile dummyFile;
-		dummyFile = PsiFileFactory.getInstance(project).createFileFromText(name, text);
+		dummyFile = PsiFileFactory.getInstance(project).createFileFromText("dummy.js", JavaScriptLanguage.INSTANCE, text);
 
 		return dummyFile.getFirstChild();
 	}
 
 	public static ASTNode createJSTreeFromText(Project project, @NonNls String text)
 	{
-		return createJSTreeFromText(project, text, null);
-	}
-
-	public static ASTNode createJSTreeFromText(Project project, @NonNls String text, @Nullable JSLanguageDialect languageDialect)
-	{
-		final PsiElement element = createJSTreeFromTextImpl(project, text, languageDialect);
+		final PsiElement element = createJSTreeFromTextImpl(project, text);
 		if(element != null)
 		{
 			return element.getNode();

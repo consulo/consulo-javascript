@@ -28,7 +28,6 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSLanguageDialect;
 import com.intellij.lang.javascript.JSLanguageInjector;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.index.JSIndexEntry;
@@ -115,8 +114,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 
 	private JSReferenceList createReferenceList(final String s)
 	{
-		final JSClass element = (JSClass) JSChangeUtil.createJSTreeFromText(getProject(), "class C extends " + s + " {}",
-				(JSLanguageDialect) JavaScriptSupportLoader.ECMA_SCRIPT_L4).getPsi();
+		final JSClass element = (JSClass) JSChangeUtil.createJSTreeFromText(getProject(), "class C extends " + s + " {}").getPsi();
 		return element.getExtendsList();
 	}
 
@@ -591,7 +589,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 					{
 						int markerEnd = cdataAt + marker.length();
 						ASTNode fromText = JSChangeUtil.createJSTreeFromText(getProject(), text.substring(0, markerEnd) + element.getText() + text.substring
-								(markerEnd), (JSLanguageDialect) element.getContainingFile().getLanguage());
+								(markerEnd));
 						jsFile.getNode().replaceAllChildrenToChildrenOf(fromText.getTreeParent());
 						element = PsiTreeUtil.getParentOfType(jsFile.findElementAt(markerEnd + 1), element.getClass());
 					}

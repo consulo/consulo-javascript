@@ -22,7 +22,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
-import com.intellij.lang.javascript.psi.util.JSUtils;
 import com.intellij.lang.surroundWith.Surrounder;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -57,7 +56,7 @@ public class JSWithParenthesesSurrounder implements Surrounder
 			IncorrectOperationException
 	{
 		JSExpression expr = (JSExpression) elements[0];
-		ASTNode parenthExprNode = JSChangeUtil.createExpressionFromText(project, "(" + expr.getText() + ")", JSUtils.getDialect(expr.getContainingFile())).getNode();
+		ASTNode parenthExprNode = JSChangeUtil.createExpressionFromText(project, "(" + expr.getText() + ")").getNode();
 		expr.getNode().getTreeParent().replaceChild(expr.getNode(), parenthExprNode);
 		int offset = parenthExprNode.getTextRange().getEndOffset();
 		return new TextRange(offset, offset);

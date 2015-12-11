@@ -24,15 +24,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.codeInsight.PsiEquivalenceUtil;
 import com.intellij.codeInsight.highlighting.HighlightManager;
-import com.intellij.lang.javascript.JavaScriptBundle;
-import com.intellij.lang.javascript.JSLanguageDialect;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import com.intellij.lang.javascript.psi.impl.JSEmbeddedContentImpl;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.lang.javascript.psi.util.JSUtils;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
@@ -267,8 +264,7 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
 		final boolean replaceAllOccurences = settings.isReplaceAllOccurences();
 		@NonNls String varDeclText = getDeclText(settings);
 		final PsiFile containingFile = expression.getContainingFile();
-		final JSLanguageDialect languageDialect = JSUtils.getDialect(containingFile);
-		final boolean ecma = JavaScriptSupportLoader.ECMA_SCRIPT_L4 == languageDialect;
+		final boolean ecma = false;
 		if(ecma)
 		{
 			String type = settings.getVariableType();
@@ -282,7 +278,7 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
 		try
 		{
 			T anchorStatement = findAnchor(introduceContext, replaceAllOccurences);
-			JSVarStatement declaration = prepareDeclaration(varDeclText, introduceContext, project, languageDialect);
+			JSVarStatement declaration = prepareDeclaration(varDeclText, introduceContext, project);
 
 			LOG.assertTrue(anchorStatement != null);
 
@@ -344,7 +340,7 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
 				}
 			}
 
-			final JSExpression refExpr = (JSExpression) JSChangeUtil.createExpressionFromText(project, settings.getVariableName(), languageDialect);
+			final JSExpression refExpr = (JSExpression) JSChangeUtil.createExpressionFromText(project, settings.getVariableName());
 			if(replaceAllOccurences)
 			{
 				List<JSExpression> toHighight = new ArrayList<JSExpression>();
@@ -373,11 +369,10 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
 		}
 	}
 
-	protected JSVarStatement prepareDeclaration(final String varDeclText, BaseIntroduceContext<S> context, final Project project,
-			final JSLanguageDialect languageDialect) throws IncorrectOperationException
+	protected JSVarStatement prepareDeclaration(final String varDeclText, BaseIntroduceContext<S> context, final Project project) throws IncorrectOperationException
 	{
 		JSVarStatement declaration = (JSVarStatement) JSChangeUtil.createStatementFromText(project, varDeclText + " = 0" + JSChangeUtil.getSemicolon
-				(project), languageDialect).getPsi();
+				(project)).getPsi();
 		declaration.getVariables()[0].getInitializer().replace(context.expression);
 		return declaration;
 	}

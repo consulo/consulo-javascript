@@ -28,7 +28,6 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.flex.ImportUtils;
 import com.intellij.lang.javascript.generation.JSNamedElementNode;
 import com.intellij.lang.javascript.psi.JSAttributeList;
@@ -104,7 +103,7 @@ public abstract class BaseCreateMethodsFix<T extends JSNamedElement & JSAttribut
 	{
 		if(functionText != null && functionText.length() > 0)
 		{
-			PsiElement element = JSChangeUtil.createJSTreeFromText(project, functionText, JavaScriptSupportLoader.ECMA_SCRIPT_L4).getPsi();
+			PsiElement element = JSChangeUtil.createJSTreeFromText(project, functionText).getPsi();
 			if(element instanceof PsiWhiteSpace)
 			{
 				element = element.getNextSibling();

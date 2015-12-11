@@ -18,7 +18,6 @@ package com.intellij.lang.javascript.refactoring.introduceField;
 
 import org.jetbrains.annotations.NonNls;
 import com.intellij.lang.javascript.JavaScriptBundle;
-import com.intellij.lang.javascript.JSLanguageDialect;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
 import com.intellij.lang.javascript.psi.JSAttributeList;
@@ -104,19 +103,18 @@ public class JSIntroduceFieldHandler extends JSBaseIntroduceHandler<JSElement, J
 	}
 
 	@Override
-	protected JSVarStatement prepareDeclaration(final String varDeclText, BaseIntroduceContext<JSIntroduceFieldSettings> context,
-			final Project project, final JSLanguageDialect languageDialect) throws IncorrectOperationException
+	protected JSVarStatement prepareDeclaration(final String varDeclText, BaseIntroduceContext<JSIntroduceFieldSettings> context, final Project project) throws IncorrectOperationException
 	{
 		final JSIntroduceFieldSettings.InitializationPlace place = context.settings.getInitializationPlace();
 
 		if(place == JSIntroduceFieldSettings.InitializationPlace.FieldDeclaration)
 		{
-			return super.prepareDeclaration(varDeclText, context, project, languageDialect);
+			return super.prepareDeclaration(varDeclText, context, project);
 		}
 		else
 		{
 			final String assignmentText = context.settings.getVariableName() + "=" + context.expression.getText() + JSChangeUtil.getSemicolon(project);
-			final PsiElement psiToInsert = JSChangeUtil.createStatementFromText(project, assignmentText, languageDialect).getPsi();
+			final PsiElement psiToInsert = JSChangeUtil.createStatementFromText(project, assignmentText).getPsi();
 
 			if(place == JSIntroduceFieldSettings.InitializationPlace.CurrentMethod)
 			{
@@ -147,13 +145,13 @@ public class JSIntroduceFieldHandler extends JSBaseIntroduceHandler<JSElement, J
 						constr = "public " + constr;
 					}
 
-					fun = (JSFunction) clazz.add(JSChangeUtil.createJSTreeFromText(project, constr, languageDialect).getPsi());
+					fun = (JSFunction) clazz.add(JSChangeUtil.createJSTreeFromText(project, constr).getPsi());
 				}
 
 				fun.getBody()[0].add(psiToInsert);
 			}
 
-			return (JSVarStatement) JSChangeUtil.createStatementFromText(project, varDeclText + JSChangeUtil.getSemicolon(project), languageDialect).getPsi();
+			return (JSVarStatement) JSChangeUtil.createStatementFromText(project, varDeclText + JSChangeUtil.getSemicolon(project)).getPsi();
 		}
 	}
 }

@@ -28,7 +28,6 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
-import com.intellij.lang.javascript.psi.util.JSUtils;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -116,9 +115,7 @@ public class JSElementFactory {
         throws IncorrectOperationException {
         final ASTNode    newStatementNode       = JSChangeUtil.createStatementFromText(
           element.getProject(),
-          statementText,
-          JSUtils.getDialect(element.getContainingFile())
-        );
+          statementText);
 
         final ASTNode    oldStatementParentNode = element.getNode();
         final PsiElement parentNode             = element.getParent();
@@ -138,9 +135,7 @@ public class JSElementFactory {
             throws IncorrectOperationException {
         final JSExpression newExpressionNode = JSChangeUtil.createExpressionFromText(
           expression.getProject(),
-          text,
-          JSUtils.getDialect(expression.getContainingFile())
-        );
+          text);
 
         return replaceExpression(expression, newExpressionNode);
     }
@@ -168,9 +163,7 @@ public class JSElementFactory {
         throws IncorrectOperationException {
         final ASTNode    newStatementNode       = JSChangeUtil.createStatementFromText(
           statement.getProject(),
-          text,
-          JSUtils.getDialect(statement.getContainingFile())
-        );
+          text);
 
         final ASTNode    oldStatementParentNode = statement.getNode();
         final PsiElement parentNode             = statement.getParent();
@@ -191,9 +184,7 @@ public class JSElementFactory {
         throws IncorrectOperationException {
         final ASTNode    newStatementNode       = JSChangeUtil.createStatementFromText(
           statement.getProject(),
-          previousStatementText,
-          JSUtils.getDialect(statement.getContainingFile())
-        );
+          previousStatementText);
         final ASTNode    oldStatementParentNode = statement.getNode();
         final PsiElement parentNode             = statement.getParent();
         final ASTNode    newStatementParentNode = parentNode.getNode();
@@ -213,9 +204,7 @@ public class JSElementFactory {
             throws IncorrectOperationException {
         final ASTNode     newStatementNode       = JSChangeUtil.createStatementFromText(
           statement.getProject(),
-          nextStatementText,
-          JSUtils.getDialect(statement.getContainingFile())
-        );
+          nextStatementText);
         final ASTNode     statementNode          = statement.getNode();
         final ASTNode     oldStatementParentNode = ((statementNode == null) ? null : statementNode.getTreeNext());
         final PsiElement  parentNode             = statement.getParent();

@@ -18,6 +18,7 @@ package com.intellij.lang.javascript;
 
 import org.jetbrains.annotations.NonNls;
 import com.intellij.ide.highlighter.XmlFileType;
+import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -36,7 +37,7 @@ public class JavaScriptSupportLoader
 	public static final LanguageFileType JAVASCRIPT = JavaScriptFileType.INSTANCE;
 
 	@Deprecated
-	public static final JSLanguageDialect ECMA_SCRIPT_L4 = new JSLanguageDialect("ECMA4_DEPRECATED");
+	public static final Language ECMA_SCRIPT_L4 = new Language("ECMA4_DEPRECATED") {};
 
 
 	public static final

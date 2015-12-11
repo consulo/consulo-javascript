@@ -23,9 +23,6 @@ import static com.intellij.lang.javascript.JSElementTypes.POSTFIX_EXPRESSION;
 import static com.intellij.lang.javascript.JSElementTypes.PREFIX_EXPRESSION;
 import static com.intellij.lang.javascript.JSTokenTypes.*;
 
-import org.jetbrains.annotations.Nullable;
-import com.intellij.lang.Language;
-import com.intellij.lang.javascript.JSLanguageDialect;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSCallExpression;
 import com.intellij.lang.javascript.psi.JSDefinitionExpression;
@@ -50,18 +47,6 @@ import com.intellij.psi.xml.XmlTagChild;
  */
 public class JSUtils
 {
-
-	@Nullable
-	public static JSLanguageDialect getDialect(@Nullable PsiFile file)
-	{
-		if(file == null)
-		{
-			return null;
-		}
-		final Language language = file.getLanguage();
-		return language instanceof JSLanguageDialect ? (JSLanguageDialect) language : null;
-	}
-
 	public static boolean isLHSExpression(JSExpression expr)
 	{
 		if(expr instanceof JSDefinitionExpression)

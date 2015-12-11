@@ -20,9 +20,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSLanguageDialect;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
-import com.intellij.lang.javascript.psi.util.JSUtils;
 import com.intellij.lang.surroundWith.Surrounder;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -51,8 +49,7 @@ public abstract class JSStatementSurrounder implements Surrounder
 	public TextRange surroundElements(@NotNull Project project, @NotNull Editor editor, @NotNull PsiElement[] elements) throws
 			IncorrectOperationException
 	{
-		final JSLanguageDialect languageDialect = JSUtils.getDialect(elements[0].getContainingFile());
-		ASTNode node = JSChangeUtil.createStatementFromText(project, getStatementTemplate(project, elements[0]), languageDialect);
+		ASTNode node = JSChangeUtil.createStatementFromText(project, getStatementTemplate(project, elements[0]));
 
 		PsiElement container = elements[0].getParent();
 		container.getNode().addChild(node, elements[0].getNode());

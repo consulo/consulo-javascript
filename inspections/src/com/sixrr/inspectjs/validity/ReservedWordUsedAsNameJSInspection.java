@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.lang.javascript.psi.JSProperty;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
-import com.intellij.lang.javascript.psi.util.JSUtils;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
@@ -179,7 +178,7 @@ public class ReservedWordUsedAsNameJSInspection extends JavaScriptInspection
 			final String s = nameElement.getText();
 			if(isReserved(s))
 			{
-				if(!reservedWordExclusionsForECMAScript.contains(s) || JSUtils.getDialect(jsReferenceExpression.getContainingFile()) == null)
+				if(!reservedWordExclusionsForECMAScript.contains(s))
 				{
 					registerError(nameElement);
 				}

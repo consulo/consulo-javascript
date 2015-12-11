@@ -114,7 +114,7 @@ public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSSimpl
 	@Override
 	public PsiLanguageInjectionHost updateText(@NotNull String text)
 	{
-		JSExpression expressionFromText = JSChangeUtil.createExpressionFromText(getProject(), text, null);
+		JSExpression expressionFromText = JSChangeUtil.createExpressionFromText(getProject(), text);
 		return (PsiLanguageInjectionHost) replace(expressionFromText);
 	}
 

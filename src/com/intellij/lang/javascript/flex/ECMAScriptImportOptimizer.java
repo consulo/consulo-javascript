@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.idea.LoggerFactory;
 import com.intellij.lang.ImportOptimizer;
@@ -203,8 +204,7 @@ public class ECMAScriptImportOptimizer implements ImportOptimizer
 						}
 
 						String importBlock = ImportUtils.createImportBlock(project, entry.getSecond());
-						PsiElement newImports = PsiFileFactory.getInstance(project).createFileFromText("dummy." + JavaScriptSupportLoader.ECMA_SCRIPT_L4
-								.getFileExtension(), importBlock);
+						PsiElement newImports = PsiFileFactory.getInstance(project).createFileFromText("dummy.js", JavaScriptLanguage.INSTANCE, importBlock);
 
 						PsiElement firstAdded;
 						if(before)

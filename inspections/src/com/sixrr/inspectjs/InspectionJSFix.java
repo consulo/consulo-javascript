@@ -1,11 +1,13 @@
 package com.sixrr.inspectjs;
 
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import com.intellij.lang.javascript.JSLanguageDialect;
-import com.intellij.lang.javascript.psi.*;
+import com.intellij.lang.javascript.psi.JSExpression;
+import com.intellij.lang.javascript.psi.JSExpressionStatement;
+import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
@@ -14,9 +16,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public abstract class InspectionJSFix implements LocalQuickFix {
     //to appear in "Apply Fix" statement when multiple Quick Fixes exist
@@ -60,8 +59,7 @@ public abstract class InspectionJSFix implements LocalQuickFix {
                                             String newExpression)
             throws IncorrectOperationException {
 
-        final JSLanguageDialect javascript = getLanguageDialect(expression);
-        final ASTNode fromText = JSChangeUtil.createStatementFromText(expression.getProject(), newExpression + ';', javascript);
+        final ASTNode fromText = JSChangeUtil.createStatementFromText(expression.getProject(), newExpression + ';');
         final PsiElement element = fromText != null ? fromText.getPsi() : null;
 
         final JSExpressionStatement expressionStatement = element instanceof JSExpressionStatement ? (JSExpressionStatement) element:null;
@@ -81,8 +79,7 @@ public abstract class InspectionJSFix implements LocalQuickFix {
     protected static void replaceStatement(JSStatement statement,
                                            @NonNls String newStatement)
             throws IncorrectOperationException {
-        final JSLanguageDialect javascript = getLanguageDialect(statement);
-        final ASTNode fromText = JSChangeUtil.createStatementFromText(statement.getProject(), newStatement, javascript);
+        final ASTNode fromText = JSChangeUtil.createStatementFromText(statement.getProject(), newStatement);
         final PsiElement element = fromText != null ? fromText.getPsi() : null;
         final JSStatement newStmt = element instanceof JSStatement ? (JSStatement)element:null;
       
@@ -96,14 +93,6 @@ public abstract class InspectionJSFix implements LocalQuickFix {
         parentNode.replaceChild(statementNode, newStatementNode);
        // final CodeStyleManager styleManager = manager.getCodeStyleManager();
        // styleManager.reformat(newStatementNode.getPsi());
-    }
-
-    private static @Nullable JSLanguageDialect getLanguageDialect(final JSElement statement) {
-        final PsiFile containingFile = statement.getContainingFile();
-        if (!(containingFile instanceof JSFile)) return null;
-        final Language language = containingFile.getLanguage();
-        if (!(language instanceof JSLanguageDialect)) return null;
-        return (JSLanguageDialect)language;
     }
 
     private static boolean isQuickFixOnReadOnlyFile(PsiElement problemElement) {

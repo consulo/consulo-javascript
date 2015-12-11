@@ -614,8 +614,7 @@ public class JSReferenceSet
 		}
 		else if(elt instanceof JSAttributeNameValuePair)
 		{
-			final PsiElement element = JSChangeUtil.createJSTreeFromText(project, "[XXX(" + newLiteralText + ")]",
-					JavaScriptSupportLoader.ECMA_SCRIPT_L4).getPsi();
+			final PsiElement element = JSChangeUtil.createJSTreeFromText(project, "[XXX(" + newLiteralText + ")]").getPsi();
 			expressionFromText = ((JSAttribute) element.getFirstChild()).getValues()[0].getNode();
 		}
 		else

@@ -1343,7 +1343,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 			{
 				return;
 			}
-			final ASTNode fromText = JSChangeUtil.createJSTreeFromText(project, "override class A {}", JSUtils.getDialect(myNode.getContainingFile()));
+			final ASTNode fromText = JSChangeUtil.createJSTreeFromText(project, "override class A {}");
 			final JSAttributeList jsAttributeList = myNode.getAttributeList();
 			final JSAttributeList createdAttrList = ((JSClass) fromText.getPsi()).getAttributeList();
 
@@ -1530,7 +1530,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 			fun += ")" + JSChangeUtil.getSemicolon(project);
 			fun += "\n}";
 
-			jsClass.add(JSChangeUtil.createJSTreeFromText(project, fun, JavaScriptSupportLoader.ECMA_SCRIPT_L4).getPsi());
+			jsClass.add(JSChangeUtil.createJSTreeFromText(project, fun).getPsi());
 		}
 
 		@Override

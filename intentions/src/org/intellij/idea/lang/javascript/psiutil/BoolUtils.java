@@ -24,7 +24,6 @@ import com.intellij.lang.javascript.psi.JSLiteralExpression;
 import com.intellij.lang.javascript.psi.JSParenthesizedExpression;
 import com.intellij.lang.javascript.psi.JSPrefixExpression;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
-import com.intellij.lang.javascript.psi.util.JSUtils;
 import com.intellij.psi.tree.IElementType;
 
 public class BoolUtils {
@@ -108,9 +107,7 @@ public class BoolUtils {
 
             return (JSExpression) JSChangeUtil.createExpressionFromText(
               condition.getProject(),
-              negatedText,
-              JSUtils.getDialect(condition.getContainingFile())
-            );
+              negatedText);
         } else if (condition instanceof JSParenthesizedExpression) {
             return getNegated(((JSParenthesizedExpression) condition).getInnerExpression());
         }

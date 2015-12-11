@@ -27,7 +27,6 @@ import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
-import com.intellij.lang.javascript.psi.util.JSUtils;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
@@ -137,8 +136,7 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention {
             final String  subExpressionText = leftSide.getText() + BinaryOperatorUtils.getOperatorText(sign) +
                                               rhs.getText();
             final JSExpression subExpression     = JSChangeUtil.createExpressionFromText(expression.getProject(),
-                                                                                    subExpressionText,
-                                                                                    JSUtils.getDialect(expression.getContainingFile())                                                                                    );
+                                                                                    subExpressionText);
 
             return (JSBinaryExpression) subExpression;
         } catch (Throwable ignore) {
