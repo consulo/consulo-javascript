@@ -1082,49 +1082,4 @@ public class ExpressionParsing extends Parsing
 			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
 		}
 	}
-
-	public void parseJSON(final PsiBuilder builder)
-	{
-		if(builder.getTokenType() == JSTokenTypes.LBRACKET)
-		{
-			parseArrayLiteralExpression(builder);
-			if(builder.getTokenType() != null)
-			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.eof"));
-			}
-		}
-		else if(builder.getTokenType() == JSTokenTypes.LBRACE)
-		{
-			parseObjectLiteralExpression(builder);
-			if(builder.getTokenType() != null)
-			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.eof"));
-			}
-		}
-		else
-		{
-			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.lbrace.or.lbracket"));
-		}
-
-		while(builder.getTokenType() != null)
-		{
-			builder.advanceLexer();
-		}
-	}
-
-	public void parseScriptExpression(final PsiBuilder builder)
-	{
-		PsiBuilder.Marker root = builder.mark();
-		checkMatches(builder, JSTokenTypes.LBRACE, JavaScriptBundle.message("javascript.parser.message.expected.lbrace"));
-		parseExpression(builder);
-		checkMatches(builder, JSTokenTypes.RBRACE, JavaScriptBundle.message("javascript.parser.message.expected.rbrace"));
-
-		while(!builder.eof())
-		{
-			builder.advanceLexer();
-		}
-
-		root.done(JSElementTypes.EMBEDDED_EXPRESSION);
-	}
-
 }

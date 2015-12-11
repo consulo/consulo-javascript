@@ -21,7 +21,6 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.parsing.ExpressionParsing;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.tree.IElementType;
 
@@ -69,7 +68,7 @@ public class FunctionParsing extends Parsing
 
 		if(isIdentifierToken(builder.getTokenType()))
 		{
-			ExpressionParsing.parseQualifiedTypeName(builder, false);
+			getExpressionParsing().parseQualifiedTypeName(builder, false);
 		}
 		else
 		{
@@ -151,7 +150,7 @@ public class FunctionParsing extends Parsing
 				if(builder.getTokenType() == JSTokenTypes.EQ)
 				{
 					builder.advanceLexer();
-					ExpressionParsing.parseSimpleExpression(builder);
+					getExpressionParsing().parseSimpleExpression(builder);
 				}
 				parameter.done(JSElementTypes.FORMAL_PARAMETER);
 			}

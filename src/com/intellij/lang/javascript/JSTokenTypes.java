@@ -17,12 +17,19 @@
 package com.intellij.lang.javascript;
 
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
+import org.mustbe.consulo.javascript.lang.parsing.JavaScriptParser;
+import org.mustbe.consulo.javascript.lang.parsing.JavaScriptParsingContext;
+import org.mustbe.consulo.javascript.lang.parsing.Parsing;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
+import com.intellij.lang.LanguageParserDefinitions;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilderFactory;
-import com.intellij.lang.javascript.parsing.ExpressionParsing;
 import com.intellij.lang.javascript.parsing.JSDocParsing;
 import com.intellij.lexer.FlexAdapter;
 import com.intellij.lexer.Lexer;
@@ -35,7 +42,7 @@ import com.intellij.psi.tree.ILazyParseableElementType;
 import com.intellij.psi.tree.TokenSet;
 
 /**
- * @by max, maxim.mossienko
+ * @author max, maxim.mossienko
  */
 public interface JSTokenTypes
 {
@@ -54,15 +61,15 @@ public interface JSTokenTypes
 	IElementType DOC_COMMENT = new JSChameleonElementType("DOC_COMMENT")
 	{
 		@Override
-		protected void doParse(final PsiBuilder builder)
+		protected void doParse(JavaScriptParsingContext context, PsiBuilder builder)
 		{
 			JSDocParsing.parseJSDoc(builder);
+
 		}
 
 		@Override
-		protected
 		@Nullable
-		Lexer createLexer()
+		protected Lexer createLexer()
 		{
 			return new MergingLexerAdapter(new FlexAdapter(new _JSDocLexer(false)), JSDocTokenTypes.TOKENS_TO_MERGE);
 		}
@@ -142,9 +149,24 @@ public interface JSTokenTypes
 	IElementType XML_JS_SCRIPT = new JSChameleonElementType("XML_JS_SCRIPT")
 	{
 		@Override
-		protected void doParse(final PsiBuilder builder)
+		protected void doParse(JavaScriptParsingContext context, PsiBuilder builder)
 		{
-			ExpressionParsing.parseScriptExpression(builder);
+			parseScriptExpression(context, builder);
+		}
+
+		public void parseScriptExpression(JavaScriptParsingContext context, final PsiBuilder builder)
+		{
+			PsiBuilder.Marker root = builder.mark();
+			Parsing.checkMatches(builder, JSTokenTypes.LBRACE, JavaScriptBundle.message("javascript.parser.message.expected.lbrace"));
+			context.getExpressionParsing().parseExpression(builder);
+			Parsing.checkMatches(builder, JSTokenTypes.RBRACE, JavaScriptBundle.message("javascript.parser.message.expected.rbrace"));
+
+			while(!builder.eof())
+			{
+				builder.advanceLexer();
+			}
+
+			root.done(JSElementTypes.EMBEDDED_EXPRESSION);
 		}
 	};
 
@@ -152,9 +174,8 @@ public interface JSTokenTypes
 	IElementType XML_ENTITY_REF = new JSElementType("XML_ENTITY_REF");
 	IElementType XML_TAG_WHITE_SPACE = new JSElementType("XML_TAG_WHITESPACE");
 
-	TokenSet XML_TOKENS = TokenSet.create(XML_START_TAG_START, XML_START_TAG_LIST, XML_END_TAG_LIST, XML_END_TAG_START, XML_EMPTY_TAG_END, XML_NAME,
-			XML_TAG_NAME, XML_ATTR_EQUAL, XML_ATTR_VALUE, XML_ATTR_VALUE_START, XML_ATTR_VALUE_END, XML_TAG_END, XML_JS_SCRIPT, XML_TAG_CONTENT,
-			XML_STYLE_COMMENT, XML_ENTITY_REF, XML_TAG_WHITE_SPACE);
+	TokenSet XML_TOKENS = TokenSet.create(XML_START_TAG_START, XML_START_TAG_LIST, XML_END_TAG_LIST, XML_END_TAG_START, XML_EMPTY_TAG_END, XML_NAME, XML_TAG_NAME, XML_ATTR_EQUAL, XML_ATTR_VALUE,
+			XML_ATTR_VALUE_START, XML_ATTR_VALUE_END, XML_TAG_END, XML_JS_SCRIPT, XML_TAG_CONTENT, XML_STYLE_COMMENT, XML_ENTITY_REF, XML_TAG_WHITE_SPACE);
 
 	IElementType JSP_TEXT = new JSElementType("JSP_TEXT");
 	IElementType YIELD_KEYWORD = new JSElementType("YIELD_KEYWORD");
@@ -166,15 +187,13 @@ public interface JSTokenTypes
 	IElementType NULL_KEYWORD = new JSElementType("NULL_KEYWORD");
 	IElementType UNDEFINED_KEYWORD = new JSElementType("UNDEFINED_KEYWORD");
 
-	TokenSet JS_KEYWORDS = TokenSet.create(BREAK_KEYWORD, CASE_KEYWORD, CATCH_KEYWORD, CONST_KEYWORD, CONTINUE_KEYWORD, DELETE_KEYWORD,
-			DEFAULT_KEYWORD, DO_KEYWORD, ELSE_KEYWORD, FINALLY_KEYWORD, FOR_KEYWORD, FUNCTION_KEYWORD, IF_KEYWORD, IN_KEYWORD, INSTANCEOF_KEYWORD,
-			NEW_KEYWORD, RETURN_KEYWORD, SWITCH_KEYWORD, THIS_KEYWORD, THROW_KEYWORD, TRY_KEYWORD, TYPEOF_KEYWORD, VAR_KEYWORD, VOID_KEYWORD, WHILE_KEYWORD,
-			WITH_KEYWORD, TRUE_KEYWORD, FALSE_KEYWORD, NULL_KEYWORD, UNDEFINED_KEYWORD, YIELD_KEYWORD, LET_KEYWORD);
+	TokenSet JS_KEYWORDS = TokenSet.create(BREAK_KEYWORD, CASE_KEYWORD, CATCH_KEYWORD, CONST_KEYWORD, CONTINUE_KEYWORD, DELETE_KEYWORD, DEFAULT_KEYWORD, DO_KEYWORD, ELSE_KEYWORD, FINALLY_KEYWORD,
+			FOR_KEYWORD, FUNCTION_KEYWORD, IF_KEYWORD, IN_KEYWORD, INSTANCEOF_KEYWORD, NEW_KEYWORD, RETURN_KEYWORD, SWITCH_KEYWORD, THIS_KEYWORD, THROW_KEYWORD, TRY_KEYWORD, TYPEOF_KEYWORD,
+			VAR_KEYWORD, VOID_KEYWORD, WHILE_KEYWORD, WITH_KEYWORD, TRUE_KEYWORD, FALSE_KEYWORD, NULL_KEYWORD, UNDEFINED_KEYWORD, YIELD_KEYWORD, LET_KEYWORD);
 
-	TokenSet JS2_KEYWORDS = TokenSet.create(PACKAGE_KEYWORD, PROTECTED_KEYWORD, INTERNAL_KEYWORD, DYNAMIC_KEYWORD, FINAL_KEYWORD, NATIVE_KEYWORD,
-			PRIVATE_KEYWORD, PUBLIC_KEYWORD, VIRTUAL_KEYWORD, STATIC_KEYWORD, PUBLIC_KEYWORD, CLASS_KEYWORD, INTERFACE_KEYWORD, EXTENDS_KEYWORD,
-			IMPLEMENTS_KEYWORD, IMPORT_KEYWORD, USE_KEYWORD, NAMESPACE_KEYWORD, OVERRIDE_KEYWORD, INCLUDE_KEYWORD, SUPER_KEYWORD, IS_KEYWORD, AS_KEYWORD,
-			GET_KEYWORD, SET_KEYWORD, EACH_KEYWORD, INT_KEYWORD, UINT_KEYWORD);
+	TokenSet JS2_KEYWORDS = TokenSet.create(PACKAGE_KEYWORD, PROTECTED_KEYWORD, INTERNAL_KEYWORD, DYNAMIC_KEYWORD, FINAL_KEYWORD, NATIVE_KEYWORD, PRIVATE_KEYWORD, PUBLIC_KEYWORD, VIRTUAL_KEYWORD,
+			STATIC_KEYWORD, PUBLIC_KEYWORD, CLASS_KEYWORD, INTERFACE_KEYWORD, EXTENDS_KEYWORD, IMPLEMENTS_KEYWORD, IMPORT_KEYWORD, USE_KEYWORD, NAMESPACE_KEYWORD, OVERRIDE_KEYWORD, INCLUDE_KEYWORD,
+			SUPER_KEYWORD, IS_KEYWORD, AS_KEYWORD, GET_KEYWORD, SET_KEYWORD, EACH_KEYWORD, INT_KEYWORD, UINT_KEYWORD);
 
 	TokenSet KEYWORDS = TokenSet.orSet(JS_KEYWORDS, JS2_KEYWORDS);
 
@@ -245,9 +264,8 @@ public interface JSTokenTypes
 	IElementType CDATA_END = new JSElementType("CDATA_END"); // ]]>
 	IElementType JSDOC_TAG_DATA = new JSElementType("JSDOC_TAG_DATA");
 
-	TokenSet OPERATIONS = TokenSet.create(LT, GT, LE, GE, EQEQ, NE, EQEQEQ, NEQEQ, PLUS, MINUS, MULT, PERC, PLUSPLUS, MINUSMINUS, LTLT, GTGT, GTGTGT,
-			AND, OR, XOR, EXCL, TILDE, ANDAND, OROR, QUEST, COLON, EQ, PLUSEQ, MINUSEQ, MULTEQ, PERCEQ, LTLTEQ, GTGTEQ, GTGTGTEQ, ANDEQ, OREQ, XOREQ, DIV,
-			DIVEQ, COMMA, IS_KEYWORD, AS_KEYWORD);
+	TokenSet OPERATIONS = TokenSet.create(LT, GT, LE, GE, EQEQ, NE, EQEQEQ, NEQEQ, PLUS, MINUS, MULT, PERC, PLUSPLUS, MINUSMINUS, LTLT, GTGT, GTGTGT, AND, OR, XOR, EXCL, TILDE, ANDAND, OROR, QUEST,
+			COLON, EQ, PLUSEQ, MINUSEQ, MULTEQ, PERCEQ, LTLTEQ, GTGTEQ, GTGTGTEQ, ANDEQ, OREQ, XOREQ, DIV, DIVEQ, COMMA, IS_KEYWORD, AS_KEYWORD);
 
 	TokenSet ASSOC_OPERATIONS = TokenSet.create(PLUS, MULT, AND, OR, XOR, OROR, ANDAND);
 
@@ -266,38 +284,39 @@ public interface JSTokenTypes
 
 	TokenSet UNARY_OPERATIONS = TokenSet.create(PLUS, MINUS, PLUSPLUS, MINUSMINUS, TILDE, EXCL, TYPEOF_KEYWORD, VOID_KEYWORD, DELETE_KEYWORD);
 
-	TokenSet COMMENTS = TokenSet.create(END_OF_LINE_COMMENT, DOC_COMMENT, C_STYLE_COMMENT, XML_STYLE_COMMENT, CDATA_START, CDATA_END,
-			XML_STYLE_COMMENT_START, JavaScriptHighlightingLexer.getTagContentTokenType(), XML_TAG_WHITE_SPACE, JSP_TEXT, JSDOC_TAG_DATA);
+	TokenSet COMMENTS = TokenSet.create(END_OF_LINE_COMMENT, DOC_COMMENT, C_STYLE_COMMENT, XML_STYLE_COMMENT, CDATA_START, CDATA_END, XML_STYLE_COMMENT_START,
+			JavaScriptHighlightingLexer.getTagContentTokenType(), XML_TAG_WHITE_SPACE, JSP_TEXT, JSDOC_TAG_DATA);
 
-	TokenSet MODIFIERS = TokenSet.create(PUBLIC_KEYWORD, STATIC_KEYWORD, OVERRIDE_KEYWORD, PROTECTED_KEYWORD, PRIVATE_KEYWORD, INTERNAL_KEYWORD,
-			DYNAMIC_KEYWORD, FINAL_KEYWORD, NATIVE_KEYWORD, VIRTUAL_KEYWORD);
+	TokenSet MODIFIERS = TokenSet.create(PUBLIC_KEYWORD, STATIC_KEYWORD, OVERRIDE_KEYWORD, PROTECTED_KEYWORD, PRIVATE_KEYWORD, INTERNAL_KEYWORD, DYNAMIC_KEYWORD, FINAL_KEYWORD, NATIVE_KEYWORD,
+			VIRTUAL_KEYWORD);
 
 	TokenSet ACCESS_MODIFIERS = TokenSet.create(PUBLIC_KEYWORD, PROTECTED_KEYWORD, PRIVATE_KEYWORD, INTERNAL_KEYWORD);
 
-	TokenSet IDENTIFIER_TOKENS_SET = TokenSet.create(IDENTIFIER, NAMESPACE_KEYWORD, EACH_KEYWORD, GET_KEYWORD, SET_KEYWORD, GWT_FIELD_OR_METHOD,
-			INT_KEYWORD, UINT_KEYWORD, UNDEFINED_KEYWORD, INCLUDE_KEYWORD, DYNAMIC_KEYWORD, FINAL_KEYWORD, NATIVE_KEYWORD, OVERRIDE_KEYWORD, STATIC_KEYWORD,
-			LET_KEYWORD, YIELD_KEYWORD, VIRTUAL_KEYWORD, INTERNAL_KEYWORD);
+	TokenSet IDENTIFIER_TOKENS_SET = TokenSet.create(IDENTIFIER, NAMESPACE_KEYWORD, EACH_KEYWORD, GET_KEYWORD, SET_KEYWORD, GWT_FIELD_OR_METHOD, INT_KEYWORD, UINT_KEYWORD, UNDEFINED_KEYWORD,
+			INCLUDE_KEYWORD, DYNAMIC_KEYWORD, FINAL_KEYWORD, NATIVE_KEYWORD, OVERRIDE_KEYWORD, STATIC_KEYWORD, LET_KEYWORD, YIELD_KEYWORD, VIRTUAL_KEYWORD, INTERNAL_KEYWORD);
 
 	abstract class JSChameleonElementType extends ILazyParseableElementType
 	{
 		public JSChameleonElementType(@NonNls String name)
 		{
-			super(name, JavaScriptSupportLoader.JAVASCRIPT.getLanguage());
+			super(name, JavaScriptLanguage.INSTANCE);
 		}
 
-		protected abstract void doParse(PsiBuilder builder);
+		protected abstract void doParse(JavaScriptParsingContext context, PsiBuilder builder);
 
 		@Override
-		public ASTNode parseContents(final ASTNode chameleon)
+		@RequiredReadAction
+		protected ASTNode doParseContents(@NotNull ASTNode chameleon, @NotNull PsiElement psi)
 		{
-			final PsiElement parentElement = chameleon.getTreeParent().getPsi();
-			final Project project = parentElement.getProject();
-			final PsiBuilderFactory factory = PsiBuilderFactory.getInstance();
+			final Project project = psi.getProject();
+			final Language languageForParser = getLanguageForParser(psi);
+			final LanguageVersion tempLanguageVersion = chameleon.getUserData(LanguageVersion.KEY);
+			final LanguageVersion languageVersion = tempLanguageVersion == null ? psi.getLanguageVersion() : tempLanguageVersion;
+			final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, chameleon, createLexer(), languageForParser, languageVersion, chameleon.getChars());
+			final JavaScriptParser parser = (JavaScriptParser) LanguageParserDefinitions.INSTANCE.forLanguage(languageForParser).createParser(project, languageVersion);
 
-			final Language language = parentElement.getContainingFile().getLanguage();
-			final PsiBuilder builder = factory.createBuilder(project, chameleon, createLexer(), language, language.getVersions()[0], chameleon.getText());
-
-			doParse(builder);
+			JavaScriptParsingContext parsingContext = parser.createParsingContext();
+			doParse(parsingContext, builder);
 			return builder.getTreeBuilt();
 		}
 
