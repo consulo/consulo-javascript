@@ -376,8 +376,7 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 
 			if(context != null)
 			{
-				element = scriptIndex.findSymbolWithNameAndOffsetInEntry(((JSNamedElement) editorElement).getName(), offset,
-						scriptIndex.getEntryForFile(containingFile));
+				element = scriptIndex.findSymbolWithNameAndOffsetInEntry(((JSNamedElement) editorElement).getName(), offset);
 			}
 			else
 			{

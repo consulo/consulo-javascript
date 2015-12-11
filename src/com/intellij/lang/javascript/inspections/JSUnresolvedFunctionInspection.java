@@ -37,7 +37,6 @@ import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.flex.AddImportECMAScriptClassOrFunctionAction;
 import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.lang.javascript.psi.impl.JSPackageWrapper;
 import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.util.JSUtils;
@@ -422,10 +421,6 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 				if(results.length != 0)
 				{
 					PsiElement resultElement = results[0].getElement();
-					if(resultElement instanceof JSPackageWrapper)
-					{
-						return ProblemHighlightType.ERROR;
-					}
 					String type = null;
 
 					if(resultElement instanceof JSVariable)

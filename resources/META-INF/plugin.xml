@@ -48,7 +48,6 @@
 
 		<lang.parserDefinition language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScriptParsingDefinition"/>
 
-		<fileBasedIndex implementation="com.intellij.lang.javascript.index.JSPackageIndex"/>
 		<annotator language="JavaScript" implementationClass="com.intellij.lang.javascript.validation.JSAnnotatingVisitor"/>
 		<readWriteAccessDetector implementation="com.intellij.lang.javascript.findUsages.JSReadWriteAccessDetector"/>
 		<lang.refactoringSupport language="JavaScript"

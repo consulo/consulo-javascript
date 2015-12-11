@@ -21,11 +21,9 @@ import gnu.trove.THashSet;
 
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,17 +40,11 @@ import com.intellij.codeInsight.daemon.LineMarkerProvider;
 import com.intellij.codeInsight.daemon.impl.PsiElementListNavigator;
 import com.intellij.codeInsight.navigation.NavigationUtil;
 import com.intellij.ide.util.DefaultPsiElementCellRenderer;
-import com.intellij.lang.javascript.index.JSNamedElementProxy;
-import com.intellij.lang.javascript.index.JSNamespace;
-import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
-import com.intellij.lang.javascript.index.JavaScriptIndex;
-import com.intellij.lang.javascript.index.JavaScriptSymbolProcessor;
 import com.intellij.lang.javascript.psi.JSAttributeList;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSFunctionExpression;
-import com.intellij.lang.javascript.psi.JSProperty;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import com.intellij.lang.javascript.search.JSClassSearch;
@@ -60,13 +52,11 @@ import com.intellij.lang.javascript.search.JSFunctionsSearch;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.NavigatablePsiElement;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.CollectionQuery;
 import com.intellij.util.Function;
@@ -183,28 +173,6 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 		if(qName != null)
 		{
 			final ArrayList<JSFunction> result = new ArrayList<JSFunction>();
-			MyNamespaceProcessor namespaceProcessor = new MyNamespaceProcessor(new THashSet<JSFunction>(Arrays.asList(elt)))
-			{
-				@Override
-				protected boolean doProcess(PsiElement elt)
-				{
-					if(elt instanceof JSNamedElementProxy)
-					{
-						elt = ((JSNamedElementProxy) elt).getElement();
-					}
-					if(elt instanceof JSProperty)
-					{
-						elt = ((JSProperty) elt).getValue();
-					}
-					if(!(elt instanceof JSFunction))
-					{
-						return true; // TODO: override can be caused by definitions, that generate classes
-					}
-					result.add((JSFunction) elt);
-					return true;
-				}
-			};
-			namespaceProcessor.processDescendantsOf(qName, elt.getProject());
 
 			return new CollectionQuery<JSFunction>(result);
 		}
@@ -377,24 +345,6 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 					jsMethodsToProcess.put(clazz, null);
 				}
 			}
-		}
-
-		for(Map.Entry<String, Set<JSFunction>> entry : jsFunctionsToProcess.entrySet())
-		{
-			ProgressManager.getInstance().checkCanceled();
-
-			MyNamespaceProcessor processor = new MyNamespaceProcessor(entry.getValue())
-			{
-				@Override
-				protected boolean doProcess(final PsiElement elt)
-				{
-					function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
-					result.add(new LineMarkerInfo<JSFunction>(function, function.getTextOffset(), OVERRIDDEN_ICON, Pass.UPDATE_OVERRIDEN_MARKERS,
-							ourOverriddenFunctionsTooltipProvider, ourOverriddenFunctionsNavHandler));
-					return false;
-				}
-			};
-			processor.processDescendantsOf(entry.getKey(), elements.get(0).getProject());
 		}
 
 		for(Map.Entry<JSClass, Set<JSFunction>> entry : jsMethodsToProcess.entrySet())
@@ -602,96 +552,5 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 
 		@Nullable
 		protected abstract Query<T> search(T elt);
-	}
-
-	private abstract static class MyNamespaceProcessor extends JavaScriptSymbolProcessor.DefaultSymbolProcessor implements JSTypeEvaluateManager
-			.NamespaceProcessor
-	{
-		private final Set<JSFunction> myFunctions;
-		private LinkedList<String> myDescendants = new LinkedList<String>();
-		private final Set<String> myProcessed = new THashSet<String>();
-		protected JSFunction function;
-		private String myDescendantNameId;
-
-		public MyNamespaceProcessor(Set<JSFunction> functions)
-		{
-			myFunctions = functions;
-		}
-
-		@Override
-		public boolean process(final JSNamespace superNs)
-		{
-			JavaScriptIndex index = JavaScriptIndex.getInstance(myFunctions.iterator().next().getProject());
-
-			String qName = superNs.getQualifiedName(index);
-			if(myProcessed.contains(qName))
-			{
-				return true;
-			}
-			myProcessed.add(qName);
-
-			myDescendants.add(qName);
-			boolean result = false;
-			Iterator<JSFunction> functionIterator = myFunctions.iterator();
-
-			while(functionIterator.hasNext())
-			{
-				function = functionIterator.next();
-				JSNamespace ns = superNs;
-				final String funName = function.getName();
-
-				if(function instanceof JSFunctionExpression && funName != null && funName.length() > 0 && (Character.isLowerCase(funName.charAt(0)) || '_' ==
-						funName.charAt(0)))
-				{
-					myDescendantNameId = funName;
-				}
-				else
-				{
-					ns = ns.getParent();
-					myDescendantNameId = superNs.getNameId();
-				}
-
-				final boolean b = ns.processDeclarations(this);
-				if(!b)
-				{
-					functionIterator.remove();
-				}
-				result |= b;
-			}
-
-			return result;
-		}
-
-		@Override
-		protected boolean process(PsiElement namedElement, final JSNamespace namespace)
-		{
-			return doProcess(namedElement);
-		}
-
-		protected abstract boolean doProcess(final PsiElement elt);
-
-		@Override
-		public PsiFile getBaseFile()
-		{
-			return null;
-		}
-
-		@Override
-		public String getRequiredNameId()
-		{
-			return myDescendantNameId;
-		}
-
-		public void processDescendantsOf(String qName, Project project)
-		{
-			ProgressManager.checkCanceled();
-			boolean b = JSTypeEvaluateManager.getInstance(project).iterateSubclasses(qName, this);
-
-			while(b && myDescendants.size() > 0)
-			{
-				ProgressManager.checkCanceled();
-				b = JSTypeEvaluateManager.getInstance(project).iterateSubclasses(myDescendants.removeFirst(), this);
-			}
-		}
 	}
 }

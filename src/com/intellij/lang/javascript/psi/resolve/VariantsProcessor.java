@@ -24,21 +24,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.Icon;
-
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.extapi.psi.PsiElementBase;
-import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.index.JSNamedElementProxy;
-import com.intellij.lang.javascript.index.JSNamespace;
-import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSElementImpl;
 import com.intellij.lang.javascript.psi.util.JSLookupUtil;
@@ -125,7 +120,6 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 					}
 				}
 
-				myIndex.getDefaultPackage(); // ensure index is up to date
 				final CompletionTypeProcessor processor = new CompletionTypeProcessor(possibleNameComponents);
 				doEvalForExpr(getOriginalQualifier(qualifier), myTargetFile, processor);
 				allTypesResolved = processor.getAllTypesResolved();
@@ -195,14 +189,6 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			doIterateTypeHierarchy(nameIds, new HierarchyProcessor()
 			{
 				@Override
-				public boolean processNamespace(final JSNamespace ns)
-				{
-					updateCanUseOnlyCompleteMatchesFromNs(ns);
-					possibleNameComponents.add(ns.getIndices());
-					return true;
-				}
-
-				@Override
 				public boolean processClass(final JSClass clazz)
 				{
 					updateCanUseOnlyCompleteMatchesFromString(clazz.getQualifiedName(), clazz, clazz);
@@ -218,10 +204,6 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 		hasSomeSmartnessAvailable = myNameIdsArray != null && myNameIdsArray.length > 0;
 	}
 
-	private void updateCanUseOnlyCompleteMatchesFromNs(final JSNamespace ns)
-	{
-		updateCanUseOnlyCompleteMatchesFromString(ns.getQualifiedName(myIndex), ns, null);
-	}
 
 	private void updateCanUseOnlyCompleteMatchesFromString(final String qName, Object source, PsiElement clazz)
 	{
@@ -380,19 +362,6 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 		doIterateHierarchy(type, new HierarchyProcessor()
 		{
 			@Override
-			public boolean processNamespace(final JSNamespace ns)
-			{
-				final String qname = ns.getQualifiedName(myIndex);
-				if(!context.visitedTypes.contains(qname))
-				{
-					context.visitedTypes.add(qname);
-					updateCanUseOnlyCompleteMatchesFromString(qname, ns, null);
-					possibleNameIds.add(ns.getIndices());
-				}
-				return true;
-			}
-
-			@Override
 			public boolean processClass(final JSClass clazz)
 			{
 				String qname = clazz.getQualifiedName();
@@ -455,64 +424,64 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 	}
 
 	@Override
-	public boolean processFunction(JSNamespace namespace, final String nameId, JSNamedElement function)
+	public boolean processFunction(final String nameId, JSNamedElement function)
 	{
 		if(myCurrentFile != myTargetFile ||
 				myDefinitelyGlobalReference ||
-				((function instanceof JSNamedElementProxy && (((JSNamedElementProxy) function).getType() != JSNamedElementProxy.NamedItemType.Function || !isGlobalNS(namespace))) || function
+				((function instanceof JSNamedElementProxy && (((JSNamedElementProxy) function).getType() != JSNamedElementProxy.NamedItemType.Function)) || function
 						instanceof JSFunctionExpression))
 		{
-			doAdd(namespace, nameId, function);
+			doAdd(nameId, function);
 		}
 		return true;
 	}
 
 	@Override
-	public boolean processClass(final JSNamespace namespace, final String nameId, final JSNamedElement clazz)
+	public boolean processClass(final String nameId, final JSNamedElement clazz)
 	{
-		doAdd(namespace, nameId, clazz);
+		doAdd(nameId, clazz);
 		return true;
 	}
 
 	@Override
-	public boolean processProperty(JSNamespace namespace, final String nameId, JSNamedElement property)
+	public boolean processProperty(final String nameId, JSNamedElement property)
 	{
-		doAdd(namespace, nameId, property);
+		doAdd(nameId, property);
 		return true;
 	}
 
 	@Override
-	public boolean processDefinition(final JSNamespace namespace, final String nameId, final JSNamedElement refExpr)
+	public boolean processDefinition(final String nameId, final JSNamedElement refExpr)
 	{
-		doAdd(namespace, nameId, refExpr);
+		doAdd(nameId, refExpr);
 		return true;
 	}
 
 	@Override
-	public boolean processNamespace(final JSNamespace namespace, final String nameId, final JSNamedElement refExpr)
+	public boolean processNamespace(final String nameId, final JSNamedElement refExpr)
 	{
-		doAdd(namespace, nameId, refExpr);
+		doAdd(nameId, refExpr);
 		return true;
 	}
 
 	@Override
-	public boolean processImplicitNamespace(final JSNamespace namespace, final String nameId, final PsiElement refExpr, boolean finalReference)
+	public boolean processImplicitNamespace(final String nameId, final PsiElement refExpr, boolean finalReference)
 	{
-		doAdd(namespace, nameId, refExpr);
+		doAdd(nameId, refExpr);
 		return true;
 	}
 
 	@Override
-	public boolean processImplicitFunction(final JSNamespace namespace, final String nameId, final PsiElement refExpr)
+	public boolean processImplicitFunction(final String nameId, final PsiElement refExpr)
 	{
-		doAdd(namespace, nameId, refExpr);
+		doAdd(nameId, refExpr);
 		return true;
 	}
 
 	@Override
-	public boolean processImplicitVariable(final JSNamespace namespace, final String nameId, final PsiElement refExpr)
+	public boolean processImplicitVariable(final String nameId, final PsiElement refExpr)
 	{
-		doAdd(namespace, nameId, refExpr);
+		doAdd(nameId, refExpr);
 		return true;
 	}
 
@@ -523,20 +492,20 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 	}
 
 	@Override
-	public boolean processTag(JSNamespace namespace, final String nameId, PsiNamedElement namedElement, final String attrName)
+	public boolean processTag(final String nameId, PsiNamedElement namedElement, final String attrName)
 	{
-		doAdd(namespace, nameId, namedElement);
+		doAdd(nameId, namedElement);
 		return true;
 	}
 
 	@Override
-	public boolean processVariable(JSNamespace namespace, final String nameId, JSNamedElement variable)
+	public boolean processVariable(final String nameId, JSNamedElement variable)
 	{
 		if(myCurrentFile != myTargetFile ||
 				myDefinitelyGlobalReference ||
 				(variable instanceof JSNamedElementProxy && ((JSNamedElementProxy) variable).getType() == JSNamedElementProxy.NamedItemType.MemberVariable))
 		{
-			doAdd(namespace, nameId, variable);
+			doAdd(nameId, variable);
 		}
 		return true;
 	}
@@ -547,7 +516,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 		return myTargetFile;
 	}
 
-	private void doAdd(JSNamespace namespace, final String nameId, final PsiElement element)
+	private void doAdd(final String nameId, final PsiElement element)
 	{
 		final String name = nameId != null ? nameId : null;
 
@@ -562,7 +531,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 				return;
 			}
 
-			if(myContextNameIds == null || myContextNameIds.length == 0 || myContextNameIds[myContextNameIds.length - 1].equals(namespace.getNameId()))
+			if(myContextNameIds == null || myContextNameIds.length == 0 )
 			{
 				privateSymbol = false;
 			}
@@ -614,7 +583,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			}
 		}
 
-		MatchType matchType = isAcceptableQualifiedItem(namespace, type);
+		MatchType matchType = isAcceptableQualifiedItem(type);
 
 		if(matchType == MatchType.COMPLETE && !ecmal4 && myProcessOnlyTypes)
 		{
@@ -628,14 +597,6 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 		{
 			addPartialMatch(element, nameId);
 
-			if(!ecmal4 &&
-					namespace.getNameId() != null &&
-					!myNames2CandidatesMap.containsKey(namespace.getNameId()) &&
-					isAcceptableNS(namespace) == MatchType.COMPLETE_NS &&
-					namespace.getNameId().length() > 0)
-			{
-				addCompleteMatch(namespace, namespace.getNameId());
-			}
 		}
 		else if(matchType == MatchType.COMPLETE)
 		{
@@ -758,7 +719,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 		}
 		else
 		{
-			element = new MyElementWrapper((JSNamespace) _element, myCurrentFile, 0);
+			throw new UnsupportedOperationException();
 		}
 		return element;
 	}
@@ -813,7 +774,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 		}
 	}
 
-	private MatchType isAcceptableQualifiedItem(JSNamespace namespace, final JSNamedElementProxy.NamedItemType type)
+	private MatchType isAcceptableQualifiedItem(final JSNamedElementProxy.NamedItemType type)
 	{
 		if(myProcessOnlyTypes && ecmal4)
 		{
@@ -822,116 +783,17 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 
 		if(!hasSomeInfoAvailable || myDefinitelyGlobalReference)
 		{
-			return isGlobalNS(namespace) || (ecmal4 && (type == JSNamedElementProxy.NamedItemType.Variable ||
+			return (ecmal4 && (type == JSNamedElementProxy.NamedItemType.Variable ||
 					type == JSNamedElementProxy.NamedItemType.Function ||
 					type == JSNamedElementProxy.NamedItemType.Clazz)) ? MatchType.COMPLETE : (myDefinitelyGlobalReference ? MatchType.NOMATCH : MatchType.PARTIAL);
-		}
-
-		if(namespace.getParent() == null)
-		{
-			return MatchType.NOMATCH;
-		}
-
-		for(String[] myNameComponents : myNameIdsArray)
-		{
-			boolean completeMatch = true;
-			JSNamespace currentNs = namespace;
-			int i;
-
-			for(i = myNameComponents.length - 1; i >= 0; --i)
-			{
-				if(myNameComponents[i].equals(currentNs.getNameId()))
-				{
-					currentNs = currentNs.getParent();
-					if(currentNs != null)
-					{
-						continue;
-					}
-				}
-				completeMatch = false;
-				break;
-			}
-
-			if(completeMatch && currentNs != namespace)
-			{
-				if(myAddOnlyCompleteMatches && (i >= 0 || currentNs.getNameId() != null))
-				{
-					return MatchType.PARTIAL;
-				}
-				return MatchType.COMPLETE;
-			}
 		}
 
 		return MatchType.PARTIAL;
 	}
 
-	private MatchType isAcceptableNS(JSNamespace namespace)
-	{
-		boolean completeMatch = false;
-		JSNamespace currentNs = namespace;
-
-		while(true)
-		{
-			final JSNamespace newParentCandidate = currentNs.getParent();
-			if(newParentCandidate == null)
-			{
-				break;
-			}
-			if(newParentCandidate.getNameId() == null)
-			{
-				break;
-			}
-			currentNs = newParentCandidate;
-		}
-
-		if(myContextNameIds == null || myContextNameIds.length == 0)
-		{
-			return MatchType.COMPLETE_NS;
-		}
-		if(currentNs == namespace)
-		{
-			return MatchType.NOMATCH;
-		}
-
-		for(int i = 0; i < myContextNameIds.length; ++i)
-		{
-			if(myContextNameIds[i].equals(currentNs.getNameId()))
-			{
-				if(i + 1 < myContextNameIds.length)
-				{
-					currentNs = currentNs.findChildNamespace(myContextNameIds[i + 1]);
-					if(currentNs == null)
-					{
-						break;
-					}
-					if(currentNs == namespace)
-					{
-						break;
-					}
-				}
-				else
-				{
-					completeMatch = namespace.getParent() == currentNs;
-					break;
-				}
-			}
-			else
-			{
-				break;
-			}
-		}
-
-		if(completeMatch)
-		{
-			return MatchType.COMPLETE_NS;
-		}
-
-		return MatchType.NOMATCH;
-	}
 
 	public static class MyElementWrapper extends PsiElementBase implements JSNamedElement
 	{
-		private final JSNamespace myJsNamespace;
 		private final String myArtificialName;
 		private final JSNamedElementProxy myProxy;
 		private int myOffset;
@@ -955,18 +817,8 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			return myOffset;
 		}
 
-		public MyElementWrapper(final JSNamespace jsNamespace, PsiFile file, int offset)
-		{
-			myJsNamespace = jsNamespace;
-			myProxy = null;
-			myOffset = offset;
-			myCurrentFile = file;
-			myArtificialName = null;
-		}
-
 		public MyElementWrapper(final String name, PsiFile file, int offset)
 		{
-			myJsNamespace = null;
 			myProxy = null;
 			myOffset = offset;
 			myCurrentFile = file;
@@ -976,7 +828,6 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 		public MyElementWrapper(JSNamedElementProxy _proxy)
 		{
 			myProxy = _proxy;
-			myJsNamespace = null;
 			myArtificialName = null;
 		}
 
@@ -1085,7 +936,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			{
 				return myArtificialName;
 			}
-			return myJsNamespace != null ? myJsNamespace.getNameId() : myProxy.getNameId();
+			return myProxy.getNameId();
 		}
 
 		@RequiredReadAction
@@ -1141,31 +992,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			{
 				return null;
 			}
-			return myJsNamespace != null ? new ItemPresentation()
-			{
-				final JavaScriptIndex myIndex = JavaScriptIndex.getInstance(getProject());
-
-				@Override
-				public String getPresentableText()
-				{
-					return myJsNamespace.getQualifiedName(myIndex);
-				}
-
-				@Override
-				@Nullable
-				public String getLocationString()
-				{
-					return myJsNamespace.getParent().getQualifiedName(myIndex);
-				}
-
-				@Override
-				@Nullable
-				@RequiredReadAction
-				public Icon getIcon(final boolean open)
-				{
-					return AllIcons.Nodes.Class;
-				}
-			} : myProxy.getPresentation();
+			return myProxy.getPresentation();
 		}
 
 		public JSNamedElementProxy getProxy()
@@ -1176,11 +1003,6 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 		public String getArtificialName()
 		{
 			return myArtificialName;
-		}
-
-		public JSNamespace getNamespace()
-		{
-			return myJsNamespace;
 		}
 
 		@Override

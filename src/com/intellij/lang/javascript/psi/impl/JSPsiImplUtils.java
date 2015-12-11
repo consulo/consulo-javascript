@@ -31,7 +31,6 @@ import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
-import com.intellij.lang.javascript.index.JSPackageIndex;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.openapi.project.Project;
@@ -429,7 +428,7 @@ public class JSPsiImplUtils
 				}
 			}
 
-			qName = JSPackageIndex.buildQualifiedName(packageName, newName);
+			qName = packageName.isEmpty() ? newName : packageName + "." + newName;
 		}
 		else if(elementToBind instanceof PsiDirectoryContainer)
 		{

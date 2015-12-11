@@ -32,33 +32,24 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
-import com.intellij.extapi.psi.PsiElementBase;
 import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.javascript.documentation.JSDocumentationProvider;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.flex.JSResolveHelper;
 import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
 import com.intellij.lang.javascript.index.JSNamedElementProxy;
-import com.intellij.lang.javascript.index.JSNamespace;
-import com.intellij.lang.javascript.index.JSPackage;
-import com.intellij.lang.javascript.index.JSPackageIndex;
-import com.intellij.lang.javascript.index.JSPackageIndexInfo;
 import com.intellij.lang.javascript.index.JSSymbolUtil;
 import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
-import com.intellij.lang.javascript.index.JavaScriptSymbolProcessor;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import com.intellij.lang.javascript.psi.impl.JSFileImpl;
-import com.intellij.lang.javascript.psi.impl.JSPackageWrapper;
 import com.intellij.lang.javascript.psi.impl.JSReferenceExpressionImpl;
 import com.intellij.lang.javascript.psi.impl.JSStubElementImpl;
 import com.intellij.lang.javascript.psi.stubs.JSVariableStubBase;
@@ -71,7 +62,6 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.UserDataCache;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -666,22 +656,6 @@ public class JSResolveUtil
 		return jsParameters[0].getTypeString();
 	}
 
-	public static boolean processTopPackages(final ResolveProcessor processor, final ResolveState state, final Project project, final GlobalSearchScope scope)
-	{
-		return JSPackageIndex.processElementsInScope("", processor.getName(), new JSPackageIndex.PackageElementsProcessor()
-		{
-			@Override
-			public boolean process(VirtualFile file, String name, JSPackageIndexInfo.Kind kind)
-			{
-				if(kind != JSPackageIndexInfo.Kind.PACKAGE)
-				{
-					return true;
-				}
-				return processor.execute(new JSPackageWrapper(name, project, scope), state);
-			}
-		}, scope, project);
-	}
-
 	public static boolean shouldProcessTopLevelGlobalContext(@NotNull PsiElement place, @NotNull PsiScopeProcessor processor)
 	{
 		PsiElement placeParent = null;
@@ -895,7 +869,7 @@ public class JSResolveUtil
 
 		if(shouldProcessTopLevelGlobalContext(place, processor))
 		{
-			result = processTopPackages((ResolveProcessor) processor, state, project, scope);
+			//result = processTopPackages((ResolveProcessor) processor, state, project, scope);
 		}
 
 		if(result)
@@ -1823,235 +1797,13 @@ public class JSResolveUtil
 		return null;
 	}
 
-	public static JSPackage findPackageByText(final String str, final JavaScriptIndex index)
-	{
-		final PsiElement element = doFindPackage(str, JavaScriptIndex.getInstance(index.getProject()), null);
-		if(element instanceof MyPackageWrapper)
-		{
-			return ((MyPackageWrapper) element).myPackage;
-		}
-		return null;
-	}
-
-	private static PsiElement doFindPackage(final String qName, final JavaScriptIndex index, @Nullable Module module)
-	{
-		JSPackage jsPackage;
-
-		synchronized(index)
-		{
-			final PsiElement element = index.recallPackageElement(qName);
-			if(element != null)
-			{
-				return element;
-			}
-
-			jsPackage = index.getDefaultPackage();
-			StringTokenizer tokenizer = new StringTokenizer(qName, ".");
-
-			while(tokenizer.hasMoreElements())
-			{
-				String nextElement = tokenizer.nextElement();
-				if(nextElement != null)
-				{
-					jsPackage = jsPackage.findPackageWithNameId(nextElement);
-				}
-
-				if(jsPackage == null || nextElement == null)
-				{
-					jsPackage = null;
-					break;
-				}
-			}
-
-			final PsiElement myWrapper = jsPackage != null ? new MyPackageWrapper(jsPackage, index.getProject()) : null;
-			if(myWrapper != null)
-			{
-				index.rememberPackageElement(qName, myWrapper);
-			}
-			return myWrapper;
-		}
-	}
-
-	public static class MyPackageWrapper extends PsiElementBase implements JSNamedElement
-	{
-		final JSPackage myPackage;
-		final private Project project;
-
-		MyPackageWrapper(JSPackage _package, Project _project)
-		{
-			myPackage = _package;
-			project = _project;
-		}
-
-		@Override
-		public String getName()
-		{
-			return myPackage.getNameId();
-		}
-
-		@Override
-		public PsiElement setName(@NonNls @NotNull final String name) throws IncorrectOperationException
-		{
-			throw new IncorrectOperationException();
-		}
-
-		@Override
-		public PsiElement getNameIdentifier()
-		{
-			return null;
-		}
-
-		@RequiredReadAction
-		@Override
-		@NotNull
-		public Language getLanguage()
-		{
-			return JavaScriptLanguage.INSTANCE;
-		}
-
-		@RequiredReadAction
-		@Override
-		@NotNull
-		public PsiElement[] getChildren()
-		{
-			return PsiElement.EMPTY_ARRAY;
-		}
-
-		@Override
-		public PsiElement getParent()
-		{
-			return null;
-		}
-
-		@Override
-		public PsiFile getContainingFile()
-		{
-			return null;
-		}
-
-		@RequiredReadAction
-		@Override
-		public PsiElement getFirstChild()
-		{
-			return null;
-		}
-
-		@Override
-		public boolean isValid()
-		{
-			return true;
-		}
-
-		@RequiredReadAction
-		@Override
-		public PsiElement getLastChild()
-		{
-			return null;
-		}
-
-		@RequiredReadAction
-		@Override
-		public PsiElement getNextSibling()
-		{
-			return null;
-		}
-
-		@RequiredReadAction
-		@Override
-		public PsiElement getPrevSibling()
-		{
-			return null;
-		}
-
-		@NotNull
-		@RequiredReadAction
-		@Override
-		public TextRange getTextRange()
-		{
-			return null;
-		}
-
-		@RequiredReadAction
-		@Override
-		public int getStartOffsetInParent()
-		{
-			return 0;
-		}
-
-		@Override
-		@NotNull
-		public Project getProject()
-		{
-			return project;
-		}
-
-		@RequiredReadAction
-		@Override
-		public int getTextLength()
-		{
-			return 0;
-		}
-
-		@RequiredReadAction
-		@Override
-		public PsiElement findElementAt(final int offset)
-		{
-			return null;
-		}
-
-		@Override
-		public int getTextOffset()
-		{
-			return 0;
-		}
-
-		@RequiredReadAction
-		@Override
-		public String getText()
-		{
-			return null;
-		}
-
-		@RequiredReadAction
-		@Override
-		@NotNull
-		public char[] textToCharArray()
-		{
-			return new char[0];
-		}
-
-		@RequiredReadAction
-		@Override
-		public boolean textContains(final char c)
-		{
-			return false;
-		}
-
-		@Override
-		public ASTNode getNode()
-		{
-			return null;
-		}
-
-		@Override
-		public ASTNode findNameIdentifier()
-		{
-			return null;
-		}
-
-		public JSPackage getPackage()
-		{
-			return myPackage;
-		}
-	}
-
 	public static String[] buildNameIdsForQualifier(final JSExpression qualifier, final JavaScriptIndex index)
 	{
 		String[] nameIds = null;
 
 		if(qualifier == null)
 		{
-			nameIds = JSSymbolUtil.buildNameIndexArray(qualifier, null, index);
+			nameIds = JSSymbolUtil.buildNameIndexArray(qualifier);
 		}
 		else
 		{
@@ -2101,90 +1853,8 @@ public class JSResolveUtil
 			return processOverrides(jsClass, handler, node.getName(), namespace, node);
 		}
 
-		return JSTypeEvaluateManager.getInstance(project).iterateTypeHierarchy(typeName, new JSTypeEvaluateManager.NamespaceProcessor()
-		{
-			final JavaScriptIndex index = JavaScriptIndex.getInstance(project);
-			final Set<JSNamespace> visited = new THashSet<JSNamespace>();
-
-			@Override
-			public boolean process(final JSNamespace jsNamespace)
-			{
-				if(visited.contains(jsNamespace))
-				{
-					return true;
-				}
-				visited.add(jsNamespace);
-				String className = null;
-
-				final ResolveProcessor processor = new ResolveProcessor(node.getName(), node);
-
-				if(jsClass instanceof JSClass)
-				{
-					final String baseQName = jsNamespace.getQualifiedName(index);
-					final PsiElement clazzProxy = findClassByQName(baseQName, jsClass);
-
-					if(clazzProxy != null)
-					{
-						JSNamedElement clazz = (JSNamedElement) unwrapProxy(clazzProxy);
-						className = clazz.getName();
-
-						if(clazz instanceof JSClass)
-						{
-							className = ((JSClass) clazz).getQualifiedName();
-							clazz.processDeclarations(processor, ResolveState.initial(), clazz, node);
-						}
-					}
-					else
-					{
-						return false;
-					}
-				}
-				else if(jsNamespace.getPackage() != null)
-				{
-					className = jsNamespace.getQualifiedName(index);
-
-					jsNamespace.processDeclarations(new JavaScriptSymbolProcessor.DefaultSymbolProcessor()
-					{
-						@Override
-						protected boolean process(final PsiElement namedElement, final JSNamespace namespace)
-						{
-							return processor.execute(namedElement, ResolveState.initial());
-						}
-
-						@Override
-						public PsiFile getBaseFile()
-						{
-							return null;
-						}
-
-						@Override
-						public String getRequiredNameId()
-						{
-							return node.getName();
-						}
-					});
-				}
-
-				if(processor.getResult() != null)
-				{
-					final PsiElement result = processor.getResult();
-					if(result instanceof JSFunction)
-					{
-						final JSAttributeList attributeList = ((JSFunction) result).getAttributeList();
-						if(attributeList != null && attributeList.getAccessType() == JSAttributeList.AccessType.PRIVATE)
-						{
-							return false;
-						}
-					}
-					handler.process(processor, jsClass, className);
-					return false;
-				}
-				return true;
-			}
-		});
+		return true;
 	}
-
-	//public static Object ANY_NAMESPACE_MARKER = new Object();
 
 	public static boolean processOverrides(final PsiElement jsClass, final OverrideHandler handler, String name, final Object namespace, final PsiElement context)
 	{

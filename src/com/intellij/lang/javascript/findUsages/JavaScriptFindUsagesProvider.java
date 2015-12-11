@@ -30,7 +30,6 @@ import com.intellij.lang.javascript.psi.JSPackageStatement;
 import com.intellij.lang.javascript.psi.JSParameter;
 import com.intellij.lang.javascript.psi.JSProperty;
 import com.intellij.lang.javascript.psi.JSVariable;
-import com.intellij.lang.javascript.psi.impl.JSPackageWrapper;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.xml.XmlTag;
@@ -105,7 +104,7 @@ public class JavaScriptFindUsagesProvider implements FindUsagesProvider
 		{
 			return JavaScriptBundle.message("javascript.language.term.attribute.value");
 		}
-		if(element instanceof JSPackageWrapper || element instanceof JSPackageStatement)
+		if(element instanceof JSPackageStatement)
 		{
 			return JavaScriptBundle.message("javascript.language.term.package");
 		}

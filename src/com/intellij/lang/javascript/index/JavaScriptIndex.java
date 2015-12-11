@@ -17,11 +17,9 @@
 package com.intellij.lang.javascript.index;
 
 import gnu.trove.THashMap;
-import gnu.trove.THashSet;
 
 import java.lang.ref.SoftReference;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,11 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.flex.FlexModuleExtension;
-import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
-import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -47,16 +41,11 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.MultiplePsiFilesPerDocumentFileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.xml.XmlFile;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.containers.HashSet;
 
 /**
  * @by maxim, yole
@@ -64,13 +53,6 @@ import com.intellij.util.containers.HashSet;
 public final class JavaScriptIndex implements ProjectComponent
 {
 	private Project myProject;
-	private THashMap<String, JSIndexEntry> myJavaScriptFiles = new THashMap<String, JSIndexEntry>();
-
-	private final JSPackage myRootPackage = new JSPackage();
-	private static Key<JSIndexEntry> ourEntryKey = Key.create("js.indexentry");
-
-	private THashSet<JSIndexEntry> myFilesToUpdate = new THashSet<JSIndexEntry>(50);
-
 	static final Logger LOG = Logger.getInstance("#com.intellij.lang.javascript.index.JavaScriptIndex");
 
 	@NonNls
@@ -80,51 +62,6 @@ public final class JavaScriptIndex implements ProjectComponent
 	@Deprecated
 	public static final Key<String> PREDEFINED_JS_FILE_KEY = Key.create("Predefined.JavaScript.File");
 
-	private static final MyEntryProcessor<Set<String>, Object> myCollectingClassNamesProcessor = new MyEntryProcessor<Set<String>, Object>()
-	{
-		@Override
-		public void process(final JSIndexEntry entry, final Set<String> classNames, final Object o1)
-		{
-			entry.fillClassNames(classNames);
-		}
-	};
-	private static final MyEntryProcessor<Set<NavigationItem>, String> myFindClassByNameProcessor = new MyEntryProcessor<Set<NavigationItem>, String>()
-	{
-		@Override
-		public void process(final JSIndexEntry entry, final Set<NavigationItem> classes, final String name)
-		{
-			entry.fillClassByName(name, classes);
-		}
-	};
-
-	private static final MyEntryProcessor<Set<String>, Object> myCollectSymbolNamesProcessor = new MyEntryProcessor<Set<String>, Object>()
-	{
-		@Override
-		public void process(final JSIndexEntry entry, final Set<String> symbolNames, final Object o1)
-		{
-			entry.fillSymbolNames(symbolNames);
-		}
-	};
-	private static final MyEntryProcessor<Set<NavigationItem>, String> myFindSymbolByNameProcessor = new MyEntryProcessor<Set<NavigationItem>, String>()
-	{
-		@Override
-		public void process(final JSIndexEntry entry, final Set<NavigationItem> navigationItems, final String s)
-		{
-			entry.fillSymbolsByName(s, navigationItems);
-		}
-	};
-
-	private final static MyEntryProcessor<Set<NavigationItem>, String> myFindFileByNameProcessor = new MyEntryProcessor<Set<NavigationItem>, String>()
-	{
-		@Override
-		public void process(final JSIndexEntry entry, final Set<NavigationItem> navigationItems, final String s)
-		{
-			if(s.equals(entry.getFile().getName()))
-			{
-				navigationItems.add(entry.getFile());
-			}
-		}
-	};
 
 	private final GlobalSearchScope myScopeForPackages;
 
@@ -190,12 +127,6 @@ public final class JavaScriptIndex implements ProjectComponent
 
 	public synchronized void clear()
 	{
-		myJavaScriptFiles.clear();
-		JSTypeEvaluateManager.getInstance(myProject).clear();
-
-		myRootPackage.clear();
-		myFilesToUpdate.clear();
-
 		synchronized(cachesLock)
 		{
 			myPackageResolveResult.clear();
@@ -236,89 +167,17 @@ public final class JavaScriptIndex implements ProjectComponent
 				modules.add(moduleForFile);
 
 				VirtualFile flexPath = getFlexSdkLocation(moduleForFile);
-
-				for(JSIndexEntry entry : myJavaScriptFiles.values())
-				{
-					final VirtualFile file = entry.getVirtualFile();
-					final Module moduleForEntryFile = fileIndex.getModuleForFile(file);
-
-					if(moduleForEntryFile == null)
-					{
-						if(flexPath != null && VfsUtil.isAncestor(flexPath, file, true))
-						{
-							entry.processSymbolsNoLock(processor);
-						}
-					}
-					else if(modules.contains(moduleForEntryFile))
-					{
-						entry.processSymbolsNoLock(processor);
-					}
-				}
 			}
 			else
 			{
 				final GlobalSearchScope scope = JSResolveUtil.getSearchScope(moduleForFile, myProject);
 
-				for(JSIndexEntry entry : myJavaScriptFiles.values())
-				{
-					VirtualFile file = entry.getVirtualFile();
-					if(scope.contains(file))
-					{
-						entry.processSymbolsNoLock(processor);
-					}
-				}
 			}
 		}
 		else
 		{
-			for(JSIndexEntry entry : myJavaScriptFiles.values())
-			{
-				final VirtualFile file = entry.getVirtualFile();
-				final Module moduleForEntryFile = fileIndex.getModuleForFile(file);
 
-				if(moduleForEntryFile == null)
-				{ // TODO: this is not correct when more than one SDK defined
-					entry.processSymbolsNoLock(processor);
-					if(file == virtualFile)
-					{
-						seenEntryForFile = true;
-					}
-				}
-			}
 		}
-
-		boolean contextFileForStdJs = false;
-
-		// JS files out of module contents (except sdks) + files that have js embedded / injected (htl / jsp)
-		if(((!(psiFile instanceof JSFile) ||
-				psiFile.getViewProvider() instanceof MultiplePsiFilesPerDocumentFileViewProvider ||
-				(contextFileForStdJs = (psiFile.getContext() != null && !ecmaL4))) && !isAcceptableFile(psiFile.getViewProvider().getVirtualFile())) ||
-				(moduleForFile == null && !seenEntryForFile))
-		{
-			getEntryForNonJavaScriptFile(psiFile).processSymbolsNoLock(processor);
-			if(contextFileForStdJs)
-			{
-				final PsiFile contextFile = psiFile.getContext().getContainingFile();
-
-				if(contextFile instanceof XmlFile && XmlBackedJSClassImpl.doProcessAllTags((XmlFile) contextFile))
-				{
-					getEntryForNonJavaScriptFile(contextFile).processSymbolsNoLock(processor);
-				}
-			}
-		}
-	}
-
-	private static JSIndexEntry getEntryForNonJavaScriptFile(PsiFile psiFile)
-	{
-		JSIndexEntry ourEntry = psiFile.getUserData(ourEntryKey);
-
-		if(ourEntry == null)
-		{
-			ourEntry = new JSIndexEntry(psiFile.getViewProvider().getVirtualFile(), psiFile.getProject(), false, psiFile.getLanguage());
-			psiFile.putUserData(ourEntryKey, ourEntry);
-			ourEntry.setContentBelongsOnlyToMyFile();
-		}
-		return ourEntry;
 	}
 
 	public static boolean isFromPredefinedFile(final PsiFile containingFile)
@@ -326,180 +185,24 @@ public final class JavaScriptIndex implements ProjectComponent
 		return !containingFile.isPhysical() && containingFile.getUserData(JavaScriptIndex.PREDEFINED_JS_FILE_KEY) != null;
 	}
 
-	public JSPackage getDefaultPackage()
+	public boolean inUpdateState()
 	{
-		updateDirtyFiles();
-		return myRootPackage;
-	}
-
-	private synchronized void updateDirtyFiles()
-	{
-		if(myFilesToUpdate != null)
-		{
-			THashSet<JSIndexEntry> entries = myFilesToUpdate;
-			myFilesToUpdate = null;
-
-			try
-			{
-				for(JSIndexEntry entry : entries)
-				{
-					final VirtualFile virtualfile = entry.getVirtualFile();
-					if(!virtualfile.isValid())
-					{
-						continue; // may happen when js sources accessed from jar which was invalidated
-					}
-					entry.getTopLevelNsNoLock();
-				}
-				entries.clear();
-			}
-			finally
-			{
-				myFilesToUpdate = entries;
-			}
-		}
-	}
-
-	public synchronized boolean inUpdateState()
-	{
-		return myFilesToUpdate == null;
+		return true;
 	}
 
 	public synchronized PsiElement findSymbolByFileAndNameAndOffset(final String fileName, final String name, final int offset)
 	{
-		JSIndexEntry indexEntry = myJavaScriptFiles.get(fileName);
-		if(indexEntry == null)
-		{
-			return null;
-		}
-		return findSymbolWithNameAndOffsetInEntryNoLock(name, offset, indexEntry);
+		return null;
 	}
 
-	public synchronized PsiElement findSymbolWithNameAndOffsetInEntry(final String nameId, final int offset, final JSIndexEntry indexEntry)
+	public synchronized PsiElement findSymbolWithNameAndOffsetInEntry(final String nameId, final int offset)
 	{
-		return findSymbolWithNameAndOffsetInEntryNoLock(nameId, offset, indexEntry);
-	}
-
-	private PsiElement findSymbolWithNameAndOffsetInEntryNoLock(final String nameId, final int offset, final JSIndexEntry indexEntry)
-	{
-		if(indexEntry == null)
-		{
-			return null;
-		}
-
-		final PsiElement[] result = new PsiElement[1];
-
-		indexEntry.processSymbolsNoLock(new JavaScriptSymbolProcessor.DefaultSymbolProcessor()
-		{
-			@Override
-			public PsiFile getBaseFile()
-			{
-				return indexEntry.getFile();
-			}
-
-			@Override
-			public String getRequiredNameId()
-			{
-				return nameId;
-			}
-
-			@Override
-			public final boolean process(PsiElement element, JSNamespace ns)
-			{
-				if(element.getTextOffset() == offset)
-				{
-					result[0] = element;
-					return false;
-				}
-				return true;
-			}
-		});
-		return result[0];
-	}
-
-	public synchronized JSIndexEntry getEntryForFile(final PsiFile file)
-	{
-		final VirtualFile vfile = file.getViewProvider().getVirtualFile();
-		if(isAcceptableFile(vfile))
-		{
-			final JSIndexEntry indexEntry = myJavaScriptFiles.get(vfile.getPath());
-			if(indexEntry != null)
-			{
-				return indexEntry;
-			}
-		}
-		return getEntryForNonJavaScriptFile(file);
-	}
-
-	public NavigationItem[] getFileByName(final String name, final boolean includeNonProjectItems)
-	{
-		final Set<NavigationItem> symbolNavItems = new HashSet<NavigationItem>();
-		processEntries(myFindFileByNameProcessor, includeNonProjectItems, symbolNavItems, name);
-
-		return symbolNavItems.toArray(new NavigationItem[symbolNavItems.size()]);
+		return null;
 	}
 
 	public final Project getProject()
 	{
 		return myProject;
-	}
-
-	interface MyEntryProcessor<T, T2>
-	{
-		void process(JSIndexEntry entry, T t, T2 t2);
-	}
-
-	private synchronized <T, T2> void processEntries(MyEntryProcessor<T, T2> processor, boolean includeNonProjectItems, T t, T2 t2)
-	{
-		final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
-		final boolean unitTestMode = ApplicationManager.getApplication().isCommandLine();
-		if(unitTestMode)
-		{
-			includeNonProjectItems = true;
-		}
-
-		for(JSIndexEntry entry : myJavaScriptFiles.values())
-		{
-			final VirtualFile file = entry.getVirtualFile();
-			final Module moduleForEntryFile = fileIndex.getModuleForFile(file);
-
-			if(includeNonProjectItems || moduleForEntryFile != null)
-			{
-				processor.process(entry, t, t2);
-			}
-		}
-	}
-
-	public String[] getSymbolNames(final boolean includeNonProjectItems)
-	{
-		updateDirtyFiles();
-		final Set<String> symbolNames = new HashSet<String>();
-		processEntries(myCollectSymbolNamesProcessor, includeNonProjectItems, symbolNames, null);
-		return ArrayUtil.toStringArray(symbolNames);
-	}
-
-	public NavigationItem[] getSymbolsByName(final String name, boolean includeNonProjectItems)
-	{
-		final Set<NavigationItem> symbolNavItems = new HashSet<NavigationItem>();
-		processEntries(myFindSymbolByNameProcessor, includeNonProjectItems, symbolNavItems, name);
-
-		return symbolNavItems.toArray(new NavigationItem[symbolNavItems.size()]);
-	}
-
-	public Collection<String> getNavigatableClassNames(final boolean includeNonProjectItems)
-	{
-		final Set<String> classNames = new HashSet<String>();
-
-		processEntries(myCollectingClassNamesProcessor, includeNonProjectItems, classNames, null);
-
-		return classNames;
-	}
-
-	public NavigationItem[] getClassByName(final String name, final boolean includeNonProjectItems)
-	{
-		final Set<NavigationItem> classes = new HashSet<NavigationItem>();
-		processEntries(myFindClassByNameProcessor, includeNonProjectItems, classes, name);
-
-		return classes.toArray(new NavigationItem[classes.size()]);
 	}
 
 	private static final Object cachesLock = new Object(); // guards myNames2Index, myIndexToNames, myPackageResolveResult, myToplevelResolveResult

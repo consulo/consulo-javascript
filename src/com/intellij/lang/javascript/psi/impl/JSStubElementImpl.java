@@ -94,7 +94,7 @@ public class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElemen
 			final NavigationItem element = getUserData(ORIGINAL_ELEMENT);
 			if(element == null)
 			{
-				return new JSItemPresentation((JSNamedElement) this, null);
+				return new JSItemPresentation((JSNamedElement) this);
 			}
 			return element.getPresentation();
 		}

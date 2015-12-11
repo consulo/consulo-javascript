@@ -30,10 +30,6 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSLanguageInjector;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
-import com.intellij.lang.javascript.index.JSIndexEntry;
-import com.intellij.lang.javascript.index.JSNamespace;
-import com.intellij.lang.javascript.index.JavaScriptIndex;
-import com.intellij.lang.javascript.index.JavaScriptSymbolProcessor;
 import com.intellij.lang.javascript.psi.JSAttributeList;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSFile;
@@ -47,7 +43,6 @@ import com.intellij.lang.javascript.psi.impl.JSPsiImplUtils;
 import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
-import com.intellij.lang.javascript.psi.resolve.WalkUpResolveProcessor;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataCache;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -248,43 +243,6 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 			final PsiElement lastParent, @NotNull final PsiElement place)
 	{
 		boolean b = super.processDeclarations(processor, substitutor, lastParent, place);
-
-		if(b)
-		{
-			final PsiFile xmlFile = getParent().getContainingFile();
-			final JavaScriptIndex index = JavaScriptIndex.getInstance(xmlFile.getProject());
-			final JSIndexEntry indexEntry = index.getEntryForFile(xmlFile);
-
-			b = indexEntry.processSymbolsInNs(new JavaScriptSymbolProcessor.DefaultSymbolProcessor()
-			{
-				@Override
-				protected boolean process(final PsiElement namedElement, final JSNamespace namespace)
-				{
-					return processor.execute(namedElement, ResolveState.initial());
-				}
-
-				@Override
-				public PsiFile getBaseFile()
-				{
-					return xmlFile;
-				}
-
-				@Override
-				public String getRequiredNameId()
-				{
-					if(processor instanceof ResolveProcessor)
-					{
-						final String name = ((ResolveProcessor) processor).getName();
-						return name;
-					}
-					else if(processor instanceof WalkUpResolveProcessor)
-					{
-						return ((WalkUpResolveProcessor) processor).getRequiredNameId();
-					}
-					return null;
-				}
-			}, indexEntry.getTopLevelNs());
-		}
 
 		if(b && JSResolveUtil.shouldProcessImports(place, processor))
 		{

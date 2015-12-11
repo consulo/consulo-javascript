@@ -25,7 +25,6 @@ import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.codeInsight.navigation.actions.TypeDeclarationProvider;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.index.JSNamedElementProxy;
-import com.intellij.lang.javascript.index.JSNamespace;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.index.JavaScriptSymbolProcessor;
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -85,7 +84,7 @@ public class JavaScriptTypeDeclarationProvider extends TypeDeclarationProvider
 				index.processAllSymbols(new JavaScriptSymbolProcessor.DefaultSymbolProcessor()
 				{
 					@Override
-					protected boolean process(final PsiElement namedElement, final JSNamespace namespace)
+					protected boolean process(final PsiElement namedElement)
 					{
 						if(namedElement.isPhysical())
 						{

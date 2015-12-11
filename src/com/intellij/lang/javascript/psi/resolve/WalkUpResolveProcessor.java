@@ -22,7 +22,6 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.index.JSNamedElementProxy;
-import com.intellij.lang.javascript.index.JSNamespace;
 import com.intellij.lang.javascript.index.JSSymbolUtil;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSClassImpl;
@@ -166,13 +165,6 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor
 						doIterateHierarchy(type, new HierarchyProcessor()
 						{
 							@Override
-							public boolean processNamespace(final JSNamespace ns)
-							{
-								possibleNameIds.add(ns.getIndices());
-								return true;
-							}
-
-							@Override
 							public boolean processClass(final JSClass clazz)
 							{
 								buildIndexListFromQNameAndCorrectQName(clazz.getQualifiedName(), clazz, possibleNameIds);
@@ -218,17 +210,6 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor
 		doIterateTypeHierarchy(contextIds, new HierarchyProcessor()
 		{
 			@Override
-			public boolean processNamespace(final JSNamespace ns)
-			{
-				if("Object".equals(ns.getQualifiedName(myIndex)) && !allowObject)
-				{
-					return true;
-				}
-				possibleNameIds.add(ns.getIndices());
-				return true;
-			}
-
-			@Override
 			public boolean processClass(final JSClass clazz)
 			{
 				buildIndexListFromQNameAndCorrectQName(clazz.getQualifiedName(), clazz, possibleNameIds);
@@ -238,20 +219,20 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor
 	}
 
 	@Override
-	public boolean processFunction(JSNamespace namespace, final String nameId, final JSNamedElement function)
+	public boolean processFunction(final String nameId, final JSNamedElement function)
 	{
-		doQualifiedCheck(namespace, nameId, function);
+		doQualifiedCheck(nameId, function);
 		return true;
 	}
 
 	@Override
-	public boolean processClass(final JSNamespace namespace, final String nameId, final JSNamedElement clazz)
+	public boolean processClass(final String nameId, final JSNamedElement clazz)
 	{
-		doQualifiedCheck(namespace, nameId, clazz);
+		doQualifiedCheck(nameId, clazz);
 		return true;
 	}
 
-	protected MatchType isAcceptableQualifiedItem(JSNamespace namespace, final String nameId, final PsiElement element)
+	protected MatchType isAcceptableQualifiedItem(final String nameId, final PsiElement element)
 	{
 		final boolean partialMatch = myReferenceName.equals(nameId);
 
@@ -266,13 +247,13 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor
 
 				if(type == JSNamedElementProxy.NamedItemType.MemberFunction && proxy.hasProperty(JSNamedElementProxy.Property.Constructor))
 				{
-					final boolean inglobalNs = isGlobalNS(namespace.getParent());
+					final boolean inglobalNs = true;
 					final boolean canResolveToElement = !qualifiedContext == inglobalNs;
 					return canResolveToElement ? MatchType.COMPLETE : MatchType.NOMATCH;
 				}
 				else if(type == JSNamedElementProxy.NamedItemType.Clazz)
 				{
-					final boolean inglobalNs = isGlobalNS(namespace);
+					final boolean inglobalNs = true;
 					final boolean canResolveToElement = !qualifiedContext == inglobalNs;
 					return proxy.hasProperty(JSNamedElementProxy.Property.HasConstructor) || !canResolveToElement ? MatchType.NOMATCH : MatchType.COMPLETE;
 				}
@@ -288,20 +269,8 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor
 				{
 					final String[] contextIds = myContextIds[currentContextIndex];
 
-					for(i = contextIds.length - 1; i >= 0; --i)
-					{
-						if(namespace == null)
-						{
-							break;
-						}
-						if(!namespace.getNameId().equals(contextIds[i]))
-						{
-							break;
-						}
-						namespace = namespace.getParent();
-					}
 
-					if(i < 0 && isGlobalNS(namespace))
+					if(i < 0)
 					{
 						if(myBestMatchedContextId == -1)
 						{
@@ -318,7 +287,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor
 				}
 			}
 
-			if(i < 0 && isGlobalNS(namespace))
+			if(i < 0)
 			{
 				return MatchType.COMPLETE;
 			}
@@ -327,9 +296,9 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor
 		return partialMatch ? MatchType.PARTIAL : MatchType.NOMATCH;
 	}
 
-	private void doQualifiedCheck(final JSNamespace namespace, String nameId, final PsiElement element)
+	private void doQualifiedCheck(String nameId, final PsiElement element)
 	{
-		final MatchType matchType = isAcceptableQualifiedItem(namespace, nameId, element);
+		final MatchType matchType = isAcceptableQualifiedItem(nameId, element);
 
 		if(matchType == MatchType.PARTIAL)
 		{
@@ -339,9 +308,9 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor
 					type == JSNamedElementProxy.NamedItemType.Property ||
 					type == JSNamedElementProxy.NamedItemType.MemberFunction ||
 					type == JSNamedElementProxy.NamedItemType.MemberVariable ||
-					(type == JSNamedElementProxy.NamedItemType.Definition && !isGlobalNS(namespace)))) || (element instanceof JSFunctionExpression ||
+					(type == JSNamedElementProxy.NamedItemType.Definition && !true))) || (element instanceof JSFunctionExpression ||
 					element instanceof JSProperty ||
-					(element instanceof JSDefinitionExpression && !isGlobalNS(namespace)))))
+					(element instanceof JSDefinitionExpression && !true))))
 			{
 				return; // nonqualified item could not be resolved into property
 			}
@@ -400,20 +369,16 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor
 	}
 
 	@Override
-	public boolean processProperty(JSNamespace namespace, final String nameId, JSNamedElement property)
+	public boolean processProperty(final String nameId, JSNamedElement property)
 	{
-		doQualifiedCheck(namespace, nameId, property);
+		doQualifiedCheck(nameId, property);
 		return true;
 	}
 
 	@Override
-	public boolean processVariable(JSNamespace namespace, final String nameId, JSNamedElement variable)
+	public boolean processVariable(final String nameId, JSNamedElement variable)
 	{
-		if(namespace.getNameId() != null)
-		{
-			doQualifiedCheck(namespace, nameId, variable);
-		}
-		else if(shouldProcessVariable(nameId, variable))
+		if(shouldProcessVariable(nameId, variable))
 		{
 			addCompleteResult(variable);
 		}
@@ -427,38 +392,38 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor
 	}
 
 	@Override
-	public boolean processDefinition(final JSNamespace namespace, final String nameId, final JSNamedElement refExpr)
+	public boolean processDefinition(final String nameId, final JSNamedElement refExpr)
 	{
 		//if(myCurrentFile != myTargetFile || !mySkipDclsInTargetFile)
-		doQualifiedCheck(namespace, nameId, refExpr);
+		doQualifiedCheck(nameId, refExpr);
 		return true;
 	}
 
 	@Override
-	public boolean processNamespace(final JSNamespace namespace, final String nameId, final JSNamedElement refExpr)
+	public boolean processNamespace(final String nameId, final JSNamedElement refExpr)
 	{
-		doQualifiedCheck(namespace, nameId, refExpr);
+		doQualifiedCheck(nameId, refExpr);
 		return true;
 	}
 
 	@Override
-	public boolean processImplicitNamespace(final JSNamespace namespace, final String nameId, final PsiElement refExpr, boolean finalReference)
+	public boolean processImplicitNamespace(final String nameId, final PsiElement refExpr, boolean finalReference)
 	{
-		doQualifiedCheck(namespace, nameId, refExpr);
+		doQualifiedCheck(nameId, refExpr);
 		return true;
 	}
 
 	@Override
-	public boolean processImplicitFunction(final JSNamespace namespace, final String nameId, final PsiElement refExpr)
+	public boolean processImplicitFunction(final String nameId, final PsiElement refExpr)
 	{
-		doQualifiedCheck(namespace, nameId, refExpr);
+		doQualifiedCheck(nameId, refExpr);
 		return true;
 	}
 
 	@Override
-	public boolean processImplicitVariable(final JSNamespace namespace, final String nameId, final PsiElement refExpr)
+	public boolean processImplicitVariable(final String nameId, final PsiElement refExpr)
 	{
-		doQualifiedCheck(namespace, nameId, refExpr);
+		doQualifiedCheck(nameId, refExpr);
 		return true;
 	}
 
@@ -469,9 +434,9 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor
 	}
 
 	@Override
-	public boolean processTag(JSNamespace namespace, final String nameId, PsiNamedElement namedElement, final String attrName)
+	public boolean processTag(final String nameId, PsiNamedElement namedElement, final String attrName)
 	{
-		doQualifiedCheck(namespace, nameId, namedElement);
+		doQualifiedCheck(nameId, namedElement);
 		return true;
 	}
 
@@ -535,7 +500,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor
 
 		if(qualifier instanceof JSReferenceExpression)
 		{
-			contextNameIds = JSSymbolUtil.buildNameIndexArray(qualifier, null, myIndex);
+			contextNameIds = JSSymbolUtil.buildNameIndexArray(qualifier);
 		}
 		else if(qualifier instanceof JSThisExpression || qualifier instanceof JSSuperExpression)
 		{

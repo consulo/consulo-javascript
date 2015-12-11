@@ -19,7 +19,6 @@ package com.intellij.lang.javascript.psi.resolve;
 import gnu.trove.THashSet;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -31,13 +30,11 @@ import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.index.JSNamedElementProxy;
-import com.intellij.lang.javascript.index.JSNamespace;
 import com.intellij.lang.javascript.index.JSSymbolUtil;
 import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.index.JavaScriptSymbolProcessor;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.lang.javascript.psi.impl.JSPackageWrapper;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
@@ -45,7 +42,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
@@ -150,12 +146,6 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 	{
 		myAddOnlyCompleteMatches = addOnlyCompleteMatches;
 		myAllowPartialResults = false;
-	}
-
-	protected final boolean isGlobalNS(final JSNamespace namespace)
-	{
-		final String nameId = namespace.getNameId();
-		return nameId == null || ((nameId == myWindowIndex || nameId == myFunctionIndex) && namespace.getParent().getParent() == null);
 	}
 
 	@Override
@@ -376,7 +366,7 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 					//if (psiElement == qualifier && ((JSReferenceExpressionImpl)qualifier).isAttributeReference()) {
 					//   addType(STRING_TYPE_NAME, typeProcessor, context, null); continue;
 					//}
-					String type = psiElement instanceof JSNamedElement ? context.typeEvaluateManager.getElementType((PsiNamedElement) psiElement) : null;
+					String type = psiElement instanceof JSNamedElement ? null :  null;
 
 					if(type == null)
 					{
@@ -504,19 +494,7 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 							}
 							else if(psiElement instanceof JSNamedElement)
 							{
-								if(psiElement instanceof JSPackageWrapper)
-								{
-									if(typeProcessor instanceof PsiScopeProcessor)
-									{
-										psiElement.processDeclarations((PsiScopeProcessor) typeProcessor, ResolveState.initial(), qualifier, qualifier);
-									}
-									else
-									{
-										addType(((JSQualifiedNamedElement) psiElement).getQualifiedName(), typeProcessor, context, psiElement);
-									}
-									hasSomeType = true;
-								}
-								else if(psiElement instanceof JSFunction)
+								if(psiElement instanceof JSFunction)
 								{
 									final JSFunction function = (JSFunction) psiElement;
 									final boolean inCall = rawqualifier.getParent() instanceof JSCallExpression;
@@ -905,44 +883,6 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 
 			if(isBindowsXml(containingFile))
 			{
-				final JavaScriptIndex index = JavaScriptIndex.getInstance(containingFile.getProject());
-
-				index.getEntryForFile(containingFile).processSymbols(new DefaultSymbolProcessor()
-				{
-					@Override
-					protected boolean process(final PsiElement namedElement, final JSNamespace namespace)
-					{
-						return true;
-					}
-
-					@Override
-					public boolean processTag(final JSNamespace namespace, final String nameId, final PsiNamedElement namedElement, @NonNls final String attrName)
-					{
-						final PsiElement val = ((JSNamedElementProxy) namedElement).getElement();
-						if(val != null)
-						{
-							final XmlTag tag = PsiTreeUtil.getParentOfType(val, XmlTag.class);
-							if(tag != null)
-							{
-								typeProcessor.process("Bi" + tag.getLocalName(), context, namedElement);
-							}
-						}
-
-						return false;
-					}
-
-					@Override
-					public PsiFile getBaseFile()
-					{
-						return containingFile;
-					}
-
-					@Override
-					public String getRequiredNameId()
-					{
-						return val;
-					}
-				});
 			}
 		}
 	}
@@ -1127,8 +1067,6 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 
 	interface HierarchyProcessor
 	{
-		boolean processNamespace(JSNamespace ns);
-
 		boolean processClass(JSClass clazz);
 	}
 
@@ -1187,21 +1125,6 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 
 			return;
 		}
-		final Set<String> visitedTypes = new HashSet<String>();
-		JSTypeEvaluateManager.getInstance(myContext.getProject()).iterateTypeHierarchy(typeName, new JSTypeEvaluateManager.NamespaceProcessor()
-		{
-			@Override
-			public boolean process(final JSNamespace element)
-			{
-				final String qname = element.getQualifiedName(myIndex);
-				if(!visitedTypes.contains(qname))
-				{
-					visitedTypes.add(qname);
-					processor.processNamespace(element);
-				}
-				return true;
-			}
-		});
 	}
 
 

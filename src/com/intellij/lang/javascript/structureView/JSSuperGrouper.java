@@ -31,8 +31,6 @@ import com.intellij.ide.util.treeView.smartTree.ActionPresentationData;
 import com.intellij.ide.util.treeView.smartTree.Group;
 import com.intellij.ide.util.treeView.smartTree.Grouper;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
-import com.intellij.lang.javascript.index.JSNamedElementProxy;
-import com.intellij.lang.javascript.index.JSNamespace;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSFunction;
@@ -70,26 +68,7 @@ class JSSuperGrouper implements Grouper
 			JSStructureViewElement child = (JSStructureViewElement) _child;
 			final PsiElement value = child.getValue();
 
-			if(value instanceof JSNamedElementProxy)
-			{
-				if(((JSNamedElementProxy) value).getType() == JSNamedElementProxy.NamedItemType.MemberFunction)
-				{
-					// TODO sure it's a function?
-					processFunction((JSStructureViewElement) parent.getValue(), groups, _child, ((JSNamedElementProxy) value).getElement());
-				}
-				if(!child.isInherited())
-				{
-					continue;
-				}
-				final JSNamespace ns = ((JSNamedElementProxy) value).getNamespace();
-				if(ns.getNameId() == null)
-				{
-					continue;
-				}
-
-				addGroup(groups, _child, ns.getQualifiedName(index));
-			}
-			else if(value instanceof JSVariable)
+			if(value instanceof JSVariable)
 			{
 				if(!child.isInherited())
 				{

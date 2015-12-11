@@ -403,11 +403,11 @@ public class JSReferenceSet
 				@Override
 				public boolean execute(PsiElement element, ResolveState state)
 				{
-					if(onlyPackages && !(element instanceof JSPackageWrapper))
+					if(onlyPackages)
 					{
-						return true;
+						return false;
 					}
-					if(onlyFqns && !(element instanceof JSPackageWrapper) && !(element instanceof JSClass))
+					if(onlyFqns)
 					{
 						return true;
 					}

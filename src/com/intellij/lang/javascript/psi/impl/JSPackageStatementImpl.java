@@ -229,10 +229,4 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 			}
 		}
 	}
-
-	@Override
-	public boolean isEquivalentTo(PsiElement another)
-	{
-		return JSPackageWrapper.isPackageReferenceOfSomeForm(getQualifiedName(), getProject(), getResolveScope(), another);
-	}
 }

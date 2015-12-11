@@ -38,12 +38,10 @@ import com.intellij.psi.PsiFile;
 public class JSItemPresentation implements ItemPresentation
 {
 	private JSNamedElement myElement;
-	private JSNamespace myNamespace;
 
-	public JSItemPresentation(final JSNamedElement elementProxy, final JSNamespace namespace)
+	public JSItemPresentation(final JSNamedElement elementProxy)
 	{
 		this.myElement = elementProxy;
-		this.myNamespace = namespace;
 	}
 
 	@Override
@@ -57,20 +55,7 @@ public class JSItemPresentation implements ItemPresentation
 	public String getLocationString()
 	{
 		final PsiFile psiFile = myElement.getContainingFile();
-		if(myNamespace != null)
-		{
-			final StringBuilder presentation = new StringBuilder();
-			JavaScriptIndex index = JavaScriptIndex.getInstance(psiFile.getProject());
-			String location = myNamespace.getQualifiedName(index);
-
-			if(location != null && location.length() > 0)
-			{
-				presentation.append(location);
-				presentation.append('(').append(getFileName(psiFile)).append(')');
-				return presentation.toString();
-			}
-		}
-		else if(myElement instanceof JSVariable || myElement instanceof JSFunction)
+		if(myElement instanceof JSVariable || myElement instanceof JSFunction)
 		{
 			PsiElement possibleClazz = JSResolveUtil.findParent(myElement);
 

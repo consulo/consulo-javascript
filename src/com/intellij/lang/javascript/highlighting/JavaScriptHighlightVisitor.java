@@ -25,7 +25,6 @@ import com.intellij.codeInsight.daemon.impl.HighlightVisitor;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.index.JSNamedElementProxy;
-import com.intellij.lang.javascript.index.JSNamespace;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
@@ -150,16 +149,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
 				if(namedItemType == JSNamedElementProxy.NamedItemType.FunctionExpression)
 				{
-					final JSNamespace namespace = elementProxy.getNamespace();
-
-					if(namespace.getNameId() == null)
-					{
-						isFunction = true;
-					}
-					else
-					{
-						isMethod = true;
-					}
+					isFunction = true;
 				}
 			}
 		}

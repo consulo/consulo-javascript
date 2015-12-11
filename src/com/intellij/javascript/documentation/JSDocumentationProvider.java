@@ -1140,7 +1140,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 			{
 				return (JSClass) parent;
 			}
-			else if(parent instanceof JSFile || parent instanceof JSPackage)
+			else if(parent instanceof JSFile)
 			{
 				return (JSQualifiedNamedElement) element;
 			}

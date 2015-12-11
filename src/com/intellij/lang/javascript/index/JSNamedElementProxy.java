@@ -48,7 +48,4 @@ public interface JSNamedElementProxy extends JSQualifiedNamedElement
 
 	NamedItemType getType();
 
-	JSNamespace getNamespace();
-
-	JSIndexEntry getEntry();
 }

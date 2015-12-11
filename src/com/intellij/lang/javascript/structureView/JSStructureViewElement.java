@@ -36,19 +36,12 @@ import javax.swing.Icon;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.ide.structureView.StructureViewTreeElement;
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
-import com.intellij.lang.javascript.index.JSIndexEntry;
 import com.intellij.lang.javascript.index.JSNamedElementProxy;
-import com.intellij.lang.javascript.index.JSNamespace;
 import com.intellij.lang.javascript.index.JSSymbolUtil;
-import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
-import com.intellij.lang.javascript.index.JavaScriptSymbolProcessor;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.lang.javascript.psi.resolve.VariantsProcessor;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
@@ -124,27 +117,9 @@ public class JSStructureViewElement implements StructureViewTreeElement
 
 		final JavaScriptIndex index = JavaScriptIndex.getInstance(element.getProject());
 		final Set<String> referencedNamedIds = new HashSet<String>();
-		JSIndexEntry entry = null;
-		JSNamespace ns = null;
 
-		if(myProxy != null)
-		{
-			entry = myProxy.getEntry();
-			ns = myProxy.getNamespace();
-			ns = ns != null ? ns.findChildNamespace(myProxy.getNameId()) : null;
-		}
-		else if(element instanceof PsiFile)
-		{
-			entry = index.getEntryForFile((PsiFile) element);
-			ns = entry != null ? entry.getTopLevelNs() : null;
-		}
-		else if(element instanceof VariantsProcessor.MyElementWrapper)
-		{
-			entry = index.getEntryForFile(element.getContainingFile());
-			ns = ((VariantsProcessor.MyElementWrapper) element).getNamespace();
-		}
 
-		List<StructureViewTreeElement> children = collectMyElements(referencedNamedIds, entry, ns, index);
+		List<StructureViewTreeElement> children = collectMyElements(referencedNamedIds, index);
 
 		ArrayList<StructureViewTreeElement> elementsFromSupers = null;
 
@@ -179,67 +154,6 @@ public class JSStructureViewElement implements StructureViewTreeElement
 					elementsFromSupers.add(e);
 				}
 			}
-		}
-		else if((element instanceof JSNamedElement || element instanceof JSReferenceExpression) && entry != null)
-		{
-			final Set<String> visitedTypes = new HashSet<String>();
-			final ArrayList<StructureViewTreeElement> elements = new ArrayList<StructureViewTreeElement>();
-
-			final MyProcessor processor = new MyProcessor(index, visitedTypes)
-			{
-				@Override
-				public boolean acceptsFile(final PsiFile file)
-				{
-					return !JSResolveUtil.isPredefinedFile(file) && super.acceptsFile(file);
-				}
-
-				@Override
-				protected boolean process(final PsiElement namedElement, final JSNamespace namespace)
-				{
-					final JSNamedElementProxy elementProxy = (JSNamedElementProxy) namedElement;
-					if(referencedNamedIds.contains(elementProxy.getNameId()) || !isVisible(namedElement, element))
-					{
-						return true;
-					}
-					referencedNamedIds.add(elementProxy.getNameId());
-					final JSStructureViewElement jsStructureViewElement = createStructureViewElement(elementProxy.getElement(), elementProxy);
-					elements.add(jsStructureViewElement);
-					jsStructureViewElement.setInherited(true);
-
-					return true;
-				}
-			};
-
-			String typeName = element instanceof JSNamedElement ? ((JSNamedElement) element).getName() : element.getText();
-			if(element instanceof JSFunction)
-			{
-				ASTNode node = ((JSFunction) element).findNameIdentifier();
-				if(node != null && node.getPsi() != null && node.getPsi().getParent() instanceof JSReferenceExpression)
-				{
-					typeName = node.getPsi().getParent().getText();
-				}
-			}
-			else if(element instanceof VariantsProcessor.MyElementWrapper)
-			{
-				final JSNamespace namespace = ((VariantsProcessor.MyElementWrapper) element).getNamespace();
-				typeName = namespace != null ? namespace.getQualifiedName(index) : typeName;
-			}
-
-			boolean doIterateTypes = true;
-			if(myProxy != null)
-			{
-				final JSNamespace namespace = myProxy.getNamespace();
-				if(namespace != null && "Object".equals(namespace.getQualifiedName(index)))
-				{
-					doIterateTypes = false;
-				}
-			}
-
-			if(doIterateTypes)
-			{
-				JSTypeEvaluateManager.getInstance(element.getProject()).iterateTypeHierarchy(typeName, processor);
-			}
-			elementsFromSupers = elements;
 		}
 
 
@@ -328,82 +242,10 @@ public class JSStructureViewElement implements StructureViewTreeElement
 	}
 
 
-	protected List<StructureViewTreeElement> collectMyElements(final Set<String> referencedNamedIds, final JSIndexEntry entry, final JSNamespace ns, final JavaScriptIndex index)
+	protected List<StructureViewTreeElement> collectMyElements(final Set<String> referencedNamedIds, final JavaScriptIndex index)
 	{
 		final TIntObjectHashMap<PsiElement> offset2Proxy = new TIntObjectHashMap<PsiElement>();
 		final Map<String, PsiElement> nameId2NsProxy = new HashMap<String, PsiElement>();
-
-		if(entry != null && ns != null)
-		{
-			final JSNamespace ns1 = ns;
-			final JSIndexEntry entry1 = entry;
-
-			entry.processSymbols(new JavaScriptSymbolProcessor.DefaultSymbolProcessor()
-			{
-				final boolean myElementIsFile = myElement instanceof JSFile;
-				final boolean shouldFindNsInDepth = (myElementIsFile && ((JSFile) myElement).getLanguage() != JavaScriptSupportLoader.ECMA_SCRIPT_L4) || myElement instanceof VariantsProcessor
-						.MyElementWrapper;
-
-				@Override
-				protected boolean process(final PsiElement sym, JSNamespace namespace)
-				{
-					int textOffset = sym.getTextOffset();
-					String nsName;
-					final JSNamedElementProxy.NamedItemType type = ((JSNamedElementProxy) sym).getType();
-
-					if(myElementIsFile && (type == JSNamedElementProxy.NamedItemType.MemberFunction || type == JSNamedElementProxy.NamedItemType.MemberVariable))
-					{
-						return true;
-					}
-
-					if((namespace == ns1 || (myElementIsFile && !shouldFindNsInDepth && findNsInParents(namespace, ns1) != null)))
-					{
-						if(type == JSNamedElementProxy.NamedItemType.ImplicitVariable)
-						{
-							textOffset++; // implicit var will have the same offset as implicit function so modify offset to prevent collision
-						}
-						offset2Proxy.put(textOffset, sym);
-					}
-					else if((namespace.getParent() == ns1 || (shouldFindNsInDepth && (namespace = findNsInParents(namespace, ns1)) != null)) &&
-							(nsName = namespace.getNameId()).length() > 0 &&
-							type != JSNamedElementProxy.NamedItemType.Clazz &&
-							nameId2NsProxy.get(namespace.getNameId()) == null)
-					{
-						if(!nsName.equals("window"))
-						{
-							nameId2NsProxy.put(namespace.getNameId(), new VariantsProcessor.MyElementWrapper(namespace, entry1.getFile(), textOffset));
-						}
-					}
-					return true;
-				}
-
-				private JSNamespace findNsInParents(JSNamespace namespace, final JSNamespace ns1)
-				{
-					while(namespace != null)
-					{
-						final JSNamespace parentNs = namespace.getParent();
-						if(parentNs == ns1)
-						{
-							return namespace;
-						}
-						namespace = parentNs;
-					}
-					return null;
-				}
-
-				@Override
-				public String getRequiredNameId()
-				{
-					return null;
-				}
-
-				@Override
-				public PsiFile getBaseFile()
-				{
-					return entry1.getFile();
-				}
-			});
-		}
 
 		final TIntObjectHashMap<PsiElement> offset2Element = new TIntObjectHashMap<PsiElement>();
 
@@ -727,41 +569,6 @@ public class JSStructureViewElement implements StructureViewTreeElement
 	}
 
 
-	private abstract static class MyProcessor extends JavaScriptSymbolProcessor.DefaultSymbolProcessor implements JSTypeEvaluateManager.NamespaceProcessor
-	{
-		private final JavaScriptIndex myIndex;
-		private final Set<String> myVisitedTypes;
-
-		public MyProcessor(final JavaScriptIndex index, final Set<String> visitedTypes)
-		{
-			myIndex = index;
-			myVisitedTypes = visitedTypes;
-		}
-
-		@Override
-		public boolean process(final JSNamespace jsNamespace)
-		{
-			final String qName = jsNamespace.getQualifiedName(myIndex);
-			if(!myVisitedTypes.contains(qName) && qName.length() > 0)
-			{
-				myVisitedTypes.add(qName);
-				jsNamespace.getPackage().processDeclarations(this);
-			}
-			return true;
-		}
-
-		@Override
-		public PsiFile getBaseFile()
-		{
-			return null;
-		}
-
-		@Override
-		public String getRequiredNameId()
-		{
-			return null;
-		}
-	}
 
 	static abstract class JSStructureItemPresentationBase implements ItemPresentation
 	{
