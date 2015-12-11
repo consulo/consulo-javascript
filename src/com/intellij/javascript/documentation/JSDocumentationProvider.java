@@ -810,7 +810,6 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 	private static PsiElement getDocumentationElementForLinkStatic(final PsiManager psiManager, String link, final PsiElement context)
 	{
 		final int delimiterIndex = link.lastIndexOf(':');
-		final JavaScriptIndex index = JavaScriptIndex.getInstance(psiManager.getProject());
 
 		String attributeType = null;
 		String attributeName = null;
@@ -831,11 +830,11 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 			String fileName = link.substring(0, delimiterIndex2).replace(File.separatorChar, '/');
 			String name = link.substring(delimiterIndex2 + 1, delimiterIndex);
 			int offset = Integer.parseInt(link.substring(delimiterIndex + 1));
-			return index.findSymbolByFileAndNameAndOffset(fileName, name, offset);
+			return JavaScriptIndex.findSymbolByFileAndNameAndOffset(fileName, name, offset);
 		}
 		else if(attributeType != null)
 		{
-			PsiElement clazz = JSResolveUtil.findClassByQName(link, index, context != null ? ModuleUtil.findModuleForPsiElement(context) : null);
+			PsiElement clazz = JSResolveUtil.findClassByQName(link, psiManager.getProject(), context != null ? ModuleUtil.findModuleForPsiElement(context) : null);
 			if(!(clazz instanceof JSClass))
 			{
 				return null;
@@ -844,11 +843,11 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 		}
 		else
 		{
-			PsiElement clazz = JSResolveUtil.findClassByQName(link, index, context != null ? ModuleUtil.findModuleForPsiElement(context) : null);
+			PsiElement clazz = JSResolveUtil.findClassByQName(link, psiManager.getProject(), context != null ? ModuleUtil.findModuleForPsiElement(context) : null);
 			if(clazz == null && link.contains("."))
 			{
 				String qname = link.substring(0, link.lastIndexOf('.'));
-				clazz = JSResolveUtil.findClassByQName(qname, index, context != null ? ModuleUtil.findModuleForPsiElement(context) : null);
+				clazz = JSResolveUtil.findClassByQName(qname, psiManager.getProject(), context != null ? ModuleUtil.findModuleForPsiElement(context) : null);
 				if(clazz instanceof JSClass)
 				{
 					JSClass jsClass = (JSClass) clazz;
@@ -889,7 +888,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 			if(link.endsWith("()"))
 			{
 				link = link.substring(0, link.length() - 2);
-				clazz = JSResolveUtil.findClassByQName(link, index, context != null ? ModuleUtil.findModuleForPsiElement(context) : null);
+				clazz = JSResolveUtil.findClassByQName(link, psiManager.getProject(), context != null ? ModuleUtil.findModuleForPsiElement(context) : null);
 				if(clazz instanceof JSFunction)
 				{
 					return clazz;

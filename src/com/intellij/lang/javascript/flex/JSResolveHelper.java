@@ -17,7 +17,6 @@
 package com.intellij.lang.javascript.flex;
 
 import org.jetbrains.annotations.Nullable;
-import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -36,7 +35,7 @@ public interface JSResolveHelper
 
 	// TODO: drop module
 	@Nullable
-	PsiElement findClassByQName(final String link, final JavaScriptIndex index, final String className, GlobalSearchScope scope);
+	PsiElement findClassByQName(final String link, final Project project, final String className, GlobalSearchScope scope);
 
 	void importClass(final PsiScopeProcessor processor, final PsiNamedElement file, final String packageQualifierText);
 

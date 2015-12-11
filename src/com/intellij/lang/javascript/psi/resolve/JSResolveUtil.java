@@ -1668,17 +1668,17 @@ public class JSResolveUtil
 	public static PsiElement findClassByQName(final String link, final @NotNull PsiElement context)
 	{
 		final Module module = ModuleUtil.findModuleForPsiElement(context);
-		return findClassByQName(link, JavaScriptIndex.getInstance(context.getProject()), module);
+		return findClassByQName(link, context.getProject(), module);
 	}
 
 	public static PsiElement findClassByQName(final String link, GlobalSearchScope scope, Project project)
 	{
-		return findClassByQName(link, JavaScriptIndex.getInstance(project), scope);
+		return findClassByQName(link, project, scope);
 	}
 
-	public static PsiElement findClassByQName(final String link, final JavaScriptIndex index, final Module module)
+	public static PsiElement findClassByQName(final String link, final Project index, final Module module)
 	{
-		final GlobalSearchScope searchScope = getSearchScope(module, index.getProject());
+		final GlobalSearchScope searchScope = getSearchScope(module, index);
 		return findClassByQName(link, index, searchScope);
 	}
 
@@ -1725,19 +1725,13 @@ public class JSResolveUtil
 		return allScope;
 	}
 
-	private static PsiElement findClassByQName(final String link, final JavaScriptIndex index, final GlobalSearchScope searchScope)
+	private static PsiElement findClassByQName(final String link, final Project project, final GlobalSearchScope searchScope)
 	{
-		synchronized(index)
+		synchronized(project)
 		{
-			PsiElement element = index.recallClass(link, searchScope);
-			if(element != null)
-			{
-				return element;
-			}
-
 			final PsiElement[] result = new PsiElement[1];
 
-			final Collection<JSQualifiedNamedElement> candidates = StubIndex.getElements(JavaScriptIndexKeys.ELEMENTS_BY_QNAME, link, index.getProject(), searchScope, JSQualifiedNamedElement.class);
+			final Collection<JSQualifiedNamedElement> candidates = StubIndex.getElements(JavaScriptIndexKeys.ELEMENTS_BY_QNAME, link, project, searchScope, JSQualifiedNamedElement.class);
 			for(JSQualifiedNamedElement clazz : candidates)
 			{
 				if(link.equals(clazz.getQualifiedName()))
@@ -1761,15 +1755,11 @@ public class JSResolveUtil
 						!isBuiltInClassName(className))
 				{
 					// TODO optimization, remove when packages will be properly handled
-					result[0] = findClassByQNameViaHelper(link, index, className, searchScope);
+					result[0] = findClassByQNameViaHelper(link, project, className, searchScope);
 				}
 			}
-			final PsiElement psiElement = result[0];
-			if(psiElement != null)
-			{
-				index.rememberTopLevelClassElement(link, searchScope, psiElement);
-			}
-			return psiElement;
+
+			return result[0];
 		}
 	}
 
@@ -1784,11 +1774,11 @@ public class JSResolveUtil
 	}
 
 	@Nullable
-	private static PsiElement findClassByQNameViaHelper(final String link, final JavaScriptIndex index, final String className, final GlobalSearchScope scope)
+	private static PsiElement findClassByQNameViaHelper(final String link, final Project project, final String className, final GlobalSearchScope scope)
 	{
 		for(JSResolveHelper helper : Extensions.getExtensions(JSResolveHelper.EP_NAME))
 		{
-			PsiElement result = helper.findClassByQName(link, index, className, scope);
+			PsiElement result = helper.findClassByQName(link, project, className, scope);
 			if(result != null)
 			{
 				return result;

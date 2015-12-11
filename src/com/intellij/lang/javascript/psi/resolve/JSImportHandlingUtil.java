@@ -29,7 +29,6 @@ import com.intellij.lang.javascript.flex.FlexImportSupport;
 import com.intellij.lang.javascript.flex.JSResolveHelper;
 import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
 import com.intellij.lang.javascript.index.JSNamedElementProxy;
-import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSClassBase;
 import com.intellij.lang.javascript.psi.impl.JSStubElementImpl;
@@ -256,10 +255,7 @@ public class JSImportHandlingUtil
 		{
 			return null;
 		}
-		if(JavaScriptIndex.getInstance(expr.getProject()).inUpdateState())
-		{
-			return null;
-		}
+
 		if(expr.getReferencedName() == null)
 		{
 			return null;

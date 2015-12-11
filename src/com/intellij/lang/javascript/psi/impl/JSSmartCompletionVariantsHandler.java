@@ -25,7 +25,6 @@ import java.util.Map;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
-import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
@@ -84,7 +83,6 @@ public class JSSmartCompletionVariantsHandler
 
 	private static class MyEventSubclassesProcessor extends ResolveProcessor implements JSResolveUtil.MetaDataProcessor
 	{
-		private final JavaScriptIndex index;
 		private final PsiElement myExpr;
 		private final List<Object> myVariants;
 		private final ResolveState state = new ResolveState();
@@ -96,7 +94,6 @@ public class JSSmartCompletionVariantsHandler
 			super(null);
 			myExpr = expr;
 			myVariants = variants;
-			index = JavaScriptIndex.getInstance(myExpr.getProject());
 
 			setToProcessHierarchy(true);
 		}
@@ -140,7 +137,7 @@ public class JSSmartCompletionVariantsHandler
 		public void findAcceptableVariants(JSReferenceExpression expression, final Project project)
 		{
 
-			PsiElement clazz = JSResolveUtil.findClassByQName("flash.events.Event", index, ModuleUtil.findModuleForPsiElement(expression));
+			PsiElement clazz = JSResolveUtil.findClassByQName("flash.events.Event", project, ModuleUtil.findModuleForPsiElement(expression));
 			clazz = JSResolveUtil.unwrapProxy(clazz);
 			if(!(clazz instanceof JSClass))
 			{
