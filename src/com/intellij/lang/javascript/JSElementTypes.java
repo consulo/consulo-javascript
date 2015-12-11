@@ -48,7 +48,7 @@ public interface JSElementTypes
 		@Override
 		public Language getLanguage()
 		{
-			return JavaScriptSupportLoader.JS_IN_HTML_DIALECT;
+			return JavaScriptLanguage.INSTANCE;
 		}
 	};
 	IElementType EMBEDDED_EXPRESSION = new ElementTypeAsPsiFactory("EMBEDDED_EXPRESSION", JavaScriptLanguage.INSTANCE, JSEmbeddedContentImpl.class);

@@ -42,7 +42,7 @@
 
 		<iconDescriptorUpdater implementation="org.mustbe.consulo.javascript.ide.JavaScriptIconDescriptorUpdater"/>
 
-		<fileTypeFactory implementation="com.intellij.lang.javascript.JavaScriptSupportLoader"/>
+		<fileTypeFactory implementation="org.mustbe.consulo.javascript.lang.JavaScriptFileTypeFactory"/>
 
 		<highlightVisitor implementation="com.intellij.lang.javascript.highlighting.JavaScriptHighlightVisitor"/>
 

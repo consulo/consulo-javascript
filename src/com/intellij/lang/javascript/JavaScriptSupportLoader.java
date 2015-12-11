@@ -17,21 +17,9 @@
 package com.intellij.lang.javascript;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.ide.highlighter.XmlFileType;
-import com.intellij.lang.DependentLanguage;
-import com.intellij.lang.LanguageParserDefinitions;
-import com.intellij.lang.LanguageVersion;
-import com.intellij.lang.javascript.highlighting.JSHighlighter;
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.fileTypes.FileTypeConsumer;
-import com.intellij.openapi.fileTypes.FileTypeFactory;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.fileTypes.SingleLazyInstanceSyntaxHighlighterFactory;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -42,15 +30,13 @@ import com.intellij.util.ArrayUtil;
 /**
  * @by max, maxim.mossienko
  */
-public class JavaScriptSupportLoader extends FileTypeFactory
+public class JavaScriptSupportLoader
 {
 	@Deprecated
 	public static final LanguageFileType JAVASCRIPT = JavaScriptFileType.INSTANCE;
 
 	@Deprecated
 	public static final JSLanguageDialect ECMA_SCRIPT_L4 = new JSLanguageDialect("ECMA4_DEPRECATED");
-	@Deprecated
-	public static final JSLanguageDialect JS_IN_HTML_DIALECT = new JsInHtmlLanguageDialect();
 
 
 	public static final
@@ -97,15 +83,6 @@ public class JavaScriptSupportLoader extends FileTypeFactory
 	@NonNls
 	public static final String MXML_COMPONENT_TEMPLATE_NAME = "Mxml Component";
 
-	@Override
-	public void createFileTypes(final @NotNull FileTypeConsumer consumer)
-	{
-		consumer.consume(JavaScriptFileType.INSTANCE);
-		//consumer.consume(JsonFileType.INSTANCE);
-		//consumer.consume(EcmaScriptFileType.INSTANCE, "es;js2");
-		//consumer.consume(ActionScriptFileType.INSTANCE);
-	}
-
 	public static boolean isFlexMxmFile(final PsiFile file)
 	{
 		return file.getFileType() == XmlFileType.INSTANCE && nameHasMxmlExtension(file.getName());
@@ -151,42 +128,4 @@ public class JavaScriptSupportLoader extends FileTypeFactory
 		return ArrayUtil.contains(ns, MXML_URIS);
 	}
 
-	private static class JsInHtmlLanguageDialect extends JSLanguageDialect implements DependentLanguage
-	{
-		final DialectOptionHolder holder = new DialectOptionHolder(false, false, false);
-
-		public JsInHtmlLanguageDialect()
-		{
-			super("JS in HTML");
-		}
-
-		{
-			SyntaxHighlighterFactory.LANGUAGE_FACTORY.addExplicitExtension(this, new SingleLazyInstanceSyntaxHighlighterFactory()
-			{
-				@Override
-				@NotNull
-				protected SyntaxHighlighter createHighlighter()
-				{
-					return new JSHighlighter(holder);
-				}
-			});
-
-			LanguageParserDefinitions.INSTANCE.addExplicitExtension(this, new JavascriptParserDefinition()
-			{
-
-				@NotNull
-				@Override
-				public Lexer createLexer(final Project project, LanguageVersion languageVersion)
-				{
-					return new JavaScriptParsingLexer(holder);
-				}
-			});
-		}
-
-		@Override
-		public String getFileExtension()
-		{
-			return "jshtml";
-		}
-	}
 }

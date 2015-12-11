@@ -44,7 +44,7 @@ public class JavascriptParserDefinition implements ParserDefinition
 {
 	@Override
 	@NotNull
-	public Lexer createLexer(Project project, LanguageVersion languageVersion)
+	public Lexer createLexer(Project project, @NotNull LanguageVersion languageVersion)
 	{
 		return new JavaScriptParsingLexer(DialectOptionHolder.dummy());
 	}
@@ -58,28 +58,28 @@ public class JavascriptParserDefinition implements ParserDefinition
 
 	@Override
 	@NotNull
-	public TokenSet getWhitespaceTokens(LanguageVersion languageVersion)
+	public TokenSet getWhitespaceTokens(@NotNull LanguageVersion languageVersion)
 	{
 		return TokenSet.create(JSTokenTypes.WHITE_SPACE);
 	}
 
 	@Override
 	@NotNull
-	public TokenSet getCommentTokens(LanguageVersion languageVersion)
+	public TokenSet getCommentTokens(@NotNull LanguageVersion languageVersion)
 	{
 		return JSTokenTypes.COMMENTS;
 	}
 
 	@Override
 	@NotNull
-	public TokenSet getStringLiteralElements(LanguageVersion languageVersion)
+	public TokenSet getStringLiteralElements(@NotNull LanguageVersion languageVersion)
 	{
 		return TokenSet.EMPTY;
 	}
 
 	@Override
 	@NotNull
-	public PsiParser createParser(final Project project, LanguageVersion languageVersion)
+	public PsiParser createParser(final Project project, @NotNull LanguageVersion languageVersion)
 	{
 		return new JSParser(null);
 	}
