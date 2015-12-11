@@ -20,7 +20,6 @@ import org.jetbrains.annotations.NonNls;
 import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -31,11 +30,9 @@ import com.intellij.util.ArrayUtil;
 /**
  * @by max, maxim.mossienko
  */
+@Deprecated
 public class JavaScriptSupportLoader
 {
-	@Deprecated
-	public static final LanguageFileType JAVASCRIPT = JavaScriptFileType.INSTANCE;
-
 	@Deprecated
 	public static final Language ECMA_SCRIPT_L4 = new Language("ECMA4_DEPRECATED") {};
 

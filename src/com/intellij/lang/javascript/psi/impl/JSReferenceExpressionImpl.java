@@ -18,6 +18,7 @@ package com.intellij.lang.javascript.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageNamesValidation;
 import com.intellij.lang.javascript.JSElementTypes;
@@ -156,7 +157,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		{
 			newElementName = newElementName.substring(0, i);
 		}
-		if(!LanguageNamesValidation.INSTANCE.forLanguage(JavaScriptSupportLoader.JAVASCRIPT.getLanguage()).isIdentifier(newElementName, null))
+		if(!LanguageNamesValidation.INSTANCE.forLanguage(JavaScriptLanguage.INSTANCE).isIdentifier(newElementName, null))
 		{
 			throw new IncorrectOperationException("Invalid javascript element name:" + newElementName);
 		}

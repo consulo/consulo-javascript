@@ -21,10 +21,10 @@ import java.lang.ref.WeakReference;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.extapi.psi.PsiElementBase;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.JSAssignmentExpression;
 import com.intellij.lang.javascript.psi.JSAttributeList;
 import com.intellij.lang.javascript.psi.JSClass;
@@ -125,7 +125,7 @@ final class MyJSNamedItem extends PsiElementBase implements JSNamedElementProxy,
 	@NotNull
 	public Language getLanguage()
 	{
-		return JavaScriptSupportLoader.JAVASCRIPT.getLanguage();
+		return JavaScriptLanguage.INSTANCE;
 	}
 
 	@RequiredReadAction

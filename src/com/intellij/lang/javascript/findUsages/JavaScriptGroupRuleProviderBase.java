@@ -20,7 +20,7 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.lang.javascript.psi.JSNamedElement;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.actionSystem.DataKey;
@@ -62,7 +62,7 @@ abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> impleme
 				{
 					PsiElement psiElement = ((PsiElementUsage) usage).getElement();
 
-					if(!psiElement.getLanguage().isKindOf(JavaScriptSupportLoader.JAVASCRIPT.getLanguage()))
+					if(!psiElement.getLanguage().isKindOf(JavaScriptLanguage.INSTANCE))
 					{
 						return null;
 					}

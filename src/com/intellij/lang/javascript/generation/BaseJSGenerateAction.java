@@ -18,6 +18,7 @@ package com.intellij.lang.javascript.generation;
 
 import org.jetbrains.annotations.NotNull;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
+import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -66,7 +67,7 @@ abstract class BaseJSGenerateAction extends AnAction
 
 		if(file != null)
 		{
-			if(file.getFileType() == JavaScriptSupportLoader.JAVASCRIPT)
+			if(file.getFileType() == JavaScriptFileType.INSTANCE)
 			{
 				final Editor editor = e.getData(PlatformDataKeys.EDITOR);
 				final PsiFile psifile = e.getData(LangDataKeys.PSI_FILE);

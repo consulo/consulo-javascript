@@ -17,10 +17,10 @@ package org.intellij.idea.lang.javascript.psiutil;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageParserDefinitions;
 import com.intellij.lang.ParserDefinition;
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSBlockStatement;
 import com.intellij.lang.javascript.psi.JSElement;
@@ -43,7 +43,6 @@ import com.intellij.util.IncorrectOperationException;
 /**
  */
 public class JSElementFactory {
-    @NonNls private static final String  DUMMY_FILE_NAME_PREFIX = "dummy.";
     private         static final Class[] WHITESPACE_CLASS       = new Class[] { PsiWhiteSpace.class };
 
     private JSElementFactory() {}
@@ -103,11 +102,11 @@ public class JSElementFactory {
 
     @NotNull private static PsiFile createDummyFile(Project project, String text) {
       final ParserDefinition  def            =
-        LanguageParserDefinitions.INSTANCE.forLanguage(JavaScriptSupportLoader.JAVASCRIPT.getLanguage());
+        LanguageParserDefinitions.INSTANCE.forLanguage(JavaScriptLanguage.INSTANCE);
 
         assert (def != null);
       return PsiFileFactory.getInstance(project)
-        .createFileFromText(DUMMY_FILE_NAME_PREFIX + JavaScriptSupportLoader.JAVASCRIPT.getDefaultExtension(), text);
+        .createFileFromText("dummy.js", text);
     }
 
     public static JSStatement replaceElementWithStatement(@NotNull JSElement      element,

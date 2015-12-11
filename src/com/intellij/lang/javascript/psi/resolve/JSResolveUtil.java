@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import com.intellij.extapi.psi.PsiElementBase;
 import com.intellij.ide.highlighter.XmlFileType;
@@ -1905,7 +1906,7 @@ public class JSResolveUtil
 		@NotNull
 		public Language getLanguage()
 		{
-			return JavaScriptSupportLoader.JAVASCRIPT.getLanguage();
+			return JavaScriptLanguage.INSTANCE;
 		}
 
 		@RequiredReadAction

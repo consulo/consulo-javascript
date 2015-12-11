@@ -22,11 +22,12 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.extapi.psi.PsiElementBase;
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.index.JSPackageIndex;
 import com.intellij.lang.javascript.index.JSPackageIndexInfo;
 import com.intellij.lang.javascript.psi.JSPackage;
@@ -143,13 +144,15 @@ public class JSPackageWrapper extends PsiElementBase implements JSPackage
 		return null;
 	}
 
+	@RequiredReadAction
 	@Override
 	@NotNull
 	public Language getLanguage()
 	{
-		return JavaScriptSupportLoader.JAVASCRIPT.getLanguage();
+		return JavaScriptLanguage.INSTANCE;
 	}
 
+	@RequiredReadAction
 	@Override
 	@NotNull
 	public PsiElement[] getChildren()
@@ -172,6 +175,7 @@ public class JSPackageWrapper extends PsiElementBase implements JSPackage
 		return null;
 	}
 
+	@RequiredReadAction
 	@Override
 	public PsiElement getFirstChild()
 	{
@@ -184,30 +188,35 @@ public class JSPackageWrapper extends PsiElementBase implements JSPackage
 		return true;
 	}
 
+	@RequiredReadAction
 	@Override
 	public PsiElement getLastChild()
 	{
 		return null;
 	}
 
+	@RequiredReadAction
 	@Override
 	public PsiElement getNextSibling()
 	{
 		return null;
 	}
 
+	@RequiredReadAction
 	@Override
 	public PsiElement getPrevSibling()
 	{
 		return null;
 	}
 
+	@RequiredReadAction
 	@Override
 	public TextRange getTextRange()
 	{
 		return null;
 	}
 
+	@RequiredReadAction
 	@Override
 	public int getStartOffsetInParent()
 	{
@@ -221,12 +230,14 @@ public class JSPackageWrapper extends PsiElementBase implements JSPackage
 		return project;
 	}
 
+	@RequiredReadAction
 	@Override
 	public int getTextLength()
 	{
 		return 0;
 	}
 
+	@RequiredReadAction
 	@Override
 	public PsiElement findElementAt(final int offset)
 	{
@@ -239,12 +250,14 @@ public class JSPackageWrapper extends PsiElementBase implements JSPackage
 		return 0;
 	}
 
+	@RequiredReadAction
 	@Override
 	public String getText()
 	{
 		return null;
 	}
 
+	@RequiredReadAction
 	@Override
 	@NotNull
 	public char[] textToCharArray()
@@ -252,6 +265,7 @@ public class JSPackageWrapper extends PsiElementBase implements JSPackage
 		return new char[0];
 	}
 
+	@RequiredReadAction
 	@Override
 	public boolean textContains(final char c)
 	{

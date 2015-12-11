@@ -29,6 +29,7 @@ import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.idea.LoggerFactory;
+import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.flex.JSResolveHelper;
 import com.intellij.lang.javascript.psi.JSFile;
@@ -237,7 +238,7 @@ public class JSPackageIndex extends CustomImplementationFileBasedIndexExtension<
 		public boolean acceptInput(final Project project, final VirtualFile file)
 		{
 			FileType type = file.getFileType();
-			return type == JavaScriptSupportLoader.JAVASCRIPT || type == swfFileType;
+			return type == JavaScriptFileType.INSTANCE || type == swfFileType;
 		}
 	};
 

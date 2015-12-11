@@ -17,7 +17,7 @@
 package com.intellij.lang.javascript.search;
 
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
+import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNamedElement;
@@ -51,9 +51,8 @@ class JSReferencesSearchExecutor implements QueryExecutor<PsiReference, Referenc
 			{
 				return true;
 			}
-			PsiSearchHelper.SERVICE.getInstance(sourceElement.getProject()).processAllFilesWithWordInLiterals(s,
-					GlobalSearchScope.getScopeRestrictedByFileTypes(GlobalSearchScope.projectScope(sourceElement.getProject()),
-							JavaScriptSupportLoader.JAVASCRIPT), new Processor<PsiFile>()
+			PsiSearchHelper.SERVICE.getInstance(sourceElement.getProject()).processAllFilesWithWordInLiterals(s, GlobalSearchScope.getScopeRestrictedByFileTypes(GlobalSearchScope.projectScope
+					(sourceElement.getProject()), JavaScriptFileType.INSTANCE), new Processor<PsiFile>()
 			{
 				@Override
 				public boolean process(final PsiFile psiFile)

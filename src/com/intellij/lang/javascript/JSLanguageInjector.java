@@ -19,6 +19,7 @@ package com.intellij.lang.javascript;
 import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguagePointerUtil;
 import com.intellij.lang.injection.MultiHostInjector;
@@ -90,7 +91,7 @@ public class JSLanguageInjector implements MultiHostInjector
 							isMozillaXulOrXblNs(ns))
 					{
 						TextRange range = new TextRange(1, host.getTextLength() - 1);
-						registrar.startInjecting(JavaScriptSupportLoader.JAVASCRIPT.getLanguage()).addPlace(null, null, (PsiLanguageInjectionHost) host,
+						registrar.startInjecting(JavaScriptLanguage.INSTANCE).addPlace(null, null, (PsiLanguageInjectionHost) host,
 								range).doneInjecting();
 					}
 					else
@@ -118,7 +119,7 @@ public class JSLanguageInjector implements MultiHostInjector
 				else if(attrName.equalsIgnoreCase("djConfig"))
 				{
 					TextRange range = new TextRange(1, host.getTextLength() - 1);
-					registrar.startInjecting(JavaScriptSupportLoader.JAVASCRIPT.getLanguage()).addPlace("a = { ", " }", (PsiLanguageInjectionHost) host,
+					registrar.startInjecting(JavaScriptLanguage.INSTANCE).addPlace("a = { ", " }", (PsiLanguageInjectionHost) host,
 							range).doneInjecting();
 				}
 				else
@@ -141,7 +142,7 @@ public class JSLanguageInjector implements MultiHostInjector
 					@NonNls final String name = tag.getAttributeValue("name");
 					if(name != null && name.startsWith("on"))
 					{
-						Language language = JavaScriptSupportLoader.JAVASCRIPT.getLanguage();
+						Language language = JavaScriptLanguage.INSTANCE;
 						injectToXmlText(registrar, host, language, null, null);
 					}
 				}
@@ -160,7 +161,7 @@ public class JSLanguageInjector implements MultiHostInjector
 					{
 						inject = false;
 					}
-					Language language = ecma ? JavaScriptSupportLoader.ECMA_SCRIPT_L4 : JavaScriptSupportLoader.JAVASCRIPT.getLanguage();
+					Language language = ecma ? JavaScriptSupportLoader.ECMA_SCRIPT_L4 : JavaScriptLanguage.INSTANCE;
 					if(inject)
 					{
 						injectToXmlText(registrar, host, language, null, null);
@@ -229,7 +230,7 @@ public class JSLanguageInjector implements MultiHostInjector
 							suffix = "}";
 						}
 
-						injectToXmlText(registrar, host, JavaScriptSupportLoader.JAVASCRIPT.getLanguage(), prefix, suffix);
+						injectToXmlText(registrar, host, JavaScriptLanguage.INSTANCE, prefix, suffix);
 					}
 				}
 			}
@@ -349,7 +350,7 @@ public class JSLanguageInjector implements MultiHostInjector
 			}
 			TextRange range = new TextRange(injectFromTheBeginning ? valueTokenNumber + (startsWithPrefix ? JAVASCRIPT_PREFIX.length() : 0) : valueChild
 					.getStartOffsetInParent(), host.getTextLength() - valueTokenNumber);
-			Language language = JavaScriptSupportLoader.JAVASCRIPT.getLanguage();
+			Language language = JavaScriptLanguage.INSTANCE;
 			registrar.startInjecting(language).addPlace(null, null, (PsiLanguageInjectionHost) host, range).doneInjecting();
 
 		}

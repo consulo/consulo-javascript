@@ -17,6 +17,7 @@
 package com.intellij.lang.javascript;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.codeInsight.template.TemplateContextType;
 import com.intellij.lang.Language;
 import com.intellij.lang.javascript.psi.JSFile;
@@ -75,11 +76,11 @@ public class JavaScriptCodeContextType extends TemplateContextType
 
 				if(hasJsInjection.get())
 				{
-					language = JavaScriptSupportLoader.JAVASCRIPT.getLanguage();
+					language = JavaScriptLanguage.INSTANCE;
 				}
 			}
 		}
-		return language != null && language.isKindOf(JavaScriptSupportLoader.JAVASCRIPT.getLanguage());
+		return language != null && language.isKindOf(JavaScriptLanguage.INSTANCE);
 	}
 
 	public boolean isInContext(@NotNull final FileType fileType)
