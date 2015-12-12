@@ -63,7 +63,9 @@ public class JavaScriptQuoteHandler extends SimpleTokenSetQuoteHandler implement
 				tokenType == JSTokenTypes.RPAR ||
 				tokenType == JSTokenTypes.RBRACKET ||
 				tokenType == JSTokenTypes.RBRACE ||
-				tokenType == JSTokenTypes.STRING_LITERAL;	}
+				tokenType == JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL ||
+				tokenType == JSTokenTypes.STRING_LITERAL;
+	}
 
 	@Override
 	public boolean needParenthesesAroundConcatenation(PsiElement element)

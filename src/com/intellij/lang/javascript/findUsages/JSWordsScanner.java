@@ -16,11 +16,11 @@
 
 package com.intellij.lang.javascript.findUsages;
 
+import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
 import com.intellij.lang.cacheBuilder.DefaultWordsScanner;
 import com.intellij.lang.javascript.DialectOptionHolder;
 import com.intellij.lang.javascript.JSFlexAdapter;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.psi.tree.TokenSet;
 
 /**
  * Created by IntelliJ IDEA.
@@ -33,8 +33,7 @@ public class JSWordsScanner extends DefaultWordsScanner
 {
 	public JSWordsScanner()
 	{
-		super(new JSFlexAdapter(false, DialectOptionHolder.dummy()), JSTokenTypes.IDENTIFIER_TOKENS_SET, JSTokenTypes.COMMENTS,
-				TokenSet.create(JSTokenTypes.STRING_LITERAL));
+		super(new JSFlexAdapter(false, DialectOptionHolder.dummy()), JSTokenTypes.IDENTIFIER_TOKENS_SET, JSTokenTypes.COMMENTS, JavaScriptTokenSets.STRING_LITERALS);
 		setMayHaveFileRefsInLiterals(true);
 	}
 }

@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
+import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageParserDefinitions;
 import com.intellij.lang.ParserDefinition;
@@ -60,7 +61,7 @@ public class JSChangeUtil
 		{
 			return createNameIdentifier(project, name);
 		}
-		else if(type == JSTokenTypes.STRING_LITERAL && !StringUtil.isQuotedString(name))
+		else if(JavaScriptTokenSets.STRING_LITERALS.contains(type) && !StringUtil.isQuotedString(name))
 		{
 			return createExpressionFromText(project, "\"" + name + "\"").getNode().getFirstChildNode();
 		}

@@ -68,6 +68,25 @@ public class JsonCompletionContributor extends CompletionContributor
 			}
 		});
 
+		extend(CompletionType.BASIC, StandardPatterns.psiElement(JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL), new CompletionProvider<CompletionParameters>()
+		{
+			@RequiredReadAction
+			@Override
+			protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result)
+			{
+				PsiElement originalPosition = parameters.getOriginalPosition();
+				if(originalPosition == null)
+				{
+					return;
+				}
+				if(!"\'\'".equals(originalPosition.getText()))
+				{
+					return;
+				}
+				addVariants(parameters, result, false);
+			}
+		});
+
 		extend(CompletionType.BASIC, StandardPatterns.psiElement(JSTokenTypes.STRING_LITERAL), new CompletionProvider<CompletionParameters>()
 		{
 			@RequiredReadAction
