@@ -38,7 +38,7 @@ public class JavaScript16LanguageVersion extends BaseJavaScriptLanguageVersion i
 		@Override
 		public Lexer create()
 		{
-			return new JavaScript16Lexer(true);
+			return new JavaScript16Lexer();
 		}
 	};
 
@@ -65,7 +65,7 @@ public class JavaScript16LanguageVersion extends BaseJavaScriptLanguageVersion i
 	@Override
 	public Lexer createLexer(@Nullable Project project)
 	{
-		return new JavaScriptParsingLexer(new JavaScript16Lexer(false), JavaScript16Lexer.LAST_STATE);
+		return new JavaScriptParsingLexer(ourLexerFactory.create(), JavaScript16Lexer.LAST_STATE);
 	}
 
 	@NotNull

@@ -18,6 +18,7 @@ package com.intellij.lang.javascript.psi.impl;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -143,8 +144,7 @@ public class JSNamespaceDeclarationImpl extends JSStubbedStatementImpl<JSNamespa
 				node = node.getTreeNext();
 			}
 
-			IElementType type;
-			if(node != null && ((type = node.getElementType()) == JSTokenTypes.STRING_LITERAL || type == JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL))
+			if(node != null && JavaScriptTokenSets.STRING_LITERALS.contains(node.getElementType()))
 			{
 				return node.getText();
 			}

@@ -18,6 +18,7 @@ package com.intellij.lang.javascript.psi.impl;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -103,12 +104,7 @@ public class JSAttributeNameValuePairImpl extends JSStubElementImpl<JSAttributeN
 
 	private ASTNode findValueNode()
 	{
-		ASTNode valueNode = getNode().findChildByType(JSTokenTypes.STRING_LITERAL);
-		if(valueNode == null)
-		{
-			valueNode = getNode().findChildByType(JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL);
-		}
-		return valueNode;
+		return getNode().findChildByType(JavaScriptTokenSets.STRING_LITERALS);
 	}
 
 	@Override

@@ -6,15 +6,6 @@ import com.intellij.lang.javascript.JSTokenTypes;
 
 %%
 
-%{
-    public JsonLexer(boolean highlightMode) {
-      isHighlightModeOn = highlightMode;
-    }
-
-    private boolean isHighlightModeOn = false;
-    private int tagCount = 0;
-%}
-
 %public
 %class JsonLexer
 %extends LexerBase
@@ -69,12 +60,7 @@ DIGIT=[0-9]
 <YYINITIAL> {INTEGER_LITERAL}     { yybegin(YYINITIAL); return JSTokenTypes.NUMERIC_LITERAL; }
 <YYINITIAL> {FLOAT_LITERAL}       { yybegin(YYINITIAL); return JSTokenTypes.NUMERIC_LITERAL; }
 
-<YYINITIAL> {QUOTED_LITERAL}      {
-                        yybegin(YYINITIAL);
-                        return isHighlightModeOn ?
-                          JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL:
-                          JSTokenTypes.STRING_LITERAL;
-                      }
+<YYINITIAL> {QUOTED_LITERAL}      { return JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL; }
 
 <YYINITIAL> {DOUBLE_QUOTED_LITERAL}      { yybegin(YYINITIAL); return JSTokenTypes.STRING_LITERAL; }
 

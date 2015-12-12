@@ -22,7 +22,7 @@ public class JavaScript15LanguageVersion extends BaseJavaScriptLanguageVersion i
 		@Override
 		public Lexer create()
 		{
-			return new JavaScript15Lexer(true);
+			return new JavaScript15Lexer();
 		}
 	};
 
@@ -48,7 +48,7 @@ public class JavaScript15LanguageVersion extends BaseJavaScriptLanguageVersion i
 	@Override
 	public Lexer createLexer(@Nullable Project project)
 	{
-		return new JavaScriptParsingLexer(new JavaScript15Lexer(false), JavaScript15Lexer.LAST_STATE);
+		return new JavaScriptParsingLexer(ourLexerFactory.create(), JavaScript15Lexer.LAST_STATE);
 	}
 
 	@NotNull

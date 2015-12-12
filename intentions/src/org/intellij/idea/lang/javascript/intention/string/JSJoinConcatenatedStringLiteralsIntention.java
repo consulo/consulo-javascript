@@ -19,11 +19,13 @@ import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.jetbrains.annotations.NotNull;
-
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
+import com.intellij.lang.javascript.psi.JSSimpleLiteralExpression;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
@@ -88,13 +90,11 @@ public class JSJoinConcatenatedStringLiteralsIntention extends JSIntention {
             return true;
         }
 
+		@RequiredReadAction
         private static boolean isApplicableLiteral(JSExpression lhs) {
-            IElementType type;
             return lhs != null &&
-                   lhs instanceof JSLiteralExpression &&
-                    ((type = lhs.getFirstChild().getNode().getElementType()) == JSTokenTypes.STRING_LITERAL ||
-                     type == JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL
-                    );
+                   lhs instanceof JSSimpleLiteralExpression &&
+                    JavaScriptTokenSets.STRING_LITERALS.contains(((JSSimpleLiteralExpression) lhs).getLiteralElementType());
         }
     }
 }

@@ -25,7 +25,7 @@ public class JsonJavaScriptVersion extends BaseJavaScriptLanguageVersion
 		@Override
 		public Lexer create()
 		{
-			return new JsonLexer(true);
+			return new JsonLexer();
 		}
 	};
 
@@ -52,7 +52,7 @@ public class JsonJavaScriptVersion extends BaseJavaScriptLanguageVersion
 	@Override
 	public Lexer createLexer(@Nullable Project project)
 	{
-		return new JavaScriptParsingLexer(new JsonLexer(false), JsonLexer.LAST_STATE);
+		return new JavaScriptParsingLexer(ourLexerFactory.create(), JsonLexer.LAST_STATE);
 	}
 
 	@NotNull

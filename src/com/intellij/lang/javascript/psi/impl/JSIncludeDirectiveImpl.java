@@ -17,9 +17,9 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
-import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSIncludeDirective;
 import com.intellij.lang.javascript.psi.stubs.JSIncludeDirectiveStub;
@@ -76,12 +76,7 @@ public class JSIncludeDirectiveImpl extends JSStubbedStatementImpl<JSIncludeDire
 
 	private ASTNode getIncludedFileNode()
 	{
-		ASTNode node = getNode().findChildByType(JSTokenTypes.STRING_LITERAL);
-		if(node == null)
-		{
-			getNode().findChildByType(JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL);
-		}
-		return node;
+		return getNode().findChildByType(JavaScriptTokenSets.STRING_LITERALS);
 	}
 
 	@Override

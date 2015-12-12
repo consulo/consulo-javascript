@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.injection.InjectedLanguageManager;
@@ -31,7 +32,6 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.index.JSSymbolUtil;
 import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
-import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.index.JavaScriptSymbolProcessor;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.openapi.util.Key;
@@ -904,7 +904,7 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 		final ASTNode childNode = rawqualifier.getNode().getFirstChildNode();
 		IElementType constantType = childNode.getElementType();
 
-		String type = constantType == JSTokenTypes.STRING_LITERAL || constantType == JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL ? STRING_TYPE_NAME :
+		String type = JavaScriptTokenSets.STRING_LITERALS.contains(constantType) ? STRING_TYPE_NAME :
 				constantType == JSTokenTypes.NUMERIC_LITERAL ? NUMBER_TYPE_NAME : constantType == JSTokenTypes.REGEXP_LITERAL ? REG_EXP_TYPE_NAME : constantType
 						== JSTokenTypes.XML_START_TAG_START ? XML_TYPE_NAME : constantType == JSTokenTypes.XML_START_TAG_LIST ? XML_LIST_TYPE_NAME : constantType ==
 						JSTokenTypes.TRUE_KEYWORD || constantType == JSTokenTypes.FALSE_KEYWORD ? BOOLEAN_TYPE_NAME : null;
