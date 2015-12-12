@@ -19,6 +19,7 @@ package com.intellij.lang.javascript.psi.impl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -42,8 +43,7 @@ import com.intellij.util.IncorrectOperationException;
  */
 public class JSPropertyImpl extends JSElementImpl implements JSProperty
 {
-	private static TokenSet IDENTIFIER_TOKENS_SET = TokenSet.orSet(JSTokenTypes.IDENTIFIER_TOKENS_SET, TokenSet.create(JSTokenTypes.STRING_LITERAL,
-			JSTokenTypes.NUMERIC_LITERAL));
+	private static TokenSet IDENTIFIER_TOKENS_SET = TokenSet.orSet(JSTokenTypes.IDENTIFIER_TOKENS_SET, TokenSet.create(JSTokenTypes.NUMERIC_LITERAL), JavaScriptTokenSets.STRING_LITERALS);
 
 	private static TokenSet FUNCTION_TOKEN_SET = TokenSet.create(JSElementTypes.FUNCTION_DECLARATION);
 
@@ -80,7 +80,7 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 		PsiReference reference = JSPropertyNameReferenceProvider.EP_NAME.composite().getReference(this);
 		if(reference != null)
 		{
-			return new PsiReference[] {reference};
+			return new PsiReference[]{reference};
 		}
 		return PsiReference.EMPTY_ARRAY;
 	}
