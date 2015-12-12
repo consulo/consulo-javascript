@@ -8,7 +8,7 @@ import com.intellij.lang.javascript.JSTokenTypes;
 
 
 %public
-%class JavaScript16Lexer
+%class JavaScript17Lexer
 %extends LexerBase
 %unicode
 %function advanceImpl
@@ -101,6 +101,9 @@ DIGIT=[0-9]
 <YYINITIAL> "with"                { yybegin(YYINITIAL); return JSTokenTypes.WITH_KEYWORD; }
 <YYINITIAL> "get"                 { yybegin(YYINITIAL); return JSTokenTypes.GET_KEYWORD; }
 <YYINITIAL> "set"                 { yybegin(YYINITIAL); return JSTokenTypes.SET_KEYWORD; }
+<YYINITIAL> "yield"               { yybegin(YYINITIAL); return JSTokenTypes.YIELD_KEYWORD; }
+<YYINITIAL> "let"                 { yybegin(YYINITIAL); return JSTokenTypes.LET_KEYWORD; }
+
 
 <YYINITIAL> {IDENTIFIER}          { yybegin(YYINITIAL);       return JSTokenTypes.IDENTIFIER; }
 

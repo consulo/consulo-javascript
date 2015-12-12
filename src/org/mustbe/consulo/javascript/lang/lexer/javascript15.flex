@@ -54,8 +54,6 @@ DIGIT=[0-9]
 
 <YYINITIAL, COMMENT> {WHITE_SPACE_CHAR}+   { return JSTokenTypes.WHITE_SPACE; }
 
-<YYINITIAL> "<" { return JSTokenTypes.LT; }
-
 <COMMENT> [^] { yybegin(YYINITIAL); yypushback(1); }
 
 <YYINITIAL> {C_STYLE_COMMENT}     { return JSTokenTypes.C_STYLE_COMMENT; }
