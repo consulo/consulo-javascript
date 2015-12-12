@@ -29,18 +29,25 @@ import com.intellij.openapi.project.Project;
  * @author VISTALL
  * @since 11.12.2015
  */
-public class JavaScript17LanguageVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersion
+public class JavaScript18LanguageVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersions.Marker
 {
 	@NotNull
 	@LazyInstance
-	public static JavaScript17LanguageVersion getInstance()
+	public static JavaScript18LanguageVersion getInstance()
 	{
-		return JavaScriptLanguage.INSTANCE.findVersionByClass(JavaScript17LanguageVersion.class);
+		return JavaScriptLanguage.INSTANCE.findVersionByClass(JavaScript18LanguageVersion.class);
 	}
 
-	public JavaScript17LanguageVersion()
+	public JavaScript18LanguageVersion()
 	{
-		super("JavaScript 1.7");
+		super("JAVASCRIPT_1_8");
+	}
+
+	@NotNull
+	@Override
+	public String getPresentableName()
+	{
+		return "JavaScript 1.8";
 	}
 
 	@NotNull
@@ -55,5 +62,11 @@ public class JavaScript17LanguageVersion extends BaseJavaScriptLanguageVersion i
 	public JSHighlighter getSyntaxHighlighter()
 	{
 		return new JSHighlighter(DialectOptionHolder.dummy());
+	}
+
+	@Override
+	public int getWeight()
+	{
+		return 3;
 	}
 }

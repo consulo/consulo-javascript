@@ -23,6 +23,12 @@ public abstract class BaseJavaScriptLanguageVersion extends BaseLanguageVersion<
 	}
 
 	@NotNull
+	public String getPresentableName()
+	{
+		return getName();
+	}
+
+	@NotNull
 	public abstract JSHighlighter getSyntaxHighlighter();
 
 	@NotNull

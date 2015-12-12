@@ -30,7 +30,14 @@ public class ActionScriptLanguageVersion extends BaseJavaScriptLanguageVersion
 
 	public ActionScriptLanguageVersion()
 	{
-		super("ActionScript");
+		super("ACTIONSCRIPT");
+	}
+
+	@NotNull
+	@Override
+	public String getPresentableName()
+	{
+		return "ActionScript";
 	}
 
 	@NotNull

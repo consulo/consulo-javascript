@@ -14,6 +14,9 @@
             <element id="module-output" name="client-javascript-impl" />
             <element id="module-output" name="ecmascript-level4-impl" />
             <element id="module-output" name="actionscript-impl" />
+            <element id="module-output" name="javascript18-impl" />
+            <element id="module-output" name="javascript17-impl" />
+            <element id="module-output" name="javascript16-impl" />
           </element>
           <element id="zip-archive" name="json-impl.jar">
             <element id="module-output" name="json-javascript-impl" />

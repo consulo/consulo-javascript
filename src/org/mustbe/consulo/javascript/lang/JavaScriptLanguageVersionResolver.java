@@ -40,7 +40,7 @@ public class JavaScriptLanguageVersionResolver implements LanguageVersionResolve
 		PsiFile containingFile = element == null ? null : element.getContainingFile();
 		if(containingFile == null)
 		{
-			return JavaScript15LanguageVersion.getInstance();
+			return StandardJavaScriptVersions.getDefaultVersion();
 		}
 		return getLanguageVersion(language, element.getProject(), containingFile.getVirtualFile());
 	}
@@ -50,7 +50,7 @@ public class JavaScriptLanguageVersionResolver implements LanguageVersionResolve
 	{
 		if(project == null || virtualFile == null)
 		{
-			return JavaScript15LanguageVersion.getInstance();
+			return StandardJavaScriptVersions.getDefaultVersion();
 		}
 
 		FileType fileType = virtualFile.getFileType();
@@ -59,6 +59,6 @@ public class JavaScriptLanguageVersionResolver implements LanguageVersionResolve
 			return ((JavaScriptFileTypeWithVersion) fileType).getLanguageVersion(project, virtualFile);
 		}
 
-		return JavaScript15LanguageVersion.getInstance();
+		return StandardJavaScriptVersions.getDefaultVersion();
 	}
 }

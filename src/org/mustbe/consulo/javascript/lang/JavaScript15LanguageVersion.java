@@ -13,7 +13,7 @@ import com.intellij.openapi.project.Project;
  * @author VISTALL
  * @since 05.03.2015
  */
-public class JavaScript15LanguageVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersion
+public class JavaScript15LanguageVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersions.Marker
 {
 	@NotNull
 	@LazyInstance
@@ -24,9 +24,15 @@ public class JavaScript15LanguageVersion extends BaseJavaScriptLanguageVersion i
 
 	public JavaScript15LanguageVersion()
 	{
-		super("JavaScript 1.5");
+		super("JAVASCRIPT_1_5");
 	}
 
+	@NotNull
+	@Override
+	public String getPresentableName()
+	{
+		return "JavaScript 1.5";
+	}
 	@NotNull
 	@Override
 	public Lexer createLexer(@Nullable Project project)
@@ -39,5 +45,11 @@ public class JavaScript15LanguageVersion extends BaseJavaScriptLanguageVersion i
 	public JSHighlighter getSyntaxHighlighter()
 	{
 		return new JSHighlighter(DialectOptionHolder.dummy());
+	}
+
+	@Override
+	public int getWeight()
+	{
+		return 0;
 	}
 }

@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.javascript.lang;
+package org.mustbe.consulo.javascript.module.extension;
+
+import org.consulo.module.extension.MutableModuleExtensionWithSdk;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
+import com.intellij.lang.LanguageVersion;
 
 /**
  * @author VISTALL
- * @since 11.12.2015
+ * @since 12.12.2015
  */
-public interface StandardJavaScriptVersion
+public interface JavaScriptMutableModuleExtension<T extends JavaScriptModuleExtension<T>> extends JavaScriptModuleExtension<T>, MutableModuleExtensionWithSdk<T>
 {
+	void setLanguageVersion(@NotNull LanguageVersion<JavaScriptLanguage> languageVersion);
 }

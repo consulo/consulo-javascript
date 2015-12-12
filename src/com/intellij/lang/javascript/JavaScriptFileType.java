@@ -20,11 +20,14 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.javascript.lang.JavaScript15LanguageVersion;
 import org.mustbe.consulo.javascript.lang.JavaScriptFileTypeWithVersion;
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
+import org.mustbe.consulo.javascript.lang.StandardJavaScriptVersions;
+import org.mustbe.consulo.javascript.module.extension.JavaScriptModuleExtension;
 import com.intellij.lang.LanguageVersion;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
@@ -73,6 +76,20 @@ public class JavaScriptFileType extends LanguageFileType implements JavaScriptFi
 	@Override
 	public LanguageVersion<JavaScriptLanguage> getLanguageVersion(@Nullable Project project, @Nullable VirtualFile virtualFile)
 	{
-		return JavaScript15LanguageVersion.getInstance();
+		if(virtualFile == null || project == null)
+		{
+			return StandardJavaScriptVersions.getDefaultVersion();
+		}
+		Module moduleForFile = ModuleUtilCore.findModuleForFile(virtualFile, project);
+		if(moduleForFile == null)
+		{
+			return StandardJavaScriptVersions.getDefaultVersion();
+		}
+		JavaScriptModuleExtension<?> extension = ModuleUtilCore.getExtension(moduleForFile, JavaScriptModuleExtension.class);
+		if(extension != null)
+		{
+			return extension.getLanguageVersion();
+		}
+		return StandardJavaScriptVersions.getDefaultVersion();
 	}
 }
