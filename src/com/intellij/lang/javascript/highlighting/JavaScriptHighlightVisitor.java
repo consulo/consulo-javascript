@@ -19,6 +19,7 @@ package com.intellij.lang.javascript.highlighting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.HighlightVisitor;
@@ -51,7 +52,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
 		PsiElement parent = element.getParent();
 		IElementType elementType = PsiUtilCore.getElementType(element);
-		if((elementType == JSTokenTypes.STRING_LITERAL || elementType == JSTokenTypes.IDENTIFIER) && parent instanceof JSProperty && ((JSProperty) parent).getNameIdentifier() == element)
+		if((JavaScriptTokenSets.STRING_LITERALS.contains(elementType) || elementType == JSTokenTypes.IDENTIFIER) && parent instanceof JSProperty && ((JSProperty) parent).getNameIdentifier() == element)
 		{
 			highlightPropertyName((JSProperty) parent, element);
 		}

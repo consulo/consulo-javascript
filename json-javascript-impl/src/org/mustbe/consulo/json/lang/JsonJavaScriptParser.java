@@ -208,6 +208,7 @@ public class JsonJavaScriptParser implements PsiParser
 		final IElementType firstToken = builder.getTokenType();
 		if(firstToken == JSTokenTypes.NUMERIC_LITERAL ||
 				firstToken == JSTokenTypes.STRING_LITERAL ||
+				firstToken == JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL ||
 				firstToken == JSTokenTypes.NULL_KEYWORD ||
 				firstToken == JSTokenTypes.FALSE_KEYWORD ||
 				firstToken == JSTokenTypes.TRUE_KEYWORD)

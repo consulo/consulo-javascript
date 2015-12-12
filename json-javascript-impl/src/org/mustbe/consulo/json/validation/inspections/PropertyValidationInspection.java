@@ -27,6 +27,7 @@ import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
 import org.mustbe.consulo.json.validation.JsonFileDescriptorProviders;
 import org.mustbe.consulo.json.validation.NativeArray;
 import org.mustbe.consulo.json.validation.descriptor.JsonObjectDescriptor;
@@ -187,7 +188,7 @@ public class PropertyValidationInspection extends LocalInspectionTool
 			{
 				propertyType = Number.class;
 			}
-			else if(elementType == JSTokenTypes.STRING_LITERAL)
+			else if(JavaScriptTokenSets.STRING_LITERALS.contains(elementType))
 			{
 				propertyType = String.class;
 			}

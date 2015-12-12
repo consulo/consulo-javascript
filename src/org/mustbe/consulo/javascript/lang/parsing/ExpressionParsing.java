@@ -17,6 +17,7 @@
 package org.mustbe.consulo.javascript.lang.parsing;
 
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JavaScriptBundle;
@@ -62,6 +63,7 @@ public class ExpressionParsing extends Parsing
 		}
 		else if(firstToken == JSTokenTypes.NUMERIC_LITERAL ||
 				firstToken == JSTokenTypes.STRING_LITERAL ||
+				firstToken == JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL ||
 				firstToken == JSTokenTypes.REGEXP_LITERAL ||
 				firstToken == JSTokenTypes.NULL_KEYWORD ||
 				firstToken == JSTokenTypes.UNDEFINED_KEYWORD ||
@@ -306,7 +308,7 @@ public class ExpressionParsing extends Parsing
 
 	public static boolean isNotPropertyStart(final IElementType elementType)
 	{
-		return !JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(elementType) && elementType != JSTokenTypes.STRING_LITERAL && elementType !=
+		return !JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(elementType) && !JavaScriptTokenSets.STRING_LITERALS.contains(elementType) && elementType !=
 				JSTokenTypes.NUMERIC_LITERAL;
 	}
 
