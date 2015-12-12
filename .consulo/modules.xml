@@ -226,6 +226,7 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="consulo-javascript" />
+          <orderEntry type="module" module-name="javascript17-impl" />
         </module-layer>
       </module>
     </modules>
