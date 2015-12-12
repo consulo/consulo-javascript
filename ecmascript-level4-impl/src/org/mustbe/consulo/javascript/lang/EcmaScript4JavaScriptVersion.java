@@ -5,7 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.javascript.lang.parsing.EcmaScript4Parser;
 import com.intellij.lang.PsiParser;
 import com.intellij.lang.javascript.DialectOptionHolder;
-import com.intellij.lang.javascript.JavaScriptParsingLexer;
+import com.intellij.lang.javascript.JavaScriptParsingFlexLexer;
 import com.intellij.lang.javascript.highlighting.JSHighlighter;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
@@ -41,6 +41,6 @@ public class EcmaScript4JavaScriptVersion extends BaseJavaScriptLanguageVersion
 	@Override
 	public Lexer createLexer(@Nullable Project project)
 	{
-		return new JavaScriptParsingLexer(myDialectOptionHolder);
+		return new JavaScriptParsingFlexLexer(myDialectOptionHolder);
 	}
 }

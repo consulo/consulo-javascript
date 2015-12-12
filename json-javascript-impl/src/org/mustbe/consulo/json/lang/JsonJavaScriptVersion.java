@@ -3,15 +3,16 @@ package org.mustbe.consulo.json.lang;
 import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.javascript.ide.hightlight.JavaScriptHighlighter;
 import org.mustbe.consulo.javascript.lang.BaseJavaScriptLanguageVersion;
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
+import org.mustbe.consulo.json.lang.lexer.JsonLexer;
 import com.intellij.lang.PsiParser;
-import com.intellij.lang.javascript.DialectOptionHolder;
-import com.intellij.lang.javascript.JSONLexer;
 import com.intellij.lang.javascript.JavaScriptParsingLexer;
-import com.intellij.lang.javascript.highlighting.JSHighlighter;
 import com.intellij.lexer.Lexer;
+import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Factory;
 
 /**
  * @author VISTALL
@@ -19,6 +20,15 @@ import com.intellij.openapi.project.Project;
  */
 public class JsonJavaScriptVersion extends BaseJavaScriptLanguageVersion
 {
+	private static final Factory<Lexer> ourLexerFactory = new Factory<Lexer>()
+	{
+		@Override
+		public Lexer create()
+		{
+			return new JsonLexer(true);
+		}
+	};
+
 	@NotNull
 	@LazyInstance
 	public static JsonJavaScriptVersion getInstance()
@@ -33,24 +43,16 @@ public class JsonJavaScriptVersion extends BaseJavaScriptLanguageVersion
 
 	@NotNull
 	@Override
-	public JSHighlighter getSyntaxHighlighter()
+	public SyntaxHighlighter getSyntaxHighlighter()
 	{
-		return new JSHighlighter(DialectOptionHolder.dummy())
-		{
-			@Override
-			@NotNull
-			public Lexer getHighlightingLexer()
-			{
-				return new JSONLexer(super.getHighlightingLexer());
-			}
-		};
+		return new JavaScriptHighlighter(ourLexerFactory);
 	}
 
 	@NotNull
 	@Override
 	public Lexer createLexer(@Nullable Project project)
 	{
-		return new JSONLexer(new JavaScriptParsingLexer(DialectOptionHolder.dummy()));
+		return new JavaScriptParsingLexer(new JsonLexer(false), JsonLexer.LAST_STATE);
 	}
 
 	@NotNull

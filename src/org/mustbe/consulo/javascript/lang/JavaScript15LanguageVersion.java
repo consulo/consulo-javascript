@@ -3,11 +3,13 @@ package org.mustbe.consulo.javascript.lang;
 import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.lang.javascript.DialectOptionHolder;
+import org.mustbe.consulo.javascript.ide.hightlight.JavaScriptHighlighter;
+import org.mustbe.consulo.javascript.lang.lexer.JavaScript15Lexer;
 import com.intellij.lang.javascript.JavaScriptParsingLexer;
-import com.intellij.lang.javascript.highlighting.JSHighlighter;
 import com.intellij.lexer.Lexer;
+import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Factory;
 
 /**
  * @author VISTALL
@@ -15,6 +17,15 @@ import com.intellij.openapi.project.Project;
  */
 public class JavaScript15LanguageVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersions.Marker
 {
+	private static final Factory<Lexer> ourLexerFactory = new Factory<Lexer>()
+	{
+		@Override
+		public Lexer create()
+		{
+			return new JavaScript15Lexer(true);
+		}
+	};
+
 	@NotNull
 	@LazyInstance
 	public static JavaScript15LanguageVersion getInstance()
@@ -37,14 +48,14 @@ public class JavaScript15LanguageVersion extends BaseJavaScriptLanguageVersion i
 	@Override
 	public Lexer createLexer(@Nullable Project project)
 	{
-		return new JavaScriptParsingLexer(DialectOptionHolder.dummy());
+		return new JavaScriptParsingLexer(new JavaScript15Lexer(false), JavaScript15Lexer.LAST_STATE);
 	}
 
 	@NotNull
 	@Override
-	public JSHighlighter getSyntaxHighlighter()
+	public SyntaxHighlighter getSyntaxHighlighter()
 	{
-		return new JSHighlighter(DialectOptionHolder.dummy());
+		return new JavaScriptHighlighter(ourLexerFactory);
 	}
 
 	@Override

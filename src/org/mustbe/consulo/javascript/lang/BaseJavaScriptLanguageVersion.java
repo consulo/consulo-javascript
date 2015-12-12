@@ -7,7 +7,7 @@ import com.intellij.lang.BaseLanguageVersion;
 import com.intellij.lang.LanguageVersionWithParsing;
 import com.intellij.lang.PsiParser;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.highlighting.JSHighlighter;
+import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.tree.TokenSet;
 
@@ -29,7 +29,7 @@ public abstract class BaseJavaScriptLanguageVersion extends BaseLanguageVersion<
 	}
 
 	@NotNull
-	public abstract JSHighlighter getSyntaxHighlighter();
+	public abstract SyntaxHighlighter getSyntaxHighlighter();
 
 	@NotNull
 	@Override

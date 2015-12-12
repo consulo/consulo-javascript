@@ -1,6 +1,5 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o
- * Copyright 2013-2015 must-be.org
+ * Copyright 2000-2005 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,27 +16,22 @@
 
 package com.intellij.lang.javascript;
 
-import com.intellij.lexer.DelegateLexer;
-import com.intellij.lexer.Lexer;
 import com.intellij.psi.tree.IElementType;
 
 /**
- * @author VISTALL
- * @since 12.12.2015
+ * @author max
  */
-public class JavaScriptParsingLexer extends DelegateLexer
+public class JavaScriptParsingFlexLexer extends JSFlexAdapter
 {
 	private boolean myOnBreakOrContinueOrReturn = false;
 	private boolean myOnSemanticLineFeed = false;
 
-	private final int ON_BREAK_OR_CONTINUE_OR_RETURN;
-	private final int ON_SEMANTIC_LF;
+	private final static int ON_BREAK_OR_CONTINUE_OR_RETURN = _JavaScriptLexer.LAST_STATE;
+	private final static int ON_SEMANTIC_LF = ON_BREAK_OR_CONTINUE_OR_RETURN + 1;
 
-	public JavaScriptParsingLexer(Lexer delegate, int lastState)
+	public JavaScriptParsingFlexLexer(DialectOptionHolder dialectOptionsHolder)
 	{
-		super(delegate);
-		ON_BREAK_OR_CONTINUE_OR_RETURN = lastState;
-		ON_SEMANTIC_LF = ON_BREAK_OR_CONTINUE_OR_RETURN + 1;
+		super(false, dialectOptionsHolder);
 	}
 
 	@Override
