@@ -19,6 +19,7 @@ package com.intellij.lang.javascript.highlighting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.ide.hightlight.JavaScriptSyntaxHighlightKeys;
 import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
@@ -70,11 +71,11 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
 		if(expression instanceof JSFunctionExpression)
 		{
-			type = JSHighlighter.JS_INSTANCE_MEMBER_FUNCTION;
+			type = JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_FUNCTION;
 		}
 		else
 		{
-			type = JSHighlighter.JS_INSTANCE_MEMBER_VARIABLE;
+			type = JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_VARIABLE;
 		}
 		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(nameIdentifier).textAttributes(type).create());
 	}
@@ -85,7 +86,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 	{
 		super.visitJSAttribute(jsAttribute);
 
-		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(jsAttribute).textAttributes(JSHighlighter.JS_METADATA).create());
+		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(jsAttribute).textAttributes(JavaScriptSyntaxHighlightKeys.JS_METADATA).create());
 	}
 
 	@Override
@@ -125,7 +126,6 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 		boolean isStatic = false;
 		boolean isMethod = false;
 		boolean isFunction = false;
-		boolean isVariable = false;
 		boolean isField = false;
 		TextAttributesKey type = null;
 
@@ -179,24 +179,20 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 		{
 			if(isStatic)
 			{
-				type = JSHighlighter.JS_STATIC_MEMBER_FUNCTION;
+				type = JavaScriptSyntaxHighlightKeys.JS_STATIC_MEMBER_FUNCTION;
 			}
 			else
 			{
-				type = JSHighlighter.JS_INSTANCE_MEMBER_FUNCTION;
+				type = JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_FUNCTION;
 			}
 		}
 		else if(isFunction)
 		{
-			type = JSHighlighter.JS_GLOBAL_FUNCTION;
-		}
-		else if(isVariable)
-		{
-			type = JSHighlighter.JS_GLOBAL_VARIABLE;
+			type = JavaScriptSyntaxHighlightKeys.JS_GLOBAL_FUNCTION;
 		}
 		else if(isField)
 		{
-			type = JSHighlighter.JS_INSTANCE_MEMBER_VARIABLE;
+			type = JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_VARIABLE;
 		}
 
 		if(type == null)
@@ -219,7 +215,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
 		if(element instanceof JSParameter)
 		{
-			type = JSHighlighter.JS_PARAMETER;
+			type = JavaScriptSyntaxHighlightKeys.JS_PARAMETER;
 		}
 		else
 		{
@@ -227,17 +223,17 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 			{
 				final JSAttributeList attributeList = ((JSAttributeListOwner) element).getAttributeList();
 				final boolean isStatic = attributeList != null && attributeList.hasModifier(JSAttributeList.ModifierType.STATIC);
-				type = isStatic ? JSHighlighter.JS_STATIC_MEMBER_VARIABLE : JSHighlighter.JS_INSTANCE_MEMBER_VARIABLE;
+				type = isStatic ? JavaScriptSyntaxHighlightKeys.JS_STATIC_MEMBER_VARIABLE : JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_VARIABLE;
 			}
 			else
 			{
 				if(PsiTreeUtil.getParentOfType(element, JSFunction.class) != null)
 				{
-					type = JSHighlighter.JS_LOCAL_VARIABLE;
+					type = JavaScriptSyntaxHighlightKeys.JS_LOCAL_VARIABLE;
 				}
 				else
 				{
-					type = JSHighlighter.JS_GLOBAL_VARIABLE;
+					type = JavaScriptSyntaxHighlightKeys.JS_GLOBAL_VARIABLE;
 				}
 			}
 		}
