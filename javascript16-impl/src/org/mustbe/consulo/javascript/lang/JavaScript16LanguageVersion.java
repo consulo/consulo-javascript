@@ -78,6 +78,6 @@ public class JavaScript16LanguageVersion extends BaseJavaScriptLanguageVersion i
 	@Override
 	public int getWeight()
 	{
-		return 1;
+		return 10;
 	}
 }

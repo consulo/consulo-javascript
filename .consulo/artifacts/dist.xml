@@ -17,6 +17,7 @@
             <element id="module-output" name="javascript18-impl" />
             <element id="module-output" name="javascript17-impl" />
             <element id="module-output" name="javascript16-impl" />
+            <element id="module-output" name="ecmascript6-impl" />
           </element>
           <element id="zip-archive" name="json-impl.jar">
             <element id="module-output" name="json-javascript-impl" />

@@ -78,6 +78,6 @@ public class JavaScript18LanguageVersion extends BaseJavaScriptLanguageVersion i
 	@Override
 	public int getWeight()
 	{
-		return 3;
+		return 30;
 	}
 }

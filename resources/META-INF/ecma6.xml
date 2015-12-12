@@ -14,10 +14,9 @@
   - limitations under the License.
   -->
 
-<idea-plugin version="2">
-	<application-components>
-		<component>
-			<implementation-class>com.sixrr.inspectjs.InspectionJSPlugin</implementation-class>
-		</component>
-	</application-components>
+<idea-plugin>
+	<extensions defaultExtensionNs="com.intellij">
+		<fileTypeFactory implementation="org.mustbe.consulo.javascript.lang.EcmaScriptFileTypeFactory" />
+		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.EcmaScript6JavaScriptVersion" />
+	</extensions>
 </idea-plugin>

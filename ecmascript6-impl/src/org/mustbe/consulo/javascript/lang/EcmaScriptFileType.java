@@ -20,14 +20,17 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 
 /**
  * @author VISTALL
  * @since 23.12.13.
  */
-public class EcmaScriptFileType extends LanguageFileType
+public class EcmaScriptFileType extends LanguageFileType implements JavaScriptFileTypeWithVersion
 {
 	public static final EcmaScriptFileType INSTANCE = new EcmaScriptFileType();
 
@@ -47,7 +50,7 @@ public class EcmaScriptFileType extends LanguageFileType
 	@Override
 	public String getDescription()
 	{
-		return "EcmaScript files";
+		return "ECMAScript files";
 	}
 
 	@NotNull
@@ -61,6 +64,13 @@ public class EcmaScriptFileType extends LanguageFileType
 	@Override
 	public Icon getIcon()
 	{
-		return JavaScriptIcons.JavaScript;
+		return JavaScriptIcons.EcmaScript;
+	}
+
+	@NotNull
+	@Override
+	public LanguageVersion<JavaScriptLanguage> getLanguageVersion(@Nullable Project project, @Nullable VirtualFile virtualFile)
+	{
+		return EcmaScript6JavaScriptVersion.getInstance();
 	}
 }

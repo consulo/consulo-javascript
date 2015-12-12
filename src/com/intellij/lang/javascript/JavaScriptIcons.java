@@ -20,13 +20,12 @@ import javax.swing.Icon;
 
 import com.intellij.openapi.util.IconLoader;
 
-/**
- * @author VISTALL
- * @since 02.12.13.
- */
+// Generated Consulo DevKit plugin 
 public interface JavaScriptIcons
 {
-	public static Icon JavaScript = IconLoader.findIcon("/icons/javaScript.png");
-	public static Icon Json = IconLoader.findIcon("/icons/json.png");
-	public static Icon As = IconLoader.findIcon("/icons/as.png");
+	Icon As = IconLoader.getIcon("/icons/as.png");  // 16x16
+	Icon EcmaScript = IconLoader.getIcon("/icons/ecmaScript.png");  // 16x16
+	Icon JavaScript = IconLoader.getIcon("/icons/javaScript.png");  // 16x16
+	Icon Json = IconLoader.getIcon("/icons/json.png");  // 16x16
+	Icon Jsx = IconLoader.getIcon("/icons/jsx.png");  // 16x16
 }

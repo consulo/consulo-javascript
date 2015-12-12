@@ -1,3 +1,19 @@
+<!--
+  - Copyright 2013-2015 must-be.org
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  - http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+
 <idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
 	<id>org.mustbe.consulo.javascript</id>
 	<name>JavaScript</name>
@@ -12,6 +28,7 @@
 	<xi:include href="/META-INF/Intentions.xml" xpointer="xpointer(/idea-plugin/*)"/>
 	<xi:include href="/META-INF/json.xml" xpointer="xpointer(/idea-plugin/*)"/>
 	<xi:include href="/META-INF/ecma4.xml" xpointer="xpointer(/idea-plugin/*)"/>
+	<xi:include href="/META-INF/ecma6.xml" xpointer="xpointer(/idea-plugin/*)"/>
 	<xi:include href="/META-INF/actionscript.xml" xpointer="xpointer(/idea-plugin/*)"/>
 
 	<actions>

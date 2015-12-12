@@ -20,7 +20,7 @@ import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.javascript.ide.hightlight.JavaScriptHighlighter;
-import org.mustbe.consulo.javascript.lang.lexer.JavaScript17Lexer;
+import org.mustbe.consulo.javascript.lang.lexer.JavaScript15Lexer;
 import com.intellij.lang.javascript.JavaScriptParsingLexer;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
@@ -29,43 +29,44 @@ import com.intellij.openapi.util.Factory;
 
 /**
  * @author VISTALL
- * @since 11.12.2015
+ * @since 12.12.2015
+ *
+ * TODO [VISTALL] it used JavaScript 1.5 parsing & lexer. Need change IT!
  */
-public class JavaScript185LanguageVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersions.Marker
+public class EcmaScript6JavaScriptVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersions.Marker
 {
 	private static final Factory<Lexer> ourLexerFactory = new Factory<Lexer>()
 	{
 		@Override
 		public Lexer create()
 		{
-			return new JavaScript17Lexer();
+			return new JavaScript15Lexer();
 		}
 	};
 
 	@NotNull
 	@LazyInstance
-	public static JavaScript185LanguageVersion getInstance()
+	public static EcmaScript6JavaScriptVersion getInstance()
 	{
-		return JavaScriptLanguage.INSTANCE.findVersionByClass(JavaScript185LanguageVersion.class);
+		return JavaScriptLanguage.INSTANCE.findVersionByClass(EcmaScript6JavaScriptVersion.class);
 	}
 
-	public JavaScript185LanguageVersion()
+	public EcmaScript6JavaScriptVersion()
 	{
-		super("JAVASCRIPT_1_8_5");
+		super("ECMASCRIPT_6");
 	}
 
 	@NotNull
 	@Override
 	public String getPresentableName()
 	{
-		return "JavaScript 1.8.5";
+		return "ECMAScript 6";
 	}
-
 	@NotNull
 	@Override
 	public Lexer createLexer(@Nullable Project project)
 	{
-		return new JavaScriptParsingLexer(ourLexerFactory.create(), JavaScript17Lexer.LAST_STATE);
+		return new JavaScriptParsingLexer(ourLexerFactory.create(), JavaScript15Lexer.LAST_STATE);
 	}
 
 	@NotNull
@@ -78,6 +79,6 @@ public class JavaScript185LanguageVersion extends BaseJavaScriptLanguageVersion 
 	@Override
 	public int getWeight()
 	{
-		return 40;
+		return 50;
 	}
 }
