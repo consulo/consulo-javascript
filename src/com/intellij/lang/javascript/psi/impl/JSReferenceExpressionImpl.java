@@ -18,7 +18,9 @@ package com.intellij.lang.javascript.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
+import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageNamesValidation;
 import com.intellij.lang.javascript.JSElementTypes;
@@ -59,6 +61,23 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 	public JSReferenceExpressionImpl(final ASTNode node)
 	{
 		super(node);
+	}
+
+	@RequiredReadAction
+	@NotNull
+	@Override
+	public JavaScriptType getType()
+	{
+		PsiElement resolvedElement = resolve();
+		if(resolvedElement instanceof JSVariable)
+		{
+			return ((JSVariable) resolvedElement).getType();
+		}
+		else if(resolvedElement instanceof JSFunction)
+		{
+			return ((JSFunction) resolvedElement).getReturnType();
+		}
+		return super.getType();
 	}
 
 	@Override

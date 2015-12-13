@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.javascript.lang.psi;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.psi.PsiElement;
 
@@ -23,18 +24,27 @@ import com.intellij.psi.PsiElement;
  * @author VISTALL
  * @since 13.12.2015
  */
-public interface JavaScriptType
+public class JavaScriptSimpleType implements JavaScriptType
 {
-	JavaScriptType UNKNOWN = new JavaScriptType()
+	private String myReferenceName;
+	private PsiElement myElement;
+
+	public JavaScriptSimpleType(@NotNull String referenceName, @Nullable PsiElement element)
 	{
-		@Nullable
-		@Override
-		public PsiElement getTargetElement()
-		{
-			return null;
-		}
-	};
+		myReferenceName = referenceName;
+		myElement = element;
+	}
 
 	@Nullable
-	PsiElement getTargetElement();
+	@Override
+	public PsiElement getTargetElement()
+	{
+		return myElement;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "JavaScriptSimpleType: " + myReferenceName;
+	}
 }

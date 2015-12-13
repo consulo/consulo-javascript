@@ -18,7 +18,11 @@ package com.intellij.lang.javascript.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
+import org.mustbe.consulo.javascript.lang.psi.JavaScriptPrimitiveType;
+import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSSimpleLiteralExpression;
@@ -51,6 +55,35 @@ public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSSimpl
 		PsiElement firstChild = getFirstChild();
 		assert firstChild != null;
 		return firstChild.getNode().getElementType();
+	}
+
+	@RequiredReadAction
+	@NotNull
+	@Override
+	public JavaScriptType getType()
+	{
+		IElementType literalElementType = getLiteralElementType();
+		if(literalElementType == JSTokenTypes.TRUE_KEYWORD || literalElementType == JSTokenTypes.FALSE_KEYWORD)
+		{
+			return JavaScriptPrimitiveType.BOOL;
+		}
+		else if(literalElementType == JSTokenTypes.REGEXP_LITERAL)
+		{
+			return JavaScriptPrimitiveType.REGEXP;
+		}
+		else if(literalElementType == JSTokenTypes.NUMERIC_LITERAL)
+		{
+			return JavaScriptPrimitiveType.NUMBER;
+		}
+		else if(literalElementType == JSTokenTypes.NULL_KEYWORD)
+		{
+			return JavaScriptPrimitiveType.NULL;
+		}
+		else if(JavaScriptTokenSets.STRING_LITERALS.contains(literalElementType))
+		{
+			return JavaScriptPrimitiveType.STRING;
+		}
+		return super.getType();
 	}
 
 	@Override

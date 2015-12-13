@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.psi;
 
+import org.jetbrains.annotations.Nullable;
 import com.intellij.psi.tree.IElementType;
 
 /**
@@ -27,6 +28,7 @@ import com.intellij.psi.tree.IElementType;
  */
 public interface JSPostfixExpression extends JSExpression
 {
+	@Nullable
 	JSExpression getExpression();
 
 	IElementType getOperationSign();

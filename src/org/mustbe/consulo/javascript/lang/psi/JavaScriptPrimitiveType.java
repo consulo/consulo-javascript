@@ -23,18 +23,31 @@ import com.intellij.psi.PsiElement;
  * @author VISTALL
  * @since 13.12.2015
  */
-public interface JavaScriptType
+public class JavaScriptPrimitiveType implements JavaScriptType
 {
-	JavaScriptType UNKNOWN = new JavaScriptType()
+	public static final JavaScriptPrimitiveType BOOL = new JavaScriptPrimitiveType("Boolean");
+	public static final JavaScriptPrimitiveType STRING = new JavaScriptPrimitiveType("String");
+	public static final JavaScriptPrimitiveType NUMBER = new JavaScriptPrimitiveType("Number");
+	public static final JavaScriptPrimitiveType REGEXP = new JavaScriptPrimitiveType("Regexp");
+	public static final JavaScriptPrimitiveType NULL = new JavaScriptPrimitiveType("null");
+
+	private String myName;
+
+	public JavaScriptPrimitiveType(String name)
 	{
-		@Nullable
-		@Override
-		public PsiElement getTargetElement()
-		{
-			return null;
-		}
-	};
+		myName = name;
+	}
 
 	@Nullable
-	PsiElement getTargetElement();
+	@Override
+	public PsiElement getTargetElement()
+	{
+		return null;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "JavaScriptPrimitiveType: " + myName;
+	}
 }

@@ -16,6 +16,9 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSExpression;
 
@@ -27,6 +30,14 @@ public abstract class JSExpressionImpl extends JSElementImpl implements JSExpres
 	public JSExpressionImpl(final ASTNode node)
 	{
 		super(node);
+	}
+
+	@RequiredReadAction
+	@NotNull
+	@Override
+	public JavaScriptType getType()
+	{
+		return JavaScriptType.UNKNOWN;
 	}
 
 	@Override

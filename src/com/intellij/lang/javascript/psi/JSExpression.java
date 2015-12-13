@@ -16,17 +16,22 @@
 
 package com.intellij.lang.javascript.psi;
 
+import org.consulo.lombok.annotations.ArrayFactoryFields;
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
+
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 6:46:19 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since  6:46:19 PM Jan 30, 2005
  */
+@ArrayFactoryFields
 public interface JSExpression extends JSElement
 {
-	JSExpression[] EMPTY_ARRAY = new JSExpression[0];
-	//JSType getType(); TODO
-
+	@NotNull
 	JSExpression replace(JSExpression other);
+
+	@NotNull
+	@RequiredReadAction
+	JavaScriptType getType();
 }

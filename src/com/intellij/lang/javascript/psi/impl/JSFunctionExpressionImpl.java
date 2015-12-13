@@ -17,6 +17,8 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
@@ -75,6 +77,14 @@ public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionStub,
 	public JSExpression replace(JSExpression newExpr)
 	{
 		return JSChangeUtil.replaceExpression(this, newExpr);
+	}
+
+	@RequiredReadAction
+	@NotNull
+	@Override
+	public JavaScriptType getType()
+	{
+		return JavaScriptType.UNKNOWN;
 	}
 
 	@Override

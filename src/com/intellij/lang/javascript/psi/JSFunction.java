@@ -17,8 +17,10 @@
 package com.intellij.lang.javascript.psi;
 
 import org.consulo.lombok.annotations.ArrayFactoryFields;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.lang.javascript.psi.stubs.JSFunctionStub;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.StubBasedPsiElement;
@@ -40,6 +42,9 @@ public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JS
 	boolean isSetProperty();
 
 	boolean isConstructor();
+
+	@NotNull
+	JavaScriptType getReturnType();
 
 	String getReturnTypeString();
 
