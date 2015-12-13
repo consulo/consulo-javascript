@@ -17,6 +17,7 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
@@ -26,7 +27,6 @@ import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.lang.javascript.psi.JSStubElementType;
-import com.intellij.lang.javascript.psi.JSType;
 import com.intellij.lang.javascript.psi.JSVarStatement;
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
@@ -136,10 +136,11 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 		throw new UnsupportedOperationException("TODO: implement");
 	}
 
+	@NotNull
 	@Override
-	public JSType getType()
+	public JavaScriptType getType()
 	{
-		return null;
+		return JavaScriptType.UNKNOWN;
 	}
 
 	@Override

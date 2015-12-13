@@ -28,7 +28,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
-import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.BaseJSSymbolProcessor;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
@@ -290,7 +289,7 @@ public class JSReferenceSet
 			{
 				processor.addLocalResults(localProcessor.getResults());  // TODO: remove this stuff as we create new js index
 			}
-			JavaScriptIndex.processAllSymbols(processor);
+			//JSResolveUtil.processGlobalSymbols(containingFile, processor);
 
 			final PsiElement context = containingFile.getContext();
 			if(context != null)
@@ -539,7 +538,7 @@ public class JSReferenceSet
 					null, psiFile, false, element);
 
 			processor.setAddOnlyCompleteMatches(contextIds != null || !(element instanceof JSLiteralExpression));
-			JavaScriptIndex.processAllSymbols(processor);
+			//JSResolveUtil.processGlobalSymbols(psiFile, processor);
 			final StringBuilder b = new StringBuilder();
 
 			for(final PsiReference ref : myReferences)

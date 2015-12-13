@@ -16,6 +16,8 @@
 
 package com.intellij.lang.javascript.psi;
 
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.lang.javascript.psi.stubs.JSVariableStubBase;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.StubBasedPsiElement;
@@ -38,7 +40,8 @@ public interface JSVariable extends JSQualifiedNamedElement, JSAttributeListOwne
 
 	void setInitializer(JSExpression expr) throws IncorrectOperationException;
 
-	JSType getType();
+	@NotNull
+	JavaScriptType getType();
 
 	String getTypeString();
 

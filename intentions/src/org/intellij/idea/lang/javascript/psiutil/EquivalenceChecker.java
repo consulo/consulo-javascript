@@ -15,47 +15,8 @@
  */
 package org.intellij.idea.lang.javascript.psiutil;
 
-import com.intellij.lang.javascript.psi.JSArgumentList;
-import com.intellij.lang.javascript.psi.JSArrayLiteralExpression;
-import com.intellij.lang.javascript.psi.JSAssignmentExpression;
-import com.intellij.lang.javascript.psi.JSBinaryExpression;
-import com.intellij.lang.javascript.psi.JSBlockStatement;
-import com.intellij.lang.javascript.psi.JSBreakStatement;
-import com.intellij.lang.javascript.psi.JSCallExpression;
-import com.intellij.lang.javascript.psi.JSCaseClause;
-import com.intellij.lang.javascript.psi.JSCatchBlock;
-import com.intellij.lang.javascript.psi.JSConditionalExpression;
-import com.intellij.lang.javascript.psi.JSContinueStatement;
-import com.intellij.lang.javascript.psi.JSDoWhileStatement;
-import com.intellij.lang.javascript.psi.JSEmptyStatement;
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSExpressionStatement;
-import com.intellij.lang.javascript.psi.JSForInStatement;
-import com.intellij.lang.javascript.psi.JSForStatement;
-import com.intellij.lang.javascript.psi.JSFunctionExpression;
-import com.intellij.lang.javascript.psi.JSIfStatement;
-import com.intellij.lang.javascript.psi.JSIndexedPropertyAccessExpression;
-import com.intellij.lang.javascript.psi.JSLabeledStatement;
-import com.intellij.lang.javascript.psi.JSLiteralExpression;
-import com.intellij.lang.javascript.psi.JSNewExpression;
-import com.intellij.lang.javascript.psi.JSObjectLiteralExpression;
-import com.intellij.lang.javascript.psi.JSParameter;
-import com.intellij.lang.javascript.psi.JSPostfixExpression;
-import com.intellij.lang.javascript.psi.JSPrefixExpression;
-import com.intellij.lang.javascript.psi.JSProperty;
-import com.intellij.lang.javascript.psi.JSReferenceExpression;
-import com.intellij.lang.javascript.psi.JSReturnStatement;
-import com.intellij.lang.javascript.psi.JSStatement;
-import com.intellij.lang.javascript.psi.JSSwitchStatement;
-import com.intellij.lang.javascript.psi.JSThisExpression;
-import com.intellij.lang.javascript.psi.JSThrowStatement;
-import com.intellij.lang.javascript.psi.JSTryStatement;
-import com.intellij.lang.javascript.psi.JSType;
-import com.intellij.lang.javascript.psi.JSVarStatement;
-import com.intellij.lang.javascript.psi.JSVariable;
-import com.intellij.lang.javascript.psi.JSWhileStatement;
-import com.intellij.lang.javascript.psi.JSWithStatement;
-import com.intellij.lang.javascript.psi.JSDefinitionExpression;
+import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
+import com.intellij.lang.javascript.psi.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 
@@ -228,7 +189,7 @@ public class EquivalenceChecker {
                 areEqual          (parameter1.getName(), parameter2.getName()));
     }
 
-    private static boolean typesAreEquivalent(JSType type1, JSType type2) {
+    private static boolean typesAreEquivalent(JavaScriptType type1, JavaScriptType type2) {
         return areEqual(type1, type2);
     }
 

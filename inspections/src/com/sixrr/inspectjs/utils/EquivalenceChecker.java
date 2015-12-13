@@ -1,7 +1,8 @@
 package com.sixrr.inspectjs.utils;
 
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
@@ -160,8 +161,8 @@ public class EquivalenceChecker {
         if (!expressionsAreEquivalent(initializer1, initializer2)) {
             return false;
         }
-        final JSType type1 = var1.getType();
-        final JSType type2 = var2.getType();
+        final JavaScriptType type1 = var1.getType();
+        final JavaScriptType type2 = var2.getType();
         if (!typesAreEquivalent(type1, type2)) {
             return false;
         }
@@ -208,8 +209,8 @@ public class EquivalenceChecker {
 
     private static boolean parametersAreEquivalent(@NotNull JSParameter parameter1,
                                                    @NotNull JSParameter parameter2) {
-        final JSType type1 = parameter1.getType();
-        final JSType type2 = parameter2.getType();
+        final JavaScriptType type1 = parameter1.getType();
+        final JavaScriptType type2 = parameter2.getType();
         if (!typesAreEquivalent(type1, type2)) {
             return false;
         }
@@ -221,7 +222,7 @@ public class EquivalenceChecker {
         return name1.equals(name2);
     }
 
-    private static boolean typesAreEquivalent(@Nullable JSType type1, @Nullable JSType type2) {
+    private static boolean typesAreEquivalent(@Nullable JavaScriptType type1, @Nullable JavaScriptType type2) {
         if (type1 == null) {
             return type2 == null;
         }

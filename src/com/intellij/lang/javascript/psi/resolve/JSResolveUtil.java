@@ -32,7 +32,9 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
 import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
+import org.mustbe.consulo.javascript.module.extension.JavaScriptModuleExtension;
 import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.javascript.documentation.JSDocumentationProvider;
@@ -55,9 +57,12 @@ import com.intellij.lang.javascript.psi.stubs.JSVariableStubBase;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Ref;
@@ -117,6 +122,8 @@ public class JSResolveUtil
 	private static final String ARRAY_TYPE_NAME = "Array";
 	@NonNls
 	private static final String ARGUMENTS_TYPE_NAME = "Arguments";
+
+	public static final String COMMENT_DELIMITERS = "|/";
 
 	public static void processInjectedFileForTag(final @NotNull XmlTag tag, @NotNull JSInjectedFilesVisitor visitor)
 	{
@@ -320,12 +327,12 @@ public class JSResolveUtil
 	{
 		if((expectedType != null && hasMultipleOccurenceDelimiters(expectedType)) || (type != null && hasMultipleOccurenceDelimiters(type)))
 		{
-			StringTokenizer expectedTypeIterator = new StringTokenizer(expectedType != null ? expectedType : "", JSType.COMMENT_DELIMITERS);
+			StringTokenizer expectedTypeIterator = new StringTokenizer(expectedType != null ? expectedType : "", COMMENT_DELIMITERS);
 
 			while(expectedTypeIterator.hasMoreElements())
 			{
 				String primitiveExpectedType = expectedTypeIterator.nextToken().trim();
-				StringTokenizer typeIterator = new StringTokenizer(type != null ? type : "", JSType.COMMENT_DELIMITERS);
+				StringTokenizer typeIterator = new StringTokenizer(type != null ? type : "", COMMENT_DELIMITERS);
 
 				while(typeIterator.hasMoreElements())
 				{
@@ -446,7 +453,7 @@ public class JSResolveUtil
 
 	private static boolean hasMultipleOccurenceDelimiters(String expectedType)
 	{
-		final String commentDelimiters = JSType.COMMENT_DELIMITERS;
+		final String commentDelimiters = COMMENT_DELIMITERS;
 
 		for(int i = 0; i < commentDelimiters.length(); ++i)
 		{
@@ -2788,6 +2795,45 @@ public class JSResolveUtil
 		return element instanceof PsiFile && (((PsiFile) element).getVirtualFile() instanceof LightVirtualFile);
 	}
 
+	@RequiredReadAction
+	public static void processGlobalSymbols(PsiElement target, PsiScopeProcessor processor)
+	{
+		Sdk sdk = ModuleUtilCore.getSdk(target, JavaScriptModuleExtension.class);
+		if(sdk != null)
+		{
+			VirtualFile[] files = sdk.getRootProvider().getFiles(BinariesOrderRootType.getInstance());
+
+			for(VirtualFile file : files)
+			{
+				PsiFile psiFile = PsiManager.getInstance(target.getProject()).findFile(file);
+				if(psiFile instanceof JSFile)
+				{
+					for(JSSourceElement element : ((JSFile) psiFile).getStatements())
+					{
+						if(element instanceof JSNamedElement)
+						{
+							if(!processor.execute(element, ResolveState.initial()))
+							{
+								break;
+							}
+						}
+						else if(element instanceof JSVarStatement)
+						{
+							JSVariable[] variables = ((JSVarStatement) element).getVariables();
+							for(JSVariable variable : variables)
+							{
+								if(!processor.execute(variable, ResolveState.initial()))
+								{
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	public interface OverrideHandler
 	{
 		boolean process(ResolveProcessor processor, final PsiElement scope, String className);
@@ -3041,10 +3087,11 @@ public class JSResolveUtil
 		{
 		}
 
+		@NotNull
 		@Override
-		public JSType getType()
+		public JavaScriptType getType()
 		{
-			return null;
+			return JavaScriptType.UNKNOWN;
 		}
 
 		@Override

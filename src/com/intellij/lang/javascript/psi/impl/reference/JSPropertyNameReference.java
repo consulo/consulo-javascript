@@ -21,11 +21,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.psi.JSDefinitionExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSProperty;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
+import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.VariantsProcessor;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
@@ -118,10 +118,12 @@ public class JSPropertyNameReference implements PsiReference
 
 	@NotNull
 	@Override
+	@RequiredReadAction
 	public Object[] getVariants()
 	{
 		final VariantsProcessor processor = new VariantsProcessor(null, myProperty.getContainingFile(), false, myProperty);
-		JavaScriptIndex.processAllSymbols(processor);
+
+		JSResolveUtil.processGlobalSymbols(myProperty, processor);
 
 		return processor.getResult();
 	}

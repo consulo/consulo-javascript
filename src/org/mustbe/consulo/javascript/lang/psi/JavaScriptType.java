@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package com.intellij.lang.javascript.psi;
+package org.mustbe.consulo.javascript.lang.psi;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 6:47:23 PM
- * To change this template use File | Settings | File Templates.
+ * @author VISTALL
+ * @since 13.12.2015
  */
-public interface JSType
+public interface JavaScriptType
 {
-	String COMMENT_DELIMITERS = "|/";
+	JavaScriptType UNKNOWN = new JavaScriptType()
+	{
+	};
 }

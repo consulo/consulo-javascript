@@ -25,7 +25,6 @@ import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
-import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.BaseJSSymbolProcessor;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
@@ -421,12 +420,9 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 
 		final VariantsProcessor processor = new VariantsProcessor(null, containingFile, false, this);
 
-		if(localProcessor != null)
-		{
-			processor.addLocalResults(localProcessor.getResults());
-		}
+		processor.addLocalResults(localProcessor.getResults());
 
-		JavaScriptIndex.processAllSymbols(processor);
+		JSResolveUtil.processGlobalSymbols(this, processor);
 
 		return processor.getResult();
 	}
@@ -550,9 +546,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		//  return localProcessor.getResultsAsResolveResults();
 		//}
 
-		ResolveResult[] results = doOldResolve(containingFile, referencedName, parent, qualifier, ecma, localResolve, parentIsDefinition, localProcessor);
-
-		return results;
+		return doOldResolve(containingFile, referencedName, parent, qualifier, ecma, localResolve, parentIsDefinition, localProcessor);
 	}
 
 	private boolean isE4XAttributeReference(JSExpression realQualifier)
@@ -632,7 +626,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 			processor.addLocalResults(localProcessor.getResultsAsResolveResults());
 		}
 
-		JavaScriptIndex.processAllSymbols(processor);
+		JSResolveUtil.processGlobalSymbols(this, processor);
 		return processor.getResults();
 	}
 

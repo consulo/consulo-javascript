@@ -22,56 +22,10 @@ import com.intellij.psi.PsiFile;
 /**
  * @author maxim, yole
  */
+@Deprecated
 public final class JavaScriptIndex
 {
 	public static final String ECMASCRIPT_JS2 = "ECMAScript.js2";
-
-	@Deprecated
-	public static void processAllSymbols(Object processor)
-	{
-		/*assert processor.getBaseFile() != null;
-		boolean ecmaL4 = processor.getBaseFile().getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
-
-		final PsiFile psiFile = processor.getBaseFile();
-		VirtualFile virtualFile = psiFile.getVirtualFile();
-		if(virtualFile == null && psiFile.getOriginalFile() != null)
-		{
-			virtualFile = psiFile.getOriginalFile().getVirtualFile();
-		}
-
-		if(virtualFile == null)
-		{
-			return;
-		}
-		final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
-
-		final Module moduleForFile = fileIndex.getModuleForFile(virtualFile);
-		boolean seenEntryForFile = moduleForFile != null;
-
-		if(moduleForFile != null)
-		{
-			boolean facetBased = false;
-
-			if(facetBased)
-			{
-				final Module[] dependencies = ModuleRootManager.getInstance(moduleForFile).getDependencies();
-				final Set<Module> modules = new java.util.HashSet<Module>(dependencies.length + 1);
-				modules.addAll(Arrays.asList(dependencies));
-				modules.add(moduleForFile);
-
-				VirtualFile flexPath = getFlexSdkLocation(moduleForFile);
-			}
-			else
-			{
-				final GlobalSearchScope scope = JSResolveUtil.getSearchScope(moduleForFile, myProject);
-
-			}
-		}
-		else
-		{
-
-		} */
-	}
 
 	public static boolean isFromPredefinedFile(final PsiFile containingFile)
 	{

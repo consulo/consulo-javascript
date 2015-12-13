@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSDocTagValue;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
-import com.intellij.lang.javascript.psi.JSType;
+import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
@@ -95,7 +95,7 @@ public class JSDocTagValueImpl extends JSElementImpl implements JSDocTagValue
 					text = text.substring(0, text.length() - 1);
 				}
 
-				final StringTokenizer tokenizer = new StringTokenizer(text, JSType.COMMENT_DELIMITERS);
+				final StringTokenizer tokenizer = new StringTokenizer(text, JSResolveUtil.COMMENT_DELIMITERS);
 				while(tokenizer.hasMoreElements())
 				{
 					@NonNls String textFragment = tokenizer.nextElement();
