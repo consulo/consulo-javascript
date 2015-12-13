@@ -140,6 +140,11 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 	@Override
 	public JavaScriptType getType()
 	{
+		JSExpression initializer = getInitializer();
+		if(initializer != null)
+		{
+			return initializer.getType();
+		}
 		return JavaScriptType.UNKNOWN;
 	}
 

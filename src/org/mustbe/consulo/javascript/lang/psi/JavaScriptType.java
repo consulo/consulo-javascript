@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.javascript.lang.psi;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.psi.PsiElement;
 
@@ -27,6 +28,13 @@ public interface JavaScriptType
 {
 	JavaScriptType UNKNOWN = new JavaScriptType()
 	{
+		@NotNull
+		@Override
+		public String getPresentableText()
+		{
+			return "?";
+		}
+
 		@Nullable
 		@Override
 		public PsiElement getTargetElement()
@@ -34,6 +42,9 @@ public interface JavaScriptType
 			return null;
 		}
 	};
+
+	@NotNull
+	String getPresentableText();
 
 	@Nullable
 	PsiElement getTargetElement();

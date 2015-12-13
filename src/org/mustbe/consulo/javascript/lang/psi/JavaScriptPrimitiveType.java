@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.javascript.lang.psi;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.psi.PsiElement;
 
@@ -36,6 +37,13 @@ public class JavaScriptPrimitiveType implements JavaScriptType
 	public JavaScriptPrimitiveType(String name)
 	{
 		myName = name;
+	}
+
+	@NotNull
+	@Override
+	public String getPresentableText()
+	{
+		return myName;
 	}
 
 	@Nullable

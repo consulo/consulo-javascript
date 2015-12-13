@@ -399,8 +399,6 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		}
 		final JSExpression qualifier = getResolveQualifier();
 
-		ResolveProcessor localProcessor;
-
 		if(qualifier == null)
 		{
 			if(JSResolveUtil.isSelfReference(getParent(), this))
@@ -408,9 +406,16 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 				return ArrayUtil.EMPTY_OBJECT_ARRAY;
 			}
 
-			localProcessor = new ResolveProcessor(null, this);
+			ResolveProcessor localProcessor = new ResolveProcessor(null, this);
 
 			doProcessLocalDeclarations(qualifier, localProcessor, ecma, true);
+			final VariantsProcessor processor = new VariantsProcessor(null, containingFile, false, this);
+
+			processor.addLocalResults(localProcessor.getResults());
+
+			JSResolveUtil.processGlobalSymbols(this, processor);
+
+			return processor.getResult();
 		}
 		else
 		{
@@ -432,23 +437,9 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 				}
 				return processor.getResultsAsObjects(qualifiedNameToSkip);
 			}
-			else
-			{
-				localProcessor = processor;
-			}
+
+			return processor.getResultsAsObjects();
 		}
-
-		//if (ecma && false && !localProcessor.isEncounteredDynamicClasses()) {
-		//  return localProcessor.getResultsAsObjects();
-		//}
-
-		final VariantsProcessor processor = new VariantsProcessor(null, containingFile, false, this);
-
-		processor.addLocalResults(localProcessor.getResults());
-
-		JSResolveUtil.processGlobalSymbols(this, processor);
-
-		return processor.getResult();
 	}
 
 	@Override
@@ -483,12 +474,14 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 
 		@NotNull
 		@Override
+		@RequiredReadAction
 		public ResolveResult[] resolve(@NotNull JSReferenceExpressionImpl referenceExpression, boolean incompleteCode)
 		{
 			return referenceExpression.doResolve();
 		}
 	}
 
+	@RequiredReadAction
 	private ResolveResult[] doResolve()
 	{
 		PsiFile containingFile = getContainingFile();
@@ -543,6 +536,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 					return localProcessor.getResultsAsResolveResults();
 				}
 			}
+			return doOldResolve(containingFile, referencedName, parent, qualifier, ecma, localResolve, parentIsDefinition, localProcessor);
 		}
 		else
 		{
@@ -562,15 +556,9 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 			}
 			else
 			{
-				localProcessor = processor;
+				return processor.getResultsAsResolveResults();
 			}
 		}
-
-		//if(ecma && false && !localProcessor.isEncounteredDynamicClasses()) {
-		//  return localProcessor.getResultsAsResolveResults();
-		//}
-
-		return doOldResolve(containingFile, referencedName, parent, qualifier, ecma, localResolve, parentIsDefinition, localProcessor);
 	}
 
 	private boolean isE4XAttributeReference(JSExpression realQualifier)

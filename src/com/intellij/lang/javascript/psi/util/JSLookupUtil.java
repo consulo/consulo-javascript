@@ -18,7 +18,8 @@ package com.intellij.lang.javascript.psi.util;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.codeInsight.completion.PrioritizedLookupElement;
 import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler;
 import com.intellij.codeInsight.lookup.LookupElement;
@@ -30,6 +31,7 @@ import com.intellij.lang.javascript.psi.JSFunctionExpression;
 import com.intellij.lang.javascript.psi.JSParameter;
 import com.intellij.lang.javascript.psi.JSParameterList;
 import com.intellij.lang.javascript.psi.JSProperty;
+import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
@@ -46,11 +48,10 @@ public class JSLookupUtil
 	}
 
 	@Nullable
-	@RequiredDispatchThread
+	@RequiredReadAction
 	public static LookupElement createLookupItem(@NotNull PsiElement value, @NotNull String name, @NotNull LookupPriority priority)
 	{
 		LookupElementBuilder builder = LookupElementBuilder.create(name);
-		builder = builder.withTypeText(value.getContainingFile().getName(), true);
 		builder = builder.withIcon(IconDescriptorUpdaters.getIcon(value, Iconable.ICON_FLAG_VISIBILITY));
 
 		JSFunction function = value instanceof JSFunction ? (JSFunction) value : null;
@@ -69,12 +70,26 @@ public class JSLookupUtil
 				@Override
 				public String fun(JSParameter jsParameter)
 				{
+					JavaScriptType type = jsParameter.getType();
+					if(type != JavaScriptType.UNKNOWN)
+					{
+						return type.getPresentableText() + " " + jsParameter.getName();
+					}
 					return jsParameter.getName();
 				}
 			}, ", ") + ")");
 			builder = builder.withInsertHandler(ParenthesesInsertHandler.getInstance(jsParameters.length > 0));
 		}
+		else if(value instanceof JSVariable)
+		{
+			JavaScriptType type = ((JSVariable) value).getType();
+			if(type != JavaScriptType.UNKNOWN)
+			{
+				builder = builder.withTypeText(type.getPresentableText());
+			}
+		}
 
+		//builder = builder.withTailText(value.getContainingFile().getName(), true);
 		if(priority == LookupPriority.NORMAL)
 		{
 			return builder;

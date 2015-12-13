@@ -29,16 +29,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
+import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.extapi.psi.PsiElementBase;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.lang.javascript.psi.impl.JSElementImpl;
 import com.intellij.lang.javascript.psi.util.JSLookupUtil;
 import com.intellij.navigation.ItemPresentation;
-import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
@@ -449,21 +448,11 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 	}
 
 
-	private Object addLookupValue(PsiElement _element, final String nameId, JSLookupUtil.LookupPriority priority)
+	@RequiredReadAction
+	private LookupElement addLookupValue(PsiElement element, final String name, JSLookupUtil.LookupPriority priority)
 	{
-		PsiElement element = _element;
-		boolean proxyExpanded = false;
-
-		final Object item = JSLookupUtil.createLookupItem(element, nameId, priority);
-
-		if(item != null && proxyExpanded)
-		{
-			element.putUserData(JSElementImpl.ORIGINAL_ELEMENT, (NavigationItem) _element);
-		}
-
-		return item;
+		return JSLookupUtil.createLookupItem(element, name, priority);
 	}
-
 
 	@Override
 	protected String[] calculateContextIds(final JSReferenceExpression jsReferenceExpression)

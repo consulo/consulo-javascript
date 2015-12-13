@@ -35,6 +35,13 @@ public class JavaScriptSimpleType implements JavaScriptType
 		myElement = element;
 	}
 
+	@NotNull
+	@Override
+	public String getPresentableText()
+	{
+		return myReferenceName;
+	}
+
 	@Nullable
 	@Override
 	public PsiElement getTargetElement()
