@@ -16,23 +16,23 @@
 
 package com.intellij.lang.javascript.structureView;
 
-import gnu.trove.THashMap;
-
-import java.util.Map;
-
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 
-import com.intellij.icons.AllIcons;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.ide.IconDescriptorUpdaters;
 import com.intellij.lang.javascript.JavaScriptBundle;
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
-import com.intellij.lang.javascript.psi.*;
+import com.intellij.lang.javascript.psi.JSAssignmentExpression;
+import com.intellij.lang.javascript.psi.JSDefinitionExpression;
+import com.intellij.lang.javascript.psi.JSExpression;
+import com.intellij.lang.javascript.psi.JSFunction;
+import com.intellij.lang.javascript.psi.JSObjectLiteralExpression;
+import com.intellij.lang.javascript.psi.JSParameter;
+import com.intellij.lang.javascript.psi.JSParameterList;
+import com.intellij.lang.javascript.psi.JSProperty;
+import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.xml.XmlTag;
 
 /**
  * @author Maxim.Mossienko
@@ -47,6 +47,7 @@ class JSStructureItemPresentation extends JSStructureViewElement.JSStructureItem
 	}
 
 	@Override
+	@RequiredReadAction
 	public String getPresentableText()
 	{
 		PsiElement psiElement = element.getUpToDateElement();
@@ -149,6 +150,7 @@ class JSStructureItemPresentation extends JSStructureViewElement.JSStructureItem
 	}
 
 	@Override
+	@RequiredReadAction
 	public Icon getIcon(boolean open)
 	{
 		final PsiElement psiElement = this.element.getRealElement();
@@ -156,102 +158,6 @@ class JSStructureItemPresentation extends JSStructureViewElement.JSStructureItem
 		{
 			return null;
 		}
-		if(psiElement instanceof JSProperty)
-		{
-			final JSExpression expression = ((JSProperty) psiElement).getValue();
-			if(expression instanceof JSObjectLiteralExpression)
-			{
-				return AllIcons.Nodes.Class;
-			}
-			if(expression instanceof JSFunction)
-			{
-				return AllIcons.Nodes.Method;
-			}
-			return AllIcons.Nodes.Variable;
-		}
-		if(psiElement instanceof JSReferenceExpression)
-		{
-			return AllIcons.Nodes.Variable;
-		}
-
 		return IconDescriptorUpdaters.getIcon(psiElement, 0);
-	}
-
-	private static Map<String, Icon> myQNameToIconMap = new THashMap<String, Icon>();
-	private static long myQNameToIconModificationCount;
-
-	private Icon getIcon(XmlTag tag)
-	{
-		if(tag == null)
-		{
-			return null;
-		}
-
-		if(JavaScriptSupportLoader.isFlexMxmFile(tag.getContainingFile()))
-		{
-			Icon icon;
-			final long count = tag.getManager().getModificationTracker().getModificationCount();
-			final String tagName = tag.getName();
-
-			if(myQNameToIconModificationCount == count)
-			{
-				icon = myQNameToIconMap.get(tagName);
-				if(icon != null)
-				{
-					return icon;
-				}
-				if(myQNameToIconMap.containsKey(tagName))
-				{
-					return null;
-				}
-			}
-			else
-			{
-				myQNameToIconMap.clear();
-				myQNameToIconModificationCount = count;
-			}
-
-			myQNameToIconMap.put(tagName, icon = findIcon(tag));
-			return icon;
-		}
-
-		return null;
-	}
-
-	private static Icon findIcon(XmlTag tag)
-	{
-		final JSClass aClass = JSResolveUtil.getClassFromTagNameInMxml(tag.getFirstChild());
-		if(aClass != null)
-		{
-			final JSAttributeList attributeList = aClass.getAttributeList();
-
-			if(attributeList != null)
-			{
-				final JSAttribute[] attrs = attributeList.getAttributesByName("IconFile");
-
-				if(attrs.length > 0)
-				{
-					final JSAttributeNameValuePair pair = attrs[0].getValueByName(null);
-
-					if(pair != null)
-					{
-						final String s = pair.getSimpleValue();
-						final VirtualFile file = aClass.getContainingFile().getVirtualFile();
-
-						if(file != null)
-						{
-							final VirtualFile parent = file.getParent();
-							final VirtualFile child = parent != null ? parent.findChild(s) : null;
-							if(child != null)
-							{
-								return new ImageIcon(child.getPath());
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return null;
 	}
 }

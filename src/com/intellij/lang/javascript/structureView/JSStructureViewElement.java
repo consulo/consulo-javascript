@@ -454,8 +454,6 @@ public class JSStructureViewElement implements StructureViewTreeElement
 		return myElement;
 	}
 
-
-
 	static abstract class JSStructureItemPresentationBase implements ItemPresentation
 	{
 		final protected JSStructureViewElement element;
