@@ -114,7 +114,6 @@
 
 		<codeInsight.lineMarkerProvider language="JavaScript"
 										implementationClass="com.intellij.lang.javascript.highlighting.JavaScriptLineMarkerProvider"/>
-		<typeDeclarationProvider implementation="com.intellij.lang.javascript.navigation.JavaScriptTypeDeclarationProvider"/>
 		<gotoTargetRendererProvider implementation="com.intellij.lang.javascript.search.JSGotoTargetRendererProvider"/>
 		<definitionsScopedSearch implementation="com.intellij.lang.javascript.search.JSDefinitionsSearchExecutor"/>
 		<referencesSearch implementation="com.intellij.lang.javascript.search.JSReferencesSearchExecutor"/>

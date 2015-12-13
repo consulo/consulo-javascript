@@ -26,7 +26,8 @@ public final class JavaScriptIndex
 {
 	public static final String ECMASCRIPT_JS2 = "ECMAScript.js2";
 
-	public static void processAllSymbols(JavaScriptSymbolProcessor processor)
+	@Deprecated
+	public static void processAllSymbols(Object processor)
 	{
 		/*assert processor.getBaseFile() != null;
 		boolean ecmaL4 = processor.getBaseFile().getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;

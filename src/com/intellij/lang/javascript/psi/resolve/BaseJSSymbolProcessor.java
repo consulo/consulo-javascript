@@ -32,7 +32,6 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.index.JSSymbolUtil;
 import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
-import com.intellij.lang.javascript.index.JavaScriptSymbolProcessor;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Pair;
@@ -54,7 +53,7 @@ import com.intellij.util.ArrayUtil;
 /**
  * @author Maxim.Mossienko
  */
-abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor, PsiScopeProcessor
+abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor
 {
 	protected final PsiFile myTargetFile;
 	protected PsiFile myCurrentFile;
@@ -144,16 +143,6 @@ abstract public class BaseJSSymbolProcessor implements JavaScriptSymbolProcessor
 		myAllowPartialResults = false;
 	}
 
-	@Override
-	public boolean acceptsFile(PsiFile file)
-	{
-		if(mySkipDclsInTargetFile && file == myTargetFile)
-		{
-			return false;
-		}
-		myCurrentFile = file;
-		return true;
-	}
 
 	protected boolean isFromRelevantFileOrDirectory()
 	{

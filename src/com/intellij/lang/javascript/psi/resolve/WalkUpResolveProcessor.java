@@ -27,7 +27,6 @@ import com.intellij.lang.javascript.psi.impl.JSClassImpl;
 import com.intellij.lang.javascript.psi.impl.JSEmbeddedContentImpl;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -217,20 +216,6 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor
 		});
 	}
 
-	@Override
-	public boolean processFunction(final String nameId, final JSNamedElement function)
-	{
-		doQualifiedCheck(nameId, function);
-		return true;
-	}
-
-	@Override
-	public boolean processClass(final String nameId, final JSNamedElement clazz)
-	{
-		doQualifiedCheck(nameId, clazz);
-		return true;
-	}
-
 	protected MatchType isAcceptableQualifiedItem(final String nameId, final PsiElement element)
 	{
 		final boolean partialMatch = myReferenceName.equals(nameId);
@@ -328,78 +313,6 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor
 		{
 			myPartialMatchResults.add(o);
 		}
-	}
-
-	@Override
-	public boolean processProperty(final String nameId, JSNamedElement property)
-	{
-		doQualifiedCheck(nameId, property);
-		return true;
-	}
-
-	@Override
-	public boolean processVariable(final String nameId, JSNamedElement variable)
-	{
-		if(shouldProcessVariable(nameId, variable))
-		{
-			addCompleteResult(variable);
-		}
-		return true;
-	}
-
-	@Override
-	public PsiFile getBaseFile()
-	{
-		return myTargetFile;
-	}
-
-	@Override
-	public boolean processDefinition(final String nameId, final JSNamedElement refExpr)
-	{
-		//if(myCurrentFile != myTargetFile || !mySkipDclsInTargetFile)
-		doQualifiedCheck(nameId, refExpr);
-		return true;
-	}
-
-	@Override
-	public boolean processNamespace(final String nameId, final JSNamedElement refExpr)
-	{
-		doQualifiedCheck(nameId, refExpr);
-		return true;
-	}
-
-	@Override
-	public boolean processImplicitNamespace(final String nameId, final PsiElement refExpr, boolean finalReference)
-	{
-		doQualifiedCheck(nameId, refExpr);
-		return true;
-	}
-
-	@Override
-	public boolean processImplicitFunction(final String nameId, final PsiElement refExpr)
-	{
-		doQualifiedCheck(nameId, refExpr);
-		return true;
-	}
-
-	@Override
-	public boolean processImplicitVariable(final String nameId, final PsiElement refExpr)
-	{
-		doQualifiedCheck(nameId, refExpr);
-		return true;
-	}
-
-	@Override
-	public String getRequiredNameId()
-	{
-		return myReferenceName;
-	}
-
-	@Override
-	public boolean processTag(final String nameId, PsiNamedElement namedElement, final String attrName)
-	{
-		doQualifiedCheck(nameId, namedElement);
-		return true;
 	}
 
 	protected boolean shouldProcessVariable(final String nameId, JSNamedElement var)
