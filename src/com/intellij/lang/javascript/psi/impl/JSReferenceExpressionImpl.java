@@ -82,26 +82,29 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 
 	@Override
 	@Nullable
+	@RequiredReadAction
 	public JSExpression getQualifier()
 	{
-		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
-		return node != null ? (JSExpression) node.getPsi() : null;
+		final PsiElement psiElement = findChildByType(JSElementTypes.EXPRESSIONS);
+		return psiElement != null ? (JSExpression) psiElement : null;
 	}
 
 	@Override
 	@Nullable
+	@RequiredReadAction
 	public String getReferencedName()
 	{
-		final ASTNode nameElement = getNameElement();
+		final PsiElement nameElement = getNameElement();
 		return nameElement != null ? nameElement.getText() : null;
 	}
 
 	@Override
 	@Nullable
+	@RequiredReadAction
 	public PsiElement getReferenceNameElement()
 	{
-		final ASTNode element = getNameElement();
-		return element != null ? element.getPsi() : null;
+		final PsiElement element = getNameElement();
+		return element != null ? element : null;
 	}
 
 	@Override
@@ -117,16 +120,19 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 	}
 
 	@Override
+	@RequiredReadAction
 	public TextRange getRangeInElement()
 	{
-		final ASTNode nameElement = getNameElement();
-		final int startOffset = nameElement != null ? nameElement.getStartOffset() : getNode().getTextRange().getEndOffset();
+		final PsiElement nameElement = getNameElement();
+		final int startOffset = nameElement != null ? nameElement.getNode().getStartOffset() : getNode().getTextRange().getEndOffset();
 		return new TextRange(startOffset - getNode().getStartOffset(), getTextLength());
 	}
 
-	private ASTNode getNameElement()
+	@Nullable
+	@RequiredReadAction
+	private PsiElement getNameElement()
 	{
-		return getNode().findChildByType(IDENTIFIER_TOKENS_SET);
+		return findChildByType(IDENTIFIER_TOKENS_SET);
 	}
 
 	@Override
@@ -137,7 +143,9 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		return resolveResults.length == 0 || resolveResults.length > 1 ? null : resolveResults[0].getElement();
 	}
 
+	@NotNull
 	@Override
+	@RequiredReadAction
 	public String getCanonicalText()
 	{
 		return getText();
@@ -146,16 +154,10 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 	@Override
 	public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException
 	{
-		final ResolveResult[] results = multiResolve(false);
-
-		for(ResolveResult r : results)
-		{
-			PsiElement element = r.getElement();
-		}
-
-		throw new IncorrectOperationException("Unexpected rename request"); // bindToElement should be called
+		return this;
 	}
 
+	@RequiredReadAction
 	PsiElement handleElementRenameInternal(String newElementName) throws IncorrectOperationException
 	{
 		final int i = newElementName.lastIndexOf('.');
@@ -176,11 +178,12 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 				return this; // JSNamedElement.setName will care of things
 			}
 		}
-		JSChangeUtil.doIdentifierReplacement(this, getNameElement().getPsi(), newElementName);
+		JSChangeUtil.doIdentifierReplacement(this, getNameElement(), newElementName);
 		return getParent();
 	}
 
 	@Override
+	@RequiredReadAction
 	public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException
 	{
 		final PsiElement parent = getParent();
@@ -220,7 +223,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		}
 
 		final ASTNode nameElement = JSChangeUtil.createNameIdentifier(getProject(), newName);
-		getNode().replaceChild(getNameElement(), nameElement);
+		getNode().replaceChild(getNameElement().getNode(), nameElement);
 		return this;
 	}
 
@@ -382,7 +385,9 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		return jsClass;
 	}
 
+	@NotNull
 	@Override
+	@RequiredReadAction
 	public Object[] getVariants()
 	{
 		final PsiFile containingFile = getContainingFile();
@@ -396,7 +401,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 
 		ResolveProcessor localProcessor;
 
-		if(isLocalResolveQualifier(qualifier))
+		if(qualifier == null)
 		{
 			if(JSResolveUtil.isSelfReference(getParent(), this))
 			{ // Prevent Rulezz to appear
@@ -496,7 +501,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		final PsiElement parent = getParent();
 		final JSExpression qualifier = getResolveQualifier();
 		final boolean ecma = containingFile.getLanguage().isKindOf(JavaScriptSupportLoader.ECMA_SCRIPT_L4);
-		final boolean localResolve = isLocalResolveQualifier(qualifier);
+		final boolean localResolve = qualifier == null;
 		final boolean parentIsDefinition = parent instanceof JSDefinitionExpression;
 
 		// Handle self references
@@ -522,7 +527,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 
 		ResolveProcessor localProcessor;
 
-		if(localResolve)
+		if(qualifier == null)
 		{
 			localProcessor = new ResolveProcessor(referencedName, this);
 
@@ -649,10 +654,6 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		return processor.getResults();
 	}
 
-	private static boolean isLocalResolveQualifier(final JSExpression qualifier)
-	{
-		return qualifier == null || qualifier instanceof JSThisExpression || qualifier instanceof JSSuperExpression;
-	}
 
 	@Override
 	public boolean shouldCheckReferences()

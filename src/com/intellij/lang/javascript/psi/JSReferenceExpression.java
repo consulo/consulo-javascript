@@ -21,11 +21,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiPolyVariantReference;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 7:26:32 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 7:26:32 PM Jan 30, 2005
  */
 public interface JSReferenceExpression extends JSExpression, PsiPolyVariantReference
 {

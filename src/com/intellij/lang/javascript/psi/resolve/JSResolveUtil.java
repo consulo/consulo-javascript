@@ -1084,13 +1084,13 @@ public class JSResolveUtil
 
 				if(JavaScriptSupportLoader.isMxmlNs(rootNs))
 				{
-					processAllGlobals(processor, xmlFile, place);
+					processXmlFile(processor, xmlFile, place);
 				}
 				else
 				{
 					if(rootTag != null && xmlFile.getFileType() == XmlFileType.INSTANCE)
 					{ // TODO this is bindows specific
-						processAllGlobals(processor, xmlFile, place);
+						processXmlFile(processor, xmlFile, place);
 					}
 				}
 			}
@@ -1161,7 +1161,7 @@ public class JSResolveUtil
 
 	private static Key<CachedValue<List<JSVariable>>> ourCachedPredefinedVarsKey = Key.create("ourCachedPredefinedVarsKey");
 
-	public static boolean processAllGlobals(final PsiScopeProcessor processor, final XmlFile xmlFile, final PsiElement place)
+	public static boolean processXmlFile(final PsiScopeProcessor processor, final XmlFile xmlFile, final PsiElement place)
 	{
 		JSClass clazz = XmlBackedJSClassImpl.getXmlBackedClass(xmlFile);
 		if(!clazz.processDeclarations(processor, ResolveState.initial(), clazz, place))
