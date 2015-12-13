@@ -723,6 +723,10 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 		{
 			final PsiElement namedElement = processorResults.get(i);
 			final String name = getName(namedElement);
+			if(name == null)
+			{
+				continue;
+			}
 
 			String qName = namedElement instanceof JSQualifiedNamedElement ? ((JSQualifiedNamedElement) namedElement).getQualifiedName() : name;
 
