@@ -31,6 +31,7 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.openapi.util.Factory;
 import com.intellij.psi.StringEscapesTokenTypes;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.Processor;
 
 /**
@@ -47,9 +48,11 @@ public class JavaScriptHighlighter extends SyntaxHighlighterBase
 		keys1 = new HashMap<IElementType, TextAttributesKey>();
 		keys2 = new HashMap<IElementType, TextAttributesKey>();
 
-		SyntaxHighlighterBase.fillMap(keys1, JSTokenTypes.OPERATIONS, JavaScriptSyntaxHighlightKeys.JS_OPERATION_SIGN); // we do need init OPERATIONS before KEYWORDS because has some
-		// OPERATIONS to be KEYWORDS (is, as)
-		fillMap(keys1, JSTokenTypes.KEYWORDS, JavaScriptSyntaxHighlightKeys.JS_KEYWORD);
+		TokenSet operations = TokenSet.andNot(JSTokenTypes.OPERATIONS, TokenSet.create(JSTokenTypes.AS_KEYWORD, JSTokenTypes.IS_KEYWORD));
+
+		safeMap(keys1, operations, JavaScriptSyntaxHighlightKeys.JS_OPERATION_SIGN);
+
+		safeMap(keys1, JSTokenTypes.KEYWORDS, JavaScriptSyntaxHighlightKeys.JS_KEYWORD);
 
 		keys1.put(StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN, JavaScriptSyntaxHighlightKeys.JS_VALID_STRING_ESCAPE);
 		keys1.put(StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN, JavaScriptSyntaxHighlightKeys.JS_INVALID_STRING_ESCAPE);
