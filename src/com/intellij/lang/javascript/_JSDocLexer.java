@@ -28,7 +28,7 @@ import com.intellij.psi.tree.IElementType;
  * on 8/5/08 7:33 PM from the specification file
  * <tt>C:/Trunk/tools/lexer/../../plugins/JavaScriptLanguage/src/com/intellij/lang/javascript/JSDoc.flex</tt>
  */
-class _JSDocLexer implements FlexLexer
+public class _JSDocLexer implements FlexLexer
 {
 	/**
 	 * initial size of the lookahead buffer

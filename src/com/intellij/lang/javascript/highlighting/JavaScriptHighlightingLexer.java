@@ -1,5 +1,6 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2000-2005 JetBrains s.r.o
+ * Copyright 2013-2015 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,42 +15,42 @@
  * limitations under the License.
  */
 
-package com.intellij.lang.javascript;
+package com.intellij.lang.javascript.highlighting;
 
 import com.intellij.lang.html.HTMLLanguage;
+import com.intellij.lang.javascript.JSDocTokenTypes;
+import com.intellij.lang.javascript.JSTokenTypes;
+import com.intellij.lang.javascript._JSDocLexer;
 import com.intellij.lexer.FlexAdapter;
 import com.intellij.lexer.LayeredLexer;
 import com.intellij.lexer.Lexer;
 import com.intellij.lexer.LexerBase;
 import com.intellij.lexer.StringLiteralLexer;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
+import com.intellij.openapi.util.Factory;
 import com.intellij.psi.tree.IElementType;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Feb 15, 2005
- * Time: 12:13:05 AM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 12:13:05 AM Feb 15, 2005
  */
-@Deprecated
 public class JavaScriptHighlightingLexer extends LayeredLexer
 {
-	public JavaScriptHighlightingLexer(DialectOptionHolder optionHolder)
+	public JavaScriptHighlightingLexer(Factory<Lexer> baseLexerFactory)
 	{
-		this(optionHolder, true);
+		this(baseLexerFactory, true);
 	}
 
-	private JavaScriptHighlightingLexer(DialectOptionHolder optionHolder, boolean withEmbeddments)
+	private JavaScriptHighlightingLexer(Factory<Lexer> baseLexerFactory, boolean withEmbeddments)
 	{
-		super(new JSFlexAdapter(true, optionHolder));
+		super(baseLexerFactory.create());
 
 		if(withEmbeddments)
 		{
 			registerSelfStoppingLayer(new StringLiteralLexer('\"', JSTokenTypes.STRING_LITERAL, true, "/"), new IElementType[]{JSTokenTypes.STRING_LITERAL},
 					IElementType.EMPTY_ARRAY);
 
-			registerSelfStoppingLayer(new JavaScriptHighlightingLexer(optionHolder, false), new IElementType[]{JSTokenTypes.XML_JS_SCRIPT},
+			registerSelfStoppingLayer(new JavaScriptHighlightingLexer(baseLexerFactory, false), new IElementType[]{JSTokenTypes.XML_JS_SCRIPT},
 					IElementType.EMPTY_ARRAY);
 
 			registerSelfStoppingLayer(new StringLiteralLexer('\'', JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL, true, "/"),
@@ -119,7 +120,6 @@ public class JavaScriptHighlightingLexer extends LayeredLexer
 				}
 			}, JSDocTokenTypes.DOC_COMMENT_DATA);
 			registerSelfStoppingLayer(docLexer, new IElementType[]{JSTokenTypes.DOC_COMMENT}, new IElementType[]{JSDocTokenTypes.DOC_COMMENT_END});
-
 		}
 	}
 

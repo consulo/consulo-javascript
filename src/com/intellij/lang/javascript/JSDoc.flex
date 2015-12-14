@@ -12,6 +12,7 @@ import com.intellij.psi.tree.IElementType;
   }
 %}
 
+%public
 %class _JSDocLexer
 %implements FlexLexer
 %unicode

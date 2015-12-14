@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.javascript.JSDocElementType;
 import com.intellij.lang.javascript.JSDocTokenTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
+import com.intellij.lang.javascript.highlighting.JavaScriptHighlightingLexer;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.XmlHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
@@ -125,7 +126,7 @@ public class JavaScriptHighlighter extends SyntaxHighlighterBase
 	@Override
 	public Lexer getHighlightingLexer()
 	{
-		return myFactory.create();
+		return new JavaScriptHighlightingLexer(myFactory);
 	}
 
 	@Override
