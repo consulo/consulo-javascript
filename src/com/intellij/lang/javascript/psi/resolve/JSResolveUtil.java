@@ -2808,26 +2808,9 @@ public class JSResolveUtil
 				PsiFile psiFile = PsiManager.getInstance(target.getProject()).findFile(file);
 				if(psiFile instanceof JSFile)
 				{
-					for(JSSourceElement element : ((JSFile) psiFile).getStatements())
+					if(!psiFile.processDeclarations(processor, ResolveState.initial(), null, target))
 					{
-						if(element instanceof JSNamedElement)
-						{
-							if(!processor.execute(element, ResolveState.initial()))
-							{
-								break;
-							}
-						}
-						else if(element instanceof JSVarStatement)
-						{
-							JSVariable[] variables = ((JSVarStatement) element).getVariables();
-							for(JSVariable variable : variables)
-							{
-								if(!processor.execute(variable, ResolveState.initial()))
-								{
-									break;
-								}
-							}
-						}
+						return;
 					}
 				}
 			}
