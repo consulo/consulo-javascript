@@ -31,7 +31,6 @@ import java.util.Set;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.DeprecationInfo;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
 import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
@@ -116,7 +115,6 @@ public class JSResolveUtil
 	@NonNls
 	public static final String PROTOTYPE_FIELD_NAME = "prototype";
 
-	private static final Key<GlobalSearchScope> MY_SCOPE_KEY = Key.create("default.scope");
 	@NonNls
 	private static final String ARRAY_TYPE_NAME = "Array";
 	@NonNls
@@ -1673,14 +1671,6 @@ public class JSResolveUtil
 	public static PsiElement findClassByQName(final String link, @NotNull GlobalSearchScope scope, @NotNull Project project)
 	{
 		return findClassByQName(link, project, scope);
-	}
-
-	@Deprecated
-	@DeprecationInfo(value = "Use findClassByQName(final String link, GlobalSearchScope scope, Project project)", until = "1.0")
-	public static PsiElement findClassByQName(final String link, final Project index, final Module module)
-	{
-		final GlobalSearchScope searchScope = module != null ? GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module) : GlobalSearchScope.allScope(index);
-		return findClassByQName(link, index, searchScope);
 	}
 
 	private static PsiElement findClassByQName(final String link, final Project project, final GlobalSearchScope searchScope)
