@@ -1679,15 +1679,8 @@ public class JSResolveUtil
 	@DeprecationInfo(value = "Use findClassByQName(final String link, GlobalSearchScope scope, Project project)", until = "1.0")
 	public static PsiElement findClassByQName(final String link, final Project index, final Module module)
 	{
-		final GlobalSearchScope searchScope = getSearchScope(module, index);
+		final GlobalSearchScope searchScope = module != null ? GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module) : GlobalSearchScope.allScope(index);
 		return findClassByQName(link, index, searchScope);
-	}
-
-	@Deprecated
-	@DeprecationInfo(value = "Use PsiElement.getResolveScope()", until = "1.0")
-	public static GlobalSearchScope getSearchScope(@Nullable Module module, @NotNull Project project)
-	{
-		return module != null ? GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module) : GlobalSearchScope.allScope(project);
 	}
 
 	private static PsiElement findClassByQName(final String link, final Project project, final GlobalSearchScope searchScope)
