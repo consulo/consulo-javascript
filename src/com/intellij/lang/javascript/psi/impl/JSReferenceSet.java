@@ -475,7 +475,7 @@ public class JSReferenceSet
 			if(psiFile instanceof XmlFile && !JavaScriptSupportLoader.isFlexMxmFile(psiFile))
 			{
 				// TODO: short names during completion should be
-				JSResolveUtil.processTopLevelClasses(processor, ResolveState.initial(), psiFile.getProject(), JSResolveUtil.getSearchScope(psiFile), onlyFqns,
+				JSResolveUtil.processTopLevelClasses(processor, ResolveState.initial(), psiFile.getProject(), psiFile.getResolveScope(), onlyFqns,
 						false);
 			}
 			return processor;

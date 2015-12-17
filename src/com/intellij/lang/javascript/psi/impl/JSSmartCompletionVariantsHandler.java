@@ -30,7 +30,6 @@ import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import com.intellij.lang.javascript.psi.util.JSLookupUtil;
 import com.intellij.lang.javascript.search.JSClassSearch;
-import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.text.StringUtil;
@@ -137,7 +136,7 @@ public class JSSmartCompletionVariantsHandler
 		public void findAcceptableVariants(JSReferenceExpression expression, final Project project)
 		{
 
-			PsiElement clazz = JSResolveUtil.findClassByQName("flash.events.Event", project, ModuleUtil.findModuleForPsiElement(expression));
+			PsiElement clazz = JSResolveUtil.findClassByQName("flash.events.Event", expression.getResolveScope(), project);
 			clazz = JSResolveUtil.unwrapProxy(clazz);
 			if(!(clazz instanceof JSClass))
 			{

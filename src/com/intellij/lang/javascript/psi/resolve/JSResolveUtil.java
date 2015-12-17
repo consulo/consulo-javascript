@@ -57,7 +57,6 @@ import com.intellij.lang.javascript.psi.impl.JSStubElementImpl;
 import com.intellij.lang.javascript.psi.stubs.JSVariableStubBase;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -871,7 +870,7 @@ public class JSResolveUtil
 	{
 		boolean result = true;
 		final Project project = context.getProject();
-		final GlobalSearchScope scope = getSearchScope(context);
+		final GlobalSearchScope scope = context.getResolveScope();
 
 		if(shouldProcessTopLevelGlobalContext(place, processor))
 		{
@@ -1664,28 +1663,24 @@ public class JSResolveUtil
 						(((JSBinaryExpression) parent).getOperationSign() == JSTokenTypes.IS_KEYWORD || ((JSBinaryExpression) parent).getOperationSign() == JSTokenTypes.AS_KEYWORD));
 	}
 
+	@Nullable
 	public static PsiElement findClassByQName(final String link, final @NotNull PsiElement context)
 	{
-		final Module module = ModuleUtil.findModuleForPsiElement(context);
-		return findClassByQName(link, context.getProject(), module);
+		return findClassByQName(link, context.getProject(), context.getResolveScope());
 	}
 
-	public static PsiElement findClassByQName(final String link, GlobalSearchScope scope, Project project)
+	@Nullable
+	public static PsiElement findClassByQName(final String link, @NotNull GlobalSearchScope scope, @NotNull Project project)
 	{
 		return findClassByQName(link, project, scope);
 	}
 
+	@Deprecated
+	@DeprecationInfo(value = "Use findClassByQName(final String link, GlobalSearchScope scope, Project project)", until = "1.0")
 	public static PsiElement findClassByQName(final String link, final Project index, final Module module)
 	{
 		final GlobalSearchScope searchScope = getSearchScope(module, index);
 		return findClassByQName(link, index, searchScope);
-	}
-
-	@Deprecated
-	@DeprecationInfo(value = "Use PsiElement.getResolveScope()", until = "1.0")
-	public static GlobalSearchScope getSearchScope(@NotNull PsiElement context)
-	{
-		return context.getResolveScope();
 	}
 
 	@Deprecated

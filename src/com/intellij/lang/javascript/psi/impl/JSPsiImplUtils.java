@@ -211,7 +211,7 @@ public class JSPsiImplUtils
 			return null;
 		}
 
-		GlobalSearchScope searchScope = JSResolveUtil.getSearchScope(jsClass);
+		GlobalSearchScope searchScope = jsClass.getResolveScope();
 		final String qName = jsClass.getQualifiedName();
 		final Collection<JSQualifiedNamedElement> candidates = StubIndex.getElements(JavaScriptIndexKeys.ELEMENTS_BY_QNAME, qName, jsClass.getProject(), searchScope, JSQualifiedNamedElement.class);
 		for(Iterator<JSQualifiedNamedElement> i = candidates.iterator(); i.hasNext(); )
