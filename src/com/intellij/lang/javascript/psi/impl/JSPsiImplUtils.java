@@ -33,6 +33,7 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.OrderRootType;
@@ -203,6 +204,11 @@ public class JSPsiImplUtils
 		if(sourceElement != null)
 		{
 			return sourceElement;
+		}
+
+		if(DumbService.isDumb(jsClass.getProject()))
+		{
+			return null;
 		}
 
 		GlobalSearchScope searchScope = JSResolveUtil.getSearchScope(jsClass);
