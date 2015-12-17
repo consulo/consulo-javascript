@@ -31,6 +31,7 @@ import java.util.Set;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.DeprecationInfo;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
 import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
@@ -117,7 +118,6 @@ public class JSResolveUtil
 	public static final String PROTOTYPE_FIELD_NAME = "prototype";
 
 	private static final Key<GlobalSearchScope> MY_SCOPE_KEY = Key.create("default.scope");
-	public static final Key<Boolean> IMPLICIT_JS_FILES_KEY = Key.create("implicit.js.files");
 	@NonNls
 	private static final String ARRAY_TYPE_NAME = "Array";
 	@NonNls
@@ -1681,47 +1681,18 @@ public class JSResolveUtil
 		return findClassByQName(link, index, searchScope);
 	}
 
+	@Deprecated
+	@DeprecationInfo(value = "Use PsiElement.getResolveScope()", until = "1.0")
 	public static GlobalSearchScope getSearchScope(@NotNull PsiElement context)
 	{
-		return getSearchScope(ModuleUtil.findModuleForPsiElement(context), context.getProject());
+		return context.getResolveScope();
 	}
 
+	@Deprecated
+	@DeprecationInfo(value = "Use PsiElement.getResolveScope()", until = "1.0")
 	public static GlobalSearchScope getSearchScope(@Nullable Module module, @NotNull Project project)
 	{
-		GlobalSearchScope allScope = (module != null ? module : project).getUserData(MY_SCOPE_KEY);
-		if(allScope == null)
-		{
-			final GlobalSearchScope searchScope = module != null ? GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module) : GlobalSearchScope.allScope(project);
-			allScope = new GlobalSearchScope()
-			{
-				@Override
-				public boolean contains(VirtualFile file)
-				{
-					return searchScope.contains(file) || file.getUserData(IMPLICIT_JS_FILES_KEY) != null;
-				}
-
-				@Override
-				public int compare(VirtualFile file1, VirtualFile file2)
-				{
-					return searchScope.compare(file1, file2);
-				}
-
-				@Override
-				public boolean isSearchInModuleContent(@NotNull Module aModule)
-				{
-					return searchScope.isSearchInModuleContent(aModule);
-				}
-
-				@Override
-				public boolean isSearchInLibraries()
-				{
-					return searchScope.isSearchInLibraries();
-				}
-			};
-			(module != null ? module : project).putUserData(MY_SCOPE_KEY, allScope);
-		}
-
-		return allScope;
+		return module != null ? GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module) : GlobalSearchScope.allScope(project);
 	}
 
 	private static PsiElement findClassByQName(final String link, final Project project, final GlobalSearchScope searchScope)
