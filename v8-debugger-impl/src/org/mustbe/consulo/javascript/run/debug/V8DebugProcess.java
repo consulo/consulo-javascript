@@ -161,7 +161,7 @@ public class V8DebugProcess extends XDebugProcess
 						int line = lineBreakpoint.getLine();
 						XExpression conditionExpression = lineBreakpoint.getConditionExpression();
 						String expression = conditionExpression == null ? null : conditionExpression.getExpression();
-						myVm.setBreakpoint(new Breakpoint.Target.ScriptName(presentableFilePath), line, 0, true, expression, new JavascriptVm.BreakpointCallback()
+						myVm.setBreakpoint(new Breakpoint.Target.ScriptName(presentableFilePath), line, Breakpoint.EMPTY_VALUE, true, expression, new JavascriptVm.BreakpointCallback()
 						{
 							@Override
 							public void success(Breakpoint breakpoint)
@@ -179,10 +179,10 @@ public class V8DebugProcess extends XDebugProcess
 					}
 
 					@Override
-					public void unregisterBreakpoint(@NotNull XLineBreakpoint xBreakpoint, boolean b)
+					public void unregisterBreakpoint(@NotNull XLineBreakpoint breakpoint, boolean b)
 					{
-						String presentableFilePath = xBreakpoint.getPresentableFilePath();
-						myVm.setBreakpoint(new Breakpoint.Target.ScriptName(presentableFilePath), xBreakpoint.getLine(), 0, false, null, null, null);
+						String presentableFilePath = breakpoint.getPresentableFilePath();
+						myVm.setBreakpoint(new Breakpoint.Target.ScriptName(presentableFilePath), breakpoint.getLine(), Breakpoint.EMPTY_VALUE, false, null, null, null);
 					}
 				}
 		};
