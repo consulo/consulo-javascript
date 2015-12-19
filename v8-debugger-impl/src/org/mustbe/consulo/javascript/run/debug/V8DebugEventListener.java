@@ -71,7 +71,7 @@ public class V8DebugEventListener implements DebugEventListener
 				Script script = callFrame.getScript();
 				if(script.getName() != null)
 				{
-					VirtualFile virtualFile = V8ScriptUtil.toVirtualFile(callFrame.getScript(), true);
+					VirtualFile virtualFile = V8ScriptUtil.toVirtualFile(script, true);
 					if(!(virtualFile instanceof LightVirtualFile))
 					{
 						XBreakpointManager breakpointManager = XDebuggerManager.getInstance(myV8DebugProcess.getSession().getProject()).getBreakpointManager();
