@@ -51,6 +51,7 @@ import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.XDebuggerManager;
+import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpointHandler;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
@@ -154,24 +155,25 @@ public class V8DebugProcess extends XDebugProcess
 				new XBreakpointHandler<XLineBreakpoint<XBreakpointProperties>>(JavaScriptLineBreakpointType.class)
 				{
 					@Override
-					public void registerBreakpoint(@NotNull final XLineBreakpoint xBreakpoint)
+					public void registerBreakpoint(@NotNull final XLineBreakpoint lineBreakpoint)
 					{
-						String presentableFilePath = xBreakpoint.getPresentableFilePath();
-						int line = xBreakpoint.getLine();
-						myVm.setBreakpoint(new Breakpoint.Target.ScriptName(presentableFilePath), line, 0, true, null,
-								new JavascriptVm.BreakpointCallback()
+						String presentableFilePath = lineBreakpoint.getPresentableFilePath();
+						int line = lineBreakpoint.getLine();
+						XExpression conditionExpression = lineBreakpoint.getConditionExpression();
+						String expression = conditionExpression == null ? null : conditionExpression.getExpression();
+						myVm.setBreakpoint(new Breakpoint.Target.ScriptName(presentableFilePath), line, 0, true, expression, new JavascriptVm.BreakpointCallback()
 						{
 							@Override
 							public void success(Breakpoint breakpoint)
 							{
-								myBreakpoints.put(breakpoint, xBreakpoint);
-								myXBreakpointManager.updateBreakpointPresentation(xBreakpoint, AllIcons.Debugger.Db_verified_breakpoint, null);
+								myBreakpoints.put(breakpoint, lineBreakpoint);
+								myXBreakpointManager.updateBreakpointPresentation(lineBreakpoint, AllIcons.Debugger.Db_verified_breakpoint, null);
 							}
 
 							@Override
 							public void failure(String s)
 							{
-								myXBreakpointManager.updateBreakpointPresentation(xBreakpoint, AllIcons.Debugger.Db_invalid_breakpoint, s);
+								myXBreakpointManager.updateBreakpointPresentation(lineBreakpoint, AllIcons.Debugger.Db_invalid_breakpoint, s);
 							}
 						}, null);
 					}

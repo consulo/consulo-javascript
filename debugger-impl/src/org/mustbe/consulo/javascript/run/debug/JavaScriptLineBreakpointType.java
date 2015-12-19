@@ -18,6 +18,7 @@ package org.mustbe.consulo.javascript.run.debug;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.intellij.javascript.JSDebuggerSupportUtils;
 import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileTypes.FileType;
@@ -47,12 +48,9 @@ public class JavaScriptLineBreakpointType extends XLineBreakpointTypeBase
 
 			@NotNull
 			@Override
-			public Document createDocument(@NotNull Project project,
-					@NotNull String s,
-					@Nullable XSourcePosition xSourcePosition,
-					@NotNull EvaluationMode evaluationMode)
+			public Document createDocument(@NotNull Project project, @NotNull String s, @Nullable XSourcePosition sourcePosition, @NotNull EvaluationMode evaluationMode)
 			{
-				return null;
+				return JSDebuggerSupportUtils.createDocument(s, project, sourcePosition == null ? null : sourcePosition.getFile(), sourcePosition == null ? 0 : sourcePosition.getOffset());
 			}
 		});
 	}
