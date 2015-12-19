@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.javascript.run.debug;
 
+import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.javascript.JSDebuggerSupportUtils;
@@ -35,6 +36,13 @@ import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
  */
 public class JavaScriptLineBreakpointType extends XLineBreakpointTypeBase
 {
+	@NotNull
+	@LazyInstance
+	public static JavaScriptLineBreakpointType getInstance()
+	{
+		return EXTENSION_POINT_NAME.findExtension(JavaScriptLineBreakpointType.class);
+	}
+
 	public JavaScriptLineBreakpointType()
 	{
 		super("javascript", "JavaScript Breakpoints", new XDebuggerEditorsProvider()

@@ -17,12 +17,20 @@
 package org.mustbe.consulo.javascript.run.debug;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.chromium.sdk.Breakpoint;
+import org.chromium.sdk.CallFrame;
 import org.chromium.sdk.DebugContext;
 import org.chromium.sdk.DebugEventListener;
 import org.chromium.sdk.Script;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.testFramework.LightVirtualFile;
+import com.intellij.util.containers.ContainerUtil;
+import com.intellij.xdebugger.XDebuggerManager;
+import com.intellij.xdebugger.breakpoints.XBreakpointManager;
+import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 
 /**
@@ -54,6 +62,32 @@ public class V8DebugEventListener implements DebugEventListener
 					myV8DebugProcess.getSession().initBreakpoints();
 				}
 			});
+
+			// we need find top file and top first breakpoint
+			List<? extends CallFrame> callFrames = debugContext.getCallFrames();
+			CallFrame callFrame = ContainerUtil.getFirstItem(callFrames);
+			if(callFrame != null)
+			{
+				Script script = callFrame.getScript();
+				if(script.getName() != null)
+				{
+					VirtualFile virtualFile = V8ScriptUtil.toVirtualFile(callFrame.getScript(), true);
+					if(!(virtualFile instanceof LightVirtualFile))
+					{
+						XBreakpointManager breakpointManager = XDebuggerManager.getInstance(myV8DebugProcess.getSession().getProject()).getBreakpointManager();
+						XLineBreakpoint<XBreakpointProperties> breakpointAtLine = breakpointManager.findBreakpointAtLine(JavaScriptLineBreakpointType.getInstance(), virtualFile, 0);
+						// if we have breakpoint at line 0, we dont need unpause
+						if(breakpointAtLine != null)
+						{
+							myV8DebugProcess.setCurrentDebugContext(debugContext);
+
+							myV8DebugProcess.getSession().breakpointReached(breakpointAtLine, null, new V8SuspendContext(debugContext));
+							return;
+						}
+					}
+				}
+			}
+
 			debugContext.continueVm(DebugContext.StepAction.CONTINUE, 0, null, null);
 			return;
 		}
@@ -113,5 +147,4 @@ public class V8DebugEventListener implements DebugEventListener
 	{
 
 	}
-
 }
