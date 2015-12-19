@@ -63,7 +63,7 @@ public abstract class JSInspection extends LocalInspectionTool implements Custom
 	@NotNull
 	public HighlightDisplayLevel getDefaultLevel()
 	{
-		return HighlightDisplayLevel.INFO;
+		return HighlightDisplayLevel.WEAK_WARNING;
 	}
 
 	@Override
