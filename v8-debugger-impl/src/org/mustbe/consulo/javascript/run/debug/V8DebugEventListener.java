@@ -80,7 +80,6 @@ public class V8DebugEventListener implements DebugEventListener
 						if(breakpointAtLine != null)
 						{
 							myV8DebugProcess.setCurrentDebugContext(debugContext);
-
 							myV8DebugProcess.getSession().breakpointReached(breakpointAtLine, null, new V8SuspendContext(debugContext));
 							return;
 						}
