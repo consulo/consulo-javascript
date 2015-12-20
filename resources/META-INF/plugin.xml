@@ -42,13 +42,13 @@
 
 		<internalFileTemplate name="JavaScriptFile"/>
 
-		<lang.versionResolver language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScriptLanguageVersionResolver" />
+		<lang.versionResolver language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScriptLanguageVersionResolver"/>
 
-		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScript15LanguageVersion" />
-		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScript16LanguageVersion" />
-		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScript17LanguageVersion" />
-		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScript18LanguageVersion" />
-		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScript185LanguageVersion" />
+		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScript15LanguageVersion"/>
+		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScript16LanguageVersion"/>
+		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScript17LanguageVersion"/>
+		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScript18LanguageVersion"/>
+		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScript185LanguageVersion"/>
 
 		<copyright.updater filetype="JavaScript" implementationClass="org.mustbe.consulo.javascript.copyright.UpdateJavaScriptFileCopyrightProvider"/>
 
@@ -134,9 +134,9 @@
 		<lang.elementManipulator forClass="com.intellij.lang.javascript.psi.JSDocTag"
 								 implementationClass="com.intellij.javascript.manipulators.JSDocTagManipulator"/>
 
-		<completion.contributor language="JavaScript" implementationClass="com.intellij.javascript.JSCompletionContributor"/>
+		<completion.contributor language="JavaScript" implementationClass="org.mustbe.consulo.javascript.ide.completion.JavaScriptKeywordCompletionContributor"/>
 
-		<quoteHandler fileType="JavaScript" className="org.mustbe.consulo.javascript.lang.JavaScriptQuoteHandler" />
+		<quoteHandler fileType="JavaScript" className="org.mustbe.consulo.javascript.lang.JavaScriptQuoteHandler"/>
 
 		<liveTemplateMacro implementation="com.intellij.javascript.JSClassNameMacro"/>
 		<liveTemplateMacro implementation="com.intellij.javascript.JSMethodNameMacro"/>
