@@ -25,31 +25,20 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.extapi.psi.PsiElementBase;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.util.JSLookupUtil;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.IncorrectOperationException;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
 public class VariantsProcessor extends BaseJSSymbolProcessor
 {
@@ -61,34 +50,19 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 	private Map<String, Object> myPartialMatchNamesMapFromSameFile = new HashMap<String, Object>();
 	//private Set<PsiFile> myTargetFiles;
 	private final boolean hasSomeSmartnessAvailable;
-	private boolean hasSomeInfoAvailable;
-	private final String[][] myNameIdsArray;
-	private boolean myProcessOnlyProperties, myProcessOnlyTypes;
-	private boolean myProcessOnlyClasses, myProcessOnlyInterfaces;
+	private boolean myProcessOnlyTypes;
 
 	private boolean myAddOnlyCompleteMatchesSet;
 
-	@NonNls
-	private static final String INT_TYPE = "int";
-	@NonNls
-	private static final String UINT_TYPE = "uint";
-	@NonNls
-	private static final String VOID_TYPE = "void";
-	@NonNls
-	private static final String ANY_TYPE = "*";
-	private boolean myInVarDcl;
-	private boolean myInFuncDcl;
-	private boolean myStrictTypeContext;
 	@NonNls
 	private static final String OBJECT_CLASS_NAME = "Object";
 
 	public VariantsProcessor(String[] nameIds, PsiFile targetFile, boolean skipDclsInTargetFile, PsiElement context)
 	{
-		super(targetFile.getOriginalFile() != null ? targetFile.getOriginalFile() : targetFile, skipDclsInTargetFile, context, nameIds);
+		super(targetFile.getOriginalFile(), skipDclsInTargetFile, context, nameIds);
 		nameIds = myContextNameIds;
 
-		myProcessOnlyProperties = context instanceof JSProperty;
-		hasSomeInfoAvailable = nameIds != null && nameIds.length > 0;
+		boolean hasSomeInfoAvailable = nameIds != null && nameIds.length > 0;
 		final List<String[]> possibleNameComponents = new ArrayList<String[]>(1);
 		myCurrentFile = targetFile.getOriginalFile();
 		//myTargetFiles = new HashSet<PsiFile>();
@@ -126,47 +100,17 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			else
 			{
 				final PsiElement parent = refExpr.getParent();
-				boolean strictTypeContext;
 
 				if(parent instanceof JSImportStatement)
 				{
 					myProcessOnlyTypes = true;
 				}
-				else if((strictTypeContext = JSResolveUtil.isExprInTypeContext(refExpr)) || (ecmal4 && JSResolveUtil.isInPlaceWhereTypeCanBeDuringCompletion(refExpr)))
+				else if(JSResolveUtil.isExprInTypeContext(refExpr) || (ecmal4 && JSResolveUtil.isInPlaceWhereTypeCanBeDuringCompletion(refExpr)))
 				{
 					myAddOnlyCompleteMatches = myAddOnlyCompleteMatchesSet = true;
 					myProcessOnlyTypes = true;
-					myStrictTypeContext = strictTypeContext;
-					myInFuncDcl = parent instanceof JSFunction;
-					myInVarDcl = parent instanceof JSVariable;
 					allTypesResolved = true;
 					addPackageScope(possibleNameComponents, jsClass, refExpr);
-
-					if(parent instanceof JSReferenceList)
-					{
-						if(parent.getNode().getElementType() == JSElementTypes.EXTENDS_LIST)
-						{
-							final PsiElement element = parent.getParent();
-							if(element instanceof JSClass)
-							{
-								if(((JSClass) element).isInterface())
-								{
-									myProcessOnlyClasses = false;
-									myProcessOnlyInterfaces = true;
-								}
-								else
-								{
-									myProcessOnlyClasses = true;
-									myProcessOnlyInterfaces = false;
-								}
-							}
-						}
-						else
-						{
-							myProcessOnlyClasses = false;
-							myProcessOnlyInterfaces = true;
-						}
-					}
 				}
 				else if(jsClass != null)
 				{
@@ -197,12 +141,11 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			});
 		}
 
-		myNameIdsArray = new String[possibleNameComponents.size()][];
-		possibleNameComponents.toArray(myNameIdsArray);
+		String[][] nameIdsArray = new String[possibleNameComponents.size()][];
+		possibleNameComponents.toArray(nameIdsArray);
 
-		hasSomeSmartnessAvailable = myNameIdsArray != null && myNameIdsArray.length > 0;
+		hasSomeSmartnessAvailable = nameIdsArray != null && nameIdsArray.length > 0;
 	}
-
 
 	private void updateCanUseOnlyCompleteMatchesFromString(final String qName, Object source, PsiElement clazz)
 	{
@@ -361,17 +304,6 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 
 	public Object[] getResult()
 	{
-		if(myProcessOnlyTypes && ecmal4 && (myInFuncDcl || myInVarDcl))
-		{
-			addCompleteMatch(INT_TYPE, INT_TYPE);
-			addCompleteMatch(UINT_TYPE, UINT_TYPE);
-			if(myInFuncDcl)
-			{
-				addCompleteMatch(VOID_TYPE, VOID_TYPE);
-			}
-			addCompleteMatch(ANY_TYPE, ANY_TYPE);
-		}
-
 		List<Object> results = new ArrayList<Object>();
 		for(Object o : myNamesList)
 		{
@@ -466,12 +398,12 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 		return super.isFromRelevantFileOrDirectory(); // || myTargetFiles.contains(myCurrentFile);
 	}
 
-	private void addCompleteMatch(final Object _element, String nameId)
+	private void addCompleteMatch(final PsiElement _element, String nameId)
 	{
 		addCompleteMatch(_element, nameId, true);
 	}
 
-	private void addCompleteMatch(final Object _element, String nameId, boolean doFilterting)
+	private void addCompleteMatch(final PsiElement _element, String nameId, boolean doFilterting)
 	{
 		if(!doAdd(_element, nameId, doFilterting))
 		{
@@ -488,7 +420,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			}
 		}
 
-		PsiElement element = updateElement(_element);
+		PsiElement element = _element;
 
 		if(isFromRelevantFileOrDirectory() && !myAddOnlyCompleteMatches)
 		{
@@ -516,24 +448,6 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 		}
 	}
 
-	private PsiElement updateElement(final Object _element)
-	{
-		PsiElement element;
-		if(_element instanceof PsiElement)
-		{
-			element = (PsiElement) _element;
-		}
-		else if(_element instanceof String)
-		{
-			element = new MyElementWrapper((String) _element, myCurrentFile, 0);
-		}
-		else
-		{
-			throw new UnsupportedOperationException();
-		}
-		return element;
-	}
-
 	private boolean doAdd(Object element, String nameId, boolean doFilterting)
 	{
 		if(nameId == null || (doFilterting && myNames2CandidatesMap.get(nameId) != null))
@@ -555,7 +469,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			return;
 		}
 
-		PsiElement element = updateElement(_element);
+		PsiElement element = _element;
 
 		final Map<String, Object> targetNamesMap;
 		final JSLookupUtil.LookupPriority priority;
@@ -581,214 +495,6 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 		else
 		{
 			myNames2CandidatesMap.remove(nameId);
-		}
-	}
-
-	public static class MyElementWrapper extends PsiElementBase implements JSNamedElement
-	{
-		private final String myArtificialName;
-		private int myOffset;
-		private PsiFile myCurrentFile;
-
-		@Override
-		public boolean equals(final Object obj)
-		{
-			if(!(obj instanceof MyElementWrapper))
-			{
-				return false;
-			}
-			final MyElementWrapper elementWrapper = (MyElementWrapper) obj;
-
-			return elementWrapper.myOffset == myOffset;
-		}
-
-		@Override
-		public int hashCode()
-		{
-			return myOffset;
-		}
-
-		public MyElementWrapper(final String name, PsiFile file, int offset)
-		{
-			myOffset = offset;
-			myCurrentFile = file;
-			myArtificialName = name;
-		}
-
-		@RequiredReadAction
-		@Override
-		@NotNull
-		public Language getLanguage()
-		{
-			return JavaScriptLanguage.INSTANCE;
-		}
-
-		@RequiredReadAction
-		@Override
-		@NotNull
-		public PsiElement[] getChildren()
-		{
-			return PsiElement.EMPTY_ARRAY;
-		}
-
-		@Override
-		public PsiElement getParent()
-		{
-			return myCurrentFile != null ? myCurrentFile : null;
-		}
-
-		@RequiredReadAction
-		@Override
-		@Nullable
-		public PsiElement getFirstChild()
-		{
-			return null;
-		}
-
-		@RequiredReadAction
-		@Override
-		@Nullable
-		public PsiElement getLastChild()
-		{
-			return null;
-		}
-
-		@Override
-		@NotNull
-		public Project getProject()
-		{
-			return getParent().getProject();
-		}
-
-		@RequiredReadAction
-		@Override
-		@Nullable
-		public PsiElement getNextSibling()
-		{
-			return null;
-		}
-
-		@RequiredReadAction
-		@Override
-		@Nullable
-		public PsiElement getPrevSibling()
-		{
-			return null;
-		}
-
-		@RequiredReadAction
-		@Override
-		public TextRange getTextRange()
-		{
-			return new TextRange(myOffset, myOffset);
-		}
-
-		@RequiredReadAction
-		@Override
-		public int getStartOffsetInParent()
-		{
-			return myOffset;
-		}
-
-		@RequiredReadAction
-		@Override
-		public int getTextLength()
-		{
-			return 0;
-		}
-
-		@RequiredReadAction
-		@Override
-		@Nullable
-		public PsiElement findElementAt(final int offset)
-		{
-			return null;
-		}
-
-		@Override
-		public int getTextOffset()
-		{
-			return myOffset;
-		}
-
-		@RequiredReadAction
-		@Override
-		@NonNls
-		public String getText()
-		{
-			if(myArtificialName != null)
-			{
-				return myArtificialName;
-			}
-			return null;
-		}
-
-		@RequiredReadAction
-		@Override
-		@NotNull
-		public char[] textToCharArray()
-		{
-			return new char[0];
-		}
-
-		@RequiredReadAction
-		@Override
-		public boolean textContains(final char c)
-		{
-			return false;
-		}
-
-		@Override
-		@Nullable
-		public ASTNode getNode()
-		{
-			return null;
-		}
-
-		@Override
-		public String getName()
-		{
-			return getText();
-		}
-
-		@Override
-		public boolean isPhysical()
-		{
-			return true;
-		}
-
-		@Override
-		public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException
-		{
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public PsiElement getNameIdentifier()
-		{
-			return null;
-		}
-
-		@Override
-		public ItemPresentation getPresentation()
-		{
-			if(myArtificialName != null)
-			{
-				return null;
-			}
-			return null;
-		}
-
-		public String getArtificialName()
-		{
-			return myArtificialName;
-		}
-
-		@Override
-		@Nullable
-		public ASTNode findNameIdentifier()
-		{
-			return null;
 		}
 	}
 }

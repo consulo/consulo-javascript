@@ -34,7 +34,6 @@ import com.intellij.ide.util.treeView.smartTree.Sorter;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.lang.javascript.psi.resolve.VariantsProcessor;
 import com.intellij.openapi.actionSystem.Shortcut;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.keymap.KeymapManager;
@@ -86,10 +85,6 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 					}
 				}
 
-				if(o instanceof VariantsProcessor.MyElementWrapper)
-				{
-					return 6;
-				}
 				if(o instanceof JSClass)
 				{
 					return 7;

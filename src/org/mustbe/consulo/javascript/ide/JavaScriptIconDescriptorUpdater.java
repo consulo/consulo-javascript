@@ -41,16 +41,7 @@ public class JavaScriptIconDescriptorUpdater implements IconDescriptorUpdater
 	@Override
 	public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags)
 	{
-		if(element instanceof VariantsProcessor.MyElementWrapper)
-		{
-			String artificialName = ((VariantsProcessor.MyElementWrapper) element).getArtificialName();
-			if(artificialName == null)
-			{
-				return;
-			}
-			iconDescriptor.setMainIcon(AllIcons.Nodes.Class);
-		}
-		else if(element instanceof JSProperty)
+		if(element instanceof JSProperty)
 		{
 			iconDescriptor.setMainIcon(AllIcons.Nodes.Property);
 			JSExpression value = ((JSProperty) element).getValue();
