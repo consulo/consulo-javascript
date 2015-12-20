@@ -26,6 +26,7 @@ import java.util.Map;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.documentation.CodeDocumentationProvider;
 import com.intellij.lang.documentation.DocumentationProvider;
@@ -259,9 +260,9 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 		}
 	}
 
-	private static
 	@Nullable
-	String createQuickNavigateForVariable(final JSVariable variable)
+	@RequiredReadAction
+	private static String createQuickNavigateForVariable(final JSVariable variable)
 	{
 		final PsiElement parent = JSResolveUtil.findParent(variable);
 		final StringBuilder result = new StringBuilder();
@@ -272,10 +273,23 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 		result.append(variable.isConst() ? "const " : "var ");
 		result.append(variable.getName());
 		appendVarType(variable, result);
-		final String s = variable.getInitializerText();
-		if(s != null)
+
+		JSExpression initializer = variable.getInitializer();
+		if(initializer != null)
 		{
-			result.append(" = ").append(s);
+			result.append(" = ");
+			if(initializer instanceof JSLiteralExpression)
+			{
+				result.append(initializer.getText());
+			}
+			else if(initializer instanceof JSObjectLiteralExpression)
+			{
+				result.append("{...}");
+			}
+			else
+			{
+				result.append("...");
+			}
 		}
 		return result.toString();
 	}
