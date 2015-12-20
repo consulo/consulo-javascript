@@ -222,8 +222,6 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor
 
 		if(partialMatch)
 		{
-
-
 			int i = -1;
 
 			if(myContextIds != null)
@@ -233,7 +231,6 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor
 				for(int currentContextIndex = 0; currentContextIndex < maxContextScanCount; ++currentContextIndex)
 				{
 					final String[] contextIds = myContextIds[currentContextIndex];
-
 
 					if(i < 0)
 					{

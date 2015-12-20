@@ -55,8 +55,7 @@ import com.intellij.util.IncorrectOperationException;
 
 public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSReferenceExpression, BindablePsiReference
 {
-	private static final TokenSet IDENTIFIER_TOKENS_SET = TokenSet.orSet(JSTokenTypes.IDENTIFIER_TOKENS_SET,
-			TokenSet.create(JSTokenTypes.ANY_IDENTIFIER));
+	private static final TokenSet IDENTIFIER_TOKENS_SET = TokenSet.orSet(JSTokenTypes.IDENTIFIER_TOKENS_SET, TokenSet.create(JSTokenTypes.ANY_IDENTIFIER));
 
 	public JSReferenceExpressionImpl(final ASTNode node)
 	{
@@ -563,8 +562,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 
 	private boolean isE4XAttributeReference(JSExpression realQualifier)
 	{
-		return getNode().findChildByType(JSTokenTypes.AT) != null || (realQualifier != null && realQualifier.getNode().findChildByType(JSTokenTypes.AT) !=
-				null);
+		return getNode().findChildByType(JSTokenTypes.AT) != null || (realQualifier != null && realQualifier.getNode().findChildByType(JSTokenTypes.AT) != null);
 	}
 
 	@Nullable
@@ -613,8 +611,14 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		return qualifier;
 	}
 
-	private ResolveResult[] doOldResolve(final PsiFile containingFile, final String referencedName, final PsiElement parent,
-			final JSExpression qualifier, final boolean ecma, final boolean localResolve, final boolean parentIsDefinition, ResolveProcessor localProcessor)
+	private ResolveResult[] doOldResolve(final PsiFile containingFile,
+			final String referencedName,
+			final PsiElement parent,
+			final JSExpression qualifier,
+			final boolean ecma,
+			final boolean localResolve,
+			final boolean parentIsDefinition,
+			ResolveProcessor localProcessor)
 	{
 		if(parentIsDefinition && ((ecma && !localResolve) || (!ecma && qualifier != null)))
 		{
@@ -642,7 +646,6 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		return processor.getResults();
 	}
 
-
 	@Override
 	public boolean shouldCheckReferences()
 	{
@@ -650,7 +653,6 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 	}
 
 	private static class MyTypeProcessor extends ResolveProcessor implements BaseJSSymbolProcessor.TypeProcessor
-
 	{
 		private final boolean myEcma;
 
@@ -699,15 +701,13 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 
 			final PsiElement placeParent = place.getParent();
 			boolean setTypeContext = placeParent instanceof JSReferenceList;
-			final PsiElement clazz = source != null && (source instanceof JSClass || source instanceof XmlFile) ? source : JSClassImpl.findClassFromNamespace
-					(type, place);
+			final PsiElement clazz = source != null && (source instanceof JSClass || source instanceof XmlFile) ? source : JSClassImpl.findClassFromNamespace(type, place);
 
 			if(clazz instanceof JSClass)
 			{
 				final JSClass jsClass = (JSClass) clazz;
 
-				final boolean statics = myEcma && JSPsiImplUtils.isTheSameClass(typeSource, jsClass) && !(((JSReferenceExpression) place).getQualifier()
-						instanceof JSCallExpression);
+				final boolean statics = myEcma && JSPsiImplUtils.isTheSameClass(typeSource, jsClass) && !(((JSReferenceExpression) place).getQualifier() instanceof JSCallExpression);
 				setProcessStatics(statics);
 				if(statics)
 				{
