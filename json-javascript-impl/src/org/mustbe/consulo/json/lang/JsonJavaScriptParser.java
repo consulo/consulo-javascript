@@ -2,15 +2,16 @@ package org.mustbe.consulo.json.lang;
 
 import org.consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
 import org.mustbe.consulo.javascript.lang.parsing.ExpressionParsing;
 import org.mustbe.consulo.javascript.lang.parsing.Parsing;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
-import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.psi.tree.IElementType;
 
 /**
@@ -103,9 +104,9 @@ public class JsonJavaScriptParser implements PsiParser
 
 		final IElementType nameToken = builder.getTokenType();
 		final PsiBuilder.Marker property = builder.mark();
-		myPropertyDepth ++;
+		myPropertyDepth++;
 
-		if(ExpressionParsing.isNotPropertyStart(nameToken))
+		if(isNotPropertyStart(nameToken))
 		{
 			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.identifier.string.literal.or.numeric.literal"));
 		}
@@ -116,7 +117,7 @@ public class JsonJavaScriptParser implements PsiParser
 		{
 			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
 		}
-		myPropertyDepth --;
+		myPropertyDepth--;
 
 		property.done(JSElementTypes.PROPERTY);
 	}
@@ -152,7 +153,7 @@ public class JsonJavaScriptParser implements PsiParser
 			{
 				builder.error(JavaScriptBundle.message("javascript.parser.property.expected"));
 			}
-			else if(ExpressionParsing.isNotPropertyStart(elementType))
+			else if(isNotPropertyStart(elementType))
 			{
 				break;
 			}
@@ -160,6 +161,11 @@ public class JsonJavaScriptParser implements PsiParser
 
 		Parsing.checkMatches(builder, JSTokenTypes.RBRACE, JavaScriptBundle.message("javascript.parser.message.expected.rbrace"));
 		expr.done(JSElementTypes.OBJECT_LITERAL_EXPRESSION);
+	}
+
+	public static boolean isNotPropertyStart(final IElementType elementType)
+	{
+		return !JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(elementType) && !JavaScriptTokenSets.STRING_LITERALS.contains(elementType) && elementType != JSTokenTypes.NUMERIC_LITERAL;
 	}
 
 	public void parseArrayLiteralExpression(final PsiBuilder builder)

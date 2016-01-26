@@ -17,7 +17,6 @@
 package org.mustbe.consulo.javascript.lang.parsing;
 
 import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.psi.tree.IElementType;
 
 /**
@@ -70,8 +69,13 @@ public class Parsing
 		}
 	}
 
-	public static boolean isIdentifierToken(final IElementType tokenType)
+	public boolean isIdentifierToken(PsiBuilder builder, IElementType tokenType)
 	{
-		return JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(tokenType);
+		return myContext.isIdentifierToken(builder, tokenType);
+	}
+
+	public boolean isIdentifierName(PsiBuilder builder, IElementType tokenType)
+	{
+		return myContext.isIdentifierName(builder, tokenType);
 	}
 }

@@ -73,7 +73,6 @@ import com.sixrr.inspectjs.validity.DebuggerStatementJSInspection;
 import com.sixrr.inspectjs.validity.DuplicateCaseLabelJSInspection;
 import com.sixrr.inspectjs.validity.DuplicatePropertyOnObjectJSInspection;
 import com.sixrr.inspectjs.validity.FunctionWithInconsistentReturnsJSInspection;
-import com.sixrr.inspectjs.validity.ReservedWordUsedAsNameJSInspection;
 import com.sixrr.inspectjs.validity.StringLiteralBreaksHTMLJSInspection;
 import com.sixrr.inspectjs.validity.ThisExpressionReferencesGlobalObjectJSInspection;
 import com.sixrr.inspectjs.validity.UnreachableCodeJSInspection;
@@ -431,7 +430,6 @@ public class InspectionJSPlugin implements ApplicationComponent,
         m_inspectionClasses.add(UnreachableCodeJSInspection.class);
         m_inspectionClasses.add(FunctionWithInconsistentReturnsJSInspection.class);
         m_inspectionClasses.add(ThisExpressionReferencesGlobalObjectJSInspection.class);
-        m_inspectionClasses.add(ReservedWordUsedAsNameJSInspection.class);
         m_inspectionClasses.add(StringLiteralBreaksHTMLJSInspection.class);
     }
 

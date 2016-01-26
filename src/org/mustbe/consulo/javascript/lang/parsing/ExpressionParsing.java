@@ -56,7 +56,7 @@ public class ExpressionParsing extends Parsing
 			buildTokenElement(JSElementTypes.SUPER_EXPRESSION, builder);
 			return true;
 		}
-		else if(isIdentifierToken(firstToken) || firstToken == JSTokenTypes.ANY_IDENTIFIER)
+		else if(isIdentifierName(builder, firstToken) || firstToken == JSTokenTypes.ANY_IDENTIFIER)
 		{
 			buildTokenElement(JSElementTypes.REFERENCE_EXPRESSION, builder);
 			return true;
@@ -110,7 +110,7 @@ public class ExpressionParsing extends Parsing
 			if(JSTokenTypes.COLON_COLON == builder.getTokenType())
 			{
 				builder.advanceLexer();
-				if(isIdentifierToken(builder.getTokenType()))
+				if(isIdentifierToken(builder, builder.getTokenType()))
 				{
 					builder.advanceLexer();
 				}
@@ -135,7 +135,7 @@ public class ExpressionParsing extends Parsing
 			if(!builder.eof())
 			{
 				IElementType tokenType = builder.getTokenType();
-				if(tokenType == JSTokenTypes.ANY_IDENTIFIER || isIdentifierToken(tokenType))
+				if(tokenType == JSTokenTypes.ANY_IDENTIFIER || isIdentifierToken(builder, tokenType))
 				{
 					builder.advanceLexer();
 				}
@@ -296,7 +296,7 @@ public class ExpressionParsing extends Parsing
 			{
 				builder.error(JavaScriptBundle.message("javascript.parser.property.expected"));
 			}
-			else if(isNotPropertyStart(elementType))
+			else if(isNotPropertyStart(builder, elementType))
 			{
 				break;
 			}
@@ -306,10 +306,9 @@ public class ExpressionParsing extends Parsing
 		expr.done(JSElementTypes.OBJECT_LITERAL_EXPRESSION);
 	}
 
-	public static boolean isNotPropertyStart(final IElementType elementType)
+	public boolean isNotPropertyStart(PsiBuilder builder, IElementType elementType)
 	{
-		return !JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(elementType) && !JavaScriptTokenSets.STRING_LITERALS.contains(elementType) && elementType !=
-				JSTokenTypes.NUMERIC_LITERAL;
+		return !isIdentifierToken(builder, elementType) && !JavaScriptTokenSets.STRING_LITERALS.contains(elementType) && elementType != JSTokenTypes.NUMERIC_LITERAL;
 	}
 
 	private void parseProperty(final PsiBuilder builder)
@@ -317,7 +316,7 @@ public class ExpressionParsing extends Parsing
 		final IElementType nameToken = builder.getTokenType();
 		final PsiBuilder.Marker property = builder.mark();
 
-		String propName = JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(nameToken) ? builder.getTokenText() : null;
+		String propName = isIdentifierToken(builder, nameToken) ? builder.getTokenText() : null;
 		//noinspection HardCodedStringLiteral
 		if("set".equals(propName) || "get".equals(propName))
 		{
@@ -337,7 +336,7 @@ public class ExpressionParsing extends Parsing
 		}
 		else
 		{
-			if(isNotPropertyStart(nameToken))
+			if(isNotPropertyStart(builder, nameToken))
 			{
 				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.identifier.string.literal.or.numeric.literal"));
 			}
@@ -473,7 +472,7 @@ public class ExpressionParsing extends Parsing
 					continue;
 				}
 
-				if(tokenType == JSTokenTypes.ANY_IDENTIFIER || isIdentifierToken(tokenType))
+				if(tokenType == JSTokenTypes.ANY_IDENTIFIER || isIdentifierToken(builder, tokenType))
 				{
 					builder.advanceLexer();
 				}

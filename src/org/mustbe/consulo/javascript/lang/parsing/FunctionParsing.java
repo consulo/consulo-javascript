@@ -66,7 +66,7 @@ public class FunctionParsing extends Parsing
 			builder.advanceLexer();
 		}
 
-		if(isIdentifierToken(builder.getTokenType()))
+		if(isIdentifierName(builder, builder.getTokenType()))
 		{
 			getExpressionParsing().parseQualifiedTypeName(builder, false);
 		}

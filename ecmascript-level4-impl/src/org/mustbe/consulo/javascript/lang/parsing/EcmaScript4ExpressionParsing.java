@@ -81,7 +81,7 @@ public class EcmaScript4ExpressionParsing extends ExpressionParsing
 					continue;
 				}
 
-				if(tokenType == JSTokenTypes.ANY_IDENTIFIER || isIdentifierToken(tokenType))
+				if(tokenType == JSTokenTypes.ANY_IDENTIFIER || isIdentifierToken(builder, tokenType))
 				{
 					builder.advanceLexer();
 				}
