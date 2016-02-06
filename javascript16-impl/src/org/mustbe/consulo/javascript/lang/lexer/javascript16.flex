@@ -116,7 +116,7 @@ DIGIT=[0-9]
 <DIV_OR_GT> "<"                             { yybegin(YYINITIAL); return JSTokenTypes.LT; }
 <YYINITIAL,DIV_OR_GT> ">"                   { yybegin(YYINITIAL); return JSTokenTypes.GT; }
 <DIV_OR_GT> "<="                            { yybegin(YYINITIAL); return JSTokenTypes.LE; }
-<YYINITIAL,DIV_OR_GT>> ">="                 { yybegin(YYINITIAL); return JSTokenTypes.GE; }
+<YYINITIAL,DIV_OR_GT> ">="                 { yybegin(YYINITIAL); return JSTokenTypes.GE; }
 <DIV_OR_GT> "<<"                            { yybegin(YYINITIAL); return JSTokenTypes.LTLT; }
 <YYINITIAL,DIV_OR_GT> ">>"                  { yybegin(YYINITIAL); return JSTokenTypes.GTGT; }
 <YYINITIAL,DIV_OR_GT> ">>>"                 { yybegin(YYINITIAL); return JSTokenTypes.GTGTGT; }
