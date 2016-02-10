@@ -18,7 +18,7 @@ import com.intellij.lang.javascript.JSTokenTypes;
 DIGIT=[0-9]
 OCTAL_DIGIT=[0-7]
 HEX_DIGIT=[0-9A-Fa-f]
-WHITE_SPACE_CHAR=[\ \n\r\t\f]
+WHITE_SPACE=[\ \n\r\t\f]+
 
 IDENTIFIER=[:jletter:] [:jletterdigit:]*
 
@@ -48,11 +48,10 @@ REGEXP_LITERAL="/"([^\*\\/\r\n]|{ESCAPE_SEQUENCE}|{GROUP})([^\\/\r\n]|{ESCAPE_SE
 DIGIT=[0-9]
 
 %state DIV_OR_GT
-%state LAST_STATE
 
 %%
 
-<YYINITIAL,DIV_OR_GT> {WHITE_SPACE_CHAR}+   { return JSTokenTypes.WHITE_SPACE; }
+<YYINITIAL,DIV_OR_GT> {WHITE_SPACE}         { return JSTokenTypes.WHITE_SPACE; }
 
 <YYINITIAL,DIV_OR_GT> {C_STYLE_COMMENT}     { return JSTokenTypes.C_STYLE_COMMENT; }
 <YYINITIAL,DIV_OR_GT> {END_OF_LINE_COMMENT} { return JSTokenTypes.END_OF_LINE_COMMENT; }
@@ -159,4 +158,5 @@ DIGIT=[0-9]
 
 <YYINITIAL> {REGEXP_LITERAL}                { return JSTokenTypes.REGEXP_LITERAL; }
 
-<YYINITIAL, DIV_OR_GT> .                    { System.out.println("bad token" + getTokenText()); return JSTokenTypes.BAD_CHARACTER; }
+<YYINITIAL,DIV_OR_GT> .                    { System.out.println("bad token '" + com.intellij.openapi.util.text.StringUtil.escapeLineBreak(getTokenText()) + "' state " + yystate()); return JSTokenTypes
+.BAD_CHARACTER; }
