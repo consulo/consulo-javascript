@@ -8,7 +8,6 @@ import org.mustbe.consulo.javascript.lang.BaseJavaScriptLanguageVersion;
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import org.mustbe.consulo.json.lang.lexer.JsonLexer;
 import com.intellij.lang.PsiParser;
-import com.intellij.lang.javascript.JavaScriptParsingLexer;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.project.Project;
@@ -52,7 +51,7 @@ public class JsonJavaScriptVersion extends BaseJavaScriptLanguageVersion
 	@Override
 	public Lexer createLexer(@Nullable Project project)
 	{
-		return new JavaScriptParsingLexer(ourLexerFactory.create(), JsonLexer.LAST_STATE);
+		return ourLexerFactory.create();
 	}
 
 	@NotNull

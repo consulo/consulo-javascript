@@ -51,8 +51,6 @@ public interface JSTokenTypes
 	IElementType WHITE_SPACE = TokenType.WHITE_SPACE;
 	IElementType BAD_CHARACTER = TokenType.BAD_CHARACTER;
 
-	IElementType SEMANTIC_LINEFEED = new JSElementType("SEMANTIC_LINEFEED");
-
 	IElementType END_OF_LINE_COMMENT = new JSElementType("END_OF_LINE_COMMENT");
 	IElementType C_STYLE_COMMENT = new JSElementType("C_STYLE_COMMENT");
 	IElementType XML_STYLE_COMMENT = new JSElementType("XML_STYLE_COMMENT");

@@ -52,7 +52,7 @@ DIGIT=[0-9]
 
 %%
 
-<YYINITIAL, DIV_OR_GT> {WHITE_SPACE_CHAR}+   { return JSTokenTypes.WHITE_SPACE; }
+<YYINITIAL,DIV_OR_GT> {WHITE_SPACE_CHAR}+   { return JSTokenTypes.WHITE_SPACE; }
 
 <YYINITIAL,DIV_OR_GT> {C_STYLE_COMMENT}     { return JSTokenTypes.C_STYLE_COMMENT; }
 <YYINITIAL,DIV_OR_GT> {END_OF_LINE_COMMENT} { return JSTokenTypes.END_OF_LINE_COMMENT; }
@@ -159,4 +159,4 @@ DIGIT=[0-9]
 
 <YYINITIAL> {REGEXP_LITERAL}                { return JSTokenTypes.REGEXP_LITERAL; }
 
-<YYINITIAL, DIV_OR_GT> .                    { System.out.println(getTokenText()); return JSTokenTypes.BAD_CHARACTER; }
+<YYINITIAL, DIV_OR_GT> .                    { System.out.println("bad token" + getTokenText()); return JSTokenTypes.BAD_CHARACTER; }

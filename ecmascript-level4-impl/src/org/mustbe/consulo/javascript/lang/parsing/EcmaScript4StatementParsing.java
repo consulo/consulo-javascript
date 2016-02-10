@@ -334,9 +334,8 @@ public class EcmaScript4StatementParsing extends StatementParsing
 			}
 		}
 
-		if(firstToken == JSTokenTypes.SEMANTIC_LINEFEED)
+		if(hasSemanticLineBeforeNextToken(builder))
 		{
-			builder.advanceLexer();
 			return;
 		}
 

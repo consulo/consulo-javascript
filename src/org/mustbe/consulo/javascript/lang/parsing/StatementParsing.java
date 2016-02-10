@@ -191,9 +191,8 @@ public class StatementParsing extends Parsing
 			}
 		}
 
-		if(firstToken == JSTokenTypes.SEMANTIC_LINEFEED)
+		if(hasSemanticLineBeforeNextToken(builder))
 		{
-			builder.advanceLexer();
 			return;
 		}
 
@@ -418,7 +417,7 @@ public class StatementParsing extends Parsing
 		LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.RETURN_KEYWORD);
 		final PsiBuilder.Marker statement = builder.mark();
 		builder.advanceLexer();
-		boolean hasNewLine = builder.getTokenType() == JSTokenTypes.SEMANTIC_LINEFEED;
+		boolean hasNewLine = hasSemanticLineBeforeNextToken(builder);
 
 		if(!hasNewLine)
 		{
@@ -427,11 +426,6 @@ public class StatementParsing extends Parsing
 			checkForSemicolon(builder);
 		}
 		statement.done(JSElementTypes.RETURN_STATEMENT);
-
-		if(hasNewLine)
-		{
-			builder.advanceLexer();
-		}
 	}
 
 	protected void parseBreakStatement(final PsiBuilder builder)
@@ -445,7 +439,7 @@ public class StatementParsing extends Parsing
 			builder.advanceLexer();
 		}
 
-		if(builder.getTokenType() == JSTokenTypes.SEMICOLON || builder.getTokenType() == JSTokenTypes.SEMANTIC_LINEFEED)
+		if(builder.getTokenType() == JSTokenTypes.SEMICOLON)
 		{
 			builder.advanceLexer();
 		}
@@ -463,12 +457,50 @@ public class StatementParsing extends Parsing
 			builder.advanceLexer();
 		}
 
-		if(builder.getTokenType() == JSTokenTypes.SEMICOLON || builder.getTokenType() == JSTokenTypes.SEMANTIC_LINEFEED)
+		if(builder.getTokenType() == JSTokenTypes.SEMICOLON)
 		{
 			builder.advanceLexer();
 		}
 
 		statement.done(JSElementTypes.CONTINUE_STATEMENT);
+	}
+
+	protected boolean hasSemanticLineBeforeNextToken(final PsiBuilder builder)
+	{
+		IElementType tokenType = builder.getTokenType();
+		// force end
+		if(tokenType == JSTokenTypes.RBRACE)
+		{
+			return true;
+		}
+
+		int step = 1;
+		IElementType rawElementType;
+		while((rawElementType = builder.rawLookup(step)) != null)
+		{
+			if(rawElementType == JSTokenTypes.WHITE_SPACE)
+			{
+				int tokenStart = builder.rawTokenTypeStart(step);
+				CharSequence originalText = builder.getOriginalText();
+				for(int i = tokenStart; i < originalText.length(); i++)
+				{
+					char c = originalText.charAt(i);
+					if(c == '\n')
+					{
+						return true;
+					}
+					else if(!Character.isWhitespace(c))
+					{
+						return false;
+					}
+				}
+			}
+			else
+			{
+				break;
+			}
+		}
+		return false;
 	}
 
 	protected void parseIterationStatement(final PsiBuilder builder)
