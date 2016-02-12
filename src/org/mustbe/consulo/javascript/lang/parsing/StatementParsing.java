@@ -426,9 +426,11 @@ public class StatementParsing extends Parsing
 	{
 		LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.BREAK_KEYWORD);
 		final PsiBuilder.Marker statement = builder.mark();
+
+		boolean hasSemanticLineBeforeNextToken = hasSemanticLineBeforeNextToken(builder);
 		builder.advanceLexer();
 
-		if(builder.getTokenType() == JSTokenTypes.IDENTIFIER)
+		if(!hasSemanticLineBeforeNextToken && builder.getTokenType() == JSTokenTypes.IDENTIFIER)
 		{
 			builder.advanceLexer();
 		}
@@ -445,8 +447,10 @@ public class StatementParsing extends Parsing
 	{
 		LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.CONTINUE_KEYWORD);
 		final PsiBuilder.Marker statement = builder.mark();
+		boolean hasSemanticLineBeforeNextToken = hasSemanticLineBeforeNextToken(builder);
 		builder.advanceLexer();
-		if(builder.getTokenType() == JSTokenTypes.IDENTIFIER)
+
+		if(!hasSemanticLineBeforeNextToken && builder.getTokenType() == JSTokenTypes.IDENTIFIER)
 		{
 			builder.advanceLexer();
 		}
