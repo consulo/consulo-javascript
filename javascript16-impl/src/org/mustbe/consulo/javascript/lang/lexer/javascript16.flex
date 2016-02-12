@@ -161,4 +161,6 @@ DIGIT=[0-9]
 
 <YYINITIAL> {REGEXP_LITERAL}                { return JSTokenTypes.REGEXP_LITERAL; }
 
-<YYINITIAL, DIV_OR_GT> .                    { System.out.println(getTokenText()); return JSTokenTypes.BAD_CHARACTER; }
+<YYINITIAL> "/"                             { return JSTokenTypes.DIV; }
+
+<YYINITIAL,DIV_OR_GT> [^]                   { return JSTokenTypes.BAD_CHARACTER; }

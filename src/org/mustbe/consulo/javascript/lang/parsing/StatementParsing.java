@@ -191,11 +191,6 @@ public class StatementParsing extends Parsing
 			}
 		}
 
-		if(hasSemanticLineBeforeNextToken(builder))
-		{
-			return;
-		}
-
 		builder.error(JavaScriptBundle.message("javascript.parser.message.expected.statement"));
 		builder.advanceLexer();
 	}
@@ -416,9 +411,8 @@ public class StatementParsing extends Parsing
 	{
 		LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.RETURN_KEYWORD);
 		final PsiBuilder.Marker statement = builder.mark();
-		builder.advanceLexer();
 		boolean hasNewLine = hasSemanticLineBeforeNextToken(builder);
-
+		builder.advanceLexer();
 		if(!hasNewLine)
 		{
 			getExpressionParsing().parseExpressionOptional(builder);
