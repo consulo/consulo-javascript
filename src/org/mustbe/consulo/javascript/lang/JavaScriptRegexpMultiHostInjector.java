@@ -43,7 +43,14 @@ public class JavaScriptRegexpMultiHostInjector implements MultiHostInjector
 			IElementType literalElementType = ((JSSimpleLiteralExpression) context).getLiteralElementType();
 			if(literalElementType == JSTokenTypes.REGEXP_LITERAL)
 			{
-				registrar.startInjecting(RegExpLanguage.INSTANCE).addPlace(null, null, (PsiLanguageInjectionHost) context, new TextRange(1, context.getTextLength() - 1)).doneInjecting();
+				int textLength = context.getTextLength() - 1;
+				String text = context.getText();
+
+				if(text.charAt(textLength) != '/')
+				{
+					textLength --;
+				}
+				registrar.startInjecting(RegExpLanguage.INSTANCE).addPlace(null, null, (PsiLanguageInjectionHost) context, new TextRange(1, textLength)).doneInjecting();
 			}
 		}
 	}
