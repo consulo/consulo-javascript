@@ -20,7 +20,7 @@ import org.consulo.lombok.annotations.LazyInstance;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.javascript.ide.hightlight.JavaScriptHighlighter;
-import org.mustbe.consulo.javascript.lang.lexer.JavaScript15Lexer;
+import org.mustbe.consulo.javascript.lang.lexer.EcmaScript6Lexer;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.project.Project;
@@ -29,8 +29,6 @@ import com.intellij.openapi.util.Factory;
 /**
  * @author VISTALL
  * @since 12.12.2015
- *
- * TODO [VISTALL] it used JavaScript 1.5 parsing & lexer. Need change IT!
  */
 public class EcmaScript6JavaScriptVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersions.Marker
 {
@@ -39,7 +37,7 @@ public class EcmaScript6JavaScriptVersion extends BaseJavaScriptLanguageVersion 
 		@Override
 		public Lexer create()
 		{
-			return new JavaScript15Lexer();
+			return new EcmaScript6Lexer();
 		}
 	};
 

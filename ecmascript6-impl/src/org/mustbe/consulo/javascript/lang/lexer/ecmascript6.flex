@@ -7,7 +7,7 @@ import com.intellij.lang.javascript.JSTokenTypes;
 %%
 
 %public
-%class JavaScript16Lexer
+%class EcmaScript6Lexer
 %extends LexerBase
 %unicode
 %function advanceImpl
@@ -97,11 +97,14 @@ DIGIT=[0-9]
 <YYINITIAL,DIV_OR_GT> "with"                { yybegin(YYINITIAL); return JSTokenTypes.WITH_KEYWORD; }
 <YYINITIAL,DIV_OR_GT> "set"                 { yybegin(YYINITIAL); return JSTokenTypes.SET_KEYWORD; }
 <YYINITIAL,DIV_OR_GT> "get"                 { yybegin(YYINITIAL); return JSTokenTypes.GET_KEYWORD; }
+<YYINITIAL,DIV_OR_GT> "yield"               { yybegin(YYINITIAL); return JSTokenTypes.YIELD_KEYWORD; }
+<YYINITIAL,DIV_OR_GT> "let"                 { yybegin(YYINITIAL); return JSTokenTypes.LET_KEYWORD; }
+<YYINITIAL,DIV_OR_GT> "class"               { yybegin(YYINITIAL); return JSTokenTypes.CLASS_KEYWORD; }
 
-<YYINITIAL, DIV_OR_GT> {IDENTIFIER}                    { yybegin(DIV_OR_GT);       return JSTokenTypes.IDENTIFIER; }
+<YYINITIAL, DIV_OR_GT> {IDENTIFIER}         { yybegin(DIV_OR_GT);       return JSTokenTypes.IDENTIFIER; }
 
 
-<YYINITIAL, DIV_OR_GT> "."                            { yybegin(YYINITIAL); return JSTokenTypes.DOT; }
+<YYINITIAL, DIV_OR_GT> "."                   { yybegin(YYINITIAL); return JSTokenTypes.DOT; }
 
 
 <YYINITIAL,DIV_OR_GT> "==="                 { yybegin(YYINITIAL); return JSTokenTypes.EQEQEQ; }
@@ -115,7 +118,7 @@ DIGIT=[0-9]
 <DIV_OR_GT> "<"                             { yybegin(YYINITIAL); return JSTokenTypes.LT; }
 <YYINITIAL,DIV_OR_GT> ">"                   { yybegin(YYINITIAL); return JSTokenTypes.GT; }
 <DIV_OR_GT> "<="                            { yybegin(YYINITIAL); return JSTokenTypes.LE; }
-<YYINITIAL,DIV_OR_GT> ">="                 { yybegin(YYINITIAL); return JSTokenTypes.GE; }
+<YYINITIAL,DIV_OR_GT> ">="                  { yybegin(YYINITIAL); return JSTokenTypes.GE; }
 <DIV_OR_GT> "<<"                            { yybegin(YYINITIAL); return JSTokenTypes.LTLT; }
 <YYINITIAL,DIV_OR_GT> ">>"                  { yybegin(YYINITIAL); return JSTokenTypes.GTGT; }
 <YYINITIAL,DIV_OR_GT> ">>>"                 { yybegin(YYINITIAL); return JSTokenTypes.GTGTGT; }
