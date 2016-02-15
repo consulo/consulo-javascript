@@ -48,7 +48,6 @@ REGEXP_LITERAL="/"([^\*\\/\r\n]|{ESCAPE_SEQUENCE}|{GROUP})([^\\/\r\n]|{ESCAPE_SE
 DIGIT=[0-9]
 
 %state DIV_OR_GT
-%state LAST_STATE
 
 %%
 

@@ -18,7 +18,7 @@ import com.intellij.lang.javascript.JSTokenTypes;
 DIGIT=[0-9]
 OCTAL_DIGIT=[0-7]
 HEX_DIGIT=[0-9A-Fa-f]
-WHITE_SPACE_CHAR=[\ \n\r\t\f]
+WHITE_SPACE_CHAR=[\ \n\r\t\f]+
 
 IDENTIFIER=[:jletter:] [:jletterdigit:]*
 
@@ -45,14 +45,9 @@ ESCAPE_SEQUENCE=\\[^\r\n]
 
 DIGIT=[0-9]
 
-%state COMMENT
-%state LAST_STATE
-
 %%
 
-<YYINITIAL, COMMENT> {WHITE_SPACE_CHAR}+   { return JSTokenTypes.WHITE_SPACE; }
-
-<COMMENT> [^] { yybegin(YYINITIAL); yypushback(1); }
+<YYINITIAL> {WHITE_SPACE_CHAR}   { return JSTokenTypes.WHITE_SPACE; }
 
 <YYINITIAL> {C_STYLE_COMMENT}     { return JSTokenTypes.C_STYLE_COMMENT; }
 <YYINITIAL> {END_OF_LINE_COMMENT} { return JSTokenTypes.END_OF_LINE_COMMENT; }
@@ -79,4 +74,4 @@ DIGIT=[0-9]
 <YYINITIAL> "-"                   { yybegin(YYINITIAL); return JSTokenTypes.MINUS; }
 
 
-<YYINITIAL> . {return JSTokenTypes.BAD_CHARACTER; }
+<YYINITIAL> [^] {return JSTokenTypes.BAD_CHARACTER; }
