@@ -12,7 +12,7 @@
             <element id="module-output" name="intentions" />
             <element id="module-production-resource-output" name="intentions" />
             <element id="module-output" name="client-javascript-impl" />
-            <element id="module-output" name="ecmascript-level4-impl" />
+            <element id="module-output" name="ecmascript4-impl" />
             <element id="module-output" name="actionscript-impl" />
             <element id="module-output" name="javascript18-impl" />
             <element id="module-output" name="javascript17-impl" />
