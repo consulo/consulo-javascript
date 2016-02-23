@@ -23,7 +23,9 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.PropertyKey;
-import com.intellij.codeInsight.template.Expression;
+import org.mustbe.consulo.javascript.ide.codeInsight.JavaScriptQuickFixFactory;
+import org.mustbe.consulo.javascript.lang.JavaScriptFeature;
+import org.mustbe.consulo.javascript.lang.JavaScriptVersionUtil;
 import com.intellij.codeInsight.template.Template;
 import com.intellij.codeInsight.template.TemplateManager;
 import com.intellij.codeInspection.LocalQuickFix;
@@ -36,6 +38,7 @@ import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.flex.AddImportECMAScriptClassOrFunctionAction;
 import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
+import com.intellij.lang.javascript.inspections.qucikFixes.BaseCreateFix;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
@@ -141,6 +144,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 							break;
 						}
 					}
+					JavaScriptQuickFixFactory javaScriptQuickFixFactory = JavaScriptQuickFixFactory.byElement(referenceExpression);
 
 					if(resolveResults.length == 0 || noCompleteResolve)
 					{
@@ -152,18 +156,18 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 						{
 							if(methodExpression.getParent() instanceof JSCallExpression)
 							{
-								boolean simpleJs = node.getContainingFile().getLanguage() != JavaScriptSupportLoader.ECMA_SCRIPT_L4;
+								boolean simpleJs = !JavaScriptVersionUtil.containsFeature(referenceExpression, JavaScriptFeature.CLASS);
 
 								if(!inNewExpression || simpleJs)
 								{
-									quickFixes.add(new CreateJSFunctionIntentionAction(refName, true));
+									quickFixes.add(javaScriptQuickFixFactory.createFunctionOrMethodFix(refName, true));
 								}
 
 								if(qualifier == null)
 								{
 									if(simpleJs)
 									{
-										quickFixes.add(new CreateJSFunctionIntentionAction(refName, false));
+										quickFixes.add(javaScriptQuickFixFactory.createFunctionOrMethodFix(refName, false));
 									}
 									else
 									{
@@ -588,166 +592,6 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 			return ProblemHighlightType.GENERIC_ERROR;
 		}
 		return ProblemHighlightType.GENERIC_ERROR_OR_WARNING;
-	}
-
-	static abstract class CreateJSFunctionIntentionActionBase extends BaseCreateFix
-	{
-		private final String myName;
-		private final String myIntentionNameKey;
-
-		CreateJSFunctionIntentionActionBase(String name, @PropertyKey(resourceBundle = JavaScriptBundle.BUNDLE) String nameKey)
-		{
-			myName = name;
-			myIntentionNameKey = nameKey;
-		}
-
-		@Override
-		@NotNull
-		public String getName()
-		{
-			return JavaScriptBundle.message(myIntentionNameKey, myName);
-		}
-
-		@Override
-		@NotNull
-		public String getFamilyName()
-		{
-			return JavaScriptBundle.message("javascript.create.function.intention.family");
-		}
-
-		@Override
-		protected void buildTemplate(Template template, JSReferenceExpression referenceExpression, boolean ecma, boolean staticContext, PsiFile file,
-				PsiElement anchorParent)
-		{
-			String referencedName = ecma ? referenceExpression.getReferencedName() : referenceExpression.getText();
-			addAccessModifier(template, referenceExpression, ecma, staticContext);
-			writeFunctionAndName(template, referencedName, ecma);
-			template.addTextSegment("(");
-
-			addParameters(template, referenceExpression, file, ecma);
-
-			template.addTextSegment(")");
-
-			if(ecma)
-			{
-				template.addTextSegment(":");
-				addReturnType(template, referenceExpression, file);
-			}
-
-			JSClass clazz = findClass(file, anchorParent);
-			if(clazz == null || !clazz.isInterface())
-			{
-				template.addTextSegment(" {");
-				addBody(template, referenceExpression, file);
-				template.addTextSegment("}");
-			}
-			else
-			{
-				addSemicolonSegment(template, file);
-				template.addEndVariable();
-			}
-		}
-
-		protected void writeFunctionAndName(Template template, String referencedName, boolean ecma)
-		{
-			template.addTextSegment("function ");
-			template.addTextSegment(referencedName);
-		}
-
-		protected abstract void addParameters(Template template, JSReferenceExpression refExpr, PsiFile file, boolean ecma);
-
-		protected abstract void addReturnType(Template template, JSReferenceExpression referenceExpression, PsiFile psifile);
-
-		protected abstract void addBody(Template template, JSReferenceExpression refExpr, PsiFile file);
-	}
-
-	static class CreateJSFunctionIntentionAction extends CreateJSFunctionIntentionActionBase
-	{
-		private final boolean myIsMethod;
-
-		CreateJSFunctionIntentionAction(String name, boolean isMethod)
-		{
-			super(name, isMethod ? "javascript.create.method.intention.name" : "javascript.create.function.intention.name");
-			myIsMethod = isMethod;
-		}
-
-		@Override
-		protected void writeFunctionAndName(Template template, String createdMethodName, boolean ecma)
-		{
-			if(!myIsMethod || ecma)
-			{
-				template.addTextSegment("function ");
-			}
-			template.addTextSegment(createdMethodName);
-			if(myIsMethod && !ecma)
-			{
-				template.addTextSegment(" = function ");
-			}
-		}
-
-		@Override
-		protected void addParameters(Template template, JSReferenceExpression referenceExpression, PsiFile file, boolean ecma)
-		{
-			JSCallExpression methodInvokation = (JSCallExpression) referenceExpression.getParent();
-			final JSArgumentList list = methodInvokation.getArgumentList();
-			final JSExpression[] expressions = list.getArguments();
-			int paramCount = expressions.length;
-
-			for(int i = 0; i < paramCount; ++i)
-			{
-				if(i != 0)
-				{
-					template.addTextSegment(", ");
-				}
-				String var = null;
-
-				final JSExpression passedParameterValue = expressions[i];
-				if(passedParameterValue instanceof JSReferenceExpression)
-				{
-					var = ((JSReferenceExpression) passedParameterValue).getReferencedName();
-				}
-
-				if(var == null || var.length() == 0)
-				{
-					var = "param" + (i != 0 ? Integer.toString(i + 1) : "");
-				}
-
-				final String var1 = var;
-				Expression expression = new MyExpression(var1);
-
-				template.addVariable(var, expression, expression, true);
-				if(ecma)
-				{
-					template.addTextSegment(":");
-					guessExprTypeAndAddSuchVariable(passedParameterValue, template, var1, file, ecma);
-				}
-			}
-
-		}
-
-		@Override
-		protected void addReturnType(Template template, JSReferenceExpression referenceExpression, PsiFile file)
-		{
-			guessTypeAndAddTemplateVariable(template, referenceExpression, file);
-		}
-
-		@Override
-		protected void addBody(Template template, JSReferenceExpression refExpr, PsiFile file)
-		{
-			template.addEndVariable();
-		}
-
-		@Override
-		protected void buildTemplate(final Template template, JSReferenceExpression referenceExpression, boolean ecma, boolean staticContext,
-				PsiFile file, PsiElement anchorParent)
-		{
-			super.buildTemplate(template, referenceExpression, ecma, staticContext, file, anchorParent);
-
-			if(myIsMethod && !ecma)
-			{
-				addSemicolonSegment(template, file);
-			}
-		}
 	}
 
 	private static class JSInsertCastFix implements LocalQuickFix

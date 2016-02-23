@@ -53,6 +53,7 @@ public class EcmaScript6JavaScriptVersion extends BaseJavaScriptLanguageVersion 
 	public EcmaScript6JavaScriptVersion()
 	{
 		super("ECMASCRIPT_6");
+		addFeature(JavaScriptFeature.CLASS);
 	}
 
 	@NotNull

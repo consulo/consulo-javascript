@@ -16,8 +16,11 @@
 
 package com.intellij.lang.javascript.inspections;
 
+import java.util.Collections;
+
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.javascript.lang.JavaScriptFeature;
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.codeInsight.template.Template;
@@ -30,6 +33,7 @@ import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
+import com.intellij.lang.javascript.inspections.qucikFixes.BaseCreateFix;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSFunction;
@@ -177,7 +181,7 @@ public class JSUntypedDeclarationInspection extends JSInspection
 
 				if(expression != null)
 				{
-					BaseCreateFix.guessExprTypeAndAddSuchVariable(expression, t, "a", containingFile, true);
+					BaseCreateFix.guessExprTypeAndAddSuchVariable(expression, t, "a", containingFile, Collections.singleton(JavaScriptFeature.CLASS));
 					hasDetectedTypeFromUsage = true;
 				}
 			}

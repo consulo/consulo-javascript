@@ -18,8 +18,10 @@ package com.intellij.lang.javascript.psi.resolve;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.javascript.lang.JavaScriptFeature;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.index.JSSymbolUtil;
 import com.intellij.lang.javascript.psi.*;
@@ -144,6 +146,12 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor
 			{
 				VariantsProcessor.doEvalForExpr(qualifier, myTargetFile, new VariantsProcessor.TypeProcessor()
 				{
+					@Override
+					public Set<JavaScriptFeature> getFeatures()
+					{
+						return myFeatures;
+					}
+
 					@Override
 					public void process(@NotNull String type, @NotNull final EvaluateContext context, final PsiElement source)
 					{

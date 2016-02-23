@@ -21,6 +21,7 @@ public class EcmaScript4JavaScriptVersion extends BaseJavaScriptLanguageVersion
 	public EcmaScript4JavaScriptVersion()
 	{
 		super("ECMA4");
+		addFeature(JavaScriptFeature.CLASS);
 	}
 
 	@NotNull

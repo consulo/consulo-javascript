@@ -24,12 +24,13 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.javascript.lang.JavaScriptFeature;
 import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
+import org.mustbe.consulo.javascript.lang.JavaScriptVersionUtil;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.index.JSSymbolUtil;
 import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
 import com.intellij.lang.javascript.psi.*;
@@ -63,7 +64,9 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor
 	protected final String myFunctionIndex;
 
 	protected String[] myContextNameIds;
+	@Deprecated
 	protected boolean ecmal4;
+	protected Set<JavaScriptFeature> myFeatures;
 	protected boolean myDefinitelyGlobalReference;
 	protected boolean myDefinitelyNonglobalReference;
 	protected boolean myAddOnlyCompleteMatches;
@@ -102,7 +105,8 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor
 		myWindowIndex = "window";
 		myFunctionIndex = "Function";
 
-		ecmal4 = myTargetFile.getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
+		myFeatures = JavaScriptVersionUtil.getFeatures(targetFile);
+		ecmal4 = myFeatures.contains(JavaScriptFeature.CLASS);
 
 		if(contextIds == null && context instanceof JSReferenceExpression)
 		{
@@ -289,7 +293,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor
 				String text = methodExpr.getText();
 				if(methodExpr instanceof JSReferenceExpression && typeProcessor.ecma())
 				{
-					final SimpleTypeProcessor processor = new SimpleTypeProcessor(typeProcessor.ecma());
+					final SimpleTypeProcessor processor = new SimpleTypeProcessor(typeProcessor.getFeatures());
 					doEvalForExpr(methodExpr, context.targetFile, processor);
 
 					if(processor.type != null && !"*".equals(processor.type))
@@ -629,8 +633,8 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor
 						sign == JSTokenTypes.OROR)
 				{
 
-					final SimpleTypeProcessor lprocessor = new SimpleTypeProcessor(typeProcessor.ecma());
-					final SimpleTypeProcessor rprocessor = new SimpleTypeProcessor(typeProcessor.ecma());
+					final SimpleTypeProcessor lprocessor = new SimpleTypeProcessor(typeProcessor.getFeatures());
+					final SimpleTypeProcessor rprocessor = new SimpleTypeProcessor(typeProcessor.getFeatures());
 					doEvalForExpr(lOperand, lprocessor, context);
 					doEvalForExpr(rOperand, rprocessor, context);
 
@@ -646,7 +650,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor
 				}
 				else if(sign == JSTokenTypes.EQ)
 				{
-					final SimpleTypeProcessor rprocessor = new SimpleTypeProcessor(typeProcessor.ecma());
+					final SimpleTypeProcessor rprocessor = new SimpleTypeProcessor(typeProcessor.getFeatures());
 					doEvalForExpr(rOperand, rprocessor, context);
 
 					String evaluatedType = rprocessor.type;
@@ -676,7 +680,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor
 		else if(rawqualifier instanceof JSIndexedPropertyAccessExpression)
 		{
 			final JSIndexedPropertyAccessExpression propertyAccessExpression = (JSIndexedPropertyAccessExpression) rawqualifier;
-			final SimpleTypeProcessor lprocessor = new SimpleTypeProcessor(typeProcessor.ecma());
+			final SimpleTypeProcessor lprocessor = new SimpleTypeProcessor(typeProcessor.getFeatures());
 
 			doEvalForExpr(propertyAccessExpression.getQualifier(), lprocessor, context);
 
@@ -764,7 +768,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor
 				return null;
 			}
 			context.addProcessingItem(rawqualifier);
-			final SimpleTypeProcessor lprocessor = new SimpleTypeProcessor(typeProcessor.ecma());
+			final SimpleTypeProcessor lprocessor = new SimpleTypeProcessor(typeProcessor.getFeatures());
 			doEvalForExpr(collectionExpression, lprocessor, context);
 			return addComponentTypeFromProcessor(rawqualifier, typeProcessor, context, lprocessor);
 		}
@@ -1134,7 +1138,10 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor
 	{
 		void process(@NotNull String type, @NotNull EvaluateContext evaluateContext, final PsiElement source);
 
+		@Deprecated
 		boolean ecma();
+
+		Set<JavaScriptFeature> getFeatures();
 
 		void setUnknownElement(@NotNull PsiElement element);
 	}
@@ -1148,12 +1155,12 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor
 		private String type;
 		private PsiElement result;
 		private PsiElement source;
-		private final boolean ecma;
+		private final Set<JavaScriptFeature> myFeatures;
 
-		public SimpleTypeProcessor(boolean _ecma)
+		public SimpleTypeProcessor(Set<JavaScriptFeature> features)
 		{
 			super(null);
-			ecma = _ecma;
+			myFeatures = features;
 		}
 
 		@Override
@@ -1169,9 +1176,15 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor
 		}
 
 		@Override
+		public Set<JavaScriptFeature> getFeatures()
+		{
+			return myFeatures;
+		}
+
+		@Override
 		public boolean ecma()
 		{
-			return ecma;
+			return myFeatures.contains(JavaScriptFeature.CLASS);
 		}
 
 		@Override

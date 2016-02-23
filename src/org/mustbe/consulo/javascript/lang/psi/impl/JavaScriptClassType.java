@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2015 must-be.org
+ * Copyright 2013-2016 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.javascript.lang.psi;
+package org.mustbe.consulo.javascript.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
+import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.psi.PsiElement;
 
 /**
  * @author VISTALL
- * @since 13.12.2015
+ * @since 23.02.2016
  */
-public class JavaScriptSimpleType implements JavaScriptType
+public class JavaScriptClassType implements JavaScriptType
 {
-	private String myReferenceName;
-	private PsiElement myElement;
+	private JSClass myClass;
 
-	public JavaScriptSimpleType(@NotNull String referenceName, @Nullable PsiElement element)
+	public JavaScriptClassType(JSClass aClass)
 	{
-		myReferenceName = referenceName;
-		myElement = element;
+		myClass = aClass;
 	}
 
 	@RequiredReadAction
@@ -41,19 +41,13 @@ public class JavaScriptSimpleType implements JavaScriptType
 	@Override
 	public String getPresentableText()
 	{
-		return myReferenceName;
+		return myClass.getName();
 	}
 
 	@Nullable
 	@Override
 	public PsiElement getTargetElement()
 	{
-		return myElement;
-	}
-
-	@Override
-	public String toString()
-	{
-		return "JavaScriptSimpleType: " + myReferenceName;
+		return myClass;
 	}
 }

@@ -26,6 +26,7 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NonNls;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.JavaScriptFeature;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
 import com.intellij.lang.javascript.psi.*;
@@ -259,6 +260,12 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			updateCanUseOnlyCompleteMatchesFromString(type, source, null);
 			type = buildIndexListFromQNameAndCorrectQName(type, source, possibleNameIds);
 			addSupers(type, possibleNameIds, context);
+		}
+
+		@Override
+		public Set<JavaScriptFeature> getFeatures()
+		{
+			return myFeatures;
 		}
 
 		@Override

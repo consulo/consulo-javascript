@@ -18,9 +18,12 @@ package com.intellij.lang.javascript.inspections;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.JavaScriptFeature;
 import com.intellij.codeInsight.template.Template;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemsHolder;
@@ -28,6 +31,9 @@ import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.flex.AddImportECMAScriptClassOrFunctionAction;
 import com.intellij.lang.javascript.formatter.JSCodeStyleSettings;
+import com.intellij.lang.javascript.inspections.qucikFixes.BaseCreateFix;
+import com.intellij.lang.javascript.inspections.qucikFixes.CreateJSFunctionFixBase;
+import com.intellij.lang.javascript.inspections.qucikFixes.CreateJSFunctionOrMethodFix;
 import com.intellij.lang.javascript.psi.JSArgumentList;
 import com.intellij.lang.javascript.psi.JSCallExpression;
 import com.intellij.lang.javascript.psi.JSClass;
@@ -135,11 +141,11 @@ public class JSUnresolvedVariableInspection extends JSInspection
 									{
 										if(node.getParent() instanceof JSArgumentList)
 										{
-											fixes.add(new JSUnresolvedFunctionInspection.CreateJSFunctionIntentionAction(referencedName, !(qualifier == null || (qualifier instanceof
+											fixes.add(new CreateJSFunctionOrMethodFix(referencedName, !(qualifier == null || (qualifier instanceof
 													JSThisExpression && ecma)))
 											{
 												@Override
-												protected void addParameters(Template template, JSReferenceExpression referenceExpression, PsiFile file, boolean ecma)
+												protected void addParameters(Template template, JSReferenceExpression referenceExpression, PsiFile file, Set<JavaScriptFeature> features)
 												{
 													JSExpression method = ((JSCallExpression) referenceExpression.getParent().getParent()).getMethodExpression();
 													if(method instanceof JSReferenceExpression && "bindSetter".equals(((JSReferenceExpression) method).getReferencedName()))
@@ -288,8 +294,9 @@ public class JSUnresolvedVariableInspection extends JSInspection
 			return JavaScriptBundle.message("javascript.create.namespace.intention.name", myReferencedName);
 		}
 
+		@RequiredReadAction
 		@Override
-		protected void buildTemplate(final Template template, final JSReferenceExpression referenceExpression, final boolean ecma, boolean staticContext,
+		protected void buildTemplate(final Template template, final JSReferenceExpression referenceExpression, final Set<JavaScriptFeature> features, boolean staticContext,
 				final PsiFile file, final PsiElement anchorParent)
 		{
 			template.addTextSegment("/** @namespace ");
@@ -322,19 +329,22 @@ public class JSUnresolvedVariableInspection extends JSInspection
 					isConstant ? "javascript.create.constant.intention.name" : "javascript.create.variable.intention.name", myReferencedName);
 		}
 
+		@RequiredReadAction
 		@Override
-		protected void buildTemplate(final Template template, final JSReferenceExpression referenceExpression, final boolean ecma, boolean staticContext,
+		protected void buildTemplate(final Template template, final JSReferenceExpression referenceExpression, final Set<JavaScriptFeature> features, boolean staticContext,
 				final PsiFile file, final PsiElement anchorParent)
 		{
-			final JSExpression qualifier = addAccessModifier(template, referenceExpression, ecma, staticContext);
-			if(qualifier == null || ecma)
+			boolean classFeature = features.contains(JavaScriptFeature.CLASS);
+
+			final JSExpression qualifier = addAccessModifier(template, referenceExpression, classFeature, staticContext);
+			if(qualifier == null || classFeature)
 			{
 				template.addTextSegment(isConstant ? CONSTANT_STATEMENT_START : VAR_STATEMENT_START);
 			}
 
-			template.addTextSegment(ecma ? referenceExpression.getReferencedName() : referenceExpression.getText());
+			template.addTextSegment(classFeature ? referenceExpression.getReferencedName() : referenceExpression.getText());
 			template.addEndVariable();
-			if(ecma)
+			if(classFeature)
 			{
 				template.addTextSegment(":");
 			}
@@ -343,7 +353,7 @@ public class JSUnresolvedVariableInspection extends JSInspection
 				template.addTextSegment(" = ");
 			}
 
-			if(ecma)
+			if(classFeature)
 			{
 				guessTypeAndAddTemplateVariable(template, referenceExpression, file);
 				if(isConstant)
@@ -361,7 +371,7 @@ public class JSUnresolvedVariableInspection extends JSInspection
 
 	}
 
-	private static class CreateJSPropertyAccessorIntentionAction extends JSUnresolvedFunctionInspection.CreateJSFunctionIntentionActionBase
+	private static class CreateJSPropertyAccessorIntentionAction extends CreateJSFunctionFixBase
 	{
 		private final boolean myIsGetter;
 
@@ -372,7 +382,7 @@ public class JSUnresolvedVariableInspection extends JSInspection
 		}
 
 		@Override
-		protected void writeFunctionAndName(Template template, String referencedName, boolean ecma)
+		protected void writeFunctionAndName(Template template, String referencedName, Set<JavaScriptFeature> features)
 		{
 			template.addTextSegment("function ");
 			template.addTextSegment(myIsGetter ? "get " : "set ");
@@ -380,7 +390,7 @@ public class JSUnresolvedVariableInspection extends JSInspection
 		}
 
 		@Override
-		protected void addParameters(Template template, JSReferenceExpression refExpr, PsiFile file, boolean ecma)
+		protected void addParameters(Template template, JSReferenceExpression refExpr, PsiFile file, Set<JavaScriptFeature> features)
 		{
 			if(!myIsGetter)
 			{
@@ -440,7 +450,7 @@ public class JSUnresolvedVariableInspection extends JSInspection
 
 	}
 
-	private static class CreateJSEventMethod extends JSUnresolvedFunctionInspection.CreateJSFunctionIntentionActionBase
+	private static class CreateJSEventMethod extends CreateJSFunctionFixBase
 	{
 		private JSExpression myEventQualifier;
 
@@ -452,7 +462,7 @@ public class JSUnresolvedVariableInspection extends JSInspection
 
 
 		@Override
-		protected void addParameters(Template template, JSReferenceExpression refExpr, PsiFile file, boolean ecma)
+		protected void addParameters(Template template, JSReferenceExpression refExpr, PsiFile file, Set<JavaScriptFeature> features)
 		{
 			template.addTextSegment("event:");
 			template.addTextSegment(myEventQualifier.getText());

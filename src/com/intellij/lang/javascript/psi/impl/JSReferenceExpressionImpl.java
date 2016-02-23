@@ -16,16 +16,19 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
+import java.util.Set;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.JavaScriptFeature;
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
+import org.mustbe.consulo.javascript.lang.JavaScriptVersionUtil;
 import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageNamesValidation;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.BaseJSSymbolProcessor;
@@ -265,13 +268,13 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		return false;
 	}
 
-	private void doProcessLocalDeclarations(final JSExpression qualifier, final ResolveProcessor processor, boolean ecma, boolean completion)
+	private void doProcessLocalDeclarations(final JSExpression qualifier, final ResolveProcessor processor, Set<JavaScriptFeature> features, boolean completion)
 	{
 		final JSClass jsClass = findEnclosingClass(this);
 		processor.configureClassScope(jsClass);
 
 		final boolean inTypeContext = JSResolveUtil.isExprInTypeContext(this);
-		final boolean whereTypeCanBe = inTypeContext || (completion && ecma ? JSResolveUtil.isInPlaceWhereTypeCanBeDuringCompletion(this) : false);
+		final boolean whereTypeCanBe = inTypeContext || (completion && features.contains(JavaScriptFeature.CLASS) && JSResolveUtil.isInPlaceWhereTypeCanBeDuringCompletion(this));
 		PsiElement elToProcess = this;
 		PsiElement scopeToStopAt = null;
 
@@ -287,7 +290,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 			{
 				if(qualifier instanceof JSThisExpression)
 				{
-					if(ecma)
+					if(features.contains(JavaScriptFeature.CLASS))
 					{
 						final JSFunction nearestFunction = PsiTreeUtil.getParentOfType(this, JSFunction.class);
 						elToProcess = nearestFunction != null ? nearestFunction : this;
@@ -331,7 +334,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		if((qualifier instanceof JSThisExpression || qualifier instanceof JSSuperExpression) && jsClass != null)
 		{
 			scopeToStopAt = jsClass;
-			if(ecma)
+			if(features.contains(JavaScriptFeature.CLASS))
 			{
 				JSFunctionExpression expression = PsiTreeUtil.getParentOfType(this, JSFunctionExpression.class);
 				if(expression != null)
@@ -390,8 +393,9 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 	public Object[] getVariants()
 	{
 		final PsiFile containingFile = getContainingFile();
-		final boolean ecma = containingFile.getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
-		Object[] smartVariants = JSSmartCompletionVariantsHandler.getSmartVariants(this, ecma);
+		Set<JavaScriptFeature> features = JavaScriptVersionUtil.getFeatures(this);
+		final boolean classFeature = features.contains(JavaScriptFeature.CLASS);
+		Object[] smartVariants = JSSmartCompletionVariantsHandler.getSmartVariants(this, classFeature);
 		if(smartVariants != null)
 		{
 			return smartVariants;
@@ -407,7 +411,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 
 			ResolveProcessor localProcessor = new ResolveProcessor(null, this);
 
-			doProcessLocalDeclarations(qualifier, localProcessor, ecma, true);
+			doProcessLocalDeclarations(qualifier, localProcessor, features, true);
 			final VariantsProcessor processor = new VariantsProcessor(null, containingFile, false, this);
 
 			processor.addLocalResults(localProcessor.getResults());
@@ -418,12 +422,12 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		}
 		else
 		{
-			final MyTypeProcessor processor = new MyTypeProcessor(null, ecma, this);
+			final MyTypeProcessor processor = new MyTypeProcessor(null, features, this);
 			BaseJSSymbolProcessor.doEvalForExpr(BaseJSSymbolProcessor.getOriginalQualifier(qualifier), containingFile, processor);
 
 			if(processor.resolved == MyTypeProcessor.TypeResolveState.Resolved ||
 					processor.resolved == MyTypeProcessor.TypeResolveState.Undefined ||
-					(processor.resolved == MyTypeProcessor.TypeResolveState.PrefixUnknown && ecma))
+					(processor.resolved == MyTypeProcessor.TypeResolveState.PrefixUnknown && classFeature))
 			{
 				String qualifiedNameToSkip = null;
 				if(JSResolveUtil.isSelfReference(getParent(), this))
@@ -492,7 +496,9 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 
 		final PsiElement parent = getParent();
 		final JSExpression qualifier = getResolveQualifier();
-		final boolean ecma = containingFile.getLanguage().isKindOf(JavaScriptSupportLoader.ECMA_SCRIPT_L4);
+		Set<JavaScriptFeature> features = JavaScriptVersionUtil.getFeatures(this);
+		final boolean classFeature = features.contains(JavaScriptFeature.CLASS);
+
 		final boolean localResolve = qualifier == null;
 		final boolean parentIsDefinition = parent instanceof JSDefinitionExpression;
 
@@ -523,26 +529,26 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		{
 			localProcessor = new ResolveProcessor(referencedName, this);
 
-			final boolean canResolveAllLocally = !parentIsDefinition || !ecma;
-			doProcessLocalDeclarations(realQualifier, localProcessor, ecma, false);
+			final boolean canResolveAllLocally = !parentIsDefinition || !classFeature;
+			doProcessLocalDeclarations(realQualifier, localProcessor, features, false);
 
 			if(canResolveAllLocally)
 			{
 				final PsiElement jsElement = localProcessor.getResult();
 
-				if(jsElement != null || (qualifier != null && ecma && localProcessor.foundAllValidResults()))
+				if(jsElement != null || (qualifier != null && classFeature && localProcessor.foundAllValidResults()))
 				{
 					return localProcessor.getResultsAsResolveResults();
 				}
 			}
-			return doOldResolve(containingFile, referencedName, parent, qualifier, ecma, localResolve, parentIsDefinition, localProcessor);
+			return doOldResolve(containingFile, referencedName, parent, qualifier, classFeature, localResolve, parentIsDefinition, localProcessor);
 		}
 		else
 		{
-			final MyTypeProcessor processor = new MyTypeProcessor(referencedName, ecma, this);
+			final MyTypeProcessor processor = new MyTypeProcessor(referencedName, features, this);
 			BaseJSSymbolProcessor.doEvalForExpr(qualifier, containingFile, processor);
 
-			if(processor.resolved == MyTypeProcessor.TypeResolveState.PrefixUnknown && ecma)
+			if(processor.resolved == MyTypeProcessor.TypeResolveState.PrefixUnknown && classFeature)
 			{
 				return new ResolveResult[]{new JSResolveUtil.MyResolveResult(this)};
 			}
@@ -654,12 +660,12 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 
 	private static class MyTypeProcessor extends ResolveProcessor implements BaseJSSymbolProcessor.TypeProcessor
 	{
-		private final boolean myEcma;
+		private final Set<JavaScriptFeature> myFeatures;
 
-		public MyTypeProcessor(String referenceName, final boolean ecma, PsiElement _place)
+		public MyTypeProcessor(String referenceName, final Set<JavaScriptFeature> features, PsiElement _place)
 		{
 			super(referenceName, _place);
-			myEcma = ecma;
+			myFeatures = features;
 			setToProcessHierarchy(true);
 
 			configureClassScope(findEnclosingClass(_place));
@@ -671,6 +677,12 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		}
 
 		TypeResolveState resolved = TypeResolveState.Unknown;
+
+		@Override
+		public Set<JavaScriptFeature> getFeatures()
+		{
+			return myFeatures;
+		}
 
 		@Override
 		public void process(String type, @NotNull final BaseJSSymbolProcessor.EvaluateContext evaluateContext, PsiElement source)
@@ -707,7 +719,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 			{
 				final JSClass jsClass = (JSClass) clazz;
 
-				final boolean statics = myEcma && JSPsiImplUtils.isTheSameClass(typeSource, jsClass) && !(((JSReferenceExpression) place).getQualifier() instanceof JSCallExpression);
+				final boolean statics = ecma() && JSPsiImplUtils.isTheSameClass(typeSource, jsClass) && !(((JSReferenceExpression) place).getQualifier() instanceof JSCallExpression);
 				setProcessStatics(statics);
 				if(statics)
 				{
@@ -730,7 +742,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 					{
 						resolved = TypeResolveState.Resolved;
 					}
-					else if(myEcma)
+					else if(ecma())
 					{
 						final JSAttributeList attrList = jsClass.getAttributeList();
 						if(attrList == null || !attrList.hasModifier(JSAttributeList.ModifierType.DYNAMIC))
@@ -748,7 +760,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 					}
 				}
 			}
-			else if(myEcma)
+			else if(ecma())
 			{
 				resolved = TypeResolveState.Undefined;
 			}
@@ -758,7 +770,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		public boolean execute(PsiElement element, ResolveState state)
 		{
 			boolean b = super.execute(element, state);
-			if(myEcma && getResult() != null)
+			if(ecma() && getResult() != null)
 			{
 				resolved = MyTypeProcessor.TypeResolveState.Resolved;
 			}
@@ -768,7 +780,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		@Override
 		public boolean ecma()
 		{
-			return myEcma;
+			return myFeatures.contains(JavaScriptFeature.CLASS);
 		}
 
 		@Override

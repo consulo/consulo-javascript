@@ -163,6 +163,10 @@
 		<extensionPoint name="classInheritorsProvider" interface="com.intellij.lang.javascript.search.JSClassInheritorsProvider"/>
 
 		<extensionPoint name="propertyNameReferenceProvider" interface="com.intellij.lang.javascript.psi.impl.reference.JSPropertyNameReferenceProvider"/>
+
+		<extensionPoint name="quickFixFactory" beanClass="com.intellij.util.KeyedLazyInstanceEP">
+			<with attribute="implementationClass" implements="org.mustbe.consulo.javascript.ide.codeInsight.JavaScriptQuickFixFactory"/>
+		</extensionPoint>
 	</extensionPoints>
 
 	<extensions defaultExtensionNs="org.mustbe.consulo.javascript">

@@ -18,6 +18,7 @@ package org.mustbe.consulo.javascript.lang.psi;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -39,6 +40,7 @@ public class JavaScriptPrimitiveType implements JavaScriptType
 		myName = name;
 	}
 
+	@RequiredReadAction
 	@NotNull
 	@Override
 	public String getPresentableText()

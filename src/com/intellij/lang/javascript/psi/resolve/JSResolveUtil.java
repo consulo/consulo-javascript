@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.JavaScriptVersionUtil;
 import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
 import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import org.mustbe.consulo.javascript.module.extension.JavaScriptModuleExtension;
@@ -214,7 +215,7 @@ public class JSResolveUtil
 
 		if(expression != null)
 		{
-			final BaseJSSymbolProcessor.SimpleTypeProcessor processor = new BaseJSSymbolProcessor.SimpleTypeProcessor(true);
+			final BaseJSSymbolProcessor.SimpleTypeProcessor processor = new BaseJSSymbolProcessor.SimpleTypeProcessor(JavaScriptVersionUtil.getFeatures(expression));
 			BaseJSSymbolProcessor.doEvalForExpr(expression, containingFile, processor);
 			type = processor.getType();
 		}

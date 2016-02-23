@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-package com.intellij.lang.javascript.inspections;
+package com.intellij.lang.javascript.inspections.qucikFixes;
+
+import java.util.Collections;
+import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.JavaScriptFeature;
+import org.mustbe.consulo.javascript.lang.JavaScriptVersionUtil;
+import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupItem;
@@ -31,11 +38,9 @@ import com.intellij.codeInsight.template.impl.MacroCallNode;
 import com.intellij.codeInsight.template.macro.MacroFactory;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
-import com.intellij.lang.javascript.psi.resolve.BaseJSSymbolProcessor;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.util.JSUtils;
 import com.intellij.openapi.application.ApplicationManager;
@@ -60,32 +65,34 @@ import com.intellij.psi.xml.XmlText;
 /**
  * @author Maxim.Mossienko
  */
-abstract class BaseCreateFix implements LocalQuickFix
+public abstract class BaseCreateFix implements LocalQuickFix
 {
 	private static final String ANY_TYPE = "*";
 	private static final String SCRIPT_TAG_NAME = "Script";
 
 	@Override
+	@RequiredReadAction
 	public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor)
 	{
 		final PsiElement psiElement = descriptor.getPsiElement();
 		PsiFile file = psiElement.getContainingFile();
 		PsiFile realFile = file.getContext() != null ? file.getContext().getContainingFile() : file;
-		final boolean ecma = file.getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
+		Set<JavaScriptFeature> features = JavaScriptVersionUtil.getFeatures(psiElement);
 
 		JSReferenceExpression referenceExpression = (JSReferenceExpression) psiElement.getParent();
 		final JSExpression qualifier = referenceExpression.getQualifier();
 		PsiElement predefinedAnchor = null;
 
-		if(qualifier != null && ecma)
+		boolean classFeature = features.contains(JavaScriptFeature.CLASS);
+		if(qualifier != null && classFeature)
 		{
-			PsiElement type = getType(qualifier, file, ecma);
+			PsiElement type = getType(qualifier, file, features);
 			if(type == null)
 			{
 				return; // can not resolve
 			}
 
-			if(type != null && type.isWritable())
+			if(type.isWritable())
 			{
 				if(type instanceof XmlBackedJSClassImpl)
 				{
@@ -121,7 +128,7 @@ abstract class BaseCreateFix implements LocalQuickFix
 		String prefix = "";
 		String suffix = "";
 
-		if(anchor != null && ecma)
+		if(anchor != null && classFeature)
 		{
 			anchorParent = anchor.getParent();
 			while(anchorParent != null && !(anchorParent instanceof JSClass) && !(anchorParent instanceof JSFile))
@@ -136,8 +143,7 @@ abstract class BaseCreateFix implements LocalQuickFix
 			if(anchorParent instanceof JSFile && anchorParent.getContext() != null)
 			{
 				final PsiElement context = anchorParent.getContext();
-				if(context instanceof XmlAttributeValue || context instanceof XmlText && !(SCRIPT_TAG_NAME.equals(((XmlTag) context.getParent()).getLocalName
-						())))
+				if(context instanceof XmlAttributeValue || context instanceof XmlText && !(SCRIPT_TAG_NAME.equals(((XmlTag) context.getParent()).getLocalName())))
 				{
 					contextFile = (XmlFile) context.getContainingFile();
 				}
@@ -193,7 +199,7 @@ abstract class BaseCreateFix implements LocalQuickFix
 			template.setToReformat(true);
 
 			boolean isStatic = false;
-			if(ecma)
+			if(classFeature)
 			{
 				if(qualifier != null)
 				{
@@ -237,7 +243,7 @@ abstract class BaseCreateFix implements LocalQuickFix
 				template.addTextSegment("\n");
 			}
 
-			buildTemplate(template, referenceExpression, ecma, isStatic, file, anchorParent);
+			buildTemplate(template, referenceExpression, features, isStatic, file, anchorParent);
 			if(!insertAtEnd)
 			{
 				template.addTextSegment("\n");
@@ -294,34 +300,37 @@ abstract class BaseCreateFix implements LocalQuickFix
 		return FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, realFile.getVirtualFile(), 0), true);
 	}
 
-	protected abstract void buildTemplate(final Template template, JSReferenceExpression referenceExpression, boolean ecma, boolean staticContext,
-			PsiFile file, PsiElement anchorParent);
+	@RequiredReadAction
+	protected abstract void buildTemplate(final Template template,
+			JSReferenceExpression referenceExpression,
+			Set<JavaScriptFeature> features,
+			boolean staticContext,
+			PsiFile file,
+			PsiElement anchorParent);
 
-	private static String getTypeOfValue(final JSExpression passedParameterValue, final PsiFile file, boolean ecma)
+	private static String getTypeOfValue(final JSExpression passedParameterValue, final PsiFile file, Set<JavaScriptFeature> features)
 	{
-		final PsiElement type = getType(passedParameterValue, file, ecma);
+		final PsiElement type = getType(passedParameterValue, file, features);
 		return type != null ? type instanceof JSClass ? ((JSClass) type).getQualifiedName() : ((PsiNamedElement) type).getName() : ANY_TYPE;
 	}
 
-	static PsiElement getType(final JSExpression passedParameterValue, final PsiFile file, boolean ecma)
+	@RequiredReadAction
+	static PsiElement getType(final JSExpression passedParameterValue, final PsiFile file, Set<JavaScriptFeature> features)
 	{
-		final BaseJSSymbolProcessor.SimpleTypeProcessor processor = new BaseJSSymbolProcessor.SimpleTypeProcessor(ecma);
-		BaseJSSymbolProcessor.doEvalForExpr(passedParameterValue, file, processor);
-		String type = processor.getType();
-		PsiElement source = processor.getSource();
-
-		if(type != null)
+		if(passedParameterValue instanceof JSReferenceExpression)
 		{
-			if(!(source instanceof JSClass) && !(source instanceof XmlFile))
+			JavaScriptType type = passedParameterValue.getType();
+
+			PsiElement targetElement = type.getTargetElement();
+			if(targetElement instanceof JSClass)
 			{
-				source = JSResolveUtil.findClassByQName(type, file);
+				return targetElement;
 			}
 		}
-		return source;
+		return null;
 	}
 
-	protected static JSExpression addAccessModifier(final Template template, final JSReferenceExpression referenceExpression, final boolean ecma,
-			boolean staticContext)
+	protected static JSExpression addAccessModifier(final Template template, final JSReferenceExpression referenceExpression, final boolean ecma, boolean staticContext)
 	{
 		final JSExpression qualifier = referenceExpression.getQualifier();
 
@@ -356,10 +365,9 @@ abstract class BaseCreateFix implements LocalQuickFix
 		}
 	}
 
-	static void guessExprTypeAndAddSuchVariable(final JSExpression passedParameterValue, final Template template, final String var1,
-			final PsiFile file, final boolean ecma)
+	public static void guessExprTypeAndAddSuchVariable(final JSExpression passedParameterValue, final Template template, final String var1, final PsiFile file, final Set<JavaScriptFeature> features)
 	{
-		String type = getTypeOfValue(passedParameterValue, file, ecma);
+		String type = getTypeOfValue(passedParameterValue, file, features);
 
 		if(ApplicationManager.getApplication().isUnitTestMode())
 		{
@@ -418,8 +426,7 @@ abstract class BaseCreateFix implements LocalQuickFix
 		}
 		else if(parent instanceof JSArgumentList)
 		{
-			JSParameter parameter = JSResolveUtil.findParameterForUsedArgument(isCall ? (JSExpression) referenceExpression.getParent() : referenceExpression,
-					(JSArgumentList) parent);
+			JSParameter parameter = JSResolveUtil.findParameterForUsedArgument(isCall ? (JSExpression) referenceExpression.getParent() : referenceExpression, (JSArgumentList) parent);
 			if(parameter != null)
 			{
 				type = parameter.getTypeString();
@@ -430,12 +437,11 @@ abstract class BaseCreateFix implements LocalQuickFix
 			JSExpression lOperand = ((JSAssignmentExpression) parent).getLOperand();
 			if(lOperand != null)
 			{
-				type = getTypeOfValue(lOperand, file, true);
+				type = getTypeOfValue(lOperand, file, Collections.singleton(JavaScriptFeature.CLASS));
 			}
 		}
 
-		String expressionType = elementForWhichExprTypeToEvaluate instanceof JSExpression ? JSResolveUtil.getExpressionType((JSExpression)
-				elementForWhichExprTypeToEvaluate, file) : null;
+		String expressionType = elementForWhichExprTypeToEvaluate instanceof JSExpression ? JSResolveUtil.getExpressionType((JSExpression) elementForWhichExprTypeToEvaluate, file) : null;
 		if(expressionType != null && !expressionType.equals("*"))
 		{
 			type = expressionType;
@@ -466,7 +472,7 @@ abstract class BaseCreateFix implements LocalQuickFix
 		return null;
 	}
 
-	static class MyExpression extends Expression
+	public static class MyExpression extends Expression
 	{
 		TextResult result;
 		private final String myVar1;

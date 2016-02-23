@@ -1,5 +1,8 @@
 package org.mustbe.consulo.javascript.lang;
 
+import java.util.Set;
+
+import org.consulo.annotations.Immutable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.javascript.lang.parsing.JavaScriptParser;
@@ -10,6 +13,7 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.tree.TokenSet;
+import com.intellij.util.containers.ArrayListSet;
 
 /**
  * @author VISTALL
@@ -17,9 +21,23 @@ import com.intellij.psi.tree.TokenSet;
  */
 public abstract class BaseJavaScriptLanguageVersion extends BaseLanguageVersion<JavaScriptLanguage> implements LanguageVersionWithParsing<JavaScriptLanguage>
 {
+	private Set<JavaScriptFeature> myFeatures = new ArrayListSet<JavaScriptFeature>();
+
 	public BaseJavaScriptLanguageVersion(String name)
 	{
 		super(name, JavaScriptLanguage.INSTANCE);
+	}
+
+	protected void addFeature(@NotNull JavaScriptFeature feature)
+	{
+		myFeatures.add(feature);
+	}
+
+	@NotNull
+	@Immutable
+	public Set<JavaScriptFeature> getFeatures()
+	{
+		return myFeatures;
 	}
 
 	@NotNull
