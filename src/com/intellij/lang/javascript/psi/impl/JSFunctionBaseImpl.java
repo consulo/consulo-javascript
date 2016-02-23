@@ -40,7 +40,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 
 /**
@@ -318,37 +317,6 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
 	@RequiredReadAction
 	public PsiElement getNameIdentifier()
 	{
-		final ASTNode myNode = getNode();
-		ASTNode astNode = myNode.findChildByType(JSTokenTypes.FUNCTION_KEYWORD);
-
-		if(astNode != null)
-		{
-			astNode = advance(astNode);
-		}
-		else
-		{
-			astNode = myNode.findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
-		}
-
-		IElementType type = astNode != null ? astNode.getElementType() : null;
-		ASTNode prevAstNode = null;
-
-		if(type == JSTokenTypes.GET_KEYWORD || type == JSTokenTypes.SET_KEYWORD)
-		{
-			prevAstNode = astNode;
-			astNode = advance(astNode);
-			type = astNode.getElementType();
-		}
-
-		if(JSVariableBaseImpl.IDENTIFIER_TOKENS_SET.contains(type))
-		{
-			return astNode.getPsi();
-		}
-		if(prevAstNode != null)
-		{
-			return prevAstNode.getPsi();
-		}
-
-		return null;
+		return findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET);
 	}
 }
