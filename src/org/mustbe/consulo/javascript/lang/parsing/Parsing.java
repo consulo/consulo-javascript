@@ -16,8 +16,12 @@
 
 package org.mustbe.consulo.javascript.lang.parsing;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.PsiBuilder;
+import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
 
 /**
  * User: max
@@ -31,6 +35,34 @@ public class Parsing
 	public Parsing(JavaScriptParsingContext context)
 	{
 		myContext = context;
+	}
+
+	@Nullable
+	public IElementType expectContextKeyword(@NotNull PsiBuilder builder, @NotNull TokenSet tokenSet)
+	{
+		if(builder.getTokenType() == JSTokenTypes.IDENTIFIER)
+		{
+			IElementType contextKeywordElementType = ContextKeywordCache.getContextKeywordElementType(builder.getTokenText());
+			if(contextKeywordElementType == null)
+			{
+				return null;
+			}
+			if(tokenSet.contains(contextKeywordElementType))
+			{
+				return contextKeywordElementType;
+			}
+		}
+		return null;
+	}
+
+	public void advanceContextKeyword(@NotNull PsiBuilder builder, @NotNull TokenSet tokenSet)
+	{
+		IElementType elementType = expectContextKeyword(builder, tokenSet);
+		if(elementType != null)
+		{
+			builder.remapCurrentToken(elementType);
+			builder.advanceLexer();
+		}
 	}
 
 	public FunctionParsing getFunctionParsing()

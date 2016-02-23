@@ -10,7 +10,6 @@ import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.codeInspection.SuppressIntentionAction;
 import com.intellij.codeInspection.SuppressionUtil;
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSSuppressionHolder;
 import com.intellij.psi.PsiElement;
@@ -100,8 +99,8 @@ public abstract class BaseInspection extends LocalInspectionTool implements Cust
 
 	protected boolean functionHasIdentifier(JSFunction function)
 	{
-		final ASTNode identifier = function.findNameIdentifier();
-		return identifier != null && PsiTreeUtil.isAncestor(function, identifier.getPsi(), true);
+		final PsiElement identifier = function.getNameIdentifier();
+		return identifier != null && PsiTreeUtil.isAncestor(function, identifier, true);
 	}
 
 	@Override

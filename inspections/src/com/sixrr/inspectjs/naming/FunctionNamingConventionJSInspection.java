@@ -1,6 +1,7 @@
 package com.sixrr.inspectjs.naming;
 
-import com.intellij.lang.ASTNode;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -9,8 +10,6 @@ import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.InspectionJSFix;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.fix.RenameFix;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 
 public class FunctionNamingConventionJSInspection extends ConventionInspection {
     private static final int DEFAULT_MIN_LENGTH = 4;
@@ -84,9 +83,9 @@ public class FunctionNamingConventionJSInspection extends ConventionInspection {
             if (isValid(name)) {
                 return;
             }
-            final ASTNode identifier = function.findNameIdentifier();
+            final PsiElement identifier = function.getNameIdentifier();
             if (identifier == null ||
-                    !PsiTreeUtil.isAncestor(function, identifier.getPsi(), true)) {
+                    !PsiTreeUtil.isAncestor(function, identifier, true)) {
                 return;
             }
             registerFunctionError(function);

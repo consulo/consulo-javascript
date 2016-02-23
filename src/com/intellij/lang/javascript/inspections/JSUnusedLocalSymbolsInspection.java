@@ -31,9 +31,8 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JSElementTypes;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.highlighting.JavaScriptLineMarkerProvider;
 import com.intellij.lang.javascript.psi.*;
@@ -370,21 +369,21 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 					}
 
 					messageId = "js.unused.parameter";
-					highlightedElement = ((JSParameter) p).findNameIdentifier().getPsi();
+					highlightedElement = ((JSParameter) p).getNameIdentifier();
 				}
 				else if(p instanceof JSFunction)
 				{
-					final ASTNode nameIdentifier = ((JSFunction) p).findNameIdentifier();
+					final PsiElement nameIdentifier = ((JSFunction) p).getNameIdentifier();
 					if(nameIdentifier == null)
 					{
 						continue;
 					}
-					highlightedElement = nameIdentifier.getPsi();
+					highlightedElement = nameIdentifier;
 					messageId = "js.unused.function.declaration";
 				}
 				else
 				{
-					highlightedElement = ((JSVariable) p).findNameIdentifier().getPsi();
+					highlightedElement = ((JSVariable) p).getNameIdentifier();
 					messageId = "js.unused.local.variable";
 				}
 

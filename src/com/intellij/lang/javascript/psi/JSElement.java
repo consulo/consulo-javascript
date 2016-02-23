@@ -19,11 +19,8 @@ package com.intellij.lang.javascript.psi;
 import com.intellij.psi.NavigatablePsiElement;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Feb 3, 2005
- * Time: 2:30:26 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2:30:26 PM Feb 3, 2005
  */
 public interface JSElement extends NavigatablePsiElement
 {

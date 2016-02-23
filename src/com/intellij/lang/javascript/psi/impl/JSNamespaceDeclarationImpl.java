@@ -30,7 +30,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 
 /**
@@ -76,7 +75,7 @@ public class JSNamespaceDeclarationImpl extends JSStubbedStatementImpl<JSNamespa
 			return this;
 		}
 
-		getNode().replaceChild(findNameIdentifier(), JSChangeUtil.createExpressionFromText(getProject(), newName).getNode());
+		getNode().replaceChild(getNameIdentifier().getNode(), JSChangeUtil.createExpressionFromText(getProject(), newName).getNode());
 
 		JSPsiImplUtils.updateFileName(this, newName, oldName);
 		return this;
@@ -90,21 +89,15 @@ public class JSNamespaceDeclarationImpl extends JSStubbedStatementImpl<JSNamespa
 		{
 			return stub.getName();
 		}
-		final ASTNode node = findNameIdentifier();
+		final PsiElement node = getNameIdentifier();
 		return node != null ? node.getText() : null;
 	}
 
 	@Override
 	public int getTextOffset()
 	{
-		final ASTNode node = findNameIdentifier();
-		return node == null ? super.getTextOffset() : node.getStartOffset();
-	}
-
-	@Override
-	public ASTNode findNameIdentifier()
-	{
-		return getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
+		final PsiElement node = getNameIdentifier();
+		return node == null ? super.getTextOffset() : node.getTextOffset();
 	}
 
 	@Override
@@ -121,8 +114,7 @@ public class JSNamespaceDeclarationImpl extends JSStubbedStatementImpl<JSNamespa
 	@Override
 	public PsiElement getNameIdentifier()
 	{
-		final ASTNode node = findNameIdentifier();
-		return node != null ? node.getPsi() : null;
+		return findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
 	}
 
 	@Override

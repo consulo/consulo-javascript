@@ -27,6 +27,7 @@ import com.intellij.codeInsight.daemon.impl.HighlightVisitor;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
+import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -53,7 +54,8 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
 		PsiElement parent = element.getParent();
 		IElementType elementType = PsiUtilCore.getElementType(element);
-		if((JavaScriptTokenSets.STRING_LITERALS.contains(elementType) || elementType == JSTokenTypes.IDENTIFIER) && parent instanceof JSProperty && ((JSProperty) parent).getNameIdentifier() == element)
+		if((JavaScriptTokenSets.STRING_LITERALS.contains(elementType) || elementType == JSTokenTypes.IDENTIFIER) && parent instanceof JSProperty && ((JSProperty) parent).getNameIdentifier() ==
+				element)
 		{
 			highlightPropertyName((JSProperty) parent, element);
 		}
@@ -131,18 +133,25 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
 		if(resolvedElement instanceof JSAttributeListOwner)
 		{
-			final JSAttributeList attributeList = ((JSAttributeListOwner) resolvedElement).getAttributeList();
-
-			if(attributeList != null)
+			if(resolvedElement instanceof JSClass)
 			{
-				isStatic = attributeList.hasModifier(JSAttributeList.ModifierType.STATIC);
+				type = DefaultLanguageHighlighterColors.CLASS_NAME;
 			}
-
-			isMethod = resolvedElement instanceof JSFunction;
-			if(isMethod && !isClass(resolvedElement.getParent()))
+			else
 			{
-				isMethod = false;
-				isFunction = true;
+				final JSAttributeList attributeList = ((JSAttributeListOwner) resolvedElement).getAttributeList();
+
+				if(attributeList != null)
+				{
+					isStatic = attributeList.hasModifier(JSAttributeList.ModifierType.STATIC);
+				}
+
+				isMethod = resolvedElement instanceof JSFunction;
+				if(isMethod && !isClass(resolvedElement.getParent()))
+				{
+					isMethod = false;
+					isFunction = true;
+				}
 			}
 		}
 		else if(resolvedElement instanceof JSDefinitionExpression)

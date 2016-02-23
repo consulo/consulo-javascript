@@ -15,9 +15,11 @@ public class JavaScriptParser implements PsiParser
 {
 	@NotNull
 	@Override
-	public ASTNode parse(@NotNull IElementType root, @NotNull PsiBuilder builder, @NotNull LanguageVersion languageVersion)
+	public ASTNode parse(@NotNull IElementType root, @NotNull PsiBuilder originalBuilder, @NotNull LanguageVersion languageVersion)
 	{
 		JavaScriptParsingContext parsingContext = createParsingContext();
+
+		JavaScriptParserBuilder builder = createBuilder(originalBuilder);
 
 		final PsiBuilder.Marker rootMarker = builder.mark();
 		while(!builder.eof())
@@ -26,6 +28,12 @@ public class JavaScriptParser implements PsiParser
 		}
 		rootMarker.done(root);
 		return builder.getTreeBuilt();
+	}
+
+	@NotNull
+	public JavaScriptParserBuilder createBuilder(PsiBuilder builder)
+	{
+		return new JavaScriptParserBuilder(builder);
 	}
 
 	@NotNull

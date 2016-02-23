@@ -18,7 +18,6 @@ package com.intellij.lang.javascript.psi.impl;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
@@ -39,6 +38,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.IncorrectOperationException;
 
 /**
@@ -46,6 +46,8 @@ import com.intellij.util.IncorrectOperationException;
  */
 public class JSClassImpl extends JSClassBase implements JSSuppressionHolder
 {
+	private static final TokenSet ourNameTokenTypes = TokenSet.create(JSElementTypes.REFERENCE_EXPRESSION, JSTokenTypes.IDENTIFIER);
+
 	public JSClassImpl(final ASTNode node)
 	{
 		super(node);
@@ -60,8 +62,8 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder
 	@Override
 	public int getTextOffset()
 	{
-		ASTNode node = findNameIdentifier();
-		return node == null ? super.getTextOffset() : node.getStartOffset();
+		PsiElement nameIdentifier = getNameIdentifier();
+		return nameIdentifier == null ? super.getTextOffset() : nameIdentifier.getTextOffset();
 	}
 
 	@Override
@@ -71,6 +73,7 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder
 	}
 
 	@Override
+	@RequiredReadAction
 	public String getName()
 	{
 		final JSClassStub classStub = getStub();
@@ -79,15 +82,20 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder
 			return classStub.getName();
 		}
 
-		final ASTNode node = findNameIdentifier();
-		if(node != null)
+		PsiElement nameIdentifier = getNameIdentifier();
+		if(nameIdentifier instanceof JSReferenceExpression)
 		{
-			return ((JSReferenceExpression) node.getPsi()).getReferencedName();
+			return ((JSReferenceExpression) nameIdentifier).getReferencedName();
+		}
+		else if(nameIdentifier != null)
+		{
+			return nameIdentifier.getText();
 		}
 		return null;
 	}
 
 	@Override
+	@RequiredReadAction
 	public PsiElement setName(@NonNls @NotNull String newName) throws IncorrectOperationException
 	{
 		newName = newName.substring(newName.lastIndexOf('.') + 1);
@@ -98,7 +106,9 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder
 		}
 		final JSFunction constructor = findFunctionByName(oldName);
 
-		getNode().replaceChild(findNameIdentifier(), JSChangeUtil.createExpressionFromText(getProject(), newName).getNode());
+		PsiElement nameIdentifier = getNameIdentifier();
+		assert nameIdentifier != null;
+		getNode().replaceChild(nameIdentifier.getNode(), JSChangeUtil.createExpressionFromText(getProject(), newName).getNode());
 
 		if(constructor != null)
 		{
@@ -111,10 +121,10 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder
 	}
 
 	@Override
-	@Nullable
-	public ASTNode findNameIdentifier()
+	@RequiredReadAction
+	public PsiElement getNameIdentifier()
 	{
-		return getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
+		return findChildByType(ourNameTokenTypes);
 	}
 
 	@Override

@@ -21,6 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.javascript.ide.hightlight.JavaScriptHighlighter;
 import org.mustbe.consulo.javascript.lang.lexer.EcmaScript6Lexer;
+import org.mustbe.consulo.javascript.lang.parsing.EcmaScript6Parser;
+import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.project.Project;
@@ -71,6 +73,13 @@ public class EcmaScript6JavaScriptVersion extends BaseJavaScriptLanguageVersion 
 	public SyntaxHighlighter getSyntaxHighlighter()
 	{
 		return new JavaScriptHighlighter(ourLexerFactory);
+	}
+
+	@NotNull
+	@Override
+	public PsiParser createParser(@Nullable Project project)
+	{
+		return new EcmaScript6Parser();
 	}
 
 	@Override

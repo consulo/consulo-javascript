@@ -28,7 +28,6 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -119,13 +118,13 @@ public class JSUntypedDeclarationInspection extends JSInspection
 		{
 			return;
 		}
-		ASTNode nameIdentifier = node.findNameIdentifier();
+		PsiElement nameIdentifier = node.getNameIdentifier();
 
 		if(nameIdentifier != null &&
 				JSPsiImplUtils.getTypeFromDeclaration(node) == null &&
 				(!(node instanceof JSParameter) || !((JSParameter) node).isRest()))
 		{
-			holder.registerProblem(nameIdentifier.getPsi(), JavaScriptBundle.message(node instanceof JSFunction ? "js.untyped.function.problem" : "js.untyped" +
+			holder.registerProblem(nameIdentifier, JavaScriptBundle.message(node instanceof JSFunction ? "js.untyped.function.problem" : "js.untyped" +
 					".variable.problem", nameIdentifier.getText()), ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new AddTypeToDclFix());
 		}
 	}

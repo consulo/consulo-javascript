@@ -1,15 +1,15 @@
 package com.sixrr.inspectjs.confusing;
 
-import com.intellij.lang.ASTNode;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSFunctionExpression;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class AnonymousFunctionJSInspection extends JavaScriptInspection{
 
@@ -41,9 +41,9 @@ public class AnonymousFunctionJSInspection extends JavaScriptInspection{
         @Override public void visitJSFunctionExpression(JSFunctionExpression jsFunctionExpression){
             super.visitJSFunctionExpression(jsFunctionExpression);
             final JSFunction function = jsFunctionExpression.getFunction();
-            final ASTNode identifier = function.findNameIdentifier();
+            final PsiElement identifier = function.getNameIdentifier();
             if(identifier == null ||
-                    PsiTreeUtil.isAncestor(function, identifier.getPsi(), true)){
+                    PsiTreeUtil.isAncestor(function, identifier, true)){
                 return;
             }
             registerError(function.getFirstChild());

@@ -16,7 +16,9 @@
 
 package com.intellij.lang.javascript.psi;
 
+import org.mustbe.consulo.DeprecationInfo;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiNameIdentifierOwner;
 
 /**
  * Created by IntelliJ IDEA.
@@ -25,10 +27,12 @@ import com.intellij.psi.PsiElement;
  * Time: 6:52:43 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSLabeledStatement extends JSStatement
+public interface JSLabeledStatement extends JSStatement, PsiNameIdentifierOwner
 {
 	String getLabel();
 
+	@Deprecated
+	@DeprecationInfo("Use #getNameIdentifier()")
 	PsiElement getLabelIdentifier();
 
 	JSStatement getStatement();

@@ -88,56 +88,17 @@ public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionStub,
 	}
 
 	@Override
-	public ASTNode findNameIdentifier()
-	{
-		final ASTNode treeParent = getNode().getTreeParent();
-		PsiElement psi = treeParent != null ? treeParent.getPsi() : null;
-		if(psi instanceof JSCallExpression)
-		{
-			psi = psi.getParent();
-		}
-		if(psi instanceof JSAssignmentExpression)
-		{
-			final JSExpression jsExpression = ((JSAssignmentExpression) psi).getLOperand();
-			final JSExpression lOperand = jsExpression instanceof JSDefinitionExpression ? ((JSDefinitionExpression) jsExpression).getExpression() : null;
-
-			if(lOperand instanceof JSReferenceExpression)
-			{
-				return lOperand.getNode().findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET);
-			}
-		}
-		else if(psi instanceof JSProperty)
-		{
-			return psi.getNode().findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET);
-		}
-		else
-		{
-			final ASTNode node = super.findNameIdentifier();
-
-			if(node != null)
-			{
-				return node;
-			}
-
-			if(psi instanceof JSVariable)
-			{
-				return psi.getNode().findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET);
-			}
-		}
-		return null;
-	}
-
-	@Override
 	public JSAttributeList getAttributeList()
 	{
 		return null;
 	}
 
+	@RequiredReadAction
 	@Override
 	public int getTextOffset()
 	{
-		final ASTNode name = findNameIdentifier();
-		return name != null ? name.getStartOffset() : super.getTextOffset();
+		final PsiElement name = getNameIdentifier();
+		return name != null ? name.getTextOffset() : super.getTextOffset();
 	}
 
 	@Override
@@ -174,5 +135,49 @@ public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionStub,
 	public String getQualifiedName()
 	{
 		return getName();
+	}
+
+	@RequiredReadAction
+	@Override
+	public PsiElement getNameIdentifier()
+	{
+		final ASTNode treeParent = getNode().getTreeParent();
+		PsiElement psi = treeParent != null ? treeParent.getPsi() : null;
+		if(psi instanceof JSCallExpression)
+		{
+			psi = psi.getParent();
+		}
+		if(psi instanceof JSAssignmentExpression)
+		{
+			final JSExpression jsExpression = ((JSAssignmentExpression) psi).getLOperand();
+			final JSExpression lOperand = jsExpression instanceof JSDefinitionExpression ? ((JSDefinitionExpression) jsExpression).getExpression() : null;
+
+			if(lOperand instanceof JSReferenceExpression)
+			{
+				ASTNode childByType = lOperand.getNode().findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET);
+				return childByType != null ? childByType.getPsi() : null;
+			}
+		}
+		else if(psi instanceof JSProperty)
+		{
+			ASTNode childByType = psi.getNode().findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET);
+			return childByType != null ? childByType.getPsi() : null;
+		}
+		else
+		{
+			final PsiElement node = super.getNameIdentifier();
+
+			if(node != null)
+			{
+				return node;
+			}
+
+			if(psi instanceof JSVariable)
+			{
+				ASTNode childByType = psi.getNode().findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET);
+				return childByType != null ? childByType.getPsi() : null;
+			}
+		}
+		return null;
 	}
 }

@@ -198,11 +198,11 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 		return false;
 	}
 
-	@Override
 	@Nullable
-	public ASTNode findNameIdentifier()
+	@Override
+	public PsiElement getNameIdentifier()
 	{
-		return getParent().getNode();
+		return getParent();
 	}
 
 	@Override

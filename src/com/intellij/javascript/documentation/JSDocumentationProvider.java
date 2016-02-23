@@ -240,7 +240,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 
 				if(element instanceof JSNamedElement)
 				{
-					ASTNode node = ((JSNamedElement) element).findNameIdentifier();
+					PsiElement node = ((JSNamedElement) element).getNameIdentifier();
 					if(node != null)
 					{
 						final String s = node.getText();

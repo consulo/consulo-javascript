@@ -25,7 +25,6 @@ import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSProperty;
 import com.intellij.lang.javascript.psi.impl.reference.JSPropertyNameReferenceProvider;
 import com.intellij.openapi.util.text.StringUtil;
@@ -36,6 +35,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
+import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.IncorrectOperationException;
 
 /**
@@ -86,71 +86,52 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 	}
 
 	@Override
+	@RequiredReadAction
 	public String getName()
 	{
-		final ASTNode node = findNameIdentifier();
-		if(node != null)
+		final PsiElement nameIdentifier = getNameIdentifier();
+		if(nameIdentifier != null)
 		{
-			return StringUtil.stripQuotesAroundValue(node.getText());
+			return StringUtil.stripQuotesAroundValue(nameIdentifier.getText());
 		}
 		return null;
 	}
 
-	@Override
-	public ASTNode findNameIdentifier()
+	@RequiredReadAction
+	static boolean isGetIdentifier(final PsiElement node)
 	{
-		ASTNode node = getNode().findChildByType(IDENTIFIER_TOKENS_SET);
-		if(node != null)
-		{
+		final IElementType type = PsiUtilCore.getElementType(node);
 
-			if(isGetIdentifier(node) || isSetIdentifier(node))
-			{
-				ASTNode prevNode = node;
-				final ASTNode funcDeclNode = getNode().findChildByType(FUNCTION_TOKEN_SET, node);
-				node = funcDeclNode != null ? ((JSFunction) funcDeclNode.getPsi()).findNameIdentifier() : null;
-				if(node == null)
-				{
-					node = prevNode;
-				}
-			}
-		}
-		return node;
+		return type == JSTokenTypes.GET_KEYWORD;
 	}
 
-	static boolean isGetIdentifier(final ASTNode node)
+	@RequiredReadAction
+	static boolean isSetIdentifier(final PsiElement node)
 	{
-		final IElementType type = node != null ? node.getElementType() : null;
+		final IElementType type = PsiUtilCore.getElementType(node);
 
-		return type == JSTokenTypes.GET_KEYWORD || type == JSTokenTypes.IDENTIFIER && "get".equals(node.getText());
-	}
-
-	static boolean isSetIdentifier(final ASTNode node)
-	{
-		final IElementType type = node != null ? node.getElementType() : null;
-
-		return type == JSTokenTypes.SET_KEYWORD || type == JSTokenTypes.IDENTIFIER && "set".equals(node.getText());
+		return type == JSTokenTypes.SET_KEYWORD;
 	}
 
 	@Override
 	public boolean isGetProperty()
 	{
-		final ASTNode node = getNode().findChildByType(IDENTIFIER_TOKENS_SET);
-		return node != null && isGetIdentifier(node) && getNode().findChildByType(IDENTIFIER_TOKENS_SET, node) != null;
+		return false;
 	}
 
 	@Override
 	public boolean isSetProperty()
 	{
-		final ASTNode node = getNode().findChildByType(IDENTIFIER_TOKENS_SET);
-		return node != null && isSetIdentifier(node) && getNode().findChildByType(IDENTIFIER_TOKENS_SET, node) != null;
+		return false;
 	}
 
 	@Override
 	public PsiElement setName(@NotNull String name) throws IncorrectOperationException
 	{
-		final ASTNode nameNode = findNameIdentifier();
-		final ASTNode nameElement = JSChangeUtil.createNameIdentifier(getProject(), name, nameNode.getElementType());
-		getNode().replaceChild(nameNode, nameElement);
+		final PsiElement nameNode = getNameIdentifier();
+		assert nameNode != null;
+		final ASTNode nameElement = JSChangeUtil.createNameIdentifier(getProject(), name, nameNode.getNode().getElementType());
+		getNode().replaceChild(nameNode.getNode(), nameElement);
 		return this;
 	}
 
@@ -175,14 +156,16 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 		}
 	}
 
+	@RequiredReadAction
 	@Override
 	public int getTextOffset()
 	{
-		final ASTNode name = findNameIdentifier();
-		return name != null ? name.getStartOffset() : super.getTextOffset();
+		final PsiElement name = getNameIdentifier();
+		return name != null ? name.getTextOffset() : super.getTextOffset();
 	}
 
 	@Override
+	@RequiredReadAction
 	public void delete() throws IncorrectOperationException
 	{
 		final ASTNode myNode = getNode();
@@ -190,9 +173,9 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 	}
 
 	@Override
+	@RequiredReadAction
 	public PsiElement getNameIdentifier()
 	{
-		final ASTNode node = findNameIdentifier();
-		return node != null ? node.getPsi() : null;
+		return findChildByType(IDENTIFIER_TOKENS_SET);
 	}
 }

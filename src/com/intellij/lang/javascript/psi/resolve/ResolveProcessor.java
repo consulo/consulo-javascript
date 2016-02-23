@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
@@ -40,12 +42,11 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
-import com.intellij.psi.xml.XmlToken;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
 public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProcessor
 {
@@ -207,7 +208,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 	}
 
 	@Override
-	public boolean execute(PsiElement element, ResolveState state)
+	public boolean execute(@NotNull PsiElement element, ResolveState state)
 	{
 		if((element instanceof JSVariable && !(element instanceof JSParameter)) || element instanceof JSFunction)
 		{
@@ -380,7 +381,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 
 		if(element instanceof PsiNamedElement)
 		{
-			if(myName == null || myName.equals(getName(element)))
+			if(myName == null || myName.equals(getName((PsiNamedElement) element)))
 			{
 				element = getElement(element);
 				if(checkStopOnMatch && !doStopOnMatch)
@@ -499,25 +500,18 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 		return element;
 	}
 
-	public static String getName(final PsiElement element)
+	@Nullable
+	public static String getName(final PsiNamedElement element)
 	{
 		if(element instanceof JSNamedElement)
 		{
-			return ((JSNamedElement) element).getName();
-		}
-		if(element instanceof XmlTag)
-		{
-			return ((XmlTag) element).getAttributeValue("name");
-		}
-		if(element instanceof XmlToken)
-		{
-			return element.getText();
+			return element.getName();
 		}
 		return null;
 	}
 
 	@Override
-	public <T> T getHint(Key<T> hintClass)
+	public <T> T getHint(@NotNull Key<T> hintClass)
 	{
 		return null;
 	}
@@ -722,7 +716,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 		for(int i = 0; i < numberOfVariants; ++i)
 		{
 			final PsiElement namedElement = processorResults.get(i);
-			final String name = getName(namedElement);
+			final String name = getName((PsiNamedElement) namedElement);
 			if(name == null)
 			{
 				continue;

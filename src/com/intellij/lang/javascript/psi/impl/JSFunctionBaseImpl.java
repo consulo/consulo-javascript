@@ -125,7 +125,7 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
 	{
 		final boolean isConstructor = isConstructor();
 		final ASTNode newNameElement = createNameIdentifier(name);
-		final ASTNode nameIdentifier = findNameIdentifier();
+		final ASTNode nameIdentifier = getNameIdentifier().getNode();
 		nameIdentifier.getTreeParent().replaceChild(nameIdentifier, newNameElement);
 
 		if(isConstructor)
@@ -141,6 +141,7 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
 	}
 
 	@Override
+	@RequiredReadAction
 	public String getName()
 	{
 		final JSFunctionStub stub = getStub();
@@ -148,57 +149,19 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
 		{
 			return stub.getName();
 		}
-		final ASTNode name = findNameIdentifier();
+		final PsiElement name = getNameIdentifier();
 
 		if(name != null)
 		{
-			final PsiElement psi = name.getPsi();
-			if(psi instanceof JSReferenceExpression)
+			if(name instanceof JSReferenceExpression)
 			{
-				return ((JSReferenceExpression) psi).getReferencedName();
+				return ((JSReferenceExpression) name).getReferencedName();
 			}
 			else
 			{
 				return name.getText();
 			}
 		}
-		return null;
-	}
-
-	@Override
-	public ASTNode findNameIdentifier()
-	{
-		final ASTNode myNode = getNode();
-		ASTNode astNode = myNode.findChildByType(JSTokenTypes.FUNCTION_KEYWORD);
-
-		if(astNode != null)
-		{
-			astNode = advance(astNode);
-		}
-		else
-		{
-			astNode = myNode.findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
-		}
-
-		IElementType type = astNode != null ? astNode.getElementType() : null;
-		ASTNode prevAstNode = null;
-
-		if(type == JSTokenTypes.GET_KEYWORD || type == JSTokenTypes.SET_KEYWORD)
-		{
-			prevAstNode = astNode;
-			astNode = advance(astNode);
-			type = astNode.getElementType();
-		}
-
-		if(JSVariableBaseImpl.IDENTIFIER_TOKENS_SET.contains(type))
-		{
-			return astNode;
-		}
-		if(prevAstNode != null)
-		{
-			return prevAstNode;
-		}
-
 		return null;
 	}
 
@@ -213,11 +176,12 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
 		return astNode;
 	}
 
+	@RequiredReadAction
 	@Override
 	public int getTextOffset()
 	{
-		final ASTNode name = findNameIdentifier();
-		return name != null ? name.getStartOffset() : super.getTextOffset();
+		final PsiElement name = getNameIdentifier();
+		return name != null ? name.getTextOffset() : super.getTextOffset();
 	}
 
 	@Override
@@ -351,9 +315,40 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
 	}
 
 	@Override
+	@RequiredReadAction
 	public PsiElement getNameIdentifier()
 	{
-		final ASTNode node = findNameIdentifier();
-		return node != null ? node.getPsi() : null;
+		final ASTNode myNode = getNode();
+		ASTNode astNode = myNode.findChildByType(JSTokenTypes.FUNCTION_KEYWORD);
+
+		if(astNode != null)
+		{
+			astNode = advance(astNode);
+		}
+		else
+		{
+			astNode = myNode.findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
+		}
+
+		IElementType type = astNode != null ? astNode.getElementType() : null;
+		ASTNode prevAstNode = null;
+
+		if(type == JSTokenTypes.GET_KEYWORD || type == JSTokenTypes.SET_KEYWORD)
+		{
+			prevAstNode = astNode;
+			astNode = advance(astNode);
+			type = astNode.getElementType();
+		}
+
+		if(JSVariableBaseImpl.IDENTIFIER_TOKENS_SET.contains(type))
+		{
+			return astNode.getPsi();
+		}
+		if(prevAstNode != null)
+		{
+			return prevAstNode.getPsi();
+		}
+
+		return null;
 	}
 }

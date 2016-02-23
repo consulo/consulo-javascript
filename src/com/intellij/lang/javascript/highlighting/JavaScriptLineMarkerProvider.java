@@ -205,7 +205,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 		{
 			final JSFunction function = (JSFunction) element;
 			function.putUserData(ourParticipatesInHierarchyKey, null);
-			if(function.findNameIdentifier() == null)
+			if(function.getNameIdentifier() == null)
 			{
 				return null;
 			}
@@ -237,7 +237,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 					final PsiElement parentNode1 = parentNode;
 					function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
 
-					return new LineMarkerInfo<JSFunction>(function, function.findNameIdentifier().getTextRange().getStartOffset(), OVERRIDING_METHOD_ICON,
+					return new LineMarkerInfo<JSFunction>(function, function.getNameIdentifier().getTextRange().getStartOffset(), OVERRIDING_METHOD_ICON,
 							Pass.UPDATE_ALL, new Function<JSFunction, String>()
 					{
 						@Override

@@ -239,6 +239,8 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 		}
 
 		void reportError(final ASTNode nameIdentifier, final String s, ProblemKind kind, final IntentionAction implementMethodsFix);
+
+		void reportError(final PsiElement nameIdentifier, final String s, ProblemKind kind, final IntentionAction implementMethodsFix);
 	}
 
 	public static void checkImplementedMethods(final JSClass jsClass, final ErrorReportingClient reportingClient)
@@ -250,7 +252,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 			@Override
 			protected void addNonimplementedFunction(final JSFunction function)
 			{
-				final ASTNode node = myJsClass.findNameIdentifier();
+				final PsiElement node = myJsClass.getNameIdentifier();
 				if(node == null)
 				{
 					return;
@@ -304,8 +306,8 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 					{
 						PsiElement implementationReturnTypeExpr = implementationFunction.getReturnTypeElement();
 						PsiElement interfaceReturnTypeExpr = interfaceFunction.getReturnTypeElement();
-						reportingClient.reportError(implementationReturnTypeExpr != null ? implementationReturnTypeExpr.getNode() : implementationFunction
-								.findNameIdentifier(), JavaScriptBundle.message("javascript.validation.message.interface.method.invalid.signature2",
+						reportingClient.reportError(implementationReturnTypeExpr != null ? implementationReturnTypeExpr : implementationFunction
+								.getNameIdentifier(), JavaScriptBundle.message("javascript.validation.message.interface.method.invalid.signature2",
 								interfaceReturnTypeExpr != null ? interfaceReturnTypeExpr.getText() : "*"), ErrorReportingClient.ProblemKind.ERROR, null);  // TODO: quickfix
 					}
 				}
@@ -324,7 +326,8 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 				return accessTypeElement.getNode();
 			}
 		}
-		return o.findNameIdentifier();
+		PsiElement nameIdentifier = o.getNameIdentifier();
+		return nameIdentifier == null ? null : nameIdentifier.getNode();
 	}
 
 	@Override
@@ -394,9 +397,9 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 		if(parent instanceof JSNamedElement)
 		{
 			JSNamedElement namedElement = (JSNamedElement) parent;
-			final ASTNode nameIdentifier = namedElement.findNameIdentifier();
+			final PsiElement nameIdentifier = namedElement.getNameIdentifier();
 
-			if(nameIdentifier != null && nameIdentifier.getPsi() == node)
+			if(nameIdentifier != null && nameIdentifier == node)
 			{
 				if(parent instanceof JSPackageStatement)
 				{
@@ -451,7 +454,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 						if(typeString == null || "void".equals(typeString))
 						{
 							// TODO: fix!
-							myHolder.createErrorAnnotation(typeString != null ? function.getReturnTypeElement() : nameIdentifier.getPsi(),
+							myHolder.createErrorAnnotation(typeString != null ? function.getReturnTypeElement() : nameIdentifier,
 									JavaScriptBundle.message("javascript.validation.message.get.method.should.be.valid.type", typeString != null ? typeString : "empty"));
 						}
 
@@ -670,7 +673,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 				break;
 			}
 		}
-		final ASTNode node = packageStatement.findNameIdentifier();
+		final PsiElement node = packageStatement.getNameIdentifier();
 		if(node == null)
 		{
 			checkPackageStatement(packageStatement);
@@ -835,7 +838,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 	@Override
 	public void visitJSFunctionDeclaration(final JSFunction node)
 	{
-		final ASTNode nameIdentifier = node.findNameIdentifier();
+		final PsiElement nameIdentifier = node.getNameIdentifier();
 		if(nameIdentifier == null)
 		{
 			return;
@@ -943,8 +946,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 						final JSParameterList nodeParameterList = node.getParameterList();
 						final JSParameterList overrideParameterList = override.getParameterList();
 
-						final Annotation annotation = myHolder.createErrorAnnotation(nodeParameterList != null ? nodeParameterList.getNode() : node.findNameIdentifier
-								(), JavaScriptBundle.message("javascript.validation.message.function.override.incompatible.signature",
+						final Annotation annotation = myHolder.createErrorAnnotation(nodeParameterList != null ? nodeParameterList : node.getNameIdentifier(), JavaScriptBundle.message("javascript.validation.message.function.override.incompatible.signature",
 								overrideParameterList != null ? overrideParameterList.getText() : "()"));
 
 						// TODO: quickfix
@@ -956,7 +958,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 					{
 						PsiElement returnTypeExpr = node.getReturnTypeElement();
 						PsiElement overrideReturnTypeExpr = override.getReturnTypeElement();
-						final Annotation annotation = myHolder.createErrorAnnotation(returnTypeExpr != null ? returnTypeExpr.getNode() : node.findNameIdentifier(),
+						final Annotation annotation = myHolder.createErrorAnnotation(returnTypeExpr != null ? returnTypeExpr : node.getNameIdentifier(),
 								JavaScriptBundle.message("javascript.validation.message.function.override.incompatible.signature2",
 										overrideReturnTypeExpr != null ? overrideReturnTypeExpr.getText() : "*"));
 
@@ -1087,7 +1089,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 
 		if(file != null && !file.getNameWithoutExtension().equals(aClass.getName()))
 		{
-			final ASTNode node = aClass.findNameIdentifier();
+			final PsiElement node = aClass.getNameIdentifier();
 
 			if(node != null)
 			{
@@ -1164,8 +1166,8 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 
 		if(expected != null && ((s == null && expected.length() != 0) || (s != null && !expected.equals(s))))
 		{
-			final ASTNode nameIdentifier = packageStatement.findNameIdentifier();
-			final Annotation annotation = myHolder.createErrorAnnotation(nameIdentifier != null ? nameIdentifier : packageStatement.getFirstChild().getNode()
+			final PsiElement nameIdentifier = packageStatement.getNameIdentifier();
+			final Annotation annotation = myHolder.createErrorAnnotation(nameIdentifier != null ? nameIdentifier : packageStatement.getFirstChild()
 					, JavaScriptBundle.message("javascript.validation.message.incorrect.package.name", s, expected));
 			annotation.registerFix(new IntentionAction()
 			{
@@ -1217,8 +1219,8 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 		{
 			for(JSNamedElement el : elements)
 			{
-				final ASTNode nameIdentifier = el.findNameIdentifier();
-				myHolder.createErrorAnnotation(nameIdentifier != null ? nameIdentifier : el.getFirstChild().getNode(),
+				final PsiElement nameIdentifier = el.getNameIdentifier();
+				myHolder.createErrorAnnotation(nameIdentifier != null ? nameIdentifier : el.getFirstChild(),
 						JavaScriptBundle.message("javascript.validation.message.more.than.one.externally.visible.symbol")).registerFix(new RemoveASTNodeFix(el.getNode(),
 						"javascript.fix.remove.externally.visible.symbol"));
 			}
@@ -1368,6 +1370,17 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 	{
 		@Override
 		public void reportError(final ASTNode nameIdentifier, final String s, ProblemKind kind, final IntentionAction implementMethodsFix)
+		{
+			final Annotation annotation = kind == ProblemKind.ERROR ? myHolder.createErrorAnnotation(nameIdentifier,
+					s) : myHolder.createWarningAnnotation(nameIdentifier, s);
+			if(implementMethodsFix != null)
+			{
+				annotation.registerFix(implementMethodsFix);
+			}
+		}
+
+		@Override
+		public void reportError(PsiElement nameIdentifier, String s, ProblemKind kind, IntentionAction implementMethodsFix)
 		{
 			final Annotation annotation = kind == ProblemKind.ERROR ? myHolder.createErrorAnnotation(nameIdentifier,
 					s) : myHolder.createWarningAnnotation(nameIdentifier, s);

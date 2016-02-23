@@ -322,7 +322,7 @@ public class JSPsiImplUtils
 
 	static String getQName(final JSNamedElement element)
 	{
-		final ASTNode node = element.findNameIdentifier();
+		final PsiElement node = element.getNameIdentifier();
 		final String name = node != null ? node.getText() : null;
 		PsiElement responsibleParent = element.getParent();
 

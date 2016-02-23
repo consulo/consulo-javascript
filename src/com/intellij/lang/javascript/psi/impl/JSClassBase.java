@@ -449,13 +449,6 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 		return classes.toArray(new JSClass[classes.size()]);
 	}
 
-	@Override
-	public PsiElement getNameIdentifier()
-	{
-		final ASTNode node = findNameIdentifier();
-		return node != null ? node.getPsi() : null;
-	}
-
 	private static class ExtendsClassesUserDataCache extends ClassesUserDataCache
 	{
 		@Override

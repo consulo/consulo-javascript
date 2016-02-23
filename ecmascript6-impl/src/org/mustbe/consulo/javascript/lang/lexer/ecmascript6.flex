@@ -95,11 +95,20 @@ DIGIT=[0-9]
 <YYINITIAL,DIV_OR_GT> "void"                { yybegin(YYINITIAL); return JSTokenTypes.VOID_KEYWORD; }
 <YYINITIAL,DIV_OR_GT> "while"               { yybegin(YYINITIAL); return JSTokenTypes.WHILE_KEYWORD; }
 <YYINITIAL,DIV_OR_GT> "with"                { yybegin(YYINITIAL); return JSTokenTypes.WITH_KEYWORD; }
-<YYINITIAL,DIV_OR_GT> "set"                 { yybegin(YYINITIAL); return JSTokenTypes.SET_KEYWORD; }
-<YYINITIAL,DIV_OR_GT> "get"                 { yybegin(YYINITIAL); return JSTokenTypes.GET_KEYWORD; }
 <YYINITIAL,DIV_OR_GT> "yield"               { yybegin(YYINITIAL); return JSTokenTypes.YIELD_KEYWORD; }
 <YYINITIAL,DIV_OR_GT> "let"                 { yybegin(YYINITIAL); return JSTokenTypes.LET_KEYWORD; }
 <YYINITIAL,DIV_OR_GT> "class"               { yybegin(YYINITIAL); return JSTokenTypes.CLASS_KEYWORD; }
+<YYINITIAL,DIV_OR_GT> "export"              { yybegin(YYINITIAL); return JSTokenTypes.EXPORT_KEYWORD; }
+<YYINITIAL,DIV_OR_GT> "extends"             { yybegin(YYINITIAL); return JSTokenTypes.EXTENDS_KEYWORD; }
+<YYINITIAL,DIV_OR_GT> "static"              { yybegin(YYINITIAL); return JSTokenTypes.STATIC_KEYWORD; }
+<YYINITIAL,DIV_OR_GT> "enum"                { yybegin(YYINITIAL); return JSTokenTypes.ENUM_KEYWORD; }
+
+<YYINITIAL,DIV_OR_GT> "public"              { yybegin(YYINITIAL); return JSTokenTypes.PUBLIC_KEYWORD; }
+<YYINITIAL,DIV_OR_GT> "private"             { yybegin(YYINITIAL); return JSTokenTypes.PRIVATE_KEYWORD; }
+<YYINITIAL,DIV_OR_GT> "protected"           { yybegin(YYINITIAL); return JSTokenTypes.PROTECTED_KEYWORD; }
+<YYINITIAL,DIV_OR_GT> "package"             { yybegin(YYINITIAL); return JSTokenTypes.PACKAGE_KEYWORD; }
+<YYINITIAL,DIV_OR_GT> "interface"           { yybegin(YYINITIAL); return JSTokenTypes.INTERFACE_KEYWORD; }
+<YYINITIAL,DIV_OR_GT> "implements"          { yybegin(YYINITIAL); return JSTokenTypes.IMPLEMENTS_KEYWORD; }
 
 <YYINITIAL, DIV_OR_GT> {IDENTIFIER}         { yybegin(DIV_OR_GT);       return JSTokenTypes.IDENTIFIER; }
 

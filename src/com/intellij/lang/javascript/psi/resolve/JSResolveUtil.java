@@ -502,8 +502,8 @@ public class JSResolveUtil
 	{
 		return currentParent instanceof JSPackageStatement ||
 				currentParent instanceof JSNamespaceDeclaration ||
-				(currentParent instanceof JSVariable && (((JSVariable) currentParent).findNameIdentifier() == elt.getNode())) ||
-				(currentParent instanceof JSFunction && ((JSFunction) currentParent).findNameIdentifier() == elt.getNode()) ||
+				(currentParent instanceof JSVariable && (((JSVariable) currentParent).getNameIdentifier() == elt)) ||
+				(currentParent instanceof JSFunction && ((JSFunction) currentParent).getNameIdentifier() == elt) ||
 				currentParent instanceof JSClass;
 	}
 
@@ -1384,7 +1384,7 @@ public class JSResolveUtil
 								resolvedElement.getParent() == element))
 				{
 					if(reference instanceof JSReferenceExpression && ((((JSReferenceExpression) reference).getParent() == resolvedElement && resolvedElement instanceof JSDefinitionExpression) ||
-							resolvedElement instanceof JSFunctionExpression && ((JSFunctionExpression) resolvedElement).getFunction().findNameIdentifier().getTreeParent().getPsi() == reference))
+							resolvedElement instanceof JSFunctionExpression && ((JSFunctionExpression) resolvedElement).getFunction().getNameIdentifier().getNextSibling() == reference))
 					{
 						return false; // do not include self to usages
 					}
@@ -1394,8 +1394,8 @@ public class JSResolveUtil
 
 				if(resolvedElement instanceof JSFunctionExpression)
 				{
-					final ASTNode nameIdentifier = ((JSFunctionExpression) resolvedElement).getFunction().findNameIdentifier();
-					if(nameIdentifier != null && nameIdentifier.getTreeParent().getPsi() == element)
+					final PsiElement nameIdentifier = ((JSFunctionExpression) resolvedElement).getFunction().getNameIdentifier();
+					if(nameIdentifier != null && nameIdentifier.getNextSibling() == element)
 					{
 						return true;
 					}
@@ -3060,12 +3060,6 @@ public class JSResolveUtil
 		public String getQualifiedName()
 		{
 			return myName;
-		}
-
-		@Override
-		public ASTNode findNameIdentifier()
-		{
-			return null;
 		}
 
 		@Override

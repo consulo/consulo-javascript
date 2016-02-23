@@ -171,8 +171,8 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		final PsiElement parent = getParent();
 		if(parent instanceof JSClass || parent instanceof JSFunction)
 		{
-			final ASTNode node = ((JSNamedElement) parent).findNameIdentifier();
-			if(node != null && node.getPsi() == this)
+			final PsiElement node = ((JSNamedElement) parent).getNameIdentifier();
+			if(node != null && node == this)
 			{
 				return this; // JSNamedElement.setName will care of things
 			}
@@ -191,9 +191,9 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 				parent instanceof JSNamespaceDeclaration ||
 				parent instanceof JSFunction)
 		{
-			final ASTNode node = ((JSNamedElement) parent).findNameIdentifier();
+			final PsiElement node = ((JSNamedElement) parent).getNameIdentifier();
 
-			if(node != null && node.getPsi() == this)
+			if(node != null && node == this)
 			{
 				if(parent == element || element instanceof PsiFile)
 				{

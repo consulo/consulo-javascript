@@ -1,17 +1,23 @@
 package com.sixrr.inspectjs;
 
+import java.util.List;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.*;
+import com.intellij.lang.javascript.psi.JSCallExpression;
+import com.intellij.lang.javascript.psi.JSElementVisitor;
+import com.intellij.lang.javascript.psi.JSExpression;
+import com.intellij.lang.javascript.psi.JSFunction;
+import com.intellij.lang.javascript.psi.JSReferenceExpression;
+import com.intellij.lang.javascript.psi.JSStatement;
+import com.intellij.lang.javascript.psi.JSVariable;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public abstract class BaseInspectionVisitor extends JSElementVisitor{
     private BaseInspection inspection = null;
@@ -38,8 +44,8 @@ public abstract class BaseInspectionVisitor extends JSElementVisitor{
         if (methodExpression instanceof JSReferenceExpression) {
           errorLocation = ((JSReferenceExpression)methodExpression).getReferenceNameElement();
         } else if (methodExpression instanceof JSFunction) {
-          final ASTNode node = ((JSFunction)methodExpression).findNameIdentifier();
-          if (node != null) errorLocation = node.getPsi();
+          final PsiElement node = ((JSFunction)methodExpression).getNameIdentifier();
+          if (node != null) errorLocation = node;
           else errorLocation = methodExpression;
         }
 
@@ -52,12 +58,12 @@ public abstract class BaseInspectionVisitor extends JSElementVisitor{
     }
 
     protected void registerFunctionError(JSFunction function){
-        final ASTNode identifier = function.findNameIdentifier();
+        final PsiElement identifier = function.getNameIdentifier();
         if(identifier == null ||
-                !PsiTreeUtil.isAncestor(function, identifier.getPsi(), true)){
+                !PsiTreeUtil.isAncestor(function, identifier, true)){
             registerError(function.getFirstChild());
         } else{
-            registerError(identifier.getPsi());
+            registerError(identifier);
         }
     }
 

@@ -19,7 +19,6 @@ package com.intellij.lang.javascript.psi.impl;
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
@@ -139,16 +138,8 @@ public class JSDefinitionExpressionImpl extends JSExpressionImpl implements JSDe
 	}
 
 	@Override
-	@Nullable
-	public ASTNode findNameIdentifier()
-	{
-		return null;
-	}
-
-	@Override
 	public PsiElement getNameIdentifier()
 	{
-		final ASTNode node = findNameIdentifier();
-		return node != null ? node.getPsi() : null;
+		return null;
 	}
 }

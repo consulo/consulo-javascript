@@ -29,6 +29,7 @@ import com.intellij.psi.tree.IElementType;
  */
 public class FunctionParsing extends Parsing
 {
+	@Deprecated
 	public static final Key<String> allowEmptyMethodsKey = Key.create("allowEmptyMethodsKey");
 
 	public FunctionParsing(JavaScriptParsingContext context)
@@ -102,7 +103,7 @@ public class FunctionParsing extends Parsing
 		functionMarker.done(expressionContext ? JSElementTypes.FUNCTION_EXPRESSION : JSElementTypes.FUNCTION_DECLARATION);
 	}
 
-	private void parseParameterList(final PsiBuilder builder)
+	public void parseParameterList(final PsiBuilder builder)
 	{
 		final PsiBuilder.Marker parameterList;
 		if(builder.getTokenType() != JSTokenTypes.LPAR)

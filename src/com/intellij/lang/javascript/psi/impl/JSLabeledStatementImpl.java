@@ -45,19 +45,13 @@ public class JSLabeledStatementImpl extends JSStatementImpl implements JSLabeled
 	@Override
 	public String getLabel()
 	{
-		return findNameIdentifier().getText();
-	}
-
-	@Override
-	public ASTNode findNameIdentifier()
-	{
-		return getNode().findChildByType(JSTokenTypes.IDENTIFIER);
+		return getNameIdentifier().getText();
 	}
 
 	@Override
 	public PsiElement getLabelIdentifier()
 	{
-		return findNameIdentifier().getPsi();
+		return getNameIdentifier();
 	}
 
 	@Override
@@ -107,7 +101,6 @@ public class JSLabeledStatementImpl extends JSStatementImpl implements JSLabeled
 	@Override
 	public PsiElement getNameIdentifier()
 	{
-		final ASTNode node = findNameIdentifier();
-		return node != null ? node.getPsi() : null;
+		return findChildByType(JSTokenTypes.IDENTIFIER);
 	}
 }

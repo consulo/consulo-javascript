@@ -16,17 +16,14 @@
 
 package com.intellij.lang.javascript.psi;
 
-import javax.swing.Icon;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.icons.AllIcons;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeListStub;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.StubBasedPsiElement;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
 public interface JSAttributeList extends JSElement, StubBasedPsiElement<JSAttributeListStub>
 {
@@ -44,22 +41,6 @@ public interface JSAttributeList extends JSElement, StubBasedPsiElement<JSAttrib
 	enum AccessType
 	{
 		PACKAGE_LOCAL, PUBLIC, PRIVATE, PROTECTED;
-
-		public Icon getIcon()
-		{
-			switch(this)
-			{
-				case PUBLIC:
-					return AllIcons.Nodes.C_public;
-				case PRIVATE:
-					return AllIcons.Nodes.C_private;
-				case PROTECTED:
-					return AllIcons.Nodes.C_protected;
-				case PACKAGE_LOCAL:
-					return AllIcons.Nodes.C_plocal;
-			}
-			return null;
-		}
 	}
 
 	AccessType getAccessType();

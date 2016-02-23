@@ -21,9 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JSElementType;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSEmbeddedContentImpl;
@@ -34,6 +33,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.util.PsiUtilCore;
 
 /**
  * @author Maxim.Mossienko
@@ -78,7 +78,7 @@ public class JSDuplicatedDeclarationInspection extends JSInspection
 				{
 					return;
 				}
-				final ASTNode nameIdentifier = node.findNameIdentifier();
+				final PsiElement nameIdentifier = node.getNameIdentifier();
 
 				checkForDuplicateDeclaration(name, node, nameIdentifier);
 			}
@@ -91,12 +91,12 @@ public class JSDuplicatedDeclarationInspection extends JSInspection
 				{
 					return;
 				}
-				final ASTNode nameIdentifier = node.findNameIdentifier();
+				final PsiElement nameIdentifier = node.getNameIdentifier();
 
 				checkForDuplicateDeclaration(name, node, nameIdentifier);
 			}
 
-			private void checkForDuplicateDeclaration(final String name, final PsiElement decl, final ASTNode nameIdentifier)
+			private void checkForDuplicateDeclaration(final String name, final PsiElement decl, final PsiElement nameIdentifier)
 			{
 				PsiElement scope = PsiTreeUtil.getParentOfType(decl, JSFunction.class, JSFile.class, JSEmbeddedContentImpl.class, JSClass.class,
 						JSObjectLiteralExpression.class, JSPackageStatement.class, PsiFile.class);
@@ -201,7 +201,7 @@ public class JSDuplicatedDeclarationInspection extends JSInspection
 
 				if(processor.getResult() != null && processor.getResult() != scope)
 				{
-					holder.registerProblem(nameIdentifier.getPsi(), JavaScriptBundle.message("javascript.validation.message.duplicate.declaration"),
+					holder.registerProblem(nameIdentifier, JavaScriptBundle.message("javascript.validation.message.duplicate.declaration"),
 							originalScope.getContainingFile().getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4 ? ProblemHighlightType.ERROR : ProblemHighlightType
 									.GENERIC_ERROR_OR_WARNING);
 				}
@@ -215,20 +215,20 @@ public class JSDuplicatedDeclarationInspection extends JSInspection
 				{
 					return;
 				}
-				checkForDuplicateDeclaration(name, node, node.findNameIdentifier());
+				checkForDuplicateDeclaration(name, node, node.getNameIdentifier());
 			}
 
 			@Override
 			public void visitJSVariable(final JSVariable var)
 			{
-				final ASTNode nameIdentifier = var.findNameIdentifier();
-				final ASTNode next = nameIdentifier != null ? nameIdentifier.getTreeNext() : null;
+				final PsiElement nameIdentifier = var.getNameIdentifier();
+				final PsiElement next = nameIdentifier != null ? nameIdentifier.getNextSibling() : null;
 				final String name = nameIdentifier != null ? nameIdentifier.getText() : null;
 
 				// Actully skip outer language elements
 				if(name != null && (next == null ||
-						next.getElementType() instanceof JSElementType ||
-						next.getPsi() instanceof PsiWhiteSpace))
+						PsiUtilCore.getElementType(next) instanceof JSElementType ||
+						next instanceof PsiWhiteSpace))
 				{
 					checkForDuplicateDeclaration(name, var, nameIdentifier);
 				}

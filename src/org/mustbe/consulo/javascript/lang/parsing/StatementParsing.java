@@ -18,9 +18,9 @@ package org.mustbe.consulo.javascript.lang.parsing;
 
 import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.tree.IElementType;
 
@@ -165,6 +165,11 @@ public class StatementParsing extends Parsing
 			return;
 		}
 
+		if(doParseStatementSub(builder, canHaveClasses))
+		{
+			return;
+		}
+
 		if(firstToken == JSTokenTypes.IDENTIFIER)
 		{
 			// Try labeled statement:
@@ -193,6 +198,11 @@ public class StatementParsing extends Parsing
 
 		builder.error(JavaScriptBundle.message("javascript.parser.message.expected.statement"));
 		builder.advanceLexer();
+	}
+
+	protected boolean doParseStatementSub(PsiBuilder builder, boolean canHaveClasses)
+	{
+		return false;
 	}
 
 	protected boolean parseExpressionStatement(PsiBuilder builder)

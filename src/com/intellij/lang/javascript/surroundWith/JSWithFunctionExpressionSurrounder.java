@@ -56,7 +56,7 @@ public class JSWithFunctionExpressionSurrounder extends JSStatementSurrounder
 	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
 	{
 		JSFunctionExpression stmt = getFunctionExpr(statementNode);
-		ASTNode conditionNode = stmt.findNameIdentifier();
+		ASTNode conditionNode = stmt.getNameIdentifier().getNode();
 		int offset = conditionNode.getStartOffset();
 		stmt.getParent().getNode().removeChild(conditionNode);
 

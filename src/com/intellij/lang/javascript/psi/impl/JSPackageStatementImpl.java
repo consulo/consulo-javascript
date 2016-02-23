@@ -76,10 +76,10 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 		{
 			return stub.getName();
 		}
-		final ASTNode node = findNameIdentifier();
+		final PsiElement node = getNameIdentifier();
 		if(node != null)
 		{
-			return ((JSReferenceExpression) node.getPsi()).getReferencedName();
+			return ((JSReferenceExpression) node).getReferencedName();
 		}
 		return null;
 	}
@@ -93,7 +93,7 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 			return stub.getQualifiedName();
 		}
 
-		final ASTNode node = findNameIdentifier();
+		final PsiElement node = getNameIdentifier();
 		if(node != null)
 		{
 			return node.getText();
@@ -130,10 +130,10 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 			}
 		}
 
-		ASTNode child = findNameIdentifier();
-		if(child != null)
+		PsiElement child = getNameIdentifier();
+		if(child instanceof JSReferenceExpression)
 		{
-			JSReferenceExpression expr = (JSReferenceExpression) child.getPsi();
+			JSReferenceExpression expr = (JSReferenceExpression) child;
 			PsiElement element = expr.getReferenceNameElement();
 			if(element != null)
 			{
@@ -142,12 +142,6 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 		}
 
 		return this;
-	}
-
-	@Override
-	public ASTNode findNameIdentifier()
-	{
-		return getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
 	}
 
 	@Override
@@ -167,8 +161,7 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 	@Override
 	public PsiElement getNameIdentifier()
 	{
-		final ASTNode node = findNameIdentifier();
-		return node != null ? node.getPsi() : null;
+		return findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
 	}
 
 	@Override
@@ -201,15 +194,15 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 		{
 			return;
 		}
-		final ASTNode node = packageStatement.findNameIdentifier();
+		final PsiElement node = packageStatement.getNameIdentifier();
 		final ASTNode parent = packageStatement.getNode();
 
 		if(expected.length() == 0)
 		{
 			if(node != null)
 			{
-				final ASTNode treeNext = node.getTreeNext();
-				parent.removeChild(node);
+				final ASTNode treeNext = node.getNode().getTreeNext();
+				parent.removeChild(node.getNode());
 				if(treeNext.getPsi() instanceof PsiWhiteSpace)
 				{
 					parent.removeChild(treeNext);
@@ -221,7 +214,7 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 			final ASTNode child = JSChangeUtil.createExpressionFromText(project, expected).getNode();
 			if(node != null)
 			{
-				parent.replaceChild(node, child);
+				parent.replaceChild(node.getNode(), child);
 			}
 			else
 			{

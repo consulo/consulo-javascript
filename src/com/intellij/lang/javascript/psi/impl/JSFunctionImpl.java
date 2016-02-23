@@ -63,7 +63,7 @@ public class JSFunctionImpl extends JSFunctionBaseImpl<JSFunctionStub, JSFunctio
 			return stub.isGetProperty();
 		}
 		ASTNode node = getNode().findChildByType(JSTokenTypes.GET_KEYWORD);
-		return node != null && node != findNameIdentifier();
+		return node != null;
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class JSFunctionImpl extends JSFunctionBaseImpl<JSFunctionStub, JSFunctio
 			return stub.isSetProperty();
 		}
 		ASTNode node = getNode().findChildByType(JSTokenTypes.SET_KEYWORD);
-		return node != null && node != findNameIdentifier();
+		return node != null;
 	}
 
 	@Override

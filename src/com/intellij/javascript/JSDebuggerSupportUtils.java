@@ -21,7 +21,6 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSElementFactory;
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.JSNamedElement;
@@ -134,11 +133,11 @@ public class JSDebuggerSupportUtils
 
 		if(parent instanceof JSNamedElement)
 		{
-			final ASTNode node = ((JSNamedElement) parent).findNameIdentifier();
+			final PsiElement node = ((JSNamedElement) parent).getNameIdentifier();
 
 			if(node != null)
 			{
-				return node.getPsi().getTextRange().shiftRight(offset);
+				return node.getTextRange().shiftRight(offset);
 			}
 		}
 		return null;

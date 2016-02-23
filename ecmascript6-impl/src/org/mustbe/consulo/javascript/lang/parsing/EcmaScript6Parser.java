@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2013-2016 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,28 @@
  * limitations under the License.
  */
 
-package com.intellij.lang.javascript.psi;
+package org.mustbe.consulo.javascript.lang.parsing;
 
-import com.intellij.navigation.NavigationItem;
-import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.psi.PsiNamedElement;
+import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.PsiBuilder;
 
 /**
- * @author ven
+ * @author VISTALL
+ * @since 15.02.2016
  */
-public interface JSNamedElement extends PsiNamedElement, JSElement, NavigationItem, PsiNameIdentifierOwner
+public class EcmaScript6Parser extends JavaScriptParser
 {
+	@NotNull
+	@Override
+	public JavaScriptParsingContext createParsingContext()
+	{
+		return new EcmaScript6ParsingContext();
+	}
+
+	@NotNull
+	@Override
+	public JavaScriptParserBuilder createBuilder(PsiBuilder builder)
+	{
+		return new EcmaScript6StrictParserBuilder(builder);
+	}
 }

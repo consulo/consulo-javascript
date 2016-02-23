@@ -17,6 +17,7 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
@@ -104,24 +105,16 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 		{
 			return stub.getName();
 		}
-		final ASTNode name = findNameIdentifier();
+		final PsiElement name = getNameIdentifier();
 
 		if(name != null)
 		{
-			final PsiElement element = name.getPsi();
-
-			if(element instanceof JSReferenceExpression)
+			if(name instanceof JSReferenceExpression)
 			{
-				return ((JSReferenceExpression) element).getReferencedName();
+				return ((JSReferenceExpression) name).getReferencedName();
 			}
 		}
 		return name != null ? name.getText() : "";
-	}
-
-	@Override
-	public ASTNode findNameIdentifier()
-	{
-		return getNode().findChildByType(IDENTIFIER_TOKENS_SET);
 	}
 
 	@Override
@@ -174,13 +167,13 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 	@Override
 	public PsiElement setName(@NotNull String name) throws IncorrectOperationException
 	{
-		final ASTNode nameNode = findNameIdentifier();
+		final PsiElement nameNode = getNameIdentifier();
 		if(nameNode == null)
 		{
 			return this;
 		}
 		final ASTNode nameElement = JSChangeUtil.createNameIdentifier(getProject(), name);
-		getNode().replaceChild(nameNode, nameElement);
+		getNode().replaceChild(nameNode.getNode(), nameElement);
 		return this;
 	}
 
@@ -197,11 +190,12 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 		}
 	}
 
+	@RequiredReadAction
 	@Override
 	public int getTextOffset()
 	{
-		final ASTNode name = findNameIdentifier();
-		return name != null ? name.getStartOffset() : super.getTextOffset();
+		final PsiElement name = getNameIdentifier();
+		return name != null ? name.getTextOffset() : super.getTextOffset();
 	}
 
 	@Override
@@ -306,7 +300,6 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 	@Override
 	public PsiElement getNameIdentifier()
 	{
-		final ASTNode node = findNameIdentifier();
-		return node != null ? node.getPsi() : null;
+		return findChildByType(IDENTIFIER_TOKENS_SET);
 	}
 }
