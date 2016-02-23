@@ -17,12 +17,18 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
+import org.mustbe.consulo.javascript.lang.psi.impl.JavaScriptClassType;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSArgumentList;
+import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSNewExpression;
+import com.intellij.lang.javascript.psi.JSReferenceExpression;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 
 /**
@@ -37,6 +43,24 @@ public class JSNewExpressionImpl extends JSExpressionImpl implements JSNewExpres
 	public JSNewExpressionImpl(final ASTNode node)
 	{
 		super(node);
+	}
+
+	@RequiredReadAction
+	@NotNull
+	@Override
+	public JavaScriptType getType()
+	{
+		JSExpression methodExpression = getMethodExpression();
+
+		if(methodExpression instanceof JSReferenceExpression)
+		{
+			PsiElement resolvedElement = ((JSReferenceExpression) methodExpression).resolve();
+			if(resolvedElement instanceof JSClass)
+			{
+				return new JavaScriptClassType((JSClass) resolvedElement);
+			}
+		}
+		return super.getType();
 	}
 
 	@Override
