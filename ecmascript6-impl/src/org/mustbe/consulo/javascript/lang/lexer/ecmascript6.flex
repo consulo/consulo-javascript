@@ -102,6 +102,7 @@ DIGIT=[0-9]
 <YYINITIAL,DIV_OR_GT> "extends"             { yybegin(YYINITIAL); return JSTokenTypes.EXTENDS_KEYWORD; }
 <YYINITIAL,DIV_OR_GT> "static"              { yybegin(YYINITIAL); return JSTokenTypes.STATIC_KEYWORD; }
 <YYINITIAL,DIV_OR_GT> "enum"                { yybegin(YYINITIAL); return JSTokenTypes.ENUM_KEYWORD; }
+<YYINITIAL,DIV_OR_GT> "import"              { yybegin(YYINITIAL); return JSTokenTypes.IMPORT_KEYWORD; }
 
 <YYINITIAL,DIV_OR_GT> "public"              { yybegin(YYINITIAL); return JSTokenTypes.PUBLIC_KEYWORD; }
 <YYINITIAL,DIV_OR_GT> "private"             { yybegin(YYINITIAL); return JSTokenTypes.PRIVATE_KEYWORD; }
