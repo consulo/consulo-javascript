@@ -45,6 +45,29 @@ public class EcmaScript6StatementParsing extends StatementParsing
 		{
 			getFunctionParsing().parseFunctionDeclaration(builder);
 		}
+		else if(tokenType == JSTokenTypes.EXPORT_KEYWORD)
+		{
+			PsiBuilder.Marker mark = builder.mark();
+			PsiBuilder.Marker attributeMark = builder.mark();
+			builder.advanceLexer();
+			attributeMark.done(JSElementTypes.ATTRIBUTE_LIST);
+
+			IElementType nextType = builder.getTokenType();
+			if(nextType == JSTokenTypes.FUNCTION_KEYWORD)
+			{
+				getFunctionParsing().parseFunctionNoMarker(builder, false, mark);
+			}
+			else if(nextType == JSTokenTypes.VAR_KEYWORD ||
+					nextType == JSTokenTypes.CONST_KEYWORD ||
+					nextType == JSTokenTypes.LET_KEYWORD)
+			{
+				parseVarStatementNoMarker(builder, false, mark);
+			}
+			else
+			{
+				mark.error("Expected function or variable");
+			}
+		}
 		else
 		{
 			doParseStatement(builder, true);
@@ -61,10 +84,6 @@ public class EcmaScript6StatementParsing extends StatementParsing
 			{
 				parseClass(builder);
 				return true;
-			}
-			else if(tokenType == JSTokenTypes.EXPORT_KEYWORD)
-			{
-
 			}
 		}
 		return false;
