@@ -987,6 +987,10 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor
 
 	private static void addType(String type, TypeProcessor typeProcessor, EvaluateContext context, final PsiElement source)
 	{
+		if(type == null)
+		{
+			return;
+		}
 		int spacePos = type.indexOf(' ');
 		if(spacePos != -1)
 		{
