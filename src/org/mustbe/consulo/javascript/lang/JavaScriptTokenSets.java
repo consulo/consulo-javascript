@@ -25,7 +25,7 @@ import com.intellij.psi.tree.TokenSet;
  */
 public interface JavaScriptTokenSets extends JSTokenTypes
 {
-	TokenSet STRING_LITERALS = TokenSet.create(STRING_LITERAL, SINGLE_QUOTE_STRING_LITERAL);
+	TokenSet STRING_LITERALS = TokenSet.create(STRING_LITERAL, SINGLE_QUOTE_STRING_LITERAL, INTERPOLATION_STRING_LITERAL);
 
 	TokenSet WHITE_SPACES = TokenSet.create(WHITE_SPACE);
 }

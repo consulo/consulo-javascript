@@ -207,6 +207,7 @@ public interface JSTokenTypes
 	IElementType NUMERIC_LITERAL = new JSElementType("NUMERIC_LITERAL");
 	IElementType STRING_LITERAL = new JSElementType("STRING_LITERAL");
 	IElementType SINGLE_QUOTE_STRING_LITERAL = new JSElementType("SINGLE_QUOTE_STRING_LITERAL");
+	IElementType INTERPOLATION_STRING_LITERAL = new JSElementType("INTERPOLATION_STRING_LITERAL");
 	IElementType REGEXP_LITERAL = new JSElementType("REGEXP_LITERAL");
 
 	// Punctuators

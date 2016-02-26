@@ -61,6 +61,7 @@ public class JavaScriptHighlighter extends SyntaxHighlighterBase
 		keys1.put(JSTokenTypes.NUMERIC_LITERAL, JavaScriptSyntaxHighlightKeys.JS_NUMBER);
 		keys1.put(JSTokenTypes.STRING_LITERAL, JavaScriptSyntaxHighlightKeys.JS_STRING);
 		keys1.put(JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL, JavaScriptSyntaxHighlightKeys.JS_STRING);
+		keys1.put(JSTokenTypes.INTERPOLATION_STRING_LITERAL, JavaScriptSyntaxHighlightKeys.JS_STRING);
 		keys1.put(JSTokenTypes.REGEXP_LITERAL, JavaScriptSyntaxHighlightKeys.JS_REGEXP);
 
 		keys1.put(JSTokenTypes.LPAR, JavaScriptSyntaxHighlightKeys.JS_PARENTHS);

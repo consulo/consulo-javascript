@@ -64,6 +64,7 @@ public class ExpressionParsing extends Parsing
 		else if(firstToken == JSTokenTypes.NUMERIC_LITERAL ||
 				firstToken == JSTokenTypes.STRING_LITERAL ||
 				firstToken == JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL ||
+				firstToken == JSTokenTypes.INTERPOLATION_STRING_LITERAL ||
 				firstToken == JSTokenTypes.REGEXP_LITERAL ||
 				firstToken == JSTokenTypes.NULL_KEYWORD ||
 				firstToken == JSTokenTypes.UNDEFINED_KEYWORD ||
@@ -227,7 +228,7 @@ public class ExpressionParsing extends Parsing
 	public static String validateLiteral(final PsiBuilder builder)
 	{
 		final IElementType ttype = builder.getTokenType();
-		if(ttype == JSTokenTypes.STRING_LITERAL)
+		if(ttype == JSTokenTypes.STRING_LITERAL || ttype == JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL)
 		{
 			final String ttext = builder.getTokenText();
 			assert ttext != null;

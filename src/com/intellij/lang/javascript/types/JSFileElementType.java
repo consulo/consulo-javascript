@@ -95,7 +95,7 @@ public class JSFileElementType extends IStubFileElementType<JSFileStub>
 	@Override
 	public int getStubVersion()
 	{
-		int version = 37;
+		int version = 38;
 		for(JavaScriptIndexer javaScriptIndexer : JavaScriptIndexer.EP_NAME.getExtensions())
 		{
 			version += javaScriptIndexer.getVersion();
