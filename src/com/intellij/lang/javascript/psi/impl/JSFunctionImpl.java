@@ -17,6 +17,7 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -54,6 +55,7 @@ public class JSFunctionImpl extends JSFunctionBaseImpl<JSFunctionStub, JSFunctio
 		super(stub, type);
 	}
 
+	@RequiredReadAction
 	@Override
 	public boolean isGetProperty()
 	{
@@ -62,22 +64,22 @@ public class JSFunctionImpl extends JSFunctionBaseImpl<JSFunctionStub, JSFunctio
 		{
 			return stub.isGetProperty();
 		}
-		ASTNode node = getNode().findChildByType(JSTokenTypes.GET_KEYWORD);
-		return node != null;
+		return findChildByType(JSTokenTypes.GET_KEYWORD) != null;
 	}
 
+	@RequiredReadAction
 	@Override
 	public boolean isSetProperty()
 	{
 		final JSFunctionStub stub = getStub();
 		if(stub != null)
 		{
-			return stub.isSetProperty();
+			return stub.isGetProperty();
 		}
-		ASTNode node = getNode().findChildByType(JSTokenTypes.SET_KEYWORD);
-		return node != null;
+		return findChildByType(JSTokenTypes.SET_KEYWORD) != null;
 	}
 
+	@RequiredReadAction
 	@Override
 	public boolean isConstructor()
 	{
@@ -87,7 +89,7 @@ public class JSFunctionImpl extends JSFunctionBaseImpl<JSFunctionStub, JSFunctio
 			return stub.isConstructor();
 		}
 		final PsiElement parent = JSResolveUtil.findParent(this);
-		if(parent instanceof JSClass && Comparing.equal(((JSClass) parent).getName(), getName(), true))
+		if(parent instanceof JSClass && Comparing.equal("constructor", getName(), true))
 		{
 			return true;
 		}

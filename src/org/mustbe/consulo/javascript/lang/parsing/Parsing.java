@@ -18,6 +18,7 @@ package org.mustbe.consulo.javascript.lang.parsing;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.javascript.lang.parsing.impl.JavaScriptStrictParserBuilder;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.psi.tree.IElementType;
@@ -60,6 +61,10 @@ public class Parsing
 		IElementType elementType = expectContextKeyword(builder, tokenSet);
 		if(elementType != null)
 		{
+			if(builder instanceof JavaScriptStrictParserBuilder)
+			{
+				((JavaScriptStrictParserBuilder) builder).disableNonStrictRemap(builder.getCurrentOffset());
+			}
 			builder.remapCurrentToken(elementType);
 			builder.advanceLexer();
 		}

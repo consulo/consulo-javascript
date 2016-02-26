@@ -201,6 +201,8 @@ public interface JSTokenTypes
 
 	TokenSet KEYWORDS = TokenSet.orSet(JS_KEYWORDS, JS2_KEYWORDS, ECMASCRIPT6_KEYWORDS);
 
+	TokenSet CONTEXT_KEYWORDS = TokenSet.orSet(ECMASCRIPT6_STRICT_KEYWORDS, TokenSet.create(GET_KEYWORD, SET_KEYWORD));
+
 	// Literals
 	IElementType NUMERIC_LITERAL = new JSElementType("NUMERIC_LITERAL");
 	IElementType STRING_LITERAL = new JSElementType("STRING_LITERAL");

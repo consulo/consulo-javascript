@@ -113,18 +113,21 @@ public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionStub,
 		super.delete();
 	}
 
+	@RequiredReadAction
 	@Override
 	public boolean isGetProperty()
 	{
 		return false;
 	}
 
+	@RequiredReadAction
 	@Override
 	public boolean isSetProperty()
 	{
 		return false;
 	}
 
+	@RequiredReadAction
 	@Override
 	public boolean isConstructor()
 	{

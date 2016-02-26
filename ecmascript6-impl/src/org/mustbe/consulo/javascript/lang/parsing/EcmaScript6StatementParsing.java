@@ -23,6 +23,7 @@ import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
 
 /**
  * @author VISTALL
@@ -112,16 +113,52 @@ public class EcmaScript6StatementParsing extends StatementParsing
 				return;
 			}
 
+			PsiBuilder.Marker attributeListMarker = builder.mark();
+			if(expectStaticKeywordExpected(builder))
+			{
+				attributeListMarker.done(JSElementTypes.ATTRIBUTE_LIST);
+			}
+			else
+			{
+				attributeListMarker.drop();
+				attributeListMarker = null;
+			}
+
 			IElementType tokenType = builder.getTokenType();
 			if(tokenType != JSTokenTypes.IDENTIFIER && tokenType != JSTokenTypes.MULT)
 			{
+				if(attributeListMarker != null)
+				{
+					attributeListMarker.rollbackTo();
+				}
+
 				PsiBuilder.Marker mark = builder.mark();
+
+				if(attributeListMarker != null)
+				{
+					PsiBuilder.Marker temp = builder.mark();
+					expectStaticKeywordExpected(builder);
+					temp.done(JSElementTypes.ATTRIBUTE_LIST);
+				}
+
 				builder.advanceLexer();
 				mark.error("Expected identifier or *");
 			}
 			else
 			{
+				if(attributeListMarker != null)
+				{
+					attributeListMarker.rollbackTo();
+				}
+
 				PsiBuilder.Marker mark = builder.mark();
+
+				if(attributeListMarker != null)
+				{
+					PsiBuilder.Marker temp = builder.mark();
+					expectStaticKeywordExpected(builder);
+					temp.done(JSElementTypes.ATTRIBUTE_LIST);
+				}
 
 				if(builder.getTokenType() == JSTokenTypes.MULT)
 				{
@@ -152,6 +189,25 @@ public class EcmaScript6StatementParsing extends StatementParsing
 		}
 
 		builder.advanceLexer();
+	}
+
+	private boolean expectStaticKeywordExpected(PsiBuilder builder)
+	{
+		IElementType tokenType = builder.getTokenType();
+		if(tokenType == JSTokenTypes.STATIC_KEYWORD)
+		{
+			builder.advanceLexer();
+			return true;
+		}
+		else if(expectContextKeyword(builder, TokenSet.create(JSTokenTypes.STATIC_KEYWORD)) != null)
+		{
+			if(builder.lookAhead(1) == JSTokenTypes.IDENTIFIER)
+			{
+				advanceContextKeyword(builder, TokenSet.create(JSTokenTypes.STATIC_KEYWORD));
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void parseReferenceList(final PsiBuilder builder)

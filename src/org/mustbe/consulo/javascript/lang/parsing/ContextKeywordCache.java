@@ -19,6 +19,7 @@ public class ContextKeywordCache
 	{
 		ourCache.put("get", JSTokenTypes.GET_KEYWORD);
 		ourCache.put("set", JSTokenTypes.SET_KEYWORD);
+		ourCache.put("static", JSTokenTypes.STATIC_KEYWORD);
 	}
 
 	@Nullable

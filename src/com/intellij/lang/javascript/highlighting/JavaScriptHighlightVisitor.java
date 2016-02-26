@@ -63,6 +63,10 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 		{
 			addElementHighlight(parent, element);
 		}
+		else if(JSTokenTypes.CONTEXT_KEYWORDS.contains(elementType))
+		{
+			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).textAttributes(JavaScriptSyntaxHighlightKeys.JS_KEYWORD).range(element).create());
+		}
 	}
 
 	@RequiredReadAction

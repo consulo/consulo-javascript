@@ -11,6 +11,7 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.ThreeState;
 
 /**
@@ -25,6 +26,8 @@ public class JavaScriptStrictParserBuilder extends JavaScriptParserBuilder
 
 	private Map<IElementType, ThreeState> myStrictKeywords = new HashMap<IElementType, ThreeState>();
 
+	private int[] myDisableNonStrictRemap = ArrayUtil.EMPTY_INT_ARRAY;
+
 	public JavaScriptStrictParserBuilder(PsiBuilder delegate)
 	{
 		super(delegate);
@@ -33,6 +36,11 @@ public class JavaScriptStrictParserBuilder extends JavaScriptParserBuilder
 	public void onlyInStrictMode(IElementType elementType)
 	{
 		myStrictKeywords.put(elementType, ThreeState.YES);
+	}
+
+	public void disableNonStrictRemap(int offset)
+	{
+		myDisableNonStrictRemap = ArrayUtil.append(myDisableNonStrictRemap, offset);
 	}
 
 	@Nullable
@@ -50,6 +58,12 @@ public class JavaScriptStrictParserBuilder extends JavaScriptParserBuilder
 			}
 			else
 			{
+				int currentOffset = getCurrentOffset();
+				if(ArrayUtil.indexOf(myDisableNonStrictRemap, currentOffset) != -1)
+				{
+					return tokenType;
+				}
+
 				return JSTokenTypes.IDENTIFIER;
 			}
 		}

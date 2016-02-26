@@ -37,10 +37,13 @@ public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JS
 
 	JSSourceElement[] getBody();
 
+	@RequiredReadAction
 	boolean isGetProperty();
 
+	@RequiredReadAction
 	boolean isSetProperty();
 
+	@RequiredReadAction
 	boolean isConstructor();
 
 	@NotNull
