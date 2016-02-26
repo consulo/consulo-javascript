@@ -94,10 +94,6 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 				{
 					seenAnyAttributes = true;
 					hasSomethingInAttrList = true;
-					if(builder.getTokenType() == JSTokenTypes.NATIVE_KEYWORD)
-					{
-						builder.putUserData(allowEmptyMethodsKey, "");
-					}
 					builder.advanceLexer();
 				}
 

@@ -18,10 +18,9 @@ package org.mustbe.consulo.javascript.lang.parsing;
 
 import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.openapi.util.Key;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.psi.tree.IElementType;
 
 /**
@@ -29,9 +28,6 @@ import com.intellij.psi.tree.IElementType;
  */
 public class FunctionParsing extends Parsing
 {
-	@Deprecated
-	public static final Key<String> allowEmptyMethodsKey = Key.create("allowEmptyMethodsKey");
-
 	public FunctionParsing(JavaScriptParsingContext context)
 	{
 		super(context);
@@ -83,21 +79,13 @@ public class FunctionParsing extends Parsing
 
 		getExpressionParsing().tryParseType(builder);
 
-		if(builder.getUserData(allowEmptyMethodsKey) == null)
+		if(builder.getTokenType() == JSTokenTypes.SEMICOLON)
 		{
-			getStatementParsing().parseFunctionBody(builder);
+			builder.advanceLexer();
 		}
 		else
 		{
-			if(builder.getTokenType() == JSTokenTypes.SEMICOLON)
-			{
-				builder.advanceLexer();
-			}
-
-			if(builder.getTokenType() == JSTokenTypes.LBRACE)
-			{
-				builder.error(JavaScriptBundle.message("interface.function.declaration.should.have.no.body"));
-			}
+			getStatementParsing().parseFunctionBody(builder);
 		}
 
 		functionMarker.done(expressionContext ? JSElementTypes.FUNCTION_EXPRESSION : JSElementTypes.FUNCTION_DECLARATION);

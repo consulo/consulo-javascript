@@ -236,73 +236,60 @@ public class EcmaScript4StatementParsing extends StatementParsing
 					JSTokenTypes.LBRACKET == firstToken))
 			{
 				PsiBuilder.Marker marker = builder.mark();
-				boolean wasNativeStatus = builder.getUserData(FunctionParsing.allowEmptyMethodsKey) != null;
 				getFunctionParsing().parseAttributesList(builder);
-				boolean isNativeStatus = builder.getUserData(FunctionParsing.allowEmptyMethodsKey) != null;
 
-				try
+				if(builder.eof())
 				{
-					if(builder.eof())
-					{
-						marker.drop();
-						return;
-					}
+					marker.drop();
+					return;
+				}
 
-					final IElementType tokenType = builder.getTokenType();
-					if(tokenType == JSTokenTypes.FUNCTION_KEYWORD)
+				final IElementType tokenType = builder.getTokenType();
+				if(tokenType == JSTokenTypes.FUNCTION_KEYWORD)
+				{
+					getFunctionParsing().parseFunctionNoMarker(builder, false, marker);
+					return;
+				}
+				else if(tokenType == JSTokenTypes.VAR_KEYWORD || tokenType == JSTokenTypes.CONST_KEYWORD)
+				{
+					parseVarStatementNoMarker(builder, false, marker);
+					return;
+				}
+				else if(tokenType == JSTokenTypes.NAMESPACE_KEYWORD)
+				{
+					if(parseNamespaceNoMarker(builder, marker))
 					{
-						getFunctionParsing().parseFunctionNoMarker(builder, false, marker);
-						return;
-					}
-					else if(tokenType == JSTokenTypes.VAR_KEYWORD || tokenType == JSTokenTypes.CONST_KEYWORD)
-					{
-						parseVarStatementNoMarker(builder, false, marker);
-						return;
-					}
-					else if(tokenType == JSTokenTypes.NAMESPACE_KEYWORD)
-					{
-						if(parseNamespaceNoMarker(builder, marker))
-						{
-							return;
-						}
-						else
-						{
-							builder.advanceLexer();
-						}
-					}
-					else if(tokenType == JSTokenTypes.CLASS_KEYWORD || tokenType == JSTokenTypes.INTERFACE_KEYWORD)
-					{
-						parseClassNoMarker(builder, marker);
 						return;
 					}
 					else
 					{
-						builder.putUserData(FunctionParsing.allowEmptyMethodsKey, null);
-
-						if(firstToken == JSTokenTypes.IDENTIFIER)
-						{
-							marker.rollbackTo();
-						}
-						else if(JSTokenTypes.COLON_COLON == builder.getTokenType())
-						{
-							marker.rollbackTo();
-							if(parseExpressionStatement(builder))
-							{
-								return;
-							}
-						}
-						else
-						{
-							builder.error(JavaScriptBundle.message("javascript.parser.message.expected.function.var.class.interface.namespace"));
-							marker.drop();
-						}
+						builder.advanceLexer();
 					}
 				}
-				finally
+				else if(tokenType == JSTokenTypes.CLASS_KEYWORD || tokenType == JSTokenTypes.INTERFACE_KEYWORD)
 				{
-					if(!wasNativeStatus && isNativeStatus)
+					parseClassNoMarker(builder, marker);
+					return;
+				}
+				else
+				{
+
+					if(firstToken == JSTokenTypes.IDENTIFIER)
 					{
-						builder.putUserData(FunctionParsing.allowEmptyMethodsKey, null);
+						marker.rollbackTo();
+					}
+					else if(JSTokenTypes.COLON_COLON == builder.getTokenType())
+					{
+						marker.rollbackTo();
+						if(parseExpressionStatement(builder))
+						{
+							return;
+						}
+					}
+					else
+					{
+						builder.error(JavaScriptBundle.message("javascript.parser.message.expected.function.var.class.interface.namespace"));
+						marker.drop();
 					}
 				}
 			}
@@ -471,40 +458,27 @@ public class EcmaScript4StatementParsing extends StatementParsing
 
 	private void parseClassNoMarker(final PsiBuilder builder, final @NotNull PsiBuilder.Marker clazz)
 	{
-		try
+		final IElementType tokenType = builder.getTokenType();
+		LOGGER.assertTrue(JSTokenTypes.CLASS_KEYWORD == tokenType || JSTokenTypes.INTERFACE_KEYWORD == tokenType);
+
+		builder.advanceLexer();
+		if(!getExpressionParsing().parseQualifiedTypeName(builder))
 		{
-			final IElementType tokenType = builder.getTokenType();
-			LOGGER.assertTrue(JSTokenTypes.CLASS_KEYWORD == tokenType || JSTokenTypes.INTERFACE_KEYWORD == tokenType);
-			if(builder.getTokenType() == JSTokenTypes.INTERFACE_KEYWORD)
-			{
-				builder.putUserData(FunctionParsing.allowEmptyMethodsKey, "");
-				builder.putUserData(withinInterfaceKey, "");
-			}
-
-			builder.advanceLexer();
-			if(!getExpressionParsing().parseQualifiedTypeName(builder))
-			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.typename"));
-			}
-
-			if(builder.getTokenType() == JSTokenTypes.EXTENDS_KEYWORD)
-			{
-				parseReferenceList(builder);
-			}
-
-			if(builder.getTokenType() == JSTokenTypes.IMPLEMENTS_KEYWORD)
-			{
-				parseReferenceList(builder);
-			}
-
-			parseBlockOrFunctionBody(builder, BlockType.PACKAGE_OR_CLASS_BODY);
-			clazz.done(JSElementTypes.CLASS);
+			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.typename"));
 		}
-		finally
+
+		if(builder.getTokenType() == JSTokenTypes.EXTENDS_KEYWORD)
 		{
-			builder.putUserData(FunctionParsing.allowEmptyMethodsKey, null);
-			builder.putUserData(withinInterfaceKey, null);
+			parseReferenceList(builder);
 		}
+
+		if(builder.getTokenType() == JSTokenTypes.IMPLEMENTS_KEYWORD)
+		{
+			parseReferenceList(builder);
+		}
+
+		parseBlockOrFunctionBody(builder, BlockType.PACKAGE_OR_CLASS_BODY);
+		clazz.done(JSElementTypes.CLASS);
 	}
 
 	private void parseReferenceList(final PsiBuilder builder)

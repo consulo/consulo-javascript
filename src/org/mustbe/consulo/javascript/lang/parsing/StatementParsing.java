@@ -21,7 +21,6 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptBundle;
-import com.intellij.openapi.util.Key;
 import com.intellij.psi.tree.IElementType;
 
 /**
@@ -30,8 +29,6 @@ import com.intellij.psi.tree.IElementType;
 @org.consulo.lombok.annotations.Logger
 public class StatementParsing extends Parsing
 {
-	public static Key<String> withinInterfaceKey = Key.create("within.interface");
-
 	public StatementParsing(JavaScriptParsingContext context)
 	{
 		super(context);
@@ -674,10 +671,6 @@ public class StatementParsing extends Parsing
 		LOGGER.assertTrue(declType == JSTokenTypes.VAR_KEYWORD ||
 				declType == JSTokenTypes.CONST_KEYWORD ||
 				declType == JSTokenTypes.LET_KEYWORD);
-		if(builder.getUserData(withinInterfaceKey) != null)
-		{
-			builder.error(JavaScriptBundle.message("interface.should.have.no.variable.declarations"));
-		}
 
 		builder.advanceLexer();
 		boolean first = true;
