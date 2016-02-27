@@ -18,6 +18,7 @@ package com.intellij.lang.javascript.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
 import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
@@ -38,7 +39,6 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.IncorrectOperationException;
 
 /**
@@ -50,9 +50,6 @@ import com.intellij.util.IncorrectOperationException;
  */
 public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSVariable> extends JSStubElementImpl<T> implements JSVariable
 {
-	public static final TokenSet IDENTIFIER_TOKENS_SET = TokenSet.orSet(JSTokenTypes.IDENTIFIER_TOKENS_SET,
-			TokenSet.create(JSElementTypes.REFERENCE_EXPRESSION));
-
 	protected JSVariableBaseImpl(ASTNode node)
 	{
 		super(node);
@@ -298,8 +295,9 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 	}
 
 	@Override
+	@RequiredReadAction
 	public PsiElement getNameIdentifier()
 	{
-		return findChildByType(IDENTIFIER_TOKENS_SET);
+		return findChildByType(JavaScriptTokenSets.NAME_TOKEN_TYPES);
 	}
 }

@@ -16,6 +16,7 @@
 
 package org.mustbe.consulo.javascript.lang;
 
+import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.psi.tree.TokenSet;
 
@@ -28,4 +29,6 @@ public interface JavaScriptTokenSets extends JSTokenTypes
 	TokenSet STRING_LITERALS = TokenSet.create(STRING_LITERAL, SINGLE_QUOTE_STRING_LITERAL, INTERPOLATION_STRING_LITERAL);
 
 	TokenSet WHITE_SPACES = TokenSet.create(WHITE_SPACE);
+
+	TokenSet NAME_TOKEN_TYPES = TokenSet.create(JSElementTypes.REFERENCE_EXPRESSION, JSTokenTypes.IDENTIFIER);
 }

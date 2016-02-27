@@ -35,6 +35,7 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -123,6 +124,13 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 	public void visitJSReferenceExpression(JSReferenceExpression element)
 	{
 		super.visitJSReferenceExpression(element);
+
+		PsiElement parent = element.getParent();
+
+		if(parent instanceof PsiNameIdentifierOwner && ((PsiNameIdentifierOwner) parent).getNameIdentifier() == element)
+		{
+			return;
+		}
 
 		final ResolveResult[] results = element.multiResolve(false);
 

@@ -19,6 +19,7 @@ package com.intellij.lang.javascript.psi.impl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
@@ -38,7 +39,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.IncorrectOperationException;
 
 /**
@@ -46,8 +46,6 @@ import com.intellij.util.IncorrectOperationException;
  */
 public class JSClassImpl extends JSClassBase implements JSSuppressionHolder
 {
-	private static final TokenSet ourNameTokenTypes = TokenSet.create(JSElementTypes.REFERENCE_EXPRESSION, JSTokenTypes.IDENTIFIER);
-
 	public JSClassImpl(final ASTNode node)
 	{
 		super(node);
@@ -124,7 +122,7 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder
 	@RequiredReadAction
 	public PsiElement getNameIdentifier()
 	{
-		return findChildByType(ourNameTokenTypes);
+		return findChildByType(JavaScriptTokenSets.NAME_TOKEN_TYPES);
 	}
 
 	@Override

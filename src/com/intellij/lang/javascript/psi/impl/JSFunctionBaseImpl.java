@@ -19,6 +19,7 @@ package com.intellij.lang.javascript.psi.impl;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
+import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
 import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
@@ -317,6 +318,6 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
 	@RequiredReadAction
 	public PsiElement getNameIdentifier()
 	{
-		return findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET);
+		return findChildByType(JavaScriptTokenSets.NAME_TOKEN_TYPES);
 	}
 }
