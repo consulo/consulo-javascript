@@ -67,7 +67,7 @@ public class MagicNumberJSInspection extends JavaScriptInspection {
     private static class MagicNumberVisitor extends BaseInspectionVisitor {
 
         @Override public void visitJSLiteralExpression(
-                @NotNull JSLiteralExpression expression) {
+                @NotNull JSSimpleLiteralExpression expression) {
             super.visitJSLiteralExpression(expression);
 
             final String text = expression.getText();

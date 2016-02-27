@@ -1,6 +1,6 @@
 package com.sixrr.inspectjs.validity;
 
-import com.intellij.lang.javascript.psi.JSLiteralExpression;
+import com.intellij.lang.javascript.psi.JSSimpleLiteralExpression;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
@@ -41,7 +41,7 @@ public class StringLiteralBreaksHTMLJSInspection extends JavaScriptInspection {
     private static class Visitor extends BaseInspectionVisitor {
 
 
-        @Override public void visitJSLiteralExpression(JSLiteralExpression jsLiteralExpression) {
+        @Override public void visitJSLiteralExpression(JSSimpleLiteralExpression jsLiteralExpression) {
             super.visitJSLiteralExpression(jsLiteralExpression);
             final String text = jsLiteralExpression.getText();
             if (!text.startsWith("\"") && !text.startsWith("'")) {

@@ -43,6 +43,7 @@ import com.intellij.lang.javascript.psi.JSLiteralExpression;
 import com.intellij.lang.javascript.psi.JSObjectLiteralExpression;
 import com.intellij.lang.javascript.psi.JSPrefixExpression;
 import com.intellij.lang.javascript.psi.JSProperty;
+import com.intellij.lang.javascript.psi.JSSimpleLiteralExpression;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
@@ -69,7 +70,7 @@ public class PropertyValidationInspection extends LocalInspectionTool
 		{
 			@Override
 			@RequiredReadAction
-			public void visitJSLiteralExpression(JSLiteralExpression node)
+			public void visitJSLiteralExpression(JSSimpleLiteralExpression node)
 			{
 				validateValue(node, holder);
 			}

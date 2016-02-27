@@ -107,7 +107,7 @@ public class JSElementVisitor extends PsiElementVisitor
 		visitJSExpression(node);
 	}
 
-	public void visitJSLiteralExpression(final JSLiteralExpression node)
+	public void visitJSLiteralExpression(final JSSimpleLiteralExpression node)
 	{
 		visitJSExpression(node);
 	}

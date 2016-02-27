@@ -16,11 +16,28 @@
 
 package org.mustbe.consulo.javascript.lang;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @author VISTALL
  * @since 23.02.2016
  */
 public enum JavaScriptFeature
 {
-	CLASS
+	CLASS("Classes"),
+	OCTAL_LITERAL("Octal literals"),
+	BINARY_LITERAL("Binary literals");
+
+	private String myName;
+
+	JavaScriptFeature(String name)
+	{
+		myName = name;
+	}
+
+	@NotNull
+	public String getName()
+	{
+		return myName;
+	}
 }

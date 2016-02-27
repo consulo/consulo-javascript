@@ -100,7 +100,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 	}
 
 	@Override
-	public void visitJSLiteralExpression(JSLiteralExpression node)
+	public void visitJSLiteralExpression(JSSimpleLiteralExpression node)
 	{
 		checkReferences(node, ProblemKind.ERROR);
 	}

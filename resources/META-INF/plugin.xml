@@ -136,6 +136,8 @@
 
 		<completion.contributor language="JavaScript" implementationClass="org.mustbe.consulo.javascript.ide.completion.JavaScriptKeywordCompletionContributor"/>
 
+		<completion.confidence language="JavaScript" implementationClass="com.intellij.codeInsight.completion.SkipAutopopupInStrings" />
+
 		<quoteHandler fileType="JavaScript" className="org.mustbe.consulo.javascript.lang.JavaScriptQuoteHandler"/>
 
 		<liveTemplateMacro implementation="com.intellij.javascript.JSClassNameMacro"/>

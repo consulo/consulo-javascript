@@ -20,15 +20,19 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.javascript.ide.hightlight.JavaScriptSyntaxHighlightKeys;
+import org.mustbe.consulo.javascript.lang.JavaScriptFeature;
 import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
+import org.mustbe.consulo.javascript.lang.JavaScriptVersionUtil;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.HighlightVisitor;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder;
 import com.intellij.lang.javascript.JSTokenTypes;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.ResolveResult;
@@ -66,6 +70,25 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 		else if(JSTokenTypes.CONTEXT_KEYWORDS.contains(elementType))
 		{
 			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).textAttributes(JavaScriptSyntaxHighlightKeys.JS_KEYWORD).range(element).create());
+		}
+	}
+
+	@Override
+	@RequiredReadAction
+	public void visitJSLiteralExpression(JSSimpleLiteralExpression node)
+	{
+		super.visitJSLiteralExpression(node);
+		if(node.getLiteralElementType() == JSTokenTypes.NUMERIC_LITERAL)
+		{
+			String text = node.getText();
+			if(StringUtil.startsWithIgnoreCase(text, "0o"))
+			{
+				reportFeatureUsage(node, JavaScriptFeature.OCTAL_LITERAL);
+			}
+			else if(StringUtil.startsWithIgnoreCase(text, "0b"))
+			{
+				reportFeatureUsage(node, JavaScriptFeature.BINARY_LITERAL);
+			}
 		}
 	}
 
@@ -257,6 +280,18 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 		}
 
 		return HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(markerAddTo).textAttributes(type).create();
+	}
+
+	private void reportFeatureUsage(@NotNull PsiElement element, @NotNull JavaScriptFeature javaScriptFeature)
+	{
+		if(JavaScriptVersionUtil.containsFeature(element, javaScriptFeature))
+		{
+			return;
+		}
+
+		String message = JavaScriptBundle.message("this.feature.is.not.supported.by.current.language", javaScriptFeature.getName());
+
+		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).range(element).descriptionAndTooltip(message).create());
 	}
 
 	@Override

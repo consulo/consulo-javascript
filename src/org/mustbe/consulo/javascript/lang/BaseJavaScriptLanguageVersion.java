@@ -21,6 +21,8 @@ import com.intellij.util.containers.ArrayListSet;
  */
 public abstract class BaseJavaScriptLanguageVersion extends BaseLanguageVersion<JavaScriptLanguage> implements LanguageVersionWithParsing<JavaScriptLanguage>
 {
+	private static TokenSet ourLiterals = TokenSet.orSet(JavaScriptTokenSets.STRING_LITERALS, TokenSet.create(JSTokenTypes.NUMERIC_LITERAL));
+
 	private Set<JavaScriptFeature> myFeatures = new ArrayListSet<JavaScriptFeature>();
 
 	public BaseJavaScriptLanguageVersion(String name)
@@ -74,6 +76,6 @@ public abstract class BaseJavaScriptLanguageVersion extends BaseLanguageVersion<
 	@Override
 	public TokenSet getStringLiteralElements()
 	{
-		return JavaScriptTokenSets.STRING_LITERALS;
+		return ourLiterals;
 	}
 }

@@ -62,7 +62,7 @@ public class ExpressionUtil {
             this.isConstant = false;
         }
 
-        @Override public void visitJSLiteralExpression(JSLiteralExpression expression) {
+        @Override public void visitJSLiteralExpression(JSSimpleLiteralExpression expression) {
             this.isConstant = true;
         }
 
