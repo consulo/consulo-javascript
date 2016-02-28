@@ -321,11 +321,6 @@ public class EcmaScript4StatementParsing extends StatementParsing
 			}
 		}
 
-		if(hasSemanticLineBeforeNextToken(builder))
-		{
-			return;
-		}
-
 		builder.error(JavaScriptBundle.message("javascript.parser.message.expected.statement"));
 		builder.advanceLexer();
 	}
