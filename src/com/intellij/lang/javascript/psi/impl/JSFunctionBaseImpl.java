@@ -26,7 +26,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSAttributeList;
-import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSFunction;
@@ -123,15 +122,9 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
 	@Override
 	public PsiElement setName(@NotNull String name) throws IncorrectOperationException
 	{
-		final boolean isConstructor = isConstructor();
 		final ASTNode newNameElement = createNameIdentifier(name);
 		final ASTNode nameIdentifier = getNameIdentifier().getNode();
 		nameIdentifier.getTreeParent().replaceChild(nameIdentifier, newNameElement);
-
-		if(isConstructor)
-		{
-			((JSClass) getParent()).setName(name);
-		}
 		return this;
 	}
 
