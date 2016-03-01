@@ -16,7 +16,10 @@
 
 package org.mustbe.consulo.javascript.lang;
 
+import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.Language;
+import com.intellij.lang.javascript.JavaScriptFileType;
+import com.intellij.openapi.fileTypes.LanguageFileType;
 
 /**
  * @author VISTALL
@@ -29,6 +32,13 @@ public class JavaScriptLanguage extends Language
 	public JavaScriptLanguage()
 	{
 		super("JavaScript", "text/javascript", "application/javascript");
+	}
+
+	@Nullable
+	@Override
+	public LanguageFileType getAssociatedFileType()
+	{
+		return JavaScriptFileType.INSTANCE;
 	}
 
 	@Override
