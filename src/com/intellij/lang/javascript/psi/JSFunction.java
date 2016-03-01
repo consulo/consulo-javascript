@@ -21,8 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
+import org.mustbe.consulo.javascript.lang.psi.JavaScriptTypeElement;
 import com.intellij.lang.javascript.psi.stubs.JSFunctionStub;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.StubBasedPsiElement;
 
 /**
@@ -51,7 +51,8 @@ public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JS
 
 	String getReturnTypeString();
 
-	PsiElement getReturnTypeElement();
+	@Nullable
+	JavaScriptTypeElement getReturnTypeElement();
 
 	enum FunctionKind
 	{

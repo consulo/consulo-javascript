@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
 import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
+import org.mustbe.consulo.javascript.lang.psi.JavaScriptTypeElement;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
@@ -149,11 +150,11 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 		return doGetType();
 	}
 
+	@RequiredReadAction
 	@Override
-	public PsiElement getTypeElement()
+	public JavaScriptTypeElement getTypeElement()
 	{
-		ASTNode node = JSPsiImplUtils.getTypeExpressionFromDeclaration(this);
-		return node != null ? node.getPsi() : null;
+		return JSPsiImplUtils.findTypeElement(this);
 	}
 
 	protected String doGetType()

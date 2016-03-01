@@ -26,6 +26,9 @@ import java.util.List;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import org.mustbe.consulo.javascript.lang.psi.JavaScriptTypeElement;
+import org.mustbe.consulo.javascript.lang.psi.impl.elementType.BaseJavaScriptElementType;
 import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
@@ -48,7 +51,10 @@ import com.intellij.psi.PsiDirectoryContainer;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNamedElement;
+import com.intellij.psi.StubBasedPsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlFile;
@@ -67,6 +73,46 @@ public class JSPsiImplUtils
 	@NonNls
 	private static final String ARRAY_ELEMENT_TYPE_ANNOTATION_NAME = "ArrayElementType";
 
+	@Nullable
+	@RequiredReadAction
+	public static JavaScriptTypeElement findTypeElement(@NotNull PsiElement element)
+	{
+		if(element instanceof StubBasedPsiElement)
+		{
+			StubElement<?> stub = ((StubBasedPsiElement) element).getStub();
+			if(stub != null)
+			{
+				List<StubElement> childrenStubs = stub.getChildrenStubs();
+				for(StubElement childrenStub : childrenStubs)
+				{
+					IStubElementType stubType = childrenStub.getStubType();
+					if(stubType instanceof BaseJavaScriptElementType)
+					{
+						return (JavaScriptTypeElement) stub.getPsi();
+					}
+				}
+			}
+		}
+
+		return findChildrenByClass(element, JavaScriptTypeElement.class);
+	}
+
+	@Nullable
+	@RequiredReadAction
+	@SuppressWarnings("unchecked")
+	private static <T> T findChildrenByClass(@NotNull PsiElement element, Class<T> aClass)
+	{
+		for(PsiElement cur = element.getFirstChild(); cur != null; cur = cur.getNextSibling())
+		{
+			if(aClass.isInstance(cur))
+			{
+				return (T) cur;
+			}
+		}
+		return null;
+	}
+
+	@Deprecated
 	public static ASTNode getTypeExpressionFromDeclaration(JSNamedElement element)
 	{
 		final ASTNode myNode = element.getNode();
@@ -81,6 +127,7 @@ public class JSPsiImplUtils
 		return null;
 	}
 
+	@Deprecated
 	public static String getTypeFromDeclaration(JSNamedElement element)
 	{
 		ASTNode typeExpr = getTypeExpressionFromDeclaration(element);

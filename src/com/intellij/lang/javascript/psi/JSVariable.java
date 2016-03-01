@@ -17,9 +17,11 @@
 package com.intellij.lang.javascript.psi;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
+import org.mustbe.consulo.javascript.lang.psi.JavaScriptTypeElement;
 import com.intellij.lang.javascript.psi.stubs.JSVariableStubBase;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.StubBasedPsiElement;
 import com.intellij.util.IncorrectOperationException;
 
@@ -43,9 +45,13 @@ public interface JSVariable extends JSQualifiedNamedElement, JSAttributeListOwne
 	@NotNull
 	JavaScriptType getType();
 
+	@Nullable
+	@Deprecated
 	String getTypeString();
 
-	PsiElement getTypeElement();
+	@Nullable
+	@RequiredReadAction
+	JavaScriptTypeElement getTypeElement();
 
 	boolean isConst();
 

@@ -21,6 +21,7 @@ import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
 import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
+import org.mustbe.consulo.javascript.lang.psi.JavaScriptTypeElement;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
@@ -113,10 +114,9 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
 	}
 
 	@Override
-	public PsiElement getReturnTypeElement()
+	public JavaScriptTypeElement getReturnTypeElement()
 	{
-		ASTNode node = JSPsiImplUtils.getTypeExpressionFromDeclaration(this);
-		return node != null ? node.getPsi() : null;
+		return JSPsiImplUtils.findTypeElement(this);
 	}
 
 	@Override

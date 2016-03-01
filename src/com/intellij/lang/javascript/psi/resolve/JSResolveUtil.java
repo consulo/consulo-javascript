@@ -34,6 +34,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.JavaScriptVersionUtil;
 import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
+import org.mustbe.consulo.javascript.lang.psi.JavaScriptTypeElement;
 import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import org.mustbe.consulo.javascript.module.extension.JavaScriptModuleExtension;
 import com.intellij.ide.highlighter.XmlFileType;
@@ -3033,8 +3034,9 @@ public class JSResolveUtil
 			return myType;
 		}
 
+		@RequiredReadAction
 		@Override
-		public PsiElement getTypeElement()
+		public JavaScriptTypeElement getTypeElement()
 		{
 			return null;
 		}
