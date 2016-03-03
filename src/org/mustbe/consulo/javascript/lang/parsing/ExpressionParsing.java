@@ -317,40 +317,20 @@ public class ExpressionParsing extends Parsing
 		final IElementType nameToken = builder.getTokenType();
 		final PsiBuilder.Marker property = builder.mark();
 
-		String propName = isIdentifierToken(builder, nameToken) ? builder.getTokenText() : null;
-		//noinspection HardCodedStringLiteral
-		if("set".equals(propName) || "get".equals(propName))
+		if(isNotPropertyStart(builder, nameToken))
 		{
-			builder.advanceLexer();
-			if(builder.getTokenType() == JSTokenTypes.COLON)
-			{
-				builder.advanceLexer();
-				if(!parseAssignmentExpression(builder))
-				{
-					builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
-				}
-			}
-			else
-			{
-				getFunctionParsing().parseFunctionDeclaration(builder);
-			}
+			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.identifier.string.literal.or.numeric.literal"));
 		}
-		else
-		{
-			if(isNotPropertyStart(builder, nameToken))
-			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.identifier.string.literal.or.numeric.literal"));
-			}
-			builder.advanceLexer();
-			checkMatches(builder, JSTokenTypes.COLON, JavaScriptBundle.message("javascript.parser.message.expected.colon"));
+		builder.advanceLexer();
 
-			builder.putUserData(WITHIN_OBJECT_LITERAL_EXPRESSION, Boolean.TRUE);
-			if(!parseAssignmentExpression(builder))
-			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
-			}
-			builder.putUserData(WITHIN_OBJECT_LITERAL_EXPRESSION, null);
+		checkMatches(builder, JSTokenTypes.COLON, JavaScriptBundle.message("javascript.parser.message.expected.colon"));
+
+		builder.putUserData(WITHIN_OBJECT_LITERAL_EXPRESSION, Boolean.TRUE);
+		if(!parseAssignmentExpression(builder))
+		{
+			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
 		}
+		builder.putUserData(WITHIN_OBJECT_LITERAL_EXPRESSION, null);
 
 		property.done(JSElementTypes.PROPERTY);
 	}
