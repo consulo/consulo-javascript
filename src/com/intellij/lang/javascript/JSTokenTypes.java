@@ -301,6 +301,7 @@ public interface JSTokenTypes
 
 	TokenSet GET_SET_TOKEN_SET = TokenSet.create(GET_KEYWORD, SET_KEYWORD);
 
+	@Deprecated
 	TokenSet IDENTIFIER_TOKENS_SET = TokenSet.create(IDENTIFIER);
 
 	abstract class JSChameleonElementType extends ILazyParseableElementType

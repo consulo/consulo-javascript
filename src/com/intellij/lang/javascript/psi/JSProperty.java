@@ -20,6 +20,7 @@ package com.intellij.lang.javascript.psi;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.javascript.psi.JSComputedName;
+import com.intellij.psi.PsiElement;
 
 /**
  * @author max
@@ -30,6 +31,10 @@ public interface JSProperty extends JSNamedElement
 	@Nullable
 	@RequiredReadAction
 	JSExpression getValue();
+
+	@Nullable
+	@RequiredReadAction
+	PsiElement getColonElement();
 
 	@Nullable
 	@RequiredReadAction

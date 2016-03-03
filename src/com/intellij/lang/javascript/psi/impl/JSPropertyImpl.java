@@ -22,7 +22,6 @@ import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
 import org.mustbe.consulo.javascript.psi.JSComputedName;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -42,7 +41,7 @@ import com.intellij.util.IncorrectOperationException;
  */
 public class JSPropertyImpl extends JSElementImpl implements JSProperty
 {
-	private static TokenSet IDENTIFIER_TOKENS_SET = TokenSet.orSet(JSTokenTypes.IDENTIFIER_TOKENS_SET, TokenSet.create(JSTokenTypes.NUMERIC_LITERAL), JavaScriptTokenSets.STRING_LITERALS);
+	private static TokenSet IDENTIFIER_TOKENS_SET = TokenSet.orSet(TokenSet.create(JSTokenTypes.NUMERIC_LITERAL, JSTokenTypes.IDENTIFIER), JavaScriptTokenSets.STRING_LITERALS);
 
 	public JSPropertyImpl(final ASTNode node)
 	{
@@ -108,8 +107,15 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 	@Override
 	public JSExpression getValue()
 	{
-		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
-		return node != null ? (JSExpression) node.getPsi() : null;
+		return findChildByClass(JSExpression.class);
+	}
+
+	@RequiredReadAction
+	@Nullable
+	@Override
+	public PsiElement getColonElement()
+	{
+		return findChildByType(JSTokenTypes.COLON);
 	}
 
 	@RequiredReadAction
@@ -153,6 +159,16 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 	@RequiredReadAction
 	public PsiElement getNameIdentifier()
 	{
-		return findChildByType(IDENTIFIER_TOKENS_SET);
+		PsiElement nameIdentifier = findChildByType(IDENTIFIER_TOKENS_SET);
+		if(nameIdentifier == null)
+		{
+			JSExpression value = getValue();
+			// auto-property name
+			if(value != null && getColonElement() == null)
+			{
+				return value;
+			}
+		}
+		return nameIdentifier;
 	}
 }

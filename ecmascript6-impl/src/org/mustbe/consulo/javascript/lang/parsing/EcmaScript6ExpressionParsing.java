@@ -36,11 +36,10 @@ public class EcmaScript6ExpressionParsing extends ExpressionParsing
 	@Override
 	protected void parseProperty(PsiBuilder builder)
 	{
-		final IElementType nameToken = builder.getTokenType();
-		final PsiBuilder.Marker property = builder.mark();
+		final IElementType nameTokenType = builder.getTokenType();
+		PsiBuilder.Marker propertyMark = builder.mark();
 
-		IElementType tokenType = builder.getTokenType();
-		if(tokenType == JSTokenTypes.LBRACKET)
+		if(nameTokenType == JSTokenTypes.LBRACKET)
 		{
 			PsiBuilder.Marker mark = builder.mark();
 			builder.advanceLexer();
@@ -50,23 +49,38 @@ public class EcmaScript6ExpressionParsing extends ExpressionParsing
 		}
 		else
 		{
-			if(isNotPropertyStart(builder, nameToken))
+			if(isNotPropertyStart(builder, nameTokenType))
 			{
 				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.identifier.string.literal.or.numeric.literal"));
 			}
 			builder.advanceLexer();
 		}
 
-		checkMatches(builder, JSTokenTypes.COLON, JavaScriptBundle.message("javascript.parser.message.expected.colon"));
-
-		builder.putUserData(WITHIN_OBJECT_LITERAL_EXPRESSION, Boolean.TRUE);
-		if(!parseAssignmentExpression(builder))
+		IElementType nextTokenType = builder.getTokenType();
+		// we finished property
+		if((nextTokenType == JSTokenTypes.COMMA || nextTokenType == JSTokenTypes.RBRACE) && nameTokenType == JSTokenTypes.IDENTIFIER)
 		{
-			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
-		}
-		builder.putUserData(WITHIN_OBJECT_LITERAL_EXPRESSION, null);
+			propertyMark.rollbackTo(); // rollback it
 
-		property.done(JSElementTypes.PROPERTY);
+			propertyMark = builder.mark();
+
+			PsiBuilder.Marker referenceMark = builder.mark();
+			builder.advanceLexer();
+			referenceMark.done(JSElementTypes.REFERENCE_EXPRESSION);
+		}
+		else
+		{
+			checkMatches(builder, JSTokenTypes.COLON, JavaScriptBundle.message("javascript.parser.message.expected.colon"));
+
+			builder.putUserData(WITHIN_OBJECT_LITERAL_EXPRESSION, Boolean.TRUE);
+			if(!parseAssignmentExpression(builder))
+			{
+				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+			}
+			builder.putUserData(WITHIN_OBJECT_LITERAL_EXPRESSION, null);
+		}
+
+		propertyMark.done(JSElementTypes.PROPERTY);
 	}
 
 	@Override
