@@ -104,25 +104,6 @@ public class ExpressionParsing extends Parsing
 			getFunctionParsing().parseFunctionExpression(builder);
 			return true;
 		}
-		else if(JSTokenTypes.ACCESS_MODIFIERS.contains(firstToken))
-		{
-			PsiBuilder.Marker marker = builder.mark();
-			builder.advanceLexer();
-			if(JSTokenTypes.COLON_COLON == builder.getTokenType())
-			{
-				builder.advanceLexer();
-				if(isIdentifierToken(builder, builder.getTokenType()))
-				{
-					builder.advanceLexer();
-				}
-				marker.done(JSElementTypes.REFERENCE_EXPRESSION);
-			}
-			else
-			{
-				marker.drop();
-			}
-			return true;
-		}
 		else if(firstToken == JSTokenTypes.XML_START_TAG_START || firstToken == JSTokenTypes.XML_START_TAG_LIST)
 		{
 			parseTag(builder);
