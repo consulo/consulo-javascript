@@ -217,9 +217,9 @@ public class JSElementVisitor extends PsiElementVisitor
 		visitJSElement(node);
 	}
 
-	public void visitJSParameter(final JSParameter node)
+	public void visitJSParameter(final JSParameter parameter)
 	{
-		visitJSVariable(node);
+		visitJSVariable(parameter);
 	}
 
 	public void visitJSVariable(final JSVariable node)

@@ -122,6 +122,7 @@ DIGIT=[0-9]
 
 
 <YYINITIAL, DIV_OR_GT> "."                   { yybegin(YYINITIAL); return JSTokenTypes.DOT; }
+<YYINITIAL, DIV_OR_GT> "..."                 { yybegin(YYINITIAL); return JSTokenTypes.DOT_DOT_DOT; }
 
 
 <YYINITIAL,DIV_OR_GT> "==="                 { yybegin(YYINITIAL); return JSTokenTypes.EQEQEQ; }

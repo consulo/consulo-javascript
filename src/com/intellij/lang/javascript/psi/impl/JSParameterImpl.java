@@ -17,6 +17,8 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
@@ -26,6 +28,7 @@ import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSParameter;
 import com.intellij.lang.javascript.psi.stubs.JSParameterStub;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.util.IncorrectOperationException;
 
@@ -55,6 +58,7 @@ public class JSParameterImpl extends JSVariableBaseImpl<JSParameterStub, JSParam
 	}
 
 	@Override
+	@RequiredReadAction
 	public boolean isRest()
 	{
 		final JSParameterStub parameterStub = getStub();
@@ -62,7 +66,15 @@ public class JSParameterImpl extends JSVariableBaseImpl<JSParameterStub, JSParam
 		{
 			return parameterStub.isRest();
 		}
-		return getNode().findChildByType(JSTokenTypes.DOT_DOT_DOT) != null;
+		return getRestElement() != null;
+	}
+
+	@Nullable
+	@Override
+	@RequiredReadAction
+	public PsiElement getRestElement()
+	{
+		return findChildByType(JSTokenTypes.DOT_DOT_DOT);
 	}
 
 	@Override

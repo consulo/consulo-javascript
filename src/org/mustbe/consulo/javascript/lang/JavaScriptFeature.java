@@ -27,7 +27,8 @@ public enum JavaScriptFeature
 	CLASS("Classes"),
 	OCTAL_LITERAL("Octal literals"),
 	BINARY_LITERAL("Binary literals"),
-	PARAMETER_DEFAULT_VALUE("Default parameter values");
+	PARAMETER_DEFAULT_VALUE("Default parameter values"),
+	REST_PARAMETER("Rest parameters");
 
 	private String myName;
 

@@ -17,6 +17,9 @@
 package com.intellij.lang.javascript.psi;
 
 import org.consulo.lombok.annotations.ArrayFactoryFields;
+import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import com.intellij.psi.PsiElement;
 
 /**
  * User: max
@@ -28,7 +31,12 @@ public interface JSParameter extends JSVariable
 {
 	JSFunction getDeclaringFunction();
 
+	@RequiredReadAction
 	boolean isRest();
+
+	@Nullable
+	@RequiredReadAction
+	PsiElement getRestElement();
 
 	boolean isOptional();
 }

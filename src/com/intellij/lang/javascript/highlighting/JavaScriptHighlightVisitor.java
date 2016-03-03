@@ -120,14 +120,21 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 	}
 
 	@Override
-	public void visitJSParameter(JSParameter node)
+	@RequiredReadAction
+	public void visitJSParameter(JSParameter parameter)
 	{
-		super.visitJSParameter(node);
+		super.visitJSParameter(parameter);
 
-		JSExpression initializer = node.getInitializer();
+		JSExpression initializer = parameter.getInitializer();
 		if(initializer != null)
 		{
 			reportFeatureUsage(initializer, JavaScriptFeature.PARAMETER_DEFAULT_VALUE);
+		}
+
+		PsiElement restElement = parameter.getRestElement();
+		if(restElement != null)
+		{
+			reportFeatureUsage(restElement, JavaScriptFeature.REST_PARAMETER);
 		}
 	}
 
