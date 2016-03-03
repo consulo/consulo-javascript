@@ -47,9 +47,9 @@ public class JSElementVisitor extends PsiElementVisitor
 		visitJSExpression(node);
 	}
 
-	public void visitJSPrefixExpression(final JSPrefixExpression node)
+	public void visitJSPrefixExpression(final JSPrefixExpression expression)
 	{
-		visitJSExpression(node);
+		visitJSExpression(expression);
 	}
 
 	public void visitJSPostfixExpression(final JSPostfixExpression node)

@@ -59,6 +59,7 @@ public class EcmaScript6JavaScriptVersion extends BaseJavaScriptLanguageVersion 
 		addFeature(JavaScriptFeature.OCTAL_LITERAL);
 		addFeature(JavaScriptFeature.PARAMETER_DEFAULT_VALUE);
 		addFeature(JavaScriptFeature.REST_PARAMETER);
+		addFeature(JavaScriptFeature.SPREAD_OPERATOR);
 	}
 
 	@NotNull

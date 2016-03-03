@@ -176,6 +176,18 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 		addElementHighlight(validResult, referenceNameElement);
 	}
 
+	@Override
+	@RequiredReadAction
+	public void visitJSPrefixExpression(JSPrefixExpression expression)
+	{
+		super.visitJSPrefixExpression(expression);
+
+		if(expression.getOperationSign() == JSTokenTypes.DOT_DOT_DOT)
+		{
+			reportFeatureUsage(expression.getOperatorElement(), JavaScriptFeature.SPREAD_OPERATOR);
+		}
+	}
+
 	@RequiredReadAction
 	private void addElementHighlight(@NotNull PsiElement resolvedElement, @NotNull PsiElement targetForHighlight)
 	{

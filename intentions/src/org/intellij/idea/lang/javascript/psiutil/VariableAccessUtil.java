@@ -209,18 +209,18 @@ public class VariableAccessUtil {
             }
         }
 
-        @Override public void visitJSPrefixExpression(JSPrefixExpression prefixExpression) {
+        @Override public void visitJSPrefixExpression(JSPrefixExpression expression) {
             if (!this.assigned) {
-                super.visitJSPrefixExpression(prefixExpression);
+                super.visitJSPrefixExpression(expression);
 
-                final IElementType tokenType = prefixExpression.getOperationSign();
+                final IElementType tokenType = expression.getOperationSign();
 
                 if (!(tokenType.equals(JSTokenTypes.PLUSPLUS) ||
                       tokenType.equals(JSTokenTypes.MINUSMINUS))) {
                     return;
                 }
 
-                final JSExpression operand = prefixExpression.getExpression();
+                final JSExpression operand = expression.getExpression();
 
                 this.assigned = (VariableAccessUtil.mayEvaluateToVariable(operand, this.variable));
             }

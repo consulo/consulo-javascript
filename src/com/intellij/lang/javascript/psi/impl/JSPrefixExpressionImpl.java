@@ -25,6 +25,7 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSPrefixExpression;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.IElementType;
 
@@ -49,11 +50,21 @@ public class JSPrefixExpressionImpl extends JSExpressionImpl implements JSPrefix
 		return node != null ? (JSExpression) node.getPsi() : null;
 	}
 
+	@NotNull
+	@RequiredReadAction
 	@Override
 	public IElementType getOperationSign()
 	{
-		final ASTNode[] nodes = getNode().getChildren(JSTokenTypes.OPERATIONS);
-		return nodes.length == 1 ? nodes[0].getElementType() : null;
+		PsiElement operatorElement = getOperatorElement();
+		return operatorElement.getNode().getElementType();
+	}
+
+	@RequiredReadAction
+	@NotNull
+	@Override
+	public PsiElement getOperatorElement()
+	{
+		return findNotNullChildByType(JSTokenTypes.OPERATIONS);
 	}
 
 	@Override

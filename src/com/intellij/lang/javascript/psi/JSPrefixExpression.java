@@ -16,7 +16,10 @@
 
 package com.intellij.lang.javascript.psi;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mustbe.consulo.RequiredReadAction;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 
 /**
@@ -31,5 +34,11 @@ public interface JSPrefixExpression extends JSExpression
 	@Nullable
 	JSExpression getExpression();
 
+	@NotNull
+	@RequiredReadAction
 	IElementType getOperationSign();
+
+	@RequiredReadAction
+	@NotNull
+	PsiElement getOperatorElement();
 }

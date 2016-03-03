@@ -36,17 +36,17 @@ public class VariableAssignedVisitor extends JSRecursiveElementVisitor {
     }
 
     @Override public void visitJSPrefixExpression(
-            @NotNull JSPrefixExpression prefixExpression) {
+            @NotNull JSPrefixExpression expression) {
         if (assigned) {
             return;
         }
-        super.visitJSPrefixExpression(prefixExpression);
-        final IElementType operationSign = prefixExpression.getOperationSign();
+        super.visitJSPrefixExpression(expression);
+        final IElementType operationSign = expression.getOperationSign();
         if (!JSTokenTypes.PLUSPLUS.equals(operationSign) &&
                 !JSTokenTypes.MINUSMINUS.equals(operationSign)) {
             return;
         }
-        final JSExpression operand = prefixExpression.getExpression();
+        final JSExpression operand = expression.getExpression();
         if (VariableAccessUtils.mayEvaluateToVariable(operand, variable)) {
             assigned = true;
         }

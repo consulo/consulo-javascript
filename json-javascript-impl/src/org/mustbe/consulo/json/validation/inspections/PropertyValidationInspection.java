@@ -77,9 +77,9 @@ public class PropertyValidationInspection extends LocalInspectionTool
 
 			@Override
 			@RequiredReadAction
-			public void visitJSPrefixExpression(JSPrefixExpression node)
+			public void visitJSPrefixExpression(JSPrefixExpression expression)
 			{
-				validateValue(node, holder);
+				validateValue(expression, holder);
 			}
 
 			@Override

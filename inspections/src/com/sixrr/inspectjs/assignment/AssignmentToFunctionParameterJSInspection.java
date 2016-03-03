@@ -44,14 +44,14 @@ public class AssignmentToFunctionParameterJSInspection extends JavaScriptInspect
             checkOperand(lhs);
         }
 
-        @Override public void visitJSPrefixExpression(JSPrefixExpression jsPrefixExpression) {
-            super.visitJSPrefixExpression(jsPrefixExpression);
-            final IElementType sign = jsPrefixExpression.getOperationSign();
+        @Override public void visitJSPrefixExpression(JSPrefixExpression expression) {
+            super.visitJSPrefixExpression(expression);
+            final IElementType sign = expression.getOperationSign();
             if (!JSTokenTypes.PLUSPLUS.equals(sign) &&
                     !JSTokenTypes.MINUSMINUS.equals(sign)) {
                 return;
             }
-            final JSExpression operand = jsPrefixExpression.getExpression();
+            final JSExpression operand = expression.getExpression();
             checkOperand(operand);
         }
 

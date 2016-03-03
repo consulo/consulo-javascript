@@ -28,7 +28,8 @@ public enum JavaScriptFeature
 	OCTAL_LITERAL("Octal literals"),
 	BINARY_LITERAL("Binary literals"),
 	PARAMETER_DEFAULT_VALUE("Default parameter values"),
-	REST_PARAMETER("Rest parameters");
+	REST_PARAMETER("Rest parameters"),
+	SPREAD_OPERATOR("Spread operator");
 
 	private String myName;
 
