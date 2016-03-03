@@ -17,11 +17,18 @@
 package org.mustbe.consulo.javascript.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.javascript.psi.JavaScriptLambdaExpression;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
+import com.intellij.lang.javascript.psi.JSParameter;
+import com.intellij.lang.javascript.psi.JSParameterList;
 import com.intellij.lang.javascript.psi.impl.JSExpressionImpl;
+import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
 
 /**
  * @author VISTALL
@@ -35,15 +42,49 @@ public class JavaScriptLambdaExpressionImpl extends JSExpressionImpl implements 
 	}
 
 	@Override
+	@RequiredReadAction
+	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place)
+	{
+		if(lastParent != null && lastParent.getParent() == this)
+		{
+			final JSParameter[] params = getParameterList().getParameters();
+			for(JSParameter param : params)
+			{
+				if(!processor.execute(param, state))
+				{
+					return false;
+				}
+			}
+
+			boolean b = JSResolveUtil.processDeclarationsInScope(this, processor, state, lastParent, place);
+			if(b)
+			{
+				processor.handleEvent(PsiScopeProcessor.Event.SET_DECLARATION_HOLDER, this);
+			}
+			return b;
+		}
+
+		return processor.execute(this, state);
+	}
+
+	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
 		{
-			((JSElementVisitor)visitor).visitLambdaExpression(this);
+			((JSElementVisitor) visitor).visitLambdaExpression(this);
 		}
 		else
 		{
 			visitor.visitElement(this);
 		}
+	}
+
+	@RequiredReadAction
+	@NotNull
+	@Override
+	public JSParameterList getParameterList()
+	{
+		return findNotNullChildByClass(JSParameterList.class);
 	}
 }

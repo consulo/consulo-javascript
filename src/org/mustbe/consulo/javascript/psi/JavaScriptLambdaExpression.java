@@ -16,7 +16,10 @@
 
 package org.mustbe.consulo.javascript.psi;
 
+import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.RequiredReadAction;
 import com.intellij.lang.javascript.psi.JSExpression;
+import com.intellij.lang.javascript.psi.JSParameterList;
 
 /**
  * @author VISTALL
@@ -24,4 +27,7 @@ import com.intellij.lang.javascript.psi.JSExpression;
  */
 public interface JavaScriptLambdaExpression extends JSExpression
 {
+	@NotNull
+	@RequiredReadAction
+	JSParameterList getParameterList();
 }
