@@ -312,7 +312,7 @@ public class ExpressionParsing extends Parsing
 		return !isIdentifierToken(builder, elementType) && !JavaScriptTokenSets.STRING_LITERALS.contains(elementType) && elementType != JSTokenTypes.NUMERIC_LITERAL;
 	}
 
-	private void parseProperty(final PsiBuilder builder)
+	protected void parseProperty(final PsiBuilder builder)
 	{
 		final IElementType nameToken = builder.getTokenType();
 		final PsiBuilder.Marker property = builder.mark();

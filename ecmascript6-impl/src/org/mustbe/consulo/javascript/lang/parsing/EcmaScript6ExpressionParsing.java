@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2013-2016 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-package com.intellij.lang.javascript.psi;
+package org.mustbe.consulo.javascript.lang.parsing;
 
-import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import com.intellij.lang.PsiBuilder;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 7:39:29 PM
- * To change this template use File | Settings | File Templates.
+ * @author VISTALL
+ * @since 03.03.2016
  */
-public interface JSProperty extends JSNamedElement
+public class EcmaScript6ExpressionParsing extends ExpressionParsing
 {
-	@Nullable
-	@RequiredReadAction
-	JSExpression getValue();
+	public EcmaScript6ExpressionParsing(JavaScriptParsingContext context)
+	{
+		super(context);
+	}
+
+	@Override
+	protected void parseProperty(PsiBuilder builder)
+	{
+		super.parseProperty(builder);
+	}
 }

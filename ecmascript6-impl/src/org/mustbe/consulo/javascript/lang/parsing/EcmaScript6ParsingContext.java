@@ -30,4 +30,11 @@ public class EcmaScript6ParsingContext extends JavaScriptParsingContext
 	{
 		return new EcmaScript6StatementParsing(this);
 	}
+
+	@NotNull
+	@Override
+	protected ExpressionParsing createExpressionParsing()
+	{
+		return new EcmaScript6ExpressionParsing(this);
+	}
 }

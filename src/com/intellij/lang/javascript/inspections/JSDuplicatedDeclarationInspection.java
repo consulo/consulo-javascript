@@ -134,17 +134,6 @@ public class JSDuplicatedDeclarationInspection extends JSInspection
 								return true;
 							}
 						}
-						else if(element instanceof JSProperty && decl instanceof JSProperty)
-						{
-							final JSProperty elementProperty = (JSProperty) element;
-							final JSProperty declProperty = (JSProperty) decl;
-
-							if((declProperty.isGetProperty() && elementProperty.isSetProperty()) || (declProperty.isSetProperty() && elementProperty.isGetProperty()))
-							{
-								return true;
-							}
-						}
-
 						if(element instanceof JSFunction &&
 								decl instanceof JSClass && element.getParent() == decl)
 						{

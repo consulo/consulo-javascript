@@ -31,11 +31,9 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiReference;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.IncorrectOperationException;
 
 /**
@@ -44,8 +42,6 @@ import com.intellij.util.IncorrectOperationException;
 public class JSPropertyImpl extends JSElementImpl implements JSProperty
 {
 	private static TokenSet IDENTIFIER_TOKENS_SET = TokenSet.orSet(JSTokenTypes.IDENTIFIER_TOKENS_SET, TokenSet.create(JSTokenTypes.NUMERIC_LITERAL), JavaScriptTokenSets.STRING_LITERALS);
-
-	private static TokenSet FUNCTION_TOKEN_SET = TokenSet.create(JSElementTypes.FUNCTION_DECLARATION);
 
 	public JSPropertyImpl(final ASTNode node)
 	{
@@ -95,34 +91,6 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 			return StringUtil.stripQuotesAroundValue(nameIdentifier.getText());
 		}
 		return null;
-	}
-
-	@RequiredReadAction
-	static boolean isGetIdentifier(final PsiElement node)
-	{
-		final IElementType type = PsiUtilCore.getElementType(node);
-
-		return type == JSTokenTypes.GET_KEYWORD;
-	}
-
-	@RequiredReadAction
-	static boolean isSetIdentifier(final PsiElement node)
-	{
-		final IElementType type = PsiUtilCore.getElementType(node);
-
-		return type == JSTokenTypes.SET_KEYWORD;
-	}
-
-	@Override
-	public boolean isGetProperty()
-	{
-		return false;
-	}
-
-	@Override
-	public boolean isSetProperty()
-	{
-		return false;
 	}
 
 	@Override
