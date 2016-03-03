@@ -131,6 +131,7 @@ DIGIT=[0-9]
 <YYINITIAL,DIV_OR_GT> "++"                  { return JSTokenTypes.PLUSPLUS; }
 <YYINITIAL,DIV_OR_GT> "--"                  { return JSTokenTypes.MINUSMINUS; }
 
+<YYINITIAL,DIV_OR_GT> "=>"                  { yybegin(YYINITIAL); return JSTokenTypes.DARROW; }
 <YYINITIAL,DIV_OR_GT> "=="                  { yybegin(YYINITIAL); return JSTokenTypes.EQEQ; }
 <YYINITIAL,DIV_OR_GT> "!="                  { yybegin(YYINITIAL); return JSTokenTypes.NE; }
 <DIV_OR_GT> "<"                             { yybegin(YYINITIAL); return JSTokenTypes.LT; }

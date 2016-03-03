@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.psi;
 
+import org.mustbe.consulo.javascript.psi.JavaScriptLambdaExpression;
 import com.intellij.psi.PsiElementVisitor;
 
 /**
@@ -344,5 +345,10 @@ public class JSElementVisitor extends PsiElementVisitor
 	public void visitJSDocComment(final JSDocComment docComment)
 	{
 		visitComment(docComment);
+	}
+
+	public void visitLambdaExpression(JavaScriptLambdaExpression expression)
+	{
+		visitJSExpression(expression);
 	}
 }

@@ -34,6 +34,81 @@ public class EcmaScript6ExpressionParsing extends ExpressionParsing
 	}
 
 	@Override
+	protected boolean parsePrimaryExpression(PsiBuilder builder)
+	{
+		if(canParseLambdaExpression(builder))
+		{
+			return parseLambdaExpression(builder);
+		}
+		return super.parsePrimaryExpression(builder);
+	}
+
+	private boolean parseLambdaExpression(PsiBuilder builder)
+	{
+		PsiBuilder.Marker mark = builder.mark();
+
+		IElementType tokenType = builder.getTokenType();
+		if(tokenType == JSTokenTypes.IDENTIFIER)
+		{
+			PsiBuilder.Marker parameterList = builder.mark();
+			getFunctionParsing().parseParameter(builder, null);
+			parameterList.done(JSElementTypes.PARAMETER_LIST);
+		}
+		else
+		{
+			getFunctionParsing().parseParameterList(builder);
+		}
+
+		if(builder.getTokenType() == JSTokenTypes.DARROW)
+		{
+			builder.advanceLexer();
+		}
+
+		if(builder.getTokenType() == JSTokenTypes.LBRACE)
+		{
+			getStatementParsing().parseBlock(builder);
+		}
+		else
+		{
+			parseExpression(builder);
+		}
+
+		mark.done(JSElementTypes.LAMBDA_EXPRESSION);
+		return true;
+	}
+
+	private boolean canParseLambdaExpression(PsiBuilder builder)
+	{
+		PsiBuilder.Marker marker = builder.mark();
+		try
+		{
+			IElementType tokenType = builder.getTokenType();
+			if(tokenType == JSTokenTypes.IDENTIFIER)
+			{
+				builder.advanceLexer();
+				if(builder.getTokenType() == JSTokenTypes.DARROW)
+				{
+					return true;
+				}
+			}
+			else if(tokenType == JSTokenTypes.LPAR)
+			{
+				getFunctionParsing().parseParameterList(builder);
+
+				if(builder.getTokenType() == JSTokenTypes.DARROW)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+		finally
+		{
+			marker.rollbackTo();
+		}
+	}
+
+	@Override
 	protected void parseProperty(PsiBuilder builder)
 	{
 		final IElementType nameTokenType = builder.getTokenType();

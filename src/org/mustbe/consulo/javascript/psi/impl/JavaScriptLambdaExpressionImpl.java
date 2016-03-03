@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o.
+ * Copyright 2013-2016 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
-package com.intellij.lang.javascript.psi.impl;
+package org.mustbe.consulo.javascript.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.mustbe.consulo.javascript.psi.JavaScriptLambdaExpression;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.psi.JSLiteralExpression;
+import com.intellij.lang.javascript.psi.JSElementVisitor;
+import com.intellij.lang.javascript.psi.impl.JSExpressionImpl;
 import com.intellij.psi.PsiElementVisitor;
 
 /**
- * @since Maxim.Mossienko
+ * @author VISTALL
+ * @since 03.03.2016
  */
-public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLiteralExpression
+public class JavaScriptLambdaExpressionImpl extends JSExpressionImpl implements JavaScriptLambdaExpression
 {
-	public JSXmlLiteralExpressionImpl(final ASTNode node)
+	public JavaScriptLambdaExpressionImpl(ASTNode node)
 	{
 		super(node);
 	}
@@ -34,6 +37,13 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
 	@Override
 	public void accept(@NotNull PsiElementVisitor visitor)
 	{
-		visitor.visitElement(this);
+		if(visitor instanceof JSElementVisitor)
+		{
+			((JSElementVisitor)visitor).visitLambdaExpression(this);
+		}
+		else
+		{
+			visitor.visitElement(this);
+		}
 	}
 }

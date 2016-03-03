@@ -260,6 +260,7 @@ public interface JSTokenTypes
 	IElementType XOREQ = new JSElementType("XOREQ");// ^=
 	IElementType DIV = new JSElementType("DIV"); // /
 	IElementType DIVEQ = new JSElementType("DIVEQ"); // /=
+	IElementType DARROW = new JSElementType("DARROW"); // =>
 
 	IElementType COLON_COLON = new JSElementType("COLON_COLON"); // ::
 	IElementType GWT_FIELD_OR_METHOD = new JSElementType("GWT_FIELD_OR_METHOD"); // ::

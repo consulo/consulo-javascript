@@ -16,11 +16,13 @@
 
 package org.mustbe.consulo.javascript.psi.impl;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.javascript.psi.JSComputedName;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.impl.JSElementImpl;
+import com.intellij.psi.PsiElementVisitor;
 
 /**
  * @author VISTALL
@@ -31,6 +33,12 @@ public class JSComputedNameImpl extends JSElementImpl implements JSComputedName
 	public JSComputedNameImpl(ASTNode node)
 	{
 		super(node);
+	}
+
+	@Override
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		visitor.visitElement(this);
 	}
 
 	@Nullable

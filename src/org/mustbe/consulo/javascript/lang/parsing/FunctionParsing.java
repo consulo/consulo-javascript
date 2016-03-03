@@ -17,6 +17,7 @@
 package org.mustbe.consulo.javascript.lang.parsing;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -127,27 +128,7 @@ public class FunctionParsing extends Parsing
 				}
 			}
 
-			final PsiBuilder.Marker parameter = builder.mark();
-			if(builder.getTokenType() == JSTokenTypes.DOT_DOT_DOT)
-			{
-				builder.advanceLexer();
-			}
-			if(JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(builder.getTokenType()))
-			{
-				builder.advanceLexer();
-				getExpressionParsing().tryParseType(builder);
-				if(builder.getTokenType() == JSTokenTypes.EQ)
-				{
-					builder.advanceLexer();
-					getExpressionParsing().parseSimpleExpression(builder);
-				}
-				parameter.done(JSElementTypes.FORMAL_PARAMETER);
-			}
-			else
-			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.formal.parameter.name"));
-				parameter.drop();
-			}
+			parseParameter(builder, null);
 		}
 
 		if(builder.getTokenType() == JSTokenTypes.RPAR)
@@ -156,5 +137,35 @@ public class FunctionParsing extends Parsing
 		}
 
 		parameterList.done(JSElementTypes.PARAMETER_LIST);
+	}
+
+	public void parseParameter(@NotNull PsiBuilder builder, @Nullable PsiBuilder.Marker parameterMarker)
+	{
+		if(parameterMarker == null)
+		{
+			parameterMarker = builder.mark();
+		}
+
+		if(builder.getTokenType() == JSTokenTypes.DOT_DOT_DOT)
+		{
+			builder.advanceLexer();
+		}
+
+		if(builder.getTokenType() == JSTokenTypes.IDENTIFIER)
+		{
+			builder.advanceLexer();
+			getExpressionParsing().tryParseType(builder);
+			if(builder.getTokenType() == JSTokenTypes.EQ)
+			{
+				builder.advanceLexer();
+				getExpressionParsing().parseSimpleExpression(builder);
+			}
+			parameterMarker.done(JSElementTypes.FORMAL_PARAMETER);
+		}
+		else
+		{
+			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.formal.parameter.name"));
+			parameterMarker.drop();
+		}
 	}
 }

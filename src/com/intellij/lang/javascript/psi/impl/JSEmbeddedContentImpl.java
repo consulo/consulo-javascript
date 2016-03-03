@@ -21,6 +21,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.PsiElementProcessor;
@@ -41,6 +42,12 @@ public class JSEmbeddedContentImpl extends JSElementImpl implements XmlTagChild
 	public JSEmbeddedContentImpl(final ASTNode node)
 	{
 		super(node);
+	}
+
+	@Override
+	public void accept(@NotNull PsiElementVisitor visitor)
+	{
+		visitor.visitElement(this);
 	}
 
 	@Override

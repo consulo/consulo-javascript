@@ -19,6 +19,7 @@ package com.intellij.lang.javascript;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import org.mustbe.consulo.javascript.psi.impl.JSComputedNameImpl;
+import org.mustbe.consulo.javascript.psi.impl.JavaScriptLambdaExpressionImpl;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.javascript.psi.*;
@@ -142,6 +143,7 @@ public interface JSElementTypes
 	IElementType BINARY_EXPRESSION = new ElementTypeAsPsiFactory("BINARY_EXPRESSION", JavaScriptLanguage.INSTANCE, JSBinaryExpressionImpl.class);
 	IElementType PREFIX_EXPRESSION = new ElementTypeAsPsiFactory("PREFIX_EXPRESSION", JavaScriptLanguage.INSTANCE, JSPrefixExpressionImpl.class);
 	IElementType POSTFIX_EXPRESSION = new ElementTypeAsPsiFactory("POSTFIX_EXPRESSION", JavaScriptLanguage.INSTANCE, JSPostfixExpressionImpl.class);
+	IElementType LAMBDA_EXPRESSION = new ElementTypeAsPsiFactory("LAMBDA_EXPRESSION", JavaScriptLanguage.INSTANCE, JavaScriptLambdaExpressionImpl.class);
 	IElementType COMMA_EXPRESSION = new ElementTypeAsPsiFactory("COMMA_EXPRESSION", JavaScriptLanguage.INSTANCE, JSCommaExpressionImpl.class);
 	JSStubElementType<JSFunctionStub, JSFunction> FUNCTION_EXPRESSION = new JSFunctionElementType("FUNCTION_EXPRESSION")
 	{
