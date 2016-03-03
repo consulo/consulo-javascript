@@ -17,6 +17,10 @@
 package org.mustbe.consulo.javascript.lang.parsing;
 
 import com.intellij.lang.PsiBuilder;
+import com.intellij.lang.javascript.JSElementTypes;
+import com.intellij.lang.javascript.JSTokenTypes;
+import com.intellij.lang.javascript.JavaScriptBundle;
+import com.intellij.psi.tree.IElementType;
 
 /**
  * @author VISTALL
@@ -32,6 +36,42 @@ public class EcmaScript6ExpressionParsing extends ExpressionParsing
 	@Override
 	protected void parseProperty(PsiBuilder builder)
 	{
-		super.parseProperty(builder);
+		final IElementType nameToken = builder.getTokenType();
+		final PsiBuilder.Marker property = builder.mark();
+
+		IElementType tokenType = builder.getTokenType();
+		if(tokenType == JSTokenTypes.LBRACKET)
+		{
+			PsiBuilder.Marker mark = builder.mark();
+			builder.advanceLexer();
+			parseExpression(builder);
+			checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptBundle.message("javascript.parser.message.expected.rbracket"));
+			mark.done(JSElementTypes.COMPUTED_NAME);
+		}
+		else
+		{
+			if(isNotPropertyStart(builder, nameToken))
+			{
+				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.identifier.string.literal.or.numeric.literal"));
+			}
+			builder.advanceLexer();
+		}
+
+		checkMatches(builder, JSTokenTypes.COLON, JavaScriptBundle.message("javascript.parser.message.expected.colon"));
+
+		builder.putUserData(WITHIN_OBJECT_LITERAL_EXPRESSION, Boolean.TRUE);
+		if(!parseAssignmentExpression(builder))
+		{
+			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+		}
+		builder.putUserData(WITHIN_OBJECT_LITERAL_EXPRESSION, null);
+
+		property.done(JSElementTypes.PROPERTY);
+	}
+
+	@Override
+	public boolean isNotPropertyStart(PsiBuilder builder, IElementType elementType)
+	{
+		return super.isNotPropertyStart(builder, elementType) && elementType != JSTokenTypes.LBRACKET;
 	}
 }

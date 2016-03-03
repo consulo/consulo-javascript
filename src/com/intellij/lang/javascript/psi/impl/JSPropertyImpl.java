@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
+import org.mustbe.consulo.javascript.psi.JSComputedName;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -109,6 +110,14 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 	{
 		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
 		return node != null ? (JSExpression) node.getPsi() : null;
+	}
+
+	@RequiredReadAction
+	@Nullable
+	@Override
+	public JSComputedName getComputedName()
+	{
+		return findChildByClass(JSComputedName.class);
 	}
 
 	@Override

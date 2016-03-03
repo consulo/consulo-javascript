@@ -1,5 +1,4 @@
 /*
- * Copyright 2000-2005 JetBrains s.r.o
  * Copyright 2013-2016 must-be.org
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,23 +14,18 @@
  * limitations under the License.
  */
 
-package com.intellij.lang.javascript.psi;
+package org.mustbe.consulo.javascript.psi;
 
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.javascript.psi.JSComputedName;
+import com.intellij.lang.javascript.psi.JSElement;
+import com.intellij.lang.javascript.psi.JSExpression;
 
 /**
- * @author max
- * @since 7:39:29 PM Jan 30, 2005
+ * @author VISTALL
+ * @since 03.03.2016
  */
-public interface JSProperty extends JSNamedElement
+public interface JSComputedName extends JSElement
 {
 	@Nullable
-	@RequiredReadAction
-	JSExpression getValue();
-
-	@Nullable
-	@RequiredReadAction
-	JSComputedName getComputedName();
+	JSExpression getExpression();
 }
