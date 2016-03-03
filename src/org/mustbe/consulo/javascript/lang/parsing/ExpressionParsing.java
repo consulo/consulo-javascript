@@ -137,14 +137,6 @@ public class ExpressionParsing extends Parsing
 
 			return true;
 		}
-		else if(firstToken == JSTokenTypes.INT_KEYWORD || firstToken == JSTokenTypes.UINT_KEYWORD)
-		{
-			PsiBuilder.Marker marker = builder.mark();
-			builder.advanceLexer();
-			marker.done(JSElementTypes.REFERENCE_EXPRESSION); // ?
-
-			return true;
-		}
 		else
 		{
 			return false;
