@@ -28,4 +28,5 @@ public interface JavaScriptIcons
 	Icon JavaScript = IconLoader.getIcon("/icons/javaScript.png");  // 16x16
 	Icon Json = IconLoader.getIcon("/icons/json.png");  // 16x16
 	Icon Jsx = IconLoader.getIcon("/icons/jsx.png");  // 16x16
+	Icon TypeScript = IconLoader.getIcon("/icons/typeScript.png");  // 16x16
 }
