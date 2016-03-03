@@ -80,6 +80,14 @@ public class JSLookupUtil
 			}, ", ") + ")");
 			builder = builder.withInsertHandler(ParenthesesInsertHandler.getInstance(jsParameters.length > 0));
 		}
+		else if(value instanceof JSProperty)
+		{
+			JavaScriptType type = ((JSProperty) value).getType();
+			if(type != JavaScriptType.UNKNOWN)
+			{
+				builder = builder.withTypeText(type.getPresentableText());
+			}
+		}
 		else if(value instanceof JSVariable)
 		{
 			JavaScriptType type = ((JSVariable) value).getType();
