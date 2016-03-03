@@ -30,6 +30,7 @@
 	<xi:include href="/META-INF/ecma4.xml" xpointer="xpointer(/idea-plugin/*)"/>
 	<xi:include href="/META-INF/ecma6.xml" xpointer="xpointer(/idea-plugin/*)"/>
 	<xi:include href="/META-INF/actionscript.xml" xpointer="xpointer(/idea-plugin/*)"/>
+	<xi:include href="/META-INF/typescript.xml" xpointer="xpointer(/idea-plugin/*)"/>
 
 	<actions>
 		<action id="JavaScript.File" class="org.mustbe.consulo.javascript.ide.actions.JavaScriptCreateFileAction">
