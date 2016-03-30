@@ -184,7 +184,9 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
 		if(expression.getOperationSign() == JSTokenTypes.DOT_DOT_DOT)
 		{
-			reportFeatureUsage(expression.getOperatorElement(), JavaScriptFeature.SPREAD_OPERATOR);
+			PsiElement operatorElement = expression.getOperatorElement();
+			assert operatorElement != null;
+			reportFeatureUsage(operatorElement, JavaScriptFeature.SPREAD_OPERATOR);
 		}
 	}
 

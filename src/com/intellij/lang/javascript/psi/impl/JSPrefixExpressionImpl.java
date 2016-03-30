@@ -17,6 +17,7 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.lang.ASTNode;
@@ -50,21 +51,21 @@ public class JSPrefixExpressionImpl extends JSExpressionImpl implements JSPrefix
 		return node != null ? (JSExpression) node.getPsi() : null;
 	}
 
-	@NotNull
+	@Nullable
 	@RequiredReadAction
 	@Override
 	public IElementType getOperationSign()
 	{
 		PsiElement operatorElement = getOperatorElement();
-		return operatorElement.getNode().getElementType();
+		return operatorElement != null ? operatorElement.getNode().getElementType() : null;
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nullable
 	@Override
 	public PsiElement getOperatorElement()
 	{
-		return findNotNullChildByType(JSTokenTypes.OPERATIONS);
+		return findChildByType(JSTokenTypes.OPERATIONS);
 	}
 
 	@Override
