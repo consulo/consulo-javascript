@@ -36,15 +36,9 @@ import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.ExecutionConsole;
 import com.intellij.execution.ui.RunnerLayoutUi;
 import com.intellij.icons.AllIcons;
-import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.lang.javascript.JavaScriptIcons;
-import com.intellij.lang.javascript.psi.JSElementFactory;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import com.intellij.ui.content.Content;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.xdebugger.XDebugProcess;
@@ -58,8 +52,8 @@ import com.intellij.xdebugger.breakpoints.XBreakpointManager;
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
-import com.intellij.xdebugger.evaluation.XDebuggerEditorsProviderBase;
 import com.intellij.xdebugger.ui.XDebugTabLayouter;
+import consulo.javascript.debugger.JavaScriptEditorsProvider;
 import consulo.javascript.debugger.JavaScriptLineBreakpointType;
 import consulo.javascript.debugger.JavaScriptListPanel;
 
@@ -119,21 +113,7 @@ public class V8DebugProcess extends XDebugProcess
 	@Override
 	public XDebuggerEditorsProvider getEditorsProvider()
 	{
-		return new XDebuggerEditorsProviderBase()
-		{
-			@Override
-			protected PsiFile createExpressionCodeFragment(@NotNull Project project, @NotNull String text, @Nullable PsiElement element, boolean isPhysical)
-			{
-				return JSElementFactory.createExpressionCodeFragment(project, text, element, isPhysical);
-			}
-
-			@NotNull
-			@Override
-			public FileType getFileType()
-			{
-				return JavaScriptFileType.INSTANCE;
-			}
-		};
+		return JavaScriptEditorsProvider.INSTANCE;
 	}
 
 	@NotNull
