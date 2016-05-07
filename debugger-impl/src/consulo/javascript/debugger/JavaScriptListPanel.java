@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.javascript.run.debug;
+package consulo.javascript.debugger;
 
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;

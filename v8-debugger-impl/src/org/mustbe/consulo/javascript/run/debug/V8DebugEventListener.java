@@ -32,6 +32,7 @@ import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
+import consulo.javascript.debugger.JavaScriptLineBreakpointType;
 
 /**
  * @author VISTALL

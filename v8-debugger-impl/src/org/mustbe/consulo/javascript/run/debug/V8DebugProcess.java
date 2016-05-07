@@ -60,6 +60,8 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProviderBase;
 import com.intellij.xdebugger.ui.XDebugTabLayouter;
+import consulo.javascript.debugger.JavaScriptLineBreakpointType;
+import consulo.javascript.debugger.JavaScriptListPanel;
 
 /**
  * @author VISTALL
