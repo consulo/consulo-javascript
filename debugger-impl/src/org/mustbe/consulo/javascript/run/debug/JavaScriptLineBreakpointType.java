@@ -24,7 +24,6 @@ import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointTypeBase;
 import com.intellij.xdebugger.evaluation.EvaluationMode;
@@ -61,11 +60,5 @@ public class JavaScriptLineBreakpointType extends XLineBreakpointTypeBase
 				return JSDebuggerSupportUtils.createDocument(s, project, sourcePosition == null ? null : sourcePosition.getFile(), sourcePosition == null ? 0 : sourcePosition.getOffset());
 			}
 		});
-	}
-
-	@Override
-	public boolean canPutAt(@NotNull VirtualFile file, int line, @NotNull Project project)
-	{
-		return file.getFileType() == JavaScriptFileType.INSTANCE;
 	}
 }

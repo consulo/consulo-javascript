@@ -157,6 +157,7 @@
 								 mutableClass="org.mustbe.consulo.javascript.client.module.extension.ClientJavaScriptMutableModuleExtension"/>
 
 		<xdebugger.breakpointType implementation="org.mustbe.consulo.javascript.run.debug.JavaScriptLineBreakpointType"/>
+		<xdebugger.lineBreakpointTypeResolver filetype="JavaScript" implementationClass="org.mustbe.consulo.javascript.run.debug.JavaScriptLineBreakpointTypeResolver" />
 	</extensions>
 
 	<extensionPoints>
