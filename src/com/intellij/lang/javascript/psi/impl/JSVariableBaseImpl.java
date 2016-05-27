@@ -34,6 +34,8 @@ import com.intellij.lang.javascript.psi.JSVarStatement;
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.stubs.JSVariableStubBase;
+import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.util.RecursionManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
@@ -131,10 +133,19 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 	@Override
 	public JavaScriptType getType()
 	{
-		JSExpression initializer = getInitializer();
+		final JSExpression initializer = getInitializer();
 		if(initializer != null)
 		{
-			return initializer.getType();
+			JavaScriptType javaScriptType = RecursionManager.doPreventingRecursion(this, false, new Computable<JavaScriptType>()
+			{
+				@Override
+				@RequiredReadAction
+				public JavaScriptType compute()
+				{
+					return initializer.getType();
+				}
+			});
+			return javaScriptType == null ? JavaScriptType.UNKNOWN : javaScriptType;
 		}
 		return JavaScriptType.UNKNOWN;
 	}
