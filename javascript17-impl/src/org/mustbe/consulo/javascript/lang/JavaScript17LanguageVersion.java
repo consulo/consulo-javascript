@@ -16,7 +16,7 @@
 
 package org.mustbe.consulo.javascript.lang;
 
-import org.consulo.lombok.annotations.LazyInstance;
+import consulo.lombok.annotations.Lazy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.javascript.ide.hightlight.JavaScriptHighlighter;
@@ -42,7 +42,7 @@ public class JavaScript17LanguageVersion extends BaseJavaScriptLanguageVersion i
 	};
 
 	@NotNull
-	@LazyInstance
+	@Lazy
 	public static JavaScript17LanguageVersion getInstance()
 	{
 		return JavaScriptLanguage.INSTANCE.findVersionByClass(JavaScript17LanguageVersion.class);

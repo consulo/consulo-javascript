@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript;
 
-import org.consulo.lombok.annotations.Bundle;
+import consulo.lombok.annotations.Bundle;
 import org.jetbrains.annotations.NonNls;
 
 @Bundle

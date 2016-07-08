@@ -26,7 +26,7 @@ import com.intellij.psi.tree.IElementType;
 /**
  * @author max
  */
-@org.consulo.lombok.annotations.Logger
+@consulo.lombok.annotations.Logger
 public class StatementParsing extends Parsing
 {
 	public StatementParsing(JavaScriptParsingContext context)

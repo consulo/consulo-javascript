@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript.psi;
 
-import org.consulo.lombok.annotations.ArrayFactoryFields;
+import consulo.lombok.annotations.ArrayFactoryFields;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeStub;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.StubBasedPsiElement;

@@ -1,6 +1,6 @@
 package org.mustbe.consulo.javascript.lang.parsing;
 
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JavaScriptBundle;

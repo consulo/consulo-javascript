@@ -2,7 +2,7 @@ package org.mustbe.consulo.javascript.client.module.sdk;
 
 import javax.swing.Icon;
 
-import org.consulo.lombok.annotations.LazyInstance;
+import consulo.lombok.annotations.Lazy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.javascript.JavaScriptIcons;
@@ -18,7 +18,7 @@ import com.intellij.openapi.roots.types.SourcesOrderRootType;
 public class ClientJavaScriptSdkType extends SdkType
 {
 	@NotNull
-	@LazyInstance
+	@Lazy
 	public static ClientJavaScriptSdkType getInstance()
 	{
 		return EP_NAME.findExtension(ClientJavaScriptSdkType.class);

@@ -1,6 +1,6 @@
 package org.mustbe.consulo.json.lang;
 
-import org.consulo.lombok.annotations.LazyInstance;
+import consulo.lombok.annotations.Lazy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.javascript.ide.hightlight.JavaScriptHighlighter;
@@ -29,7 +29,7 @@ public class JsonJavaScriptVersion extends BaseJavaScriptLanguageVersion
 	};
 
 	@NotNull
-	@LazyInstance
+	@Lazy
 	public static JsonJavaScriptVersion getInstance()
 	{
 		return JavaScriptLanguage.INSTANCE.findVersionByClass(JsonJavaScriptVersion.class);

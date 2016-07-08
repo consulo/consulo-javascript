@@ -1,6 +1,6 @@
 package org.mustbe.consulo.json.lang;
 
-import org.consulo.lombok.annotations.Logger;
+import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
 import org.mustbe.consulo.javascript.lang.parsing.ExpressionParsing;

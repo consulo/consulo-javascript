@@ -16,7 +16,7 @@
 
 package consulo.javascript.debugger;
 
-import org.consulo.lombok.annotations.LazyInstance;
+import consulo.lombok.annotations.Lazy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.javascript.JSDebuggerSupportUtils;
@@ -36,7 +36,7 @@ import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 public class JavaScriptLineBreakpointType extends XLineBreakpointTypeBase
 {
 	@NotNull
-	@LazyInstance
+	@Lazy
 	public static JavaScriptLineBreakpointType getInstance()
 	{
 		return EXTENSION_POINT_NAME.findExtension(JavaScriptLineBreakpointType.class);

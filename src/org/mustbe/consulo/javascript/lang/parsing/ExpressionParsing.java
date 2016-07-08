@@ -32,7 +32,7 @@ import com.intellij.psi.tree.IElementType;
  * Date: Jan 28, 2005
  * Time: 1:18:22 PM
  */
-@org.consulo.lombok.annotations.Logger
+@consulo.lombok.annotations.Logger
 public class ExpressionParsing extends Parsing
 {
 	public static final Key<Boolean> WITHIN_ARRAY_LITERAL_EXPRESSION = Key.create("within.array.literal.expression");

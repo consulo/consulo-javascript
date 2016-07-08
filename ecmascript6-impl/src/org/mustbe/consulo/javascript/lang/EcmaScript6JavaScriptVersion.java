@@ -16,7 +16,7 @@
 
 package org.mustbe.consulo.javascript.lang;
 
-import org.consulo.lombok.annotations.LazyInstance;
+import consulo.lombok.annotations.Lazy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.javascript.ide.hightlight.JavaScriptHighlighter;
@@ -44,7 +44,7 @@ public class EcmaScript6JavaScriptVersion extends BaseJavaScriptLanguageVersion 
 	};
 
 	@NotNull
-	@LazyInstance
+	@Lazy
 	public static EcmaScript6JavaScriptVersion getInstance()
 	{
 		return JavaScriptLanguage.INSTANCE.findVersionByClass(EcmaScript6JavaScriptVersion.class);
