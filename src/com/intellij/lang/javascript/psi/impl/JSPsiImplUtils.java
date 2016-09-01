@@ -26,7 +26,7 @@ import java.util.List;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.psi.JavaScriptTypeElement;
 import org.mustbe.consulo.javascript.lang.psi.impl.elementType.BaseJavaScriptElementType;
 import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;

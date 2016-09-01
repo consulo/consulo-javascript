@@ -16,17 +16,15 @@
 
 package org.mustbe.consulo.javascript.lang;
 
-import consulo.lombok.annotations.Lazy;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.javascript.ide.hightlight.JavaScriptHighlighter;
 import org.mustbe.consulo.javascript.lang.lexer.EcmaScript6Lexer;
 import org.mustbe.consulo.javascript.lang.parsing.EcmaScript6Parser;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Factory;
+import consulo.lombok.annotations.Lazy;
 
 /**
  * @author VISTALL
@@ -70,7 +68,7 @@ public class EcmaScript6JavaScriptVersion extends BaseJavaScriptLanguageVersion 
 	}
 	@NotNull
 	@Override
-	public Lexer createLexer(@Nullable Project project)
+	public Lexer createLexer()
 	{
 		return ourLexerFactory.create();
 	}
@@ -84,7 +82,7 @@ public class EcmaScript6JavaScriptVersion extends BaseJavaScriptLanguageVersion 
 
 	@NotNull
 	@Override
-	public PsiParser createParser(@Nullable Project project)
+	public PsiParser createParser()
 	{
 		return new EcmaScript6Parser();
 	}

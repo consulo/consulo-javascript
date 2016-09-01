@@ -16,9 +16,9 @@
 
 package com.intellij.lang.javascript.psi;
 
-import org.mustbe.consulo.DeprecationInfo;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
+import consulo.annotations.DeprecationInfo;
 
 /**
  * Created by IntelliJ IDEA.

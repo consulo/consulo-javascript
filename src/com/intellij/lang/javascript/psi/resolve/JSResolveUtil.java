@@ -31,7 +31,6 @@ import java.util.Set;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.JavaScriptVersionUtil;
 import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
 import org.mustbe.consulo.javascript.lang.psi.JavaScriptTypeElement;
@@ -63,7 +62,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.roots.types.BinariesOrderRootType;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Ref;
@@ -106,6 +104,8 @@ import com.intellij.util.SmartList;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.text.StringTokenizer;
 import com.intellij.xml.XmlElementDescriptor;
+import consulo.annotations.RequiredReadAction;
+import consulo.roots.types.BinariesOrderRootType;
 
 /**
  * @author max, maxim.mossienko

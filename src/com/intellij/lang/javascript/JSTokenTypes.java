@@ -19,7 +19,6 @@ package com.intellij.lang.javascript;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import org.mustbe.consulo.javascript.lang.parsing.JavaScriptParser;
 import org.mustbe.consulo.javascript.lang.parsing.JavaScriptParsingContext;
@@ -27,7 +26,6 @@ import org.mustbe.consulo.javascript.lang.parsing.Parsing;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageParserDefinitions;
-import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilderFactory;
 import com.intellij.lang.javascript.parsing.JSDocParsing;
@@ -40,6 +38,8 @@ import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILazyParseableElementType;
 import com.intellij.psi.tree.TokenSet;
+import consulo.annotations.RequiredReadAction;
+import consulo.lang.LanguageVersion;
 
 /**
  * @author max, maxim.mossienko
@@ -323,7 +323,7 @@ public interface JSTokenTypes
 			final LanguageVersion tempLanguageVersion = chameleon.getUserData(LanguageVersion.KEY);
 			final LanguageVersion languageVersion = tempLanguageVersion == null ? psi.getLanguageVersion() : tempLanguageVersion;
 			final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, chameleon, createLexer(), languageForParser, languageVersion, chameleon.getChars());
-			final JavaScriptParser parser = (JavaScriptParser) LanguageParserDefinitions.INSTANCE.forLanguage(languageForParser).createParser(project, languageVersion);
+			final JavaScriptParser parser = (JavaScriptParser) LanguageParserDefinitions.INSTANCE.forLanguage(languageForParser).createParser(languageVersion);
 
 			JavaScriptParsingContext parsingContext = parser.createParsingContext();
 			doParse(parsingContext, builder);

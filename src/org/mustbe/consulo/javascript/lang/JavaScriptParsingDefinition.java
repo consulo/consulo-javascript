@@ -20,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageUtil;
-import com.intellij.lang.LanguageVersionableParserDefinition;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.impl.JSDocCommentImpl;
@@ -32,6 +31,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
+import consulo.lang.LanguageVersionableParserDefinition;
 
 /**
  * @author VISTALL
@@ -79,7 +79,7 @@ public class JavaScriptParsingDefinition extends LanguageVersionableParserDefini
 	public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right)
 	{
 		PsiElement leftPsi = left.getPsi();
-		final Lexer lexer = createLexer(leftPsi.getProject(), leftPsi.getLanguageVersion());
+		final Lexer lexer = createLexer(leftPsi.getLanguageVersion());
 		return LanguageUtil.canStickTokensTogetherByLexer(left, right, lexer);
 	}
 }

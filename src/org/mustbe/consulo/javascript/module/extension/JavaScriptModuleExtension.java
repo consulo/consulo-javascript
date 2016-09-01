@@ -1,9 +1,9 @@
 package org.mustbe.consulo.javascript.module.extension;
 
-import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
-import com.intellij.lang.LanguageVersion;
+import consulo.lang.LanguageVersion;
+import consulo.module.extension.ModuleExtensionWithSdk;
 
 /**
  * @author VISTALL

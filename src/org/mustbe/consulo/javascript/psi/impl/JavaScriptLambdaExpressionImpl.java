@@ -17,7 +17,7 @@
 package org.mustbe.consulo.javascript.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.javascript.psi.JavaScriptLambdaExpression;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSElementVisitor;

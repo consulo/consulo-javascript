@@ -1,8 +1,6 @@
 package org.mustbe.consulo.json.lang;
 
-import consulo.lombok.annotations.Lazy;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.javascript.ide.hightlight.JavaScriptHighlighter;
 import org.mustbe.consulo.javascript.lang.BaseJavaScriptLanguageVersion;
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
@@ -10,8 +8,8 @@ import org.mustbe.consulo.json.lang.lexer.JsonLexer;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Factory;
+import consulo.lombok.annotations.Lazy;
 
 /**
  * @author VISTALL
@@ -49,14 +47,14 @@ public class JsonJavaScriptVersion extends BaseJavaScriptLanguageVersion
 
 	@NotNull
 	@Override
-	public Lexer createLexer(@Nullable Project project)
+	public Lexer createLexer()
 	{
 		return ourLexerFactory.create();
 	}
 
 	@NotNull
 	@Override
-	public PsiParser createParser(@Nullable Project project)
+	public PsiParser createParser()
 	{
 		return new JsonJavaScriptParser();
 	}}

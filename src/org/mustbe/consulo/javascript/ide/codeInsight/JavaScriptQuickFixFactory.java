@@ -18,7 +18,7 @@ package org.mustbe.consulo.javascript.ide.codeInsight;
 
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.javascript.lang.BaseJavaScriptLanguageVersion;
-import com.intellij.lang.LanguageVersion;
+import consulo.lang.LanguageVersion;
 import com.intellij.lang.javascript.inspections.qucikFixes.CreateJSFunctionOrMethodFix;
 import com.intellij.openapi.util.KeyedExtensionCollector;
 import com.intellij.psi.PsiElement;

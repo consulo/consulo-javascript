@@ -19,8 +19,8 @@ package com.intellij.lang.javascript.index;
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
-import com.intellij.ide.IconDescriptorUpdaters;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSNamedElement;

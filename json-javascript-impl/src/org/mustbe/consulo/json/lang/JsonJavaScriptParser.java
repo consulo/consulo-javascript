@@ -1,12 +1,12 @@
 package org.mustbe.consulo.json.lang;
 
+import consulo.lang.LanguageVersion;
 import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
 import org.mustbe.consulo.javascript.lang.parsing.ExpressionParsing;
 import org.mustbe.consulo.javascript.lang.parsing.Parsing;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.LanguageVersion;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
 import com.intellij.lang.javascript.JSElementTypes;

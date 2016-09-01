@@ -21,7 +21,7 @@ import java.io.IOException;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;

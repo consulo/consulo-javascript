@@ -19,10 +19,10 @@ package com.intellij.lang.javascript.psi.impl.reference;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.extensions.CompositeExtensionPointName;
 import com.intellij.lang.javascript.psi.JSProperty;
 import com.intellij.psi.PsiReference;
+import consulo.annotations.RequiredReadAction;
+import consulo.extensions.CompositeExtensionPointName;
 
 /**
  * @author VISTALL

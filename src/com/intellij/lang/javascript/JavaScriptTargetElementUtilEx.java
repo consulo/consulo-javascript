@@ -17,12 +17,12 @@
 package com.intellij.lang.javascript;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.extensions.CompositeExtensionPointName;
-import com.intellij.codeInsight.TargetElementUtilEx;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.psi.PsiElement;
+import consulo.codeInsight.TargetElementUtilEx;
+import consulo.extensions.CompositeExtensionPointName;
 
 /**
  * @author Maxim.Mossienko

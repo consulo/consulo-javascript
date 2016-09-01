@@ -3,7 +3,7 @@ package org.mustbe.consulo.json.jom.proxy.impl;
 import java.lang.reflect.Type;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
 import org.mustbe.consulo.json.jom.proxy.JomBadValueExpressionException;
 import org.mustbe.consulo.json.jom.proxy.JomValueConverter;

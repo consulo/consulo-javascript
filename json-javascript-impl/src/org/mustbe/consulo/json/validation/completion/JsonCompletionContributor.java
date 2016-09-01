@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.json.validation.JsonFileDescriptorProviders;
 import org.mustbe.consulo.json.validation.NativeArray;
 import org.mustbe.consulo.json.validation.descriptor.JsonObjectDescriptor;
@@ -31,7 +30,6 @@ import org.mustbe.consulo.json.validation.descriptor.JsonPropertyDescriptor;
 import org.mustbe.consulo.json.validation.inspections.PropertyValidationInspection;
 import com.intellij.codeInsight.completion.CompletionContributor;
 import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.codeInsight.completion.CompletionProvider;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.codeInsight.completion.InsertHandler;
@@ -49,6 +47,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.RequiredReadAction;
+import consulo.codeInsight.completion.CompletionProvider;
 
 /**
  * @author VISTALL
@@ -58,21 +58,21 @@ public class JsonCompletionContributor extends CompletionContributor
 {
 	public JsonCompletionContributor()
 	{
-		extend(CompletionType.BASIC, StandardPatterns.psiElement(JSTokenTypes.IDENTIFIER), new CompletionProvider<CompletionParameters>()
+		extend(CompletionType.BASIC, StandardPatterns.psiElement(JSTokenTypes.IDENTIFIER), new CompletionProvider()
 		{
 			@RequiredReadAction
 			@Override
-			protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result)
+			public void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result)
 			{
 				addVariants(parameters, result, true);
 			}
 		});
 
-		extend(CompletionType.BASIC, StandardPatterns.psiElement(JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL), new CompletionProvider<CompletionParameters>()
+		extend(CompletionType.BASIC, StandardPatterns.psiElement(JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL), new CompletionProvider()
 		{
 			@RequiredReadAction
 			@Override
-			protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result)
+			public void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result)
 			{
 				PsiElement originalPosition = parameters.getOriginalPosition();
 				if(originalPosition == null)
@@ -87,11 +87,11 @@ public class JsonCompletionContributor extends CompletionContributor
 			}
 		});
 
-		extend(CompletionType.BASIC, StandardPatterns.psiElement(JSTokenTypes.STRING_LITERAL), new CompletionProvider<CompletionParameters>()
+		extend(CompletionType.BASIC, StandardPatterns.psiElement(JSTokenTypes.STRING_LITERAL), new CompletionProvider()
 		{
 			@RequiredReadAction
 			@Override
-			protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result)
+			public void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result)
 			{
 				PsiElement originalPosition = parameters.getOriginalPosition();
 				if(originalPosition == null)

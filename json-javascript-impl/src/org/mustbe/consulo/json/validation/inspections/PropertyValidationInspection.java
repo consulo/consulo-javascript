@@ -26,7 +26,7 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
 import org.mustbe.consulo.json.validation.JsonFileDescriptorProviders;
 import org.mustbe.consulo.json.validation.NativeArray;

@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jetbrains.annotations.NonNls;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.JavaScriptFeature;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.javascript.index.JSTypeEvaluateManager;

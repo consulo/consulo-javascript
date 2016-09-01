@@ -2,18 +2,15 @@ package org.mustbe.consulo.javascript.lang;
 
 import java.util.Set;
 
-import org.consulo.annotations.Immutable;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.javascript.lang.parsing.JavaScriptParser;
-import com.intellij.lang.BaseLanguageVersion;
-import com.intellij.lang.LanguageVersionWithParsing;
 import com.intellij.lang.PsiParser;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.containers.ArrayListSet;
+import consulo.lang.BaseLanguageVersion;
+import consulo.lang.LanguageVersionWithParsing;
 
 /**
  * @author VISTALL
@@ -36,7 +33,6 @@ public abstract class BaseJavaScriptLanguageVersion extends BaseLanguageVersion<
 	}
 
 	@NotNull
-	@Immutable
 	public Set<JavaScriptFeature> getFeatures()
 	{
 		return myFeatures;
@@ -53,7 +49,7 @@ public abstract class BaseJavaScriptLanguageVersion extends BaseLanguageVersion<
 
 	@NotNull
 	@Override
-	public PsiParser createParser(@Nullable Project project)
+	public PsiParser createParser()
 	{
 		return new JavaScriptParser();
 	}

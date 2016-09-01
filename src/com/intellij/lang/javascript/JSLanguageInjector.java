@@ -16,12 +16,10 @@
 
 package com.intellij.lang.javascript;
 
-import org.consulo.util.pointers.NamedPointer;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.lang.Language;
-import com.intellij.lang.LanguagePointerUtil;
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
 import com.intellij.lang.javascript.flex.AnnotationBackedDescriptor;
@@ -43,6 +41,8 @@ import com.intellij.psi.xml.XmlText;
 import com.intellij.psi.xml.XmlToken;
 import com.intellij.psi.xml.XmlTokenType;
 import com.intellij.xml.XmlElementDescriptorWithCDataContent;
+import consulo.lang.LanguagePointerUtil;
+import consulo.util.pointers.NamedPointer;
 
 /**
  * @author Maxim.Mossienko

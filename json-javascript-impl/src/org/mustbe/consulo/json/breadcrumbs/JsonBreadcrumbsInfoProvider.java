@@ -2,7 +2,7 @@ package org.mustbe.consulo.json.breadcrumbs;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import org.mustbe.consulo.json.JsonFileType;
 import com.intellij.lang.Language;

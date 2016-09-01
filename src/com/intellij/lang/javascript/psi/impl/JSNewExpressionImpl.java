@@ -17,7 +17,7 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
 import org.mustbe.consulo.javascript.lang.psi.impl.JavaScriptClassType;
 import com.intellij.lang.ASTNode;

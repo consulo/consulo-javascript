@@ -19,7 +19,7 @@ package org.mustbe.consulo.json.jom;
 import consulo.lombok.annotations.ProjectService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.json.JsonFileType;
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.openapi.fileTypes.FileType;

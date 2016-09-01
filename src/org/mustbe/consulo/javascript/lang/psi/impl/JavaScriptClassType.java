@@ -18,7 +18,7 @@ package org.mustbe.consulo.javascript.lang.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.psi.PsiElement;

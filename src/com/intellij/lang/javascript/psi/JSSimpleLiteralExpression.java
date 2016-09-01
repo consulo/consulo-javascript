@@ -18,7 +18,7 @@
 package com.intellij.lang.javascript.psi;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import com.intellij.psi.tree.IElementType;
 
 /**

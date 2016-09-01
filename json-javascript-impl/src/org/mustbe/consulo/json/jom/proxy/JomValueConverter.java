@@ -11,7 +11,7 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.json.jom.JomElement;
 import org.mustbe.consulo.json.jom.proxy.impl.JomBooleanValue;
 import org.mustbe.consulo.json.jom.proxy.impl.JomCollectionValue;

@@ -17,11 +17,11 @@
 package org.mustbe.consulo.json.validation.descriptionByAnotherPsiElement;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.editor.notifications.EditorNotificationProvider;
-import org.mustbe.consulo.editor.notifications.EditorNotificationProviders;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.NotNullFunction;
+import consulo.editor.notifications.EditorNotificationProvider;
+import consulo.editor.notifications.EditorNotificationProviders;
 
 /**
  * @author VISTALL

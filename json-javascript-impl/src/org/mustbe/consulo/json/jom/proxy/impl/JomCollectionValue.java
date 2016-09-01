@@ -5,7 +5,7 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.json.jom.proxy.JomBadValueExpressionException;
 import org.mustbe.consulo.json.jom.proxy.JomValueConverter;
 import com.intellij.lang.javascript.psi.JSArrayLiteralExpression;

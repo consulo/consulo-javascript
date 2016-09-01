@@ -2,10 +2,7 @@ package org.mustbe.consulo.javascript.ide.actions;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
-import org.mustbe.consulo.RequiredReadAction;
 import org.mustbe.consulo.javascript.module.extension.JavaScriptModuleExtension;
-import org.mustbe.consulo.roots.ContentEntryFileListener;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.actions.CreateFileFromTemplateAction;
 import com.intellij.ide.actions.CreateFileFromTemplateDialog;
@@ -21,6 +18,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.testFramework.LightVirtualFile;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredReadAction;
+import consulo.roots.ContentEntryFileListener;
 
 /**
  * @author VISTALL

@@ -19,7 +19,7 @@ package com.intellij.lang.javascript.psi.impl;
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
-import com.intellij.ide.IconDescriptorUpdaters;
+import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;

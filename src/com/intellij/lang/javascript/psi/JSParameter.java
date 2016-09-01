@@ -18,7 +18,7 @@ package com.intellij.lang.javascript.psi;
 
 import consulo.lombok.annotations.ArrayFactoryFields;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import com.intellij.psi.PsiElement;
 
 /**

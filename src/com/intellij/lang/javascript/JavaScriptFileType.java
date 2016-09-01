@@ -24,7 +24,7 @@ import org.mustbe.consulo.javascript.lang.JavaScriptFileTypeWithVersion;
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import org.mustbe.consulo.javascript.lang.StandardJavaScriptVersions;
 import org.mustbe.consulo.javascript.module.extension.JavaScriptModuleExtension;
-import com.intellij.lang.LanguageVersion;
+import consulo.lang.LanguageVersion;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;

@@ -25,7 +25,7 @@ import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.lang.javascript.psi.stubs.JSStubElement;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.IndexSink;
-import com.intellij.psi.tree.IElementTypeAsPsiFactory;
+import consulo.psi.tree.IElementTypeAsPsiFactory;
 
 public abstract class JSStubElementType<StubT extends JSStubElement<PsiT>, PsiT extends JSElement> extends IStubElementType<StubT,
 		PsiT> implements IElementTypeAsPsiFactory

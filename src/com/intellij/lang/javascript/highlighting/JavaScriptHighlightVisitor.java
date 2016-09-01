@@ -18,7 +18,7 @@ package com.intellij.lang.javascript.highlighting;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.javascript.ide.hightlight.JavaScriptSyntaxHighlightKeys;
 import org.mustbe.consulo.javascript.lang.JavaScriptFeature;
 import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;

@@ -18,8 +18,8 @@ package org.mustbe.consulo.json.validation.descriptionByAnotherPsiElement;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredDispatchThread;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredDispatchThread;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.json.validation.descriptor.JsonObjectDescriptor;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;

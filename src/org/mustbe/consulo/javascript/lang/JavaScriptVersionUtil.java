@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
-import com.intellij.lang.LanguageVersion;
+import consulo.lang.LanguageVersion;
 import com.intellij.psi.PsiElement;
 
 /**

@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.json.jom.proxy.JomBadValueExpressionException;
 import org.mustbe.consulo.json.jom.proxy.JomValueConverter;
 import com.intellij.lang.javascript.psi.JSObjectLiteralExpression;

@@ -18,10 +18,10 @@ package org.mustbe.consulo.json.validation.descriptor;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.Exported;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
+import consulo.annotations.Exported;
 
 /**
  * @author VISTALL

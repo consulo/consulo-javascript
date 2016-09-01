@@ -4,7 +4,7 @@ import java.lang.reflect.Type;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.json.jom.proxy.JomBadValueExpressionException;
 import org.mustbe.consulo.json.jom.proxy.JomValueConverter;
 import com.intellij.lang.javascript.JSTokenTypes;

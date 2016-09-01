@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.actionscript.lang.ActionScriptLanguageVersion;
 import org.mustbe.consulo.javascript.lang.JavaScriptFileTypeWithVersion;
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
-import com.intellij.lang.LanguageVersion;
+import consulo.lang.LanguageVersion;
 import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.Project;

@@ -17,7 +17,7 @@
 package org.mustbe.consulo.json.validation.psi.reference;
 
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.json.validation.descriptor.JsonPropertyDescriptor;
 import org.mustbe.consulo.json.validation.inspections.PropertyValidationInspection;
 import com.intellij.lang.javascript.psi.JSProperty;

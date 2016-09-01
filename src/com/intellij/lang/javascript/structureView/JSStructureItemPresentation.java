@@ -18,8 +18,8 @@ package com.intellij.lang.javascript.structureView;
 
 import javax.swing.Icon;
 
-import org.mustbe.consulo.RequiredReadAction;
-import com.intellij.ide.IconDescriptorUpdaters;
+import consulo.annotations.RequiredReadAction;
+import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSAssignmentExpression;
 import com.intellij.lang.javascript.psi.JSDefinitionExpression;

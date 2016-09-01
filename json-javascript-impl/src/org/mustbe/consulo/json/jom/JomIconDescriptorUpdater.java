@@ -17,11 +17,11 @@
 package org.mustbe.consulo.json.jom;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
-import com.intellij.ide.IconDescriptor;
-import com.intellij.ide.IconDescriptorUpdater;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import consulo.annotations.RequiredReadAction;
+import consulo.ide.IconDescriptor;
+import consulo.ide.IconDescriptorUpdater;
 
 /**
  * @author VISTALL

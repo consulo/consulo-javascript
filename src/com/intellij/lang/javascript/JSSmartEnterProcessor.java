@@ -17,7 +17,7 @@
 package com.intellij.lang.javascript;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import com.intellij.codeInsight.editorActions.smartEnter.SmartEnterProcessor;
 import com.intellij.idea.LoggerFactory;
 import com.intellij.lang.javascript.psi.JSArgumentList;

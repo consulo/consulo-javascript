@@ -2,14 +2,14 @@ package org.mustbe.consulo.javascript.client.module.sdk;
 
 import javax.swing.Icon;
 
-import consulo.lombok.annotations.Lazy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.types.BinariesOrderRootType;
-import com.intellij.openapi.roots.types.SourcesOrderRootType;
+import consulo.lombok.annotations.Lazy;
+import consulo.roots.types.BinariesOrderRootType;
+import consulo.roots.types.SourcesOrderRootType;
 
 /**
  * @author VISTALL

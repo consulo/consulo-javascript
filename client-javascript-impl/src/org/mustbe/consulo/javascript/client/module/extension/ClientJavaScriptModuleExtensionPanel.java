@@ -27,7 +27,7 @@ import org.mustbe.consulo.javascript.lang.BaseJavaScriptLanguageVersion;
 import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import org.mustbe.consulo.javascript.lang.StandardJavaScriptVersions;
 import org.mustbe.consulo.javascript.module.extension.JavaScriptMutableModuleExtension;
-import com.intellij.lang.LanguageVersion;
+import consulo.lang.LanguageVersion;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.VerticalFlowLayout;

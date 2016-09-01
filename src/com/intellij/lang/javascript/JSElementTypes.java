@@ -27,11 +27,11 @@ import com.intellij.lang.javascript.psi.impl.*;
 import com.intellij.lang.javascript.psi.stubs.*;
 import com.intellij.lang.javascript.types.*;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.ElementTypeAsPsiFactory;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILazyParseableElementType;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.psi.tree.TokenSet;
+import consulo.psi.tree.ElementTypeAsPsiFactory;
 
 /**
  * Created by IntelliJ IDEA.

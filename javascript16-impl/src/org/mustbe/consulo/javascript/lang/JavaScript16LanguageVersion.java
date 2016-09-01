@@ -16,15 +16,13 @@
 
 package org.mustbe.consulo.javascript.lang;
 
-import consulo.lombok.annotations.Lazy;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mustbe.consulo.javascript.ide.hightlight.JavaScriptHighlighter;
 import org.mustbe.consulo.javascript.lang.lexer.JavaScript16Lexer;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Factory;
+import consulo.lombok.annotations.Lazy;
 
 /**
  * @author VISTALL
@@ -62,7 +60,7 @@ public class JavaScript16LanguageVersion extends BaseJavaScriptLanguageVersion i
 
 	@NotNull
 	@Override
-	public Lexer createLexer(@Nullable Project project)
+	public Lexer createLexer()
 	{
 		return ourLexerFactory.create();
 	}

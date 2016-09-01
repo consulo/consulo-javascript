@@ -19,7 +19,7 @@ package com.intellij.lang.javascript.inspections.qucikFixes;
 
 import java.util.Set;
 
-import org.mustbe.consulo.RequiredReadAction;
+import consulo.annotations.RequiredReadAction;
 import org.mustbe.consulo.javascript.lang.JavaScriptFeature;
 import com.intellij.codeInsight.template.Expression;
 import com.intellij.codeInsight.template.Template;

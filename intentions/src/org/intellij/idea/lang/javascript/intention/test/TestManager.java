@@ -26,12 +26,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.jetbrains.annotations.NonNls;
-import com.intellij.ide.highlighter.ZipArchiveFileType;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.fileTypes.ZipArchiveFileType;
 
 public abstract class TestManager {
 

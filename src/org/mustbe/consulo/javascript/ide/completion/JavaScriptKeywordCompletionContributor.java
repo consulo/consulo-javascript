@@ -17,8 +17,6 @@
 package org.mustbe.consulo.javascript.ide.completion;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.RequiredReadAction;
-import org.mustbe.consulo.codeInsight.completion.CompletionProvider;
 import com.intellij.codeInsight.completion.CompletionContributor;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
@@ -30,6 +28,8 @@ import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.patterns.StandardPatterns;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
+import consulo.annotations.RequiredReadAction;
+import consulo.codeInsight.completion.CompletionProvider;
 
 /**
  * @author VISTALL
@@ -43,7 +43,7 @@ public class JavaScriptKeywordCompletionContributor extends CompletionContributo
 		{
 			@RequiredReadAction
 			@Override
-			protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result)
+			public void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result)
 			{
 				PsiElement position = parameters.getPosition();
 				JSReferenceExpression parent = (JSReferenceExpression) position.getParent();
