@@ -16,7 +16,7 @@
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="inspections" />
           <orderEntry type="module" module-name="intentions" />
-          <orderEntry type="library" name="consuo-plugin: com.intellij.xml" level="project" />
+          <orderEntry type="library" name="consulo-plugin: com.intellij.xml" level="project" />
           <orderEntry type="library" name="consulo-plugin: com.intellij.regexp" level="project" />
         </module-layer>
       </module>
@@ -32,7 +32,7 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="consulo-javascript" />
-          <orderEntry type="library" name="consuo-plugin: com.intellij.xml" level="project" />
+          <orderEntry type="library" name="consulo-plugin: com.intellij.xml" level="project" />
         </module-layer>
       </module>
       <module name="intentions" dirurl="file://$PROJECT_DIR$/intentions" current-layer="Default">
@@ -47,7 +47,7 @@
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="consulo-javascript" />
-          <orderEntry type="library" name="consuo-plugin: com.intellij.xml" level="project" />
+          <orderEntry type="library" name="consulo-plugin: com.intellij.xml" level="project" />
         </module-layer>
       </module>
       <module name="client-javascript-impl" dirurl="file://$PROJECT_DIR$/client-javascript-impl" current-layer="Default">
@@ -75,7 +75,7 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="consulo-javascript" exported="" />
-          <orderEntry type="library" name="consuo-plugin: com.intellij.xml" level="project" />
+          <orderEntry type="library" name="consulo-plugin: com.intellij.xml" level="project" />
         </module-layer>
       </module>
       <module name="debugger-impl/debugger-impl" dirurl="file://$PROJECT_DIR$/debugger-impl" current-layer="Default">

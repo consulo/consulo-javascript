@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="consuo-plugin: com.intellij.xml">
+  <library name="consulo-plugin: com.intellij.xml">
     <binaries>
       <root url="file://$PROJECT_DIR$/dep/com.intellij.xml/lib" />
     </binaries>
