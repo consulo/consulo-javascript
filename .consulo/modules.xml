@@ -14,25 +14,10 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
           <orderEntry type="sourceFolder" />
-          <orderEntry type="module-library">
-            <library name="consulo:XML">
-              <binaries>
-                <root url="jar://$MODULE_DIR$/dep/xml/lib/jsr173_1.0_api.jar!/" />
-                <root url="jar://$MODULE_DIR$/dep/xml/lib/resolver.jar!/" />
-                <root url="jar://$MODULE_DIR$/dep/xml/lib/xerces.jar!/" />
-                <root url="jar://$MODULE_DIR$/dep/xml/lib/xml.jar!/" />
-              </binaries>
-            </library>
-          </orderEntry>
           <orderEntry type="module" module-name="inspections" />
           <orderEntry type="module" module-name="intentions" />
-          <orderEntry type="module-library">
-            <library name="consulo:Regexp">
-              <binaries>
-                <root url="jar://$MODULE_DIR$/dep/regexp/lib/regexp.jar!/" />
-              </binaries>
-            </library>
-          </orderEntry>
+          <orderEntry type="library" name="consuo-plugin: com.intellij.xml" level="project" />
+          <orderEntry type="library" name="consulo-plugin: com.intellij.regexp" level="project" />
         </module-layer>
       </module>
       <module name="inspections" dirurl="file://$PROJECT_DIR$/inspections" current-layer="Default">
@@ -47,16 +32,7 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="consulo-javascript" />
-          <orderEntry type="module-library">
-            <library name="consulo:XML">
-              <binaries>
-                <root url="jar://$MODULE_DIR$/../dep/xml/lib/jsr173_1.0_api.jar!/" />
-                <root url="jar://$MODULE_DIR$/../dep/xml/lib/resolver.jar!/" />
-                <root url="jar://$MODULE_DIR$/../dep/xml/lib/xerces.jar!/" />
-                <root url="jar://$MODULE_DIR$/../dep/xml/lib/xml.jar!/" />
-              </binaries>
-            </library>
-          </orderEntry>
+          <orderEntry type="library" name="consuo-plugin: com.intellij.xml" level="project" />
         </module-layer>
       </module>
       <module name="intentions" dirurl="file://$PROJECT_DIR$/intentions" current-layer="Default">
@@ -70,17 +46,8 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="module-extension-sdk" extension-id="consulo-plugin" />
           <orderEntry type="sourceFolder" />
-          <orderEntry type="module-library">
-            <library name="consulo:XML">
-              <binaries>
-                <root url="jar://$MODULE_DIR$/../dep/xml/lib/jsr173_1.0_api.jar!/" />
-                <root url="jar://$MODULE_DIR$/../dep/xml/lib/resolver.jar!/" />
-                <root url="jar://$MODULE_DIR$/../dep/xml/lib/xerces.jar!/" />
-                <root url="jar://$MODULE_DIR$/../dep/xml/lib/xml.jar!/" />
-              </binaries>
-            </library>
-          </orderEntry>
           <orderEntry type="module" module-name="consulo-javascript" />
+          <orderEntry type="library" name="consuo-plugin: com.intellij.xml" level="project" />
         </module-layer>
       </module>
       <module name="client-javascript-impl" dirurl="file://$PROJECT_DIR$/client-javascript-impl" current-layer="Default">
@@ -108,16 +75,7 @@
           <orderEntry type="module-extension-sdk" extension-id="java" />
           <orderEntry type="sourceFolder" />
           <orderEntry type="module" module-name="consulo-javascript" exported="" />
-          <orderEntry type="module-library">
-            <library name="consulo:XML">
-              <binaries>
-                <root url="jar://$MODULE_DIR$/../dep/xml/lib/jsr173_1.0_api.jar!/" />
-                <root url="jar://$MODULE_DIR$/../dep/xml/lib/resolver.jar!/" />
-                <root url="jar://$MODULE_DIR$/../dep/xml/lib/xerces.jar!/" />
-                <root url="jar://$MODULE_DIR$/../dep/xml/lib/xml.jar!/" />
-              </binaries>
-            </library>
-          </orderEntry>
+          <orderEntry type="library" name="consuo-plugin: com.intellij.xml" level="project" />
         </module-layer>
       </module>
       <module name="debugger-impl/debugger-impl" dirurl="file://$PROJECT_DIR$/debugger-impl" current-layer="Default">

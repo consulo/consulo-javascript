@@ -1,0 +1,8 @@
+<component name="libraryTable">
+  <library name="consuo-plugin: com.intellij.xml">
+    <binaries>
+      <root url="file://$PROJECT_DIR$/dep/com.intellij.xml/lib" />
+    </binaries>
+    <jarDirectory url="file://$PROJECT_DIR$/dep/com.intellij.xml/lib" recursive="false" />
+  </library>
+</component>

@@ -1,0 +1,8 @@
+<component name="libraryTable">
+  <library name="consulo-plugin: org.intellij.intelliLang">
+    <binaries>
+      <root url="file://$PROJECT_DIR$/dep/org.intellij.intelliLang/lib" />
+    </binaries>
+    <jarDirectory url="file://$PROJECT_DIR$/dep/org.intellij.intelliLang/lib" recursive="false" />
+  </library>
+</component>
