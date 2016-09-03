@@ -1,1 +1,1 @@
-![Build Status](http://must-be.org/vulcan/statusImage?name=consulo-javascript)
+[![Build Status](http://must-be.org/jenkins/job/consulo-javascript/badge/icon)](http://must-be.org/jenkins/job/consulo-javascript/)
