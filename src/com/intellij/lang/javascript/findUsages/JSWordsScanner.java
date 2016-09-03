@@ -16,11 +16,11 @@
 
 package com.intellij.lang.javascript.findUsages;
 
-import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
 import com.intellij.lang.cacheBuilder.DefaultWordsScanner;
 import com.intellij.lang.javascript.DialectOptionHolder;
 import com.intellij.lang.javascript.JSFlexAdapter;
 import com.intellij.lang.javascript.JSTokenTypes;
+import consulo.javascript.lang.JavaScriptTokenSets;
 
 /**
  * Created by IntelliJ IDEA.

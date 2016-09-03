@@ -20,10 +20,10 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.javascript.lang.JavaScriptLanguage;
 
 /**
  * @author VISTALL

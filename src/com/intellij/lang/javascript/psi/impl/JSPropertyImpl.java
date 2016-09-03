@@ -18,10 +18,6 @@ package com.intellij.lang.javascript.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
-import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
-import org.mustbe.consulo.javascript.psi.JSComputedName;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -36,6 +32,10 @@ import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.IncorrectOperationException;
+import consulo.annotations.RequiredReadAction;
+import consulo.javascript.lang.JavaScriptTokenSets;
+import consulo.javascript.lang.psi.JavaScriptType;
+import consulo.javascript.psi.JSComputedName;
 
 /**
  * @author max

@@ -21,14 +21,14 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.PropertyKey;
-import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.javascript.lang.JavaScriptFeature;
 import com.intellij.codeInsight.template.Template;
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import consulo.annotations.RequiredReadAction;
+import consulo.javascript.lang.JavaScriptFeature;
 
 /**
 * @author VISTALL

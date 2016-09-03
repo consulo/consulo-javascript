@@ -26,12 +26,6 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
-import consulo.json.validation.JsonFileDescriptorProviders;
-import consulo.json.validation.NativeArray;
-import consulo.json.validation.descriptor.JsonObjectDescriptor;
-import consulo.json.validation.descriptor.JsonPropertyDescriptor;
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
@@ -55,6 +49,12 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.annotations.RequiredReadAction;
+import consulo.javascript.lang.JavaScriptTokenSets;
+import consulo.json.validation.JsonFileDescriptorProviders;
+import consulo.json.validation.NativeArray;
+import consulo.json.validation.descriptor.JsonObjectDescriptor;
+import consulo.json.validation.descriptor.JsonPropertyDescriptor;
 
 /**
  * @author VISTALL

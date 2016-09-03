@@ -16,7 +16,6 @@
 
 package com.intellij.lang.javascript.search;
 
-import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -28,6 +27,7 @@ import com.intellij.psi.search.PsiSearchHelper;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.util.Processor;
 import com.intellij.util.QueryExecutor;
+import consulo.javascript.lang.JavaScriptLanguage;
 
 /**
  * @author Maxim.Mossienko

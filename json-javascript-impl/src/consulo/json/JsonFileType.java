@@ -20,13 +20,13 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.javascript.lang.JavaScriptFileTypeWithVersion;
-import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
-import consulo.json.lang.JsonJavaScriptVersion;
 import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.javascript.lang.JavaScriptFileTypeWithVersion;
+import consulo.javascript.lang.JavaScriptLanguage;
+import consulo.json.lang.JsonJavaScriptVersion;
 
 /**
  * @author VISTALL

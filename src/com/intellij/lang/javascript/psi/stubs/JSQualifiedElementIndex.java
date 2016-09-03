@@ -20,10 +20,10 @@
 package com.intellij.lang.javascript.psi.stubs;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
 import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;
+import consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 
 public class JSQualifiedElementIndex extends StringStubIndexExtension<JSQualifiedNamedElement>
 {

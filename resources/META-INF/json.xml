@@ -39,7 +39,7 @@
 
 		<completion.contributor language="JavaScript" implementationClass="consulo.json.validation.completion.JsonCompletionContributor"/>
 
-		<quoteHandler fileType="JSON" className="org.mustbe.consulo.javascript.lang.JavaScriptQuoteHandler" />
+		<quoteHandler fileType="JSON" className="onsulo.javascript.lang.JavaScriptQuoteHandler" />
 
 		<localInspection language="JavaScript"
 						 displayName="Property validation"

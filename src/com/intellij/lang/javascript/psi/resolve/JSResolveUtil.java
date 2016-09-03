@@ -31,11 +31,6 @@ import java.util.Set;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.javascript.lang.JavaScriptVersionUtil;
-import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
-import org.mustbe.consulo.javascript.lang.psi.JavaScriptTypeElement;
-import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
-import org.mustbe.consulo.javascript.module.extension.JavaScriptModuleExtension;
 import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.javascript.documentation.JSDocumentationProvider;
@@ -105,6 +100,11 @@ import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.text.StringTokenizer;
 import com.intellij.xml.XmlElementDescriptor;
 import consulo.annotations.RequiredReadAction;
+import consulo.javascript.lang.JavaScriptVersionUtil;
+import consulo.javascript.lang.psi.JavaScriptType;
+import consulo.javascript.lang.psi.JavaScriptTypeElement;
+import consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
+import consulo.javascript.module.extension.JavaScriptModuleExtension;
 import consulo.roots.types.BinariesOrderRootType;
 
 /**

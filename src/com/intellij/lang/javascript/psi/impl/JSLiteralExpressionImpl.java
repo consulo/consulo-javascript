@@ -17,10 +17,6 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
-import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
-import org.mustbe.consulo.javascript.lang.psi.JavaScriptPrimitiveType;
-import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -32,6 +28,10 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.tree.IElementType;
+import consulo.annotations.RequiredReadAction;
+import consulo.javascript.lang.JavaScriptTokenSets;
+import consulo.javascript.lang.psi.JavaScriptPrimitiveType;
+import consulo.javascript.lang.psi.JavaScriptType;
 
 /**
  * @author max

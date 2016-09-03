@@ -1,14 +1,14 @@
 package consulo.json.lang;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.javascript.ide.hightlight.JavaScriptHighlighter;
-import org.mustbe.consulo.javascript.lang.BaseJavaScriptLanguageVersion;
-import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
-import consulo.json.lang.lexer.JsonLexer;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.util.Factory;
+import consulo.javascript.ide.hightlight.JavaScriptHighlighter;
+import consulo.javascript.lang.BaseJavaScriptLanguageVersion;
+import consulo.javascript.lang.JavaScriptLanguage;
+import consulo.json.lang.lexer.JsonLexer;
 import consulo.lombok.annotations.Lazy;
 
 /**

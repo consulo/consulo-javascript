@@ -11,7 +11,7 @@ import com.intellij.psi.stubs.IndexSink;
  */
 public abstract class JavaScriptIndexer
 {
-	public static final ExtensionPointName<JavaScriptIndexer> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.javascript.indexer");
+	public static final ExtensionPointName<JavaScriptIndexer> EP_NAME = ExtensionPointName.create("consulo.javascript.indexer");
 
 	public void indexFile(@NotNull JSFileStub fileStub, @NotNull final IndexSink sink)
 	{

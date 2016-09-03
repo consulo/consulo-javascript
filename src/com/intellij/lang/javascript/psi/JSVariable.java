@@ -18,12 +18,12 @@ package com.intellij.lang.javascript.psi;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
-import org.mustbe.consulo.javascript.lang.psi.JavaScriptTypeElement;
 import com.intellij.lang.javascript.psi.stubs.JSVariableStubBase;
 import com.intellij.psi.StubBasedPsiElement;
 import com.intellij.util.IncorrectOperationException;
+import consulo.annotations.RequiredReadAction;
+import consulo.javascript.lang.psi.JavaScriptType;
+import consulo.javascript.lang.psi.JavaScriptTypeElement;
 
 /**
  * @author max

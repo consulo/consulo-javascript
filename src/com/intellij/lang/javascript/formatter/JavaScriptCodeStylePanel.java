@@ -1,8 +1,8 @@
 package com.intellij.lang.javascript.formatter;
 
-import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.application.options.TabbedLanguageCodeStylePanel;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
+import consulo.javascript.lang.JavaScriptLanguage;
 
 /**
  * @author VISTALL

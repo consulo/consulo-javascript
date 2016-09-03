@@ -1,11 +1,6 @@
 package consulo.json.lang;
 
-import consulo.lang.LanguageVersion;
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
-import org.mustbe.consulo.javascript.lang.parsing.ExpressionParsing;
-import org.mustbe.consulo.javascript.lang.parsing.Parsing;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
@@ -13,6 +8,11 @@ import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.psi.tree.IElementType;
+import consulo.javascript.lang.JavaScriptTokenSets;
+import consulo.javascript.lang.parsing.ExpressionParsing;
+import consulo.javascript.lang.parsing.Parsing;
+import consulo.lang.LanguageVersion;
+import consulo.lombok.annotations.Logger;
 
 /**
  * @author VISTALL

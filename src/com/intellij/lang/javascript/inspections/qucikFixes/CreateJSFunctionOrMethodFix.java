@@ -19,8 +19,6 @@ package com.intellij.lang.javascript.inspections.qucikFixes;
 
 import java.util.Set;
 
-import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.javascript.lang.JavaScriptFeature;
 import com.intellij.codeInsight.template.Expression;
 import com.intellij.codeInsight.template.Template;
 import com.intellij.lang.javascript.psi.JSArgumentList;
@@ -29,6 +27,8 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import consulo.annotations.RequiredReadAction;
+import consulo.javascript.lang.JavaScriptFeature;
 
 public class CreateJSFunctionOrMethodFix extends CreateJSFunctionFixBase
 {

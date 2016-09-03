@@ -26,7 +26,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 public interface JSClassInheritorsProvider
 {
 
-	ExtensionPointName<JSClassInheritorsProvider> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.javascript.classInheritorsProvider");
+	ExtensionPointName<JSClassInheritorsProvider> EP_NAME = ExtensionPointName.create("consulo.javascript.classInheritorsProvider");
 
 	Collection<JSClass> getImplementingClasses(String parentName, Project project, GlobalSearchScope scope);
 

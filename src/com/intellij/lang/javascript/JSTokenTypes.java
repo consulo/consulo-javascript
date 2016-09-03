@@ -19,10 +19,6 @@ package com.intellij.lang.javascript;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
-import org.mustbe.consulo.javascript.lang.parsing.JavaScriptParser;
-import org.mustbe.consulo.javascript.lang.parsing.JavaScriptParsingContext;
-import org.mustbe.consulo.javascript.lang.parsing.Parsing;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.LanguageParserDefinitions;
@@ -39,6 +35,10 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILazyParseableElementType;
 import com.intellij.psi.tree.TokenSet;
 import consulo.annotations.RequiredReadAction;
+import consulo.javascript.lang.JavaScriptLanguage;
+import consulo.javascript.lang.parsing.JavaScriptParser;
+import consulo.javascript.lang.parsing.JavaScriptParsingContext;
+import consulo.javascript.lang.parsing.Parsing;
 import consulo.lang.LanguageVersion;
 
 /**

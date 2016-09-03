@@ -16,6 +16,6 @@
 
 <idea-plugin>
 	<extensions defaultExtensionNs="com.intellij">
-		<multiHostInjector forClass="com.intellij.lang.javascript.psi.impl.JSLiteralExpressionImpl" implementationClass="org.mustbe.consulo.javascript.lang.JavaScriptRegexpMultiHostInjector"/>
+		<multiHostInjector forClass="com.intellij.lang.javascript.psi.impl.JSLiteralExpressionImpl" implementationClass="consulo.javascript.lang.JavaScriptRegexpMultiHostInjector"/>
 	</extensions>
 </idea-plugin>

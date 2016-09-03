@@ -33,7 +33,7 @@
 	<xi:include href="/META-INF/typescript.xml" xpointer="xpointer(/idea-plugin/*)"/>
 
 	<actions>
-		<action id="JavaScript.File" class="org.mustbe.consulo.javascript.ide.actions.JavaScriptCreateFileAction">
+		<action id="JavaScript.File" class="consulo.javascript.ide.actions.JavaScriptCreateFileAction">
 			<add-to-group group-id="NewGroup1" anchor="after" relative-to-action="NewClass"/>
 		</action>
 	</actions>
@@ -41,28 +41,28 @@
 	<extensions defaultExtensionNs="com.intellij">
 		<internalFileTemplate name="JavaScriptFile"/>
 
-		<lang.versionResolver language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScriptLanguageVersionResolver"/>
+		<lang.versionResolver language="JavaScript" implementationClass="consulo.javascript.lang.JavaScriptLanguageVersionResolver"/>
 
-		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScript15LanguageVersion"/>
-		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScript16LanguageVersion"/>
-		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScript17LanguageVersion"/>
-		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScript18LanguageVersion"/>
-		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScript185LanguageVersion"/>
+		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.lang.JavaScript15LanguageVersion"/>
+		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.lang.JavaScript16LanguageVersion"/>
+		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.lang.JavaScript17LanguageVersion"/>
+		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.lang.JavaScript18LanguageVersion"/>
+		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.lang.JavaScript185LanguageVersion"/>
 
-		<copyright.updater filetype="JavaScript" implementationClass="org.mustbe.consulo.javascript.copyright.UpdateJavaScriptFileCopyrightProvider"/>
+		<copyright.updater filetype="JavaScript" implementationClass="consulo.javascript.copyright.UpdateJavaScriptFileCopyrightProvider"/>
 
 		<colorSettingsPage implementation="com.intellij.lang.javascript.highlighting.JavaScriptColorsAndFontsPage"/>
 
-		<gotoClassContributor implementation="org.mustbe.consulo.javascript.lang.navigation.JavaScriptClassContributor"/>
+		<gotoClassContributor implementation="consulo.javascript.lang.navigation.JavaScriptClassContributor"/>
 		<gotoSymbolContributor implementation="com.intellij.lang.javascript.navigation.JavaScriptSymbolContributor"/>
 
-		<iconDescriptorUpdater implementation="org.mustbe.consulo.javascript.ide.JavaScriptIconDescriptorUpdater"/>
+		<iconDescriptorUpdater implementation="consulo.javascript.ide.JavaScriptIconDescriptorUpdater"/>
 
-		<fileTypeFactory implementation="org.mustbe.consulo.javascript.lang.JavaScriptFileTypeFactory"/>
+		<fileTypeFactory implementation="consulo.javascript.lang.JavaScriptFileTypeFactory"/>
 
 		<highlightVisitor implementation="com.intellij.lang.javascript.highlighting.JavaScriptHighlightVisitor"/>
 
-		<lang.parserDefinition language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScriptParsingDefinition"/>
+		<lang.parserDefinition language="JavaScript" implementationClass="consulo.javascript.lang.JavaScriptParsingDefinition"/>
 
 		<annotator language="JavaScript" implementationClass="com.intellij.lang.javascript.validation.JSAnnotatingVisitor"/>
 		<readWriteAccessDetector implementation="com.intellij.lang.javascript.findUsages.JSReadWriteAccessDetector"/>
@@ -87,7 +87,7 @@
 		<lang.findUsagesProvider language="JavaScript" implementationClass="com.intellij.lang.javascript.findUsages.JavaScriptFindUsagesProvider"/>
 
 		<lang.syntaxHighlighterFactory key="JavaScript"
-									   implementationClass="org.mustbe.consulo.javascript.ide.hightlight.JavaScriptSyntaxHighlightFactory"/>
+									   implementationClass="consulo.javascript.ide.hightlight.JavaScriptSyntaxHighlightFactory"/>
 		<lang.commenter language="JavaScript" implementationClass="com.intellij.lang.javascript.JavascriptCommenter"/>
 
 		<lang.braceMatcher language="JavaScript" implementationClass="com.intellij.lang.javascript.highlighting.JSBraceMatcher"/>
@@ -101,7 +101,7 @@
 		<fileStructureGroupRuleProvider implementation="com.intellij.lang.javascript.findUsages.JavaScriptFunctionGroupRuleProvider"/>
 
 		<stubIndex implementation="com.intellij.lang.javascript.psi.stubs.JSNameIndex"/>
-		<stubIndex implementation="org.mustbe.consulo.javascript.psi.stubs.index.JavaScriptClassNameIndex"/>
+		<stubIndex implementation="consulo.javascript.psi.stubs.index.JavaScriptClassNameIndex"/>
 		<stubIndex implementation="com.intellij.lang.javascript.psi.stubs.JSQualifiedElementIndex"/>
 		<stubIndex implementation="com.intellij.lang.javascript.psi.stubs.JSSuperClassIndex"/>
 		<stubIndex implementation="com.intellij.lang.javascript.psi.stubs.JSImplementedInterfacesIndex"/>
@@ -133,11 +133,11 @@
 		<lang.elementManipulator forClass="com.intellij.lang.javascript.psi.JSDocTag"
 								 implementationClass="com.intellij.javascript.manipulators.JSDocTagManipulator"/>
 
-		<completion.contributor language="JavaScript" implementationClass="org.mustbe.consulo.javascript.ide.completion.JavaScriptKeywordCompletionContributor"/>
+		<completion.contributor language="JavaScript" implementationClass="consulo.javascript.ide.completion.JavaScriptKeywordCompletionContributor"/>
 
 		<completion.confidence language="JavaScript" implementationClass="com.intellij.codeInsight.completion.SkipAutopopupInStrings" />
 
-		<quoteHandler fileType="JavaScript" className="org.mustbe.consulo.javascript.lang.JavaScriptQuoteHandler"/>
+		<quoteHandler fileType="JavaScript" className="consulo.javascript.lang.JavaScriptQuoteHandler"/>
 
 		<liveTemplateMacro implementation="com.intellij.javascript.JSClassNameMacro"/>
 		<liveTemplateMacro implementation="com.intellij.javascript.JSMethodNameMacro"/>
@@ -145,14 +145,14 @@
 		<inspectionToolProvider implementation="com.intellij.lang.javascript.inspections.JSInspectionToolProvider"/>
 		<targetElementUtilEx implementation="com.intellij.lang.javascript.JavaScriptTargetElementUtilEx"/>
 
-		<sdkType implementation="org.mustbe.consulo.javascript.client.module.sdk.ClientJavaScriptSdkType"/>
-		<predefinedBundlesProvider implementation="org.mustbe.consulo.javascript.client.module.sdk.ClientJavaScriptPredefinedBundlesProvider"/>
+		<sdkType implementation="consulo.javascript.client.module.sdk.ClientJavaScriptSdkType"/>
+		<predefinedBundlesProvider implementation="consulo.javascript.client.module.sdk.ClientJavaScriptPredefinedBundlesProvider"/>
 		<moduleExtensionProvider key="client-javascript"
 								 icon="/icons/javaScript.png"
 								 name="JavaScript (Client)"
 								 allowMixin="true"
-								 immutableClass="org.mustbe.consulo.javascript.client.module.extension.ClientJavaScriptModuleExtension"
-								 mutableClass="org.mustbe.consulo.javascript.client.module.extension.ClientJavaScriptMutableModuleExtension"/>
+								 immutableClass="consulo.javascript.client.module.extension.ClientJavaScriptModuleExtension"
+								 mutableClass="consulo.javascript.client.module.extension.ClientJavaScriptMutableModuleExtension"/>
 
 		<xdebugger.breakpointType implementation="consulo.javascript.debugger.JavaScriptLineBreakpointType"/>
 		<xdebugger.lineBreakpointTypeResolver filetype="JavaScript" implementationClass="consulo.javascript.debugger.JavaScriptLineBreakpointTypeResolver" />
@@ -167,11 +167,11 @@
 		<extensionPoint name="propertyNameReferenceProvider" interface="com.intellij.lang.javascript.psi.impl.reference.JSPropertyNameReferenceProvider"/>
 
 		<extensionPoint name="quickFixFactory" beanClass="com.intellij.util.KeyedLazyInstanceEP">
-			<with attribute="implementationClass" implements="org.mustbe.consulo.javascript.ide.codeInsight.JavaScriptQuickFixFactory"/>
+			<with attribute="implementationClass" implements="consulo.javascript.ide.codeInsight.JavaScriptQuickFixFactory"/>
 		</extensionPoint>
 	</extensionPoints>
 
-	<extensions defaultExtensionNs="org.mustbe.consulo.javascript">
+	<extensions defaultExtensionNs="consulo.javascript">
 		<propertyNameReferenceProvider implementation="com.intellij.lang.javascript.psi.impl.reference.DefaultJSPropertyNameReferenceProvider" id="default"/>
 	</extensions>
 

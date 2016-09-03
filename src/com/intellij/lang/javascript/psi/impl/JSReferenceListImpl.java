@@ -21,8 +21,6 @@ import java.util.Collection;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -37,6 +35,8 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.util.ArrayUtil;
+import consulo.annotations.RequiredReadAction;
+import consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 
 /**
  * @author Maxim.Mossienko

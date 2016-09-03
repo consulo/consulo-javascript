@@ -17,9 +17,6 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import org.jetbrains.annotations.NotNull;
-import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
-import org.mustbe.consulo.javascript.lang.psi.impl.JavaScriptClassType;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSArgumentList;
@@ -30,6 +27,9 @@ import com.intellij.lang.javascript.psi.JSNewExpression;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import consulo.annotations.RequiredReadAction;
+import consulo.javascript.lang.psi.JavaScriptType;
+import consulo.javascript.lang.psi.impl.JavaScriptClassType;
 
 /**
  * Created by IntelliJ IDEA.

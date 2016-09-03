@@ -18,8 +18,8 @@ package com.intellij.lang.javascript;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.psi.tree.IElementType;
+import consulo.javascript.lang.JavaScriptLanguage;
 
 /**
  * Created by IntelliJ IDEA.

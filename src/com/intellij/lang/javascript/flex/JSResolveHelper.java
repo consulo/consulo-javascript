@@ -31,7 +31,7 @@ import com.intellij.util.Processor;
  */
 public interface JSResolveHelper
 {
-	ExtensionPointName<JSResolveHelper> EP_NAME = ExtensionPointName.create("org.mustbe.consulo.javascript.resolveHelper");
+	ExtensionPointName<JSResolveHelper> EP_NAME = ExtensionPointName.create("consulo.javascript.resolveHelper");
 
 	// TODO: drop module
 	@Nullable

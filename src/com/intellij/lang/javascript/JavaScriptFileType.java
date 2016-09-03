@@ -20,16 +20,16 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.javascript.lang.JavaScriptFileTypeWithVersion;
-import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
-import org.mustbe.consulo.javascript.lang.StandardJavaScriptVersions;
-import org.mustbe.consulo.javascript.module.extension.JavaScriptModuleExtension;
-import consulo.lang.LanguageVersion;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.javascript.lang.JavaScriptFileTypeWithVersion;
+import consulo.javascript.lang.JavaScriptLanguage;
+import consulo.javascript.lang.StandardJavaScriptVersions;
+import consulo.javascript.module.extension.JavaScriptModuleExtension;
+import consulo.lang.LanguageVersion;
 
 /**
  * User: max

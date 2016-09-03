@@ -20,7 +20,6 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.lang.javascript.psi.JSNamedElement;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.actionSystem.DataKey;
@@ -42,6 +41,7 @@ import com.intellij.usages.UsageView;
 import com.intellij.usages.impl.FileStructureGroupRuleProvider;
 import com.intellij.usages.rules.PsiElementUsage;
 import com.intellij.usages.rules.UsageGroupingRule;
+import consulo.javascript.lang.JavaScriptLanguage;
 
 /**
  * @author Maxim.Mossienko

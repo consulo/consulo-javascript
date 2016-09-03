@@ -3,14 +3,14 @@ package consulo.json.jom.proxy.impl;
 import java.lang.reflect.Type;
 
 import org.jetbrains.annotations.NotNull;
-import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
-import consulo.json.jom.proxy.JomBadValueExpressionException;
-import consulo.json.jom.proxy.JomValueConverter;
 import com.intellij.lang.javascript.psi.JSSimpleLiteralExpression;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
+import consulo.annotations.RequiredReadAction;
+import consulo.javascript.lang.JavaScriptTokenSets;
+import consulo.json.jom.proxy.JomBadValueExpressionException;
+import consulo.json.jom.proxy.JomValueConverter;
 
 /**
  * @author VISTALL

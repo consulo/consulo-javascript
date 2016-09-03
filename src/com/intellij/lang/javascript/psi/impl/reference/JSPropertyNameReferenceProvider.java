@@ -30,7 +30,7 @@ import consulo.extensions.CompositeExtensionPointName;
  */
 public interface JSPropertyNameReferenceProvider
 {
-	CompositeExtensionPointName<JSPropertyNameReferenceProvider> EP_NAME = CompositeExtensionPointName.applicationPoint("org.mustbe.consulo.javascript.propertyNameReferenceProvider",
+	CompositeExtensionPointName<JSPropertyNameReferenceProvider> EP_NAME = CompositeExtensionPointName.applicationPoint("consulo.javascript.propertyNameReferenceProvider",
 			JSPropertyNameReferenceProvider.class);
 
 	@Nullable

@@ -18,7 +18,7 @@ package com.intellij.lang.javascript.psi;
 
 import org.jetbrains.annotations.NotNull;
 import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
+import consulo.javascript.lang.psi.JavaScriptType;
 import consulo.lombok.annotations.ArrayFactoryFields;
 
 /**

@@ -18,7 +18,6 @@ package org.intellij.idea.lang.javascript.intention;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
 import com.intellij.lang.Language;
 import com.intellij.openapi.editor.Editor;
@@ -27,6 +26,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.util.IncorrectOperationException;
+import consulo.javascript.lang.JavaScriptLanguage;
 
 public abstract class JSIntention extends PsiElementBaseIntentionAction
 {

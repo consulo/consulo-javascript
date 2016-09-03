@@ -2,7 +2,7 @@ package com.sixrr.inspectjs.utils;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
+import consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;

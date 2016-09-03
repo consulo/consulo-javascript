@@ -23,14 +23,14 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.javascript.ide.hightlight.JavaScriptSyntaxHighlightKeys;
-import org.mustbe.consulo.javascript.lang.JavaScript15LanguageVersion;
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
+import consulo.javascript.ide.hightlight.JavaScriptSyntaxHighlightKeys;
+import consulo.javascript.lang.JavaScript15LanguageVersion;
 
 /**
  * Created by IntelliJ IDEA.

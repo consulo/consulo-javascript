@@ -1,4 +1,4 @@
-package org.mustbe.consulo.json.lang.lexer;
+package consulo.json.lang.lexer;
 
 import com.intellij.lexer.LexerBase;
 import com.intellij.psi.tree.IElementType;

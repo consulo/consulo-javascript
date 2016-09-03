@@ -17,7 +17,6 @@
 package com.intellij.lang.javascript;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.codeInsight.template.TemplateContextType;
 import com.intellij.lang.Language;
 import com.intellij.lang.javascript.psi.JSFile;
@@ -32,6 +31,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.util.PsiTreeUtil;
+import consulo.javascript.lang.JavaScriptLanguage;
 
 /**
  * @author Maxim.Mossienko

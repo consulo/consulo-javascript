@@ -17,9 +17,6 @@
 package com.intellij.lang.javascript;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
-import org.mustbe.consulo.javascript.psi.impl.JSComputedNameImpl;
-import org.mustbe.consulo.javascript.psi.impl.JavaScriptLambdaExpressionImpl;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.javascript.psi.*;
@@ -31,6 +28,9 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILazyParseableElementType;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.psi.tree.TokenSet;
+import consulo.javascript.lang.JavaScriptLanguage;
+import consulo.javascript.psi.impl.JSComputedNameImpl;
+import consulo.javascript.psi.impl.JavaScriptLambdaExpressionImpl;
 import consulo.psi.tree.ElementTypeAsPsiFactory;
 
 /**

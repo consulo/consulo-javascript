@@ -18,11 +18,6 @@ package com.intellij.lang.javascript.highlighting;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.javascript.ide.hightlight.JavaScriptSyntaxHighlightKeys;
-import org.mustbe.consulo.javascript.lang.JavaScriptFeature;
-import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
-import org.mustbe.consulo.javascript.lang.JavaScriptVersionUtil;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.HighlightVisitor;
@@ -40,6 +35,11 @@ import com.intellij.psi.ResolveResult;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
+import consulo.annotations.RequiredReadAction;
+import consulo.javascript.ide.hightlight.JavaScriptSyntaxHighlightKeys;
+import consulo.javascript.lang.JavaScriptFeature;
+import consulo.javascript.lang.JavaScriptTokenSets;
+import consulo.javascript.lang.JavaScriptVersionUtil;
 
 public class JavaScriptHighlightVisitor extends JSElementVisitor implements HighlightVisitor
 {

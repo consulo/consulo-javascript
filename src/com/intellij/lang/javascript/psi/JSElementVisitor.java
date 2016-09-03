@@ -16,8 +16,8 @@
 
 package com.intellij.lang.javascript.psi;
 
-import org.mustbe.consulo.javascript.psi.JavaScriptLambdaExpression;
 import com.intellij.psi.PsiElementVisitor;
+import consulo.javascript.psi.JavaScriptLambdaExpression;
 
 /**
  * Created by IntelliJ IDEA.

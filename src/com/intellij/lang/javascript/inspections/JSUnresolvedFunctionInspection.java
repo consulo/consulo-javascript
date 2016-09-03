@@ -23,9 +23,6 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.PropertyKey;
-import org.mustbe.consulo.javascript.ide.codeInsight.JavaScriptQuickFixFactory;
-import org.mustbe.consulo.javascript.lang.JavaScriptFeature;
-import org.mustbe.consulo.javascript.lang.JavaScriptVersionUtil;
 import com.intellij.codeInsight.template.Template;
 import com.intellij.codeInsight.template.TemplateManager;
 import com.intellij.codeInspection.LocalQuickFix;
@@ -51,6 +48,9 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
+import consulo.javascript.ide.codeInsight.JavaScriptQuickFixFactory;
+import consulo.javascript.lang.JavaScriptFeature;
+import consulo.javascript.lang.JavaScriptVersionUtil;
 
 /**
  * @author Maxim.Mossienko

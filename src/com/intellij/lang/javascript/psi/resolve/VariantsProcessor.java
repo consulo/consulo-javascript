@@ -25,8 +25,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jetbrains.annotations.NonNls;
-import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.javascript.lang.JavaScriptFeature;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
 import com.intellij.lang.javascript.psi.*;
@@ -37,6 +35,8 @@ import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
+import consulo.annotations.RequiredReadAction;
+import consulo.javascript.lang.JavaScriptFeature;
 
 /**
  * @author Maxim.Mossienko

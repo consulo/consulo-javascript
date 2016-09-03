@@ -2,14 +2,14 @@ package consulo.json.breadcrumbs;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
-import consulo.json.JsonFileType;
 import com.intellij.lang.Language;
 import com.intellij.lang.javascript.psi.JSProperty;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.xml.breadcrumbs.BreadcrumbsInfoProvider;
+import consulo.annotations.RequiredReadAction;
+import consulo.javascript.lang.JavaScriptLanguage;
+import consulo.json.JsonFileType;
 
 /**
  * @author VISTALL

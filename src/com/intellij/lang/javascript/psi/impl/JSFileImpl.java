@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JavaScriptFileType;
@@ -40,6 +39,7 @@ import com.intellij.psi.StubBasedPsiElement;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.IncorrectOperationException;
+import consulo.javascript.lang.JavaScriptLanguage;
 
 /**
  * Created by IntelliJ IDEA.

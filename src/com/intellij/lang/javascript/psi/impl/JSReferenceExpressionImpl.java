@@ -20,11 +20,6 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.javascript.lang.JavaScriptFeature;
-import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
-import org.mustbe.consulo.javascript.lang.JavaScriptVersionUtil;
-import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageNamesValidation;
 import com.intellij.lang.javascript.JSElementTypes;
@@ -55,6 +50,11 @@ import com.intellij.psi.xml.XmlToken;
 import com.intellij.refactoring.rename.BindablePsiReference;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
+import consulo.annotations.RequiredReadAction;
+import consulo.javascript.lang.JavaScriptFeature;
+import consulo.javascript.lang.JavaScriptLanguage;
+import consulo.javascript.lang.JavaScriptVersionUtil;
+import consulo.javascript.lang.psi.JavaScriptType;
 
 public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSReferenceExpression, BindablePsiReference
 {

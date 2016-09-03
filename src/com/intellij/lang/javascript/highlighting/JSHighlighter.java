@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.javascript.ide.hightlight.JavaScriptSyntaxHighlightKeys;
 import com.intellij.lang.javascript.DialectOptionHolder;
 import com.intellij.lang.javascript.JSDocElementType;
 import com.intellij.lang.javascript.JSDocTokenTypes;
@@ -33,6 +32,7 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.StringEscapesTokenTypes;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.Processor;
+import consulo.javascript.ide.hightlight.JavaScriptSyntaxHighlightKeys;
 
 /**
  * Created by IntelliJ IDEA.

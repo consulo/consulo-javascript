@@ -15,7 +15,7 @@
  */
 package org.intellij.idea.lang.javascript.psiutil;
 
-import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
+import consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;

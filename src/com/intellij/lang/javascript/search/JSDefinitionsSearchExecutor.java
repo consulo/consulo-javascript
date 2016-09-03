@@ -17,7 +17,6 @@
 package com.intellij.lang.javascript.search;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSDefinitionExpression;
@@ -32,6 +31,7 @@ import com.intellij.psi.search.searches.DefinitionsScopedSearch;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.util.Processor;
 import com.intellij.util.QueryExecutor;
+import consulo.javascript.lang.JavaScriptLanguage;
 
 /**
  * @author Maxim.Mossienko

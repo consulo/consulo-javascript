@@ -16,6 +16,6 @@
 
 <idea-plugin>
 	<extensions defaultExtensionNs="com.intellij">
-		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.EcmaScript4JavaScriptVersion" />
+		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.lang.EcmaScript4JavaScriptVersion" />
 	</extensions>
 </idea-plugin>

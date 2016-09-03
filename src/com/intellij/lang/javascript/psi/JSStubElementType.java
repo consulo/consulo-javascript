@@ -21,10 +21,10 @@ package com.intellij.lang.javascript.psi;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.lang.javascript.psi.stubs.JSStubElement;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.IndexSink;
+import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.psi.tree.IElementTypeAsPsiFactory;
 
 public abstract class JSStubElementType<StubT extends JSStubElement<PsiT>, PsiT extends JSElement> extends IStubElementType<StubT,

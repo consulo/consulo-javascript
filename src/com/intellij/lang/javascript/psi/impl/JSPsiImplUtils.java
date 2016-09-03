@@ -26,10 +26,6 @@ import java.util.List;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.javascript.lang.psi.JavaScriptTypeElement;
-import org.mustbe.consulo.javascript.lang.psi.impl.elementType.BaseJavaScriptElementType;
-import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -60,6 +56,10 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.IncorrectOperationException;
+import consulo.annotations.RequiredReadAction;
+import consulo.javascript.lang.psi.JavaScriptTypeElement;
+import consulo.javascript.lang.psi.impl.elementType.BaseJavaScriptElementType;
+import consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 
 /**
  * @author Maxim.Mossienko

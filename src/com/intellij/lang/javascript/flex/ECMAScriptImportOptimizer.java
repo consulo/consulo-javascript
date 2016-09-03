@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.javascript.lang.JavaScriptLanguage;
 import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.idea.LoggerFactory;
 import com.intellij.lang.ImportOptimizer;
@@ -54,6 +53,7 @@ import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.containers.MultiMap;
+import consulo.javascript.lang.JavaScriptLanguage;
 
 /**
  * @author Maxim.Mossienko

@@ -20,7 +20,6 @@ import java.util.Collections;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.javascript.lang.JavaScriptFeature;
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.codeInsight.template.Template;
@@ -49,6 +48,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import consulo.javascript.lang.JavaScriptFeature;
 
 /**
  * @author Maxim.Mossienko

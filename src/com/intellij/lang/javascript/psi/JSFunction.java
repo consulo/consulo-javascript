@@ -18,11 +18,11 @@ package com.intellij.lang.javascript.psi;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
-import org.mustbe.consulo.javascript.lang.psi.JavaScriptTypeElement;
 import com.intellij.lang.javascript.psi.stubs.JSFunctionStub;
 import com.intellij.psi.StubBasedPsiElement;
+import consulo.annotations.RequiredReadAction;
+import consulo.javascript.lang.psi.JavaScriptType;
+import consulo.javascript.lang.psi.JavaScriptTypeElement;
 import consulo.lombok.annotations.ArrayFactoryFields;
 
 /**

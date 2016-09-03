@@ -21,10 +21,6 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
-import org.mustbe.consulo.javascript.lang.JavaScriptFeature;
-import org.mustbe.consulo.javascript.lang.JavaScriptVersionUtil;
-import org.mustbe.consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupItem;
@@ -61,6 +57,10 @@ import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.psi.xml.XmlText;
+import consulo.annotations.RequiredReadAction;
+import consulo.javascript.lang.JavaScriptFeature;
+import consulo.javascript.lang.JavaScriptVersionUtil;
+import consulo.javascript.lang.psi.JavaScriptType;
 
 /**
  * @author Maxim.Mossienko

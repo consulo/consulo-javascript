@@ -24,9 +24,6 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.javascript.lang.JavaScriptFeature;
-import org.mustbe.consulo.javascript.lang.JavaScriptTokenSets;
-import org.mustbe.consulo.javascript.lang.JavaScriptVersionUtil;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.injection.InjectedLanguageManager;
@@ -50,6 +47,9 @@ import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.psi.xml.XmlToken;
 import com.intellij.util.ArrayUtil;
+import consulo.javascript.lang.JavaScriptFeature;
+import consulo.javascript.lang.JavaScriptTokenSets;
+import consulo.javascript.lang.JavaScriptVersionUtil;
 
 /**
  * @author Maxim.Mossienko

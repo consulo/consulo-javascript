@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
-import org.mustbe.consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSReferenceList;
 import com.intellij.openapi.extensions.Extensions;
@@ -35,6 +34,7 @@ import com.intellij.util.Processor;
 import com.intellij.util.Query;
 import com.intellij.util.QueryExecutor;
 import com.intellij.util.QueryFactory;
+import consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 
 public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSearch.SearchParameters>
 {
