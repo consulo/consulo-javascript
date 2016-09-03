@@ -31,6 +31,7 @@ import com.intellij.psi.tree.TokenSet;
 import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.javascript.psi.impl.JSComputedNameImpl;
 import consulo.javascript.psi.impl.JavaScriptLambdaExpressionImpl;
+import consulo.javascript.psi.stubs.JSFileStub;
 import consulo.psi.tree.ElementTypeAsPsiFactory;
 
 /**

@@ -1,6 +1,6 @@
 package com.sixrr.inspectjs.confusing;
 
-import com.intellij.lang.javascript.psi.JSSimpleLiteralExpression;
+import consulo.javascript.psi.JSSimpleLiteralExpression;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.intellij.lang.javascript.types;
+package consulo.javascript.types;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;

@@ -40,6 +40,7 @@ import consulo.javascript.ide.hightlight.JavaScriptSyntaxHighlightKeys;
 import consulo.javascript.lang.JavaScriptFeature;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.javascript.lang.JavaScriptVersionUtil;
+import consulo.javascript.psi.JSSimpleLiteralExpression;
 
 public class JavaScriptHighlightVisitor extends JSElementVisitor implements HighlightVisitor
 {

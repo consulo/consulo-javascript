@@ -21,7 +21,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSSimpleLiteralExpression;
+import consulo.javascript.psi.JSSimpleLiteralExpression;
 import com.intellij.psi.LiteralTextEscaper;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;

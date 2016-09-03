@@ -1,6 +1,6 @@
 package com.sixrr.inspectjs.validity;
 
-import com.intellij.lang.javascript.psi.JSSimpleLiteralExpression;
+import consulo.javascript.psi.JSSimpleLiteralExpression;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;

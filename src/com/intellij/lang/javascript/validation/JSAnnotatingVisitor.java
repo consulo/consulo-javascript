@@ -71,6 +71,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTagChild;
 import com.intellij.util.IncorrectOperationException;
+import consulo.javascript.psi.JSSimpleLiteralExpression;
 
 /**
  * @by max, maxim.mossienko

@@ -1,4 +1,4 @@
-package com.intellij.lang.javascript.formatter;
+package consulo.javascript.formatter;
 
 import java.io.IOException;
 

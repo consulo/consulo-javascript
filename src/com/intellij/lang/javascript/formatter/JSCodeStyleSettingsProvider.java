@@ -23,6 +23,7 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsProvider;
 import com.intellij.psi.codeStyle.CustomCodeStyleSettings;
+import consulo.javascript.formatter.JavaScriptCodeStyleConfigurable;
 import consulo.javascript.lang.JavaScriptLanguage;
 
 /**

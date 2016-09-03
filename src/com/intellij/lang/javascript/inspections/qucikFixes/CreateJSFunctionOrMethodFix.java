@@ -28,6 +28,7 @@ import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import consulo.annotations.RequiredReadAction;
+import consulo.javascript.inspections.qucikFixes.CreateJSFunctionFixBase;
 import consulo.javascript.lang.JavaScriptFeature;
 
 public class CreateJSFunctionOrMethodFix extends CreateJSFunctionFixBase

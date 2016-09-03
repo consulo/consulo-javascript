@@ -15,25 +15,29 @@
  * limitations under the License.
  */
 
-package com.intellij.lang.javascript.psi.impl.reference;
+package consulo.javascript.psi.impl.reference;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.lang.javascript.psi.JSProperty;
-import com.intellij.psi.PsiReference;
+import com.intellij.lang.javascript.psi.impl.reference.JSPropertyNameReference;
 import consulo.annotations.RequiredReadAction;
-import consulo.extensions.CompositeExtensionPointName;
+import com.intellij.lang.javascript.psi.JSProperty;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
 
 /**
  * @author VISTALL
  * @since 02.12.2015
  */
-public interface JSPropertyNameReferenceProvider
+public class DefaultJSPropertyNameReferenceProvider implements JSPropertyNameReferenceProvider
 {
-	CompositeExtensionPointName<JSPropertyNameReferenceProvider> EP_NAME = CompositeExtensionPointName.applicationPoint("consulo.javascript.propertyNameReferenceProvider",
-			JSPropertyNameReferenceProvider.class);
-
-	@Nullable
 	@RequiredReadAction
-	PsiReference getReference(@NotNull JSProperty property);
+	@Nullable
+	@Override
+	public PsiReference getReference(@NotNull JSProperty property)
+	{
+		PsiElement nameIdentifier = property.getNameIdentifier();
+		assert nameIdentifier != null;
+		return new JSPropertyNameReference(property, nameIdentifier);
+	}
 }

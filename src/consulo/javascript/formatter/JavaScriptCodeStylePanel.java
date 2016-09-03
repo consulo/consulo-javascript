@@ -1,6 +1,7 @@
-package com.intellij.lang.javascript.formatter;
+package consulo.javascript.formatter;
 
 import com.intellij.application.options.TabbedLanguageCodeStylePanel;
+import com.intellij.lang.javascript.formatter.JSCodeStylePanel;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import consulo.javascript.lang.JavaScriptLanguage;
 

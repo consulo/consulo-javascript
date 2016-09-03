@@ -23,7 +23,7 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSProperty;
-import com.intellij.lang.javascript.psi.impl.reference.JSPropertyNameReferenceProvider;
+import consulo.javascript.psi.impl.reference.JSPropertyNameReferenceProvider;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;

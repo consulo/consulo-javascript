@@ -108,7 +108,7 @@
 
 		<fileTypeIndentOptionsProvider implementation="com.intellij.lang.javascript.formatter.JavaScriptIndentOptionsProvider"/>
 		<codeStyleSettingsProvider implementation="com.intellij.lang.javascript.formatter.JSCodeStyleSettingsProvider"/>
-		<langCodeStyleSettingsProvider implementation="com.intellij.lang.javascript.formatter.JavaScriptLanguageCodeStyleSettingsProvider"/>
+		<langCodeStyleSettingsProvider implementation="consulo.javascript.formatter.JavaScriptLanguageCodeStyleSettingsProvider"/>
 		<liveTemplateContext implementation="com.intellij.lang.javascript.JavaScriptCodeContextType"/>
 
 		<codeInsight.lineMarkerProvider language="JavaScript"
@@ -159,12 +159,12 @@
 	</extensions>
 
 	<extensionPoints>
-		<extensionPoint name="indexer" interface="com.intellij.lang.javascript.index.JavaScriptIndexer"/>
+		<extensionPoint name="indexer" interface="consulo.javascript.index.JavaScriptIndexer"/>
 
 		<extensionPoint name="resolveHelper" interface="com.intellij.lang.javascript.flex.JSResolveHelper"/>
 		<extensionPoint name="classInheritorsProvider" interface="com.intellij.lang.javascript.search.JSClassInheritorsProvider"/>
 
-		<extensionPoint name="propertyNameReferenceProvider" interface="com.intellij.lang.javascript.psi.impl.reference.JSPropertyNameReferenceProvider"/>
+		<extensionPoint name="propertyNameReferenceProvider" interface="consulo.javascript.psi.impl.reference.JSPropertyNameReferenceProvider"/>
 
 		<extensionPoint name="quickFixFactory" beanClass="com.intellij.util.KeyedLazyInstanceEP">
 			<with attribute="implementationClass" implements="consulo.javascript.ide.codeInsight.JavaScriptQuickFixFactory"/>
@@ -172,7 +172,7 @@
 	</extensionPoints>
 
 	<extensions defaultExtensionNs="consulo.javascript">
-		<propertyNameReferenceProvider implementation="com.intellij.lang.javascript.psi.impl.reference.DefaultJSPropertyNameReferenceProvider" id="default"/>
+		<propertyNameReferenceProvider implementation="consulo.javascript.psi.impl.reference.DefaultJSPropertyNameReferenceProvider" id="default"/>
 	</extensions>
 
 	<actions>

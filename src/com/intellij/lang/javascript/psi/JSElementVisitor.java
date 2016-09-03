@@ -17,6 +17,7 @@
 package com.intellij.lang.javascript.psi;
 
 import com.intellij.psi.PsiElementVisitor;
+import consulo.javascript.psi.JSSimpleLiteralExpression;
 import consulo.javascript.psi.JavaScriptLambdaExpression;
 
 /**

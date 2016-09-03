@@ -1,4 +1,4 @@
-package com.intellij.lang.javascript.psi.stubs;
+package consulo.javascript.psi.stubs;
 
 import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.javascript.psi.JSFile;

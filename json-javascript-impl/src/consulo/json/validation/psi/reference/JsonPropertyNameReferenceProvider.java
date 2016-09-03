@@ -22,7 +22,7 @@ import consulo.annotations.RequiredReadAction;
 import consulo.json.validation.descriptor.JsonPropertyDescriptor;
 import consulo.json.validation.inspections.PropertyValidationInspection;
 import com.intellij.lang.javascript.psi.JSProperty;
-import com.intellij.lang.javascript.psi.impl.reference.JSPropertyNameReferenceProvider;
+import consulo.javascript.psi.impl.reference.JSPropertyNameReferenceProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 

@@ -1,7 +1,7 @@
-package com.intellij.lang.javascript.index;
+package consulo.javascript.index;
 
 import org.jetbrains.annotations.NotNull;
-import com.intellij.lang.javascript.psi.stubs.JSFileStub;
+import consulo.javascript.psi.stubs.JSFileStub;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.stubs.IndexSink;
 

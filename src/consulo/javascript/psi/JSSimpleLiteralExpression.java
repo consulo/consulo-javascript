@@ -15,9 +15,10 @@
  * limitations under the License.
  */
 
-package com.intellij.lang.javascript.psi;
+package consulo.javascript.psi;
 
 import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.javascript.psi.JSLiteralExpression;
 import consulo.annotations.RequiredReadAction;
 import com.intellij.psi.tree.IElementType;
 

@@ -20,10 +20,10 @@ import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.Language;
-import com.intellij.lang.javascript.index.JavaScriptIndexer;
+import consulo.javascript.index.JavaScriptIndexer;
 import com.intellij.lang.javascript.psi.JSFile;
-import com.intellij.lang.javascript.psi.stubs.JSFileStub;
-import com.intellij.lang.javascript.psi.stubs.impl.JSFileStubImpl;
+import consulo.javascript.psi.stubs.JSFileStub;
+import consulo.javascript.psi.stubs.impl.JSFileStubImpl;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.StubBuilder;
 import com.intellij.psi.stubs.DefaultStubBuilder;

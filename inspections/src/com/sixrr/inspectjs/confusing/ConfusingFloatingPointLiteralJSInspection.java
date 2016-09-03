@@ -3,7 +3,7 @@ package com.sixrr.inspectjs.confusing;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
-import com.intellij.lang.javascript.psi.JSSimpleLiteralExpression;
+import consulo.javascript.psi.JSSimpleLiteralExpression;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;

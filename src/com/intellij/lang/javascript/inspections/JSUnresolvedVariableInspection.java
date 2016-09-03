@@ -30,7 +30,7 @@ import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.flex.AddImportECMAScriptClassOrFunctionAction;
 import com.intellij.lang.javascript.formatter.JSCodeStyleSettings;
 import com.intellij.lang.javascript.inspections.qucikFixes.BaseCreateFix;
-import com.intellij.lang.javascript.inspections.qucikFixes.CreateJSFunctionFixBase;
+import consulo.javascript.inspections.qucikFixes.CreateJSFunctionFixBase;
 import com.intellij.lang.javascript.inspections.qucikFixes.CreateJSFunctionOrMethodFix;
 import com.intellij.lang.javascript.psi.JSArgumentList;
 import com.intellij.lang.javascript.psi.JSCallExpression;

@@ -22,7 +22,7 @@ import consulo.annotations.RequiredReadAction;
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.psi.JSSimpleLiteralExpression;
+import consulo.javascript.psi.JSSimpleLiteralExpression;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLanguageInjectionHost;

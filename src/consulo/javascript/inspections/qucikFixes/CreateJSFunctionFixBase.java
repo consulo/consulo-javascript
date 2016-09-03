@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.intellij.lang.javascript.inspections.qucikFixes;
+package consulo.javascript.inspections.qucikFixes;
 
 import java.util.Set;
 
@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.PropertyKey;
 import com.intellij.codeInsight.template.Template;
 import com.intellij.lang.javascript.JavaScriptBundle;
+import com.intellij.lang.javascript.inspections.qucikFixes.BaseCreateFix;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.psi.PsiElement;
