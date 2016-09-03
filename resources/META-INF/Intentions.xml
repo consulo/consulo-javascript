@@ -16,8 +16,6 @@
 
 <idea-plugin version="2">
 	<extensions defaultExtensionNs="com.intellij">
-		<errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
-
 		<!-- Numbers -->
 		<intentionAction>
 			<className>org.intellij.idea.lang.javascript.intention.number.JSConvertIntegerToDecimalIntention</className>

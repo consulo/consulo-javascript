@@ -17,27 +17,27 @@
 <idea-plugin>
 	<application-components>
 		<component>
-			<implementation-class>org.mustbe.consulo.json.validation.descriptionByAnotherPsiElement.DescriptionByAnotherPsiElementRegistrar</implementation-class>
+			<implementation-class>consulo.json.validation.descriptionByAnotherPsiElement.DescriptionByAnotherPsiElementRegistrar</implementation-class>
 		</component>
 	</application-components>
 
 	<extensionPoints>
-		<extensionPoint name="jomFileDescriptor" interface="org.mustbe.consulo.json.jom.JomFileDescriptor"/>
-		<extensionPoint name="jsonFileDescriptorProvider" interface="org.mustbe.consulo.json.validation.JsonFileDescriptorProvider"/>
+		<extensionPoint name="jomFileDescriptor" interface="consulo.json.jom.JomFileDescriptor"/>
+		<extensionPoint name="jsonFileDescriptorProvider" interface="consulo.json.validation.JsonFileDescriptorProvider"/>
 		<extensionPoint name="jsonDescriptionByAnotherPsiElementProvider"
-						interface="org.mustbe.consulo.json.validation.descriptionByAnotherPsiElement.DescriptionByAnotherPsiElementProvider"/>
+						interface="consulo.json.validation.descriptionByAnotherPsiElement.DescriptionByAnotherPsiElementProvider"/>
 	</extensionPoints>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<fileTypeFactory implementation="org.mustbe.consulo.json.JsonFileTypeFactory"/>
-		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.json.lang.JsonJavaScriptVersion"/>
+		<fileTypeFactory implementation="consulo.json.JsonFileTypeFactory"/>
+		<lang.defineVersion language="JavaScript" implementationClass="consulo.json.lang.JsonJavaScriptVersion"/>
 
-		<iconDescriptorUpdater implementation="org.mustbe.consulo.json.jom.JomIconDescriptorUpdater"/>
+		<iconDescriptorUpdater implementation="consulo.json.jom.JomIconDescriptorUpdater"/>
 
-		<projectService serviceImplementation="org.mustbe.consulo.json.validation.descriptionByAnotherPsiElement.DescriptionByAnotherPsiElementService"/>
-		<projectService serviceImplementation="org.mustbe.consulo.json.jom.JomManager"/>
+		<projectService serviceImplementation="consulo.json.validation.descriptionByAnotherPsiElement.DescriptionByAnotherPsiElementService"/>
+		<projectService serviceImplementation="consulo.json.jom.JomManager"/>
 
-		<completion.contributor language="JavaScript" implementationClass="org.mustbe.consulo.json.validation.completion.JsonCompletionContributor"/>
+		<completion.contributor language="JavaScript" implementationClass="consulo.json.validation.completion.JsonCompletionContributor"/>
 
 		<quoteHandler fileType="JSON" className="org.mustbe.consulo.javascript.lang.JavaScriptQuoteHandler" />
 
@@ -45,18 +45,18 @@
 						 displayName="Property validation"
 						 groupName="JSON"
 						 enabledByDefault="true"
-						 implementationClass="org.mustbe.consulo.json.validation.inspections.PropertyValidationInspection"/>
+						 implementationClass="consulo.json.validation.inspections.PropertyValidationInspection"/>
 	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij.xml">
-		<breadcrumbsInfoProvider implementation="org.mustbe.consulo.json.breadcrumbs.JsonBreadcrumbsInfoProvider" />
+		<breadcrumbsInfoProvider implementation="consulo.json.breadcrumbs.JsonBreadcrumbsInfoProvider" />
 	</extensions>
 
-	<extensions defaultExtensionNs="org.mustbe.consulo.javascript">
-		<propertyNameReferenceProvider implementation="org.mustbe.consulo.json.validation.psi.reference.JsonPropertyNameReferenceProvider" order="before default"/>
+	<extensions defaultExtensionNs="consulo.javascript">
+		<propertyNameReferenceProvider implementation="consulo.json.validation.psi.reference.JsonPropertyNameReferenceProvider" order="before default"/>
 
-		<jsonFileDescriptorProvider implementation="org.mustbe.consulo.json.jom.JomModeAsJsonFileDescriptorProvider"/>
+		<jsonFileDescriptorProvider implementation="consulo.json.jom.JomModeAsJsonFileDescriptorProvider"/>
 
-		<jsonFileDescriptorProvider implementation="org.mustbe.consulo.json.validation.descriptionByAnotherPsiElement.DescriptionByAnotherPsiElementJsonDescriptionProvider"/>
+		<jsonFileDescriptorProvider implementation="consulo.json.validation.descriptionByAnotherPsiElement.DescriptionByAnotherPsiElementJsonDescriptionProvider"/>
 	</extensions>
 </idea-plugin>

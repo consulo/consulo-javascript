@@ -20,7 +20,7 @@
 		<lang.defineVersion language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.EcmaScript6JavaScriptVersion" />
 	</extensions>
 
-	<extensions defaultExtensionNs="org.mustbe.consulo.javascript">
+	<extensions defaultExtensionNs="consulo.javascript">
 		<quickFixFactory key="ECMASCRIPT_6" implementationClass="org.mustbe.consulo.javascript.ide.codeInsight.EcmaScript6QuickFixFactory" />
 	</extensions>
 </idea-plugin>
