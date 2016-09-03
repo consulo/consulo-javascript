@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.typescript;
+package consulo.typescript;
 
 import javax.swing.Icon;
 
