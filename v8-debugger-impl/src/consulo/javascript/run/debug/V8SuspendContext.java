@@ -14,40 +14,36 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.javascript.run.debug;
+package consulo.javascript.run.debug;
 
-import javax.swing.Icon;
-
-import org.chromium.sdk.JsEvaluateContext;
-import org.chromium.sdk.JsValue;
-import org.jetbrains.annotations.NotNull;
-import com.intellij.icons.AllIcons;
+import org.chromium.sdk.DebugContext;
+import org.jetbrains.annotations.Nullable;
+import com.intellij.xdebugger.frame.XExecutionStack;
+import com.intellij.xdebugger.frame.XSuspendContext;
 
 /**
  * @author VISTALL
- * @since 05.12.2015
+ * @since 20.03.14
  */
-public class V8WatchValue extends V8BaseVariableValue
+public class V8SuspendContext extends XSuspendContext
 {
-	private JsValue myValue;
+	private V8ExecutionStack myStack;
 
-	public V8WatchValue(@NotNull JsEvaluateContext evaluateContext, @NotNull String text, @NotNull JsValue value)
+	public V8SuspendContext(DebugContext debugContext)
 	{
-		super(evaluateContext, text);
-		myValue = value;
+		myStack = new V8ExecutionStack(debugContext);
 	}
 
-	@NotNull
+	@Nullable
 	@Override
-	protected Icon getIconForValue(JsValue value, JsValue.Type valueType)
+	public XExecutionStack getActiveExecutionStack()
 	{
-		return AllIcons.Debugger.Watch;
+		return myStack;
 	}
 
-	@NotNull
 	@Override
-	protected JsValue getValue()
+	public XExecutionStack[] getExecutionStacks()
 	{
-		return myValue;
+		return new XExecutionStack[] {myStack};
 	}
 }

@@ -15,7 +15,7 @@
   -->
 
 <idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
-	<id>org.mustbe.consulo.javascript</id>
+	<id>consulo.javascript</id>
 	<name>JavaScript</name>
 	<version>SNAPSHOT</version>
 	<category>Custom Languages</category>
@@ -39,8 +39,6 @@
 	</actions>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
-
 		<internalFileTemplate name="JavaScriptFile"/>
 
 		<lang.versionResolver language="JavaScript" implementationClass="org.mustbe.consulo.javascript.lang.JavaScriptLanguageVersionResolver"/>

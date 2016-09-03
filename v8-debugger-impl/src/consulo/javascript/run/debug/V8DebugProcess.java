@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mustbe.consulo.javascript.run.debug;
+package consulo.javascript.run.debug;
 
 import java.net.InetSocketAddress;
 import java.util.Collection;

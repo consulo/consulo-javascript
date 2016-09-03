@@ -4,7 +4,7 @@
     <modules>
       <module name="consulo-javascript" dirurl="file://$PROJECT_DIR$" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo SNAPSHOT" custom-plugin-dir-url="file://$MODULE_DIR$/dep" />
+          <extension id="consulo-plugin" sdk-module-name="" sdk-name="Consulo SNAPSHOT" />
           <extension id="java" sdk-module-name="" sdk-name="1.8" language-level-module-name="" language-level-name="JDK_1_8" special-dir-location="SOURCE_DIR" />
           <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
@@ -22,7 +22,7 @@
       </module>
       <module name="inspections" dirurl="file://$PROJECT_DIR$/inspections" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-javascript" sdk-name="" custom-plugin-dir-url="file://$MODULE_DIR$/../dep" />
+          <extension id="consulo-plugin" sdk-module-name="consulo-javascript" sdk-name="" />
           <extension id="java" sdk-module-name="consulo-javascript" sdk-name="" language-level-module-name="consulo-javascript" language-level-name="" special-dir-location="SOURCE_DIR" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
@@ -37,7 +37,7 @@
       </module>
       <module name="intentions" dirurl="file://$PROJECT_DIR$/intentions" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-javascript" sdk-name="" custom-plugin-dir-url="file://$MODULE_DIR$/../dep" />
+          <extension id="consulo-plugin" sdk-module-name="consulo-javascript" sdk-name="" />
           <extension id="java" sdk-module-name="consulo-javascript" sdk-name="" language-level-module-name="consulo-javascript" language-level-name="" special-dir-location="SOURCE_DIR" />
           <content url="file://$MODULE_DIR$">
             <content-folder type="PRODUCTION_RESOURCE" url="file://$MODULE_DIR$/resources" />
@@ -65,7 +65,7 @@
       </module>
       <module name="json-javascript-impl" dirurl="file://$PROJECT_DIR$/json-javascript-impl" current-layer="Default">
         <module-layer name="Default">
-          <extension id="consulo-plugin" sdk-module-name="consulo-javascript" sdk-name="" custom-plugin-dir-url="file://$MODULE_DIR$/../dep" />
+          <extension id="consulo-plugin" sdk-module-name="consulo-javascript" sdk-name="" />
           <extension id="java" sdk-module-name="consulo-javascript" sdk-name="" language-level-module-name="consulo-javascript" language-level-name="" special-dir-location="SOURCE_DIR" />
           <extension id="lombok" />
           <content url="file://$MODULE_DIR$">
