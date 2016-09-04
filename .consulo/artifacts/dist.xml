@@ -2,7 +2,7 @@
   <artifact name="dist">
     <output-path>$PROJECT_DIR$/out/artifacts/dist</output-path>
     <root id="root">
-      <element id="directory" name="javascript">
+      <element id="directory" name="consulo.javascript">
         <element id="directory" name="lib">
           <element id="zip-archive" name="javascript.jar">
             <element id="module-output" name="consulo-javascript" />
