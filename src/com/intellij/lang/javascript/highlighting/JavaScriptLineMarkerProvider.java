@@ -365,7 +365,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 				{
 					if(!addedClassMarker)
 					{
-						result.add(new LineMarkerInfo<JSClass>(clazz, clazz.getTextOffset(), OVERRIDDEN_ICON, Pass.UPDATE_OVERRIDEN_MARKERS,
+						result.add(new LineMarkerInfo<JSClass>(clazz, clazz.getTextOffset(), OVERRIDDEN_ICON, Pass.LINE_MARKERS,
 								ourClassInheritorsTooltipProvider, ourClassInheritorsNavHandler));
 						addedClassMarker = true;
 					}
@@ -381,7 +381,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 							{
 								// TODO: more correct check for override
 								function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
-								result.add(new LineMarkerInfo<JSFunction>(function, function.getTextOffset(), OVERRIDDEN_ICON, Pass.UPDATE_OVERRIDEN_MARKERS,
+								result.add(new LineMarkerInfo<JSFunction>(function, function.getTextOffset(), OVERRIDDEN_ICON, Pass.LINE_MARKERS,
 										ourOverriddenFunctionsTooltipProvider, ourOverriddenFunctionsNavHandler));
 								functionIterator.remove();
 							}
@@ -398,7 +398,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 
 				if(classQuery.findFirst() != null)
 				{
-					result.add(new LineMarkerInfo<JSClass>(clazz, clazz.getTextOffset(), IMPLEMENTED_ICON, Pass.UPDATE_OVERRIDEN_MARKERS,
+					result.add(new LineMarkerInfo<JSClass>(clazz, clazz.getTextOffset(), IMPLEMENTED_ICON, Pass.LINE_MARKERS,
 							ourImplementedInterfacesTooltipProvider, ourInterfaceImplementationsNavHandler));
 				}
 			}
@@ -417,7 +417,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 					if(query.findFirst() != null)
 					{
 						function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
-						result.add(new LineMarkerInfo<JSFunction>(function, function.getTextOffset(), IMPLEMENTED_ICON, Pass.UPDATE_OVERRIDEN_MARKERS,
+						result.add(new LineMarkerInfo<JSFunction>(function, function.getTextOffset(), IMPLEMENTED_ICON, Pass.LINE_MARKERS,
 								ourImplementingFunctionsTooltipProvider, ourImplementingFunctionsNavHandler));
 					}
 				}
@@ -434,7 +434,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 					{
 						function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
 
-						result.add(new LineMarkerInfo<JSFunction>(function, function.getTextOffset(), IMPLEMENTING_ICON, Pass.UPDATE_OVERRIDEN_MARKERS,
+						result.add(new LineMarkerInfo<JSFunction>(function, function.getTextOffset(), IMPLEMENTING_ICON, Pass.LINE_MARKERS,
 								new Function<JSFunction, String>()
 						{
 							@Override
