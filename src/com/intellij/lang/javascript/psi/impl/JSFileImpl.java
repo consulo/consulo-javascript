@@ -22,15 +22,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.lang.javascript.JSElementTypes;
-import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.JSPackageStatement;
 import com.intellij.lang.javascript.psi.JSSourceElement;
 import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
@@ -53,18 +50,6 @@ public class JSFileImpl extends PsiFileBase implements JSFile
 	public JSFileImpl(FileViewProvider fileViewProvider)
 	{
 		super(fileViewProvider, JavaScriptLanguage.INSTANCE);
-	}
-
-	@Override
-	@NotNull
-	public FileType getFileType()
-	{
-		VirtualFile virtualFile = getVirtualFile();
-		if(virtualFile == null)
-		{
-			return JavaScriptFileType.INSTANCE;
-		}
-		return virtualFile.getFileType();
 	}
 
 	@Override

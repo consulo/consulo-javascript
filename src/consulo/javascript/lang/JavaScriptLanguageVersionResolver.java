@@ -42,7 +42,13 @@ public class JavaScriptLanguageVersionResolver implements LanguageVersionResolve
 		{
 			return StandardJavaScriptVersions.getDefaultVersion();
 		}
-		return getLanguageVersion(language, element.getProject(), containingFile.getVirtualFile());
+		FileType fileType = containingFile.getFileType();
+		if(fileType instanceof JavaScriptFileTypeWithVersion)
+		{
+			return ((JavaScriptFileTypeWithVersion) fileType).getLanguageVersion(element.getProject(), element.getContainingFile().getVirtualFile());
+		}
+
+		return StandardJavaScriptVersions.getDefaultVersion();
 	}
 
 	@Override

@@ -23,11 +23,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
-import consulo.json.validation.JsonFileDescriptorProviders;
-import consulo.json.validation.NativeArray;
-import consulo.json.validation.descriptor.JsonObjectDescriptor;
-import consulo.json.validation.descriptor.JsonPropertyDescriptor;
-import consulo.json.validation.inspections.PropertyValidationInspection;
 import com.intellij.codeInsight.completion.CompletionContributor;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
@@ -49,6 +44,11 @@ import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotations.RequiredReadAction;
 import consulo.codeInsight.completion.CompletionProvider;
+import consulo.json.validation.JsonFileDescriptorProviders;
+import consulo.json.validation.NativeArray;
+import consulo.json.validation.descriptor.JsonObjectDescriptor;
+import consulo.json.validation.descriptor.JsonPropertyDescriptor;
+import consulo.json.validation.inspections.PropertyValidationInspection;
 
 /**
  * @author VISTALL
