@@ -18,10 +18,6 @@ package consulo.json.validation.descriptionByAnotherPsiElement;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.json.JsonFileType;
-import consulo.json.jom.JomElement;
-import consulo.json.jom.JomFileElement;
-import consulo.json.jom.JomManager;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
@@ -37,6 +33,10 @@ import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.editor.notifications.EditorNotificationProvider;
+import consulo.json.JsonFileType;
+import consulo.json.jom.JomElement;
+import consulo.json.jom.JomFileElement;
+import consulo.json.jom.JomManager;
 
 /**
  * @author VISTALL
@@ -55,6 +55,7 @@ public class DescriptionByAnotherPsiElementEditorNotification<T extends PsiEleme
 
 		myPanelKey = Key.create("DescriptionByAnotherPsiElementEditorNotification." + provider.getId());
 	}
+
 	@NotNull
 	@Override
 	public Key<EditorNotificationPanel> getKey()
@@ -134,7 +135,7 @@ public class DescriptionByAnotherPsiElementEditorNotification<T extends PsiEleme
 
 	private void wantUpdate(PsiFile psiFile)
 	{
-		((PsiModificationTrackerImpl) PsiModificationTracker.SERVICE.getInstance(myProject)).incOutOfCodeBlockModificationCounter();
+		((PsiModificationTrackerImpl) PsiModificationTracker.SERVICE.getInstance(myProject)).incCounter();
 
 		DaemonCodeAnalyzer.getInstance(myProject).restart(psiFile);
 

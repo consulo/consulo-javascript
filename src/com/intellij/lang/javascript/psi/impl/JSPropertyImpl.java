@@ -23,6 +23,7 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSProperty;
+import com.intellij.psi.util.PsiModificationTracker;
 import consulo.javascript.psi.impl.reference.JSPropertyNameReferenceProvider;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
@@ -60,7 +61,7 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 			@RequiredReadAction
 			public Result<PsiReference[]> compute()
 			{
-				return Result.create(buildReferences(), JSPropertyImpl.this);
+				return Result.create(buildReferences(), JSPropertyImpl.this, PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT);
 			}
 		});
 	}
