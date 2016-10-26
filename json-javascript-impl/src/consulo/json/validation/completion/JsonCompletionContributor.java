@@ -211,8 +211,8 @@ public class JsonCompletionContributor extends CompletionContributor
 			{
 				builder = builder.strikeout();
 			}
-			final Class type = value.getType();
-			builder = builder.withTypeText(StringUtil.decapitalize(type.getSimpleName()), true);
+			final Object type = value.getValue();
+			builder = builder.withTypeText(formatValue(type), true);
 
 			if(quotes && ((JSProperty) jsProperty).getValue() == null)
 			{
@@ -259,5 +259,19 @@ public class JsonCompletionContributor extends CompletionContributor
 			}
 			result.addElement(builder);
 		}
+	}
+
+	private static String formatValue(Object value)
+	{
+		if(value instanceof Class)
+		{
+			return StringUtil.decapitalize(((Class) value).getSimpleName());
+		}
+		else if(value instanceof NativeArray)
+		{
+			return formatValue(((NativeArray) value).getComponentType()) + "[]";
+		}
+		// JsonObjectDescriptor
+		return "object";
 	}
 }
