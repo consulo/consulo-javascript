@@ -72,12 +72,6 @@ public class JsonPropertyDescriptor
 		return myValue;
 	}
 
-	@NotNull
-	public Class getType()
-	{
-		return myValue instanceof Class ? (Class) myValue : Object.class;
-	}
-
 	@Nullable
 	public String getName()
 	{
