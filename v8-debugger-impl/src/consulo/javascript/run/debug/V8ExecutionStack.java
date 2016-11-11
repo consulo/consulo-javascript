@@ -60,10 +60,4 @@ public class V8ExecutionStack extends XExecutionStack
 
 		frameContainer.addStackFrames(stackFrames, true);
 	}
-
-	@Override
-	public void computeStackFrames(int firstFrameIndex, XStackFrameContainer container)
-	{
-		throw new UnsupportedOperationException();
-	}
 }

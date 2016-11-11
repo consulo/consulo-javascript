@@ -25,13 +25,11 @@ import java.util.List;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.LibraryOrderEntry;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderEntry;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.roots.SdkOrderEntry;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -46,6 +44,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet;
 import com.intellij.util.Function;
+import consulo.roots.OrderEntryWithTracking;
 
 /**
  * Created by IntelliJ IDEA.
@@ -191,7 +190,7 @@ public class ReferenceSupport
 			final OrderEntry[] orderEntries = ModuleRootManager.getInstance(module).getOrderEntries();
 			for(final OrderEntry orderEntry : orderEntries)
 			{
-				if(orderEntry instanceof LibraryOrderEntry || orderEntry instanceof SdkOrderEntry)
+				if(orderEntry instanceof OrderEntryWithTracking)
 				{
 					dirs.addAll(Arrays.asList(orderEntry.getFiles(OrderRootType.CLASSES)));
 				}
