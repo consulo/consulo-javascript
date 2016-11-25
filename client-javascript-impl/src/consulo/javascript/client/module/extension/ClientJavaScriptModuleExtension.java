@@ -3,23 +3,22 @@ package consulo.javascript.client.module.extension;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.javascript.client.module.sdk.ClientJavaScriptSdkType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.SdkType;
 import consulo.annotations.RequiredReadAction;
-import consulo.bundle.SdkUtil;
-import consulo.extension.impl.ModuleExtensionImpl;
+import consulo.javascript.client.module.sdk.ClientJavaScriptSdkType;
 import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.javascript.lang.StandardJavaScriptVersions;
 import consulo.javascript.module.extension.JavaScriptModuleExtension;
 import consulo.lang.LanguageVersion;
 import consulo.module.extension.ModuleInheritableNamedPointer;
+import consulo.module.extension.impl.ModuleExtensionImpl;
 import consulo.module.extension.impl.ModuleInheritableNamedPointerImpl;
 import consulo.roots.ModuleRootLayer;
+import consulo.roots.impl.ModuleRootLayerImpl;
 import consulo.util.pointers.NamedPointer;
 
 /**
@@ -32,10 +31,10 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionImpl<ClientJ
 
 	protected LanguageVersion<JavaScriptLanguage> myLanguageVersion = StandardJavaScriptVersions.getDefaultVersion();
 
-	public ClientJavaScriptModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootModel)
+	public ClientJavaScriptModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootLayer)
 	{
-		super(id, rootModel);
-		myPointer = new ModuleInheritableNamedPointerImpl<Sdk>(getProject(), id)
+		super(id, rootLayer);
+		myPointer = new ModuleInheritableNamedPointerImpl<Sdk>(rootLayer, id)
 		{
 			@Nullable
 			@Override
@@ -63,9 +62,9 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionImpl<ClientJ
 
 			@NotNull
 			@Override
-			public NamedPointer<Sdk> getPointer(@NotNull Project project, @NotNull String name)
+			public NamedPointer<Sdk> getPointer(@NotNull ModuleRootLayer moduleRootLayer, @NotNull String name)
 			{
-				return SdkUtil.createPointer(name);
+				return ((ModuleRootLayerImpl)moduleRootLayer).getRootModel().getConfigurationAccessor().getSdkPointer(name);
 			}
 		};
 
@@ -126,6 +125,7 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionImpl<ClientJ
 		return myLanguageVersion;
 	}
 
+	@RequiredReadAction
 	@Override
 	public void commit(@NotNull ClientJavaScriptModuleExtension mutableModuleExtension)
 	{
