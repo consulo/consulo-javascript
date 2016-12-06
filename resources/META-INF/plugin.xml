@@ -19,7 +19,7 @@
 	<name>JavaScript</name>
 	<version>SNAPSHOT</version>
 	<category>Custom Languages</category>
-	<vendor>JetBrains</vendor>
+	<vendor>JetBrains &amp; consulo.io</vendor>
 	<resource-bundle>messages.JavaScriptBundle</resource-bundle>
 	<depends>com.intellij.xml</depends>
 	<depends config-file="regexp.xml" optional="true">com.intellij.regexp</depends>

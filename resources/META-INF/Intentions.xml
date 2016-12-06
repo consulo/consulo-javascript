@@ -14,7 +14,7 @@
   - limitations under the License.
   -->
 
-<idea-plugin version="2">
+<idea-plugin>
 	<extensions defaultExtensionNs="com.intellij">
 		<!-- Numbers -->
 		<intentionAction>
@@ -206,9 +206,4 @@
 		</intentionAction>
 
 	</extensions>
-	<project-components>
-		<component>
-			<implementation-class>org.intellij.idea.lang.javascript.intention.JSIntentionPowerPack</implementation-class>
-		</component>
-	</project-components>
 </idea-plugin>
