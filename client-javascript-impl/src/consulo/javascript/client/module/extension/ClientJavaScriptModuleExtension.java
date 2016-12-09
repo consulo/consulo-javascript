@@ -10,7 +10,6 @@ import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.SdkType;
 import consulo.annotations.RequiredReadAction;
 import consulo.javascript.client.module.sdk.ClientJavaScriptSdkType;
-import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.javascript.lang.StandardJavaScriptVersions;
 import consulo.javascript.module.extension.JavaScriptModuleExtension;
 import consulo.lang.LanguageVersion;
@@ -29,7 +28,7 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionImpl<ClientJ
 {
 	private ModuleInheritableNamedPointerImpl<Sdk> myPointer;
 
-	protected LanguageVersion<JavaScriptLanguage> myLanguageVersion = StandardJavaScriptVersions.getDefaultVersion();
+	protected LanguageVersion myLanguageVersion = StandardJavaScriptVersions.getDefaultVersion();
 
 	public ClientJavaScriptModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootLayer)
 	{
@@ -86,7 +85,7 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionImpl<ClientJ
 		super.getStateImpl(element);
 		if(myLanguageVersion != StandardJavaScriptVersions.getDefaultVersion())
 		{
-			element.setAttribute("language-version", myLanguageVersion.getName());
+			element.setAttribute("language-version", myLanguageVersion.getId());
 		}
 	}
 
@@ -120,7 +119,7 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionImpl<ClientJ
 
 	@NotNull
 	@Override
-	public LanguageVersion<JavaScriptLanguage> getLanguageVersion()
+	public LanguageVersion getLanguageVersion()
 	{
 		return myLanguageVersion;
 	}

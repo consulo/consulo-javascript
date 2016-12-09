@@ -74,7 +74,7 @@ public class JavaScriptFileType extends LanguageFileType implements JavaScriptFi
 
 	@NotNull
 	@Override
-	public LanguageVersion<JavaScriptLanguage> getLanguageVersion(@Nullable Project project, @Nullable VirtualFile virtualFile)
+	public LanguageVersion getLanguageVersion(@Nullable Project project, @Nullable VirtualFile virtualFile)
 	{
 		if(virtualFile == null || project == null)
 		{

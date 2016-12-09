@@ -9,22 +9,22 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.containers.ArrayListSet;
 import consulo.javascript.lang.parsing.JavaScriptParser;
-import consulo.lang.BaseLanguageVersion;
+import consulo.lang.LanguageVersion;
 import consulo.lang.LanguageVersionWithParsing;
 
 /**
  * @author VISTALL
  * @since 24.08.14
  */
-public abstract class BaseJavaScriptLanguageVersion extends BaseLanguageVersion<JavaScriptLanguage> implements LanguageVersionWithParsing<JavaScriptLanguage>
+public abstract class BaseJavaScriptLanguageVersion extends LanguageVersion implements LanguageVersionWithParsing
 {
 	private static TokenSet ourLiterals = TokenSet.orSet(JavaScriptTokenSets.STRING_LITERALS, TokenSet.create(JSTokenTypes.NUMERIC_LITERAL));
 
-	private Set<JavaScriptFeature> myFeatures = new ArrayListSet<JavaScriptFeature>();
+	private Set<JavaScriptFeature> myFeatures = new ArrayListSet<>();
 
-	public BaseJavaScriptLanguageVersion(String name)
+	public BaseJavaScriptLanguageVersion(String name, String... mimeTypes)
 	{
-		super(name, JavaScriptLanguage.INSTANCE);
+		super(name, name, JavaScriptLanguage.INSTANCE, mimeTypes);
 	}
 
 	protected void addFeature(@NotNull JavaScriptFeature feature)

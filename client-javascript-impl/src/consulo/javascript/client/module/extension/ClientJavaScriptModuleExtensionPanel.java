@@ -29,7 +29,6 @@ import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.ColoredListCellRenderer;
 import consulo.javascript.lang.BaseJavaScriptLanguageVersion;
-import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.javascript.lang.StandardJavaScriptVersions;
 import consulo.javascript.module.extension.JavaScriptMutableModuleExtension;
 import consulo.lang.LanguageVersion;
@@ -55,7 +54,7 @@ public class ClientJavaScriptModuleExtensionPanel extends JPanel
 				if(e.getStateChange() == ItemEvent.SELECTED)
 				{
 					//noinspection unchecked
-					extension.setLanguageVersion((LanguageVersion <JavaScriptLanguage>) e.getItem());
+					extension.setLanguageVersion((LanguageVersion) e.getItem());
 				}
 			}
 		});

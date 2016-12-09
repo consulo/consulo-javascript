@@ -72,7 +72,7 @@ public class ActionScriptFileType extends LanguageFileType implements JavaScript
 
 	@NotNull
 	@Override
-	public LanguageVersion<JavaScriptLanguage> getLanguageVersion(@Nullable Project project, @Nullable VirtualFile virtualFile)
+	public LanguageVersion getLanguageVersion(@Nullable Project project, @Nullable VirtualFile virtualFile)
 	{
 		return ActionScriptLanguageVersion.getInstance();
 	}

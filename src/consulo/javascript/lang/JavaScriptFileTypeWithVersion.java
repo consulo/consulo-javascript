@@ -29,5 +29,5 @@ import com.intellij.openapi.vfs.VirtualFile;
 public interface JavaScriptFileTypeWithVersion
 {
 	@NotNull
-	LanguageVersion<JavaScriptLanguage> getLanguageVersion(@Nullable Project project, @Nullable VirtualFile virtualFile);
+	LanguageVersion getLanguageVersion(@Nullable Project project, @Nullable VirtualFile virtualFile);
 }

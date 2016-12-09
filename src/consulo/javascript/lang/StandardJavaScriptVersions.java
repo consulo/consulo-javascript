@@ -17,14 +17,13 @@
 package consulo.javascript.lang;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.lang.LanguageVersion;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.lang.LanguageVersion;
 
 /**
  * @author VISTALL
@@ -56,14 +55,7 @@ public class StandardJavaScriptVersions
 			}
 		}
 
-		ContainerUtil.sort(list, new Comparator<BaseJavaScriptLanguageVersion>()
-		{
-			@Override
-			public int compare(BaseJavaScriptLanguageVersion o1, BaseJavaScriptLanguageVersion o2)
-			{
-				return ((StandardJavaScriptVersions.Marker) o1).getWeight() - ((StandardJavaScriptVersions.Marker) o2).getWeight();
-			}
-		});
+		ContainerUtil.sort(list, (o1, o2) -> ((Marker) o1).getWeight() - ((Marker) o2).getWeight());
 		return list;
 	}
 
@@ -78,7 +70,7 @@ public class StandardJavaScriptVersions
 		LanguageVersion[] versions = JavaScriptLanguage.INSTANCE.getVersions();
 		for(LanguageVersion version : versions)
 		{
-			if(version instanceof StandardJavaScriptVersions.Marker && id.equals(version.getName()))
+			if(version instanceof StandardJavaScriptVersions.Marker && id.equals(version.getId()))
 			{
 				return (BaseJavaScriptLanguageVersion) version;
 			}

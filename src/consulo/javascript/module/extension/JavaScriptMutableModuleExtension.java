@@ -17,7 +17,6 @@
 package consulo.javascript.module.extension;
 
 import org.jetbrains.annotations.NotNull;
-import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.lang.LanguageVersion;
 import consulo.module.extension.MutableModuleExtensionWithSdk;
 
@@ -27,5 +26,5 @@ import consulo.module.extension.MutableModuleExtensionWithSdk;
  */
 public interface JavaScriptMutableModuleExtension<T extends JavaScriptModuleExtension<T>> extends JavaScriptModuleExtension<T>, MutableModuleExtensionWithSdk<T>
 {
-	void setLanguageVersion(@NotNull LanguageVersion<JavaScriptLanguage> languageVersion);
+	void setLanguageVersion(@NotNull LanguageVersion languageVersion);
 }

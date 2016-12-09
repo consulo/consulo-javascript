@@ -24,6 +24,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import consulo.annotations.RequiredReadAction;
 import consulo.lang.LanguageVersion;
 import consulo.lang.LanguageVersionResolver;
 
@@ -31,11 +32,12 @@ import consulo.lang.LanguageVersionResolver;
  * @author VISTALL
  * @since 11.12.2015
  */
-public class JavaScriptLanguageVersionResolver implements LanguageVersionResolver<JavaScriptLanguage>
+public class JavaScriptLanguageVersionResolver implements LanguageVersionResolver
 {
+	@RequiredReadAction
 	@NotNull
 	@Override
-	public LanguageVersion<JavaScriptLanguage> getLanguageVersion(@NotNull Language language, @Nullable PsiElement element)
+	public LanguageVersion getLanguageVersion(@NotNull Language language, @Nullable PsiElement element)
 	{
 		PsiFile containingFile = element == null ? null : element.getContainingFile();
 		if(containingFile == null)
@@ -51,8 +53,9 @@ public class JavaScriptLanguageVersionResolver implements LanguageVersionResolve
 		return StandardJavaScriptVersions.getDefaultVersion();
 	}
 
+	@RequiredReadAction
 	@Override
-	public LanguageVersion<JavaScriptLanguage> getLanguageVersion(@NotNull Language language, @Nullable Project project, @Nullable VirtualFile virtualFile)
+	public LanguageVersion getLanguageVersion(@NotNull Language language, @Nullable Project project, @Nullable VirtualFile virtualFile)
 	{
 		if(project == null || virtualFile == null)
 		{

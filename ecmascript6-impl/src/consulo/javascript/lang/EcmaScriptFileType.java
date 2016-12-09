@@ -69,7 +69,7 @@ public class EcmaScriptFileType extends LanguageFileType implements JavaScriptFi
 
 	@NotNull
 	@Override
-	public LanguageVersion<JavaScriptLanguage> getLanguageVersion(@Nullable Project project, @Nullable VirtualFile virtualFile)
+	public LanguageVersion getLanguageVersion(@Nullable Project project, @Nullable VirtualFile virtualFile)
 	{
 		return EcmaScript6JavaScriptVersion.getInstance();
 	}
