@@ -16,17 +16,29 @@
 
 package com.intellij.lang.javascript.psi;
 
-import consulo.lombok.annotations.ArrayFactoryFields;
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeStub;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.StubBasedPsiElement;
+import com.intellij.util.ArrayFactory;
 
 /**
  * @author  Maxim.Mossienko
  */
-@ArrayFactoryFields
 public interface JSAttribute extends JSElement, PsiNamedElement, StubBasedPsiElement<JSAttributeStub>
 {
+	public static final JSAttribute[] EMPTY_ARRAY = new JSAttribute[0];
+
+	public static ArrayFactory<JSAttribute> ARRAY_FACTORY = new ArrayFactory<JSAttribute>()
+	{
+		@NotNull
+		@Override
+		public JSAttribute[] create(int count)
+		{
+			return count == 0 ? EMPTY_ARRAY : new JSAttribute[count];
+		}
+	};
+
 	@Override
 	String getName();
 

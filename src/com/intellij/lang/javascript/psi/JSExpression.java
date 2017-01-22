@@ -17,17 +17,28 @@
 package com.intellij.lang.javascript.psi;
 
 import org.jetbrains.annotations.NotNull;
+import com.intellij.util.ArrayFactory;
 import consulo.annotations.RequiredReadAction;
 import consulo.javascript.lang.psi.JavaScriptType;
-import consulo.lombok.annotations.ArrayFactoryFields;
 
 /**
  * @author max
  * @since  6:46:19 PM Jan 30, 2005
  */
-@ArrayFactoryFields
 public interface JSExpression extends JSElement
 {
+	public static final JSExpression[] EMPTY_ARRAY = new JSExpression[0];
+
+	public static ArrayFactory<JSExpression> ARRAY_FACTORY = new ArrayFactory<JSExpression>()
+	{
+		@NotNull
+		@Override
+		public JSExpression[] create(int count)
+		{
+			return count == 0 ? EMPTY_ARRAY : new JSExpression[count];
+		}
+	};
+
 	@NotNull
 	JSExpression replace(JSExpression other);
 

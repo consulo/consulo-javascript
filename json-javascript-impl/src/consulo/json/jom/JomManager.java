@@ -19,6 +19,7 @@ package consulo.json.jom;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.javascript.psi.JSFile;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
@@ -29,15 +30,19 @@ import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.psi.util.PsiModificationTracker;
 import consulo.annotations.RequiredReadAction;
 import consulo.json.JsonFileType;
-import consulo.lombok.annotations.ProjectService;
 
 /**
  * @author VISTALL
  * @since 10.11.2015
  */
-@ProjectService
 public class JomManager
 {
+	@NotNull
+	public static JomManager getInstance(@NotNull Project project)
+	{
+		return ServiceManager.getService(project, JomManager.class);
+	}
+
 	private static final Key<CachedValue<JomFileElement<?>>> JOM_FILE_ELEMENT = Key.create("jom.file.lement");
 
 	private final Project myProject;

@@ -22,6 +22,7 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptBundle;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.tree.IElementType;
 import consulo.javascript.lang.JavaScriptTokenSets;
@@ -32,9 +33,10 @@ import consulo.javascript.lang.JavaScriptTokenSets;
  * Date: Jan 28, 2005
  * Time: 1:18:22 PM
  */
-@consulo.lombok.annotations.Logger
 public class ExpressionParsing extends Parsing
 {
+	public static final Logger LOGGER = Logger.getInstance(ExpressionParsing.class);
+
 	public static final Key<Boolean> WITHIN_ARRAY_LITERAL_EXPRESSION = Key.create("within.array.literal.expression");
 	public static final Key<Boolean> WITHIN_OBJECT_LITERAL_EXPRESSION = Key.create("within.object.literal.expression");
 

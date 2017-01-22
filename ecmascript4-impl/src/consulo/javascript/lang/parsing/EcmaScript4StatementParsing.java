@@ -1,20 +1,21 @@
 package consulo.javascript.lang.parsing;
 
-import consulo.lombok.annotations.Logger;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
+import com.intellij.lang.javascript.JavaScriptBundle;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.tree.IElementType;
 
 /**
  * @author VISTALL
  * @since 24.08.14
  */
-@Logger
 public class EcmaScript4StatementParsing extends StatementParsing
 {
+	public static final Logger LOGGER = Logger.getInstance(EcmaScript4StatementParsing.class);
+
 	public EcmaScript4StatementParsing(EcmaScript4ParsingContext context)
 	{
 		super(context);

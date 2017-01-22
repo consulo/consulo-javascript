@@ -7,20 +7,21 @@ import com.intellij.lang.PsiParser;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptBundle;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.tree.IElementType;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.javascript.lang.parsing.ExpressionParsing;
 import consulo.javascript.lang.parsing.Parsing;
 import consulo.lang.LanguageVersion;
-import consulo.lombok.annotations.Logger;
 
 /**
  * @author VISTALL
  * @since 05.03.2015
  */
-@Logger
 public class JsonJavaScriptParser implements PsiParser
 {
+	public static final Logger LOGGER = Logger.getInstance(JsonJavaScriptParser.class);
+
 	private int myPropertyDepth;
 
 	@NotNull
@@ -124,7 +125,7 @@ public class JsonJavaScriptParser implements PsiParser
 
 	public void parseObjectLiteralExpression(final PsiBuilder builder)
 	{
-		JsonJavaScriptParser.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.LBRACE);
+		LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.LBRACE);
 		final PsiBuilder.Marker expr = builder.mark();
 		builder.advanceLexer();
 

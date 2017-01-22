@@ -22,7 +22,6 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.util.Factory;
 import consulo.javascript.ide.hightlight.JavaScriptHighlighter;
 import consulo.javascript.lang.lexer.JavaScript16Lexer;
-import consulo.lombok.annotations.Lazy;
 
 /**
  * @author VISTALL
@@ -40,7 +39,6 @@ public class JavaScript16LanguageVersion extends BaseJavaScriptLanguageVersion i
 	};
 
 	@NotNull
-	@Lazy
 	public static JavaScript16LanguageVersion getInstance()
 	{
 		return JavaScriptLanguage.INSTANCE.findVersionByClass(JavaScript16LanguageVersion.class);

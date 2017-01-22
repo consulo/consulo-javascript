@@ -21,17 +21,18 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptBundle;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
-import consulo.lombok.annotations.Logger;
 
 /**
  * @author VISTALL
  * @since 15.02.2016
  */
-@Logger
 public class EcmaScript6StatementParsing extends StatementParsing
 {
+	public static final Logger LOGGER = Logger.getInstance(EcmaScript6StatementParsing.class);
+
 	public EcmaScript6StatementParsing(EcmaScript6ParsingContext context)
 	{
 		super(context);

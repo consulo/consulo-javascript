@@ -16,19 +16,31 @@
 
 package com.intellij.lang.javascript.psi;
 
-import consulo.lombok.annotations.ArrayFactoryFields;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import consulo.annotations.RequiredReadAction;
 import com.intellij.psi.PsiElement;
+import com.intellij.util.ArrayFactory;
+import consulo.annotations.RequiredReadAction;
 
 /**
  * User: max
  * Date: Jan 30, 2005
  * Time: 6:43:02 PM
  */
-@ArrayFactoryFields
 public interface JSParameter extends JSVariable
 {
+	public static final JSParameter[] EMPTY_ARRAY = new JSParameter[0];
+
+	public static ArrayFactory<JSParameter> ARRAY_FACTORY = new ArrayFactory<JSParameter>()
+	{
+		@NotNull
+		@Override
+		public JSParameter[] create(int count)
+		{
+			return count == 0 ? EMPTY_ARRAY : new JSParameter[count];
+		}
+	};
+
 	JSFunction getDeclaringFunction();
 
 	@RequiredReadAction

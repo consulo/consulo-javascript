@@ -7,7 +7,6 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.OrderRootType;
-import consulo.lombok.annotations.Lazy;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
 
@@ -18,7 +17,6 @@ import consulo.roots.types.SourcesOrderRootType;
 public class ClientJavaScriptSdkType extends SdkType
 {
 	@NotNull
-	@Lazy
 	public static ClientJavaScriptSdkType getInstance()
 	{
 		return EP_NAME.findExtension(ClientJavaScriptSdkType.class);

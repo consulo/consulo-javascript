@@ -20,17 +20,28 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.javascript.psi.stubs.JSFunctionStub;
 import com.intellij.psi.StubBasedPsiElement;
+import com.intellij.util.ArrayFactory;
 import consulo.annotations.RequiredReadAction;
 import consulo.javascript.lang.psi.JavaScriptType;
 import consulo.javascript.lang.psi.JavaScriptTypeElement;
-import consulo.lombok.annotations.ArrayFactoryFields;
 
 /**
  * @author max
  */
-@ArrayFactoryFields
 public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JSAttributeListOwner, StubBasedPsiElement<JSFunctionStub>
 {
+	public static final JSFunction[] EMPTY_ARRAY = new JSFunction[0];
+
+	public static ArrayFactory<JSFunction> ARRAY_FACTORY = new ArrayFactory<JSFunction>()
+	{
+		@NotNull
+		@Override
+		public JSFunction[] create(int count)
+		{
+			return count == 0 ? EMPTY_ARRAY : new JSFunction[count];
+		}
+	};
+
 	@Nullable
 	@RequiredReadAction
 	JSParameterList getParameterList();

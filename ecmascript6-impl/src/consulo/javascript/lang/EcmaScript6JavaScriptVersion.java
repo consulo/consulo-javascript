@@ -24,7 +24,6 @@ import com.intellij.openapi.util.Factory;
 import consulo.javascript.ide.hightlight.JavaScriptHighlighter;
 import consulo.javascript.lang.lexer.EcmaScript6Lexer;
 import consulo.javascript.lang.parsing.EcmaScript6Parser;
-import consulo.lombok.annotations.Lazy;
 
 /**
  * @author VISTALL
@@ -42,7 +41,6 @@ public class EcmaScript6JavaScriptVersion extends BaseJavaScriptLanguageVersion 
 	};
 
 	@NotNull
-	@Lazy
 	public static EcmaScript6JavaScriptVersion getInstance()
 	{
 		return JavaScriptLanguage.INSTANCE.findVersionByClass(EcmaScript6JavaScriptVersion.class);

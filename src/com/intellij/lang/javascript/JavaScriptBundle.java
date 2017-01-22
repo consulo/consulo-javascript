@@ -16,12 +16,29 @@
 
 package com.intellij.lang.javascript;
 
-import consulo.lombok.annotations.Bundle;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.PropertyKey;
+import com.intellij.AbstractBundle;
 
-@Bundle
-public class JavaScriptBundle
+public class JavaScriptBundle extends AbstractBundle
 {
 	@NonNls
 	public static final String BUNDLE = "messages.JavaScriptBundle";
+
+	private static final JavaScriptBundle ourInstance = new JavaScriptBundle();
+
+	private JavaScriptBundle()
+	{
+		super(BUNDLE);
+	}
+
+	public static String message(@PropertyKey(resourceBundle = BUNDLE) String key)
+	{
+		return ourInstance.getMessage(key);
+	}
+
+	public static String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params)
+	{
+		return ourInstance.getMessage(key, params);
+	}
 }

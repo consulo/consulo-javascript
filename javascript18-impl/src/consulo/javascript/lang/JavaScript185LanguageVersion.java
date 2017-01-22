@@ -22,7 +22,6 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.util.Factory;
 import consulo.javascript.ide.hightlight.JavaScriptHighlighter;
 import consulo.javascript.lang.lexer.JavaScript17Lexer;
-import consulo.lombok.annotations.Lazy;
 
 /**
  * @author VISTALL
@@ -40,7 +39,6 @@ public class JavaScript185LanguageVersion extends BaseJavaScriptLanguageVersion 
 	};
 
 	@NotNull
-	@Lazy
 	public static JavaScript185LanguageVersion getInstance()
 	{
 		return JavaScriptLanguage.INSTANCE.findVersionByClass(JavaScript185LanguageVersion.class);

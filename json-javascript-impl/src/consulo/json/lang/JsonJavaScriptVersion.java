@@ -12,7 +12,6 @@ import consulo.javascript.lang.BaseJavaScriptLanguageVersion;
 import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.json.JsonFileType;
 import consulo.json.lang.lexer.JsonLexer;
-import consulo.lombok.annotations.Lazy;
 
 /**
  * @author VISTALL
@@ -23,7 +22,6 @@ public class JsonJavaScriptVersion extends BaseJavaScriptLanguageVersion
 	private static final Factory<Lexer> ourLexerFactory = JsonLexer::new;
 
 	@NotNull
-	@Lazy
 	public static JsonJavaScriptVersion getInstance()
 	{
 		return JavaScriptLanguage.INSTANCE.findVersionByClass(JsonJavaScriptVersion.class);

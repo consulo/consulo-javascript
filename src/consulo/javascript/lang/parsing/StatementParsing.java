@@ -21,14 +21,16 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptBundle;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.tree.IElementType;
 
 /**
  * @author max
  */
-@consulo.lombok.annotations.Logger
 public class StatementParsing extends Parsing
 {
+	public static final Logger LOGGER = Logger.getInstance(StatementParsing.class);
+
 	public StatementParsing(JavaScriptParsingContext context)
 	{
 		super(context);

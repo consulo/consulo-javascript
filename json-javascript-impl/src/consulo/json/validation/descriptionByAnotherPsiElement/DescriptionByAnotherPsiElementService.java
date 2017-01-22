@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.components.StoragePathMacros;
@@ -41,13 +42,11 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.lombok.annotations.ProjectService;
 
 /**
  * @author VISTALL
  * @since 12.11.2015
  */
-@ProjectService
 @State(
 		name = "JSONDescriptionByAnotherPsiElementService",
 		storages = {
@@ -191,6 +190,11 @@ public class DescriptionByAnotherPsiElementService implements PersistentStateCom
 		}
 	}
 
+	@NotNull
+	public static DescriptionByAnotherPsiElementService getInstance(@NotNull Project project)
+	{
+		return ServiceManager.getService(project, DescriptionByAnotherPsiElementService.class);
+	}
 
 	private final Project myProject;
 	private final List<Info> myRegisteredFiles = new ArrayList<Info>();
