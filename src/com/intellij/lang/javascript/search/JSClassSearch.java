@@ -30,6 +30,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.stubs.StubIndexKey;
+import com.intellij.util.CommonProcessors;
 import com.intellij.util.Processor;
 import com.intellij.util.Query;
 import com.intellij.util.QueryExecutor;
@@ -232,17 +233,17 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 			}
 		};
 
-		if(!StubIndex.getInstance().processElements(getIndexKey(), name, project, scope, JSReferenceList.class, new Processor<JSReferenceList>()
+		CommonProcessors.CollectProcessor<JSReferenceList> collectProcessor = new CommonProcessors.CollectProcessor<>();
+
+		StubIndex.getInstance().processElements(getIndexKey(), name, project, scope, JSReferenceList.class, collectProcessor);
+
+		for(JSReferenceList referenceList : collectProcessor.getResults())
 		{
-			@Override
-			public boolean process(JSReferenceList referenceList)
+			JSClass parent = (JSClass) referenceList.getParent();
+			if(!processor.process(parent))
 			{
-				JSClass parent = (JSClass) referenceList.getParent();
-				return processor.process(parent);
+				return false;
 			}
-		}))
-		{
-			return false;
 		}
 
 		for(JSClassInheritorsProvider provider : Extensions.getExtensions(JSClassInheritorsProvider.EP_NAME))
