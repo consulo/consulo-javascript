@@ -17,6 +17,7 @@
 package com.intellij.lang.javascript.search;
 
 import com.intellij.lang.javascript.JavaScriptFileType;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNamedElement;
@@ -46,7 +47,7 @@ class JSReferencesSearchExecutor implements QueryExecutor<PsiReference, Referenc
 				queryParameters.getScope() instanceof GlobalSearchScope &&
 				!(sourceElement.getUseScope() instanceof LocalSearchScope))
 		{
-			final String s = ((PsiNamedElement) sourceElement).getName();
+			final String s = ReadAction.compute(() -> ((PsiNamedElement) sourceElement).getName());
 			if(s == null)
 			{
 				return true;
