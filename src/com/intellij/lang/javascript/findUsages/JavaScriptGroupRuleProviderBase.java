@@ -22,11 +22,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.javascript.psi.JSNamedElement;
 import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.psi.PsiElement;
@@ -90,7 +91,7 @@ abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> impleme
 	/**
 	 * @author Maxim.Mossienko
 	 */
-	abstract static class PsiNamedElementUsageGroupBase<T extends PsiNamedElement & NavigationItem> implements UsageGroup
+	abstract static class PsiNamedElementUsageGroupBase<T extends PsiNamedElement & NavigationItem> implements UsageGroup, TypeSafeDataProvider
 	{
 		private SmartPsiElementPointer myElementPointer;
 		private String myName;
@@ -192,7 +193,8 @@ abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> impleme
 			return myName.hashCode();
 		}
 
-		public void calcData(final DataKey key, final DataSink sink)
+		@Override
+		public void calcData(final Key<?> key, final DataSink sink)
 		{
 			if(!isValid())
 			{
