@@ -48,10 +48,6 @@
 						 implementationClass="consulo.json.validation.inspections.PropertyValidationInspection"/>
 	</extensions>
 
-	<extensions defaultExtensionNs="com.intellij.xml">
-		<breadcrumbsInfoProvider implementation="consulo.json.breadcrumbs.JsonBreadcrumbsInfoProvider" />
-	</extensions>
-
 	<extensions defaultExtensionNs="consulo.javascript">
 		<propertyNameReferenceProvider implementation="consulo.json.validation.psi.reference.JsonPropertyNameReferenceProvider" order="before default"/>
 
