@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="consulo-plugin: org.intellij.intelliLang">
     <binaries>
-      <root url="jar://$PROJECT_DIR$/dep/org.intellij.intelliLang/lib/intelliLang.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dep/org.intellij.intelliLang/lib/org.intellij.intelliLang-2-SNAPSHOT.jar!/" />
     </binaries>
   </library>
 </component>
