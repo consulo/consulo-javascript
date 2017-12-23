@@ -17,13 +17,17 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<parent>
 		<groupId>consulo</groupId>
-		<artifactId>arch.managment</artifactId>
+		<artifactId>arch.ide-provided</artifactId>
 		<version>2-SNAPSHOT</version>
 		<relativePath/>
 	</parent>
+
+	<groupId>consulo.plugin</groupId>
+	<artifactId>consulo.javascript-actionscript.impl</artifactId>
+	<version>2-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
 	<repositories>
 		<repository>
@@ -36,23 +40,24 @@
 		</repository>
 	</repositories>
 
-	<groupId>consulo.plugin</groupId>
-	<artifactId>consulo.javascript.parent</artifactId>
-	<version>2-SNAPSHOT</version>
-	<packaging>pom</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>consulo.javascript-base.impl</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
-	<modules>
-		<module>base-api</module>
-		<module>base-impl</module>
-		<module>web-browser-impl</module>
-		<module>lang-version-impl/javascript16-impl</module>
-		<module>lang-version-impl/javascript17-impl</module>
-		<module>lang-version-impl/javascript18-impl</module>
-		<module>lang-version-impl/typescript-impl</module>
-		<module>lang-version-impl/actionscript-impl</module>
-		<module>lang-version-impl/ecmascript4-impl</module>
-		<module>lang-version-impl/ecmascript6-impl</module>
-		<module>lang-version-impl/json-javascript-impl</module>
-		<module>plugin</module>
-	</modules>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>consulo.javascript-ecmascript4.impl</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.parent.groupId}</groupId>
+			<artifactId>consulo-lang-impl-testing</artifactId>
+			<version>${project.parent.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>

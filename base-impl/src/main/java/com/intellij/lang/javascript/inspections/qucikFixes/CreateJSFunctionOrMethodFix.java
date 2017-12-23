@@ -90,7 +90,7 @@ public class CreateJSFunctionOrMethodFix extends CreateJSFunctionFixBase
 			if(features.contains(JavaScriptFeature.CLASS))
 			{
 				template.addTextSegment(":");
-				guessExprTypeAndAddSuchVariable(passedParameterValue, template, var1, file, features);
+				BaseCreateFix.guessExprTypeAndAddSuchVariable(passedParameterValue, template, var1, file, features);
 			}
 		}
 

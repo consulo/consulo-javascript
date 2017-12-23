@@ -67,7 +67,7 @@ public abstract class CreateJSFunctionFixBase extends BaseCreateFix
 	{
 		boolean classFeature = features.contains(JavaScriptFeature.CLASS);
 		String referencedName = classFeature ? referenceExpression.getReferencedName() : referenceExpression.getText();
-		addAccessModifier(template, referenceExpression, classFeature, staticContext);
+		BaseCreateFix.addAccessModifier(template, referenceExpression, classFeature, staticContext);
 		writeFunctionAndName(template, referencedName, features);
 		template.addTextSegment("(");
 
@@ -81,7 +81,7 @@ public abstract class CreateJSFunctionFixBase extends BaseCreateFix
 			addReturnType(template, referenceExpression, file);
 		}
 
-		JSClass clazz = findClass(file, anchorParent);
+		JSClass clazz = BaseCreateFix.findClass(file, anchorParent);
 		if(clazz == null || !clazz.isInterface())
 		{
 			template.addTextSegment(" {");

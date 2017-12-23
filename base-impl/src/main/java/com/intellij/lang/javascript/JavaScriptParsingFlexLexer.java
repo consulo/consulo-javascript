@@ -21,11 +21,8 @@ package com.intellij.lang.javascript;
  */
 public class JavaScriptParsingFlexLexer extends JSFlexAdapter
 {
-
 	public JavaScriptParsingFlexLexer(DialectOptionHolder dialectOptionsHolder)
 	{
 		super(false, dialectOptionsHolder);
 	}
-
-
 }
