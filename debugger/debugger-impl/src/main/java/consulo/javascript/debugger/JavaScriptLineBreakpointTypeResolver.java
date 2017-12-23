@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
+import consulo.annotations.RequiredReadAction;
 import consulo.xdebugger.breakpoints.XLineBreakpointTypeResolver;
 
 /**
@@ -29,6 +30,7 @@ import consulo.xdebugger.breakpoints.XLineBreakpointTypeResolver;
  */
 public class JavaScriptLineBreakpointTypeResolver implements XLineBreakpointTypeResolver
 {
+	@RequiredReadAction
 	@Nullable
 	@Override
 	public XLineBreakpointType<?> resolveBreakpointType(@NotNull Project project, @NotNull VirtualFile virtualFile, int line)

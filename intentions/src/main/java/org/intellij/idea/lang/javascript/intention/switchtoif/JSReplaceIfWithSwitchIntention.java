@@ -15,20 +15,26 @@
  */
 package org.intellij.idea.lang.javascript.intention.switchtoif;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
+import org.intellij.idea.lang.javascript.intention.JSIntention;
+import org.intellij.idea.lang.javascript.psiutil.ControlFlowUtils;
+import org.intellij.idea.lang.javascript.psiutil.DeclarationUtils;
+import org.intellij.idea.lang.javascript.psiutil.EquivalenceChecker;
+import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
+import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.formatter.blocks.JSBlock;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
-import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
-import org.intellij.idea.lang.javascript.intention.JSIntention;
-import org.intellij.idea.lang.javascript.psiutil.*;
-import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.*;
 
 public class JSReplaceIfWithSwitchIntention extends JSIntention {
     @NonNls private static final String IF_KEYWORD                     = "if";
@@ -302,7 +308,6 @@ public class JSReplaceIfWithSwitchIntention extends JSIntention {
                 switchStatementString.append(text);
             }
         } else if (element instanceof JSBlockStatement ||
-                   element instanceof JSBlock   ||
                    element instanceof JSIfStatement) {
             final JSElement[] children = (JSElement[]) element.getChildren();
             for (final JSElement child : children) {

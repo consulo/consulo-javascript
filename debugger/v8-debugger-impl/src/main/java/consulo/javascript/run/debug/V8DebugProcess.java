@@ -251,7 +251,6 @@ public class V8DebugProcess extends XDebugProcess
 	@Override
 	public void runToPosition(@NotNull XSourcePosition xSourcePosition)
 	{
-
 	}
 
 	@NotNull
