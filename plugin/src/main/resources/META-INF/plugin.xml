@@ -41,6 +41,8 @@
 	<extensions defaultExtensionNs="com.intellij">
 		<internalFileTemplate name="JavaScriptFile"/>
 
+		<applicationService serviceInterface="consulo.javascript.lang.StandardJavaScriptVersions" serviceImplementation="consulo.javascript.lang.StandardJavaScriptVersionsImpl"/>
+
 		<lang.versionResolver language="JavaScript" implementationClass="consulo.javascript.lang.JavaScriptLanguageVersionResolver"/>
 
 		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.lang.JavaScript15LanguageVersion"/>
@@ -135,7 +137,7 @@
 
 		<completion.contributor language="JavaScript" implementationClass="consulo.javascript.ide.completion.JavaScriptKeywordCompletionContributor"/>
 
-		<completion.confidence language="JavaScript" implementationClass="com.intellij.codeInsight.completion.SkipAutopopupInStrings" />
+		<completion.confidence language="JavaScript" implementationClass="com.intellij.codeInsight.completion.SkipAutopopupInStrings"/>
 
 		<quoteHandler fileType="JavaScript" className="consulo.javascript.lang.JavaScriptQuoteHandler"/>
 
@@ -155,7 +157,7 @@
 								 mutableClass="consulo.javascript.client.module.extension.ClientJavaScriptMutableModuleExtension"/>
 
 		<xdebugger.breakpointType implementation="consulo.javascript.debugger.JavaScriptLineBreakpointType"/>
-		<xdebugger.lineBreakpointTypeResolver filetype="JavaScript" implementationClass="consulo.javascript.debugger.JavaScriptLineBreakpointTypeResolver" />
+		<xdebugger.lineBreakpointTypeResolver filetype="JavaScript" implementationClass="consulo.javascript.debugger.JavaScriptLineBreakpointTypeResolver"/>
 	</extensions>
 
 	<extensionPoints>

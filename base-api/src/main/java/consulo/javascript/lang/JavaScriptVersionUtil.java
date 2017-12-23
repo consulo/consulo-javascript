@@ -37,6 +37,6 @@ public class JavaScriptVersionUtil
 	public static Set<JavaScriptFeature> getFeatures(@NotNull PsiElement element)
 	{
 		LanguageVersion languageVersion = element.getLanguageVersion();
-		return languageVersion instanceof BaseJavaScriptLanguageVersion ? ((BaseJavaScriptLanguageVersion) languageVersion).getFeatures() : Collections.<JavaScriptFeature>emptySet();
+		return languageVersion instanceof JavaScriptLanguageVersion ? ((JavaScriptLanguageVersion) languageVersion).getFeatures() : Collections.<JavaScriptFeature>emptySet();
 	}
 }

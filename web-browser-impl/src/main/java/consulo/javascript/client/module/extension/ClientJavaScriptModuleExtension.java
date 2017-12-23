@@ -28,7 +28,7 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionImpl<ClientJ
 {
 	private ModuleInheritableNamedPointerImpl<Sdk> myPointer;
 
-	protected LanguageVersion myLanguageVersion = StandardJavaScriptVersions.getDefaultVersion();
+	protected LanguageVersion myLanguageVersion = StandardJavaScriptVersions.getInstance().getDefaultVersion();
 
 	public ClientJavaScriptModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootLayer)
 	{
@@ -76,14 +76,14 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionImpl<ClientJ
 	protected void loadStateImpl(@NotNull Element element)
 	{
 		super.loadStateImpl(element);
-		myLanguageVersion = StandardJavaScriptVersions.findVersionById(element.getAttributeValue("language-version"));
+		myLanguageVersion = StandardJavaScriptVersions.getInstance().findVersionById(element.getAttributeValue("language-version"));
 	}
 
 	@Override
 	protected void getStateImpl(@NotNull Element element)
 	{
 		super.getStateImpl(element);
-		if(myLanguageVersion != StandardJavaScriptVersions.getDefaultVersion())
+		if(myLanguageVersion != StandardJavaScriptVersions.getInstance().getDefaultVersion())
 		{
 			element.setAttribute("language-version", myLanguageVersion.getId());
 		}

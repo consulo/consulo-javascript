@@ -443,7 +443,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 		final JSReferenceList implementsList = getImplementsList();
 		if(implementsList == null)
 		{
-			return EMPTY_ARRAY;
+			return JSClass.EMPTY_ARRAY;
 		}
 		final List<JSClass> classes = getClassesFromReferenceList(implementsList, JSElementTypes.IMPLEMENTS_LIST);
 		return classes.toArray(new JSClass[classes.size()]);

@@ -23,12 +23,14 @@ import java.util.List;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
+import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.VerticalFlowLayout;
 import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.ColoredListCellRenderer;
 import consulo.javascript.lang.BaseJavaScriptLanguageVersion;
+import consulo.javascript.lang.JavaScriptLanguageVersion;
 import consulo.javascript.lang.StandardJavaScriptVersions;
 import consulo.javascript.module.extension.JavaScriptMutableModuleExtension;
 import consulo.lang.LanguageVersion;
@@ -43,7 +45,7 @@ public class ClientJavaScriptModuleExtensionPanel extends JPanel
 	{
 		super(new VerticalFlowLayout(true, false));
 
-		List<BaseJavaScriptLanguageVersion> validLanguageVersions = StandardJavaScriptVersions.getValidLanguageVersions();
+		List<JavaScriptLanguageVersion> validLanguageVersions = StandardJavaScriptVersions.getInstance().getValidLanguageVersions();
 
 		ComboBox languageVersionComboBox = new ComboBox(new CollectionComboBoxModel(validLanguageVersions, extension.getLanguageVersion()));
 		languageVersionComboBox.addItemListener(new ItemListener()
@@ -61,7 +63,7 @@ public class ClientJavaScriptModuleExtensionPanel extends JPanel
 		languageVersionComboBox.setRenderer(new ColoredListCellRenderer<BaseJavaScriptLanguageVersion>()
 		{
 			@Override
-			protected void customizeCellRenderer(JList list, BaseJavaScriptLanguageVersion value, int index, boolean selected, boolean hasFocus)
+			protected void customizeCellRenderer(@NotNull JList list, BaseJavaScriptLanguageVersion value, int index, boolean selected, boolean hasFocus)
 			{
 				append(value.getPresentableName());
 			}
