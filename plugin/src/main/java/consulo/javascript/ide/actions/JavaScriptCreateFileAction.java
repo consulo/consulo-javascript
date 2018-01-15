@@ -1,5 +1,6 @@
 package consulo.javascript.ide.actions;
 
+import org.jetbrains.annotations.Nullable;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.actions.CreateFileFromTemplateAction;
 import com.intellij.ide.actions.CreateFileFromTemplateDialog;
@@ -7,6 +8,7 @@ import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
@@ -36,6 +38,13 @@ public class JavaScriptCreateFileAction extends CreateFileFromTemplateAction
 		}
 		Module module = findModule(dataContext);
 		return module != null && ModuleUtilCore.getExtension(module, JavaScriptModuleExtension.class) != null;
+	}
+
+	@Nullable
+	@Override
+	protected FileType getFileTypeForModuleResolve()
+	{
+		return JavaScriptFileType.INSTANCE;
 	}
 
 	@RequiredReadAction
