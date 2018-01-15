@@ -1,7 +1,5 @@
 package consulo.javascript.ide.actions;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.actions.CreateFileFromTemplateAction;
 import com.intellij.ide.actions.CreateFileFromTemplateDialog;
@@ -12,15 +10,10 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.testFramework.LightVirtualFile;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.javascript.module.extension.JavaScriptModuleExtension;
-import consulo.roots.ContentEntryFileListener;
 
 /**
  * @author VISTALL
@@ -56,48 +49,18 @@ public class JavaScriptCreateFileAction extends CreateFileFromTemplateAction
 			return null;
 		}
 
-		final PsiDirectory orChooseDirectory = view.getOrChooseDirectory();
-		if(orChooseDirectory == null)
+		final PsiDirectory directory = view.getOrChooseDirectory();
+		if(directory == null)
 		{
 			return null;
 		}
 
-		Module resolve = findModuleByPsiDirectory(project, orChooseDirectory);
-		if(resolve != null)
+		Module resolvedModule = ModuleResolver.EP_NAME.composite().resolveModule(directory, JavaScriptFileType.INSTANCE);
+		if(resolvedModule != null)
 		{
-			return resolve;
+			return resolvedModule;
 		}
 		return dataContext.getData(LangDataKeys.MODULE);
-	}
-
-	@Nullable
-	@RequiredReadAction
-	private static Module findModuleByPsiDirectory(Project project, final PsiDirectory orChooseDirectory)
-	{
-		LightVirtualFile l = new LightVirtualFile("test.js", JavaScriptFileType.INSTANCE, "")
-		{
-			@Override
-			public VirtualFile getParent()
-			{
-				return orChooseDirectory.getVirtualFile();
-			}
-
-			@NotNull
-			@Override
-			public VirtualFileSystem getFileSystem()
-			{
-				return LocalFileSystem.getInstance();
-			}
-		};
-		for(ContentEntryFileListener.PossibleModuleForFileResolver o : ContentEntryFileListener.PossibleModuleForFileResolver.EP_NAME.getExtensions())
-		{
-			Module resolve = o.resolve(project, l);
-			if(resolve != null)
-			{
-				return resolve;
-			}
-		}
-		return null;
 	}
 
 	@Override
