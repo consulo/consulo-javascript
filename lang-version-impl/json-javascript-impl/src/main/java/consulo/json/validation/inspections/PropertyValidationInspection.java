@@ -155,7 +155,7 @@ public class PropertyValidationInspection extends LocalInspectionTool
 			return Collections.emptyList();
 		}
 
-		final Deque<JSProperty> queue = new ArrayDeque<JSProperty>();
+		final Deque<JSProperty> queue = new ArrayDeque<>();
 		PsiTreeUtil.treeWalkUp(element, null, new PairProcessor<PsiElement, PsiElement>()
 		{
 			@Override
@@ -218,10 +218,15 @@ public class PropertyValidationInspection extends LocalInspectionTool
 		}
 		else if(node instanceof JSArrayLiteralExpression)
 		{
-			Set<Object> types = new THashSet<Object>();
+			Set<Object> types = new THashSet<>();
 			JSExpression[] expressions = ((JSArrayLiteralExpression) node).getExpressions();
 			for(JSExpression expression : expressions)
 			{
+				if(expression == null)
+				{
+					continue;
+				}
+
 				Object typeOfExpression = getTypeOfExpression(expression);
 				ContainerUtil.addIfNotNull(types, typeOfExpression);
 			}
