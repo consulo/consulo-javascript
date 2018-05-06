@@ -28,11 +28,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeInsight.daemon.GutterIconNavigationHandler;
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
@@ -199,7 +200,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 	public static Key<Boolean> ourParticipatesInHierarchyKey = Key.create("js.named.item.participates.in.hierarchy");
 
 	@Override
-	public LineMarkerInfo getLineMarkerInfo(@NotNull final PsiElement element)
+	public LineMarkerInfo getLineMarkerInfo(@Nonnull final PsiElement element)
 	{
 		if(element instanceof JSFunction)
 		{
@@ -284,7 +285,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 	}
 
 	@Override
-	public void collectSlowLineMarkers(@NotNull final List<PsiElement> elements, @NotNull final Collection<LineMarkerInfo> result)
+	public void collectSlowLineMarkers(@Nonnull final List<PsiElement> elements, @Nonnull final Collection<LineMarkerInfo> result)
 	{
 		final Map<String, Set<JSFunction>> jsFunctionsToProcess = new THashMap<String, Set<JSFunction>>();
 		final Map<JSClass, Set<JSFunction>> jsMethodsToProcess = new THashMap<JSClass, Set<JSFunction>>();

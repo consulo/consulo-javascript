@@ -1,5 +1,7 @@
 package com.sixrr.inspectjs.style;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -10,25 +12,24 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.ComparisonUtils;
-import org.jetbrains.annotations.NotNull;
 
 public class ConstantOnRHSOfComparisonJSInspection extends JavaScriptInspection {
     private final SwapComparisonFix fix = new SwapComparisonFix();
 
     @Override
-	@NotNull
+	@Nonnull
     public String getID() {
         return "ConstantOnRightSideOfComparisonJS";
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("constant.on.right.side.of.comparison.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.STYLE_GROUP_NAME;
     }
@@ -50,7 +51,7 @@ public class ConstantOnRHSOfComparisonJSInspection extends JavaScriptInspection 
 
     private static class SwapComparisonFix extends InspectionJSFix {
         @Override
-		@NotNull
+		@Nonnull
         public String getName() {
             return InspectionJSBundle.message("flip.comparison.fix");
         }
@@ -73,7 +74,7 @@ public class ConstantOnRHSOfComparisonJSInspection extends JavaScriptInspection 
 
     private static class ConstantOnRHSOfComparisonVisitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSBinaryExpression(@NotNull JSBinaryExpression expression) {
+        @Override public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             if (!(expression.getROperand() != null)) {
                 return;

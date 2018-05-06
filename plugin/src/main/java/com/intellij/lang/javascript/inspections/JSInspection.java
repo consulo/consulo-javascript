@@ -16,8 +16,8 @@
 
 package com.intellij.lang.javascript.inspections;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInspection.CustomSuppressableInspectionTool;
 import com.intellij.codeInspection.LocalInspectionTool;
@@ -46,8 +46,8 @@ public abstract class JSInspection extends LocalInspectionTool implements Custom
 	protected abstract JSElementVisitor createVisitor(final ProblemsHolder holder);
 
 	@Override
-	@NotNull
-	public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly)
+	@Nonnull
+	public PsiElementVisitor buildVisitor(@Nonnull ProblemsHolder holder, boolean isOnTheFly)
 	{
 		myOnTheFly = isOnTheFly;
 		return createVisitor(holder);
@@ -60,7 +60,7 @@ public abstract class JSInspection extends LocalInspectionTool implements Custom
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public HighlightDisplayLevel getDefaultLevel()
 	{
 		return HighlightDisplayLevel.WEAK_WARNING;

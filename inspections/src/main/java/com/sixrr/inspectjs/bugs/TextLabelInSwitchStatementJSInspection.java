@@ -9,24 +9,24 @@ import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class TextLabelInSwitchStatementJSInspection extends JavaScriptInspection {
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("text.label.in.switch.statement.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.BUGS_GROUP_NAME;
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String buildErrorString(Object... args) {
         return InspectionJSBundle.message("text.label.in.switch.statement.error.string");
     }
@@ -40,7 +40,7 @@ public class TextLabelInSwitchStatementJSInspection extends JavaScriptInspection
             extends BaseInspectionVisitor {
 
         @Override public void visitJSSwitchStatement(
-                @NotNull JSSwitchStatement statement) {
+                @Nonnull JSSwitchStatement statement) {
             super.visitJSSwitchStatement(statement);
             final JSCaseClause[] caseClauses = statement.getCaseClauses();
             for (JSCaseClause caseClause : caseClauses) {

@@ -19,9 +19,11 @@ package com.intellij.lang.javascript.inspections;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.PropertyKey;
 import com.intellij.codeInsight.template.Template;
 import com.intellij.codeInsight.template.TemplateManager;
@@ -61,21 +63,21 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 	private static final String SHORT_NAME = "JSUnresolvedFunction";
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getGroupDisplayName()
 	{
 		return JavaScriptBundle.message("js.inspection.group.name");
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getDisplayName()
 	{
 		return JavaScriptBundle.message("js.unresolved.function.inspection.name");
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	@NonNls
 	public String getShortName()
 	{
@@ -409,7 +411,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 		}
 	}
 
-	static ProblemHighlightType getUnresolveReferenceHighlightType(final @Nullable JSExpression qualifier, @NotNull JSExpression node)
+	static ProblemHighlightType getUnresolveReferenceHighlightType(final @Nullable JSExpression qualifier, @Nonnull JSExpression node)
 	{
 		JSClass jsClass;
 
@@ -585,7 +587,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 		}
 	}
 
-	private static ProblemHighlightType getHighlightTypeForTypeOrSignatureProblem(@NotNull PsiElement node)
+	private static ProblemHighlightType getHighlightTypeForTypeOrSignatureProblem(@Nonnull PsiElement node)
 	{
 		if(node.getContainingFile().getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4)
 		{
@@ -604,21 +606,21 @@ public class JSUnresolvedFunctionInspection extends JSInspection
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public String getName()
 		{
 			return JavaScriptBundle.message("javascript.insert.cast.fix");
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public String getFamilyName()
 		{
 			return getName();
 		}
 
 		@Override
-		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor)
+		public void applyFix(@Nonnull final Project project, @Nonnull final ProblemDescriptor descriptor)
 		{
 			final PsiElement element = descriptor.getPsiElement();
 			final Editor editor = BaseCreateFix.getEditor(project, element.getContainingFile());

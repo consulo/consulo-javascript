@@ -2,8 +2,9 @@ package consulo.json.jom;
 
 import java.lang.reflect.Method;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ObjectUtil;
 
@@ -14,7 +15,7 @@ import com.intellij.util.ObjectUtil;
 public class JomUtil
 {
 	@Nullable
-	public static String getJsonGetPropertyName(@NotNull Method method)
+	public static String getJsonGetPropertyName(@Nonnull Method method)
 	{
 		JomPropertyGetter annotation = method.getAnnotation(JomPropertyGetter.class);
 		if(annotation == null)

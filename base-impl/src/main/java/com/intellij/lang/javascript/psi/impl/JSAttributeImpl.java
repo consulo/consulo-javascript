@@ -16,8 +16,9 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.codeInsight.daemon.EmptyResolveMessageProvider;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
@@ -75,7 +76,7 @@ public class JSAttributeImpl extends JSStubElementImpl<JSAttributeStub> implemen
 	}
 
 	@Override
-	public void accept(@NotNull PsiElementVisitor visitor)
+	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
 		{
@@ -100,7 +101,7 @@ public class JSAttributeImpl extends JSStubElementImpl<JSAttributeStub> implemen
 	}
 
 	@Override
-	public PsiElement setName(@NonNls @NotNull final String name) throws IncorrectOperationException
+	public PsiElement setName(@NonNls @Nonnull final String name) throws IncorrectOperationException
 	{
 		throw new IncorrectOperationException();
 	}
@@ -190,7 +191,7 @@ public class JSAttributeImpl extends JSStubElementImpl<JSAttributeStub> implemen
 		}
 
 		@Override
-		public PsiElement bindToElement(@NotNull final PsiElement element) throws IncorrectOperationException
+		public PsiElement bindToElement(@Nonnull final PsiElement element) throws IncorrectOperationException
 		{
 			return null;
 		}

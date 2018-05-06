@@ -2,7 +2,7 @@ package com.sixrr.inspectjs.functionmetrics;
 
 import com.intellij.lang.javascript.psi.*;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class NestingDepthVisitor extends JSRecursiveElementVisitor {
     private int m_maximumDepth = 0;
@@ -25,19 +25,19 @@ class NestingDepthVisitor extends JSRecursiveElementVisitor {
     //    }
     //}
 
-    @Override public void visitJSDoWhileStatement(@NotNull JSDoWhileStatement statement) {
+    @Override public void visitJSDoWhileStatement(@Nonnull JSDoWhileStatement statement) {
         enterScope();
         super.visitJSDoWhileStatement(statement);
         exitScope();
     }
 
-    @Override public void visitJSForStatement(@NotNull JSForStatement statement) {
+    @Override public void visitJSForStatement(@Nonnull JSForStatement statement) {
         enterScope();
         super.visitJSForStatement(statement);
         exitScope();
     }
 
-    @Override public void visitJSIfStatement(@NotNull JSIfStatement statement) {
+    @Override public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
         boolean isAlreadyCounted = false;
         if (statement.getParent() instanceof JSIfStatement) {
             final JSIfStatement parent = (JSIfStatement) statement.getParent();
@@ -56,19 +56,19 @@ class NestingDepthVisitor extends JSRecursiveElementVisitor {
         }
     }
 
-    @Override public void visitJSTryStatement(@NotNull JSTryStatement statement) {
+    @Override public void visitJSTryStatement(@Nonnull JSTryStatement statement) {
         enterScope();
         super.visitJSTryStatement(statement);
         exitScope();
     }
 
-    @Override public void visitJSSwitchStatement(@NotNull JSSwitchStatement statement) {
+    @Override public void visitJSSwitchStatement(@Nonnull JSSwitchStatement statement) {
         enterScope();
         super.visitJSSwitchStatement(statement);
         exitScope();
     }
 
-    @Override public void visitJSWhileStatement(@NotNull JSWhileStatement statement) {
+    @Override public void visitJSWhileStatement(@Nonnull JSWhileStatement statement) {
         enterScope();
         super.visitJSWhileStatement(statement);
         exitScope();

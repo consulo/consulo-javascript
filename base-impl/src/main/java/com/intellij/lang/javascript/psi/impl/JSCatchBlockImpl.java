@@ -16,7 +16,8 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSCatchBlock;
@@ -58,7 +59,7 @@ public class JSCatchBlockImpl extends JSElementImpl implements JSCatchBlock
 	}
 
 	@Override
-	public void accept(@NotNull PsiElementVisitor visitor)
+	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
 		{
@@ -71,8 +72,8 @@ public class JSCatchBlockImpl extends JSElementImpl implements JSCatchBlock
 	}
 
 	@Override
-	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent,
-			@NotNull PsiElement place)
+	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent,
+			@Nonnull PsiElement place)
 	{
 		if(lastParent != null)
 		{

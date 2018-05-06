@@ -29,7 +29,7 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
 import org.intellij.idea.lang.javascript.psiutil.SideEffectChecker;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import com.intellij.psi.PsiElement;
@@ -49,13 +49,13 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
     @NonNls private static final String DEFAULT_LABEL_NAME = "Label";
 
     @Override
-	@NotNull
+	@Nonnull
     public JSElementPredicate getElementPredicate() {
         return new SwitchPredicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         final JSSwitchStatement switchStatement = (JSSwitchStatement) element.getParent();
 
         assert (switchStatement != null);
@@ -333,7 +333,7 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
 
     private static class SwitchPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             final PsiElement parent = element.getParent();
 
             if (!(parent instanceof JSSwitchStatement)) {

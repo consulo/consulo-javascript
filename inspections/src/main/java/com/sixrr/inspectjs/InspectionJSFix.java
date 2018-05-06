@@ -1,7 +1,8 @@
 package com.sixrr.inspectjs;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.ASTNode;
@@ -20,14 +21,14 @@ import com.intellij.util.IncorrectOperationException;
 public abstract class InspectionJSFix implements LocalQuickFix {
     //to appear in "Apply Fix" statement when multiple Quick Fixes exist
     @Override
-	@NotNull
+	@Nonnull
     public String getFamilyName() {
         return "";
     }
 
     @Override
-	public void applyFix(@NotNull Project project,
-                         @NotNull ProblemDescriptor descriptor) {
+	public void applyFix(@Nonnull Project project,
+                         @Nonnull ProblemDescriptor descriptor) {
         final PsiElement problemElement = descriptor.getPsiElement();
         if (problemElement == null || !problemElement.isValid()) {
             return;
@@ -48,7 +49,7 @@ public abstract class InspectionJSFix implements LocalQuickFix {
     protected abstract void doFix(Project project, ProblemDescriptor descriptor)
             throws IncorrectOperationException;
 
-    protected static void deleteElement(@NotNull PsiElement element)
+    protected static void deleteElement(@Nonnull PsiElement element)
             throws IncorrectOperationException {
         final ASTNode node = element.getNode();
         final ASTNode parent = element.getParent().getNode();

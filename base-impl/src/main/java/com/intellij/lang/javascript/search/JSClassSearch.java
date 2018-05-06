@@ -21,7 +21,7 @@ import gnu.trove.THashSet;
 import java.util.Collection;
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSReferenceList;
 import com.intellij.openapi.extensions.Extensions;
@@ -109,7 +109,7 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 			}
 
 			@Override
-			public boolean execute(@NotNull final SearchParameters queryParameters, @NotNull Processor<JSClass> consumer)
+			public boolean execute(@Nonnull final SearchParameters queryParameters, @Nonnull Processor<JSClass> consumer)
 			{
 				final THashSet<JSClass> visited = new THashSet<JSClass>();         // no abstract classes in ActionScript !
 
@@ -175,7 +175,7 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 	}
 
 	@Override
-	public boolean execute(@NotNull final SearchParameters queryParameters, @NotNull final Processor<JSClass> consumer)
+	public boolean execute(@Nonnull final SearchParameters queryParameters, @Nonnull final Processor<JSClass> consumer)
 	{
 		return processDirectInheritors(queryParameters.getTargetClass(), consumer, queryParameters.isCheckDeepInheritance(), null,
 				queryParameters.getScope());

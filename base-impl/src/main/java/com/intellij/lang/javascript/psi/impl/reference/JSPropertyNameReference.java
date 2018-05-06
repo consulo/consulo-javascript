@@ -17,8 +17,8 @@
 
 package com.intellij.lang.javascript.psi.impl.reference;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSDefinitionExpression;
@@ -72,7 +72,7 @@ public class JSPropertyNameReference implements PsiReference
 		return myProperty;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	@RequiredReadAction
 	public String getCanonicalText()
@@ -88,7 +88,7 @@ public class JSPropertyNameReference implements PsiReference
 	}
 
 	@Override
-	public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException
+	public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		return null;
 	}
@@ -116,7 +116,7 @@ public class JSPropertyNameReference implements PsiReference
 		return proxyExpanded && element == element2;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	@RequiredReadAction
 	public Object[] getVariants()

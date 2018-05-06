@@ -19,7 +19,7 @@ package consulo.javascript.run.debug;
 import java.io.File;
 
 import org.chromium.sdk.Script;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Key;
@@ -35,8 +35,8 @@ public class V8ScriptUtil
 {
 	private static final Key<Object> SOME_VALUE_TO_EQUALS = Key.create("some-value-to-equals");
 
-	@NotNull
-	public static VirtualFile toVirtualFile(@NotNull Script value, boolean toOpen)
+	@Nonnull
+	public static VirtualFile toVirtualFile(@Nonnull Script value, boolean toOpen)
 	{
 		String scriptName = value.getName();
 		assert scriptName != null;

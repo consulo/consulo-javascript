@@ -16,7 +16,8 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -61,7 +62,7 @@ public class JSBlockStatementImpl extends JSStatementImpl implements JSBlockStat
 	}
 
 	@Override
-	public void accept(@NotNull PsiElementVisitor visitor)
+	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
 		{
@@ -74,7 +75,7 @@ public class JSBlockStatementImpl extends JSStatementImpl implements JSBlockStat
 	}
 
 	@Override
-	public PsiElement add(@NotNull final PsiElement element) throws IncorrectOperationException
+	public PsiElement add(@Nonnull final PsiElement element) throws IncorrectOperationException
 	{
 		if(element instanceof JSStatement)
 		{

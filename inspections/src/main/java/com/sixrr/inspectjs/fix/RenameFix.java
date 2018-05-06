@@ -10,7 +10,7 @@ import com.intellij.refactoring.RenameRefactoring;
 import com.intellij.ide.DataManager;
 import com.sixrr.inspectjs.InspectionJSFix;
 import com.sixrr.inspectjs.InspectionJSBundle;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class RenameFix extends InspectionJSFix {
     private final String m_targetName;
@@ -26,7 +26,7 @@ public class RenameFix extends InspectionJSFix {
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getName() {
         if (m_targetName == null) {
             return InspectionJSBundle.message("rename.fix");

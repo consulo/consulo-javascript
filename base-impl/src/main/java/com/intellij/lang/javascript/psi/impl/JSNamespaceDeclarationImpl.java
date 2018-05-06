@@ -17,7 +17,7 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -48,7 +48,7 @@ public class JSNamespaceDeclarationImpl extends JSStubbedStatementImpl<JSNamespa
 	}
 
 	@Override
-	public void accept(@NotNull PsiElementVisitor visitor)
+	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
 		{
@@ -67,7 +67,7 @@ public class JSNamespaceDeclarationImpl extends JSStubbedStatementImpl<JSNamespa
 	}
 
 	@Override
-	public PsiElement setName(@NonNls @NotNull String newName) throws IncorrectOperationException
+	public PsiElement setName(@NonNls @Nonnull String newName) throws IncorrectOperationException
 	{
 		final String oldName = getName();
 		if(newName.equals(oldName))
@@ -151,8 +151,8 @@ public class JSNamespaceDeclarationImpl extends JSStubbedStatementImpl<JSNamespa
 	}
 
 	@Override
-	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState state, final PsiElement lastParent,
-			@NotNull final PsiElement place)
+	public boolean processDeclarations(@Nonnull final PsiScopeProcessor processor, @Nonnull final ResolveState state, final PsiElement lastParent,
+			@Nonnull final PsiElement place)
 	{
 		return processor.execute(lastParent, state);
 	}

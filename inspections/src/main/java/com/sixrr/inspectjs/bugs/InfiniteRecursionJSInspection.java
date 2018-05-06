@@ -1,31 +1,32 @@
 package com.sixrr.inspectjs.bugs;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
-import org.jetbrains.annotations.NotNull;
 
 public class InfiniteRecursionJSInspection extends JavaScriptInspection {
     private static Logger logger = Logger.getInstance("ULVJS");
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message(
                 "infinite.recursion.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.BUGS_GROUP_NAME;
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String buildErrorString(Object... args) {
         return InspectionJSBundle.message(
                 "infinite.recursion.problem.descriptor");
@@ -44,7 +45,7 @@ public class InfiniteRecursionJSInspection extends JavaScriptInspection {
     private static class InfiniteRecursionVisitor
             extends BaseInspectionVisitor {
 
-        @Override public void visitJSFunctionDeclaration(@NotNull JSFunction function) {
+        @Override public void visitJSFunctionDeclaration(@Nonnull JSFunction function) {
             super.visitJSFunctionDeclaration(function);
 
             if (!RecursionUtils.functionMayRecurse(function)) {

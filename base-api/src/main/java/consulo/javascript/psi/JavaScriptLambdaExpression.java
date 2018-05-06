@@ -16,7 +16,8 @@
 
 package consulo.javascript.psi;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSParameterList;
@@ -27,7 +28,7 @@ import com.intellij.lang.javascript.psi.JSParameterList;
  */
 public interface JavaScriptLambdaExpression extends JSExpression
 {
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	JSParameterList getParameterList();
 }

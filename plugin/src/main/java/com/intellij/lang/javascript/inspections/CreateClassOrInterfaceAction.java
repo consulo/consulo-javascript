@@ -18,8 +18,9 @@ package com.intellij.lang.javascript.inspections;
 
 import java.util.Properties;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.ide.fileTemplates.FileTemplate;
@@ -67,7 +68,7 @@ class CreateClassOrInterfaceAction implements LocalQuickFix
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getName()
 	{
 		final String key = myIsInterface ? "javascript.create.interface.intention.name" : "javascript.create.class.intention.name";
@@ -75,14 +76,14 @@ class CreateClassOrInterfaceAction implements LocalQuickFix
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getFamilyName()
 	{
 		return getName();
 	}
 
 	@Override
-	public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor)
+	public void applyFix(@Nonnull final Project project, @Nonnull final ProblemDescriptor descriptor)
 	{
 		PsiFile contextFile = myContext.getContainingFile();
 		final PsiElement context = contextFile.getContext();

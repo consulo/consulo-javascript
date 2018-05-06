@@ -9,18 +9,18 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 import com.sixrr.inspectjs.*;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class UnnecessaryLabelJSInspection extends JavaScriptInspection {
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("unnecessary.label.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
@@ -36,7 +36,7 @@ public class UnnecessaryLabelJSInspection extends JavaScriptInspection {
     }
 
     @Override
-	@NotNull
+	@Nonnull
     protected String buildErrorString(Object... args) {
         return InspectionJSBundle.message("unnecessary.label.error.string");
 
@@ -50,7 +50,7 @@ public class UnnecessaryLabelJSInspection extends JavaScriptInspection {
     private static class UnusedLabelFix extends InspectionJSFix {
 
         @Override
-		@NotNull
+		@Nonnull
         public String getName() {
             return InspectionJSBundle.message("remove.label.fix");
         }
@@ -101,14 +101,14 @@ public class UnnecessaryLabelJSInspection extends JavaScriptInspection {
             label = labelIdentifier.getText();
         }
 
-        @Override public void visitElement(@NotNull PsiElement element) {
+        @Override public void visitElement(@Nonnull PsiElement element) {
             if (!found) {
                 super.visitElement(element);
             }
         }
 
         @Override public void visitJSContinueStatement(
-                @NotNull JSContinueStatement continueStatement) {
+                @Nonnull JSContinueStatement continueStatement) {
             if (found) {
                 return;
             }
@@ -120,7 +120,7 @@ public class UnnecessaryLabelJSInspection extends JavaScriptInspection {
         }
 
         @Override public void visitJSBreakStatement(
-                @NotNull JSBreakStatement breakStatement) {
+                @Nonnull JSBreakStatement breakStatement) {
             if (found) {
                 return;
             }

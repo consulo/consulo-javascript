@@ -19,7 +19,8 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSIncludeDirective;
@@ -46,14 +47,14 @@ public class JSIncludeDirectiveElementType extends JSStubElementType<JSIncludeDi
 	}
 
 	@Override
-	public void serialize(@NotNull JSIncludeDirectiveStub stub, @NotNull StubOutputStream dataStream) throws IOException
+	public void serialize(@Nonnull JSIncludeDirectiveStub stub, @Nonnull StubOutputStream dataStream) throws IOException
 	{
 		dataStream.writeName(stub.getIncludeText());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public JSIncludeDirectiveStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException
+	public JSIncludeDirectiveStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
 	{
 		StringRef includeText = dataStream.readName();
 		return new JSIncludeDirectiveStubImpl(StringRef.toString(includeText), parentStub, this);
@@ -61,21 +62,21 @@ public class JSIncludeDirectiveElementType extends JSStubElementType<JSIncludeDi
 
 	@RequiredReadAction
 	@Override
-	public JSIncludeDirectiveStub createStub(@NotNull JSIncludeDirective psi, StubElement parentStub)
+	public JSIncludeDirectiveStub createStub(@Nonnull JSIncludeDirective psi, StubElement parentStub)
 	{
 		String includeText = psi.getIncludeText();
 		return new JSIncludeDirectiveStubImpl(includeText, parentStub, this);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public PsiElement createElement(@NotNull ASTNode astNode)
+	public PsiElement createElement(@Nonnull ASTNode astNode)
 	{
 		return new JSIncludeDirectiveImpl(astNode);
 	}
 
 	@Override
-	public JSIncludeDirective createPsi(@NotNull JSIncludeDirectiveStub stub)
+	public JSIncludeDirective createPsi(@Nonnull JSIncludeDirectiveStub stub)
 	{
 		return new JSIncludeDirectiveImpl(stub);
 	}

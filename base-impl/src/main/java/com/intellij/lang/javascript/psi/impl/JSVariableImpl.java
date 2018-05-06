@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSClass;
@@ -63,7 +63,7 @@ public class JSVariableImpl extends JSVariableBaseImpl<JSVariableStub, JSVariabl
 	}
 
 	@Override
-	public PsiElement setName(@NotNull String name) throws IncorrectOperationException
+	public PsiElement setName(@Nonnull String name) throws IncorrectOperationException
 	{
 		String oldName = getName();
 		PsiElement element = super.setName(name);

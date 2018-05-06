@@ -4,7 +4,8 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 import consulo.json.jom.proxy.JomBadValueExpressionException;
 import consulo.json.jom.proxy.JomValueConverter;
@@ -36,7 +37,7 @@ public class JomCollectionValue<T extends Collection> implements JomValueConvert
 	@RequiredReadAction
 	@Override
 	@SuppressWarnings("unchecked")
-	public T parseValue(@NotNull Class type, @NotNull Type genericType, @NotNull PsiElement value) throws JomBadValueExpressionException
+	public T parseValue(@Nonnull Class type, @Nonnull Type genericType, @Nonnull PsiElement value) throws JomBadValueExpressionException
 	{
 		if(value instanceof JSArrayLiteralExpression)
 		{
@@ -63,7 +64,7 @@ public class JomCollectionValue<T extends Collection> implements JomValueConvert
 	}
 
 
-	public static Pair<Class, Type> findValueTypeInsideGeneric(@NotNull Type genericType, int index)
+	public static Pair<Class, Type> findValueTypeInsideGeneric(@Nonnull Type genericType, int index)
 	{
 		if(!(genericType instanceof ParameterizedType))
 		{

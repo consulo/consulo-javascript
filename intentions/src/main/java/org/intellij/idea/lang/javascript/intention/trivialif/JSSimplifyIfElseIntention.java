@@ -15,11 +15,12 @@
  */
 package org.intellij.idea.lang.javascript.intention.trivialif;
 
+import javax.annotation.Nonnull;
+
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ConditionalUtils;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
-import org.jetbrains.annotations.NotNull;
 
 import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -29,13 +30,13 @@ import com.intellij.util.IncorrectOperationException;
 
 public class JSSimplifyIfElseIntention extends JSIntention {
     @Override
-	@NotNull
+	@Nonnull
     public JSElementPredicate getElementPredicate() {
         return new SimplifyIfElsePredicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         final PsiElement statement = (element.getParent() instanceof JSIfStatement ? element.getParent() : element);
 
         ConditionalUtils.replaceAssignmentOrReturnIfSimplifiable((JSIfStatement) statement);
@@ -43,7 +44,7 @@ public class JSSimplifyIfElseIntention extends JSIntention {
 
     private static class SimplifyIfElsePredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (!(element instanceof JSElement)) {
                 return false;
             }

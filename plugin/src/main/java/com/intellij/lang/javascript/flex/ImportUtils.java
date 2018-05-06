@@ -25,8 +25,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.idea.LoggerFactory;
 import com.intellij.lang.injection.InjectedLanguageManager;
@@ -106,7 +106,7 @@ public class ImportUtils
 		return earlyImport;
 	}
 
-	public static void doImport(@NotNull PsiElement subject, final @NotNull String fqn)
+	public static void doImport(@Nonnull PsiElement subject, final @Nonnull String fqn)
 	{
 		assert fqn.contains(".") : "Qualified name belongs to default package: " + fqn;
 

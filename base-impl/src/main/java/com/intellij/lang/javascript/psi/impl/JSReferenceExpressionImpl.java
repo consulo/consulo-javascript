@@ -18,8 +18,8 @@ package com.intellij.lang.javascript.psi.impl;
 
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageNamesValidation;
 import com.intellij.lang.javascript.JSElementTypes;
@@ -66,7 +66,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public JavaScriptType getType()
 	{
@@ -145,7 +145,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		return resolveResults.length == 0 || resolveResults.length > 1 ? null : resolveResults[0].getElement();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	@RequiredReadAction
 	public String getCanonicalText()
@@ -186,7 +186,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 
 	@Override
 	@RequiredReadAction
-	public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException
+	public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		final PsiElement parent = getParent();
 
@@ -387,7 +387,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		return jsClass;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	@RequiredReadAction
 	public Object[] getVariants()
@@ -452,7 +452,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 	}
 
 	@Override
-	public void accept(@NotNull PsiElementVisitor visitor)
+	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
 		{
@@ -465,7 +465,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public ResolveResult[] multiResolve(final boolean incompleteCode)
 	{
 		return ResolveCache.getInstance(getContainingFile().getProject()).resolveWithCaching(this, MyResolver.INSTANCE, true, incompleteCode);
@@ -475,10 +475,10 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 	{
 		private static final MyResolver INSTANCE = new MyResolver();
 
-		@NotNull
+		@Nonnull
 		@Override
 		@RequiredReadAction
-		public ResolveResult[] resolve(@NotNull JSReferenceExpressionImpl referenceExpression, boolean incompleteCode)
+		public ResolveResult[] resolve(@Nonnull JSReferenceExpressionImpl referenceExpression, boolean incompleteCode)
 		{
 			return referenceExpression.doResolve();
 		}
@@ -685,7 +685,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		}
 
 		@Override
-		public void process(String type, @NotNull final BaseJSSymbolProcessor.EvaluateContext evaluateContext, PsiElement source)
+		public void process(String type, @Nonnull final BaseJSSymbolProcessor.EvaluateContext evaluateContext, PsiElement source)
 		{
 			if(evaluateContext.visitedTypes.contains(type))
 			{
@@ -784,7 +784,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		}
 
 		@Override
-		public void setUnknownElement(@NotNull final PsiElement element)
+		public void setUnknownElement(@Nonnull final PsiElement element)
 		{
 			if(!(element instanceof XmlToken))
 			{

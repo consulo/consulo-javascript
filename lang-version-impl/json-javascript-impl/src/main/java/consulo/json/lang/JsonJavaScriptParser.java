@@ -1,6 +1,6 @@
 package consulo.json.lang;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
@@ -24,9 +24,9 @@ public class JsonJavaScriptParser implements PsiParser
 
 	private int myPropertyDepth;
 
-	@NotNull
+	@Nonnull
 	@Override
-	public ASTNode parse(@NotNull IElementType root, @NotNull PsiBuilder builder, @NotNull LanguageVersion languageVersion)
+	public ASTNode parse(@Nonnull IElementType root, @Nonnull PsiBuilder builder, @Nonnull LanguageVersion languageVersion)
 	{
 		final PsiBuilder.Marker rootMarker = builder.mark();
 		parseRoot(builder);

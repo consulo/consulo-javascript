@@ -28,8 +28,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.lang.javascript.index.JSSymbolUtil;
@@ -157,7 +157,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor
 	}
 
 	@Override
-	public boolean onCommentLine(@NotNull String line)
+	public boolean onCommentLine(@Nonnull String line)
 	{
 		String trimmedLine = line.trim();
 		boolean parametersStarted = false;
@@ -239,8 +239,8 @@ class JSDocumentationBuilder implements JSDocumentationProcessor
 	}
 
 	@Override
-	public boolean onPatternMatch(@NotNull MetaDocType metaDocType, @Nullable String matchName, @Nullable String matchValue,
-			@Nullable String remainingLineContent, @NotNull final String line, final String patternMatched)
+	public boolean onPatternMatch(@Nonnull MetaDocType metaDocType, @Nullable String matchName, @Nullable String matchValue,
+			@Nullable String remainingLineContent, @Nonnull final String line, final String patternMatched)
 	{
 		if(metaDocType == MetaDocType.DEFAULT)
 		{

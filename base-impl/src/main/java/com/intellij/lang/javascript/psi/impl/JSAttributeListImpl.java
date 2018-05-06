@@ -19,8 +19,9 @@ package com.intellij.lang.javascript.psi.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -54,7 +55,7 @@ public class JSAttributeListImpl extends JSStubElementImpl<JSAttributeListStub> 
 	}
 
 	@Override
-	public void accept(@NotNull PsiElementVisitor visitor)
+	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
 		{
@@ -92,9 +93,9 @@ public class JSAttributeListImpl extends JSStubElementImpl<JSAttributeListStub> 
 		return getStubOrPsiChildren(JSElementTypes.ATTRIBUTE, JSAttribute.ARRAY_FACTORY);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public JSAttribute[] getAttributesByName(final @NotNull String name)
+	public JSAttribute[] getAttributesByName(final @Nonnull String name)
 	{
 		List<JSAttribute> attributes = null;
 		for(JSAttribute attr : getAttributes())
@@ -186,7 +187,7 @@ public class JSAttributeListImpl extends JSStubElementImpl<JSAttributeListStub> 
 	}
 
 	@Override
-	public PsiElement add(@NotNull final PsiElement element) throws IncorrectOperationException
+	public PsiElement add(@Nonnull final PsiElement element) throws IncorrectOperationException
 	{
 		if(element.getNode().getElementType() == JSTokenTypes.OVERRIDE_KEYWORD)
 		{

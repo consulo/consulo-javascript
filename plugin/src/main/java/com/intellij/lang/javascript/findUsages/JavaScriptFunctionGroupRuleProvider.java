@@ -16,7 +16,8 @@
 
 package com.intellij.lang.javascript.findUsages;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSNamedElement;
@@ -41,7 +42,7 @@ public class JavaScriptFunctionGroupRuleProvider extends JavaScriptGroupRuleProv
 
 	private static class FunctionUsageGroup extends JavaScriptGroupRuleProviderBase.PsiNamedElementUsageGroupBase<JSFunction>
 	{
-		public FunctionUsageGroup(@NotNull JSFunction function)
+		public FunctionUsageGroup(@Nonnull JSFunction function)
 		{
 			super(function, AllIcons.Nodes.Function);
 		}

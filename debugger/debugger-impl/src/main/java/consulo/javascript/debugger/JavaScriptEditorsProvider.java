@@ -16,8 +16,8 @@
 
 package consulo.javascript.debugger;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.lang.javascript.psi.JSElementFactory;
 import com.intellij.openapi.fileTypes.FileType;
@@ -35,12 +35,12 @@ public class JavaScriptEditorsProvider extends XDebuggerEditorsProviderBase
 	public static final JavaScriptEditorsProvider INSTANCE = new JavaScriptEditorsProvider();
 
 	@Override
-	protected PsiFile createExpressionCodeFragment(@NotNull Project project, @NotNull String text, @Nullable PsiElement element, boolean isPhysical)
+	protected PsiFile createExpressionCodeFragment(@Nonnull Project project, @Nonnull String text, @Nullable PsiElement element, boolean isPhysical)
 	{
 		return JSElementFactory.createExpressionCodeFragment(project, text, element, isPhysical);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public FileType getFileType()
 	{

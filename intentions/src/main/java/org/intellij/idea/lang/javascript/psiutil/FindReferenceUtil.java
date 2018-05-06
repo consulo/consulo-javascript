@@ -24,8 +24,8 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlFile;
 import org.intellij.idea.lang.javascript.intention.JSElementIterator;
 import org.intellij.idea.lang.javascript.intention.JSFunctionVisitor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -34,7 +34,7 @@ import java.util.List;
 public class FindReferenceUtil {
     private FindReferenceUtil() {}
 
-    public static JSReferenceExpression[] findReferences(@NotNull JSVariable variable) {
+    public static JSReferenceExpression[] findReferences(@Nonnull JSVariable variable) {
         final JSReferenceVisitor visitor = new JSReferenceVisitor(variable, Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
         JSElement                scope   = PsiTreeUtil.getParentOfType(variable, JSFunction.class);
 
@@ -46,7 +46,7 @@ public class FindReferenceUtil {
         return visitor.getReferences();
     }
 
-    public static <T extends PsiElement> T getFarthestAncestor(@NotNull PsiElement element, @NotNull Class<T> aClass) {
+    public static <T extends PsiElement> T getFarthestAncestor(@Nonnull PsiElement element, @Nonnull Class<T> aClass) {
         PsiElement previousElement = element;
         PsiElement currentElement;
 
@@ -70,7 +70,7 @@ public class FindReferenceUtil {
         private final int                   maxTextOffset;
         private List<JSReferenceExpression> references;
 
-        public JSReferenceVisitor(@NotNull JSVariable variable, int maxCount, int minTextOffset, int maxTextOffset) {
+        public JSReferenceVisitor(@Nonnull JSVariable variable, int maxCount, int minTextOffset, int maxTextOffset) {
             this.variable      = variable;
             this.variableName  = variable.getName();
             this.maxCount      = maxCount;
@@ -114,24 +114,24 @@ public class FindReferenceUtil {
     }
 
 
-    public static Iterable<PsiElement> getReferences(@NotNull JSVariable variable) {
+    public static Iterable<PsiElement> getReferences(@Nonnull JSVariable variable) {
         return getReferences(variable, null, 0, Integer.MAX_VALUE);
     }
 
-    public static Iterable<PsiElement> getReferences(@NotNull JSVariable variable,
+    public static Iterable<PsiElement> getReferences(@Nonnull JSVariable variable,
                                                      @Nullable PsiElement scope) {
         return getReferences(variable, scope, 0, Integer.MAX_VALUE);
     }
 
-    public static Iterable<PsiElement> getReferencesBefore(@NotNull JSVariable variable, int textOffset) {
+    public static Iterable<PsiElement> getReferencesBefore(@Nonnull JSVariable variable, int textOffset) {
         return getReferences(variable, null, 0, textOffset);
     }
 
-    public static Iterable<PsiElement> getReferencesAfter(@NotNull JSVariable variable, int textOffset) {
+    public static Iterable<PsiElement> getReferencesAfter(@Nonnull JSVariable variable, int textOffset) {
         return getReferences(variable, null, textOffset, Integer.MAX_VALUE);
     }
 
-    private static Iterable<PsiElement> getReferences(@NotNull  final JSVariable variable,
+    private static Iterable<PsiElement> getReferences(@Nonnull  final JSVariable variable,
                                                       @Nullable final PsiElement scope,
                                                       final int minTextOffset, final int maxTextOffset) {
         final PsiElement iteratedScope;
@@ -156,9 +156,9 @@ public class FindReferenceUtil {
         private final JSVariable            variable;
         private final String                variableName;
 
-        public JSReferenceIterator(@NotNull JSVariable variable,
+        public JSReferenceIterator(@Nonnull JSVariable variable,
                                    int minTextOffset, int maxTextOffset,
-                                   @NotNull PsiElement element) {
+                                   @Nonnull PsiElement element) {
             super(element, false, minTextOffset, maxTextOffset);
             this.variable     = variable;
             this.variableName = variable.getName();

@@ -2,7 +2,8 @@ package consulo.javascript.lang;
 
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.Language;
 import consulo.lang.LanguageVersion;
 import consulo.lang.LanguageVersionWithParsing;
@@ -13,15 +14,15 @@ import consulo.lang.LanguageVersionWithParsing;
  */
 public abstract class JavaScriptLanguageVersion extends LanguageVersion implements LanguageVersionWithParsing
 {
-	public JavaScriptLanguageVersion(@NotNull String id, @NotNull String name, @NotNull Language language, String... mimeTypes)
+	public JavaScriptLanguageVersion(@Nonnull String id, @Nonnull String name, @Nonnull Language language, String... mimeTypes)
 	{
 		super(id, name, language, mimeTypes);
 	}
 
-	@NotNull
+	@Nonnull
 	public abstract Set<JavaScriptFeature> getFeatures();
 
-	@NotNull
+	@Nonnull
 	public String getPresentableName()
 	{
 		return getName();

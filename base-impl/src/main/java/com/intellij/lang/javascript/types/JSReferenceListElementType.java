@@ -19,8 +19,9 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSReferenceList;
@@ -53,7 +54,7 @@ public class JSReferenceListElementType extends JSStubElementType<JSReferenceLis
 	}
 
 	@Override
-	public void indexStub(@NotNull JSReferenceListStub stub, @NotNull IndexSink sink)
+	public void indexStub(@Nonnull JSReferenceListStub stub, @Nonnull IndexSink sink)
 	{
 		if(this == JSElementTypes.EXTENDS_LIST)
 		{
@@ -76,29 +77,29 @@ public class JSReferenceListElementType extends JSStubElementType<JSReferenceLis
 		}
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public PsiElement createElement(@NotNull ASTNode astNode)
+	public PsiElement createElement(@Nonnull ASTNode astNode)
 	{
 		return new JSReferenceListImpl(astNode);
 	}
 
 	@Override
-	public JSReferenceList createPsi(@NotNull JSReferenceListStub stub)
+	public JSReferenceList createPsi(@Nonnull JSReferenceListStub stub)
 	{
 		return new JSReferenceListImpl(stub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public JSReferenceListStub createStub(@NotNull JSReferenceList psi, StubElement parentStub)
+	public JSReferenceListStub createStub(@Nonnull JSReferenceList psi, StubElement parentStub)
 	{
 		String[] referenceTexts = psi.getReferenceTexts();
 		return new JSReferenceListStubImpl(referenceTexts, parentStub, this);
 	}
 
 	@Override
-	public void serialize(@NotNull JSReferenceListStub stub, @NotNull StubOutputStream dataStream) throws IOException
+	public void serialize(@Nonnull JSReferenceListStub stub, @Nonnull StubOutputStream dataStream) throws IOException
 	{
 		String[] referenceTexts = stub.getReferenceTexts();
 		dataStream.writeVarInt(referenceTexts.length);
@@ -108,9 +109,9 @@ public class JSReferenceListElementType extends JSStubElementType<JSReferenceLis
 		}
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public JSReferenceListStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException
+	public JSReferenceListStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
 	{
 		int count = dataStream.readVarInt();
 		String[] refs = ArrayUtil.newStringArray(count);

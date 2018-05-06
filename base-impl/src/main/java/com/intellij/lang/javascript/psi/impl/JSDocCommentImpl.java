@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSDocTokenTypes;
 import com.intellij.lang.javascript.psi.JSDocComment;
@@ -40,7 +40,7 @@ public class JSDocCommentImpl extends JSElementImpl implements JSDocComment
 	}
 
 	@Override
-	public void accept(@NotNull final PsiElementVisitor visitor)
+	public void accept(@Nonnull final PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
 		{

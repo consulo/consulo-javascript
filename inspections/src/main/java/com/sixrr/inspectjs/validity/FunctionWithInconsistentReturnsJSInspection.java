@@ -1,5 +1,8 @@
 package com.sixrr.inspectjs.validity;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
@@ -7,19 +10,17 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class FunctionWithInconsistentReturnsJSInspection extends JavaScriptInspection {
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("function.with.inconsistent.returns.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.VALIDITY_GROUP_NAME;
     }

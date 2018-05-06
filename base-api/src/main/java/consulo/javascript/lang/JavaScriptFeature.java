@@ -16,7 +16,7 @@
 
 package consulo.javascript.lang;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -38,7 +38,7 @@ public enum JavaScriptFeature
 		myName = name;
 	}
 
-	@NotNull
+	@Nonnull
 	public String getName()
 	{
 		return myName;

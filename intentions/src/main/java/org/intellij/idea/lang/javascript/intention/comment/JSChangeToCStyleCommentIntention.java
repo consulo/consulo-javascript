@@ -24,7 +24,7 @@ import com.intellij.util.IncorrectOperationException;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,13 +32,13 @@ import java.util.List;
 public class JSChangeToCStyleCommentIntention extends JSIntention {
 
     @Override
-	@NotNull
+	@Nonnull
     protected JSElementPredicate getElementPredicate() {
         return new EndOfLineCommentPredicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         PsiComment firstComment = (PsiComment) element;
 
         while (true) {
@@ -106,7 +106,7 @@ public class JSChangeToCStyleCommentIntention extends JSIntention {
     private static class EndOfLineCommentPredicate implements JSElementPredicate {
 
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (!(element instanceof PsiComment)) {
                 return false;
             }

@@ -16,8 +16,9 @@
 
 package com.intellij.lang.javascript.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.lang.javascript.psi.stubs.JSAttributeListStub;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.StubBasedPsiElement;
@@ -35,8 +36,8 @@ public interface JSAttributeList extends JSElement, StubBasedPsiElement<JSAttrib
 
 	JSAttribute[] getAttributes();
 
-	@NotNull
-	JSAttribute[] getAttributesByName(@NotNull String name);
+	@Nonnull
+	JSAttribute[] getAttributesByName(@Nonnull String name);
 
 	enum AccessType
 	{

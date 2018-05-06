@@ -23,9 +23,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.documentation.CodeDocumentationProvider;
@@ -424,7 +425,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 
 	private static
 	@Nullable
-	String generateReferenceTargetList(final @Nullable JSReferenceList implementsList, @NotNull String packageName)
+	String generateReferenceTargetList(final @Nullable JSReferenceList implementsList, @Nonnull String packageName)
 	{
 		if(implementsList == null)
 		{
@@ -793,7 +794,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 	}
 
 	@Nullable
-	private static PsiElement getDocumentationElementForLinkStatic(final PsiManager psiManager, String link, @NotNull PsiElement context)
+	private static PsiElement getDocumentationElementForLinkStatic(final PsiManager psiManager, String link, @Nonnull PsiElement context)
 	{
 		final int delimiterIndex = link.lastIndexOf(':');
 
@@ -891,7 +892,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 		JSResolveUtil.processMetaAttributesForClass(clazz, new JSResolveUtil.MetaDataProcessor()
 		{
 			@Override
-			public boolean process(@NotNull JSAttribute jsAttribute)
+			public boolean process(@Nonnull JSAttribute jsAttribute)
 			{
 				if(type.equals(jsAttribute.getName()))
 				{
@@ -943,7 +944,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 
 	@Nullable
 	@Override
-	public Pair<PsiElement, PsiComment> parseContext(@NotNull PsiElement element)
+	public Pair<PsiElement, PsiComment> parseContext(@Nonnull PsiElement element)
 	{
 		return null;
 	}

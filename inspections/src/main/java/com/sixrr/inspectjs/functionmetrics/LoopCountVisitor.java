@@ -2,7 +2,7 @@ package com.sixrr.inspectjs.functionmetrics;
 
 import com.intellij.lang.javascript.psi.*;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class LoopCountVisitor extends JSRecursiveElementVisitor {
     private int loopCount = 0;
@@ -19,22 +19,22 @@ class LoopCountVisitor extends JSRecursiveElementVisitor {
         }
     }
 
-    @Override public void visitJSForStatement(@NotNull JSForStatement jsForStatement) {
+    @Override public void visitJSForStatement(@Nonnull JSForStatement jsForStatement) {
         super.visitJSForStatement(jsForStatement);
         loopCount++;
     }
 
-    @Override public void visitJSForInStatement(@NotNull JSForInStatement jsForStatement) {
+    @Override public void visitJSForInStatement(@Nonnull JSForInStatement jsForStatement) {
         super.visitJSForInStatement(jsForStatement);
         loopCount++;
     }
 
-    @Override public void visitJSWhileStatement(@NotNull JSWhileStatement jsWhileStatement) {
+    @Override public void visitJSWhileStatement(@Nonnull JSWhileStatement jsWhileStatement) {
         super.visitJSWhileStatement(jsWhileStatement);
         loopCount++;
     }
 
-    @Override public void visitJSDoWhileStatement(@NotNull JSDoWhileStatement jsDoWhileStatement) {
+    @Override public void visitJSDoWhileStatement(@Nonnull JSDoWhileStatement jsDoWhileStatement) {
         super.visitJSDoWhileStatement(jsDoWhileStatement);
         loopCount++;
     }

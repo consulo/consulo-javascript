@@ -19,8 +19,8 @@ package com.intellij.lang.javascript.formatter.blocks;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.formatting.Alignment;
 import com.intellij.formatting.Block;
 import com.intellij.formatting.ChildAttributes;
@@ -50,14 +50,14 @@ public class JSDocCommentBlock implements Block
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public TextRange getTextRange()
 	{
 		return new TextRange(myNode.getStartOffset() + myStartOffset, myNode.getStartOffset() + myEndOffset);
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public List<Block> getSubBlocks()
 	{
 		return EMPTY_BLOCK_LIST;
@@ -92,7 +92,7 @@ public class JSDocCommentBlock implements Block
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public ChildAttributes getChildAttributes(final int newChildIndex)
 	{
 		return null;

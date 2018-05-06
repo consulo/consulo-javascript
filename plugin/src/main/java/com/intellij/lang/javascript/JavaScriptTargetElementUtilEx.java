@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
@@ -33,7 +33,7 @@ public class JavaScriptTargetElementUtilEx extends TargetElementUtilEx.Adapter
 {
 	@Override
 	@CompositeExtensionPointName.BooleanBreakResult(breakValue = false)
-	public boolean includeSelfInGotoImplementation(@NotNull final PsiElement element)
+	public boolean includeSelfInGotoImplementation(@Nonnull final PsiElement element)
 	{
 		if(element instanceof JSFunction)
 		{

@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
@@ -208,7 +208,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 	}
 
 	@Override
-	public boolean execute(@NotNull PsiElement element, ResolveState state)
+	public boolean execute(@Nonnull PsiElement element, ResolveState state)
 	{
 		if((element instanceof JSVariable && !(element instanceof JSParameter)) || element instanceof JSFunction)
 		{
@@ -511,7 +511,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 	}
 
 	@Override
-	public <T> T getHint(@NotNull Key<T> hintClass)
+	public <T> T getHint(@Nonnull Key<T> hintClass)
 	{
 		return null;
 	}

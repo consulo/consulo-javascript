@@ -16,8 +16,9 @@
 
 package com.intellij.lang.javascript.highlighting;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.lang.BracePair;
 import com.intellij.lang.PairedBraceMatcher;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -46,7 +47,7 @@ public class JSBraceMatcher implements PairedBraceMatcher
 	}
 
 	@Override
-	public boolean isPairedBracesAllowedBeforeType(@NotNull final IElementType lbraceType, @Nullable final IElementType tokenType)
+	public boolean isPairedBracesAllowedBeforeType(@Nonnull final IElementType lbraceType, @Nullable final IElementType tokenType)
 	{
 		return JSTokenTypes.WHITE_SPACE == tokenType || JSTokenTypes.COMMENTS.contains(tokenType) || tokenType == JSTokenTypes.SEMICOLON || tokenType ==
 				JSTokenTypes.COMMA || tokenType == JSTokenTypes.RPAR || tokenType == JSTokenTypes.RBRACKET || tokenType == JSTokenTypes.RBRACE || null ==

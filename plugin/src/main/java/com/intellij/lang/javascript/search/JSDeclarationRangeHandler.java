@@ -16,7 +16,8 @@
 
 package com.intellij.lang.javascript.search;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.codeInsight.hint.DeclarationRangeHandler;
 import com.intellij.lang.javascript.psi.JSNamedElement;
 import com.intellij.openapi.util.TextRange;
@@ -30,8 +31,8 @@ import com.intellij.psi.PsiElement;
 public class JSDeclarationRangeHandler implements DeclarationRangeHandler
 {
 	@Override
-	@NotNull
-	public TextRange getDeclarationRange(@NotNull PsiElement container)
+	@Nonnull
+	public TextRange getDeclarationRange(@Nonnull PsiElement container)
 	{
 		JSNamedElement namedElement = (JSNamedElement) container;
 

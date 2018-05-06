@@ -16,7 +16,8 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -48,7 +49,7 @@ public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSSimpl
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public IElementType getLiteralElementType()
 	{
@@ -58,7 +59,7 @@ public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSSimpl
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public JavaScriptType getType()
 	{
@@ -87,7 +88,7 @@ public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSSimpl
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public PsiReference[] getReferences()
 	{
 		JSReferenceSet referenceSet = myReferenceSet;
@@ -126,7 +127,7 @@ public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSSimpl
 	}
 
 	@Override
-	public void accept(@NotNull PsiElementVisitor visitor)
+	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
 		{
@@ -145,13 +146,13 @@ public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSSimpl
 	}
 
 	@Override
-	public PsiLanguageInjectionHost updateText(@NotNull String text)
+	public PsiLanguageInjectionHost updateText(@Nonnull String text)
 	{
 		JSExpression expressionFromText = JSChangeUtil.createExpressionFromText(getProject(), text);
 		return (PsiLanguageInjectionHost) replace(expressionFromText);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public LiteralTextEscaper<? extends PsiLanguageInjectionHost> createLiteralTextEscaper()
 	{

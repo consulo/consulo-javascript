@@ -16,7 +16,8 @@
 
 package consulo.javascript.lang.parsing;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -666,7 +667,7 @@ public class StatementParsing extends Parsing
 		parseVarStatementNoMarker(builder, inForInitializationContext, builder.mark());
 	}
 
-	protected void parseVarStatementNoMarker(final PsiBuilder builder, final boolean inForInitializationContext, final @NotNull PsiBuilder.Marker var)
+	protected void parseVarStatementNoMarker(final PsiBuilder builder, final boolean inForInitializationContext, final @Nonnull PsiBuilder.Marker var)
 	{
 		final IElementType declType = builder.getTokenType();
 		StatementParsing.LOGGER.assertTrue(declType == JSTokenTypes.VAR_KEYWORD ||

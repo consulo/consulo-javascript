@@ -1,5 +1,7 @@
 package com.sixrr.inspectjs.assignment;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSAssignmentExpression;
 import com.intellij.lang.javascript.psi.JSDefinitionExpression;
@@ -12,20 +14,19 @@ import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.utils.EquivalenceChecker;
-import org.jetbrains.annotations.NotNull;
 
 public class SillyAssignmentJSInspection
         extends JavaScriptInspection {
 
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("silly.assignment.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.ASSIGNMENT_GROUP_NAME;
     }
@@ -48,7 +49,7 @@ public class SillyAssignmentJSInspection
     private static class Visitor
             extends BaseInspectionVisitor {
 
-        @Override public void visitJSAssignmentExpression(@NotNull JSAssignmentExpression assignment) {
+        @Override public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression assignment) {
             super.visitJSAssignmentExpression(assignment);
 
             final IElementType sign = assignment.getOperationSign();

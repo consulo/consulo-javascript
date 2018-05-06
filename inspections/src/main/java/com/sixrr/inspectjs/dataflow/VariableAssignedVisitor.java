@@ -5,26 +5,27 @@ import com.intellij.lang.javascript.psi.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class VariableAssignedVisitor extends JSRecursiveElementVisitor {
 
     private boolean assigned = false;
-    @NotNull private final JSVariable variable;
+    @Nonnull
+	private final JSVariable variable;
 
-    public VariableAssignedVisitor(@NotNull JSVariable variable) {
+    public VariableAssignedVisitor(@Nonnull JSVariable variable) {
         super();
         this.variable = variable;
     }
 
-    @Override public void visitElement(@NotNull PsiElement element) {
+    @Override public void visitElement(@Nonnull PsiElement element) {
         if (!assigned) {
             super.visitElement(element);
         }
     }
 
     @Override public void visitJSAssignmentExpression(
-            @NotNull JSAssignmentExpression assignment) {
+            @Nonnull JSAssignmentExpression assignment) {
         if (assigned) {
             return;
         }
@@ -36,7 +37,7 @@ public class VariableAssignedVisitor extends JSRecursiveElementVisitor {
     }
 
     @Override public void visitJSPrefixExpression(
-            @NotNull JSPrefixExpression expression) {
+            @Nonnull JSPrefixExpression expression) {
         if (assigned) {
             return;
         }
@@ -53,7 +54,7 @@ public class VariableAssignedVisitor extends JSRecursiveElementVisitor {
     }
 
     @Override public void visitJSPostfixExpression(
-            @NotNull JSPostfixExpression postfixExpression) {
+            @Nonnull JSPostfixExpression postfixExpression) {
         if (assigned) {
             return;
         }

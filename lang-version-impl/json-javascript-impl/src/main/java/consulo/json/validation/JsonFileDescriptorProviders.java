@@ -16,7 +16,8 @@
 
 package consulo.json.validation;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredReadAction;
 import consulo.json.JsonFileType;
 import consulo.json.validation.descriptor.JsonObjectDescriptor;

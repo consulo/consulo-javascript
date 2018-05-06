@@ -19,7 +19,7 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.impl.JSClassImpl;
@@ -48,7 +48,7 @@ public class JSClassElementType extends JSQualifiedStubElementType<JSClassStub, 
 	}
 
 	@Override
-	public void indexStub(@NotNull JSClassStub stub, @NotNull IndexSink sink)
+	public void indexStub(@Nonnull JSClassStub stub, @Nonnull IndexSink sink)
 	{
 		super.indexStub(stub, sink);
 
@@ -59,22 +59,22 @@ public class JSClassElementType extends JSQualifiedStubElementType<JSClassStub, 
 		}
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public PsiElement createElement(@NotNull ASTNode astNode)
+	public PsiElement createElement(@Nonnull ASTNode astNode)
 	{
 		return new JSClassImpl(astNode);
 	}
 
 	@Override
-	public JSClass createPsi(@NotNull JSClassStub stub)
+	public JSClass createPsi(@Nonnull JSClassStub stub)
 	{
 		return new JSClassImpl(stub, this);
 	}
 
 	@RequiredReadAction
 	@Override
-	public JSClassStub createStub(@NotNull JSClass psi, StubElement parentStub)
+	public JSClassStub createStub(@Nonnull JSClass psi, StubElement parentStub)
 	{
 		String name = psi.getName();
 		int flags = JSClassStubImpl.getFlags(psi);
@@ -83,16 +83,16 @@ public class JSClassElementType extends JSQualifiedStubElementType<JSClassStub, 
 	}
 
 	@Override
-	public void serialize(@NotNull JSClassStub stub, @NotNull StubOutputStream dataStream) throws IOException
+	public void serialize(@Nonnull JSClassStub stub, @Nonnull StubOutputStream dataStream) throws IOException
 	{
 		dataStream.writeName(stub.getName());
 		dataStream.writeName(stub.getQualifiedName());
 		dataStream.writeInt(stub.getFlags());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public JSClassStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException
+	public JSClassStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
 	{
 		StringRef nameRef = dataStream.readName();
 		StringRef qualifiedRef = dataStream.readName();

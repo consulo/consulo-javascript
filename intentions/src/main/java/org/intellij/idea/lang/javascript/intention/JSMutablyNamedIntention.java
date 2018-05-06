@@ -15,12 +15,14 @@
  */
 package org.intellij.idea.lang.javascript.intention;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 public abstract class JSMutablyNamedIntention extends JSIntention {
     private String text;
@@ -28,12 +30,13 @@ public abstract class JSMutablyNamedIntention extends JSIntention {
     @NonNls protected abstract String getTextForElement(PsiElement element);
 
     @Override
-	@NotNull public String getText() {
+	@Nonnull
+	public String getText() {
       return text;
     }
 
     @Override
-	public boolean isAvailable(@NotNull Project project, Editor editor, @Nullable PsiElement node) {
+	public boolean isAvailable(@Nonnull Project project, Editor editor, @Nullable PsiElement node) {
       final PsiElement element = findMatchingElement(node);
       if (element != null) {
         text = getTextForElement(element);

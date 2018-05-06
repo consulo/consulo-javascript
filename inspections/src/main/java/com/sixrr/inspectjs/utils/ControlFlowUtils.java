@@ -1,10 +1,12 @@
 package com.sixrr.inspectjs.utils;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 public class ControlFlowUtils {
     private ControlFlowUtils() {
@@ -63,7 +65,7 @@ public class ControlFlowUtils {
     }
 
     private static boolean doWhileStatementMayReturnNormally(
-            @NotNull JSDoWhileStatement loopStatement) {
+            @Nonnull JSDoWhileStatement loopStatement) {
         final JSExpression test = loopStatement.getCondition();
         final JSStatement body = loopStatement.getBody();
         return statementMayCompleteNormally(body) && !BoolUtils.isTrue(test)
@@ -71,14 +73,14 @@ public class ControlFlowUtils {
     }
 
     private static boolean whileStatementMayReturnNormally(
-            @NotNull JSWhileStatement loopStatement) {
+            @Nonnull JSWhileStatement loopStatement) {
         final JSExpression test = loopStatement.getCondition();
         return !BoolUtils.isTrue(test)
                 || statementIsBreakTarget(loopStatement);
     }
 
     private static boolean forStatementMayReturnNormally(
-            @NotNull JSForStatement loopStatement) {
+            @Nonnull JSForStatement loopStatement) {
         final JSExpression test = loopStatement.getCondition();
         if (statementIsBreakTarget(loopStatement)) {
             return true;
@@ -90,12 +92,12 @@ public class ControlFlowUtils {
     }
 
     private static boolean foreachStatementMayReturnNormally(
-            @NotNull JSForInStatement loopStatement) {
+            @Nonnull JSForInStatement loopStatement) {
         return true;
     }
 
     private static boolean switchStatementMayReturnNormally(
-            @NotNull JSSwitchStatement switchStatement) {
+            @Nonnull JSSwitchStatement switchStatement) {
         if (statementIsBreakTarget(switchStatement)) {
             return true;
         }
@@ -125,7 +127,7 @@ public class ControlFlowUtils {
     }
 
     private static boolean tryStatementMayReturnNormally(
-            @NotNull JSTryStatement tryStatement) {
+            @Nonnull JSTryStatement tryStatement) {
         final JSStatement finallyBlock = tryStatement.getFinallyStatement();
         if (finallyBlock != null) {
             if (!statementMayCompleteNormally(finallyBlock)) {
@@ -146,7 +148,7 @@ public class ControlFlowUtils {
     }
 
     private static boolean ifStatementMayReturnNormally(
-            @NotNull JSIfStatement ifStatement) {
+            @Nonnull JSIfStatement ifStatement) {
         final JSStatement thenBranch = ifStatement.getThen();
         if (statementMayCompleteNormally(thenBranch)) {
             return true;
@@ -157,7 +159,7 @@ public class ControlFlowUtils {
     }
 
     private static boolean labeledStatementMayCompleteNormally(
-            @NotNull JSLabeledStatement labeledStatement) {
+            @Nonnull JSLabeledStatement labeledStatement) {
         final JSStatement statement = labeledStatement.getStatement();
         return statementMayCompleteNormally(statement) ||
                 statementIsBreakTarget(statement);
@@ -178,34 +180,34 @@ public class ControlFlowUtils {
     }
 
     private static boolean statementIsBreakTarget(
-            @NotNull JSStatement statement) {
+            @Nonnull JSStatement statement) {
         final BreakFinder breakFinder = new BreakFinder(statement);
         statement.accept(breakFinder);
         return breakFinder.breakFound();
     }
 
     public static boolean statementContainsReturn(
-            @NotNull JSStatement statement) {
+            @Nonnull JSStatement statement) {
         final ReturnFinder returnFinder = new ReturnFinder();
         statement.accept(returnFinder);
         return returnFinder.returnFound();
     }
 
     public static boolean statementIsContinueTarget(
-            @NotNull JSStatement statement) {
+            @Nonnull JSStatement statement) {
         final ContinueFinder continueFinder = new ContinueFinder(statement);
         statement.accept(continueFinder);
         return continueFinder.continueFound();
     }
 
-    public static boolean isInLoop(@NotNull JSElement element) {
+    public static boolean isInLoop(@Nonnull JSElement element) {
         return isInForStatementBody(element) ||
                 isInForeachStatementBody(element) ||
                 isInWhileStatementBody(element) ||
                 isInDoWhileStatementBody(element);
     }
 
-    public static boolean isInFinallyBlock(@NotNull JSElement element) {
+    public static boolean isInFinallyBlock(@Nonnull JSElement element) {
         JSElement currentElement = element;
         while (true) {
             final JSTryStatement tryStatement =
@@ -224,7 +226,7 @@ public class ControlFlowUtils {
         }
     }
 
-    public static boolean isInCatchBlock(@NotNull JSElement element) {
+    public static boolean isInCatchBlock(@Nonnull JSElement element) {
         JSElement currentElement = element;
         while (true) {
             final JSTryStatement tryStatement =
@@ -244,7 +246,7 @@ public class ControlFlowUtils {
         }
     }
 
-    private static boolean isInWhileStatementBody(@NotNull JSElement element) {
+    private static boolean isInWhileStatementBody(@Nonnull JSElement element) {
         final JSWhileStatement whileStatement =
                 PsiTreeUtil.getParentOfType(element,
                         JSWhileStatement.class);
@@ -256,7 +258,7 @@ public class ControlFlowUtils {
     }
 
     private static boolean isInDoWhileStatementBody(
-            @NotNull JSElement element) {
+            @Nonnull JSElement element) {
         final JSDoWhileStatement doWhileStatement =
                 PsiTreeUtil.getParentOfType(element,
                         JSDoWhileStatement.class);
@@ -267,7 +269,7 @@ public class ControlFlowUtils {
         return PsiTreeUtil.isAncestor(body, element, true);
     }
 
-    private static boolean isInForStatementBody(@NotNull JSElement element) {
+    private static boolean isInForStatementBody(@Nonnull JSElement element) {
         final JSForStatement forStatement =
                 PsiTreeUtil.getParentOfType(element, JSForStatement.class);
         if (forStatement == null) {
@@ -278,7 +280,7 @@ public class ControlFlowUtils {
     }
 
     private static boolean isInForeachStatementBody(
-            @NotNull JSElement element) {
+            @Nonnull JSElement element) {
         final JSForInStatement foreachStatement =
                 PsiTreeUtil.getParentOfType(element,
                         JSForInStatement.class);
@@ -289,7 +291,7 @@ public class ControlFlowUtils {
         return PsiTreeUtil.isAncestor(body, element, true);
     }
 
-    public static JSStatement stripBraces(@NotNull JSStatement branch) {
+    public static JSStatement stripBraces(@Nonnull JSStatement branch) {
         if (branch instanceof JSBlockStatement) {
             final JSBlockStatement block = (JSBlockStatement) branch;
             final JSStatement[] statements = block.getStatements();
@@ -304,8 +306,8 @@ public class ControlFlowUtils {
     }
 
     public static boolean statementCompletesWithStatement(
-            @NotNull JSStatement containingStatement,
-            @NotNull JSStatement statement) {
+            @Nonnull JSStatement containingStatement,
+            @Nonnull JSStatement statement) {
         JSElement statementToCheck = statement;
         while (true) {
             if (statementToCheck.equals(containingStatement)) {
@@ -333,8 +335,8 @@ public class ControlFlowUtils {
     }
 
     public static boolean blockCompletesWithStatement(
-            @NotNull JSBlockStatement body,
-            @NotNull JSStatement statement) {
+            @Nonnull JSBlockStatement body,
+            @Nonnull JSStatement statement) {
         JSElement statementToCheck = statement;
         while (true) {
             if (statementToCheck == null) {
@@ -365,19 +367,19 @@ public class ControlFlowUtils {
         }
     }
 
-    private static boolean isLoop(@NotNull JSElement element) {
+    private static boolean isLoop(@Nonnull JSElement element) {
         return element instanceof JSLoopStatement;
     }
 
     @Nullable
     private static JSElement getContainingStatement(
-            @NotNull JSElement statement) {
+            @Nonnull JSElement statement) {
         return PsiTreeUtil
                 .getParentOfType(statement, JSStatement.class);
     }
 
-    private static boolean statementIsLastInBlock(@NotNull JSBlockStatement block,
-                                                  @NotNull JSStatement statement) {
+    private static boolean statementIsLastInBlock(@Nonnull JSBlockStatement block,
+                                                  @Nonnull JSStatement statement) {
         final JSStatement[] statements = block.getStatements();
         for (int i = statements.length - 1; i >= 0; i--) {
             final JSStatement childStatement = statements[i];
@@ -399,7 +401,7 @@ public class ControlFlowUtils {
         }
 
         @Override public void visitJSReturnStatement(
-                @NotNull JSReturnStatement returnStatement) {
+                @Nonnull JSReturnStatement returnStatement) {
             if (m_found) {
                 return;
             }
@@ -412,7 +414,7 @@ public class ControlFlowUtils {
         private boolean m_found = false;
         private final JSStatement m_target;
 
-        private BreakFinder(@NotNull JSStatement target) {
+        private BreakFinder(@Nonnull JSStatement target) {
             super();
             m_target = target;
         }
@@ -422,7 +424,7 @@ public class ControlFlowUtils {
         }
 
         @Override public void visitJSBreakStatement(
-                @NotNull JSBreakStatement breakStatement) {
+                @Nonnull JSBreakStatement breakStatement) {
             if (m_found) {
                 return;
             }
@@ -442,7 +444,7 @@ public class ControlFlowUtils {
         private boolean m_found = false;
         private final JSStatement m_target;
 
-        private ContinueFinder(@NotNull JSStatement target) {
+        private ContinueFinder(@Nonnull JSStatement target) {
             super();
             m_target = target;
         }
@@ -452,7 +454,7 @@ public class ControlFlowUtils {
         }
 
         @Override public void visitJSContinueStatement(
-                @NotNull JSContinueStatement continueStatement) {
+                @Nonnull JSContinueStatement continueStatement) {
             if (m_found) {
                 return;
             }
@@ -468,13 +470,13 @@ public class ControlFlowUtils {
         }
     }
 
-    public static boolean isInExitStatement(@NotNull JSExpression expression) {
+    public static boolean isInExitStatement(@Nonnull JSExpression expression) {
         return isInReturnStatementArgument(expression) ||
                 isInThrowStatementArgument(expression);
     }
 
     private static boolean isInReturnStatementArgument(
-            @NotNull JSExpression expression) {
+            @Nonnull JSExpression expression) {
         final JSReturnStatement returnStatement =
                 PsiTreeUtil
                         .getParentOfType(expression, JSReturnStatement.class);
@@ -482,7 +484,7 @@ public class ControlFlowUtils {
     }
 
     private static boolean isInThrowStatementArgument(
-            @NotNull JSExpression expression) {
+            @Nonnull JSExpression expression) {
         final JSThrowStatement throwStatement =
                 PsiTreeUtil
                         .getParentOfType(expression, JSThrowStatement.class);

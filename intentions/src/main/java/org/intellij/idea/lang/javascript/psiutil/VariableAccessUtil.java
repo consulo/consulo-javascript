@@ -20,7 +20,7 @@ import com.intellij.lang.javascript.psi.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.containers.ArrayListSet;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -151,9 +151,9 @@ public class VariableAccessUtil {
         private final Set<JSVariable> candidateSymbols;
         private       boolean         assigned;
 
-        public VariableAssignedVisitor(@NotNull JSVariable      variable,
-                                       @NotNull JSElement       context,
-                                       @NotNull Set<JSVariable> notUpdatedSymbols) {
+        public VariableAssignedVisitor(@Nonnull JSVariable      variable,
+                                       @Nonnull JSElement       context,
+                                       @Nonnull Set<JSVariable> notUpdatedSymbols) {
             this.variable          = variable;
             this.context           = context;
             this.notUpdatedSymbols = notUpdatedSymbols;
@@ -162,10 +162,10 @@ public class VariableAccessUtil {
             this.candidateSymbols.add(variable);
         }
 
-        private VariableAssignedVisitor(@NotNull JSVariable      variable,
-                                        @NotNull JSElement       context,
-                                        @NotNull Set<JSVariable> notUpdatedSymbols,
-                                        @NotNull Set<JSVariable> candidateSymbols) {
+        private VariableAssignedVisitor(@Nonnull JSVariable      variable,
+                                        @Nonnull JSElement       context,
+                                        @Nonnull Set<JSVariable> notUpdatedSymbols,
+                                        @Nonnull Set<JSVariable> candidateSymbols) {
             this.variable          = variable;
             this.context           = context;
             this.notUpdatedSymbols = notUpdatedSymbols;
@@ -252,17 +252,17 @@ public class VariableAccessUtil {
         private final JSVariable variable;
         private       boolean    assignedFrom;
 
-        public VariableAssignedFromVisitor(@NotNull JSVariable variable) {
+        public VariableAssignedFromVisitor(@Nonnull JSVariable variable) {
             this.variable = variable;
         }
 
-        @Override public void visitJSElement(@NotNull JSElement element) {
+        @Override public void visitJSElement(@Nonnull JSElement element) {
             if (!this.assignedFrom) {
                 super.visitJSElement(element);
             }
         }
 
-        @Override public void visitJSAssignmentExpression(@NotNull JSAssignmentExpression assignment) {
+        @Override public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression assignment) {
             if (!this.assignedFrom) {
                 super.visitJSAssignmentExpression(assignment);
 
@@ -270,7 +270,7 @@ public class VariableAccessUtil {
             }
         }
 
-        @Override public void visitJSVarStatement(@NotNull JSVarStatement statement) {
+        @Override public void visitJSVarStatement(@Nonnull JSVarStatement statement) {
             if (!this.assignedFrom) {
                 super.visitJSVarStatement(statement);
 
@@ -297,14 +297,15 @@ public class VariableAccessUtil {
     }
 
     private static class VariableReturnedVisitor extends JSRecursiveElementVisitor {
-        @NotNull private final JSVariable variable;
+        @Nonnull
+		private final JSVariable variable;
         private                boolean    returned;
 
-        public VariableReturnedVisitor(@NotNull JSVariable variable) {
+        public VariableReturnedVisitor(@Nonnull JSVariable variable) {
             this.variable = variable;
         }
 
-        @Override public void visitJSReturnStatement(@NotNull JSReturnStatement returnStatement){
+        @Override public void visitJSReturnStatement(@Nonnull JSReturnStatement returnStatement){
             if (!this.returned) {
                 super.visitJSReturnStatement(returnStatement);
                 this.returned = VariableAccessUtil.mayEvaluateToVariable(returnStatement.getExpression(), this.variable);
@@ -320,18 +321,18 @@ public class VariableAccessUtil {
         private final JSVariable variable;
         private       boolean    accessed;
 
-        public ArrayContentsAccessedVisitor(@NotNull JSVariable variable) {
+        public ArrayContentsAccessedVisitor(@Nonnull JSVariable variable) {
             this.variable = variable;
         }
 
-        @Override public void visitJSForInStatement(@NotNull JSForInStatement statement) {
+        @Override public void visitJSForInStatement(@Nonnull JSForInStatement statement) {
             if (!this.accessed) {
                 super.visitJSForInStatement(statement);
                 this.checkQualifier(statement.getCollectionExpression());
             }
         }
 
-        @Override public void visitJSIndexedPropertyAccessExpression(@NotNull JSIndexedPropertyAccessExpression accessExpression) {
+        @Override public void visitJSIndexedPropertyAccessExpression(@Nonnull JSIndexedPropertyAccessExpression accessExpression) {
             if (!this.accessed) {
                 super.visitJSIndexedPropertyAccessExpression(accessExpression);
 
@@ -361,25 +362,25 @@ public class VariableAccessUtil {
         private final JSVariable  variable;
         private       boolean     assigned;
 
-        public ArrayContentsAssignedVisitor(@NotNull JSVariable variable) {
+        public ArrayContentsAssignedVisitor(@Nonnull JSVariable variable) {
             this.variable = variable;
         }
 
-        @Override public void visitJSAssignmentExpression(@NotNull JSAssignmentExpression assignment) {
+        @Override public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression assignment) {
             if (!this.assigned) {
                 super.visitJSAssignmentExpression(assignment);
                 this.checkExpression(null, assignment.getLOperand());
             }
         }
 
-        @Override public void visitJSPrefixExpression(@NotNull JSPrefixExpression expression) {
+        @Override public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
             if (!this.assigned) {
                 super.visitJSPrefixExpression(expression);
                 this.checkExpression(expression.getOperationSign(), expression.getExpression());
             }
         }
 
-        @Override public void visitJSPostfixExpression(@NotNull JSPostfixExpression expression) {
+        @Override public void visitJSPostfixExpression(@Nonnull JSPostfixExpression expression) {
             if (!this.assigned) {
                 super.visitJSPostfixExpression(expression);
                 this.checkExpression(expression.getOperationSign(), expression.getExpression());
@@ -420,13 +421,14 @@ public class VariableAccessUtil {
 
     private static class UsedVariableVisitor extends JSRecursiveElementVisitor {
 
-        @NotNull private final Set<JSVariable> variables;
+        @Nonnull
+		private final Set<JSVariable> variables;
 
         public UsedVariableVisitor() {
             this.variables = new HashSet<JSVariable>();
         }
 
-        @Override public void visitJSReferenceExpression(@NotNull JSReferenceExpression ref) {
+        @Override public void visitJSReferenceExpression(@Nonnull JSReferenceExpression ref) {
             super.visitJSReferenceExpression(ref);
 
             final PsiElement referent = ref.resolve();

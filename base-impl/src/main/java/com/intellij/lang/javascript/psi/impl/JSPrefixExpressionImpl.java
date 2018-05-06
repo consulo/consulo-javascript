@@ -16,8 +16,8 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.lang.ASTNode;
@@ -69,7 +69,7 @@ public class JSPrefixExpressionImpl extends JSExpressionImpl implements JSPrefix
 	}
 
 	@Override
-	public void accept(@NotNull PsiElementVisitor visitor)
+	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
 		{
@@ -82,7 +82,7 @@ public class JSPrefixExpressionImpl extends JSExpressionImpl implements JSPrefix
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public JavaScriptType getType()
 	{

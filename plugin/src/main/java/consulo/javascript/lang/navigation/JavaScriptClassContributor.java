@@ -20,7 +20,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
@@ -36,7 +37,7 @@ import consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
  */
 public class JavaScriptClassContributor implements ChooseByNameContributor
 {
-	@NotNull
+	@Nonnull
 	@Override
 	public String[] getNames(Project project, boolean includeNonProjectItems)
 	{
@@ -47,7 +48,7 @@ public class JavaScriptClassContributor implements ChooseByNameContributor
 		return ArrayUtil.toStringArray(result);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public NavigationItem[] getItemsByName(String name, final String pattern, Project project, boolean includeNonProjectItems)
 	{

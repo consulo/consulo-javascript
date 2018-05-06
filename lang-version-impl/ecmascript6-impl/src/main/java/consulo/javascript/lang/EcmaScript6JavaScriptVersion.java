@@ -16,7 +16,8 @@
 
 package consulo.javascript.lang;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
@@ -40,7 +41,7 @@ public class EcmaScript6JavaScriptVersion extends BaseJavaScriptLanguageVersion 
 		}
 	};
 
-	@NotNull
+	@Nonnull
 	public static EcmaScript6JavaScriptVersion getInstance()
 	{
 		return JavaScriptLanguage.INSTANCE.findVersionByClass(EcmaScript6JavaScriptVersion.class);
@@ -58,27 +59,27 @@ public class EcmaScript6JavaScriptVersion extends BaseJavaScriptLanguageVersion 
 		addFeature(JavaScriptFeature.SPREAD_OPERATOR);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getPresentableName()
 	{
 		return "ECMAScript 6";
 	}
-	@NotNull
+	@Nonnull
 	@Override
 	public Lexer createLexer()
 	{
 		return ourLexerFactory.create();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public SyntaxHighlighter getSyntaxHighlighter()
 	{
 		return new JavaScriptHighlighter(ourLexerFactory);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public PsiParser createParser()
 	{

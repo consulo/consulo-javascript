@@ -1,5 +1,7 @@
 package com.sixrr.inspectjs.assignment;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSAssignmentExpression;
@@ -14,24 +16,23 @@ import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.EquivalenceChecker;
 import com.sixrr.inspectjs.utils.SideEffectChecker;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 
 public class ReplaceAssignmentWithOperatorAssignmentJSInspection
         extends JavaScriptInspection {
     @Override
-	@NotNull
+	@Nonnull
     public String getID() {
         return "AssignmentReplaceableWithOperatorAssignmentJS";
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("assignment.replaceable.with.operator.assignment.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.ASSIGNMENT_GROUP_NAME;
     }
@@ -83,7 +84,7 @@ public class ReplaceAssignmentWithOperatorAssignmentJSInspection
         }
 
         @Override
-		@NotNull
+		@Nonnull
         public String getName() {
             return m_name;
         }
@@ -102,7 +103,7 @@ public class ReplaceAssignmentWithOperatorAssignmentJSInspection
     private static class ReplaceAssignmentWithOperatorAssignmentVisitor
             extends BaseInspectionVisitor {
 
-        @Override public void visitJSAssignmentExpression(@NotNull JSAssignmentExpression assignment) {
+        @Override public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression assignment) {
             super.visitJSAssignmentExpression(assignment);
 
             final IElementType sign = assignment.getOperationSign();

@@ -24,7 +24,7 @@ import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.FindReferenceUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Iterator;
 
@@ -32,13 +32,13 @@ public class JSMergeDeclarationAndInitializationIntention extends JSIntention {
     @NonNls private static final String JS_VAR_PREFIX = "var ";
 
     @Override
-	@NotNull
+	@Nonnull
     protected JSElementPredicate getElementPredicate() {
         return new Predicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         assert (element instanceof JSVarStatement);
 
         final JSVarStatement varStatement      = (JSVarStatement) element;
@@ -79,7 +79,7 @@ public class JSMergeDeclarationAndInitializationIntention extends JSIntention {
 
     private static class Predicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (!(element instanceof JSVarStatement)) {
                 return false;
             }

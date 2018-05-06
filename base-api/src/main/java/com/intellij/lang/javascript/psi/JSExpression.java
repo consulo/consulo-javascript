@@ -16,7 +16,8 @@
 
 package com.intellij.lang.javascript.psi;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.util.ArrayFactory;
 import consulo.annotations.RequiredReadAction;
 import consulo.javascript.lang.psi.JavaScriptType;
@@ -31,7 +32,7 @@ public interface JSExpression extends JSElement
 
 	public static ArrayFactory<JSExpression> ARRAY_FACTORY = new ArrayFactory<JSExpression>()
 	{
-		@NotNull
+		@Nonnull
 		@Override
 		public JSExpression[] create(int count)
 		{
@@ -39,10 +40,10 @@ public interface JSExpression extends JSElement
 		}
 	};
 
-	@NotNull
+	@Nonnull
 	JSExpression replace(JSExpression other);
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	JavaScriptType getType();
 }

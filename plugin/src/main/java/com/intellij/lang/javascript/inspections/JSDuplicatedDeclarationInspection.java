@@ -16,8 +16,9 @@
 
 package com.intellij.lang.javascript.inspections;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
@@ -44,21 +45,21 @@ public class JSDuplicatedDeclarationInspection extends JSInspection
 	private static final String SHORT_NAME = "JSDuplicatedDeclaration";
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getGroupDisplayName()
 	{
 		return JavaScriptBundle.message("js.inspection.group.name");
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getDisplayName()
 	{
 		return JavaScriptBundle.message("js.duplicated.declaration.inspection.name");
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	@NonNls
 	public String getShortName()
 	{
@@ -227,7 +228,7 @@ public class JSDuplicatedDeclarationInspection extends JSInspection
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public HighlightDisplayLevel getDefaultLevel()
 	{
 		return HighlightDisplayLevel.WARNING;

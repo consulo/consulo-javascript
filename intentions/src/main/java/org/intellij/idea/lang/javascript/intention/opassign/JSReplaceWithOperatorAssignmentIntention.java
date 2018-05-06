@@ -15,6 +15,8 @@
  */
 package org.intellij.idea.lang.javascript.intention.opassign;
 
+import javax.annotation.Nonnull;
+
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
@@ -22,7 +24,6 @@ import org.intellij.idea.lang.javascript.psiutil.EquivalenceChecker;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.SideEffectChecker;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NotNull;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSAssignmentExpression;
@@ -45,13 +46,13 @@ public class JSReplaceWithOperatorAssignmentIntention extends JSMutablyNamedInte
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public JSElementPredicate getElementPredicate() {
         return new Predicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         final JSAssignmentExpression exp = (JSAssignmentExpression) element;
         final JSBinaryExpression     rhs = (JSBinaryExpression) exp.getROperand();
         final JSExpression           lhs = exp.getLOperand();
@@ -69,7 +70,7 @@ public class JSReplaceWithOperatorAssignmentIntention extends JSMutablyNamedInte
 
     private static class Predicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (!(element instanceof JSAssignmentExpression)) {
                 return false;
             }

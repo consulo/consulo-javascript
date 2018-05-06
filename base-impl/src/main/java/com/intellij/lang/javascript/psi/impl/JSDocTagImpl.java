@@ -16,8 +16,9 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.codeInsight.daemon.EmptyResolveMessageProvider;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JavaScriptBundle;
@@ -55,13 +56,13 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag
 	}
 
 	@Override
-	public PsiElement setName(@NonNls @NotNull final String name) throws IncorrectOperationException
+	public PsiElement setName(@NonNls @Nonnull final String name) throws IncorrectOperationException
 	{
 		throw new IncorrectOperationException();
 	}
 
 	@Override
-	public void accept(@NotNull final PsiElementVisitor visitor)
+	public void accept(@Nonnull final PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
 		{
@@ -79,7 +80,7 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag
 		return findChildByClass(JSDocTagValue.class);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public PsiReference[] getReferences()
 	{
@@ -197,7 +198,7 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag
 		}
 
 		@Override
-		public PsiElement bindToElement(@NotNull final PsiElement element) throws IncorrectOperationException
+		public PsiElement bindToElement(@Nonnull final PsiElement element) throws IncorrectOperationException
 		{
 			return null;
 		}

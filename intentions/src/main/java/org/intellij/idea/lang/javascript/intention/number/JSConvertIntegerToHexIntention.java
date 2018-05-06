@@ -15,11 +15,12 @@
  */
 package org.intellij.idea.lang.javascript.intention.number;
 
+import javax.annotation.Nonnull;
+
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.NumberUtil;
-import org.jetbrains.annotations.NotNull;
 
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
 import com.intellij.psi.PsiElement;
@@ -27,13 +28,13 @@ import com.intellij.util.IncorrectOperationException;
 
 public class JSConvertIntegerToHexIntention extends JSIntention {
     @Override
-	@NotNull
+	@Nonnull
     public JSElementPredicate getElementPredicate() {
         return new ConvertIntegerToHexPredicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         final JSLiteralExpression exp = (JSLiteralExpression) element;
 
         JSElementFactory.replaceExpression(exp, "0x" + NumberUtil.getLiteralNumber(exp).toString(16));
@@ -41,7 +42,7 @@ public class JSConvertIntegerToHexIntention extends JSIntention {
 
     private static class ConvertIntegerToHexPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (!(element instanceof JSLiteralExpression)) {
                 return false;
             }

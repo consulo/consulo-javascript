@@ -19,7 +19,8 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSAttributeNameValuePair;
@@ -45,22 +46,22 @@ public class JSAttributeNameValuePairType extends JSStubElementType<JSAttributeN
 		super("ATTRIBUTE_NAME_VALUE_PAIR");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public PsiElement createElement(@NotNull ASTNode astNode)
+	public PsiElement createElement(@Nonnull ASTNode astNode)
 	{
 		return new JSAttributeNameValuePairImpl(astNode);
 	}
 
 	@Override
-	public JSAttributeNameValuePair createPsi(@NotNull JSAttributeNameValuePairStub stub)
+	public JSAttributeNameValuePair createPsi(@Nonnull JSAttributeNameValuePairStub stub)
 	{
 		return new JSAttributeNameValuePairImpl(stub);
 	}
 
 	@RequiredReadAction
 	@Override
-	public JSAttributeNameValuePairStub createStub(@NotNull JSAttributeNameValuePair psi, StubElement parentStub)
+	public JSAttributeNameValuePairStub createStub(@Nonnull JSAttributeNameValuePair psi, StubElement parentStub)
 	{
 		String name = psi.getName();
 		String simpleValue = psi.getSimpleValue();
@@ -68,15 +69,15 @@ public class JSAttributeNameValuePairType extends JSStubElementType<JSAttributeN
 	}
 
 	@Override
-	public void serialize(@NotNull JSAttributeNameValuePairStub stub, @NotNull StubOutputStream dataStream) throws IOException
+	public void serialize(@Nonnull JSAttributeNameValuePairStub stub, @Nonnull StubOutputStream dataStream) throws IOException
 	{
 		dataStream.writeName(stub.getName());
 		dataStream.writeName(stub.getValue());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public JSAttributeNameValuePairStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException
+	public JSAttributeNameValuePairStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
 	{
 		StringRef name = dataStream.readName();
 		StringRef value = dataStream.readName();

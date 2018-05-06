@@ -22,8 +22,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.hint.QuestionAction;
 import com.intellij.codeInsight.navigation.NavigationUtil;
@@ -87,34 +88,34 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getText()
 	{
 		return JavaScriptBundle.message(isFunction ? "flex.import.function" : "flex.import.class", calculatedClass);
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getName()
 	{
 		return getText();
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getFamilyName()
 	{
 		return getText();
 	}
 
 	@Override
-	public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor)
+	public void applyFix(@Nonnull final Project project, @Nonnull final ProblemDescriptor descriptor)
 	{
 		invoke(project, myEditor, descriptor.getPsiElement().getContainingFile());
 	}
 
 	@Override
-	public boolean isAvailable(@NotNull final Project project, final Editor editor, final PsiFile file)
+	public boolean isAvailable(@Nonnull final Project project, final Editor editor, final PsiFile file)
 	{
 		if(!myReference.getElement().isValid())
 		{
@@ -218,7 +219,7 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
 	}
 
 	@Override
-	public void invoke(@NotNull final Project project, final Editor editor, final PsiFile file)
+	public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file)
 	{
 		final Collection<JSQualifiedNamedElement> candidates = getCandidates(editor, file);
 

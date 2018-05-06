@@ -6,7 +6,7 @@ import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.ui.SingleCheckboxOptionsPanel;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -17,19 +17,19 @@ public class EmptyStatementBodyJSInspection extends JavaScriptInspection {
     public boolean m_reportEmptyBlocks = false;
 
     @Override
-	@NotNull
+	@Nonnull
     public String getID() {
         return "StatementWithEmptyBodyJS";
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("statement.with.empty.body.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
@@ -61,7 +61,7 @@ public class EmptyStatementBodyJSInspection extends JavaScriptInspection {
 
     private class EmptyStatementVisitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSDoWhileStatement(@NotNull JSDoWhileStatement statement) {
+        @Override public void visitJSDoWhileStatement(@Nonnull JSDoWhileStatement statement) {
             super.visitJSDoWhileStatement(statement);
 
             final JSStatement body = statement.getBody();
@@ -74,7 +74,7 @@ public class EmptyStatementBodyJSInspection extends JavaScriptInspection {
             registerStatementError(statement, statement);
         }
 
-        @Override public void visitJSWhileStatement(@NotNull JSWhileStatement statement) {
+        @Override public void visitJSWhileStatement(@Nonnull JSWhileStatement statement) {
             super.visitJSWhileStatement(statement);
 
             final JSStatement body = statement.getBody();
@@ -87,7 +87,7 @@ public class EmptyStatementBodyJSInspection extends JavaScriptInspection {
             registerStatementError(statement, statement);
         }
 
-        @Override public void visitJSForStatement(@NotNull JSForStatement statement) {
+        @Override public void visitJSForStatement(@Nonnull JSForStatement statement) {
             super.visitJSForStatement(statement);
 
             final JSStatement body = statement.getBody();
@@ -101,7 +101,7 @@ public class EmptyStatementBodyJSInspection extends JavaScriptInspection {
         }
 
         @Override
-		public void visitJSForInStatement(@NotNull JSForInStatement statement) {
+		public void visitJSForInStatement(@Nonnull JSForInStatement statement) {
             super.visitJSForInStatement(statement);
 
             final JSStatement body = statement.getBody();
@@ -114,7 +114,7 @@ public class EmptyStatementBodyJSInspection extends JavaScriptInspection {
             registerStatementError(statement, statement);
         }
 
-        @Override public void visitJSIfStatement(@NotNull JSIfStatement statement) {
+        @Override public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
             super.visitJSIfStatement(statement);
 
             final JSStatement thenBranch = statement.getThen();

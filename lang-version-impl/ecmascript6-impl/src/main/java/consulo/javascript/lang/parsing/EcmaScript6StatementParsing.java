@@ -16,7 +16,8 @@
 
 package consulo.javascript.lang.parsing;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -95,7 +96,7 @@ public class EcmaScript6StatementParsing extends StatementParsing
 		parseClassNoMarker(builder, builder.mark());
 	}
 
-	private void parseClassNoMarker(final PsiBuilder builder, final @NotNull PsiBuilder.Marker clazz)
+	private void parseClassNoMarker(final PsiBuilder builder, final @Nonnull PsiBuilder.Marker clazz)
 	{
 		builder.advanceLexer();
 		if(!JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(builder.getTokenType()))

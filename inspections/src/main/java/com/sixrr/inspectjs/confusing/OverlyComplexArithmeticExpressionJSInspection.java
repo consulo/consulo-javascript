@@ -9,7 +9,7 @@ import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.ui.SingleIntegerFieldOptionsPanel;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.HashSet;
@@ -22,13 +22,13 @@ public class OverlyComplexArithmeticExpressionJSInspection extends JavaScriptIns
     public int m_limit = TERM_LIMIT;
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("overly.complex.arithmetic.expression.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
@@ -64,12 +64,12 @@ public class OverlyComplexArithmeticExpressionJSInspection extends JavaScriptIns
             arithmeticTokens.add(JSTokenTypes.PERC);
         }
 
-        @Override public void visitJSBinaryExpression(@NotNull JSBinaryExpression expression) {
+        @Override public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             checkExpression(expression);
         }
 
-        @Override public void visitJSPrefixExpression(@NotNull JSPrefixExpression expression) {
+        @Override public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
             super.visitJSPrefixExpression(expression);
             checkExpression(expression);
         }

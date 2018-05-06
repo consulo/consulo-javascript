@@ -21,14 +21,15 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.chromium.sdk.Breakpoint;
 import org.chromium.sdk.DebugContext;
 import org.chromium.sdk.JavascriptVm;
 import org.chromium.sdk.JavascriptVmFactory;
 import org.chromium.sdk.Script;
 import org.chromium.sdk.StandaloneVm;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.process.ProcessHandler;
@@ -72,14 +73,14 @@ public class V8DebugProcess extends XDebugProcess
 
 	private Map<Breakpoint, XLineBreakpoint> myBreakpoints = new HashMap<Breakpoint, XLineBreakpoint>();
 
-	public V8DebugProcess(@NotNull XDebugSession session, ExecutionResult result, int port) throws ExecutionException
+	public V8DebugProcess(@Nonnull XDebugSession session, ExecutionResult result, int port) throws ExecutionException
 	{
 		super(session);
 		myScriptListPanel = new JavaScriptListPanel<Script>(session.getProject())
 		{
 			@Nullable
 			@Override
-			public VirtualFile toVirtualFile(@NotNull Script value, boolean toOpen)
+			public VirtualFile toVirtualFile(@Nonnull Script value, boolean toOpen)
 			{
 				return V8ScriptUtil.toVirtualFile(value, toOpen);
 			}
@@ -109,14 +110,14 @@ public class V8DebugProcess extends XDebugProcess
 		return myVm != null && myVm.isAttached();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public XDebuggerEditorsProvider getEditorsProvider()
 	{
 		return JavaScriptEditorsProvider.INSTANCE;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public ExecutionConsole createConsole()
 	{
@@ -129,7 +130,7 @@ public class V8DebugProcess extends XDebugProcess
 		return false;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public XBreakpointHandler<?>[] getBreakpointHandlers()
 	{
@@ -137,7 +138,7 @@ public class V8DebugProcess extends XDebugProcess
 				new XBreakpointHandler<XLineBreakpoint<XBreakpointProperties>>(JavaScriptLineBreakpointType.class)
 				{
 					@Override
-					public void registerBreakpoint(@NotNull final XLineBreakpoint lineBreakpoint)
+					public void registerBreakpoint(@Nonnull final XLineBreakpoint lineBreakpoint)
 					{
 						String presentableFilePath = lineBreakpoint.getPresentableFilePath();
 						int line = lineBreakpoint.getLine();
@@ -161,7 +162,7 @@ public class V8DebugProcess extends XDebugProcess
 					}
 
 					@Override
-					public void unregisterBreakpoint(@NotNull XLineBreakpoint breakpoint, boolean b)
+					public void unregisterBreakpoint(@Nonnull XLineBreakpoint breakpoint, boolean b)
 					{
 						String presentableFilePath = breakpoint.getPresentableFilePath();
 						myVm.setBreakpoint(new Breakpoint.Target.ScriptName(presentableFilePath), breakpoint.getLine(), Breakpoint.EMPTY_VALUE, false, null, null, null);
@@ -249,18 +250,18 @@ public class V8DebugProcess extends XDebugProcess
 	}
 
 	@Override
-	public void runToPosition(@NotNull XSourcePosition xSourcePosition)
+	public void runToPosition(@Nonnull XSourcePosition xSourcePosition)
 	{
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public XDebugTabLayouter createTabLayouter()
 	{
 		return new XDebugTabLayouter()
 		{
 			@Override
-			public void registerAdditionalContent(@NotNull RunnerLayoutUi ui)
+			public void registerAdditionalContent(@Nonnull RunnerLayoutUi ui)
 			{
 				Content content = ui.createContent("ScriptListView", myScriptListPanel, "Scripts", JavaScriptIcons.JavaScript, null);
 				content.setCloseable(false);

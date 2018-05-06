@@ -1,9 +1,9 @@
 package consulo.javascript.client.module.sdk;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.Icon;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.OrderRootType;
@@ -16,7 +16,7 @@ import consulo.roots.types.SourcesOrderRootType;
  */
 public class ClientJavaScriptSdkType extends SdkType
 {
-	@NotNull
+	@Nonnull
 	public static ClientJavaScriptSdkType getInstance()
 	{
 		return EP_NAME.findExtension(ClientJavaScriptSdkType.class);
@@ -65,7 +65,7 @@ public class ClientJavaScriptSdkType extends SdkType
 		return currentSdkName;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getPresentableName()
 	{

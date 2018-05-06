@@ -15,12 +15,13 @@
  */
 package org.intellij.idea.lang.javascript.intention.constant;
 
+import javax.annotation.Nonnull;
+
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.ExpressionUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NotNull;
 
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
@@ -32,13 +33,13 @@ import com.intellij.util.IncorrectOperationException;
 
 public class JSConstantExpressionIntention extends JSIntention {
     @Override
-	@NotNull
+	@Nonnull
     protected JSElementPredicate getElementPredicate() {
         return new ConstantExpressionPredicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         final JSExpression  expression = (JSExpression) element;
         final Object        value      = ExpressionUtil.computeConstantExpression(expression);
         final String        newExpression;
@@ -53,7 +54,7 @@ public class JSConstantExpressionIntention extends JSIntention {
 
     private static class ConstantExpressionPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (!(element instanceof JSExpression)) {
                 return false;
             }

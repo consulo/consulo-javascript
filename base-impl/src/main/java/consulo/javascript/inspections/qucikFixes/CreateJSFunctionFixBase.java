@@ -19,7 +19,7 @@ package consulo.javascript.inspections.qucikFixes;
 
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.PropertyKey;
 import com.intellij.codeInsight.template.Template;
 import com.intellij.lang.javascript.JavaScriptBundle;
@@ -47,14 +47,14 @@ public abstract class CreateJSFunctionFixBase extends BaseCreateFix
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getName()
 	{
 		return JavaScriptBundle.message(myIntentionNameKey, myName);
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getFamilyName()
 	{
 		return JavaScriptBundle.message("javascript.create.function.intention.family");

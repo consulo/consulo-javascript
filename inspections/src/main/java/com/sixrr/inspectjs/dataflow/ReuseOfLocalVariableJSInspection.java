@@ -1,5 +1,7 @@
 package com.sixrr.inspectjs.dataflow;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.psi.PsiElement;
@@ -10,27 +12,27 @@ import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 public class ReuseOfLocalVariableJSInspection
         extends JavaScriptInspection {
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message(
                 "reuse.of.local.variable.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.DATA_FLOW_ISSUES;
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String buildErrorString(Object... args) {
         return InspectionJSBundle.message(
                 "reuse.of.local.variable.problem.descriptor");
@@ -46,7 +48,7 @@ public class ReuseOfLocalVariableJSInspection
             extends BaseInspectionVisitor {
 
         @Override public void visitJSAssignmentExpression(
-                @NotNull JSAssignmentExpression assignment) {
+                @Nonnull JSAssignmentExpression assignment) {
             super.visitJSAssignmentExpression(assignment);
             if (assignment.getROperand()==null) {
                 return;
@@ -162,8 +164,8 @@ public class ReuseOfLocalVariableJSInspection
          */
         @Nullable
         public static PsiElement getChildWhichContainsElement(
-                @NotNull JSBlockStatement ancestor,
-                @NotNull PsiElement descendant) {
+                @Nonnull JSBlockStatement ancestor,
+                @Nonnull PsiElement descendant) {
             PsiElement element = descendant;
             while (!element.equals(ancestor)) {
                 descendant = element;

@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript.flex.importer;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -34,9 +34,9 @@ abstract class MemberInfo
 	boolean isPublic;
 	boolean isFinal;
 
-	abstract void dump(Abc abc, String indent, String attr, final @NotNull FlexByteCodeInformationProcessor processor);
+	abstract void dump(Abc abc, String indent, String attr, final @Nonnull FlexByteCodeInformationProcessor processor);
 
-	protected void dumpMetaData(String indent, final @NotNull FlexByteCodeInformationProcessor processor)
+	protected void dumpMetaData(String indent, final @Nonnull FlexByteCodeInformationProcessor processor)
 	{
 		if(metadata != null)
 		{

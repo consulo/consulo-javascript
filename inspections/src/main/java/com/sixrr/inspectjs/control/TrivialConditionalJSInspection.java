@@ -1,5 +1,7 @@
 package com.sixrr.inspectjs.control;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.psi.JSConditionalExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -10,26 +12,25 @@ import com.intellij.util.IncorrectOperationException;
 import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.BoolUtils;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 
 public class TrivialConditionalJSInspection
         extends JavaScriptInspection {
     private final TrivialConditionalFix fix = new TrivialConditionalFix();
 
     @Override
-	@NotNull
+	@Nonnull
     public String getID() {
         return "RedundantConditionalExpressionJS";
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("redundant.conditional.expression.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
@@ -70,7 +71,7 @@ public class TrivialConditionalJSInspection
     private static class
             TrivialConditionalFix extends InspectionJSFix {
         @Override
-		@NotNull
+		@Nonnull
         public String getName() {
             return InspectionJSBundle.message("simplify.fix");
         }

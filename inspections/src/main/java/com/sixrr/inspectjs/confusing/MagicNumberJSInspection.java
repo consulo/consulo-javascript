@@ -9,7 +9,7 @@ import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import consulo.javascript.psi.JSSimpleLiteralExpression;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -38,19 +38,19 @@ public class MagicNumberJSInspection extends JavaScriptInspection {
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("magic.number.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String buildErrorString(Object... args) {
         return InspectionJSBundle.message(
                 "magic.number.problem.descriptor");
@@ -68,7 +68,7 @@ public class MagicNumberJSInspection extends JavaScriptInspection {
     private static class MagicNumberVisitor extends BaseInspectionVisitor {
 
         @Override public void visitJSLiteralExpression(
-                @NotNull JSSimpleLiteralExpression expression) {
+                @Nonnull JSSimpleLiteralExpression expression) {
             super.visitJSLiteralExpression(expression);
 
             final String text = expression.getText();

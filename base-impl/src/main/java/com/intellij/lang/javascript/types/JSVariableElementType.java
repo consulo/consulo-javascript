@@ -19,7 +19,8 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
@@ -75,22 +76,22 @@ public class JSVariableElementType extends JSQualifiedStubElementType<JSVariable
 				discriminatingParentType instanceof JSFileElementType;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public PsiElement createElement(@NotNull ASTNode astNode)
+	public PsiElement createElement(@Nonnull ASTNode astNode)
 	{
 		return new JSVariableImpl(astNode);
 	}
 
 	@Override
-	public JSVariable createPsi(@NotNull JSVariableStub stub)
+	public JSVariable createPsi(@Nonnull JSVariableStub stub)
 	{
 		return new JSVariableImpl(stub);
 	}
 
 	@RequiredReadAction
 	@Override
-	public JSVariableStub createStub(@NotNull JSVariable psi, StubElement parentStub)
+	public JSVariableStub createStub(@Nonnull JSVariable psi, StubElement parentStub)
 	{
 		String name = psi.getName();
 		int flags = JSVariableStubImpl.buildFlags(psi);
@@ -101,7 +102,7 @@ public class JSVariableElementType extends JSQualifiedStubElementType<JSVariable
 	}
 
 	@Override
-	public void serialize(@NotNull JSVariableStub stub, @NotNull StubOutputStream dataStream) throws IOException
+	public void serialize(@Nonnull JSVariableStub stub, @Nonnull StubOutputStream dataStream) throws IOException
 	{
 		dataStream.writeName(stub.getName());
 		dataStream.writeVarInt(stub.getFlags());
@@ -110,9 +111,9 @@ public class JSVariableElementType extends JSQualifiedStubElementType<JSVariable
 		dataStream.writeName(stub.getQualifiedName());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public JSVariableStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException
+	public JSVariableStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
 	{
 		StringRef nameRef = dataStream.readName();
 		int flags = dataStream.readVarInt();

@@ -1,7 +1,7 @@
 package com.sixrr.inspectjs.naming;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -17,13 +17,13 @@ public class FunctionNamingConventionJSInspection extends ConventionInspection {
     private final RenameFix fix = new RenameFix();
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("function.naming.convention.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.NAMING_CONVENTIONS_GROUP_NAME;
     }

@@ -21,6 +21,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ControlFlowUtils;
@@ -29,7 +31,6 @@ import org.intellij.idea.lang.javascript.psiutil.EquivalenceChecker;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.psi.PsiElement;
@@ -46,13 +47,13 @@ public class JSReplaceIfWithSwitchIntention extends JSIntention {
     @NonNls private static final String BREAK_STATEMENT                = "\nbreak;";
 
     @Override
-	@NotNull
+	@Nonnull
     public JSElementPredicate getElementPredicate() {
         return new IfToSwitchPredicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element)
+	public void processIntention(@Nonnull PsiElement element)
             throws IncorrectOperationException {
         JSIfStatement ifStatement = (JSIfStatement) element.getParent();
 
@@ -322,7 +323,7 @@ public class JSReplaceIfWithSwitchIntention extends JSIntention {
     private static class IfToSwitchPredicate implements JSElementPredicate {
 
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             final PsiElement parent = element.getParent();
             if (!(parent instanceof JSIfStatement)) {
                 return false;

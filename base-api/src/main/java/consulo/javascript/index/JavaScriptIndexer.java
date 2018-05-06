@@ -1,6 +1,7 @@
 package consulo.javascript.index;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.javascript.psi.stubs.JSFileStub;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.stubs.IndexSink;
@@ -13,7 +14,7 @@ public abstract class JavaScriptIndexer
 {
 	public static final ExtensionPointName<JavaScriptIndexer> EP_NAME = ExtensionPointName.create("consulo.javascript.indexer");
 
-	public void indexFile(@NotNull JSFileStub fileStub, @NotNull final IndexSink sink)
+	public void indexFile(@Nonnull JSFileStub fileStub, @Nonnull final IndexSink sink)
 	{
 	}
 

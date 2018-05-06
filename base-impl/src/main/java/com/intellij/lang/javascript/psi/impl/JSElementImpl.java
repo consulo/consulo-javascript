@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.stubs.StubElement;
@@ -33,5 +33,5 @@ public abstract class JSElementImpl extends JSStubElementImpl<StubElement>
 	}
 
 	@Override
-	public abstract void accept(@NotNull PsiElementVisitor visitor);
+	public abstract void accept(@Nonnull PsiElementVisitor visitor);
 }

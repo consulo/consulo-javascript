@@ -16,7 +16,8 @@
 
 package com.intellij.lang.javascript.psi.stubs;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.psi.JSReferenceList;
 import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;
@@ -24,7 +25,7 @@ import consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 
 public class JSSuperClassIndex extends StringStubIndexExtension<JSReferenceList>
 {
-	@NotNull
+	@Nonnull
 	@Override
 	public StubIndexKey<String, JSReferenceList> getKey()
 	{

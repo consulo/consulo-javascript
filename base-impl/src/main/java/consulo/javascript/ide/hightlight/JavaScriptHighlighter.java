@@ -19,7 +19,8 @@ package consulo.javascript.ide.hightlight;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.JSDocElementType;
 import com.intellij.lang.javascript.JSDocTokenTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -121,12 +122,12 @@ public class JavaScriptHighlighter extends SyntaxHighlighterBase
 
 	private Factory<Lexer> myFactory;
 
-	public JavaScriptHighlighter(@NotNull Factory<Lexer> factory)
+	public JavaScriptHighlighter(@Nonnull Factory<Lexer> factory)
 	{
 		myFactory = factory;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Lexer getHighlightingLexer()
 	{
@@ -134,7 +135,7 @@ public class JavaScriptHighlighter extends SyntaxHighlighterBase
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public TextAttributesKey[] getTokenHighlights(IElementType tokenType)
 	{
 		return pack(keys1.get(tokenType), keys2.get(tokenType));

@@ -19,7 +19,8 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSClass;
@@ -54,35 +55,35 @@ public class JSVarStatementElementType extends JSStubElementType<JSVarStatementS
 		return element instanceof JSClass || element instanceof JSPackageStatement || element instanceof JSFile;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public PsiElement createElement(@NotNull ASTNode astNode)
+	public PsiElement createElement(@Nonnull ASTNode astNode)
 	{
 		return new JSVarStatementImpl(astNode);
 	}
 
 	@Override
-	public JSVarStatement createPsi(@NotNull JSVarStatementStub stub)
+	public JSVarStatement createPsi(@Nonnull JSVarStatementStub stub)
 	{
 		return new JSVarStatementImpl(stub);
 	}
 
 	@RequiredReadAction
 	@Override
-	public JSVarStatementStub createStub(@NotNull JSVarStatement psi, StubElement parentStub)
+	public JSVarStatementStub createStub(@Nonnull JSVarStatement psi, StubElement parentStub)
 	{
 		return new JSVarStatementStubImpl(parentStub, this);
 	}
 
 	@Override
-	public void serialize(@NotNull JSVarStatementStub stub, @NotNull StubOutputStream dataStream) throws IOException
+	public void serialize(@Nonnull JSVarStatementStub stub, @Nonnull StubOutputStream dataStream) throws IOException
 	{
 
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public JSVarStatementStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException
+	public JSVarStatementStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
 	{
 		return new JSVarStatementStubImpl(parentStub, this);
 	}

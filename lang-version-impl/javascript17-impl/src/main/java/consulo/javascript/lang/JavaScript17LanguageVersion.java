@@ -16,7 +16,7 @@
 
 package consulo.javascript.lang;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.util.Factory;
@@ -38,7 +38,7 @@ public class JavaScript17LanguageVersion extends BaseJavaScriptLanguageVersion i
 		}
 	};
 
-	@NotNull
+	@Nonnull
 	public static JavaScript17LanguageVersion getInstance()
 	{
 		return JavaScriptLanguage.INSTANCE.findVersionByClass(JavaScript17LanguageVersion.class);
@@ -49,21 +49,21 @@ public class JavaScript17LanguageVersion extends BaseJavaScriptLanguageVersion i
 		super("JAVASCRIPT_1_7");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getPresentableName()
 	{
 		return "JavaScript 1.7";
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Lexer createLexer()
 	{
 		return ourLexerFactory.create();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public SyntaxHighlighter getSyntaxHighlighter()
 	{

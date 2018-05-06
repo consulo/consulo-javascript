@@ -9,8 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredReadAction;
 import consulo.json.jom.JomElement;
 import consulo.json.jom.proxy.impl.JomBooleanValue;
@@ -36,7 +37,7 @@ public class JomValueConverter
 		T getDefaultValue();
 
 		@RequiredReadAction
-		T parseValue(@NotNull Class type, @NotNull Type genericType, @NotNull PsiElement value) throws JomBadValueExpressionException;
+		T parseValue(@Nonnull Class type, @Nonnull Type genericType, @Nonnull PsiElement value) throws JomBadValueExpressionException;
 	}
 
 	private static Map<Class, Converter> ourDefaultConverters = new HashMap<Class, Converter>();
@@ -72,7 +73,7 @@ public class JomValueConverter
 
 	@RequiredReadAction
 	@SuppressWarnings("unchecked")
-	public static Object convertToObject(@NotNull Class type, @NotNull Type genericType, @Nullable JSExpression value) throws JomBadValueExpressionException
+	public static Object convertToObject(@Nonnull Class type, @Nonnull Type genericType, @Nullable JSExpression value) throws JomBadValueExpressionException
 	{
 		if(value == null)
 		{
@@ -120,7 +121,7 @@ public class JomValueConverter
 	}
 
 	@Nullable
-	public static Object getDefaultValueForType(@NotNull Class type)
+	public static Object getDefaultValueForType(@Nonnull Class type)
 	{
 		JomValueConverter.Converter converter = JomValueConverter.ourDefaultConverters.get(type);
 		if(converter != null)

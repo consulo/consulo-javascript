@@ -16,7 +16,7 @@
 
 package consulo.json.validation.descriptionByAnotherPsiElement;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 import consulo.json.validation.JsonFileDescriptorProvider;
 import consulo.json.validation.descriptor.JsonObjectDescriptor;
@@ -34,7 +34,7 @@ public class DescriptionByAnotherPsiElementJsonDescriptionProvider implements Js
 {
 	@RequiredReadAction
 	@Override
-	public boolean isMyFile(@NotNull PsiFile file)
+	public boolean isMyFile(@Nonnull PsiFile file)
 	{
 		VirtualFile virtualFile = PsiUtilCore.getVirtualFile(file);
 		if(virtualFile == null)
@@ -46,7 +46,7 @@ public class DescriptionByAnotherPsiElementJsonDescriptionProvider implements Js
 
 	@RequiredReadAction
 	@Override
-	public void fillRootObject(@NotNull JsonObjectDescriptor root, @NotNull PsiFile file)
+	public void fillRootObject(@Nonnull JsonObjectDescriptor root, @Nonnull PsiFile file)
 	{
 		VirtualFile virtualFile = PsiUtilCore.getVirtualFile(file);
 		if(virtualFile == null)

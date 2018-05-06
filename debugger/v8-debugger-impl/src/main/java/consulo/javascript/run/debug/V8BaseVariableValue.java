@@ -18,6 +18,7 @@ package consulo.javascript.run.debug;
 
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
 import javax.swing.Icon;
 
 import org.chromium.sdk.JsArray;
@@ -25,8 +26,8 @@ import org.chromium.sdk.JsEvaluateContext;
 import org.chromium.sdk.JsObject;
 import org.chromium.sdk.JsValue;
 import org.chromium.sdk.JsVariable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 import com.intellij.icons.AllIcons;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XNamedValue;
@@ -41,20 +42,20 @@ import com.intellij.xdebugger.frame.presentation.XValuePresentation;
  */
 public abstract class V8BaseVariableValue extends XNamedValue
 {
-	@NotNull
+	@Nonnull
 	protected final JsEvaluateContext myEvaluateContext;
 
-	protected V8BaseVariableValue(@NotNull JsEvaluateContext evaluateContext, @NotNull String name)
+	protected V8BaseVariableValue(@Nonnull JsEvaluateContext evaluateContext, @Nonnull String name)
 	{
 		super(name);
 		myEvaluateContext = evaluateContext;
 	}
 
-	@NotNull
+	@Nonnull
 	protected abstract JsValue getValue();
 
 	@Override
-	public void computeChildren(@NotNull XCompositeNode node)
+	public void computeChildren(@Nonnull XCompositeNode node)
 	{
 		XValueChildrenList valueChildrenList = new XValueChildrenList();
 
@@ -78,7 +79,7 @@ public abstract class V8BaseVariableValue extends XNamedValue
 		node.addChildren(valueChildrenList, true);
 	}
 
-	@NotNull
+	@Nonnull
 	protected Icon getIconForValue(JsValue value, JsValue.Type valueType)
 	{
 		if(value instanceof JsArray)
@@ -118,7 +119,7 @@ public abstract class V8BaseVariableValue extends XNamedValue
 	}
 
 	@Override
-	public void computePresentation(@NotNull XValueNode valueNode, @NotNull XValuePlace xValuePlace)
+	public void computePresentation(@Nonnull XValueNode valueNode, @Nonnull XValuePlace xValuePlace)
 	{
 		final JsValue value = getValue();
 		final JsValue.Type valueType = value.getType();
@@ -153,7 +154,7 @@ public abstract class V8BaseVariableValue extends XNamedValue
 			}
 
 			@Override
-			public void renderValue(@NotNull XValueTextRenderer textRenderer)
+			public void renderValue(@Nonnull XValueTextRenderer textRenderer)
 			{
 				switch(value.getType())
 				{

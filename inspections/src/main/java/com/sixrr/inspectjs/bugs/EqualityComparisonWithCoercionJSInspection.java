@@ -1,5 +1,7 @@
 package com.sixrr.inspectjs.bugs;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -10,30 +12,29 @@ import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.util.IncorrectOperationException;
 import com.sixrr.inspectjs.*;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 
 public class EqualityComparisonWithCoercionJSInspection extends JavaScriptInspection {
 
     @Override
-	@NotNull
+	@Nonnull
     public String getID() {
         return "EqualityComparisonWithCoercionJS";
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("equality.comparison.with.coercion.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.BUGS_GROUP_NAME;
     }
 
     @Override
-	@NotNull
+	@Nonnull
     protected String buildErrorString(Object... args) {
         return InspectionJSBundle.message("equality.comparison.with.coercion.error.string");
     }
@@ -59,7 +60,7 @@ public class EqualityComparisonWithCoercionJSInspection extends JavaScriptInspec
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public String getName() {
 			return InspectionJSBundle.message("equality.comparison.with.coercion.fix", sign);
 		}
@@ -82,7 +83,7 @@ public class EqualityComparisonWithCoercionJSInspection extends JavaScriptInspec
     private static class EqualityComparisonWithCoercionVisitor extends BaseInspectionVisitor {
 
         @Override public void visitJSBinaryExpression(
-                @NotNull JSBinaryExpression expression) {
+                @Nonnull JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             final JSExpression lhs = expression.getLOperand();
             if (lhs == null) {

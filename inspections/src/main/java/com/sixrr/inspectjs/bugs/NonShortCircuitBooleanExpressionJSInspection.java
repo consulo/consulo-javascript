@@ -1,5 +1,7 @@
 package com.sixrr.inspectjs.bugs;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
@@ -9,19 +11,19 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.sixrr.inspectjs.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 public class NonShortCircuitBooleanExpressionJSInspection extends JavaScriptInspection {
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("non.short.circuit.boolean.expression.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.BUGS_GROUP_NAME;
     }
@@ -41,7 +43,7 @@ public class NonShortCircuitBooleanExpressionJSInspection extends JavaScriptInsp
             extends InspectionJSFix {
 
         @Override
-		@NotNull
+		@Nonnull
         public String getName() {
             return InspectionJSBundle.message("replace.with.short.circuit.expression.fix.string");
         }
@@ -79,7 +81,7 @@ public class NonShortCircuitBooleanExpressionJSInspection extends JavaScriptInsp
             extends BaseInspectionVisitor {
 
         @Override public void visitJSBinaryExpression(
-                @NotNull JSBinaryExpression expression) {
+                @Nonnull JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             if (!(expression.getROperand() != null)) {
                 return;

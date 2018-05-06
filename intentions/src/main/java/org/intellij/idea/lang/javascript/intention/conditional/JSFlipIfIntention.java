@@ -15,12 +15,13 @@
  */
 package org.intellij.idea.lang.javascript.intention.conditional;
 
+import javax.annotation.Nonnull;
+
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.BoolUtils;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.NonNls;
 
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -36,13 +37,13 @@ public class JSFlipIfIntention extends JSIntention {
     @NonNls private static final String ELSE_KEYWORD = "else ";
 
     @Override
-	@NotNull
+	@Nonnull
     public JSElementPredicate getElementPredicate() {
         return new FlipIfPredicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         final JSIfStatement exp             = (JSIfStatement) element;
         final JSExpression  condition       = exp.getCondition();
         final JSStatement   thenBranch      = exp.getThen();
@@ -61,7 +62,7 @@ public class JSFlipIfIntention extends JSIntention {
 
     private static class FlipIfPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (!(element instanceof JSIfStatement) ||
                 ErrorUtil.containsError(element)) {
                 return false;

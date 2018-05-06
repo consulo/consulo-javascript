@@ -26,7 +26,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.application.options.CodeStyleAbstractPanel;
 import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
@@ -108,7 +108,7 @@ public class JSCodeStylePanel extends CodeStyleAbstractPanel
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	protected FileType getFileType()
 	{
 		return JavaScriptFileType.INSTANCE;

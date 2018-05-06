@@ -16,8 +16,9 @@
 
 package consulo.javascript.lang.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredReadAction;
 import com.intellij.psi.PsiElement;
 
@@ -30,14 +31,14 @@ public class JavaScriptSimpleType implements JavaScriptType
 	private String myReferenceName;
 	private PsiElement myElement;
 
-	public JavaScriptSimpleType(@NotNull String referenceName, @Nullable PsiElement element)
+	public JavaScriptSimpleType(@Nonnull String referenceName, @Nullable PsiElement element)
 	{
 		myReferenceName = referenceName;
 		myElement = element;
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public String getPresentableText()
 	{

@@ -16,8 +16,9 @@
 
 package consulo.javascript.lang;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
@@ -35,9 +36,9 @@ import consulo.lang.LanguageVersionResolver;
 public class JavaScriptLanguageVersionResolver implements LanguageVersionResolver
 {
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
-	public LanguageVersion getLanguageVersion(@NotNull Language language, @Nullable PsiElement element)
+	public LanguageVersion getLanguageVersion(@Nonnull Language language, @Nullable PsiElement element)
 	{
 		PsiFile containingFile = element == null ? null : element.getContainingFile();
 		if(containingFile == null)
@@ -53,10 +54,10 @@ public class JavaScriptLanguageVersionResolver implements LanguageVersionResolve
 		return StandardJavaScriptVersions.getInstance().getDefaultVersion();
 	}
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	@Override
-	public LanguageVersion getLanguageVersion(@NotNull Language language, @Nullable Project project, @Nullable VirtualFile virtualFile)
+	public LanguageVersion getLanguageVersion(@Nonnull Language language, @Nullable Project project, @Nullable VirtualFile virtualFile)
 	{
 		if(project == null || virtualFile == null)
 		{

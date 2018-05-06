@@ -16,9 +16,9 @@
 
 package consulo.json.jom;
 
+import javax.annotation.Nonnull;
 import javax.swing.Icon;
 
-import org.jetbrains.annotations.NotNull;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiFile;
 
@@ -32,19 +32,19 @@ public abstract class JomFileDescriptor<T extends JomElement>
 
 	private Class<T> myDefinitionClass;
 
-	public JomFileDescriptor(@NotNull Class<T> definitionClass)
+	public JomFileDescriptor(@Nonnull Class<T> definitionClass)
 	{
 		myDefinitionClass = definitionClass;
 	}
 
-	@NotNull
+	@Nonnull
 	public Class<T> getDefinitionClass()
 	{
 		return myDefinitionClass;
 	}
 
-	@NotNull
+	@Nonnull
 	public abstract Icon getIcon();
 
-	public abstract boolean isMyFile(@NotNull PsiFile psiFile);
+	public abstract boolean isMyFile(@Nonnull PsiFile psiFile);
 }

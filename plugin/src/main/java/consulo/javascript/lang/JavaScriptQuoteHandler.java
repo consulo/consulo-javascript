@@ -16,7 +16,7 @@
 
 package consulo.javascript.lang;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.codeInsight.editorActions.JavaLikeQuoteHandler;
 import com.intellij.codeInsight.editorActions.SimpleTokenSetQuoteHandler;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -54,7 +54,7 @@ public class JavaScriptQuoteHandler extends SimpleTokenSetQuoteHandler implement
 	}
 
 	@Override
-	public boolean isAppropriateElementTypeForLiteral(@NotNull IElementType tokenType)
+	public boolean isAppropriateElementTypeForLiteral(@Nonnull IElementType tokenType)
 	{
 		return JavaScriptTokenSets.COMMENTS.contains(tokenType) ||
 				tokenType == JSTokenTypes.WHITE_SPACE ||

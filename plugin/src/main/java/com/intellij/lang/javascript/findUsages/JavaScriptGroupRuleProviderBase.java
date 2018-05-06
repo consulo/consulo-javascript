@@ -16,10 +16,10 @@
 
 package com.intellij.lang.javascript.findUsages;
 
+import javax.annotation.Nonnull;
 import javax.swing.Icon;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import com.intellij.lang.javascript.psi.JSNamedElement;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.actionSystem.DataSink;
@@ -97,7 +97,7 @@ abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> impleme
 		private String myName;
 		private Icon myIcon;
 
-		PsiNamedElementUsageGroupBase(@NotNull T element, Icon icon)
+		PsiNamedElementUsageGroupBase(@Nonnull T element, Icon icon)
 		{
 			myIcon = icon;
 
@@ -121,7 +121,7 @@ abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> impleme
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public String getText(UsageView view)
 		{
 			return myName;

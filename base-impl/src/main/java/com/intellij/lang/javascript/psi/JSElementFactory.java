@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript.psi;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.lang.javascript.psi.impl.JSExpressionCodeFragmentImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
@@ -30,8 +30,8 @@ public class JSElementFactory
 	{
 	}
 
-	@NotNull
-	public static JSFile createExpressionCodeFragment(@NotNull Project project, CharSequence text, PsiElement context, boolean isPhysical)
+	@Nonnull
+	public static JSFile createExpressionCodeFragment(@Nonnull Project project, CharSequence text, PsiElement context, boolean isPhysical)
 	{
 		JSExpressionCodeFragmentImpl codeFragment = new JSExpressionCodeFragmentImpl(project, "fragment.js", text, isPhysical);
 		codeFragment.setContext(context);

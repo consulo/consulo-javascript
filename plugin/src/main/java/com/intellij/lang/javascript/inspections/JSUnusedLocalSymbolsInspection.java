@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.PropertyKey;
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInspection.LocalQuickFix;
@@ -59,21 +59,21 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 	public static final String SHORT_NAME = "JSUnusedLocalSymbols";
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getGroupDisplayName()
 	{
 		return JavaScriptBundle.message("js.inspection.group.name");
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getDisplayName()
 	{
 		return JavaScriptBundle.message("js.unused.local.symbol.inspection.name");
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	@NonNls
 	public String getShortName()
 	{
@@ -269,7 +269,7 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 					continue;
 				}
 				final @NonNls @PropertyKey(resourceBundle = JavaScriptBundle.BUNDLE) String messageId;
-				final @NotNull PsiElement highlightedElement;
+				final @Nonnull PsiElement highlightedElement;
 
 				if(p instanceof JSParameter)
 				{
@@ -428,7 +428,7 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public HighlightDisplayLevel getDefaultLevel()
 	{
 		return HighlightDisplayLevel.WARNING;
@@ -437,21 +437,21 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 	private static class RemoveElementLocalQuickFix implements LocalQuickFix
 	{
 		@Override
-		@NotNull
+		@Nonnull
 		public String getName()
 		{
 			return JavaScriptBundle.message("js.unused.symbol.remove");
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public String getFamilyName()
 		{
 			return getName();
 		}
 
 		@Override
-		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor)
+		public void applyFix(@Nonnull final Project project, @Nonnull final ProblemDescriptor descriptor)
 		{
 			try
 			{

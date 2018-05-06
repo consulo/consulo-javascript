@@ -22,8 +22,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.MutableLookupElement;
@@ -157,7 +157,7 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 	}
 
 	@Nullable
-	private static JSArgumentList fillSignaturesForArgumentList(final CreateParameterInfoContext context, final @NotNull JSArgumentList argList)
+	private static JSArgumentList fillSignaturesForArgumentList(final CreateParameterInfoContext context, final @Nonnull JSArgumentList argList)
 	{
 		final PsiElement psiElement = argList.getParent();
 		if(!(psiElement instanceof JSCallExpression))
@@ -205,7 +205,7 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 	}
 
 	@Override
-	public void showParameterInfo(@NotNull final JSArgumentList element, final CreateParameterInfoContext context)
+	public void showParameterInfo(@Nonnull final JSArgumentList element, final CreateParameterInfoContext context)
 	{
 		context.showHint(element, element.getTextOffset(), this);
 	}
@@ -217,7 +217,7 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 	}
 
 	@Override
-	public void updateParameterInfo(@NotNull final JSArgumentList o, final UpdateParameterInfoContext context)
+	public void updateParameterInfo(@Nonnull final JSArgumentList o, final UpdateParameterInfoContext context)
 	{
 		if(context.getParameterOwner() != o)
 		{
@@ -229,7 +229,7 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getParameterCloseChars()
 	{
 		return ",){";
@@ -265,7 +265,7 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 	}
 
 	private static
-	@NotNull
+	@Nonnull
 	SignatureInfo buildSignature(final JSParameter[] params, final boolean skipType, int selectedParameterIndex)
 	{
 		SignatureInfo info = new SignatureInfo();
@@ -329,34 +329,34 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 	}
 
 	@Override
-	@NotNull
-	public JSExpression[] getActualParameters(@NotNull final JSArgumentList jsArgumentList)
+	@Nonnull
+	public JSExpression[] getActualParameters(@Nonnull final JSArgumentList jsArgumentList)
 	{
 		return jsArgumentList.getArguments();
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public IElementType getActualParameterDelimiterType()
 	{
 		return JSTokenTypes.COMMA;
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public IElementType getActualParametersRBraceType()
 	{
 		return JSTokenTypes.RBRACE;
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public Set<Class> getArgumentListAllowedParentClasses()
 	{
 		return ourArgumentListAllowedParentClassesSet;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Set<? extends Class> getArgListStopSearchClasses()
 	{
@@ -364,7 +364,7 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public Class<JSArgumentList> getArgumentListClass()
 	{
 		return JSArgumentList.class;

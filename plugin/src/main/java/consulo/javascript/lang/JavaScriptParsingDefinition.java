@@ -16,7 +16,8 @@
 
 package consulo.javascript.lang;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageUtil;
@@ -39,14 +40,14 @@ import consulo.lang.LanguageVersionableParserDefinition;
  */
 public class JavaScriptParsingDefinition extends LanguageVersionableParserDefinition
 {
-	@NotNull
+	@Nonnull
 	@Override
 	public IFileElementType getFileNodeType()
 	{
 		return JSElementTypes.FILE;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public PsiElement createElement(ASTNode node)
 	{
@@ -74,7 +75,7 @@ public class JavaScriptParsingDefinition extends LanguageVersionableParserDefini
 		return new JSFileImpl(fileViewProvider);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right)
 	{

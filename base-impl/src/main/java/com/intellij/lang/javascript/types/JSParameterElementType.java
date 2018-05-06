@@ -19,7 +19,7 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSParameter;
@@ -45,22 +45,22 @@ public class JSParameterElementType extends JSStubElementType<JSParameterStub, J
 		super("FORMAL_PARAMETER");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public PsiElement createElement(@NotNull ASTNode astNode)
+	public PsiElement createElement(@Nonnull ASTNode astNode)
 	{
 		return new JSParameterImpl(astNode);
 	}
 
 	@Override
-	public JSParameter createPsi(@NotNull JSParameterStub stub)
+	public JSParameter createPsi(@Nonnull JSParameterStub stub)
 	{
 		return new JSParameterImpl(stub);
 	}
 
 	@RequiredReadAction
 	@Override
-	public JSParameterStub createStub(@NotNull JSParameter psi, StubElement parentStub)
+	public JSParameterStub createStub(@Nonnull JSParameter psi, StubElement parentStub)
 	{
 		String name = psi.getName();
 		int flags = JSParameterStubImpl.buildFlags(psi);
@@ -71,7 +71,7 @@ public class JSParameterElementType extends JSStubElementType<JSParameterStub, J
 	}
 
 	@Override
-	public void serialize(@NotNull JSParameterStub stub, @NotNull StubOutputStream dataStream) throws IOException
+	public void serialize(@Nonnull JSParameterStub stub, @Nonnull StubOutputStream dataStream) throws IOException
 	{
 		dataStream.writeName(stub.getName());
 		dataStream.writeVarInt(stub.getFlags());
@@ -80,9 +80,9 @@ public class JSParameterElementType extends JSStubElementType<JSParameterStub, J
 		dataStream.writeName(stub.getQualifiedName());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public JSParameterStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException
+	public JSParameterStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
 	{
 		StringRef nameRef = dataStream.readName();
 		int flags = dataStream.readVarInt();

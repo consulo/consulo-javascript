@@ -1,6 +1,6 @@
 package consulo.javascript.lang.parsing;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.lang.ASTNode;
 import consulo.lang.LanguageVersion;
 import com.intellij.lang.PsiBuilder;
@@ -13,9 +13,9 @@ import com.intellij.psi.tree.IElementType;
  */
 public class JavaScriptParser implements PsiParser
 {
-	@NotNull
+	@Nonnull
 	@Override
-	public ASTNode parse(@NotNull IElementType root, @NotNull PsiBuilder originalBuilder, @NotNull LanguageVersion languageVersion)
+	public ASTNode parse(@Nonnull IElementType root, @Nonnull PsiBuilder originalBuilder, @Nonnull LanguageVersion languageVersion)
 	{
 		JavaScriptParsingContext parsingContext = createParsingContext();
 
@@ -30,13 +30,13 @@ public class JavaScriptParser implements PsiParser
 		return builder.getTreeBuilt();
 	}
 
-	@NotNull
+	@Nonnull
 	public JavaScriptParserBuilder createBuilder(PsiBuilder builder)
 	{
 		return new JavaScriptParserBuilder(builder);
 	}
 
-	@NotNull
+	@Nonnull
 	public JavaScriptParsingContext createParsingContext()
 	{
 		return new JavaScriptParsingContext();

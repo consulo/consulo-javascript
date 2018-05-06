@@ -29,8 +29,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.javascript.documentation.JSDocumentationProvider;
@@ -124,7 +124,7 @@ public class JSResolveUtil
 
 	public static final String COMMENT_DELIMITERS = "|/";
 
-	public static void processInjectedFileForTag(final @NotNull XmlTag tag, @NotNull JSInjectedFilesVisitor visitor)
+	public static void processInjectedFileForTag(final @Nonnull XmlTag tag, @Nonnull JSInjectedFilesVisitor visitor)
 	{
 
 		for(XmlTagChild child : tag.getValue().getChildren())
@@ -488,7 +488,7 @@ public class JSResolveUtil
 		return currentParent;
 	}
 
-	public static PsiElement getTopReferenceExpression(final @NotNull PsiElement parent)
+	public static PsiElement getTopReferenceExpression(final @Nonnull PsiElement parent)
 	{
 		PsiElement element = parent;
 
@@ -661,7 +661,7 @@ public class JSResolveUtil
 		return jsParameters[0].getTypeString();
 	}
 
-	public static boolean shouldProcessTopLevelGlobalContext(@NotNull PsiElement place, @NotNull PsiScopeProcessor processor)
+	public static boolean shouldProcessTopLevelGlobalContext(@Nonnull PsiElement place, @Nonnull PsiScopeProcessor processor)
 	{
 		PsiElement placeParent = null;
 
@@ -672,7 +672,7 @@ public class JSResolveUtil
 				placeParent instanceof JSNewExpression);
 	}
 
-	public static boolean shouldProcessImports(@NotNull PsiElement place, @NotNull PsiScopeProcessor processor)
+	public static boolean shouldProcessImports(@Nonnull PsiElement place, @Nonnull PsiScopeProcessor processor)
 	{
 		if(!(processor instanceof ResolveProcessor) || ((ResolveProcessor) processor).isLocalResolve())
 		{
@@ -737,7 +737,7 @@ public class JSResolveUtil
 		return result;
 	}
 
-	static boolean walkOverStructure(@NotNull PsiElement context, Processor<PsiNamedElement> processor)
+	static boolean walkOverStructure(@Nonnull PsiElement context, Processor<PsiNamedElement> processor)
 	{
 		PsiNamedElement parent = PsiTreeUtil.getNonStrictParentOfType(context, JSQualifiedNamedElement.class, PsiFile.class);
 
@@ -888,7 +888,7 @@ public class JSResolveUtil
 
 	public static
 	@Nullable
-	JSParameter findParameterForUsedArgument(@NotNull JSExpression mainOccurence, @NotNull JSArgumentList parent)
+	JSParameter findParameterForUsedArgument(@Nonnull JSExpression mainOccurence, @Nonnull JSArgumentList parent)
 	{
 		int paramIndex = 0;
 
@@ -931,7 +931,7 @@ public class JSResolveUtil
 	public static abstract class JSInjectedFilesVisitor implements PsiLanguageInjectionHost.InjectedPsiVisitor, XmlBackedJSClassImpl.InjectedFileVisitor
 	{
 		@Override
-		public void visit(@NotNull final PsiFile injectedPsi, @NotNull final List<PsiLanguageInjectionHost.Shred> places)
+		public void visit(@Nonnull final PsiFile injectedPsi, @Nonnull final List<PsiLanguageInjectionHost.Shred> places)
 		{
 			if(injectedPsi instanceof JSFile)
 			{
@@ -1195,7 +1195,7 @@ public class JSResolveUtil
 	}
 
 	@Nullable
-	private static PsiElement processFunctionDeclarations(final @NotNull PsiScopeProcessor processor, final @Nullable PsiElement context)
+	private static PsiElement processFunctionDeclarations(final @Nonnull PsiScopeProcessor processor, final @Nullable PsiElement context)
 	{
 		if(!(context instanceof JSElement))
 		{
@@ -1279,7 +1279,7 @@ public class JSResolveUtil
 	/**
 	 * @return true if processor said enough
 	 */
-	private static boolean visitAllImplementedInterfaces(JSClass clazz, @NotNull Collection<JSClass> visited, Processor<JSClass> processor)
+	private static boolean visitAllImplementedInterfaces(JSClass clazz, @Nonnull Collection<JSClass> visited, Processor<JSClass> processor)
 	{
 		if(visited.contains(clazz))
 		{
@@ -1664,13 +1664,13 @@ public class JSResolveUtil
 	}
 
 	@Nullable
-	public static PsiElement findClassByQName(final String link, final @NotNull PsiElement context)
+	public static PsiElement findClassByQName(final String link, final @Nonnull PsiElement context)
 	{
 		return findClassByQName(link, context.getProject(), context.getResolveScope());
 	}
 
 	@Nullable
-	public static PsiElement findClassByQName(final String link, @NotNull GlobalSearchScope scope, @NotNull Project project)
+	public static PsiElement findClassByQName(final String link, @Nonnull GlobalSearchScope scope, @Nonnull Project project)
 	{
 		return findClassByQName(link, project, scope);
 	}
@@ -2775,7 +2775,7 @@ public class JSResolveUtil
 
 	public interface MetaDataProcessor
 	{
-		boolean process(final @NotNull JSAttribute jsAttribute);
+		boolean process(final @Nonnull JSAttribute jsAttribute);
 
 		boolean handleOtherElement(final PsiElement el, PsiElement context, @Nullable Ref<PsiElement> continuePassElement);
 	}
@@ -2949,7 +2949,7 @@ public class JSResolveUtil
 		}
 
 		@Override
-		public void accept(@NotNull PsiElementVisitor visitor)
+		public void accept(@Nonnull PsiElementVisitor visitor)
 		{
 			if(visitor instanceof JSElementVisitor)
 			{
@@ -2979,7 +2979,7 @@ public class JSResolveUtil
 			return false;
 		}
 
-		@NotNull
+		@Nonnull
 		@Override
 		public ASTNode getNode()
 		{
@@ -3021,7 +3021,7 @@ public class JSResolveUtil
 		{
 		}
 
-		@NotNull
+		@Nonnull
 		@Override
 		public JavaScriptType getType()
 		{
@@ -3072,7 +3072,7 @@ public class JSResolveUtil
 		}
 
 		@Override
-		public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException
+		public PsiElement setName(@NonNls @Nonnull String name) throws IncorrectOperationException
 		{
 			throw new IncorrectOperationException();
 		}

@@ -16,8 +16,8 @@
 
 package consulo.json.validation.descriptor;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
@@ -36,7 +36,7 @@ public class JsonPropertyDescriptor
 	private boolean myDeprecated;
 	private boolean myNullable = true;
 
-	public JsonPropertyDescriptor(@Nullable String name, @NotNull Object value)
+	public JsonPropertyDescriptor(@Nullable String name, @Nonnull Object value)
 	{
 		myName = name;
 		myValue = value;
@@ -52,21 +52,21 @@ public class JsonPropertyDescriptor
 		return myDeprecated;
 	}
 
-	@NotNull
+	@Nonnull
 	public JsonPropertyDescriptor deprecated()
 	{
 		myDeprecated = true;
 		return this;
 	}
 
-	@NotNull
+	@Nonnull
 	public JsonPropertyDescriptor notNull()
 	{
 		myNullable = false;
 		return this;
 	}
 
-	@NotNull
+	@Nonnull
 	public Object getValue()
 	{
 		return myValue;
@@ -79,7 +79,7 @@ public class JsonPropertyDescriptor
 	}
 
 	@Exported
-	public void setNavigationElement(@NotNull PsiElement element)
+	public void setNavigationElement(@Nonnull PsiElement element)
 	{
 		myNavigationElement = SmartPointerManager.getInstance(element.getProject()).createSmartPsiElementPointer(element);
 	}

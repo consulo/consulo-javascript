@@ -26,8 +26,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSClass;
@@ -85,7 +86,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 	}
 
 	@Override
-	public void accept(@NotNull PsiElementVisitor visitor)
+	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
 		{
@@ -236,7 +237,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 	}
 
 	private
-	@NotNull
+	@Nonnull
 	Map<String, JSVariable> initFields()
 	{
 		Map<String, JSVariable> name2FieldsMap = myName2FieldsMap;
@@ -268,7 +269,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 	}
 
 	private
-	@NotNull
+	@Nonnull
 	Map<String, Object> initFunctions()
 	{
 		Map<String, Object> name2FunctionMap = myName2FunctionMap;
@@ -350,7 +351,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 		return superClasses.toArray(new JSClass[superClasses.size()]);
 	}
 
-	private List<JSClass> getClassesFromReferenceList(final @Nullable JSReferenceList extendsList, @NotNull IElementType type)
+	private List<JSClass> getClassesFromReferenceList(final @Nullable JSReferenceList extendsList, @Nonnull IElementType type)
 	{
 		final PsiElement element = extendsList != null ? extendsList : this;
 
@@ -365,8 +366,8 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 	}
 
 	@Override
-	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState substitutor,
-			final PsiElement lastParent, @NotNull final PsiElement place)
+	public boolean processDeclarations(@Nonnull final PsiScopeProcessor processor, @Nonnull final ResolveState substitutor,
+			final PsiElement lastParent, @Nonnull final PsiElement place)
 	{
 		final ResolveProcessor resolveProcessor = processor instanceof ResolveProcessor ? (ResolveProcessor) processor : null;
 		final boolean toProcessClass = resolveProcessor != null && resolveProcessor.isTypeContext();

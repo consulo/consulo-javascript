@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.codeInsight.template.TemplateContextType;
 import com.intellij.lang.Language;
 import com.intellij.lang.javascript.psi.JSFile;
@@ -48,7 +48,7 @@ public class JavaScriptCodeContextType extends TemplateContextType
 	}
 
 	@Override
-	public boolean isInContext(@NotNull final PsiFile file, final int offset)
+	public boolean isInContext(@Nonnull final PsiFile file, final int offset)
 	{
 		PsiElement at = file.findElementAt(offset);
 		if(at == null && offset == file.getTextLength())
@@ -83,7 +83,7 @@ public class JavaScriptCodeContextType extends TemplateContextType
 		return language != null && language.isKindOf(JavaScriptLanguage.INSTANCE);
 	}
 
-	public boolean isInContext(@NotNull final FileType fileType)
+	public boolean isInContext(@Nonnull final FileType fileType)
 	{
 		return fileType instanceof JavaScriptFileType;
 	}

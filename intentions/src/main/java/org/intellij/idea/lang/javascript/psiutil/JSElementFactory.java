@@ -15,8 +15,9 @@
  */
 package org.intellij.idea.lang.javascript.psiutil;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageParserDefinitions;
 import com.intellij.lang.ParserDefinition;
@@ -47,8 +48,8 @@ public class JSElementFactory {
 
     private JSElementFactory() {}
 
-    public static PsiElement addElementBefore(@NotNull PsiElement element,
-                                              @NotNull PsiElement newElement) {
+    public static PsiElement addElementBefore(@Nonnull PsiElement element,
+                                              @Nonnull PsiElement newElement) {
         final ASTNode     oldElementParentNode = element.getNode();
         final PsiElement  parentNode           = element.getParent();
         final ASTNode     newElementParentNode = parentNode.getNode();
@@ -61,8 +62,8 @@ public class JSElementFactory {
         return newElement;
     }
 
-    public static PsiElement addElementAfter(@NotNull PsiElement element,
-                                             @NotNull PsiElement newElement) {
+    public static PsiElement addElementAfter(@Nonnull PsiElement element,
+                                             @Nonnull PsiElement newElement) {
         final ASTNode     elementNode          = element.getNode();
         final ASTNode     oldElementParentNode = ((elementNode == null) ? null : elementNode.getTreeNext());
         final PsiElement  parentNode           = element.getParent();
@@ -77,16 +78,16 @@ public class JSElementFactory {
         return newElement;
     }
 
-    public static PsiElement addElementBefore(@NotNull PsiElement element,
-                                              @NonNls @NotNull String     elementText) {
+    public static PsiElement addElementBefore(@Nonnull PsiElement element,
+                                              @NonNls @Nonnull String     elementText) {
         final PsiElement newElement = createDummyFile(element.getProject(), elementText).getFirstChild();
 
         assert (newElement != null);
         return addElementBefore(element, newElement);
     }
 
-    public static PsiElement addElementAfter(@NotNull PsiElement element,
-                                             @NotNull String     elementText) {
+    public static PsiElement addElementAfter(@Nonnull PsiElement element,
+                                             @Nonnull String     elementText) {
         final PsiElement newElement = createDummyFile(element.getProject(), elementText).getFirstChild();
 
         assert (newElement != null);
@@ -100,7 +101,8 @@ public class JSElementFactory {
         return element.getNode();
     }
 
-    @NotNull private static PsiFile createDummyFile(Project project, String text) {
+    @Nonnull
+	private static PsiFile createDummyFile(Project project, String text) {
       final ParserDefinition  def            =
         LanguageParserDefinitions.INSTANCE.forLanguage(JavaScriptLanguage.INSTANCE);
 
@@ -109,8 +111,8 @@ public class JSElementFactory {
         .createFileFromText("dummy.js", text);
     }
 
-    public static JSStatement replaceElementWithStatement(@NotNull JSElement      element,
-                                                          @NonNls @NotNull String statementText)
+    public static JSStatement replaceElementWithStatement(@Nonnull JSElement      element,
+                                                          @NonNls @Nonnull String statementText)
         throws IncorrectOperationException {
         final ASTNode    newStatementNode       = JSChangeUtil.createStatementFromText(
           element.getProject(),
@@ -129,8 +131,8 @@ public class JSElementFactory {
         return (JSStatement) newStatementNode.getPsi();
     }
 
-    public static JSExpression replaceExpression(@NotNull JSExpression   expression,
-                                                 @NonNls @NotNull String text)
+    public static JSExpression replaceExpression(@Nonnull JSExpression   expression,
+                                                 @NonNls @Nonnull String text)
             throws IncorrectOperationException {
         final JSExpression newExpressionNode = JSChangeUtil.createExpressionFromText(
           expression.getProject(),
@@ -139,8 +141,8 @@ public class JSElementFactory {
         return replaceExpression(expression, newExpressionNode);
     }
 
-    public static JSExpression replaceExpression(@NotNull JSExpression expression,
-                                                 @NotNull JSExpression newExpression)
+    public static JSExpression replaceExpression(@Nonnull JSExpression expression,
+                                                 @Nonnull JSExpression newExpression)
         throws IncorrectOperationException {
         final ASTNode    newExpressionNode = newExpression.getNode();
         final ASTNode    oldExpressionNode = expression.getNode();
@@ -157,8 +159,8 @@ public class JSElementFactory {
         return (JSExpression) newExpressionNode.getPsi();
     }
 
-    public static JSStatement replaceStatement(@NotNull JSStatement    statement,
-                                               @NonNls @NotNull String text)
+    public static JSStatement replaceStatement(@Nonnull JSStatement    statement,
+                                               @NonNls @Nonnull String text)
         throws IncorrectOperationException {
         final ASTNode    newStatementNode       = JSChangeUtil.createStatementFromText(
           statement.getProject(),
@@ -178,8 +180,8 @@ public class JSElementFactory {
         return (JSStatement) newStatementNode.getPsi();
     }
 
-    public static JSStatement addStatementBefore(@NotNull JSStatement    statement,
-                                                 @NonNls @NotNull String previousStatementText)
+    public static JSStatement addStatementBefore(@Nonnull JSStatement    statement,
+                                                 @NonNls @Nonnull String previousStatementText)
         throws IncorrectOperationException {
         final ASTNode    newStatementNode       = JSChangeUtil.createStatementFromText(
           statement.getProject(),
@@ -198,8 +200,8 @@ public class JSElementFactory {
         return (JSStatement) newStatementNode.getPsi();
     }
 
-    public static JSStatement addStatementAfter(@NotNull JSStatement    statement,
-                                                @NonNls @NotNull String nextStatementText)
+    public static JSStatement addStatementAfter(@Nonnull JSStatement    statement,
+                                                @NonNls @Nonnull String nextStatementText)
             throws IncorrectOperationException {
         final ASTNode     newStatementNode       = JSChangeUtil.createStatementFromText(
           statement.getProject(),
@@ -244,8 +246,8 @@ public class JSElementFactory {
         }
     }
 
-    public static void replaceExpressionWithNegatedExpression(@NotNull JSExpression newExpression,
-                                                              @NotNull JSExpression exp)
+    public static void replaceExpressionWithNegatedExpression(@Nonnull JSExpression newExpression,
+                                                              @Nonnull JSExpression exp)
         throws IncorrectOperationException {
         JSExpression expressionToReplace = BoolUtils.findNegation(exp);
         final String replacementString;

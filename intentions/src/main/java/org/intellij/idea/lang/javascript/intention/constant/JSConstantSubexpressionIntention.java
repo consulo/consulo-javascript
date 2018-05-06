@@ -15,14 +15,16 @@
  */
 package org.intellij.idea.lang.javascript.intention.constant;
 
+import javax.annotation.Nonnull;
+
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
 import org.intellij.idea.lang.javascript.psiutil.ExpressionUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -34,7 +36,7 @@ import com.intellij.util.IncorrectOperationException;
 
 public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention {
     @Override
-	@NotNull
+	@Nonnull
     protected JSElementPredicate getElementPredicate() {
         return new ConstantSubexpressionPredicate();
     }
@@ -61,7 +63,7 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention {
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         final PsiElement   parent        = element.getParent();
         final JSExpression expression    = (JSExpression) (parent instanceof JSBinaryExpression ? parent : element);
         String             newExpression = "";
@@ -146,7 +148,7 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention {
 
     private static class ConstantSubexpressionPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (!(element instanceof JSElement ||
                   element.getPrevSibling() instanceof JSElement)) {
                 return false;

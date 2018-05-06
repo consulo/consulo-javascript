@@ -16,7 +16,8 @@
 
 package com.intellij.lang.javascript.generation;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
@@ -55,7 +56,7 @@ abstract class BaseJSGenerateAction extends AnAction
 	}
 
 	protected abstract
-	@NotNull
+	@Nonnull
 	JavaScriptGenerateAccessorHandler.GenerationMode getGenerationMode();
 
 	@Override

@@ -17,7 +17,7 @@
 package consulo.javascript.run.debug;
 
 import org.chromium.sdk.DebugContext;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import com.intellij.xdebugger.frame.XExecutionStack;
 import com.intellij.xdebugger.frame.XSuspendContext;
 

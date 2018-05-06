@@ -16,7 +16,8 @@
 
 package com.intellij.lang.javascript;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.javascript.psi.*;
@@ -47,7 +48,7 @@ public interface JSElementTypes
 
 	IElementType EMBEDDED_CONTENT = new ILazyParseableElementType("EMBEDDED_CONTENT", JavaScriptLanguage.INSTANCE)
 	{
-		@NotNull
+		@Nonnull
 		@Override
 		public Language getLanguage()
 		{
@@ -58,14 +59,14 @@ public interface JSElementTypes
 	JSStubElementType<JSFunctionStub, JSFunction> FUNCTION_DECLARATION = new JSFunctionElementType("FUNCTION_DECLARATION")
 	{
 		@Override
-		public JSFunction createPsi(@NotNull JSFunctionStub stub)
+		public JSFunction createPsi(@Nonnull JSFunctionStub stub)
 		{
 			return new JSFunctionImpl(stub, this);
 		}
 
-		@NotNull
+		@Nonnull
 		@Override
-		public PsiElement createElement(@NotNull ASTNode astNode)
+		public PsiElement createElement(@Nonnull ASTNode astNode)
 		{
 			return new JSFunctionImpl(astNode);
 		}
@@ -149,14 +150,14 @@ public interface JSElementTypes
 	JSStubElementType<JSFunctionStub, JSFunction> FUNCTION_EXPRESSION = new JSFunctionElementType("FUNCTION_EXPRESSION")
 	{
 		@Override
-		public JSFunction createPsi(@NotNull JSFunctionStub stub)
+		public JSFunction createPsi(@Nonnull JSFunctionStub stub)
 		{
 			return new JSFunctionExpressionImpl(stub, this);
 		}
 
-		@NotNull
+		@Nonnull
 		@Override
-		public PsiElement createElement(@NotNull ASTNode astNode)
+		public PsiElement createElement(@Nonnull ASTNode astNode)
 		{
 			return new JSFunctionExpressionImpl(astNode);
 		}

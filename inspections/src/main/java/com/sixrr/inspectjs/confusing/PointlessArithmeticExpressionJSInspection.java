@@ -11,7 +11,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.sixrr.inspectjs.*;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -23,13 +23,13 @@ public class PointlessArithmeticExpressionJSInspection
     private final PointlessArithmeticFix fix = new PointlessArithmeticFix();
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("pointless.arithmetic.expression.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
@@ -86,7 +86,7 @@ public class PointlessArithmeticExpressionJSInspection
 
     private class PointlessArithmeticFix extends InspectionJSFix {
         @Override
-		@NotNull
+		@Nonnull
         public String getName() {
             return InspectionJSBundle.message("simplify.fix");
         }
@@ -114,7 +114,7 @@ public class PointlessArithmeticExpressionJSInspection
         }
 
         @Override public void visitJSBinaryExpression(
-                @NotNull JSBinaryExpression expression) {
+                @Nonnull JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             if (!(expression.getROperand() != null)) {
                 return;

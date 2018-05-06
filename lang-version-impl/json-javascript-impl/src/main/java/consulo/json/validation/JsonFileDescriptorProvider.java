@@ -16,7 +16,8 @@
 
 package consulo.json.validation;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 import consulo.json.validation.descriptor.JsonObjectDescriptor;
 import com.intellij.openapi.extensions.ExtensionPointName;
@@ -31,8 +32,8 @@ public interface JsonFileDescriptorProvider
 	ExtensionPointName<JsonFileDescriptorProvider> EP_NAME = ExtensionPointName.create("consulo.javascript.jsonFileDescriptorProvider");
 
 	@RequiredReadAction
-	boolean isMyFile(@NotNull PsiFile file);
+	boolean isMyFile(@Nonnull PsiFile file);
 
 	@RequiredReadAction
-	void fillRootObject(@NotNull JsonObjectDescriptor root, @NotNull PsiFile file);
+	void fillRootObject(@Nonnull JsonObjectDescriptor root, @Nonnull PsiFile file);
 }

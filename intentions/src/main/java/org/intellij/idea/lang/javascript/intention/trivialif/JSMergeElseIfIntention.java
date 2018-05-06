@@ -19,7 +19,7 @@ import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import com.intellij.lang.javascript.psi.JSBlockStatement;
 import com.intellij.lang.javascript.psi.JSElement;
@@ -30,13 +30,13 @@ import com.intellij.util.IncorrectOperationException;
 
 public class JSMergeElseIfIntention extends JSIntention {
     @Override
-	@NotNull
+	@Nonnull
     public JSElementPredicate getElementPredicate() {
         return new MergeElseIfPredicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         final JSIfStatement parentStatement = (JSIfStatement) element.getParent();
 
         assert (parentStatement != null);
@@ -49,7 +49,7 @@ public class JSMergeElseIfIntention extends JSIntention {
 
     private static class MergeElseIfPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (!(element instanceof JSElement)) {
                 return false;
             }

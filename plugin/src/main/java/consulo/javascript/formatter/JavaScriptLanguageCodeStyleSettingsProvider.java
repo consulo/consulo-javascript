@@ -2,7 +2,8 @@ package consulo.javascript.formatter;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.application.options.IndentOptionsEditor;
 import com.intellij.application.options.SmartIndentOptionsEditor;
 import com.intellij.lang.Language;
@@ -38,7 +39,7 @@ public class JavaScriptLanguageCodeStyleSettingsProvider extends LanguageCodeSty
 		return defaultSettings;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Language getLanguage()
 	{
@@ -46,7 +47,7 @@ public class JavaScriptLanguageCodeStyleSettingsProvider extends LanguageCodeSty
 	}
 
 	@Override
-	public void customizeSettings(@NotNull CodeStyleSettingsCustomizable consumer, @NotNull SettingsType settingsType)
+	public void customizeSettings(@Nonnull CodeStyleSettingsCustomizable consumer, @Nonnull SettingsType settingsType)
 	{
 		if(settingsType == SettingsType.SPACING_SETTINGS)
 		{
@@ -79,7 +80,7 @@ public class JavaScriptLanguageCodeStyleSettingsProvider extends LanguageCodeSty
 	}
 
 	@Override
-	public String getCodeSample(@NotNull SettingsType settingsType)
+	public String getCodeSample(@Nonnull SettingsType settingsType)
 	{
 		if(settingsType == SettingsType.SPACING_SETTINGS)
 		{

@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript.psi;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * User: max

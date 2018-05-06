@@ -8,7 +8,7 @@ import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.utils.EquivalenceChecker;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -16,13 +16,13 @@ import java.util.Set;
 
 public class DuplicateCaseLabelJSInspection extends JavaScriptInspection {
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("duplicate.case.label.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.VALIDITY_GROUP_NAME;
     }
@@ -45,7 +45,7 @@ public class DuplicateCaseLabelJSInspection extends JavaScriptInspection {
     private static class Visitor
             extends BaseInspectionVisitor {
 
-        @Override public void visitJSSwitchStatement(@NotNull JSSwitchStatement statement) {
+        @Override public void visitJSSwitchStatement(@Nonnull JSSwitchStatement statement) {
             super.visitJSSwitchStatement(statement);
 
             final Set<JSExpression> conditions = new HashSet<JSExpression>();

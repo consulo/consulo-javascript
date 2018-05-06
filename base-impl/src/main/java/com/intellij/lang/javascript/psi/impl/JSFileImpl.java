@@ -18,8 +18,9 @@ package com.intellij.lang.javascript.psi.impl;
 
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -59,8 +60,8 @@ public class JSFileImpl extends PsiFileBase implements JSFile
 	}
 
 	@Override
-	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState state, @Nullable PsiElement lastParent,
-			@NotNull PsiElement place)
+	public boolean processDeclarations(@Nonnull final PsiScopeProcessor processor, @Nonnull final ResolveState state, @Nullable PsiElement lastParent,
+			@Nonnull PsiElement place)
 	{
 		boolean result = JSResolveUtil.processDeclarationsInScope(this, processor, state, lastParent, place);
 		if(lastParent == null)
@@ -90,7 +91,7 @@ public class JSFileImpl extends PsiFileBase implements JSFile
 	}
 
 	@Override
-	public void accept(@NotNull PsiElementVisitor visitor)
+	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
 		{
@@ -103,7 +104,7 @@ public class JSFileImpl extends PsiFileBase implements JSFile
 	}
 
 	@Override
-	public PsiElement addRangeBefore(@NotNull PsiElement first, @NotNull PsiElement last, PsiElement anchor) throws IncorrectOperationException
+	public PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor) throws IncorrectOperationException
 	{
 		if(JSChangeUtil.isStatementOrComment(first))
 		{
@@ -119,7 +120,7 @@ public class JSFileImpl extends PsiFileBase implements JSFile
 	}
 
 	@Override
-	public PsiElement addAfter(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException
+	public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException
 	{
 		if(JSChangeUtil.isStatementOrComment(element))
 		{
@@ -129,7 +130,7 @@ public class JSFileImpl extends PsiFileBase implements JSFile
 	}
 
 	@Override
-	public PsiElement addBefore(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException
+	public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException
 	{
 		if(JSChangeUtil.isStatementOrComment(element))
 		{
@@ -150,7 +151,7 @@ public class JSFileImpl extends PsiFileBase implements JSFile
 	}
 
 	@Override
-	public PsiElement add(@NotNull PsiElement element) throws IncorrectOperationException
+	public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		return addAfter(element, null);
 	}

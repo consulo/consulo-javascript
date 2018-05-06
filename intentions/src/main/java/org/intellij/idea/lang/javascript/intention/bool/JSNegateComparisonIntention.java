@@ -15,11 +15,12 @@
  */
 package org.intellij.idea.lang.javascript.intention.bool;
 
+import javax.annotation.Nonnull;
+
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.ComparisonUtils;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NotNull;
 
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -49,13 +50,13 @@ public class JSNegateComparisonIntention extends JSMutablyNamedIntention {
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public JSElementPredicate getElementPredicate() {
         return new ComparisonPredicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         final JSBinaryExpression exp             = (JSBinaryExpression) element;
         final JSExpression       lhs             = exp.getLOperand();
         final JSExpression       rhs             = exp.getROperand();

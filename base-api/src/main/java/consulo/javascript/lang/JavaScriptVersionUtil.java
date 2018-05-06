@@ -19,7 +19,8 @@ package consulo.javascript.lang;
 import java.util.Collections;
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.lang.LanguageVersion;
 import com.intellij.psi.PsiElement;
 
@@ -29,12 +30,12 @@ import com.intellij.psi.PsiElement;
  */
 public class JavaScriptVersionUtil
 {
-	public static boolean containsFeature(@NotNull PsiElement element, @NotNull JavaScriptFeature feature)
+	public static boolean containsFeature(@Nonnull PsiElement element, @Nonnull JavaScriptFeature feature)
 	{
 		return getFeatures(element).contains(feature);
 	}
 
-	public static Set<JavaScriptFeature> getFeatures(@NotNull PsiElement element)
+	public static Set<JavaScriptFeature> getFeatures(@Nonnull PsiElement element)
 	{
 		LanguageVersion languageVersion = element.getLanguageVersion();
 		return languageVersion instanceof JavaScriptLanguageVersion ? ((JavaScriptLanguageVersion) languageVersion).getFeatures() : Collections.<JavaScriptFeature>emptySet();

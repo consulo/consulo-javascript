@@ -16,7 +16,8 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 import consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.lang.ASTNode;
@@ -47,7 +48,7 @@ public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionStub,
 		super(stub, type);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public JSFunction getFunction()
 	{
@@ -55,7 +56,7 @@ public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionStub,
 	}
 
 	@Override
-	public void accept(@NotNull PsiElementVisitor visitor)
+	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
 		{
@@ -80,7 +81,7 @@ public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionStub,
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public JavaScriptType getType()
 	{

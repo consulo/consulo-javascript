@@ -15,8 +15,8 @@
  */
 package org.intellij.idea.lang.javascript.psiutil;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.psi.PsiElement;
@@ -66,7 +66,7 @@ public class TreeUtil {
 
     @Nullable
     public static <ParentType extends PsiElement> ParentType getParentOfType(@Nullable PsiElement        element,
-                                                                             @NotNull  Class<ParentType> aClass) {
+                                                                             @Nonnull Class<ParentType> aClass) {
         return getParentOfType(element, aClass, true);
     }
 
@@ -89,7 +89,7 @@ public class TreeUtil {
 
     @Nullable
     public static <ParentType extends PsiElement> ParentType getPrevLeafOfType(@Nullable PsiElement         element,
-                                                                               @NotNull  Class<ParentType> aClass) {
+                                                                               @Nonnull Class<ParentType> aClass) {
         return getPrevLeafOfType(element, aClass, true);
     }
 
@@ -112,7 +112,7 @@ public class TreeUtil {
 
     @Nullable
     public static <ParentType extends PsiElement> ParentType getNextLeafOfType(@Nullable PsiElement         element,
-                                                                               @NotNull  Class<ParentType> aClass) {
+                                                                               @Nonnull Class<ParentType> aClass) {
         return getNextLeafOfType(element, aClass, true);
     }
 
@@ -133,8 +133,8 @@ public class TreeUtil {
         return (ParentType) element;
     }
 
-    public static boolean isAncestor(@NotNull JSElement ancestor,
-                                     @NotNull JSElement element,
+    public static boolean isAncestor(@Nonnull JSElement ancestor,
+                                     @Nonnull JSElement element,
                                      boolean            strict) {
         PsiElement parent = (strict ? element.getParent() : element);
 

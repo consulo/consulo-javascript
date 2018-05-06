@@ -1,6 +1,7 @@
 package consulo.javascript.lang;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.javascript.lang.parsing.EcmaScript4Parser;
 import com.intellij.lang.PsiParser;
 import com.intellij.lang.javascript.DialectOptionHolder;
@@ -25,21 +26,21 @@ public class EcmaScript4JavaScriptVersion extends BaseJavaScriptLanguageVersion
 		addFeature(JavaScriptFeature.CLASS);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public PsiParser createParser()
 	{
 		return new EcmaScript4Parser();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public JSHighlighter getSyntaxHighlighter()
 	{
 		return new JSHighlighter(myDialectOptionHolder);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Lexer createLexer()
 	{

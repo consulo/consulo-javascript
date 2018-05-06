@@ -15,12 +15,13 @@
  */
 package org.intellij.idea.lang.javascript.intention.number;
 
+import javax.annotation.Nonnull;
+
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
 import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NotNull;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSAssignmentExpression;
@@ -48,13 +49,13 @@ public class JSReplaceMultiplyWithShiftIntention extends JSMutablyNamedIntention
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public JSElementPredicate getElementPredicate() {
         return new MultiplyByPowerOfTwoPredicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element)
+	public void processIntention(@Nonnull PsiElement element)
             throws IncorrectOperationException {
         if (element instanceof JSAssignmentExpression) {
             this.replaceMultiplyOrDivideAssignWithShiftAssign((JSAssignmentExpression) element);
@@ -104,7 +105,7 @@ public class JSReplaceMultiplyWithShiftIntention extends JSMutablyNamedIntention
 
     private static class MultiplyByPowerOfTwoPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (element instanceof JSAssignmentExpression) {
                 return isMultiplyByPowerOfTwo((JSAssignmentExpression) element);
             } else if (element instanceof JSBinaryExpression) {

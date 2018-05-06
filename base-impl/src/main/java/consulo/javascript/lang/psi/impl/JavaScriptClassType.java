@@ -16,8 +16,9 @@
 
 package consulo.javascript.lang.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredReadAction;
 import consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.lang.javascript.psi.JSClass;
@@ -37,7 +38,7 @@ public class JavaScriptClassType implements JavaScriptType
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public String getPresentableText()
 	{

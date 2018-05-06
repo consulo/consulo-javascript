@@ -19,8 +19,8 @@ package com.intellij.lang.javascript.flex.importer;
 import java.util.LinkedList;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.stubs.impl.JSAttributeNameValuePairStubImpl;
 import com.intellij.lang.javascript.psi.stubs.impl.JSReferenceListStubImpl;
@@ -67,7 +67,7 @@ class AS3InterfaceStubDumper extends AS3InterfaceDumper
 	}
 
 	@Override
-	public void processParameter(@NotNull String name, @Nullable Multiname type, String parentName, @Nullable Multiname value, boolean rest)
+	public void processParameter(@Nonnull String name, @Nullable Multiname type, String parentName, @Nullable Multiname value, boolean rest)
 	{
 		/*new JSParameterStubImpl(name, rest ? JSParameterStubImpl.REST_MASK : 0, getMultinameAsPackageName(type, parentName, true),
 			getValueRepr(value),
@@ -75,7 +75,7 @@ class AS3InterfaceStubDumper extends AS3InterfaceDumper
 	}
 
 	@Override
-	public void append(@NotNull @NonNls String str)
+	public void append(@Nonnull @NonNls String str)
 	{
 	}
 

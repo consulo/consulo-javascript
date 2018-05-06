@@ -22,8 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.injection.InjectedLanguageManager;
@@ -1140,14 +1141,14 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor
 
 	public interface TypeProcessor
 	{
-		void process(@NotNull String type, @NotNull EvaluateContext evaluateContext, final PsiElement source);
+		void process(@Nonnull String type, @Nonnull EvaluateContext evaluateContext, final PsiElement source);
 
 		@Deprecated
 		boolean ecma();
 
 		Set<JavaScriptFeature> getFeatures();
 
-		void setUnknownElement(@NotNull PsiElement element);
+		void setUnknownElement(@Nonnull PsiElement element);
 	}
 
 	public interface GenericTypeParametersClient
@@ -1168,7 +1169,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor
 		}
 
 		@Override
-		public void process(@NotNull final String _type, @NotNull final EvaluateContext evaluateContext, final PsiElement _source)
+		public void process(@Nonnull final String _type, @Nonnull final EvaluateContext evaluateContext, final PsiElement _source)
 		{
 			setType(type != null && !type.equals(_type) ? ANY_TYPE : _type, _source);
 		}
@@ -1199,7 +1200,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor
 		}
 
 		@Override
-		public void setUnknownElement(@NotNull final PsiElement _element)
+		public void setUnknownElement(@Nonnull final PsiElement _element)
 		{
 			setType(ANY_TYPE, _element);
 		}

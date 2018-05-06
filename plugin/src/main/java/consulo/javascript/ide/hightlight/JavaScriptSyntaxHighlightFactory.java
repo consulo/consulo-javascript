@@ -1,6 +1,7 @@
 package consulo.javascript.ide.hightlight;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import consulo.fileTypes.LanguageVersionableSyntaxHighlighterFactory;
 import consulo.javascript.lang.BaseJavaScriptLanguageVersion;
@@ -18,9 +19,9 @@ public class JavaScriptSyntaxHighlightFactory extends LanguageVersionableSyntaxH
 		super(JavaScriptLanguage.INSTANCE);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public SyntaxHighlighter getSyntaxHighlighter(@NotNull LanguageVersion languageVersion)
+	public SyntaxHighlighter getSyntaxHighlighter(@Nonnull LanguageVersion languageVersion)
 	{
 		if(languageVersion instanceof BaseJavaScriptLanguageVersion)
 		{

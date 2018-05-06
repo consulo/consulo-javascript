@@ -20,8 +20,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.codeInsight.template.Template;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemsHolder;
@@ -60,21 +61,21 @@ public class JSUnresolvedVariableInspection extends JSInspection
 	private static final String SHORT_NAME = "JSUnresolvedVariable";
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getGroupDisplayName()
 	{
 		return JavaScriptBundle.message("js.inspection.group.name");
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getDisplayName()
 	{
 		return JavaScriptBundle.message("js.unresolved.variable.inspection.name");
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	@NonNls
 	public String getShortName()
 	{
@@ -273,7 +274,7 @@ public class JSUnresolvedVariableInspection extends JSInspection
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public String getFamilyName()
 		{
 			return JavaScriptBundle.message("javascript.create.variable.intention.family");
@@ -288,7 +289,7 @@ public class JSUnresolvedVariableInspection extends JSInspection
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public String getName()
 		{
 			return JavaScriptBundle.message("javascript.create.namespace.intention.name", myReferencedName);
@@ -322,7 +323,7 @@ public class JSUnresolvedVariableInspection extends JSInspection
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public String getName()
 		{
 			return JavaScriptBundle.message(isField ? isConstant ? "javascript.create.constant.field.intention.name" : "javascript.create.property.intention.name" :

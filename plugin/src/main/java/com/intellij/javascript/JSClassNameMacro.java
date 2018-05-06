@@ -16,8 +16,9 @@
 
 package com.intellij.javascript;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.template.Expression;
 import com.intellij.codeInsight.template.ExpressionContext;
@@ -56,7 +57,7 @@ public class JSClassNameMacro extends Macro
 	}
 
 	@Override
-	public Result calculateResult(@NotNull final Expression[] params, final ExpressionContext context)
+	public Result calculateResult(@Nonnull final Expression[] params, final ExpressionContext context)
 	{
 		final PsiElement elementAtCaret = findElementAtCaret(context);
 		final JSResolveUtil.ContextResolver resolver = new JSResolveUtil.ContextResolver(elementAtCaret);
@@ -93,13 +94,13 @@ public class JSClassNameMacro extends Macro
 	}
 
 	@Override
-	public Result calculateQuickResult(@NotNull final Expression[] params, final ExpressionContext context)
+	public Result calculateQuickResult(@Nonnull final Expression[] params, final ExpressionContext context)
 	{
 		return null;
 	}
 
 	@Override
-	public LookupElement[] calculateLookupItems(@NotNull final Expression[] params, final ExpressionContext context)
+	public LookupElement[] calculateLookupItems(@Nonnull final Expression[] params, final ExpressionContext context)
 	{
 		return null;
 	}

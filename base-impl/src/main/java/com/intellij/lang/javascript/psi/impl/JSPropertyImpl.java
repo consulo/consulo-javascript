@@ -16,8 +16,8 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -51,7 +51,7 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public PsiReference[] getReferences()
 	{
 		return CachedValuesManager.getCachedValue(this, new CachedValueProvider<PsiReference[]>()
@@ -66,7 +66,7 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 		});
 	}
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	private PsiReference[] buildReferences()
 	{
@@ -96,7 +96,7 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 	}
 
 	@Override
-	public PsiElement setName(@NotNull String name) throws IncorrectOperationException
+	public PsiElement setName(@Nonnull String name) throws IncorrectOperationException
 	{
 		final PsiElement nameNode = getNameIdentifier();
 		assert nameNode != null;
@@ -106,7 +106,7 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public JavaScriptType getType()
 	{
@@ -142,7 +142,7 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 	}
 
 	@Override
-	public void accept(@NotNull PsiElementVisitor visitor)
+	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
 		{

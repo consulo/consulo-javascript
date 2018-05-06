@@ -19,14 +19,14 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiRecursiveElementVisitor;
 import com.intellij.psi.util.PsiUtilBase;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ErrorUtil {
     private ErrorUtil() {}
 
     private static final boolean fullTraversal = false;
 
-    public static boolean containsError(@NotNull PsiElement element) {
+    public static boolean containsError(@Nonnull PsiElement element) {
         // check only immediate children, full tree traversal is too expensive
         if (fullTraversal) {
             final ErrorElementVisitor visitor = new ErrorElementVisitor();

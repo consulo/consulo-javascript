@@ -16,8 +16,9 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSDocTagValue;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -38,7 +39,7 @@ public class JSDocTagValueImpl extends JSElementImpl implements JSDocTagValue
 		super(node);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public PsiReference[] getReferences()
 	{
@@ -126,7 +127,7 @@ public class JSDocTagValueImpl extends JSElementImpl implements JSDocTagValue
 	}
 
 	@Override
-	public void accept(@NotNull final PsiElementVisitor visitor)
+	public void accept(@Nonnull final PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
 		{

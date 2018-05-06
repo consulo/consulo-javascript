@@ -16,11 +16,11 @@
 
 package consulo.javascript.run.debug;
 
+import javax.annotation.Nonnull;
 import javax.swing.Icon;
 
 import org.chromium.sdk.JsEvaluateContext;
 import org.chromium.sdk.JsValue;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.icons.AllIcons;
 
 /**
@@ -31,20 +31,20 @@ public class V8WatchValue extends V8BaseVariableValue
 {
 	private JsValue myValue;
 
-	public V8WatchValue(@NotNull JsEvaluateContext evaluateContext, @NotNull String text, @NotNull JsValue value)
+	public V8WatchValue(@Nonnull JsEvaluateContext evaluateContext, @Nonnull String text, @Nonnull JsValue value)
 	{
 		super(evaluateContext, text);
 		myValue = value;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	protected Icon getIconForValue(JsValue value, JsValue.Type valueType)
 	{
 		return AllIcons.Debugger.Watch;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	protected JsValue getValue()
 	{

@@ -18,8 +18,9 @@ package com.intellij.lang.javascript.psi.impl;
 
 import java.io.IOException;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -56,7 +57,7 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 	}
 
 	@Override
-	public void accept(@NotNull PsiElementVisitor visitor)
+	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
 		{
@@ -114,7 +115,7 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 	}
 
 	@Override
-	public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException
+	public PsiElement setName(@NonNls @Nonnull String name) throws IncorrectOperationException
 	{
 		VirtualFile virtualFile = getContainingFile().getVirtualFile();
 		String expectedPackageNameFromFile = JSResolveUtil.getExpectedPackageNameFromFile(virtualFile, getProject(), false);
@@ -145,8 +146,8 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 	}
 
 	@Override
-	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState substitutor,
-			final PsiElement lastParent, @NotNull final PsiElement place)
+	public boolean processDeclarations(@Nonnull final PsiScopeProcessor processor, @Nonnull final ResolveState substitutor,
+			final PsiElement lastParent, @Nonnull final PsiElement place)
 	{
 		if(lastParent != null && lastParent.getParent() == this)
 		{
@@ -165,7 +166,7 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 	}
 
 	@Override
-	public PsiElement addBefore(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException
+	public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException
 	{
 		if(JSChangeUtil.isStatementOrComment(element))
 		{
@@ -177,7 +178,7 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 	}
 
 	@Override
-	public PsiElement addAfter(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException
+	public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException
 	{
 		if(JSChangeUtil.isStatementOrComment(element))
 		{

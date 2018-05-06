@@ -16,13 +16,15 @@
 
 package consulo.javascript.run.debug;
 
+import javax.annotation.Nonnull;
+
 import org.chromium.sdk.JsDeclarativeVariable;
 import org.chromium.sdk.JsEvaluateContext;
 import org.chromium.sdk.JsFunction;
 import org.chromium.sdk.JsValue;
 import org.chromium.sdk.JsVariable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.frame.XValueModifier;
 
@@ -32,7 +34,7 @@ import com.intellij.xdebugger.frame.XValueModifier;
  */
 public class V8VariableValue extends V8BaseVariableValue
 {
-	public static void addValue(@NotNull XValueChildrenList valueChildrenList, @NotNull JsEvaluateContext debugContext, @NotNull JsVariable jsVariable)
+	public static void addValue(@Nonnull XValueChildrenList valueChildrenList, @Nonnull JsEvaluateContext debugContext, @Nonnull JsVariable jsVariable)
 	{
 		JsValue value = jsVariable.getValue();
 		if(value instanceof JsFunction)
@@ -44,7 +46,7 @@ public class V8VariableValue extends V8BaseVariableValue
 
 	private JsVariable myJsVariable;
 
-	public V8VariableValue(@NotNull JsEvaluateContext evaluateContext, @NotNull JsVariable jsVariable)
+	public V8VariableValue(@Nonnull JsEvaluateContext evaluateContext, @Nonnull JsVariable jsVariable)
 	{
 		super(evaluateContext, jsVariable.getName());
 		myJsVariable = jsVariable;
@@ -74,7 +76,7 @@ public class V8VariableValue extends V8BaseVariableValue
 				return new XValueModifier()
 				{
 					@Override
-					public void setValue(@NotNull String expression, @NotNull final XModificationCallback callback)
+					public void setValue(@Nonnull String expression, @Nonnull final XModificationCallback callback)
 					{
 						JsEvaluateContext.PrimitiveValueFactory valueFactory = myEvaluateContext.getValueFactory();
 						JsValue value = null;
@@ -149,7 +151,7 @@ public class V8VariableValue extends V8BaseVariableValue
 		}
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	protected JsValue getValue()
 	{

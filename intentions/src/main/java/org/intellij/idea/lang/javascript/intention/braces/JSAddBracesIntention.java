@@ -23,7 +23,7 @@ import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class JSAddBracesIntention extends JSMutablyNamedIntention {
 
@@ -31,7 +31,7 @@ public class JSAddBracesIntention extends JSMutablyNamedIntention {
     @NonNls private static final String ELSE_KEYWORD = "else";
 
     @Override
-	@NotNull
+	@Nonnull
     protected JSElementPredicate getElementPredicate() {
         return new AddBracesPredicate();
     }
@@ -59,7 +59,7 @@ public class JSAddBracesIntention extends JSMutablyNamedIntention {
     }
 
     @Override
-	protected void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+	protected void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         if (!(element instanceof JSStatement)) { return; }
         final JSStatement  statement = (JSStatement) element;
         final JSElement    parent    = (JSElement) element.getParent();
@@ -76,7 +76,7 @@ public class JSAddBracesIntention extends JSMutablyNamedIntention {
 
     private static class AddBracesPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (!(element instanceof JSStatement)) {
                 return false;
             }

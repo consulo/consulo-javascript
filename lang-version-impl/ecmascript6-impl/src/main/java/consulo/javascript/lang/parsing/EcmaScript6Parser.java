@@ -16,7 +16,8 @@
 
 package consulo.javascript.lang.parsing;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.PsiBuilder;
 
 /**
@@ -25,14 +26,14 @@ import com.intellij.lang.PsiBuilder;
  */
 public class EcmaScript6Parser extends JavaScriptParser
 {
-	@NotNull
+	@Nonnull
 	@Override
 	public JavaScriptParsingContext createParsingContext()
 	{
 		return new EcmaScript6ParsingContext();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public JavaScriptParserBuilder createBuilder(PsiBuilder builder)
 	{

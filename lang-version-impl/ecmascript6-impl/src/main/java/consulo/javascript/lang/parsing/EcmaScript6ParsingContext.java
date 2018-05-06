@@ -16,7 +16,7 @@
 
 package consulo.javascript.lang.parsing;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -24,14 +24,14 @@ import org.jetbrains.annotations.NotNull;
  */
 public class EcmaScript6ParsingContext extends JavaScriptParsingContext
 {
-	@NotNull
+	@Nonnull
 	@Override
 	protected StatementParsing createStatementParsing()
 	{
 		return new EcmaScript6StatementParsing(this);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	protected ExpressionParsing createExpressionParsing()
 	{

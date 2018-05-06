@@ -19,7 +19,8 @@
  */
 package consulo.javascript.psi.stubs.index;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;
@@ -30,7 +31,7 @@ import consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
  */
 public class JavaScriptClassNameIndex extends StringStubIndexExtension<JSClass>
 {
-	@NotNull
+	@Nonnull
 	@Override
 	public StubIndexKey<String, JSClass> getKey()
 	{

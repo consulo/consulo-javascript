@@ -15,10 +15,11 @@
  */
 package org.intellij.idea.lang.javascript.intention.braces;
 
+import javax.annotation.Nonnull;
+
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.NonNls;
 
 import com.intellij.lang.javascript.psi.JSBlockStatement;
@@ -39,7 +40,7 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention {
     @NonNls private static final String ELSE_KEYWORD = "else";
 
     @Override
-	@NotNull
+	@Nonnull
     protected JSElementPredicate getElementPredicate() {
         return new RemoveBracesPredicate();
     }
@@ -67,7 +68,7 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention {
     }
 
     @Override
-	protected void processIntention(@NotNull PsiElement element)
+	protected void processIntention(@Nonnull PsiElement element)
         throws IncorrectOperationException {
         final JSBlockStatement blockStatement = (JSBlockStatement) element;
         final JSStatement[]    statements     = blockStatement.getStatements();
@@ -108,7 +109,7 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention {
 
     public static class RemoveBracesPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (!(element instanceof JSBlockStatement)) {
                 return false;
             }

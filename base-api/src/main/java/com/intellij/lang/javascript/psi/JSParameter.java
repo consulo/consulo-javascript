@@ -16,8 +16,8 @@
 
 package com.intellij.lang.javascript.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ArrayFactory;
 import consulo.annotations.RequiredReadAction;
@@ -33,7 +33,7 @@ public interface JSParameter extends JSVariable
 
 	public static ArrayFactory<JSParameter> ARRAY_FACTORY = new ArrayFactory<JSParameter>()
 	{
-		@NotNull
+		@Nonnull
 		@Override
 		public JSParameter[] create(int count)
 		{

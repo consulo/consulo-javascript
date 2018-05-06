@@ -22,8 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
@@ -48,7 +49,7 @@ import com.intellij.util.Query;
  */
 public class JSSmartCompletionVariantsHandler
 {
-	static Object[] getSmartVariants(final @NotNull PsiElement expr, final boolean ecma)
+	static Object[] getSmartVariants(final @Nonnull PsiElement expr, final boolean ecma)
 	{
 		final PsiElement parent = expr.getParent();
 
@@ -198,7 +199,7 @@ public class JSSmartCompletionVariantsHandler
 		}
 
 		@Override
-		public boolean process(final @NotNull JSAttribute jsAttribute)
+		public boolean process(final @Nonnull JSAttribute jsAttribute)
 		{
 			if("Event".equals(jsAttribute.getName()))
 			{

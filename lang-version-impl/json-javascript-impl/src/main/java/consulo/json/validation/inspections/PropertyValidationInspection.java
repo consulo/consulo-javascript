@@ -24,8 +24,8 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
@@ -62,9 +62,9 @@ import consulo.json.validation.descriptor.JsonPropertyDescriptor;
  */
 public class PropertyValidationInspection extends LocalInspectionTool
 {
-	@NotNull
+	@Nonnull
 	@Override
-	public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly)
+	public PsiElementVisitor buildVisitor(@Nonnull final ProblemsHolder holder, boolean isOnTheFly)
 	{
 		return new JSElementVisitor()
 		{
@@ -173,7 +173,7 @@ public class PropertyValidationInspection extends LocalInspectionTool
 
 	@Nullable
 	@RequiredReadAction
-	private static Object getTypeOfExpression(@NotNull PsiElement node)
+	private static Object getTypeOfExpression(@Nonnull PsiElement node)
 	{
 		if(node instanceof JSLiteralExpression)
 		{
@@ -249,7 +249,7 @@ public class PropertyValidationInspection extends LocalInspectionTool
 
 	@Nullable
 	@RequiredReadAction
-	public static JsonPropertyDescriptor findPropertyDescriptor(@NotNull final JSProperty jsProperty)
+	public static JsonPropertyDescriptor findPropertyDescriptor(@Nonnull final JSProperty jsProperty)
 	{
 		return CachedValuesManager.getManager(jsProperty.getProject()).createCachedValue(new CachedValueProvider<JsonPropertyDescriptor>()
 		{
@@ -265,7 +265,7 @@ public class PropertyValidationInspection extends LocalInspectionTool
 
 	@Nullable
 	@RequiredReadAction
-	private static JsonPropertyDescriptor findPropertyDescriptorImpl(@NotNull JSProperty jsProperty)
+	private static JsonPropertyDescriptor findPropertyDescriptorImpl(@Nonnull JSProperty jsProperty)
 	{
 		JsonObjectDescriptor rootDescriptor = JsonFileDescriptorProviders.getRootDescriptor(jsProperty.getContainingFile());
 		if(rootDescriptor == null)
@@ -318,7 +318,7 @@ public class PropertyValidationInspection extends LocalInspectionTool
 	}
 
 	@RequiredReadAction
-	private static void validateValue(@NotNull PsiElement value, @NotNull ProblemsHolder holder)
+	private static void validateValue(@Nonnull PsiElement value, @Nonnull ProblemsHolder holder)
 	{
 		Object actualType = getTypeOfExpression(value);
 		if(actualType == null)
@@ -376,7 +376,7 @@ public class PropertyValidationInspection extends LocalInspectionTool
 		return false;
 	}
 
-	@NotNull
+	@Nonnull
 	private static String getSimpleName(Object o)
 	{
 		if(o instanceof Class)

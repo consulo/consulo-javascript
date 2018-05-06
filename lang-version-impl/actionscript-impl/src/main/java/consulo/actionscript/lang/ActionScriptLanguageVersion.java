@@ -1,6 +1,7 @@
 package consulo.actionscript.lang;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.PsiParser;
 import com.intellij.lang.javascript.DialectOptionHolder;
 import com.intellij.lang.javascript.JavaScriptParsingFlexLexer;
@@ -16,7 +17,7 @@ import consulo.javascript.lang.parsing.EcmaScript4Parser;
  */
 public class ActionScriptLanguageVersion extends BaseJavaScriptLanguageVersion
 {
-	@NotNull
+	@Nonnull
 	public static ActionScriptLanguageVersion getInstance()
 	{
 		return JavaScriptLanguage.INSTANCE.findVersionByClass(ActionScriptLanguageVersion.class);
@@ -29,28 +30,28 @@ public class ActionScriptLanguageVersion extends BaseJavaScriptLanguageVersion
 		super("ACTIONSCRIPT");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getPresentableName()
 	{
 		return "ActionScript";
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public PsiParser createParser()
 	{
 		return new EcmaScript4Parser();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public JSHighlighter getSyntaxHighlighter()
 	{
 		return new JSHighlighter(myDialectOptionHolder);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Lexer createLexer()
 	{

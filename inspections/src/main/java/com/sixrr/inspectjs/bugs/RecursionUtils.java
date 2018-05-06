@@ -1,11 +1,12 @@
 package com.sixrr.inspectjs.bugs;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.psi.*;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.sixrr.inspectjs.utils.BoolUtils;
-import org.jetbrains.annotations.NotNull;
 
 public class RecursionUtils {
 
@@ -190,7 +191,7 @@ public class RecursionUtils {
         return endsInImplicitReturn;
     }
 
-    public static boolean functionMayRecurse(@NotNull JSFunction function) {
+    public static boolean functionMayRecurse(@Nonnull JSFunction function) {
         final RecursionVisitor recursionVisitor = new RecursionVisitor(function);
         function.accept(recursionVisitor);
         return recursionVisitor.isRecursive();
@@ -522,7 +523,7 @@ public class RecursionUtils {
     }
 
     public static boolean functionDefinitelyRecurses(
-            @NotNull JSFunction function) {
+            @Nonnull JSFunction function) {
         final JSSourceElement[] body = function.getBody();
         if (body == null) {
             return false;

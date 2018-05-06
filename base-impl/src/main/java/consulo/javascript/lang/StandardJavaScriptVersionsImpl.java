@@ -3,8 +3,9 @@ package consulo.javascript.lang;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.lang.LanguageVersion;
@@ -15,13 +16,13 @@ import consulo.lang.LanguageVersion;
  */
 public class StandardJavaScriptVersionsImpl extends StandardJavaScriptVersions
 {
-	@NotNull
+	@Nonnull
 	public BaseJavaScriptLanguageVersion getDefaultVersion()
 	{
 		return JavaScript15LanguageVersion.getInstance();
 	}
 
-	@NotNull
+	@Nonnull
 	public List<JavaScriptLanguageVersion> getValidLanguageVersions()
 	{
 		List<JavaScriptLanguageVersion> list = new ArrayList<>();
@@ -38,7 +39,7 @@ public class StandardJavaScriptVersionsImpl extends StandardJavaScriptVersions
 		return list;
 	}
 
-	@NotNull
+	@Nonnull
 	public BaseJavaScriptLanguageVersion findVersionById(@Nullable String id)
 	{
 		if(StringUtil.isEmpty(id))

@@ -16,8 +16,9 @@
 
 package com.intellij.lang.javascript.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.lang.javascript.psi.stubs.JSFunctionStub;
 import com.intellij.psi.StubBasedPsiElement;
 import com.intellij.util.ArrayFactory;
@@ -34,7 +35,7 @@ public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JS
 
 	public static ArrayFactory<JSFunction> ARRAY_FACTORY = new ArrayFactory<JSFunction>()
 	{
-		@NotNull
+		@Nonnull
 		@Override
 		public JSFunction[] create(int count)
 		{
@@ -57,7 +58,7 @@ public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JS
 	@RequiredReadAction
 	boolean isConstructor();
 
-	@NotNull
+	@Nonnull
 	JavaScriptType getReturnType();
 
 	String getReturnTypeString();

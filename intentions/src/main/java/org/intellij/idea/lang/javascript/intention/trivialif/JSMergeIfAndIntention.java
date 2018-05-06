@@ -21,7 +21,7 @@ import org.intellij.idea.lang.javascript.psiutil.ConditionalUtils;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
 import com.intellij.lang.javascript.psi.JSElement;
@@ -35,13 +35,13 @@ public class JSMergeIfAndIntention extends JSIntention {
     @NonNls private static final String IF_STATEMENT_PREFIX = "if (";
 
     @Override
-	@NotNull
+	@Nonnull
     public JSElementPredicate getElementPredicate() {
         return new MergeIfAndPredicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         assert (element.getParent() != null);
         assert (element.getParent() instanceof JSIfStatement || element instanceof JSIfStatement);
 
@@ -61,7 +61,7 @@ public class JSMergeIfAndIntention extends JSIntention {
     private static class MergeIfAndPredicate implements JSElementPredicate {
 
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (!(element instanceof JSElement)) {
                 return false;
             }

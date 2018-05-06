@@ -2,8 +2,8 @@ package com.sixrr.inspectjs;
 
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
@@ -92,7 +92,7 @@ public abstract class BaseInspectionVisitor extends JSElementVisitor{
         return ProblemHighlightType.GENERIC_ERROR_OR_WARNING;
     }
 
-    protected PsiElement getEditorErrorLocation(final @NotNull PsiElement location) {
+    protected PsiElement getEditorErrorLocation(final @Nonnull PsiElement location) {
         return location;
     }
 

@@ -22,7 +22,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.codeInsight.completion.CompletionContributor;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
@@ -62,7 +63,7 @@ public class JsonCompletionContributor extends CompletionContributor
 		{
 			@RequiredReadAction
 			@Override
-			public void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result)
+			public void addCompletions(@Nonnull CompletionParameters parameters, ProcessingContext context, @Nonnull CompletionResultSet result)
 			{
 				addVariants(parameters, result, true);
 			}
@@ -72,7 +73,7 @@ public class JsonCompletionContributor extends CompletionContributor
 		{
 			@RequiredReadAction
 			@Override
-			public void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result)
+			public void addCompletions(@Nonnull CompletionParameters parameters, ProcessingContext context, @Nonnull CompletionResultSet result)
 			{
 				PsiElement originalPosition = parameters.getOriginalPosition();
 				if(originalPosition == null)
@@ -91,7 +92,7 @@ public class JsonCompletionContributor extends CompletionContributor
 		{
 			@RequiredReadAction
 			@Override
-			public void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result)
+			public void addCompletions(@Nonnull CompletionParameters parameters, ProcessingContext context, @Nonnull CompletionResultSet result)
 			{
 				PsiElement originalPosition = parameters.getOriginalPosition();
 				if(originalPosition == null)
@@ -108,7 +109,7 @@ public class JsonCompletionContributor extends CompletionContributor
 	}
 
 	@RequiredReadAction
-	private static void addVariants(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result, boolean quotes)
+	private static void addVariants(@Nonnull CompletionParameters parameters, @Nonnull CompletionResultSet result, boolean quotes)
 	{
 		final PsiFile originalFile = parameters.getOriginalFile();
 

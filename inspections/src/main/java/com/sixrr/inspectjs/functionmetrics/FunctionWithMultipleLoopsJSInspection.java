@@ -7,18 +7,18 @@ import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class FunctionWithMultipleLoopsJSInspection extends JavaScriptInspection {
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("function.with.multiple.loops.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
     }
@@ -47,7 +47,7 @@ public class FunctionWithMultipleLoopsJSInspection extends JavaScriptInspection 
 
     private static class Visitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSFunctionDeclaration(@NotNull JSFunction function) {
+        @Override public void visitJSFunctionDeclaration(@Nonnull JSFunction function) {
             // note: no call to super
             final PsiElement lastChild = function.getLastChild();
             if (!(lastChild instanceof JSBlockStatement)) {

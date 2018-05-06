@@ -19,9 +19,10 @@ package com.intellij.lang.javascript.psi.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import consulo.annotations.RequiredReadAction;
 import com.intellij.codeInsight.daemon.EmptyResolveMessageProvider;
 import com.intellij.lang.ASTNode;
@@ -241,7 +242,7 @@ public class JSReferenceSet
 		}
 
 		@Override
-		public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException
+		public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException
 		{
 			String qName = JSPsiImplUtils.getQNameForMove(getElement(), element);
 			if(qName != null)
@@ -356,7 +357,7 @@ public class JSReferenceSet
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		@RequiredReadAction
 		public ResolveResult[] multiResolve(final boolean incompleteCode)
 		{
@@ -577,9 +578,9 @@ public class JSReferenceSet
 	{
 		private static final MyResolver INSTANCE = new MyResolver();
 
-		@NotNull
+		@Nonnull
 		@Override
-		public ResolveResult[] resolve(@NotNull MyPsiReference ref, @NotNull PsiFile containingFile, boolean incompleteCode)
+		public ResolveResult[] resolve(@Nonnull MyPsiReference ref, @Nonnull PsiFile containingFile, boolean incompleteCode)
 		{
 			return ref.doResolve(containingFile);
 		}

@@ -15,10 +15,11 @@
  */
 package org.intellij.idea.lang.javascript.intention.string;
 
+import javax.annotation.Nonnull;
+
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -32,13 +33,13 @@ import consulo.javascript.lang.JavaScriptTokenSets;
 
 public class JSJoinConcatenatedStringLiteralsIntention extends JSIntention {
     @Override
-	@NotNull
+	@Nonnull
     protected JSElementPredicate getElementPredicate() {
         return new StringConcatPredicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element)
+	public void processIntention(@Nonnull PsiElement element)
             throws IncorrectOperationException {
         final JSBinaryExpression expression = (JSBinaryExpression) element;
         final JSExpression       lhs        = expression.getLOperand();
@@ -66,7 +67,7 @@ public class JSJoinConcatenatedStringLiteralsIntention extends JSIntention {
 
     private static class StringConcatPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (!(element instanceof JSBinaryExpression)) {
                 return false;
             }

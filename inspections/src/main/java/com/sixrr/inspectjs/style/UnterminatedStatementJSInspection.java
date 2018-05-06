@@ -1,7 +1,8 @@
 package com.sixrr.inspectjs.style;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.openapi.project.Project;
@@ -28,14 +29,14 @@ public class UnterminatedStatementJSInspection extends JavaScriptInspection
 	private final TerminateStatementFix fix = new TerminateStatementFix();
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getDisplayName()
 	{
 		return InspectionJSBundle.message("unterminated.statement.display.name");
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getGroupDisplayName()
 	{
 		return JSGroupNames.STYLE_GROUP_NAME;
@@ -63,7 +64,7 @@ public class UnterminatedStatementJSInspection extends JavaScriptInspection
 	private static class TerminateStatementFix extends InspectionJSFix
 	{
 		@Override
-		@NotNull
+		@Nonnull
 		public String getName()
 		{
 			return InspectionJSBundle.message("terminate.statement.fix");

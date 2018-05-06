@@ -16,8 +16,9 @@
 
 package com.intellij.lang.javascript.flex.importer;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Maxim.Mossienko
@@ -37,7 +38,7 @@ abstract class AbstractDumpProcessor implements FlexByteCodeInformationProcessor
 	}
 
 	@Override
-	public void append(@NotNull @NonNls String str)
+	public void append(@Nonnull @NonNls String str)
 	{
 		sb.append(str);
 	}
@@ -116,7 +117,7 @@ abstract class AbstractDumpProcessor implements FlexByteCodeInformationProcessor
 		processMultinameAsPackageName(methodInfo.returnType, parentName, referenceNameRequested);
 	}
 
-	protected void processMemberKindAndName(@NotNull final MemberInfo member)
+	protected void processMemberKindAndName(@Nonnull final MemberInfo member)
 	{
 		append(Abc.traitKinds[member.kind]);
 		append(" ");

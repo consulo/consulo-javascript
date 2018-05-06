@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 
@@ -560,7 +560,7 @@ class Abc
 	int totalSize;
 	final int opSizes[] = new int[256];
 
-	public Abc(final @NotNull ByteBuffer _data, @NotNull FlexByteCodeInformationProcessor _processor)
+	public Abc(final @Nonnull ByteBuffer _data, @Nonnull FlexByteCodeInformationProcessor _processor)
 	{
 		data = _data;
 		processor = _processor;
@@ -1179,7 +1179,7 @@ class Abc
 		reportAboutPercentage("MethodBodies size ", data, start, processor);
 	}
 
-	private static void reportAboutPercentage(String s, ByteBuffer data, int start, @NotNull FlexByteCodeInformationProcessor processor)
+	private static void reportAboutPercentage(String s, ByteBuffer data, int start, @Nonnull FlexByteCodeInformationProcessor processor)
 	{
 		processor.dumpStat(s + (data.getPosition() - start) + " " + (int) 100f * (data.getPosition() - start) / data.bytesSize() + " %\n");
 	}

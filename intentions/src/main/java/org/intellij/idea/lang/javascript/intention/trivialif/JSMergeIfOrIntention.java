@@ -15,6 +15,8 @@
  */
 package org.intellij.idea.lang.javascript.intention.trivialif;
 
+import javax.annotation.Nonnull;
+
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ControlFlowUtils;
@@ -22,7 +24,6 @@ import org.intellij.idea.lang.javascript.psiutil.EquivalenceChecker;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.NonNls;
 
 import com.intellij.lang.javascript.psi.JSElement;
@@ -37,13 +38,13 @@ public class JSMergeIfOrIntention extends JSIntention {
     @NonNls private static final String ELSE_KEYWORD        = "else ";
 
     @Override
-	@NotNull
+	@Nonnull
     public JSElementPredicate getElementPredicate() {
         return new MergeIfOrPredicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         assert (element instanceof JSElement);
         JSElement jsElement = (JSElement) element;
         if (MergeIfOrPredicate.isMergableExplicitIf(jsElement)) {
@@ -114,7 +115,7 @@ public class JSMergeIfOrIntention extends JSIntention {
 
     private static class MergeIfOrPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (!(element instanceof JSElement)) {
                 return false;
             }

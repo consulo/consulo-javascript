@@ -1,9 +1,9 @@
 package consulo.javascript.client.module.extension;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.JComponent;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.projectRoots.Sdk;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.javascript.module.extension.JavaScriptMutableModuleExtension;
@@ -17,12 +17,12 @@ import consulo.roots.ModuleRootLayer;
  */
 public class ClientJavaScriptMutableModuleExtension extends ClientJavaScriptModuleExtension implements JavaScriptMutableModuleExtension<ClientJavaScriptModuleExtension>
 {
-	public ClientJavaScriptMutableModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootModel)
+	public ClientJavaScriptMutableModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer rootModel)
 	{
 		super(id, rootModel);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk()
 	{
@@ -32,7 +32,7 @@ public class ClientJavaScriptMutableModuleExtension extends ClientJavaScriptModu
 	@RequiredDispatchThread
 	@Nullable
 	@Override
-	public JComponent createConfigurablePanel(@NotNull Runnable updateOnCheck)
+	public JComponent createConfigurablePanel(@Nonnull Runnable updateOnCheck)
 	{
 		return new ClientJavaScriptModuleExtensionPanel(this);
 	}
@@ -44,13 +44,13 @@ public class ClientJavaScriptMutableModuleExtension extends ClientJavaScriptModu
 	}
 
 	@Override
-	public boolean isModified(@NotNull ClientJavaScriptModuleExtension originalExtension)
+	public boolean isModified(@Nonnull ClientJavaScriptModuleExtension originalExtension)
 	{
 		return myIsEnabled != originalExtension.isEnabled() || myLanguageVersion != originalExtension.getLanguageVersion();
 	}
 
 	@Override
-	public void setLanguageVersion(@NotNull LanguageVersion languageVersion)
+	public void setLanguageVersion(@Nonnull LanguageVersion languageVersion)
 	{
 		myLanguageVersion = languageVersion;
 	}

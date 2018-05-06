@@ -19,7 +19,8 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSAttributeList;
@@ -45,22 +46,22 @@ public class JSAttributeListElementType extends JSStubElementType<JSAttributeLis
 		super("ATTRIBUTE_LIST");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public PsiElement createElement(@NotNull ASTNode astNode)
+	public PsiElement createElement(@Nonnull ASTNode astNode)
 	{
 		return new JSAttributeListImpl(astNode);
 	}
 
 	@Override
-	public JSAttributeList createPsi(@NotNull JSAttributeListStub stub)
+	public JSAttributeList createPsi(@Nonnull JSAttributeListStub stub)
 	{
 		return new JSAttributeListImpl(stub);
 	}
 
 	@RequiredReadAction
 	@Override
-	public JSAttributeListStub createStub(@NotNull JSAttributeList psi, StubElement parentStub)
+	public JSAttributeListStub createStub(@Nonnull JSAttributeList psi, StubElement parentStub)
 	{
 		String namespace = psi.getNamespace();
 		int flags = JSAttributeListStubImpl.getFlags(psi);
@@ -68,15 +69,15 @@ public class JSAttributeListElementType extends JSStubElementType<JSAttributeLis
 	}
 
 	@Override
-	public void serialize(@NotNull JSAttributeListStub stub, @NotNull StubOutputStream dataStream) throws IOException
+	public void serialize(@Nonnull JSAttributeListStub stub, @Nonnull StubOutputStream dataStream) throws IOException
 	{
 		dataStream.writeName(stub.getNamespace());
 		dataStream.writeInt(stub.getFlags());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public JSAttributeListStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException
+	public JSAttributeListStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
 	{
 		StringRef namespaceRef = dataStream.readName();
 		int i = dataStream.readInt();

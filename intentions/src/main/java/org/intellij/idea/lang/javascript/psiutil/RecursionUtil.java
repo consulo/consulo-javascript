@@ -15,7 +15,7 @@
  */
 package org.intellij.idea.lang.javascript.psiutil;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSArgumentList;
@@ -239,7 +239,7 @@ public class RecursionUtil {
         return endsInImplicitReturn;
     }
 
-    public static boolean functionMayRecurse(@NotNull JSFunction function) {
+    public static boolean functionMayRecurse(@Nonnull JSFunction function) {
         final JSRecursionVisitor recursionVisitor = new JSRecursionVisitor(function);
 
         if (recursionVisitor.isFunctionNamed()) {
@@ -596,7 +596,7 @@ public class RecursionUtil {
     }
 
     public static boolean functionDefinitelyRecurses(
-            @NotNull JSFunction method) {
+            @Nonnull JSFunction method) {
         final JSSourceElement[] body = method.getBody();
 
         if (body != null) {

@@ -19,8 +19,9 @@ package com.intellij.lang.javascript.inspections;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
@@ -50,21 +51,21 @@ public class JSUndeclaredVariableInspection extends JSInspection
 	public static final String SHORT_NAME = "JSUndeclaredVariable";
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getGroupDisplayName()
 	{
 		return JavaScriptBundle.message("js.inspection.group.name");
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getDisplayName()
 	{
 		return JavaScriptBundle.message("js.undeclared.variable.inspection.name");
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	@NonNls
 	public String getShortName()
 	{
@@ -157,21 +158,21 @@ public class JSUndeclaredVariableInspection extends JSInspection
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public String getName()
 		{
 			return JavaScriptBundle.message("javascript.declare.variable.intention.name", myReferenceExpression.getReferencedName());
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public String getFamilyName()
 		{
 			return JavaScriptBundle.message("javascript.create.variable.intention.family");
 		}
 
 		@Override
-		public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor)
+		public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor)
 		{
 			if(!CodeInsightUtilBase.getInstance().prepareFileForWrite(myFile))
 			{

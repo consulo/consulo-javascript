@@ -1,29 +1,30 @@
 package com.sixrr.inspectjs.functionmetrics;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.psi.JSBlockStatement;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.psi.PsiElement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
-import org.jetbrains.annotations.NotNull;
 
 public class CyclomaticComplexityJSInspection
         extends FunctionMetricsInspection {
     @Override
-	@NotNull
+	@Nonnull
     public String getID() {
         return "OverlyComplexFunctionJS";
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("overly.complex.function.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
     }
@@ -61,7 +62,7 @@ public class CyclomaticComplexityJSInspection
 
     private class Visitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSFunctionDeclaration(@NotNull JSFunction function) {
+        @Override public void visitJSFunctionDeclaration(@Nonnull JSFunction function) {
             final PsiElement lastChild = function.getLastChild();
             if(!(lastChild instanceof JSBlockStatement))
             {

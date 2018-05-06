@@ -1,6 +1,7 @@
 package consulo.javascript.formatter;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.application.options.CodeStyleAbstractConfigurable;
 import com.intellij.application.options.CodeStyleAbstractPanel;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
@@ -11,7 +12,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
  */
 public class JavaScriptCodeStyleConfigurable extends CodeStyleAbstractConfigurable
 {
-	public JavaScriptCodeStyleConfigurable(@NotNull CodeStyleSettings settings, CodeStyleSettings cloneSettings)
+	public JavaScriptCodeStyleConfigurable(@Nonnull CodeStyleSettings settings, CodeStyleSettings cloneSettings)
 	{
 		super(settings, cloneSettings, "JavaScript");
 	}

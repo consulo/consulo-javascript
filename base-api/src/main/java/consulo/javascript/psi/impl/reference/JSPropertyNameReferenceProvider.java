@@ -17,8 +17,9 @@
 
 package consulo.javascript.psi.impl.reference;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.lang.javascript.psi.JSProperty;
 import com.intellij.psi.PsiReference;
 import consulo.annotations.RequiredReadAction;
@@ -35,5 +36,5 @@ public interface JSPropertyNameReferenceProvider
 
 	@Nullable
 	@RequiredReadAction
-	PsiReference getReference(@NotNull JSProperty property);
+	PsiReference getReference(@Nonnull JSProperty property);
 }

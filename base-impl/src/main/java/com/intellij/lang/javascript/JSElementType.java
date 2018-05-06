@@ -17,7 +17,7 @@
 package com.intellij.lang.javascript;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.psi.tree.IElementType;
 import consulo.javascript.lang.JavaScriptLanguage;
 
@@ -29,7 +29,7 @@ import consulo.javascript.lang.JavaScriptLanguage;
  */
 public class JSElementType extends IElementType
 {
-	public JSElementType(@NonNls @NotNull String debugName)
+	public JSElementType(@NonNls @Nonnull String debugName)
 	{
 		super(debugName, JavaScriptLanguage.INSTANCE);
 	}

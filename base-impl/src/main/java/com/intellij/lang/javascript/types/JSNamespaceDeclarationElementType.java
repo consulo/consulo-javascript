@@ -19,7 +19,8 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSNamespaceDeclaration;
@@ -45,22 +46,22 @@ public class JSNamespaceDeclarationElementType extends JSQualifiedStubElementTyp
 		super("NAMESPACE_DECLARATION");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public PsiElement createElement(@NotNull ASTNode astNode)
+	public PsiElement createElement(@Nonnull ASTNode astNode)
 	{
 		return new JSNamespaceDeclarationImpl(astNode);
 	}
 
 	@Override
-	public JSNamespaceDeclaration createPsi(@NotNull JSNamespaceDeclarationStub stub)
+	public JSNamespaceDeclaration createPsi(@Nonnull JSNamespaceDeclarationStub stub)
 	{
 		return new JSNamespaceDeclarationImpl(stub);
 	}
 
 	@RequiredReadAction
 	@Override
-	public JSNamespaceDeclarationStub createStub(@NotNull JSNamespaceDeclaration psi, StubElement parentStub)
+	public JSNamespaceDeclarationStub createStub(@Nonnull JSNamespaceDeclaration psi, StubElement parentStub)
 	{
 		String name = psi.getName();
 		String qualifiedName = psi.getQualifiedName();
@@ -69,16 +70,16 @@ public class JSNamespaceDeclarationElementType extends JSQualifiedStubElementTyp
 	}
 
 	@Override
-	public void serialize(@NotNull JSNamespaceDeclarationStub stub, @NotNull StubOutputStream dataStream) throws IOException
+	public void serialize(@Nonnull JSNamespaceDeclarationStub stub, @Nonnull StubOutputStream dataStream) throws IOException
 	{
 		dataStream.writeName(stub.getName());
 		dataStream.writeName(stub.getQualifiedName());
 		dataStream.writeName(stub.getInitialValueString());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public JSNamespaceDeclarationStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException
+	public JSNamespaceDeclarationStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
 	{
 		StringRef nameRef = dataStream.readName();
 		StringRef qualifiedRef = dataStream.readName();

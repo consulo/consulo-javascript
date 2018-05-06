@@ -11,7 +11,7 @@ import com.intellij.util.IncorrectOperationException;
 import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.ui.SingleCheckboxOptionsPanel;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -23,25 +23,25 @@ public class ForLoopReplaceableByWhileJSInspection extends JavaScriptInspection 
     public boolean m_ignoreLoopsWithoutConditions = false;
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("for.loop.replaceable.by.while.display.name");
 
     }
     @Override
-	@NotNull
+	@Nonnull
     public String getID() {
         return "ForLoopReplaceableByWhile";
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
     @Override
-	@NotNull
+	@Nonnull
     protected String buildErrorString(Object... args) {
         return InspectionJSBundle.message(
                 "for.loop.replaceable.by.while.problem.descriptor");
@@ -62,7 +62,7 @@ public class ForLoopReplaceableByWhileJSInspection extends JavaScriptInspection 
     private static class ReplaceForByWhileFix extends InspectionJSFix {
 
         @Override
-		@NotNull
+		@Nonnull
         public String getName() {
             return InspectionJSBundle.message(
                     "for.loop.replaceable.by.while.replace.quickfix");
@@ -103,7 +103,7 @@ public class ForLoopReplaceableByWhileJSInspection extends JavaScriptInspection 
     private class ForLoopReplaceableByWhileVisitor
             extends BaseInspectionVisitor {
 
-        @Override public void visitJSForStatement(@NotNull JSForStatement statement) {
+        @Override public void visitJSForStatement(@Nonnull JSForStatement statement) {
             super.visitJSForStatement(statement);
             final JSVarStatement varStatement = statement.getVarDeclaration();
             if(varStatement!=null)

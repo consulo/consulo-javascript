@@ -1,5 +1,7 @@
 package com.sixrr.inspectjs.bugs;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSExpressionStatement;
 import com.intellij.lang.javascript.psi.JSNewExpression;
@@ -7,30 +9,29 @@ import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
-import org.jetbrains.annotations.NotNull;
 
 public class ObjectAllocationIgnoredJSInspection extends JavaScriptInspection {
 
     @Override
-	@NotNull
+	@Nonnull
     public String getID() {
         return "ObjectAllocationIgnored";
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("result.of.object.allocation.ignored.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.BUGS_GROUP_NAME;
     }
 
     @Override
-	@NotNull
+	@Nonnull
     protected String buildErrorString(Object... args) {
         return InspectionJSBundle.message("result.of.object.allocation.ignored.error.string");
     }
@@ -43,7 +44,7 @@ public class ObjectAllocationIgnoredJSInspection extends JavaScriptInspection {
     private static class ObjectAllocationIgnoredVisitor extends BaseInspectionVisitor {
 
         @Override public void visitJSExpressionStatement(
-                @NotNull JSExpressionStatement statement) {
+                @Nonnull JSExpressionStatement statement) {
             super.visitJSExpressionStatement(statement);
             if (!(statement.getExpression()instanceof JSNewExpression)) {
                 return;

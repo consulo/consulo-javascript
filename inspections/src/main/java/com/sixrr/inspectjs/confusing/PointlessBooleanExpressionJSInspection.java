@@ -14,8 +14,8 @@ import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.ComparisonUtils;
 import com.sixrr.inspectjs.utils.ParenthesesUtils;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -26,13 +26,13 @@ public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection
             new BooleanLiteralComparisonFix();
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("pointless.boolean.expression.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
@@ -148,7 +148,7 @@ public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection
     private class BooleanLiteralComparisonFix
             extends InspectionJSFix {
         @Override
-		@NotNull
+		@Nonnull
         public String getName() {
             return InspectionJSBundle.message("simplify.fix");
         }
@@ -190,7 +190,7 @@ public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection
             //booleanTokens.add(JSTokenTypes.NEQEQ); // !== has strict semantic so do not report it
         }
 
-        @Override public void visitJSBinaryExpression(@NotNull JSBinaryExpression expression) {
+        @Override public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             if (!(expression.getROperand() != null)) {
                 return;
@@ -224,7 +224,7 @@ public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection
             registerError(expression);
         }
 
-        @Override public void visitJSPrefixExpression(@NotNull JSPrefixExpression expression) {
+        @Override public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
             super.visitJSPrefixExpression(expression);
             final IElementType sign = expression.getOperationSign();
             if (sign == null) {

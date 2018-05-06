@@ -17,8 +17,8 @@
 
 package consulo.javascript.psi.impl.reference;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.lang.javascript.psi.impl.reference.JSPropertyNameReference;
 import consulo.annotations.RequiredReadAction;
 import com.intellij.lang.javascript.psi.JSProperty;
@@ -34,7 +34,7 @@ public class DefaultJSPropertyNameReferenceProvider implements JSPropertyNameRef
 	@RequiredReadAction
 	@Nullable
 	@Override
-	public PsiReference getReference(@NotNull JSProperty property)
+	public PsiReference getReference(@Nonnull JSProperty property)
 	{
 		PsiElement nameIdentifier = property.getNameIdentifier();
 		assert nameIdentifier != null;

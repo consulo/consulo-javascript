@@ -1,11 +1,12 @@
 package com.sixrr.inspectjs.dataflow;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.JSFunctionExpression;
 import com.intellij.psi.PsiElement;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
-import org.jetbrains.annotations.NotNull;
 
 public class VariableUsedInInnerFunctionVisitor extends JSRecursiveElementVisitor
 {
@@ -19,7 +20,7 @@ public class VariableUsedInInnerFunctionVisitor extends JSRecursiveElementVisito
         this.variable = variable;
     }
 
-    @Override public void visitElement(@NotNull PsiElement element)
+    @Override public void visitElement(@Nonnull PsiElement element)
     {
         if (usedInInnerFunction)
         {
@@ -29,7 +30,7 @@ public class VariableUsedInInnerFunctionVisitor extends JSRecursiveElementVisito
     }
 
     @Override public void visitJSFunctionExpression(
-            @NotNull JSFunctionExpression funcExpr)
+            @Nonnull JSFunctionExpression funcExpr)
     {
         if(usedInInnerFunction)
         {
@@ -42,7 +43,7 @@ public class VariableUsedInInnerFunctionVisitor extends JSRecursiveElementVisito
     }
 
     @Override public void visitJSReferenceExpression(
-            @NotNull JSReferenceExpression reference)
+            @Nonnull JSReferenceExpression reference)
     {
         if(usedInInnerFunction)
         {

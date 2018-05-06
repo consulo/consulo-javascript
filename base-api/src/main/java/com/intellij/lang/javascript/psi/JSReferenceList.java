@@ -16,7 +16,8 @@
 
 package com.intellij.lang.javascript.psi;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 import com.intellij.lang.javascript.psi.stubs.JSReferenceListStub;
 import com.intellij.psi.StubBasedPsiElement;
@@ -27,14 +28,14 @@ import com.intellij.psi.StubBasedPsiElement;
 public interface JSReferenceList extends JSElement, StubBasedPsiElement<JSReferenceListStub>
 {
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	JSReferenceExpression[] getExpressions();
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	String[] getReferenceTexts();
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	JSClass[] getReferencedClasses();
 }

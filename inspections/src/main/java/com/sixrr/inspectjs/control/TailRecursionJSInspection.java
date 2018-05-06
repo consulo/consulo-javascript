@@ -1,5 +1,7 @@
 package com.sixrr.inspectjs.control;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -7,25 +9,24 @@ import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
-import org.jetbrains.annotations.NotNull;
 
 public class TailRecursionJSInspection extends JavaScriptInspection {
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message(
                 "tail.recursion.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     protected String buildErrorString(Object... args) {
         return InspectionJSBundle.message(
                 "tail.recursion.problem.descriptor");
@@ -177,7 +178,7 @@ public class TailRecursionJSInspection extends JavaScriptInspection {
     private static class TailRecursionVisitor extends BaseInspectionVisitor {
 
         @Override public void visitJSReturnStatement(
-                @NotNull JSReturnStatement statement) {
+                @Nonnull JSReturnStatement statement) {
             super.visitJSReturnStatement(statement);
             final JSExpression returnValue = statement.getExpression();
             if (!(returnValue instanceof JSCallExpression)) {

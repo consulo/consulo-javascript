@@ -1,6 +1,7 @@
 package consulo.javascript.lang;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.util.Factory;
@@ -15,7 +16,7 @@ public class JavaScript15LanguageVersion extends BaseJavaScriptLanguageVersion i
 {
 	private static final Factory<Lexer> ourLexerFactory = () -> new JavaScript15Lexer();
 
-	@NotNull
+	@Nonnull
 	public static JavaScript15LanguageVersion getInstance()
 	{
 		return JavaScriptLanguage.INSTANCE.findVersionByClass(JavaScript15LanguageVersion.class);
@@ -26,20 +27,20 @@ public class JavaScript15LanguageVersion extends BaseJavaScriptLanguageVersion i
 		super("JAVASCRIPT_1_5");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getPresentableName()
 	{
 		return "JavaScript 1.5";
 	}
-	@NotNull
+	@Nonnull
 	@Override
 	public Lexer createLexer()
 	{
 		return ourLexerFactory.create();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public SyntaxHighlighter getSyntaxHighlighter()
 	{

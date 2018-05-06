@@ -16,7 +16,8 @@
 
 package consulo.javascript.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSParameter;
@@ -43,7 +44,7 @@ public class JavaScriptLambdaExpressionImpl extends JSExpressionImpl implements 
 
 	@Override
 	@RequiredReadAction
-	public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place)
+	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent, @Nonnull PsiElement place)
 	{
 		if(lastParent != null && lastParent.getParent() == this)
 		{
@@ -68,7 +69,7 @@ public class JavaScriptLambdaExpressionImpl extends JSExpressionImpl implements 
 	}
 
 	@Override
-	public void accept(@NotNull PsiElementVisitor visitor)
+	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
 		{
@@ -81,7 +82,7 @@ public class JavaScriptLambdaExpressionImpl extends JSExpressionImpl implements 
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public JSParameterList getParameterList()
 	{

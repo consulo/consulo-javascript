@@ -7,7 +7,7 @@ import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSPrefixExpression;
 import com.intellij.psi.tree.IElementType;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class NegationCountVisitor extends JSRecursiveElementVisitor {
     private int negationCount = 0;
@@ -24,7 +24,7 @@ class NegationCountVisitor extends JSRecursiveElementVisitor {
         }
     }
 
-    @Override public void visitJSBinaryExpression(@NotNull JSBinaryExpression expression) {
+    @Override public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
         super.visitJSBinaryExpression(expression);
         final IElementType sign = expression.getOperationSign();
         if (JSTokenTypes.NE.equals(sign) || JSTokenTypes.NEQEQ.equals(sign)) {
@@ -32,7 +32,7 @@ class NegationCountVisitor extends JSRecursiveElementVisitor {
         }
     }
 
-    @Override public void visitJSPrefixExpression(@NotNull JSPrefixExpression expression) {
+    @Override public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
         super.visitJSPrefixExpression(expression);
         final IElementType sign = expression.getOperationSign();
         if (JSTokenTypes.EXCL.equals(sign)) {

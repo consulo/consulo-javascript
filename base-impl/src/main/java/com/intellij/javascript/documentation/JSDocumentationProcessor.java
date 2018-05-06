@@ -22,8 +22,8 @@
  */
 package com.intellij.javascript.documentation;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface JSDocumentationProcessor
 {
@@ -35,8 +35,8 @@ public interface JSDocumentationProcessor
 
 	boolean needsPlainCommentData();
 
-	boolean onCommentLine(@NotNull String line);
+	boolean onCommentLine(@Nonnull String line);
 
-	boolean onPatternMatch(@NotNull MetaDocType type, @Nullable String matchName, @Nullable final String matchValue,
-			@Nullable String remainingLineContent, @NotNull final String line, final String patternMatched);
+	boolean onPatternMatch(@Nonnull MetaDocType type, @Nullable String matchName, @Nullable final String matchValue,
+			@Nullable String remainingLineContent, @Nonnull final String line, final String patternMatched);
 }

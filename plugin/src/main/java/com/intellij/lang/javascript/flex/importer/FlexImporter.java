@@ -22,8 +22,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.psi.stubs.StubElement;
 
 /**
@@ -105,7 +106,7 @@ public class FlexImporter
 		processFlexByteCode(in, new AS3InterfaceStubDumper(parent));
 	}
 
-	private static void processFlexByteCode(@NotNull final InputStream in, @NotNull FlexByteCodeInformationProcessor processor) throws IOException
+	private static void processFlexByteCode(@Nonnull final InputStream in, @Nonnull FlexByteCodeInformationProcessor processor) throws IOException
 	{
 		ByteBuffer data = new ByteBuffer();
 		data.read(in);

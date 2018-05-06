@@ -17,7 +17,8 @@
 
 package consulo.javascript.psi;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
 import consulo.annotations.RequiredReadAction;
 import com.intellij.psi.tree.IElementType;
@@ -28,7 +29,7 @@ import com.intellij.psi.tree.IElementType;
  */
 public interface JSSimpleLiteralExpression extends JSLiteralExpression
 {
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	IElementType getLiteralElementType();
 }

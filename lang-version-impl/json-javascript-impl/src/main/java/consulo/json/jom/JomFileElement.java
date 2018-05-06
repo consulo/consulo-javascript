@@ -16,7 +16,7 @@
 
 package consulo.json.jom;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.json.jom.proxy.JomProxyInvocationHandler;
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.JSObjectLiteralExpression;
@@ -33,7 +33,7 @@ public class JomFileElement<T extends JomElement>
 	private final JSFile myPsiFile;
 	private final NotNullLazyValue<T> myRootValue = new NotNullLazyValue<T>()
 	{
-		@NotNull
+		@Nonnull
 		@Override
 		protected T compute()
 		{
@@ -48,19 +48,19 @@ public class JomFileElement<T extends JomElement>
 		myFileDescriptor = fileDescriptor;
 	}
 
-	@NotNull
+	@Nonnull
 	public T getRootElement()
 	{
 		return myRootValue.getValue();
 	}
 
-	@NotNull
+	@Nonnull
 	public JomFileDescriptor<T> getFileDescriptor()
 	{
 		return myFileDescriptor;
 	}
 
-	@NotNull
+	@Nonnull
 	public JSFile getFile()
 	{
 		return myPsiFile;

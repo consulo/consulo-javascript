@@ -26,8 +26,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredReadAction;
 import consulo.json.validation.JsonFileDescriptorProvider;
 import consulo.json.validation.NativeArray;
@@ -44,14 +45,14 @@ public class JomModeAsJsonFileDescriptorProvider implements JsonFileDescriptorPr
 {
 	@RequiredReadAction
 	@Override
-	public boolean isMyFile(@NotNull PsiFile file)
+	public boolean isMyFile(@Nonnull PsiFile file)
 	{
 		return JomManager.getInstance(file.getProject()).getFileElement(file) != null;
 	}
 
 	@RequiredReadAction
 	@Override
-	public void fillRootObject(@NotNull JsonObjectDescriptor root, @NotNull PsiFile file)
+	public void fillRootObject(@Nonnull JsonObjectDescriptor root, @Nonnull PsiFile file)
 	{
 		JomFileElement<JomElement> fileElement = JomManager.getInstance(file.getProject()).getFileElement(file);
 		if(fileElement == null)
@@ -84,8 +85,8 @@ public class JomModeAsJsonFileDescriptorProvider implements JsonFileDescriptorPr
 		}
 	}
 
-	@NotNull
-	private static JsonPropertyDescriptor fillObjectDescriptor(JsonObjectDescriptor objectDescriptor, @NotNull Class<?> classType, @NotNull Type genericType, @Nullable String propertyName)
+	@Nonnull
+	private static JsonPropertyDescriptor fillObjectDescriptor(JsonObjectDescriptor objectDescriptor, @Nonnull Class<?> classType, @Nonnull Type genericType, @Nullable String propertyName)
 	{
 		if(classType.isArray())
 		{

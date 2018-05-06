@@ -16,8 +16,8 @@
 
 package consulo.json.validation.descriptionByAnotherPsiElement;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
 import consulo.annotations.RequiredReadAction;
 import consulo.json.validation.descriptor.JsonObjectDescriptor;
@@ -33,26 +33,26 @@ public interface DescriptionByAnotherPsiElementProvider<T extends PsiElement>
 {
 	ExtensionPointName<DescriptionByAnotherPsiElementProvider<?>> EP_NAME = ExtensionPointName.create("consulo.javascript.jsonDescriptionByAnotherPsiElementProvider");
 
-	@NotNull
+	@Nonnull
 	String getId();
 
-	@NotNull
+	@Nonnull
 	String getPsiElementName();
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
-	String getIdFromPsiElement(@NotNull T element);
+	String getIdFromPsiElement(@Nonnull T element);
 
 	@Nullable
 	@RequiredReadAction
-	T getPsiElementById(@NotNull String id, @NotNull Project project);
+	T getPsiElementById(@Nonnull String id, @Nonnull Project project);
 
 	@RequiredDispatchThread
 	@Nullable
-	T chooseElement(@NotNull Project project);
+	T chooseElement(@Nonnull Project project);
 
 	@RequiredReadAction
-	boolean isAvailable(@NotNull Project project);
+	boolean isAvailable(@Nonnull Project project);
 
-	void fillRootObject(@NotNull T psiElement, @NotNull JsonObjectDescriptor root);
+	void fillRootObject(@Nonnull T psiElement, @Nonnull JsonObjectDescriptor root);
 }

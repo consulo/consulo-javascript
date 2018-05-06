@@ -16,8 +16,8 @@
 
 package consulo.javascript.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.impl.JSElementImpl;
@@ -36,7 +36,7 @@ public class JSComputedNameImpl extends JSElementImpl implements JSComputedName
 	}
 
 	@Override
-	public void accept(@NotNull PsiElementVisitor visitor)
+	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
 		visitor.visitElement(this);
 	}

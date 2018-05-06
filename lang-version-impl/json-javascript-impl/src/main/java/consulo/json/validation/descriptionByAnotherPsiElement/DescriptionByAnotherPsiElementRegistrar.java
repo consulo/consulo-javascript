@@ -16,7 +16,7 @@
 
 package consulo.json.validation.descriptionByAnotherPsiElement;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.NotNullFunction;
@@ -36,7 +36,7 @@ public class DescriptionByAnotherPsiElementRegistrar implements ApplicationCompo
 		{
 			EditorNotificationProviders.registerProvider(new NotNullFunction<Project, EditorNotificationProvider<?>>()
 			{
-				@NotNull
+				@Nonnull
 				@Override
 				public EditorNotificationProvider<?> fun(Project project)
 				{
@@ -53,7 +53,7 @@ public class DescriptionByAnotherPsiElementRegistrar implements ApplicationCompo
 
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getComponentName()
 	{

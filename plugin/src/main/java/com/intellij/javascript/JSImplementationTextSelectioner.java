@@ -20,7 +20,8 @@
  */
 package com.intellij.javascript;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.codeInsight.hint.ImplementationTextSelectioner;
 import com.intellij.lang.javascript.psi.JSDefinitionExpression;
 import com.intellij.lang.javascript.psi.JSExpressionStatement;
@@ -30,13 +31,13 @@ import com.intellij.psi.util.PsiTreeUtil;
 public class JSImplementationTextSelectioner implements ImplementationTextSelectioner
 {
 	@Override
-	public int getTextStartOffset(@NotNull PsiElement element)
+	public int getTextStartOffset(@Nonnull PsiElement element)
 	{
 		return element.getTextOffset();
 	}
 
 	@Override
-	public int getTextEndOffset(@NotNull PsiElement element)
+	public int getTextEndOffset(@Nonnull PsiElement element)
 	{
 		if(element instanceof JSDefinitionExpression)
 		{

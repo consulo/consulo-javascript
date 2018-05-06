@@ -4,7 +4,7 @@ import com.intellij.lang.javascript.psi.JSParameter;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.psi.PsiElement;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class CatchParameterUsedVisitor extends JSRecursiveElementVisitor {
     private final JSParameter parameter;
@@ -15,13 +15,13 @@ class CatchParameterUsedVisitor extends JSRecursiveElementVisitor {
         parameter = variable;
     }
 
-    @Override public void visitElement(@NotNull PsiElement element) {
+    @Override public void visitElement(@Nonnull PsiElement element) {
         if (!used) {
             super.visitElement(element);
         }
     }
 
-    @Override public void visitJSReferenceExpression(@NotNull JSReferenceExpression reference) {
+    @Override public void visitJSReferenceExpression(@Nonnull JSReferenceExpression reference) {
         if (used) {
             return;
         }

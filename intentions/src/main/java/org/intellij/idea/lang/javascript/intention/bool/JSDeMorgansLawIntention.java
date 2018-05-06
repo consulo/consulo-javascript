@@ -15,12 +15,13 @@
  */
 package org.intellij.idea.lang.javascript.intention.bool;
 
+import javax.annotation.Nonnull;
+
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BoolUtils;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
@@ -44,12 +45,13 @@ public class JSDeMorgansLawIntention extends JSMutablyNamedIntention {
     }
 
     @Override
-	@NotNull public JSElementPredicate getElementPredicate() {
+	@Nonnull
+	public JSElementPredicate getElementPredicate() {
         return new ConjunctionPredicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         JSBinaryExpression  exp       = (JSBinaryExpression) element;
         final IElementType  tokenType = exp.getOperationSign();
         JSElement           parent    = (JSElement) exp.getParent();

@@ -19,8 +19,9 @@
  */
 package com.intellij.lang.javascript.psi;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.javascript.psi.stubs.JSStubElement;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.IndexSink;
@@ -42,11 +43,11 @@ public abstract class JSStubElementType<StubT extends JSStubElement<PsiT>, PsiT 
 	}
 
 	@Override
-	public void indexStub(@NotNull final StubT stub, @NotNull final IndexSink sink)
+	public void indexStub(@Nonnull final StubT stub, @Nonnull final IndexSink sink)
 	{
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getExternalId()
 	{

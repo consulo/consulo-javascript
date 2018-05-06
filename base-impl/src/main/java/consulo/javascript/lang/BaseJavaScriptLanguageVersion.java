@@ -2,7 +2,8 @@ package consulo.javascript.lang;
 
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.PsiParser;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
@@ -25,42 +26,42 @@ public abstract class BaseJavaScriptLanguageVersion extends JavaScriptLanguageVe
 		super(name, name, JavaScriptLanguage.INSTANCE, mimeTypes);
 	}
 
-	protected void addFeature(@NotNull JavaScriptFeature feature)
+	protected void addFeature(@Nonnull JavaScriptFeature feature)
 	{
 		myFeatures.add(feature);
 	}
 
-	@NotNull
+	@Nonnull
 	public Set<JavaScriptFeature> getFeatures()
 	{
 		return myFeatures;
 	}
 
-	@NotNull
+	@Nonnull
 	public abstract SyntaxHighlighter getSyntaxHighlighter();
 
-	@NotNull
+	@Nonnull
 	@Override
 	public PsiParser createParser()
 	{
 		return new JavaScriptParser();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public TokenSet getWhitespaceTokens()
 	{
 		return JavaScriptTokenSets.WHITE_SPACES;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public TokenSet getCommentTokens()
 	{
 		return JSTokenTypes.COMMENTS;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public TokenSet getStringLiteralElements()
 	{

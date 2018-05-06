@@ -16,7 +16,7 @@
 
 package consulo.javascript.lang;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import com.intellij.lang.Language;
 import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;

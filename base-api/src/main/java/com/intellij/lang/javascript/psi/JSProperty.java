@@ -17,8 +17,8 @@
 
 package com.intellij.lang.javascript.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.psi.PsiElement;
 import consulo.annotations.RequiredReadAction;
 import consulo.javascript.lang.psi.JavaScriptType;
@@ -42,7 +42,7 @@ public interface JSProperty extends JSNamedElement
 	@RequiredReadAction
 	JSComputedName getComputedName();
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	JavaScriptType getType();
 }

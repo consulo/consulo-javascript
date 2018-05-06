@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.flex.ImportUtils;
@@ -64,7 +64,7 @@ public abstract class BaseCreateMethodsFix<T extends JSNamedElement & JSAttribut
 		myJsClass = jsClass;
 	}
 
-	public void invoke(@NotNull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException
+	public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException
 	{
 		evalAnchor(editor, file);
 		for(T e : getElementsToProcess())

@@ -19,9 +19,11 @@ package com.intellij.lang.javascript.refactoring;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 import com.intellij.codeInsight.PsiEquivalenceUtil;
 import com.intellij.codeInsight.highlighting.HighlightManager;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -139,7 +141,7 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
 	}
 
 	@Override
-	public void invoke(@NotNull final Project project, final Editor editor, PsiFile file, DataContext dataContext)
+	public void invoke(@Nonnull final Project project, final Editor editor, PsiFile file, DataContext dataContext)
 	{
 		if(!editor.getSelectionModel().hasSelection())
 		{
@@ -479,7 +481,7 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
 	}
 
 	@Override
-	public void invoke(@NotNull Project project, @NotNull PsiElement[] elements, DataContext dataContext)
+	public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext)
 	{
 		throw new RuntimeException("Not implemented");
 	}

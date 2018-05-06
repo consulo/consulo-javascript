@@ -1,29 +1,30 @@
 package com.sixrr.inspectjs.assignment;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.psi.JSAssignmentExpression;
 import com.intellij.psi.PsiElement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
-import org.jetbrains.annotations.NotNull;
 
 public class NestedAssignmentJSInspection extends JavaScriptInspection {
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("nested.assignment.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.ASSIGNMENT_GROUP_NAME;
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String buildErrorString(Object... args) {
         return InspectionJSBundle.message("nested.assignment.error.string");
     }
@@ -36,7 +37,7 @@ public class NestedAssignmentJSInspection extends JavaScriptInspection {
     private static class NestedAssignmentVisitor extends BaseInspectionVisitor {
 
         @Override public void visitJSAssignmentExpression(
-                @NotNull JSAssignmentExpression expression) {
+                @Nonnull JSAssignmentExpression expression) {
             super.visitJSAssignmentExpression(expression);
             final PsiElement parent = expression.getParent();
             if (parent == null) {

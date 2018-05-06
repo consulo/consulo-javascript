@@ -16,7 +16,8 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -73,7 +74,7 @@ public class JSLabeledStatementImpl extends JSStatementImpl implements JSLabeled
 	}
 
 	@Override
-	public void accept(@NotNull PsiElementVisitor visitor)
+	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
 		{
@@ -92,7 +93,7 @@ public class JSLabeledStatementImpl extends JSStatementImpl implements JSLabeled
 	}
 
 	@Override
-	public PsiElement setName(@NotNull String name) throws IncorrectOperationException
+	public PsiElement setName(@Nonnull String name) throws IncorrectOperationException
 	{
 		JSChangeUtil.doIdentifierReplacement(this, getLabelIdentifier(), name);
 		return this;

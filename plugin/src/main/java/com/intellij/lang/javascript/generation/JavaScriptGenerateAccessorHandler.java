@@ -24,11 +24,11 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.formatter.JSCodeStyleSettings;
 import com.intellij.lang.javascript.psi.JSAttributeList;
@@ -108,7 +108,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler
 				final MyBaseCreateMethodsFix generateSetterFix = new MyBaseCreateMethodsFix(GenerationMode.SETTERS, jsClass, toCreateBindableProperties);
 
 				@Override
-				public void invoke(@NotNull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException
+				public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException
 				{
 					evalAnchor(editor, file);
 
@@ -125,7 +125,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler
 			return new BaseCreateMethodsFix<JSVariable>(jsClass)
 			{
 				@Override
-				public void invoke(@NotNull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException
+				public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException
 				{
 					final JSCodeStyleSettings codeStyleSettings = CodeStyleSettingsManager.getSettings(project).getCustomSettings(JSCodeStyleSettings.class);
 					evalAnchor(editor, file);
@@ -208,7 +208,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler
 			return new BaseCreateMethodsFix<JSVariable>(jsClass)
 			{
 				@Override
-				public void invoke(@NotNull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException
+				public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException
 				{
 					evalAnchor(editor, file);
 

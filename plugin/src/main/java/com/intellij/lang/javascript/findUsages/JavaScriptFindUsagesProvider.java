@@ -16,7 +16,8 @@
 
 package com.intellij.lang.javascript.findUsages;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.cacheBuilder.WordsScanner;
 import com.intellij.lang.findUsages.FindUsagesProvider;
 import com.intellij.lang.javascript.JavaScriptBundle;
@@ -44,20 +45,20 @@ import com.intellij.psi.xml.XmlToken;
 public class JavaScriptFindUsagesProvider implements FindUsagesProvider
 {
 	@Override
-	public boolean canFindUsagesFor(@NotNull PsiElement psiElement)
+	public boolean canFindUsagesFor(@Nonnull PsiElement psiElement)
 	{
 		return psiElement instanceof PsiNamedElement;
 	}
 
 	@Override
-	public String getHelpId(@NotNull PsiElement psiElement)
+	public String getHelpId(@Nonnull PsiElement psiElement)
 	{
 		return null;
 	}
 
 	@Override
-	@NotNull
-	public String getType(@NotNull PsiElement element)
+	@Nonnull
+	public String getType(@Nonnull PsiElement element)
 	{
 		if(element instanceof JSFunction)
 		{
@@ -107,16 +108,16 @@ public class JavaScriptFindUsagesProvider implements FindUsagesProvider
 	}
 
 	@Override
-	@NotNull
-	public String getDescriptiveName(@NotNull PsiElement element)
+	@Nonnull
+	public String getDescriptiveName(@Nonnull PsiElement element)
 	{
 		String name = ((PsiNamedElement) element).getName();
 		return name != null ? name : "";
 	}
 
 	@Override
-	@NotNull
-	public String getNodeText(@NotNull PsiElement element, boolean useFullName)
+	@Nonnull
+	public String getNodeText(@Nonnull PsiElement element, boolean useFullName)
 	{
 		return getDescriptiveName(element);
 	}

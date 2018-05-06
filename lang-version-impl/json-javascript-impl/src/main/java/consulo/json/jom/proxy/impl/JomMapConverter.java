@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 import consulo.json.jom.proxy.JomBadValueExpressionException;
 import consulo.json.jom.proxy.JomValueConverter;
@@ -29,7 +29,7 @@ public class JomMapConverter implements JomValueConverter.Converter<Map>
 	@RequiredReadAction
 	@Override
 	@SuppressWarnings("unchecked")
-	public Map parseValue(@NotNull Class type, @NotNull Type genericType, @NotNull PsiElement value) throws JomBadValueExpressionException
+	public Map parseValue(@Nonnull Class type, @Nonnull Type genericType, @Nonnull PsiElement value) throws JomBadValueExpressionException
 	{
 		if(!(value instanceof JSObjectLiteralExpression))
 		{

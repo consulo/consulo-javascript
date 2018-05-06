@@ -12,7 +12,7 @@ import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.ui.SingleCheckboxOptionsPanel;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -24,14 +24,14 @@ public class UnusedCatchParameterJSInspection extends JavaScriptInspection {
     public boolean m_ignoreCatchBlocksWithComments = false;
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message(
                 "unused.catch.parameter.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.ERRORHANDLING_GROUP_NAME;
     }
@@ -45,7 +45,7 @@ public class UnusedCatchParameterJSInspection extends JavaScriptInspection {
     }
 
     @Override
-	@NotNull
+	@Nonnull
     protected String buildErrorString(Object... args) {
         return InspectionJSBundle.message(
                 "unused.catch.parameter.problem.descriptor");
@@ -58,7 +58,7 @@ public class UnusedCatchParameterJSInspection extends JavaScriptInspection {
 
     private class EmptyCatchBlockVisitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSTryStatement(@NotNull JSTryStatement statement) {
+        @Override public void visitJSTryStatement(@Nonnull JSTryStatement statement) {
             super.visitJSTryStatement(statement);
             final JSCatchBlock jsCatchBlock = statement.getCatchBlock();
             if(jsCatchBlock == null)

@@ -3,7 +3,7 @@ package consulo.javascript.lang.parsing.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.openapi.util.text.StringUtil;

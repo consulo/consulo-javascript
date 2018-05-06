@@ -8,7 +8,7 @@ import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.ui.SingleIntegerFieldOptionsPanel;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -21,13 +21,13 @@ public class IfStatementWithTooManyBranchesJSInspection extends JavaScriptInspec
     public int m_limit = DEFAULT_BRANCH_LIMIT;  //this is public for the DefaultJDOMExternalizer thingy
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("if.statement.with.too.many.branches.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
@@ -67,7 +67,7 @@ public class IfStatementWithTooManyBranchesJSInspection extends JavaScriptInspec
 
     private class Visitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSIfStatement(@NotNull JSIfStatement statement) {
+        @Override public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
             super.visitJSIfStatement(statement);
             final PsiElement parent = statement.getParent();
             if (parent instanceof JSIfStatement) {

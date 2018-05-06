@@ -16,7 +16,8 @@
 
 package com.intellij.lang.javascript;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 import com.intellij.codeInsight.editorActions.smartEnter.SmartEnterProcessor;
 import com.intellij.idea.LoggerFactory;
@@ -50,7 +51,7 @@ public class JSSmartEnterProcessor extends SmartEnterProcessor
 {
 	@Override
 	@RequiredReadAction
-	public boolean process(@NotNull final Project project, @NotNull final Editor editor, @NotNull final PsiFile psiFile)
+	public boolean process(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile psiFile)
 	{
 		int offset = editor.getCaretModel().getOffset();
 		PsiElement at = psiFile.findElementAt(offset);

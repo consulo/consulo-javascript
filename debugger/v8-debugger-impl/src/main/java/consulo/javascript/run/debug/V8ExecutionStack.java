@@ -19,9 +19,10 @@ package consulo.javascript.run.debug;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import org.chromium.sdk.CallFrame;
 import org.chromium.sdk.DebugContext;
-import org.jetbrains.annotations.Nullable;
 import com.intellij.xdebugger.frame.XExecutionStack;
 import com.intellij.xdebugger.frame.XStackFrame;
 

@@ -9,7 +9,7 @@ import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.ui.SingleCheckboxOptionsPanel;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -26,14 +26,14 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection {
     public boolean m_ignoreAnnotatedVariables = false;
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message(
                 "redundant.local.variable.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.DATA_FLOW_ISSUES;
     }
@@ -51,7 +51,7 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection {
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String buildErrorString(Object... args) {
         return InspectionJSBundle.message(
                 "unnecessary.local.variable.problem.descriptor");
@@ -70,7 +70,7 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection {
     private class UnnecessaryLocalVariableVisitor
             extends BaseInspectionVisitor {
 
-        @Override public void visitJSVarStatement(@NotNull JSVarStatement varStatement) {
+        @Override public void visitJSVarStatement(@Nonnull JSVarStatement varStatement) {
              super.visitJSVarStatement(varStatement);
             final JSVariable[] variables = varStatement.getVariables();
             for (JSVariable variable : variables) {

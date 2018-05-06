@@ -1,5 +1,7 @@
 package com.sixrr.inspectjs.exception;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.JSThrowStatement;
@@ -9,18 +11,17 @@ import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
-import org.jetbrains.annotations.NotNull;
 
 public class ExceptionCaughtLocallyJSInspection extends JavaScriptInspection {
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("exception.used.for.local.control.flow.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.ERRORHANDLING_GROUP_NAME;
     }
@@ -42,7 +43,7 @@ public class ExceptionCaughtLocallyJSInspection extends JavaScriptInspection {
 
     private static class Visitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSThrowStatement(@NotNull JSThrowStatement statement) {
+        @Override public void visitJSThrowStatement(@Nonnull JSThrowStatement statement) {
             super.visitJSThrowStatement(statement);
             if (!isCaughtLocally(statement)) {
                 return;
@@ -51,7 +52,7 @@ public class ExceptionCaughtLocallyJSInspection extends JavaScriptInspection {
         }
     }
 
-    public static boolean isCaughtLocally(@NotNull JSThrowStatement throwStatement) {
+    public static boolean isCaughtLocally(@Nonnull JSThrowStatement throwStatement) {
         JSElement currentElement = throwStatement;
         while (true) {
             final JSTryStatement tryStatement =

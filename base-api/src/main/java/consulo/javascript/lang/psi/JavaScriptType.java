@@ -16,8 +16,8 @@
 
 package consulo.javascript.lang.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import com.intellij.psi.PsiElement;
 
@@ -30,7 +30,7 @@ public interface JavaScriptType
 	JavaScriptType UNKNOWN = new JavaScriptType()
 	{
 		@RequiredReadAction
-		@NotNull
+		@Nonnull
 		@Override
 		public String getPresentableText()
 		{
@@ -45,7 +45,7 @@ public interface JavaScriptType
 		}
 	};
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	String getPresentableText();
 

@@ -16,7 +16,7 @@
 
 package consulo.json.validation;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,12 +26,12 @@ public class NativeArray
 {
 	private final Object myComponentType;
 
-	public NativeArray(@NotNull Object componentType)
+	public NativeArray(@Nonnull Object componentType)
 	{
 		myComponentType = componentType;
 	}
 
-	@NotNull
+	@Nonnull
 	public Object getComponentType()
 	{
 		return myComponentType;

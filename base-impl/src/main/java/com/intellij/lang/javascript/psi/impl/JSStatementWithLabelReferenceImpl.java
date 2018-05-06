@@ -19,8 +19,9 @@ package com.intellij.lang.javascript.psi.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSFunction;
@@ -56,7 +57,7 @@ class JSStatementWithLabelReferenceImpl extends JSStatementImpl
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public PsiReference[] getReferences()
 	{
 		final String text = getText();
@@ -138,7 +139,7 @@ class JSStatementWithLabelReferenceImpl extends JSStatementImpl
 		}
 
 		@Override
-		public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException
+		public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException
 		{
 			return null;
 		}

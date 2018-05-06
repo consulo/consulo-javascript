@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.cl.PluginClassLoader;
@@ -33,7 +33,7 @@ public class ClientJavaScriptPredefinedBundlesProvider extends PredefinedBundles
 	};
 
 	@Override
-	public void createBundles(@NotNull Consumer<SdkImpl> consumer)
+	public void createBundles(@Nonnull Consumer<SdkImpl> consumer)
 	{
 		PluginClassLoader classLoader = (PluginClassLoader) getClass().getClassLoader();
 		IdeaPluginDescriptor plugin = PluginManager.getPlugin(classLoader.getPluginId());

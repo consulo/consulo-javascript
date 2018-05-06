@@ -9,7 +9,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 import com.sixrr.inspectjs.*;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,20 +20,20 @@ public class ConfusingFloatingPointLiteralJSInspection extends JavaScriptInspect
             Pattern.compile("[0-9]+\\.[0-9]+((e|E)(-)?[0-9]+)?(f|F|d|D)?");
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message(
                 "confusing.floating.point.literal.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     protected String buildErrorString(Object... args) {
         return InspectionJSBundle.message(
                 "confusing.floating.point.literal.problem.descriptor");
@@ -48,7 +48,7 @@ public class ConfusingFloatingPointLiteralJSInspection extends JavaScriptInspect
             extends InspectionJSFix {
 
         @Override
-		@NotNull
+		@Nonnull
         public String getName() {
             return InspectionJSBundle.message(
                     "confusing.floating.point.literal.change.quickfix");
@@ -116,7 +116,7 @@ public class ConfusingFloatingPointLiteralJSInspection extends JavaScriptInspect
             extends BaseInspectionVisitor {
 
         @Override public void visitJSLiteralExpression(
-                @NotNull JSSimpleLiteralExpression literal) {
+                @Nonnull JSSimpleLiteralExpression literal) {
             super.visitJSLiteralExpression(literal);
             final String text = literal.getText();
             if (text == null) {

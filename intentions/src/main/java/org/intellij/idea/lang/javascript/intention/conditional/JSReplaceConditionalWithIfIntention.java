@@ -15,10 +15,11 @@
  */
 package org.intellij.idea.lang.javascript.intention.conditional;
 
+import javax.annotation.Nonnull;
+
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ConditionalUtils;
-import org.jetbrains.annotations.NotNull;
 
 import com.intellij.lang.javascript.psi.JSConditionalExpression;
 import com.intellij.psi.PsiElement;
@@ -26,20 +27,20 @@ import com.intellij.util.IncorrectOperationException;
 
 public class JSReplaceConditionalWithIfIntention extends JSIntention {
     @Override
-	@NotNull
+	@Nonnull
     public JSElementPredicate getElementPredicate() {
         return new ReplaceConditionalWithIfPredicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         assert (element instanceof JSConditionalExpression);
         ConditionalUtils.replaceConditionalWithIf((JSConditionalExpression) element);
     }
 
     private static class ReplaceConditionalWithIfPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             return (element instanceof JSConditionalExpression);
         }
     }

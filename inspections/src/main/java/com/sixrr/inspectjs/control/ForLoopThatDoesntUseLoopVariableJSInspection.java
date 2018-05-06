@@ -1,28 +1,29 @@
 package com.sixrr.inspectjs.control;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.psi.PsiElement;
 import com.sixrr.inspectjs.*;
-import org.jetbrains.annotations.NotNull;
 
 public class ForLoopThatDoesntUseLoopVariableJSInspection
         extends JavaScriptInspection {
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message(
                 "for.loop.not.use.loop.variable.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.BUGS_GROUP_NAME;
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String buildErrorString(Object... args) {
         final boolean condition = (Boolean) args[0];
         final boolean update = (Boolean) args[1];
@@ -48,7 +49,7 @@ public class ForLoopThatDoesntUseLoopVariableJSInspection
     private static class ForLoopThatDoesntUseLoopVariableVisitor
             extends BaseInspectionVisitor {
 
-        @Override public void visitJSForStatement(@NotNull JSForStatement statement) {
+        @Override public void visitJSForStatement(@Nonnull JSForStatement statement) {
             super.visitJSForStatement(statement);
             if (conditionUsesInitializer(statement)) {
                 if (!updateUsesInitializer(statement)) {
@@ -118,14 +119,14 @@ public class ForLoopThatDoesntUseLoopVariableJSInspection
             variable = var;
         }
 
-        @Override public void visitElement(@NotNull PsiElement element) {
+        @Override public void visitElement(@Nonnull PsiElement element) {
             if (!used) {
                 super.visitElement(element);
             }
         }
 
         @Override public void visitJSReferenceExpression(
-                @NotNull JSReferenceExpression ref) {
+                @Nonnull JSReferenceExpression ref) {
             if (used) {
                 return;
             }

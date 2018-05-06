@@ -6,19 +6,19 @@ import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class LabeledStatementJSInspection extends JavaScriptInspection {
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("labeled.statement.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
@@ -36,7 +36,7 @@ public class LabeledStatementJSInspection extends JavaScriptInspection {
 
     private static class Visitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSLabeledStatement(@NotNull JSLabeledStatement statement) {
+        @Override public void visitJSLabeledStatement(@Nonnull JSLabeledStatement statement) {
             super.visitJSLabeledStatement(statement);
             @NonNls final String label = statement.getLabel();
             if("javascript".equals(label))

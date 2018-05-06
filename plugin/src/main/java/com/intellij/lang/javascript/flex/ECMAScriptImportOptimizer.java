@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.idea.LoggerFactory;
 import com.intellij.lang.ImportOptimizer;
@@ -70,7 +70,7 @@ public class ECMAScriptImportOptimizer implements ImportOptimizer
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public Runnable processFile(final PsiFile file)
 	{
 		if(!CodeInsightUtilBase.getInstance().prepareFileForWrite(file))

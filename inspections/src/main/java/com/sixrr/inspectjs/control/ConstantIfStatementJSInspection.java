@@ -1,5 +1,7 @@
 package com.sixrr.inspectjs.control;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSIfStatement;
@@ -9,19 +11,18 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.BoolUtils;
-import org.jetbrains.annotations.NotNull;
 
 public class ConstantIfStatementJSInspection extends JavaScriptInspection {
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message(
                 "constant.if.statement.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
@@ -32,7 +33,7 @@ public class ConstantIfStatementJSInspection extends JavaScriptInspection {
     }
 
     @Override
-	@NotNull
+	@Nonnull
     protected String buildErrorString(Object... args) {
         return InspectionJSBundle.message(
                 "constant.if.statement.problem.descriptor");
@@ -51,7 +52,7 @@ public class ConstantIfStatementJSInspection extends JavaScriptInspection {
     private static class ConstantIfStatementFix extends InspectionJSFix {
 
         @Override
-		@NotNull
+		@Nonnull
         public String getName() {
             return InspectionJSBundle.message(
                     "constant.conditional.expression.simplify.quickfix");

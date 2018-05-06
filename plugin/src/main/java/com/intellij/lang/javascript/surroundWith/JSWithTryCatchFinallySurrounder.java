@@ -16,8 +16,9 @@
 
 package com.intellij.lang.javascript.surroundWith;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
@@ -50,7 +51,7 @@ public class JSWithTryCatchFinallySurrounder extends JSStatementSurrounder
 		return "try { } catch(e" + getExceptionVarTypeBasedOnContext(context) + ") { } finally { }";
 	}
 
-	protected static String getExceptionVarTypeBasedOnContext(@NotNull PsiElement context)
+	protected static String getExceptionVarTypeBasedOnContext(@Nonnull PsiElement context)
 	{
 		if(context.getContainingFile().getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4)
 		{

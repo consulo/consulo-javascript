@@ -16,7 +16,8 @@
 
 package consulo.javascript.lang.parsing;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
+
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSElementTypes;

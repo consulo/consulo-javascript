@@ -5,23 +5,23 @@ import com.intellij.psi.PsiElement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class NestingDepthJSInspection extends FunctionMetricsInspection {
     @Override
-	@NotNull
+	@Nonnull
     public String getID() {
         return "OverlyNestedFunctionJS";
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("overly.nested.function.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
     }
@@ -58,7 +58,7 @@ public class NestingDepthJSInspection extends FunctionMetricsInspection {
 
     private class Visitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSFunctionDeclaration(@NotNull JSFunction function) {
+        @Override public void visitJSFunctionDeclaration(@Nonnull JSFunction function) {
             final NestingDepthVisitor visitor = new NestingDepthVisitor();
             function.accept(visitor);
             final int count = visitor.getMaximumDepth();

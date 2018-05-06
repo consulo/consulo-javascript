@@ -16,7 +16,8 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
 import com.intellij.psi.PsiElementVisitor;
@@ -32,7 +33,7 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
 	}
 
 	@Override
-	public void accept(@NotNull PsiElementVisitor visitor)
+	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
 		visitor.visitElement(this);
 	}

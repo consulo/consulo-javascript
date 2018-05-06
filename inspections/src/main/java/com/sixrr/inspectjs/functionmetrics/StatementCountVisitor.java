@@ -1,8 +1,9 @@
 package com.sixrr.inspectjs.functionmetrics;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.psi.*;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
-import org.jetbrains.annotations.NotNull;
 
 class StatementCountVisitor extends JSRecursiveElementVisitor {
     private int statementCount = 0;
@@ -19,7 +20,7 @@ class StatementCountVisitor extends JSRecursiveElementVisitor {
         }
     }
 
-    @Override public void visitJSStatement(@NotNull JSStatement statement) {
+    @Override public void visitJSStatement(@Nonnull JSStatement statement) {
         super.visitJSStatement(statement);
         if(statement instanceof JSEmptyStatement ||
                 statement instanceof JSBlockStatement)

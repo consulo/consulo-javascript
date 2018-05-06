@@ -1,8 +1,8 @@
 package com.sixrr.inspectjs.validity;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
@@ -20,14 +20,14 @@ public class BadExpressionStatementJSInspection extends JavaScriptInspection
 {
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getDisplayName()
 	{
 		return InspectionJSBundle.message("expression.statement.which.is.not.assignment.or.call.display.name");
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getGroupDisplayName()
 	{
 		return JSGroupNames.VALIDITY_GROUP_NAME;

@@ -1,6 +1,6 @@
 package consulo.javascript.psi.stubs;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.psi.stubs.PsiFileStub;
 
@@ -10,6 +10,6 @@ import com.intellij.psi.stubs.PsiFileStub;
  */
 public interface JSFileStub extends PsiFileStub<JSFile>
 {
-	@NotNull
+	@Nonnull
 	String getName();
 }

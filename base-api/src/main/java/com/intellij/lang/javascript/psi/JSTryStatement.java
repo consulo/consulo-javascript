@@ -16,8 +16,8 @@
 
 package com.intellij.lang.javascript.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,7 +30,7 @@ public interface JSTryStatement extends JSStatement
 {
 	JSStatement getStatement();
 
-	@NotNull
+	@Nonnull
 	JSCatchBlock[] getAllCatchBlocks();
 
 	@Deprecated

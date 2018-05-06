@@ -1,5 +1,7 @@
 package com.sixrr.inspectjs.bitwise;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -11,31 +13,30 @@ import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.utils.ComparisonUtils;
 import com.sixrr.inspectjs.utils.ExpressionUtil;
 import com.sixrr.inspectjs.utils.ParenthesesUtils;
-import org.jetbrains.annotations.NotNull;
 
 public class IncompatibleMaskJSInspection extends JavaScriptInspection {
 
     @Override
-	@NotNull
+	@Nonnull
     public String getID() {
         return "IncompatibleBitwiseMaskOperation";
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message(
                 "incompatible.mask.operation.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.BITWISE_GROUP_NAME;
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String buildErrorString(Object... args) {
         final JSBinaryExpression binaryExpression =
                 (JSBinaryExpression) args[0];
@@ -63,7 +64,7 @@ public class IncompatibleMaskJSInspection extends JavaScriptInspection {
     private static class IncompatibleMaskVisitor extends BaseInspectionVisitor {
 
         @Override public void visitJSBinaryExpression(
-                @NotNull JSBinaryExpression expression) {
+                @Nonnull JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             final JSExpression rhs = expression.getROperand();
             if (!ComparisonUtils.isEqualityComparison(expression)) {

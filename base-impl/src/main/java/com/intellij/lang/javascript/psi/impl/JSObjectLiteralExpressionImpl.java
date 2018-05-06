@@ -16,9 +16,9 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
+import javax.annotation.Nonnull;
 import javax.swing.Icon;
 
-import org.jetbrains.annotations.NotNull;
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
@@ -60,7 +60,7 @@ public class JSObjectLiteralExpressionImpl extends JSExpressionImpl implements J
 	}
 
 	@Override
-	public void accept(@NotNull PsiElementVisitor visitor)
+	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
 		{
@@ -78,8 +78,8 @@ public class JSObjectLiteralExpressionImpl extends JSExpressionImpl implements J
 	}
 
 	@Override
-	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState state, final PsiElement lastParent,
-			@NotNull final PsiElement place)
+	public boolean processDeclarations(@Nonnull final PsiScopeProcessor processor, @Nonnull final ResolveState state, final PsiElement lastParent,
+			@Nonnull final PsiElement place)
 	{
 		if(lastParent == null || !(place instanceof JSProperty))
 		{

@@ -1,5 +1,7 @@
 package com.sixrr.inspectjs.control;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.psi.JSIfStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
@@ -8,19 +10,18 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.EquivalenceChecker;
-import org.jetbrains.annotations.NotNull;
 
 public class IfStatementWithIdenticalBranchesJSInspection extends JavaScriptInspection {
     private InspectionJSFix fix = new CollapseIfFix();
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("if.statement.with.identical.branches.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
@@ -37,7 +38,7 @@ public class IfStatementWithIdenticalBranchesJSInspection extends JavaScriptInsp
 
     private static class CollapseIfFix extends InspectionJSFix {
         @Override
-		@NotNull
+		@Nonnull
         public String getName() {
             return InspectionJSBundle.message("collapse.if.statement.fix");
         }
@@ -62,7 +63,7 @@ public class IfStatementWithIdenticalBranchesJSInspection extends JavaScriptInsp
 
     private static class IfStatementWithIdenticalBranchesVisitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSIfStatement(@NotNull JSIfStatement statement) {
+        @Override public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
             super.visitJSIfStatement(statement);
             final JSStatement thenBranch = statement.getThen();
             final JSStatement elseBranch = statement.getElse();

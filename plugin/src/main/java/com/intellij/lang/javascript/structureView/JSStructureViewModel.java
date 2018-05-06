@@ -19,8 +19,9 @@ package com.intellij.lang.javascript.structureView;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.structureView.StructureViewTreeElement;
@@ -106,14 +107,14 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public ActionPresentation getPresentation()
 		{
 			return null; // will not be shown
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public String getName()
 		{
 			return ID;
@@ -156,14 +157,14 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public ActionPresentation getPresentation()
 		{
 			return new ActionPresentationData(IdeBundle.message("action.structureview.show.fields"), null, AllIcons.Nodes.Variable);
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public String getName()
 		{
 			return ID;
@@ -189,7 +190,7 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public ActionPresentation getPresentation()
 		{
 			return new ActionPresentationData(IdeBundle.message("action.structureview.show.inherited"), null, IconLoader.getIcon("/hierarchy/supertypes" +
@@ -197,7 +198,7 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public String getName()
 		{
 			return ID;
@@ -248,28 +249,28 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public StructureViewTreeElement getRoot()
 	{
 		return new JSStructureViewElement(myRoot);
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public Grouper[] getGroupers()
 	{
 		return myGroupers;
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public Sorter[] getSorters()
 	{
 		return mySorters;
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public Filter[] getFilters()
 	{
 		return myFilters;
@@ -299,7 +300,7 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 				InjectedLanguageUtil.enumerate(injectionHost, new PsiLanguageInjectionHost.InjectedPsiVisitor()
 				{
 					@Override
-					public void visit(@NotNull final PsiFile injectedPsi, @NotNull final List<PsiLanguageInjectionHost.Shred> places)
+					public void visit(@Nonnull final PsiFile injectedPsi, @Nonnull final List<PsiLanguageInjectionHost.Shred> places)
 					{
 						final PsiLanguageInjectionHost.Shred shred = places.get(0);
 						final int injectedStart = shred.getRangeInsideHost().getStartOffset() + shred.getHost().getTextOffset();
@@ -363,7 +364,7 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	protected Class[] getSuitableClasses()
 	{
 		return myClasses;

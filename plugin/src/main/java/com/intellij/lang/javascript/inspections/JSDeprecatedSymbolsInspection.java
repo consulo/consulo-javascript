@@ -16,8 +16,9 @@
 
 package com.intellij.lang.javascript.inspections;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
@@ -38,21 +39,21 @@ public class JSDeprecatedSymbolsInspection extends JSInspection
 	private static final String SHORT_NAME = "JSDeprecatedSymbols";
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getGroupDisplayName()
 	{
 		return JavaScriptBundle.message("js.inspection.group.name");
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getDisplayName()
 	{
 		return JavaScriptBundle.message("js.deprecated.symbols.inspection.name");
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	@NonNls
 	public String getShortName()
 	{

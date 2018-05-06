@@ -1,5 +1,7 @@
 package com.sixrr.inspectjs.style;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -8,30 +10,29 @@ import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
-import org.jetbrains.annotations.NotNull;
 
 public class ChainedEqualityJSInspection extends JavaScriptInspection {
 
     @Override
-	@NotNull
+	@Nonnull
     public String getID() {
         return "ChainedEqualityComparisonsJS";
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("chained.equality.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.STYLE_GROUP_NAME;
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String buildErrorString(Object... args) {
         return InspectionJSBundle.message("chained.equality.error.string");
     }
@@ -44,7 +45,7 @@ public class ChainedEqualityJSInspection extends JavaScriptInspection {
     private static class ChainedEqualityVisitor extends BaseInspectionVisitor {
 
         @Override public void visitJSBinaryExpression(
-                @NotNull JSBinaryExpression expression) {
+                @Nonnull JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             if (!(expression.getROperand() != null)) {
                 return;
@@ -63,7 +64,7 @@ public class ChainedEqualityJSInspection extends JavaScriptInspection {
         }
 
         private static boolean isEqualityComparison(
-                @NotNull JSBinaryExpression expression) {
+                @Nonnull JSBinaryExpression expression) {
             final IElementType tokenType = expression.getOperationSign();
             return JSTokenTypes.EQEQ.equals(tokenType) ||
                     JSTokenTypes.NE.equals(tokenType);

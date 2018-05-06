@@ -16,10 +16,10 @@
 
 package consulo.json;
 
+import javax.annotation.Nonnull;
 import javax.swing.Icon;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.Project;
@@ -41,21 +41,21 @@ public class JsonFileType extends LanguageFileType implements JavaScriptFileType
 		super(JavaScriptLanguage.INSTANCE);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getName()
 	{
 		return "JSON";
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getDescription()
 	{
 		return "Json files";
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getDefaultExtension()
 	{
@@ -69,7 +69,7 @@ public class JsonFileType extends LanguageFileType implements JavaScriptFileType
 		return JavaScriptIcons.Json;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public JsonJavaScriptVersion getLanguageVersion(@Nullable Project project, @Nullable VirtualFile virtualFile)
 	{

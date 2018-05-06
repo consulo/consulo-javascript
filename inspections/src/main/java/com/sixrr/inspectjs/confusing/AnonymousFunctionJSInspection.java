@@ -1,7 +1,7 @@
 package com.sixrr.inspectjs.confusing;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSFunctionExpression;
 import com.intellij.psi.PsiElement;
@@ -14,13 +14,13 @@ import com.sixrr.inspectjs.JavaScriptInspection;
 public class AnonymousFunctionJSInspection extends JavaScriptInspection{
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName(){
         return InspectionJSBundle.message("anonymous.function.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName(){
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }

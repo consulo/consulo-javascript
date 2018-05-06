@@ -16,8 +16,8 @@
 
 package consulo.javascript.lang;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.lang.LanguageVersion;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -28,6 +28,6 @@ import com.intellij.openapi.vfs.VirtualFile;
  */
 public interface JavaScriptFileTypeWithVersion
 {
-	@NotNull
+	@Nonnull
 	LanguageVersion getLanguageVersion(@Nullable Project project, @Nullable VirtualFile virtualFile);
 }

@@ -16,8 +16,9 @@
 
 package com.intellij.lang.javascript;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.Language;
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
@@ -59,7 +60,7 @@ public class JSLanguageInjector implements MultiHostInjector
 	private static final NamedPointer<Language> CSS_LANGUAGE = LanguagePointerUtil.createPointer("CSS");
 
 	@Override
-	public void injectLanguages(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement host)
+	public void injectLanguages(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement host)
 	{
 
 		if(host instanceof XmlAttributeValue)

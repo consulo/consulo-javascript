@@ -1,5 +1,8 @@
 package com.sixrr.inspectjs.confusing;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
@@ -15,20 +18,18 @@ import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.BoolUtils;
 import com.sixrr.inspectjs.utils.ParenthesesUtils;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class NegatedIfStatementJSInspection extends JavaScriptInspection {
     private final NegatedIfElseFix fix = new NegatedIfElseFix();
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("negated.if.statement.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
@@ -52,7 +53,7 @@ public class NegatedIfStatementJSInspection extends JavaScriptInspection {
     private static class NegatedIfElseFix extends InspectionJSFix {
 
         @Override
-		@NotNull
+		@Nonnull
         public String getName() {
             return InspectionJSBundle.message("invert.if.condition.fix");
         }

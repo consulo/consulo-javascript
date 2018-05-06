@@ -1,6 +1,7 @@
 package consulo.javascript.lang.parsing;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.psi.tree.IElementType;
@@ -42,37 +43,37 @@ public class JavaScriptParsingContext
 		return JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(tokenType);
 	}
 
-	@NotNull
+	@Nonnull
 	protected FunctionParsing createFunctionParsing()
 	{
 		return new FunctionParsing(this);
 	}
 
-	@NotNull
+	@Nonnull
 	protected StatementParsing createStatementParsing()
 	{
 		return new StatementParsing(this);
 	}
 
-	@NotNull
+	@Nonnull
 	protected ExpressionParsing createExpressionParsing()
 	{
 		return new ExpressionParsing(this);
 	}
 
-	@NotNull
+	@Nonnull
 	public FunctionParsing getFunctionParsing()
 	{
 		return myFunctionParsing;
 	}
 
-	@NotNull
+	@Nonnull
 	public ExpressionParsing getExpressionParsing()
 	{
 		return myExpressionParsing;
 	}
 
-	@NotNull
+	@Nonnull
 	public StatementParsing getStatementParsing()
 	{
 		return myStatementParsing;

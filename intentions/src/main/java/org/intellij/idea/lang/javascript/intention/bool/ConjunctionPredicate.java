@@ -15,9 +15,10 @@
  */
 package org.intellij.idea.lang.javascript.intention.bool;
 
+import javax.annotation.Nonnull;
+
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
-import org.jetbrains.annotations.NotNull;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
@@ -26,7 +27,7 @@ import com.intellij.psi.PsiElement;
 
 class ConjunctionPredicate implements JSElementPredicate {
     @Override
-	public boolean satisfiedBy(@NotNull PsiElement element) {
+	public boolean satisfiedBy(@Nonnull PsiElement element) {
         if (!(element instanceof JSBinaryExpression)) {
             return false;
         }

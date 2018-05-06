@@ -16,7 +16,7 @@
 
 package consulo.javascript.ide.codeInsight;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.lang.javascript.inspections.qucikFixes.CreateJSFunctionOrMethodFix;
 import com.intellij.openapi.util.KeyedExtensionCollector;
 import com.intellij.psi.PsiElement;
@@ -31,7 +31,7 @@ public class JavaScriptQuickFixFactory
 {
 	private static final JavaScriptQuickFixFactory ourDefaultImpl = new JavaScriptQuickFixFactory();
 
-	@NotNull
+	@Nonnull
 	public static JavaScriptQuickFixFactory byElement(PsiElement element)
 	{
 		LanguageVersion languageVersion = element.getLanguageVersion();

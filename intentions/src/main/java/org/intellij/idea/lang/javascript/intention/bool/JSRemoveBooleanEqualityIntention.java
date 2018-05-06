@@ -21,7 +21,7 @@ import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
 import org.intellij.idea.lang.javascript.psiutil.BoolUtils;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
@@ -39,13 +39,13 @@ public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention {
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public JSElementPredicate getElementPredicate() {
         return new BooleanLiteralEqualityPredicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element)
+	public void processIntention(@Nonnull PsiElement element)
             throws IncorrectOperationException {
         final JSBinaryExpression exp      = (JSBinaryExpression) element;
         final boolean            isEquals = exp.getOperationSign().equals(JSTokenTypes.EQEQ);
@@ -87,7 +87,7 @@ public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention {
 
     private static class BooleanLiteralEqualityPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (!(element instanceof JSBinaryExpression)) {
                 return false;
             }

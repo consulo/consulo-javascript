@@ -16,8 +16,8 @@
 
 package consulo.javascript.debugger;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.javascript.JSDebuggerSupportUtils;
 import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.openapi.editor.Document;
@@ -34,7 +34,7 @@ import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
  */
 public class JavaScriptLineBreakpointType extends XLineBreakpointTypeBase
 {
-	@NotNull
+	@Nonnull
 	public static JavaScriptLineBreakpointType getInstance()
 	{
 		return EXTENSION_POINT_NAME.findExtension(JavaScriptLineBreakpointType.class);
@@ -44,16 +44,16 @@ public class JavaScriptLineBreakpointType extends XLineBreakpointTypeBase
 	{
 		super("javascript", "JavaScript Breakpoints", new XDebuggerEditorsProvider()
 		{
-			@NotNull
+			@Nonnull
 			@Override
 			public FileType getFileType()
 			{
 				return JavaScriptFileType.INSTANCE;
 			}
 
-			@NotNull
+			@Nonnull
 			@Override
-			public Document createDocument(@NotNull Project project, @NotNull String s, @Nullable XSourcePosition sourcePosition, @NotNull EvaluationMode evaluationMode)
+			public Document createDocument(@Nonnull Project project, @Nonnull String s, @Nullable XSourcePosition sourcePosition, @Nonnull EvaluationMode evaluationMode)
 			{
 				return JSDebuggerSupportUtils.createDocument(s, project, sourcePosition == null ? null : sourcePosition.getFile(), sourcePosition == null ? 0 : sourcePosition.getOffset());
 			}

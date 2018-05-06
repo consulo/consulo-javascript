@@ -19,7 +19,8 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSPackageStatement;
@@ -45,22 +46,22 @@ public class JSPackageStatementElementType extends JSStubElementType<JSPackageSt
 		super("PACKAGE_STATEMENT");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public PsiElement createElement(@NotNull ASTNode astNode)
+	public PsiElement createElement(@Nonnull ASTNode astNode)
 	{
 		return new JSPackageStatementImpl(astNode);
 	}
 
 	@Override
-	public JSPackageStatement createPsi(@NotNull JSPackageStatementStub stub)
+	public JSPackageStatement createPsi(@Nonnull JSPackageStatementStub stub)
 	{
 		return new JSPackageStatementImpl(stub);
 	}
 
 	@RequiredReadAction
 	@Override
-	public JSPackageStatementStub createStub(@NotNull JSPackageStatement psi, StubElement parentStub)
+	public JSPackageStatementStub createStub(@Nonnull JSPackageStatement psi, StubElement parentStub)
 	{
 		String name = psi.getName();
 		String qualifiedName = psi.getQualifiedName();
@@ -68,15 +69,15 @@ public class JSPackageStatementElementType extends JSStubElementType<JSPackageSt
 	}
 
 	@Override
-	public void serialize(@NotNull JSPackageStatementStub stub, @NotNull StubOutputStream dataStream) throws IOException
+	public void serialize(@Nonnull JSPackageStatementStub stub, @Nonnull StubOutputStream dataStream) throws IOException
 	{
 		dataStream.writeName(stub.getName());
 		dataStream.writeName(stub.getQualifiedName());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public JSPackageStatementStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException
+	public JSPackageStatementStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
 	{
 		StringRef nameRef = dataStream.readName();
 		StringRef qualifiedRef = dataStream.readName();

@@ -17,14 +17,14 @@
 package com.intellij.lang.javascript;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
 public class JSDocElementType extends JSElementType
 {
-	public JSDocElementType(@NotNull @NonNls String debugName)
+	public JSDocElementType(@Nonnull @NonNls String debugName)
 	{
 		super(debugName);
 	}

@@ -16,8 +16,8 @@
 
 package consulo.json.jom;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileTypes.FileType;
@@ -37,8 +37,8 @@ import consulo.json.JsonFileType;
  */
 public class JomManager
 {
-	@NotNull
-	public static JomManager getInstance(@NotNull Project project)
+	@Nonnull
+	public static JomManager getInstance(@Nonnull Project project)
 	{
 		return ServiceManager.getService(project, JomManager.class);
 	}
@@ -55,7 +55,7 @@ public class JomManager
 	@Nullable
 	@RequiredReadAction
 	@SuppressWarnings("unchecked")
-	public <T extends JomElement> JomFileElement<T> getFileElement(@NotNull final PsiFile psiFile)
+	public <T extends JomElement> JomFileElement<T> getFileElement(@Nonnull final PsiFile psiFile)
 	{
 		FileType fileType = psiFile.getFileType();
 		if(fileType != JsonFileType.INSTANCE)
@@ -89,7 +89,7 @@ public class JomManager
 	}
 
 	@Nullable
-	private static JomFileDescriptor findFileDescriptor(@NotNull PsiFile psiFile)
+	private static JomFileDescriptor findFileDescriptor(@Nonnull PsiFile psiFile)
 	{
 		JomFileDescriptor jomFileDescriptor = null;
 		for(JomFileDescriptor temp : JomFileDescriptor.EP_NAME.getExtensions())

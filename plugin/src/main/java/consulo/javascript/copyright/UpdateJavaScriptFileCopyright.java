@@ -16,7 +16,8 @@
 
 package consulo.javascript.copyright;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -27,7 +28,7 @@ import consulo.copyright.config.CopyrightFileConfig;
 
 public class UpdateJavaScriptFileCopyright extends UpdatePsiFileCopyright<CopyrightFileConfig>
 {
-	public UpdateJavaScriptFileCopyright(@NotNull PsiFile psiFile, @NotNull CopyrightProfile copyrightProfile)
+	public UpdateJavaScriptFileCopyright(@Nonnull PsiFile psiFile, @Nonnull CopyrightProfile copyrightProfile)
 	{
 		super(psiFile, copyrightProfile);
 	}

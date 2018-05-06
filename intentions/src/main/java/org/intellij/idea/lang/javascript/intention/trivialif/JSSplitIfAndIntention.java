@@ -15,12 +15,13 @@
  */
 package org.intellij.idea.lang.javascript.intention.trivialif;
 
+import javax.annotation.Nonnull;
+
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.NonNls;
 
 import com.intellij.psi.PsiElement;
@@ -37,13 +38,13 @@ public class JSSplitIfAndIntention extends JSIntention {
     @NonNls private static final String ELSE_KEYWORD              = "else ";
 
     @Override
-	@NotNull
+	@Nonnull
     public JSElementPredicate getElementPredicate() {
         return new SplitIfAndPredicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         final PsiElement jsElement = (element.getParent() instanceof JSIfStatement ? element.getParent() : element);
 
         assert (jsElement != null);
@@ -87,7 +88,7 @@ public class JSSplitIfAndIntention extends JSIntention {
 
     private static class SplitIfAndPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             PsiElement parent = element.getParent();
 
             if (!(parent instanceof JSIfStatement)) {

@@ -1,5 +1,7 @@
 package com.sixrr.inspectjs.bugs;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.psi.JSDoWhileStatement;
 import com.intellij.lang.javascript.psi.JSForStatement;
 import com.intellij.lang.javascript.psi.JSWhileStatement;
@@ -8,18 +10,17 @@ import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
-import org.jetbrains.annotations.NotNull;
 
 public class InfiniteLoopJSInspection extends JavaScriptInspection {
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("infinite.loop.statement.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.BUGS_GROUP_NAME;
     }
@@ -42,7 +43,7 @@ public class InfiniteLoopJSInspection extends JavaScriptInspection {
     private static class Visitor extends BaseInspectionVisitor {
 
 
-        @Override public void visitJSForStatement(@NotNull JSForStatement statement) {
+        @Override public void visitJSForStatement(@Nonnull JSForStatement statement) {
             super.visitJSForStatement(statement);
             if (ControlFlowUtils.statementMayCompleteNormally(statement)) {
                 return;
@@ -53,7 +54,7 @@ public class InfiniteLoopJSInspection extends JavaScriptInspection {
             registerStatementError(statement);
         }
 
-        @Override public void visitJSWhileStatement(@NotNull JSWhileStatement statement) {
+        @Override public void visitJSWhileStatement(@Nonnull JSWhileStatement statement) {
 
             super.visitJSWhileStatement(statement);
             if (ControlFlowUtils.statementMayCompleteNormally(statement)) {
@@ -65,7 +66,7 @@ public class InfiniteLoopJSInspection extends JavaScriptInspection {
             registerStatementError(statement);
         }
 
-        @Override public void visitJSDoWhileStatement(@NotNull JSDoWhileStatement statement) {
+        @Override public void visitJSDoWhileStatement(@Nonnull JSDoWhileStatement statement) {
             super.visitJSDoWhileStatement(statement);
             if (ControlFlowUtils.statementMayCompleteNormally(statement)) {
                 return;

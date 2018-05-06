@@ -19,7 +19,7 @@ import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
 import com.intellij.lang.javascript.psi.JSBlockStatement;
@@ -33,13 +33,13 @@ public class JSRemoveRedundantElseIntention extends JSIntention {
     @NonNls private static final String IF_STATEMENT_PREFIX = "if (";
 
     @Override
-	@NotNull
+	@Nonnull
     public JSElementPredicate getElementPredicate() {
         return new RemoveRedundantElsePredicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         final JSIfStatement ifStatement = (JSIfStatement) element;
         final JSStatement   thenBranch  = ifStatement.getThen();
         final JSStatement   elseBranch  = ifStatement.getElse();
@@ -59,7 +59,7 @@ public class JSRemoveRedundantElseIntention extends JSIntention {
 
     private static class RemoveRedundantElsePredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (!(element instanceof JSIfStatement)) {
                 return false;
             }

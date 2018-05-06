@@ -9,7 +9,7 @@ import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.utils.EquivalenceChecker;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -17,13 +17,13 @@ import java.util.Set;
 
 public class DuplicateConditionJSInspection extends JavaScriptInspection {
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("duplicate.condition.in.if.statement.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
@@ -41,7 +41,7 @@ public class DuplicateConditionJSInspection extends JavaScriptInspection {
     private static class DuplicateConditionVisitor
             extends BaseInspectionVisitor {
 
-        @Override public void visitJSIfStatement(@NotNull JSIfStatement statement) {
+        @Override public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
             super.visitJSIfStatement(statement);
             final PsiElement parent = statement.getParent();
             if (parent instanceof JSIfStatement) {

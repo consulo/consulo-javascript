@@ -17,8 +17,9 @@
 
 package consulo.javascript.types;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
 import com.intellij.lang.javascript.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.stubs.JSQualifiedStub;
@@ -37,7 +38,7 @@ public abstract class JSQualifiedStubElementType<StubT extends JSQualifiedStub<P
 	}
 
 	@Override
-	public void indexStub(@NotNull StubT stub, @NotNull IndexSink sink)
+	public void indexStub(@Nonnull StubT stub, @Nonnull IndexSink sink)
 	{
 		final String name = stub.getName();
 		final String fqn = stub.getQualifiedName();

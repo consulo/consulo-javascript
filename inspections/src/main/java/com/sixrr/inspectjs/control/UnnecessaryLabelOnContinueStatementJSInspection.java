@@ -1,5 +1,7 @@
 package com.sixrr.inspectjs.control;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.psi.JSContinueStatement;
 import com.intellij.lang.javascript.psi.JSLoopStatement;
@@ -9,21 +11,21 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.sixrr.inspectjs.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 public class UnnecessaryLabelOnContinueStatementJSInspection extends JavaScriptInspection {
     private final UnnecessaryLabelOnContinueStatementFix fix =
             new UnnecessaryLabelOnContinueStatementFix();
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("unnecessary.label.on.continue.statement.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
@@ -51,7 +53,7 @@ public class UnnecessaryLabelOnContinueStatementJSInspection extends JavaScriptI
 
     private static class UnnecessaryLabelOnContinueStatementFix extends InspectionJSFix {
         @Override
-		@NotNull
+		@Nonnull
         public String getName() {
             return InspectionJSBundle.message("remove.label.fix");
         }
@@ -67,7 +69,7 @@ public class UnnecessaryLabelOnContinueStatementJSInspection extends JavaScriptI
     }
     private static class Visitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSContinueStatement(@NotNull JSContinueStatement statement) {
+        @Override public void visitJSContinueStatement(@Nonnull JSContinueStatement statement) {
             super.visitJSContinueStatement(statement);
             if (statement.getLabel() == null) {
                 return;

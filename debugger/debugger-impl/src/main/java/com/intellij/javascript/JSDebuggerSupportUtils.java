@@ -18,8 +18,8 @@ package com.intellij.javascript;
 
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.lang.javascript.psi.JSElementFactory;
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.JSNamedElement;
@@ -52,7 +52,7 @@ import consulo.javascript.lang.JavaScriptLanguage;
 public class JSDebuggerSupportUtils
 {
 	@Nullable
-	public static TextRange getExpressionAtOffset(@NotNull Project project, @NotNull Document document, final int offset)
+	public static TextRange getExpressionAtOffset(@Nonnull Project project, @Nonnull Document document, final int offset)
 	{
 		PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(document);
 		if(file == null)
@@ -84,7 +84,7 @@ public class JSDebuggerSupportUtils
 				InjectedLanguageUtil.enumerate(psiLanguageInjectionHost, new PsiLanguageInjectionHost.InjectedPsiVisitor()
 				{
 					@Override
-					public void visit(@NotNull final PsiFile injectedPsi, @NotNull final List<PsiLanguageInjectionHost.Shred> places)
+					public void visit(@Nonnull final PsiFile injectedPsi, @Nonnull final List<PsiLanguageInjectionHost.Shred> places)
 					{
 						final PsiLanguageInjectionHost.Shred shred = places.get(0);
 						final int injectedStart = shred.getRangeInsideHost().getStartOffset() + shred.getHost().getTextOffset();
@@ -155,7 +155,7 @@ public class JSDebuggerSupportUtils
 	}
 
 	@Nullable
-	public static PsiElement getContextElement(VirtualFile virtualFile, int offset, final @NotNull Project project)
+	public static PsiElement getContextElement(VirtualFile virtualFile, int offset, final @Nonnull Project project)
 	{
 		Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
 		PsiFile file = PsiManager.getInstance(project).findFile(virtualFile);
@@ -206,7 +206,7 @@ public class JSDebuggerSupportUtils
 				InjectedLanguageUtil.enumerate(parent, new PsiLanguageInjectionHost.InjectedPsiVisitor()
 				{
 					@Override
-					public void visit(@NotNull final PsiFile injectedPsi, @NotNull final List<PsiLanguageInjectionHost.Shred> places)
+					public void visit(@Nonnull final PsiFile injectedPsi, @Nonnull final List<PsiLanguageInjectionHost.Shred> places)
 					{
 						final PsiLanguageInjectionHost.Shred shred = places.get(0);
 						final int injectedStart = shred.getRangeInsideHost().getStartOffset() + shred.getHost().getTextOffset();

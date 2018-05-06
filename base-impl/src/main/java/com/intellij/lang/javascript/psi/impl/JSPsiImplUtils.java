@@ -23,9 +23,11 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -75,7 +77,7 @@ public class JSPsiImplUtils
 
 	@Nullable
 	@RequiredReadAction
-	public static JavaScriptTypeElement findTypeElement(@NotNull PsiElement element)
+	public static JavaScriptTypeElement findTypeElement(@Nonnull PsiElement element)
 	{
 		if(element instanceof StubBasedPsiElement)
 		{
@@ -100,7 +102,7 @@ public class JSPsiImplUtils
 	@Nullable
 	@RequiredReadAction
 	@SuppressWarnings("unchecked")
-	private static <T> T findChildrenByClass(@NotNull PsiElement element, Class<T> aClass)
+	private static <T> T findChildrenByClass(@Nonnull PsiElement element, Class<T> aClass)
 	{
 		for(PsiElement cur = element.getFirstChild(); cur != null; cur = cur.getNextSibling())
 		{
@@ -228,8 +230,8 @@ public class JSPsiImplUtils
 	}
 
 	static
-	@NotNull
-	PsiElement findTopLevelNavigatableElement(@NotNull JSQualifiedNamedElement jsClass)
+	@Nonnull
+	PsiElement findTopLevelNavigatableElement(@Nonnull JSQualifiedNamedElement jsClass)
 	{
 		PsiElement sourceElement = findTopLevelNavigatableElementWithSource(jsClass, null);
 		if(sourceElement != null)
@@ -240,7 +242,7 @@ public class JSPsiImplUtils
 	}
 
 	@Nullable
-	public static PsiElement findTopLevelNavigatableElementWithSource(@NotNull JSQualifiedNamedElement jsClass, @Nullable Consumer<JSQualifiedNamedElement> candidatesConsumer)
+	public static PsiElement findTopLevelNavigatableElementWithSource(@Nonnull JSQualifiedNamedElement jsClass, @Nullable Consumer<JSQualifiedNamedElement> candidatesConsumer)
 	{
 		if(candidatesConsumer != null)
 		{
@@ -391,7 +393,7 @@ public class JSPsiImplUtils
 
 	public static
 	@Nullable
-	String getTypeFromAnnotationParameter(@NotNull JSAttributeList attributeList, @NotNull String annotationName, @Nullable String annotationParameter)
+	String getTypeFromAnnotationParameter(@Nonnull JSAttributeList attributeList, @Nonnull String annotationName, @Nullable String annotationParameter)
 	{
 		String arrayType = null;
 		final JSAttribute[] byName = attributeList.getAttributesByName(annotationName);
@@ -446,7 +448,7 @@ public class JSPsiImplUtils
 
 	static
 	@Nullable
-	String getQNameForMove(@NotNull PsiElement targetElement, PsiElement elementToBind)
+	String getQNameForMove(@Nonnull PsiElement targetElement, PsiElement elementToBind)
 	{
 		String qName = null;
 		Project project = targetElement.getProject();

@@ -16,7 +16,8 @@
 
 package com.intellij.lang.javascript.formatter;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.formatting.Block;
 import com.intellij.formatting.FormattingDocumentModel;
 import com.intellij.formatting.FormattingModel;
@@ -39,14 +40,14 @@ public class JSFormattingModel implements FormattingModel
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public Block getRootBlock()
 	{
 		return myModel.getRootBlock();
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public FormattingDocumentModel getDocumentModel()
 	{
 		return myModel.getDocumentModel();

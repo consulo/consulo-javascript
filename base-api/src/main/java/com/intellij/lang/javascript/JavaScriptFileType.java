@@ -16,10 +16,10 @@
 
 package com.intellij.lang.javascript;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.Icon;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -46,21 +46,21 @@ public class JavaScriptFileType extends LanguageFileType implements JavaScriptFi
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getId()
 	{
 		return "JavaScript";
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getDescription()
 	{
 		return JavaScriptBundle.message("javascript.filetype.description");
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getDefaultExtension()
 	{
 		return "js";
@@ -72,7 +72,7 @@ public class JavaScriptFileType extends LanguageFileType implements JavaScriptFi
 		return JavaScriptIcons.JavaScript;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public LanguageVersion getLanguageVersion(@Nullable Project project, @Nullable VirtualFile virtualFile)
 	{

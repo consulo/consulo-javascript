@@ -16,9 +16,11 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageParserDefinitions;
 import com.intellij.lang.ParserDefinition;
@@ -79,7 +81,7 @@ public class JSChangeUtil
 		return refExpression.getNode().getFirstChildNode();
 	}
 
-	@NotNull
+	@Nonnull
 	public static JSExpression createExpressionFromText(Project project, @NonNls String text)
 	{
 		text = "{\n" + text + "\n}";
@@ -299,7 +301,7 @@ public class JSChangeUtil
 		return jsElement instanceof JSIfStatement || jsElement instanceof JSLoopStatement;
 	}
 
-	public static PsiElement blockDoAddRangeBefore(final PsiElement first, final PsiElement last, final @NotNull PsiElement anchor) throws
+	public static PsiElement blockDoAddRangeBefore(final PsiElement first, final PsiElement last, final @Nonnull PsiElement anchor) throws
 			IncorrectOperationException
 	{
 		BlockAddContext addContext = new BlockAddContext(anchor)
@@ -314,7 +316,7 @@ public class JSChangeUtil
 		return addContext.doAddElement(first, last);
 	}
 
-	public static PsiElement blockDoAddRangeAfter(final PsiElement first, final PsiElement last, final @NotNull PsiElement anchor) throws
+	public static PsiElement blockDoAddRangeAfter(final PsiElement first, final PsiElement last, final @Nonnull PsiElement anchor) throws
 			IncorrectOperationException
 	{
 		BlockAddContext addContext = new BlockAddContext(anchor)
@@ -329,7 +331,7 @@ public class JSChangeUtil
 		return addContext.doAddElement(first, last);
 	}
 
-	public static PsiElement blockDoAddAfter(final PsiElement element, final @NotNull PsiElement anchor) throws IncorrectOperationException
+	public static PsiElement blockDoAddAfter(final PsiElement element, final @Nonnull PsiElement anchor) throws IncorrectOperationException
 	{
 		BlockAddContext addContext = new BlockAddContext(anchor)
 		{
@@ -343,7 +345,7 @@ public class JSChangeUtil
 		return addContext.doAddElement(element);
 	}
 
-	public static PsiElement blockDoAddBefore(final PsiElement element, final @NotNull PsiElement anchor) throws IncorrectOperationException
+	public static PsiElement blockDoAddBefore(final PsiElement element, final @Nonnull PsiElement anchor) throws IncorrectOperationException
 	{
 		BlockAddContext addContext = new BlockAddContext(anchor)
 		{
@@ -368,7 +370,7 @@ public class JSChangeUtil
 		final JSBlockStatement newlyAddedBlock;
 		final PsiElement codeBlockAnchor;
 
-		BlockAddContext(final @NotNull PsiElement _anchor) throws IncorrectOperationException
+		BlockAddContext(final @Nonnull PsiElement _anchor) throws IncorrectOperationException
 		{
 			final ASTNode codeBlockNode = JSChangeUtil.createStatementFromText(_anchor.getProject(), "{ a }");
 

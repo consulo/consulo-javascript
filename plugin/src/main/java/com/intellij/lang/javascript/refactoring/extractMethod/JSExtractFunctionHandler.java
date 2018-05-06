@@ -16,7 +16,8 @@
 
 package com.intellij.lang.javascript.refactoring.extractMethod;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
@@ -37,7 +38,7 @@ import com.intellij.refactoring.util.CommonRefactoringUtil;
 public class JSExtractFunctionHandler implements RefactoringActionHandler
 {
 	@Override
-	public void invoke(@NotNull final Project project, final Editor editor, PsiFile file, DataContext dataContext)
+	public void invoke(@Nonnull final Project project, final Editor editor, PsiFile file, DataContext dataContext)
 	{
 		if(!editor.getSelectionModel().hasSelection())
 		{
@@ -90,7 +91,7 @@ public class JSExtractFunctionHandler implements RefactoringActionHandler
 	}
 
 	@Override
-	public void invoke(@NotNull final Project project, @NotNull final PsiElement[] elements, final DataContext dataContext)
+	public void invoke(@Nonnull final Project project, @Nonnull final PsiElement[] elements, final DataContext dataContext)
 	{
 		throw new UnsupportedOperationException();
 	}

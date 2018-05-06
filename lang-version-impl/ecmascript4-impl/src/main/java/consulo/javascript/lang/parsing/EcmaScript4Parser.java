@@ -1,6 +1,6 @@
 package consulo.javascript.lang.parsing;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class EcmaScript4Parser extends JavaScriptParser
 {
-	@NotNull
+	@Nonnull
 	@Override
 	public JavaScriptParsingContext createParsingContext()
 	{

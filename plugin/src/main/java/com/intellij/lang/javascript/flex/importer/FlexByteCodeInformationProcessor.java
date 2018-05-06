@@ -17,8 +17,8 @@
 package com.intellij.lang.javascript.flex.importer;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Maxim.Mossienko
@@ -27,19 +27,19 @@ import org.jetbrains.annotations.Nullable;
  */
 interface FlexByteCodeInformationProcessor
 {
-	void dumpStat(@NotNull @NonNls String stat);
+	void dumpStat(@Nonnull @NonNls String stat);
 
-	void hasError(@NotNull String error);
+	void hasError(@Nonnull String error);
 
-	void append(@NotNull @NonNls String str);
+	void append(@Nonnull @NonNls String str);
 
-	void processMultinameAsPackageName(@NotNull Multiname name, @Nullable String parentName, boolean referenceNameRequested);
+	void processMultinameAsPackageName(@Nonnull Multiname name, @Nullable String parentName, boolean referenceNameRequested);
 
-	void dumpToplevelAnonymousMethod(final @NotNull Abc abc, final @NotNull MethodInfo m);
+	void dumpToplevelAnonymousMethod(final @Nonnull Abc abc, final @Nonnull MethodInfo m);
 
-	void dumpTopLevelTraits(final @NotNull Abc abc, final @NotNull Traits t, final String indent);
+	void dumpTopLevelTraits(final @Nonnull Abc abc, final @Nonnull Traits t, final String indent);
 
-	boolean doDumpMember(final @NotNull MemberInfo memberInfo);
+	boolean doDumpMember(final @Nonnull MemberInfo memberInfo);
 
 	void appendMethodSeparator();
 
@@ -47,11 +47,11 @@ interface FlexByteCodeInformationProcessor
 
 	String getAbcInSwfIndent();
 
-	boolean doDumpMetaData(final @NotNull MetaData md);
+	boolean doDumpMetaData(final @Nonnull MetaData md);
 
 	String REST_PARAMETER_TYPE = "...";
 
-	void processParameter(final @NotNull String name, @Nullable Multiname type, String parentName, @Nullable Multiname value, boolean rest);
+	void processParameter(final @Nonnull String name, @Nullable Multiname type, String parentName, @Nullable Multiname value, boolean rest);
 
 	boolean doStarTypeDumpInExtends();
 

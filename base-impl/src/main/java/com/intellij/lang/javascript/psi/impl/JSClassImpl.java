@@ -16,8 +16,9 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
@@ -94,7 +95,7 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder
 
 	@Override
 	@RequiredReadAction
-	public PsiElement setName(@NonNls @NotNull String newName) throws IncorrectOperationException
+	public PsiElement setName(@NonNls @Nonnull String newName) throws IncorrectOperationException
 	{
 		newName = newName.substring(newName.lastIndexOf('.') + 1);
 		final String oldName = getName();
@@ -185,7 +186,7 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder
 	}
 
 	@Override
-	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState substitutor, final PsiElement lastParent, @NotNull final PsiElement place)
+	public boolean processDeclarations(@Nonnull final PsiScopeProcessor processor, @Nonnull final ResolveState substitutor, final PsiElement lastParent, @Nonnull final PsiElement place)
 	{
 		boolean b = super.processDeclarations(processor, substitutor, lastParent, place);
 
@@ -197,7 +198,7 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder
 	}
 
 	@Override
-	public PsiElement addAfter(@NotNull final PsiElement element, PsiElement anchor) throws IncorrectOperationException
+	public PsiElement addAfter(@Nonnull final PsiElement element, PsiElement anchor) throws IncorrectOperationException
 	{
 		if(anchor == null)
 		{
@@ -216,7 +217,7 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder
 	}
 
 	@Override
-	public PsiElement addBefore(@NotNull final PsiElement element, final PsiElement anchor) throws IncorrectOperationException
+	public PsiElement addBefore(@Nonnull final PsiElement element, final PsiElement anchor) throws IncorrectOperationException
 	{
 		final PsiElement superElement = super.addBefore(element, anchor);
 		CodeStyleManager.getInstance(getProject()).reformatNewlyAddedElement(getNode(), superElement.getNode());

@@ -16,10 +16,10 @@
 
 package consulo.actionscript;
 
+import javax.annotation.Nonnull;
 import javax.swing.Icon;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import consulo.actionscript.lang.ActionScriptLanguageVersion;
 import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
@@ -42,21 +42,21 @@ public class ActionScriptFileType extends LanguageFileType implements JavaScript
 		super(JavaScriptLanguage.INSTANCE);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getName()
 	{
 		return "ACTIONSCRIPT";
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getDescription()
 	{
 		return "ActionScript files";
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getDefaultExtension()
 	{
@@ -70,7 +70,7 @@ public class ActionScriptFileType extends LanguageFileType implements JavaScript
 		return JavaScriptIcons.As;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public LanguageVersion getLanguageVersion(@Nullable Project project, @Nullable VirtualFile virtualFile)
 	{

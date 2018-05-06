@@ -12,8 +12,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.codeInspection.InspectionToolProvider;
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.openapi.application.Application;
@@ -335,7 +336,7 @@ public class InspectionJSPlugin implements ApplicationComponent,
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getComponentName() {
         return "InspectionJS";
     }

@@ -15,13 +15,14 @@
  */
 package org.intellij.idea.lang.javascript.intention.conditional;
 
+import javax.annotation.Nonnull;
+
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.BoolUtils;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NotNull;
 
 import com.intellij.lang.javascript.psi.JSConditionalExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -30,13 +31,13 @@ import com.intellij.util.IncorrectOperationException;
 
 public class JSRemoveConditionalIntention extends JSIntention {
     @Override
-	@NotNull
+	@Nonnull
     public JSElementPredicate getElementPredicate() {
         return new RemoveConditionalPredicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         final JSConditionalExpression exp            = (JSConditionalExpression) element;
         final JSExpression            condition      = exp.getCondition();
         final JSExpression            thenExpression = exp.getThen();
@@ -54,7 +55,7 @@ public class JSRemoveConditionalIntention extends JSIntention {
 
     private static class RemoveConditionalPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (!(element instanceof JSConditionalExpression)) {
                 return false;
             }

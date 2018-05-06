@@ -18,8 +18,8 @@ package consulo.javascript.lang;
 
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.openapi.components.ServiceManager;
 
 /**
@@ -33,17 +33,17 @@ public abstract class StandardJavaScriptVersions
 		int getWeight();
 	}
 
-	@NotNull
+	@Nonnull
 	public static StandardJavaScriptVersions getInstance()
 	{
 		return ServiceManager.getService(StandardJavaScriptVersions.class);
 	}
 
-	@NotNull
+	@Nonnull
 	public abstract JavaScriptLanguageVersion getDefaultVersion();
-	@NotNull
+	@Nonnull
 	public abstract List<JavaScriptLanguageVersion> getValidLanguageVersions();
 
-	@NotNull
+	@Nonnull
 	public abstract JavaScriptLanguageVersion findVersionById(@Nullable String id);
 }

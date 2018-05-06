@@ -22,8 +22,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.smartTree.ActionPresentation;
@@ -48,7 +49,7 @@ class JSSuperGrouper implements Grouper
 	private static final String SHOW_CLASSES = "SHOW_CLASSES";
 
 	@Override
-	@NotNull
+	@Nonnull
 	public Collection<Group> group(final AbstractTreeNode parent, final Collection<TreeElement> children)
 	{
 		if(isParentGrouped(parent))
@@ -116,7 +117,7 @@ class JSSuperGrouper implements Grouper
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public ActionPresentation getPresentation()
 	{
 		return new ActionPresentationData(IdeBundle.message("action.structureview.group.methods.by.defining.type"), null,
@@ -124,7 +125,7 @@ class JSSuperGrouper implements Grouper
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getName()
 	{
 		return SHOW_CLASSES;

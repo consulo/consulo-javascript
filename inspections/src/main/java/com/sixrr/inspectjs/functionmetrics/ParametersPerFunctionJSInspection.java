@@ -7,24 +7,24 @@ import com.intellij.psi.PsiElement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ParametersPerFunctionJSInspection
         extends FunctionMetricsInspection {
     @Override
-	@NotNull
+	@Nonnull
     public String getID() {
         return "OverlyComplexFunctionJS";
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("function.with.too.many.parameters.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
     }
@@ -60,7 +60,7 @@ public class ParametersPerFunctionJSInspection
 
     private class Visitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSFunctionDeclaration(@NotNull JSFunction function) {
+        @Override public void visitJSFunctionDeclaration(@Nonnull JSFunction function) {
             final JSParameterList parameterList = function.getParameterList();
             if (parameterList == null) {
                 return;

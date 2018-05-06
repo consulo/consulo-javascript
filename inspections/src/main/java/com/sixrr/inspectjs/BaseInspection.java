@@ -2,9 +2,10 @@ package com.sixrr.inspectjs;
 
 import java.lang.reflect.Method;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.intellij.codeInspection.CustomSuppressableInspectionTool;
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.ProblemsHolder;
@@ -23,7 +24,7 @@ public abstract class BaseInspection extends LocalInspectionTool implements Cust
 	private final String m_shortName = null;
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getShortName()
 	{
 		if(m_shortName == null)
@@ -37,8 +38,8 @@ public abstract class BaseInspection extends LocalInspectionTool implements Cust
 	}
 
 	@Override
-	@NotNull
-	public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder problemsHolder, boolean onTheFly)
+	@Nonnull
+	public PsiElementVisitor buildVisitor(@Nonnull ProblemsHolder problemsHolder, boolean onTheFly)
 	{
 		if(!canBuildVisitor(problemsHolder.getFile()))
 		{
@@ -53,7 +54,7 @@ public abstract class BaseInspection extends LocalInspectionTool implements Cust
 		return visitor;
 	}
 
-	public boolean canBuildVisitor(@NotNull PsiFile psiFile)
+	public boolean canBuildVisitor(@Nonnull PsiFile psiFile)
 	{
 		return true;
 	}
@@ -118,7 +119,7 @@ public abstract class BaseInspection extends LocalInspectionTool implements Cust
 	}
 
 	@Override
-	public boolean isSuppressedFor(@NotNull final PsiElement element)
+	public boolean isSuppressedFor(@Nonnull final PsiElement element)
 	{
 		return SuppressionUtil.isSuppressedInStatement(element, getID(), JSSuppressionHolder.class);
 	}

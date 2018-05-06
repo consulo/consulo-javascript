@@ -16,8 +16,8 @@
 
 package com.intellij.lang.javascript.flex.importer;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Maxim.Mossienko
@@ -34,13 +34,13 @@ class AbcDumper extends AbstractDumpProcessor
 	}
 
 	@Override
-	public void dumpStat(@NotNull final String stat)
+	public void dumpStat(@Nonnull final String stat)
 	{
 		sb.append(stat);
 	}
 
 	@Override
-	public void hasError(@NotNull final String error)
+	public void hasError(@Nonnull final String error)
 	{
 		sb.append(error);
 	}
@@ -53,19 +53,19 @@ class AbcDumper extends AbstractDumpProcessor
 	}
 
 	@Override
-	public void processMultinameAsPackageName(@NotNull final Multiname name, @Nullable final String parentName, final boolean referenceNameRequested)
+	public void processMultinameAsPackageName(@Nonnull final Multiname name, @Nullable final String parentName, final boolean referenceNameRequested)
 	{
 		append(name.toString());
 	}
 
 	@Override
-	public void dumpToplevelAnonymousMethod(final @NotNull Abc abc, final @NotNull MethodInfo m)
+	public void dumpToplevelAnonymousMethod(final @Nonnull Abc abc, final @Nonnull MethodInfo m)
 	{
 		m.dump(abc, "", "", this);
 	}
 
 	@Override
-	public void dumpTopLevelTraits(final Abc abc, final @NotNull Traits t, final String indent)
+	public void dumpTopLevelTraits(final Abc abc, final @Nonnull Traits t, final String indent)
 	{
 		sb.append(indent + t.name + "\n");
 		t.dump(abc, indent, "", this);
@@ -73,7 +73,7 @@ class AbcDumper extends AbstractDumpProcessor
 	}
 
 	@Override
-	public boolean doDumpMember(final @NotNull MemberInfo memberInfo)
+	public boolean doDumpMember(final @Nonnull MemberInfo memberInfo)
 	{
 		return true;
 	}
@@ -103,13 +103,13 @@ class AbcDumper extends AbstractDumpProcessor
 	}
 
 	@Override
-	public boolean doDumpMetaData(final @NotNull MetaData md)
+	public boolean doDumpMetaData(final @Nonnull MetaData md)
 	{
 		return true;
 	}
 
 	@Override
-	public void processParameter(@NotNull String name, @Nullable Multiname type, String parentName, @Nullable Multiname value, boolean rest)
+	public void processParameter(@Nonnull String name, @Nullable Multiname type, String parentName, @Nullable Multiname value, boolean rest)
 	{
 		processMultinameAsPackageName(type, parentName, true);
 	}

@@ -16,8 +16,9 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.index.JSItemPresentation;
@@ -56,7 +57,7 @@ public class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElemen
 	}
 
 	@Override
-	public void accept(@NotNull PsiElementVisitor visitor)
+	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
 		{
@@ -102,7 +103,7 @@ public class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElemen
 	}
 
 	@Override
-	public PsiElement addBefore(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException
+	public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException
 	{
 		if(JSChangeUtil.isStatementOrComment(element))
 		{
@@ -120,7 +121,7 @@ public class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElemen
 	}
 
 	@Override
-	public PsiElement addAfter(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException
+	public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException
 	{
 		if(JSChangeUtil.isStatementOrComment(element))
 		{
@@ -137,7 +138,7 @@ public class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElemen
 	}
 
 	@Override
-	public PsiElement addRangeBefore(@NotNull PsiElement first, @NotNull PsiElement last, PsiElement anchor) throws IncorrectOperationException
+	public PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor) throws IncorrectOperationException
 	{
 		if(JSChangeUtil.isStatementOrComment(first))
 		{
@@ -172,7 +173,7 @@ public class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElemen
 	}
 
 	@Override
-	public PsiElement add(@NotNull PsiElement element) throws IncorrectOperationException
+	public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		return addAfter(element, null);
 	}
@@ -184,7 +185,7 @@ public class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElemen
 	}
 
 	@Override
-	public PsiElement replace(@NotNull PsiElement newElement) throws IncorrectOperationException
+	public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException
 	{
 		final ASTNode myNode = getNode();
 		final ASTNode result = newElement.getNode().copyElement();

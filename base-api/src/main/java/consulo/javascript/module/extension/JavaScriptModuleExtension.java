@@ -1,6 +1,7 @@
 package consulo.javascript.module.extension;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.lang.LanguageVersion;
 import consulo.module.extension.ModuleExtensionWithSdk;
 
@@ -10,6 +11,6 @@ import consulo.module.extension.ModuleExtensionWithSdk;
  */
 public interface JavaScriptModuleExtension<T extends JavaScriptModuleExtension<T>> extends ModuleExtensionWithSdk<T>
 {
-	@NotNull
+	@Nonnull
 	LanguageVersion getLanguageVersion();
 }

@@ -24,9 +24,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSLanguageInjector;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
@@ -206,7 +208,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 	}
 
 	@Override
-	public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException
+	public PsiElement setName(@NonNls @Nonnull String name) throws IncorrectOperationException
 	{
 		final int i = name.lastIndexOf('.');
 		if(i != -1)
@@ -239,8 +241,8 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 	}
 
 	@Override
-	public boolean processDeclarations(@NotNull final PsiScopeProcessor processor, @NotNull final ResolveState substitutor,
-			final PsiElement lastParent, @NotNull final PsiElement place)
+	public boolean processDeclarations(@Nonnull final PsiScopeProcessor processor, @Nonnull final ResolveState substitutor,
+			final PsiElement lastParent, @Nonnull final PsiElement place)
 	{
 		boolean b = super.processDeclarations(processor, substitutor, lastParent, place);
 
@@ -523,7 +525,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 	}
 
 	@Override
-	public PsiElement add(@NotNull PsiElement element) throws IncorrectOperationException
+	public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		if(element instanceof JSFunction || element instanceof JSVarStatement)
 		{
@@ -598,7 +600,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 	}
 
 	@Override
-	public PsiElement addBefore(@NotNull final PsiElement element, final PsiElement anchor) throws IncorrectOperationException
+	public PsiElement addBefore(@Nonnull final PsiElement element, final PsiElement anchor) throws IncorrectOperationException
 	{
 		if(anchor == null)
 		{
@@ -761,7 +763,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 					InjectedLanguageUtil.enumerate(value, new PsiLanguageInjectionHost.InjectedPsiVisitor()
 					{
 						@Override
-						public void visit(@NotNull PsiFile injectedPsi, @NotNull List<PsiLanguageInjectionHost.Shred> places)
+						public void visit(@Nonnull PsiFile injectedPsi, @Nonnull List<PsiLanguageInjectionHost.Shred> places)
 						{
 							if(places.get(0).getHost() instanceof XmlAttributeValue)
 							{

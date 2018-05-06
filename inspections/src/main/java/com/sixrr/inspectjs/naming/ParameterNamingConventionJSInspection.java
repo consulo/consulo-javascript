@@ -1,5 +1,7 @@
 package com.sixrr.inspectjs.naming;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSParameter;
 import com.intellij.lang.javascript.psi.JSParameterList;
@@ -11,7 +13,6 @@ import com.sixrr.inspectjs.InspectionJSFix;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.fix.RenameFix;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 
 public class ParameterNamingConventionJSInspection extends ConventionInspection {
     private static final int DEFAULT_MIN_LENGTH = 1;
@@ -19,13 +20,13 @@ public class ParameterNamingConventionJSInspection extends ConventionInspection 
     private final RenameFix fix = new RenameFix();
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("function.parameter.naming.convention.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.NAMING_CONVENTIONS_GROUP_NAME;
     }

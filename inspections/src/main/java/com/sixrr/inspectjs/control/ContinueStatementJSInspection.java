@@ -1,23 +1,25 @@
 package com.sixrr.inspectjs.control;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.psi.JSContinueStatement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 public class ContinueStatementJSInspection extends JavaScriptInspection {
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("continue.statement.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
@@ -35,7 +37,7 @@ public class ContinueStatementJSInspection extends JavaScriptInspection {
 
     private static class Visitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSContinueStatement(@NotNull JSContinueStatement statement) {
+        @Override public void visitJSContinueStatement(@Nonnull JSContinueStatement statement) {
             super.visitJSContinueStatement(statement);
             registerStatementError(statement);
         }

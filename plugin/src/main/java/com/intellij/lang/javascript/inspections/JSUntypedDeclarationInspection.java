@@ -18,8 +18,9 @@ package com.intellij.lang.javascript.inspections;
 
 import java.util.Collections;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.codeInsight.template.Template;
@@ -59,20 +60,20 @@ public class JSUntypedDeclarationInspection extends JSInspection
 	public static final String SHORT_NAME = "JSUntypedDeclaration";
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getGroupDisplayName()
 	{
 		return JavaScriptBundle.message("js.inspection.group.name");
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getDisplayName()
 	{
 		return JavaScriptBundle.message("js.untyped.declaration.inspection.name");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public HighlightDisplayLevel getDefaultLevel()
 	{
@@ -80,7 +81,7 @@ public class JSUntypedDeclarationInspection extends JSInspection
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	@NonNls
 	public String getShortName()
 	{
@@ -137,21 +138,21 @@ public class JSUntypedDeclarationInspection extends JSInspection
 	{
 
 		@Override
-		@NotNull
+		@Nonnull
 		public String getName()
 		{
 			return JavaScriptBundle.message("js.untyped.declaration.problem.addtype.fix");
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public String getFamilyName()
 		{
 			return getName();
 		}
 
 		@Override
-		public void applyFix(@NotNull final Project project, @NotNull final ProblemDescriptor descriptor)
+		public void applyFix(@Nonnull final Project project, @Nonnull final ProblemDescriptor descriptor)
 		{
 			PsiElement anchor = descriptor.getPsiElement();
 			PsiFile containingFile = anchor.getContainingFile();

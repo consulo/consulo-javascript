@@ -4,18 +4,18 @@ import com.intellij.lang.javascript.psi.*;
 import com.intellij.psi.PsiElement;
 import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class FunctionWithMultipleReturnPointsJSInspection extends JavaScriptInspection {
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("function.with.multiple.return.points.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
     }
@@ -59,7 +59,7 @@ public class FunctionWithMultipleReturnPointsJSInspection extends JavaScriptInsp
 
     private static class Visitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSFunctionDeclaration(@NotNull JSFunction function) {
+        @Override public void visitJSFunctionDeclaration(@Nonnull JSFunction function) {
             final int returnPointCount = countReturnPoints(function);
             if (returnPointCount <= 1) {
                 return;

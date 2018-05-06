@@ -19,7 +19,8 @@ package com.intellij.lang.javascript.surroundWith;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSBlockStatement;
 import com.intellij.lang.javascript.psi.JSFile;
@@ -57,7 +58,7 @@ public class JSStatementsSurroundDescriptor implements SurroundDescriptor
 	};
 
 	@Override
-	@NotNull
+	@Nonnull
 	public PsiElement[] getElementsToSurround(PsiFile file, int startOffset, int endOffset)
 	{
 		final PsiElement[] statements = findStatementsInRange(file, startOffset, endOffset);
@@ -69,7 +70,7 @@ public class JSStatementsSurroundDescriptor implements SurroundDescriptor
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public Surrounder[] getSurrounders()
 	{
 		return SURROUNDERS;

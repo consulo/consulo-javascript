@@ -1,5 +1,7 @@
 package com.sixrr.inspectjs.exception;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.psi.JSBreakStatement;
 import com.intellij.lang.javascript.psi.JSContinueStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
@@ -8,18 +10,17 @@ import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
-import org.jetbrains.annotations.NotNull;
 
 public class ContinueOrBreakFromFinallyBlockJSInspection extends JavaScriptInspection {
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("continue.or.break.inside.finally.block.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.ERRORHANDLING_GROUP_NAME;
     }
@@ -41,7 +42,7 @@ public class ContinueOrBreakFromFinallyBlockJSInspection extends JavaScriptInspe
 
     private static class Visitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSContinueStatement(@NotNull JSContinueStatement statement) {
+        @Override public void visitJSContinueStatement(@Nonnull JSContinueStatement statement) {
             super.visitJSContinueStatement(statement);
             if (!ControlFlowUtils.isInFinallyBlock(statement)) {
                 return;
@@ -56,7 +57,7 @@ public class ContinueOrBreakFromFinallyBlockJSInspection extends JavaScriptInspe
             registerStatementError(statement);
         }
 
-        @Override public void visitJSBreakStatement(@NotNull JSBreakStatement statement) {
+        @Override public void visitJSBreakStatement(@Nonnull JSBreakStatement statement) {
             super.visitJSBreakStatement(statement);
             if (!ControlFlowUtils.isInFinallyBlock(statement)) {
                 return;

@@ -19,8 +19,8 @@ import com.intellij.lang.javascript.psi.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.util.PsiTreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -174,8 +174,8 @@ public class ControlFlowUtils {
     }
 
     public static boolean statementCompletesWithStatement(
-            @NotNull JSStatement containingStatement,
-            @NotNull JSStatement statement) {
+            @Nonnull JSStatement containingStatement,
+            @Nonnull JSStatement statement) {
         JSElement statementToCheck = statement;
 
         while (true) {
@@ -202,8 +202,8 @@ public class ControlFlowUtils {
     }
 
     private static boolean elementCompletesWithStatement(
-            @NotNull JSElement   element,
-            @NotNull JSStatement statement) {
+            @Nonnull JSElement   element,
+            @Nonnull JSStatement statement) {
         PsiElement statementToCheck = statement;
 
         while (true) {
@@ -236,19 +236,19 @@ public class ControlFlowUtils {
     }
 
     public static boolean functionCompletesWithStatement(
-            @NotNull JSFunction  function,
-            @NotNull JSStatement statement) {
+            @Nonnull JSFunction  function,
+            @Nonnull JSStatement statement) {
         return elementCompletesWithStatement(function, statement);
     }
 
     public static boolean blockCompletesWithStatement(
-            @NotNull JSBlockStatement block,
-            @NotNull JSStatement      statement) {
+            @Nonnull JSBlockStatement block,
+            @Nonnull JSStatement      statement) {
         return elementCompletesWithStatement(block, statement);
     }
 
     private static boolean statementIsLastInBlock(
-            @NotNull JSBlockStatement block, @NotNull JSStatement statement) {
+            @Nonnull JSBlockStatement block, @Nonnull JSStatement statement) {
         final JSStatement[] statements = block.getStatements();
 
         //noinspection ForLoopWithMissingComponent
@@ -307,7 +307,7 @@ public class ControlFlowUtils {
         return (!containsConflictingDeclarations(statement2Declarations, statement1));
     }
 
-    public static boolean isInLoopStatementBody(@NotNull PsiElement element) {
+    public static boolean isInLoopStatementBody(@Nonnull PsiElement element) {
         final JSLoopStatement forStatement = PsiTreeUtil.getParentOfType(element, JSLoopStatement.class);
 
         if (forStatement == null) {
@@ -319,7 +319,8 @@ public class ControlFlowUtils {
         return (body != null && PsiTreeUtil.isAncestor(body, element, true));
     }
 
-    @NotNull public static List<JSCallExpression> getRecursiveCalls(@NotNull JSFunction function) {
+    @Nonnull
+	public static List<JSCallExpression> getRecursiveCalls(@Nonnull JSFunction function) {
         final RecursiveCallVisitor recursiveCallVisitor = new RecursiveCallVisitor(function);
 
         function.accept(recursiveCallVisitor);

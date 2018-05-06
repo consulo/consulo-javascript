@@ -16,8 +16,9 @@
 
 package consulo.json.validation.descriptionByAnotherPsiElement;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
@@ -48,7 +49,7 @@ public class DescriptionByAnotherPsiElementEditorNotification<T extends PsiEleme
 	private Project myProject;
 	private DescriptionByAnotherPsiElementProvider<T> myProvider;
 
-	public DescriptionByAnotherPsiElementEditorNotification(@NotNull Project project, @NotNull DescriptionByAnotherPsiElementProvider<T> provider)
+	public DescriptionByAnotherPsiElementEditorNotification(@Nonnull Project project, @Nonnull DescriptionByAnotherPsiElementProvider<T> provider)
 	{
 		myProject = project;
 		myProvider = provider;
@@ -56,7 +57,7 @@ public class DescriptionByAnotherPsiElementEditorNotification<T extends PsiEleme
 		myPanelKey = Key.create("DescriptionByAnotherPsiElementEditorNotification." + provider.getId());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Key<EditorNotificationPanel> getKey()
 	{
@@ -66,7 +67,7 @@ public class DescriptionByAnotherPsiElementEditorNotification<T extends PsiEleme
 	@Nullable
 	@Override
 	@RequiredDispatchThread
-	public EditorNotificationPanel createNotificationPanel(@NotNull final VirtualFile file, @NotNull FileEditor fileEditor)
+	public EditorNotificationPanel createNotificationPanel(@Nonnull final VirtualFile file, @Nonnull FileEditor fileEditor)
 	{
 		if(file.getFileType() != JsonFileType.INSTANCE)
 		{

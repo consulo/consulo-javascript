@@ -16,8 +16,8 @@
 
 package com.intellij.lang.javascript.formatter;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.lang.Language;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
@@ -47,7 +47,7 @@ public class JSCodeStyleSettingsProvider extends CodeStyleSettingsProvider
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public Configurable createSettingsPage(final CodeStyleSettings settings, final CodeStyleSettings originalSettings)
 	{
 		return new JavaScriptCodeStyleConfigurable(settings, originalSettings);

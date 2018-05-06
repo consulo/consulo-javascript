@@ -16,8 +16,9 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -53,7 +54,7 @@ public class JSAttributeNameValuePairImpl extends JSStubElementImpl<JSAttributeN
 	}
 
 	@Override
-	public void accept(@NotNull PsiElementVisitor visitor)
+	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
 		{
@@ -78,7 +79,7 @@ public class JSAttributeNameValuePairImpl extends JSStubElementImpl<JSAttributeN
 	}
 
 	@Override
-	public PsiElement setName(@NonNls @NotNull final String name) throws IncorrectOperationException
+	public PsiElement setName(@NonNls @Nonnull final String name) throws IncorrectOperationException
 	{
 		throw new IncorrectOperationException();
 	}
@@ -108,7 +109,7 @@ public class JSAttributeNameValuePairImpl extends JSStubElementImpl<JSAttributeN
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public PsiReference[] getReferences()
 	{
 		final @NonNls String name = getName();

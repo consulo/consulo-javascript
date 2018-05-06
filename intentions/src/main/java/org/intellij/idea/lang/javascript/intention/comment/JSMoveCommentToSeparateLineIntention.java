@@ -15,6 +15,8 @@
  */
 package org.intellij.idea.lang.javascript.intention.comment;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
@@ -25,17 +27,16 @@ import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.TreeUtil;
-import org.jetbrains.annotations.NotNull;
 
 public class JSMoveCommentToSeparateLineIntention extends JSIntention {
     @Override
-	@NotNull
+	@Nonnull
     protected JSElementPredicate getElementPredicate() {
         return new CommentOnLineWithSourcePredicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         final PsiComment    selectedComment = (PsiComment) element;
         PsiElement          elementToCheck  = selectedComment;
         final PsiWhiteSpace whiteSpace;
@@ -70,7 +71,7 @@ public class JSMoveCommentToSeparateLineIntention extends JSIntention {
     private static class CommentOnLineWithSourcePredicate implements JSElementPredicate {
 
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (!(element instanceof PsiComment)) {
                 return false;
             }

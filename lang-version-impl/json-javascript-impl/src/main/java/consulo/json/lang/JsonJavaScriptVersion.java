@@ -1,7 +1,7 @@
 package consulo.json.lang;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.fileTypes.FileType;
@@ -21,7 +21,7 @@ public class JsonJavaScriptVersion extends BaseJavaScriptLanguageVersion
 {
 	private static final Factory<Lexer> ourLexerFactory = JsonLexer::new;
 
-	@NotNull
+	@Nonnull
 	public static JsonJavaScriptVersion getInstance()
 	{
 		return JavaScriptLanguage.INSTANCE.findVersionByClass(JsonJavaScriptVersion.class);
@@ -39,21 +39,21 @@ public class JsonJavaScriptVersion extends BaseJavaScriptLanguageVersion
 		return JsonFileType.INSTANCE;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public SyntaxHighlighter getSyntaxHighlighter()
 	{
 		return new JavaScriptHighlighter(ourLexerFactory);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Lexer createLexer()
 	{
 		return ourLexerFactory.create();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public PsiParser createParser()
 	{

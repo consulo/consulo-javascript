@@ -16,8 +16,9 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.javascript.psi.JSExpressionCodeFragment;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
@@ -69,7 +70,7 @@ public class JSExpressionCodeFragmentImpl extends JSFileImpl implements JSExpres
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public FileViewProvider getViewProvider()
 	{
 		if(myViewProvider != null)

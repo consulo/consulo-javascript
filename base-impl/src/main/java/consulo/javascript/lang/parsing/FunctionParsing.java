@@ -16,8 +16,9 @@
 
 package consulo.javascript.lang.parsing;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -49,7 +50,7 @@ public class FunctionParsing extends Parsing
 		parseFunctionNoMarker(builder, expressionContext, builder.mark());
 	}
 
-	public void parseFunctionNoMarker(final PsiBuilder builder, final boolean expressionContext, final @NotNull PsiBuilder.Marker functionMarker)
+	public void parseFunctionNoMarker(final PsiBuilder builder, final boolean expressionContext, final @Nonnull PsiBuilder.Marker functionMarker)
 	{
 		if(builder.getTokenType() == JSTokenTypes.FUNCTION_KEYWORD)
 		{ // function keyword may be ommited in context of get/set property definition
@@ -139,7 +140,7 @@ public class FunctionParsing extends Parsing
 		parameterList.done(JSElementTypes.PARAMETER_LIST);
 	}
 
-	public void parseParameter(@NotNull PsiBuilder builder, @Nullable PsiBuilder.Marker parameterMarker)
+	public void parseParameter(@Nonnull PsiBuilder builder, @Nullable PsiBuilder.Marker parameterMarker)
 	{
 		if(parameterMarker == null)
 		{

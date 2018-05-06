@@ -1,13 +1,15 @@
 package com.sixrr.inspectjs.utils;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSParenthesizedExpression;
 import com.intellij.lang.javascript.psi.JSPrefixExpression;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 
 public class BoolUtils {
@@ -15,7 +17,7 @@ public class BoolUtils {
         super();
     }
 
-    public static boolean isNegation(@NotNull JSExpression exp) {
+    public static boolean isNegation(@Nonnull JSExpression exp) {
         if (!(exp instanceof JSPrefixExpression)) {
             return false;
         }
@@ -41,7 +43,7 @@ public class BoolUtils {
         return "false".equals(text);
     }
 
-    public static String getNegatedExpressionText(@NotNull JSExpression condition) {
+    public static String getNegatedExpressionText(@Nonnull JSExpression condition) {
         if (condition instanceof JSParenthesizedExpression) {
             final JSExpression contentExpression = ((JSParenthesizedExpression) condition).getInnerExpression();
             return '(' + getNegatedExpressionText(contentExpression) + ')';
@@ -64,7 +66,7 @@ public class BoolUtils {
         }
     }
 
-    private static JSExpression getNegated(@NotNull JSExpression exp) {
+    private static JSExpression getNegated(@Nonnull JSExpression exp) {
         final JSPrefixExpression prefixExp = (JSPrefixExpression) exp;
         final JSExpression operand = prefixExp.getExpression();
         return ParenthesesUtils.stripParentheses(operand);

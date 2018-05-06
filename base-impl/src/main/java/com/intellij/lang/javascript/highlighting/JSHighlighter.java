@@ -19,7 +19,7 @@ package com.intellij.lang.javascript.highlighting;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.lang.javascript.DialectOptionHolder;
 import com.intellij.lang.javascript.JSDocElementType;
 import com.intellij.lang.javascript.JSDocTokenTypes;
@@ -53,7 +53,7 @@ public class JSHighlighter extends SyntaxHighlighterBase implements JavaScriptSy
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public Lexer getHighlightingLexer()
 	{
 		return new JavaScriptHighlightingLexer(myDialectOptionsHolder);
@@ -134,7 +134,7 @@ public class JSHighlighter extends SyntaxHighlighterBase implements JavaScriptSy
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public TextAttributesKey[] getTokenHighlights(IElementType tokenType)
 	{
 		return pack(keys1.get(tokenType), keys2.get(tokenType));

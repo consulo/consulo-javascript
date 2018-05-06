@@ -2,7 +2,8 @@ package consulo.json.jom.proxy.impl;
 
 import java.lang.reflect.Type;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.javascript.psi.JSSimpleLiteralExpression;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
@@ -26,7 +27,7 @@ public class JomStringConverter implements JomValueConverter.Converter<String>
 
 	@RequiredReadAction
 	@Override
-	public String parseValue(@NotNull Class type, @NotNull Type genericType, @NotNull PsiElement value) throws JomBadValueExpressionException
+	public String parseValue(@Nonnull Class type, @Nonnull Type genericType, @Nonnull PsiElement value) throws JomBadValueExpressionException
 	{
 		if(value instanceof JSSimpleLiteralExpression)
 		{

@@ -15,6 +15,8 @@
  */
 package org.intellij.idea.lang.javascript.intention.increment;
 
+import javax.annotation.Nonnull;
+
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
@@ -22,7 +24,6 @@ import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.ExpressionUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.TreeUtil;
-import org.jetbrains.annotations.NotNull;
 
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSExpressionStatement;
@@ -42,13 +43,13 @@ public class JSExtractIncrementIntention extends JSMutablyNamedIntention {
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public JSElementPredicate getElementPredicate() {
         return new ExtractIncrementPredicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         final boolean      isPostfix = (element instanceof JSPostfixExpression);
         final JSExpression operand   = (isPostfix ? ((JSPostfixExpression) element).getExpression()
                                                   : ((JSPrefixExpression)  element).getExpression());
@@ -72,7 +73,7 @@ public class JSExtractIncrementIntention extends JSMutablyNamedIntention {
 
     private static class ExtractIncrementPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (!ExpressionUtil.isIncrementDecrementExpression(element)) {
                 return false;
             }

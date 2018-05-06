@@ -16,8 +16,8 @@
 
 package com.intellij.lang.javascript.psi;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.lang.javascript.psi.stubs.JSVariableStubBase;
 import com.intellij.psi.StubBasedPsiElement;
 import com.intellij.util.IncorrectOperationException;
@@ -42,7 +42,7 @@ public interface JSVariable extends JSQualifiedNamedElement, JSAttributeListOwne
 
 	void setInitializer(JSExpression expr) throws IncorrectOperationException;
 
-	@NotNull
+	@Nonnull
 	JavaScriptType getType();
 
 	@Nullable

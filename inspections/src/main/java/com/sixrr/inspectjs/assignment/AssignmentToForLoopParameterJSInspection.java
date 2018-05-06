@@ -1,5 +1,7 @@
 package com.sixrr.inspectjs.assignment;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.psi.PsiElement;
@@ -9,18 +11,17 @@ import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
-import org.jetbrains.annotations.NotNull;
 
 public class AssignmentToForLoopParameterJSInspection extends JavaScriptInspection {
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("assignment.to.for.loop.parameter.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.ASSIGNMENT_GROUP_NAME;
     }
@@ -37,7 +38,7 @@ public class AssignmentToForLoopParameterJSInspection extends JavaScriptInspecti
 
     private static class Visitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSAssignmentExpression(@NotNull JSAssignmentExpression expression) {
+        @Override public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression expression) {
             super.visitJSAssignmentExpression(expression);
             final JSExpression rhs = expression.getROperand();
             if (rhs == null) {
@@ -48,7 +49,7 @@ public class AssignmentToForLoopParameterJSInspection extends JavaScriptInspecti
             checkForForeachLoopParam(lhs);
         }
 
-        @Override public void visitJSPrefixExpression(@NotNull JSPrefixExpression expression) {
+        @Override public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
             super.visitJSPrefixExpression(expression);
             final IElementType sign = expression.getOperationSign();
             if (!JSTokenTypes.PLUSPLUS.equals(sign) &&
@@ -63,7 +64,7 @@ public class AssignmentToForLoopParameterJSInspection extends JavaScriptInspecti
             checkForForeachLoopParam(operand);
         }
 
-        @Override public void visitJSPostfixExpression(@NotNull JSPostfixExpression expression) {
+        @Override public void visitJSPostfixExpression(@Nonnull JSPostfixExpression expression) {
             super.visitJSPostfixExpression(expression);
             final IElementType sign = expression.getOperationSign();
             if (!JSTokenTypes.PLUSPLUS.equals(sign) &&

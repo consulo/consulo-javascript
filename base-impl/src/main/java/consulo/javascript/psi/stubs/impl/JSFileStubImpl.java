@@ -1,7 +1,7 @@
 package consulo.javascript.psi.stubs.impl;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSFile;
 import consulo.javascript.psi.stubs.JSFileStub;
@@ -17,13 +17,13 @@ public class JSFileStubImpl extends PsiFileStubImpl<JSFile> implements JSFileStu
 {
 	private StringRef myName;
 
-	public JSFileStubImpl(@Nullable JSFile file, @NotNull String name)
+	public JSFileStubImpl(@Nullable JSFile file, @Nonnull String name)
 	{
 		super(file);
 		myName = StringRef.fromString(name);
 	}
 
-	public JSFileStubImpl(@Nullable JSFile file, @NotNull StringRef name)
+	public JSFileStubImpl(@Nullable JSFile file, @Nonnull StringRef name)
 	{
 		super(file);
 		myName = name;
@@ -35,7 +35,7 @@ public class JSFileStubImpl extends PsiFileStubImpl<JSFile> implements JSFileStu
 		return JSElementTypes.FILE;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getName()
 	{

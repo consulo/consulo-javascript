@@ -21,11 +21,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Comparator;
 
+import javax.annotation.Nonnull;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import com.intellij.ide.actions.OpenFileAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
@@ -42,7 +42,7 @@ import com.intellij.ui.components.JBScrollPane;
  */
 public abstract class JavaScriptListPanel<T> extends JPanel
 {
-	@NotNull
+	@Nonnull
 	private final Project myProject;
 	private SortedListModel<T> myModel = SortedListModel.create(new Comparator<T>()
 	{
@@ -59,7 +59,7 @@ public abstract class JavaScriptListPanel<T> extends JPanel
 		}
 	});
 
-	public JavaScriptListPanel(@NotNull Project project)
+	public JavaScriptListPanel(@Nonnull Project project)
 	{
 		super(new BorderLayout());
 		init();
@@ -114,7 +114,7 @@ public abstract class JavaScriptListPanel<T> extends JPanel
 	}
 
 	@Nullable
-	public abstract VirtualFile toVirtualFile(@NotNull T value, boolean toOpen);
+	public abstract VirtualFile toVirtualFile(@Nonnull T value, boolean toOpen);
 
 	public void add(T value)
 	{

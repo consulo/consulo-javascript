@@ -25,8 +25,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.PropertyKey;
 import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.codeInsight.daemon.EmptyResolveMessageProvider;
@@ -317,7 +318,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 		JSResolveUtil.processInterfaceMethods(jsClass, implementedMethodProcessor);
 	}
 
-	private static ASTNode findElementForAccessModifierError(final @NotNull JSFunction o, final JSAttributeList attributeList)
+	private static ASTNode findElementForAccessModifierError(final @Nonnull JSFunction o, final JSAttributeList attributeList)
 	{
 		if(attributeList != null)
 		{
@@ -1173,27 +1174,27 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 			annotation.registerFix(new IntentionAction()
 			{
 				@Override
-				@NotNull
+				@Nonnull
 				public String getText()
 				{
 					return JavaScriptBundle.message("javascript.fix.package.name", expected);
 				}
 
 				@Override
-				@NotNull
+				@Nonnull
 				public String getFamilyName()
 				{
 					return getText();
 				}
 
 				@Override
-				public boolean isAvailable(@NotNull final Project project, final Editor editor, final PsiFile file)
+				public boolean isAvailable(@Nonnull final Project project, final Editor editor, final PsiFile file)
 				{
 					return packageStatement.isValid();
 				}
 
 				@Override
-				public void invoke(@NotNull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException
+				public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException
 				{
 					JSPackageStatementImpl.doChangeName(project, packageStatement, expected);
 				}
@@ -1247,34 +1248,34 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public String getText()
 		{
 			return JavaScriptBundle.message(myPropKey);
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public String getName()
 		{
 			return getText();
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public String getFamilyName()
 		{
 			return getText();
 		}
 
 		@Override
-		public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor)
+		public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor)
 		{
 			invoke(project, null, descriptor.getPsiElement().getContainingFile());
 		}
 
 		@Override
-		public boolean isAvailable(@NotNull final Project project, final Editor editor, final PsiFile file)
+		public boolean isAvailable(@Nonnull final Project project, final Editor editor, final PsiFile file)
 		{
 			for(ASTNode astNode : myAstNodes)
 			{
@@ -1288,7 +1289,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 		}
 
 		@Override
-		public void invoke(@NotNull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException
+		public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException
 		{
 			if(!CodeInsightUtilBase.getInstance().prepareFileForWrite(file))
 			{
@@ -1320,27 +1321,27 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public String getText()
 		{
 			return JavaScriptBundle.message("javascript.fix.add.override.modifier");
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public String getFamilyName()
 		{
 			return getText();
 		}
 
 		@Override
-		public boolean isAvailable(@NotNull final Project project, final Editor editor, final PsiFile file)
+		public boolean isAvailable(@Nonnull final Project project, final Editor editor, final PsiFile file)
 		{
 			return myNode.isValid();
 		}
 
 		@Override
-		public void invoke(@NotNull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException
+		public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException
 		{
 			if(!CodeInsightUtilBase.getInstance().prepareFileForWrite(file))
 			{
@@ -1404,27 +1405,27 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public String getText()
 		{
 			return JavaScriptBundle.message("javascript.fix.create.invoke.super");
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public String getFamilyName()
 		{
 			return getText();
 		}
 
 		@Override
-		public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file)
+		public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file)
 		{
 			return superConstructor.isValid() && node.isValid();
 		}
 
 		@Override
-		public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException
+		public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException
 		{
 			if(!CodeInsightUtilBase.getInstance().prepareFileForWrite(file))
 			{
@@ -1486,27 +1487,27 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public String getText()
 		{
 			return JavaScriptBundle.message("javascript.fix.create.constructor.invoke.super");
 		}
 
 		@Override
-		@NotNull
+		@Nonnull
 		public String getFamilyName()
 		{
 			return getText();
 		}
 
 		@Override
-		public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file)
+		public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file)
 		{
 			return node.isValid() && superConstructor.isValid();
 		}
 
 		@Override
-		public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException
+		public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException
 		{
 			if(!CodeInsightUtilBase.getInstance().prepareFileForWrite(file))
 			{

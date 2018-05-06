@@ -1,8 +1,10 @@
 package consulo.javascript.client.module.extension;
 
+import javax.annotation.Nonnull;
+
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -30,14 +32,14 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionImpl<ClientJ
 
 	protected LanguageVersion myLanguageVersion = StandardJavaScriptVersions.getInstance().getDefaultVersion();
 
-	public ClientJavaScriptModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootLayer)
+	public ClientJavaScriptModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer rootLayer)
 	{
 		super(id, rootLayer);
 		myPointer = new ModuleInheritableNamedPointerImpl<Sdk>(rootLayer, id)
 		{
 			@Nullable
 			@Override
-			public String getItemNameFromModule(@NotNull Module module)
+			public String getItemNameFromModule(@Nonnull Module module)
 			{
 				ClientJavaScriptModuleExtension extension = ModuleUtilCore.getExtension(module, ClientJavaScriptModuleExtension.class);
 				if(extension == null)
@@ -49,7 +51,7 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionImpl<ClientJ
 
 			@Nullable
 			@Override
-			public Sdk getItemFromModule(@NotNull Module module)
+			public Sdk getItemFromModule(@Nonnull Module module)
 			{
 				ClientJavaScriptModuleExtension extension = ModuleUtilCore.getExtension(module, ClientJavaScriptModuleExtension.class);
 				if(extension == null)
@@ -59,9 +61,9 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionImpl<ClientJ
 				return extension.getSdk();
 			}
 
-			@NotNull
+			@Nonnull
 			@Override
-			public NamedPointer<Sdk> getPointer(@NotNull ModuleRootLayer moduleRootLayer, @NotNull String name)
+			public NamedPointer<Sdk> getPointer(@Nonnull ModuleRootLayer moduleRootLayer, @Nonnull String name)
 			{
 				return ((ModuleRootLayerImpl)moduleRootLayer).getRootModel().getConfigurationAccessor().getSdkPointer(name);
 			}
@@ -73,14 +75,14 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionImpl<ClientJ
 
 	@RequiredReadAction
 	@Override
-	protected void loadStateImpl(@NotNull Element element)
+	protected void loadStateImpl(@Nonnull Element element)
 	{
 		super.loadStateImpl(element);
 		myLanguageVersion = StandardJavaScriptVersions.getInstance().findVersionById(element.getAttributeValue("language-version"));
 	}
 
 	@Override
-	protected void getStateImpl(@NotNull Element element)
+	protected void getStateImpl(@Nonnull Element element)
 	{
 		super.getStateImpl(element);
 		if(myLanguageVersion != StandardJavaScriptVersions.getInstance().getDefaultVersion())
@@ -89,7 +91,7 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionImpl<ClientJ
 		}
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public ModuleInheritableNamedPointer<Sdk> getInheritableSdk()
 	{
@@ -110,14 +112,14 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionImpl<ClientJ
 		return myPointer.getName();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Class<? extends SdkType> getSdkTypeClass()
 	{
 		throw new IllegalArgumentException();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public LanguageVersion getLanguageVersion()
 	{
@@ -126,7 +128,7 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionImpl<ClientJ
 
 	@RequiredReadAction
 	@Override
-	public void commit(@NotNull ClientJavaScriptModuleExtension mutableModuleExtension)
+	public void commit(@Nonnull ClientJavaScriptModuleExtension mutableModuleExtension)
 	{
 		super.commit(mutableModuleExtension);
 		myLanguageVersion = mutableModuleExtension.getLanguageVersion();

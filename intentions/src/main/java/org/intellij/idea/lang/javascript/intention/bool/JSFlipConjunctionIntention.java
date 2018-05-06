@@ -15,11 +15,12 @@
  */
 package org.intellij.idea.lang.javascript.intention.bool;
 
+import javax.annotation.Nonnull;
+
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NotNull;
 
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSElement;
@@ -38,12 +39,13 @@ public class JSFlipConjunctionIntention extends JSMutablyNamedIntention {
     }
 
     @Override
-	@NotNull public JSElementPredicate getElementPredicate() {
+	@Nonnull
+	public JSElementPredicate getElementPredicate() {
         return new ConjunctionPredicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         final JSBinaryExpression binaryExpression = (JSBinaryExpression) element;
         JSExpression             exp              = binaryExpression;
 

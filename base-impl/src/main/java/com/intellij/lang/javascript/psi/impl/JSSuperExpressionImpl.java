@@ -16,8 +16,9 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSCallExpression;
 import com.intellij.lang.javascript.psi.JSClass;
@@ -54,7 +55,7 @@ public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperEx
 	}
 
 	@Override
-	public void accept(@NotNull PsiElementVisitor visitor)
+	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
 		{
@@ -73,7 +74,7 @@ public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperEx
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public PsiReference[] getReferences()
 	{
 		if(references != null)
@@ -157,7 +158,7 @@ public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperEx
 					}
 
 					@Override
-					public PsiElement bindToElement(@NotNull final PsiElement element) throws IncorrectOperationException
+					public PsiElement bindToElement(@Nonnull final PsiElement element) throws IncorrectOperationException
 					{
 						return null;
 					}

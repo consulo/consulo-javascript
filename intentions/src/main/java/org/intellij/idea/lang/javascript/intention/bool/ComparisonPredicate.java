@@ -18,7 +18,7 @@ package org.intellij.idea.lang.javascript.intention.bool;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.psiutil.ComparisonUtils;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -26,7 +26,7 @@ import com.intellij.psi.PsiElement;
 
 class ComparisonPredicate implements JSElementPredicate {
     @Override
-	public boolean satisfiedBy(@NotNull PsiElement element) {
+	public boolean satisfiedBy(@Nonnull PsiElement element) {
         if (!(element instanceof JSBinaryExpression)) {
             return false;
         }

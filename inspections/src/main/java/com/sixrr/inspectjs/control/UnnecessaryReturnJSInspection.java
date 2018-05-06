@@ -1,5 +1,7 @@
 package com.sixrr.inspectjs.control;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.openapi.project.Project;
@@ -8,25 +10,24 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
-import org.jetbrains.annotations.NotNull;
 
 public class  UnnecessaryReturnJSInspection extends JavaScriptInspection {
     private final UnnecessaryReturnFix fix = new UnnecessaryReturnFix();
 
     @Override
-	@NotNull
+	@Nonnull
     public String getID() {
         return "UnnecessaryReturnStatementJS";
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("unnecessary.return.statement.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
@@ -53,7 +54,7 @@ public class  UnnecessaryReturnJSInspection extends JavaScriptInspection {
 
     private static class UnnecessaryReturnFix extends InspectionJSFix {
         @Override
-		@NotNull
+		@Nonnull
         public String getName() {
             return InspectionJSBundle.message("remove.unnecessary.return.fix");
         }
@@ -70,7 +71,7 @@ public class  UnnecessaryReturnJSInspection extends JavaScriptInspection {
 
     private static class UnnecessaryReturnVisitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSReturnStatement(@NotNull JSReturnStatement statement) {
+        @Override public void visitJSReturnStatement(@Nonnull JSReturnStatement statement) {
             super.visitJSReturnStatement(statement);
 
             final JSExpression returnValue = statement.getExpression();

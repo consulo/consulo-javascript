@@ -21,7 +21,7 @@ import gnu.trove.THashMap;
 import java.util.Map;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.JSImportStatement;
 import com.intellij.lang.javascript.psi.resolve.JSImportedElementResolveResult;
@@ -133,7 +133,7 @@ public class FlexImportSupport
 		}
 	}
 
-	public static JSImportedElementResolveResult resolveTypeNameUsingImplicitImports(@NotNull String referenceName, @NotNull JSFile file)
+	public static JSImportedElementResolveResult resolveTypeNameUsingImplicitImports(@Nonnull String referenceName, @Nonnull JSFile file)
 	{
 		final PsiElement context = file.getContext();
 

@@ -19,7 +19,7 @@ import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.NumberUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
 import com.intellij.psi.PsiElement;
@@ -27,13 +27,13 @@ import com.intellij.util.IncorrectOperationException;
 
 public class JSConvertIntegerToOctalIntention extends JSIntention {
     @Override
-	@NotNull
+	@Nonnull
     public JSElementPredicate getElementPredicate() {
         return new ConvertIntegerToOctalPredicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         final JSLiteralExpression exp = (JSLiteralExpression) element;
 
         JSElementFactory.replaceExpression(exp, '0' + NumberUtil.getLiteralNumber(exp).toString(8));
@@ -41,7 +41,7 @@ public class JSConvertIntegerToOctalIntention extends JSIntention {
 
     private static class ConvertIntegerToOctalPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (!(element instanceof JSLiteralExpression)) {
                 return false;
             }

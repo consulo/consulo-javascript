@@ -18,7 +18,8 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.Language;
 import consulo.javascript.index.JavaScriptIndexer;
 import com.intellij.lang.javascript.psi.JSFile;
@@ -45,7 +46,7 @@ public class JSFileElementType extends IStubFileElementType<JSFileStub>
 	}
 
 	@Override
-	public void indexStub(@NotNull final JSFileStub stub, @NotNull final IndexSink sink)
+	public void indexStub(@Nonnull final JSFileStub stub, @Nonnull final IndexSink sink)
 	{
 		for(JavaScriptIndexer javaScriptIndexer : JavaScriptIndexer.EP_NAME.getExtensions())
 		{
@@ -58,9 +59,9 @@ public class JSFileElementType extends IStubFileElementType<JSFileStub>
 	{
 		return new DefaultStubBuilder()
 		{
-			@NotNull
+			@Nonnull
 			@Override
-			protected StubElement createStubForFile(@NotNull PsiFile file)
+			protected StubElement createStubForFile(@Nonnull PsiFile file)
 			{
 				if(file instanceof JSFile)
 				{
@@ -72,20 +73,20 @@ public class JSFileElementType extends IStubFileElementType<JSFileStub>
 	}
 
 	@Override
-	public void serialize(@NotNull JSFileStub stub, @NotNull StubOutputStream dataStream) throws IOException
+	public void serialize(@Nonnull JSFileStub stub, @Nonnull StubOutputStream dataStream) throws IOException
 	{
 		dataStream.writeName(stub.getName());
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public JSFileStub deserialize(@NotNull final StubInputStream dataStream, final StubElement parentStub) throws IOException
+	public JSFileStub deserialize(@Nonnull final StubInputStream dataStream, final StubElement parentStub) throws IOException
 	{
 		StringRef name = dataStream.readName();
 		return new JSFileStubImpl(null, name);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getExternalId()
 	{

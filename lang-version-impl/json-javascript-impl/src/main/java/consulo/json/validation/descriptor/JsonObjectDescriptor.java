@@ -19,8 +19,9 @@ package consulo.json.validation.descriptor;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.json.validation.NativeArray;
 import com.intellij.openapi.util.Factory;
 import com.intellij.util.containers.ContainerUtil;
@@ -33,8 +34,8 @@ public class JsonObjectDescriptor
 {
 	private Map<String, JsonPropertyDescriptor> myProperties = new HashMap<String, JsonPropertyDescriptor>();
 
-	@NotNull
-	public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @NotNull final Class<?> value)
+	@Nonnull
+	public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @Nonnull final Class<?> value)
 	{
 		if(value == Object.class)
 		{
@@ -51,8 +52,8 @@ public class JsonObjectDescriptor
 		});
 	}
 
-	@NotNull
-	public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @NotNull final JsonObjectDescriptor value)
+	@Nonnull
+	public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @Nonnull final JsonObjectDescriptor value)
 	{
 		return ContainerUtil.getOrCreate(myProperties, propertyName, new Factory<JsonPropertyDescriptor>()
 		{
@@ -64,8 +65,8 @@ public class JsonObjectDescriptor
 		});
 	}
 
-	@NotNull
-	public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @NotNull final NativeArray value)
+	@Nonnull
+	public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @Nonnull final NativeArray value)
 	{
 		return ContainerUtil.getOrCreate(myProperties, propertyName, new Factory<JsonPropertyDescriptor>()
 		{
@@ -78,7 +79,7 @@ public class JsonObjectDescriptor
 	}
 
 	@Nullable
-	public JsonPropertyDescriptor getProperty(@NotNull final String propertyName)
+	public JsonPropertyDescriptor getProperty(@Nonnull final String propertyName)
 	{
 		JsonPropertyDescriptor propertyDescriptor = myProperties.get(propertyName);
 		if(propertyDescriptor != null)

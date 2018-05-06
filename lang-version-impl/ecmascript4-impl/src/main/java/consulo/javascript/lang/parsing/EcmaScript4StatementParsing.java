@@ -1,6 +1,6 @@
 package consulo.javascript.lang.parsing;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -390,7 +390,7 @@ public class EcmaScript4StatementParsing extends StatementParsing
 		}
 	}
 
-	private boolean parseNamespaceNoMarker(final PsiBuilder builder, final @NotNull PsiBuilder.Marker useNSStatement)
+	private boolean parseNamespaceNoMarker(final PsiBuilder builder, final @Nonnull PsiBuilder.Marker useNSStatement)
 	{
 		EcmaScript4StatementParsing.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.NAMESPACE_KEYWORD);
 
@@ -452,7 +452,7 @@ public class EcmaScript4StatementParsing extends StatementParsing
 		parseClassNoMarker(builder, builder.mark());
 	}
 
-	private void parseClassNoMarker(final PsiBuilder builder, final @NotNull PsiBuilder.Marker clazz)
+	private void parseClassNoMarker(final PsiBuilder builder, final @Nonnull PsiBuilder.Marker clazz)
 	{
 		final IElementType tokenType = builder.getTokenType();
 		EcmaScript4StatementParsing.LOGGER.assertTrue(JSTokenTypes.CLASS_KEYWORD == tokenType || JSTokenTypes.INTERFACE_KEYWORD == tokenType);

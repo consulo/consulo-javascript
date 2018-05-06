@@ -15,10 +15,11 @@
  */
 package org.intellij.idea.lang.javascript.intention.string;
 
+import javax.annotation.Nonnull;
+
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NotNull;
 
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
 import com.intellij.psi.PsiElement;
@@ -26,13 +27,13 @@ import com.intellij.util.IncorrectOperationException;
 
 public class JSDoubleToSingleQuotedStringIntention extends JSIntention {
     @Override
-	@NotNull
+	@Nonnull
     protected JSElementPredicate getElementPredicate() {
         return new DoubleToSingleQuotedStringPredicate();
     }
 
     @Override
-	public void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         final JSLiteralExpression stringLiteral = (JSLiteralExpression) element;
 
         JSElementFactory.replaceExpression(stringLiteral, changeQuotes(stringLiteral.getText()));
@@ -65,7 +66,7 @@ public class JSDoubleToSingleQuotedStringIntention extends JSIntention {
     private static class DoubleToSingleQuotedStringPredicate implements JSElementPredicate {
 
         @Override
-		public boolean satisfiedBy(@NotNull PsiElement element) {
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (!(element instanceof JSLiteralExpression)) {
                 return false;
             }

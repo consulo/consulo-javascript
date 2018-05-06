@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -54,7 +54,7 @@ public class JSReferenceListImpl extends JSStubElementImpl<JSReferenceListStub> 
 	}
 
 	@Override
-	public void accept(@NotNull PsiElementVisitor visitor)
+	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
 		{
@@ -67,14 +67,14 @@ public class JSReferenceListImpl extends JSStubElementImpl<JSReferenceListStub> 
 	}
 
 	@RequiredReadAction
-	@NotNull
+	@Nonnull
 	@Override
 	public JSReferenceExpression[] getExpressions()
 	{
 		return findChildrenByClass(JSReferenceExpression.class);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	@RequiredReadAction
 	public String[] getReferenceTexts()
@@ -100,7 +100,7 @@ public class JSReferenceListImpl extends JSStubElementImpl<JSReferenceListStub> 
 		return result;
 	}
 
-	@NotNull
+	@Nonnull
 	@RequiredReadAction
 	@Override
 	public JSClass[] getReferencedClasses()

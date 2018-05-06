@@ -16,8 +16,8 @@
 package org.intellij.idea.lang.javascript.intention;
 
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
 import com.intellij.lang.Language;
 import com.intellij.openapi.editor.Editor;
@@ -46,7 +46,7 @@ public abstract class JSIntention extends PsiElementBaseIntentionAction
 	}
 
 	@Override
-	public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement element) throws IncorrectOperationException
+	public void invoke(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		PsiElement matchingElement = findMatchingElement(element);
 		if(matchingElement == null)
@@ -56,9 +56,9 @@ public abstract class JSIntention extends PsiElementBaseIntentionAction
 		processIntention(matchingElement);
 	}
 
-	protected abstract void processIntention(@NotNull PsiElement element) throws IncorrectOperationException;
+	protected abstract void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException;
 
-	@NotNull
+	@Nonnull
 	protected abstract JSElementPredicate getElementPredicate();
 
 	@Nullable
@@ -92,7 +92,7 @@ public abstract class JSIntention extends PsiElementBaseIntentionAction
 
 
 	@Override
-	public boolean isAvailable(@NotNull Project project, Editor editor, @Nullable PsiElement element)
+	public boolean isAvailable(@Nonnull Project project, Editor editor, @Nullable PsiElement element)
 	{
 		return element != null && findMatchingElement(element) != null;
 	}
@@ -110,7 +110,7 @@ public abstract class JSIntention extends PsiElementBaseIntentionAction
 
 	@Override
 	@SuppressWarnings({"UnresolvedPropertyKey"})
-	@NotNull
+	@Nonnull
 	public String getText()
 	{
 		return JSIntentionBundle.message(this.getTextKey(DISPLAY_NAME));
@@ -130,7 +130,7 @@ public abstract class JSIntention extends PsiElementBaseIntentionAction
 
 	@Override
 	@SuppressWarnings({"UnresolvedPropertyKey"})
-	@NotNull
+	@Nonnull
 	public String getFamilyName()
 	{
 		return JSIntentionBundle.message(this.getTextKey(FAMILY_NAME));

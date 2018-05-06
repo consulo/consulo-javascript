@@ -16,7 +16,8 @@
 
 package consulo.javascript.lang;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.util.Factory;
@@ -38,7 +39,7 @@ public class JavaScript185LanguageVersion extends BaseJavaScriptLanguageVersion 
 		}
 	};
 
-	@NotNull
+	@Nonnull
 	public static JavaScript185LanguageVersion getInstance()
 	{
 		return JavaScriptLanguage.INSTANCE.findVersionByClass(JavaScript185LanguageVersion.class);
@@ -49,21 +50,21 @@ public class JavaScript185LanguageVersion extends BaseJavaScriptLanguageVersion 
 		super("JAVASCRIPT_1_8_5");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public String getPresentableName()
 	{
 		return "JavaScript 1.8.5";
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public Lexer createLexer()
 	{
 		return ourLexerFactory.create();
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public SyntaxHighlighter getSyntaxHighlighter()
 	{

@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript.psi;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import com.intellij.lang.javascript.psi.stubs.JSNamespaceDeclarationStub;
 import com.intellij.psi.StubBasedPsiElement;
 

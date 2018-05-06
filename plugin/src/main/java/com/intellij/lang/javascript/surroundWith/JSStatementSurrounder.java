@@ -16,9 +16,11 @@
 
 package com.intellij.lang.javascript.surroundWith;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import com.intellij.lang.surroundWith.Surrounder;
@@ -39,14 +41,14 @@ import com.intellij.util.IncorrectOperationException;
 public abstract class JSStatementSurrounder implements Surrounder
 {
 	@Override
-	public boolean isApplicable(@NotNull PsiElement[] elements)
+	public boolean isApplicable(@Nonnull PsiElement[] elements)
 	{
 		return true;
 	}
 
 	@Override
 	@Nullable
-	public TextRange surroundElements(@NotNull Project project, @NotNull Editor editor, @NotNull PsiElement[] elements) throws
+	public TextRange surroundElements(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiElement[] elements) throws
 			IncorrectOperationException
 	{
 		ASTNode node = JSChangeUtil.createStatementFromText(project, getStatementTemplate(project, elements[0]));

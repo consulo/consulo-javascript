@@ -20,7 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.index.JSSymbolUtil;
 import com.intellij.lang.javascript.psi.*;
@@ -153,7 +154,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor
 					}
 
 					@Override
-					public void process(@NotNull String type, @NotNull final EvaluateContext context, final PsiElement source)
+					public void process(@Nonnull String type, @Nonnull final EvaluateContext context, final PsiElement source)
 					{
 						if(context.visitedTypes.contains(type))
 						{
@@ -180,7 +181,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor
 					}
 
 					@Override
-					public void setUnknownElement(@NotNull final PsiElement element)
+					public void setUnknownElement(@Nonnull final PsiElement element)
 					{
 					}
 

@@ -25,8 +25,8 @@ import org.chromium.sdk.JsScope;
 import org.chromium.sdk.JsValue;
 import org.chromium.sdk.JsVariable;
 import org.chromium.sdk.TextStreamPosition;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.icons.AllIcons;
 import com.intellij.ui.ColoredTextContainer;
 import com.intellij.ui.SimpleTextAttributes;
@@ -57,7 +57,7 @@ public class V8StackFrame extends XStackFrame
 		return new XDebuggerEvaluator()
 		{
 			@Override
-			public void evaluate(@NotNull final String expression, @NotNull final XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition)
+			public void evaluate(@Nonnull final String expression, @Nonnull final XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition)
 			{
 				final JsEvaluateContext evaluateContext = myCallFrame.getEvaluateContext();
 				evaluateContext.evaluateSync(expression, Collections.<String, JsValue>emptyMap(), new JsEvaluateContext.EvaluateCallback()
@@ -93,7 +93,7 @@ public class V8StackFrame extends XStackFrame
 	}
 
 	@Override
-	public void computeChildren(@NotNull XCompositeNode node)
+	public void computeChildren(@Nonnull XCompositeNode node)
 	{
 		JsEvaluateContext evaluateContext = myCallFrame.getEvaluateContext();
 		List<? extends JsScope> variableScopes = myCallFrame.getVariableScopes();

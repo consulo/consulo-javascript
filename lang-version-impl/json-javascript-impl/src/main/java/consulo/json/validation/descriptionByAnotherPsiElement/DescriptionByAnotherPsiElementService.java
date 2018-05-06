@@ -20,9 +20,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.jdom.Element;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
@@ -66,7 +68,7 @@ public class DescriptionByAnotherPsiElementService implements PersistentStateCom
 		private String myPsiElementId;
 		private Project myProject;
 
-		public Info(@NotNull Project project, @NotNull VirtualFile virtualFile, @NotNull PsiElement element, @NotNull DescriptionByAnotherPsiElementProvider<?> provider)
+		public Info(@Nonnull Project project, @Nonnull VirtualFile virtualFile, @Nonnull PsiElement element, @Nonnull DescriptionByAnotherPsiElementProvider<?> provider)
 		{
 			myProject = project;
 			myId = provider.getId();
@@ -75,7 +77,7 @@ public class DescriptionByAnotherPsiElementService implements PersistentStateCom
 			myElementPointer = SmartPointerManager.getInstance(element.getProject()).createSmartPsiElementPointer(element);
 		}
 
-		public Info(@NotNull Project project, @NotNull String url, @NotNull final String providerId, @NotNull String psiElementId)
+		public Info(@Nonnull Project project, @Nonnull String url, @Nonnull final String providerId, @Nonnull String psiElementId)
 		{
 			myProject = project;
 			myVirtualFilePointer = VirtualFilePointerManager.getInstance().create(url, this, null);
@@ -115,7 +117,7 @@ public class DescriptionByAnotherPsiElementService implements PersistentStateCom
 			});
 		}
 
-		@NotNull
+		@Nonnull
 		public String getId()
 		{
 			if(myId != null)
@@ -125,7 +127,7 @@ public class DescriptionByAnotherPsiElementService implements PersistentStateCom
 			return myProvider.getId();
 		}
 
-		@NotNull
+		@Nonnull
 		public String getUrl()
 		{
 			return myVirtualFilePointer.getUrl();
@@ -190,8 +192,8 @@ public class DescriptionByAnotherPsiElementService implements PersistentStateCom
 		}
 	}
 
-	@NotNull
-	public static DescriptionByAnotherPsiElementService getInstance(@NotNull Project project)
+	@Nonnull
+	public static DescriptionByAnotherPsiElementService getInstance(@Nonnull Project project)
 	{
 		return ServiceManager.getService(project, DescriptionByAnotherPsiElementService.class);
 	}
@@ -204,7 +206,7 @@ public class DescriptionByAnotherPsiElementService implements PersistentStateCom
 		myProject = project;
 	}
 
-	public <T extends PsiElement> void registerFile(@NotNull VirtualFile virtualFile, @NotNull T element, @NotNull DescriptionByAnotherPsiElementProvider<?> provider)
+	public <T extends PsiElement> void registerFile(@Nonnull VirtualFile virtualFile, @Nonnull T element, @Nonnull DescriptionByAnotherPsiElementProvider<?> provider)
 	{
 		Info info = new Info(myProject, virtualFile, element, provider);
 		Disposer.register(this, info);
@@ -212,7 +214,7 @@ public class DescriptionByAnotherPsiElementService implements PersistentStateCom
 	}
 
 
-	public boolean removeFile(@NotNull VirtualFile file)
+	public boolean removeFile(@Nonnull VirtualFile file)
 	{
 		Iterator<Info> iterator = myRegisteredFiles.iterator();
 		while(iterator.hasNext())
@@ -229,7 +231,7 @@ public class DescriptionByAnotherPsiElementService implements PersistentStateCom
 	}
 
 	@Nullable
-	public String getRegisteredPsiElementId(@NotNull VirtualFile virtualFile)
+	public String getRegisteredPsiElementId(@Nonnull VirtualFile virtualFile)
 	{
 		for(Info registeredFile : myRegisteredFiles)
 		{
@@ -242,9 +244,9 @@ public class DescriptionByAnotherPsiElementService implements PersistentStateCom
 		return null;
 	}
 
-	@NotNull
+	@Nonnull
 	@SuppressWarnings("unchecked")
-	public <T extends PsiElement> Pair<DescriptionByAnotherPsiElementProvider<T>, T> getRegisteredPsiElementInfo(@NotNull VirtualFile virtualFile)
+	public <T extends PsiElement> Pair<DescriptionByAnotherPsiElementProvider<T>, T> getRegisteredPsiElementInfo(@Nonnull VirtualFile virtualFile)
 	{
 		for(Info info : myRegisteredFiles)
 		{

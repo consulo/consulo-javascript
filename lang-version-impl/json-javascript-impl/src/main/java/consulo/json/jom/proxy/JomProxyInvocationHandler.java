@@ -4,8 +4,8 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import consulo.json.jom.JomElement;
 import consulo.json.jom.JomUtil;
@@ -19,8 +19,8 @@ import com.intellij.openapi.util.Comparing;
  */
 public class JomProxyInvocationHandler implements InvocationHandler
 {
-	@NotNull
-	public static JomElement createProxy(@NotNull Class<?> interfaceClass, @Nullable final JSObjectLiteralExpression objectLiteralExpression)
+	@Nonnull
+	public static JomElement createProxy(@Nonnull Class<?> interfaceClass, @Nullable final JSObjectLiteralExpression objectLiteralExpression)
 	{
 		return (JomElement) Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class[]{interfaceClass}, new JomProxyInvocationHandler(objectLiteralExpression));
 	}

@@ -20,7 +20,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
@@ -41,7 +42,7 @@ import consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
  */
 public class JavaScriptSymbolContributor implements ChooseByNameContributor
 {
-	@NotNull
+	@Nonnull
 	@Override
 	public String[] getNames(Project project, boolean includeNonProjectItems)
 	{
@@ -64,7 +65,7 @@ public class JavaScriptSymbolContributor implements ChooseByNameContributor
 		return result.toArray(new String[result.size()]);
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public NavigationItem[] getItemsByName(String name, final String pattern, Project project, boolean includeNonProjectItems)
 	{

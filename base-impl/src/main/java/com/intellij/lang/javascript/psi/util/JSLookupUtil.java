@@ -16,8 +16,9 @@
 
 package com.intellij.lang.javascript.psi.util;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import consulo.annotations.RequiredReadAction;
 import consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.codeInsight.completion.PrioritizedLookupElement;
@@ -49,7 +50,7 @@ public class JSLookupUtil
 
 	@Nullable
 	@RequiredReadAction
-	public static LookupElement createLookupItem(@NotNull PsiElement value, @NotNull String name, @NotNull LookupPriority priority)
+	public static LookupElement createLookupItem(@Nonnull PsiElement value, @Nonnull String name, @Nonnull LookupPriority priority)
 	{
 		LookupElementBuilder builder = LookupElementBuilder.create(name);
 		builder = builder.withIcon(IconDescriptorUpdaters.getIcon(value, Iconable.ICON_FLAG_VISIBILITY));

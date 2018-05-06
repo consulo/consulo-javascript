@@ -16,8 +16,9 @@
 
 package com.intellij.lang.javascript.validation;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSAttributeList;
@@ -42,21 +43,21 @@ public class ImplementMethodsFix extends BaseCreateMethodsFix<JSFunction> implem
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getText()
 	{
 		return JavaScriptBundle.message("javascript.fix.implement.methods");
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public String getFamilyName()
 	{
 		return getText();
 	}
 
 	@Override
-	public boolean isAvailable(@NotNull final Project project, final Editor editor, final PsiFile file)
+	public boolean isAvailable(@Nonnull final Project project, final Editor editor, final PsiFile file)
 	{
 		return myJsClass.isValid();
 	}

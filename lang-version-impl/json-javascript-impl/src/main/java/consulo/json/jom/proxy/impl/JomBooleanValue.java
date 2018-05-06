@@ -2,8 +2,8 @@ package consulo.json.jom.proxy.impl;
 
 import java.lang.reflect.Type;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import consulo.annotations.RequiredReadAction;
 import consulo.json.jom.proxy.JomBadValueExpressionException;
 import consulo.json.jom.proxy.JomValueConverter;
@@ -34,7 +34,7 @@ public class JomBooleanValue implements JomValueConverter.Converter<Boolean>
 
 	@RequiredReadAction
 	@Override
-	public Boolean parseValue(@NotNull Class type, @NotNull Type genericType, @NotNull PsiElement value) throws JomBadValueExpressionException
+	public Boolean parseValue(@Nonnull Class type, @Nonnull Type genericType, @Nonnull PsiElement value) throws JomBadValueExpressionException
 	{
 		if(value instanceof JSLiteralExpression)
 		{

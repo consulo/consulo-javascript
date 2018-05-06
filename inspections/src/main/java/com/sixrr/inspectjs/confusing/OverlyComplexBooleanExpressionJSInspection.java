@@ -12,7 +12,7 @@ import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.ui.SingleIntegerFieldOptionsPanel;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -25,13 +25,13 @@ public class OverlyComplexBooleanExpressionJSInspection extends JavaScriptInspec
     public int m_limit = TERM_LIMIT;
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("overly.complex.boolean.expression.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
@@ -63,12 +63,12 @@ public class OverlyComplexBooleanExpressionJSInspection extends JavaScriptInspec
 
     private class Visitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSBinaryExpression(@NotNull JSBinaryExpression expression) {
+        @Override public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             checkExpression(expression);
         }
 
-        @Override public void visitJSPrefixExpression(@NotNull JSPrefixExpression expression) {
+        @Override public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
             super.visitJSPrefixExpression(expression);
             checkExpression(expression);
         }

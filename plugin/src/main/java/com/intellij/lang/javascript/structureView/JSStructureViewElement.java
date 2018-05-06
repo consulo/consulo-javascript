@@ -29,7 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
+
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.lang.javascript.index.JSSymbolUtil;

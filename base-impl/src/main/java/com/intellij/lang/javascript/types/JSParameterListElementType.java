@@ -19,7 +19,8 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import consulo.annotations.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSParameterList;
@@ -44,35 +45,35 @@ public class JSParameterListElementType extends JSStubElementType<JSParameterLis
 		super("PARAMETER_LIST");
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public PsiElement createElement(@NotNull ASTNode astNode)
+	public PsiElement createElement(@Nonnull ASTNode astNode)
 	{
 		return new JSParameterListImpl(astNode);
 	}
 
 	@Override
-	public JSParameterList createPsi(@NotNull JSParameterListStub stub)
+	public JSParameterList createPsi(@Nonnull JSParameterListStub stub)
 	{
 		return new JSParameterListImpl(stub);
 	}
 
 	@RequiredReadAction
 	@Override
-	public JSParameterListStub createStub(@NotNull JSParameterList psi, StubElement parentStub)
+	public JSParameterListStub createStub(@Nonnull JSParameterList psi, StubElement parentStub)
 	{
 		return new JSParameterListStubImpl(parentStub, this);
 	}
 
 	@Override
-	public void serialize(@NotNull JSParameterListStub stub, @NotNull StubOutputStream dataStream) throws IOException
+	public void serialize(@Nonnull JSParameterListStub stub, @Nonnull StubOutputStream dataStream) throws IOException
 	{
 
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
-	public JSParameterListStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException
+	public JSParameterListStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
 	{
 		return new JSParameterListStubImpl(parentStub, this);
 	}

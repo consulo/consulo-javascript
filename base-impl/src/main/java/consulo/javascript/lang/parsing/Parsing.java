@@ -16,8 +16,8 @@
 
 package consulo.javascript.lang.parsing;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.psi.tree.IElementType;
@@ -39,7 +39,7 @@ public class Parsing
 	}
 
 	@Nullable
-	public IElementType expectContextKeyword(@NotNull PsiBuilder builder, @NotNull TokenSet tokenSet)
+	public IElementType expectContextKeyword(@Nonnull PsiBuilder builder, @Nonnull TokenSet tokenSet)
 	{
 		if(builder.getTokenType() == JSTokenTypes.IDENTIFIER)
 		{
@@ -56,7 +56,7 @@ public class Parsing
 		return null;
 	}
 
-	public void advanceContextKeyword(@NotNull PsiBuilder builder, @NotNull TokenSet tokenSet)
+	public void advanceContextKeyword(@Nonnull PsiBuilder builder, @Nonnull TokenSet tokenSet)
 	{
 		IElementType elementType = expectContextKeyword(builder, tokenSet);
 		if(elementType != null)

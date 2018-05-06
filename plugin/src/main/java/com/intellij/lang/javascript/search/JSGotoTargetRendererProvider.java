@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript.search;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import com.intellij.codeInsight.navigation.GotoTargetHandler;
 import com.intellij.codeInsight.navigation.GotoTargetRendererProvider;
 import com.intellij.ide.util.PsiElementListCellRenderer;

@@ -16,8 +16,8 @@
 
 package com.intellij.lang.javascript.highlighting;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.HighlightVisitor;
@@ -47,7 +47,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 	private HighlightInfoHolder myHighlightInfoHolder;
 
 	@Override
-	public boolean suitableForFile(@NotNull PsiFile psiFile)
+	public boolean suitableForFile(@Nonnull PsiFile psiFile)
 	{
 		return psiFile instanceof JSFile;
 	}
@@ -95,7 +95,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 	}
 
 	@RequiredReadAction
-	private void highlightPropertyName(@NotNull JSProperty property, @NotNull PsiElement nameIdentifier)
+	private void highlightPropertyName(@Nonnull JSProperty property, @Nonnull PsiElement nameIdentifier)
 	{
 		final JSExpression expression = property.getValue();
 		TextAttributesKey type;
@@ -192,7 +192,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 	}
 
 	@RequiredReadAction
-	private void addElementHighlight(@NotNull PsiElement resolvedElement, @NotNull PsiElement targetForHighlight)
+	private void addElementHighlight(@Nonnull PsiElement resolvedElement, @Nonnull PsiElement targetForHighlight)
 	{
 		boolean isStatic = false;
 		boolean isMethod = false;
@@ -287,7 +287,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
 	@Nullable
 	@RequiredReadAction
-	private static HighlightInfo buildHighlightForVariable(@NotNull final PsiElement element, @NotNull final PsiElement markerAddTo)
+	private static HighlightInfo buildHighlightForVariable(@Nonnull final PsiElement element, @Nonnull final PsiElement markerAddTo)
 	{
 		TextAttributesKey type;
 
@@ -324,7 +324,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 		return HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(markerAddTo).textAttributes(type).create();
 	}
 
-	private void reportFeatureUsage(@NotNull PsiElement element, @NotNull JavaScriptFeature javaScriptFeature)
+	private void reportFeatureUsage(@Nonnull PsiElement element, @Nonnull JavaScriptFeature javaScriptFeature)
 	{
 		if(JavaScriptVersionUtil.containsFeature(element, javaScriptFeature))
 		{
@@ -337,20 +337,20 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 	}
 
 	@Override
-	public void visit(@NotNull PsiElement element)
+	public void visit(@Nonnull PsiElement element)
 	{
 		element.acceptChildren(this);
 	}
 
 	@Override
-	public boolean analyze(@NotNull PsiFile psiFile, boolean b, @NotNull HighlightInfoHolder highlightInfoHolder, @NotNull Runnable runnable)
+	public boolean analyze(@Nonnull PsiFile psiFile, boolean b, @Nonnull HighlightInfoHolder highlightInfoHolder, @Nonnull Runnable runnable)
 	{
 		myHighlightInfoHolder = highlightInfoHolder;
 		runnable.run();
 		return true;
 	}
 
-	@NotNull
+	@Nonnull
 	@Override
 	public HighlightVisitor clone()
 	{

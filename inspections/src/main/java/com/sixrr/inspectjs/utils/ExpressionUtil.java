@@ -4,10 +4,11 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.psi.tree.IElementType;
 import consulo.javascript.psi.JSSimpleLiteralExpression;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 public class ExpressionUtil {
     private ExpressionUtil() {

@@ -1,24 +1,25 @@
 package com.sixrr.inspectjs.style;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 import com.sixrr.inspectjs.*;
-import org.jetbrains.annotations.NotNull;
 
 public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
     private InspectionJSFix fix = new WrapBodyFix();
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("non.block.statement.body.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.STYLE_GROUP_NAME;
     }
@@ -44,7 +45,7 @@ public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
 
     private static class WrapBodyFix extends InspectionJSFix {
         @Override
-		@NotNull
+		@Nonnull
         public String getName() {
             return InspectionJSBundle.message("wrap.statement.body.fix");
         }
@@ -83,7 +84,7 @@ public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
 
     private static class Visitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSDoWhileStatement(@NotNull JSDoWhileStatement statement) {
+        @Override public void visitJSDoWhileStatement(@Nonnull JSDoWhileStatement statement) {
             super.visitJSDoWhileStatement(statement);
 
             final JSStatement body = statement.getBody();
@@ -97,7 +98,7 @@ public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
             registerStatementError(statement, statement);
         }
 
-        @Override public void visitJSWhileStatement(@NotNull JSWhileStatement statement) {
+        @Override public void visitJSWhileStatement(@Nonnull JSWhileStatement statement) {
             super.visitJSWhileStatement(statement);
 
             final JSStatement body = statement.getBody();
@@ -111,7 +112,7 @@ public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
             registerStatementError(statement, statement);
         }
 
-        @Override public void visitJSForStatement(@NotNull JSForStatement statement) {
+        @Override public void visitJSForStatement(@Nonnull JSForStatement statement) {
             super.visitJSForStatement(statement);
 
             final JSStatement body = statement.getBody();
@@ -125,7 +126,7 @@ public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
             registerStatementError(statement, statement);
         }
 
-        @Override public void visitJSForInStatement(@NotNull JSForInStatement statement) {
+        @Override public void visitJSForInStatement(@Nonnull JSForInStatement statement) {
             super.visitJSForInStatement(statement);
 
             final JSStatement body = statement.getBody();
@@ -139,7 +140,7 @@ public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
             registerStatementError(statement, statement);
         }
 
-        @Override public void visitJSIfStatement(@NotNull JSIfStatement statement) {
+        @Override public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
             super.visitJSIfStatement(statement);
 
             final JSStatement thenBranch = statement.getThen();

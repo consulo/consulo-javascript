@@ -1,5 +1,7 @@
 package com.sixrr.inspectjs.control;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
@@ -14,26 +16,25 @@ import com.sixrr.inspectjs.utils.BoolUtils;
 import com.sixrr.inspectjs.utils.ConditionalUtils;
 import com.sixrr.inspectjs.utils.EquivalenceChecker;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 
 
 public class TrivialIfJSInspection extends JavaScriptInspection {
     private final TrivialIfFix fix = new TrivialIfFix();
 
     @Override
-	@NotNull
+	@Nonnull
     public String getID() {
         return "RedundantIfStatementJS";
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("redundant.if.statement.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
@@ -60,7 +61,7 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
 
     private static class TrivialIfFix extends InspectionJSFix {
         @Override
-		@NotNull
+		@Nonnull
         public String getName() {
             return InspectionJSBundle.message("simplify.fix");
         }
@@ -231,7 +232,7 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
 
     private static class TrivialIfVisitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSIfStatement(@NotNull JSIfStatement ifStatement) {
+        @Override public void visitJSIfStatement(@Nonnull JSIfStatement ifStatement) {
             super.visitJSIfStatement(ifStatement);
             final JSExpression condition = ifStatement.getCondition();
             if (condition == null) {

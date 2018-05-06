@@ -1,28 +1,29 @@
 package com.sixrr.inspectjs.exception;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.psi.JSReturnStatement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
-import org.jetbrains.annotations.NotNull;
 
 public class ReturnFromFinallyBlockJSInspection extends JavaScriptInspection {
     @Override
-	@NotNull
+	@Nonnull
     public String getID() {
         return "ReturnInsideFinallyBlockJS";
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("return.inside.finally.block.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.ERRORHANDLING_GROUP_NAME;
     }
@@ -44,7 +45,7 @@ public class ReturnFromFinallyBlockJSInspection extends JavaScriptInspection {
 
     private static class Visitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSReturnStatement(@NotNull JSReturnStatement statement) {
+        @Override public void visitJSReturnStatement(@Nonnull JSReturnStatement statement) {
             super.visitJSReturnStatement(statement);
             if (!ControlFlowUtils.isInFinallyBlock(statement)) {
                 return;

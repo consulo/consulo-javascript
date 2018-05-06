@@ -21,9 +21,11 @@ import gnu.trove.THashSet;
 import java.util.Arrays;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 /**
  * @author Maxim.Mossienko
@@ -36,23 +38,23 @@ class AS3InterfaceDumper extends AbstractDumpProcessor
 	private boolean isInterface;
 
 	@Override
-	public void dumpStat(@NotNull final String stat)
+	public void dumpStat(@Nonnull final String stat)
 	{
 	}
 
 	@Override
-	public void dumpToplevelAnonymousMethod(final @NotNull Abc abc, final @NotNull MethodInfo m)
+	public void dumpToplevelAnonymousMethod(final @Nonnull Abc abc, final @Nonnull MethodInfo m)
 	{
 	}
 
 	@Override
-	public void dumpTopLevelTraits(final Abc abc, final @NotNull Traits t, final String indent)
+	public void dumpTopLevelTraits(final Abc abc, final @Nonnull Traits t, final String indent)
 	{
 		t.dump(abc, indent, "", this);
 	}
 
 	@Override
-	public boolean doDumpMember(final @NotNull MemberInfo memberInfo)
+	public boolean doDumpMember(final @Nonnull MemberInfo memberInfo)
 	{
 		if(memberInfo.name == null)
 		{
@@ -145,13 +147,13 @@ class AS3InterfaceDumper extends AbstractDumpProcessor
 	}
 
 	@Override
-	public boolean doDumpMetaData(final @NotNull MetaData md)
+	public boolean doDumpMetaData(final @Nonnull MetaData md)
 	{
 		return md.name.indexOf("__") == -1;
 	}
 
 	@Override
-	public void processParameter(@NotNull String name, @Nullable Multiname type, String parentName, @Nullable Multiname value, boolean rest)
+	public void processParameter(@Nonnull String name, @Nullable Multiname type, String parentName, @Nullable Multiname value, boolean rest)
 	{
 		if(rest)
 		{
@@ -189,7 +191,7 @@ class AS3InterfaceDumper extends AbstractDumpProcessor
 	}
 
 	@Override
-	public void hasError(@NotNull final String error)
+	public void hasError(@Nonnull final String error)
 	{
 		sb.append("/*" + error + "*/");
 	}

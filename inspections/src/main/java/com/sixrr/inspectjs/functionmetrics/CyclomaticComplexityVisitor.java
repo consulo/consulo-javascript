@@ -1,8 +1,9 @@
 package com.sixrr.inspectjs.functionmetrics;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.psi.*;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
-import org.jetbrains.annotations.NotNull;
 
 class CyclomaticComplexityVisitor extends JSRecursiveElementVisitor {
     private int complexity = 1;
@@ -20,23 +21,23 @@ class CyclomaticComplexityVisitor extends JSRecursiveElementVisitor {
         }
     }
 
-    @Override public void visitJSForStatement(@NotNull JSForStatement statement) {
+    @Override public void visitJSForStatement(@Nonnull JSForStatement statement) {
         super.visitJSForStatement(statement);
         complexity++;
     }
 
     @Override
-	public void visitJSForInStatement(@NotNull JSForInStatement statement) {
+	public void visitJSForInStatement(@Nonnull JSForInStatement statement) {
         super.visitJSForInStatement(statement);
         complexity++;
     }
 
-    @Override public void visitJSIfStatement(@NotNull JSIfStatement statement) {
+    @Override public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
         super.visitJSIfStatement(statement);
         complexity++;
     }
 
-    @Override public void visitJSDoWhileStatement(@NotNull JSDoWhileStatement statement) {
+    @Override public void visitJSDoWhileStatement(@Nonnull JSDoWhileStatement statement) {
         super.visitJSDoWhileStatement(statement);
         complexity++;
     }
@@ -46,7 +47,7 @@ class CyclomaticComplexityVisitor extends JSRecursiveElementVisitor {
         complexity++;
     }
 
-    @Override public void visitJSSwitchStatement(@NotNull JSSwitchStatement statement) {
+    @Override public void visitJSSwitchStatement(@Nonnull JSSwitchStatement statement) {
         super.visitJSSwitchStatement(statement);
         final JSCaseClause[] caseClauses = statement.getCaseClauses();
         for (JSCaseClause clause : caseClauses) {
@@ -58,7 +59,7 @@ class CyclomaticComplexityVisitor extends JSRecursiveElementVisitor {
         }
     }
 
-    @Override public void visitJSWhileStatement(@NotNull JSWhileStatement statement) {
+    @Override public void visitJSWhileStatement(@Nonnull JSWhileStatement statement) {
         super.visitJSWhileStatement(statement);
         complexity++;
     }

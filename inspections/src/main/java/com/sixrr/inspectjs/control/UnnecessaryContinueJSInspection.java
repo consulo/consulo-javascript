@@ -1,5 +1,7 @@
 package com.sixrr.inspectjs.control;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.openapi.project.Project;
@@ -7,19 +9,18 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
-import org.jetbrains.annotations.NotNull;
 
 public class UnnecessaryContinueJSInspection extends JavaScriptInspection {
     private final UnnecessaryContinueFix fix = new UnnecessaryContinueFix();
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("unnecessary.continue.statement.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
@@ -46,7 +47,7 @@ public class UnnecessaryContinueJSInspection extends JavaScriptInspection {
 
     private static class UnnecessaryContinueFix extends InspectionJSFix {
         @Override
-		@NotNull
+		@Nonnull
         public String getName() {
             return InspectionJSBundle.message("remove.unnecessary.continue.fix");
         }
@@ -65,7 +66,7 @@ public class UnnecessaryContinueJSInspection extends JavaScriptInspection {
     private static class Visitor
             extends BaseInspectionVisitor {
 
-        @Override public void visitJSContinueStatement(@NotNull JSContinueStatement statement) {
+        @Override public void visitJSContinueStatement(@Nonnull JSContinueStatement statement) {
 
             JSStatement continuedStatement =
                     statement.getStatementToContinue();

@@ -1,5 +1,7 @@
 package com.sixrr.inspectjs.functionmetrics;
 
+import javax.annotation.Nonnull;
+
 import com.intellij.lang.javascript.psi.JSBlockStatement;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.psi.PsiElement;
@@ -7,24 +9,23 @@ import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
-import org.jetbrains.annotations.NotNull;
 
 public class ThreeNegationsPerFunctionJSInspection extends JavaScriptInspection {
 
     @Override
-	@NotNull
+	@Nonnull
     public String getID() {
         return "FunctionWithMoreThanThreeNegationsJS";
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("function.with.more.than.three.negations.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
     }
@@ -52,7 +53,7 @@ public class ThreeNegationsPerFunctionJSInspection extends JavaScriptInspection 
 
     private static class Visitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSFunctionDeclaration(@NotNull JSFunction function) {
+        @Override public void visitJSFunctionDeclaration(@Nonnull JSFunction function) {
             final NegationCountVisitor visitor = new NegationCountVisitor();
             final PsiElement lastChild = function.getLastChild();
             if (!(lastChild instanceof JSBlockStatement)) {

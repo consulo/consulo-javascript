@@ -8,19 +8,19 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.BoolUtils;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class ConstantConditionalExpressionJSInspection
         extends JavaScriptInspection {
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message("constant.conditional.expression.display.name");
     }
@@ -36,7 +36,7 @@ public class ConstantConditionalExpressionJSInspection
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String buildErrorString(Object... args) {
         return InspectionJSBundle.message("constant.conditional.expression.error.string");
     }
@@ -63,7 +63,7 @@ public class ConstantConditionalExpressionJSInspection
     private static class ConstantConditionalFix extends InspectionJSFix {
 
         @Override
-		@NotNull
+		@Nonnull
         public String getName() {
             return InspectionJSBundle.message("simplify.fix");
         }

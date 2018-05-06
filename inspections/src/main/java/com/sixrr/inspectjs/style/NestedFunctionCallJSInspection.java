@@ -8,7 +8,7 @@ import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 
 
@@ -17,20 +17,20 @@ public class NestedFunctionCallJSInspection extends JavaScriptInspection {
 
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.STYLE_GROUP_NAME;
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message(
                 "nested.function.call.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     protected String buildErrorString(Object... args) {
         return InspectionJSBundle.message(
                 "nested.function.call.problem.descriptor");
@@ -44,7 +44,7 @@ public class NestedFunctionCallJSInspection extends JavaScriptInspection {
     private static class NestedMethodCallVisitor extends BaseInspectionVisitor {
 
         @Override public void visitJSCallExpression(
-                @NotNull JSCallExpression expression) {
+                @Nonnull JSCallExpression expression) {
             super.visitJSCallExpression(expression);
             JSExpression outerExpression = expression;
             while (outerExpression != null &&

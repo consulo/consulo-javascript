@@ -23,7 +23,7 @@ import java.util.List;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.VerticalFlowLayout;
@@ -63,7 +63,7 @@ public class ClientJavaScriptModuleExtensionPanel extends JPanel
 		languageVersionComboBox.setRenderer(new ColoredListCellRenderer<BaseJavaScriptLanguageVersion>()
 		{
 			@Override
-			protected void customizeCellRenderer(@NotNull JList list, BaseJavaScriptLanguageVersion value, int index, boolean selected, boolean hasFocus)
+			protected void customizeCellRenderer(@Nonnull JList list, BaseJavaScriptLanguageVersion value, int index, boolean selected, boolean hasFocus)
 			{
 				append(value.getPresentableName());
 			}

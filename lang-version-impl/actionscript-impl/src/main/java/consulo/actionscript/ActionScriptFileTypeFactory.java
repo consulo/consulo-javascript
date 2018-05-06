@@ -1,6 +1,7 @@
 package consulo.actionscript;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
+
 import com.intellij.openapi.fileTypes.FileTypeConsumer;
 import com.intellij.openapi.fileTypes.FileTypeFactory;
 
@@ -11,7 +12,7 @@ import com.intellij.openapi.fileTypes.FileTypeFactory;
 public class ActionScriptFileTypeFactory extends FileTypeFactory
 {
 	@Override
-	public void createFileTypes(@NotNull FileTypeConsumer consumer)
+	public void createFileTypes(@Nonnull FileTypeConsumer consumer)
 	{
 		consumer.consume(ActionScriptFileType.INSTANCE);
 	}

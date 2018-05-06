@@ -15,10 +15,10 @@
  */
 package org.intellij.idea.lang.javascript.intention;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import com.intellij.psi.PsiElement;
 
 public interface JSElementPredicate {
-    boolean satisfiedBy(@NotNull PsiElement element);
+    boolean satisfiedBy(@Nonnull PsiElement element);
 }

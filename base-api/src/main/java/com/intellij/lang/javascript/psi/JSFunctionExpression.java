@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript.psi;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -24,6 +24,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface JSFunctionExpression extends JSFunction, JSExpression
 {
-	@NotNull
+	@Nonnull
 	JSFunction getFunction();
 }

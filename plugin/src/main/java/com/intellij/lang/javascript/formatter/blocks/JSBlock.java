@@ -18,8 +18,8 @@ package com.intellij.lang.javascript.formatter.blocks;
 
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.formatting.Alignment;
 import com.intellij.formatting.Block;
 import com.intellij.formatting.ChildAttributes;
@@ -68,14 +68,14 @@ public class JSBlock implements Block
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public TextRange getTextRange()
 	{
 		return myNode.getTextRange();
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public List<Block> getSubBlocks()
 	{
 		if(mySubBlocks == null)
@@ -120,7 +120,7 @@ public class JSBlock implements Block
 	}
 
 	@Override
-	@NotNull
+	@Nonnull
 	public ChildAttributes getChildAttributes(final int newChildIndex)
 	{
 		Indent indent = null;

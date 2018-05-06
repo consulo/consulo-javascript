@@ -12,7 +12,7 @@ import com.intellij.util.IncorrectOperationException;
 import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.ui.SingleCheckboxOptionsPanel;
 import com.sixrr.inspectjs.utils.ExpressionUtil;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.HashSet;
@@ -38,20 +38,20 @@ public class PointlessBitwiseExpressionJSInspection extends JavaScriptInspection
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getDisplayName() {
         return InspectionJSBundle.message(
                 "pointless.bitwise.expression.display.name");
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.BITWISE_GROUP_NAME;
     }
 
     @Override
-	@NotNull
+	@Nonnull
     public String buildErrorString(Object... args) {
         final String replacementExpression =
                 calculateReplacementExpression((JSExpression) args[0]);
@@ -123,7 +123,7 @@ public class PointlessBitwiseExpressionJSInspection extends JavaScriptInspection
     private class PointlessBitwiseFix extends InspectionJSFix {
 
         @Override
-		@NotNull
+		@Nonnull
         public String getName() {
             return InspectionJSBundle.message(
                     "pointless.bitwise.expression.simplify.quickfix");
@@ -143,7 +143,7 @@ public class PointlessBitwiseExpressionJSInspection extends JavaScriptInspection
     private class PointlessBitwiseVisitor extends BaseInspectionVisitor {
 
         @Override public void visitJSBinaryExpression(
-                @NotNull JSBinaryExpression expression) {
+                @Nonnull JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             final IElementType sign = expression.getOperationSign();
             if (!bitwiseTokens.contains(sign)) {

@@ -17,7 +17,7 @@
 package consulo.javascript.lang;
 
 import org.intellij.lang.regexp.RegExpLanguage;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import consulo.annotations.RequiredReadAction;
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
@@ -36,7 +36,7 @@ public class JavaScriptRegexpMultiHostInjector implements MultiHostInjector
 {
 	@Override
 	@RequiredReadAction
-	public void injectLanguages(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context)
+	public void injectLanguages(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement context)
 	{
 		if(context instanceof JSSimpleLiteralExpression)
 		{

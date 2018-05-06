@@ -18,8 +18,8 @@ package org.intellij.idea.lang.javascript.psiutil;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.psi.PsiElement;
@@ -39,7 +39,7 @@ public class ExpressionUtil {
         return visitor.isConstant;
     }
 
-    public static boolean isIncrementDecrementExpression(@NotNull PsiElement expression) {
+    public static boolean isIncrementDecrementExpression(@Nonnull PsiElement expression) {
         if (expression instanceof JSPostfixExpression) {
             final IElementType operator = ((JSPostfixExpression) expression).getOperationSign();
             return (JSTokenTypes.PLUSPLUS.equals(operator) || JSTokenTypes.MINUSMINUS.equals(operator));
