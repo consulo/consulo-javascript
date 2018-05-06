@@ -17,17 +17,17 @@
 package consulo.actionscript;
 
 import javax.annotation.Nonnull;
-import javax.swing.Icon;
-
 import javax.annotation.Nullable;
-import consulo.actionscript.lang.ActionScriptLanguageVersion;
+
 import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.actionscript.lang.ActionScriptLanguageVersion;
 import consulo.javascript.lang.JavaScriptFileTypeWithVersion;
 import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.lang.LanguageVersion;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -44,7 +44,7 @@ public class ActionScriptFileType extends LanguageFileType implements JavaScript
 
 	@Nonnull
 	@Override
-	public String getName()
+	public String getId()
 	{
 		return "ACTIONSCRIPT";
 	}
@@ -65,7 +65,7 @@ public class ActionScriptFileType extends LanguageFileType implements JavaScript
 
 	@Nullable
 	@Override
-	public Icon getIcon()
+	public Image getIcon()
 	{
 		return JavaScriptIcons.As;
 	}

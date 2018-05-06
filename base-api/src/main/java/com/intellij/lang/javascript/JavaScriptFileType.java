@@ -30,6 +30,7 @@ import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.javascript.lang.StandardJavaScriptVersions;
 import consulo.javascript.module.extension.JavaScriptModuleExtension;
 import consulo.lang.LanguageVersion;
+import consulo.ui.image.Image;
 
 /**
  * User: max
@@ -67,7 +68,7 @@ public class JavaScriptFileType extends LanguageFileType implements JavaScriptFi
 	}
 
 	@Override
-	public Icon getIcon()
+	public Image getIcon()
 	{
 		return JavaScriptIcons.JavaScript;
 	}

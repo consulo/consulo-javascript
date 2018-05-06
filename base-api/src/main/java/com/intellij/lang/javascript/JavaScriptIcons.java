@@ -16,17 +16,16 @@
 
 package com.intellij.lang.javascript;
 
-import javax.swing.Icon;
-
 import com.intellij.openapi.util.IconLoader;
+import consulo.ui.image.Image;
 
 // Generated Consulo DevKit plugin 
 public interface JavaScriptIcons
 {
-	Icon As = IconLoader.getIcon("/icons/as.png");  // 16x16
-	Icon EcmaScript = IconLoader.getIcon("/icons/ecmaScript.png");  // 16x16
-	Icon JavaScript = IconLoader.getIcon("/icons/javaScript.png");  // 16x16
-	Icon Json = IconLoader.getIcon("/icons/json.png");  // 16x16
-	Icon Jsx = IconLoader.getIcon("/icons/jsx.png");  // 16x16
-	Icon TypeScript = IconLoader.getIcon("/icons/typeScript.png");  // 16x16
+	Image As = IconLoader.getIcon("/icons/as.png");  // 16x16
+	Image EcmaScript = IconLoader.getIcon("/icons/ecmaScript.png");  // 16x16
+	Image JavaScript = IconLoader.getIcon("/icons/javaScript.png");  // 16x16
+	Image Json = IconLoader.getIcon("/icons/json.png");  // 16x16
+	Image Jsx = IconLoader.getIcon("/icons/jsx.png");  // 16x16
+	Image TypeScript = IconLoader.getIcon("/icons/typeScript.png");  // 16x16
 }

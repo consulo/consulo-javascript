@@ -35,6 +35,7 @@ import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.SortedListModel;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
+import consulo.awt.TargetAWT;
 
 /**
  * @author VISTALL
@@ -83,7 +84,7 @@ public abstract class JavaScriptListPanel<T> extends JPanel
 				{
 					setBackground(FileColorManager.getInstance(myProject).getFileColor(virtualFile));
 					setText(virtualFile.getPath());
-					setIcon(virtualFile.getFileType().getIcon());
+					setIcon(TargetAWT.to(virtualFile.getFileType().getIcon()));
 				}
 			}
 		});

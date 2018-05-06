@@ -18,12 +18,12 @@ package consulo.typescript;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.Icon;
 
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import consulo.javascript.lang.JavaScriptLanguage;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -40,7 +40,7 @@ public class TypeScriptFileType extends LanguageFileType
 
 	@Nonnull
 	@Override
-	public String getName()
+	public String getId()
 	{
 		return "TypeScript";
 	}
@@ -61,7 +61,7 @@ public class TypeScriptFileType extends LanguageFileType
 
 	@Nullable
 	@Override
-	public Icon getIcon()
+	public Image getIcon()
 	{
 		return JavaScriptIcons.TypeScript;
 	}

@@ -2,13 +2,13 @@ package consulo.javascript.client.module.sdk;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.Icon;
 
 import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.OrderRootType;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -41,7 +41,7 @@ public class ClientJavaScriptSdkType extends SdkType
 
 	@Nullable
 	@Override
-	public Icon getIcon()
+	public Image getIcon()
 	{
 		return JavaScriptIcons.JavaScript;
 	}
