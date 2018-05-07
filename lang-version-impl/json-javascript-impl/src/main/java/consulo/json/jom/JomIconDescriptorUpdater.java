@@ -20,6 +20,7 @@ import javax.annotation.Nonnull;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import consulo.annotations.RequiredReadAction;
+import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdater;
 
@@ -38,7 +39,7 @@ public class JomIconDescriptorUpdater implements IconDescriptorUpdater
 			JomFileElement<JomElement> fileElement = JomManager.getInstance(element.getProject()).getFileElement((PsiFile) element);
 			if(fileElement != null)
 			{
-				iconDescriptor.setMainIcon(fileElement.getFileDescriptor().getIcon());
+				iconDescriptor.setMainIcon(TargetAWT.to(fileElement.getFileDescriptor().getIcon()));
 			}
 		}
 	}

@@ -17,10 +17,10 @@
 package consulo.json.jom;
 
 import javax.annotation.Nonnull;
-import javax.swing.Icon;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.psi.PsiFile;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -44,7 +44,7 @@ public abstract class JomFileDescriptor<T extends JomElement>
 	}
 
 	@Nonnull
-	public abstract Icon getIcon();
+	public abstract Image getIcon();
 
 	public abstract boolean isMyFile(@Nonnull PsiFile psiFile);
 }
