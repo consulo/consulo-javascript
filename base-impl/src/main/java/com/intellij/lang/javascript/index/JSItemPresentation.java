@@ -20,6 +20,7 @@ import javax.swing.Icon;
 
 import javax.annotation.Nullable;
 import consulo.annotations.RequiredDispatchThread;
+import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSFunction;
@@ -100,6 +101,6 @@ public class JSItemPresentation implements ItemPresentation
 	@RequiredDispatchThread
 	public Icon getIcon(boolean open)
 	{
-		return IconDescriptorUpdaters.getIcon(myElement, Iconable.ICON_FLAG_VISIBILITY);
+		return TargetAWT.to(IconDescriptorUpdaters.getIcon(myElement, Iconable.ICON_FLAG_VISIBILITY));
 	}
 }

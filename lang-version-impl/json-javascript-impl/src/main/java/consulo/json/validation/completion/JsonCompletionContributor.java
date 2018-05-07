@@ -50,6 +50,7 @@ import consulo.json.validation.NativeArray;
 import consulo.json.validation.descriptor.JsonObjectDescriptor;
 import consulo.json.validation.descriptor.JsonPropertyDescriptor;
 import consulo.json.validation.inspections.PropertyValidationInspection;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -206,7 +207,7 @@ public class JsonCompletionContributor extends CompletionContributor
 			}
 			LookupElementBuilder builder = LookupElementBuilder.create(quotes ? StringUtil.QUOTER.fun(key) : key);
 			builder = builder.withPresentableText(quotes ? StringUtil.QUOTER.fun(key) : key);
-			builder = builder.withIcon(AllIcons.Nodes.Property);
+			builder = builder.withIcon((Image) AllIcons.Nodes.Property);
 			final JsonPropertyDescriptor value = entry.getValue();
 			if(value.isDeprecated())
 			{

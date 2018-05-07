@@ -22,6 +22,7 @@ import com.intellij.codeInsight.generation.ClassMember;
 import com.intellij.codeInsight.generation.MemberChooserObject;
 import com.intellij.codeInsight.generation.PsiElementMemberChooserObject;
 import com.intellij.icons.AllIcons;
+import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.javascript.JSParameterInfoHandler;
 import com.intellij.lang.javascript.psi.JSFunction;
@@ -48,7 +49,7 @@ public class JSNamedElementNode extends PsiElementMemberChooserObject implements
 
 	private static Icon buildIcon(final JSNamedElement node)
 	{
-		Icon icon = IconDescriptorUpdaters.getIcon(node, 0);
+		Icon icon = TargetAWT.to(IconDescriptorUpdaters.getIcon(node, 0));
 
 		if(node instanceof JSFunction)
 		{

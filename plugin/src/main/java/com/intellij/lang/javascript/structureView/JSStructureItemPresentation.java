@@ -19,6 +19,7 @@ package com.intellij.lang.javascript.structureView;
 import javax.swing.Icon;
 
 import consulo.annotations.RequiredReadAction;
+import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSAssignmentExpression;
@@ -158,6 +159,6 @@ class JSStructureItemPresentation extends JSStructureViewElement.JSStructureItem
 		{
 			return null;
 		}
-		return IconDescriptorUpdaters.getIcon(psiElement, 0);
+		return TargetAWT.to(IconDescriptorUpdaters.getIcon(psiElement, 0));
 	}
 }

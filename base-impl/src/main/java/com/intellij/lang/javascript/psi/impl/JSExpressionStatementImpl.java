@@ -19,6 +19,7 @@ package com.intellij.lang.javascript.psi.impl;
 import javax.annotation.Nonnull;
 import javax.swing.Icon;
 
+import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
@@ -107,7 +108,7 @@ public class JSExpressionStatementImpl extends JSStatementImpl implements JSExpr
 			@Override
 			public Icon getIcon(boolean open)
 			{
-				return IconDescriptorUpdaters.getIcon(JSExpressionStatementImpl.this, 0);
+				return TargetAWT.to(IconDescriptorUpdaters.getIcon(JSExpressionStatementImpl.this, 0));
 			}
 		};
 
