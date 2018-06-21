@@ -5,14 +5,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.cl.PluginClassLoader;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModificator;
-import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.Consumer;
 import consulo.bundle.PredefinedBundlesProvider;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
@@ -33,7 +33,7 @@ public class ClientJavaScriptPredefinedBundlesProvider extends PredefinedBundles
 	};
 
 	@Override
-	public void createBundles(@Nonnull Consumer<SdkImpl> consumer)
+	public void createBundles(@Nonnull Context context)
 	{
 		PluginClassLoader classLoader = (PluginClassLoader) getClass().getClassLoader();
 		IdeaPluginDescriptor plugin = PluginManager.getPlugin(classLoader.getPluginId());
@@ -59,18 +59,17 @@ public class ClientJavaScriptPredefinedBundlesProvider extends PredefinedBundles
 			{
 				continue;
 			}
-			SdkImpl sdk = createSdkWithName(ClientJavaScriptSdkType.getInstance(), name);
-			sdk.setHomePath(fileByIoFile.getPath());
-			sdk.setVersionString("1");
+			Sdk sdk = context.createSdkWithName(ClientJavaScriptSdkType.getInstance(), name);
 
-			SdkModificator sdkModificator = sdk.getSdkModificator();
+			SdkModificator modificator = sdk.getSdkModificator();
+			modificator.setHomePath(fileByIoFile.getPath());
+			modificator.setVersionString("1");
 			for(VirtualFile child : fileByIoFile.getChildren())
 			{
-				sdkModificator.addRoot(child, BinariesOrderRootType.getInstance());
-				sdkModificator.addRoot(child, SourcesOrderRootType.getInstance());
+				modificator.addRoot(child, BinariesOrderRootType.getInstance());
+				modificator.addRoot(child, SourcesOrderRootType.getInstance());
 			}
-			sdkModificator.commitChanges();
-			consumer.consume(sdk);
+			modificator.commitChanges();
 		}
 	}
 }
