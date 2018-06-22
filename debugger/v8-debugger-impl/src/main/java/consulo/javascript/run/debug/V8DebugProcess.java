@@ -54,7 +54,6 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.ui.XDebugTabLayouter;
 import consulo.annotations.Exported;
-import consulo.awt.TargetAWT;
 import consulo.javascript.debugger.JavaScriptEditorsProvider;
 import consulo.javascript.debugger.JavaScriptLineBreakpointType;
 import consulo.javascript.debugger.JavaScriptListPanel;
@@ -264,7 +263,7 @@ public class V8DebugProcess extends XDebugProcess
 			@Override
 			public void registerAdditionalContent(@Nonnull RunnerLayoutUi ui)
 			{
-				Content content = ui.createContent("ScriptListView", myScriptListPanel, "Scripts", TargetAWT.to(JavaScriptIcons.JavaScript), null);
+				Content content = ui.createContent("ScriptListView", myScriptListPanel, "Scripts", JavaScriptIcons.JavaScript, null);
 				content.setCloseable(false);
 
 				ui.addContent(content);
