@@ -29,17 +29,16 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
-import javax.swing.Icon;
+import javax.annotation.Nullable;
 
 import org.jetbrains.annotations.NonNls;
-
-import javax.annotation.Nullable;
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeInsight.daemon.GutterIconNavigationHandler;
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.codeInsight.daemon.LineMarkerProvider;
 import com.intellij.codeInsight.daemon.impl.PsiElementListNavigator;
 import com.intellij.codeInsight.navigation.NavigationUtil;
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.DefaultPsiElementCellRenderer;
 import com.intellij.lang.javascript.psi.JSAttributeList;
 import com.intellij.lang.javascript.psi.JSClass;
@@ -53,7 +52,6 @@ import com.intellij.lang.javascript.search.JSFunctionsSearch;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.NavigatablePsiElement;
@@ -73,10 +71,6 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 {
 	@NonNls
 	private static final String OVERRIDES_METHOD_IN = "overrides method in ";
-	private static final Icon OVERRIDING_METHOD_ICON = IconLoader.getIcon("/gutter/overridingMethod.png");
-	private static final Icon OVERRIDDEN_ICON = IconLoader.getIcon("/gutter/overridenMethod.png");
-	private static final Icon IMPLEMENTED_ICON = IconLoader.getIcon("/gutter/implementedMethod.png");
-	private static final Icon IMPLEMENTING_ICON = IconLoader.getIcon("/gutter/implementingMethod.png");
 
 	private static final Function<JSClass, String> ourClassInheritorsTooltipProvider = new Function<JSClass, String>()
 	{
@@ -173,12 +167,12 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 		final String qName = JSResolveUtil.getQNameToStartHierarchySearch(elt);
 		if(qName != null)
 		{
-			final ArrayList<JSFunction> result = new ArrayList<JSFunction>();
+			final ArrayList<JSFunction> result = new ArrayList<>();
 
-			return new CollectionQuery<JSFunction>(result);
+			return new CollectionQuery<>(result);
 		}
 
-		return new CollectionQuery<JSFunction>(Collections.<JSFunction>emptyList());
+		return new CollectionQuery<>(Collections.<JSFunction>emptyList());
 	}
 
 	private static final BasicGutterIconNavigationHandler<JSFunction> ourImplementingFunctionsNavHandler = new
@@ -238,7 +232,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 					final PsiElement parentNode1 = parentNode;
 					function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
 
-					return new LineMarkerInfo<JSFunction>(function, function.getNameIdentifier().getTextRange().getStartOffset(), OVERRIDING_METHOD_ICON,
+					return new LineMarkerInfo<>(function, function.getNameIdentifier().getTextRange().getStartOffset(), AllIcons.Gutter.OverridingMethod,
 							Pass.UPDATE_ALL, new Function<JSFunction, String>()
 					{
 						@Override
@@ -251,7 +245,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 						@Override
 						public void navigate(final MouseEvent e, final JSFunction elt)
 						{
-							final Set<NavigationItem> results = new THashSet<NavigationItem>();
+							final Set<NavigationItem> results = new THashSet<>();
 							JSResolveUtil.iterateType(function, parentNode1, typeName, new JSResolveUtil.OverrideHandler()
 							{
 								@Override
@@ -287,8 +281,8 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 	@Override
 	public void collectSlowLineMarkers(@Nonnull final List<PsiElement> elements, @Nonnull final Collection<LineMarkerInfo> result)
 	{
-		final Map<String, Set<JSFunction>> jsFunctionsToProcess = new THashMap<String, Set<JSFunction>>();
-		final Map<JSClass, Set<JSFunction>> jsMethodsToProcess = new THashMap<JSClass, Set<JSFunction>>();
+		final Map<String, Set<JSFunction>> jsFunctionsToProcess = new THashMap<>();
+		final Map<JSClass, Set<JSFunction>> jsMethodsToProcess = new THashMap<>();
 
 		for(final PsiElement el : elements)
 		{
@@ -315,7 +309,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 					Set<JSFunction> functions = jsMethodsToProcess.get(clazz);
 					if(functions == null)
 					{
-						functions = new THashSet<JSFunction>();
+						functions = new THashSet<>();
 						jsMethodsToProcess.put(clazz, functions);
 					}
 
@@ -330,7 +324,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 
 						if(functions == null)
 						{
-							functions = new THashSet<JSFunction>();
+							functions = new THashSet<>();
 							jsFunctionsToProcess.put(qName, functions);
 						}
 
@@ -359,14 +353,14 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 			classQuery.forEach(new Processor<JSClass>()
 			{
 				boolean addedClassMarker;
-				final Set<JSFunction> methodsClone = methods == null || clazz.isInterface() ? null : new THashSet<JSFunction>(methods);
+				final Set<JSFunction> methodsClone = methods == null || clazz.isInterface() ? null : new THashSet<>(methods);
 
 				@Override
 				public boolean process(final JSClass jsClass)
 				{
 					if(!addedClassMarker)
 					{
-						result.add(new LineMarkerInfo<JSClass>(clazz, clazz.getTextOffset(), OVERRIDDEN_ICON, Pass.LINE_MARKERS,
+						result.add(new LineMarkerInfo<>(clazz, clazz.getTextOffset(), AllIcons.Gutter.OverridenMethod, Pass.LINE_MARKERS,
 								ourClassInheritorsTooltipProvider, ourClassInheritorsNavHandler));
 						addedClassMarker = true;
 					}
@@ -382,7 +376,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 							{
 								// TODO: more correct check for override
 								function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
-								result.add(new LineMarkerInfo<JSFunction>(function, function.getTextOffset(), OVERRIDDEN_ICON, Pass.LINE_MARKERS,
+								result.add(new LineMarkerInfo<>(function, function.getTextOffset(), AllIcons.Gutter.OverridenMethod, Pass.LINE_MARKERS,
 										ourOverriddenFunctionsTooltipProvider, ourOverriddenFunctionsNavHandler));
 								functionIterator.remove();
 							}
@@ -399,7 +393,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 
 				if(classQuery.findFirst() != null)
 				{
-					result.add(new LineMarkerInfo<JSClass>(clazz, clazz.getTextOffset(), IMPLEMENTED_ICON, Pass.LINE_MARKERS,
+					result.add(new LineMarkerInfo<>(clazz, clazz.getTextOffset(), AllIcons.Gutter.ImplementedMethod, Pass.LINE_MARKERS,
 							ourImplementedInterfacesTooltipProvider, ourInterfaceImplementationsNavHandler));
 				}
 			}
@@ -418,7 +412,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 					if(query.findFirst() != null)
 					{
 						function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
-						result.add(new LineMarkerInfo<JSFunction>(function, function.getTextOffset(), IMPLEMENTED_ICON, Pass.LINE_MARKERS,
+						result.add(new LineMarkerInfo<>(function, function.getTextOffset(), AllIcons.Gutter.ImplementedMethod, Pass.LINE_MARKERS,
 								ourImplementingFunctionsTooltipProvider, ourImplementingFunctionsNavHandler));
 					}
 				}
@@ -435,7 +429,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 					{
 						function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
 
-						result.add(new LineMarkerInfo<JSFunction>(function, function.getTextOffset(), IMPLEMENTING_ICON, Pass.LINE_MARKERS,
+						result.add(new LineMarkerInfo<>(function, function.getTextOffset(), AllIcons.Gutter.ImplementingMethod, Pass.LINE_MARKERS,
 								new Function<JSFunction, String>()
 						{
 							@Override
@@ -487,7 +481,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 		{
 			return null;
 		}
-		final Ref<JSFunction> result = new Ref<JSFunction>();
+		final Ref<JSFunction> result = new Ref<>();
 		JSResolveUtil.processInterfaceMethods((JSClass) clazz, new JSResolveUtil.CollectMethodsToImplementProcessor(implementingFunction.getName(),
 				implementingFunction)
 		{
@@ -527,7 +521,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 		@Override
 		public void navigate(final MouseEvent e, final T elt)
 		{
-			final List<NavigatablePsiElement> navElements = new ArrayList<NavigatablePsiElement>();
+			final List<NavigatablePsiElement> navElements = new ArrayList<>();
 			Query<T> elementQuery = search(elt);
 			if(elementQuery == null)
 			{
