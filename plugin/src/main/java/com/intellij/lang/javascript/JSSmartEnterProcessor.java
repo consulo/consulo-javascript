@@ -18,9 +18,7 @@ package com.intellij.lang.javascript;
 
 import javax.annotation.Nonnull;
 
-import consulo.annotations.RequiredReadAction;
 import com.intellij.codeInsight.editorActions.smartEnter.SmartEnterProcessor;
-import com.intellij.idea.LoggerFactory;
 import com.intellij.lang.javascript.psi.JSArgumentList;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSElement;
@@ -40,7 +38,7 @@ import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.IncorrectOperationException;
+import consulo.annotations.RequiredReadAction;
 
 /**
  * @author Maxim.Mossienko
@@ -152,17 +150,10 @@ public class JSSmartEnterProcessor extends SmartEnterProcessor
 		PsiElement at = psiFile.findElementAt(offset + shiftOffset - 1);
 		final PsiElement parentOfType = PsiTreeUtil.getParentOfType(at, JSStatement.class, JSFunction.class, JSClass.class, JSFile.class);
 
-		try
+		reformat(parentOfType);
+		if(adjustLineIndent)
 		{
-			reformat(parentOfType);
-			if(adjustLineIndent)
-			{
-				CodeStyleManager.getInstance(project).adjustLineIndent(psiFile, editor.getCaretModel().getOffset());
-			}
-		}
-		catch(IncorrectOperationException ex)
-		{
-			LoggerFactory.getInstance().getLoggerInstance(getClass().getName()).error(ex);
+			CodeStyleManager.getInstance(project).adjustLineIndent(psiFile, editor.getCaretModel().getOffset());
 		}
 	}
 

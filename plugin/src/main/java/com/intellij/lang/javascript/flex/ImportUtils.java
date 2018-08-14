@@ -24,11 +24,11 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.jetbrains.annotations.NonNls;
 import com.intellij.codeInsight.CodeInsightUtilBase;
-import com.intellij.idea.LoggerFactory;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
@@ -116,83 +116,76 @@ public class ImportUtils
 		}
 		Project project = subject.getProject();
 
-		try
+		final JSReferenceExpression refExpr = PsiTreeUtil.getNonStrictParentOfType(subject, JSReferenceExpression.class);
+		if(refExpr != null && JSResolveUtil.referenceExpressionShouldBeQualified(refExpr))
 		{
-			final JSReferenceExpression refExpr = PsiTreeUtil.getNonStrictParentOfType(subject, JSReferenceExpression.class);
-			if(refExpr != null && JSResolveUtil.referenceExpressionShouldBeQualified(refExpr))
-			{
-				refExpr.replace(JSChangeUtil.createExpressionFromText(project, fqn)); // TODO should commit corresponding document before?
-				return;
-			}
-
-			JSElement importHolder = getImportHolder(subject, JSPackageStatement.class, JSFile.class);
-			if(importHolder == null)
-			{ // importHolder is null when completing js2 class name from js code
-				return;
-			}
-
-			PsiFile file = importHolder.getContainingFile();
-			Document document = PsiDocumentManager.getInstance(project).getDocument(file);
-			PsiDocumentManager.getInstance(project).doPostponedOperationsAndUnblockDocument(document);
-
-			String textToInsert = createImportBlock(project, Collections.singletonList(fqn));
-
-			Pair<PsiElement, Boolean/*before*/> insertionPlace = getImportInsertionPlace(importHolder);
-			if(!insertionPlace.second && insertionPlace.first.getNextSibling() != null)
-			{
-				insertionPlace = Pair.create(insertionPlace.first.getNextSibling(), true);
-			}
-
-			final int offset;
-			final String prefix;
-			final String suffix;
-			if(insertionPlace.second)
-			{
-				PsiElement insertBefore = specifyInsertionPlace(insertionPlace.first, fqn);
-				offset = insertBefore.getTextRange().getStartOffset();
-				prefix = (insertBefore.getPrevSibling() == null && file.getContext() == null) || insertBefore.getPrevSibling() instanceof PsiWhiteSpace ? "" :
-						"\n";
-				suffix = insertBefore instanceof PsiWhiteSpace ? "" : " ";
-			}
-			else
-			{
-				offset = insertionPlace.first.getTextRange().getEndOffset();
-				prefix = insertionPlace.first instanceof PsiWhiteSpace ? "" : "\n";
-				suffix = "";
-			}
-
-			document.insertString(offset, prefix + textToInsert + suffix);
-			PsiDocumentManager.getInstance(project).commitDocument(document);
-
-			PsiElement inserted = file.findElementAt(offset);
-			if(prefix.length() > 0)
-			{
-				if(inserted.getNextSibling() instanceof JSImportStatement)
-				{
-					inserted = inserted.getNextSibling();
-				}
-			}
-			else
-			{
-				JSImportStatement importStatement = PsiTreeUtil.getParentOfType(inserted, JSImportStatement.class);
-				if(importStatement != null)
-				{
-					inserted = importStatement;
-				}
-			}
-			PsiElement formatFrom = inserted.getPrevSibling() instanceof PsiWhiteSpace ? inserted.getPrevSibling() : inserted;
-			PsiElement formatTo = inserted.getNextSibling() instanceof PsiWhiteSpace ? inserted.getNextSibling() : inserted;
-
-			PsiFile realFile = file.getContext() != null ? file.getContext().getContainingFile() : file;
-			final TextRange injectionOffset = InjectedLanguageManager.getInstance(project).injectedToHost(inserted, inserted.getTextRange());
-
-			CodeStyleManager.getInstance(project).reformatText(realFile, injectionOffset.getStartOffset() + formatFrom.getTextRange().getStartOffset(),
-					injectionOffset.getEndOffset() + formatTo.getTextRange().getEndOffset());
+			refExpr.replace(JSChangeUtil.createExpressionFromText(project, fqn)); // TODO should commit corresponding document before?
+			return;
 		}
-		catch(IncorrectOperationException ex)
+
+		JSElement importHolder = getImportHolder(subject, JSPackageStatement.class, JSFile.class);
+		if(importHolder == null)
+		{ // importHolder is null when completing js2 class name from js code
+			return;
+		}
+
+		PsiFile file = importHolder.getContainingFile();
+		Document document = PsiDocumentManager.getInstance(project).getDocument(file);
+		PsiDocumentManager.getInstance(project).doPostponedOperationsAndUnblockDocument(document);
+
+		String textToInsert = createImportBlock(project, Collections.singletonList(fqn));
+
+		Pair<PsiElement, Boolean/*before*/> insertionPlace = getImportInsertionPlace(importHolder);
+		if(!insertionPlace.second && insertionPlace.first.getNextSibling() != null)
 		{
-			LoggerFactory.getInstance().getLoggerInstance(ImportUtils.class.getName()).error(ex);
+			insertionPlace = Pair.create(insertionPlace.first.getNextSibling(), true);
 		}
+
+		final int offset;
+		final String prefix;
+		final String suffix;
+		if(insertionPlace.second)
+		{
+			PsiElement insertBefore = specifyInsertionPlace(insertionPlace.first, fqn);
+			offset = insertBefore.getTextRange().getStartOffset();
+			prefix = (insertBefore.getPrevSibling() == null && file.getContext() == null) || insertBefore.getPrevSibling() instanceof PsiWhiteSpace ? "" :
+					"\n";
+			suffix = insertBefore instanceof PsiWhiteSpace ? "" : " ";
+		}
+		else
+		{
+			offset = insertionPlace.first.getTextRange().getEndOffset();
+			prefix = insertionPlace.first instanceof PsiWhiteSpace ? "" : "\n";
+			suffix = "";
+		}
+
+		document.insertString(offset, prefix + textToInsert + suffix);
+		PsiDocumentManager.getInstance(project).commitDocument(document);
+
+		PsiElement inserted = file.findElementAt(offset);
+		if(prefix.length() > 0)
+		{
+			if(inserted.getNextSibling() instanceof JSImportStatement)
+			{
+				inserted = inserted.getNextSibling();
+			}
+		}
+		else
+		{
+			JSImportStatement importStatement = PsiTreeUtil.getParentOfType(inserted, JSImportStatement.class);
+			if(importStatement != null)
+			{
+				inserted = importStatement;
+			}
+		}
+		PsiElement formatFrom = inserted.getPrevSibling() instanceof PsiWhiteSpace ? inserted.getPrevSibling() : inserted;
+		PsiElement formatTo = inserted.getNextSibling() instanceof PsiWhiteSpace ? inserted.getNextSibling() : inserted;
+
+		PsiFile realFile = file.getContext() != null ? file.getContext().getContainingFile() : file;
+		final TextRange injectionOffset = InjectedLanguageManager.getInstance(project).injectedToHost(inserted, inserted.getTextRange());
+
+		CodeStyleManager.getInstance(project).reformatText(realFile, injectionOffset.getStartOffset() + formatFrom.getTextRange().getStartOffset(),
+				injectionOffset.getEndOffset() + formatTo.getTextRange().getEndOffset());
 	}
 
 	private static JSElement getAnonymousEventHandlerBody(JSFile injectedFile)

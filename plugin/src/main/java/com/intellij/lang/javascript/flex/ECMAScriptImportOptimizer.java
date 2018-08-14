@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+
 import com.intellij.codeInsight.CodeInsightUtilBase;
-import com.intellij.idea.LoggerFactory;
 import com.intellij.lang.ImportOptimizer;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -50,7 +50,6 @@ import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.containers.HashSet;
 import com.intellij.util.containers.MultiMap;
 import consulo.javascript.lang.JavaScriptLanguage;
@@ -85,181 +84,174 @@ public class ECMAScriptImportOptimizer implements ImportOptimizer
 			{
 				final JSUnusedImportsHelper.Results unusedImportsResults = JSUnusedImportsHelper.getUnusedImports(file);
 
-				try
+				MultiMap<JSElement, String> importsByHolder = new MultiMap<JSElement, String>()
 				{
-					MultiMap<JSElement, String> importsByHolder = new MultiMap<JSElement, String>()
+					@Override
+					protected Collection<String> createCollection()
 					{
-						@Override
-						protected Collection<String> createCollection()
-						{
-							return new HashSet<String>();
-						}
-					};
+						return new HashSet<String>();
+					}
+				};
 
-					Project project = file.getProject();
-					final SmartPointerManager pointerManager = SmartPointerManager.getInstance(project);
-					final List<SmartPsiElementPointer> oldImportsPointers = new ArrayList<SmartPsiElementPointer>(unusedImportsResults.allImports.size());
-					for(JSImportStatement anImport : unusedImportsResults.allImports)
+				Project project = file.getProject();
+				final SmartPointerManager pointerManager = SmartPointerManager.getInstance(project);
+				final List<SmartPsiElementPointer> oldImportsPointers = new ArrayList<SmartPsiElementPointer>(unusedImportsResults.allImports.size());
+				for(JSImportStatement anImport : unusedImportsResults.allImports)
+				{
+					oldImportsPointers.add(pointerManager.createSmartPsiElementPointer(anImport));
+					if(unusedImportsResults.unusedImports.contains(anImport))
 					{
-						oldImportsPointers.add(pointerManager.createSmartPsiElementPointer(anImport));
-						if(unusedImportsResults.unusedImports.contains(anImport))
-						{
-							continue;
-						}
-
-						JSElement importHolder = ImportUtils.getImportHolder(anImport, JSFunction.class, JSPackageStatement.class, JSFile.class);
-						assert importHolder != null : "Import holder not found for " + anImport.getText();
-						importsByHolder.putValue(importHolder, anImport.getImportText());
+						continue;
 					}
 
-					final List<SmartPsiElementPointer> replaceWithShortName = new ArrayList<SmartPsiElementPointer>();
-					for(Map.Entry<JSReferenceExpression, String> e : unusedImportsResults.fqnsToReplaceWithImport.entrySet())
+					JSElement importHolder = ImportUtils.getImportHolder(anImport, JSFunction.class, JSPackageStatement.class, JSFile.class);
+					assert importHolder != null : "Import holder not found for " + anImport.getText();
+					importsByHolder.putValue(importHolder, anImport.getImportText());
+				}
+
+				final List<SmartPsiElementPointer> replaceWithShortName = new ArrayList<SmartPsiElementPointer>();
+				for(Map.Entry<JSReferenceExpression, String> e : unusedImportsResults.fqnsToReplaceWithImport.entrySet())
+				{
+					final Collection<String> importsInScope;
+					final Collection<String> importsInEnclosingScope;
+					final JSElement importHolder;
+
+					JSElement enclosingFunction = ImportUtils.getImportHolder(e.getKey(), JSFunction.class);
+					JSElement enclosingPackage = ImportUtils.getImportHolder(e.getKey(), JSPackageStatement.class);
+
+					if(enclosingFunction != null && !importsByHolder.get(enclosingFunction).isEmpty())
 					{
-						final Collection<String> importsInScope;
-						final Collection<String> importsInEnclosingScope;
-						final JSElement importHolder;
-
-						JSElement enclosingFunction = ImportUtils.getImportHolder(e.getKey(), JSFunction.class);
-						JSElement enclosingPackage = ImportUtils.getImportHolder(e.getKey(), JSPackageStatement.class);
-
-						if(enclosingFunction != null && !importsByHolder.get(enclosingFunction).isEmpty())
-						{
-							importHolder = enclosingFunction;
-							importsInScope = importsByHolder.get(enclosingFunction);
-							importsInEnclosingScope = importsByHolder.get(enclosingPackage);
-						}
-						else if(enclosingPackage != null)
-						{
-							importHolder = enclosingPackage;
-							importsInScope = importsByHolder.get(enclosingPackage);
-							importsInEnclosingScope = Collections.emptyList();
-						}
-						else
-						{
-							importHolder = ImportUtils.getImportHolder(e.getKey(), JSFile.class);
-							importsInScope = importsByHolder.get(importHolder);
-							importsInEnclosingScope = Collections.emptyList();
-						}
-
-						String fqn = e.getValue();
-
-						ResolveResult resolve = resolveUsingImports(importsInScope, fqn, file);
-						ResolveResult implicitResolve = resolveUsingImports(importsInEnclosingScope, fqn, file);
-
-						if(resolve == ResolveResult.None && implicitResolve == ResolveResult.None)
-						{
-							importsByHolder.putValue(importHolder, fqn);
-							replaceWithShortName.add(pointerManager.createSmartPsiElementPointer(e.getKey()));
-						}
-						else if((resolve == ResolveResult.ThisOne || resolve == ResolveResult.None) && (implicitResolve == ResolveResult.ThisOne || implicitResolve ==
-								ResolveResult.None))
-						{
-							replaceWithShortName.add(pointerManager.createSmartPsiElementPointer(e.getKey()));
-						}
+						importHolder = enclosingFunction;
+						importsInScope = importsByHolder.get(enclosingFunction);
+						importsInEnclosingScope = importsByHolder.get(enclosingPackage);
+					}
+					else if(enclosingPackage != null)
+					{
+						importHolder = enclosingPackage;
+						importsInScope = importsByHolder.get(enclosingPackage);
+						importsInEnclosingScope = Collections.emptyList();
+					}
+					else
+					{
+						importHolder = ImportUtils.getImportHolder(e.getKey(), JSFile.class);
+						importsInScope = importsByHolder.get(importHolder);
+						importsInEnclosingScope = Collections.emptyList();
 					}
 
-					final Collection<Pair<SmartPsiElementPointer<JSElement>, Collection<String>>> importsByHolderPointer = new
-							ArrayList<Pair<SmartPsiElementPointer<JSElement>, Collection<String>>>(importsByHolder.size());
-					for(JSElement holder : importsByHolder.keySet())
+					String fqn = e.getValue();
+
+					ResolveResult resolve = resolveUsingImports(importsInScope, fqn, file);
+					ResolveResult implicitResolve = resolveUsingImports(importsInEnclosingScope, fqn, file);
+
+					if(resolve == ResolveResult.None && implicitResolve == ResolveResult.None)
 					{
-						importsByHolderPointer.add(Pair.create(pointerManager.createSmartPsiElementPointer(holder), importsByHolder.get(holder)));
+						importsByHolder.putValue(importHolder, fqn);
+						replaceWithShortName.add(pointerManager.createSmartPsiElementPointer(e.getKey()));
 					}
-
-					for(Pair<SmartPsiElementPointer<JSElement>, Collection<String>> entry : importsByHolderPointer)
+					else if((resolve == ResolveResult.ThisOne || resolve == ResolveResult.None) && (implicitResolve == ResolveResult.ThisOne || implicitResolve ==
+							ResolveResult.None))
 					{
-						JSElement holder = entry.getFirst().getElement();
-						assert holder != null && holder.isValid();
-
-						Pair<PsiElement, Boolean> defaultInsertionPlace = ImportUtils.getImportInsertionPlace(holder);
-						boolean before = defaultInsertionPlace.second;
-						PsiElement insertionPlace = defaultInsertionPlace.first;
-
-						PsiElement earlyImport = ImportUtils.findEarlyImport(before ? insertionPlace : insertionPlace.getNextSibling());
-						Pair<PsiElement, PsiElement> elementToDelete = null;
-						if(earlyImport != null)
-						{
-							for(PsiElement e = (before ? insertionPlace : insertionPlace.getNextSibling()); e != earlyImport; e = e.getNextSibling())
-							{
-								if(!(e instanceof PsiWhiteSpace))
-								{
-									break;
-								}
-							}
-							insertionPlace = earlyImport;
-							before = true;
-							PsiElement deleteTo = earlyImport;
-							while(deleteTo.getNextSibling() instanceof PsiWhiteSpace || deleteTo.getNextSibling() instanceof JSImportStatement)
-							{
-								deleteTo = deleteTo.getNextSibling();
-							}
-							elementToDelete = Pair.create(insertionPlace, deleteTo);
-						}
-						else if(before && insertionPlace instanceof PsiWhiteSpace)
-						{
-							insertionPlace = insertionPlace.replace(JSChangeUtil.createJSTreeFromText(insertionPlace.getProject(), " ").getPsi());
-						}
-						else if(insertionPlace.getNextSibling() instanceof PsiWhiteSpace)
-						{
-							insertionPlace.getNextSibling().replace(JSChangeUtil.createJSTreeFromText(insertionPlace.getProject(), " ").getPsi());
-						}
-
-						String importBlock = ImportUtils.createImportBlock(project, entry.getSecond());
-						PsiElement newImports = PsiFileFactory.getInstance(project).createFileFromText("dummy.js", JavaScriptLanguage.INSTANCE, importBlock);
-
-						PsiElement firstAdded;
-						if(before)
-						{
-							firstAdded = insertionPlace.getParent().addRangeBefore(newImports.getFirstChild(), newImports.getLastChild(), insertionPlace);
-						}
-						else
-						{
-							firstAdded = insertionPlace.getParent().addRangeAfter(newImports.getFirstChild(), newImports.getLastChild(), insertionPlace);
-						}
-
-						if(elementToDelete != null)
-						{
-							deleteRange(elementToDelete.first, elementToDelete.second);
-						}
-
-						PsiElement lastAdded = firstAdded;
-						final String lastImportText = newImports.getLastChild().getText();
-						while(!lastImportText.equals(lastAdded.getText()))
-						{
-							lastAdded = lastAdded.getNextSibling();
-						}
-
-						PsiElement formatFrom = firstAdded.getPrevSibling() instanceof PsiWhiteSpace ? firstAdded.getPrevSibling() : firstAdded;
-						PsiElement formatTo = lastAdded.getNextSibling() instanceof PsiWhiteSpace ? lastAdded.getNextSibling() : lastAdded;
-
-						PsiFile realFile = file.getContext() != null ? file.getContext().getContainingFile() : file;
-
-						TextRange textRange = InjectedLanguageManager.getInstance(file.getProject()).injectedToHost(firstAdded, firstAdded.getTextRange());
-						CodeStyleManager.getInstance(project).reformatText(realFile, textRange.getStartOffset(), textRange.getEndOffset());
-					}
-
-					for(SmartPsiElementPointer pointer : oldImportsPointers)
-					{
-						final JSImportStatement statement = (JSImportStatement) pointer.getElement();
-						if(statement != null)
-						{
-							deleteImport(statement);
-						}
-					}
-
-					for(SmartPsiElementPointer pointer : replaceWithShortName)
-					{
-						final JSReferenceExpression fqn = (JSReferenceExpression) pointer.getElement();
-						if(fqn == null || !fqn.isValid())
-						{
-							continue;
-						}
-						String name = fqn.getReferencedName().substring(fqn.getReferencedName().lastIndexOf('.') + 1);
-						fqn.replace(JSChangeUtil.createExpressionFromText(project, name));
+						replaceWithShortName.add(pointerManager.createSmartPsiElementPointer(e.getKey()));
 					}
 				}
-				catch(IncorrectOperationException ex)
+
+				final Collection<Pair<SmartPsiElementPointer<JSElement>, Collection<String>>> importsByHolderPointer = new
+						ArrayList<Pair<SmartPsiElementPointer<JSElement>, Collection<String>>>(importsByHolder.size());
+				for(JSElement holder : importsByHolder.keySet())
 				{
-					LoggerFactory.getInstance().getLoggerInstance(getClass().getName()).error(ex);
+					importsByHolderPointer.add(Pair.create(pointerManager.createSmartPsiElementPointer(holder), importsByHolder.get(holder)));
+				}
+
+				for(Pair<SmartPsiElementPointer<JSElement>, Collection<String>> entry : importsByHolderPointer)
+				{
+					JSElement holder = entry.getFirst().getElement();
+					assert holder != null && holder.isValid();
+
+					Pair<PsiElement, Boolean> defaultInsertionPlace = ImportUtils.getImportInsertionPlace(holder);
+					boolean before = defaultInsertionPlace.second;
+					PsiElement insertionPlace = defaultInsertionPlace.first;
+
+					PsiElement earlyImport = ImportUtils.findEarlyImport(before ? insertionPlace : insertionPlace.getNextSibling());
+					Pair<PsiElement, PsiElement> elementToDelete = null;
+					if(earlyImport != null)
+					{
+						for(PsiElement e = (before ? insertionPlace : insertionPlace.getNextSibling()); e != earlyImport; e = e.getNextSibling())
+						{
+							if(!(e instanceof PsiWhiteSpace))
+							{
+								break;
+							}
+						}
+						insertionPlace = earlyImport;
+						before = true;
+						PsiElement deleteTo = earlyImport;
+						while(deleteTo.getNextSibling() instanceof PsiWhiteSpace || deleteTo.getNextSibling() instanceof JSImportStatement)
+						{
+							deleteTo = deleteTo.getNextSibling();
+						}
+						elementToDelete = Pair.create(insertionPlace, deleteTo);
+					}
+					else if(before && insertionPlace instanceof PsiWhiteSpace)
+					{
+						insertionPlace = insertionPlace.replace(JSChangeUtil.createJSTreeFromText(insertionPlace.getProject(), " ").getPsi());
+					}
+					else if(insertionPlace.getNextSibling() instanceof PsiWhiteSpace)
+					{
+						insertionPlace.getNextSibling().replace(JSChangeUtil.createJSTreeFromText(insertionPlace.getProject(), " ").getPsi());
+					}
+
+					String importBlock = ImportUtils.createImportBlock(project, entry.getSecond());
+					PsiElement newImports = PsiFileFactory.getInstance(project).createFileFromText("dummy.js", JavaScriptLanguage.INSTANCE, importBlock);
+
+					PsiElement firstAdded;
+					if(before)
+					{
+						firstAdded = insertionPlace.getParent().addRangeBefore(newImports.getFirstChild(), newImports.getLastChild(), insertionPlace);
+					}
+					else
+					{
+						firstAdded = insertionPlace.getParent().addRangeAfter(newImports.getFirstChild(), newImports.getLastChild(), insertionPlace);
+					}
+
+					if(elementToDelete != null)
+					{
+						deleteRange(elementToDelete.first, elementToDelete.second);
+					}
+
+					PsiElement lastAdded = firstAdded;
+					final String lastImportText = newImports.getLastChild().getText();
+					while(!lastImportText.equals(lastAdded.getText()))
+					{
+						lastAdded = lastAdded.getNextSibling();
+					}
+
+					PsiElement formatFrom = firstAdded.getPrevSibling() instanceof PsiWhiteSpace ? firstAdded.getPrevSibling() : firstAdded;
+					PsiElement formatTo = lastAdded.getNextSibling() instanceof PsiWhiteSpace ? lastAdded.getNextSibling() : lastAdded;
+
+					PsiFile realFile = file.getContext() != null ? file.getContext().getContainingFile() : file;
+
+					TextRange textRange = InjectedLanguageManager.getInstance(file.getProject()).injectedToHost(firstAdded, firstAdded.getTextRange());
+					CodeStyleManager.getInstance(project).reformatText(realFile, textRange.getStartOffset(), textRange.getEndOffset());
+				}
+
+				for(SmartPsiElementPointer pointer : oldImportsPointers)
+				{
+					final JSImportStatement statement = (JSImportStatement) pointer.getElement();
+					if(statement != null)
+					{
+						deleteImport(statement);
+					}
+				}
+
+				for(SmartPsiElementPointer pointer : replaceWithShortName)
+				{
+					final JSReferenceExpression fqn = (JSReferenceExpression) pointer.getElement();
+					if(fqn == null || !fqn.isValid())
+					{
+						continue;
+					}
+					String name = fqn.getReferencedName().substring(fqn.getReferencedName().lastIndexOf('.') + 1);
+					fqn.replace(JSChangeUtil.createExpressionFromText(project, name));
 				}
 			}
 		};
