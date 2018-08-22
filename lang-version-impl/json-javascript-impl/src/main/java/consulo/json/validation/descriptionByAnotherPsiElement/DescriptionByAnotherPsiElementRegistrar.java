@@ -17,7 +17,8 @@
 package consulo.json.validation.descriptionByAnotherPsiElement;
 
 import javax.annotation.Nonnull;
-import com.intellij.openapi.components.ApplicationComponent;
+import javax.inject.Singleton;
+
 import com.intellij.openapi.project.Project;
 import com.intellij.util.NotNullFunction;
 import consulo.editor.notifications.EditorNotificationProvider;
@@ -27,10 +28,10 @@ import consulo.editor.notifications.EditorNotificationProviders;
  * @author VISTALL
  * @since 12.11.2015
  */
-public class DescriptionByAnotherPsiElementRegistrar implements ApplicationComponent
+@Singleton
+public class DescriptionByAnotherPsiElementRegistrar
 {
-	@Override
-	public void initComponent()
+	DescriptionByAnotherPsiElementRegistrar()
 	{
 		for(final DescriptionByAnotherPsiElementProvider<?> provider : DescriptionByAnotherPsiElementProvider.EP_NAME.getExtensions())
 		{
@@ -45,18 +46,5 @@ public class DescriptionByAnotherPsiElementRegistrar implements ApplicationCompo
 				}
 			});
 		}
-	}
-
-	@Override
-	public void disposeComponent()
-	{
-
-	}
-
-	@Nonnull
-	@Override
-	public String getComponentName()
-	{
-		return "DescriptionByAnotherPsiElementRegistrar";
 	}
 }

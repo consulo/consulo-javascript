@@ -24,7 +24,6 @@
 	<depends>com.intellij.xml</depends>
 	<depends config-file="regexp.xml" optional="true">com.intellij.regexp</depends>
 
-	<xi:include href="/META-INF/Inspections.xml" xpointer="xpointer(/idea-plugin/*)"/>
 	<xi:include href="/META-INF/Intentions.xml" xpointer="xpointer(/idea-plugin/*)"/>
 	<xi:include href="/META-INF/json.xml" xpointer="xpointer(/idea-plugin/*)"/>
 	<xi:include href="/META-INF/ecma4.xml" xpointer="xpointer(/idea-plugin/*)"/>
@@ -145,6 +144,8 @@
 		<liveTemplateMacro implementation="com.intellij.javascript.JSMethodNameMacro"/>
 
 		<inspectionToolProvider implementation="com.intellij.lang.javascript.inspections.JSInspectionToolProvider"/>
+		<inspectionToolProvider implementation="com.sixrr.inspectjs.InspectionJSPlugin" />
+
 		<targetElementUtilEx implementation="com.intellij.lang.javascript.JavaScriptTargetElementUtilEx"/>
 
 		<sdkType implementation="consulo.javascript.client.module.sdk.ClientJavaScriptSdkType"/>

@@ -15,12 +15,6 @@
   -->
 
 <idea-plugin>
-	<application-components>
-		<component>
-			<implementation-class>consulo.json.validation.descriptionByAnotherPsiElement.DescriptionByAnotherPsiElementRegistrar</implementation-class>
-		</component>
-	</application-components>
-
 	<extensionPoints>
 		<extensionPoint name="jomFileDescriptor" interface="consulo.json.jom.JomFileDescriptor"/>
 		<extensionPoint name="jsonFileDescriptorProvider" interface="consulo.json.validation.JsonFileDescriptorProvider"/>
@@ -39,13 +33,15 @@
 
 		<completion.contributor language="JavaScript" implementationClass="consulo.json.validation.completion.JsonCompletionContributor"/>
 
-		<quoteHandler fileType="JSON" className="onsulo.javascript.lang.JavaScriptQuoteHandler" />
+		<quoteHandler fileType="JSON" className="onsulo.javascript.lang.JavaScriptQuoteHandler"/>
 
 		<localInspection language="JavaScript"
 						 displayName="Property validation"
 						 groupName="JSON"
 						 enabledByDefault="true"
 						 implementationClass="consulo.json.validation.inspections.PropertyValidationInspection"/>
+
+		<applicationService serviceImplementation="consulo.json.validation.descriptionByAnotherPsiElement.DescriptionByAnotherPsiElementRegistrar" lazy="false"/>
 	</extensions>
 
 	<extensions defaultExtensionNs="consulo.javascript">
