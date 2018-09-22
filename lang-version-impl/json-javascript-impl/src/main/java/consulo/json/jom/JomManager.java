@@ -18,6 +18,9 @@ package consulo.json.jom;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileTypes.FileType;
@@ -35,6 +38,7 @@ import consulo.json.JsonFileType;
  * @author VISTALL
  * @since 10.11.2015
  */
+@Singleton
 public class JomManager
 {
 	@Nonnull
@@ -47,6 +51,7 @@ public class JomManager
 
 	private final Project myProject;
 
+	@Inject
 	public JomManager(Project project)
 	{
 		myProject = project;

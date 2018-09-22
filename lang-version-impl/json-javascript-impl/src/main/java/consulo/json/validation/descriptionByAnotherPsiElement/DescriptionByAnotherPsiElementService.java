@@ -21,10 +21,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.jdom.Element;
-
-import javax.annotation.Nullable;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
@@ -49,13 +50,8 @@ import com.intellij.util.containers.ContainerUtil;
  * @author VISTALL
  * @since 12.11.2015
  */
-@State(
-		name = "JSONDescriptionByAnotherPsiElementService",
-		storages = {
-				@Storage(
-						file = StoragePathMacros.WORKSPACE_FILE
-				)}
-)
+@Singleton
+@State(name = "JSONDescriptionByAnotherPsiElementService",storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 public class DescriptionByAnotherPsiElementService implements PersistentStateComponent<Element>, Disposable
 {
 	private static class Info implements Disposable
@@ -201,6 +197,7 @@ public class DescriptionByAnotherPsiElementService implements PersistentStateCom
 	private final Project myProject;
 	private final List<Info> myRegisteredFiles = new ArrayList<Info>();
 
+	@Inject
 	public DescriptionByAnotherPsiElementService(Project project)
 	{
 		myProject = project;

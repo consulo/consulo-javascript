@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Singleton;
 
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
@@ -14,6 +15,7 @@ import consulo.lang.LanguageVersion;
  * @author VISTALL
  * @since 23-Dec-17
  */
+@Singleton
 public class StandardJavaScriptVersionsImpl extends StandardJavaScriptVersions
 {
 	@Nonnull
