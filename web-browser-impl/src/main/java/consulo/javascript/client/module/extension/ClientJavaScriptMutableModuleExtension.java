@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import javax.swing.JComponent;
 
 import com.intellij.openapi.projectRoots.Sdk;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.javascript.module.extension.JavaScriptMutableModuleExtension;
 import consulo.lang.LanguageVersion;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
@@ -29,7 +29,7 @@ public class ClientJavaScriptMutableModuleExtension extends ClientJavaScriptModu
 		return (MutableModuleInheritableNamedPointer<Sdk>) super.getInheritableSdk();
 	}
 
-	@RequiredDispatchThread
+	@RequiredUIAccess
 	@Nullable
 	@Override
 	public JComponent createConfigurablePanel(@Nonnull Runnable updateOnCheck)

@@ -19,7 +19,7 @@ package com.intellij.lang.javascript.index;
 import javax.swing.Icon;
 
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.awt.TargetAWT;
 import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.lang.javascript.psi.JSClass;
@@ -98,7 +98,7 @@ public class JSItemPresentation implements ItemPresentation
 
 	@Override
 	@Nullable
-	@RequiredDispatchThread
+	@RequiredUIAccess
 	public Icon getIcon(boolean open)
 	{
 		return TargetAWT.to(IconDescriptorUpdaters.getIcon(myElement, Iconable.ICON_FLAG_VISIBILITY));

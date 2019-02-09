@@ -32,7 +32,7 @@ import com.intellij.psi.impl.PsiModificationTrackerImpl;
 import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.editor.notifications.EditorNotificationProvider;
 import consulo.json.JsonFileType;
 import consulo.json.jom.JomElement;
@@ -66,7 +66,7 @@ public class DescriptionByAnotherPsiElementEditorNotification<T extends PsiEleme
 
 	@Nullable
 	@Override
-	@RequiredDispatchThread
+	@RequiredUIAccess
 	public EditorNotificationPanel createNotificationPanel(@Nonnull final VirtualFile file, @Nonnull FileEditor fileEditor)
 	{
 		if(file.getFileType() != JsonFileType.INSTANCE)
@@ -99,7 +99,7 @@ public class DescriptionByAnotherPsiElementEditorNotification<T extends PsiEleme
 			panel.createActionLabel("Choose " + myProvider.getPsiElementName(), new Runnable()
 			{
 				@Override
-				@RequiredDispatchThread
+				@RequiredUIAccess
 				public void run()
 				{
 					T chooseElement = myProvider.chooseElement(myProject);

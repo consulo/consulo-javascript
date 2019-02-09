@@ -13,7 +13,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.awt.TargetAWT;
 import consulo.javascript.module.extension.JavaScriptModuleExtension;
@@ -30,7 +30,7 @@ public class JavaScriptCreateFileAction extends CreateFileFromTemplateAction
 	}
 
 	@Override
-	@RequiredDispatchThread
+	@RequiredUIAccess
 	protected boolean isAvailable(DataContext dataContext)
 	{
 		if(!super.isAvailable(dataContext))

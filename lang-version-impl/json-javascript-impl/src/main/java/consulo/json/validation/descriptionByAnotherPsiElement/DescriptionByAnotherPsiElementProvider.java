@@ -18,7 +18,7 @@ package consulo.json.validation.descriptionByAnotherPsiElement;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredDispatchThread;
+import consulo.ui.RequiredUIAccess;
 import consulo.annotations.RequiredReadAction;
 import consulo.json.validation.descriptor.JsonObjectDescriptor;
 import com.intellij.openapi.extensions.ExtensionPointName;
@@ -47,7 +47,7 @@ public interface DescriptionByAnotherPsiElementProvider<T extends PsiElement>
 	@RequiredReadAction
 	T getPsiElementById(@Nonnull String id, @Nonnull Project project);
 
-	@RequiredDispatchThread
+	@RequiredUIAccess
 	@Nullable
 	T chooseElement(@Nonnull Project project);
 
