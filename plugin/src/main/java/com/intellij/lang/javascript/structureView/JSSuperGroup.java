@@ -23,11 +23,13 @@ import java.util.List;
 import javax.annotation.Nullable;
 import javax.swing.Icon;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.treeView.smartTree.Group;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.IconLoader;
+import consulo.ui.image.Image;
 
 /**
  * @author Maxim.Mossienko
@@ -36,7 +38,6 @@ public class JSSuperGroup implements Group, ItemPresentation
 {
 	private final String myName;
 	private final List<TreeElement> myChildren;
-	private static final Icon myIcon = IconLoader.getIcon("/general/inheritedMethod.png");
 
 	public JSSuperGroup(final String name)
 	{
@@ -71,9 +72,9 @@ public class JSSuperGroup implements Group, ItemPresentation
 
 	@Override
 	@Nullable
-	public Icon getIcon(final boolean open)
+	public Image getIcon()
 	{
-		return myIcon;
+		return AllIcons.General.InheritedMethod;
 	}
 
 	@Nullable

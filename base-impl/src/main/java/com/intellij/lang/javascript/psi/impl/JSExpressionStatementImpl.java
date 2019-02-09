@@ -17,21 +17,19 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import javax.annotation.Nonnull;
-import javax.swing.Icon;
 
-import consulo.awt.TargetAWT;
-import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSExpressionStatement;
 import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import consulo.ide.IconDescriptorUpdaters;
+import consulo.ui.image.Image;
 
 /**
  * Created by IntelliJ IDEA.
@@ -100,15 +98,10 @@ public class JSExpressionStatementImpl extends JSStatementImpl implements JSExpr
 				return "";
 			}
 
-			public TextAttributesKey getTextAttributesKey()
-			{
-				return null;
-			}
-
 			@Override
-			public Icon getIcon(boolean open)
+			public Image getIcon()
 			{
-				return TargetAWT.to(IconDescriptorUpdaters.getIcon(JSExpressionStatementImpl.this, 0));
+				return IconDescriptorUpdaters.getIcon(JSExpressionStatementImpl.this, 0);
 			}
 		};
 

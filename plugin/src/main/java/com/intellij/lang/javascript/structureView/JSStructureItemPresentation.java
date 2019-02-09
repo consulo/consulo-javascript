@@ -16,11 +16,6 @@
 
 package com.intellij.lang.javascript.structureView;
 
-import javax.swing.Icon;
-
-import consulo.annotations.RequiredReadAction;
-import consulo.awt.TargetAWT;
-import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSAssignmentExpression;
 import com.intellij.lang.javascript.psi.JSDefinitionExpression;
@@ -34,6 +29,9 @@ import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
+import consulo.annotations.RequiredReadAction;
+import consulo.ide.IconDescriptorUpdaters;
+import consulo.ui.image.Image;
 
 /**
  * @author Maxim.Mossienko
@@ -152,13 +150,13 @@ class JSStructureItemPresentation extends JSStructureViewElement.JSStructureItem
 
 	@Override
 	@RequiredReadAction
-	public Icon getIcon(boolean open)
+	public Image getIcon()
 	{
 		final PsiElement psiElement = this.element.getRealElement();
 		if(!psiElement.isValid())
 		{
 			return null;
 		}
-		return TargetAWT.to(IconDescriptorUpdaters.getIcon(psiElement, 0));
+		return IconDescriptorUpdaters.getIcon(psiElement, 0);
 	}
 }

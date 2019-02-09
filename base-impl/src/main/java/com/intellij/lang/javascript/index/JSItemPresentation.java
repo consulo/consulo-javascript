@@ -16,12 +16,8 @@
 
 package com.intellij.lang.javascript.index;
 
-import javax.swing.Icon;
-
 import javax.annotation.Nullable;
-import consulo.ui.RequiredUIAccess;
-import consulo.awt.TargetAWT;
-import consulo.ide.IconDescriptorUpdaters;
+
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSNamedElement;
@@ -31,6 +27,9 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import consulo.ide.IconDescriptorUpdaters;
+import consulo.ui.RequiredUIAccess;
+import consulo.ui.image.Image;
 
 /**
  * @author Maxim.Mossienko
@@ -99,8 +98,8 @@ public class JSItemPresentation implements ItemPresentation
 	@Override
 	@Nullable
 	@RequiredUIAccess
-	public Icon getIcon(boolean open)
+	public Image getIcon()
 	{
-		return TargetAWT.to(IconDescriptorUpdaters.getIcon(myElement, Iconable.ICON_FLAG_VISIBILITY));
+		return IconDescriptorUpdaters.getIcon(myElement, Iconable.ICON_FLAG_VISIBILITY);
 	}
 }
