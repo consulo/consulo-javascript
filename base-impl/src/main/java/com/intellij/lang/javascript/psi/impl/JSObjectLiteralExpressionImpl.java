@@ -17,7 +17,6 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import javax.annotation.Nonnull;
-import javax.swing.Icon;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
@@ -30,6 +29,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.tree.TokenSet;
+import consulo.ui.image.Image;
 
 /**
  * Created by IntelliJ IDEA.
@@ -72,7 +72,7 @@ public class JSObjectLiteralExpressionImpl extends JSExpressionImpl implements J
 		}
 	}
 
-	public Icon getIcon(int flags)
+	public Image getIcon(int flags)
 	{
 		return AllIcons.Nodes.Class;
 	}

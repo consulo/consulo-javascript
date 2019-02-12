@@ -17,9 +17,8 @@
 package com.intellij.lang.javascript.findUsages;
 
 import javax.annotation.Nonnull;
-import javax.swing.Icon;
-
 import javax.annotation.Nullable;
+
 import com.intellij.lang.javascript.psi.JSNamedElement;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.actionSystem.DataSink;
@@ -43,6 +42,7 @@ import com.intellij.usages.impl.FileStructureGroupRuleProvider;
 import com.intellij.usages.rules.PsiElementUsage;
 import com.intellij.usages.rules.UsageGroupingRule;
 import consulo.javascript.lang.JavaScriptLanguage;
+import consulo.ui.image.Image;
 
 /**
  * @author Maxim.Mossienko
@@ -95,9 +95,9 @@ abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> impleme
 	{
 		private SmartPsiElementPointer myElementPointer;
 		private String myName;
-		private Icon myIcon;
+		private Image myIcon;
 
-		PsiNamedElementUsageGroupBase(@Nonnull T element, Icon icon)
+		PsiNamedElementUsageGroupBase(@Nonnull T element, Image icon)
 		{
 			myIcon = icon;
 
@@ -110,7 +110,7 @@ abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> impleme
 		}
 
 		@Override
-		public Icon getIcon(boolean isOpen)
+		public Image getIcon()
 		{
 			return myIcon;
 		}

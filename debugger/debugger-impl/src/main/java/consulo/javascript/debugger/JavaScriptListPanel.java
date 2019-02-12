@@ -22,20 +22,19 @@ import java.awt.event.MouseEvent;
 import java.util.Comparator;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
-import javax.annotation.Nullable;
 import com.intellij.ide.actions.OpenFileAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.FileColorManager;
-import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.SortedListModel;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
-import consulo.awt.TargetAWT;
 
 /**
  * @author VISTALL
@@ -69,22 +68,22 @@ public abstract class JavaScriptListPanel<T> extends JPanel
 
 	private void init()
 	{
-		final JBList jbList = new JBList(myModel);
-		jbList.setCellRenderer(new ListCellRendererWrapper<T>()
+		final JBList<T> jbList = new JBList<>(myModel);
+		jbList.setCellRenderer(new ColoredListCellRenderer<T>()
 		{
 			@Override
-			public void customize(JList list, T value, int index, boolean selected, boolean hasFocus)
+			protected void customizeCellRenderer(@Nonnull JList<? extends T> jList, T t, int i, boolean b, boolean b1)
 			{
-				VirtualFile virtualFile = toVirtualFile(value, false);
+				VirtualFile virtualFile = toVirtualFile(t, false);
 				if(virtualFile == null)
 				{
-					setText("<invalid>");
+					append("<invalid>");
 				}
 				else
 				{
 					setBackground(FileColorManager.getInstance(myProject).getFileColor(virtualFile));
-					setText(virtualFile.getPath());
-					setIcon(TargetAWT.to(virtualFile.getFileType().getIcon()));
+					append(virtualFile.getPath());
+					setIcon(virtualFile.getFileType().getIcon());
 				}
 			}
 		});
@@ -95,7 +94,7 @@ public abstract class JavaScriptListPanel<T> extends JPanel
 			{
 				if(e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1)
 				{
-					T selectedValue = (T) jbList.getSelectedValue();
+					T selectedValue = jbList.getSelectedValue();
 					if(selectedValue == null)
 					{
 						return;

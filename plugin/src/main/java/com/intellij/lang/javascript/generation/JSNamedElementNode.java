@@ -16,14 +16,10 @@
 
 package com.intellij.lang.javascript.generation;
 
-import javax.swing.Icon;
-
 import com.intellij.codeInsight.generation.ClassMember;
 import com.intellij.codeInsight.generation.MemberChooserObject;
 import com.intellij.codeInsight.generation.PsiElementMemberChooserObject;
 import com.intellij.icons.AllIcons;
-import consulo.awt.TargetAWT;
-import consulo.ide.IconDescriptorUpdaters;
 import com.intellij.javascript.JSParameterInfoHandler;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSNamedElement;
@@ -32,29 +28,31 @@ import com.intellij.lang.javascript.psi.JSParameterList;
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.psi.PsiElement;
-import com.intellij.ui.LayeredIcon;
-import com.intellij.ui.RowIcon;
+import consulo.awt.TargetAWT;
+import consulo.ide.IconDescriptorUpdaters;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jul 17, 2008
- *         Time: 8:55:57 PM
+ * Date: Jul 17, 2008
+ * Time: 8:55:57 PM
  */
 public class JSNamedElementNode extends PsiElementMemberChooserObject implements ClassMember
 {
 	public JSNamedElementNode(JSNamedElement node)
 	{
-		super(node, buildTextFor(node), buildIcon(node));
+		super(node, buildTextFor(node), TargetAWT.to(buildIcon(node)));
 	}
 
-	private static Icon buildIcon(final JSNamedElement node)
+	private static Image buildIcon(final JSNamedElement node)
 	{
-		Icon icon = TargetAWT.to(IconDescriptorUpdaters.getIcon(node, 0));
+		Image icon = IconDescriptorUpdaters.getIcon(node, 0);
 
 		if(node instanceof JSFunction)
 		{
 			final JSFunction function = (JSFunction) node;
-			final Icon accessIcon;
+			final Image accessIcon;
 
 			if(function.isGetProperty())
 			{
@@ -71,12 +69,7 @@ public class JSNamedElementNode extends PsiElementMemberChooserObject implements
 
 			if(accessIcon != null)
 			{
-				final LayeredIcon layeredIcon = new LayeredIcon(1);
-				layeredIcon.setIcon(accessIcon, 0, 1, 3);
-				RowIcon rowIcon = new RowIcon(2);
-				rowIcon.setIcon(layeredIcon, 1);
-				rowIcon.setIcon(icon, 0);
-				icon = rowIcon;
+				icon = ImageEffects.appendRight(icon, accessIcon);
 			}
 		}
 		return icon;

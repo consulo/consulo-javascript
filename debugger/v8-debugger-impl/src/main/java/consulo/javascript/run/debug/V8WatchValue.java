@@ -17,11 +17,11 @@
 package consulo.javascript.run.debug;
 
 import javax.annotation.Nonnull;
-import javax.swing.Icon;
 
 import org.chromium.sdk.JsEvaluateContext;
 import org.chromium.sdk.JsValue;
 import com.intellij.icons.AllIcons;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -39,7 +39,7 @@ public class V8WatchValue extends V8BaseVariableValue
 
 	@Nonnull
 	@Override
-	protected Icon getIconForValue(JsValue value, JsValue.Type valueType)
+	protected Image getIconForValue(JsValue value, JsValue.Type valueType)
 	{
 		return AllIcons.Debugger.Watch;
 	}

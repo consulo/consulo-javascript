@@ -21,14 +21,11 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nullable;
-import javax.swing.Icon;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.treeView.smartTree.Group;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.util.IconLoader;
 import consulo.ui.image.Image;
 
 /**
@@ -75,12 +72,6 @@ public class JSSuperGroup implements Group, ItemPresentation
 	public Image getIcon()
 	{
 		return AllIcons.General.InheritedMethod;
-	}
-
-	@Nullable
-	public TextAttributesKey getTextAttributesKey()
-	{
-		return null;
 	}
 
 	void addChild(TreeElement element)

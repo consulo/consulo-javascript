@@ -19,15 +19,13 @@ package consulo.javascript.run.debug;
 import java.util.Collection;
 
 import javax.annotation.Nonnull;
-import javax.swing.Icon;
+import javax.annotation.Nullable;
 
 import org.chromium.sdk.JsArray;
 import org.chromium.sdk.JsEvaluateContext;
 import org.chromium.sdk.JsObject;
 import org.chromium.sdk.JsValue;
 import org.chromium.sdk.JsVariable;
-
-import javax.annotation.Nullable;
 import com.intellij.icons.AllIcons;
 import com.intellij.xdebugger.frame.XCompositeNode;
 import com.intellij.xdebugger.frame.XNamedValue;
@@ -35,6 +33,7 @@ import com.intellij.xdebugger.frame.XValueChildrenList;
 import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.XValuePlace;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
@@ -80,7 +79,7 @@ public abstract class V8BaseVariableValue extends XNamedValue
 	}
 
 	@Nonnull
-	protected Icon getIconForValue(JsValue value, JsValue.Type valueType)
+	protected Image getIconForValue(JsValue value, JsValue.Type valueType)
 	{
 		if(value instanceof JsArray)
 		{

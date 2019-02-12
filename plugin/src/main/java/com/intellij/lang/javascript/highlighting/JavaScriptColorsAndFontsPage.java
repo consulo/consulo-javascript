@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
-import javax.swing.Icon;
 
 import org.jetbrains.annotations.NonNls;
 import com.intellij.lang.javascript.JavaScriptBundle;
@@ -92,12 +91,6 @@ public class JavaScriptColorsAndFontsPage implements ColorSettingsPage
 	public String getDisplayName()
 	{
 		return "JavaScript";
-	}
-
-	@Override
-	public Icon getIcon()
-	{
-		return null;
 	}
 
 	@Override

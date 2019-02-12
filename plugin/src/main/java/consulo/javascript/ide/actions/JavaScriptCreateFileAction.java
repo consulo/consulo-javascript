@@ -26,7 +26,7 @@ public class JavaScriptCreateFileAction extends CreateFileFromTemplateAction
 {
 	public JavaScriptCreateFileAction()
 	{
-		super(null, null, TargetAWT.to(JavaScriptFileType.INSTANCE.getIcon()));
+		super(null, null, JavaScriptFileType.INSTANCE.getIcon());
 	}
 
 	@Override
