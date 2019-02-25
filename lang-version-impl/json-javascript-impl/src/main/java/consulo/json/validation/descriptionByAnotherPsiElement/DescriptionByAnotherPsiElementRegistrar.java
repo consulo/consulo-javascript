@@ -16,35 +16,28 @@
 
 package consulo.json.validation.descriptionByAnotherPsiElement;
 
-import javax.annotation.Nonnull;
-import javax.inject.Singleton;
+import java.util.function.Consumer;
 
+import javax.annotation.Nonnull;
+
+import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.NotNullFunction;
 import consulo.editor.notifications.EditorNotificationProvider;
-import consulo.editor.notifications.EditorNotificationProviders;
+import consulo.extensions.ExtensionExtender;
 
 /**
  * @author VISTALL
  * @since 12.11.2015
  */
-@Singleton
-public class DescriptionByAnotherPsiElementRegistrar
+@SuppressWarnings("unchecked")
+public class DescriptionByAnotherPsiElementRegistrar implements ExtensionExtender<EditorNotificationProvider>
 {
-	DescriptionByAnotherPsiElementRegistrar()
+	@Override
+	public void extend(@Nonnull ComponentManager componentManager, @Nonnull Consumer<EditorNotificationProvider> consumer)
 	{
-		for(final DescriptionByAnotherPsiElementProvider<?> provider : DescriptionByAnotherPsiElementProvider.EP_NAME.getExtensions())
+		for(final DescriptionByAnotherPsiElementProvider<?> provider : DescriptionByAnotherPsiElementProvider.EP_NAME.getExtensionList())
 		{
-			EditorNotificationProviders.registerProvider(new NotNullFunction<Project, EditorNotificationProvider<?>>()
-			{
-				@Nonnull
-				@Override
-				public EditorNotificationProvider<?> fun(Project project)
-				{
-					//noinspection unchecked
-					return new DescriptionByAnotherPsiElementEditorNotification(project, provider);
-				}
-			});
+			consumer.accept(new DescriptionByAnotherPsiElementEditorNotification((Project) componentManager, provider));
 		}
 	}
 }

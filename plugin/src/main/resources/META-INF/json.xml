@@ -41,7 +41,7 @@
 						 enabledByDefault="true"
 						 implementationClass="consulo.json.validation.inspections.PropertyValidationInspection"/>
 
-		<applicationService serviceImplementation="consulo.json.validation.descriptionByAnotherPsiElement.DescriptionByAnotherPsiElementRegistrar" lazy="false"/>
+		<extensionExtender key="com.intellij.editorNotificationProvider" implementationClass="consulo.json.validation.descriptionByAnotherPsiElement.DescriptionByAnotherPsiElementRegistrar" />
 	</extensions>
 
 	<extensions defaultExtensionNs="consulo.javascript">
