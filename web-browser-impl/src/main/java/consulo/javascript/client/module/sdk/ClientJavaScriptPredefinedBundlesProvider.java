@@ -1,14 +1,6 @@
 package consulo.javascript.client.module.sdk;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
-import com.intellij.ide.plugins.cl.PluginClassLoader;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkModificator;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -16,6 +8,11 @@ import com.intellij.openapi.vfs.VirtualFile;
 import consulo.bundle.PredefinedBundlesProvider;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
+
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -35,12 +32,7 @@ public class ClientJavaScriptPredefinedBundlesProvider extends PredefinedBundles
 	@Override
 	public void createBundles(@Nonnull Context context)
 	{
-		PluginClassLoader classLoader = (PluginClassLoader) getClass().getClassLoader();
-		IdeaPluginDescriptor plugin = PluginManager.getPlugin(classLoader.getPluginId());
-		assert plugin != null;
-		File path = plugin.getPath();
-
-		File sdkDir = new File(path, "sdk");
+		File sdkDir = new File(PluginManager.getPluginPath(ClientJavaScriptPredefinedBundlesProvider.class), "sdk");
 		if(!sdkDir.exists())
 		{
 			return;
