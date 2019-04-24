@@ -41,7 +41,7 @@ public class EcmaScriptFileType extends LanguageFileType implements JavaScriptFi
 
 	@Nonnull
 	@Override
-	public String getName()
+	public String getId()
 	{
 		return "ECMASCRIPT";
 	}
