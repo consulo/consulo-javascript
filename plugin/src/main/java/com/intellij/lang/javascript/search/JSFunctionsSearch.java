@@ -79,7 +79,7 @@ public abstract class JSFunctionsSearch implements QueryExecutor<JSFunction, JSF
 	}
 
 	@Override
-	public boolean execute(final SearchParameters queryParameters, final Processor<JSFunction> consumer)
+	public boolean execute(final SearchParameters queryParameters, final Processor<? super JSFunction> consumer)
 	{
 		final JSFunction baseFunction = queryParameters.getBaseFunction();
 		PsiElement clazz = JSResolveUtil.findParent(baseFunction);

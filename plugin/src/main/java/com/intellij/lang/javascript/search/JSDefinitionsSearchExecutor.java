@@ -16,8 +16,6 @@
 
 package com.intellij.lang.javascript.search;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSDefinitionExpression;
@@ -34,6 +32,8 @@ import com.intellij.util.Processor;
 import com.intellij.util.QueryExecutor;
 import consulo.javascript.lang.JavaScriptLanguage;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Maxim.Mossienko
  *         Date: Apr 28, 2008
@@ -42,7 +42,7 @@ import consulo.javascript.lang.JavaScriptLanguage;
 class JSDefinitionsSearchExecutor implements QueryExecutor<PsiElement, DefinitionsScopedSearch.SearchParameters>
 {
 	@Override
-	public boolean execute(@Nonnull final DefinitionsScopedSearch.SearchParameters parameters, @Nonnull final Processor<PsiElement> consumer)
+	public boolean execute(@Nonnull final DefinitionsScopedSearch.SearchParameters parameters, @Nonnull final Processor<? super PsiElement> consumer)
 	{
 		final PsiElement sourceElement = parameters.getElement();
 		if(sourceElement instanceof PsiNamedElement && sourceElement.getLanguage().isKindOf(JavaScriptLanguage.INSTANCE))

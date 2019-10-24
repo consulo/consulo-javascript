@@ -38,7 +38,7 @@ import consulo.javascript.lang.JavaScriptLanguage;
 public class JSReferencesSearchExecutor implements QueryExecutor<PsiReference, ReferencesSearch.SearchParameters>
 {
 	@Override
-	public boolean execute(final ReferencesSearch.SearchParameters queryParameters, final Processor<PsiReference> consumer)
+	public boolean execute(final ReferencesSearch.SearchParameters queryParameters, final Processor<? super PsiReference> consumer)
 	{
 		final PsiElement sourceElement = queryParameters.getElementToSearch();
 

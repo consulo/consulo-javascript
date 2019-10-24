@@ -16,12 +16,6 @@
 
 package com.intellij.lang.javascript.search;
 
-import gnu.trove.THashSet;
-
-import java.util.Collection;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSReferenceList;
 import com.intellij.openapi.extensions.Extensions;
@@ -30,12 +24,13 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.stubs.StubIndexKey;
-import com.intellij.util.CommonProcessors;
-import com.intellij.util.Processor;
-import com.intellij.util.Query;
-import com.intellij.util.QueryExecutor;
-import com.intellij.util.QueryFactory;
+import com.intellij.util.*;
 import consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
+import gnu.trove.THashSet;
+
+import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Set;
 
 public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSearch.SearchParameters>
 {
@@ -109,13 +104,13 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 			}
 
 			@Override
-			public boolean execute(@Nonnull final SearchParameters queryParameters, @Nonnull Processor<JSClass> consumer)
+			public boolean execute(@Nonnull final SearchParameters queryParameters, @Nonnull Processor<? super JSClass> consumer)
 			{
 				final THashSet<JSClass> visited = new THashSet<JSClass>();         // no abstract classes in ActionScript !
 
 				if(queryParameters.isCheckDeepInheritance())
 				{
-					final Processor<JSClass> consumerCopy = consumer;
+					final Processor<? super JSClass> consumerCopy = consumer;
 					consumer = new Processor<JSClass>()
 					{
 						@Override
@@ -127,7 +122,7 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 					};
 				}
 
-				final Processor<JSClass> consumerToUse = consumer;
+				final Processor<? super JSClass> consumerToUse = consumer;
 				final boolean b = processDirectInheritors(queryParameters.getTargetClass(), consumerToUse, queryParameters.isCheckDeepInheritance(), visited,
 						queryParameters.getScope());
 				if(b)
@@ -175,14 +170,13 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 	}
 
 	@Override
-	public boolean execute(@Nonnull final SearchParameters queryParameters, @Nonnull final Processor<JSClass> consumer)
+	public boolean execute(@Nonnull final SearchParameters queryParameters, @Nonnull final Processor<? super JSClass> consumer)
 	{
 		return processDirectInheritors(queryParameters.getTargetClass(), consumer, queryParameters.isCheckDeepInheritance(), null,
 				queryParameters.getScope());
 	}
 
-	protected boolean processDirectInheritors(final JSClass superClass, final Processor<JSClass> consumer, final boolean checkDeep,
-			Set<JSClass> processed, final GlobalSearchScope scope)
+	protected boolean processDirectInheritors(final JSClass superClass, final Processor<? super JSClass> consumer, final boolean checkDeep, Set<JSClass> processed, final GlobalSearchScope scope)
 	{
 		if(processed != null)
 		{
