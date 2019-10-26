@@ -16,15 +16,7 @@
 
 package com.intellij.lang.javascript.formatter.blocks;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nullable;
-import com.intellij.formatting.Alignment;
-import com.intellij.formatting.Block;
-import com.intellij.formatting.Indent;
-import com.intellij.formatting.Wrap;
-import com.intellij.formatting.WrapType;
+import com.intellij.formatting.*;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSNodeVisitor;
@@ -41,6 +33,10 @@ import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.tree.IElementType;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author ven
@@ -369,22 +365,22 @@ public class SubBlockVisitor extends JSNodeVisitor
 		{
 			if(child == node.findChildByType(JSTokenTypes.LPAR) && mySettings.PARENTHESES_EXPRESSION_LPAREN_WRAP)
 			{
-				wrapType = Wrap.NORMAL;
+				wrapType = WrapType.NORMAL;
 			}
 			else if(child == node.findChildByType(JSTokenTypes.RPAR) && mySettings.PARENTHESES_EXPRESSION_RPAREN_WRAP)
 			{
-				wrapType = Wrap.ALWAYS;
+				wrapType = WrapType.ALWAYS;
 			}
 		}
 		else if(node.getElementType() == JSElementTypes.ARRAY_LITERAL_EXPRESSION)
 		{
 			if(child == node.findChildByType(JSTokenTypes.LBRACE) && mySettings.ARRAY_INITIALIZER_LBRACE_ON_NEXT_LINE)
 			{
-				wrapType = Wrap.NORMAL;
+				wrapType = WrapType.NORMAL;
 			}
 			else if(child == node.findChildByType(JSTokenTypes.RPAR) && mySettings.ARRAY_INITIALIZER_RBRACE_ON_NEXT_LINE)
 			{
-				wrapType = Wrap.ALWAYS;
+				wrapType = WrapType.ALWAYS;
 			}
 		}
 		else if(node.getElementType() == JSElementTypes.CONDITIONAL_EXPRESSION)
@@ -400,11 +396,11 @@ public class SubBlockVisitor extends JSNodeVisitor
 		{
 			if(child == node.findChildByType(JSTokenTypes.LPAR) && mySettings.CALL_PARAMETERS_LPAREN_ON_NEXT_LINE)
 			{
-				wrapType = Wrap.NORMAL;
+				wrapType = WrapType.NORMAL;
 			}
 			else if(child == node.findChildByType(JSTokenTypes.RPAR) && mySettings.CALL_PARAMETERS_RPAREN_ON_NEXT_LINE)
 			{
-				wrapType = Wrap.ALWAYS;
+				wrapType = WrapType.ALWAYS;
 			}
 		}
 		else if(node.getElementType() == JSElementTypes.PARAMETER_LIST)
