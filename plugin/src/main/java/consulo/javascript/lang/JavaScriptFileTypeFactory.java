@@ -16,10 +16,11 @@
 
 package consulo.javascript.lang;
 
-import javax.annotation.Nonnull;
 import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.openapi.fileTypes.FileTypeConsumer;
 import com.intellij.openapi.fileTypes.FileTypeFactory;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,5 +32,6 @@ public class JavaScriptFileTypeFactory extends FileTypeFactory
 	public void createFileTypes(@Nonnull FileTypeConsumer consumer)
 	{
 		consumer.consume(JavaScriptFileType.INSTANCE);
+		consumer.consume(JavaScriptFileType.INSTANCE, "jsx");
 	}
 }
