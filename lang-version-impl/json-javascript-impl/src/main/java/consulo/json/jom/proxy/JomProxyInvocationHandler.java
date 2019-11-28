@@ -6,7 +6,7 @@ import java.lang.reflect.Proxy;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.json.jom.JomElement;
 import consulo.json.jom.JomUtil;
 import com.intellij.lang.javascript.psi.JSObjectLiteralExpression;

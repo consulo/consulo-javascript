@@ -21,7 +21,7 @@ import java.io.IOException;
 
 import javax.annotation.Nonnull;
 
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.stubs.JSFunctionStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSFunctionStubImpl;

@@ -35,7 +35,7 @@ import com.intellij.psi.ResolveResult;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.ide.hightlight.JavaScriptSyntaxHighlightKeys;
 import consulo.javascript.lang.JavaScriptFeature;
 import consulo.javascript.lang.JavaScriptTokenSets;

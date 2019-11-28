@@ -16,12 +16,13 @@
 
 package consulo.json.validation.descriptor;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
-import consulo.annotations.Exported;
+import consulo.annotation.UsedInPlugin;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -78,7 +79,7 @@ public class JsonPropertyDescriptor
 		return myName;
 	}
 
-	@Exported
+	@UsedInPlugin
 	public void setNavigationElement(@Nonnull PsiElement element)
 	{
 		myNavigationElement = SmartPointerManager.getInstance(element.getProject()).createSmartPsiElementPointer(element);

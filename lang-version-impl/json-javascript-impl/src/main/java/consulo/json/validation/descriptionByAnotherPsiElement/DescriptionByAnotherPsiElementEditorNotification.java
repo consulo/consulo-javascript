@@ -16,9 +16,6 @@
 
 package consulo.json.validation.descriptionByAnotherPsiElement;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
@@ -32,12 +29,15 @@ import com.intellij.psi.impl.PsiModificationTrackerImpl;
 import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
-import consulo.ui.RequiredUIAccess;
 import consulo.editor.notifications.EditorNotificationProvider;
 import consulo.json.JsonFileType;
 import consulo.json.jom.JomElement;
 import consulo.json.jom.JomFileElement;
 import consulo.json.jom.JomManager;
+import consulo.ui.annotation.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

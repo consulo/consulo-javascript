@@ -8,7 +8,7 @@ import consulo.javascript.psi.JSSimpleLiteralExpression;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.json.jom.proxy.JomBadValueExpressionException;
 import consulo.json.jom.proxy.JomValueConverter;

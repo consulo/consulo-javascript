@@ -19,7 +19,7 @@ package com.intellij.lang.javascript.psi.util;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.codeInsight.completion.PrioritizedLookupElement;
 import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler;

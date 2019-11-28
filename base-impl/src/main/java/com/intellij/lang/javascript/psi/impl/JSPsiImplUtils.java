@@ -58,7 +58,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.util.Consumer;
 import com.intellij.util.IncorrectOperationException;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.psi.JavaScriptTypeElement;
 import consulo.javascript.lang.psi.impl.elementType.BaseJavaScriptElementType;
 import consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;

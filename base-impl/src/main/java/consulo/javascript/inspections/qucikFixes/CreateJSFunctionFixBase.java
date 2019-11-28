@@ -28,7 +28,7 @@ import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptFeature;
 
 /**

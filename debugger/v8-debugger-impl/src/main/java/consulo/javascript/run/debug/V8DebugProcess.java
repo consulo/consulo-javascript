@@ -16,20 +16,6 @@
 
 package consulo.javascript.run.debug;
 
-import java.net.InetSocketAddress;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.chromium.sdk.Breakpoint;
-import org.chromium.sdk.DebugContext;
-import org.chromium.sdk.JavascriptVm;
-import org.chromium.sdk.JavascriptVmFactory;
-import org.chromium.sdk.Script;
-import org.chromium.sdk.StandaloneVm;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.process.ProcessHandler;
@@ -41,22 +27,25 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.content.Content;
 import com.intellij.util.ui.UIUtil;
-import com.intellij.xdebugger.XDebugProcess;
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.XDebuggerBundle;
-import com.intellij.xdebugger.XDebuggerManager;
-import com.intellij.xdebugger.XExpression;
-import com.intellij.xdebugger.XSourcePosition;
+import com.intellij.xdebugger.*;
 import com.intellij.xdebugger.breakpoints.XBreakpointHandler;
 import com.intellij.xdebugger.breakpoints.XBreakpointManager;
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.ui.XDebugTabLayouter;
-import consulo.annotations.Exported;
+import consulo.annotation.UsedInPlugin;
 import consulo.javascript.debugger.JavaScriptEditorsProvider;
 import consulo.javascript.debugger.JavaScriptLineBreakpointType;
 import consulo.javascript.debugger.JavaScriptListPanel;
+import org.chromium.sdk.*;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.net.InetSocketAddress;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -91,7 +80,7 @@ public class V8DebugProcess extends XDebugProcess
 		myVm = JavascriptVmFactory.getInstance().createStandalone(new InetSocketAddress("localhost", port), null);
 	}
 
-	@Exported
+	@UsedInPlugin
 	public void attach() throws Exception
 	{
 		myVm.attach(new V8DebugEventListener(this));

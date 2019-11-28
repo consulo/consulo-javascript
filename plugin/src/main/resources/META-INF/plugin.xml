@@ -14,7 +14,7 @@
   - limitations under the License.
   -->
 
-<idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
+<consulo-plugin>
 	<id>consulo.javascript</id>
 	<name>JavaScript</name>
 	<version>SNAPSHOT</version>
@@ -24,12 +24,12 @@
 	<depends>com.intellij.xml</depends>
 	<depends config-file="regexp.xml" optional="true">com.intellij.regexp</depends>
 
-	<xi:include href="/META-INF/Intentions.xml" xpointer="xpointer(/idea-plugin/*)"/>
-	<xi:include href="/META-INF/json.xml" xpointer="xpointer(/idea-plugin/*)"/>
-	<xi:include href="/META-INF/ecma4.xml" xpointer="xpointer(/idea-plugin/*)"/>
-	<xi:include href="/META-INF/ecma6.xml" xpointer="xpointer(/idea-plugin/*)"/>
-	<xi:include href="/META-INF/actionscript.xml" xpointer="xpointer(/idea-plugin/*)"/>
-	<xi:include href="/META-INF/typescript.xml" xpointer="xpointer(/idea-plugin/*)"/>
+	<import path="/META-INF/Intentions.xml"/>
+	<import path="/META-INF/json.xml"/>
+	<import path="/META-INF/ecma4.xml"/>
+	<import path="/META-INF/ecma6.xml"/>
+	<import path="/META-INF/actionscript.xml"/>
+	<import path="/META-INF/typescript.xml"/>
 
 	<actions>
 		<action id="JavaScript.File" class="consulo.javascript.ide.actions.JavaScriptCreateFileAction">
@@ -200,4 +200,4 @@
 			<add-to-group anchor="last" group-id="GenerateGroup"/>
 		</action>
 	</actions>
-</idea-plugin>
+</consulo-plugin>

@@ -16,14 +16,15 @@
 
 package consulo.json.validation.descriptionByAnotherPsiElement;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import consulo.ui.RequiredUIAccess;
-import consulo.annotations.RequiredReadAction;
-import consulo.json.validation.descriptor.JsonObjectDescriptor;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.json.validation.descriptor.JsonObjectDescriptor;
+import consulo.ui.annotation.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

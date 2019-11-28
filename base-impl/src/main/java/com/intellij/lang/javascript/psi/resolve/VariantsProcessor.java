@@ -35,7 +35,7 @@ import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptFeature;
 
 /**

@@ -1,15 +1,15 @@
 package consulo.javascript.client.module.extension;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.swing.JComponent;
-
 import com.intellij.openapi.projectRoots.Sdk;
-import consulo.ui.RequiredUIAccess;
 import consulo.javascript.module.extension.JavaScriptMutableModuleExtension;
 import consulo.lang.LanguageVersion;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.roots.ModuleRootLayer;
+import consulo.ui.annotation.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.swing.*;
 
 /**
  * @author VISTALL

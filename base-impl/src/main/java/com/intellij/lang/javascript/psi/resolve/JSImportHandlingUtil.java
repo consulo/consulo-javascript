@@ -16,14 +16,6 @@
 
 package com.intellij.lang.javascript.psi.resolve;
 
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
-
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.flex.FlexImportSupport;
 import com.intellij.lang.javascript.flex.JSResolveHelper;
@@ -47,8 +39,15 @@ import com.intellij.psi.util.PsiModificationTracker;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.Processor;
-import com.intellij.util.containers.ConcurrentHashMap;
 import com.intellij.xml.XmlElementDescriptor;
+import gnu.trove.THashMap;
+import gnu.trove.THashSet;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Maxim.Mossienko

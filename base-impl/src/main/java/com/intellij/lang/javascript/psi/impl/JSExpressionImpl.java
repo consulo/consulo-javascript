@@ -17,7 +17,7 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSExpression;

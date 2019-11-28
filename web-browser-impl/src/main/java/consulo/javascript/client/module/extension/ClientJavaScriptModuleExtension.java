@@ -10,7 +10,7 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.projectRoots.SdkType;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.client.module.sdk.ClientJavaScriptSdkType;
 import consulo.javascript.lang.StandardJavaScriptVersions;
 import consulo.javascript.module.extension.JavaScriptModuleExtension;

@@ -4,7 +4,7 @@ import java.lang.reflect.Type;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.json.jom.proxy.JomBadValueExpressionException;
 import consulo.json.jom.proxy.JomValueConverter;
 import com.intellij.lang.javascript.JSTokenTypes;

@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.jetbrains.annotations.NonNls;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.documentation.CodeDocumentationProvider;
 import com.intellij.lang.documentation.DocumentationProvider;

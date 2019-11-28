@@ -16,9 +16,6 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import consulo.annotations.RequiredReadAction;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
@@ -31,6 +28,10 @@ import com.intellij.lang.javascript.psi.stubs.JSParameterStub;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.util.IncorrectOperationException;
+import consulo.annotation.access.RequiredReadAction;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by IntelliJ IDEA.

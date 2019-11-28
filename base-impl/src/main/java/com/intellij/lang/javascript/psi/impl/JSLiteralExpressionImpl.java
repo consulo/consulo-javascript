@@ -29,7 +29,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.tree.IElementType;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.javascript.lang.psi.JavaScriptPrimitiveType;
 import consulo.javascript.lang.psi.JavaScriptType;

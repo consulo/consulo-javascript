@@ -18,7 +18,7 @@ package consulo.json.validation;
 
 import javax.annotation.Nullable;
 
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.json.JsonFileType;
 import consulo.json.validation.descriptor.JsonObjectDescriptor;
 import com.intellij.psi.PsiFile;

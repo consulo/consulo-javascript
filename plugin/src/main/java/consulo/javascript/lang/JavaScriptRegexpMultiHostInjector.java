@@ -18,7 +18,7 @@ package consulo.javascript.lang;
 
 import org.intellij.lang.regexp.RegExpLanguage;
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
 import com.intellij.lang.javascript.JSTokenTypes;

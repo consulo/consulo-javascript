@@ -14,8 +14,8 @@
   - limitations under the License.
   -->
 
-<idea-plugin>
+<consulo-plugin>
 	<extensions defaultExtensionNs="com.intellij">
 		<fileTypeFactory implementation="consulo.typescript.TypeScriptFileTypeFactory" />
 	</extensions>
-</idea-plugin>
+</consulo-plugin>

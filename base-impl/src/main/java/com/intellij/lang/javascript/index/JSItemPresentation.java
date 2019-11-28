@@ -16,8 +16,6 @@
 
 package com.intellij.lang.javascript.index;
 
-import javax.annotation.Nullable;
-
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSNamedElement;
@@ -28,8 +26,10 @@ import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import consulo.ide.IconDescriptorUpdaters;
-import consulo.ui.RequiredUIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+
+import javax.annotation.Nullable;
 
 /**
  * @author Maxim.Mossienko

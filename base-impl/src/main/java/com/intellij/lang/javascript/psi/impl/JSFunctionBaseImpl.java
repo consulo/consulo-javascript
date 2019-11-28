@@ -38,7 +38,7 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.javascript.lang.psi.JavaScriptType;

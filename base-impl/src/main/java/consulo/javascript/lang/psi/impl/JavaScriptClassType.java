@@ -19,7 +19,7 @@ package consulo.javascript.lang.psi.impl;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.psi.PsiElement;

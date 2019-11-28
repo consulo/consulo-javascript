@@ -29,7 +29,7 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.json.validation.JsonFileDescriptorProvider;
 import consulo.json.validation.NativeArray;
 import consulo.json.validation.descriptor.JsonObjectDescriptor;

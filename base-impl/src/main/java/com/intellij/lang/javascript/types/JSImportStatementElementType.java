@@ -21,7 +21,7 @@ import java.io.IOException;
 
 import javax.annotation.Nonnull;
 
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSImportStatement;
 import com.intellij.lang.javascript.psi.JSStubElementType;

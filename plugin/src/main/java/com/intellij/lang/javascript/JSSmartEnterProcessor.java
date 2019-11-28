@@ -38,7 +38,7 @@ import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.util.PsiTreeUtil;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 
 /**
  * @author Maxim.Mossienko

@@ -40,7 +40,7 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.javascript.lang.psi.JavaScriptType;
 import consulo.javascript.lang.psi.JavaScriptTypeElement;

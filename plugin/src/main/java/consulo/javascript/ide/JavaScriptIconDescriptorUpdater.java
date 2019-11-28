@@ -25,7 +25,7 @@ import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.BitUtil;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdater;
 import consulo.ui.image.Image;

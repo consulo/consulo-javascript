@@ -49,7 +49,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.json.validation.JsonFileDescriptorProviders;
 import consulo.json.validation.NativeArray;

@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 
 import com.intellij.lang.javascript.psi.JSProperty;
 import com.intellij.psi.PsiReference;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.extensions.CompositeExtensionPointName;
 
 /**

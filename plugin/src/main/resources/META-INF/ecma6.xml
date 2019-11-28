@@ -14,7 +14,7 @@
   - limitations under the License.
   -->
 
-<idea-plugin>
+<consulo-plugin>
 	<extensions defaultExtensionNs="com.intellij">
 		<fileTypeFactory implementation="consulo.javascript.lang.EcmaScriptFileTypeFactory" />
 		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.lang.EcmaScript6JavaScriptVersion" />
@@ -23,4 +23,4 @@
 	<extensions defaultExtensionNs="consulo.javascript">
 		<quickFixFactory key="ECMASCRIPT_6" implementationClass="consulo.javascript.ide.codeInsight.EcmaScript6QuickFixFactory" />
 	</extensions>
-</idea-plugin>
+</consulo-plugin>

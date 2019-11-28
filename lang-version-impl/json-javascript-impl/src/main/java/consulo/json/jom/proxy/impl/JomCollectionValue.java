@@ -6,7 +6,7 @@ import java.util.Collection;
 
 import javax.annotation.Nonnull;
 
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.json.jom.proxy.JomBadValueExpressionException;
 import consulo.json.jom.proxy.JomValueConverter;
 import com.intellij.lang.javascript.psi.JSArrayLiteralExpression;

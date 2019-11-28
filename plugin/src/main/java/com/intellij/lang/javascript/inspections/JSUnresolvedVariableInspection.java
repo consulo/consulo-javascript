@@ -49,7 +49,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.util.PsiTreeUtil;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptFeature;
 
 /**

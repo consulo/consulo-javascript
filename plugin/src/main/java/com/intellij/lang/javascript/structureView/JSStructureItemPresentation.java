@@ -29,7 +29,7 @@ import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
 

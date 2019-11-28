@@ -17,7 +17,7 @@
 package com.intellij.lang.javascript.psi;
 
 import javax.annotation.Nullable;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 

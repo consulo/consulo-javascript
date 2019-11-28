@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.xdebugger.breakpoints.XLineBreakpointTypeResolver;
 
 /**

@@ -99,7 +99,7 @@ import com.intellij.util.SmartList;
 import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.util.text.StringTokenizer;
 import com.intellij.xml.XmlElementDescriptor;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptVersionUtil;
 import consulo.javascript.lang.psi.JavaScriptType;
 import consulo.javascript.lang.psi.JavaScriptTypeElement;

@@ -20,7 +20,7 @@ package consulo.javascript.psi.impl.reference;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import com.intellij.lang.javascript.psi.impl.reference.JSPropertyNameReference;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import com.intellij.lang.javascript.psi.JSProperty;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;

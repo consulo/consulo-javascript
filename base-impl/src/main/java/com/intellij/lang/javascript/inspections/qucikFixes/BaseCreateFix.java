@@ -57,7 +57,7 @@ import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.psi.xml.XmlText;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptFeature;
 import consulo.javascript.lang.JavaScriptVersionUtil;
 import consulo.javascript.lang.psi.JavaScriptType;

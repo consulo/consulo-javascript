@@ -35,7 +35,7 @@ import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILazyParseableElementType;
 import com.intellij.psi.tree.TokenSet;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.javascript.lang.parsing.JavaScriptParser;
 import consulo.javascript.lang.parsing.JavaScriptParsingContext;

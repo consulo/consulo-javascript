@@ -17,7 +17,7 @@
 package consulo.json.validation.descriptionByAnotherPsiElement;
 
 import javax.annotation.Nonnull;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.json.validation.JsonFileDescriptorProvider;
 import consulo.json.validation.descriptor.JsonObjectDescriptor;
 import com.intellij.openapi.util.Pair;

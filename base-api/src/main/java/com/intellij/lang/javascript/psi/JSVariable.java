@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 import com.intellij.lang.javascript.psi.stubs.JSVariableStubBase;
 import com.intellij.psi.StubBasedPsiElement;
 import com.intellij.util.IncorrectOperationException;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.psi.JavaScriptType;
 import consulo.javascript.lang.psi.JavaScriptTypeElement;
 

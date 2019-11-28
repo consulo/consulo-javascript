@@ -1,6 +1,5 @@
 package consulo.javascript.ide.actions;
 
-import javax.annotation.Nullable;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.actions.CreateFileFromTemplateAction;
 import com.intellij.ide.actions.CreateFileFromTemplateDialog;
@@ -13,10 +12,12 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
-import consulo.ui.RequiredUIAccess;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.awt.TargetAWT;
 import consulo.javascript.module.extension.JavaScriptModuleExtension;
+import consulo.ui.annotation.RequiredUIAccess;
+
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

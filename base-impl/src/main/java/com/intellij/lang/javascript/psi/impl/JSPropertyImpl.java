@@ -33,7 +33,7 @@ import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.IncorrectOperationException;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.javascript.lang.psi.JavaScriptType;
 import consulo.javascript.psi.JSComputedName;

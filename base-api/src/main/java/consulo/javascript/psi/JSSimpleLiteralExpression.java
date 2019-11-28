@@ -20,7 +20,7 @@ package consulo.javascript.psi;
 import javax.annotation.Nonnull;
 
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import com.intellij.psi.tree.IElementType;
 
 /**

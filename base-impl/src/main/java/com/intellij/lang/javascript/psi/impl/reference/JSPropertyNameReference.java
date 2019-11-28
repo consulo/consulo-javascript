@@ -17,9 +17,6 @@
 
 package com.intellij.lang.javascript.psi.impl.reference;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import consulo.annotations.RequiredReadAction;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSDefinitionExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -32,6 +29,10 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.IncorrectOperationException;
+import consulo.annotation.access.RequiredReadAction;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class JSPropertyNameReference implements PsiReference
 {

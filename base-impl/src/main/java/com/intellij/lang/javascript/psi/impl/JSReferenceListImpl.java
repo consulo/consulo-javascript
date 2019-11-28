@@ -35,7 +35,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.util.ArrayUtil;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 
 /**

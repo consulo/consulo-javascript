@@ -18,7 +18,7 @@ package com.intellij.lang.javascript.psi;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
-import consulo.annotations.DeprecationInfo;
+import consulo.annotation.DeprecationInfo;
 
 /**
  * Created by IntelliJ IDEA.

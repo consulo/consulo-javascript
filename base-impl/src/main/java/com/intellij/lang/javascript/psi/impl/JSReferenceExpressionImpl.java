@@ -50,7 +50,7 @@ import com.intellij.psi.xml.XmlToken;
 import com.intellij.refactoring.rename.BindablePsiReference;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
-import consulo.annotations.RequiredReadAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptFeature;
 import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.javascript.lang.JavaScriptVersionUtil;
