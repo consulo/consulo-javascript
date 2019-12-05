@@ -16,17 +16,17 @@
 
 package consulo.javascript.lang.parsing;
 
-import javax.annotation.Nullable;
-
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.Key;
 import com.intellij.psi.tree.IElementType;
 import consulo.javascript.lang.JavaScriptTokenSets;
+import consulo.util.dataholder.Key;
+
+import javax.annotation.Nullable;
 
 
 /**

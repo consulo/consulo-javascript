@@ -16,16 +16,16 @@
 
 package consulo.javascript.run.debug;
 
-import java.io.File;
-
-import org.chromium.sdk.Script;
-import javax.annotation.Nonnull;
 import com.intellij.openapi.fileTypes.FileTypeRegistry;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
+import consulo.util.dataholder.Key;
+import org.chromium.sdk.Script;
+
+import javax.annotation.Nonnull;
+import java.io.File;
 
 /**
  * @author VISTALL

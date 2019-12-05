@@ -16,15 +16,6 @@
 
 package com.intellij.lang.javascript.psi.resolve;
 
-import gnu.trove.THashSet;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import consulo.annotation.access.RequiredReadAction;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -33,8 +24,6 @@ import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSClassImpl;
 import com.intellij.lang.javascript.psi.util.JSLookupUtil;
 import com.intellij.lang.javascript.validation.JSUnusedImportsHelper;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.UserDataHolderBase;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.ResolveResult;
@@ -44,6 +33,16 @@ import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolderBase;
+import gnu.trove.THashSet;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Maxim.Mossienko

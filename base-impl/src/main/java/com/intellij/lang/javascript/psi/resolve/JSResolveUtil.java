@@ -16,21 +16,6 @@
 
 package com.intellij.lang.javascript.psi.resolve;
 
-import gnu.trove.THashSet;
-import gnu.trove.TIntObjectHashMap;
-import gnu.trove.TIntObjectIterator;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.javascript.documentation.JSDocumentationProvider;
@@ -58,7 +43,6 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.UserDataCache;
 import com.intellij.openapi.util.text.StringUtil;
@@ -76,21 +60,8 @@ import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.CachedValue;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.ParameterizedCachedValue;
-import com.intellij.psi.util.ParameterizedCachedValueProvider;
-import com.intellij.psi.util.PsiModificationTracker;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilBase;
-import com.intellij.psi.xml.XmlAttributeValue;
-import com.intellij.psi.xml.XmlDocument;
-import com.intellij.psi.xml.XmlElement;
-import com.intellij.psi.xml.XmlFile;
-import com.intellij.psi.xml.XmlTag;
-import com.intellij.psi.xml.XmlTagChild;
-import com.intellij.psi.xml.XmlText;
+import com.intellij.psi.util.*;
+import com.intellij.psi.xml.*;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
@@ -106,6 +77,15 @@ import consulo.javascript.lang.psi.JavaScriptTypeElement;
 import consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import consulo.javascript.module.extension.JavaScriptModuleExtension;
 import consulo.roots.types.BinariesOrderRootType;
+import consulo.util.dataholder.Key;
+import gnu.trove.THashSet;
+import gnu.trove.TIntObjectHashMap;
+import gnu.trove.TIntObjectIterator;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
 
 /**
  * @author max, maxim.mossienko

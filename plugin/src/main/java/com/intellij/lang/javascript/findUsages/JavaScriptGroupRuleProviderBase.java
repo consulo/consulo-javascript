@@ -16,9 +16,6 @@
 
 package com.intellij.lang.javascript.findUsages;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.lang.javascript.psi.JSNamedElement;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.actionSystem.DataSink;
@@ -26,7 +23,6 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.psi.PsiElement;
@@ -43,6 +39,10 @@ import com.intellij.usages.rules.PsiElementUsage;
 import com.intellij.usages.rules.UsageGroupingRule;
 import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Maxim.Mossienko

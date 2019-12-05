@@ -16,16 +16,6 @@
 
 package com.intellij.lang.javascript.inspections;
 
-import gnu.trove.THashSet;
-import gnu.trove.TObjectIntHashMap;
-
-import java.util.BitSet;
-import java.util.Collections;
-import java.util.Set;
-
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import org.jetbrains.annotations.PropertyKey;
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
@@ -41,13 +31,22 @@ import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
+import consulo.util.dataholder.Key;
+import gnu.trove.THashSet;
+import gnu.trove.TObjectIntHashMap;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.PropertyKey;
+
+import javax.annotation.Nonnull;
+import java.util.BitSet;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * @author Maxim.Mossienko

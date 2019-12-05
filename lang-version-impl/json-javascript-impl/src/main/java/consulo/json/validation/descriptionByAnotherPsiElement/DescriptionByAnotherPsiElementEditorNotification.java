@@ -19,7 +19,6 @@ package consulo.json.validation.descriptionByAnotherPsiElement;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -35,6 +34,7 @@ import consulo.json.jom.JomElement;
 import consulo.json.jom.JomFileElement;
 import consulo.json.jom.JomManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -24,7 +24,6 @@ import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSClassBase;
 import com.intellij.lang.javascript.psi.impl.JSStubElementImpl;
 import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.UserDataCache;
 import com.intellij.psi.PsiElement;
@@ -40,6 +39,7 @@ import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.Processor;
 import com.intellij.xml.XmlElementDescriptor;
+import consulo.util.dataholder.Key;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
 
