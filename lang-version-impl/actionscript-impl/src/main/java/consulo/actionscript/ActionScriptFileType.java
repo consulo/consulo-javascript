@@ -16,18 +16,19 @@
 
 package consulo.actionscript;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.project.Project;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.actionscript.lang.ActionScriptLanguageVersion;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptFileTypeWithVersion;
 import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.lang.LanguageVersion;
 import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -70,9 +71,10 @@ public class ActionScriptFileType extends LanguageFileType implements JavaScript
 		return JavaScriptIcons.As;
 	}
 
+	@RequiredReadAction
 	@Nonnull
 	@Override
-	public LanguageVersion getLanguageVersion(@Nullable Project project, @Nullable VirtualFile virtualFile)
+	public LanguageVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile)
 	{
 		return ActionScriptLanguageVersion.getInstance();
 	}

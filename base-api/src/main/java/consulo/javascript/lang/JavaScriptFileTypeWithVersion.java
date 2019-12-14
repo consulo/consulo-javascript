@@ -16,11 +16,13 @@
 
 package consulo.javascript.lang;
 
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.lang.LanguageVersion;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.lang.LanguageVersion;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
 
 /**
  * @author VISTALL
@@ -29,5 +31,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 public interface JavaScriptFileTypeWithVersion
 {
 	@Nonnull
-	LanguageVersion getLanguageVersion(@Nullable Project project, @Nullable VirtualFile virtualFile);
+	@RequiredReadAction
+	LanguageVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile);
 }

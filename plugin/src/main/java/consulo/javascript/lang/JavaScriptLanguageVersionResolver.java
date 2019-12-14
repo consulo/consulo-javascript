@@ -16,11 +16,10 @@
 
 package consulo.javascript.lang;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -28,6 +27,9 @@ import com.intellij.psi.PsiFile;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.lang.LanguageVersion;
 import consulo.lang.LanguageVersionResolver;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -48,7 +50,8 @@ public class JavaScriptLanguageVersionResolver implements LanguageVersionResolve
 		FileType fileType = containingFile.getFileType();
 		if(fileType instanceof JavaScriptFileTypeWithVersion)
 		{
-			return ((JavaScriptFileTypeWithVersion) fileType).getLanguageVersion(element.getProject(), element.getContainingFile().getVirtualFile());
+			Module module = ModuleUtilCore.findModuleForPsiElement(element);
+			return ((JavaScriptFileTypeWithVersion) fileType).getLanguageVersion(module, element.getContainingFile().getVirtualFile());
 		}
 
 		return StandardJavaScriptVersions.getInstance().getDefaultVersion();
@@ -67,7 +70,8 @@ public class JavaScriptLanguageVersionResolver implements LanguageVersionResolve
 		FileType fileType = virtualFile.getFileType();
 		if(fileType instanceof JavaScriptFileTypeWithVersion)
 		{
-			return ((JavaScriptFileTypeWithVersion) fileType).getLanguageVersion(project, virtualFile);
+			Module module = ModuleUtilCore.findModuleForFile(virtualFile, project);
+			return ((JavaScriptFileTypeWithVersion) fileType).getLanguageVersion(module, virtualFile);
 		}
 
 		return StandardJavaScriptVersions.getInstance().getDefaultVersion();

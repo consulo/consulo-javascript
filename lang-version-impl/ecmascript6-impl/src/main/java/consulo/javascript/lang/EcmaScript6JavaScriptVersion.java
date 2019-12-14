@@ -16,15 +16,16 @@
 
 package consulo.javascript.lang;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.util.Factory;
 import consulo.javascript.ide.hightlight.JavaScriptHighlighter;
-import consulo.javascript.lang.lexer.EcmaScript6Lexer;
+import consulo.javascript.lang.lexer.JavaScriptFlexAdapter;
+import consulo.javascript.lang.lexer._EcmaScript6Lexer;
 import consulo.javascript.lang.parsing.EcmaScript6Parser;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,14 +33,7 @@ import consulo.javascript.lang.parsing.EcmaScript6Parser;
  */
 public class EcmaScript6JavaScriptVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersions.Marker
 {
-	private static final Factory<Lexer> ourLexerFactory = new Factory<Lexer>()
-	{
-		@Override
-		public Lexer create()
-		{
-			return new EcmaScript6Lexer();
-		}
-	};
+	private static final Factory<Lexer> ourLexerFactory = () -> new JavaScriptFlexAdapter(new _EcmaScript6Lexer(false));
 
 	@Nonnull
 	public static EcmaScript6JavaScriptVersion getInstance()
@@ -76,7 +70,7 @@ public class EcmaScript6JavaScriptVersion extends BaseJavaScriptLanguageVersion 
 	@Override
 	public SyntaxHighlighter getSyntaxHighlighter()
 	{
-		return new JavaScriptHighlighter(ourLexerFactory);
+		return new JavaScriptHighlighter(() -> new JavaScriptFlexAdapter(new _EcmaScript6Lexer(true)));
 	}
 
 	@Nonnull

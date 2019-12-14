@@ -16,15 +16,16 @@
 
 package consulo.javascript.lang;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.project.Project;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.lang.LanguageVersion;
 import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -67,9 +68,10 @@ public class EcmaScriptFileType extends LanguageFileType implements JavaScriptFi
 		return JavaScriptIcons.EcmaScript;
 	}
 
+	@RequiredReadAction
 	@Nonnull
 	@Override
-	public LanguageVersion getLanguageVersion(@Nullable Project project, @Nullable VirtualFile virtualFile)
+	public LanguageVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile)
 	{
 		return EcmaScript6JavaScriptVersion.getInstance();
 	}

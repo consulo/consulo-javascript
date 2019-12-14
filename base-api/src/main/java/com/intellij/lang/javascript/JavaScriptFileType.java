@@ -16,20 +16,20 @@
 
 package com.intellij.lang.javascript;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptFileTypeWithVersion;
 import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.javascript.lang.StandardJavaScriptVersions;
 import consulo.javascript.module.extension.JavaScriptModuleExtension;
 import consulo.lang.LanguageVersion;
 import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: max
@@ -72,20 +72,17 @@ public class JavaScriptFileType extends LanguageFileType implements JavaScriptFi
 		return JavaScriptIcons.JavaScript;
 	}
 
+	@RequiredReadAction
 	@Nonnull
 	@Override
-	public LanguageVersion getLanguageVersion(@Nullable Project project, @Nullable VirtualFile virtualFile)
+	public LanguageVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile)
 	{
-		if(virtualFile == null || project == null)
+		if(module == null)
 		{
 			return StandardJavaScriptVersions.getInstance().getDefaultVersion();
 		}
-		Module moduleForFile = ModuleUtilCore.findModuleForFile(virtualFile, project);
-		if(moduleForFile == null)
-		{
-			return StandardJavaScriptVersions.getInstance().getDefaultVersion();
-		}
-		JavaScriptModuleExtension<?> extension = ModuleUtilCore.getExtension(moduleForFile, JavaScriptModuleExtension.class);
+
+		JavaScriptModuleExtension<?> extension = ModuleUtilCore.getExtension(module, JavaScriptModuleExtension.class);
 		if(extension != null)
 		{
 			return extension.getLanguageVersion();

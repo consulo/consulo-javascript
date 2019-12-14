@@ -16,17 +16,18 @@
 
 package consulo.json;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.project.Project;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptFileTypeWithVersion;
 import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.json.lang.JsonJavaScriptVersion;
 import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -69,9 +70,10 @@ public class JsonFileType extends LanguageFileType implements JavaScriptFileType
 		return JavaScriptIcons.Json;
 	}
 
+	@RequiredReadAction
 	@Nonnull
 	@Override
-	public JsonJavaScriptVersion getLanguageVersion(@Nullable Project project, @Nullable VirtualFile virtualFile)
+	public JsonJavaScriptVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile)
 	{
 		return JsonJavaScriptVersion.getInstance();
 	}
