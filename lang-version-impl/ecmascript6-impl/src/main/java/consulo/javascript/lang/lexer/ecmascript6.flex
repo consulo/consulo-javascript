@@ -66,6 +66,8 @@ ESCAPE_SEQUENCE=\\[^\r\n]
 GROUP = "[" [^\]]* "]"
 
 REGEXP_LITERAL="/"([^\*\\/\r\n]|{ESCAPE_SEQUENCE}|{GROUP})([^\\/\r\n]|{ESCAPE_SEQUENCE}|{GROUP})*("/"[gimx]*)?
+INTERPOLATION_STRING_LITERAL="`" [^"`"]* "`"
+
 ALPHA=[:letter:]
 DIGIT=[0-9]
 XML_NAME=({ALPHA}|"_")({ALPHA}|{DIGIT}|"_"|"."|"-")*(":"({ALPHA}|"_")?({ALPHA}|{DIGIT}|"_"|"."|"-")*)?
@@ -217,9 +219,8 @@ FIELD_OR_METHOD={IDENTIFIER} ("(" [^ \\)]* ")"? )?
                           JSTokenTypes.STRING_LITERAL;
                       }
 
-<YYINITIAL,DIV_OR_GT>  "\\${" [^\}]* "}" { return JSTokenTypes.JSP_TEXT; }
-<YYINITIAL,DIV_OR_GT>  "${" [^\}]* "}" { return JSTokenTypes.JSP_TEXT; }
 <YYINITIAL,DIV_OR_GT> {DOUBLE_QUOTED_LITERAL}      { yybegin(DIV_OR_GT); return JSTokenTypes.STRING_LITERAL; }
+<YYINITIAL,DIV_OR_GT> {INTERPOLATION_STRING_LITERAL}      { yybegin(DIV_OR_GT); return JSTokenTypes.INTERPOLATION_STRING_LITERAL; }
 
 <YYINITIAL,DIV_OR_GT> "true"                { yybegin(DIV_OR_GT); return JSTokenTypes.TRUE_KEYWORD; }
 <YYINITIAL,DIV_OR_GT> "false"               { yybegin(DIV_OR_GT); return JSTokenTypes.FALSE_KEYWORD; }
@@ -370,4 +371,5 @@ FIELD_OR_METHOD={IDENTIFIER} ("(" [^ \\)]* ")"? )?
 
 <YYINITIAL,DIV_OR_GT> "]]>" { yybegin(YYINITIAL); return JSTokenTypes.CDATA_END; }
 <YYINITIAL,DIV_OR_GT> "<![CDATA[" { yybegin(YYINITIAL); return JSTokenTypes.CDATA_START; }
-.                     { yybegin(YYINITIAL); return JSTokenTypes.BAD_CHARACTER; }
+
+[^] { yybegin(YYINITIAL); return JSTokenTypes.BAD_CHARACTER; }

@@ -16,14 +16,15 @@
 
 package com.intellij.lang.javascript.psi;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.intellij.lang.javascript.psi.stubs.JSVariableStubBase;
 import com.intellij.psi.StubBasedPsiElement;
 import com.intellij.util.IncorrectOperationException;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.psi.JavaScriptType;
 import consulo.javascript.lang.psi.JavaScriptTypeElement;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author max
@@ -36,6 +37,8 @@ public interface JSVariable extends JSQualifiedNamedElement, JSAttributeListOwne
 
 	boolean hasInitializer();
 
+	@RequiredReadAction
+	@Nullable
 	JSExpression getInitializer();
 
 	String getInitializerText();

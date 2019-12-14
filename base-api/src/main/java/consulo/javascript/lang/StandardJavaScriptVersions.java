@@ -16,11 +16,11 @@
 
 package consulo.javascript.lang;
 
-import java.util.List;
+import com.intellij.openapi.components.ServiceManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import com.intellij.openapi.components.ServiceManager;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -41,6 +41,7 @@ public abstract class StandardJavaScriptVersions
 
 	@Nonnull
 	public abstract JavaScriptLanguageVersion getDefaultVersion();
+
 	@Nonnull
 	public abstract List<JavaScriptLanguageVersion> getValidLanguageVersions();
 
