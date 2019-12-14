@@ -12,6 +12,7 @@ import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.ecmascript6.psi.ES6ExportDefaultAssignment;
 import org.jetbrains.annotations.NonNls;
 
@@ -56,13 +57,13 @@ public class BadExpressionStatementJSInspection extends JavaScriptInspection
 
 	private static class Visitor extends BaseInspectionVisitor
 	{
-
 		@Override
+		@RequiredReadAction
 		public void visitJSExpressionStatement(JSExpressionStatement jsExpressionStatement)
 		{
 			super.visitJSExpressionStatement(jsExpressionStatement);
 			final JSExpression expression = jsExpressionStatement.getExpression();
-			if(isNotPointless(expression))
+			if(isNotPointless(expression) || jsExpressionStatement.getParent() instanceof ES6ExportDefaultAssignment)
 			{
 				return;
 			}
@@ -90,7 +91,7 @@ public class BadExpressionStatementJSInspection extends JavaScriptInspection
 			{
 				return true;
 			}
-			if(expression instanceof JSAssignmentExpression || expression instanceof ES6ExportDefaultAssignment)
+			if(expression instanceof JSAssignmentExpression)
 			{
 				return true;
 			}

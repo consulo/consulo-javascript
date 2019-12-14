@@ -16,10 +16,7 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSExpressionStatement;
@@ -28,8 +25,11 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -45,11 +45,11 @@ public class JSExpressionStatementImpl extends JSStatementImpl implements JSExpr
 		super(node);
 	}
 
+	@RequiredReadAction
 	@Override
 	public JSExpression getExpression()
 	{
-		final ASTNode expressionNode = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
-		return expressionNode != null ? (JSExpression) expressionNode.getPsi() : null;
+		return findChildByClass(JSExpression.class);
 	}
 
 	@Override
