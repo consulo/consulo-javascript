@@ -1,6 +1,5 @@
 package consulo.json.lang;
 
-import javax.annotation.Nonnull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
@@ -13,6 +12,8 @@ import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.javascript.lang.parsing.ExpressionParsing;
 import consulo.javascript.lang.parsing.Parsing;
 import consulo.lang.LanguageVersion;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -99,8 +100,6 @@ public class JsonJavaScriptParser implements PsiParser
 				}
 				builder.advanceLexer();
 			}
-
-			return;
 		}
 
 		final IElementType nameToken = builder.getTokenType();
@@ -143,6 +142,11 @@ public class JsonJavaScriptParser implements PsiParser
 			else if(elementType == JSTokenTypes.COMMA)
 			{
 				builder.advanceLexer();
+
+				if(builder.getTokenType() == JSTokenTypes.RBRACE)
+				{
+					break;
+				}
 			}
 			else
 			{
@@ -152,7 +156,7 @@ public class JsonJavaScriptParser implements PsiParser
 			elementType = builder.getTokenType();
 			if(elementType == JSTokenTypes.RBRACE)
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.property.expected"));
+				break;
 			}
 			else if(isNotPropertyStart(elementType))
 			{
