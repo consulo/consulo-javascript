@@ -262,6 +262,11 @@ public class ExpressionParsing extends Parsing
 			else if(elementType == JSTokenTypes.COMMA)
 			{
 				builder.advanceLexer();
+
+				if(builder.getTokenType() == JSTokenTypes.RBRACE)
+				{
+					break;
+				}
 			}
 			else
 			{
