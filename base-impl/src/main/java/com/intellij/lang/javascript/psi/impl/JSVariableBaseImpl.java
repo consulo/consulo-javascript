@@ -16,19 +16,11 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.psi.JSAttributeList;
-import com.intellij.lang.javascript.psi.JSElementVisitor;
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSReferenceExpression;
-import com.intellij.lang.javascript.psi.JSStubElementType;
-import com.intellij.lang.javascript.psi.JSVarStatement;
-import com.intellij.lang.javascript.psi.JSVariable;
+import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.stubs.JSVariableStubBase;
 import com.intellij.openapi.util.Computable;
@@ -44,6 +36,8 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.javascript.lang.psi.JavaScriptType;
 import consulo.javascript.lang.psi.JavaScriptTypeElement;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -70,12 +64,24 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 		return getInitializerText() != null;
 	}
 
+	@RequiredReadAction
 	@Override
 	public JSExpression getInitializer()
 	{
-		final ASTNode eqNode = getNode().findChildByType(JSTokenTypes.EQ);
-		final ASTNode node = eqNode != null ? getNode().findChildByType(JSElementTypes.EXPRESSIONS, eqNode) : null;
-		return node != null ? (JSExpression) node.getPsi() : null;
+		PsiElement element = findChildByType(JSTokenTypes.EQ);
+		if(element == null)
+		{
+			return null;
+		}
+
+		while((element = element.getNextSibling()) != null)
+		{
+			if(element instanceof JSExpression)
+			{
+				return (JSExpression) element;
+			}
+		}
+		return null;
 	}
 
 	@Override
