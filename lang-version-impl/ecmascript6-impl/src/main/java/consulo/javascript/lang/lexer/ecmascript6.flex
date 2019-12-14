@@ -16,6 +16,9 @@ import consulo.javascript.lang.lexer.JavaScriptFlexLexer;
     private boolean isHighlightModeOn = false;
     private int tagCount = 0;
 
+    private int braceCount;
+    private com.intellij.util.containers.IntStack jsExits = new com.intellij.util.containers.IntStack();
+
     public final int getTagCount() {
       return tagCount;
     }
@@ -32,8 +35,6 @@ import consulo.javascript.lang.lexer.JavaScriptFlexLexer;
 %unicode
 %function advance
 %type IElementType
-%eof{  return;
-%eof}
 
 DIGIT=[0-9]
 OCTAL_DIGIT=[0-7]
@@ -79,6 +80,7 @@ FIELD_OR_METHOD={IDENTIFIER} ("(" [^ \\)]* ")"? )?
 %state TAG_END
 %state TAG_ATTR_SQ
 %state TAG_ATTR_DQ
+%state TAG_JS_SCRIPT
 %state COMMENT
 %state LAST_STATE
 
@@ -100,20 +102,44 @@ FIELD_OR_METHOD={IDENTIFIER} ("(" [^ \\)]* ")"? )?
 
 <TAG> {
   {XML_NAME} { yybegin(TAG_ATTRIBUTES); return JSTokenTypes.XML_TAG_NAME; }
-  "{" [^}]* "}" { yybegin(TAG_ATTRIBUTES); return JSTokenTypes.XML_JS_SCRIPT; }
+  "{"
+  {
+  	jsExits.push(TAG);
+  	yypushback(1);
+  	yybegin(TAG_JS_SCRIPT);
+  }
 }
 
 <TAG_END> {
   {XML_NAME} { return JSTokenTypes.XML_TAG_NAME; }
-  "{" [^}]* "}" { return JSTokenTypes.XML_JS_SCRIPT; }
+  "{"
+  {
+  	jsExits.push(TAG_END);
+  	yypushback(1);
+  	yybegin(TAG_JS_SCRIPT);
+  }
 }
 
 <TAG_ATTRIBUTES> {
   {XML_NAME} { return JSTokenTypes.XML_NAME; }
-  "{" [^}]* "}" { return JSTokenTypes.XML_JS_SCRIPT; }
+  "{"
+  {
+  	jsExits.push(TAG_ATTRIBUTES);
+  	yypushback(1);
+  	yybegin(TAG_JS_SCRIPT);
+  }
 }
 
-<TAG_CONTENT> "{" [^}]* "}" { return JSTokenTypes.XML_JS_SCRIPT; }
+<TAG_CONTENT>
+{
+	"{"
+	{
+		jsExits.push(TAG_CONTENT);
+		yypushback(1);
+		yybegin(TAG_JS_SCRIPT);
+	}
+}
+
 <TAG_CONTENT> ([^\?<&\{# \n\r\t\f])* { return JSTokenTypes.XML_TAG_CONTENT; }
 <TAG_CONTENT> "<?" ([^\?]|(\?[^\>]))* "?>" { return JSTokenTypes.XML_TAG_CONTENT; }
 <TAG_CONTENT> {XML_COMMENT} { return JSTokenTypes.XML_STYLE_COMMENT; }
@@ -141,6 +167,30 @@ FIELD_OR_METHOD={IDENTIFIER} ("(" [^ \\)]* ")"? )?
 <TAG_ATTR_DQ> [^\"]* { return JSTokenTypes.XML_ATTR_VALUE; }
 
 <TAG,TAG_END, TAG_CONTENT> [^] { return JSTokenTypes.BAD_CHARACTER; }
+
+<TAG_JS_SCRIPT>
+{
+	"{"
+	{
+		braceCount ++;
+		return JSTokenTypes.XML_JS_SCRIPT;
+	}
+
+	"}"
+	{
+		braceCount --;
+		if(braceCount <= 0)
+		{
+			yybegin(jsExits.peek());
+			return JSTokenTypes.XML_JS_SCRIPT;
+		}
+	}
+
+	[^]
+	{
+		return JSTokenTypes.XML_JS_SCRIPT;
+	}
+}
 
 <YYINITIAL> "<!--" (.|{CRLF}+)* "//" {WHITE_SPACE_CHAR}* "-->" {
   yybegin(COMMENT); yypushback(yylength());

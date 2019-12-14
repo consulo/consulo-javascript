@@ -98,6 +98,8 @@ public class EcmaScript6StatementParsing extends StatementParsing
 		{
 			builder.advanceLexer();
 
+			boolean wantFrom = true;
+
 			// TODO [VISTALL] specific element
 			if(builder.getTokenType() == JSTokenTypes.LBRACE)
 			{
@@ -148,6 +150,11 @@ public class EcmaScript6StatementParsing extends StatementParsing
 			{
 				getExpressionParsing().parseQualifiedTypeName(builder, false);
 			}
+			else if(JavaScriptTokenSets.STRING_LITERALS.contains(builder.getTokenType()))
+			{
+				builder.advanceLexer();
+				wantFrom = false;
+			}
 			else
 			{
 				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.typename"));
@@ -167,7 +174,7 @@ public class EcmaScript6StatementParsing extends StatementParsing
 				}
 			}
 
-			if(expectContextKeyword(builder, JSTokenTypes.FROM_KEYWORD))
+			if(wantFrom && expectContextKeyword(builder, JSTokenTypes.FROM_KEYWORD))
 			{
 				advanceContextKeyword(builder, JSTokenTypes.FROM_KEYWORD);
 

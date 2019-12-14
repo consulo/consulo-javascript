@@ -17,9 +17,11 @@
 package consulo.javascript.lang;
 
 import com.intellij.lang.PsiParser;
+import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lexer.Lexer;
+import com.intellij.lexer.MergingLexerAdapter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.util.Factory;
+import com.intellij.psi.tree.TokenSet;
 import consulo.javascript.ide.hightlight.JavaScriptHighlighter;
 import consulo.javascript.lang.lexer.JavaScriptFlexAdapter;
 import consulo.javascript.lang.lexer._EcmaScript6Lexer;
@@ -33,8 +35,6 @@ import javax.annotation.Nonnull;
  */
 public class EcmaScript6JavaScriptVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersions.Marker
 {
-	private static final Factory<Lexer> ourLexerFactory = () -> new JavaScriptFlexAdapter(new _EcmaScript6Lexer(false));
-
 	@Nonnull
 	public static EcmaScript6JavaScriptVersion getInstance()
 	{
@@ -63,14 +63,19 @@ public class EcmaScript6JavaScriptVersion extends BaseJavaScriptLanguageVersion 
 	@Override
 	public Lexer createLexer()
 	{
-		return ourLexerFactory.create();
+		return createLexer(false);
 	}
 
 	@Nonnull
 	@Override
 	public SyntaxHighlighter getSyntaxHighlighter()
 	{
-		return new JavaScriptHighlighter(() -> new JavaScriptFlexAdapter(new _EcmaScript6Lexer(true)));
+		return new JavaScriptHighlighter(() -> createLexer(true));
+	}
+
+	private Lexer createLexer(boolean hightlight)
+	{
+		return new MergingLexerAdapter(new JavaScriptFlexAdapter(new _EcmaScript6Lexer(hightlight)), TokenSet.create(JSTokenTypes.XML_JS_SCRIPT));
 	}
 
 	@Nonnull
