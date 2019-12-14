@@ -115,55 +115,27 @@ public class EcmaScript6StatementParsing extends StatementParsing
 
 			boolean wantFrom = true;
 
-			// TODO [VISTALL] specific element
-			if(builder.getTokenType() == JSTokenTypes.LBRACE)
+			if(builder.getTokenType() == JSTokenTypes.ASTERISK)
 			{
+				PsiBuilder.Marker bindingMark = builder.mark();
+
 				builder.advanceLexer();
 
-				boolean first = true;
-				while(!builder.eof())
+				if(isContextKeyword(builder, JSTokenTypes.AS_KEYWORD))
 				{
-					if(builder.getTokenType() == JSTokenTypes.RBRACE)
+					advanceContextKeyword(builder, JSTokenTypes.AS_KEYWORD);
+
+					if(builder.getTokenType() == JSTokenTypes.IDENTIFIER)
 					{
-						break;
+						builder.advanceLexer();
 					}
-
-					if(!first)
+					else
 					{
-						if(builder.getTokenType() == JSTokenTypes.COMMA)
-						{
-							builder.advanceLexer();
-						}
-						else
-						{
-							builder.error("Comma expected");
-						}
-					}
-
-					first = false;
-
-					if(!getExpressionParsing().parseQualifiedTypeName(builder, false))
-					{
-						builder.error("Reference expected");
+						builder.error("Expected identifier");
 					}
 				}
 
-				if(builder.getTokenType() != JSTokenTypes.RBRACE)
-				{
-					builder.error("'}' expected");
-				}
-				else
-				{
-					builder.advanceLexer();
-				}
-			}
-			else if(builder.getTokenType() == JSTokenTypes.ASTERISK)
-			{
-				builder.advanceLexer();
-			}
-			else if(builder.getTokenType() == JSTokenTypes.IDENTIFIER)
-			{
-				getExpressionParsing().parseQualifiedTypeName(builder, false);
+				bindingMark.done(EcmaScript6ElementTypes.IMPORTED_BINDING);
 			}
 			else if(JavaScriptTokenSets.STRING_LITERALS.contains(builder.getTokenType()))
 			{
@@ -172,24 +144,85 @@ public class EcmaScript6StatementParsing extends StatementParsing
 			}
 			else
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.typename"));
+				boolean firstBinding = true;
+
+				while(!builder.eof())
+				{
+					if(builder.getTokenType() != JSTokenTypes.COMMA && !isIdentifierToken(builder) && builder.getTokenType() != JSTokenTypes.LBRACE)
+					{
+						break;
+					}
+
+					if(isContextKeyword(builder, JSTokenTypes.FROM_KEYWORD))
+					{
+						break;
+					}
+
+					if(!firstBinding)
+					{
+						Parsing.checkMatches(builder, JSTokenTypes.COMMA, "Comma expected");
+					}
+
+					if(builder.getTokenType() == JSTokenTypes.LBRACE)
+					{
+						PsiBuilder.Marker namedImportsMark = builder.mark();
+						builder.advanceLexer();
+
+						boolean first = true;
+						while(!builder.eof())
+						{
+							if(builder.getTokenType() == JSTokenTypes.RBRACE)
+							{
+								break;
+							}
+
+							if(!first)
+							{
+								if(builder.getTokenType() == JSTokenTypes.COMMA)
+								{
+									builder.advanceLexer();
+								}
+								else
+								{
+									builder.error("Comma expected");
+								}
+							}
+
+							first = false;
+
+							if(builder.getTokenType() == JSTokenTypes.IDENTIFIER)
+							{
+								PsiBuilder.Marker importBindingMark = builder.mark();
+								builder.advanceLexer();
+								importBindingMark.done(EcmaScript6ElementTypes.IMPORTED_BINDING);
+							}
+							else if(builder.getTokenType() != JSTokenTypes.RBRACE)
+							{
+								builder.error("Expected identifier");
+							}
+						}
+
+						Parsing.checkMatches(builder, JSTokenTypes.RBRACE, "'}' expected");
+
+						namedImportsMark.done(EcmaScript6ElementTypes.NAMED_IMPORTS);
+					}
+					else if(builder.getTokenType() == JSTokenTypes.IDENTIFIER)
+					{
+						PsiBuilder.Marker importBindingMark = builder.mark();
+						builder.advanceLexer();
+						importBindingMark.done(EcmaScript6ElementTypes.IMPORTED_BINDING);
+					}
+					else
+					{
+						builder.error(JavaScriptBundle.message("javascript.parser.message.expected.typename"));
+						break;
+					}
+
+					firstBinding = false;
+				}
 			}
 
-			if(builder.getTokenType() == JSTokenTypes.AS_KEYWORD)
-			{
-				builder.advanceLexer();
-
-				if(builder.getTokenType() == JSTokenTypes.IDENTIFIER)
-				{
-					builder.advanceLexer();
-				}
-				else
-				{
-					builder.error("Expected identifier");
-				}
-			}
-
-			if(wantFrom && expectContextKeyword(builder, JSTokenTypes.FROM_KEYWORD))
+			if(wantFrom && isContextKeyword(builder, JSTokenTypes.FROM_KEYWORD))
 			{
 				advanceContextKeyword(builder, JSTokenTypes.FROM_KEYWORD);
 
@@ -322,7 +355,7 @@ public class EcmaScript6StatementParsing extends StatementParsing
 				}
 				else
 				{
-					if(expectContextKeyword(builder, JSTokenTypes.GET_SET_TOKEN_SET) != null && builder.lookAhead(1) == JSTokenTypes.IDENTIFIER)
+					if(isContextKeyword(builder, JSTokenTypes.GET_SET_TOKEN_SET) != null && builder.lookAhead(1) == JSTokenTypes.IDENTIFIER)
 					{
 						advanceContextKeyword(builder, JSTokenTypes.GET_SET_TOKEN_SET);
 					}
@@ -357,7 +390,7 @@ public class EcmaScript6StatementParsing extends StatementParsing
 			builder.advanceLexer();
 			return true;
 		}
-		else if(expectContextKeyword(builder, TokenSet.create(JSTokenTypes.STATIC_KEYWORD)) != null)
+		else if(isContextKeyword(builder, TokenSet.create(JSTokenTypes.STATIC_KEYWORD)) != null)
 		{
 			if(builder.lookAhead(1) == JSTokenTypes.IDENTIFIER)
 			{

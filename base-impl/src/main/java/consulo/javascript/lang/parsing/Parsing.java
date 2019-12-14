@@ -40,7 +40,7 @@ public class Parsing
 		myContext = context;
 	}
 
-	public boolean expectContextKeyword(@Nonnull PsiBuilder builder, @Nonnull IElementType elementType)
+	public boolean isContextKeyword(@Nonnull PsiBuilder builder, @Nonnull IElementType elementType)
 	{
 		if(builder.getTokenType() == JSTokenTypes.IDENTIFIER)
 		{
@@ -58,7 +58,7 @@ public class Parsing
 	}
 
 	@Nullable
-	public IElementType expectContextKeyword(@Nonnull PsiBuilder builder, @Nonnull TokenSet tokenSet)
+	public IElementType isContextKeyword(@Nonnull PsiBuilder builder, @Nonnull TokenSet tokenSet)
 	{
 		if(builder.getTokenType() == JSTokenTypes.IDENTIFIER)
 		{
@@ -77,7 +77,7 @@ public class Parsing
 
 	public void advanceContextKeyword(@Nonnull PsiBuilder builder, @Nonnull IElementType elementType)
 	{
-		if(expectContextKeyword(builder, elementType))
+		if(isContextKeyword(builder, elementType))
 		{
 			if(builder instanceof JavaScriptStrictParserBuilder)
 			{
@@ -90,7 +90,7 @@ public class Parsing
 
 	public void advanceContextKeyword(@Nonnull PsiBuilder builder, @Nonnull TokenSet tokenSet)
 	{
-		IElementType elementType = expectContextKeyword(builder, tokenSet);
+		IElementType elementType = isContextKeyword(builder, tokenSet);
 		if(elementType != null)
 		{
 			if(builder instanceof JavaScriptStrictParserBuilder)

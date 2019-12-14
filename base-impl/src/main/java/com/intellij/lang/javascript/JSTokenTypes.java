@@ -128,7 +128,7 @@ public interface JSTokenTypes
 	IElementType SUPER_KEYWORD = new JSElementType("SUPER_KEYWORD"); // super
 	IElementType INCLUDE_KEYWORD = new JSElementType("INCLUDE_KEYWORD"); // include
 	IElementType IS_KEYWORD = new JSElementType("IS_KEYWORD"); // is
-	IElementType AS_KEYWORD = new JSElementType("AS_KEYWORD"); // as
+	IElementType AS_KEYWORD = new JavaScriptContextKeywordElementType("AS_KEYWORD", "as"); // as
 	IElementType GET_KEYWORD = new JavaScriptContextKeywordElementType("GET_KEYWORD", "get"); // GET
 	IElementType SET_KEYWORD = new JavaScriptContextKeywordElementType("SET_KEYWORD", "set"); // SET
 	IElementType EACH_KEYWORD = new JSElementType("EACH_KEYWORD");

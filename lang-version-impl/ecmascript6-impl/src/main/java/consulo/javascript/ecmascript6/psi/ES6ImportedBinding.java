@@ -10,7 +10,7 @@ import com.intellij.lang.javascript.psi.JSElement;
  * <p>
  * asterisk import also imported binding
  * <p>
- * import [* as util] ...
+ * import * as util ...
  */
 public interface ES6ImportedBinding extends JSElement
 {

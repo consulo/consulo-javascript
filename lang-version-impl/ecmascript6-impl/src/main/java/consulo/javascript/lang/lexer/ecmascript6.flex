@@ -282,7 +282,6 @@ FIELD_OR_METHOD={IDENTIFIER} ("(" [^ \\)]* ")"? )?
 <YYINITIAL,DIV_OR_GT> "use"                 { yybegin(YYINITIAL); return JSTokenTypes.USE_KEYWORD ; }
 <YYINITIAL,DIV_OR_GT> "super"               { yybegin(YYINITIAL); return JSTokenTypes.SUPER_KEYWORD ; }
 <YYINITIAL,DIV_OR_GT> "include"             { yybegin(YYINITIAL); return JSTokenTypes.INCLUDE_KEYWORD ; }
-<YYINITIAL,DIV_OR_GT> "as"                  { yybegin(YYINITIAL); return JSTokenTypes.AS_KEYWORD ; }
 <YYINITIAL,DIV_OR_GT> "yield"               { yybegin(YYINITIAL); return JSTokenTypes.YIELD_KEYWORD ; }
 <YYINITIAL,DIV_OR_GT> "let"                 { yybegin(YYINITIAL); return JSTokenTypes.LET_KEYWORD ; }
 
