@@ -143,6 +143,11 @@ public class Parsing
 		return myContext.isIdentifierToken(builder, tokenType);
 	}
 
+	public boolean isIdentifierToken(PsiBuilder builder)
+	{
+		return myContext.isIdentifierName(builder, builder.getTokenType());
+	}
+
 	public boolean isIdentifierName(PsiBuilder builder, IElementType tokenType)
 	{
 		return myContext.isIdentifierName(builder, tokenType);

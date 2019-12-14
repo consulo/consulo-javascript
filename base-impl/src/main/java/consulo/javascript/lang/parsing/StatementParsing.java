@@ -16,21 +16,21 @@
 
 package consulo.javascript.lang.parsing;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptBundle;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.tree.IElementType;
+import consulo.logging.Logger;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author max
  */
 public class StatementParsing extends Parsing
 {
-	private static final Logger LOGGER = Logger.getInstance(StatementParsing.class);
+	private static final Logger LOG = Logger.getInstance(StatementParsing.class);
 
 	public StatementParsing(JavaScriptParsingContext context)
 	{
@@ -223,7 +223,7 @@ public class StatementParsing extends Parsing
 
 	protected void parseYieldStatement(final PsiBuilder builder)
 	{
-		StatementParsing.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.YIELD_KEYWORD);
+		StatementParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.YIELD_KEYWORD);
 		final PsiBuilder.Marker marker = builder.mark();
 		builder.advanceLexer();
 
@@ -242,7 +242,7 @@ public class StatementParsing extends Parsing
 
 	PsiBuilder.Marker parseLetExpressionStart(final PsiBuilder builder)
 	{
-		StatementParsing.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.LET_KEYWORD);
+		StatementParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.LET_KEYWORD);
 		final PsiBuilder.Marker marker = builder.mark();
 		builder.advanceLexer();
 
@@ -269,7 +269,7 @@ public class StatementParsing extends Parsing
 
 	void parseIncludeDirective(final PsiBuilder builder)
 	{
-		StatementParsing.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.INCLUDE_KEYWORD);
+		StatementParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.INCLUDE_KEYWORD);
 		final PsiBuilder.Marker useNSStatement = builder.mark();
 		builder.advanceLexer();
 		Parsing.checkMatches(builder, JSTokenTypes.STRING_LITERAL, JavaScriptBundle.message("javascript.parser.message.expected.string.literal"));
@@ -280,7 +280,7 @@ public class StatementParsing extends Parsing
 
 	protected void parseTryStatement(final PsiBuilder builder)
 	{
-		StatementParsing.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.TRY_KEYWORD);
+		StatementParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.TRY_KEYWORD);
 		final PsiBuilder.Marker statement = builder.mark();
 		builder.advanceLexer();
 		parseBlock(builder);
@@ -301,7 +301,7 @@ public class StatementParsing extends Parsing
 
 	private void parseCatchBlock(final PsiBuilder builder)
 	{
-		StatementParsing.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.CATCH_KEYWORD);
+		StatementParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.CATCH_KEYWORD);
 		final PsiBuilder.Marker block = builder.mark();
 		builder.advanceLexer();
 		Parsing.checkMatches(builder, JSTokenTypes.LPAR, JavaScriptBundle.message("javascript.parser.message.expected.lparen"));
@@ -339,7 +339,7 @@ public class StatementParsing extends Parsing
 
 	protected void parseThrowStatement(final PsiBuilder builder)
 	{
-		StatementParsing.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.THROW_KEYWORD);
+		StatementParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.THROW_KEYWORD);
 		final PsiBuilder.Marker statement = builder.mark();
 		builder.advanceLexer();
 
@@ -351,7 +351,7 @@ public class StatementParsing extends Parsing
 
 	protected void parseSwitchStatement(final PsiBuilder builder)
 	{
-		StatementParsing.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.SWITCH_KEYWORD);
+		StatementParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.SWITCH_KEYWORD);
 		final PsiBuilder.Marker statement = builder.mark();
 		builder.advanceLexer();
 
@@ -403,7 +403,7 @@ public class StatementParsing extends Parsing
 
 	protected void parseWithStatement(final PsiBuilder builder)
 	{
-		StatementParsing.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.WITH_KEYWORD);
+		StatementParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.WITH_KEYWORD);
 		final PsiBuilder.Marker statement = builder.mark();
 		builder.advanceLexer();
 
@@ -418,7 +418,7 @@ public class StatementParsing extends Parsing
 
 	protected void parseReturnStatement(final PsiBuilder builder)
 	{
-		StatementParsing.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.RETURN_KEYWORD);
+		StatementParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.RETURN_KEYWORD);
 		final PsiBuilder.Marker statement = builder.mark();
 		boolean hasNewLine = hasSemanticLineBeforeNextToken(builder);
 		builder.advanceLexer();
@@ -433,7 +433,7 @@ public class StatementParsing extends Parsing
 
 	protected void parseBreakStatement(final PsiBuilder builder)
 	{
-		StatementParsing.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.BREAK_KEYWORD);
+		StatementParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.BREAK_KEYWORD);
 		final PsiBuilder.Marker statement = builder.mark();
 
 		boolean hasSemanticLineBeforeNextToken = hasSemanticLineBeforeNextToken(builder);
@@ -454,7 +454,7 @@ public class StatementParsing extends Parsing
 
 	protected void parseContinueStatement(final PsiBuilder builder)
 	{
-		StatementParsing.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.CONTINUE_KEYWORD);
+		StatementParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.CONTINUE_KEYWORD);
 		final PsiBuilder.Marker statement = builder.mark();
 		boolean hasSemanticLineBeforeNextToken = hasSemanticLineBeforeNextToken(builder);
 		builder.advanceLexer();
@@ -527,13 +527,13 @@ public class StatementParsing extends Parsing
 		}
 		else
 		{
-			StatementParsing.LOGGER.error("Unknown iteration statement");
+			StatementParsing.LOG.error("Unknown iteration statement");
 		}
 	}
 
 	private void parseForStatement(final PsiBuilder builder)
 	{
-		StatementParsing.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.FOR_KEYWORD);
+		StatementParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.FOR_KEYWORD);
 		final PsiBuilder.Marker statement = builder.mark();
 		final boolean forin = parseForLoopHeader(builder);
 
@@ -598,7 +598,7 @@ public class StatementParsing extends Parsing
 
 	private void parseWhileStatement(final PsiBuilder builder)
 	{
-		StatementParsing.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.WHILE_KEYWORD);
+		StatementParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.WHILE_KEYWORD);
 		final PsiBuilder.Marker statement = builder.mark();
 		builder.advanceLexer();
 
@@ -612,7 +612,7 @@ public class StatementParsing extends Parsing
 
 	private void parseDoWhileStatement(final PsiBuilder builder)
 	{
-		StatementParsing.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.DO_KEYWORD);
+		StatementParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.DO_KEYWORD);
 		final PsiBuilder.Marker statement = builder.mark();
 		builder.advanceLexer();
 
@@ -628,7 +628,7 @@ public class StatementParsing extends Parsing
 
 	protected void parseIfStatement(final PsiBuilder builder)
 	{
-		StatementParsing.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.IF_KEYWORD);
+		StatementParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.IF_KEYWORD);
 		final PsiBuilder.Marker ifStatement = builder.mark();
 		builder.advanceLexer();
 
@@ -656,7 +656,7 @@ public class StatementParsing extends Parsing
 
 	protected void parseEmptyStatement(final PsiBuilder builder)
 	{
-		StatementParsing.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.SEMICOLON);
+		StatementParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.SEMICOLON);
 		final PsiBuilder.Marker statement = builder.mark();
 		builder.advanceLexer();
 		statement.done(JSElementTypes.EMPTY_STATEMENT);
@@ -670,28 +670,36 @@ public class StatementParsing extends Parsing
 	protected void parseVarStatementNoMarker(final PsiBuilder builder, final boolean inForInitializationContext, final @Nonnull PsiBuilder.Marker var)
 	{
 		final IElementType declType = builder.getTokenType();
-		StatementParsing.LOGGER.assertTrue(declType == JSTokenTypes.VAR_KEYWORD ||
+		LOG.assertTrue(declType == JSTokenTypes.VAR_KEYWORD ||
 				declType == JSTokenTypes.CONST_KEYWORD ||
 				declType == JSTokenTypes.LET_KEYWORD);
 
 		builder.advanceLexer();
-		boolean first = true;
-		while(true)
+
+		if(builder.getTokenType() == JSTokenTypes.LBRACE)
 		{
-			if(first)
+			parseDeconstructionElement(builder);
+		}
+		else
+		{
+			boolean first = true;
+			while(true)
 			{
-				first = false;
-			}
-			else
-			{
-				Parsing.checkMatches(builder, JSTokenTypes.COMMA, JavaScriptBundle.message("javascript.parser.message.expected.comma"));
-			}
+				if(first)
+				{
+					first = false;
+				}
+				else
+				{
+					Parsing.checkMatches(builder, JSTokenTypes.COMMA, JavaScriptBundle.message("javascript.parser.message.expected.comma"));
+				}
 
-			parseVarDeclaration(builder, !inForInitializationContext);
+				parseVarDeclaration(builder, !inForInitializationContext);
 
-			if(builder.getTokenType() != JSTokenTypes.COMMA)
-			{
-				break;
+				if(builder.getTokenType() != JSTokenTypes.COMMA)
+				{
+					break;
+				}
 			}
 		}
 
@@ -701,6 +709,51 @@ public class StatementParsing extends Parsing
 		}
 
 		var.done(JSElementTypes.VAR_STATEMENT);
+	}
+
+	protected void parseDeconstructionElement(PsiBuilder builder)
+	{
+		PsiBuilder.Marker mark = builder.mark();
+
+		PsiBuilder.Marker desctructionObjectMarker = builder.mark();
+		builder.advanceLexer();
+
+		boolean first = true;
+		while(!builder.eof())
+		{
+			if(builder.getTokenType() == JSTokenTypes.RBRACE)
+			{
+				break;
+			}
+
+			if(!first)
+			{
+				Parsing.checkMatches(builder, JSTokenTypes.COMMA, "Comma expected");
+			}
+
+			first = false;
+
+			if(isIdentifierToken(builder))
+			{
+				PsiBuilder.Marker propertyMarker = builder.mark();
+				builder.advanceLexer();
+				propertyMarker.done(JSElementTypes.DESTRUCTURING_SHORTHANDED_PROPERTY);
+			}
+			else
+			{
+				PsiBuilder.Marker err = builder.mark();
+				builder.advanceLexer();
+				err.error("Expected identifier");
+			}
+		}
+
+		Parsing.checkMatches(builder, JSTokenTypes.RBRACE, "'}' expected");
+
+		desctructionObjectMarker.done(JSElementTypes.DESTRUCTURING_OBJECT);
+
+		parseVarInitializer(builder, false);
+
+		mark.done(JSElementTypes.DESTRUCTURING_ELEMENT);
 	}
 
 	protected void checkForSemicolon(final PsiBuilder builder)
@@ -726,6 +779,13 @@ public class StatementParsing extends Parsing
 
 		getExpressionParsing().tryParseType(builder);
 
+		parseVarInitializer(builder, allowIn);
+
+		var.done(JSElementTypes.VARIABLE);
+	}
+
+	protected void parseVarInitializer(PsiBuilder builder, boolean allowIn)
+	{
 		if(builder.getTokenType() == JSTokenTypes.EQ)
 		{
 			builder.advanceLexer();
@@ -744,7 +804,6 @@ public class StatementParsing extends Parsing
 				}
 			}
 		}
-		var.done(JSElementTypes.VARIABLE);
 	}
 
 	public void parseBlock(final PsiBuilder builder)

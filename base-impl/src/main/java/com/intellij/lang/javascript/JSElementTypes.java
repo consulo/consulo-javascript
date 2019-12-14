@@ -16,8 +16,6 @@
 
 package com.intellij.lang.javascript;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.javascript.psi.*;
@@ -30,10 +28,15 @@ import com.intellij.psi.tree.ILazyParseableElementType;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import consulo.javascript.lang.JavaScriptLanguage;
+import consulo.javascript.lang.parsing.impl.JavaSciptDestructuringElementImpl;
+import consulo.javascript.lang.parsing.impl.JavaSciptDestructuringObjectImpl;
+import consulo.javascript.lang.parsing.impl.JavaScriptDestructuringShorthandedPropertyImpl;
 import consulo.javascript.psi.impl.JSComputedNameImpl;
 import consulo.javascript.psi.impl.JavaScriptLambdaExpressionImpl;
 import consulo.javascript.psi.stubs.JSFileStub;
 import consulo.psi.tree.ElementTypeAsPsiFactory;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -103,6 +106,9 @@ public interface JSElementTypes
 	IElementType IF_STATEMENT = new ElementTypeAsPsiFactory("IF_STATEMENT", JavaScriptLanguage.INSTANCE, JSIfStatementImpl.class);
 	IElementType CONTINUE_STATEMENT = new ElementTypeAsPsiFactory("CONTINUE_STATEMENT", JavaScriptLanguage.INSTANCE, JSContinueStatementImpl.class);
 	IElementType BREAK_STATEMENT = new ElementTypeAsPsiFactory("BREAK_STATEMENT", JavaScriptLanguage.INSTANCE, JSBreakStatementImpl.class);
+	IElementType DESTRUCTURING_ELEMENT = new ElementTypeAsPsiFactory("DESTRUCTURING_ELEMENT", JavaScriptLanguage.INSTANCE, JavaSciptDestructuringElementImpl.class);
+	IElementType DESTRUCTURING_OBJECT = new ElementTypeAsPsiFactory("DESTRUCTURING_OBJECT", JavaScriptLanguage.INSTANCE, JavaSciptDestructuringObjectImpl.class);
+	IElementType DESTRUCTURING_SHORTHANDED_PROPERTY = new ElementTypeAsPsiFactory("DESTRUCTURING_SHORTHANDED_PROPERTY", JavaScriptLanguage.INSTANCE, JavaScriptDestructuringShorthandedPropertyImpl.class);
 	IElementType WITH_STATEMENT = new ElementTypeAsPsiFactory("WITH_STATEMENT", JavaScriptLanguage.INSTANCE, JSWithStatementImpl.class);
 	IElementType RETURN_STATEMENT = new ElementTypeAsPsiFactory("RETURN_STATEMENT", JavaScriptLanguage.INSTANCE, JSReturnStatementImpl.class);
 	IElementType THROW_STATEMENT = new ElementTypeAsPsiFactory("THROW_STATEMENT", JavaScriptLanguage.INSTANCE, JSThrowStatementImpl.class);
