@@ -18,6 +18,9 @@ package com.intellij.lang.javascript.psi;
 
 import com.intellij.lang.javascript.psi.stubs.JSVarStatementStub;
 import com.intellij.psi.StubBasedPsiElement;
+import consulo.annotation.access.RequiredReadAction;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,6 +32,10 @@ import com.intellij.psi.StubBasedPsiElement;
 public interface JSVarStatement extends JSStatement, StubBasedPsiElement<JSVarStatementStub>
 {
 	JSVariable[] getVariables();
+
+	@Nullable
+	@RequiredReadAction
+	JSDestructuringElement getDestructuringElement();
 
 	void declareVariable(String name, JSExpression initializer);
 }

@@ -2,8 +2,10 @@ package consulo.javascript.lang.parsing.impl;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSDestructuringShorthandedProperty;
+import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.impl.JSElementImpl;
 import com.intellij.psi.PsiElementVisitor;
+import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;
 
@@ -22,5 +24,13 @@ public class JavaScriptDestructuringShorthandedPropertyImpl extends JSElementImp
 	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
 		visitor.visitElement(this);
+	}
+
+	@Nonnull
+	@RequiredReadAction
+	@Override
+	public JSVariable getVarialbe()
+	{
+		return findNotNullChildByClass(JSVariable.class);
 	}
 }

@@ -16,19 +16,18 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
-import com.intellij.lang.javascript.psi.JSElementVisitor;
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSVarStatement;
-import com.intellij.lang.javascript.psi.JSVariable;
+import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.stubs.JSVarStatementStub;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import consulo.annotation.access.RequiredReadAction;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,8 +38,6 @@ import com.intellij.psi.scope.PsiScopeProcessor;
  */
 public class JSVarStatementImpl extends JSStubbedStatementImpl<JSVarStatementStub> implements JSVarStatement
 {
-
-
 	public JSVarStatementImpl(final ASTNode node)
 	{
 		super(node);
@@ -54,7 +51,20 @@ public class JSVarStatementImpl extends JSStubbedStatementImpl<JSVarStatementStu
 	@Override
 	public JSVariable[] getVariables()
 	{
+		JSDestructuringElement destructuringElement = getDestructuringElement();
+		if(destructuringElement != null)
+		{
+			return destructuringElement.getVariables();
+		}
 		return getStubOrPsiChildren(JSElementTypes.VARIABLE, JSVariable.EMPTY_ARRAY);
+	}
+
+	@RequiredReadAction
+	@Nullable
+	@Override
+	public JSDestructuringElement getDestructuringElement()
+	{
+		return findChildByClass(JSDestructuringElement.class);
 	}
 
 	@Override
@@ -88,12 +98,12 @@ public class JSVarStatementImpl extends JSStubbedStatementImpl<JSVarStatementStu
 			{
 				break;
 			}
+
 			if(!processor.execute(var, state))
 			{
 				return false;
 			}
 		}
-
 
 		return true;
 	}

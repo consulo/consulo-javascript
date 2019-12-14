@@ -736,7 +736,9 @@ public class StatementParsing extends Parsing
 			if(isIdentifierToken(builder))
 			{
 				PsiBuilder.Marker propertyMarker = builder.mark();
+				PsiBuilder.Marker varMarker = builder.mark();
 				builder.advanceLexer();
+				varMarker.done(JSElementTypes.VARIABLE);
 				propertyMarker.done(JSElementTypes.DESTRUCTURING_SHORTHANDED_PROPERTY);
 			}
 			else

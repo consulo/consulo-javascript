@@ -127,6 +127,11 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 	@Override
 	public JSAttributeList getAttributeList()
 	{
+		PsiElement parent = getParent();
+		if(!(parent instanceof JSVarStatement))
+		{
+			return null;
+		}
 		return ((JSVarStatementImpl) getParent()).getStubOrPsiChild(JSElementTypes.ATTRIBUTE_LIST);
 	}
 
