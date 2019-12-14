@@ -1,23 +1,44 @@
 package consulo.javascript.lang.lexer;
 
-import com.intellij.lexer.LexerBase;
+import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.lang.javascript.JSTokenTypes;
+import consulo.javascript.lang.lexer.JavaScriptFlexLexer;
 
 %%
 
+%{
+    public _EcmaScript6Lexer(boolean highlightMode) {
+      this((java.io.Reader)null);
+      isHighlightModeOn = highlightMode;
+    }
+
+    private boolean isHighlightModeOn = false;
+    private int tagCount = 0;
+
+    public final int getTagCount() {
+      return tagCount;
+    }
+
+    public final void setTagCount(int _tagCount) {
+      tagCount = _tagCount;
+    }
+%}
+
 %public
-%class EcmaScript6Lexer
-%extends LexerBase
+%class _EcmaScript6Lexer
+%implements FlexLexer
+%implements JavaScriptFlexLexer
 %unicode
-%function advanceImpl
+%function advance
 %type IElementType
 %eof{  return;
 %eof}
 
 DIGIT=[0-9]
+OCTAL_DIGIT=[0-7]
 HEX_DIGIT=[0-9A-Fa-f]
-WHITE_SPACE_CHAR=[\ \n\r\t\f]+
+WHITE_SPACE_CHAR=[\ \n\r\t\f]
 
 IDENTIFIER=[:jletter:] [:jletterdigit:]*
 
@@ -26,11 +47,7 @@ DOC_COMMENT="/*""*"+("/"|([^"/""*"]{COMMENT_TAIL}))?
 COMMENT_TAIL=([^"*"]*("*"+[^"*""/"])?)*("*"+"/")?
 END_OF_LINE_COMMENT="/""/"[^\r\n]*
 
-
-BIN_INTEGER_LITERAL = 0 [Bb] {DIGIT}*
-OCTAL_INTEGER_LITERAL = 0 [Oo] {DIGIT}*
-
-INTEGER_LITERAL={DECIMAL_INTEGER_LITERAL}|{HEX_INTEGER_LITERAL}|{BIN_INTEGER_LITERAL}|{OCTAL_INTEGER_LITERAL}
+INTEGER_LITERAL={DECIMAL_INTEGER_LITERAL}|{HEX_INTEGER_LITERAL}
 DECIMAL_INTEGER_LITERAL=(0|([1-9]({DIGIT})*))
 HEX_INTEGER_LITERAL=0[Xx]({HEX_DIGIT})*
 
@@ -44,19 +61,97 @@ EXPONENT_PART=[Ee]["+""-"]?({DIGIT})*
 CRLF= [\ \t \f]* (\n | \r | \r\n)
 QUOTED_LITERAL="'"([^\\\'\r\n]|{ESCAPE_SEQUENCE}|\\{CRLF})*("'"|\\)?
 DOUBLE_QUOTED_LITERAL=\"([^\\\"\r\n]|{ESCAPE_SEQUENCE}|\\{CRLF})*(\"|\\)?
-SINGLE_INTERPOLATION_CHAR=[^]
-INTERPOLATION_STRING_LITERAL=\`{SINGLE_INTERPOLATION_CHAR}*\`
 ESCAPE_SEQUENCE=\\[^\r\n]
 GROUP = "[" [^\]]* "]"
 
 REGEXP_LITERAL="/"([^\*\\/\r\n]|{ESCAPE_SEQUENCE}|{GROUP})([^\\/\r\n]|{ESCAPE_SEQUENCE}|{GROUP})*("/"[gimx]*)?
+ALPHA=[:letter:]
 DIGIT=[0-9]
+XML_NAME=({ALPHA}|"_")({ALPHA}|{DIGIT}|"_"|"."|"-")*(":"({ALPHA}|"_")?({ALPHA}|{DIGIT}|"_"|"."|"-")*)?
+XML_COMMENT="<!--" ([^\-<\/] | (\-[^\-<\/])| (<[^!\-\/]) | (\-\-[^<>\/] | (\/[^<\/\-]) ))* "-->"
+
+FIELD_OR_METHOD={IDENTIFIER} ("(" [^ \\)]* ")"? )?
 
 %state DIV_OR_GT
+%state TAG
+%state TAG_ATTRIBUTES
+%state TAG_CONTENT
+%state TAG_END
+%state TAG_ATTR_SQ
+%state TAG_ATTR_DQ
+%state COMMENT
+%state LAST_STATE
 
 %%
 
-<YYINITIAL, DIV_OR_GT> {WHITE_SPACE_CHAR}   { return JSTokenTypes.WHITE_SPACE; }
+<YYINITIAL,TAG,TAG_END,DIV_OR_GT,COMMENT,TAG_CONTENT> {WHITE_SPACE_CHAR}+   { return JSTokenTypes.WHITE_SPACE; }
+<TAG_ATTRIBUTES> {WHITE_SPACE_CHAR}+   { return isHighlightModeOn ? JSTokenTypes.XML_TAG_WHITE_SPACE:JSTokenTypes.WHITE_SPACE; }
+
+<YYINITIAL> "<" {
+    tagCount = 0;
+    yybegin(TAG); yypushback(yylength());
+}
+
+<TAG> "<>" { tagCount++; yybegin(TAG_CONTENT); return JSTokenTypes.XML_START_TAG_LIST; }
+<TAG> "</>" { tagCount--; yybegin(YYINITIAL); return JSTokenTypes.XML_END_TAG_LIST; }
+
+<TAG,TAG_CONTENT> "<" { tagCount++; yybegin(TAG); return JSTokenTypes.XML_START_TAG_START; }
+<TAG_CONTENT> "</" { tagCount--; yybegin(TAG_END); return JSTokenTypes.XML_END_TAG_START; }
+
+<TAG> {
+  {XML_NAME} { yybegin(TAG_ATTRIBUTES); return JSTokenTypes.XML_TAG_NAME; }
+  "{" [^}]* "}" { yybegin(TAG_ATTRIBUTES); return JSTokenTypes.XML_JS_SCRIPT; }
+}
+
+<TAG_END> {
+  {XML_NAME} { return JSTokenTypes.XML_TAG_NAME; }
+  "{" [^}]* "}" { return JSTokenTypes.XML_JS_SCRIPT; }
+}
+
+<TAG_ATTRIBUTES> {
+  {XML_NAME} { return JSTokenTypes.XML_NAME; }
+  "{" [^}]* "}" { return JSTokenTypes.XML_JS_SCRIPT; }
+}
+
+<TAG_CONTENT> "{" [^}]* "}" { return JSTokenTypes.XML_JS_SCRIPT; }
+<TAG_CONTENT> ([^\?<&\{# \n\r\t\f])* { return JSTokenTypes.XML_TAG_CONTENT; }
+<TAG_CONTENT> "<?" ([^\?]|(\?[^\>]))* "?>" { return JSTokenTypes.XML_TAG_CONTENT; }
+<TAG_CONTENT> {XML_COMMENT} { return JSTokenTypes.XML_STYLE_COMMENT; }
+
+<TAG_CONTENT,TAG_ATTR_SQ, TAG_ATTR_DQ>
+  "&" {XML_NAME} ";" |
+  "&#" {DIGIT}+ ";" |
+  "&#x" ({DIGIT}|[a-fA-F])+ ";"
+{
+  return JSTokenTypes.XML_ENTITY_REF;
+}
+
+<TAG> "/>" { yybegin(--tagCount == 0 ? YYINITIAL:TAG_CONTENT); return JSTokenTypes.XML_EMPTY_TAG_END; }
+
+<TAG_END> ">" { yybegin(tagCount == 0 ? YYINITIAL:TAG_CONTENT); return JSTokenTypes.XML_TAG_END; }
+<TAG_ATTRIBUTES> "=" { return JSTokenTypes.XML_ATTR_EQUAL; }
+<TAG_ATTRIBUTES> "\'" { yybegin(TAG_ATTR_SQ); return JSTokenTypes.XML_ATTR_VALUE_START; }
+<TAG_ATTRIBUTES> "\"" { yybegin(TAG_ATTR_DQ); return JSTokenTypes.XML_ATTR_VALUE_START; }
+<TAG_ATTRIBUTES> ">" { yybegin(TAG_CONTENT); return JSTokenTypes.XML_TAG_END; }
+<TAG_ATTRIBUTES> [^] { yybegin(TAG); yypushback(yylength()); }
+
+<TAG_ATTR_SQ> "\'" { yybegin(TAG_ATTRIBUTES); return JSTokenTypes.XML_ATTR_VALUE_END; }
+<TAG_ATTR_SQ> [^\']* { return JSTokenTypes.XML_ATTR_VALUE; }
+<TAG_ATTR_DQ> "\"" { yybegin(TAG_ATTRIBUTES); return JSTokenTypes.XML_ATTR_VALUE_END; }
+<TAG_ATTR_DQ> [^\"]* { return JSTokenTypes.XML_ATTR_VALUE; }
+
+<TAG,TAG_END, TAG_CONTENT> [^] { return JSTokenTypes.BAD_CHARACTER; }
+
+<YYINITIAL> "<!--" (.|{CRLF}+)* "//" {WHITE_SPACE_CHAR}* "-->" {
+  yybegin(COMMENT); yypushback(yylength());
+}
+
+<YYINITIAL> {XML_COMMENT} {
+  yybegin(YYINITIAL); return JSTokenTypes.XML_STYLE_COMMENT;
+}
+
+<COMMENT> "<!--" { yybegin(YYINITIAL); return JSTokenTypes.XML_STYLE_COMMENT_START; }
+<COMMENT> [^] { yybegin(YYINITIAL); yypushback(1); }
 
 <YYINITIAL,DIV_OR_GT> {C_STYLE_COMMENT}     { return JSTokenTypes.C_STYLE_COMMENT; }
 <YYINITIAL,DIV_OR_GT> {END_OF_LINE_COMMENT} { return JSTokenTypes.END_OF_LINE_COMMENT; }
@@ -65,11 +160,16 @@ DIGIT=[0-9]
 <YYINITIAL,DIV_OR_GT> {INTEGER_LITERAL}     { yybegin(DIV_OR_GT); return JSTokenTypes.NUMERIC_LITERAL; }
 <YYINITIAL,DIV_OR_GT> {FLOAT_LITERAL}       { yybegin(DIV_OR_GT); return JSTokenTypes.NUMERIC_LITERAL; }
 
-<YYINITIAL,DIV_OR_GT> {QUOTED_LITERAL}      { yybegin(YYINITIAL); return JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL;}
+<YYINITIAL,DIV_OR_GT> {QUOTED_LITERAL}      {
+                        yybegin(DIV_OR_GT);
+                        return isHighlightModeOn ?
+                          JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL:
+                          JSTokenTypes.STRING_LITERAL;
+                      }
 
-<YYINITIAL,DIV_OR_GT> {INTERPOLATION_STRING_LITERAL}  { yybegin(YYINITIAL); return JSTokenTypes.INTERPOLATION_STRING_LITERAL;}
-
-<YYINITIAL,DIV_OR_GT> {DOUBLE_QUOTED_LITERAL}      { yybegin(YYINITIAL); return JSTokenTypes.STRING_LITERAL; }
+<YYINITIAL,DIV_OR_GT>  "\\${" [^\}]* "}" { return JSTokenTypes.JSP_TEXT; }
+<YYINITIAL,DIV_OR_GT>  "${" [^\}]* "}" { return JSTokenTypes.JSP_TEXT; }
+<YYINITIAL,DIV_OR_GT> {DOUBLE_QUOTED_LITERAL}      { yybegin(DIV_OR_GT); return JSTokenTypes.STRING_LITERAL; }
 
 <YYINITIAL,DIV_OR_GT> "true"                { yybegin(DIV_OR_GT); return JSTokenTypes.TRUE_KEYWORD; }
 <YYINITIAL,DIV_OR_GT> "false"               { yybegin(DIV_OR_GT); return JSTokenTypes.FALSE_KEYWORD; }
@@ -102,27 +202,50 @@ DIGIT=[0-9]
 <YYINITIAL,DIV_OR_GT> "void"                { yybegin(YYINITIAL); return JSTokenTypes.VOID_KEYWORD; }
 <YYINITIAL,DIV_OR_GT> "while"               { yybegin(YYINITIAL); return JSTokenTypes.WHILE_KEYWORD; }
 <YYINITIAL,DIV_OR_GT> "with"                { yybegin(YYINITIAL); return JSTokenTypes.WITH_KEYWORD; }
-<YYINITIAL,DIV_OR_GT> "yield"               { yybegin(YYINITIAL); return JSTokenTypes.YIELD_KEYWORD; }
-<YYINITIAL,DIV_OR_GT> "let"                 { yybegin(YYINITIAL); return JSTokenTypes.LET_KEYWORD; }
-<YYINITIAL,DIV_OR_GT> "class"               { yybegin(YYINITIAL); return JSTokenTypes.CLASS_KEYWORD; }
-<YYINITIAL,DIV_OR_GT> "export"              { yybegin(YYINITIAL); return JSTokenTypes.EXPORT_KEYWORD; }
-<YYINITIAL,DIV_OR_GT> "extends"             { yybegin(YYINITIAL); return JSTokenTypes.EXTENDS_KEYWORD; }
-<YYINITIAL,DIV_OR_GT> "static"              { yybegin(YYINITIAL); return JSTokenTypes.STATIC_KEYWORD; }
-<YYINITIAL,DIV_OR_GT> "enum"                { yybegin(YYINITIAL); return JSTokenTypes.ENUM_KEYWORD; }
-<YYINITIAL,DIV_OR_GT> "import"              { yybegin(YYINITIAL); return JSTokenTypes.IMPORT_KEYWORD; }
 
-<YYINITIAL,DIV_OR_GT> "public"              { yybegin(YYINITIAL); return JSTokenTypes.PUBLIC_KEYWORD; }
-<YYINITIAL,DIV_OR_GT> "private"             { yybegin(YYINITIAL); return JSTokenTypes.PRIVATE_KEYWORD; }
-<YYINITIAL,DIV_OR_GT> "protected"           { yybegin(YYINITIAL); return JSTokenTypes.PROTECTED_KEYWORD; }
-<YYINITIAL,DIV_OR_GT> "package"             { yybegin(YYINITIAL); return JSTokenTypes.PACKAGE_KEYWORD; }
-<YYINITIAL,DIV_OR_GT> "interface"           { yybegin(YYINITIAL); return JSTokenTypes.INTERFACE_KEYWORD; }
-<YYINITIAL,DIV_OR_GT> "implements"          { yybegin(YYINITIAL); return JSTokenTypes.IMPLEMENTS_KEYWORD; }
+<YYINITIAL,DIV_OR_GT> "::"                  {
+                          yybegin(YYINITIAL);
+                          return JSTokenTypes.COLON_COLON;
+                       }
 
-<YYINITIAL, DIV_OR_GT> {IDENTIFIER}         { yybegin(DIV_OR_GT);       return JSTokenTypes.IDENTIFIER; }
+<YYINITIAL,DIV_OR_GT> "..."                  {
+                            yybegin(YYINITIAL);
+                            return JSTokenTypes.DOT_DOT_DOT;
+                      }
 
+<YYINITIAL,DIV_OR_GT> ".."                  {
+                                        yybegin(YYINITIAL);
+                                                      return JSTokenTypes.DOT_DOT;
+                      }
+<YYINITIAL,DIV_OR_GT> "class"               { yybegin(YYINITIAL); return JSTokenTypes.CLASS_KEYWORD ; }
+<YYINITIAL,DIV_OR_GT> "export"              { yybegin(YYINITIAL); return JSTokenTypes.EXPORT_KEYWORD ; }
+<YYINITIAL,DIV_OR_GT> "interface"           { yybegin(YYINITIAL); return JSTokenTypes.INTERFACE_KEYWORD ; }
+<YYINITIAL,DIV_OR_GT> "extends"             { yybegin(YYINITIAL); return JSTokenTypes.EXTENDS_KEYWORD ; }
+<YYINITIAL,DIV_OR_GT> "implements"          { yybegin(YYINITIAL); return JSTokenTypes.IMPLEMENTS_KEYWORD ; }
+<YYINITIAL,DIV_OR_GT> "public"              { yybegin(YYINITIAL); return JSTokenTypes.PUBLIC_KEYWORD ; }
+<YYINITIAL,DIV_OR_GT> "static"              { yybegin(YYINITIAL); return JSTokenTypes.STATIC_KEYWORD ; }
+<YYINITIAL,DIV_OR_GT> "internal"            { yybegin(YYINITIAL); return JSTokenTypes.INTERNAL_KEYWORD ; }
+<YYINITIAL,DIV_OR_GT> "final"               { yybegin(YYINITIAL); return JSTokenTypes.FINAL_KEYWORD ; }
+<YYINITIAL,DIV_OR_GT> "dynamic"             { yybegin(YYINITIAL); return JSTokenTypes.DYNAMIC_KEYWORD ; }
+<YYINITIAL,DIV_OR_GT> "import"              { yybegin(YYINITIAL); return JSTokenTypes.IMPORT_KEYWORD ; }
+<YYINITIAL,DIV_OR_GT> "use"                 { yybegin(YYINITIAL); return JSTokenTypes.USE_KEYWORD ; }
+<YYINITIAL,DIV_OR_GT> "super"               { yybegin(YYINITIAL); return JSTokenTypes.SUPER_KEYWORD ; }
+<YYINITIAL,DIV_OR_GT> "include"             { yybegin(YYINITIAL); return JSTokenTypes.INCLUDE_KEYWORD ; }
+<YYINITIAL,DIV_OR_GT> "as"                  { yybegin(YYINITIAL); return JSTokenTypes.AS_KEYWORD ; }
+<YYINITIAL,DIV_OR_GT> "yield"               { yybegin(YYINITIAL); return JSTokenTypes.YIELD_KEYWORD ; }
+<YYINITIAL,DIV_OR_GT> "let"                 { yybegin(YYINITIAL); return JSTokenTypes.LET_KEYWORD ; }
 
-<YYINITIAL, DIV_OR_GT> "."                   { yybegin(YYINITIAL); return JSTokenTypes.DOT; }
-<YYINITIAL, DIV_OR_GT> "..."                 { yybegin(YYINITIAL); return JSTokenTypes.DOT_DOT_DOT; }
+<YYINITIAL,DIV_OR_GT> "@"                   {
+    return JSTokenTypes.AT;
+}
+
+<YYINITIAL,DIV_OR_GT> {IDENTIFIER}          { yybegin(DIV_OR_GT);       return JSTokenTypes.IDENTIFIER; }
+
+<YYINITIAL> "*"       {                           yybegin(DIV_OR_GT);
+                                                  return JSTokenTypes.ANY_IDENTIFIER;
+                      }
+
+<YYINITIAL,DIV_OR_GT> "."                   { return JSTokenTypes.DOT; }
 
 
 <YYINITIAL,DIV_OR_GT> "==="                 { yybegin(YYINITIAL); return JSTokenTypes.EQEQEQ; }
@@ -134,30 +257,43 @@ DIGIT=[0-9]
 <YYINITIAL,DIV_OR_GT> "=>"                  { yybegin(YYINITIAL); return JSTokenTypes.DARROW; }
 <YYINITIAL,DIV_OR_GT> "=="                  { yybegin(YYINITIAL); return JSTokenTypes.EQEQ; }
 <YYINITIAL,DIV_OR_GT> "!="                  { yybegin(YYINITIAL); return JSTokenTypes.NE; }
-<DIV_OR_GT> "<"                             { yybegin(YYINITIAL); return JSTokenTypes.LT; }
+<DIV_OR_GT> "<"       { yybegin(YYINITIAL); return JSTokenTypes.LT; }
+<YYINITIAL,DIV_OR_GT> "&lt;"                { yybegin(YYINITIAL); return JSTokenTypes.LT; }
 <YYINITIAL,DIV_OR_GT> ">"                   { yybegin(YYINITIAL); return JSTokenTypes.GT; }
-<DIV_OR_GT> "<="                            { yybegin(YYINITIAL); return JSTokenTypes.LE; }
+<YYINITIAL,DIV_OR_GT> "&gt;"                { yybegin(YYINITIAL); return JSTokenTypes.GT; }
+<DIV_OR_GT> "<="      { yybegin(YYINITIAL); return JSTokenTypes.LE; }
+<YYINITIAL,DIV_OR_GT> "&lt;="               { yybegin(YYINITIAL); return JSTokenTypes.LE; }
 <YYINITIAL,DIV_OR_GT> ">="                  { yybegin(YYINITIAL); return JSTokenTypes.GE; }
-<DIV_OR_GT> "<<"                            { yybegin(YYINITIAL); return JSTokenTypes.LTLT; }
+<YYINITIAL,DIV_OR_GT> "&gt;="               { yybegin(YYINITIAL); return JSTokenTypes.GE; }
+<DIV_OR_GT> "<<"      { yybegin(YYINITIAL); return JSTokenTypes.LTLT; }
+<YYINITIAL,DIV_OR_GT> "&lt;&lt;"            { yybegin(YYINITIAL); return JSTokenTypes.LTLT; }
 <YYINITIAL,DIV_OR_GT> ">>"                  { yybegin(YYINITIAL); return JSTokenTypes.GTGT; }
+<YYINITIAL,DIV_OR_GT> "&gt;&gt;"            { yybegin(YYINITIAL); return JSTokenTypes.GTGT; }
 <YYINITIAL,DIV_OR_GT> ">>>"                 { yybegin(YYINITIAL); return JSTokenTypes.GTGTGT; }
+<YYINITIAL,DIV_OR_GT> "&gt;&gt;&gt;"        { yybegin(YYINITIAL); return JSTokenTypes.GTGTGT; }
 
 <YYINITIAL,DIV_OR_GT> "&"                   { yybegin(YYINITIAL); return JSTokenTypes.AND; }
+<YYINITIAL,DIV_OR_GT> "&amp;"               { yybegin(YYINITIAL); return JSTokenTypes.AND; }
 <YYINITIAL,DIV_OR_GT> "&&"                  { yybegin(YYINITIAL); return JSTokenTypes.ANDAND; }
+<YYINITIAL,DIV_OR_GT> "&amp;&amp;"          { yybegin(YYINITIAL); return JSTokenTypes.ANDAND; }
 <YYINITIAL,DIV_OR_GT> "|"                   { yybegin(YYINITIAL); return JSTokenTypes.OR; }
 <YYINITIAL,DIV_OR_GT> "||"                  { yybegin(YYINITIAL); return JSTokenTypes.OROR; }
 
 <YYINITIAL,DIV_OR_GT> "+="                  { yybegin(YYINITIAL); return JSTokenTypes.PLUSEQ; }
 <YYINITIAL,DIV_OR_GT> "-="                  { yybegin(YYINITIAL); return JSTokenTypes.MINUSEQ; }
-<DIV_OR_GT> "*="                            { yybegin(YYINITIAL); return JSTokenTypes.MULTEQ; }
-<DIV_OR_GT> "/="                            { yybegin(YYINITIAL); return JSTokenTypes.DIVEQ; }
+<DIV_OR_GT> "*="      { yybegin(YYINITIAL); return JSTokenTypes.MULTEQ; }
+<DIV_OR_GT> "/="      { yybegin(YYINITIAL); return JSTokenTypes.DIVEQ; }
 <YYINITIAL,DIV_OR_GT> "&="                  { yybegin(YYINITIAL); return JSTokenTypes.ANDEQ; }
+<YYINITIAL,DIV_OR_GT> "&amp;="              { yybegin(YYINITIAL); return JSTokenTypes.ANDEQ; }
 <YYINITIAL,DIV_OR_GT> "|="                  { yybegin(YYINITIAL); return JSTokenTypes.OREQ; }
 <YYINITIAL,DIV_OR_GT> "^="                  { yybegin(YYINITIAL); return JSTokenTypes.XOREQ; }
 <YYINITIAL,DIV_OR_GT> "%="                  { yybegin(YYINITIAL); return JSTokenTypes.PERCEQ; }
-<DIV_OR_GT> "<<="                           { yybegin(YYINITIAL); return JSTokenTypes.LTLTEQ; }
+<DIV_OR_GT> "<<="     { yybegin(YYINITIAL); return JSTokenTypes.LTLTEQ; }
+<YYINITIAL,DIV_OR_GT> "&lt;&lt;="           { yybegin(YYINITIAL); return JSTokenTypes.LTLTEQ; }
 <YYINITIAL,DIV_OR_GT> ">>="                 { yybegin(YYINITIAL); return JSTokenTypes.GTGTEQ; }
+<YYINITIAL,DIV_OR_GT> "&gt;&gt;="           { yybegin(YYINITIAL); return JSTokenTypes.GTGTEQ; }
 <YYINITIAL,DIV_OR_GT> ">>>="                { yybegin(YYINITIAL); return JSTokenTypes.GTGTGTEQ; }
+<YYINITIAL,DIV_OR_GT> "&gt;&gt;&gt;="       { yybegin(YYINITIAL); return JSTokenTypes.GTGTGTEQ; }
 
 <YYINITIAL,DIV_OR_GT> "("                   { yybegin(YYINITIAL); return JSTokenTypes.LPAR; }
 <YYINITIAL,DIV_OR_GT> ")"                   { yybegin(DIV_OR_GT);       return JSTokenTypes.RPAR; }
@@ -175,13 +311,13 @@ DIGIT=[0-9]
 <YYINITIAL,DIV_OR_GT> ":"                   { yybegin(YYINITIAL); return JSTokenTypes.COLON; }
 <YYINITIAL,DIV_OR_GT> "+"                   { yybegin(YYINITIAL); return JSTokenTypes.PLUS; }
 <YYINITIAL,DIV_OR_GT> "-"                   { yybegin(YYINITIAL); return JSTokenTypes.MINUS; }
-<YYINITIAL,DIV_OR_GT> "*"                             { yybegin(YYINITIAL); return JSTokenTypes.MULT; }
-<DIV_OR_GT> "/"                             { yybegin(YYINITIAL); return JSTokenTypes.DIV; }
+<DIV_OR_GT> "*"       { yybegin(YYINITIAL); return JSTokenTypes.MULT; }
+<DIV_OR_GT> "/"       { yybegin(YYINITIAL); return JSTokenTypes.DIV; }
 <YYINITIAL,DIV_OR_GT> "^"                   { yybegin(YYINITIAL); return JSTokenTypes.XOR; }
 <YYINITIAL,DIV_OR_GT> "%"                   { yybegin(YYINITIAL); return JSTokenTypes.PERC; }
 
-<YYINITIAL> {REGEXP_LITERAL}                { return JSTokenTypes.REGEXP_LITERAL; }
+<YYINITIAL> {REGEXP_LITERAL} { return JSTokenTypes.REGEXP_LITERAL; }
 
-<YYINITIAL> "/"                             { return JSTokenTypes.DIV; }
-
-<YYINITIAL,DIV_OR_GT> [^]                   { return JSTokenTypes.BAD_CHARACTER; }
+<YYINITIAL,DIV_OR_GT> "]]>" { yybegin(YYINITIAL); return JSTokenTypes.CDATA_END; }
+<YYINITIAL,DIV_OR_GT> "<![CDATA[" { yybegin(YYINITIAL); return JSTokenTypes.CDATA_START; }
+.                     { yybegin(YYINITIAL); return JSTokenTypes.BAD_CHARACTER; }

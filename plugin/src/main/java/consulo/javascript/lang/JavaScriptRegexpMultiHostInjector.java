@@ -16,17 +16,18 @@
 
 package consulo.javascript.lang;
 
-import org.intellij.lang.regexp.RegExpLanguage;
-import javax.annotation.Nonnull;
-import consulo.annotation.access.RequiredReadAction;
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
 import com.intellij.lang.javascript.JSTokenTypes;
-import consulo.javascript.psi.JSSimpleLiteralExpression;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.tree.IElementType;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.javascript.psi.JSSimpleLiteralExpression;
+import org.intellij.lang.regexp.RegExpLanguage;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -50,6 +51,12 @@ public class JavaScriptRegexpMultiHostInjector implements MultiHostInjector
 				{
 					textLength --;
 				}
+
+				if(textLength <= 1)
+				{
+					return;
+				}
+
 				registrar.startInjecting(RegExpLanguage.INSTANCE).addPlace(null, null, (PsiLanguageInjectionHost) context, new TextRange(1, textLength)).doneInjecting();
 			}
 		}

@@ -16,14 +16,7 @@
 
 package com.intellij.lang.javascript;
 
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import com.intellij.lang.LanguageParserDefinitions;
-import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.PsiBuilderFactory;
+import com.intellij.lang.*;
 import com.intellij.lang.javascript.highlighting.JavaScriptHighlightingLexer;
 import com.intellij.lang.javascript.parsing.JSDocParsing;
 import com.intellij.lexer.FlexAdapter;
@@ -36,11 +29,16 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILazyParseableElementType;
 import com.intellij.psi.tree.TokenSet;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.javascript.lang.JavaScriptContextKeywordElementType;
 import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.javascript.lang.parsing.JavaScriptParser;
 import consulo.javascript.lang.parsing.JavaScriptParsingContext;
 import consulo.javascript.lang.parsing.Parsing;
 import consulo.lang.LanguageVersion;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author max, maxim.mossienko
@@ -49,6 +47,8 @@ public interface JSTokenTypes
 {
 	IElementType IDENTIFIER = new JSElementType("IDENTIFIER");
 	IElementType ANY_IDENTIFIER = new JSElementType("ANY_IDENTIFIER");
+	IElementType ASTERISK = ANY_IDENTIFIER;
+
 	IElementType WHITE_SPACE = TokenType.WHITE_SPACE;
 	IElementType BAD_CHARACTER = TokenType.BAD_CHARACTER;
 
@@ -106,8 +106,9 @@ public interface JSTokenTypes
 	IElementType IMPORT_KEYWORD = new JSElementType("IMPORT_KEYWORD"); // import
 	IElementType CLASS_KEYWORD = new JSElementType("CLASS_KEYWORD"); // class
 	IElementType INTERFACE_KEYWORD = new JSElementType("INTERFACE_KEYWORD"); // interface
+	IElementType FROM_KEYWORD = new JavaScriptContextKeywordElementType("FROM_KEYWORD", "from");
 	IElementType PUBLIC_KEYWORD = new JSElementType("PUBLIC_KEYWORD"); // public
-	IElementType STATIC_KEYWORD = new JSElementType("STATIC_KEYWORD"); // static
+	IElementType STATIC_KEYWORD = new JavaScriptContextKeywordElementType("STATIC_KEYWORD", "static"); // static
 	IElementType INTERNAL_KEYWORD = new JSElementType("INTERNAL_KEYWORD"); // internal
 	IElementType FINAL_KEYWORD = new JSElementType("FINAL_KEYWORD"); // final
 	IElementType DYNAMIC_KEYWORD = new JSElementType("DYNAMIC_KEYWORD"); // dynamic
@@ -128,8 +129,8 @@ public interface JSTokenTypes
 	IElementType INCLUDE_KEYWORD = new JSElementType("INCLUDE_KEYWORD"); // include
 	IElementType IS_KEYWORD = new JSElementType("IS_KEYWORD"); // is
 	IElementType AS_KEYWORD = new JSElementType("AS_KEYWORD"); // as
-	IElementType GET_KEYWORD = new JSElementType("GET_KEYWORD"); // GET
-	IElementType SET_KEYWORD = new JSElementType("SET_KEYWORD"); // SET
+	IElementType GET_KEYWORD = new JavaScriptContextKeywordElementType("GET_KEYWORD", "get"); // GET
+	IElementType SET_KEYWORD = new JavaScriptContextKeywordElementType("SET_KEYWORD", "set"); // SET
 	IElementType EACH_KEYWORD = new JSElementType("EACH_KEYWORD");
 	IElementType INT_KEYWORD = new JSElementType("INT_KEYWORD");
 	IElementType UINT_KEYWORD = new JSElementType("UINT_KEYWORD");
@@ -196,13 +197,11 @@ public interface JSTokenTypes
 			CLASS_KEYWORD, EXTENDS_KEYWORD, IMPORT_KEYWORD, USE_KEYWORD, NAMESPACE_KEYWORD, OVERRIDE_KEYWORD, INCLUDE_KEYWORD,
 			SUPER_KEYWORD, IS_KEYWORD, AS_KEYWORD, GET_KEYWORD, SET_KEYWORD, EACH_KEYWORD, INT_KEYWORD, UINT_KEYWORD);
 
-	TokenSet ECMASCRIPT6_KEYWORDS = TokenSet.create(EXPORT_KEYWORD, ENUM_KEYWORD);
+	TokenSet ECMASCRIPT6_KEYWORDS = TokenSet.create(EXPORT_KEYWORD, ENUM_KEYWORD, FROM_KEYWORD);
 
 	TokenSet ECMASCRIPT6_STRICT_KEYWORDS = TokenSet.create(PUBLIC_KEYWORD, PRIVATE_KEYWORD, PROTECTED_KEYWORD, PACKAGE_KEYWORD, IMPLEMENTS_KEYWORD, INTERFACE_KEYWORD, STATIC_KEYWORD);
 
 	TokenSet KEYWORDS = TokenSet.orSet(JS_KEYWORDS, JS2_KEYWORDS, ECMASCRIPT6_KEYWORDS);
-
-	TokenSet CONTEXT_KEYWORDS = TokenSet.orSet(ECMASCRIPT6_STRICT_KEYWORDS, TokenSet.create(GET_KEYWORD, SET_KEYWORD));
 
 	// Literals
 	IElementType NUMERIC_LITERAL = new JSElementType("NUMERIC_LITERAL");

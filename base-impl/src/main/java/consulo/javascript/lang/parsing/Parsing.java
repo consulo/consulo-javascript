@@ -16,13 +16,15 @@
 
 package consulo.javascript.lang.parsing;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
+import consulo.javascript.lang.JavaScriptContextKeywordElementType;
 import consulo.javascript.lang.parsing.impl.JavaScriptStrictParserBuilder;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: max
@@ -38,12 +40,29 @@ public class Parsing
 		myContext = context;
 	}
 
+	public boolean expectContextKeyword(@Nonnull PsiBuilder builder, @Nonnull IElementType elementType)
+	{
+		if(builder.getTokenType() == JSTokenTypes.IDENTIFIER)
+		{
+			IElementType contextKeywordElementType = JavaScriptContextKeywordElementType.getKeywordByText(builder.getTokenText());
+			if(contextKeywordElementType == null)
+			{
+				return false;
+			}
+			if(elementType == contextKeywordElementType)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	@Nullable
 	public IElementType expectContextKeyword(@Nonnull PsiBuilder builder, @Nonnull TokenSet tokenSet)
 	{
 		if(builder.getTokenType() == JSTokenTypes.IDENTIFIER)
 		{
-			IElementType contextKeywordElementType = ContextKeywordCache.getContextKeywordElementType(builder.getTokenText());
+			IElementType contextKeywordElementType = JavaScriptContextKeywordElementType.getKeywordByText(builder.getTokenText());
 			if(contextKeywordElementType == null)
 			{
 				return null;
@@ -54,6 +73,19 @@ public class Parsing
 			}
 		}
 		return null;
+	}
+
+	public void advanceContextKeyword(@Nonnull PsiBuilder builder, @Nonnull IElementType elementType)
+	{
+		if(expectContextKeyword(builder, elementType))
+		{
+			if(builder instanceof JavaScriptStrictParserBuilder)
+			{
+				((JavaScriptStrictParserBuilder) builder).disableNonStrictRemap(builder.getCurrentOffset());
+			}
+			builder.remapCurrentToken(elementType);
+			builder.advanceLexer();
+		}
 	}
 
 	public void advanceContextKeyword(@Nonnull PsiBuilder builder, @Nonnull TokenSet tokenSet)

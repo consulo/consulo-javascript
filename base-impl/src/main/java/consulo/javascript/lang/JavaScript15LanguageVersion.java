@@ -1,12 +1,12 @@
 package consulo.javascript.lang;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.util.Factory;
 import consulo.javascript.ide.hightlight.JavaScriptHighlighter;
 import consulo.javascript.lang.lexer.JavaScript15Lexer;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

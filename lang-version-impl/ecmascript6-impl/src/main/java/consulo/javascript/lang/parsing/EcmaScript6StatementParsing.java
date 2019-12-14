@@ -16,15 +16,16 @@
 
 package consulo.javascript.lang.parsing;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptBundle;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
+import consulo.javascript.lang.JavaScriptTokenSets;
+import consulo.logging.Logger;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,7 +33,7 @@ import com.intellij.psi.tree.TokenSet;
  */
 public class EcmaScript6StatementParsing extends StatementParsing
 {
-	public static final Logger LOGGER = Logger.getInstance(EcmaScript6StatementParsing.class);
+	private static final Logger LOGGER = Logger.getInstance(EcmaScript6StatementParsing.class);
 
 	public EcmaScript6StatementParsing(EcmaScript6ParsingContext context)
 	{
@@ -73,6 +74,118 @@ public class EcmaScript6StatementParsing extends StatementParsing
 		else
 		{
 			doParseStatement(builder, true);
+		}
+	}
+
+	@Override
+	protected void doParseStatement(PsiBuilder builder, boolean canHaveClasses)
+	{
+		if(canHaveClasses)
+		{
+			if(builder.getTokenType() == JSTokenTypes.IMPORT_KEYWORD)
+			{
+				parseImportStatement(builder);
+				return;
+			}
+		}
+		super.doParseStatement(builder, canHaveClasses);
+	}
+
+	private void parseImportStatement(final PsiBuilder builder)
+	{
+		final PsiBuilder.Marker importStatement = builder.mark();
+		try
+		{
+			builder.advanceLexer();
+
+			// TODO [VISTALL] specific element
+			if(builder.getTokenType() == JSTokenTypes.LBRACE)
+			{
+				builder.advanceLexer();
+
+				boolean first = true;
+				while(!builder.eof())
+				{
+					if(builder.getTokenType() == JSTokenTypes.RBRACE)
+					{
+						break;
+					}
+
+					if(!first)
+					{
+						if(builder.getTokenType() == JSTokenTypes.COMMA)
+						{
+							builder.advanceLexer();
+						}
+						else
+						{
+							builder.error("Comma expected");
+						}
+					}
+
+					first = false;
+
+					if(!getExpressionParsing().parseQualifiedTypeName(builder, false))
+					{
+						builder.error("Reference expected");
+					}
+				}
+
+				if(builder.getTokenType() != JSTokenTypes.RBRACE)
+				{
+					builder.error("'}' expected");
+				}
+				else
+				{
+					builder.advanceLexer();
+				}
+			}
+			else if(builder.getTokenType() == JSTokenTypes.ASTERISK)
+			{
+				builder.advanceLexer();
+			}
+			else if(builder.getTokenType() == JSTokenTypes.IDENTIFIER)
+			{
+				getExpressionParsing().parseQualifiedTypeName(builder, false);
+			}
+			else
+			{
+				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.typename"));
+			}
+
+			if(builder.getTokenType() == JSTokenTypes.AS_KEYWORD)
+			{
+				builder.advanceLexer();
+
+				if(builder.getTokenType() == JSTokenTypes.IDENTIFIER)
+				{
+					builder.advanceLexer();
+				}
+				else
+				{
+					builder.error("Expected identifier");
+				}
+			}
+
+			if(expectContextKeyword(builder, JSTokenTypes.FROM_KEYWORD))
+			{
+				advanceContextKeyword(builder, JSTokenTypes.FROM_KEYWORD);
+
+				if(JavaScriptTokenSets.STRING_LITERALS.contains(builder.getTokenType()))
+				{
+					builder.advanceLexer();
+				}
+				else
+				{
+					builder.error("Expecte from target");
+				}
+			}
+
+			checkForSemicolon(builder);
+		}
+		finally
+		{
+			importStatement.done(JSElementTypes.IMPORT_STATEMENT);
 		}
 	}
 
@@ -234,7 +347,7 @@ public class EcmaScript6StatementParsing extends StatementParsing
 	private void parseReferenceList(final PsiBuilder builder)
 	{
 		final IElementType tokenType = builder.getTokenType();
-		EcmaScript6StatementParsing.LOGGER.assertTrue(tokenType == JSTokenTypes.EXTENDS_KEYWORD || tokenType == JSTokenTypes.IMPLEMENTS_KEYWORD);
+		LOGGER.assertTrue(tokenType == JSTokenTypes.EXTENDS_KEYWORD || tokenType == JSTokenTypes.IMPLEMENTS_KEYWORD);
 		final PsiBuilder.Marker referenceList = builder.mark();
 		builder.advanceLexer();
 

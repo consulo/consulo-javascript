@@ -16,8 +16,6 @@
 
 package com.intellij.lang.javascript.highlighting;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.HighlightVisitor;
@@ -37,10 +35,14 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilCore;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.ide.hightlight.JavaScriptSyntaxHighlightKeys;
+import consulo.javascript.lang.JavaScriptContextKeywordElementType;
 import consulo.javascript.lang.JavaScriptFeature;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.javascript.lang.JavaScriptVersionUtil;
 import consulo.javascript.psi.JSSimpleLiteralExpression;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class JavaScriptHighlightVisitor extends JSElementVisitor implements HighlightVisitor
 {
@@ -69,7 +71,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 		{
 			addElementHighlight(parent, element);
 		}
-		else if(JSTokenTypes.CONTEXT_KEYWORDS.contains(elementType))
+		else if(JavaScriptContextKeywordElementType.containsKeyword(elementType))
 		{
 			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).textAttributes(JavaScriptSyntaxHighlightKeys.JS_KEYWORD).range(element).create());
 		}
