@@ -16,8 +16,6 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -27,6 +25,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+
+import javax.annotation.Nonnull;
 
 /**
  * @by Maxim.Mossienko
@@ -40,7 +40,7 @@ public class JSImportStatementImpl extends JSStubbedStatementImpl<JSImportStatem
 
 	public JSImportStatementImpl(final JSImportStatementStub stub)
 	{
-		super(stub, JSElementTypes.IMPORT_STATEMENT);
+		super(stub, JSElementTypes.ES4_IMPORT_STATEMENT);
 	}
 
 	@Override

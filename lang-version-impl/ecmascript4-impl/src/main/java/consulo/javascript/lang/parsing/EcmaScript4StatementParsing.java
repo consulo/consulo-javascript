@@ -386,7 +386,7 @@ public class EcmaScript4StatementParsing extends StatementParsing
 		}
 		finally
 		{
-			importStatement.done(JSElementTypes.IMPORT_STATEMENT);
+			importStatement.done(JSElementTypes.ES4_IMPORT_STATEMENT);
 		}
 	}
 

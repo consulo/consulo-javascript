@@ -207,7 +207,7 @@ public class EcmaScript6StatementParsing extends StatementParsing
 		}
 		finally
 		{
-			importStatement.done(JSElementTypes.IMPORT_STATEMENT);
+			importStatement.done(EcmaScript6ElementTypes.IMPORT_DECLARATION);
 		}
 	}
 

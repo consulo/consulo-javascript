@@ -16,9 +16,6 @@
 
 package com.intellij.lang.javascript.folding;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.intellij.codeInsight.folding.CodeFoldingSettings;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilder;
@@ -32,20 +29,30 @@ import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.util.PsiUtilCore;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.javascript.psi.JavaScriptImportStatementBase;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author max
  */
 public class JavaScriptFoldingBuilder implements FoldingBuilder
 {
+	@RequiredReadAction
+	@Nonnull
 	@Override
-	public FoldingDescriptor[] buildFoldRegions(ASTNode node, Document document)
+	public FoldingDescriptor[] buildFoldRegions(@Nonnull ASTNode node, @Nonnull Document document)
 	{
-		List<FoldingDescriptor> descriptors = new ArrayList<FoldingDescriptor>();
+		List<FoldingDescriptor> descriptors = new ArrayList<>();
 		appendDescriptors(node, document, descriptors);
 		return descriptors.toArray(new FoldingDescriptor[descriptors.size()]);
 	}
 
+	@RequiredReadAction
 	private static ASTNode appendDescriptors(final ASTNode node, final Document document, final List<FoldingDescriptor> descriptors)
 	{
 		final IElementType type = node.getElementType();
@@ -73,9 +80,9 @@ public class JavaScriptFoldingBuilder implements FoldingBuilder
 		{
 			return collapseConsequentNodesOfSpecifiedType(node, descriptors, JSTokenTypes.END_OF_LINE_COMMENT);
 		}
-		else if(type == JSElementTypes.IMPORT_STATEMENT)
+		else if(node.getPsi() instanceof JavaScriptImportStatementBase)
 		{
-			return collapseConsequentNodesOfSpecifiedType(node, descriptors, JSElementTypes.IMPORT_STATEMENT);
+			return collapseConsequentNodesOfSpecifiedType(node, descriptors, PsiUtilCore.getElementType(node));
 		}
 		else if(type == JSElementTypes.CLASS || type == JSElementTypes.PACKAGE_STATEMENT)
 		{
@@ -116,8 +123,8 @@ public class JavaScriptFoldingBuilder implements FoldingBuilder
 		addDescriptorForRange(node, descriptors, range);
 	}
 
-	private static ASTNode collapseConsequentNodesOfSpecifiedType(final ASTNode node, final List<FoldingDescriptor> descriptors,
-			final IElementType endOfLineComment)
+	@RequiredReadAction
+	private static ASTNode collapseConsequentNodesOfSpecifiedType(final ASTNode node, final List<FoldingDescriptor> descriptors, final IElementType endOfLineComment)
 	{
 		PsiElement lastEoLComment = node.getPsi();
 		PsiElement current = lastEoLComment.getNextSibling();
@@ -147,6 +154,7 @@ public class JavaScriptFoldingBuilder implements FoldingBuilder
 		}
 	}
 
+	@RequiredReadAction
 	@Override
 	public String getPlaceholderText(ASTNode node)
 	{
@@ -163,7 +171,7 @@ public class JavaScriptFoldingBuilder implements FoldingBuilder
 		{
 			return "//...";
 		}
-		else if(type == JSElementTypes.IMPORT_STATEMENT)
+		else if(node.getPsi() instanceof JavaScriptImportStatementBase)
 		{
 			return "import ...";
 		}
@@ -185,6 +193,7 @@ public class JavaScriptFoldingBuilder implements FoldingBuilder
 		return null;
 	}
 
+	@RequiredReadAction
 	@Override
 	public boolean isCollapsedByDefault(ASTNode node)
 	{
@@ -193,7 +202,7 @@ public class JavaScriptFoldingBuilder implements FoldingBuilder
 		{
 			return CodeFoldingSettings.getInstance().COLLAPSE_FILE_HEADER;
 		}
-		if(node.getElementType() == JSElementTypes.IMPORT_STATEMENT)
+		if(node.getPsi() instanceof JavaScriptImportStatementBase)
 		{
 			return CodeFoldingSettings.getInstance().COLLAPSE_IMPORTS;
 		}

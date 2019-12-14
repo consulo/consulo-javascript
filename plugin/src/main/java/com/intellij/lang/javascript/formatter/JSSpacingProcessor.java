@@ -208,7 +208,7 @@ public class JSSpacingProcessor extends JSNodeVisitor
 		{
 			if(isInjectedJSHack(type1, type2) ||
 					isInjectedJSHack(type2, type1) ||
-					(type2 == JSTokenTypes.END_OF_LINE_COMMENT && isInlineEndOfLineCommentOnLeft() && type1 != JSElementTypes.IMPORT_STATEMENT))
+					(type2 == JSTokenTypes.END_OF_LINE_COMMENT && isInlineEndOfLineCommentOnLeft() && type1 != JSElementTypes.ES4_IMPORT_STATEMENT))
 			{
 				myResult = Spacing.getReadOnlySpacing();
 			}
@@ -223,12 +223,12 @@ public class JSSpacingProcessor extends JSNodeVisitor
 				}
 				else
 				{
-					if((JSElementTypes.IMPORT_STATEMENT == type1 && JSElementTypes.IMPORT_STATEMENT != type2 && JSTokenTypes.RBRACE != type2) || (JSElementTypes
-							.IMPORT_STATEMENT != type1 && JSTokenTypes.LBRACE != type1 && JSElementTypes.IMPORT_STATEMENT == type2))
+					if((JSElementTypes.ES4_IMPORT_STATEMENT == type1 && JSElementTypes.ES4_IMPORT_STATEMENT != type2 && JSTokenTypes.RBRACE != type2) || (JSElementTypes
+							.ES4_IMPORT_STATEMENT != type1 && JSTokenTypes.LBRACE != type1 && JSElementTypes.ES4_IMPORT_STATEMENT == type2))
 					{
 						myResult = Spacing.createSpacing(0, 0, 2, mySettings.KEEP_LINE_BREAKS, mySettings.KEEP_BLANK_LINES_IN_CODE);
 					}
-					else if(JSElementTypes.IMPORT_STATEMENT == type1 && JSElementTypes.IMPORT_STATEMENT == type2)
+					else if(JSElementTypes.ES4_IMPORT_STATEMENT == type1 && JSElementTypes.ES4_IMPORT_STATEMENT == type2)
 					{
 						myResult = getSpacingBetweenImports();
 					}
@@ -276,18 +276,18 @@ public class JSSpacingProcessor extends JSNodeVisitor
 	{
 		if(JSElementTypes.SOURCE_ELEMENTS.contains(type1) || JSElementTypes.SOURCE_ELEMENTS.contains(type2))
 		{
-			if(type2 == JSTokenTypes.END_OF_LINE_COMMENT && isInlineEndOfLineCommentOnLeft() && type1 != JSElementTypes.IMPORT_STATEMENT)
+			if(type2 == JSTokenTypes.END_OF_LINE_COMMENT && isInlineEndOfLineCommentOnLeft() && type1 != JSElementTypes.ES4_IMPORT_STATEMENT)
 			{
 				myResult = Spacing.getReadOnlySpacing();
 			}
 			else
 			{
-				if((JSElementTypes.IMPORT_STATEMENT == type1 && JSElementTypes.IMPORT_STATEMENT != type2) || (JSElementTypes.IMPORT_STATEMENT != type1 &&
-						JSElementTypes.IMPORT_STATEMENT == type2))
+				if((JSElementTypes.ES4_IMPORT_STATEMENT == type1 && JSElementTypes.ES4_IMPORT_STATEMENT != type2) || (JSElementTypes.ES4_IMPORT_STATEMENT != type1 &&
+						JSElementTypes.ES4_IMPORT_STATEMENT == type2))
 				{
 					myResult = Spacing.createSpacing(0, 0, 2, mySettings.KEEP_LINE_BREAKS, mySettings.KEEP_BLANK_LINES_IN_CODE);
 				}
-				else if(JSElementTypes.IMPORT_STATEMENT == type1 && JSElementTypes.IMPORT_STATEMENT == type2)
+				else if(JSElementTypes.ES4_IMPORT_STATEMENT == type1 && JSElementTypes.ES4_IMPORT_STATEMENT == type2)
 				{
 					myResult = getSpacingBetweenImports();
 				}

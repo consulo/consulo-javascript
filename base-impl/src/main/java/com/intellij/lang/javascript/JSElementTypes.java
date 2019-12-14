@@ -27,6 +27,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILazyParseableElementType;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.psi.tree.TokenSet;
+import consulo.javascript.ecmascript4.psi.impl.EcmaScript4ElementTypes;
 import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.javascript.lang.parsing.impl.JavaSciptDestructuringElementImpl;
 import consulo.javascript.lang.parsing.impl.JavaSciptDestructuringObjectImpl;
@@ -84,7 +85,10 @@ public interface JSElementTypes
 	JSStubElementType<JSAttributeNameValuePairStub, JSAttributeNameValuePair> ATTRIBUTE_NAME_VALUE_PAIR = new JSAttributeNameValuePairType();
 	JSStubElementType<JSAttributeListStub, JSAttributeList> ATTRIBUTE_LIST = new JSAttributeListElementType();
 	JSStubElementType<JSPackageStatementStub, JSPackageStatement> PACKAGE_STATEMENT = new JSPackageStatementElementType();
-	JSStubElementType<JSImportStatementStub, JSImportStatement> IMPORT_STATEMENT = new JSImportStatementElementType();
+
+	@Deprecated
+	JSStubElementType<JSImportStatementStub, JSImportStatement> ES4_IMPORT_STATEMENT = EcmaScript4ElementTypes.IMPORT_STATEMENT;
+
 	JSStubElementType<JSClassStub, JSClass> CLASS = new JSClassElementType();
 	JSStubElementType<JSReferenceListStub, JSReferenceList> EXTENDS_LIST = new JSReferenceListElementType("EXTENDS_LIST");
 	JSStubElementType<JSReferenceListStub, JSReferenceList> IMPLEMENTS_LIST = new JSReferenceListElementType("IMPLEMENTS_LIST");
@@ -123,7 +127,7 @@ public interface JSElementTypes
 
 	TokenSet STATEMENTS = TokenSet.create(BLOCK_STATEMENT, LABELED_STATEMENT, VAR_STATEMENT, EMPTY_STATEMENT, IF_STATEMENT, CONTINUE_STATEMENT,
 			BREAK_STATEMENT, WITH_STATEMENT, RETURN_STATEMENT, THROW_STATEMENT, TRY_STATEMENT, SWITCH_STATEMENT, FOR_IN_STATEMENT, FOR_STATEMENT,
-			WHILE_STATEMENT, DOWHILE_STATEMENT, EXPRESSION_STATEMENT, YIELD_STATEMENT, LET_STATEMENT, IMPORT_STATEMENT, PACKAGE_STATEMENT,
+			WHILE_STATEMENT, DOWHILE_STATEMENT, EXPRESSION_STATEMENT, YIELD_STATEMENT, LET_STATEMENT, ES4_IMPORT_STATEMENT, PACKAGE_STATEMENT,
 			USE_NAMESPACE_DIRECTIVE);
 
 	TokenSet SOURCE_ELEMENTS = TokenSet.orSet(STATEMENTS, TokenSet.create(FUNCTION_DECLARATION, CLASS, NAMESPACE_DECLARATION, INCLUDE_DIRECTIVE,

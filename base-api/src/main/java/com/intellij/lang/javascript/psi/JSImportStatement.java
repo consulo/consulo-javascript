@@ -18,11 +18,14 @@ package com.intellij.lang.javascript.psi;
 
 import com.intellij.lang.javascript.psi.stubs.JSImportStatementStub;
 import com.intellij.psi.StubBasedPsiElement;
+import consulo.javascript.psi.JavaScriptImportStatementBase;
 
 /**
  * @by Maxim.Mossienko
+ *
+ * EcmaScript 4 implementation
  */
-public interface JSImportStatement extends JSStatement, StubBasedPsiElement<JSImportStatementStub>
+public interface JSImportStatement extends JSStatement, StubBasedPsiElement<JSImportStatementStub>, JavaScriptImportStatementBase
 {
 	String getImportText();
 }
