@@ -160,7 +160,10 @@ public interface JSTokenTypes
 		{
 			PsiBuilder.Marker root = builder.mark();
 			Parsing.checkMatches(builder, JSTokenTypes.LBRACE, JavaScriptBundle.message("javascript.parser.message.expected.lbrace"));
-			context.getExpressionParsing().parseExpression(builder);
+			if(builder.getTokenType() != JSTokenTypes.RBRACE)
+			{
+				context.getExpressionParsing().parseExpression(builder);
+			}
 			Parsing.checkMatches(builder, JSTokenTypes.RBRACE, JavaScriptBundle.message("javascript.parser.message.expected.rbrace"));
 
 			while(!builder.eof())
@@ -181,7 +184,7 @@ public interface JSTokenTypes
 
 	@Deprecated
 	// FIXME [VISTALL] what the heck? maybe old jsp inject support
-	IElementType JSP_TEXT = new JSElementType("JSP_TEXT");
+			IElementType JSP_TEXT = new JSElementType("JSP_TEXT");
 	IElementType YIELD_KEYWORD = new JSElementType("YIELD_KEYWORD");
 	IElementType LET_KEYWORD = new JSElementType("LET_KEYWORD");
 
