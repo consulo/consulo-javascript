@@ -664,10 +664,10 @@ public class StatementParsing extends Parsing
 
 	protected void parseVarStatement(final PsiBuilder builder, final boolean inForInitializationContext)
 	{
-		parseVarStatementNoMarker(builder, inForInitializationContext, builder.mark());
+		parseVarStatementWithMarker(builder, inForInitializationContext, builder.mark());
 	}
 
-	protected void parseVarStatementNoMarker(final PsiBuilder builder, final boolean inForInitializationContext, final @Nonnull PsiBuilder.Marker var)
+	protected void parseVarStatementWithMarker(final PsiBuilder builder, final boolean inForInitializationContext, final @Nonnull PsiBuilder.Marker var)
 	{
 		final IElementType declType = builder.getTokenType();
 		LOG.assertTrue(declType == JSTokenTypes.VAR_KEYWORD ||

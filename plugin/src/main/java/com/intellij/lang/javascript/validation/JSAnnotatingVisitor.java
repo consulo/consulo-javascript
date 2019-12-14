@@ -16,19 +16,6 @@
 
 package com.intellij.lang.javascript.validation;
 
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
-
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.PropertyKey;
 import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.codeInsight.daemon.EmptyResolveMessageProvider;
 import com.intellij.codeInsight.daemon.impl.quickfix.RenameFileFix;
@@ -44,8 +31,8 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
-import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JSTokenTypes;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
@@ -60,19 +47,25 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.PsiPolyVariantReference;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.PsiWhiteSpace;
+import com.intellij.psi.*;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTagChild;
 import com.intellij.util.IncorrectOperationException;
 import consulo.javascript.psi.JSSimpleLiteralExpression;
+import consulo.javascript.psi.JavaScriptLambdaExpression;
+import gnu.trove.THashMap;
+import gnu.trove.THashSet;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.PropertyKey;
+
+import javax.annotation.Nonnull;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @by max, maxim.mossienko
@@ -1035,7 +1028,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 	@Override
 	public void visitJSReturnStatement(final JSReturnStatement node)
 	{
-		final PsiElement element = PsiTreeUtil.getParentOfType(node, JSFunction.class, XmlTagChild.class, XmlAttributeValue.class, JSFile.class);
+		final PsiElement element = PsiTreeUtil.getParentOfType(node, JSFunction.class, XmlTagChild.class, XmlAttributeValue.class, JSFile.class, JavaScriptLambdaExpression.class);
 		if((element instanceof JSFile && !(element.getContext() instanceof PsiLanguageInjectionHost)) || (element instanceof XmlTagChild && !(element
 				.getParent() instanceof XmlAttributeValue)))
 		{

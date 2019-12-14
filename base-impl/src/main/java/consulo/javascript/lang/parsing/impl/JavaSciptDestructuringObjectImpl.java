@@ -21,6 +21,6 @@ public class JavaSciptDestructuringObjectImpl extends JSElementImpl implements J
 	@Override
 	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
-
+		visitor.visitElement(this);
 	}
 }

@@ -1,8 +1,5 @@
 package com.sixrr.inspectjs.validity;
 
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
@@ -15,6 +12,11 @@ import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import consulo.javascript.ecmascript6.psi.ES6ExportDefaultAssignment;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class BadExpressionStatementJSInspection extends JavaScriptInspection
 {
@@ -88,7 +90,7 @@ public class BadExpressionStatementJSInspection extends JavaScriptInspection
 			{
 				return true;
 			}
-			if(expression instanceof JSAssignmentExpression)
+			if(expression instanceof JSAssignmentExpression || expression instanceof ES6ExportDefaultAssignment)
 			{
 				return true;
 			}

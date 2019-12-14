@@ -21,6 +21,6 @@ public class JavaScriptDestructuringShorthandedPropertyImpl extends JSElementImp
 	@Override
 	public void accept(@Nonnull PsiElementVisitor visitor)
 	{
-
+		visitor.visitElement(this);
 	}
 }

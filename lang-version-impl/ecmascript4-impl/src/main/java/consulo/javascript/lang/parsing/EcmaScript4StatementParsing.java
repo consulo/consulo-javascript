@@ -253,7 +253,7 @@ public class EcmaScript4StatementParsing extends StatementParsing
 				}
 				else if(tokenType == JSTokenTypes.VAR_KEYWORD || tokenType == JSTokenTypes.CONST_KEYWORD)
 				{
-					parseVarStatementNoMarker(builder, false, marker);
+					parseVarStatementWithMarker(builder, false, marker);
 					return;
 				}
 				else if(tokenType == JSTokenTypes.NAMESPACE_KEYWORD)

@@ -22,6 +22,7 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
+import consulo.javascript.ecmascript6.psi.impl.EcmaScript6ElementTypes;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.logging.Logger;
 
@@ -48,6 +49,16 @@ public class EcmaScript6StatementParsing extends StatementParsing
 		{
 			getFunctionParsing().parseFunctionDeclaration(builder);
 		}
+		else if(tokenType == JSTokenTypes.EXPORT_KEYWORD && builder.lookAhead(1) == JSTokenTypes.DEFAULT_KEYWORD)
+		{
+			PsiBuilder.Marker mark = builder.mark();
+			builder.advanceLexer();
+			builder.advanceLexer();
+
+			parseSourceElement(builder);
+
+			mark.done(EcmaScript6ElementTypes.EXPORT_DEFAULT_ASSIGMENT);
+		}
 		else if(tokenType == JSTokenTypes.EXPORT_KEYWORD)
 		{
 			PsiBuilder.Marker mark = builder.mark();
@@ -60,11 +71,15 @@ public class EcmaScript6StatementParsing extends StatementParsing
 			{
 				getFunctionParsing().parseFunctionNoMarker(builder, false, mark);
 			}
+			else if(nextType == JSTokenTypes.CLASS_KEYWORD)
+			{
+				parseClassWithMarker(builder, mark);
+			}
 			else if(nextType == JSTokenTypes.VAR_KEYWORD ||
 					nextType == JSTokenTypes.CONST_KEYWORD ||
 					nextType == JSTokenTypes.LET_KEYWORD)
 			{
-				parseVarStatementNoMarker(builder, false, mark);
+				parseVarStatementWithMarker(builder, false, mark);
 			}
 			else
 			{
@@ -213,10 +228,10 @@ public class EcmaScript6StatementParsing extends StatementParsing
 
 	private void parseClass(final PsiBuilder builder)
 	{
-		parseClassNoMarker(builder, builder.mark());
+		parseClassWithMarker(builder, builder.mark());
 	}
 
-	private void parseClassNoMarker(final PsiBuilder builder, final @Nonnull PsiBuilder.Marker clazz)
+	private void parseClassWithMarker(final PsiBuilder builder, final @Nonnull PsiBuilder.Marker clazz)
 	{
 		builder.advanceLexer();
 		if(!JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(builder.getTokenType()))
@@ -324,6 +339,8 @@ public class EcmaScript6StatementParsing extends StatementParsing
 
 				getFunctionParsing().parseParameterList(builder);
 				getStatementParsing().parseFunctionBody(builder);
+
+				checkForSemicolon(builder);
 
 				mark.done(JSElementTypes.FUNCTION_DECLARATION);
 			}
