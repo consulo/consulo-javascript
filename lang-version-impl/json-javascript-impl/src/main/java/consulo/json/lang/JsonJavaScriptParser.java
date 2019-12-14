@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
  */
 public class JsonJavaScriptParser implements PsiParser
 {
-	public static final Logger LOGGER = Logger.getInstance(JsonJavaScriptParser.class);
+	private static final Logger LOG = Logger.getInstance(JsonJavaScriptParser.class);
 
 	private int myPropertyDepth;
 
@@ -124,7 +124,7 @@ public class JsonJavaScriptParser implements PsiParser
 
 	public void parseObjectLiteralExpression(final PsiBuilder builder)
 	{
-		LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.LBRACE);
+		LOG.assertTrue(builder.getTokenType() == JSTokenTypes.LBRACE);
 		final PsiBuilder.Marker expr = builder.mark();
 		builder.advanceLexer();
 
@@ -175,7 +175,7 @@ public class JsonJavaScriptParser implements PsiParser
 
 	public void parseArrayLiteralExpression(final PsiBuilder builder)
 	{
-		JsonJavaScriptParser.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.LBRACKET);
+		JsonJavaScriptParser.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.LBRACKET);
 		final PsiBuilder.Marker expr = builder.mark();
 		builder.advanceLexer();
 		boolean commaExpected = false;
