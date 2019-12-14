@@ -142,7 +142,7 @@ FIELD_OR_METHOD={IDENTIFIER} ("(" [^ \\)]* ")"? )?
 	}
 }
 
-<TAG_CONTENT> ([^\?<&\{# \n\r\t\f])* { return JSTokenTypes.XML_TAG_CONTENT; }
+<TAG_CONTENT> ([^\?<&\{ \n\r\t\f])* { return JSTokenTypes.XML_TAG_CONTENT; }
 <TAG_CONTENT> "<?" ([^\?]|(\?[^\>]))* "?>" { return JSTokenTypes.XML_TAG_CONTENT; }
 <TAG_CONTENT> {XML_COMMENT} { return JSTokenTypes.XML_STYLE_COMMENT; }
 
