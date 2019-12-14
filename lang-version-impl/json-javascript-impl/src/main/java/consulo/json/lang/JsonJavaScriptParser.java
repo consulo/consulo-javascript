@@ -6,12 +6,12 @@ import com.intellij.lang.PsiParser;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptBundle;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.tree.IElementType;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.javascript.lang.parsing.ExpressionParsing;
 import consulo.javascript.lang.parsing.Parsing;
 import consulo.lang.LanguageVersion;
+import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 
