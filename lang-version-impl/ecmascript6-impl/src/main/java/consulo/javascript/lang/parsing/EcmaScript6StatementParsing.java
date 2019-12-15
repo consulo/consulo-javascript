@@ -99,7 +99,6 @@ public class EcmaScript6StatementParsing extends StatementParsing
 		{
 			if(builder.getTokenType() == JSTokenTypes.IMPORT_KEYWORD)
 			{
-				System.out.println(builder.getTokenType());
 				parseImportStatement(builder);
 				return;
 			}
