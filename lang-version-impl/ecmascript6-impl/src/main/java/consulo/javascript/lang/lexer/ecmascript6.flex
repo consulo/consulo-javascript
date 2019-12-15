@@ -144,7 +144,6 @@ FIELD_OR_METHOD={IDENTIFIER} ("(" [^ \\)]* ")"? )?
 
 <TAG_CONTENT> ([^<&\{ \n\r\t\f])* { return JSTokenTypes.XML_TAG_CONTENT; }
 <TAG_CONTENT> "<?" ([^\?]|(\?[^\>]))* "?>" { return JSTokenTypes.XML_TAG_CONTENT; }
-<TAG_CONTENT> {XML_COMMENT} { return JSTokenTypes.XML_STYLE_COMMENT; }
 
 <TAG_CONTENT,TAG_ATTR_SQ, TAG_ATTR_DQ>
   "&" {XML_NAME} ";" |
@@ -196,10 +195,6 @@ FIELD_OR_METHOD={IDENTIFIER} ("(" [^ \\)]* ")"? )?
 
 <YYINITIAL> "<!--" (.|{CRLF}+)* "//" {WHITE_SPACE_CHAR}* "-->" {
   yybegin(COMMENT); yypushback(yylength());
-}
-
-<YYINITIAL> {XML_COMMENT} {
-  yybegin(YYINITIAL); return JSTokenTypes.XML_STYLE_COMMENT;
 }
 
 <COMMENT> "<!--" { yybegin(YYINITIAL); return JSTokenTypes.XML_STYLE_COMMENT_START; }

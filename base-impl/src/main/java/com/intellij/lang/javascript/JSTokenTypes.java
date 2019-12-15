@@ -28,6 +28,7 @@ import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILazyParseableElementType;
 import com.intellij.psi.tree.TokenSet;
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptContextKeywordElementType;
 import consulo.javascript.lang.JavaScriptLanguage;
@@ -54,7 +55,11 @@ public interface JSTokenTypes
 
 	IElementType END_OF_LINE_COMMENT = new JSElementType("END_OF_LINE_COMMENT");
 	IElementType C_STYLE_COMMENT = new JSElementType("C_STYLE_COMMENT");
+	@Deprecated
+	@DeprecationInfo("old xml parsing, es4")
 	IElementType XML_STYLE_COMMENT = new JSElementType("XML_STYLE_COMMENT");
+	@Deprecated
+	@DeprecationInfo("old xml parsing, es4")
 	IElementType XML_STYLE_COMMENT_START = new JSElementType("XML_STYLE_COMMENT_START");
 
 	IElementType DOC_COMMENT = new JSChameleonElementType("DOC_COMMENT")
