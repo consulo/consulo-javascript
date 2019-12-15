@@ -16,24 +16,19 @@
  */
 package com.intellij.lang.javascript.types;
 
-import java.io.IOException;
-
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.Language;
-import consulo.javascript.index.JavaScriptIndexer;
 import com.intellij.lang.javascript.psi.JSFile;
-import consulo.javascript.psi.stubs.JSFileStub;
-import consulo.javascript.psi.stubs.impl.JSFileStubImpl;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.StubBuilder;
-import com.intellij.psi.stubs.DefaultStubBuilder;
-import com.intellij.psi.stubs.IndexSink;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
+import com.intellij.psi.stubs.*;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.io.StringRef;
+import consulo.javascript.index.JavaScriptIndexer;
+import consulo.javascript.psi.stubs.JSFileStub;
+import consulo.javascript.psi.stubs.impl.JSFileStubImpl;
+
+import javax.annotation.Nonnull;
+import java.io.IOException;
 
 /**
  * @author peter
@@ -96,8 +91,8 @@ public class JSFileElementType extends IStubFileElementType<JSFileStub>
 	@Override
 	public int getStubVersion()
 	{
-		int version = 41;
-		for(JavaScriptIndexer javaScriptIndexer : JavaScriptIndexer.EP_NAME.getExtensions())
+		int version = 42;
+		for(JavaScriptIndexer javaScriptIndexer : JavaScriptIndexer.EP_NAME.getExtensionList())
 		{
 			version += javaScriptIndexer.getVersion();
 		}
