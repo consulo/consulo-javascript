@@ -28,6 +28,7 @@ import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILazyParseableElementType;
 import com.intellij.psi.tree.TokenSet;
+import com.intellij.psi.xml.XmlTokenType;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptContextKeywordElementType;
@@ -141,18 +142,18 @@ public interface JSTokenTypes
 	IElementType UINT_KEYWORD = new JSElementType("UINT_KEYWORD");
 	IElementType AT = new JSElementType("AT");
 
-	IElementType XML_START_TAG_START = new JSElementType("XML_TAG_START");
+	IElementType XML_START_TAG_START = XmlTokenType.XML_START_TAG_START;
 	IElementType XML_START_TAG_LIST = new JSElementType("XML_TAG__LIST_START");
 	IElementType XML_END_TAG_LIST = new JSElementType("XML_TAG__LIST_END");
-	IElementType XML_END_TAG_START = new JSElementType("XML_TAG_END_START");
-	IElementType XML_EMPTY_TAG_END = new JSElementType("XML_EMPTY_END_START");
-	IElementType XML_NAME = new JSElementType("XML_NAME");
-	IElementType XML_TAG_NAME = new JSElementType("XML_TAG_NAME");
-	IElementType XML_ATTR_EQUAL = new JSElementType("XML_ATTR_EQUAL");
-	IElementType XML_TAG_END = new JSElementType("XML_TAG_END");
-	IElementType XML_ATTR_VALUE = new JSElementType("XML_ATTR_VALUE");
-	IElementType XML_ATTR_VALUE_START = new JSElementType("XML_ATTR_VALUE_START");
-	IElementType XML_ATTR_VALUE_END = new JSElementType("XML_ATTR_VALUE_END");
+	IElementType XML_END_TAG_START = XmlTokenType.XML_END_TAG_START;
+	IElementType XML_EMPTY_TAG_END = XmlTokenType.XML_EMPTY_ELEMENT_END;
+	IElementType XML_NAME = XmlTokenType.XML_NAME;
+	IElementType XML_TAG_NAME = XmlTokenType.XML_TAG_NAME;
+	IElementType XML_ATTR_EQUAL = XmlTokenType.XML_EQ;
+	IElementType XML_TAG_END = XmlTokenType.XML_TAG_END;
+	IElementType XML_ATTR_VALUE = XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN;
+	IElementType XML_ATTR_VALUE_START = XmlTokenType.XML_ATTRIBUTE_VALUE_START_DELIMITER;
+	IElementType XML_ATTR_VALUE_END = XmlTokenType.XML_ATTRIBUTE_VALUE_END_DELIMITER;
 	IElementType XML_JS_SCRIPT = new JSChameleonElementType("XML_JS_SCRIPT")
 	{
 		@Override
@@ -189,7 +190,7 @@ public interface JSTokenTypes
 
 	@Deprecated
 	// FIXME [VISTALL] what the heck? maybe old jsp inject support
-			IElementType JSP_TEXT = new JSElementType("JSP_TEXT");
+	IElementType JSP_TEXT = new JSElementType("JSP_TEXT");
 	IElementType YIELD_KEYWORD = new JSElementType("YIELD_KEYWORD");
 	IElementType LET_KEYWORD = new JSElementType("LET_KEYWORD");
 

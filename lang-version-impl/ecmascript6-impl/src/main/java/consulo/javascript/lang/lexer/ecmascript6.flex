@@ -71,7 +71,6 @@ INTERPOLATION_STRING_LITERAL="`" [^"`"]* "`"
 ALPHA=[:letter:]
 DIGIT=[0-9]
 XML_NAME=({ALPHA}|"_")({ALPHA}|{DIGIT}|"_"|"."|"-")*(":"({ALPHA}|"_")?({ALPHA}|{DIGIT}|"_"|"."|"-")*)?
-XML_COMMENT="<!--" ([^\-<\/] | (\-[^\-<\/])| (<[^!\-\/]) | (\-\-[^<>\/] | (\/[^<\/\-]) ))* "-->"
 
 FIELD_OR_METHOD={IDENTIFIER} ("(" [^ \\)]* ")"? )?
 
@@ -83,17 +82,18 @@ FIELD_OR_METHOD={IDENTIFIER} ("(" [^ \\)]* ")"? )?
 %state TAG_ATTR_SQ
 %state TAG_ATTR_DQ
 %state TAG_JS_SCRIPT
-%state COMMENT
 %state LAST_STATE
 
 %%
 
-<YYINITIAL,TAG,TAG_END,DIV_OR_GT,COMMENT,TAG_CONTENT> {WHITE_SPACE_CHAR}+   { return JSTokenTypes.WHITE_SPACE; }
+<YYINITIAL,TAG,TAG_END,DIV_OR_GT,TAG_CONTENT> {WHITE_SPACE_CHAR}+   { return JSTokenTypes.WHITE_SPACE; }
 <TAG_ATTRIBUTES> {WHITE_SPACE_CHAR}+   { return isHighlightModeOn ? JSTokenTypes.XML_TAG_WHITE_SPACE:JSTokenTypes.WHITE_SPACE; }
 
-<YYINITIAL> "<" {
+<YYINITIAL> "<"
+{
     tagCount = 0;
-    yybegin(TAG); yypushback(yylength());
+    yybegin(TAG);
+    yypushback(yylength());
 }
 
 <TAG> "<>" { tagCount++; yybegin(TAG_CONTENT); return JSTokenTypes.XML_START_TAG_LIST; }
@@ -103,7 +103,7 @@ FIELD_OR_METHOD={IDENTIFIER} ("(" [^ \\)]* ")"? )?
 <TAG_CONTENT> "</" { tagCount--; yybegin(TAG_END); return JSTokenTypes.XML_END_TAG_START; }
 
 <TAG> {
-  {XML_NAME} { yybegin(TAG_ATTRIBUTES); return JSTokenTypes.XML_TAG_NAME; }
+  {XML_NAME} { yybegin(TAG_ATTRIBUTES); return isHighlightModeOn ? JSTokenTypes.XML_TAG_NAME : JSTokenTypes.XML_NAME; }
   "{"
   {
   	jsExits.push(TAG);
@@ -113,7 +113,7 @@ FIELD_OR_METHOD={IDENTIFIER} ("(" [^ \\)]* ")"? )?
 }
 
 <TAG_END> {
-  {XML_NAME} { return JSTokenTypes.XML_TAG_NAME; }
+  {XML_NAME} { return isHighlightModeOn ? JSTokenTypes.XML_TAG_NAME : JSTokenTypes.XML_NAME; }
   "{"
   {
   	jsExits.push(TAG_END);
@@ -192,13 +192,6 @@ FIELD_OR_METHOD={IDENTIFIER} ("(" [^ \\)]* ")"? )?
 		return JSTokenTypes.XML_JS_SCRIPT;
 	}
 }
-
-<YYINITIAL> "<!--" (.|{CRLF}+)* "//" {WHITE_SPACE_CHAR}* "-->" {
-  yybegin(COMMENT); yypushback(yylength());
-}
-
-<COMMENT> "<!--" { yybegin(YYINITIAL); return JSTokenTypes.XML_STYLE_COMMENT_START; }
-<COMMENT> [^] { yybegin(YYINITIAL); yypushback(1); }
 
 <YYINITIAL,DIV_OR_GT> {C_STYLE_COMMENT}     { return JSTokenTypes.C_STYLE_COMMENT; }
 <YYINITIAL,DIV_OR_GT> {END_OF_LINE_COMMENT} { return JSTokenTypes.END_OF_LINE_COMMENT; }

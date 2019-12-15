@@ -18,6 +18,10 @@
 	<extensions defaultExtensionNs="com.intellij">
 		<fileTypeFactory implementation="consulo.javascript.lang.EcmaScriptFileTypeFactory" />
 		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.lang.EcmaScript6JavaScriptVersion" />
+
+		<breadcrumbsInfoProvider implementation="consulo.javascript.jsx.codeInsight.breadcrumbs.JSXLanguageBreadcrumbsInfoProvider" />
+
+		<textEditorHighlightingPassFactory implementation="consulo.javascript.jsx.codeInsight.daemon.impl.tagTreeHighlighting.JSXTagTreeHighlightingPassFactory" />
 	</extensions>
 
 	<extensions defaultExtensionNs="consulo.javascript">
