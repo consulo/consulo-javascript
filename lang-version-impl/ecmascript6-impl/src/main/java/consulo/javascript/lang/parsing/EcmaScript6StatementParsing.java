@@ -99,6 +99,7 @@ public class EcmaScript6StatementParsing extends StatementParsing
 		{
 			if(builder.getTokenType() == JSTokenTypes.IMPORT_KEYWORD)
 			{
+				System.out.println(builder.getTokenType());
 				parseImportStatement(builder);
 				return;
 			}
@@ -199,6 +200,7 @@ public class EcmaScript6StatementParsing extends StatementParsing
 							else if(builder.getTokenType() != JSTokenTypes.RBRACE)
 							{
 								builder.error("Expected identifier");
+								break;
 							}
 						}
 
