@@ -34,6 +34,8 @@ import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.SmartList;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.javascript.lang.psi.impl.resolve.ResolveHelper;
+import consulo.javascript.psi.JavaScriptImportStatementBase;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import gnu.trove.THashSet;
@@ -59,7 +61,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 	private PsiElement myResult;
 	private PsiElement myCandidateResult;
 	private List<PsiElement> myResults;
-	private List<JSImportStatement> myImportsUsed;
+	private List<JavaScriptImportStatementBase> myImportsUsed;
 	private List<Boolean> myResolveStatus;
 
 	private boolean toProcessHierarchy;
@@ -87,11 +89,13 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 	private boolean myAcceptOnlyClasses;
 	private boolean myAcceptOnlyInterfaces;
 
-	public static final Key<JSImportStatement> IMPORT_KEY = Key.create("import.key");
+	public static final Key<JavaScriptImportStatementBase> IMPORT_KEY = Key.create("import.key");
 	private boolean myClassDeclarationStarted;
 	private PsiElement placeTopParent;
 	protected boolean ecma;
 	public static final String AS3_NAMESPACE = "AS3";
+
+	private ResolveHelper myResolveHelper;
 
 	public ResolveProcessor(final String name)
 	{
@@ -191,7 +195,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 		return myResult;
 	}
 
-	public JSImportStatement getImportUsed()
+	public JavaScriptImportStatementBase getImportUsed()
 	{
 		return myImportsUsed != null ? myImportsUsed.get(0) : null;
 	}
@@ -200,13 +204,14 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 	{
 		if(myResults == null && myResult == null && myCandidateResult != null)
 		{
-			myResults = new ArrayList<PsiElement>(1);
+			myResults = new ArrayList<>(1);
 			myResults.add(myCandidateResult);
 		}
 		return myResults;
 	}
 
 	@Override
+	@RequiredReadAction
 	public boolean execute(@Nonnull PsiElement element, ResolveState state)
 	{
 		if((element instanceof JSVariable && !(element instanceof JSParameter)) || element instanceof JSFunction)
@@ -281,6 +286,20 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 				{
 					return true;
 				}
+			}
+		}
+
+		if(place != null)
+		{
+			if(myResolveHelper == null)
+			{
+				myResolveHelper = ResolveHelper.find(place);
+			}
+
+			if(myResolveHelper.execute(this, element, state))
+			{
+				myCandidateResult = element;
+				return true;
 			}
 		}
 
@@ -391,7 +410,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 				{
 					if(myName != null)
 					{
-						JSImportStatement s = state != null ? state.get(IMPORT_KEY) : null;
+						JavaScriptImportStatementBase s = state != null ? state.get(IMPORT_KEY) : null;
 						int previousResultsSize = myResults != null ? myResults.size() : 0;
 
 						s = checkQualifiedNameHasNecessaryImport(element, s, previousResultsSize);
@@ -400,7 +419,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 						{
 							if(myImportsUsed == null)
 							{
-								myImportsUsed = new SmartList<JSImportStatement>();
+								myImportsUsed = new SmartList<>();
 								for(int i = 0; i < previousResultsSize; ++i)
 								{
 									myImportsUsed.add(null);
@@ -412,7 +431,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 					}
 					if(myResults == null)
 					{
-						myResults = new ArrayList<PsiElement>(1);
+						myResults = new ArrayList<>(1);
 					}
 					myResults.add(element);
 					myResult = element;
@@ -424,13 +443,13 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 		return true;
 	}
 
-	private JSImportStatement checkQualifiedNameHasNecessaryImport(PsiElement element, JSImportStatement s, int previousResultsSize)
+	private JavaScriptImportStatementBase checkQualifiedNameHasNecessaryImport(PsiElement element, JavaScriptImportStatementBase s, int previousResultsSize)
 	{
 		if(s == null && (element instanceof JSClass || element instanceof JSFunction || element instanceof JSVariable ||
 				element instanceof JSNamespaceDeclaration))
 		{
 
-			if(placeTopParent instanceof JSReferenceExpression && !(placeTopParent.getParent() instanceof JSImportStatement))
+			if(placeTopParent instanceof JSReferenceExpression && !(placeTopParent.getParent() instanceof JavaScriptImportStatementBase))
 			{
 				final String qName = ((JSQualifiedNamedElement) element).getQualifiedName();
 

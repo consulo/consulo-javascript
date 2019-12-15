@@ -22,10 +22,13 @@ import com.intellij.lexer.Lexer;
 import com.intellij.lexer.MergingLexerAdapter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.psi.tree.TokenSet;
+import consulo.javascript.ecmascript6.psi.impl.resolve.EcmaScript6ResolveHelper;
 import consulo.javascript.ide.hightlight.JavaScriptHighlighter;
 import consulo.javascript.lang.lexer.JavaScriptFlexAdapter;
 import consulo.javascript.lang.lexer._EcmaScript6Lexer;
 import consulo.javascript.lang.parsing.EcmaScript6Parser;
+import consulo.javascript.lang.psi.impl.resolve.JavaScriptVersionWithHelper;
+import consulo.javascript.lang.psi.impl.resolve.ResolveHelper;
 
 import javax.annotation.Nonnull;
 
@@ -33,7 +36,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 12.12.2015
  */
-public class EcmaScript6JavaScriptVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersions.Marker
+public class EcmaScript6JavaScriptVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersions.Marker, JavaScriptVersionWithHelper
 {
 	@Nonnull
 	public static EcmaScript6JavaScriptVersion getInstance()
@@ -89,5 +92,12 @@ public class EcmaScript6JavaScriptVersion extends BaseJavaScriptLanguageVersion 
 	public int getWeight()
 	{
 		return 50;
+	}
+
+	@Nonnull
+	@Override
+	public ResolveHelper getHelper()
+	{
+		return EcmaScript6ResolveHelper.INSTANCE;
 	}
 }

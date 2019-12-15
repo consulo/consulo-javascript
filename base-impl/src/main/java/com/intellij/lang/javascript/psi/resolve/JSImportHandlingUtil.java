@@ -39,6 +39,9 @@ import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.Processor;
 import com.intellij.xml.XmlElementDescriptor;
+import consulo.javascript.lang.psi.impl.resolve.JavaScriptVersionWithHelper;
+import consulo.javascript.lang.psi.impl.resolve.ResolveHelper;
+import consulo.lang.LanguageVersion;
 import consulo.util.dataholder.Key;
 import gnu.trove.THashMap;
 import gnu.trove.THashSet;
@@ -261,6 +264,18 @@ public class JSImportHandlingUtil
 	@Nullable
 	JSImportedElementResolveResult resolveTypeNameUsingImports(final @Nonnull String referencedName, PsiNamedElement parent)
 	{
+		LanguageVersion languageVersion = parent.getLanguageVersion();
+		if(languageVersion instanceof JavaScriptVersionWithHelper)
+		{
+			ResolveHelper helper = ((JavaScriptVersionWithHelper) languageVersion).getHelper();
+
+			JSImportedElementResolveResult result = helper.resolveTypeNameUsingImports(referencedName, parent);
+			if(result != null)
+			{
+				return result;
+			}
+		}
+
 		final Map<String, JSImportedElementResolveResult> map = myImportResolveCache.get(ourImportResolveCache, parent, null).getValue();
 		JSImportedElementResolveResult result = map.get(referencedName);
 

@@ -16,8 +16,6 @@
 
 package com.intellij.lang.javascript.flex;
 
-import javax.annotation.Nullable;
-
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -26,10 +24,15 @@ import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Processor;
+import consulo.annotation.DeprecationInfo;
+
+import javax.annotation.Nullable;
 
 /**
  * @author yole
  */
+@Deprecated
+@DeprecationInfo("We need this?")
 public interface JSResolveHelper
 {
 	ExtensionPointName<JSResolveHelper> EP_NAME = ExtensionPointName.create("consulo.javascript.resolveHelper");

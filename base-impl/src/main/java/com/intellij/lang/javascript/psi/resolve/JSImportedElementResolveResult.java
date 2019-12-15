@@ -16,8 +16,8 @@
 
 package com.intellij.lang.javascript.psi.resolve;
 
-import com.intellij.lang.javascript.psi.JSImportStatement;
 import com.intellij.psi.PsiElement;
+import consulo.javascript.psi.JavaScriptImportStatementBase;
 
 /**
  * @author Maxim.Mossienko
@@ -28,7 +28,7 @@ public class JSImportedElementResolveResult
 {
 	public final String qualifiedName;
 	public final PsiElement resolvedElement;
-	public final JSImportStatement importStatement;
+	public final JavaScriptImportStatementBase importStatement;
 	public static final JSImportedElementResolveResult EMPTY_RESULT = new JSImportedElementResolveResult(null);
 
 	public JSImportedElementResolveResult(String _qualifiedName)
@@ -36,7 +36,7 @@ public class JSImportedElementResolveResult
 		this(_qualifiedName, null, null);
 	}
 
-	public JSImportedElementResolveResult(String _qualifiedName, PsiElement _resolvedElement, JSImportStatement _importString)
+	public JSImportedElementResolveResult(String _qualifiedName, PsiElement _resolvedElement, JavaScriptImportStatementBase _importString)
 	{
 		qualifiedName = _qualifiedName;
 		resolvedElement = _resolvedElement;

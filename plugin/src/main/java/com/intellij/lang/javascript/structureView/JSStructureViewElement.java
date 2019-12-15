@@ -16,21 +16,6 @@
 
 package com.intellij.lang.javascript.structureView;
 
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
-import gnu.trove.TIntObjectHashMap;
-import gnu.trove.TIntObjectProcedure;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Nullable;
-
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.lang.javascript.index.JSSymbolUtil;
@@ -42,6 +27,14 @@ import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
+import consulo.javascript.psi.JavaScriptImportStatementBase;
+import gnu.trove.THashMap;
+import gnu.trove.THashSet;
+import gnu.trove.TIntObjectHashMap;
+import gnu.trove.TIntObjectProcedure;
+
+import javax.annotation.Nullable;
+import java.util.*;
 
 /**
  * @author max
@@ -279,7 +272,7 @@ public class JSStructureViewElement implements StructureViewTreeElement
 						!(element instanceof JSDefinitionExpression) &&
 						!(element instanceof JSLabeledStatement) &&
 						!(element instanceof JSPackageStatement) &&
-						!(element instanceof JSImportStatement))
+						!(element instanceof JavaScriptImportStatementBase))
 				{
 					if(!(element instanceof JSFunction) || !(element.getParent() instanceof JSProperty))
 					{

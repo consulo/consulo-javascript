@@ -16,30 +16,15 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageNamesValidation;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.lang.javascript.psi.resolve.BaseJSSymbolProcessor;
-import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
-import com.intellij.lang.javascript.psi.resolve.VariantsProcessor;
-import com.intellij.lang.javascript.psi.resolve.WalkUpResolveProcessor;
+import com.intellij.lang.javascript.psi.resolve.*;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.ResolveResult;
-import com.intellij.psi.ResolveState;
+import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.ResolveCache;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -55,6 +40,11 @@ import consulo.javascript.lang.JavaScriptFeature;
 import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.javascript.lang.JavaScriptVersionUtil;
 import consulo.javascript.lang.psi.JavaScriptType;
+import consulo.javascript.lang.psi.impl.resolve.ResolveHelper;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Set;
 
 public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSReferenceExpression, BindablePsiReference
 {
@@ -232,6 +222,12 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 	@Override
 	public boolean isReferenceTo(PsiElement element)
 	{
+		ResolveHelper helper = ResolveHelper.find(this);
+		if(helper.isResolveTo(this, element))
+		{
+			return true;
+		}
+
 		if(element instanceof PsiNamedElement || element instanceof XmlAttributeValue)
 		{
 			final String referencedName = getReferencedName();

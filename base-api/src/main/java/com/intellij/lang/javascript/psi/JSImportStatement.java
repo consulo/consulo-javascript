@@ -18,6 +18,7 @@ package com.intellij.lang.javascript.psi;
 
 import com.intellij.lang.javascript.psi.stubs.JSImportStatementStub;
 import com.intellij.psi.StubBasedPsiElement;
+import consulo.annotation.DeprecationInfo;
 import consulo.javascript.psi.JavaScriptImportStatementBase;
 
 /**
@@ -25,6 +26,8 @@ import consulo.javascript.psi.JavaScriptImportStatementBase;
  *
  * EcmaScript 4 implementation
  */
+@Deprecated
+@DeprecationInfo("We need rename it")
 public interface JSImportStatement extends JSStatement, StubBasedPsiElement<JSImportStatementStub>, JavaScriptImportStatementBase
 {
 	String getImportText();

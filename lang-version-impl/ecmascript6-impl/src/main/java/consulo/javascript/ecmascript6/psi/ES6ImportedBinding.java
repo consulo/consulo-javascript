@@ -1,6 +1,7 @@
 package consulo.javascript.ecmascript6.psi;
 
 import com.intellij.lang.javascript.psi.JSElement;
+import com.intellij.psi.PsiNameIdentifierOwner;
 
 /**
  * @author VISTALL
@@ -12,6 +13,6 @@ import com.intellij.lang.javascript.psi.JSElement;
  * <p>
  * import * as util ...
  */
-public interface ES6ImportedBinding extends JSElement
+public interface ES6ImportedBinding extends JSElement, PsiNameIdentifierOwner
 {
 }

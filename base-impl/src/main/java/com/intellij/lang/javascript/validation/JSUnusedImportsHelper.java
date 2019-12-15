@@ -32,6 +32,7 @@ import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.psi.xml.XmlText;
+import consulo.javascript.psi.JavaScriptImportStatementBase;
 import consulo.util.dataholder.Key;
 import gnu.trove.THashSet;
 
@@ -138,15 +139,15 @@ public class JSUnusedImportsHelper
 			// TODO can we get different import statements here?
 			if(r instanceof JSResolveUtil.MyResolveResult)
 			{
-				JSImportStatement importStatement = ((JSResolveUtil.MyResolveResult) r).getImportUsed();
+				JavaScriptImportStatementBase importStatement = ((JSResolveUtil.MyResolveResult) r).getImportUsed();
 
-				if(importStatement != null && isInstance(r.getElement(), REFERENCED_ELEMENTS_CLASSES))
+				if(importStatement instanceof JSImportStatement && isInstance(r.getElement(), REFERENCED_ELEMENTS_CLASSES))
 				{
-					String importString = importStatement.getImportText();
+					String importString = ((JSImportStatement) importStatement).getImportText();
 					String importedPackage = importString.substring(0, importString.lastIndexOf('.'));
 					if(thisPackage == null || !thisPackage.equals(importedPackage))
 					{
-						registerUsed(importStatement);
+						registerUsed((JSImportStatement) importStatement);
 					}
 				}
 			}
@@ -179,7 +180,7 @@ public class JSUnusedImportsHelper
 			resolve = JSResolveUtil.findClassByQName(node.getText(), node);
 		}
 		PsiElement parent = node.getParent();
-		if(parent instanceof JSImportStatement)
+		if(parent instanceof JavaScriptImportStatementBase)
 		{
 			return Pair.create(false, false);
 		}

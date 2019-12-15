@@ -16,18 +16,6 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import gnu.trove.TObjectHashingStrategy;
-
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
-import org.jetbrains.annotations.NonNls;
-
-import javax.annotation.Nullable;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -43,13 +31,7 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiDirectoryContainer;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.StubBasedPsiElement;
+import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
@@ -62,6 +44,16 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.psi.JavaScriptTypeElement;
 import consulo.javascript.lang.psi.impl.elementType.BaseJavaScriptElementType;
 import consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
+import consulo.javascript.psi.JavaScriptImportStatementBase;
+import gnu.trove.TObjectHashingStrategy;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Maxim.Mossienko
@@ -476,7 +468,7 @@ public class JSPsiImplUtils
 				}
 				if(qualifier == null)
 				{
-					if(!(targetElement.getParent() instanceof JSImportStatement))
+					if(!(targetElement.getParent() instanceof JavaScriptImportStatementBase))
 					{
 						return null;
 					}

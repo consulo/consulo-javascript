@@ -76,6 +76,7 @@ import consulo.javascript.lang.psi.JavaScriptType;
 import consulo.javascript.lang.psi.JavaScriptTypeElement;
 import consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import consulo.javascript.module.extension.JavaScriptModuleExtension;
+import consulo.javascript.psi.JavaScriptImportStatementBase;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.util.dataholder.Key;
 import gnu.trove.THashSet;
@@ -90,6 +91,9 @@ import java.util.*;
 /**
  * @author max, maxim.mossienko
  */
+@SuppressWarnings({
+		"ALL"
+})
 public class JSResolveUtil
 {
 	private static final Key<CachedValue<TIntObjectHashMap<Object>>> MY_CACHED_STATEMENTS = Key.create("JS.RelevantStatements");
@@ -2177,7 +2181,7 @@ public class JSResolveUtil
 	public static class MyResolveResult implements ResolveResult
 	{
 		private final PsiElement myFunction;
-		private final JSImportStatement myImportUsed;
+		private final JavaScriptImportStatementBase myImportUsed;
 		private boolean myValidResult;
 
 		public MyResolveResult(final PsiElement function)
@@ -2195,7 +2199,7 @@ public class JSResolveUtil
 			this(function, null, validResult);
 		}
 
-		public MyResolveResult(final PsiElement function, JSImportStatement importUsed, boolean validResult)
+		public MyResolveResult(final PsiElement function, JavaScriptImportStatementBase importUsed, boolean validResult)
 		{
 			myFunction = function;
 			myValidResult = validResult;
@@ -2219,7 +2223,7 @@ public class JSResolveUtil
 			myValidResult = b;
 		}
 
-		public JSImportStatement getImportUsed()
+		public JavaScriptImportStatementBase getImportUsed()
 		{
 			return myImportUsed;
 		}

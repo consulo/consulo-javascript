@@ -16,15 +16,6 @@
 
 package com.intellij.lang.javascript.psi.resolve;
 
-import gnu.trove.THashSet;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.jetbrains.annotations.NonNls;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
 import com.intellij.lang.javascript.psi.*;
@@ -37,6 +28,11 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptFeature;
+import consulo.javascript.psi.JavaScriptImportStatementBase;
+import gnu.trove.THashSet;
+import org.jetbrains.annotations.NonNls;
+
+import java.util.*;
 
 /**
  * @author Maxim.Mossienko
@@ -102,7 +98,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			{
 				final PsiElement parent = refExpr.getParent();
 
-				if(parent instanceof JSImportStatement)
+				if(parent instanceof JavaScriptImportStatementBase)
 				{
 					myProcessOnlyTypes = true;
 				}
