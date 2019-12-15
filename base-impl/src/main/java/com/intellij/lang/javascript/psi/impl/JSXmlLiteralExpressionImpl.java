@@ -60,7 +60,7 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
 	public String getName()
 	{
 		PsiElement childByType = findChildByType(JSTokenTypes.XML_NAME);
-		return childByType != null ? childByType.getText() : null;
+		return childByType != null ? childByType.getText() : "";
 	}
 
 	@RequiredWriteAction
