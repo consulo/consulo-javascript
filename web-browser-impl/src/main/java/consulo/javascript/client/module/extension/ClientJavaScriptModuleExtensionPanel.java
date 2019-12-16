@@ -16,14 +16,6 @@
 
 package consulo.javascript.client.module.extension;
 
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.util.List;
-
-import javax.swing.JList;
-import javax.swing.JPanel;
-
-import javax.annotation.Nonnull;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.VerticalFlowLayout;
@@ -34,6 +26,12 @@ import consulo.javascript.lang.JavaScriptLanguageVersion;
 import consulo.javascript.lang.StandardJavaScriptVersions;
 import consulo.javascript.module.extension.JavaScriptMutableModuleExtension;
 import consulo.lang.LanguageVersion;
+
+import javax.annotation.Nonnull;
+import javax.swing.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -69,6 +67,6 @@ public class ClientJavaScriptModuleExtensionPanel extends JPanel
 			}
 		});
 
-		add(LabeledComponent.left(languageVersionComboBox, "Language Version"));
+		add(LabeledComponent.create(languageVersionComboBox, "Default Version"));
 	}
 }

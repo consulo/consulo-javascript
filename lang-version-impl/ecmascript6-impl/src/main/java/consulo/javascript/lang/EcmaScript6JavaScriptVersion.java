@@ -31,6 +31,7 @@ import consulo.javascript.lang.psi.impl.resolve.JavaScriptVersionWithHelper;
 import consulo.javascript.lang.psi.impl.resolve.ResolveHelper;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 /**
  * @author VISTALL
@@ -44,7 +45,13 @@ public class EcmaScript6JavaScriptVersion extends BaseJavaScriptLanguageVersion 
 		return JavaScriptLanguage.INSTANCE.findVersionByClass(EcmaScript6JavaScriptVersion.class);
 	}
 
+	@Inject
 	public EcmaScript6JavaScriptVersion()
+	{
+		this("ECMASCRIPT_6");
+	}
+
+	protected EcmaScript6JavaScriptVersion(@Nonnull String id)
 	{
 		super("ECMASCRIPT_6");
 

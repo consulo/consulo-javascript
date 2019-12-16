@@ -30,6 +30,7 @@
 	<import path="/META-INF/ecma6.xml"/>
 	<import path="/META-INF/actionscript.xml"/>
 	<import path="/META-INF/typescript.xml"/>
+	<import path="/META-INF/jsx.xml"/>
 
 	<actions>
 		<action id="JavaScript.File" class="consulo.javascript.ide.actions.JavaScriptCreateFileAction">

@@ -1,0 +1,11 @@
+<consulo-plugin>
+	<extensions defaultExtensionNs="com.intellij">
+		<fileTypeFactory implementation="consulo.javascript.jsx.language.JSXFileTypeFactory" />
+
+		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.jsx.language.JSXJavaScriptVersion"/>
+
+		<breadcrumbsInfoProvider implementation="consulo.javascript.jsx.codeInsight.breadcrumbs.JSXLanguageBreadcrumbsInfoProvider"/>
+
+		<textEditorHighlightingPassFactory implementation="consulo.javascript.jsx.codeInsight.daemon.impl.tagTreeHighlighting.JSXTagTreeHighlightingPassFactory"/>
+	</extensions>
+</consulo-plugin>
