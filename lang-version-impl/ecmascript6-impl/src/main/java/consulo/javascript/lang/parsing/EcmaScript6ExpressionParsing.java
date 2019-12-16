@@ -63,6 +63,11 @@ public class EcmaScript6ExpressionParsing extends ExpressionParsing
 		{
 			builder.advanceLexer();
 		}
+		else
+		{
+			mark.rollbackTo();
+			return false;
+		}
 
 		if(builder.getTokenType() == JSTokenTypes.LBRACE)
 		{
@@ -70,7 +75,7 @@ public class EcmaScript6ExpressionParsing extends ExpressionParsing
 		}
 		else
 		{
-			parseExpression(builder);
+			parseAssignmentExpression(builder);
 		}
 
 		mark.done(JSElementTypes.LAMBDA_EXPRESSION);
