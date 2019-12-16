@@ -475,6 +475,10 @@ public class StatementParsing extends Parsing
 	protected boolean hasSemanticLineBeforeNextToken(final PsiBuilder builder)
 	{
 		IElementType tokenType = builder.getTokenType();
+		if(tokenType == null)
+		{
+			return true;
+		}
 		// force end
 		if(tokenType == JSTokenTypes.RBRACE)
 		{
@@ -499,6 +503,10 @@ public class StatementParsing extends Parsing
 					else if(!Character.isWhitespace(c))
 					{
 						return false;
+					}
+					else
+					{
+						step ++;
 					}
 				}
 			}
