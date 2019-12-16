@@ -149,6 +149,8 @@
 
 		<targetElementUtilEx implementation="com.intellij.lang.javascript.JavaScriptTargetElementUtilEx"/>
 
+		<findUsagesHandlerFactory implementation="consulo.javascript.findUsages.JavaScriptFindUsagesHandlerFactory"/>
+
 		<sdkType implementation="consulo.javascript.client.module.sdk.ClientJavaScriptSdkType"/>
 		<predefinedBundlesProvider implementation="consulo.javascript.client.module.sdk.ClientJavaScriptPredefinedBundlesProvider"/>
 		<moduleExtensionProvider key="client-javascript"

@@ -18,7 +18,6 @@ package com.intellij.lang.javascript.psi.impl;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageNamesValidation;
-import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
 import com.intellij.lang.javascript.psi.*;
@@ -77,8 +76,8 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 	@RequiredReadAction
 	public JSExpression getQualifier()
 	{
-		final PsiElement psiElement = findChildByType(JSElementTypes.EXPRESSIONS);
-		return psiElement != null ? (JSExpression) psiElement : null;
+		PsiElement firstChild = getFirstChild();
+		return firstChild instanceof JSExpression ? (JSExpression) firstChild : null;
 	}
 
 	@Override
@@ -99,10 +98,12 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		return element != null ? element : null;
 	}
 
+	@RequiredReadAction
 	@Override
 	public PsiElement getElement()
 	{
-		return this;
+		PsiElement nameElement = getNameElement();
+		return nameElement == null ? this : nameElement;
 	}
 
 	@Override
@@ -111,13 +112,14 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		return this;
 	}
 
+	@Nonnull
 	@Override
 	@RequiredReadAction
 	public TextRange getRangeInElement()
 	{
-		final PsiElement nameElement = getNameElement();
-		final int startOffset = nameElement != null ? nameElement.getNode().getStartOffset() : getNode().getTextRange().getEndOffset();
-		return new TextRange(startOffset - getNode().getStartOffset(), getTextLength());
+		PsiElement nameElement = getNameElement();
+		int l = nameElement != null ? nameElement.getTextLength(): getTextLength();
+		return new TextRange(0, l);
 	}
 
 	@Nullable
@@ -439,12 +441,6 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 
 			return processor.getResultsAsObjects();
 		}
-	}
-
-	@Override
-	public boolean isSoft()
-	{
-		return false;
 	}
 
 	@Override
