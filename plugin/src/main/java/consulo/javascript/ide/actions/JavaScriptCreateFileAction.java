@@ -13,7 +13,6 @@ import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.awt.TargetAWT;
 import consulo.javascript.module.extension.JavaScriptModuleExtension;
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -79,7 +78,7 @@ public class JavaScriptCreateFileAction extends CreateFileFromTemplateAction
 	{
 		builder.setTitle("Create JavaScript File");
 
-		builder.addKind("Empty File", TargetAWT.to(JavaScriptFileType.INSTANCE.getIcon()), "JavaScriptFile");
+		builder.addKind("Empty File", JavaScriptFileType.INSTANCE.getIcon(), "JavaScriptFile");
 	}
 
 	@Override
