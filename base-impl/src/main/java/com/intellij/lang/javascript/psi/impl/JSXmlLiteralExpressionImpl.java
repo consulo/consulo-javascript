@@ -23,6 +23,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.meta.PsiMetaData;
 import com.intellij.psi.search.PsiElementProcessor;
+import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.psi.xml.XmlTagChild;
@@ -36,7 +37,9 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,6 +50,27 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
 	public JSXmlLiteralExpressionImpl(final ASTNode node)
 	{
 		super(node);
+	}
+
+	@RequiredReadAction
+	@Nonnull
+	@Override
+	public PsiElement[] getChildren()
+	{
+		PsiElement psiChild = getFirstChild();
+		if(psiChild == null)
+		{
+			return PsiElement.EMPTY_ARRAY;
+		}
+
+		List<PsiElement> result = new ArrayList<>();
+		while(psiChild != null)
+		{
+			result.add(psiChild);
+
+			psiChild = psiChild.getNextSibling();
+		}
+		return PsiUtilCore.toPsiElementArray(result);
 	}
 
 	@Override

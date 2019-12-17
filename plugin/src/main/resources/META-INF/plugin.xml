@@ -135,6 +135,8 @@
 		<lang.elementManipulator forClass="com.intellij.lang.javascript.psi.JSDocTag"
 								 implementationClass="com.intellij.javascript.manipulators.JSDocTagManipulator"/>
 
+		<lang.fileViewProviderFactory language="JavaScript" implementationClass="consulo.javascript.lang.viewProvider.JSFileViewProviderFactory" />
+
 		<completion.contributor language="JavaScript" implementationClass="consulo.javascript.ide.completion.JavaScriptKeywordCompletionContributor"/>
 
 		<completion.confidence language="JavaScript" implementationClass="com.intellij.codeInsight.completion.SkipAutopopupInStrings"/>
