@@ -304,6 +304,15 @@ public class SubBlockVisitor extends JSNodeVisitor
 			return Indent.getNormalIndent();
 		}
 
+		if(nodeElementType == JSElementTypes.EMBEDDED_EXPRESSION)
+		{
+			if(childElementType == JSTokenTypes.LBRACE || childElementType == JSTokenTypes.RBRACE)
+			{
+				return Indent.getNoneIndent();
+			}
+			return Indent.getNormalIndent();
+		}
+
 		if(nodeElementType == JSElementTypes.OBJECT_LITERAL_EXPRESSION)
 		{
 			if(childElementType == JSTokenTypes.LBRACE || childElementType == JSTokenTypes.RBRACE)
