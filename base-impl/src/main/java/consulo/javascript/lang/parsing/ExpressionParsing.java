@@ -21,9 +21,9 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptBundle;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.tree.IElementType;
 import consulo.javascript.lang.JavaScriptTokenSets;
+import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nullable;
@@ -36,10 +36,12 @@ import javax.annotation.Nullable;
  */
 public class ExpressionParsing extends Parsing
 {
-	public static final Logger LOGGER = Logger.getInstance(ExpressionParsing.class);
+	private static final Logger LOGGER = Logger.getInstance(ExpressionParsing.class);
 
 	public static final Key<Boolean> WITHIN_ARRAY_LITERAL_EXPRESSION = Key.create("within.array.literal.expression");
 	public static final Key<Boolean> WITHIN_OBJECT_LITERAL_EXPRESSION = Key.create("within.object.literal.expression");
+
+	private final JSXParser myJSXParser = new JSXParser();
 
 	public ExpressionParsing(JavaScriptParsingContext context)
 	{
@@ -155,49 +157,9 @@ public class ExpressionParsing extends Parsing
 
 	private void parseTag(final PsiBuilder builder)
 	{
-		final IElementType tokenType = builder.getTokenType();
-		assert JSTokenTypes.XML_START_TAG_START == tokenType || JSTokenTypes.XML_START_TAG_LIST == tokenType;
+		myJSXParser.setBuilder(builder);
 
-		PsiBuilder.Marker marker = builder.mark();
-		builder.advanceLexer();
-		try
-		{
-			boolean endTagStarted = false;
-
-			for(IElementType currentTokenType = builder.getTokenType(); currentTokenType != null; currentTokenType = builder.getTokenType())
-			{
-				if(!JSTokenTypes.XML_TOKENS.contains(currentTokenType))
-				{
-					PsiBuilder.Marker errorMarker = builder.mark();
-					builder.advanceLexer();
-					errorMarker.error(JavaScriptBundle.message("javascript.parser.message.expected.xml.element"));
-					continue;
-				}
-
-				if(currentTokenType == JSTokenTypes.XML_START_TAG_START)
-				{
-					parseTag(builder);
-					continue;
-				}
-				else if(currentTokenType == JSTokenTypes.XML_EMPTY_TAG_END ||
-						currentTokenType == JSTokenTypes.XML_END_TAG_LIST ||
-						(currentTokenType == JSTokenTypes.XML_TAG_END && endTagStarted))
-				{
-					builder.advanceLexer();
-					return;
-				}
-				else if(currentTokenType == JSTokenTypes.XML_END_TAG_START)
-				{
-					endTagStarted = true;
-				}
-
-				builder.advanceLexer();
-			}
-		}
-		finally
-		{
-			marker.done(JSElementTypes.XML_LITERAL_EXPRESSION);
-		}
+		myJSXParser.parseTag(false);
 	}
 
 	@Nullable
