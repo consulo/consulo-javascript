@@ -16,14 +16,14 @@
 
 package consulo.javascript.lang.parsing;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.psi.tree.IElementType;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author max
@@ -163,10 +163,57 @@ public class FunctionParsing extends Parsing
 			}
 			parameterMarker.done(JSElementTypes.FORMAL_PARAMETER);
 		}
+		else if(builder.getTokenType() == JSTokenTypes.LBRACE)
+		{
+			parseDeconstructionParameter(builder, parameterMarker);
+		}
 		else
 		{
 			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.formal.parameter.name"));
 			parameterMarker.drop();
 		}
+	}
+
+	protected void parseDeconstructionParameter(PsiBuilder builder, PsiBuilder.Marker mark)
+	{
+		PsiBuilder.Marker desctructionObjectMarker = builder.mark();
+		builder.advanceLexer();
+
+		boolean first = true;
+		while(!builder.eof())
+		{
+			if(builder.getTokenType() == JSTokenTypes.RBRACE)
+			{
+				break;
+			}
+
+			if(!first)
+			{
+				Parsing.checkMatches(builder, JSTokenTypes.COMMA, "Comma expected");
+			}
+
+			first = false;
+
+			if(isIdentifierToken(builder))
+			{
+				PsiBuilder.Marker propertyMarker = builder.mark();
+				PsiBuilder.Marker varMarker = builder.mark();
+				builder.advanceLexer();
+				varMarker.done(JSElementTypes.FORMAL_PARAMETER);
+				propertyMarker.done(JSElementTypes.DESTRUCTURING_SHORTHANDED_PROPERTY);
+			}
+			else
+			{
+				PsiBuilder.Marker err = builder.mark();
+				builder.advanceLexer();
+				err.error("Expected identifier");
+			}
+		}
+
+		Parsing.checkMatches(builder, JSTokenTypes.RBRACE, "'}' expected");
+
+		desctructionObjectMarker.done(JSElementTypes.DESTRUCTURING_OBJECT);
+
+		mark.done(JSElementTypes.DESTRUCTURING_PARAMETER);
 	}
 }

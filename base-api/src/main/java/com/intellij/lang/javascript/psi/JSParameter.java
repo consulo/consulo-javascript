@@ -16,11 +16,11 @@
 
 package com.intellij.lang.javascript.psi;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ArrayFactory;
 import consulo.annotation.access.RequiredReadAction;
+
+import javax.annotation.Nullable;
 
 /**
  * User: max
@@ -29,17 +29,9 @@ import consulo.annotation.access.RequiredReadAction;
  */
 public interface JSParameter extends JSVariable
 {
-	public static final JSParameter[] EMPTY_ARRAY = new JSParameter[0];
+	JSParameter[] EMPTY_ARRAY = new JSParameter[0];
 
-	public static ArrayFactory<JSParameter> ARRAY_FACTORY = new ArrayFactory<JSParameter>()
-	{
-		@Nonnull
-		@Override
-		public JSParameter[] create(int count)
-		{
-			return count == 0 ? EMPTY_ARRAY : new JSParameter[count];
-		}
-	};
+	ArrayFactory<JSParameter> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new JSParameter[count];
 
 	JSFunction getDeclaringFunction();
 

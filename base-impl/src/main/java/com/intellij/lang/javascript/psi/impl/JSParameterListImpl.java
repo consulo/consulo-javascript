@@ -16,8 +16,6 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -25,6 +23,8 @@ import com.intellij.lang.javascript.psi.JSParameter;
 import com.intellij.lang.javascript.psi.JSParameterList;
 import com.intellij.lang.javascript.psi.stubs.JSParameterListStub;
 import com.intellij.psi.PsiElementVisitor;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -48,7 +48,7 @@ public class JSParameterListImpl extends JSStubElementImpl<JSParameterListStub> 
 	@Override
 	public JSParameter[] getParameters()
 	{
-		return getStubOrPsiChildren(JSElementTypes.FORMAL_PARAMETER, JSParameter.EMPTY_ARRAY);
+		return getStubOrPsiChildren(JSElementTypes.PARAMETERS, JSParameter.EMPTY_ARRAY);
 	}
 
 	@Override

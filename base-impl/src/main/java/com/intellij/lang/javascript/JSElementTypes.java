@@ -31,6 +31,7 @@ import consulo.javascript.ecmascript4.psi.impl.EcmaScript4ElementTypes;
 import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.javascript.lang.parsing.impl.JavaSciptDestructuringElementImpl;
 import consulo.javascript.lang.parsing.impl.JavaSciptDestructuringObjectImpl;
+import consulo.javascript.lang.parsing.impl.JavaScriptDestructuringParameterImpl;
 import consulo.javascript.lang.parsing.impl.JavaScriptDestructuringShorthandedPropertyImpl;
 import consulo.javascript.psi.impl.JSComputedNameImpl;
 import consulo.javascript.psi.impl.JavaScriptLambdaExpressionImpl;
@@ -78,6 +79,7 @@ public interface JSElementTypes
 	JSStubElementType<JSParameterListStub, JSParameterList> PARAMETER_LIST = new JSParameterListElementType();
 
 	JSStubElementType<JSParameterStub, JSParameter> FORMAL_PARAMETER = new JSParameterElementType();
+
 	JSStubElementType<JSVariableStub, JSVariable> VARIABLE = new JSVariableElementType();
 	IElementType ARGUMENT_LIST = new ElementTypeAsPsiFactory("ARGUMENT_LIST", JavaScriptLanguage.INSTANCE, JSArgumentListImpl.class);
 
@@ -111,6 +113,7 @@ public interface JSElementTypes
 	IElementType CONTINUE_STATEMENT = new ElementTypeAsPsiFactory("CONTINUE_STATEMENT", JavaScriptLanguage.INSTANCE, JSContinueStatementImpl.class);
 	IElementType BREAK_STATEMENT = new ElementTypeAsPsiFactory("BREAK_STATEMENT", JavaScriptLanguage.INSTANCE, JSBreakStatementImpl.class);
 	IElementType DESTRUCTURING_ELEMENT = new ElementTypeAsPsiFactory("DESTRUCTURING_ELEMENT", JavaScriptLanguage.INSTANCE, JavaSciptDestructuringElementImpl.class);
+	IElementType DESTRUCTURING_PARAMETER = new ElementTypeAsPsiFactory("DESTRUCTURING_PARAMETER", JavaScriptLanguage.INSTANCE, JavaScriptDestructuringParameterImpl.class);
 	IElementType DESTRUCTURING_OBJECT = new ElementTypeAsPsiFactory("DESTRUCTURING_OBJECT", JavaScriptLanguage.INSTANCE, JavaSciptDestructuringObjectImpl.class);
 	IElementType DESTRUCTURING_SHORTHANDED_PROPERTY = new ElementTypeAsPsiFactory("DESTRUCTURING_SHORTHANDED_PROPERTY", JavaScriptLanguage.INSTANCE, JavaScriptDestructuringShorthandedPropertyImpl.class);
 	IElementType WITH_STATEMENT = new ElementTypeAsPsiFactory("WITH_STATEMENT", JavaScriptLanguage.INSTANCE, JSWithStatementImpl.class);
@@ -173,12 +176,15 @@ public interface JSElementTypes
 		}
 	};
 	IElementType NEW_EXPRESSION = new ElementTypeAsPsiFactory("NEW_EXPRESSION", JavaScriptLanguage.INSTANCE, JSNewExpressionImpl.class);
+
 	IElementType INDEXED_PROPERTY_ACCESS_EXPRESSION = new ElementTypeAsPsiFactory("INDEXED_PROPERTY_ACCESS_EXPRESSION", JavaScriptLanguage.INSTANCE,
 			JSIndexedPropertyAccessExpressionImpl.class);
 	IElementType CALL_EXPRESSION = new ElementTypeAsPsiFactory("CALL_EXPRESSION", JavaScriptLanguage.INSTANCE, JSCallExpressionImpl.class);
 	IElementType DEFINITION_EXPRESSION = new ElementTypeAsPsiFactory("DEFINITION_EXPRESSION", JavaScriptLanguage.INSTANCE,
 			JSDefinitionExpressionImpl.class);
 	IElementType LET_EXPRESSION = new ElementTypeAsPsiFactory("LET_EXPRESSION", JavaScriptLanguage.INSTANCE, JSLetExpressionImpl.class);
+
+	TokenSet PARAMETERS = TokenSet.create(FORMAL_PARAMETER, DESTRUCTURING_PARAMETER);
 
 	TokenSet EXPRESSIONS = TokenSet.create(THIS_EXPRESSION, REFERENCE_EXPRESSION, LITERAL_EXPRESSION, PARENTHESIZED_EXPRESSION,
 			ARRAY_LITERAL_EXPRESSION, OBJECT_LITERAL_EXPRESSION, ASSIGNMENT_EXPRESSION, CONDITIONAL_EXPRESSION, BINARY_EXPRESSION,
