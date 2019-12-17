@@ -1,5 +1,5 @@
 <!--
-  - Copyright 2013-2015 must-be.org
+  - Copyright 2013-2019 consulo.io
   -
   - Licensed under the Apache License, Version 2.0 (the "License");
   - you may not use this file except in compliance with the License.
@@ -168,6 +168,8 @@
 
 	<extensionPoints>
 		<extensionPoint name="indexer" interface="consulo.javascript.index.JavaScriptIndexer"/>
+
+		<extensionPoint name="keywordCompletionExtender" interface="consulo.javascript.ide.completion.JavaScriptKeywordCompletionExtender" />
 
 		<extensionPoint name="resolveHelper" interface="com.intellij.lang.javascript.flex.JSResolveHelper"/>
 		<extensionPoint name="classInheritorsProvider" interface="com.intellij.lang.javascript.search.JSClassInheritorsProvider"/>

@@ -22,5 +22,7 @@
 
 	<extensions defaultExtensionNs="consulo.javascript">
 		<quickFixFactory key="ECMASCRIPT_6" implementationClass="consulo.javascript.ide.codeInsight.EcmaScript6QuickFixFactory"/>
+
+		<keywordCompletionExtender implementation="consulo.javascript.ecmascript6.completion.EcmaScript6KeywordCompletionExtender" />
 	</extensions>
 </consulo-plugin>

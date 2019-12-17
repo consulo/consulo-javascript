@@ -16,7 +16,6 @@
 
 package consulo.javascript.ide.completion;
 
-import javax.annotation.Nonnull;
 import com.intellij.codeInsight.completion.CompletionContributor;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
@@ -30,6 +29,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeInsight.completion.CompletionProvider;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -69,6 +70,16 @@ public class JavaScriptKeywordCompletionContributor extends CompletionContributo
 				result.addElement(functionKeyword);
 
 				result.addElement(LookupElementBuilder.create("var").withInsertHandler(SpaceInsertHandler.INSTANCE).bold());
+				result.addElement(LookupElementBuilder.create("const").withInsertHandler(SpaceInsertHandler.INSTANCE).bold());
+
+				result.addElement(LookupElementBuilder.create("if").bold());
+				result.addElement(LookupElementBuilder.create("for").bold());
+				result.addElement(LookupElementBuilder.create("return").bold());
+
+				for(JavaScriptKeywordCompletionExtender extender : JavaScriptKeywordCompletionExtender.EP_NAME.getExtensionList())
+				{
+					extender.fillCompletion(parameters, context, result);
+				}
 			}
 		});
 	}
