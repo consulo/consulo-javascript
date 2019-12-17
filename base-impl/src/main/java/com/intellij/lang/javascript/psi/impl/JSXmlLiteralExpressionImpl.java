@@ -17,17 +17,20 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.Language;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.PsiReference;
+import com.intellij.psi.impl.light.LightElement;
+import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
 import com.intellij.psi.meta.PsiMetaData;
 import com.intellij.psi.search.PsiElementProcessor;
 import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.psi.xml.XmlAttribute;
-import com.intellij.psi.xml.XmlTag;
-import com.intellij.psi.xml.XmlTagChild;
-import com.intellij.psi.xml.XmlTagValue;
+import com.intellij.psi.xml.*;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.xml.XmlElementDescriptor;
 import com.intellij.xml.XmlNSDescriptor;
@@ -47,9 +50,81 @@ import java.util.Map;
  */
 public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLiteralExpression, XmlTag
 {
+	private static class LightXmlValue extends LightElement implements XmlTagValue
+	{
+		protected LightXmlValue(PsiManager manager, Language language)
+		{
+			super(manager, language);
+		}
+
+		@Override
+		public TextRange getTextRange()
+		{
+			return TextRange.EMPTY_RANGE;
+		}
+
+		@Nonnull
+		@Override
+		public XmlTagChild[] getChildren()
+		{
+			return XmlTagChild.EMPTY_ARRAY;
+		}
+
+		@Override
+		public String toString()
+		{
+			return null;
+		}
+
+		@Override
+		public int getTextOffset()
+		{
+			return 0;
+		}
+
+		@Nonnull
+		@Override
+		public XmlText[] getTextElements()
+		{
+			return new XmlText[0];
+		}
+
+		@Nonnull
+		@Override
+		public String getTrimmedText()
+		{
+			return "";
+		}
+
+		@Override
+		public void setText(String s)
+		{
+
+		}
+
+		@Override
+		public void setEscapedText(String s)
+		{
+
+		}
+
+		@Override
+		public boolean hasCDATA()
+		{
+			return false;
+		}
+	}
+
 	public JSXmlLiteralExpressionImpl(final ASTNode node)
 	{
 		super(node);
+	}
+
+	@Nonnull
+	@Override
+	public PsiReference[] getReferences()
+	{
+		return ReferenceProvidersRegistry.getReferencesFromProviders(this);
 	}
 
 	@RequiredReadAction
@@ -246,7 +321,7 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
 	@Override
 	public XmlTagValue getValue()
 	{
-		return null;
+		return new LightXmlValue(getManager(), getLanguage());
 	}
 
 	@Nullable
@@ -259,7 +334,7 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
 	@Override
 	public boolean isEmpty()
 	{
-		return false;
+		return true;
 	}
 
 	@Override

@@ -1,6 +1,11 @@
 <consulo-plugin>
 	<extensions defaultExtensionNs="com.intellij">
-		<fileTypeFactory implementation="consulo.javascript.jsx.language.JSXFileTypeFactory" />
+		<fileTypeFactory implementation="consulo.javascript.jsx.language.JSXFileTypeFactory"/>
+
+		<psi.referenceContributor language="JavaScript" implementation="consulo.javascript.jsx.language.psi.impl.JSXmlTagReferenceContributor"/>
+
+		<lang.elementManipulator forClass="com.intellij.lang.javascript.psi.impl.JSXmlLiteralExpressionImpl" implementationClass="consulo.javascript.jsx.language.psi.impl.JSXXmlTagManipulator"
+								 order="first"/>
 
 		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.jsx.language.JSXJavaScriptVersion"/>
 
