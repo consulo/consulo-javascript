@@ -110,7 +110,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 		{
 			type = JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_VARIABLE;
 		}
-		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(nameIdentifier).textAttributes(type).create());
+		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).needsUpdateOnTyping(false).range(nameIdentifier).textAttributes(type).create());
 	}
 
 	@Override
@@ -119,7 +119,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 	{
 		super.visitJSAttribute(jsAttribute);
 
-		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(jsAttribute).textAttributes(JavaScriptSyntaxHighlightKeys.JS_METADATA).create());
+		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).needsUpdateOnTyping(false).range(jsAttribute).textAttributes(JavaScriptSyntaxHighlightKeys.JS_METADATA).create());
 	}
 
 	@Override
@@ -284,7 +284,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 			return;
 		}
 
-		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(targetForHighlight).textAttributes(type).create());
+		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).needsUpdateOnTyping(false).range(targetForHighlight).textAttributes(type).create());
 	}
 
 	@Nullable
@@ -323,7 +323,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 			return null;
 		}
 
-		return HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(markerAddTo).textAttributes(type).create();
+		return HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(markerAddTo).needsUpdateOnTyping(false).textAttributes(type).create();
 	}
 
 	private void reportFeatureUsage(@Nonnull PsiElement element, @Nonnull JavaScriptFeature javaScriptFeature)
