@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
  */
 public class ExpressionParsing extends Parsing
 {
-	private static final Logger LOGGER = Logger.getInstance(ExpressionParsing.class);
+	private static final Logger LOG = Logger.getInstance(ExpressionParsing.class);
 
 	public static final Key<Boolean> WITHIN_ARRAY_LITERAL_EXPRESSION = Key.create("within.array.literal.expression");
 	public static final Key<Boolean> WITHIN_OBJECT_LITERAL_EXPRESSION = Key.create("within.object.literal.expression");
@@ -206,7 +206,7 @@ public class ExpressionParsing extends Parsing
 
 	public void parseObjectLiteralExpression(final PsiBuilder builder)
 	{
-		ExpressionParsing.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.LBRACE);
+		ExpressionParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.LBRACE);
 		final PsiBuilder.Marker expr = builder.mark();
 		builder.advanceLexer();
 
@@ -280,7 +280,7 @@ public class ExpressionParsing extends Parsing
 
 	public void parseArrayLiteralExpression(final PsiBuilder builder)
 	{
-		ExpressionParsing.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.LBRACKET);
+		ExpressionParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.LBRACKET);
 		final PsiBuilder.Marker expr = builder.mark();
 		builder.advanceLexer();
 		boolean commaExpected = false;
@@ -333,7 +333,7 @@ public class ExpressionParsing extends Parsing
 
 	private void parseParenthesizedExpression(final PsiBuilder builder)
 	{
-		ExpressionParsing.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.LPAR);
+		ExpressionParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.LPAR);
 		final PsiBuilder.Marker expr = builder.mark();
 		builder.advanceLexer();
 		parseExpression(builder);
@@ -489,7 +489,7 @@ public class ExpressionParsing extends Parsing
 
 	protected boolean parseNewExpression(PsiBuilder builder)
 	{
-		ExpressionParsing.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.NEW_KEYWORD);
+		ExpressionParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.NEW_KEYWORD);
 		builder.advanceLexer();
 
 		if(builder.getTokenType() == JSTokenTypes.FUNCTION_KEYWORD)
@@ -507,7 +507,7 @@ public class ExpressionParsing extends Parsing
 
 	protected void parseArgumentList(final PsiBuilder builder)
 	{
-		ExpressionParsing.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.LPAR);
+		ExpressionParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.LPAR);
 		final PsiBuilder.Marker arglist = builder.mark();
 		builder.advanceLexer();
 		boolean first = true;

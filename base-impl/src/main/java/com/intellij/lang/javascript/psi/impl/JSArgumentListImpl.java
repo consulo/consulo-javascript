@@ -28,11 +28,9 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.util.IncorrectOperationException;
 
 /**
- * Created by IntelliJ IDEA.
  * User: max
  * Date: Jan 30, 2005
  * Time: 9:15:02 PM
- * To change this template use File | Settings | File Templates.
  */
 public class JSArgumentListImpl extends JSElementImpl implements JSArgumentList
 {
@@ -44,13 +42,7 @@ public class JSArgumentListImpl extends JSElementImpl implements JSArgumentList
 	@Override
 	public JSExpression[] getArguments()
 	{
-		final ASTNode[] nodes = getNode().getChildren(JSElementTypes.EXPRESSIONS);
-		final JSExpression[] exprs = new JSExpression[nodes.length];
-		for(int i = 0; i < exprs.length; i++)
-		{
-			exprs[i] = (JSExpression) nodes[i].getPsi();
-		}
-		return exprs;
+		return findChildrenByClass(JSExpression.class);
 	}
 
 	@Override

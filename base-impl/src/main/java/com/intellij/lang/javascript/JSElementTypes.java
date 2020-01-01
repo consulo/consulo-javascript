@@ -35,6 +35,7 @@ import consulo.javascript.lang.parsing.impl.JavaScriptDestructuringParameterImpl
 import consulo.javascript.lang.parsing.impl.JavaScriptDestructuringShorthandedPropertyImpl;
 import consulo.javascript.psi.impl.JSComputedNameImpl;
 import consulo.javascript.psi.impl.JavaScriptLambdaExpressionImpl;
+import consulo.javascript.psi.impl.JavaScriptSpreadExpressionImpl;
 import consulo.javascript.psi.stubs.JSFileStub;
 import consulo.psi.tree.ElementTypeAsPsiFactory;
 
@@ -159,6 +160,7 @@ public interface JSElementTypes
 	IElementType PREFIX_EXPRESSION = new ElementTypeAsPsiFactory("PREFIX_EXPRESSION", JavaScriptLanguage.INSTANCE, JSPrefixExpressionImpl.class);
 	IElementType POSTFIX_EXPRESSION = new ElementTypeAsPsiFactory("POSTFIX_EXPRESSION", JavaScriptLanguage.INSTANCE, JSPostfixExpressionImpl.class);
 	IElementType LAMBDA_EXPRESSION = new ElementTypeAsPsiFactory("LAMBDA_EXPRESSION", JavaScriptLanguage.INSTANCE, JavaScriptLambdaExpressionImpl.class);
+	IElementType SPREAD_EXPRESSION = new ElementTypeAsPsiFactory("SPREAD_EXPRESSION", JavaScriptLanguage.INSTANCE, JavaScriptSpreadExpressionImpl.class);
 	IElementType COMMA_EXPRESSION = new ElementTypeAsPsiFactory("COMMA_EXPRESSION", JavaScriptLanguage.INSTANCE, JSCommaExpressionImpl.class);
 	JSStubElementType<JSFunctionStub, JSFunction> FUNCTION_EXPRESSION = new JSFunctionElementType("FUNCTION_EXPRESSION")
 	{

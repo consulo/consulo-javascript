@@ -36,6 +36,22 @@ public class EcmaScript6ExpressionParsing extends ExpressionParsing
 	@Override
 	protected boolean parsePrimaryExpression(PsiBuilder builder)
 	{
+		if(builder.getTokenType() == JSTokenTypes.DOT_DOT_DOT)
+		{
+			PsiBuilder.Marker mark = builder.mark();
+			builder.advanceLexer();
+
+			if(!parseExpressionOptional(builder))
+			{
+				mark.error("Expression expected");
+			}
+			else
+			{
+				mark.done(JSElementTypes.SPREAD_EXPRESSION);
+			}
+
+			return true;
+		}
 		if(canParseLambdaExpression(builder))
 		{
 			return parseLambdaExpression(builder);
