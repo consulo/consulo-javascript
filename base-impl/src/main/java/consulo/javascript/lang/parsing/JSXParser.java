@@ -93,6 +93,10 @@ public class JSXParser
 			{
 				parseAttribute();
 			}
+			else if(tt == JSTokenTypes.XML_JS_SCRIPT)
+			{
+				advance();
+			}
 			else
 			{
 				break;
