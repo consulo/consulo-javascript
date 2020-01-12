@@ -32,7 +32,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.tree.IElementType;
+import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -43,10 +45,10 @@ import java.util.List;
  */
 public class SubBlockVisitor extends JSNodeVisitor
 {
-	List<Block> myBlocks = new ArrayList<Block>();
-	private final CodeStyleSettings mySettings;
+	private final List<Block> myBlocks = new ArrayList<>();
+	private final CommonCodeStyleSettings mySettings;
 
-	public SubBlockVisitor(CodeStyleSettings settings)
+	public SubBlockVisitor(CommonCodeStyleSettings settings)
 	{
 		mySettings = settings;
 	}
@@ -57,6 +59,7 @@ public class SubBlockVisitor extends JSNodeVisitor
 	}
 
 	@Override
+	@RequiredReadAction
 	public void visitElement(final ASTNode node)
 	{
 		Alignment alignment = getDefaultAlignment(node);
@@ -221,14 +224,7 @@ public class SubBlockVisitor extends JSNodeVisitor
 
 		if(nodeElementType == JSElementTypes.IF_STATEMENT)
 		{
-			if(childElementType == JSTokenTypes.ELSE_KEYWORD || JSTokenTypes.COMMENTS.contains(childElementType))
-			{
-				return Indent.getNoneIndent();
-			}
-			if(JSElementTypes.SOURCE_ELEMENTS.contains(childElementType))
-			{
-				return Indent.getNormalIndent();
-			}
+			return Indent.getNoneIndent();
 		}
 
 		if(nodeElementType == JSElementTypes.WITH_STATEMENT && JSElementTypes.SOURCE_ELEMENTS.contains(childElementType))
