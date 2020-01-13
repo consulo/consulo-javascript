@@ -21,10 +21,7 @@ import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.ResolveResult;
-import com.intellij.psi.ResolveState;
+import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
@@ -49,6 +46,12 @@ public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperEx
 	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
 		visitor.visitJSSuperExpression(this);
+	}
+
+	@Override
+	public PsiReference getReference()
+	{
+		return getReferences()[0];
 	}
 
 	@Override
