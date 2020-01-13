@@ -26,6 +26,7 @@ import com.intellij.lang.javascript.psi.JSImportStatement;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
+import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.xml.XmlText;
@@ -38,12 +39,12 @@ public class JSSpacingProcessor extends JSNodeVisitor
 	private ASTNode myParent;
 	private ASTNode myChild1;
 	private ASTNode myChild2;
-	private final CodeStyleSettings mySettings;
+	private final CommonCodeStyleSettings mySettings;
 	private Spacing myResult;
 	private final IElementType type1;
 	private final IElementType type2;
 
-	public JSSpacingProcessor(final ASTNode parent, final ASTNode child1, final ASTNode child2, final CodeStyleSettings settings)
+	public JSSpacingProcessor(final ASTNode parent, final ASTNode child1, final ASTNode child2, final CommonCodeStyleSettings settings)
 	{
 		myParent = parent;
 		myChild1 = child1;

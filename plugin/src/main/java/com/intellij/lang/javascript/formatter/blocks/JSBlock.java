@@ -16,16 +16,7 @@
 
 package com.intellij.lang.javascript.formatter.blocks;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import com.intellij.formatting.Alignment;
-import com.intellij.formatting.Block;
-import com.intellij.formatting.ChildAttributes;
-import com.intellij.formatting.Indent;
-import com.intellij.formatting.Spacing;
-import com.intellij.formatting.Wrap;
+import com.intellij.formatting.*;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -35,9 +26,13 @@ import com.intellij.lang.javascript.types.JSFileElementType;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.tree.IElementType;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author ven
@@ -46,14 +41,14 @@ public class JSBlock implements Block
 {
 	private ASTNode myNode;
 
-	private final CodeStyleSettings mySettings;
+	private final CommonCodeStyleSettings mySettings;
 
 	private Alignment myAlignment;
 	private Indent myIndent;
 	private Wrap myWrap;
 	private List<Block> mySubBlocks = null;
 
-	public JSBlock(final ASTNode node, final Alignment alignment, final Indent indent, final Wrap wrap, final CodeStyleSettings settings)
+	public JSBlock(final ASTNode node, final Alignment alignment, final Indent indent, final Wrap wrap, final CommonCodeStyleSettings settings)
 	{
 		myAlignment = alignment;
 		myIndent = indent;
@@ -218,7 +213,7 @@ public class JSBlock implements Block
 		return isIncomplete(lastChild);
 	}
 
-	public CodeStyleSettings getSettings()
+	public CommonCodeStyleSettings getSettings()
 	{
 		return mySettings;
 	}

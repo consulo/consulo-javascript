@@ -19,8 +19,6 @@
  */
 package com.intellij.lang.javascript.formatter;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.formatting.FormattingModel;
 import com.intellij.formatting.FormattingModelBuilder;
 import com.intellij.lang.ASTNode;
@@ -30,6 +28,10 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
+import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import consulo.javascript.lang.JavaScriptLanguage;
+
+import javax.annotation.Nonnull;
 
 public class JavascriptFormattingModelBuilder implements FormattingModelBuilder
 {
@@ -39,8 +41,9 @@ public class JavascriptFormattingModelBuilder implements FormattingModelBuilder
 	{
 		final PsiFile psiFile = element.getContainingFile();
 
-		return new JSFormattingModel(psiFile, settings, new JSBlock(psiFile instanceof JSFile ? psiFile.getNode() : element.getNode(), null, null, null,
-				settings));
+		CommonCodeStyleSettings commonSettings = settings.getCommonSettings(JavaScriptLanguage.INSTANCE);
+
+		return new JSFormattingModel(psiFile, settings, new JSBlock(psiFile instanceof JSFile ? psiFile.getNode() : element.getNode(), null, null, null, commonSettings));
 	}
 
 	@Override
