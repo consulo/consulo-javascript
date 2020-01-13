@@ -16,20 +16,17 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSReturnStatement;
-import com.intellij.psi.PsiElementVisitor;
+
+import javax.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
  * User: max
  * Date: Jan 30, 2005
  * Time: 9:57:08 PM
- * To change this template use File | Settings | File Templates.
  */
 public class JSReturnStatementImpl extends JSStatementImpl implements JSReturnStatement
 {
@@ -41,20 +38,12 @@ public class JSReturnStatementImpl extends JSStatementImpl implements JSReturnSt
 	@Override
 	public JSExpression getExpression()
 	{
-		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
-		return node != null ? (JSExpression) node.getPsi() : null;
+		return findChildByClass(JSExpression.class);
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSReturnStatement(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
+		visitor.visitJSReturnStatement(this);
 	}
 }

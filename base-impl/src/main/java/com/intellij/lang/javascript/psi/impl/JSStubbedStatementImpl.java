@@ -29,7 +29,7 @@ import com.intellij.util.IncorrectOperationException;
 /**
  * @author ven
  */
-class JSStubbedStatementImpl<T extends StubElement> extends JSStubElementImpl<T> implements JSStatement, JSSuppressionHolder
+abstract class JSStubbedStatementImpl<T extends StubElement> extends JSStubElementImpl<T> implements JSStatement, JSSuppressionHolder
 {
 	JSStubbedStatementImpl(final ASTNode node)
 	{

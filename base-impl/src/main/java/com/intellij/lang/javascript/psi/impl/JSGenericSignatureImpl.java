@@ -16,12 +16,11 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSGenericSignature;
-import com.intellij.psi.PsiElementVisitor;
+
+import javax.annotation.Nonnull;
 
 public class JSGenericSignatureImpl extends JSElementImpl implements JSGenericSignature
 {
@@ -31,15 +30,8 @@ public class JSGenericSignatureImpl extends JSElementImpl implements JSGenericSi
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSGenericSignature(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
+		visitor.visitJSGenericSignature(this);
 	}
 }

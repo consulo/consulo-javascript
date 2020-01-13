@@ -16,27 +16,21 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-
-import org.jetbrains.annotations.NonNls;
 import com.intellij.codeInsight.daemon.EmptyResolveMessageProvider;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JSDocTokenTypes;
+import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.util.JSLookupUtil;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.ElementManipulator;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.PsiWhiteSpace;
+import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
 
 public class JSDocTagImpl extends JSElementImpl implements JSDocTag
 {
@@ -62,16 +56,9 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag
 	}
 
 	@Override
-	public void accept(@Nonnull final PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSDocTag(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
+		visitor.visitJSDocTag(this);
 	}
 
 	@Override

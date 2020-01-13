@@ -16,13 +16,11 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
+import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.PsiElementProcessor;
@@ -30,6 +28,8 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.psi.xml.XmlTagChild;
 import com.intellij.util.IncorrectOperationException;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -46,9 +46,9 @@ public class JSEmbeddedContentImpl extends JSElementImpl implements XmlTagChild
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		visitor.visitElement(this);
+		visitor.visitJSElement(this);
 	}
 
 	@Override

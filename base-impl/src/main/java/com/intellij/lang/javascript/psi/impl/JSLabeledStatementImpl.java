@@ -16,8 +16,6 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -26,8 +24,9 @@ import com.intellij.lang.javascript.psi.JSLabeledStatement;
 import com.intellij.lang.javascript.psi.JSNamedElement;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.util.IncorrectOperationException;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -74,16 +73,9 @@ public class JSLabeledStatementImpl extends JSStatementImpl implements JSLabeled
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSLabeledStatement(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
+		visitor.visitJSLabeledStatement(this);
 	}
 
 	@Override

@@ -16,27 +16,22 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.psi.JSClass;
-import com.intellij.lang.javascript.psi.JSElementVisitor;
-import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
-import com.intellij.lang.javascript.psi.JSReferenceExpression;
-import com.intellij.lang.javascript.psi.JSReferenceList;
+import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.stubs.JSReferenceListStub;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubIndex;
 import com.intellij.util.ArrayUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * @author Maxim.Mossienko
@@ -54,16 +49,9 @@ public class JSReferenceListImpl extends JSStubElementImpl<JSReferenceListStub> 
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSReferenceList(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
+		visitor.visitJSReferenceList(this);
 	}
 
 	@RequiredReadAction

@@ -16,25 +16,21 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-
-import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSPostfixExpression;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.IElementType;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.javascript.lang.psi.JavaScriptType;
+
+import javax.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
  * User: max
  * Date: Jan 30, 2005
  * Time: 11:52:13 PM
- * To change this template use File | Settings | File Templates.
  */
 public class JSPostfixExpressionImpl extends JSExpressionImpl implements JSPostfixExpression
 {
@@ -55,8 +51,7 @@ public class JSPostfixExpressionImpl extends JSExpressionImpl implements JSPostf
 	@Override
 	public JSExpression getExpression()
 	{
-		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
-		return node != null ? (JSExpression) node.getPsi() : null;
+		return findChildByClass(JSExpression.class);
 	}
 
 	@Override
@@ -67,15 +62,8 @@ public class JSPostfixExpressionImpl extends JSExpressionImpl implements JSPostf
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSPostfixExpression(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
+		visitor.visitJSPostfixExpression(this);
 	}
 }

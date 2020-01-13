@@ -16,20 +16,15 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.psi.JSElementVisitor;
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSForStatement;
-import com.intellij.lang.javascript.psi.JSStatement;
-import com.intellij.lang.javascript.psi.JSVarStatement;
+import com.intellij.lang.javascript.psi.*;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -156,15 +151,8 @@ public class JSForStatementImpl extends JSStatementImpl implements JSForStatemen
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSForStatement(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
+		visitor.visitJSForStatement(this);
 	}
 }

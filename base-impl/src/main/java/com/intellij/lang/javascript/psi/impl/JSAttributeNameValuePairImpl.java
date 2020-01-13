@@ -16,9 +16,6 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-
-import org.jetbrains.annotations.NonNls;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -29,10 +26,12 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeNameValuePairStub;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.IncorrectOperationException;
 import consulo.javascript.lang.JavaScriptTokenSets;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
 
 /**
  * @by Maxim.Mossienko
@@ -54,16 +53,9 @@ public class JSAttributeNameValuePairImpl extends JSStubElementImpl<JSAttributeN
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSAttributeNameValuePair(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
+		visitor.visitJSAttributeNameValuePair(this);
 	}
 
 	@Override

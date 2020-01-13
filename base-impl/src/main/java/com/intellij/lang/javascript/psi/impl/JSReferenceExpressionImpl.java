@@ -444,16 +444,9 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSReferenceExpression(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
+		visitor.visitJSReferenceExpression(this);
 	}
 
 	@Override

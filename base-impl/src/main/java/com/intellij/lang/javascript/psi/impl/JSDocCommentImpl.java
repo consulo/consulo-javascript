@@ -16,15 +16,15 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSDocTokenTypes;
 import com.intellij.lang.javascript.psi.JSDocComment;
 import com.intellij.lang.javascript.psi.JSDocTag;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.IElementType;
+
+import javax.annotation.Nonnull;
 
 public class JSDocCommentImpl extends JSElementImpl implements JSDocComment
 {
@@ -40,16 +40,9 @@ public class JSDocCommentImpl extends JSElementImpl implements JSDocComment
 	}
 
 	@Override
-	public void accept(@Nonnull final PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSDocComment(this);
-		}
-		else
-		{
-			visitor.visitComment(this);
-		}
+		visitor.visitJSDocComment(this);
 	}
 
 	@Override

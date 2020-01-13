@@ -16,20 +16,15 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
-import com.intellij.lang.javascript.psi.JSArgumentList;
-import com.intellij.lang.javascript.psi.JSClass;
-import com.intellij.lang.javascript.psi.JSElementVisitor;
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSNewExpression;
-import com.intellij.lang.javascript.psi.JSReferenceExpression;
+import com.intellij.lang.javascript.psi.*;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.psi.JavaScriptType;
 import consulo.javascript.lang.psi.impl.JavaScriptClassType;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -66,8 +61,7 @@ public class JSNewExpressionImpl extends JSExpressionImpl implements JSNewExpres
 	@Override
 	public JSExpression getMethodExpression()
 	{
-		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
-		return node != null ? (JSExpression) node.getPsi() : null;
+		return findChildByClass(JSExpression.class);
 	}
 
 	@Override
@@ -78,15 +72,8 @@ public class JSNewExpressionImpl extends JSExpressionImpl implements JSNewExpres
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSNewExpression(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
+		visitor.visitJSNewExpression(this);
 	}
 }

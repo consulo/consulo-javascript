@@ -19,10 +19,10 @@ package com.intellij.lang.javascript.psi.impl;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.javascript.JSTokenTypes;
+import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.impl.light.LightElement;
@@ -149,9 +149,9 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		visitor.visitElement(this);
+		visitor.visitJSElement(this);
 	}
 
 	@Override

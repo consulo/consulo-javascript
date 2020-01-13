@@ -26,7 +26,6 @@ import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSParameter;
 import com.intellij.lang.javascript.psi.stubs.JSParameterStub;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.util.IncorrectOperationException;
@@ -97,16 +96,9 @@ public class JSParameterImpl extends JSVariableBaseImpl<JSParameterStub, JSParam
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSParameter(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
+		visitor.visitJSParameter(this);
 	}
 
 	@Override

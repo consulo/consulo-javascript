@@ -27,6 +27,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.ILazyParseableElementType;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.psi.tree.TokenSet;
+import consulo.annotation.DeprecationInfo;
 import consulo.javascript.ecmascript4.psi.impl.EcmaScript4ElementTypes;
 import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.javascript.lang.parsing.impl.JavaSciptDestructuringElementImpl;
@@ -129,6 +130,8 @@ public interface JSElementTypes
 	IElementType WHILE_STATEMENT = new ElementTypeAsPsiFactory("WHILE_STATEMENT", JavaScriptLanguage.INSTANCE, JSWhileStatementImpl.class);
 	IElementType DOWHILE_STATEMENT = new ElementTypeAsPsiFactory("DO_WHILE_STATEMENT", JavaScriptLanguage.INSTANCE, JSDoWhileStatementImpl.class);
 
+	@Deprecated
+	@DeprecationInfo("Use search by class")
 	TokenSet STATEMENTS = TokenSet.create(BLOCK_STATEMENT, LABELED_STATEMENT, VAR_STATEMENT, EMPTY_STATEMENT, IF_STATEMENT, CONTINUE_STATEMENT,
 			BREAK_STATEMENT, WITH_STATEMENT, RETURN_STATEMENT, THROW_STATEMENT, TRY_STATEMENT, SWITCH_STATEMENT, FOR_IN_STATEMENT, FOR_STATEMENT,
 			WHILE_STATEMENT, DOWHILE_STATEMENT, EXPRESSION_STATEMENT, YIELD_STATEMENT, LET_STATEMENT, ES4_IMPORT_STATEMENT, PACKAGE_STATEMENT,
@@ -188,6 +191,8 @@ public interface JSElementTypes
 
 	TokenSet PARAMETERS = TokenSet.create(FORMAL_PARAMETER, DESTRUCTURING_PARAMETER);
 
+	@Deprecated
+	@DeprecationInfo("Use search by class")
 	TokenSet EXPRESSIONS = TokenSet.create(THIS_EXPRESSION, REFERENCE_EXPRESSION, LITERAL_EXPRESSION, PARENTHESIZED_EXPRESSION,
 			ARRAY_LITERAL_EXPRESSION, OBJECT_LITERAL_EXPRESSION, ASSIGNMENT_EXPRESSION, CONDITIONAL_EXPRESSION, BINARY_EXPRESSION,
 			PREFIX_EXPRESSION, POSTFIX_EXPRESSION, COMMA_EXPRESSION, FUNCTION_EXPRESSION, NEW_EXPRESSION, INDEXED_PROPERTY_ACCESS_EXPRESSION,

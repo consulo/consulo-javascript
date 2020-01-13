@@ -16,11 +16,11 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSThisExpression;
-import com.intellij.psi.PsiElementVisitor;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -37,15 +37,8 @@ public class JSThisExpressionImpl extends JSExpressionImpl implements JSThisExpr
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSThisExpression(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
+		visitor.visitJSThisExpression(this);
 	}
 }

@@ -1,10 +1,10 @@
 package consulo.javascript.psi.impl;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSSpreadExpression;
 import com.intellij.lang.javascript.psi.impl.JSElementImpl;
-import com.intellij.psi.PsiElementVisitor;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.psi.JavaScriptType;
 
@@ -43,8 +43,8 @@ public class JavaScriptSpreadExpressionImpl extends JSElementImpl implements JSS
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		visitor.visitElement(this);
+		visitor.visitJSElement(this);
 	}
 }

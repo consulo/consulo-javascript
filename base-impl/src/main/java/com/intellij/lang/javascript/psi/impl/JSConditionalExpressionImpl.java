@@ -16,16 +16,15 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSConditionalExpression;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.IElementType;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -115,15 +114,8 @@ public class JSConditionalExpressionImpl extends JSExpressionImpl implements JSC
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSConditionalExpression(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
+		visitor.visitJSConditionalExpression(this);
 	}
 }

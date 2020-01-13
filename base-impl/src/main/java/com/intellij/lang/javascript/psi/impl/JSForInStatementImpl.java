@@ -16,20 +16,15 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.psi.JSElementVisitor;
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSForInStatement;
-import com.intellij.lang.javascript.psi.JSStatement;
-import com.intellij.lang.javascript.psi.JSVarStatement;
+import com.intellij.lang.javascript.psi.*;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -143,15 +138,8 @@ public class JSForInStatementImpl extends JSStatementImpl implements JSForInStat
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSForInStatement(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
+		visitor.visitJSForInStatement(this);
 	}
 }

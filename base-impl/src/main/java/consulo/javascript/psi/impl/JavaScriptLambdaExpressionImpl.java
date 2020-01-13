@@ -16,20 +16,24 @@
 
 package consulo.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.psi.JSElementVisitor;
-import com.intellij.lang.javascript.psi.JSParameter;
-import com.intellij.lang.javascript.psi.JSParameterList;
+import com.intellij.lang.javascript.JSElementTypes;
+import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSExpressionImpl;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.util.IncorrectOperationException;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.javascript.lang.psi.JavaScriptType;
+import consulo.javascript.lang.psi.JavaScriptTypeElement;
 import consulo.javascript.psi.JavaScriptLambdaExpression;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -69,16 +73,9 @@ public class JavaScriptLambdaExpressionImpl extends JSExpressionImpl implements 
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitLambdaExpression(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
+		visitor.visitLambdaExpression(this);
 	}
 
 	@RequiredReadAction
@@ -87,5 +84,81 @@ public class JavaScriptLambdaExpressionImpl extends JSExpressionImpl implements 
 	public JSParameterList getParameterList()
 	{
 		return findNotNullChildByClass(JSParameterList.class);
+	}
+
+	@Override
+	public JSSourceElement[] getBody()
+	{
+		final ASTNode[] children = getNode().getChildren(JSElementTypes.SOURCE_ELEMENTS);
+		if(children.length == 0)
+		{
+			return JSSourceElement.EMPTY_ARRAY;
+		}
+		JSSourceElement[] result = new JSSourceElement[children.length];
+		for(int i = 0; i < children.length; i++)
+		{
+			result[i] = (JSSourceElement) children[i].getPsi();
+		}
+		return result;
+	}
+
+	@Nonnull
+	@Override
+	public JavaScriptType getReturnType()
+	{
+		return JavaScriptType.UNKNOWN;
+	}
+
+	@Override
+	public String getReturnTypeString()
+	{
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public JavaScriptTypeElement getReturnTypeElement()
+	{
+		return null;
+	}
+
+	@Override
+	public FunctionKind getKind()
+	{
+		return FunctionKind.SIMPLE;
+	}
+
+	@Override
+	public boolean isDeprecated()
+	{
+		return false;
+	}
+
+	@Nullable
+	@Override
+	public JSAttributeList getAttributeList()
+	{
+		return null;
+	}
+
+	@Override
+	public String getQualifiedName()
+	{
+		return null;
+	}
+
+	@RequiredReadAction
+	@Nullable
+	@Override
+	public PsiElement getNameIdentifier()
+	{
+		return null;
+	}
+
+	@RequiredWriteAction
+	@Override
+	public PsiElement setName(@Nonnull @NonNls String name) throws IncorrectOperationException
+	{
+		return null;
 	}
 }

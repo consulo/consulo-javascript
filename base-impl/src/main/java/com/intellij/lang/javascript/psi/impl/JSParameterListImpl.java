@@ -22,7 +22,6 @@ import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSParameter;
 import com.intellij.lang.javascript.psi.JSParameterList;
 import com.intellij.lang.javascript.psi.stubs.JSParameterListStub;
-import com.intellij.psi.PsiElementVisitor;
 
 import javax.annotation.Nonnull;
 
@@ -52,15 +51,8 @@ public class JSParameterListImpl extends JSStubElementImpl<JSParameterListStub> 
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSParameterList(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
+		visitor.visitJSParameterList(this);
 	}
 }

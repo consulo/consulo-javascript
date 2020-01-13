@@ -25,7 +25,6 @@ import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import com.intellij.lang.javascript.psi.stubs.JSClassStub;
 import com.intellij.openapi.util.UserDataCache;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
@@ -67,16 +66,9 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSClass(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
+		visitor.visitJSClass(this);
 	}
 
 	@Override

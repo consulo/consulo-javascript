@@ -16,19 +16,12 @@
 
 package consulo.javascript.psi;
 
-import javax.annotation.Nonnull;
-
-import consulo.annotation.access.RequiredReadAction;
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSParameterList;
+import com.intellij.lang.javascript.psi.JSFunctionExpression;
 
 /**
  * @author VISTALL
  * @since 03.03.2016
  */
-public interface JavaScriptLambdaExpression extends JSExpression
+public interface JavaScriptLambdaExpression extends JSFunctionExpression
 {
-	@Nonnull
-	@RequiredReadAction
-	JSParameterList getParameterList();
 }

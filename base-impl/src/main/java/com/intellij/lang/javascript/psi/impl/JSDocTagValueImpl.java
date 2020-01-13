@@ -16,18 +16,17 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-
-import org.jetbrains.annotations.NonNls;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSDocTagValue;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.text.StringTokenizer;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
 
 public class JSDocTagValueImpl extends JSElementImpl implements JSDocTagValue
 {
@@ -127,15 +126,8 @@ public class JSDocTagValueImpl extends JSElementImpl implements JSDocTagValue
 	}
 
 	@Override
-	public void accept(@Nonnull final PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSDocTagValue(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
+		visitor.visitJSDocTagValue(this);
 	}
 }

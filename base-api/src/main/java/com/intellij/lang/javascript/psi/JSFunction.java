@@ -16,32 +16,22 @@
 
 package com.intellij.lang.javascript.psi;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.intellij.lang.javascript.psi.stubs.JSFunctionStub;
-import com.intellij.psi.StubBasedPsiElement;
 import com.intellij.util.ArrayFactory;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.psi.JavaScriptType;
 import consulo.javascript.lang.psi.JavaScriptTypeElement;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * @author max
  */
-public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JSAttributeListOwner, StubBasedPsiElement<JSFunctionStub>
+public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JSAttributeListOwner
 {
 	public static final JSFunction[] EMPTY_ARRAY = new JSFunction[0];
 
-	public static ArrayFactory<JSFunction> ARRAY_FACTORY = new ArrayFactory<JSFunction>()
-	{
-		@Nonnull
-		@Override
-		public JSFunction[] create(int count)
-		{
-			return count == 0 ? EMPTY_ARRAY : new JSFunction[count];
-		}
-	};
+	public static ArrayFactory<JSFunction> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new JSFunction[count];
 
 	@Nullable
 	@RequiredReadAction
@@ -50,13 +40,22 @@ public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JS
 	JSSourceElement[] getBody();
 
 	@RequiredReadAction
-	boolean isGetProperty();
+	default boolean isGetProperty()
+	{
+		return false;
+	}
 
 	@RequiredReadAction
-	boolean isSetProperty();
+	default boolean isSetProperty()
+	{
+		return false;
+	}
 
 	@RequiredReadAction
-	boolean isConstructor();
+	default boolean isConstructor()
+	{
+		return false;
+	}
 
 	@Nonnull
 	JavaScriptType getReturnType();
@@ -68,12 +67,18 @@ public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JS
 
 	enum FunctionKind
 	{
-		GETTER, SETTER, CONSTRUCTOR, SIMPLE
+		GETTER,
+		SETTER,
+		CONSTRUCTOR,
+		SIMPLE
 	}
 
 	FunctionKind getKind();
 
 	boolean isDeprecated();
 
-	boolean isReferencesArguments();
+	default boolean isReferencesArguments()
+	{
+		return false;
+	}
 }

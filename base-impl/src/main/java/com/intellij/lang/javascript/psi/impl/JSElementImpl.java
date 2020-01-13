@@ -31,7 +31,4 @@ public abstract class JSElementImpl extends JSStubElementImpl<StubElement>
 	{
 		super(node);
 	}
-
-	@Override
-	public abstract void accept(@Nonnull PsiElementVisitor visitor);
 }

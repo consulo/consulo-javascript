@@ -40,7 +40,7 @@ import javax.annotation.Nonnull;
  * Date: Jan 30, 2005
  * Time: 8:23:10 PM
  */
-public class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElementBase<T> implements JSElement
+public abstract class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElementBase<T> implements JSElement
 {
 	public static Key<NavigationItem> ORIGINAL_ELEMENT = Key.create("ORIGINAL_NAMED_ELEMENT");
 	@NonNls
@@ -56,12 +56,14 @@ public class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElemen
 		super(t, type);
 	}
 
+	protected abstract void accept(@Nonnull JSElementVisitor visitor);
+
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	public final void accept(@Nonnull PsiElementVisitor visitor)
 	{
 		if(visitor instanceof JSElementVisitor)
 		{
-			((JSElementVisitor) visitor).visitJSElement(this);
+			accept((JSElementVisitor)visitor);
 		}
 		else
 		{

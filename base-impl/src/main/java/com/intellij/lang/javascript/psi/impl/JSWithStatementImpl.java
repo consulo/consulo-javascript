@@ -16,15 +16,13 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.JSWithStatement;
-import com.intellij.psi.PsiElementVisitor;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -43,27 +41,18 @@ public class JSWithStatementImpl extends JSStatementImpl implements JSWithStatem
 	@Override
 	public JSExpression getExpression()
 	{
-		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
-		return node != null ? (JSExpression) node.getPsi() : null;
+		return findChildByClass(JSExpression.class);
 	}
 
 	@Override
 	public JSStatement getStatement()
 	{
-		final ASTNode node = getNode().findChildByType(JSElementTypes.STATEMENTS);
-		return node != null ? (JSStatement) node.getPsi() : null;
+		return findChildByClass(JSStatement.class);
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSWithStatement(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
+		visitor.visitJSWithStatement(this);
 	}
 }

@@ -1,6 +1,7 @@
 package consulo.javascript.ecmascript6.psi.impl;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.impl.JSStatementImpl;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
@@ -18,6 +19,12 @@ public class ES6ImportDeclarationImpl extends JSStatementImpl implements ES6Impo
 	public ES6ImportDeclarationImpl(ASTNode node)
 	{
 		super(node);
+	}
+
+	@Override
+	protected void accept(@Nonnull JSElementVisitor visitor)
+	{
+		visitor.visitJSElement(this);
 	}
 
 	@Override

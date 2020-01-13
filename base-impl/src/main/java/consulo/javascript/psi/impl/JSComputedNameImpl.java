@@ -16,13 +16,14 @@
 
 package consulo.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.impl.JSElementImpl;
-import com.intellij.psi.PsiElementVisitor;
 import consulo.javascript.psi.JSComputedName;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -36,9 +37,9 @@ public class JSComputedNameImpl extends JSElementImpl implements JSComputedName
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		visitor.visitElement(this);
+		visitor.visitJSElement(this);
 	}
 
 	@Nullable

@@ -16,18 +16,17 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-
-import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.stubs.JSFunctionStub;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.javascript.lang.psi.JavaScriptType;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -48,24 +47,10 @@ public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionStub,
 		super(stub, type);
 	}
 
-	@Nonnull
 	@Override
-	public JSFunction getFunction()
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		return this;
-	}
-
-	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
-	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSFunctionExpression(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
+		visitor.visitJSFunctionExpression(this);
 	}
 
 	@Override

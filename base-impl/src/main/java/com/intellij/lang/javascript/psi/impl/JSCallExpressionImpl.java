@@ -16,14 +16,14 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSArgumentList;
 import com.intellij.lang.javascript.psi.JSCallExpression;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.psi.PsiElementVisitor;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -42,8 +42,7 @@ public class JSCallExpressionImpl extends JSExpressionImpl implements JSCallExpr
 	@Override
 	public JSExpression getMethodExpression()
 	{
-		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
-		return node != null ? (JSExpression) node.getPsi() : null;
+		return findChildByClass(JSExpression.class);
 	}
 
 	@Override
@@ -54,15 +53,8 @@ public class JSCallExpressionImpl extends JSExpressionImpl implements JSCallExpr
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSCallExpression(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
+		visitor.visitJSCallExpression(this);
 	}
 }

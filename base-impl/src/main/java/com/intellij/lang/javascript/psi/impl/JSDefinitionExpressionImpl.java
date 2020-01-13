@@ -16,25 +16,14 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-
-import com.intellij.icons.AllIcons;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSElementTypes;
-import com.intellij.lang.javascript.psi.JSAssignmentExpression;
-import com.intellij.lang.javascript.psi.JSBinaryExpression;
-import com.intellij.lang.javascript.psi.JSDefinitionExpression;
-import com.intellij.lang.javascript.psi.JSElementVisitor;
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSReferenceExpression;
-import com.intellij.lang.javascript.psi.JSStatement;
-import com.intellij.lang.javascript.psi.JSVariable;
+import com.intellij.lang.javascript.psi.*;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.util.IncorrectOperationException;
-import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -53,8 +42,7 @@ public class JSDefinitionExpressionImpl extends JSExpressionImpl implements JSDe
 	@Override
 	public JSExpression getExpression()
 	{
-		final ASTNode expressionNode = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
-		return expressionNode != null ? (JSExpression) expressionNode.getPsi() : null;
+		return findChildByClass(JSExpression.class);
 	}
 
 	@Override
@@ -80,21 +68,9 @@ public class JSDefinitionExpressionImpl extends JSExpressionImpl implements JSDe
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSDefinitionExpression(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
-	}
-
-	public Image getIcon(int flags)
-	{
-		return AllIcons.Nodes.Variable;
+		visitor.visitJSDefinitionExpression(this);
 	}
 
 	@Override

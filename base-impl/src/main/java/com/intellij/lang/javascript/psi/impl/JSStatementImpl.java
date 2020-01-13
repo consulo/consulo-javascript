@@ -21,7 +21,7 @@ import com.intellij.lang.ASTNode;
 /**
  * @author ven
  */
-public class JSStatementImpl extends JSStubbedStatementImpl
+public abstract class JSStatementImpl extends JSStubbedStatementImpl
 {
 	public JSStatementImpl(final ASTNode node)
 	{

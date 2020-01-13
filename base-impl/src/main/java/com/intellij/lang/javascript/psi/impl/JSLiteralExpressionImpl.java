@@ -16,16 +16,12 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
-import consulo.javascript.psi.JSSimpleLiteralExpression;
 import com.intellij.psi.LiteralTextEscaper;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.tree.IElementType;
@@ -33,6 +29,9 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.javascript.lang.psi.JavaScriptPrimitiveType;
 import consulo.javascript.lang.psi.JavaScriptType;
+import consulo.javascript.psi.JSSimpleLiteralExpression;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -127,16 +126,9 @@ public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSSimpl
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSLiteralExpression(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
+		visitor.visitJSLiteralExpression(this);
 	}
 
 	@Override

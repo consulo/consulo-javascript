@@ -1,9 +1,9 @@
 package consulo.javascript.ecmascript6.psi.impl;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.impl.JSElementImpl;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import consulo.annotation.access.RequiredReadAction;
@@ -24,9 +24,9 @@ public class ES6NamedImportsImpl extends JSElementImpl implements ES6NamedImport
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		visitor.visitElement(this);
+		visitor.visitJSElement(this);
 	}
 
 	@Override

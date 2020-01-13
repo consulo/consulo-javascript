@@ -16,15 +16,11 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.psi.JSBreakStatement;
-import com.intellij.lang.javascript.psi.JSElementVisitor;
-import com.intellij.lang.javascript.psi.JSLoopStatement;
-import com.intellij.lang.javascript.psi.JSStatement;
-import com.intellij.lang.javascript.psi.JSSwitchStatement;
-import com.intellij.psi.PsiElementVisitor;
+import com.intellij.lang.javascript.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,16 +37,9 @@ public class JSBreakStatementImpl extends JSStatementWithLabelReferenceImpl impl
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSBreakStatement(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
+		visitor.visitJSBreakStatement(this);
 	}
 
 	@Override

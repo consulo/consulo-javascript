@@ -16,12 +16,6 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSFunction;
@@ -33,6 +27,11 @@ import com.intellij.psi.search.PsiElementProcessor;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * User: max
@@ -40,7 +39,7 @@ import com.intellij.util.IncorrectOperationException;
  * Time: 9:52:04 PM
  * To change this template use File | Settings | File Templates.
  */
-class JSStatementWithLabelReferenceImpl extends JSStatementImpl
+abstract class JSStatementWithLabelReferenceImpl extends JSStatementImpl
 {
 	private PsiReference[] myReferences;
 	private String myReferencesText;

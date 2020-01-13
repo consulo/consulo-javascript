@@ -16,11 +16,11 @@
 
 package com.intellij.lang.javascript.psi;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.util.ArrayFactory;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.psi.JavaScriptType;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author max
@@ -28,17 +28,9 @@ import consulo.javascript.lang.psi.JavaScriptType;
  */
 public interface JSExpression extends JSElement
 {
-	public static final JSExpression[] EMPTY_ARRAY = new JSExpression[0];
+	JSExpression[] EMPTY_ARRAY = new JSExpression[0];
 
-	public static ArrayFactory<JSExpression> ARRAY_FACTORY = new ArrayFactory<JSExpression>()
-	{
-		@Nonnull
-		@Override
-		public JSExpression[] create(int count)
-		{
-			return count == 0 ? EMPTY_ARRAY : new JSExpression[count];
-		}
-	};
+	ArrayFactory<JSExpression> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new JSExpression[count];
 
 	@Nonnull
 	JSExpression replace(JSExpression other);

@@ -16,28 +16,21 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.psi.JSCallExpression;
-import com.intellij.lang.javascript.psi.JSClass;
-import com.intellij.lang.javascript.psi.JSElementVisitor;
-import com.intellij.lang.javascript.psi.JSFile;
-import com.intellij.lang.javascript.psi.JSReferenceExpression;
-import com.intellij.lang.javascript.psi.JSReferenceList;
-import com.intellij.lang.javascript.psi.JSSuperExpression;
+import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -47,40 +40,21 @@ import com.intellij.util.IncorrectOperationException;
  */
 public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperExpression
 {
-	private PsiReference[] references;
-
 	public JSSuperExpressionImpl(final ASTNode node)
 	{
 		super(node);
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSSuperExpression(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
-	}
-
-	@Override
-	public PsiReference getReference()
-	{
-		return getReferences()[0];
+		visitor.visitJSSuperExpression(this);
 	}
 
 	@Override
 	@Nonnull
 	public PsiReference[] getReferences()
 	{
-		if(references != null)
-		{
-			return references;
-		}
 		PsiReference[] refs = {
 				new PsiReference()
 				{
@@ -182,6 +156,6 @@ public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperEx
 					}
 				}
 		};
-		return references = refs;
+		return refs;
 	}
 }

@@ -16,7 +16,6 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -24,9 +23,10 @@ import com.intellij.lang.javascript.psi.JSUseNamespaceDirective;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import com.intellij.lang.javascript.psi.stubs.JSUseNamespaceDirectiveStub;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+
+import javax.annotation.Nonnull;
 
 /**
  * @by Maxim.Mossienko
@@ -44,16 +44,9 @@ public class JSUseNamespaceDirectiveImpl extends JSStubbedStatementImpl<JSUseNam
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSUseNamespaceDirective(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
+		visitor.visitJSUseNamespaceDirective(this);
 	}
 
 	@Override

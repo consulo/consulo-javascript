@@ -25,5 +25,8 @@ import javax.annotation.Nonnull;
 public interface JSFunctionExpression extends JSFunction, JSExpression
 {
 	@Nonnull
-	JSFunction getFunction();
+	default JSFunction getFunction()
+	{
+		return this;
+	}
 }

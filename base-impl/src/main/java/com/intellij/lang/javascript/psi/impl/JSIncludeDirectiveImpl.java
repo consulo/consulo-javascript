@@ -16,7 +16,6 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -25,12 +24,13 @@ import com.intellij.lang.javascript.psi.stubs.JSIncludeDirectiveStub;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet;
 import consulo.javascript.lang.JavaScriptTokenSets;
+
+import javax.annotation.Nonnull;
 
 /**
  * @by Maxim.Mossienko
@@ -48,16 +48,9 @@ public class JSIncludeDirectiveImpl extends JSStubbedStatementImpl<JSIncludeDire
 	}
 
 	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
+	protected void accept(@Nonnull JSElementVisitor visitor)
 	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSIncludeDirective(this);
-		}
-		else
-		{
-			visitor.visitElement(this);
-		}
+		visitor.visitJSIncludeDirective(this);
 	}
 
 	@Override
