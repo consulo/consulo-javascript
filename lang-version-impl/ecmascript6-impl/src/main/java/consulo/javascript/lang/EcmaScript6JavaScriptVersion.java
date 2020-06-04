@@ -16,6 +16,9 @@
 
 package consulo.javascript.lang;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+
 import com.intellij.lang.PsiParser;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lexer.Lexer;
@@ -29,9 +32,6 @@ import consulo.javascript.lang.lexer._EcmaScript6Lexer;
 import consulo.javascript.lang.parsing.EcmaScript6Parser;
 import consulo.javascript.lang.psi.impl.resolve.JavaScriptVersionWithHelper;
 import consulo.javascript.lang.psi.impl.resolve.ResolveHelper;
-
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
 
 /**
  * @author VISTALL
@@ -53,7 +53,7 @@ public class EcmaScript6JavaScriptVersion extends BaseJavaScriptLanguageVersion 
 
 	protected EcmaScript6JavaScriptVersion(@Nonnull String id)
 	{
-		super("ECMASCRIPT_6");
+		super(id);
 
 		addFeature(JavaScriptFeature.CLASS);
 		addFeature(JavaScriptFeature.BINARY_LITERAL);
