@@ -93,6 +93,60 @@ public class EcmaScript6StatementParsing extends StatementParsing
 	}
 
 	@Override
+	protected boolean parseForLoopHeader(final PsiBuilder builder)
+	{
+		builder.advanceLexer();
+
+		Parsing.checkMatches(builder, JSTokenTypes.LPAR, JavaScriptBundle.message("javascript.parser.message.expected.lparen"));
+		final boolean empty;
+		if(builder.getTokenType() == JSTokenTypes.VAR_KEYWORD || builder.getTokenType() == JSTokenTypes.LET_KEYWORD)
+		{
+			parseVarStatement(builder, true);
+			empty = false;
+		}
+		else
+		{
+			empty = !getExpressionParsing().parseExpressionOptional(builder, false);
+		}
+
+		boolean forin = false;
+		if(builder.getTokenType() == JSTokenTypes.SEMICOLON)
+		{
+			builder.advanceLexer();
+			getExpressionParsing().parseExpressionOptional(builder);
+
+			if(builder.getTokenType() == JSTokenTypes.SEMICOLON)
+			{
+				builder.advanceLexer();
+			}
+			else
+			{
+				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.semicolon"));
+			}
+			getExpressionParsing().parseExpressionOptional(builder);
+		}
+		else if(isContextKeyword(builder, JSTokenTypes.OF_KEYWORD))
+		{
+			forin = true;
+			if(empty)
+			{
+				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.forloop.left.hand.side.expression.or.variable.declaration"));
+			}
+			advanceContextKeyword(builder, JSTokenTypes.OF_KEYWORD);
+
+			getExpressionParsing().parseExpression(builder);
+		}
+		else
+		{
+
+			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.forloop.of.or.semicolon"));
+		}
+
+		Parsing.checkMatches(builder, JSTokenTypes.RPAR, JavaScriptBundle.message("javascript.parser.message.expected.rparen"));
+		return forin;
+	}
+
+	@Override
 	protected void doParseStatement(PsiBuilder builder, boolean canHaveClasses)
 	{
 		if(canHaveClasses)

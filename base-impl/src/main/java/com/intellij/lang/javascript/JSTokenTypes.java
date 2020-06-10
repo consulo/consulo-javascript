@@ -137,6 +137,7 @@ public interface JSTokenTypes
 	IElementType AS_KEYWORD = new JavaScriptContextKeywordElementType("AS_KEYWORD", "as"); // as
 	IElementType GET_KEYWORD = new JavaScriptContextKeywordElementType("GET_KEYWORD", "get"); // GET
 	IElementType SET_KEYWORD = new JavaScriptContextKeywordElementType("SET_KEYWORD", "set"); // SET
+	IElementType OF_KEYWORD = new JavaScriptContextKeywordElementType("OF_KEYWORD", "of"); // of
 	IElementType EACH_KEYWORD = new JSElementType("EACH_KEYWORD");
 	IElementType INT_KEYWORD = new JSElementType("INT_KEYWORD");
 	IElementType UINT_KEYWORD = new JSElementType("UINT_KEYWORD");

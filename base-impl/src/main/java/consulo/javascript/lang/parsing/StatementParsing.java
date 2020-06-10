@@ -549,7 +549,7 @@ public class StatementParsing extends Parsing
 		statement.done(forin ? JSElementTypes.FOR_IN_STATEMENT : JSElementTypes.FOR_STATEMENT);
 	}
 
-	boolean parseForLoopHeader(final PsiBuilder builder)
+	protected boolean parseForLoopHeader(final PsiBuilder builder)
 	{
 		builder.advanceLexer();
 		if(builder.getTokenType() == JSTokenTypes.EACH_KEYWORD)

@@ -17,12 +17,13 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.tree.TokenSet;
+import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;
 
@@ -31,10 +32,11 @@ import javax.annotation.Nonnull;
  * User: max
  * Date: Jan 30, 2005
  * Time: 11:20:30 PM
- * To change this template use File | Settings | File Templates.
  */
 public class JSForInStatementImpl extends JSStatementImpl implements JSForInStatement
 {
+	private static final TokenSet ourSeparatorElementType = TokenSet.create(JSTokenTypes.IN_KEYWORD, JSTokenTypes.OF_KEYWORD);
+
 	public JSForInStatementImpl(final ASTNode node)
 	{
 		super(node);
@@ -43,8 +45,7 @@ public class JSForInStatementImpl extends JSStatementImpl implements JSForInStat
 	@Override
 	public JSVarStatement getDeclarationStatement()
 	{
-		final ASTNode childNode = getNode().findChildByType(JSElementTypes.VAR_STATEMENT);
-		return childNode == null ? null : (JSVarStatement) childNode.getPsi();
+		return findChildByClass(JSVarStatement.class);
 	}
 
 	@Override
@@ -53,11 +54,11 @@ public class JSForInStatementImpl extends JSStatementImpl implements JSForInStat
 		ASTNode child = getNode().getFirstChildNode();
 		while(child != null)
 		{
-			if(child.getElementType() == JSTokenTypes.IN_KEYWORD)
+			if(ourSeparatorElementType.contains(child.getElementType()))
 			{
 				return null;
 			}
-			if(JSElementTypes.EXPRESSIONS.contains(child.getElementType()))
+			if(child.getPsi() instanceof JSExpression)
 			{
 				return (JSExpression) child.getPsi();
 			}
@@ -73,11 +74,11 @@ public class JSForInStatementImpl extends JSStatementImpl implements JSForInStat
 		boolean inPassed = false;
 		while(child != null)
 		{
-			if(child.getElementType() == JSTokenTypes.IN_KEYWORD)
+			if(ourSeparatorElementType.contains(child.getElementType()))
 			{
 				inPassed = true;
 			}
-			if(inPassed && JSElementTypes.EXPRESSIONS.contains(child.getElementType()))
+			if(inPassed && child.getPsi() instanceof JSExpression)
 			{
 				return (JSExpression) child.getPsi();
 			}
@@ -88,9 +89,10 @@ public class JSForInStatementImpl extends JSStatementImpl implements JSForInStat
 	}
 
 	@Override
+	@RequiredReadAction
 	public boolean isForEach()
 	{
-		return getNode().findChildByType(JSTokenTypes.EACH_KEYWORD) != null;
+		return findChildByType(TokenSet.create(JSTokenTypes.EACH_KEYWORD, JSTokenTypes.OF_KEYWORD)) != null ;
 	}
 
 	@Override
@@ -104,7 +106,7 @@ public class JSForInStatementImpl extends JSStatementImpl implements JSForInStat
 			{
 				passedRParen = true;
 			}
-			else if(passedRParen && JSElementTypes.STATEMENTS.contains(child.getElementType()))
+			else if(passedRParen && child.getPsi() instanceof JSStatement)
 			{
 				return (JSStatement) child.getPsi();
 			}
@@ -115,8 +117,7 @@ public class JSForInStatementImpl extends JSStatementImpl implements JSForInStat
 	}
 
 	@Override
-	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent,
-			@Nonnull PsiElement place)
+	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent, @Nonnull PsiElement place)
 	{
 		if(lastParent != null)
 		{
