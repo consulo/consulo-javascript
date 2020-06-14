@@ -16,10 +16,15 @@
 
 package consulo.javascript.lang;
 
-import javax.annotation.Nullable;
 import com.intellij.lang.Language;
 import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.lang.LanguageVersion;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -29,9 +34,31 @@ public class JavaScriptLanguage extends Language
 {
 	public static final JavaScriptLanguage INSTANCE = new JavaScriptLanguage();
 
+	private Map<String, LanguageVersion> myVersionsById = new HashMap<>();
+
 	public JavaScriptLanguage()
 	{
 		super("JavaScript", "text/javascript", "application/javascript");
+	}
+
+	@Nullable
+	public LanguageVersion getVersionById(@Nonnull String id)
+	{
+		Map<String, LanguageVersion> oldMap = myVersionsById;
+		if(oldMap == null)
+		{
+			Map<String, LanguageVersion> newMap = new HashMap<>();
+			for(LanguageVersion version : getVersions())
+			{
+				newMap.put(version.getId(), version);
+			}
+
+			myVersionsById = newMap;
+
+			return newMap.get(id);
+		}
+
+		return oldMap.get(id);
 	}
 
 	@Nullable

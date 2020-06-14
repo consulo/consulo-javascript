@@ -149,6 +149,8 @@
 		<inspectionToolProvider implementation="com.intellij.lang.javascript.inspections.JSInspectionToolProvider"/>
 		<inspectionToolProvider implementation="com.sixrr.inspectjs.InspectionJSPlugin" />
 
+		<filePropertyPusher implementation="consulo.javascript.lang.JavaScriptLanguageVersionPusher" />
+
 		<targetElementUtilEx implementation="com.intellij.lang.javascript.JavaScriptTargetElementUtilEx"/>
 
 		<findUsagesHandlerFactory implementation="consulo.javascript.findUsages.JavaScriptFindUsagesHandlerFactory"/>
