@@ -23,10 +23,7 @@ import com.intellij.lang.javascript.JSNodeVisitor;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.formatter.JSCodeStyleSettings;
 import com.intellij.lang.javascript.formatter.JSSpacingProcessor;
-import com.intellij.lang.javascript.psi.JSAssignmentExpression;
-import com.intellij.lang.javascript.psi.JSBinaryExpression;
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSLoopStatement;
+import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.types.JSFileElementType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiWhiteSpace;
@@ -210,7 +207,7 @@ public class SubBlockVisitor extends JSNodeVisitor
 
 		if(nodeElementType == JSElementTypes.CASE_CLAUSE)
 		{
-			if(JSElementTypes.STATEMENTS.contains(childElementType) || JSTokenTypes.COMMENTS.contains(childElementType))
+			if(child.getPsi() instanceof JSStatement || JSTokenTypes.COMMENTS.contains(childElementType))
 			{
 				return Indent.getNormalIndent();
 			}

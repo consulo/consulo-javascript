@@ -17,7 +17,6 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBlockStatement;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -46,13 +45,7 @@ public class JSBlockStatementImpl extends JSStatementImpl implements JSBlockStat
 	@Override
 	public JSStatement[] getStatements()
 	{
-		final ASTNode[] nodes = getNode().getChildren(JSElementTypes.STATEMENTS);
-		final JSStatement[] statements = new JSStatement[nodes.length];
-		for(int i = 0; i < statements.length; i++)
-		{
-			statements[i] = (JSStatement) nodes[i].getPsi();
-		}
-		return statements;
+		return findChildrenByClass(JSStatement.class);
 	}
 
 	public JSLabeledStatement setLabel(String label)

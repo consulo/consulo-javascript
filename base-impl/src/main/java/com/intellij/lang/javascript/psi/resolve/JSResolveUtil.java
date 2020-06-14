@@ -2277,8 +2277,7 @@ public class JSResolveUtil
 					final JSSourceElement[] body = ((JSFunction) jsElement).getBody();
 					if(body.length > 0 && body[0] instanceof JSBlockStatement)
 					{
-						final ASTNode node = body[0].getNode().findChildByType(JSElementTypes.STATEMENTS);
-						first = node != null ? node.getPsi() : null;
+						first = PsiTreeUtil.findChildOfType(body[0], JSStatement.class);
 					}
 				}
 				else if(jsElement instanceof JSFile)

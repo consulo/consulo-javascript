@@ -17,7 +17,6 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSLabeledStatement;
@@ -57,8 +56,7 @@ public class JSLabeledStatementImpl extends JSStatementImpl implements JSLabeled
 	@Override
 	public JSStatement getStatement()
 	{
-		final ASTNode node = getNode().findChildByType(JSElementTypes.STATEMENTS);
-		return node != null ? (JSStatement) node.getPsi() : null;
+		return findChildByClass(JSStatement.class);
 	}
 
 	@Override

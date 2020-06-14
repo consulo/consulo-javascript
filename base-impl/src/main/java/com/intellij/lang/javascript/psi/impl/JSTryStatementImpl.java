@@ -52,7 +52,7 @@ public class JSTryStatementImpl extends JSStatementImpl implements JSTryStatemen
 		while(child != null)
 		{
 			final IElementType type = child.getElementType();
-			if(JSElementTypes.STATEMENTS.contains(type))
+			if(child.getPsi() instanceof JSStatement)
 			{
 				return (JSStatement) child.getPsi();
 			}
@@ -91,7 +91,7 @@ public class JSTryStatementImpl extends JSStatementImpl implements JSTryStatemen
 		while(child != null)
 		{
 			final IElementType type = child.getElementType();
-			if(foundFinally && JSElementTypes.STATEMENTS.contains(type))
+			if(foundFinally && child.getPsi() instanceof JSStatement)
 			{
 				return (JSStatement) child.getPsi();
 			}

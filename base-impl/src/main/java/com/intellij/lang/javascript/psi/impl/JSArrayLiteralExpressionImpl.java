@@ -17,7 +17,6 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSArrayLiteralExpression;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -51,7 +50,7 @@ public class JSArrayLiteralExpressionImpl extends JSExpressionImpl implements JS
 		while(child != null)
 		{
 			final IElementType type = child.getElementType();
-			if(JSElementTypes.EXPRESSIONS.contains(type))
+			if(child.getPsi() instanceof JSExpression)
 			{
 				result.add((JSExpression) child.getPsi());
 				wasExpression = true;

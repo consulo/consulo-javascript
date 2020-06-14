@@ -15,8 +15,14 @@
  */
 package org.intellij.idea.lang.javascript.intention.loop;
 
-import javax.annotation.Nonnull;
-
+import com.intellij.lang.ASTNode;
+import com.intellij.lang.javascript.JSTokenTypes;
+import com.intellij.lang.javascript.psi.JSExpression;
+import com.intellij.lang.javascript.psi.JSForInStatement;
+import com.intellij.lang.javascript.psi.JSStatement;
+import com.intellij.lang.javascript.psi.JSVarStatement;
+import com.intellij.psi.PsiElement;
+import com.intellij.util.IncorrectOperationException;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ControlFlowUtils;
@@ -25,15 +31,7 @@ import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.jetbrains.annotations.NonNls;
 
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSForInStatement;
-import com.intellij.lang.javascript.psi.JSStatement;
-import com.intellij.lang.javascript.psi.JSVarStatement;
-import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.JSElementTypes;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
+import javax.annotation.Nonnull;
 
 public class JSMergeParallelForInLoopsIntention extends JSIntention {
 
@@ -145,7 +143,7 @@ public class JSMergeParallelForInLoopsIntention extends JSIntention {
             if (child.getElementType() == JSTokenTypes.IN_KEYWORD) {
                 inPassed = true;
             }
-            if (inPassed && JSElementTypes.EXPRESSIONS.contains(child.getElementType())) {
+            if (inPassed && child.getPsi() instanceof JSExpression) {
                 return (JSExpression) child.getPsi();
             }
             child = child.getTreeNext();
@@ -168,7 +166,7 @@ public class JSMergeParallelForInLoopsIntention extends JSIntention {
                 return null;
             }
 
-            if (JSElementTypes.EXPRESSIONS.contains(child.getElementType())) {
+            if (child.getPsi() instanceof JSExpression) {
                 return (JSExpression) child.getPsi();
             }
             child = child.getTreeNext();

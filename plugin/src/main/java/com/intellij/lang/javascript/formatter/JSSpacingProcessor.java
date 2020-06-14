@@ -21,6 +21,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSNodeVisitor;
 import com.intellij.lang.javascript.JSTokenTypes;
+import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSImportStatement;
 import com.intellij.openapi.util.TextRange;
@@ -29,6 +30,8 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.util.PsiUtilCore;
 import com.intellij.psi.xml.XmlText;
 
 /**
@@ -95,10 +98,10 @@ public class JSSpacingProcessor extends JSNodeVisitor
 
 	private boolean shouldFormatArrayLiteralExpression()
 	{
-		ASTNode node = myParent.findChildByType(JSElementTypes.EXPRESSIONS);
-		if(node != null)
+		JSExpression jsExpression = PsiTreeUtil.findChildOfType(myParent.getPsi(), JSExpression.class);
+		if(jsExpression != null)
 		{
-			IElementType type = node.getElementType();
+			IElementType type = PsiUtilCore.getElementType(jsExpression);
 			return type == JSElementTypes.ARRAY_LITERAL_EXPRESSION || type == JSElementTypes.OBJECT_LITERAL_EXPRESSION;
 		}
 		return false;

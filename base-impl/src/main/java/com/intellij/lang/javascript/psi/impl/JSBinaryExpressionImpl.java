@@ -27,6 +27,7 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
+import com.intellij.psi.util.PsiTreeUtil;
 
 import javax.annotation.Nonnull;
 
@@ -51,12 +52,12 @@ public class JSBinaryExpressionImpl extends JSExpressionImpl implements JSBinary
 	public JSExpression getLOperand()
 	{
 		final ASTNode astNode = getNode();
-		final ASTNode firstExpression = astNode.findChildByType(JSElementTypes.EXPRESSIONS);
-		if(firstExpression != null && astNode.findChildByType(BINARY_OPERATIONS, firstExpression) == null)
+		final JSExpression firstExpression = PsiTreeUtil.findChildOfType(astNode.getPsi(), JSExpression.class);
+		if(firstExpression != null && astNode.findChildByType(BINARY_OPERATIONS, firstExpression.getNode()) == null)
 		{
 			return null; // =a
 		}
-		return firstExpression != null ? (JSExpression) firstExpression.getPsi() : null;
+		return firstExpression != null ? firstExpression : null;
 	}
 
 	@Override

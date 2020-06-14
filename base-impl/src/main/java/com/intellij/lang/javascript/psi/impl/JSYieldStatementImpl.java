@@ -17,7 +17,6 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSYieldStatement;
@@ -37,8 +36,7 @@ public class JSYieldStatementImpl extends JSStatementImpl implements JSYieldStat
 	@Override
 	public JSExpression getExpression()
 	{
-		final ASTNode expressionNode = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
-		return expressionNode != null ? (JSExpression) expressionNode.getPsi() : null;
+		return findChildByClass(JSExpression.class);
 	}
 
 	@Override

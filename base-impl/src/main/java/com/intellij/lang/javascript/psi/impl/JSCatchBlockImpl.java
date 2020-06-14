@@ -53,8 +53,7 @@ public class JSCatchBlockImpl extends JSElementImpl implements JSCatchBlock
 	@Override
 	public JSStatement getStatement()
 	{
-		final ASTNode node = getNode().findChildByType(JSElementTypes.STATEMENTS);
-		return node != null ? (JSStatement) node.getPsi() : null;
+		return findChildByClass(JSStatement.class);
 	}
 
 	@Override

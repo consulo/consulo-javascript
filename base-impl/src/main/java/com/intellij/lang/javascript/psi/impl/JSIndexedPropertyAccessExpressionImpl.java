@@ -17,7 +17,6 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -51,7 +50,7 @@ public class JSIndexedPropertyAccessExpressionImpl extends JSExpressionImpl impl
 			{
 				return null;
 			}
-			if(JSElementTypes.EXPRESSIONS.contains(type))
+			if(child.getPsi() instanceof JSExpression)
 			{
 				return (JSExpression) child.getPsi();
 			}
@@ -72,7 +71,7 @@ public class JSIndexedPropertyAccessExpressionImpl extends JSExpressionImpl impl
 			{
 				bracketPassed = true;
 			}
-			if(bracketPassed && JSElementTypes.EXPRESSIONS.contains(type))
+			if(bracketPassed && child.getPsi() instanceof JSExpression)
 			{
 				return (JSExpression) child.getPsi();
 			}

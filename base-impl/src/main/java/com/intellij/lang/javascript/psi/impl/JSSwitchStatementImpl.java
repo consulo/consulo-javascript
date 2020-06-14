@@ -45,20 +45,13 @@ public class JSSwitchStatementImpl extends JSStatementImpl implements JSSwitchSt
 	@Override
 	public JSExpression getSwitchExpression()
 	{
-		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
-		return node != null ? (JSExpression) node.getPsi() : null;
+		return findChildByClass(JSExpression.class);
 	}
 
 	@Override
 	public JSCaseClause[] getCaseClauses()
 	{
-		final ASTNode[] nodes = getNode().getChildren(CASE_CLAUSE_FILTER);
-		final JSCaseClause[] clauses = new JSCaseClause[nodes.length];
-		for(int i = 0; i < clauses.length; i++)
-		{
-			clauses[i] = (JSCaseClause) nodes[i].getPsi();
-		}
-		return clauses;
+		return findChildrenByClass(JSCaseClause.class);
 	}
 
 	@Override

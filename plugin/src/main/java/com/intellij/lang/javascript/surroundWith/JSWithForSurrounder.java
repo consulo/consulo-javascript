@@ -17,9 +17,9 @@
 package com.intellij.lang.javascript.surroundWith;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JavaScriptBundle;
-import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
+import com.intellij.lang.javascript.JavaScriptBundle;
+import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSForStatement;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
@@ -61,7 +61,7 @@ public class JSWithForSurrounder extends JSStatementSurrounder
 		{
 			if(childNode.getElementType() == JSTokenTypes.SEMICOLON ||
 					childNode.getPsi() instanceof PsiWhiteSpace ||
-					JSElementTypes.EXPRESSIONS.contains(childNode.getElementType()))
+					childNode.getPsi() instanceof JSExpression)
 			{
 				statementNode.removeChild(childNode);
 			}

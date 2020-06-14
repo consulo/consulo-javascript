@@ -17,7 +17,6 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSCaseClause;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -53,20 +52,13 @@ public class JSCaseClauseImpl extends JSElementImpl implements JSCaseClause
 		{
 			return null;
 		}
-		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
-		return node != null ? (JSExpression) node.getPsi() : null;
+		return findChildByClass(JSExpression.class);
 	}
 
 	@Override
 	public JSStatement[] getStatements()
 	{
-		final ASTNode[] nodes = getNode().getChildren(JSElementTypes.STATEMENTS);
-		final JSStatement[] statements = new JSStatement[nodes.length];
-		for(int i = 0; i < statements.length; i++)
-		{
-			statements[i] = (JSStatement) nodes[i].getPsi();
-		}
-		return statements;
+		return findChildrenByClass(JSStatement.class);
 	}
 
 	@Override

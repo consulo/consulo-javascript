@@ -17,7 +17,6 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSDoWhileStatement;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -42,15 +41,13 @@ public class JSDoWhileStatementImpl extends JSStatementImpl implements JSDoWhile
 	@Override
 	public JSExpression getCondition()
 	{
-		final ASTNode node = getNode().findChildByType(JSElementTypes.EXPRESSIONS);
-		return node != null ? (JSExpression) node.getPsi() : null;
+		return findChildByClass(JSExpression.class);
 	}
 
 	@Override
 	public JSStatement getBody()
 	{
-		final ASTNode node = getNode().findChildByType(JSElementTypes.STATEMENTS);
-		return node != null ? (JSStatement) node.getPsi() : null;
+		return findChildByClass(JSStatement.class);
 	}
 
 	@Override

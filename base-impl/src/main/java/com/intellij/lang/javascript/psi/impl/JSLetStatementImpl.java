@@ -17,7 +17,6 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSBlockStatement;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -44,27 +43,12 @@ public class JSLetStatementImpl extends JSStatementImpl implements JSLetStatemen
 	@Override
 	public JSExpression[] getExpressions()
 	{
-		final ASTNode[] children = getNode().getChildren(JSElementTypes.EXPRESSIONS);
-		if(children.length == 0)
-		{
-			return JSExpression.EMPTY_ARRAY;
-		}
-		JSExpression[] result = new JSExpression[children.length];
-		for(int i = 0; i < children.length; i++)
-		{
-			result[i] = (JSExpression) children[i].getPsi();
-		}
-		return result;
+		return findChildrenByClass(JSExpression.class);
 	}
 
 	@Override
 	public JSBlockStatement getBody()
 	{
-		final ASTNode child = getNode().findChildByType(JSElementTypes.BLOCK_STATEMENT);
-		if(child == null)
-		{
-			return null;
-		}
-		return (JSBlockStatement) child.getPsi();
+		return findChildByClass(JSBlockStatement.class);
 	}
 }

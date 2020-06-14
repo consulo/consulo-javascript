@@ -117,7 +117,7 @@ public class JSForStatementImpl extends JSStatementImpl implements JSForStatemen
 			{
 				passedRParen = true;
 			}
-			else if(passedRParen && JSElementTypes.STATEMENTS.contains(child.getElementType()))
+			else if(passedRParen && child.getPsi() instanceof JSStatement)
 			{
 				return (JSStatement) child.getPsi();
 			}
