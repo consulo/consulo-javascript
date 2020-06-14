@@ -32,6 +32,5 @@ public class JavaScriptFileTypeFactory extends FileTypeFactory
 	public void createFileTypes(@Nonnull FileTypeConsumer consumer)
 	{
 		consumer.consume(JavaScriptFileType.INSTANCE);
-		consumer.consume(JavaScriptFileType.INSTANCE, "jsx");
 	}
 }
