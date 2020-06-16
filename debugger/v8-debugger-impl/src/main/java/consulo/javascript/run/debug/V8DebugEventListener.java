@@ -16,14 +16,6 @@
 
 package consulo.javascript.run.debug;
 
-import java.util.Collection;
-import java.util.List;
-
-import org.chromium.sdk.Breakpoint;
-import org.chromium.sdk.CallFrame;
-import org.chromium.sdk.DebugContext;
-import org.chromium.sdk.DebugEventListener;
-import org.chromium.sdk.Script;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
@@ -33,6 +25,10 @@ import com.intellij.xdebugger.breakpoints.XBreakpointManager;
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import consulo.javascript.debugger.JavaScriptLineBreakpointType;
+import org.chromium.sdk.*;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -40,11 +36,11 @@ import consulo.javascript.debugger.JavaScriptLineBreakpointType;
  */
 public class V8DebugEventListener implements DebugEventListener
 {
-	private final V8DebugProcess myV8DebugProcess;
+	private final V8BaseDebugProcess myV8DebugProcess;
 
 	private boolean myFirstPausing = true;
 
-	public V8DebugEventListener(V8DebugProcess v8DebugProcess)
+	public V8DebugEventListener(V8BaseDebugProcess v8DebugProcess)
 	{
 		myV8DebugProcess = v8DebugProcess;
 	}

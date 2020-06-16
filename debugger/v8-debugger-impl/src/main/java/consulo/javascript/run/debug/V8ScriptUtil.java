@@ -47,8 +47,7 @@ public class V8ScriptUtil
 		}
 
 		String name = new File(scriptName).getName();
-		LightVirtualFile virtualFile = new LightVirtualFile(name, FileTypeRegistry.getInstance().getFileTypeByFileName(name),
-				toOpen ? value.getSource() : "")
+		LightVirtualFile virtualFile = new LightVirtualFile(name, FileTypeRegistry.getInstance().getFileTypeByFileName(name), toOpen ? value.getSource() : "")
 		{
 			@Override
 			public boolean equals(Object obj)
