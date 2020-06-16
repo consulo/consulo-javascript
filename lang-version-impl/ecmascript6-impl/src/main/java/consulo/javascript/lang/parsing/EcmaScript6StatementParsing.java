@@ -125,21 +125,28 @@ public class EcmaScript6StatementParsing extends StatementParsing
 			}
 			getExpressionParsing().parseExpressionOptional(builder);
 		}
-		else if(isContextKeyword(builder, JSTokenTypes.OF_KEYWORD))
+		else if(isContextKeyword(builder, JSTokenTypes.OF_KEYWORD) || builder.getTokenType() == JSTokenTypes.IN_KEYWORD)
 		{
 			forin = true;
 			if(empty)
 			{
 				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.forloop.left.hand.side.expression.or.variable.declaration"));
 			}
-			advanceContextKeyword(builder, JSTokenTypes.OF_KEYWORD);
+
+			if(builder.getTokenType() == JSTokenTypes.IN_KEYWORD)
+			{
+				builder.advanceLexer();
+			}
+			else
+			{
+				advanceContextKeyword(builder, JSTokenTypes.OF_KEYWORD);
+			}
 
 			getExpressionParsing().parseExpression(builder);
 		}
 		else
 		{
-
-			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.forloop.of.or.semicolon"));
+			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.forloop.in.of.or.semicolon"));
 		}
 
 		Parsing.checkMatches(builder, JSTokenTypes.RPAR, JavaScriptBundle.message("javascript.parser.message.expected.rparen"));
