@@ -102,8 +102,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 	@Override
 	public PsiElement getElement()
 	{
-		PsiElement nameElement = getNameElement();
-		return nameElement == null ? this : nameElement;
+		return this;
 	}
 
 	@Override
@@ -118,8 +117,16 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 	public TextRange getRangeInElement()
 	{
 		PsiElement nameElement = getNameElement();
-		int l = nameElement != null ? nameElement.getTextLength(): getTextLength();
-		return new TextRange(0, l);
+
+		if(nameElement != null)
+		{
+			int offset = nameElement.getStartOffsetInParent();
+			return new TextRange(offset, offset + nameElement.getTextLength());
+		}
+		else
+		{
+			return new TextRange(0, getTextLength());
+		}
 	}
 
 	@Nullable
