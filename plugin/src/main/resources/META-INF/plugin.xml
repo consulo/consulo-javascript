@@ -135,7 +135,7 @@
 		<lang.elementManipulator forClass="com.intellij.lang.javascript.psi.JSDocTag"
 								 implementationClass="com.intellij.javascript.manipulators.JSDocTagManipulator"/>
 
-		<lang.fileViewProviderFactory language="JavaScript" implementationClass="consulo.javascript.lang.viewProvider.JSFileViewProviderFactory" />
+		<lang.fileViewProviderFactory language="JavaScript" implementationClass="consulo.javascript.lang.viewProvider.JSFileViewProviderFactory"/>
 
 		<completion.contributor language="JavaScript" implementationClass="consulo.javascript.ide.completion.JavaScriptKeywordCompletionContributor"/>
 
@@ -147,9 +147,9 @@
 		<liveTemplateMacro implementation="com.intellij.javascript.JSMethodNameMacro"/>
 
 		<inspectionToolProvider implementation="com.intellij.lang.javascript.inspections.JSInspectionToolProvider"/>
-		<inspectionToolProvider implementation="com.sixrr.inspectjs.InspectionJSPlugin" />
+		<inspectionToolProvider implementation="com.sixrr.inspectjs.InspectionJSPlugin"/>
 
-		<filePropertyPusher implementation="consulo.javascript.lang.JavaScriptLanguageVersionPusher" />
+		<filePropertyPusher implementation="consulo.javascript.lang.JavaScriptLanguageVersionPusher"/>
 
 		<targetElementUtilEx implementation="com.intellij.lang.javascript.JavaScriptTargetElementUtilEx"/>
 
@@ -166,12 +166,16 @@
 
 		<xdebugger.breakpointType implementation="consulo.javascript.debugger.JavaScriptLineBreakpointType"/>
 		<xdebugger.lineBreakpointTypeResolver filetype="JavaScript" implementationClass="consulo.javascript.debugger.JavaScriptLineBreakpointTypeResolver"/>
+
+		<configurationType implementation="consulo.javascript.debugger.browser.JavaScriptBrowserConfigurationType"/>
+		<webSocketAccepter implementation="consulo.javascript.debugger.browser.transport.ExtensionWebSocketAccepter"/>
+		<programRunner implementation="consulo.javascript.debugger.browser.JavaScriptBrowserDebugRunner" />
 	</extensions>
 
 	<extensionPoints>
 		<extensionPoint name="indexer" interface="consulo.javascript.index.JavaScriptIndexer"/>
 
-		<extensionPoint name="keywordCompletionExtender" interface="consulo.javascript.ide.completion.JavaScriptKeywordCompletionExtender" />
+		<extensionPoint name="keywordCompletionExtender" interface="consulo.javascript.ide.completion.JavaScriptKeywordCompletionExtender"/>
 
 		<extensionPoint name="resolveHelper" interface="com.intellij.lang.javascript.flex.JSResolveHelper"/>
 		<extensionPoint name="classInheritorsProvider" interface="com.intellij.lang.javascript.search.JSClassInheritorsProvider"/>
