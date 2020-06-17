@@ -469,6 +469,11 @@ public class JSSpacingProcessor extends JSNodeVisitor
 		{
 			setSingleSpace(mySettings.SPACE_WITHIN_WHILE_PARENTHESES);
 		}
+
+		if(type1 == JSTokenTypes.DO_KEYWORD && type2 == JSElementTypes.BLOCK_STATEMENT)
+		{
+			setBraceSpace(true, mySettings.BRACE_STYLE, null);
+		}
 	}
 
 	@Override
