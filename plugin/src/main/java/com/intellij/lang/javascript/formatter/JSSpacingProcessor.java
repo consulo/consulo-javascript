@@ -560,6 +560,12 @@ public class JSSpacingProcessor extends JSNodeVisitor
 		{
 			setSingleSpace(mySettings.SPACE_WITHIN_CATCH_PARENTHESES);
 		}
+
+		if(type1 == JSTokenTypes.CATCH_KEYWORD && type2 == JSTokenTypes.LPAR)
+		{
+			setSingleSpace(mySettings.SPACE_BEFORE_CATCH_PARENTHESES);
+		}
+
 		if(type2 == JSElementTypes.BLOCK_STATEMENT)
 		{
 			TextRange dependentRange = new TextRange(myParent.getStartOffset(), myChild2.getTextRange().getStartOffset());
