@@ -1,9 +1,5 @@
 package consulo.javascript.formatter;
 
-import java.io.IOException;
-
-import javax.annotation.Nonnull;
-
 import com.intellij.application.options.IndentOptionsEditor;
 import com.intellij.application.options.SmartIndentOptionsEditor;
 import com.intellij.lang.Language;
@@ -12,6 +8,9 @@ import com.intellij.psi.codeStyle.CodeStyleSettingsCustomizable;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider;
 import consulo.javascript.lang.JavaScriptLanguage;
+
+import javax.annotation.Nonnull;
+import java.io.IOException;
 
 /**
  * @author VISTALL
@@ -82,19 +81,7 @@ public class JavaScriptLanguageCodeStyleSettingsProvider extends LanguageCodeSty
 	@Override
 	public String getCodeSample(@Nonnull SettingsType settingsType)
 	{
-		if(settingsType == SettingsType.SPACING_SETTINGS)
-		{
-			return loadPreview("spacing.txt");
-		}
-		if(settingsType == SettingsType.WRAPPING_AND_BRACES_SETTINGS)
-		{
-			return loadPreview("wrapping.txt");
-		}
-		if(settingsType == SettingsType.INDENT_SETTINGS)
-		{
-			return loadPreview("indent.txt");
-		}
-		return loadPreview("blankLines.txt");
+		return loadPreview("codeStyle.txt");
 	}
 
 	private static String loadPreview(String file)
