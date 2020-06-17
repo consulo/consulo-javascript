@@ -214,7 +214,7 @@ public class SubBlockVisitor extends JSNodeVisitor
 			return Indent.getNoneIndent();
 		}
 
-		if(nodeElementType == JSElementTypes.SWITCH_STATEMENT && childElementType == JSTokenTypes.RBRACE)
+		if(nodeElementType == JSElementTypes.SWITCH_STATEMENT && (childElementType == JSTokenTypes.LBRACE || childElementType == JSTokenTypes.RBRACE))
 		{
 			return Indent.getNoneIndent();
 		}
