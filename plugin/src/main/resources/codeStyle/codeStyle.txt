@@ -22,7 +22,7 @@ function test() {
     }
 }
 
-function someFunc(t, t2) {
+function someFunc(someParam, someLongParamName, t2) {
    var t = dom.getElementById("test");
 
    if(t != undefined) {
@@ -52,5 +52,12 @@ function someFunc(t, t2) {
 
    while(true) {
       console.log("endless loop");
+
+      callingLongFunc(
+          1,
+          "some param",
+          "test",
+          5
+      );
    }
 }
