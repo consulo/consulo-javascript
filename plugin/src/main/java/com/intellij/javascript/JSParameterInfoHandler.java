@@ -16,34 +16,13 @@
 
 package com.intellij.javascript;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.MutableLookupElement;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
-import com.intellij.lang.javascript.psi.JSArgumentList;
-import com.intellij.lang.javascript.psi.JSCallExpression;
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSFunction;
-import com.intellij.lang.javascript.psi.JSParameter;
-import com.intellij.lang.javascript.psi.JSParameterList;
-import com.intellij.lang.javascript.psi.JSProperty;
-import com.intellij.lang.javascript.psi.JSReferenceExpression;
-import com.intellij.lang.javascript.psi.JSSuperExpression;
-import com.intellij.lang.parameterInfo.CreateParameterInfoContext;
-import com.intellij.lang.parameterInfo.ParameterInfoContext;
-import com.intellij.lang.parameterInfo.ParameterInfoHandlerWithTabActionSupport;
-import com.intellij.lang.parameterInfo.ParameterInfoUIContext;
-import com.intellij.lang.parameterInfo.ParameterInfoUtils;
-import com.intellij.lang.parameterInfo.UpdateParameterInfoContext;
+import com.intellij.lang.javascript.psi.*;
+import com.intellij.lang.parameterInfo.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.ResolveResult;
@@ -52,12 +31,16 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
+
 /**
  * @author Maxim.Mossienko
  */
 public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabActionSupport<JSArgumentList, JSFunction, JSExpression>
 {
-	private static final Set<Class> ourArgumentListAllowedParentClassesSet = ContainerUtil.<Class>newHashSet(JSCallExpression.class);
+	private static final Set<Class<?>> ourArgumentListAllowedParentClassesSet = ContainerUtil.<Class<?>>newHashSet(JSCallExpression.class);
 
 	@Override
 	public boolean couldShowInLookup()
@@ -116,17 +99,6 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 				}
 			}
 		}
-	}
-
-	@Override
-	public Object[] getParametersForDocumentation(final JSFunction p, final ParameterInfoContext context)
-	{
-		final JSParameterList list = p.getParameterList();
-		if(list != null)
-		{
-			return list.getParameters();
-		}
-		return ArrayUtil.EMPTY_OBJECT_ARRAY;
 	}
 
 	@Override
@@ -226,19 +198,6 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 		}
 		final int currentParameterIndex = ParameterInfoUtils.getCurrentParameterIndex(o.getNode(), context.getOffset(), JSTokenTypes.COMMA);
 		context.setCurrentParameter(currentParameterIndex);
-	}
-
-	@Override
-	@Nonnull
-	public String getParameterCloseChars()
-	{
-		return ",){";
-	}
-
-	@Override
-	public boolean tracksParameterIndex()
-	{
-		return true;
 	}
 
 	@Override
@@ -351,14 +310,14 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 
 	@Override
 	@Nonnull
-	public Set<Class> getArgumentListAllowedParentClasses()
+	public Set<Class<?>> getArgumentListAllowedParentClasses()
 	{
 		return ourArgumentListAllowedParentClassesSet;
 	}
 
 	@Nonnull
 	@Override
-	public Set<? extends Class> getArgListStopSearchClasses()
+	public Set<? extends Class<?>> getArgListStopSearchClasses()
 	{
 		return Collections.emptySet();
 	}
