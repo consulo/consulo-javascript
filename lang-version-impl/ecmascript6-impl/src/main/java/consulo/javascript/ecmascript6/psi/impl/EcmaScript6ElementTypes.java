@@ -17,4 +17,6 @@ public interface EcmaScript6ElementTypes
 	IElementType IMPORTED_BINDING = new ElementTypeAsPsiFactory("IMPORTED_BINDING", JavaScriptLanguage.INSTANCE, ES6ImportedBindingImpl.class);
 
 	IElementType NAMED_IMPORTS = new ElementTypeAsPsiFactory("NAMED_IMPORTS", JavaScriptLanguage.INSTANCE, ES6NamedImportsImpl.class);
+
+	IElementType IMPORT_SPECIFIER = new ElementTypeAsPsiFactory("IMPORT_SPECIFIER", JavaScriptLanguage.INSTANCE, ES6ImportSpecifierImpl.class);
 }

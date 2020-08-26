@@ -255,6 +255,24 @@ public class EcmaScript6StatementParsing extends StatementParsing
 							{
 								PsiBuilder.Marker importBindingMark = builder.mark();
 								builder.advanceLexer();
+
+								if(isContextKeyword(builder, JSTokenTypes.AS_KEYWORD))
+								{
+									PsiBuilder.Marker importSpecificMark = builder.mark();
+									advanceContextKeyword(builder, JSTokenTypes.AS_KEYWORD);
+
+									if(builder.getTokenType() == JSTokenTypes.IDENTIFIER)
+									{
+										builder.advanceLexer();
+
+										importSpecificMark.done(EcmaScript6ElementTypes.IMPORT_SPECIFIER);
+									}
+									else
+									{
+										importSpecificMark.error("Expected identifier");
+									}
+								}
+
 								importBindingMark.done(EcmaScript6ElementTypes.IMPORTED_BINDING);
 							}
 							else if(builder.getTokenType() != JSTokenTypes.RBRACE)

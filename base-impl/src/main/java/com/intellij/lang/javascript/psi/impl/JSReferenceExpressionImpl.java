@@ -28,7 +28,6 @@ import com.intellij.psi.impl.source.resolve.ResolveCache;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilBase;
-import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlToken;
 import com.intellij.refactoring.rename.BindablePsiReference;
@@ -228,6 +227,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		return this;
 	}
 
+	@RequiredReadAction
 	@Override
 	public boolean isReferenceTo(PsiElement element)
 	{
@@ -237,39 +237,45 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 			return true;
 		}
 
-		if(element instanceof PsiNamedElement || element instanceof XmlAttributeValue)
+		PsiElement resolvedElement = resolve();
+		if(resolvedElement != null && resolvedElement.isEquivalentTo(element))
 		{
-			final String referencedName = getReferencedName();
-
-			if(referencedName != null)
-			{
-				if(element instanceof JSDefinitionExpression && referencedName.equals(((JSDefinitionExpression) element).getName()))
-				{
-					final JSExpression expression = ((JSDefinitionExpression) element).getExpression();
-					if(expression instanceof JSReferenceExpression)
-					{
-						final JSReferenceExpression jsReferenceExpression = (JSReferenceExpression) expression;
-						final JSExpression qualifier = jsReferenceExpression.getQualifier();
-						final JSExpression myQualifier = getQualifier();
-
-						return (myQualifier != null || (qualifier == myQualifier || "window".equals(qualifier.getText())));
-					}
-					else
-					{
-						return true;
-					}
-				}
-				else if(element instanceof JSProperty && referencedName.equals(((JSProperty) element).getName()))
-				{
-					if(getQualifier() != null)
-					{
-						return true; // TODO: check for type of element to be the same
-					}
-					//return false;
-				}
-			}
-			return JSResolveUtil.isReferenceTo(this, referencedName, element);
+			return true;
 		}
+
+//		if(element instanceof PsiNamedElement || element instanceof XmlAttributeValue)
+//		{
+//			final String referencedName = getReferencedName();
+//
+//			if(referencedName != null)
+//			{
+//				if(element instanceof JSDefinitionExpression && referencedName.equals(((JSDefinitionExpression) element).getName()))
+//				{
+//					final JSExpression expression = ((JSDefinitionExpression) element).getExpression();
+//					if(expression instanceof JSReferenceExpression)
+//					{
+//						final JSReferenceExpression jsReferenceExpression = (JSReferenceExpression) expression;
+//						final JSExpression qualifier = jsReferenceExpression.getQualifier();
+//						final JSExpression myQualifier = getQualifier();
+//
+//						return (myQualifier != null || (qualifier == myQualifier || "window".equals(qualifier.getText())));
+//					}
+//					else
+//					{
+//						return true;
+//					}
+//				}
+//				else if(element instanceof JSProperty && referencedName.equals(((JSProperty) element).getName()))
+//				{
+//					if(getQualifier() != null)
+//					{
+//						return true; // TODO: check for type of element to be the same
+//					}
+//					//return false;
+//				}
+//			}
+//			return JSResolveUtil.isReferenceTo(this, referencedName, element);
+//		}
 		return false;
 	}
 

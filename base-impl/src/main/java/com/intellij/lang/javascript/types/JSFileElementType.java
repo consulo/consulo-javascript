@@ -43,7 +43,7 @@ public class JSFileElementType extends IStubFileElementType<JSFileStub>
 	@Override
 	public void indexStub(@Nonnull final JSFileStub stub, @Nonnull final IndexSink sink)
 	{
-		for(JavaScriptIndexer javaScriptIndexer : JavaScriptIndexer.EP_NAME.getExtensions())
+		for(JavaScriptIndexer javaScriptIndexer : JavaScriptIndexer.EP_NAME.getExtensionList())
 		{
 			javaScriptIndexer.indexFile(stub, sink);
 		}
@@ -91,7 +91,7 @@ public class JSFileElementType extends IStubFileElementType<JSFileStub>
 	@Override
 	public int getStubVersion()
 	{
-		int version = 44;
+		int version = 45;
 		for(JavaScriptIndexer javaScriptIndexer : JavaScriptIndexer.EP_NAME.getExtensionList())
 		{
 			version += javaScriptIndexer.getVersion();
