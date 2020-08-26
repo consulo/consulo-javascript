@@ -99,7 +99,7 @@ public class EcmaScript6StatementParsing extends StatementParsing
 
 		Parsing.checkMatches(builder, JSTokenTypes.LPAR, JavaScriptBundle.message("javascript.parser.message.expected.lparen"));
 		final boolean empty;
-		if(builder.getTokenType() == JSTokenTypes.VAR_KEYWORD || builder.getTokenType() == JSTokenTypes.LET_KEYWORD)
+		if(builder.getTokenType() == JSTokenTypes.VAR_KEYWORD || builder.getTokenType() == JSTokenTypes.LET_KEYWORD || builder.getTokenType() == JSTokenTypes.CONST_KEYWORD)
 		{
 			parseVarStatement(builder, true);
 			empty = false;

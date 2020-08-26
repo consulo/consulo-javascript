@@ -1,12 +1,13 @@
 package consulo.javascript.lang.parsing;
 
-import javax.annotation.Nonnull;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptBundle;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.tree.IElementType;
+import consulo.logging.Logger;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

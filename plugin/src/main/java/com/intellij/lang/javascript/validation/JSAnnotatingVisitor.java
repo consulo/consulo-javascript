@@ -762,6 +762,11 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 	{
 		if(var.isConst() && var.getInitializer() == null)
 		{
+			if(var.getParent() instanceof JSVarStatement && var.getParent().getParent() instanceof JSForInStatement)
+			{
+				return;
+			}
+
 			JSAttributeList attributeList = var.getAttributeList();
 			if(attributeList == null || attributeList.getAttributesByName("Embed").length == 0)
 			{
