@@ -14,6 +14,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.module.extension.JavaScriptModuleExtension;
+import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nullable;
@@ -26,7 +27,7 @@ public class JavaScriptCreateFileAction extends CreateFileFromTemplateAction
 {
 	public JavaScriptCreateFileAction()
 	{
-		super(null, null, JavaScriptFileType.INSTANCE.getIcon());
+		super(LocalizeValue.empty(), LocalizeValue.empty(), JavaScriptFileType.INSTANCE.getIcon());
 	}
 
 	@Override
