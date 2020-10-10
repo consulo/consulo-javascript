@@ -22,7 +22,6 @@ import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.ExecutionConsole;
 import com.intellij.execution.ui.RunnerLayoutUi;
 import com.intellij.icons.AllIcons;
-import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.content.Content;
@@ -38,6 +37,7 @@ import com.intellij.xdebugger.ui.XDebugTabLayouter;
 import consulo.javascript.debugger.JavaScriptEditorsProvider;
 import consulo.javascript.debugger.JavaScriptLineBreakpointType;
 import consulo.javascript.debugger.JavaScriptListPanel;
+import consulo.javascript.icon.JavaScriptIconGroup;
 import org.chromium.sdk.Breakpoint;
 import org.chromium.sdk.DebugContext;
 import org.chromium.sdk.JavascriptVm;
@@ -248,7 +248,7 @@ public abstract class V8BaseDebugProcess<V extends JavascriptVm> extends XDebugP
 			@Override
 			public void registerAdditionalContent(@Nonnull RunnerLayoutUi ui)
 			{
-				Content content = ui.createContent("ScriptListView", myScriptListPanel, "Scripts", JavaScriptIcons.JavaScript, null);
+				Content content = ui.createContent("ScriptListView", myScriptListPanel, "Scripts", JavaScriptIconGroup.javaScript(), null);
 				content.setCloseable(false);
 
 				ui.addContent(content);

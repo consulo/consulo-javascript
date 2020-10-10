@@ -20,8 +20,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.intellij.lang.javascript.JavaScriptBundle;
-import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import consulo.javascript.icon.JavaScriptIconGroup;
 import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.ui.image.Image;
 
@@ -63,6 +63,6 @@ public class TypeScriptFileType extends LanguageFileType
 	@Override
 	public Image getIcon()
 	{
-		return JavaScriptIcons.TypeScript;
+		return JavaScriptIconGroup.typeScript();
 	}
 }

@@ -16,12 +16,12 @@
 
 package consulo.actionscript;
 
-import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.actionscript.lang.ActionScriptLanguageVersion;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.javascript.icon.JavaScriptIconGroup;
 import consulo.javascript.lang.JavaScriptFileTypeWithVersion;
 import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.lang.LanguageVersion;
@@ -68,7 +68,7 @@ public class ActionScriptFileType extends LanguageFileType implements JavaScript
 	@Override
 	public Image getIcon()
 	{
-		return JavaScriptIcons.As;
+		return JavaScriptIconGroup.as();
 	}
 
 	@RequiredReadAction

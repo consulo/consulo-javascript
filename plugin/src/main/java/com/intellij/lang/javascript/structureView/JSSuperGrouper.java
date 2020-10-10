@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.structureView;
 
+import consulo.platform.base.icon.PlatformIconGroup;
 import gnu.trove.THashMap;
 
 import java.util.Collection;
@@ -37,7 +38,6 @@ import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSVarStatement;
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.psi.PsiElement;
 
 /**
@@ -120,8 +120,7 @@ class JSSuperGrouper implements Grouper
 	@Nonnull
 	public ActionPresentation getPresentation()
 	{
-		return new ActionPresentationData(IdeBundle.message("action.structureview.group.methods.by.defining.type"), null,
-				IconLoader.getIcon("/general/implementingMethod.png"));
+		return new ActionPresentationData(IdeBundle.message("action.structureview.group.methods.by.defining.type"), null, PlatformIconGroup.generalImplementingMethod());
 	}
 
 	@Override

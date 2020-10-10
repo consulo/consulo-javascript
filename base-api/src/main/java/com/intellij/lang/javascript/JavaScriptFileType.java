@@ -21,6 +21,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.javascript.icon.JavaScriptIconGroup;
 import consulo.javascript.lang.JavaScriptFileTypeWithVersion;
 import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.javascript.lang.StandardJavaScriptVersions;
@@ -69,7 +70,7 @@ public class JavaScriptFileType extends LanguageFileType implements JavaScriptFi
 	@Override
 	public Image getIcon()
 	{
-		return JavaScriptIcons.JavaScript;
+		return JavaScriptIconGroup.javaScript();
 	}
 
 	@RequiredReadAction

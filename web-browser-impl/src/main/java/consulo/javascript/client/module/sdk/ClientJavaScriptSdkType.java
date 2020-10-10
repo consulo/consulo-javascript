@@ -3,9 +3,9 @@ package consulo.javascript.client.module.sdk;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.projectRoots.SdkType;
 import com.intellij.openapi.roots.OrderRootType;
+import consulo.javascript.icon.JavaScriptIconGroup;
 import consulo.roots.types.BinariesOrderRootType;
 import consulo.roots.types.SourcesOrderRootType;
 import consulo.ui.image.Image;
@@ -43,7 +43,7 @@ public class ClientJavaScriptSdkType extends SdkType
 	@Override
 	public Image getIcon()
 	{
-		return JavaScriptIcons.JavaScript;
+		return JavaScriptIconGroup.javaScript();
 	}
 
 	@Override

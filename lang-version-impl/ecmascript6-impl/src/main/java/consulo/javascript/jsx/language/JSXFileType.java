@@ -1,10 +1,10 @@
 package consulo.javascript.jsx.language;
 
-import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.javascript.icon.JavaScriptIconGroup;
 import consulo.javascript.lang.JavaScriptFileTypeWithVersion;
 import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.lang.LanguageVersion;
@@ -51,7 +51,7 @@ public class JSXFileType extends LanguageFileType implements JavaScriptFileTypeW
 	@Override
 	public Image getIcon()
 	{
-		return JavaScriptIcons.Jsx;
+		return JavaScriptIconGroup.jsx();
 	}
 
 	@RequiredReadAction

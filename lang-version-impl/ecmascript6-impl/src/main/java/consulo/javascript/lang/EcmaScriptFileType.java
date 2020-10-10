@@ -16,11 +16,11 @@
 
 package consulo.javascript.lang;
 
-import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.javascript.icon.JavaScriptIconGroup;
 import consulo.lang.LanguageVersion;
 import consulo.ui.image.Image;
 
@@ -65,7 +65,7 @@ public class EcmaScriptFileType extends LanguageFileType implements JavaScriptFi
 	@Override
 	public Image getIcon()
 	{
-		return JavaScriptIcons.EcmaScript;
+		return JavaScriptIconGroup.ecmaScript();
 	}
 
 	@RequiredReadAction

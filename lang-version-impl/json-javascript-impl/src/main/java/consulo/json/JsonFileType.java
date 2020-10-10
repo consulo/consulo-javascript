@@ -16,11 +16,11 @@
 
 package consulo.json;
 
-import com.intellij.lang.javascript.JavaScriptIcons;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.javascript.icon.JavaScriptIconGroup;
 import consulo.javascript.lang.JavaScriptFileTypeWithVersion;
 import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.json.lang.JsonJavaScriptVersion;
@@ -67,7 +67,7 @@ public class JsonFileType extends LanguageFileType implements JavaScriptFileType
 	@Override
 	public Image getIcon()
 	{
-		return JavaScriptIcons.Json;
+		return JavaScriptIconGroup.json();
 	}
 
 	@RequiredReadAction

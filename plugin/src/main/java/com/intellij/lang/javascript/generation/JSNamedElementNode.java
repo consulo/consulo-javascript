@@ -42,7 +42,7 @@ public class JSNamedElementNode extends PsiElementMemberChooserObject implements
 {
 	public JSNamedElementNode(JSNamedElement node)
 	{
-		super(node, buildTextFor(node), TargetAWT.to(buildIcon(node)));
+		super(node, buildTextFor(node), buildIcon(node));
 	}
 
 	private static Image buildIcon(final JSNamedElement node)

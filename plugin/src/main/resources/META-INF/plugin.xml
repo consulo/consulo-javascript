@@ -158,7 +158,7 @@
 		<sdkType implementation="consulo.javascript.client.module.sdk.ClientJavaScriptSdkType"/>
 		<predefinedBundlesProvider implementation="consulo.javascript.client.module.sdk.ClientJavaScriptPredefinedBundlesProvider"/>
 		<moduleExtensionProvider key="client-javascript"
-								 icon="/icons/javaScript.png"
+								 icon="consulo.javascript.JavaScriptIconGroup@javascript"
 								 name="JavaScript (Client)"
 								 allowMixin="true"
 								 immutableClass="consulo.javascript.client.module.extension.ClientJavaScriptModuleExtension"

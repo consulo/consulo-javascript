@@ -21,6 +21,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import consulo.platform.base.icon.PlatformIconGroup;
 import org.jetbrains.annotations.NonNls;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
@@ -38,7 +39,6 @@ import com.intellij.lang.javascript.psi.*;
 import com.intellij.openapi.actionSystem.Shortcut;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.keymap.KeymapManager;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -193,8 +193,7 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 		@Nonnull
 		public ActionPresentation getPresentation()
 		{
-			return new ActionPresentationData(IdeBundle.message("action.structureview.show.inherited"), null, IconLoader.getIcon("/hierarchy/supertypes" +
-					".png"));
+			return new ActionPresentationData(IdeBundle.message("action.structureview.show.inherited"), null, PlatformIconGroup.hierarchySupertypes());
 		}
 
 		@Override
