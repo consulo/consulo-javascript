@@ -44,7 +44,7 @@ import javax.annotation.Nonnull;
  * Date: Jan 30, 2005
  * Time: 8:25:27 PM
  */
-abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunction> extends JSStubElementImpl<T> implements JSFunction, StubBasedPsiElement<JSFunctionStub>
+abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunction> extends JSStubElementImpl<T> implements JSFunction
 {
 	private boolean referencesArgumentsCalculated;
 	private boolean referencesArguments;

@@ -31,7 +31,6 @@ import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.IncorrectOperationException;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 
@@ -43,8 +42,6 @@ import javax.annotation.Nonnull;
 public abstract class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElementBase<T> implements JSElement
 {
 	public static Key<NavigationItem> ORIGINAL_ELEMENT = Key.create("ORIGINAL_NAMED_ELEMENT");
-	@NonNls
-	private static final String IMPL = "Impl";
 
 	public JSStubElementImpl(final ASTNode node)
 	{
@@ -74,19 +71,6 @@ public abstract class JSStubElementImpl<T extends StubElement> extends StubBased
 	public SearchScope getDefaultUseScope()
 	{
 		return super.getUseScope();
-	}
-
-	@Override
-	public String toString()
-	{
-		String classname = getClass().getName();
-		if(classname.endsWith(IMPL))
-		{
-			classname = classname.substring(0, classname.length() - IMPL.length());
-		}
-
-		classname = classname.substring(classname.lastIndexOf(".") + 1);
-		return classname;
 	}
 
 	@Override

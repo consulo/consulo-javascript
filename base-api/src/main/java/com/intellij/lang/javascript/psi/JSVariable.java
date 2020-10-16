@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
  *         Date: Jan 30, 2005
  *         Time: 6:43:42 PM
  */
-public interface JSVariable extends JSQualifiedNamedElement, JSAttributeListOwner, StubBasedPsiElement<JSVariableStubBase>
+public interface JSVariable extends JSQualifiedNamedElement, JSAttributeListOwner
 {
 	JSVariable[] EMPTY_ARRAY = new JSVariable[0];
 

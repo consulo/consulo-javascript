@@ -91,9 +91,6 @@ import java.util.*;
 /**
  * @author max, maxim.mossienko
  */
-@SuppressWarnings({
-		"ALL"
-})
 public class JSResolveUtil
 {
 	private static final Key<CachedValue<TIntObjectHashMap<Object>>> MY_CACHED_STATEMENTS = Key.create("JS.RelevantStatements");
@@ -2965,18 +2962,6 @@ public class JSResolveUtil
 		@Nonnull
 		@Override
 		public ASTNode getNode()
-		{
-			return null;
-		}
-
-		@Override
-		public IStubElementType getElementType()
-		{
-			return JSElementTypes.VARIABLE;
-		}
-
-		@Override
-		public JSVariableStubBase getStub()
 		{
 			return null;
 		}
