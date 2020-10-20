@@ -29,9 +29,9 @@ import consulo.javascript.lang.lexer._EcmaScript6Lexer;
 import consulo.javascript.lang.parsing.EcmaScript6Parser;
 import consulo.javascript.lang.psi.impl.resolve.JavaScriptVersionWithHelper;
 import consulo.javascript.lang.psi.impl.resolve.ResolveHelper;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 
 /**
  * @author VISTALL
