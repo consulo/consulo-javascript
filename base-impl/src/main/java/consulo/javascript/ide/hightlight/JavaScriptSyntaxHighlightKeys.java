@@ -16,12 +16,12 @@
 
 package consulo.javascript.ide.hightlight;
 
-import java.awt.Color;
-
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.ui.color.RGBColor;
+import consulo.ui.style.StandardColors;
 
 /**
  * @author VISTALL
@@ -69,7 +69,7 @@ public interface JavaScriptSyntaxHighlightKeys
 	TextAttributesKey JS_GLOBAL_VARIABLE = TextAttributesKey.createTextAttributesKey("JS.GLOBAL_VARIABLE", DefaultLanguageHighlighterColors.STATIC_FIELD);
 	TextAttributesKey JS_GLOBAL_FUNCTION = TextAttributesKey.createTextAttributesKey("JS.GLOBAL_FUNCTION", DefaultLanguageHighlighterColors.STATIC_METHOD);
 	TextAttributesKey JS_STATIC_MEMBER_FUNCTION = TextAttributesKey.createTextAttributesKey("JS.STATIC_MEMBER_FUNCTION", DefaultLanguageHighlighterColors.STATIC_METHOD);
-	TextAttributesKey JS_INSTANCE_MEMBER_FUNCTION = TextAttributesKey.createTextAttributesKey("JS.INSTANCE_MEMBER_FUNCTION", new TextAttributes(new Color(0x7a, 0x7a, 43), Color.white, null, null,0));
+	TextAttributesKey JS_INSTANCE_MEMBER_FUNCTION = TextAttributesKey.createTextAttributesKey("JS.INSTANCE_MEMBER_FUNCTION", new TextAttributes(new RGBColor(0x7a, 0x7a, 43), StandardColors.WHITE, null, null,0));
 
-	TextAttributesKey JS_METADATA = TextAttributesKey.createTextAttributesKey("JS.ATTRIBUTE", new TextAttributes(null, new Color(0xf7, 0xe9, 0xe9), null, null, 0));
+	TextAttributesKey JS_METADATA = TextAttributesKey.createTextAttributesKey("JS.ATTRIBUTE", new TextAttributes(null, new RGBColor(0xf7, 0xe9, 0xe9), null, null, 0));
 }
