@@ -88,7 +88,7 @@
 
 		<lang.findUsagesProvider language="JavaScript" implementationClass="com.intellij.lang.javascript.findUsages.JavaScriptFindUsagesProvider"/>
 
-		<lang.syntaxHighlighterFactory key="JavaScript"
+		<lang.syntaxHighlighterFactory language="JavaScript"
 									   implementationClass="consulo.javascript.ide.hightlight.JavaScriptSyntaxHighlightFactory"/>
 		<lang.commenter language="JavaScript" implementationClass="com.intellij.lang.javascript.JavascriptCommenter"/>
 
@@ -154,6 +154,8 @@
 		<targetElementUtilEx implementation="com.intellij.lang.javascript.JavaScriptTargetElementUtilEx"/>
 
 		<findUsagesHandlerFactory implementation="consulo.javascript.findUsages.JavaScriptFindUsagesHandlerFactory"/>
+
+		<navbar implementation="consulo.javascript.ide.navigationToolbar.JavaScriptNavBarModelExtension" />
 
 		<sdkType implementation="consulo.javascript.client.module.sdk.ClientJavaScriptSdkType"/>
 		<predefinedBundlesProvider implementation="consulo.javascript.client.module.sdk.ClientJavaScriptPredefinedBundlesProvider"/>

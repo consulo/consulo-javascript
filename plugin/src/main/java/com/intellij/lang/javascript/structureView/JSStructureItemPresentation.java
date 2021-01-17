@@ -33,12 +33,14 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Maxim.Mossienko
  *         Date: Jul 23, 2008
  *         Time: 6:54:27 PM
  */
-class JSStructureItemPresentation extends JSStructureViewElement.JSStructureItemPresentationBase
+public class JSStructureItemPresentation extends JSStructureViewElement.JSStructureItemPresentationBase
 {
 	public JSStructureItemPresentation(final JSStructureViewElement jsStructureViewElement)
 	{
@@ -55,6 +57,12 @@ class JSStructureItemPresentation extends JSStructureViewElement.JSStructureItem
 			return "*invalid*";
 		}
 
+		return getName(psiElement);
+	}
+
+	@RequiredReadAction
+	public static String getName(@Nonnull PsiElement psiElement)
+	{
 		if(psiElement instanceof JSObjectLiteralExpression)
 		{
 			if(psiElement.getParent() instanceof JSAssignmentExpression)
