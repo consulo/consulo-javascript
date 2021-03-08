@@ -16,26 +16,12 @@
 
 package com.intellij.lang.javascript.flex;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
 import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.lang.ImportOptimizer;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
-import com.intellij.lang.javascript.psi.JSBlockStatement;
-import com.intellij.lang.javascript.psi.JSElement;
-import com.intellij.lang.javascript.psi.JSFile;
-import com.intellij.lang.javascript.psi.JSFunction;
-import com.intellij.lang.javascript.psi.JSImportStatement;
-import com.intellij.lang.javascript.psi.JSPackageStatement;
-import com.intellij.lang.javascript.psi.JSReferenceExpression;
+import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.validation.JSUnusedImportsHelper;
@@ -43,16 +29,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.EmptyRunnable;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiFileFactory;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.SmartPointerManager;
-import com.intellij.psi.SmartPsiElementPointer;
+import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.util.containers.HashSet;
 import com.intellij.util.containers.MultiMap;
 import consulo.javascript.lang.JavaScriptLanguage;
+
+import javax.annotation.Nonnull;
+import java.util.*;
 
 /**
  * @author Maxim.Mossienko
@@ -61,7 +44,6 @@ import consulo.javascript.lang.JavaScriptLanguage;
  */
 public class ECMAScriptImportOptimizer implements ImportOptimizer
 {
-
 	@Override
 	public boolean supports(PsiFile file)
 	{
