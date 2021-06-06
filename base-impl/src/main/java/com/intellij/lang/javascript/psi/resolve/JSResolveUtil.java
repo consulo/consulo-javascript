@@ -76,10 +76,9 @@ import consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import consulo.javascript.module.extension.JavaScriptModuleExtension;
 import consulo.javascript.psi.JavaScriptImportStatementBase;
 import consulo.roots.types.BinariesOrderRootType;
+import consulo.util.collection.primitive.ints.IntMaps;
+import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashSet;
-import gnu.trove.TIntObjectHashMap;
-import gnu.trove.TIntObjectIterator;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -91,8 +90,8 @@ import java.util.*;
  */
 public class JSResolveUtil
 {
-	private static final Key<CachedValue<TIntObjectHashMap<Object>>> MY_CACHED_STATEMENTS = Key.create("JS.RelevantStatements");
-	private static UserDataCache<CachedValue<TIntObjectHashMap<Object>>, JSElement, Object> ourCachedDefsCache = new RelevantDefsUserDataCache();
+	private static final Key<CachedValue<IntObjectMap<Object>>> MY_CACHED_STATEMENTS = Key.create("JS.RelevantStatements");
+	private static UserDataCache<CachedValue<IntObjectMap<Object>>, JSElement, Object> ourCachedDefsCache = new RelevantDefsUserDataCache();
 	@NonNls
 	public static final String PROTOTYPE_FIELD_NAME = "prototype";
 
@@ -813,7 +812,7 @@ public class JSResolveUtil
 							}
 							if(openedNses == null)
 							{
-								openedNses = new THashSet<String>();
+								openedNses = new HashSet<String>();
 							}
 							openedNses.add(((JSUseNamespaceDirective) element).getNamespaceToBeUsed());
 							return true;
@@ -1234,7 +1233,7 @@ public class JSResolveUtil
 		}, true);
 
 
-		Collection<JSClass> visited = new THashSet<JSClass>();
+		Collection<JSClass> visited = new HashSet<JSClass>();
 		visitAllImplementedInterfaces(lastVisitedClass.get(), visited, new Processor<JSClass>()
 		{
 			@Override
@@ -1418,7 +1417,7 @@ public class JSResolveUtil
 						{
 							final JSClass anotherClass = (JSClass) elementParent;
 
-							final Collection<JSClass> visitedInterfaces = new THashSet<JSClass>();
+							final Collection<JSClass> visitedInterfaces = new HashSet<JSClass>();
 							return iterateOverridenMethodsUp((JSFunction) resolvedElement, new Processor<JSClass>()
 							{
 								@Override
@@ -1551,7 +1550,7 @@ public class JSResolveUtil
 			}
 			if(visited == null)
 			{
-				visited = new THashSet<JSClass>();
+				visited = new HashSet<JSClass>();
 			}
 			visited.add(aClass);
 			return checkClassHasParentOfAnotherOne(superClazz, parent, visited);
@@ -1667,7 +1666,7 @@ public class JSResolveUtil
 				{
 					if("Object".equals(link) && !JavaScriptIndex.ECMASCRIPT_JS2.equals(clazz.getContainingFile().getVirtualFile().getName()) // object from swf do
 						// not contain necessary members!
-							)
+					)
 					{
 						continue;
 					}
@@ -2113,15 +2112,13 @@ public class JSResolveUtil
 		}
 
 		boolean result = true;
-		final TIntObjectHashMap<Object> defsMap = ourCachedDefsCache.get(MY_CACHED_STATEMENTS, scope, null).getValue();
+		final IntObjectMap<Object> defsMap = ourCachedDefsCache.get(MY_CACHED_STATEMENTS, scope, null).getValue();
 
 		if(requiredName == null)
 		{
-			TIntObjectIterator<Object> iterator = defsMap.iterator();
-			while(iterator.hasNext())
+			for(Object value : defsMap.values())
 			{
-				iterator.advance();
-				result = dispatchResolve(processor, state, place, result, iterator.value());
+				result = dispatchResolve(processor, state, place, result, value);
 			}
 		}
 		else
@@ -2226,22 +2223,22 @@ public class JSResolveUtil
 
 	public static Key<PsiElement> contextKey = Key.create("context.key"); // JSElement or XmlElement
 
-	public static class RelevantDefsUserDataCache extends UserDataCache<CachedValue<TIntObjectHashMap<Object>>, JSElement, Object>
+	public static class RelevantDefsUserDataCache extends UserDataCache<CachedValue<IntObjectMap<Object>>, JSElement, Object>
 	{
 
 		@Override
-		protected CachedValue<TIntObjectHashMap<Object>> compute(final JSElement jsElement, final Object o)
+		protected CachedValue<IntObjectMap<Object>> compute(final JSElement jsElement, final Object o)
 		{
-			return CachedValuesManager.getManager(jsElement.getProject()).createCachedValue(new CachedValueProvider<TIntObjectHashMap<Object>>()
+			return CachedValuesManager.getManager(jsElement.getProject()).createCachedValue(new CachedValueProvider<IntObjectMap<Object>>()
 			{
 				@Override
-				public Result<TIntObjectHashMap<Object>> compute()
+				public Result<IntObjectMap<Object>> compute()
 				{
-					final TIntObjectHashMap<Object> relevantDefs = new TIntObjectHashMap<Object>();
+					final IntObjectMap<Object> relevantDefs = IntMaps.newIntObjectHashMap();
 					final MyJSElementVisitor elementVisitor = new MyJSElementVisitor(jsElement, relevantDefs);
 					elementVisitor.startVisiting(jsElement);
 
-					return new Result<TIntObjectHashMap<Object>>(relevantDefs, jsElement);
+					return new Result<IntObjectMap<Object>>(relevantDefs, jsElement);
 				}
 			}, false);
 		}
@@ -2250,11 +2247,11 @@ public class JSResolveUtil
 		{
 			private HashMap<String, Boolean> checkedVarsToOurStatus;
 			private Set<JSFile> visitedIncludes;
-			private final TIntObjectHashMap<Object> myRelevantDefs;
+			private final IntObjectMap<Object> myRelevantDefs;
 			private final JSElement myBase;
 			private JSElement context;
 
-			public MyJSElementVisitor(JSElement base, final TIntObjectHashMap<Object> relevantDefs)
+			public MyJSElementVisitor(JSElement base, final IntObjectMap<Object> relevantDefs)
 			{
 				myRelevantDefs = relevantDefs;
 				myBase = base;
@@ -2373,7 +2370,7 @@ public class JSResolveUtil
 				}
 				if(visitedIncludes == null)
 				{
-					visitedIncludes = new THashSet<JSFile>();
+					visitedIncludes = new HashSet<JSFile>();
 				}
 				visitedIncludes.add(file);
 

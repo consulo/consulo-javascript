@@ -37,15 +37,16 @@ import com.intellij.psi.ResolveResult;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
+import consulo.util.collection.primitive.objects.ObjectIntMap;
+import consulo.util.collection.primitive.objects.ObjectMaps;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashSet;
-import gnu.trove.TObjectIntHashMap;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.PropertyKey;
 
 import javax.annotation.Nonnull;
 import java.util.BitSet;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -101,7 +102,7 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 
 				if(set == null)
 				{
-					parent.putUserData(ourUnusedLocalDeclarationsSetKey, Collections.synchronizedSet(new THashSet<PsiElement>(3)));
+					parent.putUserData(ourUnusedLocalDeclarationsSetKey, Collections.synchronizedSet(new HashSet<PsiElement>(3)));
 				}
 				else if(node.getParameters().length == 0)
 				{
@@ -147,7 +148,7 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 
 				if(parameterList.getNode().findChildByType(JSElementTypes.FORMAL_PARAMETER) == node.getNode())
 				{
-					unusedParametersSet = Collections.synchronizedSet(new THashSet<PsiElement>(3));
+					unusedParametersSet = Collections.synchronizedSet(new HashSet<PsiElement>(3));
 					scopeNode.putUserData(ourUnusedLocalDeclarationsSetKey, unusedParametersSet);
 				}
 				else
@@ -213,7 +214,7 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 										Set<PsiElement> set = scopeHandler.getUserData(ourUsedLocalDeclarationsSetKey);
 										if(set == null)
 										{
-											set = new THashSet<PsiElement>(3);
+											set = new HashSet<PsiElement>(3);
 											scopeHandler.putUserData(ourUsedLocalDeclarationsSetKey, set);
 										}
 										set.add(element);
@@ -255,11 +256,11 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 
 		try
 		{
-			unusedDeclarationsSet = new THashSet<PsiElement>(unusedDeclarationsSet);
+			unusedDeclarationsSet = new HashSet<PsiElement>(unusedDeclarationsSet);
 
 			final int nonCounted = -2;
 			int lastUsedParameterIndex = nonCounted;
-			TObjectIntHashMap<JSParameter> parameterIndexMap = null;
+			ObjectIntMap<JSParameter> parameterIndexMap = null;
 
 			for(final PsiElement p : unusedDeclarationsSet)
 			{
@@ -335,10 +336,10 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 					if(lastUsedParameterIndex == nonCounted)
 					{
 						BitSet unusedSet = new BitSet(params.length);
-						parameterIndexMap = new TObjectIntHashMap<JSParameter>();
+						parameterIndexMap = ObjectMaps.newObjectIntHashMap();
 						for(int i = 0; i < params.length; ++i)
 						{
-							parameterIndexMap.put(params[i], i);
+							parameterIndexMap.putInt(params[i], i);
 						}
 
 						for(PsiElement param : unusedDeclarationsSet)
@@ -347,7 +348,7 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 							{
 								continue;
 							}
-							unusedSet.set(parameterIndexMap.get((JSParameter) param));
+							unusedSet.set(parameterIndexMap.getInt((JSParameter) param));
 						}
 
 						lastUsedParameterIndex = -1;
@@ -362,7 +363,7 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 						}
 					}
 
-					if(parameterIndexMap.get((JSParameter) p) < lastUsedParameterIndex)
+					if(parameterIndexMap.getInt((JSParameter) p) < lastUsedParameterIndex)
 					{
 						continue; // no sense to report unused symbol before used since it will change signature
 					}

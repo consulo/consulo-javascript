@@ -16,16 +16,11 @@
 
 package com.intellij.lang.javascript.flex.importer;
 
-import gnu.trove.THashSet;
-
-import java.util.Arrays;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-
 import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Set;
 
 /**
  * @author Maxim.Mossienko
@@ -139,7 +134,7 @@ class AS3InterfaceDumper extends AbstractDumpProcessor
 
 	private static
 	@NonNls
-	Set<String> doNotNeedQoting = new THashSet<String>(Arrays.asList("null", "NaN", "undefined", "true", "false", "Infinity", "-Infinity"));
+	Set<String> doNotNeedQoting = Set.of("null", "NaN", "undefined", "true", "false", "Infinity", "-Infinity");
 
 	private static boolean needsQuoting(final String value)
 	{

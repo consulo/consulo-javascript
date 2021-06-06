@@ -45,7 +45,7 @@ import consulo.javascript.lang.psi.JavaScriptTypeElement;
 import consulo.javascript.lang.psi.impl.elementType.BaseJavaScriptElementType;
 import consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
 import consulo.javascript.psi.JavaScriptImportStatementBase;
-import gnu.trove.TObjectHashingStrategy;
+import consulo.util.collection.HashingStrategy;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -414,10 +414,10 @@ public class JSPsiImplUtils
 		return false;
 	}
 
-	public static final TObjectHashingStrategy<JSQualifiedNamedElement> QUALIFIED_NAME_HASHING_STRATEGY = new TObjectHashingStrategy<JSQualifiedNamedElement>()
+	public static final HashingStrategy<JSQualifiedNamedElement> QUALIFIED_NAME_HASHING_STRATEGY = new HashingStrategy<>()
 	{
 		@Override
-		public int computeHashCode(final JSQualifiedNamedElement object)
+		public int hashCode(final JSQualifiedNamedElement object)
 		{
 			return object == null || object.getQualifiedName() == null ? 0 : object.getQualifiedName().hashCode();
 		}

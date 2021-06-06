@@ -28,10 +28,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import consulo.javascript.psi.JavaScriptImportStatementBase;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
-import gnu.trove.TIntObjectHashMap;
-import gnu.trove.TIntObjectProcedure;
+import consulo.util.collection.primitive.ints.IntMaps;
+import consulo.util.collection.primitive.ints.IntObjectMap;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -148,7 +146,7 @@ public class JSStructureViewElement implements StructureViewTreeElement
 
 		if(elementsFromSupers != null)
 		{
-			Map<String, JSFunction> functionsByNames = new THashMap<String, JSFunction>();
+			Map<String, JSFunction> functionsByNames = new HashMap<String, JSFunction>();
 			for(StructureViewTreeElement child : children)
 			{
 				PsiElement el = getPsiElementResolveProxy(child);
@@ -211,21 +209,12 @@ public class JSStructureViewElement implements StructureViewTreeElement
 
 	protected List<StructureViewTreeElement> collectMyElements(final Set<String> referencedNamedIds)
 	{
-		final TIntObjectHashMap<PsiElement> offset2Element = new TIntObjectHashMap<PsiElement>();
+		final IntObjectMap<PsiElement> offset2Element = IntMaps.newIntObjectHashMap();
 
 		collectChildrenFromElement(myElement, referencedNamedIds, offset2Element);
 
-
 		final List<StructureViewTreeElement> children = new ArrayList<StructureViewTreeElement>(offset2Element.size());
-		offset2Element.forEachEntry(new TIntObjectProcedure<PsiElement>()
-		{
-			@Override
-			public boolean execute(int textOffset, PsiElement element)
-			{
-				children.add(createStructureViewElement(element));
-				return true;
-			}
-		});
+		offset2Element.forEach((textOffset, element) -> children.add(createStructureViewElement(element)));
 		return children;
 	}
 
@@ -257,7 +246,7 @@ public class JSStructureViewElement implements StructureViewTreeElement
 		return true;
 	}
 
-	private static void collectChildrenFromElement(final PsiElement element, final Set<String> referencedNamedIds, final TIntObjectHashMap<PsiElement> offset2Element)
+	private static void collectChildrenFromElement(final PsiElement element, final Set<String> referencedNamedIds, final IntObjectMap<PsiElement> offset2Element)
 	{
 		element.acceptChildren(new JSElementVisitor()
 		{
@@ -307,7 +296,7 @@ public class JSStructureViewElement implements StructureViewTreeElement
 					}
 					if(visited == null)
 					{
-						visited = new THashSet<PsiFile>();
+						visited = new HashSet<PsiFile>();
 					}
 					visited.add(file);
 

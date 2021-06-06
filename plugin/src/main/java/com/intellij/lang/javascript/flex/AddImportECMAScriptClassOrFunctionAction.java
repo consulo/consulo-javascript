@@ -16,15 +16,6 @@
 
 package com.intellij.lang.javascript.flex;
 
-import gnu.trove.THashSet;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-
-import javax.annotation.Nonnull;
-
-import org.jetbrains.annotations.NonNls;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.hint.QuestionAction;
 import com.intellij.codeInsight.navigation.NavigationUtil;
@@ -53,6 +44,13 @@ import com.intellij.psi.ResolveResult;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.PsiElementProcessor;
 import com.intellij.util.SmartList;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 
 /**
  * @author Maxim.Mossienko
@@ -178,7 +176,7 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
 		{
 			Collection<JSQualifiedNamedElement> c = getCandidates(editor, file, myReference.getCanonicalText());
 			filterDefaultPackage(c);
-			candidates = new THashSet<JSQualifiedNamedElement>(c, JSPsiImplUtils.QUALIFIED_NAME_HASHING_STRATEGY);
+			candidates = new HashSet<JSQualifiedNamedElement>(c, JSPsiImplUtils.QUALIFIED_NAME_HASHING_STRATEGY);
 		}
 		else
 		{

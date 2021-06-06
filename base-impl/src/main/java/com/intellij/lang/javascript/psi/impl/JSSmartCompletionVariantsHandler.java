@@ -16,15 +16,6 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import gnu.trove.THashMap;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
-import org.jetbrains.annotations.NonNls;
 import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
@@ -41,6 +32,13 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.Query;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Maxim.Mossienko
@@ -86,7 +84,7 @@ public class JSSmartCompletionVariantsHandler
 		private final PsiElement myExpr;
 		private final List<Object> myVariants;
 		private final ResolveState state = new ResolveState();
-		private final Map<String, JSVariable> myCandidatesMap = new THashMap<String, JSVariable>();
+		private final Map<String, JSVariable> myCandidatesMap = new HashMap<String, JSVariable>();
 		private boolean findAcceptableEvents;
 
 		public MyEventSubclassesProcessor(final PsiElement expr, final List<Object> variants)

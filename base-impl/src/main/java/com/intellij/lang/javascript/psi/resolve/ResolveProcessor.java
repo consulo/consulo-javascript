@@ -38,11 +38,11 @@ import consulo.javascript.lang.psi.impl.resolve.ResolveHelper;
 import consulo.javascript.psi.JavaScriptImportStatementBase;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
-import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -54,7 +54,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 	private static final Key<String> ASKING_FOR_QUALIFIED_IMPORT = Key.create("asking.for.import.of.qname");
 	protected static final Key<Boolean> LOOKING_FOR_USE_NAMESPACES = Key.create("looking.for.use.directive");
 
-	private final Set<String> visitedClasses = new THashSet<String>();
+	private final Set<String> visitedClasses = new HashSet<String>();
 
 	private boolean myToStopOnAssignment;
 	protected final String myName;
@@ -145,7 +145,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 
 			if(explicitNs != null && !anyNsAllowed)
 			{
-				openedNses = new THashSet<String>();
+				openedNses = new HashSet<String>();
 				openedNses.add(explicitNs);
 				defaultNsIsNotAllowed = true;
 			}
@@ -729,7 +729,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 		}
 		final int numberOfVariants = processorResults.size();
 		final List<Object> objects = new ArrayList<Object>(numberOfVariants);
-		final Set<String> processedCandidateNames = new THashSet<String>(numberOfVariants);
+		final Set<String> processedCandidateNames = new HashSet<String>(numberOfVariants);
 
 		for(int i = 0; i < numberOfVariants; ++i)
 		{

@@ -34,8 +34,6 @@ import com.intellij.psi.util.*;
 import com.intellij.util.ArrayFactory;
 import com.intellij.util.ArrayUtil;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -223,7 +221,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 
 				if(name2FieldsMap == null)
 				{
-					name2FieldsMap = new THashMap<String, JSVariable>();
+					name2FieldsMap = new HashMap<String, JSVariable>();
 
 					for(JSVariable variable : getFields())
 					{
@@ -255,7 +253,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 
 				if(name2FunctionMap == null)
 				{
-					name2FunctionMap = new THashMap<String, Object>();
+					name2FunctionMap = new HashMap<String, Object>();
 
 					for(JSFunction function : getFunctions())
 					{
@@ -500,7 +498,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 				return new JSIncludeDirective[count];
 			}
 		});
-		Collection<JSFile> visited = new THashSet<JSFile>();
+		Collection<JSFile> visited = new HashSet<JSFile>();
 		TokenSet filter = TokenSet.create(JSElementTypes.INCLUDE_DIRECTIVE, elementType);
 		for(JSIncludeDirective include : includes)
 		{

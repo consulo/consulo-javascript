@@ -16,19 +16,18 @@
 
 package com.intellij.lang.javascript.index;
 
-import gnu.trove.THashSet;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @by maxim.mossienko, yole
@@ -334,7 +333,7 @@ public class JSSymbolUtil
 				{
 					if(visited == null)
 					{
-						visited = new THashSet<String>();
+						visited = new HashSet<String>();
 					}
 					final String replaced = expr.getText();
 

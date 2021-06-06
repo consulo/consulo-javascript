@@ -43,11 +43,11 @@ import consulo.javascript.lang.psi.impl.resolve.JavaScriptVersionWithHelper;
 import consulo.javascript.lang.psi.impl.resolve.ResolveHelper;
 import consulo.lang.LanguageVersion;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -542,7 +542,7 @@ public class JSImportHandlingUtil
 				@Override
 				public Result<Map<String, Object>> compute()
 				{
-					final Map<String, Object> result = new THashMap<String, Object>();
+					final Map<String, Object> result = new HashMap<String, Object>();
 					collect(result, owner, null);
 					return new Result<Map<String, Object>>(result, owner);
 				}
@@ -560,7 +560,7 @@ public class JSImportHandlingUtil
 				{
 					if(visitedIncludes == null)
 					{
-						visitedIncludes = new THashSet<PsiFile>();
+						visitedIncludes = new HashSet<PsiFile>();
 					}
 					visitedIncludes.add(file);
 					children = JSResolveUtil.getSourceElements(file);

@@ -38,7 +38,6 @@ import com.intellij.psi.xml.*;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.xml.XmlElementDescriptor;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashMap;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -358,7 +357,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 				@Override
 				public Result<Map<String, String>> compute()
 				{
-					final Map<String, String> cachedComponentImports = new THashMap<String, String>();
+					final Map<String, String> cachedComponentImports = new HashMap<String, String>();
 					final List<PsiFile> dependencies = new ArrayList<PsiFile>();
 					dependencies.add(file);
 

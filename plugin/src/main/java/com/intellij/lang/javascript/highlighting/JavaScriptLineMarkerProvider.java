@@ -41,8 +41,6 @@ import com.intellij.util.Function;
 import com.intellij.util.Processor;
 import com.intellij.util.Query;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -233,7 +231,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 						@Override
 						public void navigate(final MouseEvent e, final JSFunction elt)
 						{
-							final Set<NavigationItem> results = new THashSet<>();
+							final Set<NavigationItem> results = new HashSet<>();
 							JSResolveUtil.iterateType(function, parentNode1, typeName, new JSResolveUtil.OverrideHandler()
 							{
 								@Override
@@ -269,8 +267,8 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 	@Override
 	public void collectSlowLineMarkers(@Nonnull final List<PsiElement> elements, @Nonnull final Collection<LineMarkerInfo> result)
 	{
-		final Map<String, Set<JSFunction>> jsFunctionsToProcess = new THashMap<>();
-		final Map<JSClass, Set<JSFunction>> jsMethodsToProcess = new THashMap<>();
+		final Map<String, Set<JSFunction>> jsFunctionsToProcess = new HashMap<>();
+		final Map<JSClass, Set<JSFunction>> jsMethodsToProcess = new HashMap<>();
 
 		for(final PsiElement el : elements)
 		{
@@ -297,7 +295,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 					Set<JSFunction> functions = jsMethodsToProcess.get(clazz);
 					if(functions == null)
 					{
-						functions = new THashSet<>();
+						functions = new HashSet<>();
 						jsMethodsToProcess.put(clazz, functions);
 					}
 
@@ -312,7 +310,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 
 						if(functions == null)
 						{
-							functions = new THashSet<>();
+							functions = new HashSet<>();
 							jsFunctionsToProcess.put(qName, functions);
 						}
 
@@ -341,7 +339,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 			classQuery.forEach(new Processor<JSClass>()
 			{
 				boolean addedClassMarker;
-				final Set<JSFunction> methodsClone = methods == null || clazz.isInterface() ? null : new THashSet<>(methods);
+				final Set<JSFunction> methodsClone = methods == null || clazz.isInterface() ? null : new HashSet<>(methods);
 
 				@Override
 				public boolean process(final JSClass jsClass)

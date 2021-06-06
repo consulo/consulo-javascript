@@ -55,17 +55,12 @@ import com.intellij.psi.xml.XmlTagChild;
 import com.intellij.util.IncorrectOperationException;
 import consulo.javascript.psi.JSSimpleLiteralExpression;
 import consulo.javascript.psi.JavaScriptLambdaExpression;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.PropertyKey;
 
 import javax.annotation.Nonnull;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @by max, maxim.mossienko
@@ -184,7 +179,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 			return;
 		}
 
-		final Map<String, JSReferenceExpression> nameToExprMap = new THashMap<String, JSReferenceExpression>();
+		final Map<String, JSReferenceExpression> nameToExprMap = new HashMap<String, JSReferenceExpression>();
 
 		final JSReferenceExpression[] referenceExpressions = referenceList.getExpressions();
 		if(referenceExpressions != null)
@@ -728,7 +723,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 
 		if(blocks.length > 1)
 		{
-			final Set<String> typeToCatch = new THashSet<String>();
+			final Set<String> typeToCatch = new HashSet<String>();
 
 			for(JSCatchBlock block : blocks)
 			{
@@ -1205,7 +1200,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator
 			});
 		}
 
-		final Set<JSNamedElement> elements = new THashSet<JSNamedElement>();
+		final Set<JSNamedElement> elements = new HashSet<JSNamedElement>();
 
 		for(JSSourceElement statement : packageStatement.getStatements())
 		{

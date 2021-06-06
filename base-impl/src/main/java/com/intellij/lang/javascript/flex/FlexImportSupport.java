@@ -16,12 +16,6 @@
 
 package com.intellij.lang.javascript.flex;
 
-import gnu.trove.THashMap;
-
-import java.util.Map;
-
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.JSImportStatement;
 import com.intellij.lang.javascript.psi.resolve.JSImportedElementResolveResult;
@@ -29,6 +23,11 @@ import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.util.ArrayUtil;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Maxim.Mossienko
@@ -82,8 +81,8 @@ public class FlexImportSupport
 			"flash.xml.*"
 	};
 
-	private static final Map<String, Object> implicitImportListMap = new THashMap<String, Object>();
-	private static final Map<String, Object> mxmlImportListMap = new THashMap<String, Object>();
+	private static final Map<String, Object> implicitImportListMap = new HashMap<String, Object>();
+	private static final Map<String, Object> mxmlImportListMap = new HashMap<String, Object>();
 
 	static
 	{

@@ -16,29 +16,23 @@
 
 package com.intellij.lang.javascript.structureView;
 
-import consulo.platform.base.icon.PlatformIconGroup;
-import gnu.trove.THashMap;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
-import org.jetbrains.annotations.NonNls;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.ide.util.treeView.smartTree.ActionPresentation;
-import com.intellij.ide.util.treeView.smartTree.ActionPresentationData;
-import com.intellij.ide.util.treeView.smartTree.Group;
-import com.intellij.ide.util.treeView.smartTree.Grouper;
-import com.intellij.ide.util.treeView.smartTree.TreeElement;
+import com.intellij.ide.util.treeView.smartTree.*;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSVarStatement;
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.psi.PsiElement;
+import consulo.platform.base.icon.PlatformIconGroup;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Maxim.Mossienko
@@ -56,7 +50,7 @@ class JSSuperGrouper implements Grouper
 		{
 			return Collections.emptyList();
 		}
-		final Map<String, Group> groups = new THashMap<String, Group>();
+		final Map<String, Group> groups = new HashMap<String, Group>();
 
 		for(TreeElement _child : children)
 		{

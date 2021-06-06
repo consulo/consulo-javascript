@@ -26,10 +26,10 @@ import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.stubs.StubIndexKey;
 import com.intellij.util.*;
 import consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
-import gnu.trove.THashSet;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSearch.SearchParameters>
@@ -106,7 +106,7 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 			@Override
 			public boolean execute(@Nonnull final SearchParameters queryParameters, @Nonnull Processor<? super JSClass> consumer)
 			{
-				final THashSet<JSClass> visited = new THashSet<JSClass>();         // no abstract classes in ActionScript !
+				final Set<JSClass> visited = new HashSet<JSClass>();         // no abstract classes in ActionScript !
 
 				if(queryParameters.isCheckDeepInheritance())
 				{
@@ -187,7 +187,7 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 		}
 		else
 		{
-			processed = new THashSet<JSClass>();
+			processed = new HashSet<JSClass>();
 		}
 
 		processed.add(superClass);

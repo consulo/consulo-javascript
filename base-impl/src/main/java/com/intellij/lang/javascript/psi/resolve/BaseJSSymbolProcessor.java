@@ -38,11 +38,11 @@ import consulo.javascript.lang.JavaScriptFeature;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.javascript.lang.JavaScriptVersionUtil;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -1090,7 +1090,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor
 	public static class EvaluateContext
 	{
 		public final PsiFile targetFile;
-		public final Set<String> visitedTypes = new THashSet<String>();
+		public final Set<String> visitedTypes = new HashSet<String>();
 		private Set<JSExpression> processingItems;
 		private PsiElement source;
 
@@ -1112,7 +1112,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor
 		{
 			if(processingItems == null)
 			{
-				processingItems = new THashSet<JSExpression>();
+				processingItems = new HashSet<JSExpression>();
 			}
 			processingItems.add(rawqualifier);
 		}

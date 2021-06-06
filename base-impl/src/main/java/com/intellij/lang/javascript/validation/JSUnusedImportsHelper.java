@@ -34,7 +34,6 @@ import com.intellij.psi.xml.XmlTag;
 import com.intellij.psi.xml.XmlText;
 import consulo.javascript.psi.JavaScriptImportStatementBase;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashSet;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -67,9 +66,9 @@ public class JSUnusedImportsHelper
 
 	private static final Key<CachedValue<Results>> ourUnusedImportsKey = Key.create("js.unused.imports");
 
-	private final THashSet<JSImportStatement> unusedImports = new THashSet<JSImportStatement>();
-	private final Collection<JSImportStatement> allImports = new THashSet<JSImportStatement>();
-	private final THashSet<JSImportStatement> importsUsedAheadOfDefinition = new THashSet<JSImportStatement>();
+	private final Set<JSImportStatement> unusedImports = new HashSet<JSImportStatement>();
+	private final Collection<JSImportStatement> allImports = new HashSet<JSImportStatement>();
+	private final Set<JSImportStatement> importsUsedAheadOfDefinition = new HashSet<JSImportStatement>();
 	private final Map<JSReferenceExpression, String> fqnsToReplaceWithImport = new HashMap<JSReferenceExpression, String>();
 	private final PsiFile myContainingFile;
 
@@ -275,7 +274,7 @@ public class JSUnusedImportsHelper
 				public Result<Results> compute()
 				{
 					final Map<XmlTag, Collection<PsiElement>> allElements = new HashMap<XmlTag, Collection<PsiElement>>();
-					Collection<JSFile> processedFiles = new THashSet<JSFile>();
+					Collection<JSFile> processedFiles = new HashSet<JSFile>();
 					collectElements(null, containingFile1, allElements, processedFiles);
 
 					Results allResults = new Results(new HashMap<JSReferenceExpression, String>(), new ArrayList<JSImportStatement>(),

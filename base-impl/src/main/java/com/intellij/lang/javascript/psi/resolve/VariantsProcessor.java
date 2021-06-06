@@ -29,7 +29,6 @@ import com.intellij.util.ArrayUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptFeature;
 import consulo.javascript.psi.JavaScriptImportStatementBase;
-import gnu.trove.THashSet;
 import org.jetbrains.annotations.NonNls;
 
 import java.util.*;
@@ -209,7 +208,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor
 			return;
 		}
 
-		final Set<String> processedCandidateNames = new THashSet<String>(results.size());
+		final Set<String> processedCandidateNames = new HashSet<String>(results.size());
 
 		for(PsiElement e : results)
 		{
