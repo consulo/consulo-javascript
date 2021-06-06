@@ -44,12 +44,12 @@ import com.intellij.psi.ResolveResult;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.PsiElementProcessor;
 import com.intellij.util.SmartList;
+import consulo.util.collection.Sets;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 
 /**
@@ -176,7 +176,7 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
 		{
 			Collection<JSQualifiedNamedElement> c = getCandidates(editor, file, myReference.getCanonicalText());
 			filterDefaultPackage(c);
-			candidates = new HashSet<JSQualifiedNamedElement>(c, JSPsiImplUtils.QUALIFIED_NAME_HASHING_STRATEGY);
+			candidates = Sets.newHashSet(c, JSPsiImplUtils.QUALIFIED_NAME_HASHING_STRATEGY);
 		}
 		else
 		{

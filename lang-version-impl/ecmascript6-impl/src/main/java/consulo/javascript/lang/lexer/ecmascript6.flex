@@ -17,7 +17,7 @@ import consulo.javascript.lang.lexer.JavaScriptFlexLexer;
     private int tagCount = 0;
 
     private int braceCount;
-    private com.intellij.util.containers.IntStack jsExits = new com.intellij.util.containers.IntStack();
+    private consulo.util.collection.primitive.ints.IntStack jsExits = new consulo.util.collection.primitive.ints.IntStack();
 
     public final int getTagCount() {
       return tagCount;
