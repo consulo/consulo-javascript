@@ -23,6 +23,9 @@
 	<resource-bundle>messages.JavaScriptBundle</resource-bundle>
 	<depends>com.intellij.xml</depends>
 	<depends config-file="regexp.xml" optional="true">com.intellij.regexp</depends>
+	<tags>
+		<tag>custom.language</tag>
+	</tags>
 
 	<import path="/META-INF/Intentions.xml"/>
 	<import path="/META-INF/json.xml"/>
