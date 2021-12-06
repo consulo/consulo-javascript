@@ -56,7 +56,7 @@
 		<module>lang-version-impl/typescript-impl</module>
 		<module>lang-version-impl/actionscript-impl</module>
 		<module>lang-version-impl/ecmascript4-impl</module>
-		<module>lang-version-impl/ecmascript6-impl</module>
+		<module>lang-version-impl/ecmascript-impl</module>
 		<module>lang-version-impl/json-javascript-impl</module>
 		<module>plugin</module>
 	</modules>

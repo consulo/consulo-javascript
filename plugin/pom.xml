@@ -103,7 +103,7 @@
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>consulo.javascript-ecmascript6.impl</artifactId>
+			<artifactId>consulo.javascript-ecmascript.impl</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
