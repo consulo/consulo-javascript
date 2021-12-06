@@ -18,9 +18,11 @@ package consulo.javascript.lang;
 
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.icon.JavaScriptIconGroup;
+import consulo.javascript.module.extension.JavaScriptModuleExtension;
 import consulo.lang.LanguageVersion;
 import consulo.ui.image.Image;
 
@@ -73,6 +75,16 @@ public class EcmaScriptFileType extends LanguageFileType implements JavaScriptFi
 	@Override
 	public LanguageVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile)
 	{
-		return EcmaScript6JavaScriptVersion.getInstance();
+		if(module == null)
+		{
+			return EcmaScript12JavaScriptVersion.getInstance();
+		}
+
+		JavaScriptModuleExtension<?> extension = ModuleUtilCore.getExtension(module, JavaScriptModuleExtension.class);
+		if(extension != null)
+		{
+			return extension.getLanguageVersion();
+		}
+		return EcmaScript12JavaScriptVersion.getInstance();
 	}
 }

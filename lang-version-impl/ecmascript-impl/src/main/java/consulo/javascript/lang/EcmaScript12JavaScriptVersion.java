@@ -10,6 +10,12 @@ import javax.annotation.Nonnull;
  */
 public class EcmaScript12JavaScriptVersion extends EcmaScript6JavaScriptVersion
 {
+	@Nonnull
+	public static EcmaScript12JavaScriptVersion getInstance()
+	{
+		return JavaScriptLanguage.INSTANCE.findVersionByClass(EcmaScript12JavaScriptVersion.class);
+	}
+
 	@Inject
 	public EcmaScript12JavaScriptVersion()
 	{
