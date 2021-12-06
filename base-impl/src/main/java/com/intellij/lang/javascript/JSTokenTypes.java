@@ -244,6 +244,7 @@ public interface JSTokenTypes
 	IElementType PLUS = new JSElementType("PLUS");// +
 	IElementType MINUS = new JSElementType("MINUS");// -
 	IElementType MULT = new JSElementType("MULT");// *
+	IElementType MULTMULT = new JSElementType("MULTMULT");// *
 	IElementType PERC = new JSElementType("PERC");// %
 	IElementType PLUSPLUS = new JSElementType("PLUSPLUS");// ++
 	IElementType MINUSMINUS = new JSElementType("MINUSMINUS");// --
@@ -285,7 +286,7 @@ public interface JSTokenTypes
 	IElementType JSDOC_TAG_DATA = new JSElementType("JSDOC_TAG_DATA");
 
 	TokenSet OPERATIONS = TokenSet.create(LT, GT, LE, GE, EQEQ, NE, EQEQEQ, NEQEQ, PLUS, MINUS, MULT, PERC, PLUSPLUS, MINUSMINUS, LTLT, GTGT, GTGTGT, AND, OR, XOR, EXCL, TILDE, ANDAND, OROR, QUEST,
-			COLON, EQ, PLUSEQ, MINUSEQ, MULTEQ, PERCEQ, LTLTEQ, GTGTEQ, GTGTGTEQ, ANDEQ, OREQ, XOREQ, DIV, DIVEQ, COMMA, IS_KEYWORD, AS_KEYWORD);
+			COLON, EQ, PLUSEQ, MINUSEQ, MULTEQ, PERCEQ, LTLTEQ, GTGTEQ, GTGTGTEQ, ANDEQ, OREQ, XOREQ, DIV, DIVEQ, MULTMULT, COMMA, IS_KEYWORD, AS_KEYWORD);
 
 	TokenSet ASSOC_OPERATIONS = TokenSet.create(PLUS, MULT, AND, OR, XOR, OROR, ANDAND);
 

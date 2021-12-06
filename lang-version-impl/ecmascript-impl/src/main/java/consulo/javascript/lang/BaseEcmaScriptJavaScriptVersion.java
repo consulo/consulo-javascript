@@ -10,7 +10,7 @@ import consulo.javascript.ecmascript6.psi.impl.resolve.EcmaScript6ResolveHelper;
 import consulo.javascript.ide.hightlight.JavaScriptHighlighter;
 import consulo.javascript.lang.lexer.JavaScriptFlexAdapter;
 import consulo.javascript.lang.lexer._EcmaScript6Lexer;
-import consulo.javascript.lang.parsing.EcmaScript6Parser;
+import consulo.javascript.lang.parsing.EcmaScriptParser;
 import consulo.javascript.lang.psi.impl.resolve.JavaScriptVersionWithHelper;
 import consulo.javascript.lang.psi.impl.resolve.ResolveHelper;
 
@@ -64,7 +64,7 @@ public abstract class BaseEcmaScriptJavaScriptVersion extends BaseJavaScriptLang
 	@Override
 	public PsiParser createParser()
 	{
-		return new EcmaScript6Parser();
+		return new EcmaScriptParser();
 	}
 
 	@Nonnull

@@ -8,9 +8,9 @@ import consulo.javascript.lang.parsing.impl.JavaScriptStrictParserBuilder;
  * @author VISTALL
  * @since 15.02.2016
  */
-public class EcmaScript6StrictParserBuilder extends JavaScriptStrictParserBuilder
+public class EcmaScriptStrictParserBuilder extends JavaScriptStrictParserBuilder
 {
-	public EcmaScript6StrictParserBuilder(PsiBuilder delegate)
+	public EcmaScriptStrictParserBuilder(PsiBuilder delegate)
 	{
 		super(delegate);
 

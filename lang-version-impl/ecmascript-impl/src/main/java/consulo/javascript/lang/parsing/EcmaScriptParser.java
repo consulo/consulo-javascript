@@ -16,27 +16,27 @@
 
 package consulo.javascript.lang.parsing;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.PsiBuilder;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 15.02.2016
  */
-public class EcmaScript6Parser extends JavaScriptParser
+public class EcmaScriptParser extends JavaScriptParser
 {
 	@Nonnull
 	@Override
 	public JavaScriptParsingContext createParsingContext()
 	{
-		return new EcmaScript6ParsingContext();
+		return new EcmaScriptParsingContext();
 	}
 
 	@Nonnull
 	@Override
 	public JavaScriptParserBuilder createBuilder(PsiBuilder builder)
 	{
-		return new EcmaScript6StrictParserBuilder(builder);
+		return new EcmaScriptStrictParserBuilder(builder);
 	}
 }

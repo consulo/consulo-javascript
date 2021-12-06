@@ -56,6 +56,19 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
 	@Override
 	@RequiredReadAction
+	public void visitJSBinaryExpression(JSBinaryExpression node)
+	{
+		super.visitJSBinaryExpression(node);
+
+		IElementType operationSign = node.getOperationSign();
+		if(operationSign == JSTokenTypes.MULTMULT)
+		{
+			reportFeatureUsage(node.getOperationElement(), JavaScriptFeature.EXPONENTIATION_OPERATOR);
+		}
+	}
+
+	@Override
+	@RequiredReadAction
 	public void visitElement(PsiElement element)
 	{
 		super.visitElement(element);
@@ -119,7 +132,8 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 	{
 		super.visitJSAttribute(jsAttribute);
 
-		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).needsUpdateOnTyping(false).range(jsAttribute).textAttributes(JavaScriptSyntaxHighlightKeys.JS_METADATA).create());
+		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).needsUpdateOnTyping(false).range(jsAttribute).textAttributes(JavaScriptSyntaxHighlightKeys
+				.JS_METADATA).create());
 	}
 
 	@Override

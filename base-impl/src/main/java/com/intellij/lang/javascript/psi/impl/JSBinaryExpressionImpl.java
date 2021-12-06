@@ -28,8 +28,10 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
+import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -68,11 +70,13 @@ public class JSBinaryExpressionImpl extends JSExpressionImpl implements JSBinary
 		return secondExpression != null ? (JSExpression) secondExpression.getPsi() : null;
 	}
 
+	@RequiredReadAction
+	@Nullable
 	@Override
-	public IElementType getOperationSign()
+	public PsiElement getOperationElement()
 	{
 		final ASTNode operationASTNode = getNode().findChildByType(BINARY_OPERATIONS);
-		return operationASTNode != null ? operationASTNode.getElementType() : null;
+		return operationASTNode != null ? operationASTNode.getPsi() : null;
 	}
 
 	@Override

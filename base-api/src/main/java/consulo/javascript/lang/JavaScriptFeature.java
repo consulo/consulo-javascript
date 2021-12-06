@@ -29,7 +29,8 @@ public enum JavaScriptFeature
 	BINARY_LITERAL("Binary literals"),
 	PARAMETER_DEFAULT_VALUE("Default parameter values"),
 	REST_PARAMETER("Rest parameters"),
-	SPREAD_OPERATOR("Spread operator");
+	SPREAD_OPERATOR("Spread operator"),
+	EXPONENTIATION_OPERATOR("exponentiation operator");
 
 	private String myName;
 

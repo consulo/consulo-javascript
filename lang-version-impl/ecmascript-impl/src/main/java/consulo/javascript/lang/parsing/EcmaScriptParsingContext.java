@@ -22,19 +22,19 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 15.02.2016
  */
-public class EcmaScript6ParsingContext extends JavaScriptParsingContext
+public class EcmaScriptParsingContext extends JavaScriptParsingContext
 {
 	@Nonnull
 	@Override
 	protected StatementParsing createStatementParsing()
 	{
-		return new EcmaScript6StatementParsing(this);
+		return new EcmaScriptStatementParsing(this);
 	}
 
 	@Nonnull
 	@Override
 	protected ExpressionParsing createExpressionParsing()
 	{
-		return new EcmaScript6ExpressionParsing(this);
+		return new EcmaScriptExpressionParsing(this);
 	}
 }

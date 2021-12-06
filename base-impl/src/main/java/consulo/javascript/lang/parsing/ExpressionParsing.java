@@ -22,6 +22,7 @@ import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
@@ -873,7 +874,12 @@ public class ExpressionParsing extends Parsing
 		return true;
 	}
 
-	private boolean parseMultiplicativeExpression(final PsiBuilder builder)
+	protected boolean parseMultiplicativeExpression(final PsiBuilder builder)
+	{
+		return parseMultiplicativeExpression(builder, JSTokenTypes.MULTIPLICATIVE_OPERATIONS);
+	}
+
+	protected boolean parseMultiplicativeExpression(final PsiBuilder builder, TokenSet operatorSet)
 	{
 		PsiBuilder.Marker expr = builder.mark();
 		if(!parseIsAsExpression(builder))
@@ -882,7 +888,7 @@ public class ExpressionParsing extends Parsing
 			return false;
 		}
 
-		while(JSTokenTypes.MULTIPLICATIVE_OPERATIONS.contains(builder.getTokenType()))
+		while(operatorSet.contains(builder.getTokenType()))
 		{
 			builder.advanceLexer();
 			if(!parseUnaryExpression(builder))

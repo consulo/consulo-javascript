@@ -349,7 +349,8 @@ FIELD_OR_METHOD={IDENTIFIER} ("(" [^ \\)]* ")"? )?
 <YYINITIAL,DIV_OR_GT> ":"                   { yybegin(YYINITIAL); return JSTokenTypes.COLON; }
 <YYINITIAL,DIV_OR_GT> "+"                   { yybegin(YYINITIAL); return JSTokenTypes.PLUS; }
 <YYINITIAL,DIV_OR_GT> "-"                   { yybegin(YYINITIAL); return JSTokenTypes.MINUS; }
-<DIV_OR_GT> "*"       { yybegin(YYINITIAL); return JSTokenTypes.MULT; }
+<DIV_OR_GT> "*"       { yybegin(YYINITIAL);  return JSTokenTypes.MULT; }
+<DIV_OR_GT> "**"       { yybegin(YYINITIAL); return JSTokenTypes.MULTMULT; }
 <DIV_OR_GT> "/"       { yybegin(YYINITIAL); return JSTokenTypes.DIV; }
 <YYINITIAL,DIV_OR_GT> "^"                   { yybegin(YYINITIAL); return JSTokenTypes.XOR; }
 <YYINITIAL,DIV_OR_GT> "%"                   { yybegin(YYINITIAL); return JSTokenTypes.PERC; }

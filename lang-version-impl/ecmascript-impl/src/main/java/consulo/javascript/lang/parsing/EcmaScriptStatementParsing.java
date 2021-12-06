@@ -32,11 +32,11 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 15.02.2016
  */
-public class EcmaScript6StatementParsing extends StatementParsing
+public class EcmaScriptStatementParsing extends StatementParsing
 {
-	private static final Logger LOGGER = Logger.getInstance(EcmaScript6StatementParsing.class);
+	private static final Logger LOGGER = Logger.getInstance(EcmaScriptStatementParsing.class);
 
-	public EcmaScript6StatementParsing(EcmaScript6ParsingContext context)
+	public EcmaScriptStatementParsing(EcmaScriptParsingContext context)
 	{
 		super(context);
 	}

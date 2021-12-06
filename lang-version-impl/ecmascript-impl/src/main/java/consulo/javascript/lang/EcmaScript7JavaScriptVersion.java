@@ -14,6 +14,8 @@ public class EcmaScript7JavaScriptVersion extends EcmaScript6JavaScriptVersion
 	public EcmaScript7JavaScriptVersion()
 	{
 		super("ECMASCRIPT_7");
+
+		addFeature(JavaScriptFeature.EXPONENTIATION_OPERATOR);
 	}
 
 	@Nonnull

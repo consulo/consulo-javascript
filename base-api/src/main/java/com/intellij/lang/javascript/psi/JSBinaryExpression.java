@@ -16,7 +16,11 @@
 
 package com.intellij.lang.javascript.psi;
 
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
+import consulo.annotation.access.RequiredReadAction;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,5 +35,15 @@ public interface JSBinaryExpression extends JSExpression
 
 	JSExpression getROperand();
 
-	IElementType getOperationSign();
+	@Nullable
+	@RequiredReadAction
+	default IElementType getOperationSign()
+	{
+		PsiElement element = getOperationElement();
+		return element != null ? element.getNode().getElementType() : null;
+	}
+
+	@Nullable
+	@RequiredReadAction
+	PsiElement getOperationElement();
 }

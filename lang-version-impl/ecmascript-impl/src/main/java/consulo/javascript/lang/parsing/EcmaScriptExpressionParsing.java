@@ -21,16 +21,25 @@ import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
 
 /**
  * @author VISTALL
  * @since 03.03.2016
  */
-public class EcmaScript6ExpressionParsing extends ExpressionParsing
+public class EcmaScriptExpressionParsing extends ExpressionParsing
 {
-	public EcmaScript6ExpressionParsing(JavaScriptParsingContext context)
+	private static final TokenSet ES_MULTIPLICATIVE_OPERATIONS = TokenSet.orSet(JSTokenTypes.MULTIPLICATIVE_OPERATIONS, TokenSet.create(JSTokenTypes.MULTMULT));
+
+	public EcmaScriptExpressionParsing(JavaScriptParsingContext context)
 	{
 		super(context);
+	}
+
+	@Override
+	protected boolean parseMultiplicativeExpression(PsiBuilder builder)
+	{
+		return parseMultiplicativeExpression(builder, ES_MULTIPLICATIVE_OPERATIONS);
 	}
 
 	@Override
