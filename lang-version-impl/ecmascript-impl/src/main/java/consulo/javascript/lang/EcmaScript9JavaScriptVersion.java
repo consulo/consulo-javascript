@@ -14,6 +14,8 @@ public class EcmaScript9JavaScriptVersion extends EcmaScript6JavaScriptVersion
 	public EcmaScript9JavaScriptVersion()
 	{
 		super("ECMASCRIPT_9");
+
+		addFeature(JavaScriptFeature.SPREAD_OPERATOR);
 	}
 
 	@Nonnull
