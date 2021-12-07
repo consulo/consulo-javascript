@@ -30,7 +30,8 @@ public enum JavaScriptFeature
 	PARAMETER_DEFAULT_VALUE("Default parameter values"),
 	REST_PARAMETER("Rest parameters"),
 	SPREAD_OPERATOR("Spread operator"),
-	EXPONENTIATION_OPERATOR("exponentiation operator");
+	OPTIONAL_CHAINING_OPERATOR("Optional chaining operator"),
+	EXPONENTIATION_OPERATOR("Exponentiation operator");
 
 	private String myName;
 

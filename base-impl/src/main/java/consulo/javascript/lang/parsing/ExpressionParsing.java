@@ -42,6 +42,9 @@ public class ExpressionParsing extends Parsing
 	public static final Key<Boolean> WITHIN_ARRAY_LITERAL_EXPRESSION = Key.create("within.array.literal.expression");
 	public static final Key<Boolean> WITHIN_OBJECT_LITERAL_EXPRESSION = Key.create("within.object.literal.expression");
 
+	private static final TokenSet DOT_SET = TokenSet.create(JSTokenTypes.DOT);
+	private static final TokenSet MEMBER_OPERATOR_SET = TokenSet.create(JSTokenTypes.DOT, JSTokenTypes.COLON_COLON, JSTokenTypes.DOT_DOT);
+
 	private final JSXParser myJSXParser = new JSXParser();
 
 	public ExpressionParsing(JavaScriptParsingContext context)
@@ -344,6 +347,11 @@ public class ExpressionParsing extends Parsing
 
 	protected boolean parseMemberExpression(PsiBuilder builder, boolean allowCallSyntax)
 	{
+		return parseMemberExpression(builder, allowCallSyntax, MEMBER_OPERATOR_SET);
+	}
+
+	protected boolean parseMemberExpression(PsiBuilder builder, boolean allowCallSyntax, TokenSet membersOperatorSet)
+	{
 		PsiBuilder.Marker expr = builder.mark();
 		boolean isNew;
 
@@ -380,7 +388,7 @@ public class ExpressionParsing extends Parsing
 		while(true)
 		{
 			IElementType tokenType = builder.getTokenType();
-			if(tokenType == JSTokenTypes.DOT || (tokenType == JSTokenTypes.COLON_COLON || tokenType == JSTokenTypes.DOT_DOT))
+			if(membersOperatorSet.contains(tokenType))
 			{
 				currentlyAllowCallSyntax = allowCallSyntax;
 				builder.advanceLexer();
@@ -448,6 +456,11 @@ public class ExpressionParsing extends Parsing
 
 	public boolean parseQualifiedTypeName(PsiBuilder builder, boolean allowStar)
 	{
+		return parseQualifiedTypeName(builder, allowStar, DOT_SET);
+	}
+
+	public boolean parseQualifiedTypeName(PsiBuilder builder, boolean allowStar, TokenSet separatorsSet)
+	{
 		if(!JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(builder.getTokenType()))
 		{
 			return false;
@@ -455,7 +468,7 @@ public class ExpressionParsing extends Parsing
 		PsiBuilder.Marker expr = builder.mark();
 		Parsing.buildTokenElement(JSElementTypes.REFERENCE_EXPRESSION, builder);
 
-		while(builder.getTokenType() == JSTokenTypes.DOT)
+		while(separatorsSet.contains(builder.getTokenType()))
 		{
 			boolean stop = false;
 			builder.advanceLexer();

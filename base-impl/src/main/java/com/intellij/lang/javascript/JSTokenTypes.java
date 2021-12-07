@@ -259,6 +259,7 @@ public interface JSTokenTypes
 	IElementType ANDAND = new JSElementType("ANDAND");// &&
 	IElementType OROR = new JSElementType("OROR");// ||
 	IElementType QUEST = new JSElementType("QUEST");// ?
+	IElementType QUEST_DOT = new JSElementType("QUEST_DOT");// ?
 	IElementType COLON = new JSElementType("COLON");// :
 	IElementType EQ = new JSElementType("EQ");// =
 	IElementType PLUSEQ = new JSElementType("PLUSEQ");// +=
