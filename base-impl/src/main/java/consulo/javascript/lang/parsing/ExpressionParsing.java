@@ -43,7 +43,7 @@ public class ExpressionParsing extends Parsing
 	public static final Key<Boolean> WITHIN_OBJECT_LITERAL_EXPRESSION = Key.create("within.object.literal.expression");
 
 	private static final TokenSet DOT_SET = TokenSet.create(JSTokenTypes.DOT);
-	private static final TokenSet MEMBER_OPERATOR_SET = TokenSet.create(JSTokenTypes.DOT, JSTokenTypes.COLON_COLON, JSTokenTypes.DOT_DOT);
+	private static final TokenSet MEMBER_OPERATOR_SET = TokenSet.create(JSTokenTypes.DOT, JSTokenTypes.COLON_COLON, JSTokenTypes.DOT_DOT, JSTokenTypes.QUEST_DOT);
 
 	private final JSXParser myJSXParser = new JSXParser();
 

@@ -274,6 +274,9 @@ public interface JSTokenTypes
 	IElementType XOREQ = new JSElementType("XOREQ");// ^=
 	IElementType DIV = new JSElementType("DIV"); // /
 	IElementType DIVEQ = new JSElementType("DIVEQ"); // /=
+	IElementType OR_OR_EQ = new JSElementType("OR_OR_EQ"); // ||=
+	IElementType AND_AND_EQ = new JSElementType("AND_AND_EQ"); // &&=
+	IElementType QUEST_QUEST_EQ = new JSElementType("QUEST_QUEST_EQ"); // ??=
 	IElementType DARROW = new JSElementType("DARROW"); // =>
 
 	IElementType COLON_COLON = new JSElementType("COLON_COLON"); // ::
@@ -291,8 +294,7 @@ public interface JSTokenTypes
 
 	TokenSet ASSOC_OPERATIONS = TokenSet.create(PLUS, MULT, AND, OR, XOR, OROR, ANDAND);
 
-	TokenSet ASSIGNMENT_OPERATIONS = TokenSet.create(EQ, PLUSEQ, MINUSEQ, MULTEQ, PERCEQ, LTLTEQ, GTGTEQ, GTGTGTEQ, ANDEQ, OREQ, XOREQ, DIVEQ);
-
+	TokenSet ASSIGNMENT_OPERATIONS = TokenSet.create(EQ, PLUSEQ, MINUSEQ, MULTEQ, PERCEQ, LTLTEQ, GTGTEQ, GTGTGTEQ, ANDEQ, OREQ, XOREQ, DIVEQ, OR_OR_EQ, AND_AND_EQ, QUEST_QUEST_EQ);
 
 	TokenSet EQUALITY_OPERATIONS = TokenSet.create(EQEQ, NE, EQEQEQ, NEQEQ);
 
@@ -300,7 +302,7 @@ public interface JSTokenTypes
 
 	TokenSet ADDITIVE_OPERATIONS = TokenSet.create(PLUS, MINUS);
 
-	TokenSet MULTIPLICATIVE_OPERATIONS = TokenSet.create(MULT, DIV, PERC);
+	TokenSet MULTIPLICATIVE_OPERATIONS = TokenSet.create(MULT, DIV, PERC, MULTMULT);
 
 	TokenSet SHIFT_OPERATIONS = TokenSet.create(LTLT, GTGT, GTGTGT);
 

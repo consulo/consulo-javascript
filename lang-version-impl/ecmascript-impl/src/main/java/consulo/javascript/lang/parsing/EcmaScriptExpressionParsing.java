@@ -21,7 +21,6 @@ import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
 
 /**
  * @author VISTALL
@@ -29,25 +28,11 @@ import com.intellij.psi.tree.TokenSet;
  */
 public class EcmaScriptExpressionParsing extends ExpressionParsing
 {
-	private static final TokenSet ES_MULTIPLICATIVE_OPERATIONS = TokenSet.orSet(JSTokenTypes.MULTIPLICATIVE_OPERATIONS, TokenSet.create(JSTokenTypes.MULTMULT));
-	private static final TokenSet ES_MEMBER_TOKENS = TokenSet.create(JSTokenTypes.DOT, JSTokenTypes.DOT_DOT, JSTokenTypes.QUEST_DOT);
-
 	public EcmaScriptExpressionParsing(JavaScriptParsingContext context)
 	{
 		super(context);
 	}
 
-	@Override
-	protected boolean parseMemberExpression(PsiBuilder builder, boolean allowCallSyntax)
-	{
-		return parseMemberExpression(builder, allowCallSyntax, ES_MEMBER_TOKENS);
-	}
-
-	@Override
-	protected boolean parseMultiplicativeExpression(PsiBuilder builder)
-	{
-		return parseMultiplicativeExpression(builder, ES_MULTIPLICATIVE_OPERATIONS);
-	}
 
 	@Override
 	protected boolean parsePrimaryExpression(PsiBuilder builder)
