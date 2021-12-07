@@ -69,6 +69,19 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
 	@Override
 	@RequiredReadAction
+	public void visitJSAssignmentExpression(JSAssignmentExpression node)
+	{
+		super.visitJSAssignmentExpression(node);
+
+		IElementType operationSign = node.getOperationSign();
+		if(operationSign == JSTokenTypes.MULT_MULT_EQ)
+		{
+			reportFeatureUsage(node.getOperationElement(), JavaScriptFeature.EXPONENTIATION_OPERATOR);
+		}
+	}
+
+	@Override
+	@RequiredReadAction
 	public void visitElement(PsiElement element)
 	{
 		super.visitElement(element);

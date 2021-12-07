@@ -326,6 +326,7 @@ FIELD_OR_METHOD={IDENTIFIER} ("(" [^ \\)]* ")"? )?
 <YYINITIAL,DIV_OR_GT> "|="                  { yybegin(YYINITIAL); return JSTokenTypes.OREQ; }
 <YYINITIAL,DIV_OR_GT> "^="                  { yybegin(YYINITIAL); return JSTokenTypes.XOREQ; }
 <YYINITIAL,DIV_OR_GT> "||="                  { yybegin(YYINITIAL); return JSTokenTypes.OR_OR_EQ; }
+<YYINITIAL,DIV_OR_GT> "**="                  { yybegin(YYINITIAL); return JSTokenTypes.MULT_MULT_EQ; }
 <YYINITIAL,DIV_OR_GT> "??="                  { yybegin(YYINITIAL); return JSTokenTypes.QUEST_QUEST_EQ; }
 <YYINITIAL,DIV_OR_GT> "&&="                  { yybegin(YYINITIAL); return JSTokenTypes.AND_AND_EQ; }
 <YYINITIAL,DIV_OR_GT> "%="                  { yybegin(YYINITIAL); return JSTokenTypes.PERCEQ; }
