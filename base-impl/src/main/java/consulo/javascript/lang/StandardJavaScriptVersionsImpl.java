@@ -1,15 +1,13 @@
 package consulo.javascript.lang;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.intellij.openapi.util.text.StringUtil;
+import consulo.lang.LanguageVersion;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Singleton;
-
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.lang.LanguageVersion;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -37,7 +35,7 @@ public class StandardJavaScriptVersionsImpl extends StandardJavaScriptVersions
 			}
 		}
 
-		ContainerUtil.sort(list, (o1, o2) -> ((Marker) o1).getWeight() - ((Marker) o2).getWeight());
+		list.sort((o1, o2) -> StringUtil.naturalCompare(o1.getPresentableName(), o2.getPresentableName()));
 		return list;
 	}
 

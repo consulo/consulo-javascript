@@ -30,7 +30,11 @@ public abstract class StandardJavaScriptVersions
 {
 	public static interface Marker
 	{
-		int getWeight();
+		@Deprecated
+		default int getWeight()
+		{
+			return 0;
+		}
 	}
 
 	@Nonnull

@@ -45,7 +45,7 @@ public class ClientJavaScriptModuleExtensionPanel extends JPanel
 
 		List<JavaScriptLanguageVersion> validLanguageVersions = StandardJavaScriptVersions.getInstance().getValidLanguageVersions();
 
-		ComboBox languageVersionComboBox = new ComboBox(new CollectionComboBoxModel(validLanguageVersions, extension.getLanguageVersion()));
+		ComboBox<JavaScriptLanguageVersion> languageVersionComboBox = new ComboBox(new CollectionComboBoxModel(validLanguageVersions, extension.getLanguageVersion()));
 		languageVersionComboBox.addItemListener(new ItemListener()
 		{
 			@Override
