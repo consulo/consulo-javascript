@@ -30,10 +30,17 @@ import com.intellij.psi.tree.TokenSet;
 public class EcmaScriptExpressionParsing extends ExpressionParsing
 {
 	private static final TokenSet ES_MULTIPLICATIVE_OPERATIONS = TokenSet.orSet(JSTokenTypes.MULTIPLICATIVE_OPERATIONS, TokenSet.create(JSTokenTypes.MULTMULT));
+	private static final TokenSet ES_MEMBER_TOKENS = TokenSet.create(JSTokenTypes.DOT, JSTokenTypes.DOT_DOT, JSTokenTypes.QUEST_DOT);
 
 	public EcmaScriptExpressionParsing(JavaScriptParsingContext context)
 	{
 		super(context);
+	}
+
+	@Override
+	protected boolean parseMemberExpression(PsiBuilder builder, boolean allowCallSyntax)
+	{
+		return parseMemberExpression(builder, allowCallSyntax, ES_MEMBER_TOKENS);
 	}
 
 	@Override

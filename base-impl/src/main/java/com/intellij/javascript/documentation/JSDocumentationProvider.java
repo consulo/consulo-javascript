@@ -500,7 +500,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 						presentation.getLocationString());
 				buffer.append("<br/>\n");
 			}
-			return buffer != null ? buffer.toString() : "have no idea :)";
+			return buffer != null ? buffer.toString() : null;
 		}
 
 		_element = _element.getNavigationElement();

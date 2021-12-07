@@ -14,6 +14,8 @@ public class EcmaScript11JavaScriptVersion extends EcmaScript6JavaScriptVersion
 	public EcmaScript11JavaScriptVersion()
 	{
 		super("ECMASCRIPT_11");
+
+		addFeature(JavaScriptFeature.OPTIONAL_CHAINING_OPERATOR);
 	}
 
 	@Nonnull

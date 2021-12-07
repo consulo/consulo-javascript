@@ -5,6 +5,7 @@ import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
 
 /**
  * @author VISTALL
@@ -126,7 +127,7 @@ public class EcmaScript4ExpressionParsing extends ExpressionParsing
 	}
 
 	@Override
-	public boolean parseQualifiedTypeName(PsiBuilder builder, boolean allowStar)
+	public boolean parseQualifiedTypeName(PsiBuilder builder, boolean allowStar, TokenSet separatorsSet)
 	{
 		if(!JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(builder.getTokenType()))
 		{
@@ -136,7 +137,7 @@ public class EcmaScript4ExpressionParsing extends ExpressionParsing
 		buildTokenElement(JSElementTypes.REFERENCE_EXPRESSION, builder);
 		boolean hasGenerics = false;
 
-		while(builder.getTokenType() == JSTokenTypes.DOT)
+		while(separatorsSet.contains(builder.getTokenType()))
 		{
 			boolean stop = false;
 			builder.advanceLexer();
