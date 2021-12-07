@@ -31,12 +31,6 @@ public abstract class BaseEcmaScriptJavaScriptVersion extends BaseJavaScriptLang
 	protected BaseEcmaScriptJavaScriptVersion(@Nonnull String id)
 	{
 		super(id);
-
-		addFeature(JavaScriptFeature.CLASS);
-		addFeature(JavaScriptFeature.BINARY_LITERAL);
-		addFeature(JavaScriptFeature.OCTAL_LITERAL);
-		addFeature(JavaScriptFeature.PARAMETER_DEFAULT_VALUE);
-		addFeature(JavaScriptFeature.REST_PARAMETER);
 	}
 
 
