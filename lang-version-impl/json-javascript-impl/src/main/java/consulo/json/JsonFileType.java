@@ -24,6 +24,7 @@ import consulo.javascript.icon.JavaScriptIconGroup;
 import consulo.javascript.lang.JavaScriptFileTypeWithVersion;
 import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.json.lang.JsonJavaScriptVersion;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -51,9 +52,9 @@ public class JsonFileType extends LanguageFileType implements JavaScriptFileType
 
 	@Nonnull
 	@Override
-	public String getDescription()
+	public LocalizeValue getDescription()
 	{
-		return "Json files";
+		return LocalizeValue.localizeTODO("Json files");
 	}
 
 	@Nonnull

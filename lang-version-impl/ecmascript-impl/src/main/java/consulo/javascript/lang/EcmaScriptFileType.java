@@ -24,6 +24,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.icon.JavaScriptIconGroup;
 import consulo.javascript.module.extension.JavaScriptModuleExtension;
 import consulo.lang.LanguageVersion;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -51,9 +52,9 @@ public class EcmaScriptFileType extends LanguageFileType implements JavaScriptFi
 
 	@Nonnull
 	@Override
-	public String getDescription()
+	public LocalizeValue getDescription()
 	{
-		return "ECMAScript files";
+		return LocalizeValue.localizeTODO("ECMAScript files");
 	}
 
 	@Nonnull

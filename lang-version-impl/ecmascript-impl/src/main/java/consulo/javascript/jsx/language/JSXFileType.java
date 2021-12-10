@@ -8,6 +8,7 @@ import consulo.javascript.icon.JavaScriptIconGroup;
 import consulo.javascript.lang.JavaScriptFileTypeWithVersion;
 import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.lang.LanguageVersion;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -35,9 +36,9 @@ public class JSXFileType extends LanguageFileType implements JavaScriptFileTypeW
 
 	@Nonnull
 	@Override
-	public String getDescription()
+	public LocalizeValue getDescription()
 	{
-		return "JSX files";
+		return LocalizeValue.localizeTODO("JSX files");
 	}
 
 	@Nonnull

@@ -23,6 +23,8 @@ import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import consulo.javascript.icon.JavaScriptIconGroup;
 import consulo.javascript.lang.JavaScriptLanguage;
+import consulo.javascript.localize.JavaScriptLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
 /**
@@ -47,9 +49,9 @@ public class TypeScriptFileType extends LanguageFileType
 
 	@Nonnull
 	@Override
-	public String getDescription()
+	public LocalizeValue getDescription()
 	{
-		return JavaScriptBundle.message("typescript.filetype.description");
+		return JavaScriptLocalize.typescriptFiletypeDescription();
 	}
 
 	@Nonnull
