@@ -35,7 +35,7 @@ import javax.annotation.Nullable;
  * Date: Jan 28, 2005
  * Time: 1:18:22 PM
  */
-public class ExpressionParsing extends Parsing
+public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsing<C>
 {
 	private static final Logger LOG = Logger.getInstance(ExpressionParsing.class);
 
@@ -47,7 +47,7 @@ public class ExpressionParsing extends Parsing
 
 	private final JSXParser myJSXParser = new JSXParser();
 
-	public ExpressionParsing(JavaScriptParsingContext context)
+	public ExpressionParsing(C context)
 	{
 		super(context);
 	}

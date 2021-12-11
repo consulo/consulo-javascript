@@ -24,6 +24,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import consulo.javascript.ecmascript6.psi.impl.EcmaScript6ElementTypes;
 import consulo.javascript.lang.JavaScriptTokenSets;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
@@ -73,7 +74,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 			}
 			else if(nextType == JSTokenTypes.CLASS_KEYWORD)
 			{
-				parseClassWithMarker(builder, mark);
+				parseClassWithMarker(builder, mark, false);
 			}
 			else if(nextType == JSTokenTypes.VAR_KEYWORD ||
 					nextType == JSTokenTypes.CONST_KEYWORD ||
@@ -192,7 +193,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 					}
 					else
 					{
-						builder.error("Expected identifier");
+						builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifier());
 					}
 				}
 
@@ -332,28 +333,32 @@ public class EcmaScriptStatementParsing extends StatementParsing
 		{
 			if(tokenType == JSTokenTypes.CLASS_KEYWORD)
 			{
-				parseClass(builder);
+				parseClass(builder, false);
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private void parseClass(final PsiBuilder builder)
+	private void parseClass(final PsiBuilder builder, boolean anonymous)
 	{
-		parseClassWithMarker(builder, builder.mark());
+		parseClassWithMarker(builder, builder.mark(), anonymous);
 	}
 
-	private void parseClassWithMarker(final PsiBuilder builder, final @Nonnull PsiBuilder.Marker clazz)
+	public void parseClassWithMarker(final PsiBuilder builder, final @Nonnull PsiBuilder.Marker clazz, boolean anonymous)
 	{
 		builder.advanceLexer();
-		if(!JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(builder.getTokenType()))
+
+		if(!anonymous)
 		{
-			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.identifier"));
-		}
-		else
-		{
-			builder.advanceLexer();
+			if(builder.getTokenType() != JSTokenTypes.IDENTIFIER)
+			{
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifier());
+			}
+			else
+			{
+				builder.advanceLexer();
+			}
 		}
 
 		if(builder.getTokenType() == JSTokenTypes.EXTENDS_KEYWORD)

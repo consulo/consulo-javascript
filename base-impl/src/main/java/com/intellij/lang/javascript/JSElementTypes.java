@@ -159,6 +159,7 @@ public interface JSElementTypes
 			JSAssignmentExpressionImpl.class);
 	IElementType CONDITIONAL_EXPRESSION = new ElementTypeAsPsiFactory("CONDITIONAL_EXPRESSION", JavaScriptLanguage.INSTANCE,
 			JSConditionalExpressionImpl.class);
+	IElementType CLASS_EXPRESSION = new ElementTypeAsPsiFactory("CLASS_EXPRESSION", JavaScriptLanguage.INSTANCE, JSClassExpressionImpl.class);
 	IElementType BINARY_EXPRESSION = new ElementTypeAsPsiFactory("BINARY_EXPRESSION", JavaScriptLanguage.INSTANCE, JSBinaryExpressionImpl.class);
 	IElementType PREFIX_EXPRESSION = new ElementTypeAsPsiFactory("PREFIX_EXPRESSION", JavaScriptLanguage.INSTANCE, JSPrefixExpressionImpl.class);
 	IElementType POSTFIX_EXPRESSION = new ElementTypeAsPsiFactory("POSTFIX_EXPRESSION", JavaScriptLanguage.INSTANCE, JSPostfixExpressionImpl.class);

@@ -26,13 +26,18 @@ import com.intellij.psi.tree.IElementType;
  * @author VISTALL
  * @since 03.03.2016
  */
-public class EcmaScriptExpressionParsing extends ExpressionParsing
+public class EcmaScriptExpressionParsing extends ExpressionParsing<EcmaScriptParsingContext>
 {
-	public EcmaScriptExpressionParsing(JavaScriptParsingContext context)
+	public EcmaScriptExpressionParsing(EcmaScriptParsingContext context)
 	{
 		super(context);
 	}
 
+	@Override
+	public EcmaScriptStatementParsing getStatementParsing()
+	{
+		return (EcmaScriptStatementParsing) super.getStatementParsing();
+	}
 
 	@Override
 	protected boolean parsePrimaryExpression(PsiBuilder builder)
@@ -53,6 +58,14 @@ public class EcmaScriptExpressionParsing extends ExpressionParsing
 
 			return true;
 		}
+		else if(builder.getTokenType() == JSTokenTypes.CLASS_KEYWORD)
+		{
+			PsiBuilder.Marker mark = builder.mark();
+			getStatementParsing().parseClassWithMarker(builder, builder.mark(), true);
+			mark.done(JSElementTypes.CLASS_EXPRESSION);
+			return true;
+		}
+
 		if(canParseLambdaExpression(builder))
 		{
 			return parseLambdaExpression(builder);

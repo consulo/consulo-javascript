@@ -31,11 +31,11 @@ import javax.annotation.Nullable;
  * Date: Jan 28, 2005
  * Time: 7:03:42 PM
  */
-public class Parsing
+public class Parsing<C extends JavaScriptParsingContext>
 {
-	private JavaScriptParsingContext myContext;
+	private C myContext;
 
-	public Parsing(JavaScriptParsingContext context)
+	public Parsing(C context)
 	{
 		myContext = context;
 	}

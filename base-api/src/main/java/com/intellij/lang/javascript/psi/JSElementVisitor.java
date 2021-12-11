@@ -289,6 +289,11 @@ public class JSElementVisitor extends PsiElementVisitor
 		visitJSElement(aClass);
 	}
 
+	public void visitJSClassExpression(final JSClassExpression expression)
+	{
+		visitJSExpression(expression);
+	}
+
 	public void visitJSReferenceList(final JSReferenceList referenceList)
 	{
 		visitJSElement(referenceList);

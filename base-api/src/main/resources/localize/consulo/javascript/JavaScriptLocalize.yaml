@@ -29,9 +29,9 @@ javascript.parser.message.expected.xml.element:
 javascript.parser.property.expected:
   text: property expected
 javascript.parser.message.expected.lbrace:
-  text: '{ expected'
+  text: "'{' expected"
 javascript.parser.message.expected.rbrace:
-  text: '} expected'
+  text: "'}' expected"
 javascript.parser.message.expected.identifier.string.literal.or.numeric.literal:
   text: identifier or string literal or numeric literal expected
 javascript.parser.message.expected.colon:
@@ -245,7 +245,7 @@ js.deprecated.symbols.inspection.name:
 javascript.parser.message.expected.typename:
   text: '* or type name expected'
 javascript.parser.message.expected.name.or.lbrace:
-  text: Expected package name or {
+  text: "Expected package name or '{'"
 javascript.parser.message.expected.function.var.class.interface.namespace:
   text: Expected function, variable, class, interface or namespace declaration
 interface.function.declaration.should.have.no.body:
@@ -259,7 +259,7 @@ javascript.parser.message.expected.xml:
 javascript.parser.message.expected.equal:
   text: expected =
 javascript.parser.message.expected.lbrace.or.lbracket:
-  text: '{ or [ expected'
+  text: "'{' or '[' expected"
 javascript.parser.message.expected.eof:
   text: End of file expected
 javascript.deprecated.symbol.used.name.message:
@@ -508,7 +508,7 @@ javascript.fix.remove.access.modifier:
   text: Remove access modifier
 javascript.fix.remove.namespace.reference:
   text: Remove namespace reference
-javascript.incorrect.array.type.in.for-in:
+javascript.incorrect.array.type.in.for.in:
   text: Array key type should be String
 javascript.validation.message.unexpected.type.for.rest.parameter:
   text: Rest parameter should have no type

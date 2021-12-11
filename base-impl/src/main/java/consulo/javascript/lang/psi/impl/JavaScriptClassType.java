@@ -16,13 +16,13 @@
 
 package consulo.javascript.lang.psi.impl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.psi.PsiElement;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.javascript.lang.psi.JavaScriptType;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -42,7 +42,12 @@ public class JavaScriptClassType implements JavaScriptType
 	@Override
 	public String getPresentableText()
 	{
-		return myClass.getName();
+		String name = myClass.getName();
+		if(name == null)
+		{
+			return "<anonymous class>";
+		}
+		return name;
 	}
 
 	@Nullable
