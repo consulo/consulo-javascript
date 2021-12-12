@@ -333,7 +333,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 		{
 			if(tokenType == JSTokenTypes.CLASS_KEYWORD)
 			{
-				parseClass(builder, false);
+				parseClass(builder, true);
 				return true;
 			}
 		}

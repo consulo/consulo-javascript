@@ -62,7 +62,7 @@ public class EcmaScriptExpressionParsing extends ExpressionParsing<EcmaScriptPar
 		else if(builder.getTokenType() == JSTokenTypes.CLASS_KEYWORD)
 		{
 			PsiBuilder.Marker mark = builder.mark();
-			getStatementParsing().parseClassWithMarker(builder, builder.mark(), true);
+			getStatementParsing().parseClassWithMarker(builder, builder.mark(), false);
 			mark.done(JSElementTypes.CLASS_EXPRESSION);
 			return true;
 		}
