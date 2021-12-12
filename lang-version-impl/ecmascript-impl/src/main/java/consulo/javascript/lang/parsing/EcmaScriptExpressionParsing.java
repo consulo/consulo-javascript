@@ -21,6 +21,7 @@ import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.psi.tree.IElementType;
+import consulo.javascript.localize.JavaScriptLocalize;
 
 /**
  * @author VISTALL
@@ -49,7 +50,7 @@ public class EcmaScriptExpressionParsing extends ExpressionParsing<EcmaScriptPar
 
 			if(!parseExpressionOptional(builder))
 			{
-				mark.error("Expression expected");
+				mark.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			else
 			{

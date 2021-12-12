@@ -340,25 +340,25 @@ public class EcmaScriptStatementParsing extends StatementParsing
 		return false;
 	}
 
-	private void parseClass(final PsiBuilder builder, boolean anonymous)
+	private void parseClass(final PsiBuilder builder, boolean nameRequired)
 	{
-		parseClassWithMarker(builder, builder.mark(), anonymous);
+		parseClassWithMarker(builder, builder.mark(), nameRequired);
 	}
 
-	public void parseClassWithMarker(final PsiBuilder builder, final @Nonnull PsiBuilder.Marker clazz, boolean anonymous)
+	public void parseClassWithMarker(final PsiBuilder builder, final @Nonnull PsiBuilder.Marker clazz, boolean nameRequired)
 	{
 		builder.advanceLexer();
 
-		if(!anonymous)
+		if(builder.getTokenType() != JSTokenTypes.IDENTIFIER)
 		{
-			if(builder.getTokenType() != JSTokenTypes.IDENTIFIER)
+			if(nameRequired)
 			{
 				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifier());
 			}
-			else
-			{
-				builder.advanceLexer();
-			}
+		}
+		else
+		{
+			builder.advanceLexer();
 		}
 
 		if(builder.getTokenType() == JSTokenTypes.EXTENDS_KEYWORD)
@@ -383,7 +383,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 		{
 			if(builder.eof())
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.missing.rbrace"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageMissingRbrace());
 				return;
 			}
 

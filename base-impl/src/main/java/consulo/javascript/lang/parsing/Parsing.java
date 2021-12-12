@@ -22,6 +22,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import consulo.javascript.lang.JavaScriptContextKeywordElementType;
 import consulo.javascript.lang.parsing.impl.JavaScriptStrictParserBuilder;
+import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -124,7 +125,22 @@ public class Parsing<C extends JavaScriptParsingContext>
 		marker.done(type);
 	}
 
+	@Deprecated
 	public static boolean checkMatches(final PsiBuilder builder, final IElementType token, final String message)
+	{
+		if(builder.getTokenType() == token)
+		{
+			builder.advanceLexer();
+			return true;
+		}
+		else
+		{
+			builder.error(message);
+			return false;
+		}
+	}
+
+	public static boolean checkMatches(final PsiBuilder builder, final IElementType token, final LocalizeValue message)
 	{
 		if(builder.getTokenType() == token)
 		{
