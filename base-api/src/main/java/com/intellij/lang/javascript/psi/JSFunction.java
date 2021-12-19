@@ -73,6 +73,8 @@ public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JS
 		SIMPLE
 	}
 
+	@Nonnull
+	@RequiredReadAction
 	FunctionKind getKind();
 
 	boolean isDeprecated();

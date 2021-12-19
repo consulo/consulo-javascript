@@ -104,6 +104,17 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 	}
 
 	@Override
+	public void visitJSProperty(JSProperty node)
+	{
+		super.visitJSProperty(node);
+
+		if(node instanceof JSFunction)
+		{
+			reportFeatureUsage(node.getNameIdentifier(), JavaScriptFeature.FUNCTION_PROPERTY);
+		}
+	}
+
+	@Override
 	@RequiredReadAction
 	public void visitJSLiteralExpression(JSSimpleLiteralExpression node)
 	{

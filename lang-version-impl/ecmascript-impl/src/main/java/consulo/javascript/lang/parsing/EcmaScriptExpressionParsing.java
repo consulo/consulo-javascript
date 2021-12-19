@@ -167,6 +167,8 @@ public class EcmaScriptExpressionParsing extends ExpressionParsing<EcmaScriptPar
 			builder.advanceLexer();
 		}
 
+		IElementType doneElement = JSElementTypes.PROPERTY;
+
 		IElementType nextTokenType = builder.getTokenType();
 		// we finished property
 		if((nextTokenType == JSTokenTypes.COMMA || nextTokenType == JSTokenTypes.RBRACE) && nameTokenType == JSTokenTypes.IDENTIFIER)
@@ -178,6 +180,14 @@ public class EcmaScriptExpressionParsing extends ExpressionParsing<EcmaScriptPar
 			PsiBuilder.Marker referenceMark = builder.mark();
 			builder.advanceLexer();
 			referenceMark.done(JSElementTypes.REFERENCE_EXPRESSION);
+		}
+		else if(nextTokenType == JSTokenTypes.LPAR)
+		{
+			getFunctionParsing().parseParameterList(builder);
+
+			getStatementParsing().parseFunctionBody(builder);
+
+			doneElement = JSElementTypes.FUNCTION_PROPERTY;
 		}
 		else
 		{
@@ -191,7 +201,7 @@ public class EcmaScriptExpressionParsing extends ExpressionParsing<EcmaScriptPar
 			builder.putUserData(WITHIN_OBJECT_LITERAL_EXPRESSION, null);
 		}
 
-		propertyMark.done(JSElementTypes.PROPERTY);
+		propertyMark.done(doneElement);
 	}
 
 	@Override
