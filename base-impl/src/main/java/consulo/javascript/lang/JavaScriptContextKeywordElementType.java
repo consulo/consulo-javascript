@@ -4,7 +4,6 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.intellij.lang.javascript.JSElementType;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,7 +27,7 @@ public class JavaScriptContextKeywordElementType extends JSElementType
 		return ourCache.inverse().containsKey(e);
 	}
 
-	public JavaScriptContextKeywordElementType(@NonNls @Nonnull String id, @Nonnull String keyword)
+	public JavaScriptContextKeywordElementType(@Nonnull String id, @Nonnull String keyword)
 	{
 		super(id);
 

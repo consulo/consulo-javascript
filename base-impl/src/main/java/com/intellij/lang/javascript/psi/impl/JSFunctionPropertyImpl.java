@@ -2,6 +2,7 @@ package com.intellij.lang.javascript.psi.impl;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
+import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSAttributeList;
 import com.intellij.lang.javascript.psi.JSFunctionProperty;
 import com.intellij.lang.javascript.psi.JSParameterList;
@@ -22,6 +23,20 @@ public class JSFunctionPropertyImpl extends JSPropertyImpl implements JSFunction
 	public JSFunctionPropertyImpl(ASTNode node)
 	{
 		super(node);
+	}
+
+	@RequiredReadAction
+	@Override
+	public boolean isGetProperty()
+	{
+		return findChildByType(JSTokenTypes.GET_KEYWORD) != null;
+	}
+
+	@RequiredReadAction
+	@Override
+	public boolean isSetProperty()
+	{
+		return findChildByType(JSTokenTypes.SET_KEYWORD) != null;
 	}
 
 	@RequiredReadAction
@@ -66,13 +81,6 @@ public class JSFunctionPropertyImpl extends JSPropertyImpl implements JSFunction
 	public JavaScriptTypeElement getReturnTypeElement()
 	{
 		return null;
-	}
-
-	@Nonnull
-	@Override
-	public FunctionKind getKind()
-	{
-		return FunctionKind.SIMPLE;
 	}
 
 	@Override

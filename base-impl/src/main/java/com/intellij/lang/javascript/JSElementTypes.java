@@ -152,7 +152,7 @@ public interface JSElementTypes
 	IElementType ARRAY_LITERAL_EXPRESSION = new ElementTypeAsPsiFactory("ARRAY_LITERAL_EXPRESSION", JavaScriptLanguage.INSTANCE,
 			JSArrayLiteralExpressionImpl::new);
 	IElementType PROPERTY = new ElementTypeAsPsiFactory("PROPERTY", JavaScriptLanguage.INSTANCE, JSPropertyImpl::new);
-	IElementType FUNCTION_PROPERTY = new ElementTypeAsPsiFactory("FUNCTION_PROPERTY", JavaScriptLanguage.INSTANCE, JSPropertyImpl::new);
+	IElementType FUNCTION_PROPERTY = new ElementTypeAsPsiFactory("FUNCTION_PROPERTY", JavaScriptLanguage.INSTANCE, JSFunctionPropertyImpl::new);
 	IElementType COMPUTED_NAME = new ElementTypeAsPsiFactory("COMPUTED_NAME", JavaScriptLanguage.INSTANCE, JSComputedNameImpl::new);
 	IElementType OBJECT_LITERAL_EXPRESSION = new ElementTypeAsPsiFactory("OBJECT_LITERAL_EXPRESSION", JavaScriptLanguage.INSTANCE,
 			JSObjectLiteralExpressionImpl::new);

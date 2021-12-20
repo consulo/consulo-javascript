@@ -16,9 +16,6 @@
 
 package consulo.javascript.ide;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.icons.AllIcons;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
@@ -28,7 +25,11 @@ import com.intellij.util.BitUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.IconDescriptor;
 import consulo.ide.IconDescriptorUpdater;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -42,7 +43,19 @@ public class JavaScriptIconDescriptorUpdater implements IconDescriptorUpdater
 	{
 		if(element instanceof JSProperty)
 		{
-			iconDescriptor.setMainIcon(AllIcons.Nodes.Property);
+			if(element instanceof JSFunction && ((JSFunction) element).isGetProperty())
+			{
+				iconDescriptor.setMainIcon(PlatformIconGroup.nodesPropertyRead());
+			}
+			else if(element instanceof JSFunction && ((JSFunction) element).isSetProperty())
+			{
+				iconDescriptor.setMainIcon(PlatformIconGroup.nodesPropertyWrite());
+			}
+			else
+			{
+				iconDescriptor.setMainIcon(AllIcons.Nodes.Property);
+			}
+
 			JSExpression value = ((JSProperty) element).getValue();
 			if(value instanceof JSFunctionExpression)
 			{

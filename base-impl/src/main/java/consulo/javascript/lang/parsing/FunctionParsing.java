@@ -20,7 +20,6 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptBundle;
-import com.intellij.psi.tree.IElementType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,16 +52,23 @@ public class FunctionParsing extends Parsing
 	public void parseFunctionNoMarker(final PsiBuilder builder, final boolean expressionContext, final @Nonnull PsiBuilder.Marker functionMarker)
 	{
 		if(builder.getTokenType() == JSTokenTypes.FUNCTION_KEYWORD)
-		{ // function keyword may be ommited in context of get/set property definition
+		{
+			// function keyword may be ommited in context of get/set property definition
 			builder.advanceLexer();
 		}
 
 		// Function name
 
-		final IElementType tokenType = builder.getTokenType();
-		if(!expressionContext && (tokenType == JSTokenTypes.GET_KEYWORD || tokenType == JSTokenTypes.SET_KEYWORD))
+		if(!expressionContext)
 		{
-			builder.advanceLexer();
+			if(isContextKeyword(builder, JSTokenTypes.GET_KEYWORD))
+			{
+				advanceContextKeyword(builder, JSTokenTypes.GET_KEYWORD);
+			}
+			else if(isContextKeyword(builder, JSTokenTypes.SET_KEYWORD))
+			{
+				advanceContextKeyword(builder, JSTokenTypes.SET_KEYWORD);
+			}
 		}
 
 		if(isIdentifierName(builder, builder.getTokenType()))

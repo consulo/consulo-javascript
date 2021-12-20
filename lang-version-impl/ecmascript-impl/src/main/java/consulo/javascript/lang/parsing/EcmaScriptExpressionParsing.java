@@ -150,6 +150,8 @@ public class EcmaScriptExpressionParsing extends ExpressionParsing<EcmaScriptPar
 		final IElementType nameTokenType = builder.getTokenType();
 		PsiBuilder.Marker propertyMark = builder.mark();
 
+		IElementType isSetterOrGetterType = null;
+
 		if(nameTokenType == JSTokenTypes.LBRACKET)
 		{
 			PsiBuilder.Marker mark = builder.mark();
@@ -164,25 +166,29 @@ public class EcmaScriptExpressionParsing extends ExpressionParsing<EcmaScriptPar
 			{
 				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.identifier.string.literal.or.numeric.literal"));
 			}
-			builder.advanceLexer();
+
+			IElementType setOrGetToken = isContextKeyword(builder, JSTokenTypes.GET_SET_TOKEN_SET);
+
+			if(setOrGetToken != null && builder.lookAhead(1) == JSTokenTypes.IDENTIFIER)
+			{
+				isSetterOrGetterType = setOrGetToken;
+
+				advanceContextKeyword(builder, isSetterOrGetterType);
+			}
+			else
+			{
+				// just advance identifier
+				builder.advanceLexer();
+			}
 		}
 
 		IElementType doneElement = JSElementTypes.PROPERTY;
 
-		IElementType nextTokenType = builder.getTokenType();
-		// we finished property
-		if((nextTokenType == JSTokenTypes.COMMA || nextTokenType == JSTokenTypes.RBRACE) && nameTokenType == JSTokenTypes.IDENTIFIER)
+		if(isSetterOrGetterType != null)
 		{
-			propertyMark.rollbackTo(); // rollback it
-
-			propertyMark = builder.mark();
-
-			PsiBuilder.Marker referenceMark = builder.mark();
+			// advance name - see isSetterOrGetterType set
 			builder.advanceLexer();
-			referenceMark.done(JSElementTypes.REFERENCE_EXPRESSION);
-		}
-		else if(nextTokenType == JSTokenTypes.LPAR)
-		{
+
 			getFunctionParsing().parseParameterList(builder);
 
 			getStatementParsing().parseFunctionBody(builder);
@@ -191,14 +197,37 @@ public class EcmaScriptExpressionParsing extends ExpressionParsing<EcmaScriptPar
 		}
 		else
 		{
-			checkMatches(builder, JSTokenTypes.COLON, JavaScriptBundle.message("javascript.parser.message.expected.colon"));
-
-			builder.putUserData(WITHIN_OBJECT_LITERAL_EXPRESSION, Boolean.TRUE);
-			if(!parseAssignmentExpression(builder))
+			IElementType nextTokenType = builder.getTokenType();
+			// we finished property
+			if((nextTokenType == JSTokenTypes.COMMA || nextTokenType == JSTokenTypes.RBRACE) && nameTokenType == JSTokenTypes.IDENTIFIER)
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+				propertyMark.rollbackTo(); // rollback it
+
+				propertyMark = builder.mark();
+
+				PsiBuilder.Marker referenceMark = builder.mark();
+				builder.advanceLexer();
+				referenceMark.done(JSElementTypes.REFERENCE_EXPRESSION);
 			}
-			builder.putUserData(WITHIN_OBJECT_LITERAL_EXPRESSION, null);
+			else if(nextTokenType == JSTokenTypes.LPAR)
+			{
+				getFunctionParsing().parseParameterList(builder);
+
+				getStatementParsing().parseFunctionBody(builder);
+
+				doneElement = JSElementTypes.FUNCTION_PROPERTY;
+			}
+			else
+			{
+				checkMatches(builder, JSTokenTypes.COLON, JavaScriptBundle.message("javascript.parser.message.expected.colon"));
+
+				builder.putUserData(WITHIN_OBJECT_LITERAL_EXPRESSION, Boolean.TRUE);
+				if(!parseAssignmentExpression(builder))
+				{
+					builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+				}
+				builder.putUserData(WITHIN_OBJECT_LITERAL_EXPRESSION, null);
+			}
 		}
 
 		propertyMark.done(doneElement);

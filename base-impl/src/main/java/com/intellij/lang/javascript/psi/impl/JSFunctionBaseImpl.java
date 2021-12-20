@@ -218,24 +218,6 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
 	}
 
 	@Override
-	public FunctionKind getKind()
-	{
-		if(isGetProperty())
-		{
-			return FunctionKind.GETTER;
-		}
-		if(isSetProperty())
-		{
-			return FunctionKind.SETTER;
-		}
-		if(isConstructor())
-		{
-			return FunctionKind.CONSTRUCTOR;
-		}
-		return FunctionKind.SIMPLE;
-	}
-
-	@Override
 	public boolean isDeprecated()
 	{
 		final T stub = getStub();

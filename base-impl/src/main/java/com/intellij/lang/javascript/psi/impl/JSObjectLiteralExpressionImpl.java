@@ -17,14 +17,12 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSObjectLiteralExpression;
 import com.intellij.lang.javascript.psi.JSProperty;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.tree.TokenSet;
 
 import javax.annotation.Nonnull;
 
@@ -33,12 +31,9 @@ import javax.annotation.Nonnull;
  * User: max
  * Date: Jan 30, 2005
  * Time: 11:36:30 PM
- * To change this template use File | Settings | File Templates.
  */
 public class JSObjectLiteralExpressionImpl extends JSExpressionImpl implements JSObjectLiteralExpression
 {
-	private static final TokenSet PROPERTIES_FILTER = TokenSet.create(JSElementTypes.PROPERTY);
-
 	public JSObjectLiteralExpressionImpl(final ASTNode node)
 	{
 		super(node);
@@ -47,13 +42,7 @@ public class JSObjectLiteralExpressionImpl extends JSExpressionImpl implements J
 	@Override
 	public JSProperty[] getProperties()
 	{
-		final ASTNode[] nodes = getNode().getChildren(PROPERTIES_FILTER);
-		final JSProperty[] properties = new JSProperty[nodes.length];
-		for(int i = 0; i < properties.length; i++)
-		{
-			properties[i] = (JSProperty) nodes[i].getPsi();
-		}
-		return properties;
+		return findChildrenByClass(JSProperty.class);
 	}
 
 	@Override

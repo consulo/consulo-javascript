@@ -276,8 +276,6 @@ FIELD_OR_METHOD={IDENTIFIER} ("(" [^ \\)]* ")"? )?
 <YYINITIAL,DIV_OR_GT> "super"               { yybegin(YYINITIAL); return optionsHolder.isECMAL4Level ? JSTokenTypes.SUPER_KEYWORD:JSTokenTypes.IDENTIFIER; }
 <YYINITIAL,DIV_OR_GT> "include"             { yybegin(YYINITIAL); return optionsHolder.isECMAL4Level ? JSTokenTypes.INCLUDE_KEYWORD:JSTokenTypes.IDENTIFIER; }
 <YYINITIAL,DIV_OR_GT> "is"                  { yybegin(YYINITIAL); return optionsHolder.isECMAL4Level ? JSTokenTypes.IS_KEYWORD:JSTokenTypes.IDENTIFIER; }
-<YYINITIAL,DIV_OR_GT> "get"                 { yybegin(YYINITIAL); return optionsHolder.isJavaScript1_6_OrBetter ? JSTokenTypes.GET_KEYWORD:JSTokenTypes.IDENTIFIER; }
-<YYINITIAL,DIV_OR_GT> "set"                 { yybegin(YYINITIAL); return optionsHolder.isJavaScript1_6_OrBetter ? JSTokenTypes.SET_KEYWORD:JSTokenTypes.IDENTIFIER; }
 <YYINITIAL,DIV_OR_GT> "as"                  { yybegin(YYINITIAL); return optionsHolder.isECMAL4Level ? JSTokenTypes.AS_KEYWORD:JSTokenTypes.IDENTIFIER; }
 <YYINITIAL,DIV_OR_GT> "each"                { yybegin(YYINITIAL); return optionsHolder.hasE4X ? JSTokenTypes.EACH_KEYWORD:JSTokenTypes.IDENTIFIER; }
 <YYINITIAL,DIV_OR_GT> "uint"                { yybegin(YYINITIAL); return optionsHolder.isECMAL4Level ? JSTokenTypes.UINT_KEYWORD:JSTokenTypes.IDENTIFIER; }

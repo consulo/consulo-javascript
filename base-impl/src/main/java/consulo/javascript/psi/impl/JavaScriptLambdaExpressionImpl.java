@@ -123,12 +123,6 @@ public class JavaScriptLambdaExpressionImpl extends JSExpressionImpl implements 
 	}
 
 	@Override
-	public FunctionKind getKind()
-	{
-		return FunctionKind.SIMPLE;
-	}
-
-	@Override
 	public boolean isDeprecated()
 	{
 		return false;

@@ -75,7 +75,23 @@ public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JS
 
 	@Nonnull
 	@RequiredReadAction
-	FunctionKind getKind();
+	default FunctionKind getKind()
+	{
+		if(isGetProperty())
+		{
+			return FunctionKind.GETTER;
+		}
+		if(isSetProperty())
+		{
+			return FunctionKind.SETTER;
+		}
+		if(isConstructor())
+		{
+			return FunctionKind.CONSTRUCTOR;
+		}
+		return FunctionKind.SIMPLE;
+	}
+
 
 	boolean isDeprecated();
 

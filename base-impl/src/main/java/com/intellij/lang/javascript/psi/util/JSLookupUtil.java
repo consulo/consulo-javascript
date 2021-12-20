@@ -16,27 +16,20 @@
 
 package com.intellij.lang.javascript.psi.util;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.codeInsight.completion.PrioritizedLookupElement;
 import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import consulo.ide.IconDescriptorUpdaters;
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSFunction;
-import com.intellij.lang.javascript.psi.JSFunctionExpression;
-import com.intellij.lang.javascript.psi.JSParameter;
-import com.intellij.lang.javascript.psi.JSParameterList;
-import com.intellij.lang.javascript.psi.JSProperty;
-import com.intellij.lang.javascript.psi.JSVariable;
+import com.intellij.lang.javascript.psi.*;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
-import com.intellij.util.Function;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.ide.IconDescriptorUpdaters;
+import consulo.javascript.lang.psi.JavaScriptType;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class JSLookupUtil
 {
@@ -66,18 +59,14 @@ public class JSLookupUtil
 		{
 			JSParameterList parameterList = function.getParameterList();
 			JSParameter[] jsParameters = parameterList == null ? JSParameter.EMPTY_ARRAY : parameterList.getParameters();
-			builder = builder.withPresentableText(name + "(" + StringUtil.join(jsParameters, new Function<JSParameter, String>()
+			builder = builder.withPresentableText(name + "(" + StringUtil.join(jsParameters, jsParameter ->
 			{
-				@Override
-				public String fun(JSParameter jsParameter)
+				JavaScriptType type = jsParameter.getType();
+				if(type != JavaScriptType.UNKNOWN)
 				{
-					JavaScriptType type = jsParameter.getType();
-					if(type != JavaScriptType.UNKNOWN)
-					{
-						return type.getPresentableText() + " " + jsParameter.getName();
-					}
-					return jsParameter.getName();
+					return type.getPresentableText() + " " + jsParameter.getName();
 				}
+				return jsParameter.getName();
 			}, ", ") + ")");
 			builder = builder.withInsertHandler(ParenthesesInsertHandler.getInstance(jsParameters.length > 0));
 		}
