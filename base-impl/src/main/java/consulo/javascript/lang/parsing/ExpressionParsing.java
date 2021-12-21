@@ -70,11 +70,20 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			Parsing.buildTokenElement(JSElementTypes.REFERENCE_EXPRESSION, builder);
 			return true;
 		}
+		else if(firstToken == JSTokenTypes.REGEXP_LITERAL)
+		{
+			String errorMessage = validateLiteral(builder);
+			Parsing.buildTokenElement(JSElementTypes.REGEXP_LITERAL_EXPRESSION, builder);
+			if(errorMessage != null)
+			{
+				builder.error(errorMessage);
+			}
+			return true;
+		}
 		else if(firstToken == JSTokenTypes.NUMERIC_LITERAL ||
 				firstToken == JSTokenTypes.STRING_LITERAL ||
 				firstToken == JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL ||
 				firstToken == JSTokenTypes.INTERPOLATION_STRING_LITERAL ||
-				firstToken == JSTokenTypes.REGEXP_LITERAL ||
 				firstToken == JSTokenTypes.NULL_KEYWORD ||
 				firstToken == JSTokenTypes.UNDEFINED_KEYWORD ||
 				firstToken == JSTokenTypes.FALSE_KEYWORD ||

@@ -140,6 +140,10 @@ public abstract class JSNodeVisitor
 		{
 			visitLiteralExpression(node);
 		}
+		else if(type == JSElementTypes.REGEXP_LITERAL_EXPRESSION)
+		{
+			visitLiteralExpression(node);
+		}
 		else if(type == JSElementTypes.REFERENCE_EXPRESSION)
 		{
 			visitReferenceExpression(node);

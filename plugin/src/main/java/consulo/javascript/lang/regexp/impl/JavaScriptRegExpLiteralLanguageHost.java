@@ -1,0 +1,89 @@
+package consulo.javascript.lang.regexp.impl;
+
+import org.intellij.lang.regexp.RegExpLanguageHost;
+import org.intellij.lang.regexp.psi.RegExpChar;
+import org.intellij.lang.regexp.psi.RegExpGroup;
+import org.intellij.lang.regexp.psi.RegExpNamedGroupRef;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+/**
+ * @author VISTALL
+ * @since 21/12/2021
+ */
+public class JavaScriptRegExpLiteralLanguageHost implements RegExpLanguageHost
+{
+	@Override
+	public boolean characterNeedsEscaping(char c)
+	{
+		if(c == '/')
+		{
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean supportsPerl5EmbeddedComments()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean supportsPossessiveQuantifiers()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean supportsPythonConditionalRefs()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean supportsNamedGroupSyntax(RegExpGroup group)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean supportsNamedGroupRefSyntax(RegExpNamedGroupRef ref)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean supportsExtendedHexCharacter(RegExpChar regExpChar)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean isValidCategory(@Nonnull String category)
+	{
+		return false;
+	}
+
+	@Nonnull
+	@Override
+	public String[][] getAllKnownProperties()
+	{
+		return new String[0][];
+	}
+
+	@Nullable
+	@Override
+	public String getPropertyDescription(@Nullable String name)
+	{
+		return null;
+	}
+
+	@Nonnull
+	@Override
+	public String[][] getKnownCharacterClasses()
+	{
+		return new String[0][];
+	}
+}

@@ -34,6 +34,7 @@ import consulo.javascript.lang.parsing.impl.JavaSciptDestructuringElementImpl;
 import consulo.javascript.lang.parsing.impl.JavaSciptDestructuringObjectImpl;
 import consulo.javascript.lang.parsing.impl.JavaScriptDestructuringParameterImpl;
 import consulo.javascript.lang.parsing.impl.JavaScriptDestructuringShorthandedPropertyImpl;
+import consulo.javascript.lang.psi.impl.JSRegExpLiteralExpressionImpl;
 import consulo.javascript.psi.impl.JSComputedNameImpl;
 import consulo.javascript.psi.impl.JavaScriptLambdaExpressionImpl;
 import consulo.javascript.psi.impl.JavaScriptSpreadExpressionImpl;
@@ -145,6 +146,7 @@ public interface JSElementTypes
 	IElementType REFERENCE_EXPRESSION = new ElementTypeAsPsiFactory("REFERENCE_EXPRESSION", JavaScriptLanguage.INSTANCE,
 			JSReferenceExpressionImpl::new);
 	IElementType LITERAL_EXPRESSION = new ElementTypeAsPsiFactory("LITERAL_EXPRESSION", JavaScriptLanguage.INSTANCE, JSLiteralExpressionImpl::new);
+	IElementType REGEXP_LITERAL_EXPRESSION = new ElementTypeAsPsiFactory("REGEXP_LITERAL_EXPRESSION", JavaScriptLanguage.INSTANCE, JSRegExpLiteralExpressionImpl::new);
 	IElementType XML_LITERAL_EXPRESSION = new ElementTypeAsPsiFactory("XML_LITERAL_EXPRESSION", JavaScriptLanguage.INSTANCE,
 			JSXmlLiteralExpressionImpl::new);
 	IElementType PARENTHESIZED_EXPRESSION = new ElementTypeAsPsiFactory("PARENTHESIZED_EXPRESSION", JavaScriptLanguage.INSTANCE,
@@ -195,7 +197,7 @@ public interface JSElementTypes
 
 	@Deprecated
 	@DeprecationInfo("Use search by class")
-	TokenSet EXPRESSIONS = TokenSet.create(THIS_EXPRESSION, REFERENCE_EXPRESSION, LITERAL_EXPRESSION, PARENTHESIZED_EXPRESSION,
+	TokenSet EXPRESSIONS = TokenSet.create(THIS_EXPRESSION, REFERENCE_EXPRESSION, LITERAL_EXPRESSION, REGEXP_LITERAL_EXPRESSION, PARENTHESIZED_EXPRESSION,
 			ARRAY_LITERAL_EXPRESSION, OBJECT_LITERAL_EXPRESSION, ASSIGNMENT_EXPRESSION, CONDITIONAL_EXPRESSION, BINARY_EXPRESSION,
 			PREFIX_EXPRESSION, POSTFIX_EXPRESSION, COMMA_EXPRESSION, FUNCTION_EXPRESSION, NEW_EXPRESSION, INDEXED_PROPERTY_ACCESS_EXPRESSION,
 			CALL_EXPRESSION, DEFINITION_EXPRESSION, XML_LITERAL_EXPRESSION, SUPER_EXPRESSION, LET_EXPRESSION);

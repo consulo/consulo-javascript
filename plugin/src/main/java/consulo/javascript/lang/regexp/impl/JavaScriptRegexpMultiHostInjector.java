@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package consulo.javascript.lang;
+package consulo.javascript.lang.regexp.impl;
 
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
-import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.tree.IElementType;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.psi.JSSimpleLiteralExpression;
+import consulo.javascript.lang.psi.impl.JSRegExpLiteralExpressionImpl;
 import org.intellij.lang.regexp.RegExpLanguage;
 
 import javax.annotation.Nonnull;
@@ -39,26 +37,22 @@ public class JavaScriptRegexpMultiHostInjector implements MultiHostInjector
 	@RequiredReadAction
 	public void injectLanguages(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement context)
 	{
-		if(context instanceof JSSimpleLiteralExpression)
+		if(context instanceof JSRegExpLiteralExpressionImpl)
 		{
-			IElementType literalElementType = ((JSSimpleLiteralExpression) context).getLiteralElementType();
-			if(literalElementType == JSTokenTypes.REGEXP_LITERAL)
+			int textLength = context.getTextLength() - 1;
+			String text = context.getText();
+
+			if(text.charAt(textLength) != '/')
 			{
-				int textLength = context.getTextLength() - 1;
-				String text = context.getText();
-
-				if(text.charAt(textLength) != '/')
-				{
-					textLength --;
-				}
-
-				if(textLength <= 1)
-				{
-					return;
-				}
-
-				registrar.startInjecting(RegExpLanguage.INSTANCE).addPlace(null, null, (PsiLanguageInjectionHost) context, new TextRange(1, textLength)).doneInjecting();
+				textLength--;
 			}
+
+			if(textLength <= 1)
+			{
+				return;
+			}
+
+			registrar.startInjecting(RegExpLanguage.INSTANCE).addPlace(null, null, (PsiLanguageInjectionHost) context, new TextRange(1, textLength)).doneInjecting();
 		}
 	}
 }
