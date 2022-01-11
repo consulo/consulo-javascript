@@ -1,5 +1,6 @@
 package consulo.javascript.lang.regexp.impl;
 
+import org.intellij.lang.regexp.DefaultRegExpPropertiesProvider;
 import org.intellij.lang.regexp.RegExpLanguageHost;
 import org.intellij.lang.regexp.psi.RegExpChar;
 import org.intellij.lang.regexp.psi.RegExpGroup;
@@ -63,27 +64,27 @@ public class JavaScriptRegExpLiteralLanguageHost implements RegExpLanguageHost
 	@Override
 	public boolean isValidCategory(@Nonnull String category)
 	{
-		return false;
+		return DefaultRegExpPropertiesProvider.getInstance().isValidCategory(category);
 	}
 
 	@Nonnull
 	@Override
 	public String[][] getAllKnownProperties()
 	{
-		return new String[0][];
+		return DefaultRegExpPropertiesProvider.getInstance().getAllKnownProperties();
 	}
 
 	@Nullable
 	@Override
 	public String getPropertyDescription(@Nullable String name)
 	{
-		return null;
+		return DefaultRegExpPropertiesProvider.getInstance().getPropertyDescription(name);
 	}
 
 	@Nonnull
 	@Override
 	public String[][] getKnownCharacterClasses()
 	{
-		return new String[0][];
+		return DefaultRegExpPropertiesProvider.getInstance().getKnownCharacterClasses();
 	}
 }
