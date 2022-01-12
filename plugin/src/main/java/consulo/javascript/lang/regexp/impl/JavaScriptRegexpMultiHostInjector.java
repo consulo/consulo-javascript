@@ -39,20 +39,17 @@ public class JavaScriptRegexpMultiHostInjector implements MultiHostInjector
 	{
 		if(context instanceof JSRegExpLiteralExpressionImpl)
 		{
-			int textLength = context.getTextLength() - 1;
 			String text = context.getText();
 
-			if(text.charAt(textLength) != '/')
-			{
-				textLength--;
-			}
-
-			if(textLength <= 1)
+			// ignore flags for regexp
+			int lastIndex = text.lastIndexOf('/');
+			// empty regexp
+			if(lastIndex == 0)
 			{
 				return;
 			}
 
-			registrar.startInjecting(RegExpLanguage.INSTANCE).addPlace(null, null, (PsiLanguageInjectionHost) context, new TextRange(1, textLength)).doneInjecting();
+			registrar.startInjecting(RegExpLanguage.INSTANCE).addPlace(null, null, (PsiLanguageInjectionHost) context, new TextRange(1, lastIndex)).doneInjecting();
 		}
 	}
 }
