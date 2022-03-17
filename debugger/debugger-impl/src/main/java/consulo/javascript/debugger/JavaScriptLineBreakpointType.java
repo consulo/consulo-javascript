@@ -16,8 +16,6 @@
 
 package consulo.javascript.debugger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.intellij.javascript.JSDebuggerSupportUtils;
 import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.openapi.editor.Document;
@@ -28,6 +26,9 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpointTypeBase;
 import com.intellij.xdebugger.evaluation.EvaluationMode;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * @author VISTALL
  * @since 20.03.14
@@ -37,7 +38,7 @@ public class JavaScriptLineBreakpointType extends XLineBreakpointTypeBase
 	@Nonnull
 	public static JavaScriptLineBreakpointType getInstance()
 	{
-		return EXTENSION_POINT_NAME.findExtension(JavaScriptLineBreakpointType.class);
+		return EXTENSION_POINT_NAME.findExtensionOrFail(JavaScriptLineBreakpointType.class);
 	}
 
 	public JavaScriptLineBreakpointType()
