@@ -1,15 +1,14 @@
 package consulo.javascript.lang;
 
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.PsiParser;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.containers.ArrayListSet;
 import consulo.javascript.lang.parsing.JavaScriptParser;
+
+import javax.annotation.Nonnull;
+import java.util.Set;
 
 /**
  * @author VISTALL

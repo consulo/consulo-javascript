@@ -17,5 +17,7 @@
 <consulo-plugin>
 	<extensions defaultExtensionNs="com.intellij">
 		<fileTypeFactory implementation="consulo.typescript.TypeScriptFileTypeFactory" />
+
+		<lang.defineVersion language="JavaScript" implementationClass="consulo.typescript.version.TypeScriptLanguageVersion"/>
 	</extensions>
 </consulo-plugin>

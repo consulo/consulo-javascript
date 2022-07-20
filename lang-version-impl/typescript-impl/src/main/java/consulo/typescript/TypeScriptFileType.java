@@ -16,22 +16,27 @@
 
 package consulo.typescript;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.icon.JavaScriptIconGroup;
+import consulo.javascript.lang.JavaScriptFileTypeWithVersion;
 import consulo.javascript.lang.JavaScriptLanguage;
 import consulo.javascript.localize.JavaScriptLocalize;
+import consulo.lang.LanguageVersion;
 import consulo.localize.LocalizeValue;
+import consulo.typescript.version.TypeScriptLanguageVersion;
 import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 03.03.2016
  */
-public class TypeScriptFileType extends LanguageFileType
+public class TypeScriptFileType extends LanguageFileType implements JavaScriptFileTypeWithVersion
 {
 	public static final TypeScriptFileType INSTANCE = new TypeScriptFileType();
 
@@ -66,5 +71,13 @@ public class TypeScriptFileType extends LanguageFileType
 	public Image getIcon()
 	{
 		return JavaScriptIconGroup.typeScript();
+	}
+
+	@RequiredReadAction
+	@Nonnull
+	@Override
+	public LanguageVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile)
+	{
+		return TypeScriptLanguageVersion.getInstance();
 	}
 }

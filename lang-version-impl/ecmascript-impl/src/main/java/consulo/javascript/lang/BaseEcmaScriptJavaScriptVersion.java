@@ -22,17 +22,15 @@ import javax.annotation.Nonnull;
  */
 public abstract class BaseEcmaScriptJavaScriptVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersions.Marker, JavaScriptVersionWithHelper
 {
-	@Nonnull
-	public static EcmaScript6JavaScriptVersion getInstance()
-	{
-		return JavaScriptLanguage.INSTANCE.findVersionByClass(EcmaScript6JavaScriptVersion.class);
-	}
-
 	protected BaseEcmaScriptJavaScriptVersion(@Nonnull String id)
 	{
 		super(id);
 	}
 
+	protected BaseEcmaScriptJavaScriptVersion(String name, String... mimeTypes)
+	{
+		super(name, mimeTypes);
+	}
 
 	@Nonnull
 	@Override
