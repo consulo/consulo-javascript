@@ -1,10 +1,14 @@
 package consulo.javascript.lang.viewProvider;
 
-import com.intellij.lang.Language;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.language.Language;
+import consulo.language.file.FileViewProvider;
+import consulo.language.file.FileViewProviderFactory;
+import consulo.language.impl.file.SingleRootFileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiManager;
 import consulo.util.lang.reflect.ReflectionUtil;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 

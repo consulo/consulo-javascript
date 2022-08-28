@@ -23,6 +23,7 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
+import consulo.language.ast.IElementType;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ControlFlowUtils;
@@ -33,9 +34,8 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.jetbrains.annotations.NonNls;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 
 public class JSReplaceIfWithSwitchIntention extends JSIntention {
     @NonNls private static final String IF_KEYWORD                     = "if";
@@ -212,7 +212,7 @@ public class JSReplaceIfWithSwitchIntention extends JSIntention {
                     (JSBinaryExpression) expression;
             final JSExpression       lhs              = binaryExpression.getLOperand();
             final JSExpression       rhs              = binaryExpression.getROperand();
-            final IElementType       tokenType        = binaryExpression.getOperationSign();
+            final IElementType tokenType        = binaryExpression.getOperationSign();
 
             if (JSTokenTypes.OROR.equals(tokenType)) {
                 getValuesFromExpression(lhs, caseExpression, values);

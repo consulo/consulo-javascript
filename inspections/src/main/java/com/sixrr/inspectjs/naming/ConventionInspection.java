@@ -1,11 +1,11 @@
 package com.sixrr.inspectjs.naming;
 
-import com.intellij.openapi.util.InvalidDataException;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.ui.FormattedTextFieldMacFix;
 import com.sixrr.inspectjs.ui.RegExFormatter;
 import com.sixrr.inspectjs.ui.RegExInputVerifier;
+import consulo.util.xml.serializer.InvalidDataException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
@@ -68,7 +68,8 @@ public abstract class ConventionInspection extends JavaScriptInspection {
     }
 
     @Override
-	public void readSettings(Element element) throws InvalidDataException {
+	public void readSettings(Element element) throws InvalidDataException
+	{
         super.readSettings(element);
         m_regexPattern = Pattern.compile(m_regex);
     }

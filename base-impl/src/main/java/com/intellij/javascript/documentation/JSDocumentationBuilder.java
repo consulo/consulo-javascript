@@ -22,20 +22,20 @@
  */
 package com.intellij.javascript.documentation;
 
+import com.intellij.lang.javascript.index.JSSymbolUtil;
+import com.intellij.lang.javascript.psi.*;
+import consulo.language.editor.CodeInsightBundle;
+import consulo.language.psi.PsiElement;
+import consulo.util.io.URLUtil;
+import consulo.util.lang.StringUtil;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import com.intellij.codeInsight.CodeInsightBundle;
-import com.intellij.ide.BrowserUtil;
-import com.intellij.lang.javascript.index.JSSymbolUtil;
-import com.intellij.lang.javascript.psi.*;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
 
 class JSDocumentationBuilder implements JSDocumentationProcessor
 {
@@ -259,7 +259,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor
 			{
 				result.append("</DD><DD>");
 			}
-			if(BrowserUtil.isAbsoluteURL(remainingLineContent))
+			if(URLUtil.isAbsoluteURL(remainingLineContent))
 			{
 				result.append("<a href=\"").append(remainingLineContent).append("\">").append(remainingLineContent).append("</a>");
 			}
@@ -459,7 +459,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor
 
 	private String getSeeAlsoLink(String remainingLineContent)
 	{
-		if(BrowserUtil.isAbsoluteURL(remainingLineContent))
+		if(URLUtil.isAbsoluteURL(remainingLineContent))
 		{
 			return remainingLineContent;
 		}

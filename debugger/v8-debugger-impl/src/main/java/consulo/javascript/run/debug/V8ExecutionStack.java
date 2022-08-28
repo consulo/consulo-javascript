@@ -21,10 +21,10 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import consulo.execution.debug.frame.XExecutionStack;
+import consulo.execution.debug.frame.XStackFrame;
 import org.chromium.sdk.CallFrame;
 import org.chromium.sdk.DebugContext;
-import com.intellij.xdebugger.frame.XExecutionStack;
-import com.intellij.xdebugger.frame.XStackFrame;
 
 /**
  * @author VISTALL

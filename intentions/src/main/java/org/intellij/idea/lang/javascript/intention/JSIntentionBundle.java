@@ -17,11 +17,10 @@ package org.intellij.idea.lang.javascript.intention;
 
 import java.util.ResourceBundle;
 
+import consulo.application.CommonBundle;
 import org.jetbrains.annotations.PropertyKey;
 import org.jetbrains.annotations.NonNls;
 import org.intellij.idea.lang.javascript.JSAbstractBundle;
-
-import com.intellij.CommonBundle;
 
 public class JSIntentionBundle extends JSAbstractBundle {
 

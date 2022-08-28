@@ -1,7 +1,8 @@
 package consulo.javascript.jsx.language;
 
-import consulo.javascript.lang.EcmaScript6JavaScriptVersion;
-import consulo.javascript.lang.JavaScriptLanguage;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.ecmascript.lang.EcmaScript6JavaScriptVersion;
+import consulo.javascript.language.JavaScriptLanguage;
 
 import javax.annotation.Nonnull;
 
@@ -9,6 +10,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2019-12-16
  */
+@ExtensionImpl
 public class JSXJavaScriptVersion extends EcmaScript6JavaScriptVersion
 {
 	@Nonnull

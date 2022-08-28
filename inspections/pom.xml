@@ -20,13 +20,13 @@
 	<parent>
 		<groupId>consulo</groupId>
 		<artifactId>arch.ide-provided</artifactId>
-		<version>2-SNAPSHOT</version>
+		<version>3-SNAPSHOT</version>
 		<relativePath/>
 	</parent>
 
 	<groupId>consulo.plugin</groupId>
 	<artifactId>consulo.javascript-inspections</artifactId>
-	<version>2-SNAPSHOT</version>
+	<version>3-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<repositories>
@@ -49,7 +49,7 @@
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>consulo.javascript-ecmascript6.impl</artifactId>
+			<artifactId>consulo.javascript-ecmascript.impl</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

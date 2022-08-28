@@ -19,6 +19,9 @@ package consulo.javascript.run.debug;
 import java.util.Collections;
 import java.util.List;
 
+import consulo.execution.debug.XDebuggerUtil;
+import consulo.execution.debug.XSourcePosition;
+import consulo.execution.debug.evaluation.XDebuggerEvaluator;
 import org.chromium.sdk.CallFrame;
 import org.chromium.sdk.JsEvaluateContext;
 import org.chromium.sdk.JsScope;
@@ -27,15 +30,12 @@ import org.chromium.sdk.JsVariable;
 import org.chromium.sdk.TextStreamPosition;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import com.intellij.icons.AllIcons;
-import com.intellij.ui.ColoredTextContainer;
-import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.xdebugger.XDebuggerUtil;
-import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
-import com.intellij.xdebugger.frame.XCompositeNode;
-import com.intellij.xdebugger.frame.XStackFrame;
-import com.intellij.xdebugger.frame.XValueChildrenList;
+import consulo.application.AllIcons;
+import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.execution.debug.frame.XCompositeNode;
+import consulo.execution.debug.frame.XStackFrame;
+import consulo.execution.debug.frame.XValueChildrenList;
 
 /**
  * @author VISTALL

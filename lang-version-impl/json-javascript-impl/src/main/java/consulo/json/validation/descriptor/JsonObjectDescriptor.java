@@ -23,8 +23,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import consulo.json.validation.NativeArray;
-import com.intellij.openapi.util.Factory;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
+import consulo.language.impl.ast.Factory;
+import consulo.util.collection.Maps;
 
 /**
  * @author VISTALL
@@ -42,40 +43,19 @@ public class JsonObjectDescriptor
 			throw new IllegalArgumentException("We cant add object type, use JsonObjectDescriptor as parameter");
 		}
 
-		return ContainerUtil.getOrCreate(myProperties, propertyName, new Factory<JsonPropertyDescriptor>()
-		{
-			@Override
-			public JsonPropertyDescriptor create()
-			{
-				return new JsonPropertyDescriptor(propertyName, value);
-			}
-		});
+		return myProperties.computeIfAbsent(propertyName, p -> new JsonPropertyDescriptor(p, value));
 	}
 
 	@Nonnull
 	public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @Nonnull final JsonObjectDescriptor value)
 	{
-		return ContainerUtil.getOrCreate(myProperties, propertyName, new Factory<JsonPropertyDescriptor>()
-		{
-			@Override
-			public JsonPropertyDescriptor create()
-			{
-				return new JsonPropertyDescriptor(propertyName, value);
-			}
-		});
+		return myProperties.computeIfAbsent(propertyName, p -> new JsonPropertyDescriptor(p, value));
 	}
 
 	@Nonnull
 	public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @Nonnull final NativeArray value)
 	{
-		return ContainerUtil.getOrCreate(myProperties, propertyName, new Factory<JsonPropertyDescriptor>()
-		{
-			@Override
-			public JsonPropertyDescriptor create()
-			{
-				return new JsonPropertyDescriptor(propertyName, value);
-			}
-		});
+		return myProperties.computeIfAbsent(propertyName, p -> new JsonPropertyDescriptor(p, value));
 	}
 
 	@Nullable

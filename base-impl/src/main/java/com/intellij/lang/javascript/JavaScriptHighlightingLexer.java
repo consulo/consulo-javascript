@@ -16,14 +16,10 @@
 
 package com.intellij.lang.javascript;
 
-import com.intellij.lang.html.HTMLLanguage;
-import com.intellij.lexer.FlexAdapter;
-import com.intellij.lexer.LayeredLexer;
-import com.intellij.lexer.Lexer;
-import com.intellij.lexer.LexerBase;
-import com.intellij.lexer.StringLiteralLexer;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.highlight.SyntaxHighlighterFactory;
+import consulo.language.lexer.*;
+import consulo.xml.lang.html.HTMLLanguage;
 
 /**
  * Created by IntelliJ IDEA.

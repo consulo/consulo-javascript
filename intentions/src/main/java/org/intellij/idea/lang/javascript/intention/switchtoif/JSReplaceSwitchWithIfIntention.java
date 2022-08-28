@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import consulo.language.psi.PsiManager;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ControlFlowUtils;
@@ -32,11 +33,10 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.util.IncorrectOperationException;
 
 public class JSReplaceSwitchWithIfIntention extends JSIntention {
 
@@ -60,7 +60,7 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
 
         assert (switchStatement != null);
 
-        final PsiManager       mgr              = switchStatement.getManager();
+        final PsiManager mgr              = switchStatement.getManager();
         final JSExpression     switchExpression = switchStatement.getSwitchExpression();
         final CodeStyleManager codeStyleMgr     = CodeStyleManager.getInstance(element.getProject());
         final boolean          hadSideEffects   = SideEffectChecker.mayHaveSideEffects(switchExpression);

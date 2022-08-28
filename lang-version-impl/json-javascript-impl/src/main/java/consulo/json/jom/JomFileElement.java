@@ -16,12 +16,14 @@
 
 package consulo.json.jom;
 
-import javax.annotation.Nonnull;
-import consulo.json.jom.proxy.JomProxyInvocationHandler;
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.JSObjectLiteralExpression;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.json.jom.proxy.JomProxyInvocationHandler;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.util.lang.lazy.LazyValue;
+
+import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -31,27 +33,19 @@ public class JomFileElement<T extends JomElement>
 {
 	private final JomFileDescriptor<T> myFileDescriptor;
 	private final JSFile myPsiFile;
-	private final NotNullLazyValue<T> myRootValue = new NotNullLazyValue<T>()
-	{
-		@Nonnull
-		@Override
-		protected T compute()
-		{
-			//noinspection unchecked
-			return (T) JomProxyInvocationHandler.createProxy(myFileDescriptor.getDefinitionClass(), PsiTreeUtil.findChildOfType(myPsiFile, JSObjectLiteralExpression.class));
-		}
-	};
+	private final Supplier<T> myRootValue;
 
 	public JomFileElement(JSFile psiFile, JomFileDescriptor<T> fileDescriptor)
 	{
 		myPsiFile = psiFile;
 		myFileDescriptor = fileDescriptor;
+		myRootValue = LazyValue.notNull(() -> (T) JomProxyInvocationHandler.createProxy(myFileDescriptor.getDefinitionClass(), PsiTreeUtil.findChildOfType(myPsiFile, JSObjectLiteralExpression.class)));
 	}
 
 	@Nonnull
 	public T getRootElement()
 	{
-		return myRootValue.getValue();
+		return myRootValue.get();
 	}
 
 	@Nonnull

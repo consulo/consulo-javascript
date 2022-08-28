@@ -3,15 +3,18 @@ package com.sixrr.inspectjs.style;
 import com.intellij.lang.javascript.psi.JSArgumentList;
 import com.intellij.lang.javascript.psi.JSCallExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.psi.PsiElement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.psi.PsiElement;
+
 import javax.annotation.Nonnull;
 
 
 
+@ExtensionImpl
 public class NestedFunctionCallJSInspection extends JavaScriptInspection {
 
 

@@ -1,6 +1,6 @@
 package consulo.javascript.lang.lexer;
 
-import com.intellij.lexer.FlexLexer;
+import consulo.language.lexer.FlexLexer;
 
 /**
  * @author VISTALL

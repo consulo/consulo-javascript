@@ -17,6 +17,7 @@ package org.intellij.idea.lang.javascript.intention.number;
 
 import javax.annotation.Nonnull;
 
+import consulo.language.psi.PsiElement;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
@@ -29,14 +30,13 @@ import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSParenthesizedExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.ast.IElementType;
+import consulo.language.util.IncorrectOperationException;
 
 public class JSReplaceMultiplyWithShiftIntention extends JSMutablyNamedIntention {
     @Override
 	protected String getTextForElement(PsiElement element) {
-        final IElementType  tokenType = ((JSBinaryExpression) element).getOperationSign();
+        final IElementType tokenType = ((JSBinaryExpression) element).getOperationSign();
         final String        operatorString;
 
         if (element instanceof JSAssignmentExpression) {

@@ -16,51 +16,41 @@
 
 package com.intellij.lang.javascript.inspections.qucikFixes;
 
-import java.util.Collections;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import com.intellij.codeInsight.CodeInsightUtilBase;
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupItem;
-import com.intellij.codeInsight.template.Expression;
-import com.intellij.codeInsight.template.ExpressionContext;
-import com.intellij.codeInsight.template.Result;
-import com.intellij.codeInsight.template.Template;
-import com.intellij.codeInsight.template.TemplateManager;
-import com.intellij.codeInsight.template.TextResult;
-import com.intellij.codeInsight.template.impl.MacroCallNode;
-import com.intellij.codeInsight.template.macro.MacroFactory;
-import com.intellij.codeInspection.LocalQuickFix;
-import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.util.JSUtils;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.xml.XmlAttributeValue;
-import com.intellij.psi.xml.XmlFile;
-import com.intellij.psi.xml.XmlTag;
-import com.intellij.psi.xml.XmlText;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.lang.JavaScriptFeature;
-import consulo.javascript.lang.JavaScriptVersionUtil;
-import consulo.javascript.lang.psi.JavaScriptType;
+import consulo.application.ApplicationManager;
+import consulo.codeEditor.Editor;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.fileEditor.FileEditorManager;
+import consulo.javascript.language.JavaScriptFeature;
+import consulo.javascript.language.JavaScriptVersionUtil;
+import consulo.javascript.language.psi.JavaScriptType;
+import consulo.language.editor.FileModificationService;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupItem;
+import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.editor.template.*;
+import consulo.language.editor.template.macro.MacroCallNode;
+import consulo.language.editor.template.macro.MacroFactory;
+import consulo.language.psi.*;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.navigation.OpenFileDescriptorFactory;
+import consulo.project.Project;
+import consulo.xml.psi.xml.XmlAttributeValue;
+import consulo.xml.psi.xml.XmlFile;
+import consulo.xml.psi.xml.XmlTag;
+import consulo.xml.psi.xml.XmlText;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * @author Maxim.Mossienko
@@ -288,25 +278,24 @@ public abstract class BaseCreateFix implements LocalQuickFix
 		}
 	}
 
-	public static
 	@Nullable
-	Editor getEditor(final Project project, final PsiFile realFile)
+	public static Editor getEditor(final Project project, final PsiFile realFile)
 	{
-		if(!CodeInsightUtilBase.getInstance().prepareFileForWrite(realFile))
+		if(!FileModificationService.getInstance().prepareFileForWrite(realFile))
 		{
 			return null;
 		}
 
-		return FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, realFile.getVirtualFile(), 0), true);
+		return FileEditorManager.getInstance(project).openTextEditor(OpenFileDescriptorFactory.getInstance(project).builder(realFile.getVirtualFile()).build(), true);
 	}
 
 	@RequiredReadAction
 	protected abstract void buildTemplate(final Template template,
-			JSReferenceExpression referenceExpression,
-			Set<JavaScriptFeature> features,
-			boolean staticContext,
-			PsiFile file,
-			PsiElement anchorParent);
+										  JSReferenceExpression referenceExpression,
+										  Set<JavaScriptFeature> features,
+										  boolean staticContext,
+										  PsiFile file,
+										  PsiElement anchorParent);
 
 	private static String getTypeOfValue(final JSExpression passedParameterValue, final PsiFile file, Set<JavaScriptFeature> features)
 	{

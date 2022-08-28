@@ -18,8 +18,8 @@ package consulo.json.jom;
 
 import javax.annotation.Nonnull;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
+import consulo.component.extension.ExtensionPointName;
 import consulo.ui.image.Image;
 
 /**

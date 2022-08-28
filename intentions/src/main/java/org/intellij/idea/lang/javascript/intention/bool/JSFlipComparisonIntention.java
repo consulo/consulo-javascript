@@ -24,9 +24,9 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.util.IncorrectOperationException;
 
 public class JSFlipComparisonIntention extends JSMutablyNamedIntention {
     @Override

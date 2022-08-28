@@ -21,25 +21,21 @@ import java.io.IOException;
 
 import javax.annotation.Nonnull;
 
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.*;
 import org.jetbrains.annotations.NonNls;
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSReferenceList;
-import com.intellij.lang.javascript.psi.JSStubElementType;
+import consulo.javascript.impl.language.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.impl.JSReferenceListImpl;
 import com.intellij.lang.javascript.psi.stubs.JSReferenceListStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSReferenceListStubImpl;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.IndexSink;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubIndexKey;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.io.StringRef;
+import consulo.util.lang.StringUtil;
+import consulo.util.collection.ArrayUtil;
+import consulo.index.io.StringRef;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
+import consulo.javascript.language.psi.stub.JavaScriptIndexKeys;
 
 /**
  * @author Maxim.Mossienko

@@ -16,31 +16,24 @@
 
 package com.intellij.javascript;
 
-import java.util.List;
+import consulo.javascript.impl.language.psi.JSElementFactory;
+import com.intellij.lang.javascript.psi.JSFile;
+import com.intellij.lang.javascript.psi.JSNamedElement;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.util.TextRange;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.psi.*;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.project.Project;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.xml.lang.xml.XMLLanguage;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import com.intellij.lang.javascript.psi.JSElementFactory;
-import com.intellij.lang.javascript.psi.JSFile;
-import com.intellij.lang.javascript.psi.JSNamedElement;
-import com.intellij.lang.xml.XMLLanguage;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import com.intellij.psi.util.PsiTreeUtil;
-import consulo.javascript.lang.JavaScriptLanguage;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -81,7 +74,7 @@ public class JSDebuggerSupportUtils
 				final Ref<PsiElement> eltInInjected = new Ref<PsiElement>();
 				final int[] injectedOffset = new int[1];
 
-				InjectedLanguageUtil.enumerate(psiLanguageInjectionHost, new PsiLanguageInjectionHost.InjectedPsiVisitor()
+				InjectedLanguageManager.getInstance(project).enumerate(psiLanguageInjectionHost, new PsiLanguageInjectionHost.InjectedPsiVisitor()
 				{
 					@Override
 					public void visit(@Nonnull final PsiFile injectedPsi, @Nonnull final List<PsiLanguageInjectionHost.Shred> places)
@@ -203,7 +196,7 @@ public class JSDebuggerSupportUtils
 				final int finalOffset = offset;
 				final Ref<PsiElement> resultInInjected = new Ref<PsiElement>();
 
-				InjectedLanguageUtil.enumerate(parent, new PsiLanguageInjectionHost.InjectedPsiVisitor()
+				InjectedLanguageManager.getInstance(project).enumerate(parent, new PsiLanguageInjectionHost.InjectedPsiVisitor()
 				{
 					@Override
 					public void visit(@Nonnull final PsiFile injectedPsi, @Nonnull final List<PsiLanguageInjectionHost.Shred> places)

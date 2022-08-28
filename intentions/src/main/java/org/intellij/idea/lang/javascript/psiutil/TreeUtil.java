@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.intellij.lang.javascript.psi.JSElement;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 public class TreeUtil {
     private TreeUtil() {}
@@ -89,13 +89,13 @@ public class TreeUtil {
 
     @Nullable
     public static <ParentType extends PsiElement> ParentType getPrevLeafOfType(@Nullable PsiElement         element,
-                                                                               @Nonnull Class<ParentType> aClass) {
+																									@Nonnull Class<ParentType> aClass) {
         return getPrevLeafOfType(element, aClass, true);
     }
 
     public static <ParentType extends PsiElement> ParentType getPrevLeafOfType(PsiElement        element,
-                                                                               Class<ParentType> aClass,
-                                                                               boolean           strict) {
+																									Class<ParentType> aClass,
+																									boolean           strict) {
         if (element == null) {
             return null;
         }

@@ -16,40 +16,50 @@
 
 package consulo.javascript.ide.codeInsight;
 
-import javax.annotation.Nonnull;
 import com.intellij.lang.javascript.inspections.qucikFixes.CreateJSFunctionOrMethodFix;
-import com.intellij.openapi.util.KeyedExtensionCollector;
-import com.intellij.psi.PsiElement;
 import consulo.javascript.lang.BaseJavaScriptLanguageVersion;
-import consulo.lang.LanguageVersion;
+import consulo.javascript.language.JavaScriptLanguageVersion;
+import consulo.language.psi.PsiElement;
+import consulo.language.version.LanguageVersion;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 23.02.2016
  */
-public class JavaScriptQuickFixFactory
+public abstract class JavaScriptQuickFixFactory
 {
-	private static final JavaScriptQuickFixFactory ourDefaultImpl = new JavaScriptQuickFixFactory();
+	private static final JavaScriptQuickFixFactory ourDefaultImpl = new JavaScriptQuickFixFactory()
+	{
+		@Override
+		public boolean isMyVersion(@Nonnull JavaScriptLanguageVersion version)
+		{
+			return true;
+		}
+	};
 
 	@Nonnull
 	public static JavaScriptQuickFixFactory byElement(PsiElement element)
 	{
 		LanguageVersion languageVersion = element.getLanguageVersion();
-		if(languageVersion instanceof BaseJavaScriptLanguageVersion)
+		if(languageVersion instanceof BaseJavaScriptLanguageVersion jsVersion)
 		{
-			JavaScriptQuickFixFactory quickFixFactory = EP.findSingle(languageVersion.getName());
-			if(quickFixFactory != null)
+			for(JavaScriptQuickFixFactory factory : element.getProject().getApplication().getExtensionList(JavaScriptQuickFixFactory.class))
 			{
-				return quickFixFactory;
+				if(factory.isMyVersion(jsVersion))
+				{
+					return factory;
+				}
 			}
 		}
 		return ourDefaultImpl;
 	}
 
-	public static final KeyedExtensionCollector<JavaScriptQuickFixFactory, String> EP = new KeyedExtensionCollector<>("consulo.javascript.quickFixFactory");
-
 	public CreateJSFunctionOrMethodFix createFunctionOrMethodFix(String referenceName, boolean isMethod)
 	{
 		return new CreateJSFunctionOrMethodFix(referenceName, isMethod);
 	}
+
+	public abstract boolean isMyVersion(@Nonnull JavaScriptLanguageVersion version);
 }

@@ -18,8 +18,8 @@ package com.intellij.lang.javascript.psi;
 
 import javax.annotation.Nullable;
 import consulo.annotation.access.RequiredReadAction;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
 
 /**
  * Created by IntelliJ IDEA.

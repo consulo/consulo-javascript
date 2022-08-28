@@ -16,10 +16,11 @@
 
 package consulo.javascript.run.debug;
 
+import consulo.execution.debug.frame.XExecutionStack;
 import org.chromium.sdk.DebugContext;
 import javax.annotation.Nullable;
-import com.intellij.xdebugger.frame.XExecutionStack;
-import com.intellij.xdebugger.frame.XSuspendContext;
+
+import consulo.execution.debug.frame.XSuspendContext;
 
 /**
  * @author VISTALL

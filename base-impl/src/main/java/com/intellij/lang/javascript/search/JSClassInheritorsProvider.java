@@ -19,9 +19,9 @@ package com.intellij.lang.javascript.search;
 import java.util.Collection;
 
 import com.intellij.lang.javascript.psi.JSClass;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.component.extension.ExtensionPointName;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.project.Project;
 
 public interface JSClassInheritorsProvider
 {

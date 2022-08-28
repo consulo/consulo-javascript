@@ -18,7 +18,7 @@ package org.intellij.idea.lang.javascript.psiutil;
 import java.util.Map;
 import java.util.HashMap;
 
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.JSTokenTypes;

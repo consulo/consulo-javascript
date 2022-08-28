@@ -1,14 +1,16 @@
 package com.sixrr.inspectjs.bugs;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.psi.JSFunction;
-import com.intellij.openapi.diagnostic.Logger;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.logging.Logger;
 
+import javax.annotation.Nonnull;
+
+@ExtensionImpl
 public class InfiniteRecursionJSInspection extends JavaScriptInspection {
     private static Logger logger = Logger.getInstance("ULVJS");
 

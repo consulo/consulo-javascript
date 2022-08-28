@@ -15,31 +15,25 @@
  */
 package org.intellij.idea.lang.javascript.psiutil;
 
-import javax.annotation.Nonnull;
-
-import org.jetbrains.annotations.NonNls;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.LanguageParserDefinitions;
-import com.intellij.lang.ParserDefinition;
-import com.intellij.lang.javascript.psi.JSBinaryExpression;
-import com.intellij.lang.javascript.psi.JSBlockStatement;
-import com.intellij.lang.javascript.psi.JSElement;
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSFile;
-import com.intellij.lang.javascript.psi.JSStatement;
+import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.ReadonlyStatusHandler;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiFileFactory;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.IncorrectOperationException;
-import consulo.javascript.lang.JavaScriptLanguage;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiFileFactory;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
+import consulo.virtualFileSystem.ReadonlyStatusHandler;
+import consulo.virtualFileSystem.VirtualFile;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
 
 /**
  */
@@ -50,10 +44,10 @@ public class JSElementFactory {
 
     public static PsiElement addElementBefore(@Nonnull PsiElement element,
                                               @Nonnull PsiElement newElement) {
-        final ASTNode     oldElementParentNode = element.getNode();
-        final PsiElement  parentNode           = element.getParent();
-        final ASTNode     newElementParentNode = parentNode.getNode();
-        final ASTNode     newElementNode       = newElement.getNode();
+        final ASTNode oldElementParentNode = element.getNode();
+        final PsiElement parentNode           = element.getParent();
+        final ASTNode newElementParentNode = parentNode.getNode();
+        final ASTNode newElementNode       = newElement.getNode();
 
         if (newElementParentNode == null || newElementNode == null) {
             return null;
@@ -63,12 +57,12 @@ public class JSElementFactory {
     }
 
     public static PsiElement addElementAfter(@Nonnull PsiElement element,
-                                             @Nonnull PsiElement newElement) {
-        final ASTNode     elementNode          = element.getNode();
-        final ASTNode     oldElementParentNode = ((elementNode == null) ? null : elementNode.getTreeNext());
-        final PsiElement  parentNode           = element.getParent();
-        final ASTNode     newElementParentNode = parentNode.getNode();
-        final ASTNode     newElementNode       = newElement.getNode();
+																  @Nonnull PsiElement newElement) {
+        final ASTNode elementNode          = element.getNode();
+        final ASTNode oldElementParentNode = ((elementNode == null) ? null : elementNode.getTreeNext());
+        final PsiElement parentNode           = element.getParent();
+        final ASTNode newElementParentNode = parentNode.getNode();
+        final ASTNode newElementNode       = newElement.getNode();
 
         if (newElementParentNode == null || newElementNode == null) {
             return null;
@@ -79,7 +73,7 @@ public class JSElementFactory {
     }
 
     public static PsiElement addElementBefore(@Nonnull PsiElement element,
-                                              @NonNls @Nonnull String     elementText) {
+																   @NonNls @Nonnull String     elementText) {
         final PsiElement newElement = createDummyFile(element.getProject(), elementText).getFirstChild();
 
         assert (newElement != null);
@@ -87,7 +81,7 @@ public class JSElementFactory {
     }
 
     public static PsiElement addElementAfter(@Nonnull PsiElement element,
-                                             @Nonnull String     elementText) {
+																  @Nonnull String     elementText) {
         final PsiElement newElement = createDummyFile(element.getProject(), elementText).getFirstChild();
 
         assert (newElement != null);
@@ -103,8 +97,7 @@ public class JSElementFactory {
 
     @Nonnull
 	private static PsiFile createDummyFile(Project project, String text) {
-      final ParserDefinition  def            =
-        LanguageParserDefinitions.INSTANCE.forLanguage(JavaScriptLanguage.INSTANCE);
+      final ParserDefinition def = ParserDefinition.forLanguage(JavaScriptLanguage.INSTANCE);
 
         assert (def != null);
       return PsiFileFactory.getInstance(project)
@@ -114,13 +107,13 @@ public class JSElementFactory {
     public static JSStatement replaceElementWithStatement(@Nonnull JSElement      element,
                                                           @NonNls @Nonnull String statementText)
         throws IncorrectOperationException {
-        final ASTNode    newStatementNode       = JSChangeUtil.createStatementFromText(
+        final ASTNode newStatementNode       = JSChangeUtil.createStatementFromText(
           element.getProject(),
           statementText);
 
-        final ASTNode    oldStatementParentNode = element.getNode();
+        final ASTNode oldStatementParentNode = element.getNode();
         final PsiElement parentNode             = element.getParent();
-        final ASTNode    newStatementParentNode = parentNode.getNode();
+        final ASTNode newStatementParentNode = parentNode.getNode();
 
         if (newStatementParentNode == null || oldStatementParentNode == null || newStatementNode == null) {
             return null;
@@ -145,9 +138,9 @@ public class JSElementFactory {
                                                  @Nonnull JSExpression newExpression)
         throws IncorrectOperationException {
         final ASTNode    newExpressionNode = newExpression.getNode();
-        final ASTNode    oldExpressionNode = expression.getNode();
+        final ASTNode oldExpressionNode = expression.getNode();
         final PsiElement parentNode        = expression.getParent();
-        final ASTNode    grandParentNode   = parentNode.getNode();
+        final ASTNode grandParentNode   = parentNode.getNode();
 
         if (grandParentNode == null || oldExpressionNode == null || newExpressionNode == null) {
             return null;
@@ -162,13 +155,13 @@ public class JSElementFactory {
     public static JSStatement replaceStatement(@Nonnull JSStatement    statement,
                                                @NonNls @Nonnull String text)
         throws IncorrectOperationException {
-        final ASTNode    newStatementNode       = JSChangeUtil.createStatementFromText(
+        final ASTNode newStatementNode       = JSChangeUtil.createStatementFromText(
           statement.getProject(),
           text);
 
-        final ASTNode    oldStatementParentNode = statement.getNode();
+        final ASTNode oldStatementParentNode = statement.getNode();
         final PsiElement parentNode             = statement.getParent();
-        final ASTNode    newStatementParentNode = parentNode.getNode();
+        final ASTNode newStatementParentNode = parentNode.getNode();
 
         if (newStatementParentNode == null || oldStatementParentNode == null || newStatementNode == null) {
             return null;
@@ -183,12 +176,12 @@ public class JSElementFactory {
     public static JSStatement addStatementBefore(@Nonnull JSStatement    statement,
                                                  @NonNls @Nonnull String previousStatementText)
         throws IncorrectOperationException {
-        final ASTNode    newStatementNode       = JSChangeUtil.createStatementFromText(
+        final ASTNode newStatementNode       = JSChangeUtil.createStatementFromText(
           statement.getProject(),
           previousStatementText);
-        final ASTNode    oldStatementParentNode = statement.getNode();
+        final ASTNode oldStatementParentNode = statement.getNode();
         final PsiElement parentNode             = statement.getParent();
-        final ASTNode    newStatementParentNode = parentNode.getNode();
+        final ASTNode newStatementParentNode = parentNode.getNode();
 
         if (newStatementParentNode == null || newStatementNode == null) {
             return null;
@@ -206,10 +199,10 @@ public class JSElementFactory {
         final ASTNode     newStatementNode       = JSChangeUtil.createStatementFromText(
           statement.getProject(),
           nextStatementText);
-        final ASTNode     statementNode          = statement.getNode();
-        final ASTNode     oldStatementParentNode = ((statementNode == null) ? null : statementNode.getTreeNext());
-        final PsiElement  parentNode             = statement.getParent();
-        final ASTNode     newStatementParentNode = parentNode.getNode();
+        final ASTNode statementNode          = statement.getNode();
+        final ASTNode oldStatementParentNode = ((statementNode == null) ? null : statementNode.getTreeNext());
+        final PsiElement parentNode             = statement.getParent();
+        final ASTNode newStatementParentNode = parentNode.getNode();
 
         if (newStatementParentNode == null || newStatementNode == null) {
             return null;
@@ -257,7 +250,7 @@ public class JSElementFactory {
 
             if (ComparisonUtils.isComparisonOperator(newExpression)) {
                 final JSBinaryExpression  binaryExpression  = (JSBinaryExpression) newExpression;
-                final IElementType        operationSign     = binaryExpression.getOperationSign();
+                final IElementType operationSign     = binaryExpression.getOperationSign();
                 final String              negatedComparison = ComparisonUtils.getNegatedOperatorText(operationSign);
                 final JSExpression        leftOperand       = binaryExpression.getLOperand();
                 final JSExpression        rightOperand      = binaryExpression.getROperand();

@@ -17,9 +17,9 @@ package org.intellij.idea.lang.javascript.psiutil;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.ASTNode;
 
 import java.util.HashMap;
 import java.util.Map;

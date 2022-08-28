@@ -16,19 +16,19 @@
 
 <consulo-plugin>
 	<extensions defaultExtensionNs="com.intellij">
-		<fileTypeFactory implementation="consulo.javascript.lang.EcmaScriptFileTypeFactory"/>
-		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.lang.EcmaScript6JavaScriptVersion"/>
-		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.lang.EcmaScript7JavaScriptVersion"/>
-		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.lang.EcmaScript8JavaScriptVersion"/>
-		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.lang.EcmaScript9JavaScriptVersion"/>
-		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.lang.EcmaScript10JavaScriptVersion"/>
-		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.lang.EcmaScript11JavaScriptVersion"/>
-		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.lang.EcmaScript12JavaScriptVersion"/>
+		<fileTypeFactory implementation="consulo.javascript.ecmascript.lang.EcmaScriptFileTypeFactory"/>
+		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.ecmascript.lang.EcmaScript6JavaScriptVersion"/>
+		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.ecmascript.lang.EcmaScript7JavaScriptVersion"/>
+		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.ecmascript.lang.EcmaScript8JavaScriptVersion"/>
+		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.ecmascript.lang.EcmaScript9JavaScriptVersion"/>
+		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.ecmascript.lang.EcmaScript10JavaScriptVersion"/>
+		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.ecmascript.lang.EcmaScript11JavaScriptVersion"/>
+		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.ecmascript.lang.EcmaScript12JavaScriptVersion"/>
 	</extensions>
 
 	<extensions defaultExtensionNs="consulo.javascript">
-		<quickFixFactory key="ECMASCRIPT_6" implementationClass="consulo.javascript.ide.codeInsight.EcmaScript6QuickFixFactory"/>
+		<quickFixFactory key="ECMASCRIPT_6" implementationClass="consulo.javascript.ecmascript.codeInsight.EcmaScript6QuickFixFactory"/>
 
-		<keywordCompletionExtender implementation="consulo.javascript.ecmascript6.completion.EcmaScript6KeywordCompletionExtender" />
+		<keywordCompletionExtender implementation="consulo.javascript.ecmascript.completion.EcmaScript6KeywordCompletionExtender" />
 	</extensions>
 </consulo-plugin>

@@ -1,11 +1,14 @@
 package com.sixrr.inspectjs.functionmetrics;
 
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.PsiElement;
 import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.psi.PsiElement;
+
 import javax.annotation.Nonnull;
 
+@ExtensionImpl
 public class FunctionWithMultipleReturnPointsJSInspection extends JavaScriptInspection {
 
     @Override

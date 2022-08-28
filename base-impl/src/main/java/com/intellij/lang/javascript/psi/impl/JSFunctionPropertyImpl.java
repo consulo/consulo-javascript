@@ -1,6 +1,6 @@
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSAttributeList;
@@ -8,8 +8,8 @@ import com.intellij.lang.javascript.psi.JSFunctionProperty;
 import com.intellij.lang.javascript.psi.JSParameterList;
 import com.intellij.lang.javascript.psi.JSSourceElement;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.lang.psi.JavaScriptType;
-import consulo.javascript.lang.psi.JavaScriptTypeElement;
+import consulo.javascript.language.psi.JavaScriptType;
+import consulo.javascript.language.psi.JavaScriptTypeElement;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

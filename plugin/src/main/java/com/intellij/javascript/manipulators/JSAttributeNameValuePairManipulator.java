@@ -15,17 +15,17 @@
  */
 package com.intellij.javascript.manipulators;
 
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NonNls;
 import com.intellij.lang.javascript.psi.JSAttributeNameValuePair;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
+import consulo.project.Project;
 
 /**
  * @author peter
  */
-public class JSAttributeNameValuePairManipulator extends JSAbstractElementManipulator<JSAttributeNameValuePair>
+public abstract class JSAttributeNameValuePairManipulator extends JSAbstractElementManipulator<JSAttributeNameValuePair>
 {
 	@Override
 	protected JSAttributeNameValuePair createTree(final String newText, final Project project)

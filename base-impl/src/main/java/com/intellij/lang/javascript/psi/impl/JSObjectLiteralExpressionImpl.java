@@ -16,13 +16,13 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSObjectLiteralExpression;
 import com.intellij.lang.javascript.psi.JSProperty;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.resolve.ResolveState;
 
 import javax.annotation.Nonnull;
 
@@ -53,7 +53,7 @@ public class JSObjectLiteralExpressionImpl extends JSExpressionImpl implements J
 
 	@Override
 	public boolean processDeclarations(@Nonnull final PsiScopeProcessor processor, @Nonnull final ResolveState state, final PsiElement lastParent,
-			@Nonnull final PsiElement place)
+									   @Nonnull final PsiElement place)
 	{
 		if(lastParent == null || !(place instanceof JSProperty))
 		{

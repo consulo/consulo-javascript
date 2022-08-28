@@ -1,13 +1,16 @@
 package consulo.javascript.lang;
 
-import com.intellij.lang.PsiParser;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.util.containers.ArrayListSet;
 import consulo.javascript.lang.parsing.JavaScriptParser;
+import consulo.javascript.language.JavaScriptFeature;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.javascript.language.JavaScriptLanguageVersion;
+import consulo.language.ast.TokenSet;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.parser.PsiParser;
 
 import javax.annotation.Nonnull;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -18,7 +21,7 @@ public abstract class BaseJavaScriptLanguageVersion extends JavaScriptLanguageVe
 {
 	private static TokenSet ourLiterals = TokenSet.orSet(JavaScriptTokenSets.STRING_LITERALS, TokenSet.create(JSTokenTypes.NUMERIC_LITERAL));
 
-	private Set<JavaScriptFeature> myFeatures = new ArrayListSet<>();
+	private Set<JavaScriptFeature> myFeatures = new LinkedHashSet<>();
 
 	public BaseJavaScriptLanguageVersion(String name, String... mimeTypes)
 	{

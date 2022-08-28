@@ -16,9 +16,10 @@
 
 package com.intellij.lang.javascript.psi;
 
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiPolyVariantReference;
+
 import javax.annotation.Nullable;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiPolyVariantReference;
 
 /**
  * @author max

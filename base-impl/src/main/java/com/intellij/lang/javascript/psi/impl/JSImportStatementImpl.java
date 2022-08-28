@@ -16,14 +16,14 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSImportStatement;
 import com.intellij.lang.javascript.psi.stubs.JSImportStatementStub;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.resolve.ResolveState;
 
 import javax.annotation.Nonnull;
 
@@ -50,7 +50,7 @@ public class JSImportStatementImpl extends JSStubbedStatementImpl<JSImportStatem
 
 	@Override
 	public boolean processDeclarations(@Nonnull final PsiScopeProcessor processor, @Nonnull final ResolveState state, final PsiElement lastParent,
-			@Nonnull final PsiElement place)
+									   @Nonnull final PsiElement place)
 	{
 		return true;
 	}

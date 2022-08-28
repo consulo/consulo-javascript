@@ -17,6 +17,7 @@ package org.intellij.idea.lang.javascript.intention.increment;
 
 import javax.annotation.Nonnull;
 
+import consulo.language.psi.PsiElement;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
@@ -32,9 +33,8 @@ import com.intellij.lang.javascript.psi.JSPrefixExpression;
 import com.intellij.lang.javascript.psi.JSReturnStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.JSThrowStatement;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.ast.IElementType;
+import consulo.language.util.IncorrectOperationException;
 
 public class JSExtractIncrementIntention extends JSMutablyNamedIntention {
     @Override

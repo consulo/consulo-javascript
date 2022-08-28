@@ -22,8 +22,8 @@ import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.PsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
 
 class ConjunctionPredicate implements JSElementPredicate {
     @Override

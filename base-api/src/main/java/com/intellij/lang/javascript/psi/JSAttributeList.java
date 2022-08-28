@@ -20,8 +20,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.intellij.lang.javascript.psi.stubs.JSAttributeListStub;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.StubBasedPsiElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.StubBasedPsiElement;
 
 /**
  * @author Maxim.Mossienko

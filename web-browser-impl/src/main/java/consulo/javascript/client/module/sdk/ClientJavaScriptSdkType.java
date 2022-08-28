@@ -1,25 +1,27 @@
 package consulo.javascript.client.module.sdk;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.content.OrderRootType;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.base.SourcesOrderRootType;
+import consulo.content.bundle.SdkType;
+import consulo.javascript.icon.JavaScriptIconGroup;
+import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.roots.OrderRootType;
-import consulo.javascript.icon.JavaScriptIconGroup;
-import consulo.roots.types.BinariesOrderRootType;
-import consulo.roots.types.SourcesOrderRootType;
-import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
  * @since 29.06.14
  */
+@ExtensionImpl
 public class ClientJavaScriptSdkType extends SdkType
 {
 	@Nonnull
 	public static ClientJavaScriptSdkType getInstance()
 	{
-		return EP_NAME.findExtension(ClientJavaScriptSdkType.class);
+		return EP_NAME.findExtensionOrFail(ClientJavaScriptSdkType.class);
 	}
 
 	public ClientJavaScriptSdkType()
@@ -43,7 +45,7 @@ public class ClientJavaScriptSdkType extends SdkType
 	@Override
 	public Image getIcon()
 	{
-		return JavaScriptIconGroup.javaScript();
+		return JavaScriptIconGroup.javascript();
 	}
 
 	@Override

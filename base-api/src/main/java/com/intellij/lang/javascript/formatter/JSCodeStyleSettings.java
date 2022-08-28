@@ -16,8 +16,8 @@
 
 package com.intellij.lang.javascript.formatter;
 
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CustomCodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CustomCodeStyleSettings;
 
 /**
  * @author Maxim.Mossienko
@@ -34,7 +34,7 @@ public class JSCodeStyleSettings extends CustomCodeStyleSettings
 	public static final int DO_NOT_INDENT = 0;
 	public static final int INDENT = 1;
 
-	protected JSCodeStyleSettings(CodeStyleSettings container)
+	public JSCodeStyleSettings(CodeStyleSettings container)
 	{
 		super("JSCodeStyleSettings", container);
 	}

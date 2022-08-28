@@ -2,14 +2,14 @@ package consulo.actionscript.lang;
 
 import javax.annotation.Nonnull;
 
-import com.intellij.lang.PsiParser;
+import consulo.language.parser.PsiParser;
 import com.intellij.lang.javascript.DialectOptionHolder;
 import com.intellij.lang.javascript.JavaScriptParsingFlexLexer;
 import com.intellij.lang.javascript.highlighting.JSHighlighter;
-import com.intellij.lexer.Lexer;
+import consulo.language.lexer.Lexer;
 import consulo.javascript.lang.BaseJavaScriptLanguageVersion;
-import consulo.javascript.lang.JavaScriptLanguage;
-import consulo.javascript.lang.parsing.EcmaScript4Parser;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.javascript.ecmascript4.lang.parsing.EcmaScript4Parser;
 
 /**
  * @author VISTALL

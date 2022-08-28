@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 
 import org.chromium.sdk.JsEvaluateContext;
 import org.chromium.sdk.JsValue;
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import consulo.ui.image.Image;
 
 /**

@@ -16,11 +16,11 @@
 package org.intellij.idea.lang.javascript.intention.comment;
 
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.util.IncorrectOperationException;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
@@ -53,7 +53,7 @@ public class JSChangeToCStyleCommentIntention extends JSIntention {
 
         final StringBuilder     buffer           = new StringBuilder(getCommentContents(firstComment));
         final List<PsiElement>  elementsToDelete = new ArrayList<PsiElement>();
-        PsiElement              nextComment      = firstComment;
+        PsiElement nextComment      = firstComment;
 
         while (true) {
             elementsToDelete.add(nextComment);

@@ -1,8 +1,8 @@
 package consulo.javascript.jsx.language.psi.impl;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReferenceBase;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReferenceBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

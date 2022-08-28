@@ -16,17 +16,17 @@
 
 package com.intellij.lang.javascript.psi.util;
 
-import com.intellij.codeInsight.completion.PrioritizedLookupElement;
-import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler;
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import consulo.component.util.Iconable;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.PrioritizedLookupElement;
+import consulo.language.editor.completion.lookup.ParenthesesInsertHandler;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.openapi.util.Iconable;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.IconDescriptorUpdaters;
-import consulo.javascript.lang.psi.JavaScriptType;
+import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.javascript.language.psi.JavaScriptType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

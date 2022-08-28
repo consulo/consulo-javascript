@@ -22,8 +22,8 @@ import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ConditionalUtils;
 
 import com.intellij.lang.javascript.psi.JSConditionalExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 
 public class JSReplaceConditionalWithIfIntention extends JSIntention {
     @Override

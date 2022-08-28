@@ -25,7 +25,7 @@ import com.intellij.lang.javascript.psi.JSLiteralExpression;
 import com.intellij.lang.javascript.psi.JSParenthesizedExpression;
 import com.intellij.lang.javascript.psi.JSPrefixExpression;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 
 public class BoolUtils {
 
@@ -63,7 +63,7 @@ public class BoolUtils {
     public static boolean isNegation(JSExpression condition, boolean ignoreNegatedNullComparison) {
             if (condition instanceof JSPrefixExpression) {
                 final JSPrefixExpression prefixExpression = (JSPrefixExpression) condition;
-                final IElementType       sign             = prefixExpression.getOperationSign();
+                final IElementType sign             = prefixExpression.getOperationSign();
 
                 return sign.equals(JSTokenTypes.EXCL);
             } else if (condition instanceof JSBinaryExpression) {

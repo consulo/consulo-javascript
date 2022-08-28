@@ -23,8 +23,8 @@ import consulo.json.validation.descriptor.JsonPropertyDescriptor;
 import consulo.json.validation.inspections.PropertyValidationInspection;
 import com.intellij.lang.javascript.psi.JSProperty;
 import consulo.javascript.psi.impl.reference.JSPropertyNameReferenceProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.PsiElement;
 
 /**
  * @author VISTALL

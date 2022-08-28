@@ -1,11 +1,10 @@
 package consulo.javascript.index;
 
-import javax.annotation.Nonnull;
-
+import consulo.component.extension.ExtensionPointName;
 import consulo.javascript.psi.stubs.JSFileStub;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.psi.stubs.IndexSink;
+import consulo.language.psi.stub.IndexSink;
 
+import javax.annotation.Nonnull;
 /**
  * @author VISTALL
  * @since 19.07.2015

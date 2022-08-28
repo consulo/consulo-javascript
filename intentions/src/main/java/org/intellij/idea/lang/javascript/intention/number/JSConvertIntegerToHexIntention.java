@@ -17,14 +17,14 @@ package org.intellij.idea.lang.javascript.intention.number;
 
 import javax.annotation.Nonnull;
 
+import consulo.language.psi.PsiElement;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.NumberUtil;
 
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 
 public class JSConvertIntegerToHexIntention extends JSIntention {
     @Override

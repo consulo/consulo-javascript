@@ -1,19 +1,21 @@
 package com.sixrr.inspectjs.confusing;
 
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import consulo.javascript.psi.JSSimpleLiteralExpression;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@ExtensionImpl
 public class MagicNumberJSInspection extends JavaScriptInspection {
 
     @NonNls private static final String[] s_specialCaseLiteralArray =

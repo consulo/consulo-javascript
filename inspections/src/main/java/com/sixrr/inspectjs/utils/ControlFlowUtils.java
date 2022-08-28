@@ -3,7 +3,7 @@ package com.sixrr.inspectjs.utils;
 import javax.annotation.Nonnull;
 
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
 
 import javax.annotation.Nullable;

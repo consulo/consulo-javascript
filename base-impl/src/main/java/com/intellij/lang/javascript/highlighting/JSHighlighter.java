@@ -16,23 +16,20 @@
 
 package com.intellij.lang.javascript.highlighting;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.intellij.lang.javascript.JavaScriptHighlightingLexer;
+import com.intellij.lang.javascript.*;
+import consulo.application.util.function.Processor;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.javascript.ide.hightlight.JavaScriptSyntaxHighlightKeys;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.StringEscapesTokenTypes;
+import consulo.language.editor.highlight.SyntaxHighlighterBase;
+import consulo.language.lexer.Lexer;
+import consulo.xml.editor.XmlHighlighterColors;
 
 import javax.annotation.Nonnull;
-import com.intellij.lang.javascript.DialectOptionHolder;
-import com.intellij.lang.javascript.JSDocElementType;
-import com.intellij.lang.javascript.JSDocTokenTypes;
-import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.JavaScriptHighlightingLexer;
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.editor.XmlHighlighterColors;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
-import com.intellij.psi.StringEscapesTokenTypes;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.Processor;
-import consulo.javascript.ide.hightlight.JavaScriptSyntaxHighlightKeys;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.

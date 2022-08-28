@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript.psi;
 
-import com.intellij.psi.PsiComment;
+import consulo.language.psi.PsiComment;
 
 public interface JSDocComment extends PsiComment, JSElement
 {

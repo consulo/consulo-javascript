@@ -16,9 +16,10 @@
 package org.intellij.idea.lang.javascript.psiutil;
 
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.psi.PsiReference;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -275,7 +276,7 @@ public class ControlFlowUtils {
         } else if (expression instanceof JSDefinitionExpression) {
             final JSExpression referentExpression = ((JSDefinitionExpression) expression).getExpression();
             final PsiReference reference          = (referentExpression == null) ? null : referentExpression.getReference();
-            final PsiElement   variable           = (reference == null)          ? null : reference.resolve();
+            final PsiElement variable           = (reference == null)          ? null : reference.resolve();
 
             return ((variable != null && variable instanceof JSVariable) ? (JSVariable) variable : null);
         } else {

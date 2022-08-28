@@ -1,15 +1,18 @@
 package com.sixrr.inspectjs.control;
 
-import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.psi.JSConditionalExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.project.Project;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.BoolUtils;
+import consulo.language.editor.inspection.ProblemDescriptor;
+
 import javax.annotation.Nonnull;
 
+@ExtensionImpl
 public class ConstantConditionalExpressionJSInspection
         extends JavaScriptInspection {
 

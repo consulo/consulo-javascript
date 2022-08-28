@@ -16,9 +16,9 @@
 
 package com.intellij.lang.javascript.psi;
 
-import com.intellij.util.ArrayFactory;
+import consulo.util.collection.ArrayFactory;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.lang.psi.JavaScriptType;
+import consulo.javascript.language.psi.JavaScriptType;
 
 import javax.annotation.Nonnull;
 

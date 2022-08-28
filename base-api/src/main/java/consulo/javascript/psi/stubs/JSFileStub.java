@@ -1,8 +1,9 @@
 package consulo.javascript.psi.stubs;
 
-import javax.annotation.Nonnull;
 import com.intellij.lang.javascript.psi.JSFile;
-import com.intellij.psi.stubs.PsiFileStub;
+import consulo.language.psi.stub.PsiFileStub;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

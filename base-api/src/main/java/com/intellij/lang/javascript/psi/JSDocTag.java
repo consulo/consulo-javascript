@@ -17,7 +17,7 @@
 package com.intellij.lang.javascript.psi;
 
 import javax.annotation.Nullable;
-import com.intellij.psi.PsiNamedElement;
+import consulo.language.psi.PsiNamedElement;
 
 public interface JSDocTag extends PsiNamedElement, JSElement
 {

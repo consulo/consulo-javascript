@@ -22,8 +22,8 @@ import org.intellij.idea.lang.javascript.psiutil.NumberUtil;
 import javax.annotation.Nonnull;
 
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 
 public class JSConvertIntegerToOctalIntention extends JSIntention {
     @Override

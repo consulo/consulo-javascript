@@ -17,13 +17,14 @@ package org.intellij.idea.lang.javascript.psiutil;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.containers.ArrayListSet;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
+
 import javax.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class VariableAccessUtil {
@@ -157,7 +158,7 @@ public class VariableAccessUtil {
             this.variable          = variable;
             this.context           = context;
             this.notUpdatedSymbols = notUpdatedSymbols;
-            this.candidateSymbols  = new ArrayListSet<JSVariable>();
+            this.candidateSymbols  = new LinkedHashSet<>();
 
             this.candidateSymbols.add(variable);
         }
@@ -186,7 +187,7 @@ public class VariableAccessUtil {
 
                 if (VariableAccessUtil.mayEvaluateToVariable(arg, this.variable)) {
                     final Set<JSVariable> usedVariables   = getUsedVariables(assignment.getROperand());
-                    final Set<JSVariable> newCandidateSet = new ArrayListSet<JSVariable>();
+                    final Set<JSVariable> newCandidateSet = new LinkedHashSet<>();
                     boolean               assigned        = false;
 
                     newCandidateSet.addAll(this.candidateSymbols);
@@ -197,7 +198,7 @@ public class VariableAccessUtil {
                             assigned = true;
                         } else {
                             if (this.notUpdatedSymbols.isEmpty()) {
-                                this.notUpdatedSymbols = new ArrayListSet<JSVariable>();
+                                this.notUpdatedSymbols = new LinkedHashSet<>();
                             }
                             this.notUpdatedSymbols.add(variable);
                         }

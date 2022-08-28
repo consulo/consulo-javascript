@@ -15,9 +15,9 @@
  */
 package org.intellij.idea.lang.javascript.intention;
 
-import javax.annotation.Nonnull;
+import consulo.language.psi.PsiElement;
 
-import com.intellij.psi.PsiElement;
+import javax.annotation.Nonnull;
 
 public interface JSElementPredicate {
     boolean satisfiedBy(@Nonnull PsiElement element);

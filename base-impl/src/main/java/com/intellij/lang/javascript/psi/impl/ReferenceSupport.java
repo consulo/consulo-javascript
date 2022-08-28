@@ -16,35 +16,29 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
+import consulo.application.util.SystemInfo;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.language.psi.*;
+import consulo.language.psi.path.FileReferenceSet;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.ManagingFS;
+import consulo.virtualFileSystem.VirtualFile;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.newvfs.ManagingFS;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiFileSystemItem;
-import com.intellij.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet;
-import com.intellij.util.Function;
-import consulo.roots.OrderEntryWithTracking;
+import java.util.function.Function;
 
 /**
  * Created by IntelliJ IDEA.
@@ -82,7 +76,7 @@ public class ReferenceSupport
 		base.addCustomization(FileReferenceSet.DEFAULT_PATH_EVALUATOR_OPTION, new Function<PsiFile, Collection<PsiFileSystemItem>>()
 		{
 			@Override
-			public Collection<PsiFileSystemItem> fun(PsiFile psiFile)
+			public Collection<PsiFileSystemItem> apply(PsiFile psiFile)
 			{
 				final PsiElement context = psiFile.getContext();
 				if(context instanceof PsiLanguageInjectionHost)
@@ -184,7 +178,7 @@ public class ReferenceSupport
 
 	private static void appendSdkAndLibraryClassRoots(List<VirtualFile> dirs, PsiFile psiFile)
 	{
-		final Module module = ModuleUtil.findModuleForPsiElement(psiFile);
+		final Module module = ModuleUtilCore.findModuleForPsiElement(psiFile);
 		if(module != null)
 		{
 			final OrderEntry[] orderEntries = ModuleRootManager.getInstance(module).getOrderEntries();
@@ -192,7 +186,7 @@ public class ReferenceSupport
 			{
 				if(orderEntry instanceof OrderEntryWithTracking)
 				{
-					dirs.addAll(Arrays.asList(orderEntry.getFiles(OrderRootType.CLASSES)));
+					dirs.addAll(Arrays.asList(orderEntry.getFiles(BinariesOrderRootType.getInstance())));
 				}
 			}
 		}
@@ -200,7 +194,6 @@ public class ReferenceSupport
 
 	public static class LookupOptions
 	{
-
 		// default is absolute or relative to current file
 		public static final LookupOptions DEFAULT = new LookupOptions(false, true, true, false, false, false, false);
 		public static final LookupOptions MX_STYLE_SOURCE = new LookupOptions(false, true, true, true, true, false, true);

@@ -7,7 +7,7 @@ import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSParenthesizedExpression;
 import com.intellij.lang.javascript.psi.JSPrefixExpression;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 
 import javax.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;

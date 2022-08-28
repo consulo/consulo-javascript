@@ -1,16 +1,19 @@
 package com.sixrr.inspectjs.control;
 
-import com.intellij.codeInspection.ProblemDescriptor;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.inspection.ProblemDescriptor;
 import com.intellij.lang.javascript.psi.JSBreakStatement;
 import com.intellij.lang.javascript.psi.JSContinueStatement;
 import com.intellij.lang.javascript.psi.JSLabeledStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 import com.sixrr.inspectjs.*;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 
+@ExtensionImpl
 public class UnnecessaryLabelJSInspection extends JavaScriptInspection {
 
     @Override

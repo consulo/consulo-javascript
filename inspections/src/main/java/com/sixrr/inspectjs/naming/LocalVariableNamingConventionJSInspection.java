@@ -1,17 +1,19 @@
 package com.sixrr.inspectjs.naming;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.psi.JSVarStatement;
 import com.intellij.lang.javascript.psi.JSVariable;
-import com.intellij.psi.PsiElement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.InspectionJSFix;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.fix.RenameFix;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
+
+@ExtensionImpl
 public class LocalVariableNamingConventionJSInspection extends ConventionInspection {
     private static final int DEFAULT_MIN_LENGTH = 1;
     private static final int DEFAULT_MAX_LENGTH = 32;

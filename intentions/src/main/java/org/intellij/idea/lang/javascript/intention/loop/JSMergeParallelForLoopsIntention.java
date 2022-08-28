@@ -17,6 +17,7 @@ package org.intellij.idea.lang.javascript.intention.loop;
 
 import javax.annotation.Nonnull;
 
+import consulo.language.psi.PsiElement;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ControlFlowUtils;
@@ -29,8 +30,7 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSForStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.JSVarStatement;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 
 public class JSMergeParallelForLoopsIntention extends JSIntention {
     @NonNls private static final String FOR_STATEMENT_PREFIX = "for (";
@@ -43,7 +43,7 @@ public class JSMergeParallelForLoopsIntention extends JSIntention {
 
     @Override
 	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final PsiElement  nextElement = JSElementFactory.getNonWhiteSpaceSibling(element, true);
+        final PsiElement nextElement = JSElementFactory.getNonWhiteSpaceSibling(element, true);
 
         assert (nextElement != null);
 

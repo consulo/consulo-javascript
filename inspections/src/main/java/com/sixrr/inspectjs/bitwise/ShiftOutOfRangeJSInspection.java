@@ -3,7 +3,8 @@ package com.sixrr.inspectjs.bitwise;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.psi.tree.IElementType;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.ast.IElementType;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
@@ -11,6 +12,7 @@ import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.utils.ExpressionUtil;
 import javax.annotation.Nonnull;
 
+@ExtensionImpl
 public class ShiftOutOfRangeJSInspection extends JavaScriptInspection {
 
     @Override

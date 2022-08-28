@@ -34,8 +34,8 @@ import consulo.json.validation.JsonFileDescriptorProvider;
 import consulo.json.validation.NativeArray;
 import consulo.json.validation.descriptor.JsonObjectDescriptor;
 import consulo.json.validation.descriptor.JsonPropertyDescriptor;
-import com.intellij.psi.PsiFile;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.language.psi.PsiFile;
+import consulo.util.collection.ContainerUtil;
 
 /**
  * @author VISTALL

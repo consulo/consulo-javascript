@@ -1,13 +1,13 @@
 package com.sixrr.inspectjs.fix;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.psi.PsiElement;
-import com.intellij.refactoring.RefactoringActionHandlerFactory;
-import com.intellij.refactoring.RefactoringActionHandler;
-import com.intellij.refactoring.RefactoringFactory;
-import com.intellij.refactoring.RenameRefactoring;
-import com.intellij.ide.DataManager;
+import consulo.language.editor.refactoring.RefactoringFactory;
+import consulo.project.Project;
+import consulo.dataContext.DataManager;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.psi.PsiElement;
+import consulo.language.editor.refactoring.action.RefactoringActionHandlerFactory;
+import consulo.language.editor.refactoring.action.RefactoringActionHandler;
+import consulo.language.editor.refactoring.RenameRefactoring;
 import com.sixrr.inspectjs.InspectionJSFix;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import javax.annotation.Nonnull;

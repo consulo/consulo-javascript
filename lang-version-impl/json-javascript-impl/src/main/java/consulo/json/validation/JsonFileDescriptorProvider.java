@@ -20,8 +20,8 @@ import javax.annotation.Nonnull;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.json.validation.descriptor.JsonObjectDescriptor;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.psi.PsiFile;
+import consulo.component.extension.ExtensionPointName;
+import consulo.language.psi.PsiFile;
 
 /**
  * @author VISTALL

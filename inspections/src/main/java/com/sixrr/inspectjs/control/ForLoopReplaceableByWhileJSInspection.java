@@ -1,13 +1,14 @@
 package com.sixrr.inspectjs.control;
 
-import com.intellij.codeInspection.ProblemDescriptor;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.inspection.ProblemDescriptor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSForStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.JSVarStatement;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
+import consulo.project.Project;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.ui.SingleCheckboxOptionsPanel;
 import org.jetbrains.annotations.NonNls;
@@ -15,6 +16,7 @@ import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
+@ExtensionImpl
 public class ForLoopReplaceableByWhileJSInspection extends JavaScriptInspection {
 
     /**

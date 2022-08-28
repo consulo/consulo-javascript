@@ -16,28 +16,28 @@
 
 package consulo.javascript.run.debug;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.ExecutionResult;
-import com.intellij.execution.process.ProcessHandler;
-import com.intellij.execution.ui.ExecutionConsole;
-import com.intellij.execution.ui.RunnerLayoutUi;
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.content.Content;
-import com.intellij.util.ui.UIUtil;
-import com.intellij.xdebugger.*;
-import com.intellij.xdebugger.breakpoints.XBreakpointHandler;
-import com.intellij.xdebugger.breakpoints.XBreakpointManager;
-import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
-import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
-import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
-import com.intellij.xdebugger.frame.XSuspendContext;
-import com.intellij.xdebugger.ui.XDebugTabLayouter;
+import consulo.application.AllIcons;
+import consulo.application.Application;
+import consulo.execution.ExecutionResult;
+import consulo.execution.debug.*;
+import consulo.execution.debug.breakpoint.XBreakpointHandler;
+import consulo.execution.debug.breakpoint.XBreakpointProperties;
+import consulo.execution.debug.breakpoint.XExpression;
+import consulo.execution.debug.breakpoint.XLineBreakpoint;
+import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
+import consulo.execution.debug.frame.XSuspendContext;
+import consulo.execution.debug.ui.XDebugTabLayouter;
+import consulo.execution.ui.ExecutionConsole;
+import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.javascript.debugger.JavaScriptEditorsProvider;
 import consulo.javascript.debugger.JavaScriptLineBreakpointType;
 import consulo.javascript.debugger.JavaScriptListPanel;
 import consulo.javascript.icon.JavaScriptIconGroup;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessHandler;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.content.Content;
+import consulo.virtualFileSystem.VirtualFile;
 import org.chromium.sdk.Breakpoint;
 import org.chromium.sdk.DebugContext;
 import org.chromium.sdk.JavascriptVm;
@@ -248,7 +248,7 @@ public abstract class V8BaseDebugProcess<V extends JavascriptVm> extends XDebugP
 			@Override
 			public void registerAdditionalContent(@Nonnull RunnerLayoutUi ui)
 			{
-				Content content = ui.createContent("ScriptListView", myScriptListPanel, "Scripts", JavaScriptIconGroup.javaScript(), null);
+				Content content = ui.createContent("ScriptListView", myScriptListPanel, "Scripts", JavaScriptIconGroup.javascript(), null);
 				content.setCloseable(false);
 
 				ui.addContent(content);

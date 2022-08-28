@@ -18,11 +18,11 @@ package org.intellij.idea.lang.javascript.intention.comment;
 import javax.annotation.Nonnull;
 
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.util.IncorrectOperationException;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
@@ -37,8 +37,8 @@ public class JSMoveCommentToSeparateLineIntention extends JSIntention {
 
     @Override
 	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final PsiComment    selectedComment = (PsiComment) element;
-        PsiElement          elementToCheck  = selectedComment;
+        final PsiComment selectedComment = (PsiComment) element;
+        PsiElement elementToCheck  = selectedComment;
         final PsiWhiteSpace whiteSpace;
 
         while (true) {
@@ -52,7 +52,7 @@ public class JSMoveCommentToSeparateLineIntention extends JSIntention {
             }
         }
 
-        PsiElement  commentElement = JSElementFactory.addElementBefore(whiteSpace, selectedComment.getText());
+        PsiElement commentElement = JSElementFactory.addElementBefore(whiteSpace, selectedComment.getText());
         JSElementFactory.addElementBefore(commentElement, "\n");
 
         JSElementFactory.removeElement(selectedComment);
@@ -75,7 +75,7 @@ public class JSMoveCommentToSeparateLineIntention extends JSIntention {
             if (!(element instanceof PsiComment)) {
                 return false;
             }
-            final PsiComment   comment = (PsiComment) element;
+            final PsiComment comment = (PsiComment) element;
             final IElementType type    = comment.getTokenType();
 
             if (!(JSTokenTypes.C_STYLE_COMMENT    .equals(type) ||

@@ -17,9 +17,9 @@ package org.intellij.idea.lang.javascript.intention.switchtoif;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import org.intellij.idea.lang.javascript.psiutil.EquivalenceChecker;
 import org.intellij.idea.lang.javascript.psiutil.ExpressionUtil;
 import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
@@ -169,7 +169,7 @@ class CaseUtil {
 
         if (expToCheck instanceof JSBinaryExpression) {
             final JSBinaryExpression binaryExp = (JSBinaryExpression) expToCheck;
-            final IElementType       operation = binaryExp.getOperationSign();
+            final IElementType operation = binaryExp.getOperationSign();
             final JSExpression       lhs       = binaryExp.getLOperand();
             final JSExpression       rhs       = binaryExp.getROperand();
 

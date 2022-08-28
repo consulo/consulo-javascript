@@ -22,17 +22,17 @@ import java.io.IOException;
 import javax.annotation.Nonnull;
 
 import consulo.annotation.access.RequiredReadAction;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.psi.JSStubElementType;
+import consulo.index.io.StringRef;
+import consulo.language.ast.ASTNode;
+import consulo.javascript.impl.language.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.JSUseNamespaceDirective;
 import com.intellij.lang.javascript.psi.impl.JSUseNamespaceDirectiveImpl;
 import com.intellij.lang.javascript.psi.stubs.JSUseNamespaceDirectiveStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSUseNamespaceDirectiveStubImpl;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
-import com.intellij.util.io.StringRef;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.stub.StubOutputStream;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.StubInputStream;
 
 /**
  * @author Maxim.Mossienko

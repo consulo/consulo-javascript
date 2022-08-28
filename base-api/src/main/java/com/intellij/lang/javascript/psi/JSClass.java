@@ -18,8 +18,8 @@ package com.intellij.lang.javascript.psi;
 
 import javax.annotation.Nullable;
 import com.intellij.lang.javascript.psi.stubs.JSClassStub;
-import com.intellij.pom.Navigatable;
-import com.intellij.psi.StubBasedPsiElement;
+import consulo.language.psi.StubBasedPsiElement;
+import consulo.navigation.Navigatable;
 
 /**
  * @by Maxim.Mossienko

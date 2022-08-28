@@ -16,15 +16,15 @@
 
 package consulo.javascript.run.debug;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.xdebugger.XDebuggerManager;
-import com.intellij.xdebugger.breakpoints.XBreakpointManager;
-import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
-import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
+import consulo.execution.debug.XBreakpointManager;
+import consulo.execution.debug.XDebuggerManager;
+import consulo.execution.debug.breakpoint.XBreakpointProperties;
+import consulo.execution.debug.breakpoint.XLineBreakpoint;
+import consulo.application.ApplicationManager;
 import consulo.javascript.debugger.JavaScriptLineBreakpointType;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.util.collection.ContainerUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import org.chromium.sdk.*;
 
 import java.util.Collection;

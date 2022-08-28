@@ -18,6 +18,7 @@ package consulo.javascript.run.debug;
 
 import javax.annotation.Nonnull;
 
+import consulo.execution.debug.frame.XValueModifier;
 import org.chromium.sdk.JsDeclarativeVariable;
 import org.chromium.sdk.JsEvaluateContext;
 import org.chromium.sdk.JsFunction;
@@ -25,8 +26,7 @@ import org.chromium.sdk.JsValue;
 import org.chromium.sdk.JsVariable;
 
 import javax.annotation.Nullable;
-import com.intellij.xdebugger.frame.XValueChildrenList;
-import com.intellij.xdebugger.frame.XValueModifier;
+import consulo.execution.debug.frame.XValueChildrenList;
 
 /**
  * @author VISTALL

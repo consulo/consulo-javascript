@@ -1,7 +1,10 @@
 package consulo.javascript.lang;
 
-import com.intellij.openapi.util.text.StringUtil;
-import consulo.lang.LanguageVersion;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.javascript.language.JavaScriptLanguageVersion;
+import consulo.javascript.language.StandardJavaScriptVersions;
+import consulo.language.version.LanguageVersion;
+import consulo.util.lang.StringUtil;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

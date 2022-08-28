@@ -3,11 +3,11 @@ package consulo.javascript.lang.psi.impl.resolve;
 import com.intellij.lang.javascript.psi.impl.JSReferenceExpressionImpl;
 import com.intellij.lang.javascript.psi.resolve.JSImportedElementResolveResult;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.ResolveState;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.lang.LanguageVersion;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiNamedElement;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.language.version.LanguageVersion;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -1,21 +1,23 @@
 package com.sixrr.inspectjs.confusing;
 
-import com.intellij.codeInspection.ProblemDescriptor;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.inspection.ProblemDescriptor;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.util.IncorrectOperationException;
 import com.sixrr.inspectjs.*;
+import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@ExtensionImpl
 public class PointlessArithmeticExpressionJSInspection
         extends JavaScriptInspection {
 

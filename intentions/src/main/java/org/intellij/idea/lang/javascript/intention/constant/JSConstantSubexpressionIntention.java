@@ -17,6 +17,7 @@ package org.intellij.idea.lang.javascript.intention.constant;
 
 import javax.annotation.Nonnull;
 
+import consulo.language.psi.PsiElement;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
@@ -29,10 +30,9 @@ import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
+import consulo.util.lang.StringUtil;
+import consulo.language.ast.IElementType;
+import consulo.language.util.IncorrectOperationException;
 
 public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention {
     @Override
@@ -43,7 +43,7 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention {
 
     @Override
 	protected String getTextForElement(PsiElement element) {
-        final PsiElement         parent           = element.getParent();
+        final PsiElement parent           = element.getParent();
         final JSBinaryExpression binaryExpression = (JSBinaryExpression) (parent instanceof JSBinaryExpression ? parent : element);
         final JSExpression       lhs              = binaryExpression.getLOperand();
         final JSExpression       leftSide;
@@ -64,7 +64,7 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention {
 
     @Override
 	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final PsiElement   parent        = element.getParent();
+        final PsiElement parent        = element.getParent();
         final JSExpression expression    = (JSExpression) (parent instanceof JSBinaryExpression ? parent : element);
         String             newExpression = "";
         final Object       constantValue;
@@ -109,7 +109,7 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention {
     @Nullable
     private static JSBinaryExpression getSubexpression(JSBinaryExpression expression) {
         final JSExpression       rhs               = expression.getROperand();
-        final IElementType       sign              = expression.getOperationSign();
+        final IElementType sign              = expression.getOperationSign();
         final int                parentPrecendence = ParenthesesUtils.getPrecendence(expression);
 
         if (rhs == null) {

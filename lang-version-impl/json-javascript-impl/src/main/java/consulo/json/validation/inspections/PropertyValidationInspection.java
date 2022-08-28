@@ -16,18 +16,21 @@
 
 package consulo.json.validation.inspections;
 
-import com.intellij.codeInspection.LocalInspectionTool;
-import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.codeInspection.ProblemsHolder;
+import consulo.application.util.CachedValueProvider;
+import consulo.application.util.CachedValuesManager;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.inspection.LocalInspectionTool;
+import consulo.language.editor.inspection.ProblemHighlightType;
+import consulo.language.editor.inspection.ProblemsHolder;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.*;
-import com.intellij.util.PairProcessor;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.language.psi.PsiModificationTracker;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.util.collection.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.javascript.psi.JSSimpleLiteralExpression;
@@ -35,6 +38,7 @@ import consulo.json.validation.JsonFileDescriptorProviders;
 import consulo.json.validation.NativeArray;
 import consulo.json.validation.descriptor.JsonObjectDescriptor;
 import consulo.json.validation.descriptor.JsonPropertyDescriptor;
+import consulo.util.lang.function.PairProcessor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,7 +48,7 @@ import java.util.*;
  * @author VISTALL
  * @since 10.11.2015
  */
-public class PropertyValidationInspection extends LocalInspectionTool
+public abstract class PropertyValidationInspection extends LocalInspectionTool
 {
 	@Nonnull
 	@Override

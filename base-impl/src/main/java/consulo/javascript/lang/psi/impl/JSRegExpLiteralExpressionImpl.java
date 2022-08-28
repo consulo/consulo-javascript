@@ -1,7 +1,7 @@
 package consulo.javascript.lang.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.impl.JSLiteralExpressionImpl;
+import consulo.language.ast.ASTNode;
 
 /**
  * Own implementation for RegExp literal for correct registration RegExpLanguageHost.

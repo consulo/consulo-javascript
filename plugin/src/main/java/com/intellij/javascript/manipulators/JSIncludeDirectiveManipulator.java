@@ -17,12 +17,12 @@ package com.intellij.javascript.manipulators;
 
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import com.intellij.lang.javascript.psi.impl.JSIncludeDirectiveImpl;
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 
 /**
  * @author peter
  */
-public class JSIncludeDirectiveManipulator extends JSAbstractElementManipulator<JSIncludeDirectiveImpl>
+public abstract class JSIncludeDirectiveManipulator extends JSAbstractElementManipulator<JSIncludeDirectiveImpl>
 {
 	@Override
 	protected JSIncludeDirectiveImpl createTree(final String newText, final Project project)

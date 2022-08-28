@@ -17,19 +17,19 @@
 
 package com.intellij.lang.javascript.inspections.qucikFixes;
 
-import java.util.Set;
-
-import com.intellij.codeInsight.template.Expression;
-import com.intellij.codeInsight.template.Template;
 import com.intellij.lang.javascript.psi.JSArgumentList;
 import com.intellij.lang.javascript.psi.JSCallExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.inspections.qucikFixes.CreateJSFunctionFixBase;
-import consulo.javascript.lang.JavaScriptFeature;
+import consulo.javascript.language.JavaScriptFeature;
+import consulo.language.editor.template.Expression;
+import consulo.language.editor.template.Template;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+
+import java.util.Set;
 
 public class CreateJSFunctionOrMethodFix extends CreateJSFunctionFixBase
 {

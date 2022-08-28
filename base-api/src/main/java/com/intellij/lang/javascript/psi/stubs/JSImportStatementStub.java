@@ -17,7 +17,7 @@
 package com.intellij.lang.javascript.psi.stubs;
 
 import com.intellij.lang.javascript.psi.JSImportStatement;
-import com.intellij.psi.stubs.StubElement;
+import consulo.language.psi.stub.StubElement;
 
 /**
  * @author Maxim.Mossienko

@@ -16,10 +16,10 @@
 
 <consulo-plugin>
 	<extensions defaultExtensionNs="com.intellij">
-		<multiHostInjector forClass="com.intellij.lang.javascript.psi.impl.JSLiteralExpressionImpl" implementationClass="consulo.javascript.lang.regexp.impl.JavaScriptRegexpMultiHostInjector"/>
+		<multiHostInjector forClass="com.intellij.lang.javascript.psi.impl.JSLiteralExpressionImpl" implementationClass="consulo.javascript.impl.lang.regexp.impl.JavaScriptRegexpMultiHostInjector"/>
 	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij.regexp">
-		<languageHost forClass="consulo.javascript.lang.psi.impl.JSRegExpLiteralExpressionImpl" implementationClass="consulo.javascript.lang.regexp.impl.JavaScriptRegExpLiteralLanguageHost"/>
+		<languageHost forClass="consulo.javascript.lang.psi.impl.JSRegExpLiteralExpressionImpl" implementationClass="consulo.javascript.impl.lang.regexp.impl.JavaScriptRegExpLiteralLanguageHost"/>
 	</extensions>
 </consulo-plugin>

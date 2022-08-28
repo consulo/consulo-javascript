@@ -1,30 +1,18 @@
 package consulo.json.jom.proxy;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import consulo.annotation.access.RequiredReadAction;
-import consulo.json.jom.JomElement;
-import consulo.json.jom.proxy.impl.JomBooleanValue;
-import consulo.json.jom.proxy.impl.JomCollectionValue;
-import consulo.json.jom.proxy.impl.JomMapConverter;
-import consulo.json.jom.proxy.impl.JomNullableNumberValue;
-import consulo.json.jom.proxy.impl.JomNumberValue;
-import consulo.json.jom.proxy.impl.JomStringConverter;
 import com.intellij.lang.javascript.psi.JSArrayLiteralExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSObjectLiteralExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.containers.ArrayListSet;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.json.jom.JomElement;
+import consulo.json.jom.proxy.impl.*;
+import consulo.language.psi.PsiElement;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.lang.reflect.Array;
+import java.lang.reflect.Type;
+import java.util.*;
 
 /**
  * @author VISTALL
@@ -68,7 +56,7 @@ public class JomValueConverter
 		ourDefaultConverters.put(Map.class, new JomMapConverter());
 		ourDefaultConverters.put(Collection.class, new JomCollectionValue<Collection>(ArrayList.class));
 		ourDefaultConverters.put(List.class, new JomCollectionValue<List>(ArrayList.class));
-		ourDefaultConverters.put(Set.class, new JomCollectionValue<Set>(ArrayListSet.class));
+		ourDefaultConverters.put(Set.class, new JomCollectionValue<Set>(LinkedHashSet.class));
 	}
 
 	@RequiredReadAction

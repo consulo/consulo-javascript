@@ -17,7 +17,7 @@ package org.intellij.idea.lang.javascript.psiutil;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 
 public class SideEffectChecker {
     private SideEffectChecker() {}

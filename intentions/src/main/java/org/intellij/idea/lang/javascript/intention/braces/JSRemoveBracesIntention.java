@@ -17,6 +17,8 @@ package org.intellij.idea.lang.javascript.intention.braces;
 
 import javax.annotation.Nonnull;
 
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
@@ -31,9 +33,7 @@ import com.intellij.lang.javascript.psi.JSIfStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.JSVarStatement;
 import com.intellij.lang.javascript.psi.JSWhileStatement;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 
 public class JSRemoveBracesIntention extends JSMutablyNamedIntention {
     @NonNls private static final String IF_KEYWORD   = "if";
@@ -115,7 +115,7 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention {
             }
 
             final JSBlockStatement blockStatement = (JSBlockStatement) element;
-            final PsiElement        parent         = blockStatement.getParent();
+            final PsiElement parent         = blockStatement.getParent();
 
             if (!(parent instanceof JSIfStatement      ||
                   parent instanceof JSWhileStatement   ||

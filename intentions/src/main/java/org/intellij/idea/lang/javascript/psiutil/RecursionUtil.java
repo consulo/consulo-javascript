@@ -55,7 +55,7 @@ import com.intellij.lang.javascript.psi.JSTryStatement;
 import com.intellij.lang.javascript.psi.JSVarStatement;
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.JSWhileStatement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 
 public class RecursionUtil {
 

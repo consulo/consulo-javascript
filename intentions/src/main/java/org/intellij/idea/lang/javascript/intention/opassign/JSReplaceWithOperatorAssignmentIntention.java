@@ -17,6 +17,7 @@ package org.intellij.idea.lang.javascript.intention.opassign;
 
 import javax.annotation.Nonnull;
 
+import consulo.language.psi.PsiElement;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
@@ -30,9 +31,8 @@ import com.intellij.lang.javascript.psi.JSAssignmentExpression;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSDefinitionExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.ast.IElementType;
+import consulo.language.util.IncorrectOperationException;
 
 public class JSReplaceWithOperatorAssignmentIntention extends JSMutablyNamedIntention {
     @Override
@@ -40,7 +40,7 @@ public class JSReplaceWithOperatorAssignmentIntention extends JSMutablyNamedInte
         final JSAssignmentExpression exp = (JSAssignmentExpression) element;
         final JSBinaryExpression     rhs = (JSBinaryExpression) exp.getROperand();
         assert (rhs != null);
-        final IElementType           sign = rhs.getOperationSign();
+        final IElementType sign = rhs.getOperationSign();
 
         return this.getText(BinaryOperatorUtils.getOperatorText(sign));
     }
@@ -59,7 +59,7 @@ public class JSReplaceWithOperatorAssignmentIntention extends JSMutablyNamedInte
 
         assert (rhs != null);
 
-        final IElementType  sign    = rhs.getOperationSign();
+        final IElementType sign    = rhs.getOperationSign();
         final String        operand = BinaryOperatorUtils.getOperatorText(sign);
         final JSExpression  rhsrhs  = rhs.getROperand();
 

@@ -5,13 +5,13 @@ import java.lang.reflect.Type;
 import javax.annotation.Nonnull;
 
 import consulo.javascript.psi.JSSimpleLiteralExpression;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.json.jom.proxy.JomBadValueExpressionException;
 import consulo.json.jom.proxy.JomValueConverter;
+import consulo.util.lang.StringUtil;
 
 /**
  * @author VISTALL

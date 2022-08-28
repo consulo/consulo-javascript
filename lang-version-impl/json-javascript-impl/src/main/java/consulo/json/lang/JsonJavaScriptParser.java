@@ -1,16 +1,16 @@
 package consulo.json.lang;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.PsiParser;
+import consulo.language.ast.ASTNode;
+import consulo.language.parser.PsiBuilder;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.JavaScriptBundle;
-import com.intellij.psi.tree.IElementType;
+import consulo.javascript.language.JavaScriptBundle;
+import consulo.language.ast.IElementType;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.javascript.lang.parsing.ExpressionParsing;
 import consulo.javascript.lang.parsing.Parsing;
-import consulo.lang.LanguageVersion;
+import consulo.language.parser.PsiParser;
+import consulo.language.version.LanguageVersion;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

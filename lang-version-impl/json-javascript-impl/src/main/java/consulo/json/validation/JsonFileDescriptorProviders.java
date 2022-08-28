@@ -19,12 +19,12 @@ package consulo.json.validation;
 import javax.annotation.Nullable;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.util.CachedValuesManager;
 import consulo.json.JsonFileType;
 import consulo.json.validation.descriptor.JsonObjectDescriptor;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiModificationTracker;
+import consulo.language.psi.PsiFile;
+import consulo.application.util.CachedValueProvider;
+import consulo.language.psi.PsiModificationTracker;
 
 /**
  * @author VISTALL

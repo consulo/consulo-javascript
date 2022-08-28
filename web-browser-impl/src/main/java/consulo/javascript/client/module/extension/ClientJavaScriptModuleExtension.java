@@ -1,41 +1,38 @@
 package consulo.javascript.client.module.extension;
 
-import javax.annotation.Nonnull;
-
+import consulo.annotation.access.RequiredReadAction;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkTable;
+import consulo.content.bundle.SdkType;
+import consulo.javascript.client.module.sdk.ClientJavaScriptSdkType;
+import consulo.javascript.language.StandardJavaScriptVersions;
+import consulo.javascript.module.extension.JavaScriptModuleExtension;
+import consulo.language.util.ModuleUtilCore;
+import consulo.language.version.LanguageVersion;
+import consulo.module.Module;
+import consulo.module.content.layer.ModuleRootLayer;
+import consulo.module.content.layer.extension.ModuleExtensionBase;
+import consulo.module.content.layer.extension.SdkModuleInheritableNamedPointerImpl;
+import consulo.module.extension.ModuleInheritableNamedPointer;
 import org.jdom.Element;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkTable;
-import com.intellij.openapi.projectRoots.SdkType;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.client.module.sdk.ClientJavaScriptSdkType;
-import consulo.javascript.lang.StandardJavaScriptVersions;
-import consulo.javascript.module.extension.JavaScriptModuleExtension;
-import consulo.lang.LanguageVersion;
-import consulo.module.extension.ModuleInheritableNamedPointer;
-import consulo.module.extension.impl.ModuleExtensionImpl;
-import consulo.module.extension.impl.ModuleInheritableNamedPointerImpl;
-import consulo.roots.ModuleRootLayer;
-import consulo.roots.impl.ModuleRootLayerImpl;
-import consulo.util.pointers.NamedPointer;
 
 /**
  * @author VISTALL
  * @since 29.06.14
  */
-public class ClientJavaScriptModuleExtension extends ModuleExtensionImpl<ClientJavaScriptModuleExtension> implements JavaScriptModuleExtension<ClientJavaScriptModuleExtension>
+public class ClientJavaScriptModuleExtension extends ModuleExtensionBase<ClientJavaScriptModuleExtension> implements JavaScriptModuleExtension<ClientJavaScriptModuleExtension>
 {
-	private ModuleInheritableNamedPointerImpl<Sdk> myPointer;
+	private SdkModuleInheritableNamedPointerImpl myPointer;
 
 	protected LanguageVersion myLanguageVersion = StandardJavaScriptVersions.getInstance().getDefaultVersion();
 
 	public ClientJavaScriptModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer rootLayer)
 	{
 		super(id, rootLayer);
-		myPointer = new ModuleInheritableNamedPointerImpl<Sdk>(rootLayer, id)
+		myPointer = new SdkModuleInheritableNamedPointerImpl(rootLayer, id)
 		{
 			@Nullable
 			@Override
@@ -59,13 +56,6 @@ public class ClientJavaScriptModuleExtension extends ModuleExtensionImpl<ClientJ
 					return null;
 				}
 				return extension.getSdk();
-			}
-
-			@Nonnull
-			@Override
-			public NamedPointer<Sdk> getPointer(@Nonnull ModuleRootLayer moduleRootLayer, @Nonnull String name)
-			{
-				return ((ModuleRootLayerImpl)moduleRootLayer).getRootModel().getConfigurationAccessor().getSdkPointer(name);
 			}
 		};
 

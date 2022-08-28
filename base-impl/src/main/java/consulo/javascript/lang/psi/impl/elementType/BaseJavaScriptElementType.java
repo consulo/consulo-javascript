@@ -17,9 +17,9 @@
 package consulo.javascript.lang.psi.impl.elementType;
 
 import org.jetbrains.annotations.NonNls;
-import com.intellij.lang.javascript.psi.JSStubElementType;
+import consulo.javascript.impl.language.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.stubs.JSStubElement;
-import consulo.javascript.lang.psi.JavaScriptTypeElement;
+import consulo.javascript.language.psi.JavaScriptTypeElement;
 
 /**
  * @author VISTALL

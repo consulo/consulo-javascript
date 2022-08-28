@@ -17,7 +17,7 @@
 package com.intellij.lang.javascript.psi;
 
 import javax.annotation.Nullable;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 
 /**
  * Created by IntelliJ IDEA.

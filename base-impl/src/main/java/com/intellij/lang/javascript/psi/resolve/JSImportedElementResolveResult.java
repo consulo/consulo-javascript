@@ -16,8 +16,8 @@
 
 package com.intellij.lang.javascript.psi.resolve;
 
-import com.intellij.psi.PsiElement;
 import consulo.javascript.psi.JavaScriptImportStatementBase;
+import consulo.language.psi.PsiElement;
 
 /**
  * @author Maxim.Mossienko

@@ -17,10 +17,10 @@
 
 package com.intellij.lang.javascript.psi.stubs.impl;
 
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubBase;
-import com.intellij.psi.stubs.StubElement;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.PsiNamedElement;
+import consulo.language.psi.stub.StubBase;
 
 /**
  * @author Maxim.Mossienko

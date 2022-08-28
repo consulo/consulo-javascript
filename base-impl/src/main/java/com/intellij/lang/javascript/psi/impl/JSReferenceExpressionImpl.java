@@ -16,29 +16,29 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.LanguageNamesValidation;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.*;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
-import com.intellij.psi.impl.source.resolve.ResolveCache;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilBase;
-import com.intellij.psi.xml.XmlFile;
-import com.intellij.psi.xml.XmlToken;
-import com.intellij.refactoring.rename.BindablePsiReference;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.IncorrectOperationException;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.lang.JavaScriptFeature;
-import consulo.javascript.lang.JavaScriptLanguage;
-import consulo.javascript.lang.JavaScriptVersionUtil;
-import consulo.javascript.lang.psi.JavaScriptType;
+import consulo.document.util.TextRange;
+import consulo.javascript.language.JavaScriptFeature;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.javascript.language.JavaScriptVersionUtil;
+import consulo.javascript.language.psi.JavaScriptType;
 import consulo.javascript.lang.psi.impl.resolve.ResolveHelper;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.TokenSet;
+import consulo.language.editor.refactoring.NamesValidator;
+import consulo.language.editor.util.PsiUtilBase;
+import consulo.language.psi.*;
+import consulo.language.psi.resolve.ResolveCache;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.IncorrectOperationException;
+import consulo.util.collection.ArrayUtil;
+import consulo.xml.psi.xml.XmlFile;
+import consulo.xml.psi.xml.XmlToken;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -165,7 +165,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 		{
 			newElementName = newElementName.substring(0, i);
 		}
-		if(!LanguageNamesValidation.INSTANCE.forLanguage(JavaScriptLanguage.INSTANCE).isIdentifier(newElementName, null))
+		if(!NamesValidator.forLanguage(JavaScriptLanguage.INSTANCE).isIdentifier(newElementName, null))
 		{
 			throw new IncorrectOperationException("Invalid javascript element name:" + newElementName);
 		}

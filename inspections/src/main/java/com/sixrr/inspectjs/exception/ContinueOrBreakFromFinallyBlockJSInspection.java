@@ -1,7 +1,5 @@
 package com.sixrr.inspectjs.exception;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.psi.JSBreakStatement;
 import com.intellij.lang.javascript.psi.JSContinueStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
@@ -10,7 +8,11 @@ import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
+import consulo.annotation.component.ExtensionImpl;
 
+import javax.annotation.Nonnull;
+
+@ExtensionImpl
 public class ContinueOrBreakFromFinallyBlockJSInspection extends JavaScriptInspection {
 
     @Override

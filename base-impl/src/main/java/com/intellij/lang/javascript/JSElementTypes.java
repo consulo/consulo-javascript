@@ -16,30 +16,27 @@
 
 package com.intellij.lang.javascript;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.*;
 import com.intellij.lang.javascript.psi.stubs.*;
 import com.intellij.lang.javascript.types.*;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.ILazyParseableElementType;
-import com.intellij.psi.tree.IStubFileElementType;
-import com.intellij.psi.tree.TokenSet;
 import consulo.annotation.DeprecationInfo;
 import consulo.javascript.ecmascript4.psi.impl.EcmaScript4ElementTypes;
-import consulo.javascript.lang.JavaScriptLanguage;
+import consulo.javascript.impl.language.psi.JSStubElementType;
+import consulo.javascript.language.JavaScriptLanguage;
 import consulo.javascript.lang.parsing.impl.JavaSciptDestructuringElementImpl;
 import consulo.javascript.lang.parsing.impl.JavaSciptDestructuringObjectImpl;
 import consulo.javascript.lang.parsing.impl.JavaScriptDestructuringParameterImpl;
 import consulo.javascript.lang.parsing.impl.JavaScriptDestructuringShorthandedPropertyImpl;
 import consulo.javascript.lang.psi.impl.JSRegExpLiteralExpressionImpl;
-import consulo.javascript.psi.impl.JSComputedNameImpl;
-import consulo.javascript.psi.impl.JavaScriptLambdaExpressionImpl;
-import consulo.javascript.psi.impl.JavaScriptSpreadExpressionImpl;
+import consulo.javascript.impl.language.psi.JSComputedNameImpl;
+import consulo.javascript.impl.language.psi.JavaScriptLambdaExpressionImpl;
+import consulo.javascript.impl.language.psi.JavaScriptSpreadExpressionImpl;
 import consulo.javascript.psi.stubs.JSFileStub;
-import consulo.psi.tree.ElementTypeAsPsiFactory;
+import consulo.language.Language;
+import consulo.language.ast.*;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.IStubFileElementType;
 
 import javax.annotation.Nonnull;
 

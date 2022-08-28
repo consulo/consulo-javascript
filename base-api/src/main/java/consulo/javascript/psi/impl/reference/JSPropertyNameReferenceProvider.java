@@ -17,22 +17,24 @@
 
 package consulo.javascript.psi.impl.reference;
 
+import com.intellij.lang.javascript.psi.JSProperty;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.component.extension.ExtensionPointName;
+import consulo.language.psi.PsiReference;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import com.intellij.lang.javascript.psi.JSProperty;
-import com.intellij.psi.PsiReference;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.extensions.CompositeExtensionPointName;
 
 /**
  * @author VISTALL
  * @since 02.12.2015
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface JSPropertyNameReferenceProvider
 {
-	CompositeExtensionPointName<JSPropertyNameReferenceProvider> EP_NAME = CompositeExtensionPointName.applicationPoint("consulo.javascript.propertyNameReferenceProvider",
-			JSPropertyNameReferenceProvider.class);
+	ExtensionPointName<JSPropertyNameReferenceProvider> EP_NAME = ExtensionPointName.create(JSPropertyNameReferenceProvider.class);
 
 	@Nullable
 	@RequiredReadAction

@@ -16,8 +16,8 @@
 package org.intellij.idea.lang.javascript.psiutil;
 
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
 
 public class JSRecursionVisitor extends JSRecursiveElementVisitor {
 
@@ -46,7 +46,7 @@ public class JSRecursionVisitor extends JSRecursiveElementVisitor {
 
             if (methodText.equals(this.functionName)) {
                 final PsiReference methodReference  = methodExpression.getReference();
-                final PsiElement   referent         = ((methodReference == null) ? null : methodReference.resolve());
+                final PsiElement referent         = ((methodReference == null) ? null : methodReference.resolve());
 
                 if (referent != null) {
                     if (referent instanceof JSFunction) {

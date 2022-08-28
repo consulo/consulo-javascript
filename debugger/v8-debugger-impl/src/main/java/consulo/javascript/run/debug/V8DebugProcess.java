@@ -16,10 +16,10 @@
 
 package consulo.javascript.run.debug;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.ExecutionResult;
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.XDebuggerBundle;
+import consulo.execution.ExecutionResult;
+import consulo.process.ExecutionException;
+import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.XDebuggerBundle;
 import consulo.annotation.UsedInPlugin;
 import org.chromium.sdk.JavascriptVmFactory;
 import org.chromium.sdk.StandaloneVm;

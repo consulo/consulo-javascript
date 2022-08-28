@@ -16,11 +16,11 @@
 
 package consulo.javascript.run.debug;
 
-import com.intellij.openapi.fileTypes.FileTypeRegistry;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.util.lang.Comparing;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.file.light.LightVirtualFile;
 import consulo.util.dataholder.Key;
 import org.chromium.sdk.Script;
 

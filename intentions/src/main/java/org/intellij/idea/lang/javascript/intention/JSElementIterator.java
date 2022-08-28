@@ -15,14 +15,13 @@
  */
 package org.intellij.idea.lang.javascript.intention;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
+import com.intellij.lang.javascript.psi.JSElement;
+import consulo.language.psi.PsiElement;
+import consulo.xml.psi.xml.XmlFile;
 import org.intellij.idea.lang.javascript.psiutil.ArrayStack;
 
-import com.intellij.lang.javascript.psi.JSElement;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.xml.XmlFile;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public abstract class JSElementIterator implements Iterator<PsiElement> {
 
@@ -30,7 +29,7 @@ public abstract class JSElementIterator implements Iterator<PsiElement> {
     private final int              minTextOffset;
     private final int              maxTextOffset;
     private ArrayStack<PsiElement> elementStack;
-    private PsiElement             next;
+    private PsiElement next;
     private boolean                retrieveNext;
 
     public JSElementIterator(PsiElement element) {

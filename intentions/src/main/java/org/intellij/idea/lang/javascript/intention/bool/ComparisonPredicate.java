@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 class ComparisonPredicate implements JSElementPredicate {
     @Override

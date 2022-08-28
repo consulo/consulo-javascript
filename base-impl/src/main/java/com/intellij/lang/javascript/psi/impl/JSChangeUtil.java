@@ -16,33 +16,26 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-
-import org.jetbrains.annotations.NonNls;
-
-import javax.annotation.Nullable;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.LanguageParserDefinitions;
-import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.formatter.JSCodeStyleSettings;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.util.JSUtils;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiFileFactory;
-import com.intellij.psi.PsiParserFacade;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.util.IncorrectOperationException;
-import consulo.javascript.lang.JavaScriptLanguage;
+import consulo.javascript.language.JavaScriptLanguage;
 import consulo.javascript.lang.JavaScriptTokenSets;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.psi.*;
+import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -187,7 +180,7 @@ public class JSChangeUtil
 	private static ASTNode insertWhitespaceIfNeeded(ASTNode anchorNode, final ASTNode elementNode, final ASTNode parentNode,
 			final ASTNode insertionPlaceNode) throws IncorrectOperationException
 	{
-		ParserDefinition parserDef = LanguageParserDefinitions.INSTANCE.forLanguage(parentNode.getPsi().getLanguage());
+		ParserDefinition parserDef = ParserDefinition.forLanguage(parentNode.getPsi().getLanguage());
 		final TokenSet comments = parserDef.getCommentTokens(parentNode.getPsi().getLanguage().getVersions()[0]);
 		final TokenSet whitespaces = parserDef.getWhitespaceTokens(parentNode.getPsi().getLanguage().getVersions()[0]);
 

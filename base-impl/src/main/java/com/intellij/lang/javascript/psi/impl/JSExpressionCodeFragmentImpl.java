@@ -16,20 +16,18 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-
-import org.jetbrains.annotations.NonNls;
 import com.intellij.lang.javascript.psi.JSExpressionCodeFragment;
-import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.SingleRootFileViewProvider;
-import com.intellij.psi.impl.PsiManagerEx;
-import com.intellij.psi.impl.file.impl.FileManager;
-import com.intellij.psi.impl.source.tree.FileElement;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.FileTypeManager;
+import consulo.language.file.FileViewProvider;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.language.impl.ast.FileElement;
+import consulo.language.impl.file.SingleRootFileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiManager;
+import consulo.project.Project;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
@@ -42,8 +40,7 @@ public class JSExpressionCodeFragmentImpl extends JSFileImpl implements JSExpres
 
 	public JSExpressionCodeFragmentImpl(Project project, @NonNls String name, CharSequence text, boolean isPhysical)
 	{
-		super(((PsiManagerEx) PsiManager.getInstance(project)).getFileManager().createFileViewProvider(new LightVirtualFile(name,
-				FileTypeManager.getInstance().getFileTypeByFileName(name), text), isPhysical));
+		super(new SingleRootFileViewProvider(PsiManager.getInstance(project), new LightVirtualFile(name, FileTypeManager.getInstance().getFileTypeByFileName(name), text), isPhysical));
 		myPhysical = isPhysical;
 		((SingleRootFileViewProvider) getViewProvider()).forceCachedPsi(this);
 	}
@@ -55,9 +52,7 @@ public class JSExpressionCodeFragmentImpl extends JSFileImpl implements JSExpres
 		final JSExpressionCodeFragmentImpl clone = (JSExpressionCodeFragmentImpl) cloneImpl((FileElement) calcTreeElement().clone());
 		clone.myPhysical = false;
 		clone.myOriginalFile = this;
-		FileManager fileManager = ((PsiManagerEx) getManager()).getFileManager();
-		SingleRootFileViewProvider cloneViewProvider = (SingleRootFileViewProvider) fileManager.createFileViewProvider(new LightVirtualFile(getName(),
-				getLanguage(), getText()), false);
+		SingleRootFileViewProvider cloneViewProvider = new SingleRootFileViewProvider(getManager(), new LightVirtualFile(getName(), getLanguage(), getText()), false);
 		cloneViewProvider.forceCachedPsi(clone);
 		clone.myViewProvider = cloneViewProvider;
 		return clone;

@@ -20,11 +20,11 @@ import javax.annotation.Nonnull;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.json.validation.JsonFileDescriptorProvider;
 import consulo.json.validation.descriptor.JsonObjectDescriptor;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiUtilCore;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 
 /**
  * @author VISTALL

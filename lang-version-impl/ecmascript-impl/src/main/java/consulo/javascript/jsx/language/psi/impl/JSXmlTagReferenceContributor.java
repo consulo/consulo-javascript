@@ -1,9 +1,12 @@
 package consulo.javascript.jsx.language.psi.impl;
 
 import com.intellij.lang.javascript.psi.impl.JSXmlLiteralExpressionImpl;
-import com.intellij.patterns.StandardPatterns;
-import com.intellij.psi.*;
-import com.intellij.util.ProcessingContext;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.language.Language;
+import consulo.language.pattern.StandardPatterns;
+import consulo.language.psi.*;
+import consulo.language.util.ProcessingContext;
 
 import javax.annotation.Nonnull;
 
@@ -11,6 +14,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2019-12-17
  */
+@ExtensionImpl
 public class JSXmlTagReferenceContributor extends PsiReferenceContributor
 {
 	@Override
@@ -32,5 +36,12 @@ public class JSXmlTagReferenceContributor extends PsiReferenceContributor
 //				return Arrays.stream(children).map(node -> new JSXmlTagReference(node.getPsi())).toArray(PsiReference[]::new);
 			}
 		});
+	}
+
+	@Nonnull
+	@Override
+	public Language getLanguage()
+	{
+		return JavaScriptLanguage.INSTANCE;
 	}
 }

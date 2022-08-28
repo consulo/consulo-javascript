@@ -15,20 +15,30 @@
  */
 package com.intellij.javascript.manipulators;
 
-import org.jetbrains.annotations.NonNls;
 import com.intellij.lang.javascript.psi.JSDocComment;
 import com.intellij.lang.javascript.psi.JSDocTag;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.psi.PsiElement;
+import consulo.project.Project;
 
+import javax.annotation.Nonnull;
+
+@ExtensionImpl
 public class JSDocTagManipulator extends JSAbstractElementManipulator<JSDocTag>
 {
 	@Override
 	protected JSDocTag createTree(final String newText, final Project project)
 	{
-		@NonNls String ToCreate = "/** " + newText + " */";
+		String ToCreate = "/** " + newText + " */";
 		final PsiElement element = JSChangeUtil.createJSTreeFromText(project, ToCreate).getPsi();
 		return ((JSDocComment) element).getTags()[0];
+	}
+
+	@Nonnull
+	@Override
+	public Class<JSDocTag> getElementClass()
+	{
+		return JSDocTag.class;
 	}
 }

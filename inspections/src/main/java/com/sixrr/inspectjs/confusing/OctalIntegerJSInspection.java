@@ -1,5 +1,6 @@
 package com.sixrr.inspectjs.confusing;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.psi.JSSimpleLiteralExpression;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
@@ -9,6 +10,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@ExtensionImpl
 public class OctalIntegerJSInspection extends JavaScriptInspection {
 
     @Override

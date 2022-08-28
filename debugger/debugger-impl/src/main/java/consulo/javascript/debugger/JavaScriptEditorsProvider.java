@@ -18,13 +18,13 @@ package consulo.javascript.debugger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import com.intellij.lang.javascript.JavaScriptFileType;
-import com.intellij.lang.javascript.psi.JSElementFactory;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.xdebugger.evaluation.XDebuggerEditorsProviderBase;
+import consulo.javascript.language.JavaScriptFileType;
+import consulo.javascript.impl.language.psi.JSElementFactory;
+import consulo.execution.debug.evaluation.XDebuggerEditorsProviderBase;
+import consulo.language.psi.PsiElement;
+import consulo.project.Project;
+import consulo.language.psi.PsiFile;
+import consulo.virtualFileSystem.fileType.FileType;
 
 /**
  * @author VISTALL

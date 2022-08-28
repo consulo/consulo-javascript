@@ -17,14 +17,15 @@
 
 package com.intellij.lang.javascript.highlighting;
 
-import com.intellij.lang.html.HTMLLanguage;
 import com.intellij.lang.javascript.JSDocTokenTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript._JSDocLexer;
-import com.intellij.lexer.*;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
-import com.intellij.openapi.util.Factory;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.highlight.SyntaxHighlighterFactory;
+import consulo.language.lexer.*;
+import consulo.xml.lang.html.HTMLLanguage;
+
+import java.util.function.Supplier;
 
 /**
  * @author max
@@ -32,14 +33,14 @@ import com.intellij.psi.tree.IElementType;
  */
 public class JavaScriptHighlightingLexer extends LayeredLexer
 {
-	public JavaScriptHighlightingLexer(Factory<Lexer> baseLexerFactory)
+	public JavaScriptHighlightingLexer(Supplier<Lexer> baseLexerFactory)
 	{
 		this(baseLexerFactory, true);
 	}
 
-	private JavaScriptHighlightingLexer(Factory<Lexer> baseLexerFactory, boolean withEmbeddments)
+	private JavaScriptHighlightingLexer(Supplier<Lexer> baseLexerFactory, boolean withEmbeddments)
 	{
-		super(baseLexerFactory.create());
+		super(baseLexerFactory.get());
 
 		if(withEmbeddments)
 		{

@@ -11,7 +11,7 @@ import consulo.json.jom.JomElement;
 import consulo.json.jom.JomUtil;
 import com.intellij.lang.javascript.psi.JSObjectLiteralExpression;
 import com.intellij.lang.javascript.psi.JSProperty;
-import com.intellij.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 
 /**
  * @author VISTALL

@@ -1,15 +1,15 @@
 package consulo.javascript.jsx.language;
 
-import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.icon.JavaScriptIconGroup;
-import consulo.javascript.lang.JavaScriptFileTypeWithVersion;
-import consulo.javascript.lang.JavaScriptLanguage;
-import consulo.lang.LanguageVersion;
+import consulo.javascript.language.JavaScriptFileTypeWithVersion;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.language.file.LanguageFileType;
+import consulo.language.version.LanguageVersion;
 import consulo.localize.LocalizeValue;
+import consulo.module.Module;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

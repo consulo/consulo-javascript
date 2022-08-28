@@ -16,19 +16,23 @@
 
 package consulo.javascript.debugger;
 
+import consulo.javascript.language.JavaScriptFileType;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.execution.debug.breakpoint.XLineBreakpointType;
+import consulo.execution.debug.breakpoint.XLineBreakpointTypeResolver;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.xdebugger.breakpoints.XLineBreakpointTypeResolver;
 
 /**
  * @author VISTALL
  * @since 5/7/2016
  */
+@ExtensionImpl
 public class JavaScriptLineBreakpointTypeResolver implements XLineBreakpointTypeResolver
 {
 	@RequiredReadAction
@@ -37,5 +41,12 @@ public class JavaScriptLineBreakpointTypeResolver implements XLineBreakpointType
 	public XLineBreakpointType<?> resolveBreakpointType(@Nonnull Project project, @Nonnull VirtualFile virtualFile, int line)
 	{
 		return JavaScriptLineBreakpointType.getInstance();
+	}
+
+	@Nonnull
+	@Override
+	public FileType getFileType()
+	{
+		return JavaScriptFileType.INSTANCE;
 	}
 }

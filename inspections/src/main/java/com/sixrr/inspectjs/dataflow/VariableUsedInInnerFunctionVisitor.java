@@ -5,8 +5,8 @@ import javax.annotation.Nonnull;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.JSFunctionExpression;
-import com.intellij.psi.PsiElement;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
+import consulo.language.psi.PsiElement;
 
 public class VariableUsedInInnerFunctionVisitor extends JSRecursiveElementVisitor
 {

@@ -16,11 +16,8 @@
 
 package com.intellij.lang.javascript.psi.resolve;
 
-import com.intellij.ide.highlighter.XmlFileType;
-import com.intellij.injected.editor.VirtualFileWindow;
 import com.intellij.javascript.documentation.JSDocumentationProvider;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
@@ -34,51 +31,55 @@ import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import com.intellij.lang.javascript.psi.impl.JSFileImpl;
 import com.intellij.lang.javascript.psi.impl.JSReferenceExpressionImpl;
 import com.intellij.lang.javascript.psi.impl.JSStubElementImpl;
-import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.UserDataCache;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
-import com.intellij.psi.impl.light.LightElement;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.search.FilenameIndex;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.LocalSearchScope;
-import com.intellij.psi.search.SearchScope;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubIndex;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.*;
-import com.intellij.psi.xml.*;
-import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.Processor;
-import com.intellij.util.SmartList;
-import com.intellij.util.indexing.FileBasedIndex;
-import com.intellij.util.text.StringTokenizer;
 import com.intellij.xml.XmlElementDescriptor;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.lang.JavaScriptVersionUtil;
-import consulo.javascript.lang.psi.JavaScriptType;
-import consulo.javascript.lang.psi.JavaScriptTypeElement;
-import consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
+import consulo.application.util.*;
+import consulo.application.util.function.Processor;
+import consulo.component.extension.Extensions;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.bundle.Sdk;
+import consulo.content.scope.SearchScope;
+import consulo.javascript.language.JavaScriptVersionUtil;
+import consulo.javascript.language.psi.JavaScriptType;
+import consulo.javascript.language.psi.JavaScriptTypeElement;
+import consulo.javascript.language.psi.stub.JavaScriptIndexKeys;
 import consulo.javascript.module.extension.JavaScriptModuleExtension;
 import consulo.javascript.psi.JavaScriptImportStatementBase;
-import consulo.roots.types.BinariesOrderRootType;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.TokenSet;
+import consulo.language.editor.util.PsiUtilBase;
+import consulo.language.file.inject.VirtualFileWindow;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.language.impl.psi.LightElement;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.psi.*;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.scope.LocalSearchScope;
+import consulo.language.psi.search.FilenameIndex;
+import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.stub.StubIndex;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.IncorrectOperationException;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.xml.ide.highlighter.XmlFileType;
+import consulo.xml.psi.xml.*;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -104,12 +105,13 @@ public class JSResolveUtil
 
 	public static void processInjectedFileForTag(final @Nonnull XmlTag tag, @Nonnull JSInjectedFilesVisitor visitor)
 	{
+		InjectedLanguageManager injectedLanguageManager = InjectedLanguageManager.getInstance(tag.getProject());
 
 		for(XmlTagChild child : tag.getValue().getChildren())
 		{
 			if(child instanceof XmlText)
 			{
-				InjectedLanguageUtil.enumerate(child, visitor);
+				injectedLanguageManager.enumerate(child, visitor);
 			}
 		}
 	}
@@ -152,7 +154,7 @@ public class JSResolveUtil
 
 			if(rootForFile != null)
 			{
-				return VfsUtil.getRelativePath(file.isDirectory() ? file : file.getParent(), rootForFile, '.');
+				return VirtualFileUtil.getRelativePath(file.isDirectory() ? file : file.getParent(), rootForFile, '.');
 			}
 		}
 		return null;

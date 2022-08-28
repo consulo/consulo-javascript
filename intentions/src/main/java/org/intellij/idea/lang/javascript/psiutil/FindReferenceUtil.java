@@ -19,14 +19,14 @@ import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.lang.javascript.psi.JSVariable;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.xml.XmlFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.xml.psi.xml.XmlFile;
 import org.intellij.idea.lang.javascript.intention.JSElementIterator;
 import org.intellij.idea.lang.javascript.intention.JSFunctionVisitor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -119,7 +119,7 @@ public class FindReferenceUtil {
     }
 
     public static Iterable<PsiElement> getReferences(@Nonnull JSVariable variable,
-                                                     @Nullable PsiElement scope) {
+																		  @Nullable PsiElement scope) {
         return getReferences(variable, scope, 0, Integer.MAX_VALUE);
     }
 
@@ -132,8 +132,8 @@ public class FindReferenceUtil {
     }
 
     private static Iterable<PsiElement> getReferences(@Nonnull  final JSVariable variable,
-                                                      @Nullable final PsiElement scope,
-                                                      final int minTextOffset, final int maxTextOffset) {
+																		   @Nullable final PsiElement scope,
+																		   final int minTextOffset, final int maxTextOffset) {
         final PsiElement iteratedScope;
 
         if (scope == null) {

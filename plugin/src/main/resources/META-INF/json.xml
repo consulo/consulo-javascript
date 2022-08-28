@@ -31,7 +31,6 @@
 		<projectService serviceImplementation="consulo.json.validation.descriptionByAnotherPsiElement.DescriptionByAnotherPsiElementService"/>
 		<projectService serviceImplementation="consulo.json.jom.JomManager"/>
 
-		<completion.contributor language="JavaScript" implementationClass="consulo.json.validation.completion.JsonCompletionContributor"/>
 
 		<quoteHandler fileType="JSON" className="onsulo.javascript.lang.JavaScriptQuoteHandler"/>
 

@@ -1,7 +1,7 @@
 package consulo.javascript.lang.lexer;
 
-import com.intellij.lexer.LexerBase;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.lexer.LexerBase;
+import consulo.language.ast.IElementType;
 import com.intellij.lang.javascript.JSTokenTypes;
 
 %%

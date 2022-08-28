@@ -16,8 +16,8 @@
 
 package com.intellij.lang.javascript.psi;
 
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.StubBasedPsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.StubBasedPsiElement;
 
 /**
  * @author nik
