@@ -10,7 +10,6 @@ open module consulo.javascript
 	requires consulo.language.editor.impl;
 
 	requires com.intellij.xml;
-	requires static com.intellij.regexp;
 
 	// TODO remove in future
 	requires java.desktop;
@@ -47,7 +46,6 @@ open module consulo.javascript
 	exports consulo.javascript.impl.lang;
 	exports consulo.javascript.impl.lang.navigation;
 	exports consulo.javascript.impl.lang.psi;
-	exports consulo.javascript.impl.lang.regexp.impl;
 	exports consulo.javascript.impl.psi.impl.reference;
 	exports com.intellij.lang.javascript.impl.validation;
 }

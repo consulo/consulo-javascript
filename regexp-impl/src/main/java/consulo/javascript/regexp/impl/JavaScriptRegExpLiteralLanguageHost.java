@@ -1,4 +1,4 @@
-package consulo.javascript.impl.lang.regexp.impl;
+package consulo.javascript.regexp.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.lang.psi.impl.JSRegExpLiteralExpressionImpl;

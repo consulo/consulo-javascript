@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.javascript.impl.lang.regexp.impl;
+package consulo.javascript.regexp.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.document.util.TextRange;
