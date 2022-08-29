@@ -16,20 +16,23 @@
 
 package consulo.json.validation.psi.reference;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.intellij.lang.javascript.psi.JSProperty;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.psi.impl.reference.JSPropertyNameReferenceProvider;
 import consulo.json.validation.descriptor.JsonPropertyDescriptor;
 import consulo.json.validation.inspections.PropertyValidationInspection;
-import com.intellij.lang.javascript.psi.JSProperty;
-import consulo.javascript.psi.impl.reference.JSPropertyNameReferenceProvider;
-import consulo.language.psi.PsiReference;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 02.12.2015
  */
+@ExtensionImpl(order = "before default")
 public class JsonPropertyNameReferenceProvider implements JSPropertyNameReferenceProvider
 {
 	@RequiredReadAction

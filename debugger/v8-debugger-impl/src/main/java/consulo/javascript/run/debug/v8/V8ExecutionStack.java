@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package consulo.javascript.run.debug;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nullable;
+package consulo.javascript.run.debug.v8;
 
 import consulo.execution.debug.frame.XExecutionStack;
 import consulo.execution.debug.frame.XStackFrame;
 import org.chromium.sdk.CallFrame;
 import org.chromium.sdk.DebugContext;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL

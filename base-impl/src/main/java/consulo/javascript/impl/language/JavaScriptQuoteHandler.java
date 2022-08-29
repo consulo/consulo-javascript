@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-package consulo.javascript.impl.lang;
+package consulo.javascript.impl.language;
 
 import com.intellij.lang.javascript.JSTokenTypes;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.lang.JavaScriptTokenSets;
+import consulo.javascript.language.JavaScriptFileType;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
+import consulo.language.editor.action.FileQuoteHandler;
 import consulo.language.editor.action.JavaLikeQuoteHandler;
 import consulo.language.editor.action.SimpleTokenSetQuoteHandler;
 import consulo.language.psi.PsiElement;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 
@@ -30,7 +34,8 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 09.12.2015
  */
-public class JavaScriptQuoteHandler extends SimpleTokenSetQuoteHandler implements JavaLikeQuoteHandler
+@ExtensionImpl
+public class JavaScriptQuoteHandler extends SimpleTokenSetQuoteHandler implements JavaLikeQuoteHandler, FileQuoteHandler
 {
 	public JavaScriptQuoteHandler()
 	{
@@ -73,5 +78,12 @@ public class JavaScriptQuoteHandler extends SimpleTokenSetQuoteHandler implement
 	public boolean needParenthesesAroundConcatenation(PsiElement element)
 	{
 		return false;
+	}
+
+	@Nonnull
+	@Override
+	public FileType getFileType()
+	{
+		return JavaScriptFileType.INSTANCE;
 	}
 }

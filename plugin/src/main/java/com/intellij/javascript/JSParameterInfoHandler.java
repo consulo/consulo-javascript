@@ -19,6 +19,9 @@ package com.intellij.javascript;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.*;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.completion.lookup.LookupElement;
@@ -37,7 +40,8 @@ import java.util.*;
 /**
  * @author Maxim.Mossienko
  */
-public abstract class JSParameterInfoHandler implements ParameterInfoHandlerWithTabActionSupport<JSArgumentList, JSFunction, JSExpression>
+@ExtensionImpl
+public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabActionSupport<JSArgumentList, JSFunction, JSExpression>
 {
 	private static final Set<Class<?>> ourArgumentListAllowedParentClassesSet = Set.of(JSCallExpression.class);
 
@@ -326,5 +330,12 @@ public abstract class JSParameterInfoHandler implements ParameterInfoHandlerWith
 	public Class<JSArgumentList> getArgumentListClass()
 	{
 		return JSArgumentList.class;
+	}
+
+	@Nonnull
+	@Override
+	public Language getLanguage()
+	{
+		return JavaScriptLanguage.INSTANCE;
 	}
 }

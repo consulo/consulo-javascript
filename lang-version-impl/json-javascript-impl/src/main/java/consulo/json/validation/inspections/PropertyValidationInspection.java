@@ -24,6 +24,7 @@ import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.inspection.ProblemsHolder;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.util.PsiTreeUtil;
@@ -48,7 +49,7 @@ import java.util.*;
  * @author VISTALL
  * @since 10.11.2015
  */
-public abstract class PropertyValidationInspection extends LocalInspectionTool
+public class PropertyValidationInspection extends LocalInspectionTool
 {
 	@Nonnull
 	@Override
@@ -384,5 +385,26 @@ public abstract class PropertyValidationInspection extends LocalInspectionTool
 			return getSimpleName(((NativeArray) o).getComponentType()) + "[]";
 		}
 		return "null";
+	}
+
+	@Nonnull
+	@Override
+	public String getGroupDisplayName()
+	{
+		return "JSON";
+	}
+
+	@Nonnull
+	@Override
+	public String getDisplayName()
+	{
+		return "Property validation";
+	}
+
+	@Nonnull
+	@Override
+	public HighlightDisplayLevel getDefaultLevel()
+	{
+		return HighlightDisplayLevel.ERROR;
 	}
 }

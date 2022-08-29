@@ -54,7 +54,6 @@ public abstract class JSLanguageInjector implements MultiHostInjector
 	@Override
 	public void injectLanguages(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement host)
 	{
-
 		if(host instanceof XmlAttributeValue)
 		{
 			final PsiElement attribute = host.getParent();

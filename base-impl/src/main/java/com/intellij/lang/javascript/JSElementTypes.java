@@ -41,11 +41,9 @@ import consulo.language.psi.stub.IStubFileElementType;
 import javax.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
  * User: max
  * Date: Jan 28, 2005
  * Time: 12:27:21 AM
- * To change this template use File | Settings | File Templates.
  */
 public interface JSElementTypes
 {
@@ -61,42 +59,30 @@ public interface JSElementTypes
 		}
 	};
 	IElementType EMBEDDED_EXPRESSION = new ElementTypeAsPsiFactory("EMBEDDED_EXPRESSION", JavaScriptLanguage.INSTANCE, JSEmbeddedContentImpl::new);
-	JSStubElementType<JSFunctionStub, JSFunction> FUNCTION_DECLARATION = new JSFunctionElementType("FUNCTION_DECLARATION")
-	{
-		@Override
-		public JSFunction createPsi(@Nonnull JSFunctionStub stub)
-		{
-			return new JSFunctionImpl(stub, this);
-		}
 
-		@Nonnull
-		@Override
-		public PsiElement createElement(@Nonnull ASTNode astNode)
-		{
-			return new JSFunctionImpl(astNode);
-		}
-	};
-	JSStubElementType<JSParameterListStub, JSParameterList> PARAMETER_LIST = new JSParameterListElementType();
+	JSStubElementType<JSFunctionStub, JSFunction> FUNCTION_DECLARATION = JSStubElementTypes.FUNCTION_DECLARATION;
 
-	JSStubElementType<JSParameterStub, JSParameter> FORMAL_PARAMETER = new JSParameterElementType();
+	JSStubElementType<JSParameterListStub, JSParameterList> PARAMETER_LIST = JSStubElementTypes.PARAMETER_LIST;
 
-	JSStubElementType<JSVariableStub, JSVariable> VARIABLE = new JSVariableElementType();
+	JSStubElementType<JSParameterStub, JSParameter> FORMAL_PARAMETER = JSStubElementTypes.FORMAL_PARAMETER;
+
+	JSStubElementType<JSVariableStub, JSVariable> VARIABLE = JSStubElementTypes.VARIABLE;
 	IElementType ARGUMENT_LIST = new ElementTypeAsPsiFactory("ARGUMENT_LIST", JavaScriptLanguage.INSTANCE, JSArgumentListImpl::new);
 
-	JSStubElementType<JSAttributeStub, JSAttribute> ATTRIBUTE = new JSAttributeElementType();
-	JSStubElementType<JSAttributeNameValuePairStub, JSAttributeNameValuePair> ATTRIBUTE_NAME_VALUE_PAIR = new JSAttributeNameValuePairType();
-	JSStubElementType<JSAttributeListStub, JSAttributeList> ATTRIBUTE_LIST = new JSAttributeListElementType();
-	JSStubElementType<JSPackageStatementStub, JSPackageStatement> PACKAGE_STATEMENT = new JSPackageStatementElementType();
+	JSStubElementType<JSAttributeStub, JSAttribute> ATTRIBUTE = JSStubElementTypes.ATTRIBUTE;
+	JSStubElementType<JSAttributeNameValuePairStub, JSAttributeNameValuePair> ATTRIBUTE_NAME_VALUE_PAIR = JSStubElementTypes.ATTRIBUTE_NAME_VALUE_PAIR;
+	JSStubElementType<JSAttributeListStub, JSAttributeList> ATTRIBUTE_LIST = JSStubElementTypes.ATTRIBUTE_LIST;
+	JSStubElementType<JSPackageStatementStub, JSPackageStatement> PACKAGE_STATEMENT = JSStubElementTypes.PACKAGE_STATEMENT;
 
 	@Deprecated
 	JSStubElementType<JSImportStatementStub, JSImportStatement> ES4_IMPORT_STATEMENT = EcmaScript4ElementTypes.IMPORT_STATEMENT;
 
-	JSStubElementType<JSClassStub, JSClass> CLASS = new JSClassElementType();
-	JSStubElementType<JSReferenceListStub, JSReferenceList> EXTENDS_LIST = new JSReferenceListElementType("EXTENDS_LIST");
-	JSStubElementType<JSReferenceListStub, JSReferenceList> IMPLEMENTS_LIST = new JSReferenceListElementType("IMPLEMENTS_LIST");
-	JSStubElementType<JSUseNamespaceDirectiveStub, JSUseNamespaceDirective> USE_NAMESPACE_DIRECTIVE = new JSUseNamespaceDirectiveType();
-	JSStubElementType<JSIncludeDirectiveStub, JSIncludeDirective> INCLUDE_DIRECTIVE = new JSIncludeDirectiveElementType();
-	JSStubElementType<JSNamespaceDeclarationStub, JSNamespaceDeclaration> NAMESPACE_DECLARATION = new JSNamespaceDeclarationElementType();
+	JSStubElementType<JSClassStub, JSClass> CLASS = JSStubElementTypes.CLASS;
+	JSStubElementType<JSReferenceListStub, JSReferenceList> EXTENDS_LIST = JSStubElementTypes.EXTENDS_LIST;
+	JSStubElementType<JSReferenceListStub, JSReferenceList> IMPLEMENTS_LIST = JSStubElementTypes.IMPLEMENTS_LIST;
+	JSStubElementType<JSUseNamespaceDirectiveStub, JSUseNamespaceDirective> USE_NAMESPACE_DIRECTIVE = JSStubElementTypes.USE_NAMESPACE_DIRECTIVE;
+	JSStubElementType<JSIncludeDirectiveStub, JSIncludeDirective> INCLUDE_DIRECTIVE = JSStubElementTypes.INCLUDE_DIRECTIVE;
+	JSStubElementType<JSNamespaceDeclarationStub, JSNamespaceDeclaration> NAMESPACE_DECLARATION = JSStubElementTypes.NAMESPACE_DECLARATION;
 	IElementType SUPER_EXPRESSION = new ElementTypeAsPsiFactory("SUPER_EXPRESSION", JavaScriptLanguage.INSTANCE, JSSuperExpressionImpl::new);
 	IElementType GENERIC_SIGNATURE = new ElementTypeAsPsiFactory("GENERIC_SIGNATURE", JavaScriptLanguage.INSTANCE, JSGenericSignatureImpl::new);
 
@@ -107,7 +93,7 @@ public interface JSElementTypes
 			JSExpressionStatementImpl::new);
 	IElementType YIELD_STATEMENT = new ElementTypeAsPsiFactory("YIELD_STATEMENT", JavaScriptLanguage.INSTANCE, JSYieldStatementImpl::new);
 	IElementType LET_STATEMENT = new ElementTypeAsPsiFactory("LET_STATEMENT", JavaScriptLanguage.INSTANCE, JSLetStatementImpl::new);
-	JSStubElementType<JSVarStatementStub, JSVarStatement> VAR_STATEMENT = new JSVarStatementElementType();
+	JSStubElementType<JSVarStatementStub, JSVarStatement> VAR_STATEMENT = JSStubElementTypes.VAR_STATEMENT;
 	IElementType EMPTY_STATEMENT = new ElementTypeAsPsiFactory("EMPTY_STATEMENT", JavaScriptLanguage.INSTANCE, JSEmptyStatementImpl::new);
 	IElementType IF_STATEMENT = new ElementTypeAsPsiFactory("IF_STATEMENT", JavaScriptLanguage.INSTANCE, JSIfStatementImpl::new);
 	IElementType CONTINUE_STATEMENT = new ElementTypeAsPsiFactory("CONTINUE_STATEMENT", JavaScriptLanguage.INSTANCE, JSContinueStatementImpl::new);

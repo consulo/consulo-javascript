@@ -1,14 +1,16 @@
 package consulo.actionscript;
 
-import javax.annotation.Nonnull;
-
+import consulo.annotation.component.ExtensionImpl;
 import consulo.virtualFileSystem.fileType.FileTypeConsumer;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 06.04.2015
  */
+@ExtensionImpl
 public class ActionScriptFileTypeFactory extends FileTypeFactory
 {
 	@Override

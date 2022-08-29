@@ -25,9 +25,13 @@ import com.intellij.lang.javascript.psi.resolve.BaseJSSymbolProcessor;
 import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.editor.documentation.CodeDocumentationProvider;
 import consulo.language.editor.documentation.DocumentationProvider;
+import consulo.language.editor.documentation.LanguageDocumentationProvider;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.navigation.ItemPresentation;
@@ -49,12 +53,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by IntelliJ IDEA.
  * User: Maxim.Mossienko
  * Date: Nov 4, 2005
  * Time: 5:04:28 PM
  */
-public class JSDocumentationProvider implements CodeDocumentationProvider
+@ExtensionImpl
+public class JSDocumentationProvider implements CodeDocumentationProvider, LanguageDocumentationProvider
 {
 	private DocumentationProvider cssProvider;
 	@NonNls
@@ -1148,4 +1152,10 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 	}
 
 
+	@Nonnull
+	@Override
+	public Language getLanguage()
+	{
+		return JavaScriptLanguage.INSTANCE;
+	}
 }

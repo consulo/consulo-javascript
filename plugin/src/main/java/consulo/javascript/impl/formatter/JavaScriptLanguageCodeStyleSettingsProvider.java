@@ -1,5 +1,6 @@
 package consulo.javascript.impl.formatter;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.language.Language;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
@@ -16,6 +17,7 @@ import java.io.IOException;
  * @author VISTALL
  * @since 16.02.2015
  */
+@ExtensionImpl
 public class JavaScriptLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsProvider
 {
 	@Override

@@ -55,14 +55,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>16</source>
-					<target>16</target>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 
@@ -82,6 +74,14 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>com.intellij.xml</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!--This dependency fix problem with compilation JSXTagTreeHighlightingPassFactory, due dep from XML plugin-->
+		<dependency>
+			<groupId>consulo</groupId>
+			<artifactId>consulo-ide-impl</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>

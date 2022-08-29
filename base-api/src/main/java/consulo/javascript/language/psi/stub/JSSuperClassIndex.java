@@ -16,13 +16,14 @@
 
 package consulo.javascript.language.psi.stub;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.psi.JSReferenceList;
-import consulo.javascript.language.psi.stub.JavaScriptIndexKeys;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.stub.StringStubIndexExtension;
 import consulo.language.psi.stub.StubIndexKey;
 
+import javax.annotation.Nonnull;
+
+@ExtensionImpl
 public class JSSuperClassIndex extends StringStubIndexExtension<JSReferenceList>
 {
 	@Nonnull

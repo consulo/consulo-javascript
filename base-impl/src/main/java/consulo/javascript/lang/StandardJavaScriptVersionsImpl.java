@@ -1,5 +1,6 @@
 package consulo.javascript.lang;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.javascript.language.JavaScriptLanguageVersion;
 import consulo.javascript.language.StandardJavaScriptVersions;
@@ -17,6 +18,7 @@ import java.util.List;
  * @since 23-Dec-17
  */
 @Singleton
+@ServiceImpl
 public class StandardJavaScriptVersionsImpl extends StandardJavaScriptVersions
 {
 	@Nonnull

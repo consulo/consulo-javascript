@@ -16,6 +16,9 @@
 
 package com.intellij.lang.javascript.impl.folding;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.language.Language;
 import consulo.language.editor.folding.CodeFoldingSettings;
 import consulo.language.ast.ASTNode;
 import consulo.language.editor.folding.FoldingDescriptor;
@@ -40,7 +43,8 @@ import java.util.List;
 /**
  * @author max
  */
-public abstract class JavaScriptFoldingBuilder implements FoldingBuilder
+@ExtensionImpl
+public class JavaScriptFoldingBuilder implements FoldingBuilder
 {
 	@RequiredReadAction
 	@Nonnull
@@ -207,5 +211,12 @@ public abstract class JavaScriptFoldingBuilder implements FoldingBuilder
 			return CodeFoldingSettings.getInstance().COLLAPSE_IMPORTS;
 		}
 		return CodeFoldingSettings.getInstance().COLLAPSE_DOC_COMMENTS && node.getElementType() == JSTokenTypes.DOC_COMMENT;
+	}
+
+	@Nonnull
+	@Override
+	public Language getLanguage()
+	{
+		return JavaScriptLanguage.INSTANCE;
 	}
 }

@@ -38,5 +38,6 @@ open module consulo.javascript.base.impl
 	exports consulo.javascript.lang.viewProvider;
 	exports consulo.javascript.impl.language.psi;
 	exports consulo.javascript.impl.language.psi.stub;
+	exports consulo.javascript.impl.language;
 	exports consulo.javascript.types;
 }

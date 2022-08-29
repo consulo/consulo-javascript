@@ -1,5 +1,6 @@
 package consulo.javascript.ecmascript.completion;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.completion.CompletionResultSet;
 import consulo.language.editor.completion.lookup.AddSpaceInsertHandler;
 import consulo.language.editor.completion.CompletionParameters;
@@ -13,6 +14,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2019-12-17
  */
+@ExtensionImpl
 public class EcmaScript6KeywordCompletionExtender implements JavaScriptKeywordCompletionExtender
 {
 	@Override

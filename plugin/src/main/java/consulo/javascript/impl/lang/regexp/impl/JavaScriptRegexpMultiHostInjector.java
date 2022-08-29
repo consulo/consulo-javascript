@@ -16,6 +16,7 @@
 
 package consulo.javascript.impl.lang.regexp.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.document.util.TextRange;
 import consulo.language.inject.MultiHostRegistrar;
 import consulo.language.psi.PsiElement;
@@ -31,8 +32,16 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 11.12.2015
  */
-public abstract class JavaScriptRegexpMultiHostInjector implements MultiHostInjector
+@ExtensionImpl
+public class JavaScriptRegexpMultiHostInjector implements MultiHostInjector
 {
+	@Nonnull
+	@Override
+	public Class<? extends PsiElement> getElementClass()
+	{
+		return JSRegExpLiteralExpressionImpl.class;
+	}
+
 	@Override
 	@RequiredReadAction
 	public void injectLanguages(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement context)

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.javascript.run.debug;
+package consulo.javascript.run.debug.v8;
 
 import consulo.execution.debug.XBreakpointManager;
 import consulo.execution.debug.XDebuggerManager;

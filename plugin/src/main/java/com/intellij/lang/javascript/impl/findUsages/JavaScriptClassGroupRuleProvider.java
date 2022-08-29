@@ -16,17 +16,19 @@
 
 package com.intellij.lang.javascript.impl.findUsages;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSNamedElement;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import consulo.usage.UsageGroup;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
+import consulo.usage.UsageGroup;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
  */
+@ExtensionImpl
 public class JavaScriptClassGroupRuleProvider extends JavaScriptGroupRuleProviderBase<JSClass>
 {
 	@Override

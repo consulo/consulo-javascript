@@ -20,6 +20,7 @@
 package consulo.javascript.impl.language.psi.stub;
 
 import com.intellij.lang.javascript.psi.JSClass;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.language.psi.stub.JavaScriptIndexKeys;
 import consulo.language.psi.stub.StringStubIndexExtension;
 import consulo.language.psi.stub.StubIndexKey;
@@ -29,6 +30,7 @@ import javax.annotation.Nonnull;
 /**
  * @author VISTALL
  */
+@ExtensionImpl
 public class JavaScriptClassNameIndex extends StringStubIndexExtension<JSClass>
 {
 	@Nonnull

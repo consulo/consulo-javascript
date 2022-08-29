@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package consulo.javascript.run.debug;
+package consulo.javascript.run.debug.v8;
 
 import consulo.execution.debug.frame.XExecutionStack;
-import org.chromium.sdk.DebugContext;
-import javax.annotation.Nullable;
-
 import consulo.execution.debug.frame.XSuspendContext;
+import org.chromium.sdk.DebugContext;
+
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

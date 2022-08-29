@@ -17,10 +17,12 @@
 package com.intellij.lang.javascript.impl.highlighting;
 
 import com.intellij.lang.javascript.JSTokenTypes;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.language.JavaScriptLanguage;
 import consulo.language.BracePair;
+import consulo.language.Language;
 import consulo.language.PairedBraceMatcher;
 import consulo.language.ast.IElementType;
-import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,7 +32,8 @@ import javax.annotation.Nullable;
  * Date: Feb 2, 2005
  * Time: 12:10:44 PM
  */
-public abstract class JSBraceMatcher implements PairedBraceMatcher
+@ExtensionImpl
+public class JSBraceMatcher implements PairedBraceMatcher
 {
 	private static final BracePair[] PAIRS = new BracePair[]{
 			new BracePair(JSTokenTypes.LPAR, JSTokenTypes.RPAR, false),
@@ -52,9 +55,10 @@ public abstract class JSBraceMatcher implements PairedBraceMatcher
 				tokenType;
 	}
 
+	@Nonnull
 	@Override
-	public int getCodeConstructStart(final PsiFile file, int openingBraceOffset)
+	public Language getLanguage()
 	{
-		return openingBraceOffset;
+		return JavaScriptLanguage.INSTANCE;
 	}
 }

@@ -16,6 +16,9 @@
 
 package consulo.json.validation.descriptionByAnotherPsiElement;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
 import consulo.component.persist.PersistentStateComponent;
@@ -31,7 +34,6 @@ import consulo.language.psi.SmartPsiElementPointer;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
-import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
@@ -50,7 +52,9 @@ import java.util.List;
  * @since 12.11.2015
  */
 @Singleton
-@State(name = "JSONDescriptionByAnotherPsiElementService",storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
+@State(name = "JSONDescriptionByAnotherPsiElementService", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
 public class DescriptionByAnotherPsiElementService implements PersistentStateComponent<Element>, Disposable
 {
 	private static class Info implements Disposable
@@ -77,14 +81,7 @@ public class DescriptionByAnotherPsiElementService implements PersistentStateCom
 			myProject = project;
 			myVirtualFilePointer = VirtualFilePointerManager.getInstance().create(url, this, null);
 
-			myProvider = ContainerUtil.find(DescriptionByAnotherPsiElementProvider.EP_NAME.getExtensions(), new Condition<DescriptionByAnotherPsiElementProvider<?>>()
-			{
-				@Override
-				public boolean value(DescriptionByAnotherPsiElementProvider<?> psiElementProvider)
-				{
-					return psiElementProvider.getId().equals(providerId);
-				}
-			});
+			myProvider = ContainerUtil.find(ApplicationManager.getApplication().getExtensionList(DescriptionByAnotherPsiElementProvider.class), it -> it.getId().equals(providerId));
 
 			myId = providerId;
 			myPsiElementId = psiElementId;

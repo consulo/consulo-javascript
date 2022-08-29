@@ -17,6 +17,7 @@
 package com.intellij.lang.javascript.impl.formatter;
 
 import com.intellij.lang.javascript.formatter.JSCodeStyleSettings;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.Configurable;
 import consulo.javascript.impl.formatter.JavaScriptCodeStyleConfigurable;
 import consulo.javascript.language.JavaScriptLanguage;
@@ -33,6 +34,7 @@ import javax.annotation.Nullable;
  *         Date: Mar 12, 2008
  *         Time: 10:32:33 PM
  */
+@ExtensionImpl
 public class JSCodeStyleSettingsProvider extends CodeStyleSettingsProvider
 {
 	@Override

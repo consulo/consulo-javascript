@@ -16,6 +16,8 @@
 
 package consulo.javascript.language;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 
 import javax.annotation.Nonnull;
@@ -26,6 +28,7 @@ import java.util.List;
  * @author VISTALL
  * @since 11.12.2015
  */
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class StandardJavaScriptVersions
 {
 	public static interface Marker

@@ -16,17 +16,20 @@
 
 package com.intellij.lang.javascript.impl.highlighting;
 
+import com.intellij.lang.javascript.impl.search.JSFunctionsSearch;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import com.intellij.lang.javascript.search.JSClassSearch;
-import com.intellij.lang.javascript.impl.search.JSFunctionsSearch;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Processor;
 import consulo.application.util.query.CollectionQuery;
 import consulo.application.util.query.Query;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.language.Language;
 import consulo.language.editor.Pass;
 import consulo.language.editor.gutter.GutterIconNavigationHandler;
 import consulo.language.editor.gutter.LineMarkerInfo;
@@ -40,7 +43,6 @@ import consulo.navigation.NavigationItem;
 import consulo.ui.ex.RelativePoint;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.Ref;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,9 +55,9 @@ import java.util.function.Function;
  * Date: Apr 14, 2008
  * Time: 11:43:47 PM
  */
-public abstract class JavaScriptLineMarkerProvider implements LineMarkerProvider
+@ExtensionImpl
+public class JavaScriptLineMarkerProvider implements LineMarkerProvider
 {
-	@NonNls
 	private static final String OVERRIDES_METHOD_IN = "overrides method in ";
 
 	private static final Function<JSClass, String> ourClassInheritorsTooltipProvider = clazz -> "Has subclasses";
@@ -492,5 +494,12 @@ public abstract class JavaScriptLineMarkerProvider implements LineMarkerProvider
 
 		@Nullable
 		protected abstract Query<T> search(T elt);
+	}
+
+	@Nonnull
+	@Override
+	public Language getLanguage()
+	{
+		return JavaScriptLanguage.INSTANCE;
 	}
 }

@@ -1,5 +1,6 @@
 package consulo.javascript.ecmascript.lang;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.language.JavaScriptLanguage;
 import jakarta.inject.Inject;
 
@@ -9,6 +10,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 06/12/2021
  */
+@ExtensionImpl
 public class EcmaScript12JavaScriptVersion extends EcmaScript6JavaScriptVersion
 {
 	@Nonnull

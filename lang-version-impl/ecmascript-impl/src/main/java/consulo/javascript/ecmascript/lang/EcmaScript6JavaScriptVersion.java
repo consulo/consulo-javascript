@@ -16,6 +16,7 @@
 
 package consulo.javascript.ecmascript.lang;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.lang.psi.impl.resolve.JavaScriptVersionWithHelper;
 import consulo.javascript.language.JavaScriptFeature;
 import consulo.javascript.language.JavaScriptLanguage;
@@ -28,6 +29,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 12.12.2015
  */
+@ExtensionImpl
 public class EcmaScript6JavaScriptVersion extends BaseEcmaScriptJavaScriptVersion implements StandardJavaScriptVersions.Marker, JavaScriptVersionWithHelper
 {
 	@Nonnull

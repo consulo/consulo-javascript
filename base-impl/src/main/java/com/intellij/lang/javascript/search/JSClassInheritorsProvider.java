@@ -16,16 +16,19 @@
 
 package com.intellij.lang.javascript.search;
 
-import java.util.Collection;
-
 import com.intellij.lang.javascript.psi.JSClass;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 
+import java.util.Collection;
+
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface JSClassInheritorsProvider
 {
-	ExtensionPointName<JSClassInheritorsProvider> EP_NAME = ExtensionPointName.create("consulo.javascript.classInheritorsProvider");
+	ExtensionPointName<JSClassInheritorsProvider> EP_NAME = ExtensionPointName.create(JSClassInheritorsProvider.class);
 
 	Collection<JSClass> getImplementingClasses(String parentName, Project project, GlobalSearchScope scope);
 

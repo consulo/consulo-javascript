@@ -16,44 +16,48 @@
 
 package consulo.javascript.impl.lang.navigation;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.psi.JSClass;
-import consulo.ide.navigation.ChooseByNameContributor;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.util.function.Processor;
+import consulo.content.scope.SearchScope;
+import consulo.ide.navigation.GotoClassOrTypeContributor;
+import consulo.javascript.language.psi.stub.JavaScriptIndexKeys;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.search.FindSymbolParameters;
 import consulo.language.psi.stub.IdFilter;
 import consulo.language.psi.stub.StubIndex;
-import consulo.util.collection.ArrayUtil;
-import consulo.javascript.language.psi.stub.JavaScriptIndexKeys;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collection;
 
 /**
  * @author VISTALL
  */
-public class JavaScriptClassContributor implements ChooseByNameContributor
+@ExtensionImpl
+public class JavaScriptClassContributor implements GotoClassOrTypeContributor
 {
-	@Nonnull
 	@Override
-	public String[] getNames(Project project, boolean includeNonProjectItems)
+	public void processNames(@Nonnull Processor<String> processor, @Nonnull SearchScope searchScope, @Nullable IdFilter idFilter)
 	{
-		final Set<String> result = new HashSet<String>();
-
-		result.addAll(StubIndex.getInstance().getAllKeys(JavaScriptIndexKeys.CLASSES_BY_NAME, project));
-
-		return ArrayUtil.toStringArray(result);
+		StubIndex.getInstance().processAllKeys(JavaScriptIndexKeys.CLASSES_BY_NAME, processor, (GlobalSearchScope) searchScope, idFilter);
 	}
 
-	@Nonnull
 	@Override
-	public NavigationItem[] getItemsByName(String name, final String pattern, Project project, boolean includeNonProjectItems)
+	public void processElementsWithName(@Nonnull String name, @Nonnull Processor<NavigationItem> processor, @Nonnull FindSymbolParameters findSymbolParameters)
 	{
-		Collection<JSClass> elements = StubIndex.getElements(JavaScriptIndexKeys.CLASSES_BY_NAME, name, project, GlobalSearchScope.allScope(project), IdFilter.getProjectIdFilter(project,
-				includeNonProjectItems), JSClass.class);
-		return elements.toArray(new NavigationItem[elements.size()]);
+		Project project = findSymbolParameters.getProject();
+		Collection<JSClass> elements = StubIndex.getElements(JavaScriptIndexKeys.CLASSES_BY_NAME, name, project, GlobalSearchScope.allScope(project), findSymbolParameters.getIdFilter(), JSClass
+				.class);
+
+		for(JSClass element : elements)
+		{
+			if(!processor.process(element))
+			{
+				break;
+			}
+		}
 	}
 }

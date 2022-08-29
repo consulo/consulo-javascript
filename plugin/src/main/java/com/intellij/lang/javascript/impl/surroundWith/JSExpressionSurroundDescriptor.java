@@ -19,6 +19,9 @@ package com.intellij.lang.javascript.impl.surroundWith;
 import com.intellij.lang.javascript.psi.JSCallExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.language.Language;
 import consulo.language.editor.surroundWith.SurroundDescriptor;
 import consulo.language.editor.surroundWith.Surrounder;
 import consulo.language.psi.PsiElement;
@@ -29,13 +32,12 @@ import consulo.language.psi.util.PsiTreeUtil;
 import javax.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
  * User: yole
  * Date: 12.07.2005
  * Time: 12:46:24
- * To change this template use File | Settings | File Templates.
  */
-public abstract class JSExpressionSurroundDescriptor implements SurroundDescriptor
+@ExtensionImpl
+public class JSExpressionSurroundDescriptor implements SurroundDescriptor
 {
 	private static final Surrounder[] SURROUNDERS = {
 			new JSWithParenthesesSurrounder()
@@ -88,5 +90,12 @@ public abstract class JSExpressionSurroundDescriptor implements SurroundDescript
 			return null;
 		}
 		return expression;
+	}
+
+	@Nonnull
+	@Override
+	public Language getLanguage()
+	{
+		return JavaScriptLanguage.INSTANCE;
 	}
 }

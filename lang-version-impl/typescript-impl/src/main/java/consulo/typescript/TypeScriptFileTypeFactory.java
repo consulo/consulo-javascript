@@ -16,14 +16,17 @@
 
 package consulo.typescript;
 
-import javax.annotation.Nonnull;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.virtualFileSystem.fileType.FileTypeConsumer;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 03.03.2016
  */
+@ExtensionImpl
 public class TypeScriptFileTypeFactory extends FileTypeFactory
 {
 	@Override

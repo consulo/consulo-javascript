@@ -1,9 +1,11 @@
 package consulo.javascript.lang.viewProvider;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.language.JavaScriptLanguage;
 import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
-import consulo.language.file.FileViewProviderFactory;
+import consulo.language.file.LanguageFileViewProviderFactory;
 import consulo.language.impl.file.SingleRootFileViewProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
@@ -16,7 +18,8 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2019-12-17
  */
-public class JSFileViewProviderFactory implements FileViewProviderFactory
+@ExtensionImpl
+public class JSFileViewProviderFactory implements LanguageFileViewProviderFactory
 {
 	private static class JSFileViewProvider extends SingleRootFileViewProvider
 	{
@@ -42,5 +45,12 @@ public class JSFileViewProviderFactory implements FileViewProviderFactory
 	public FileViewProvider createFileViewProvider(@Nonnull VirtualFile virtualFile, Language language, @Nonnull PsiManager psiManager, boolean eventSystemEnabled)
 	{
 		return new JSFileViewProvider(psiManager, virtualFile, eventSystemEnabled, language);
+	}
+
+	@Nonnull
+	@Override
+	public Language getLanguage()
+	{
+		return JavaScriptLanguage.INSTANCE;
 	}
 }

@@ -17,6 +17,8 @@
 package consulo.javascript.ide.codeInsight;
 
 import com.intellij.lang.javascript.inspections.qucikFixes.CreateJSFunctionOrMethodFix;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.javascript.lang.BaseJavaScriptLanguageVersion;
 import consulo.javascript.language.JavaScriptLanguageVersion;
 import consulo.language.psi.PsiElement;
@@ -28,6 +30,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 23.02.2016
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class JavaScriptQuickFixFactory
 {
 	private static final JavaScriptQuickFixFactory ourDefaultImpl = new JavaScriptQuickFixFactory()

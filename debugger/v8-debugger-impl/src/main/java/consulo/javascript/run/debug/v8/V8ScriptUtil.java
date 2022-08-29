@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.javascript.run.debug;
+package consulo.javascript.run.debug.v8;
 
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.LocalFileSystem;

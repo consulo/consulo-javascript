@@ -16,6 +16,8 @@
 
 package com.intellij.lang.javascript.flex;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.util.function.Processor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
@@ -33,9 +35,10 @@ import javax.annotation.Nullable;
  */
 @Deprecated
 @DeprecationInfo("We need this?")
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface JSResolveHelper
 {
-	ExtensionPointName<JSResolveHelper> EP_NAME = ExtensionPointName.create("consulo.javascript.resolveHelper");
+	ExtensionPointName<JSResolveHelper> EP_NAME = ExtensionPointName.create(JSResolveHelper.class);
 
 	// TODO: drop module
 	@Nullable
@@ -44,5 +47,5 @@ public interface JSResolveHelper
 	void importClass(final PsiScopeProcessor processor, final PsiNamedElement file, final String packageQualifierText);
 
 	boolean processPackage(final String packageQualifierText, String resolvedName, final Processor<VirtualFile> processor,
-			GlobalSearchScope globalSearchScope, Project project);
+						   GlobalSearchScope globalSearchScope, Project project);
 }

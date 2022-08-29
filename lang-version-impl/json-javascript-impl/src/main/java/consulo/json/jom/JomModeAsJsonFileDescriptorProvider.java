@@ -16,20 +16,8 @@
 
 package consulo.json.jom;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.math.BigInteger;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.json.validation.JsonFileDescriptorProvider;
 import consulo.json.validation.NativeArray;
 import consulo.json.validation.descriptor.JsonObjectDescriptor;
@@ -37,10 +25,19 @@ import consulo.json.validation.descriptor.JsonPropertyDescriptor;
 import consulo.language.psi.PsiFile;
 import consulo.util.collection.ContainerUtil;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.math.BigInteger;
+import java.util.*;
+
 /**
  * @author VISTALL
  * @since 10.11.2015
  */
+@ExtensionImpl
 public class JomModeAsJsonFileDescriptorProvider implements JsonFileDescriptorProvider
 {
 	@RequiredReadAction

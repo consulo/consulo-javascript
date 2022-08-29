@@ -1,5 +1,7 @@
 package consulo.javascript.impl.lang.regexp.impl;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.lang.psi.impl.JSRegExpLiteralExpressionImpl;
 import org.intellij.lang.regexp.DefaultRegExpPropertiesProvider;
 import org.intellij.lang.regexp.RegExpLanguageHost;
 import org.intellij.lang.regexp.psi.RegExpChar;
@@ -13,8 +15,16 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 21/12/2021
  */
-public abstract class JavaScriptRegExpLiteralLanguageHost implements RegExpLanguageHost
+@ExtensionImpl
+public class JavaScriptRegExpLiteralLanguageHost implements RegExpLanguageHost
 {
+	@Nonnull
+	@Override
+	public Class getHostClass()
+	{
+		return JSRegExpLiteralExpressionImpl.class;
+	}
+
 	@Override
 	public boolean characterNeedsEscaping(char c)
 	{

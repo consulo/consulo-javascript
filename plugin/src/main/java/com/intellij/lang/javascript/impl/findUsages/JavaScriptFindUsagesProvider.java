@@ -16,8 +16,11 @@
 
 package com.intellij.lang.javascript.impl.findUsages;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.*;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.language.Language;
 import consulo.language.cacheBuilder.WordsScanner;
 import consulo.language.findUsage.FindUsagesProvider;
 import consulo.language.psi.PsiElement;
@@ -28,24 +31,17 @@ import consulo.xml.psi.xml.XmlToken;
 import javax.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
  * User: max
  * Date: Feb 14, 2005
  * Time: 6:44:02 PM
- * To change this template use File | Settings | File Templates.
  */
-public abstract class JavaScriptFindUsagesProvider implements FindUsagesProvider
+@ExtensionImpl
+public class JavaScriptFindUsagesProvider implements FindUsagesProvider
 {
 	@Override
 	public boolean canFindUsagesFor(@Nonnull PsiElement psiElement)
 	{
 		return psiElement instanceof PsiNamedElement;
-	}
-
-	@Override
-	public String getHelpId(@Nonnull PsiElement psiElement)
-	{
-		return null;
 	}
 
 	@Override
@@ -118,5 +114,12 @@ public abstract class JavaScriptFindUsagesProvider implements FindUsagesProvider
 	public WordsScanner getWordsScanner()
 	{
 		return new JSWordsScanner();
+	}
+
+	@Nonnull
+	@Override
+	public Language getLanguage()
+	{
+		return JavaScriptLanguage.INSTANCE;
 	}
 }

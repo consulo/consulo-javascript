@@ -17,11 +17,13 @@
 package consulo.javascript.language.psi.stub;
 
 import com.intellij.lang.javascript.psi.JSReferenceList;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.stub.StringStubIndexExtension;
 import consulo.language.psi.stub.StubIndexKey;
 
 import javax.annotation.Nonnull;
 
+@ExtensionImpl
 public class JSImplementedInterfacesIndex extends StringStubIndexExtension<JSReferenceList>
 {
 	@Nonnull

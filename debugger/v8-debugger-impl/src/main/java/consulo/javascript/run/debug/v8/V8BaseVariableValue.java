@@ -14,26 +14,17 @@
  * limitations under the License.
  */
 
-package consulo.javascript.run.debug;
+package consulo.javascript.run.debug.v8;
 
-import java.util.Collection;
+import consulo.application.AllIcons;
+import consulo.execution.debug.frame.*;
+import consulo.execution.debug.frame.presentation.XValuePresentation;
+import consulo.ui.image.Image;
+import org.chromium.sdk.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import consulo.execution.debug.frame.XNamedValue;
-import org.chromium.sdk.JsArray;
-import org.chromium.sdk.JsEvaluateContext;
-import org.chromium.sdk.JsObject;
-import org.chromium.sdk.JsValue;
-import org.chromium.sdk.JsVariable;
-import consulo.application.AllIcons;
-import consulo.execution.debug.frame.XCompositeNode;
-import consulo.execution.debug.frame.XValueChildrenList;
-import consulo.execution.debug.frame.XValueNode;
-import consulo.execution.debug.frame.XValuePlace;
-import consulo.execution.debug.frame.presentation.XValuePresentation;
-import consulo.ui.image.Image;
+import java.util.Collection;
 
 /**
  * @author VISTALL

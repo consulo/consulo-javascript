@@ -20,6 +20,7 @@ package consulo.javascript.impl.psi.impl.reference;
 import com.intellij.lang.javascript.psi.JSProperty;
 import com.intellij.lang.javascript.psi.impl.reference.JSPropertyNameReference;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.psi.impl.reference.JSPropertyNameReferenceProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
@@ -31,6 +32,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 02.12.2015
  */
+@ExtensionImpl(id = "default", order = "last")
 public class DefaultJSPropertyNameReferenceProvider implements JSPropertyNameReferenceProvider
 {
 	@RequiredReadAction

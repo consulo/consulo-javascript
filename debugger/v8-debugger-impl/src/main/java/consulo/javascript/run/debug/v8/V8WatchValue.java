@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package consulo.javascript.run.debug;
+package consulo.javascript.run.debug.v8;
 
-import javax.annotation.Nonnull;
-
-import org.chromium.sdk.JsEvaluateContext;
-import org.chromium.sdk.JsValue;
 import consulo.application.AllIcons;
 import consulo.ui.image.Image;
+import org.chromium.sdk.JsEvaluateContext;
+import org.chromium.sdk.JsValue;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

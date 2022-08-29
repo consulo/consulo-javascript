@@ -22,8 +22,8 @@ import com.intellij.lang.javascript.psi.JSDefinitionExpression;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.lang.javascript.search.JSClassSearch;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.util.function.Processor;
-import consulo.application.util.query.QueryExecutor;
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
@@ -31,6 +31,7 @@ import consulo.language.psi.PsiReference;
 import consulo.language.psi.ResolveResult;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.search.DefinitionsScopedSearch;
+import consulo.language.psi.search.DefinitionsScopedSearchExecutor;
 import consulo.language.psi.search.ReferencesSearch;
 
 import javax.annotation.Nonnull;
@@ -40,7 +41,8 @@ import javax.annotation.Nonnull;
  *         Date: Apr 28, 2008
  *         Time: 8:34:30 PM
  */
-class JSDefinitionsSearchExecutor implements QueryExecutor<PsiElement, DefinitionsScopedSearch.SearchParameters>
+@ExtensionImpl
+public class JSDefinitionsSearchExecutor implements DefinitionsScopedSearchExecutor
 {
 	@Override
 	public boolean execute(@Nonnull final DefinitionsScopedSearch.SearchParameters parameters, @Nonnull final Processor<? super PsiElement> consumer)

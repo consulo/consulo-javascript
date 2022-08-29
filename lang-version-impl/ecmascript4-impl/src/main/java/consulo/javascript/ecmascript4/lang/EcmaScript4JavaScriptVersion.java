@@ -4,6 +4,7 @@ import com.intellij.lang.javascript.DialectOptionHolder;
 import com.intellij.lang.javascript.JavaScriptParsingFlexLexer;
 import com.intellij.lang.javascript.highlighting.JSHighlighter;
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.ecmascript4.lang.parsing.EcmaScript4Parser;
 import consulo.javascript.lang.BaseJavaScriptLanguageVersion;
 import consulo.javascript.language.JavaScriptFeature;
@@ -18,6 +19,7 @@ import javax.annotation.Nonnull;
  */
 @Deprecated
 @DeprecationInfo("This language version was dropped. We keep it only for history, many options may not supported")
+@ExtensionImpl
 public class EcmaScript4JavaScriptVersion extends BaseJavaScriptLanguageVersion
 {
 	private final DialectOptionHolder myDialectOptionHolder = new DialectOptionHolder(true, false);

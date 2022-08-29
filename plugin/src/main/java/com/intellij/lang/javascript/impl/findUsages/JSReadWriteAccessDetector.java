@@ -23,18 +23,18 @@ import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSPostfixExpression;
 import com.intellij.lang.javascript.psi.JSPrefixExpression;
 import com.intellij.lang.javascript.psi.JSVariable;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.highlight.ReadWriteAccessDetector;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 
 /**
- * Created by IntelliJ IDEA.
  * User: Maxim.Mossienko
  * Date: 15.04.2009
  * Time: 21:51:25
- * To change this template use File | Settings | File Templates.
  */
+@ExtensionImpl
 public class JSReadWriteAccessDetector extends ReadWriteAccessDetector
 {
 	@Override

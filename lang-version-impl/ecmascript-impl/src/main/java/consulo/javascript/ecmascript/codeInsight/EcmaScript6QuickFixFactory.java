@@ -17,6 +17,7 @@
 package consulo.javascript.ecmascript.codeInsight;
 
 import com.intellij.lang.javascript.inspections.qucikFixes.CreateJSFunctionOrMethodFix;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.ecmascript.codeInsight.quickFixes.EcmaScript6CreateJSFunctionOrMethodFix;
 import consulo.javascript.ecmascript.lang.BaseEcmaScriptJavaScriptVersion;
 import consulo.javascript.ide.codeInsight.JavaScriptQuickFixFactory;
@@ -28,6 +29,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 24.02.2016
  */
+@ExtensionImpl
 public class EcmaScript6QuickFixFactory extends JavaScriptQuickFixFactory
 {
 	@Override

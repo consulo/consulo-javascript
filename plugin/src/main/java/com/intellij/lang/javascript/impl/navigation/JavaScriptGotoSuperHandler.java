@@ -22,9 +22,12 @@ package com.intellij.lang.javascript.impl.navigation;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorPopupHelper;
-import consulo.language.editor.action.LanguageCodeInsightActionHandler;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.language.Language;
+import consulo.language.editor.action.GotoSuperActionHander;
 import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -33,7 +36,10 @@ import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
 
-public abstract class JavaScriptGotoSuperHandler implements LanguageCodeInsightActionHandler
+import javax.annotation.Nonnull;
+
+@ExtensionImpl
+public class JavaScriptGotoSuperHandler implements GotoSuperActionHander
 {
 	@Override
 	public void invoke(final Project project, final Editor editor, final PsiFile file)
@@ -135,5 +141,12 @@ public abstract class JavaScriptGotoSuperHandler implements LanguageCodeInsightA
 	public boolean isValidFor(final Editor editor, final PsiFile file)
 	{
 		return true;
+	}
+
+	@Nonnull
+	@Override
+	public Language getLanguage()
+	{
+		return JavaScriptLanguage.INSTANCE;
 	}
 }

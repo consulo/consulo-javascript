@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.intellij.javascript;
+package consulo.javascript.debugger;
 
 import consulo.javascript.impl.language.psi.JSElementFactory;
 import com.intellij.lang.javascript.psi.JSFile;
@@ -36,11 +36,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
  * User: Maxim.Mossienko
  * Date: Feb 27, 2008
  * Time: 7:45:08 PM
- * To change this template use File | Settings | File Templates.
  */
 public class JSDebuggerSupportUtils
 {

@@ -17,6 +17,7 @@
 package com.intellij.lang.javascript.impl.search;
 
 import com.intellij.lang.javascript.psi.JSNamedElement;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.navigation.GotoTargetRendererProvider;
 import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.psi.PsiElement;
@@ -30,7 +31,8 @@ import javax.annotation.Nullable;
  *         Date: Apr 28, 2008
  *         Time: 8:14:14 PM
  */
-public abstract class JSGotoTargetRendererProvider implements GotoTargetRendererProvider
+@ExtensionImpl
+public class JSGotoTargetRendererProvider implements GotoTargetRendererProvider
 {
 	static class JSClassListCellRenderer extends PsiElementListCellRenderer<JSNamedElement>
 	{

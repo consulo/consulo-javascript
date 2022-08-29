@@ -19,20 +19,24 @@
  */
 package com.intellij.lang.javascript.impl.refactoring;
 
-import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.impl.refactoring.extractMethod.JSExtractFunctionHandler;
 import com.intellij.lang.javascript.impl.refactoring.introduceConstant.JSIntroduceConstantHandler;
 import com.intellij.lang.javascript.impl.refactoring.introduceField.JSIntroduceFieldHandler;
 import com.intellij.lang.javascript.impl.refactoring.introduceVariable.JSIntroduceVariableHandler;
-import consulo.application.ApplicationManager;
+import com.intellij.lang.javascript.psi.*;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.language.Language;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.LocalSearchScope;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class JavascriptRefactoringSupportProvider extends RefactoringSupportProvider
+@ExtensionImpl
+public class JavascriptRefactoringSupportProvider extends RefactoringSupportProvider
 {
 	@Override
 	public boolean isSafeDeleteAvailable(PsiElement element)
@@ -54,7 +58,7 @@ public abstract class JavascriptRefactoringSupportProvider extends RefactoringSu
 	@Nullable
 	public RefactoringActionHandler getExtractMethodHandler()
 	{
-		return ApplicationManager.getApplication().isUnitTestMode() ? new JSExtractFunctionHandler() : null;
+		return new JSExtractFunctionHandler();
 	}
 
 	@Override
@@ -69,8 +73,16 @@ public abstract class JavascriptRefactoringSupportProvider extends RefactoringSu
 		return new JSIntroduceFieldHandler();
 	}
 
-	public boolean doInplaceRenameFor(final PsiElement element, final PsiElement context)
+	@Override
+	public boolean isInplaceRenameAvailable(PsiElement element, PsiElement context)
 	{
 		return element instanceof JSNamedElement && element.getUseScope() instanceof LocalSearchScope;
+	}
+
+	@Nonnull
+	@Override
+	public Language getLanguage()
+	{
+		return JavaScriptLanguage.INSTANCE;
 	}
 }

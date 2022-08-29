@@ -16,7 +16,6 @@
 
 package consulo.javascript.debugger;
 
-import com.intellij.javascript.JSDebuggerSupportUtils;
 import consulo.javascript.language.JavaScriptFileType;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.document.Document;

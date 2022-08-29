@@ -3,7 +3,7 @@ package consulo.javascript.jsx.codeInsight;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
-import consulo.javascript.ecmascript.lang.EcmaScript6JavaScriptVersion;
+import consulo.javascript.jsx.language.JSXJavaScriptVersion;
 import consulo.language.editor.Pass;
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPassFactory;
@@ -33,7 +33,7 @@ public class JSXTagTreeHighlightingPassFactory implements TextEditorHighlighting
 			return null;
 		}
 
-		if(!(editor instanceof EditorEx) || !(file.getLanguageVersion() instanceof EcmaScript6JavaScriptVersion))
+		if(!(editor instanceof EditorEx) || !(file.getLanguageVersion() instanceof JSXJavaScriptVersion))
 		{
 			return null;
 		}

@@ -20,11 +20,24 @@
 package com.intellij.lang.javascript.impl.refactoring;
 
 import com.intellij.lang.javascript.DialectOptionHolder;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.language.Language;
 
-public abstract class BasicJavascriptNamesValidator extends JSNamesValidator
+import javax.annotation.Nonnull;
+
+@ExtensionImpl
+public class BasicJavascriptNamesValidator extends JSNamesValidator
 {
 	public BasicJavascriptNamesValidator()
 	{
 		super(DialectOptionHolder.dummy());
+	}
+
+	@Nonnull
+	@Override
+	public Language getLanguage()
+	{
+		return JavaScriptLanguage.INSTANCE;
 	}
 }

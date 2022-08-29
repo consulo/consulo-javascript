@@ -20,6 +20,9 @@ import com.intellij.lang.javascript.psi.JSBlockStatement;
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.impl.JSEmbeddedContentImpl;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.editor.surroundWith.SurroundDescriptor;
 import consulo.language.editor.surroundWith.Surrounder;
@@ -34,12 +37,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
  * User: yole
  * Date: 12.07.2005
  * Time: 14:14:55
  */
-public abstract class JSStatementsSurroundDescriptor implements SurroundDescriptor
+@ExtensionImpl
+public class JSStatementsSurroundDescriptor implements SurroundDescriptor
 {
 	private static final Surrounder[] SURROUNDERS = {
 			new JSWithBlockSurrounder(),
@@ -176,5 +179,12 @@ public abstract class JSStatementsSurroundDescriptor implements SurroundDescript
 		}
 
 		return array.toArray(new PsiElement[array.size()]);
+	}
+
+	@Nonnull
+	@Override
+	public Language getLanguage()
+	{
+		return JavaScriptLanguage.INSTANCE;
 	}
 }

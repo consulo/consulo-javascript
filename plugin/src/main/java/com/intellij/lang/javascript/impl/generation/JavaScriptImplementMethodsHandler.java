@@ -25,10 +25,13 @@ import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.impl.validation.BaseCreateMethodsFix;
 import com.intellij.lang.javascript.impl.validation.ImplementMethodsFix;
 import com.intellij.lang.javascript.impl.validation.ImplementedMethodProcessor;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.generation.ImplementMethodHandler;
 
 import java.util.Collection;
 
-public abstract class JavaScriptImplementMethodsHandler extends BaseJSGenerateHandler
+@ExtensionImpl
+public class JavaScriptImplementMethodsHandler extends BaseJSGenerateHandler implements ImplementMethodHandler
 {
 	@Override
 	protected void collectCandidates(final JSClass clazz, final Collection<JSNamedElementNode> candidates)

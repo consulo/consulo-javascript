@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.impl.formatter;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.language.JavaScriptFileType;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.setting.FileTypeIndentOptionsProvider;
@@ -27,6 +28,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 /**
  * @author yole
  */
+@ExtensionImpl
 public class JavaScriptIndentOptionsProvider implements FileTypeIndentOptionsProvider
 {
 	@Override

@@ -19,6 +19,7 @@ package com.intellij.lang.javascript.impl;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.javascript.language.JavaScriptBundle;
 import consulo.javascript.language.JavaScriptFileType;
@@ -42,6 +43,7 @@ import javax.annotation.Nonnull;
  *         Date: Apr 14, 2008
  *         Time: 6:01:09 PM
  */
+@ExtensionImpl
 public class JavaScriptCodeContextType extends TemplateContextType
 {
 	private static final String JAVA_SCRIPT = "JAVA_SCRIPT";

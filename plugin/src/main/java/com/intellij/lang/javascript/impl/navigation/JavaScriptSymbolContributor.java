@@ -19,34 +19,35 @@ package com.intellij.lang.javascript.impl.navigation;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.util.function.Processor;
-import consulo.ide.navigation.ChooseByNameContributor;
+import consulo.content.scope.SearchScope;
+import consulo.ide.navigation.GotoSymbolContributor;
 import consulo.javascript.language.psi.stub.JavaScriptIndexKeys;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.search.FilenameIndex;
+import consulo.language.psi.search.FindSymbolParameters;
 import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.psi.stub.IdFilter;
 import consulo.language.psi.stub.StubIndex;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author maxim
  */
-public class JavaScriptSymbolContributor implements ChooseByNameContributor
+@ExtensionImpl
+public class JavaScriptSymbolContributor implements GotoSymbolContributor
 {
-	@Nonnull
 	@Override
-	public String[] getNames(Project project, boolean includeNonProjectItems)
+	public void processNames(@Nonnull Processor<String> processor, @Nonnull SearchScope searchScope, @Nullable IdFilter idFilter)
 	{
-		final Set<String> result = new HashSet<String>();
-
-		result.addAll(StubIndex.getInstance().getAllKeys(JavaScriptIndexKeys.ELEMENTS_BY_NAME, project));
+		StubIndex.getInstance().processAllKeys(JavaScriptIndexKeys.ELEMENTS_BY_NAME, processor, (GlobalSearchScope) searchScope, idFilter);
 
 		FileBasedIndex.getInstance().processAllKeys(FilenameIndex.NAME, new Processor<String>()
 		{
@@ -55,20 +56,28 @@ public class JavaScriptSymbolContributor implements ChooseByNameContributor
 			{
 				if(JavaScriptSupportLoader.isFlexMxmFile(s))
 				{
-					result.add(FileUtil.getNameWithoutExtension(s));
+					return processor.process(FileUtil.getNameWithoutExtension(s));
 				}
 				return true;
 			}
-		}, project);
-		return result.toArray(new String[result.size()]);
+		}, searchScope, idFilter);
 	}
 
-	@Nonnull
 	@Override
-	public NavigationItem[] getItemsByName(String name, final String pattern, Project project, boolean includeNonProjectItems)
+	public void processElementsWithName(@Nonnull String name, @Nonnull Processor<NavigationItem> processor, @Nonnull FindSymbolParameters findSymbolParameters)
 	{
-		GlobalSearchScope scope = includeNonProjectItems ? GlobalSearchScope.allScope(project) : GlobalSearchScope.projectScope(project);
+		Project project = findSymbolParameters.getProject();
+
+		GlobalSearchScope scope = (GlobalSearchScope) findSymbolParameters.getSearchScope();
+
 		Collection<JSQualifiedNamedElement> result = JSResolveUtil.findElementsByName(name, project, scope);
-		return result.toArray(new NavigationItem[result.size()]);
+
+		for(JSQualifiedNamedElement element : result)
+		{
+			if(!processor.process(element))
+			{
+				break;
+			}
+		}
 	}
 }

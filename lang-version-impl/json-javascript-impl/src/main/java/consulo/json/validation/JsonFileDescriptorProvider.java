@@ -16,20 +16,23 @@
 
 package consulo.json.validation;
 
-import javax.annotation.Nonnull;
-
 import consulo.annotation.access.RequiredReadAction;
-import consulo.json.validation.descriptor.JsonObjectDescriptor;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
+import consulo.json.validation.descriptor.JsonObjectDescriptor;
 import consulo.language.psi.PsiFile;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 10.11.2015
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface JsonFileDescriptorProvider
 {
-	ExtensionPointName<JsonFileDescriptorProvider> EP_NAME = ExtensionPointName.create("consulo.javascript.jsonFileDescriptorProvider");
+	ExtensionPointName<JsonFileDescriptorProvider> EP_NAME = ExtensionPointName.create(JsonFileDescriptorProvider.class);
 
 	@RequiredReadAction
 	boolean isMyFile(@Nonnull PsiFile file);

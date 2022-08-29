@@ -16,26 +16,28 @@
 
 package com.intellij.lang.javascript.impl.search;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.ReadAction;
+import consulo.application.util.function.Processor;
 import consulo.javascript.language.JavaScriptFileType;
-import consulo.application.util.query.QueryExecutor;
+import consulo.javascript.language.JavaScriptLanguage;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNamedElement;
+import consulo.language.psi.PsiReference;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.LocalSearchScope;
-import consulo.language.psi.search.ReferencesSearch;
-import consulo.application.util.function.Processor;
-import consulo.application.ReadAction;
-import consulo.javascript.language.JavaScriptLanguage;
-import consulo.language.psi.PsiReference;
 import consulo.language.psi.search.PsiSearchHelper;
+import consulo.language.psi.search.ReferencesSearch;
+import consulo.language.psi.search.ReferencesSearchQueryExecutor;
 
 /**
  * @author Maxim.Mossienko
  *         Date: Apr 28, 2008
  *         Time: 8:34:20 PM
  */
-public class JSReferencesSearchExecutor implements QueryExecutor<PsiReference, ReferencesSearch.SearchParameters>
+@ExtensionImpl
+public class JSReferencesSearchExecutor implements ReferencesSearchQueryExecutor
 {
 	@Override
 	public boolean execute(final ReferencesSearch.SearchParameters queryParameters, final Processor<? super PsiReference> consumer)

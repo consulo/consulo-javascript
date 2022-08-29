@@ -19,16 +19,20 @@
  */
 package com.intellij.lang.javascript.impl.structureView;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.language.Language;
 import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
 
-public abstract class JSStructureViewBuilderFactory implements PsiStructureViewFactory
+@ExtensionImpl
+public class JSStructureViewBuilderFactory implements PsiStructureViewFactory
 {
 	@Override
 	public StructureViewBuilder getStructureViewBuilder(final PsiFile psiFile)
@@ -48,5 +52,12 @@ public abstract class JSStructureViewBuilderFactory implements PsiStructureViewF
 				return false;
 			}
 		};
+	}
+
+	@Nonnull
+	@Override
+	public Language getLanguage()
+	{
+		return JavaScriptLanguage.INSTANCE;
 	}
 }

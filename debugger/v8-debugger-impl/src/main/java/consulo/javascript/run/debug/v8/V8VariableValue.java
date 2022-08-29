@@ -14,19 +14,14 @@
  * limitations under the License.
  */
 
-package consulo.javascript.run.debug;
+package consulo.javascript.run.debug.v8;
+
+import consulo.execution.debug.frame.XValueChildrenList;
+import consulo.execution.debug.frame.XValueModifier;
+import org.chromium.sdk.*;
 
 import javax.annotation.Nonnull;
-
-import consulo.execution.debug.frame.XValueModifier;
-import org.chromium.sdk.JsDeclarativeVariable;
-import org.chromium.sdk.JsEvaluateContext;
-import org.chromium.sdk.JsFunction;
-import org.chromium.sdk.JsValue;
-import org.chromium.sdk.JsVariable;
-
 import javax.annotation.Nullable;
-import consulo.execution.debug.frame.XValueChildrenList;
 
 /**
  * @author VISTALL

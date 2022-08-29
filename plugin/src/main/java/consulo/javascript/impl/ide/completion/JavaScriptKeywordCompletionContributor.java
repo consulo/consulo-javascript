@@ -19,7 +19,10 @@ package consulo.javascript.impl.ide.completion;
 import com.intellij.lang.javascript.psi.JSExpressionStatement;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.ide.completion.JavaScriptKeywordCompletionExtender;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.language.Language;
 import consulo.language.editor.completion.*;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.language.editor.completion.lookup.ParenthesesInsertHandler;
@@ -33,7 +36,8 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 20.12.2015
  */
-public abstract class JavaScriptKeywordCompletionContributor extends CompletionContributor
+@ExtensionImpl
+public class JavaScriptKeywordCompletionContributor extends CompletionContributor
 {
 	public JavaScriptKeywordCompletionContributor()
 	{
@@ -79,5 +83,12 @@ public abstract class JavaScriptKeywordCompletionContributor extends CompletionC
 				}
 			}
 		});
+	}
+
+	@Nonnull
+	@Override
+	public Language getLanguage()
+	{
+		return JavaScriptLanguage.INSTANCE;
 	}
 }

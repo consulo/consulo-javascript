@@ -25,6 +25,8 @@ import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import com.intellij.lang.javascript.impl.validation.BaseCreateMethodsFix;
 import com.intellij.lang.javascript.impl.validation.ImplementedMethodProcessor;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.generation.OverrideMethodHandler;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.ResolveState;
 
@@ -32,7 +34,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.function.Function;
 
-public abstract class JavaScriptOverrideMethodsHandler extends BaseJSGenerateHandler
+@ExtensionImpl
+public class JavaScriptOverrideMethodsHandler extends BaseJSGenerateHandler implements OverrideMethodHandler
 {
 	@Override
 	protected String getTitleKey()

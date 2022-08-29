@@ -16,18 +16,20 @@
 
 package consulo.json.jom;
 
-import javax.annotation.Nonnull;
-
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.icon.IconDescriptor;
 import consulo.language.icon.IconDescriptorUpdater;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author VISTALL
  * @since 10.11.2015
  */
+@ExtensionImpl
 public class JomIconDescriptorUpdater implements IconDescriptorUpdater
 {
 	@RequiredReadAction

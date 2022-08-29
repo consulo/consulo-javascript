@@ -1,13 +1,16 @@
 package consulo.json;
 
-import javax.annotation.Nonnull;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.virtualFileSystem.fileType.FileTypeConsumer;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 05.03.2015
  */
+@ExtensionImpl
 public class JsonFileTypeFactory extends FileTypeFactory
 {
 	@Override

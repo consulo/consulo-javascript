@@ -1,5 +1,6 @@
 package consulo.json.lang;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.ide.hightlight.JavaScriptHighlighter;
 import consulo.javascript.lang.BaseJavaScriptLanguageVersion;
 import consulo.javascript.language.JavaScriptLanguage;
@@ -18,6 +19,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 05.03.2015
  */
+@ExtensionImpl
 public class JsonJavaScriptVersion extends BaseJavaScriptLanguageVersion
 {
 	private static final Supplier<Lexer> ourLexerFactory = JsonLexer::new;

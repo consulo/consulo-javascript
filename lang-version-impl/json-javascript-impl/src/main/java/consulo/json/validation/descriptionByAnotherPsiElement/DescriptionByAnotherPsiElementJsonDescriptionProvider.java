@@ -16,20 +16,23 @@
 
 package consulo.json.validation.descriptionByAnotherPsiElement;
 
-import javax.annotation.Nonnull;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.json.validation.JsonFileDescriptorProvider;
 import consulo.json.validation.descriptor.JsonObjectDescriptor;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 12.11.2015
  */
+@ExtensionImpl
 public class DescriptionByAnotherPsiElementJsonDescriptionProvider implements JsonFileDescriptorProvider
 {
 	@RequiredReadAction
