@@ -16,29 +16,30 @@
 
 package consulo.json.validation.inspections;
 
-import consulo.application.util.CachedValueProvider;
-import consulo.application.util.CachedValuesManager;
-import consulo.language.ast.IElementType;
-import consulo.language.editor.inspection.LocalInspectionTool;
-import consulo.language.editor.inspection.ProblemHighlightType;
-import consulo.language.editor.inspection.ProblemsHolder;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
-import consulo.language.psi.PsiModificationTracker;
-import consulo.language.psi.PsiUtilCore;
-import consulo.language.psi.util.PsiTreeUtil;
-import consulo.util.lang.StringUtil;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiElementVisitor;
-import consulo.util.collection.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.util.CachedValueProvider;
+import consulo.application.util.CachedValuesManager;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.javascript.psi.JSSimpleLiteralExpression;
 import consulo.json.validation.JsonFileDescriptorProviders;
 import consulo.json.validation.NativeArray;
 import consulo.json.validation.descriptor.JsonObjectDescriptor;
 import consulo.json.validation.descriptor.JsonPropertyDescriptor;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.inspection.LocalInspectionTool;
+import consulo.language.editor.inspection.ProblemHighlightType;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiModificationTracker;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.PairProcessor;
 
 import javax.annotation.Nonnull;
@@ -49,6 +50,7 @@ import java.util.*;
  * @author VISTALL
  * @since 10.11.2015
  */
+@ExtensionImpl
 public class PropertyValidationInspection extends LocalInspectionTool
 {
 	@Nonnull
@@ -389,9 +391,16 @@ public class PropertyValidationInspection extends LocalInspectionTool
 
 	@Nonnull
 	@Override
+	public String[] getGroupPath()
+	{
+		return new String[]{"JSON"};
+	}
+
+	@Nonnull
+	@Override
 	public String getGroupDisplayName()
 	{
-		return "JSON";
+		throw new UnsupportedOperationException();
 	}
 
 	@Nonnull

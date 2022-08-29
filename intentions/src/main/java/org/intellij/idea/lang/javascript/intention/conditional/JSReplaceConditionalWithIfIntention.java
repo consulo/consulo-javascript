@@ -15,33 +15,44 @@
  */
 package org.intellij.idea.lang.javascript.intention.conditional;
 
-import javax.annotation.Nonnull;
-
+import com.intellij.lang.javascript.psi.JSConditionalExpression;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ConditionalUtils;
 
-import com.intellij.lang.javascript.psi.JSConditionalExpression;
-import consulo.language.psi.PsiElement;
-import consulo.language.util.IncorrectOperationException;
+import javax.annotation.Nonnull;
 
-public class JSReplaceConditionalWithIfIntention extends JSIntention {
-    @Override
+@ExtensionImpl
+@IntentionMetaData(ignoreId = "JSReplaceConditionalWithIfIntention", categories = {
+		"JavaScript",
+		"Conditional"
+}, fileExtensions = "js")
+public class JSReplaceConditionalWithIfIntention extends JSIntention
+{
+	@Override
 	@Nonnull
-    public JSElementPredicate getElementPredicate() {
-        return new ReplaceConditionalWithIfPredicate();
-    }
+	public JSElementPredicate getElementPredicate()
+	{
+		return new ReplaceConditionalWithIfPredicate();
+	}
 
-    @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        assert (element instanceof JSConditionalExpression);
-        ConditionalUtils.replaceConditionalWithIf((JSConditionalExpression) element);
-    }
+	@Override
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
+	{
+		assert (element instanceof JSConditionalExpression);
+		ConditionalUtils.replaceConditionalWithIf((JSConditionalExpression) element);
+	}
 
-    private static class ReplaceConditionalWithIfPredicate implements JSElementPredicate {
-        @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-            return (element instanceof JSConditionalExpression);
-        }
-    }
+	private static class ReplaceConditionalWithIfPredicate implements JSElementPredicate
+	{
+		@Override
+		public boolean satisfiedBy(@Nonnull PsiElement element)
+		{
+			return (element instanceof JSConditionalExpression);
+		}
+	}
 }

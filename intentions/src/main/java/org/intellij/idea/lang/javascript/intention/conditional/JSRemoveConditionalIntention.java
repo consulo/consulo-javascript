@@ -15,69 +15,83 @@
  */
 package org.intellij.idea.lang.javascript.intention.conditional;
 
-import javax.annotation.Nonnull;
-
+import com.intellij.lang.javascript.psi.JSConditionalExpression;
+import com.intellij.lang.javascript.psi.JSExpression;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.BoolUtils;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
-import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
+import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
 
-import com.intellij.lang.javascript.psi.JSConditionalExpression;
-import com.intellij.lang.javascript.psi.JSExpression;
-import consulo.language.psi.PsiElement;
-import consulo.language.util.IncorrectOperationException;
+import javax.annotation.Nonnull;
 
-public class JSRemoveConditionalIntention extends JSIntention {
-    @Override
+@ExtensionImpl
+@IntentionMetaData(ignoreId = "JSRemoveConditionalIntention", categories = {
+		"JavaScript",
+		"Conditional"
+}, fileExtensions = "js")
+public class JSRemoveConditionalIntention extends JSIntention
+{
+	@Override
 	@Nonnull
-    public JSElementPredicate getElementPredicate() {
-        return new RemoveConditionalPredicate();
-    }
+	public JSElementPredicate getElementPredicate()
+	{
+		return new RemoveConditionalPredicate();
+	}
 
-    @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSConditionalExpression exp            = (JSConditionalExpression) element;
-        final JSExpression            condition      = exp.getCondition();
-        final JSExpression            thenExpression = exp.getThen();
+	@Override
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
+	{
+		final JSConditionalExpression exp = (JSConditionalExpression) element;
+		final JSExpression condition = exp.getCondition();
+		final JSExpression thenExpression = exp.getThen();
 
-        assert (thenExpression != null);
+		assert (thenExpression != null);
 
-        final String thenExpressionText = thenExpression.getText();
-        final String newExpression;
+		final String thenExpressionText = thenExpression.getText();
+		final String newExpression;
 
-        newExpression = (thenExpressionText.equals(BoolUtils.TRUE)
-                              ? condition.getText()
-                              : BoolUtils.getNegatedExpressionText(condition));
-        JSElementFactory.replaceExpression(exp, newExpression);
-    }
+		newExpression = (thenExpressionText.equals(BoolUtils.TRUE)
+				? condition.getText()
+				: BoolUtils.getNegatedExpressionText(condition));
+		JSElementFactory.replaceExpression(exp, newExpression);
+	}
 
-    private static class RemoveConditionalPredicate implements JSElementPredicate {
-        @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-            if (!(element instanceof JSConditionalExpression)) {
-                return false;
-            }
-            if (ErrorUtil.containsError(element)) {
-                return false;
-            }
+	private static class RemoveConditionalPredicate implements JSElementPredicate
+	{
+		@Override
+		public boolean satisfiedBy(@Nonnull PsiElement element)
+		{
+			if(!(element instanceof JSConditionalExpression))
+			{
+				return false;
+			}
+			if(ErrorUtil.containsError(element))
+			{
+				return false;
+			}
 
-            final JSConditionalExpression condition      = (JSConditionalExpression) element;
-            final JSExpression            thenExpression = ParenthesesUtils.stripParentheses(condition.getThen());
-            final JSExpression            elseExpression = ParenthesesUtils.stripParentheses(condition.getElse());
+			final JSConditionalExpression condition = (JSConditionalExpression) element;
+			final JSExpression thenExpression = ParenthesesUtils.stripParentheses(condition.getThen());
+			final JSExpression elseExpression = ParenthesesUtils.stripParentheses(condition.getElse());
 
-            if (condition.getCondition() == null ||
-                thenExpression           == null ||
-                elseExpression           == null) {
-                return false;
-            }
+			if(condition.getCondition() == null ||
+					thenExpression == null ||
+					elseExpression == null)
+			{
+				return false;
+			}
 
-            final String thenText = thenExpression.getText();
-            final String elseText = elseExpression.getText();
+			final String thenText = thenExpression.getText();
+			final String elseText = elseExpression.getText();
 
-            return  ((BoolUtils.TRUE.equals(elseText) && BoolUtils.FALSE.equals(thenText)) ||
-                     (BoolUtils.TRUE.equals(thenText) && BoolUtils.FALSE.equals(elseText)));
-        }
-    }
+			return ((BoolUtils.TRUE.equals(elseText) && BoolUtils.FALSE.equals(thenText)) ||
+					(BoolUtils.TRUE.equals(thenText) && BoolUtils.FALSE.equals(elseText)));
+		}
+	}
 }

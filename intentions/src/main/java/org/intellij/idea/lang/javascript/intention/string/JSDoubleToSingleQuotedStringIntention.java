@@ -15,62 +15,81 @@
  */
 package org.intellij.idea.lang.javascript.intention.string;
 
-import javax.annotation.Nonnull;
-
+import com.intellij.lang.javascript.psi.JSLiteralExpression;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
-import com.intellij.lang.javascript.psi.JSLiteralExpression;
-import consulo.language.util.IncorrectOperationException;
+import javax.annotation.Nonnull;
 
-public class JSDoubleToSingleQuotedStringIntention extends JSIntention {
-    @Override
+@ExtensionImpl
+@IntentionMetaData(ignoreId = "JSDoubleToSingleQuotedStringIntention", categories = {
+		"JavaScript",
+		"Other"
+}, fileExtensions = "js")
+public class JSDoubleToSingleQuotedStringIntention extends JSIntention
+{
+	@Override
 	@Nonnull
-    protected JSElementPredicate getElementPredicate() {
-        return new DoubleToSingleQuotedStringPredicate();
-    }
+	protected JSElementPredicate getElementPredicate()
+	{
+		return new DoubleToSingleQuotedStringPredicate();
+	}
 
-    @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSLiteralExpression stringLiteral = (JSLiteralExpression) element;
+	@Override
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
+	{
+		final JSLiteralExpression stringLiteral = (JSLiteralExpression) element;
 
-        JSElementFactory.replaceExpression(stringLiteral, changeQuotes(stringLiteral.getText()));
-    }
+		JSElementFactory.replaceExpression(stringLiteral, changeQuotes(stringLiteral.getText()));
+	}
 
-    static String changeQuotes(String stringLiteral) {
-        StringBuilder buffer      = new StringBuilder(stringLiteral);
-        int           simpleIndex = stringLiteral.lastIndexOf(StringUtil.SIMPLE_QUOTE);
-        int           doubleIndex = stringLiteral.lastIndexOf(StringUtil.DOUBLE_QUOTE, stringLiteral.length() - 2);
+	static String changeQuotes(String stringLiteral)
+	{
+		StringBuilder buffer = new StringBuilder(stringLiteral);
+		int simpleIndex = stringLiteral.lastIndexOf(StringUtil.SIMPLE_QUOTE);
+		int doubleIndex = stringLiteral.lastIndexOf(StringUtil.DOUBLE_QUOTE, stringLiteral.length() - 2);
 
-        while (simpleIndex >= 0 || doubleIndex > 0) {
-            if (simpleIndex > doubleIndex) {
-                if (stringLiteral.charAt(simpleIndex - 1) != StringUtil.BACKSLASH) {
-                  buffer.insert(simpleIndex, StringUtil.BACKSLASH);
-                }
-                simpleIndex = stringLiteral.lastIndexOf(StringUtil.SIMPLE_QUOTE, simpleIndex - 1);
-            } else {
-                if (stringLiteral.charAt(doubleIndex - 1) == StringUtil.BACKSLASH) {
-                    buffer.deleteCharAt(doubleIndex - 1);
-                }
-                doubleIndex = stringLiteral.lastIndexOf(StringUtil.DOUBLE_QUOTE, doubleIndex - 2);
-            }
-        }
-        buffer.setCharAt(0,                   StringUtil.SIMPLE_QUOTE);
-        buffer.setCharAt(buffer.length() - 1, StringUtil.SIMPLE_QUOTE);
+		while(simpleIndex >= 0 || doubleIndex > 0)
+		{
+			if(simpleIndex > doubleIndex)
+			{
+				if(stringLiteral.charAt(simpleIndex - 1) != StringUtil.BACKSLASH)
+				{
+					buffer.insert(simpleIndex, StringUtil.BACKSLASH);
+				}
+				simpleIndex = stringLiteral.lastIndexOf(StringUtil.SIMPLE_QUOTE, simpleIndex - 1);
+			}
+			else
+			{
+				if(stringLiteral.charAt(doubleIndex - 1) == StringUtil.BACKSLASH)
+				{
+					buffer.deleteCharAt(doubleIndex - 1);
+				}
+				doubleIndex = stringLiteral.lastIndexOf(StringUtil.DOUBLE_QUOTE, doubleIndex - 2);
+			}
+		}
+		buffer.setCharAt(0, StringUtil.SIMPLE_QUOTE);
+		buffer.setCharAt(buffer.length() - 1, StringUtil.SIMPLE_QUOTE);
 
-        return buffer.toString();
-    }
+		return buffer.toString();
+	}
 
-    private static class DoubleToSingleQuotedStringPredicate implements JSElementPredicate {
+	private static class DoubleToSingleQuotedStringPredicate implements JSElementPredicate
+	{
 
-        @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-            if (!(element instanceof JSLiteralExpression)) {
-                return false;
-            }
-            return StringUtil.isDoubleQuoteStringLiteral((JSLiteralExpression) element);
-        }
-    }
+		@Override
+		public boolean satisfiedBy(@Nonnull PsiElement element)
+		{
+			if(!(element instanceof JSLiteralExpression))
+			{
+				return false;
+			}
+			return StringUtil.isDoubleQuoteStringLiteral((JSLiteralExpression) element);
+		}
+	}
 }

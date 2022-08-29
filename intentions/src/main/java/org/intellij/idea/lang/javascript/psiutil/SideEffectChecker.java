@@ -19,60 +19,81 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import consulo.language.ast.IElementType;
 
-public class SideEffectChecker {
-    private SideEffectChecker() {}
+public class SideEffectChecker
+{
+	private SideEffectChecker()
+	{
+	}
 
-    public static boolean mayHaveSideEffects(JSExpression exp) {
-        final SideEffectsVisitor visitor = new SideEffectsVisitor();
-        exp.accept(visitor);
-        return visitor.mayHaveSideEffects();
-    }
+	public static boolean mayHaveSideEffects(JSExpression exp)
+	{
+		final SideEffectsVisitor visitor = new SideEffectsVisitor();
+		exp.accept(visitor);
+		return visitor.mayHaveSideEffects();
+	}
 
-    private static class SideEffectsVisitor extends JSRecursiveElementVisitor {
-        private boolean mayHaveSideEffects;
+	private static class SideEffectsVisitor extends JSRecursiveElementVisitor
+	{
+		private boolean mayHaveSideEffects;
 
-        @Override public void visitJSElement(JSElement element) {
-            if (!this.mayHaveSideEffects) {
-                super.visitJSElement(element);
-            }
-        }
+		@Override
+		public void visitJSElement(JSElement element)
+		{
+			if(!this.mayHaveSideEffects)
+			{
+				super.visitJSElement(element);
+			}
+		}
 
-        @Override public void visitJSCallExpression(JSCallExpression expression) {
-            this.mayHaveSideEffects = true;
-        }
+		@Override
+		public void visitJSCallExpression(JSCallExpression expression)
+		{
+			this.mayHaveSideEffects = true;
+		}
 
-        @Override public void visitJSNewExpression(JSNewExpression expression) {
-            this.mayHaveSideEffects = true;
-        }
+		@Override
+		public void visitJSNewExpression(JSNewExpression expression)
+		{
+			this.mayHaveSideEffects = true;
+		}
 
-        @Override public void visitJSAssignmentExpression(JSAssignmentExpression expression) {
-            this.mayHaveSideEffects = true;
-        }
+		@Override
+		public void visitJSAssignmentExpression(JSAssignmentExpression expression)
+		{
+			this.mayHaveSideEffects = true;
+		}
 
-        @Override public void visitJSPrefixExpression(JSPrefixExpression expression) {
-            super.visitJSPrefixExpression(expression);
-            final IElementType sign = expression.getOperationSign();
+		@Override
+		public void visitJSPrefixExpression(JSPrefixExpression expression)
+		{
+			super.visitJSPrefixExpression(expression);
+			final IElementType sign = expression.getOperationSign();
 
-            if (sign != null &&
-                (sign.equals(JSTokenTypes.PLUSPLUS)   ||
-                 sign.equals(JSTokenTypes.MINUSMINUS))) {
-                this.mayHaveSideEffects = true;
-            }
-        }
+			if(sign != null &&
+					(sign.equals(JSTokenTypes.PLUSPLUS) ||
+							sign.equals(JSTokenTypes.MINUSMINUS)))
+			{
+				this.mayHaveSideEffects = true;
+			}
+		}
 
-        @Override public void visitJSPostfixExpression(JSPostfixExpression expression) {
-            super.visitJSPostfixExpression(expression);
-            final IElementType sign = expression.getOperationSign();
+		@Override
+		public void visitJSPostfixExpression(JSPostfixExpression expression)
+		{
+			super.visitJSPostfixExpression(expression);
+			final IElementType sign = expression.getOperationSign();
 
-            if (sign != null &&
-                (sign.equals(JSTokenTypes.PLUSPLUS)   ||
-                 sign.equals(JSTokenTypes.MINUSMINUS))) {
-                this.mayHaveSideEffects = true;
-            }
-        }
+			if(sign != null &&
+					(sign.equals(JSTokenTypes.PLUSPLUS) ||
+							sign.equals(JSTokenTypes.MINUSMINUS)))
+			{
+				this.mayHaveSideEffects = true;
+			}
+		}
 
-        public boolean mayHaveSideEffects() {
-            return this.mayHaveSideEffects;
-        }
-    }
+		public boolean mayHaveSideEffects()
+		{
+			return this.mayHaveSideEffects;
+		}
+	}
 }

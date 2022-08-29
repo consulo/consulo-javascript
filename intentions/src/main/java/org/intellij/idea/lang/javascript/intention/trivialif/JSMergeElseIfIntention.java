@@ -15,76 +15,95 @@
  */
 package org.intellij.idea.lang.javascript.intention.trivialif;
 
-import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
-import org.intellij.idea.lang.javascript.intention.JSIntention;
-import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
-import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.psi.JSBlockStatement;
 import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.JSIfStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
+import org.intellij.idea.lang.javascript.intention.JSIntention;
+import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
+import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
-public class JSMergeElseIfIntention extends JSIntention {
-    @Override
+import javax.annotation.Nonnull;
+
+@ExtensionImpl
+@IntentionMetaData(ignoreId = "JSMergeElseIfIntention", categories = {
+		"JavaScript",
+		"Control Flow"
+}, fileExtensions = "js")
+public class JSMergeElseIfIntention extends JSIntention
+{
+	@Override
 	@Nonnull
-    public JSElementPredicate getElementPredicate() {
-        return new MergeElseIfPredicate();
-    }
+	public JSElementPredicate getElementPredicate()
+	{
+		return new MergeElseIfPredicate();
+	}
 
-    @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSIfStatement parentStatement = (JSIfStatement) element.getParent();
+	@Override
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
+	{
+		final JSIfStatement parentStatement = (JSIfStatement) element.getParent();
 
-        assert (parentStatement != null);
+		assert (parentStatement != null);
 
-        final JSBlockStatement elseBranch         = (JSBlockStatement) parentStatement.getElse();
-        final JSStatement      elseBranchContents = elseBranch.getStatements()[0];
+		final JSBlockStatement elseBranch = (JSBlockStatement) parentStatement.getElse();
+		final JSStatement elseBranchContents = elseBranch.getStatements()[0];
 
-        JSElementFactory.replaceStatement(elseBranch, elseBranchContents.getText());
-    }
+		JSElementFactory.replaceStatement(elseBranch, elseBranchContents.getText());
+	}
 
-    private static class MergeElseIfPredicate implements JSElementPredicate {
-        @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-            if (!(element instanceof JSElement)) {
-                return false;
-            }
+	private static class MergeElseIfPredicate implements JSElementPredicate
+	{
+		@Override
+		public boolean satisfiedBy(@Nonnull PsiElement element)
+		{
+			if(!(element instanceof JSElement))
+			{
+				return false;
+			}
 
-            final PsiElement  parent = element.getParent();
+			final PsiElement parent = element.getParent();
 
-            if (!(parent instanceof JSIfStatement)) {
-                return false;
-            }
+			if(!(parent instanceof JSIfStatement))
+			{
+				return false;
+			}
 
-            final JSIfStatement ifStatement = (JSIfStatement) parent;
+			final JSIfStatement ifStatement = (JSIfStatement) parent;
 
-            if (ErrorUtil.containsError(ifStatement)) {
-                return false;
-            }
+			if(ErrorUtil.containsError(ifStatement))
+			{
+				return false;
+			}
 
-            final JSStatement thenBranch = ifStatement.getThen();
-            final JSStatement elseBranch = ifStatement.getElse();
+			final JSStatement thenBranch = ifStatement.getThen();
+			final JSStatement elseBranch = ifStatement.getElse();
 
-            if (thenBranch == null) {
-                return false;
-            }
-            if (elseBranch == null) {
-                return false;
-            }
-            if (!(elseBranch instanceof JSBlockStatement)) {
-                return false;
-            }
+			if(thenBranch == null)
+			{
+				return false;
+			}
+			if(elseBranch == null)
+			{
+				return false;
+			}
+			if(!(elseBranch instanceof JSBlockStatement))
+			{
+				return false;
+			}
 
-            final JSStatement[] statements = ((JSBlockStatement) elseBranch).getStatements();
+			final JSStatement[] statements = ((JSBlockStatement) elseBranch).getStatements();
 
-            if (statements.length != 1) {
-                return false;
-            }
-            return (statements[0] != null && statements[0] instanceof JSIfStatement);
-        }
-    }
+			if(statements.length != 1)
+			{
+				return false;
+			}
+			return (statements[0] != null && statements[0] instanceof JSIfStatement);
+		}
+	}
 }

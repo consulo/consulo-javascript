@@ -15,72 +15,89 @@
  */
 package org.intellij.idea.lang.javascript.intention.bool;
 
-import javax.annotation.Nonnull;
-
+import com.intellij.lang.javascript.psi.JSBinaryExpression;
+import com.intellij.lang.javascript.psi.JSElement;
+import com.intellij.lang.javascript.psi.JSExpression;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
+import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
-import com.intellij.lang.javascript.psi.JSBinaryExpression;
-import com.intellij.lang.javascript.psi.JSElement;
-import com.intellij.lang.javascript.psi.JSExpression;
-import consulo.language.util.IncorrectOperationException;
+import javax.annotation.Nonnull;
 
-public class JSFlipConjunctionIntention extends JSMutablyNamedIntention {
-    @Override
-	protected String getTextForElement(PsiElement element) {
-        final JSBinaryExpression binaryExpression = (JSBinaryExpression) element;
-        final IElementType sign             = binaryExpression.getOperationSign();
+@ExtensionImpl
+@IntentionMetaData(ignoreId = "JSFlipConjunctionIntention", categories = {
+		"JavaScript",
+		"Boolean"
+}, fileExtensions = "js")
+public class JSFlipConjunctionIntention extends JSMutablyNamedIntention
+{
+	@Override
+	protected String getTextForElement(PsiElement element)
+	{
+		final JSBinaryExpression binaryExpression = (JSBinaryExpression) element;
+		final IElementType sign = binaryExpression.getOperationSign();
 
-        return this.getText(BinaryOperatorUtils.getOperatorText(sign));
-    }
+		return this.getText(BinaryOperatorUtils.getOperatorText(sign));
+	}
 
-    @Override
+	@Override
 	@Nonnull
-	public JSElementPredicate getElementPredicate() {
-        return new ConjunctionPredicate();
-    }
+	public JSElementPredicate getElementPredicate()
+	{
+		return new ConjunctionPredicate();
+	}
 
-    @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSBinaryExpression binaryExpression = (JSBinaryExpression) element;
-        JSExpression             exp              = binaryExpression;
+	@Override
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
+	{
+		final JSBinaryExpression binaryExpression = (JSBinaryExpression) element;
+		JSExpression exp = binaryExpression;
 
-        final IElementType sign   = binaryExpression.getOperationSign();
-        JSElement          parent = (JSElement) exp.getParent();
+		final IElementType sign = binaryExpression.getOperationSign();
+		JSElement parent = (JSElement) exp.getParent();
 
-        while (isConjunctionExpression(parent, sign)) {
-            exp = (JSExpression) parent;
-            assert (exp != null);
-            parent = (JSElement) exp.getParent();
-        }
-        JSElementFactory.replaceExpression(exp, this.flipExpression(exp, sign));
-    }
+		while(isConjunctionExpression(parent, sign))
+		{
+			exp = (JSExpression) parent;
+			assert (exp != null);
+			parent = (JSElement) exp.getParent();
+		}
+		JSElementFactory.replaceExpression(exp, this.flipExpression(exp, sign));
+	}
 
-    private String flipExpression(JSExpression exp,
-                                  IElementType conjunctionType) {
-        if (isConjunctionExpression(exp, conjunctionType)) {
-            final JSBinaryExpression andExpression = (JSBinaryExpression) exp;
+	private String flipExpression(JSExpression exp,
+								  IElementType conjunctionType)
+	{
+		if(isConjunctionExpression(exp, conjunctionType))
+		{
+			final JSBinaryExpression andExpression = (JSBinaryExpression) exp;
 
-            return this.flipExpression(andExpression.getROperand(), conjunctionType) + ' ' +
-                   BinaryOperatorUtils.getOperatorText(conjunctionType) + ' ' +
-                   this.flipExpression(andExpression.getLOperand(), conjunctionType);
-        } else{
-            return exp.getText();
-        }
-    }
+			return this.flipExpression(andExpression.getROperand(), conjunctionType) + ' ' +
+					BinaryOperatorUtils.getOperatorText(conjunctionType) + ' ' +
+					this.flipExpression(andExpression.getLOperand(), conjunctionType);
+		}
+		else
+		{
+			return exp.getText();
+		}
+	}
 
-    private static boolean isConjunctionExpression(JSElement    expression,
-                                                   IElementType conjunctionType) {
-        if(!(expression instanceof JSBinaryExpression)) {
-            return false;
-        }
+	private static boolean isConjunctionExpression(JSElement expression,
+												   IElementType conjunctionType)
+	{
+		if(!(expression instanceof JSBinaryExpression))
+		{
+			return false;
+		}
 
-        final JSBinaryExpression binaryExpression = (JSBinaryExpression) expression;
+		final JSBinaryExpression binaryExpression = (JSBinaryExpression) expression;
 
-        return binaryExpression.getOperationSign().equals(conjunctionType);
-    }
+		return binaryExpression.getOperationSign().equals(conjunctionType);
+	}
 }

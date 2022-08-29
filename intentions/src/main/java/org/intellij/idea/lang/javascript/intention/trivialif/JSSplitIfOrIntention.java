@@ -15,9 +15,15 @@
  */
 package org.intellij.idea.lang.javascript.intention.trivialif;
 
-import javax.annotation.Nonnull;
-
+import com.intellij.lang.javascript.JSTokenTypes;
+import com.intellij.lang.javascript.psi.JSBinaryExpression;
+import com.intellij.lang.javascript.psi.JSExpression;
+import com.intellij.lang.javascript.psi.JSIfStatement;
+import com.intellij.lang.javascript.psi.JSStatement;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
@@ -25,84 +31,98 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
 import org.jetbrains.annotations.NonNls;
 
-import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.psi.JSBinaryExpression;
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSIfStatement;
-import com.intellij.lang.javascript.psi.JSStatement;
-import consulo.language.util.IncorrectOperationException;
+import javax.annotation.Nonnull;
 
-public class JSSplitIfOrIntention extends JSIntention {
-    @NonNls private static final String IF_STATEMENT_PREFIX      = "if (";
-    @NonNls private static final String ELSE_IF_STATEMENT_PREFIX = "else if (";
-    @NonNls private static final String ELSE_KEYWORD             = "else ";
+@ExtensionImpl
+@IntentionMetaData(ignoreId = "JSSplitIfOrIntention", categories = {
+		"JavaScript",
+		"Control Flow"
+}, fileExtensions = "js")
+public class JSSplitIfOrIntention extends JSIntention
+{
+	@NonNls
+	private static final String IF_STATEMENT_PREFIX = "if (";
+	@NonNls
+	private static final String ELSE_IF_STATEMENT_PREFIX = "else if (";
+	@NonNls
+	private static final String ELSE_KEYWORD = "else ";
 
-    @Override
+	@Override
 	@Nonnull
-    public JSElementPredicate getElementPredicate() {
-        return new SplitIfOrPredicate();
-    }
+	public JSElementPredicate getElementPredicate()
+	{
+		return new SplitIfOrPredicate();
+	}
 
-    @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final PsiElement jsElement = (element.getParent() instanceof JSIfStatement ? element.getParent() : element);
+	@Override
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
+	{
+		final PsiElement jsElement = (element.getParent() instanceof JSIfStatement ? element.getParent() : element);
 
-        assert (jsElement != null);
-        assert (jsElement instanceof JSIfStatement);
+		assert (jsElement != null);
+		assert (jsElement instanceof JSIfStatement);
 
-        final JSIfStatement ifStatement = (JSIfStatement) jsElement;
+		final JSIfStatement ifStatement = (JSIfStatement) jsElement;
 
-        assert (ifStatement.getCondition() instanceof JSBinaryExpression);
+		assert (ifStatement.getCondition() instanceof JSBinaryExpression);
 
-        final JSBinaryExpression condition  = (JSBinaryExpression) ifStatement.getCondition();
-        final String             lhsText    = ParenthesesUtils.removeParentheses(condition.getLOperand());
-        final String             rhsText    = ParenthesesUtils.removeParentheses(condition.getROperand());
-        final JSStatement        thenBranch = ifStatement.getThen();
-        final JSStatement        elseBranch = ifStatement.getElse();
-        final String             thenText   = thenBranch.getText();
+		final JSBinaryExpression condition = (JSBinaryExpression) ifStatement.getCondition();
+		final String lhsText = ParenthesesUtils.removeParentheses(condition.getLOperand());
+		final String rhsText = ParenthesesUtils.removeParentheses(condition.getROperand());
+		final JSStatement thenBranch = ifStatement.getThen();
+		final JSStatement elseBranch = ifStatement.getElse();
+		final String thenText = thenBranch.getText();
 
-        assert (condition.getOperationSign().equals(JSTokenTypes.OROR));
+		assert (condition.getOperationSign().equals(JSTokenTypes.OROR));
 
-        final StringBuilder statement = new StringBuilder(ifStatement.getTextLength());
+		final StringBuilder statement = new StringBuilder(ifStatement.getTextLength());
 
-        statement.append(IF_STATEMENT_PREFIX)
-                 .append(lhsText)
-                 .append(')')
-                 .append(thenText)
-                 .append(ELSE_IF_STATEMENT_PREFIX)
-                 .append(rhsText)
-                 .append(')')
-                 .append(thenText);
-        if (elseBranch != null) {
-            statement.append(ELSE_KEYWORD)
-                     .append(elseBranch.getText());
-        }
+		statement.append(IF_STATEMENT_PREFIX)
+				.append(lhsText)
+				.append(')')
+				.append(thenText)
+				.append(ELSE_IF_STATEMENT_PREFIX)
+				.append(rhsText)
+				.append(')')
+				.append(thenText);
+		if(elseBranch != null)
+		{
+			statement.append(ELSE_KEYWORD)
+					.append(elseBranch.getText());
+		}
 
-        JSElementFactory.replaceStatement(ifStatement, statement.toString());
-    }
+		JSElementFactory.replaceStatement(ifStatement, statement.toString());
+	}
 
-    private static class SplitIfOrPredicate implements JSElementPredicate {
-        @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-            PsiElement parent = element.getParent();
+	private static class SplitIfOrPredicate implements JSElementPredicate
+	{
+		@Override
+		public boolean satisfiedBy(@Nonnull PsiElement element)
+		{
+			PsiElement parent = element.getParent();
 
-            if (!(parent instanceof JSIfStatement)) {
-                if (element instanceof JSIfStatement) {
-                    parent = element;
-                } else {
-                    return false;
-                }
-            }
+			if(!(parent instanceof JSIfStatement))
+			{
+				if(element instanceof JSIfStatement)
+				{
+					parent = element;
+				}
+				else
+				{
+					return false;
+				}
+			}
 
-            final JSIfStatement ifStatement = (JSIfStatement) parent;
-            final JSExpression  condition   = ifStatement.getCondition();
+			final JSIfStatement ifStatement = (JSIfStatement) parent;
+			final JSExpression condition = ifStatement.getCondition();
 
-            if (condition == null || ErrorUtil.containsError(condition)) {
-                return false;
-            }
+			if(condition == null || ErrorUtil.containsError(condition))
+			{
+				return false;
+			}
 
-            return (condition instanceof JSBinaryExpression &&
-                    ((JSBinaryExpression) condition).getOperationSign().equals(JSTokenTypes.OROR));
-        }
-    }
+			return (condition instanceof JSBinaryExpression &&
+					((JSBinaryExpression) condition).getOperationSign().equals(JSTokenTypes.OROR));
+		}
+	}
 }

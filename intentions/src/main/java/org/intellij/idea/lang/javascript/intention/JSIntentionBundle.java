@@ -15,23 +15,27 @@
  */
 package org.intellij.idea.lang.javascript.intention;
 
+import consulo.application.CommonBundle;
+import org.intellij.idea.lang.javascript.JSAbstractBundle;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.PropertyKey;
+
 import java.util.ResourceBundle;
 
-import consulo.application.CommonBundle;
-import org.jetbrains.annotations.PropertyKey;
-import org.jetbrains.annotations.NonNls;
-import org.intellij.idea.lang.javascript.JSAbstractBundle;
+public class JSIntentionBundle extends JSAbstractBundle
+{
 
-public class JSIntentionBundle extends JSAbstractBundle {
+	@NonNls
+	private static final String bundleClassName = "org.intellij.idea.lang.javascript.intention.JavaScriptIntentionBundle";
+	private static final ResourceBundle ourBundle = ResourceBundle.getBundle(bundleClassName);
 
-    @NonNls
-    private static final String         bundleClassName = "org.intellij.idea.lang.javascript.intention.JavaScriptIntentionBundle";
-    private static final ResourceBundle ourBundle       = ResourceBundle.getBundle(bundleClassName);
+	private JSIntentionBundle()
+	{
+	}
 
-    private JSIntentionBundle() {}
-
-    public static String message(@PropertyKey(resourceBundle = bundleClassName) String key,
-                                 Object... params) {
-        return CommonBundle.message(ourBundle, key, params);
-    }
+	public static String message(@PropertyKey(resourceBundle = bundleClassName) String key,
+								 Object... params)
+	{
+		return CommonBundle.message(ourBundle, key, params);
+	}
 }

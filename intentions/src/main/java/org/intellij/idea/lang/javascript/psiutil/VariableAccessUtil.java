@@ -21,426 +21,537 @@ import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class VariableAccessUtil {
+public class VariableAccessUtil
+{
 
-    private VariableAccessUtil() {}
+	private VariableAccessUtil()
+	{
+	}
 
-    public static boolean variableIsAssignedFrom(JSVariable variable,
-                                                 JSElement  context) {
-        final VariableAssignedFromVisitor visitor = new VariableAssignedFromVisitor(variable);
-        context.accept(visitor);
-        return visitor.isAssignedFrom();
-    }
+	public static boolean variableIsAssignedFrom(JSVariable variable,
+												 JSElement context)
+	{
+		final VariableAssignedFromVisitor visitor = new VariableAssignedFromVisitor(variable);
+		context.accept(visitor);
+		return visitor.isAssignedFrom();
+	}
 
-//    public static boolean variableIsPassedAsMethodArgument(
-//            JSVariable variable, JSElement context) {
-//        final VariablePassedAsArgumentVisitor visitor =
-//                new VariablePassedAsArgumentVisitor(variable);
-//        context.accept(visitor);
-//        return visitor.isPassed();
-//    }
+	//    public static boolean variableIsPassedAsMethodArgument(
+	//            JSVariable variable, JSElement context) {
+	//        final VariablePassedAsArgumentVisitor visitor =
+	//                new VariablePassedAsArgumentVisitor(variable);
+	//        context.accept(visitor);
+	//        return visitor.isPassed();
+	//    }
 
-//    public static boolean variableIsUsedInArrayInitializer(
-//            JSVariable variable, JSElement context) {
-//        final VariableUsedInArrayInitializerVisitor visitor =
-//                new VariableUsedInArrayInitializerVisitor(variable);
-//        context.accept(visitor);
-//        return visitor.isPassed();
-//    }
+	//    public static boolean variableIsUsedInArrayInitializer(
+	//            JSVariable variable, JSElement context) {
+	//        final VariableUsedInArrayInitializerVisitor visitor =
+	//                new VariableUsedInArrayInitializerVisitor(variable);
+	//        context.accept(visitor);
+	//        return visitor.isPassed();
+	//    }
 
-    public static boolean variableIsAssigned(
-            JSVariable variable, JSElement context) {
-        //noinspection unchecked
-        return variableIsAssigned(variable, context, Collections.EMPTY_SET, Collections.EMPTY_SET);
-    }
+	public static boolean variableIsAssigned(
+			JSVariable variable, JSElement context)
+	{
+		//noinspection unchecked
+		return variableIsAssigned(variable, context, Collections.EMPTY_SET, Collections.EMPTY_SET);
+	}
 
-    public static boolean variableIsAssigned(
-            JSVariable      variable,
-            JSElement       context,
-            Set<JSVariable> notUpdatedSymbols) {
-        //noinspection unchecked
-        return variableIsAssigned(variable, context, notUpdatedSymbols, Collections.EMPTY_SET);
-    }
+	public static boolean variableIsAssigned(
+			JSVariable variable,
+			JSElement context,
+			Set<JSVariable> notUpdatedSymbols)
+	{
+		//noinspection unchecked
+		return variableIsAssigned(variable, context, notUpdatedSymbols, Collections.EMPTY_SET);
+	}
 
-    private static boolean variableIsAssigned(
-            JSVariable      variable,
-            JSElement       context,
-            Set<JSVariable> notUpdatedSymbols,
-            Set<JSVariable> candidateSymbols) {
-        final VariableAssignedVisitor visitor = new VariableAssignedVisitor(variable, context, notUpdatedSymbols,
-                                                                            candidateSymbols);
-        context.accept(visitor);
-        return visitor.isAssigned();
-    }
+	private static boolean variableIsAssigned(
+			JSVariable variable,
+			JSElement context,
+			Set<JSVariable> notUpdatedSymbols,
+			Set<JSVariable> candidateSymbols)
+	{
+		final VariableAssignedVisitor visitor = new VariableAssignedVisitor(variable, context, notUpdatedSymbols,
+				candidateSymbols);
+		context.accept(visitor);
+		return visitor.isAssigned();
+	}
 
-    public static boolean variableIsReturned(
-            JSVariable variable, JSElement context) {
-        final VariableReturnedVisitor visitor = new VariableReturnedVisitor(variable);
-        context.accept(visitor);
-        return visitor.isReturned();
-    }
+	public static boolean variableIsReturned(
+			JSVariable variable, JSElement context)
+	{
+		final VariableReturnedVisitor visitor = new VariableReturnedVisitor(variable);
+		context.accept(visitor);
+		return visitor.isReturned();
+	}
 
-    public static boolean arrayContentsAreAccessed(
-            JSVariable variable, JSElement context) {
-        final ArrayContentsAccessedVisitor visitor = new ArrayContentsAccessedVisitor(variable);
-        context.accept(visitor);
-        return visitor.isAccessed();
-    }
+	public static boolean arrayContentsAreAccessed(
+			JSVariable variable, JSElement context)
+	{
+		final ArrayContentsAccessedVisitor visitor = new ArrayContentsAccessedVisitor(variable);
+		context.accept(visitor);
+		return visitor.isAccessed();
+	}
 
-    public static boolean arrayContentsAreAssigned(
-            JSVariable variable, JSElement context) {
-        final ArrayContentsAssignedVisitor visitor = new ArrayContentsAssignedVisitor(variable);
-        context.accept(visitor);
-        return visitor.isAssigned();
-    }
+	public static boolean arrayContentsAreAssigned(
+			JSVariable variable, JSElement context)
+	{
+		final ArrayContentsAssignedVisitor visitor = new ArrayContentsAssignedVisitor(variable);
+		context.accept(visitor);
+		return visitor.isAssigned();
+	}
 
-    public static boolean mayEvaluateToVariable(JSExpression expression,
-                                                JSVariable variable) {
-        final String variableName = variable.getName();
-        JSExpression expr         = expression;
+	public static boolean mayEvaluateToVariable(JSExpression expression,
+												JSVariable variable)
+	{
+		final String variableName = variable.getName();
+		JSExpression expr = expression;
 
-        if (variableName == null) {
-            return false;
-        }
+		if(variableName == null)
+		{
+			return false;
+		}
 
-        while (true) {
-            if (expr == null) {
-                return false;
-            } else if (expr instanceof JSParenthesizedExpression) {
-                expr = ((JSParenthesizedExpression) expr).getInnerExpression();
-            } else if (expr instanceof JSConditionalExpression) {
-                final JSConditionalExpression conditional = (JSConditionalExpression) expr;
+		while(true)
+		{
+			if(expr == null)
+			{
+				return false;
+			}
+			else if(expr instanceof JSParenthesizedExpression)
+			{
+				expr = ((JSParenthesizedExpression) expr).getInnerExpression();
+			}
+			else if(expr instanceof JSConditionalExpression)
+			{
+				final JSConditionalExpression conditional = (JSConditionalExpression) expr;
 
-                return (mayEvaluateToVariable(conditional.getThen(), variable) ||
-                        mayEvaluateToVariable(conditional.getElse(), variable));
-            } else if (expr instanceof JSIndexedPropertyAccessExpression) {
-                expr = ((JSIndexedPropertyAccessExpression) expr).getQualifier();
-            } else if (expr instanceof JSDefinitionExpression) {
-                expr = ((JSDefinitionExpression) expr).getExpression();
-            } else if (expr instanceof JSReferenceExpression) {
-                final PsiElement referent = ((JSReferenceExpression) expr).resolve();
+				return (mayEvaluateToVariable(conditional.getThen(), variable) ||
+						mayEvaluateToVariable(conditional.getElse(), variable));
+			}
+			else if(expr instanceof JSIndexedPropertyAccessExpression)
+			{
+				expr = ((JSIndexedPropertyAccessExpression) expr).getQualifier();
+			}
+			else if(expr instanceof JSDefinitionExpression)
+			{
+				expr = ((JSDefinitionExpression) expr).getExpression();
+			}
+			else if(expr instanceof JSReferenceExpression)
+			{
+				final PsiElement referent = ((JSReferenceExpression) expr).resolve();
 
-                return (referent != null && referent.equals(variable));
-            } else {
-                return false;
-            }
-        }
-    }
+				return (referent != null && referent.equals(variable));
+			}
+			else
+			{
+				return false;
+			}
+		}
+	}
 
-    public static boolean variableIsUsed(JSVariable variable,
-                                         PsiElement context) {
-        return (variable.getName() != null &&
-                FindReferenceUtil.getReferences(variable, context).iterator().hasNext());
-    }
+	public static boolean variableIsUsed(JSVariable variable,
+										 PsiElement context)
+	{
+		return (variable.getName() != null &&
+				FindReferenceUtil.getReferences(variable, context).iterator().hasNext());
+	}
 
-    public static Set<JSVariable> getUsedVariables(PsiElement context) {
-        final UsedVariableVisitor visitor = new UsedVariableVisitor();
-        context.accept(visitor);
-        return visitor.getVariables();
-    }
+	public static Set<JSVariable> getUsedVariables(PsiElement context)
+	{
+		final UsedVariableVisitor visitor = new UsedVariableVisitor();
+		context.accept(visitor);
+		return visitor.getVariables();
+	}
 
-    private static class VariableAssignedVisitor extends JSRecursiveElementVisitor {
-        private final JSVariable      variable;
-        private final JSElement       context;
-        private       Set<JSVariable> notUpdatedSymbols;
-        private final Set<JSVariable> candidateSymbols;
-        private       boolean         assigned;
-
-        public VariableAssignedVisitor(@Nonnull JSVariable      variable,
-                                       @Nonnull JSElement       context,
-                                       @Nonnull Set<JSVariable> notUpdatedSymbols) {
-            this.variable          = variable;
-            this.context           = context;
-            this.notUpdatedSymbols = notUpdatedSymbols;
-            this.candidateSymbols  = new LinkedHashSet<>();
-
-            this.candidateSymbols.add(variable);
-        }
-
-        private VariableAssignedVisitor(@Nonnull JSVariable      variable,
-                                        @Nonnull JSElement       context,
-                                        @Nonnull Set<JSVariable> notUpdatedSymbols,
-                                        @Nonnull Set<JSVariable> candidateSymbols) {
-            this.variable          = variable;
-            this.context           = context;
-            this.notUpdatedSymbols = notUpdatedSymbols;
-            this.candidateSymbols  = candidateSymbols;
-        }
-
-        @Override public void visitJSElement(JSElement element) {
-            if (!this.assigned) {
-                super.visitJSElement(element);
-            }
-        }
-
-        @Override public void visitJSAssignmentExpression(JSAssignmentExpression assignment) {
-            if (!this.assigned) {
-                super.visitJSAssignmentExpression(assignment);
-
-                final JSExpression arg = assignment.getLOperand();
-
-                if (VariableAccessUtil.mayEvaluateToVariable(arg, this.variable)) {
-                    final Set<JSVariable> usedVariables   = getUsedVariables(assignment.getROperand());
-                    final Set<JSVariable> newCandidateSet = new LinkedHashSet<>();
-                    boolean               assigned        = false;
-
-                    newCandidateSet.addAll(this.candidateSymbols);
-                    newCandidateSet.add(this.variable);
-                    for (JSVariable variable : usedVariables) {
-                        if (newCandidateSet.contains(variable) ||
-                            variableIsAssigned(variable, this.context, this.notUpdatedSymbols, newCandidateSet)) {
-                            assigned = true;
-                        } else {
-                            if (this.notUpdatedSymbols.isEmpty()) {
-                                this.notUpdatedSymbols = new LinkedHashSet<>();
-                            }
-                            this.notUpdatedSymbols.add(variable);
-                        }
-                    }
-                    this.assigned = assigned;
-                } else {
-                    this.assigned = false;
-                }
-            }
-        }
-
-        @Override public void visitJSPrefixExpression(JSPrefixExpression expression) {
-            if (!this.assigned) {
-                super.visitJSPrefixExpression(expression);
-
-                final IElementType tokenType = expression.getOperationSign();
-
-                if (!(tokenType.equals(JSTokenTypes.PLUSPLUS) ||
-                      tokenType.equals(JSTokenTypes.MINUSMINUS))) {
-                    return;
-                }
-
-                final JSExpression operand = expression.getExpression();
-
-                this.assigned = (VariableAccessUtil.mayEvaluateToVariable(operand, this.variable));
-            }
-        }
-
-        @Override public void visitJSPostfixExpression(JSPostfixExpression postfixExpression) {
-            if (!this.assigned) {
-                super.visitJSPostfixExpression(postfixExpression);
-
-                final IElementType tokenType = postfixExpression.getOperationSign();
-
-                if (!(tokenType.equals(JSTokenTypes.PLUSPLUS) ||
-                      tokenType.equals(JSTokenTypes.MINUSMINUS))) {
-                    return;
-                }
-
-                final JSExpression operand = postfixExpression.getExpression();
-
-                this.assigned = VariableAccessUtil.mayEvaluateToVariable(operand, this.variable);
-            }
-        }
-
-        public boolean isAssigned() {
-            return this.assigned;
-        }
-    }
-
-    private static class VariableAssignedFromVisitor extends JSRecursiveElementVisitor {
-        private final JSVariable variable;
-        private       boolean    assignedFrom;
-
-        public VariableAssignedFromVisitor(@Nonnull JSVariable variable) {
-            this.variable = variable;
-        }
-
-        @Override public void visitJSElement(@Nonnull JSElement element) {
-            if (!this.assignedFrom) {
-                super.visitJSElement(element);
-            }
-        }
-
-        @Override public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression assignment) {
-            if (!this.assignedFrom) {
-                super.visitJSAssignmentExpression(assignment);
-
-                this.assignedFrom = VariableAccessUtil.mayEvaluateToVariable(assignment.getROperand(), this.variable);
-            }
-        }
-
-        @Override public void visitJSVarStatement(@Nonnull JSVarStatement statement) {
-            if (!this.assignedFrom) {
-                super.visitJSVarStatement(statement);
-
-                for (JSVariable declaredVariable : statement.getVariables()) {
-                    final JSExpression initializer = declaredVariable.getInitializer();
-
-                    if (initializer != null) {
-                        this.assignedFrom = VariableAccessUtil.mayEvaluateToVariable(initializer, this.variable);
-                    }
-                }
-            }
-        }
-
-        @Override public void visitJSVariable(JSVariable var) {
-            if (!this.assignedFrom) {
-                super.visitJSVariable(var);
-                this.assignedFrom = (VariableAccessUtil.mayEvaluateToVariable(var.getInitializer(), this.variable));
-            }
-        }
-
-        public boolean isAssignedFrom() {
-            return this.assignedFrom;
-        }
-    }
-
-    private static class VariableReturnedVisitor extends JSRecursiveElementVisitor {
-        @Nonnull
+	private static class VariableAssignedVisitor extends JSRecursiveElementVisitor
+	{
 		private final JSVariable variable;
-        private                boolean    returned;
+		private final JSElement context;
+		private Set<JSVariable> notUpdatedSymbols;
+		private final Set<JSVariable> candidateSymbols;
+		private boolean assigned;
 
-        public VariableReturnedVisitor(@Nonnull JSVariable variable) {
-            this.variable = variable;
-        }
+		public VariableAssignedVisitor(@Nonnull JSVariable variable,
+									   @Nonnull JSElement context,
+									   @Nonnull Set<JSVariable> notUpdatedSymbols)
+		{
+			this.variable = variable;
+			this.context = context;
+			this.notUpdatedSymbols = notUpdatedSymbols;
+			this.candidateSymbols = new LinkedHashSet<>();
 
-        @Override public void visitJSReturnStatement(@Nonnull JSReturnStatement returnStatement){
-            if (!this.returned) {
-                super.visitJSReturnStatement(returnStatement);
-                this.returned = VariableAccessUtil.mayEvaluateToVariable(returnStatement.getExpression(), this.variable);
-            }
-        }
+			this.candidateSymbols.add(variable);
+		}
 
-        public boolean isReturned() {
-            return this.returned;
-        }
-    }
+		private VariableAssignedVisitor(@Nonnull JSVariable variable,
+										@Nonnull JSElement context,
+										@Nonnull Set<JSVariable> notUpdatedSymbols,
+										@Nonnull Set<JSVariable> candidateSymbols)
+		{
+			this.variable = variable;
+			this.context = context;
+			this.notUpdatedSymbols = notUpdatedSymbols;
+			this.candidateSymbols = candidateSymbols;
+		}
 
-    private static class ArrayContentsAccessedVisitor extends JSRecursiveElementVisitor {
-        private final JSVariable variable;
-        private       boolean    accessed;
+		@Override
+		public void visitJSElement(JSElement element)
+		{
+			if(!this.assigned)
+			{
+				super.visitJSElement(element);
+			}
+		}
 
-        public ArrayContentsAccessedVisitor(@Nonnull JSVariable variable) {
-            this.variable = variable;
-        }
+		@Override
+		public void visitJSAssignmentExpression(JSAssignmentExpression assignment)
+		{
+			if(!this.assigned)
+			{
+				super.visitJSAssignmentExpression(assignment);
 
-        @Override public void visitJSForInStatement(@Nonnull JSForInStatement statement) {
-            if (!this.accessed) {
-                super.visitJSForInStatement(statement);
-                this.checkQualifier(statement.getCollectionExpression());
-            }
-        }
+				final JSExpression arg = assignment.getLOperand();
 
-        @Override public void visitJSIndexedPropertyAccessExpression(@Nonnull JSIndexedPropertyAccessExpression accessExpression) {
-            if (!this.accessed) {
-                super.visitJSIndexedPropertyAccessExpression(accessExpression);
+				if(VariableAccessUtil.mayEvaluateToVariable(arg, this.variable))
+				{
+					final Set<JSVariable> usedVariables = getUsedVariables(assignment.getROperand());
+					final Set<JSVariable> newCandidateSet = new LinkedHashSet<>();
+					boolean assigned = false;
 
-                final PsiElement parent = accessExpression.getParent();
+					newCandidateSet.addAll(this.candidateSymbols);
+					newCandidateSet.add(this.variable);
+					for(JSVariable variable : usedVariables)
+					{
+						if(newCandidateSet.contains(variable) ||
+								variableIsAssigned(variable, this.context, this.notUpdatedSymbols, newCandidateSet))
+						{
+							assigned = true;
+						}
+						else
+						{
+							if(this.notUpdatedSymbols.isEmpty())
+							{
+								this.notUpdatedSymbols = new LinkedHashSet<>();
+							}
+							this.notUpdatedSymbols.add(variable);
+						}
+					}
+					this.assigned = assigned;
+				}
+				else
+				{
+					this.assigned = false;
+				}
+			}
+		}
 
-                if (!(parent instanceof JSAssignmentExpression ||
-                      ((JSAssignmentExpression) parent).getLOperand().equals(accessExpression))) {
-                    this.checkQualifier(accessExpression.getQualifier());
-                }
-            }
-        }
+		@Override
+		public void visitJSPrefixExpression(JSPrefixExpression expression)
+		{
+			if(!this.assigned)
+			{
+				super.visitJSPrefixExpression(expression);
 
-        private void checkQualifier(JSExpression qualifier) {
-            if (qualifier instanceof JSReferenceExpression) {
-                final PsiElement referent = ((JSReferenceExpression) qualifier).resolve();
+				final IElementType tokenType = expression.getOperationSign();
 
-                this.accessed = (referent != null && referent.equals(this.variable));
-            }
-        }
+				if(!(tokenType.equals(JSTokenTypes.PLUSPLUS) ||
+						tokenType.equals(JSTokenTypes.MINUSMINUS)))
+				{
+					return;
+				}
 
-        public boolean isAccessed() {
-            return this.accessed;
-        }
-    }
+				final JSExpression operand = expression.getExpression();
 
-    private static class ArrayContentsAssignedVisitor extends JSRecursiveElementVisitor {
-        private final JSVariable  variable;
-        private       boolean     assigned;
+				this.assigned = (VariableAccessUtil.mayEvaluateToVariable(operand, this.variable));
+			}
+		}
 
-        public ArrayContentsAssignedVisitor(@Nonnull JSVariable variable) {
-            this.variable = variable;
-        }
+		@Override
+		public void visitJSPostfixExpression(JSPostfixExpression postfixExpression)
+		{
+			if(!this.assigned)
+			{
+				super.visitJSPostfixExpression(postfixExpression);
 
-        @Override public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression assignment) {
-            if (!this.assigned) {
-                super.visitJSAssignmentExpression(assignment);
-                this.checkExpression(null, assignment.getLOperand());
-            }
-        }
+				final IElementType tokenType = postfixExpression.getOperationSign();
 
-        @Override public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
-            if (!this.assigned) {
-                super.visitJSPrefixExpression(expression);
-                this.checkExpression(expression.getOperationSign(), expression.getExpression());
-            }
-        }
+				if(!(tokenType.equals(JSTokenTypes.PLUSPLUS) ||
+						tokenType.equals(JSTokenTypes.MINUSMINUS)))
+				{
+					return;
+				}
 
-        @Override public void visitJSPostfixExpression(@Nonnull JSPostfixExpression expression) {
-            if (!this.assigned) {
-                super.visitJSPostfixExpression(expression);
-                this.checkExpression(expression.getOperationSign(), expression.getExpression());
-            }
-        }
+				final JSExpression operand = postfixExpression.getExpression();
 
-        private void checkExpression(IElementType tokenType, JSExpression expression) {
-            if (!(tokenType == null ||
-                  tokenType.equals(JSTokenTypes.PLUSPLUS)   ||
-                  tokenType.equals(JSTokenTypes.MINUSMINUS))) {
-                return;
-            }
-            if (!(expression instanceof JSIndexedPropertyAccessExpression)) {
-                return;
-            }
+				this.assigned = VariableAccessUtil.mayEvaluateToVariable(operand, this.variable);
+			}
+		}
 
-            JSExpression arrayExpression = ((JSIndexedPropertyAccessExpression) expression).getQualifier();
+		public boolean isAssigned()
+		{
+			return this.assigned;
+		}
+	}
 
-            while (arrayExpression instanceof JSIndexedPropertyAccessExpression) {
-                final JSIndexedPropertyAccessExpression accessExpression = (JSIndexedPropertyAccessExpression) arrayExpression;
+	private static class VariableAssignedFromVisitor extends JSRecursiveElementVisitor
+	{
+		private final JSVariable variable;
+		private boolean assignedFrom;
 
-                arrayExpression = accessExpression.getQualifier();
-            }
+		public VariableAssignedFromVisitor(@Nonnull JSVariable variable)
+		{
+			this.variable = variable;
+		}
 
-            if (arrayExpression instanceof JSReferenceExpression) {
-                final String referencedName = ((JSReferenceExpression) arrayExpression).getReferencedName();
-              
+		@Override
+		public void visitJSElement(@Nonnull JSElement element)
+		{
+			if(!this.assignedFrom)
+			{
+				super.visitJSElement(element);
+			}
+		}
 
-              // TODO maybe it's better to check ((JSReferenceExpression) arrayExpression).isReferenceTo(variable) ?
-              this.assigned = referencedName != null && referencedName.equals(this.variable.getName());
-            }
-        }
+		@Override
+		public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression assignment)
+		{
+			if(!this.assignedFrom)
+			{
+				super.visitJSAssignmentExpression(assignment);
 
-        public boolean isAssigned() {
-            return this.assigned;
-        }
-    }
+				this.assignedFrom = VariableAccessUtil.mayEvaluateToVariable(assignment.getROperand(), this.variable);
+			}
+		}
 
-    private static class UsedVariableVisitor extends JSRecursiveElementVisitor {
+		@Override
+		public void visitJSVarStatement(@Nonnull JSVarStatement statement)
+		{
+			if(!this.assignedFrom)
+			{
+				super.visitJSVarStatement(statement);
 
-        @Nonnull
+				for(JSVariable declaredVariable : statement.getVariables())
+				{
+					final JSExpression initializer = declaredVariable.getInitializer();
+
+					if(initializer != null)
+					{
+						this.assignedFrom = VariableAccessUtil.mayEvaluateToVariable(initializer, this.variable);
+					}
+				}
+			}
+		}
+
+		@Override
+		public void visitJSVariable(JSVariable var)
+		{
+			if(!this.assignedFrom)
+			{
+				super.visitJSVariable(var);
+				this.assignedFrom = (VariableAccessUtil.mayEvaluateToVariable(var.getInitializer(), this.variable));
+			}
+		}
+
+		public boolean isAssignedFrom()
+		{
+			return this.assignedFrom;
+		}
+	}
+
+	private static class VariableReturnedVisitor extends JSRecursiveElementVisitor
+	{
+		@Nonnull
+		private final JSVariable variable;
+		private boolean returned;
+
+		public VariableReturnedVisitor(@Nonnull JSVariable variable)
+		{
+			this.variable = variable;
+		}
+
+		@Override
+		public void visitJSReturnStatement(@Nonnull JSReturnStatement returnStatement)
+		{
+			if(!this.returned)
+			{
+				super.visitJSReturnStatement(returnStatement);
+				this.returned = VariableAccessUtil.mayEvaluateToVariable(returnStatement.getExpression(), this.variable);
+			}
+		}
+
+		public boolean isReturned()
+		{
+			return this.returned;
+		}
+	}
+
+	private static class ArrayContentsAccessedVisitor extends JSRecursiveElementVisitor
+	{
+		private final JSVariable variable;
+		private boolean accessed;
+
+		public ArrayContentsAccessedVisitor(@Nonnull JSVariable variable)
+		{
+			this.variable = variable;
+		}
+
+		@Override
+		public void visitJSForInStatement(@Nonnull JSForInStatement statement)
+		{
+			if(!this.accessed)
+			{
+				super.visitJSForInStatement(statement);
+				this.checkQualifier(statement.getCollectionExpression());
+			}
+		}
+
+		@Override
+		public void visitJSIndexedPropertyAccessExpression(@Nonnull JSIndexedPropertyAccessExpression accessExpression)
+		{
+			if(!this.accessed)
+			{
+				super.visitJSIndexedPropertyAccessExpression(accessExpression);
+
+				final PsiElement parent = accessExpression.getParent();
+
+				if(!(parent instanceof JSAssignmentExpression ||
+						((JSAssignmentExpression) parent).getLOperand().equals(accessExpression)))
+				{
+					this.checkQualifier(accessExpression.getQualifier());
+				}
+			}
+		}
+
+		private void checkQualifier(JSExpression qualifier)
+		{
+			if(qualifier instanceof JSReferenceExpression)
+			{
+				final PsiElement referent = ((JSReferenceExpression) qualifier).resolve();
+
+				this.accessed = (referent != null && referent.equals(this.variable));
+			}
+		}
+
+		public boolean isAccessed()
+		{
+			return this.accessed;
+		}
+	}
+
+	private static class ArrayContentsAssignedVisitor extends JSRecursiveElementVisitor
+	{
+		private final JSVariable variable;
+		private boolean assigned;
+
+		public ArrayContentsAssignedVisitor(@Nonnull JSVariable variable)
+		{
+			this.variable = variable;
+		}
+
+		@Override
+		public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression assignment)
+		{
+			if(!this.assigned)
+			{
+				super.visitJSAssignmentExpression(assignment);
+				this.checkExpression(null, assignment.getLOperand());
+			}
+		}
+
+		@Override
+		public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression)
+		{
+			if(!this.assigned)
+			{
+				super.visitJSPrefixExpression(expression);
+				this.checkExpression(expression.getOperationSign(), expression.getExpression());
+			}
+		}
+
+		@Override
+		public void visitJSPostfixExpression(@Nonnull JSPostfixExpression expression)
+		{
+			if(!this.assigned)
+			{
+				super.visitJSPostfixExpression(expression);
+				this.checkExpression(expression.getOperationSign(), expression.getExpression());
+			}
+		}
+
+		private void checkExpression(IElementType tokenType, JSExpression expression)
+		{
+			if(!(tokenType == null ||
+					tokenType.equals(JSTokenTypes.PLUSPLUS) ||
+					tokenType.equals(JSTokenTypes.MINUSMINUS)))
+			{
+				return;
+			}
+			if(!(expression instanceof JSIndexedPropertyAccessExpression))
+			{
+				return;
+			}
+
+			JSExpression arrayExpression = ((JSIndexedPropertyAccessExpression) expression).getQualifier();
+
+			while(arrayExpression instanceof JSIndexedPropertyAccessExpression)
+			{
+				final JSIndexedPropertyAccessExpression accessExpression = (JSIndexedPropertyAccessExpression) arrayExpression;
+
+				arrayExpression = accessExpression.getQualifier();
+			}
+
+			if(arrayExpression instanceof JSReferenceExpression)
+			{
+				final String referencedName = ((JSReferenceExpression) arrayExpression).getReferencedName();
+
+
+				// TODO maybe it's better to check ((JSReferenceExpression) arrayExpression).isReferenceTo(variable) ?
+				this.assigned = referencedName != null && referencedName.equals(this.variable.getName());
+			}
+		}
+
+		public boolean isAssigned()
+		{
+			return this.assigned;
+		}
+	}
+
+	private static class UsedVariableVisitor extends JSRecursiveElementVisitor
+	{
+
+		@Nonnull
 		private final Set<JSVariable> variables;
 
-        public UsedVariableVisitor() {
-            this.variables = new HashSet<JSVariable>();
-        }
+		public UsedVariableVisitor()
+		{
+			this.variables = new HashSet<JSVariable>();
+		}
 
-        @Override public void visitJSReferenceExpression(@Nonnull JSReferenceExpression ref) {
-            super.visitJSReferenceExpression(ref);
+		@Override
+		public void visitJSReferenceExpression(@Nonnull JSReferenceExpression ref)
+		{
+			super.visitJSReferenceExpression(ref);
 
-            final PsiElement referent = ref.resolve();
+			final PsiElement referent = ref.resolve();
 
-            if (referent != null && referent instanceof JSVariable) {
-                this.variables.add((JSVariable) referent);
-            }
-        }
+			if(referent != null && referent instanceof JSVariable)
+			{
+				this.variables.add((JSVariable) referent);
+			}
+		}
 
-        public Set<JSVariable> getVariables() {
-            return this.variables;
-        }
-    }
+		public Set<JSVariable> getVariables()
+		{
+			return this.variables;
+		}
+	}
 }

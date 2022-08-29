@@ -15,119 +15,133 @@
  */
 package org.intellij.idea.lang.javascript.intention.braces;
 
-import javax.annotation.Nonnull;
-
+import com.intellij.lang.javascript.psi.*;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.jetbrains.annotations.NonNls;
 
-import com.intellij.lang.javascript.psi.JSBlockStatement;
-import com.intellij.lang.javascript.psi.JSDoWhileStatement;
-import com.intellij.lang.javascript.psi.JSElement;
-import com.intellij.lang.javascript.psi.JSForInStatement;
-import com.intellij.lang.javascript.psi.JSForStatement;
-import com.intellij.lang.javascript.psi.JSIfStatement;
-import com.intellij.lang.javascript.psi.JSStatement;
-import com.intellij.lang.javascript.psi.JSVarStatement;
-import com.intellij.lang.javascript.psi.JSWhileStatement;
-import consulo.language.util.IncorrectOperationException;
+import javax.annotation.Nonnull;
 
-public class JSRemoveBracesIntention extends JSMutablyNamedIntention {
-    @NonNls private static final String IF_KEYWORD   = "if";
-    @NonNls private static final String ELSE_KEYWORD = "else";
+@ExtensionImpl
+@IntentionMetaData(ignoreId = "JSRemoveBracesIntention", categories = {
+		"JavaScript",
+		"Control Flow"
+}, fileExtensions = "js")
+public class JSRemoveBracesIntention extends JSMutablyNamedIntention
+{
+	@NonNls
+	private static final String IF_KEYWORD = "if";
+	@NonNls
+	private static final String ELSE_KEYWORD = "else";
 
-    @Override
+	@Override
 	@Nonnull
-    protected JSElementPredicate getElementPredicate() {
-        return new RemoveBracesPredicate();
-    }
+	protected JSElementPredicate getElementPredicate()
+	{
+		return new RemoveBracesPredicate();
+	}
 
-    @Override
-	protected String getTextForElement(PsiElement element) {
-        final JSElement parent = (JSElement) element.getParent();
-        final String    keyword;
+	@Override
+	protected String getTextForElement(PsiElement element)
+	{
+		final JSElement parent = (JSElement) element.getParent();
+		final String keyword;
 
-        assert (parent != null);
+		assert (parent != null);
 
-        if (parent instanceof JSIfStatement) {
-            final JSIfStatement ifStatement = (JSIfStatement) parent;
-            final JSStatement   elseBranch  = ifStatement.getElse();
+		if(parent instanceof JSIfStatement)
+		{
+			final JSIfStatement ifStatement = (JSIfStatement) parent;
+			final JSStatement elseBranch = ifStatement.getElse();
 
-            keyword = (element.equals(elseBranch) ? ELSE_KEYWORD : IF_KEYWORD);
-        } else {
-            final PsiElement keywordChild = parent.getFirstChild();
+			keyword = (element.equals(elseBranch) ? ELSE_KEYWORD : IF_KEYWORD);
+		}
+		else
+		{
+			final PsiElement keywordChild = parent.getFirstChild();
 
-            assert (keywordChild != null);
-            keyword = keywordChild.getText();
-        }
+			assert (keywordChild != null);
+			keyword = keywordChild.getText();
+		}
 
-        return this.getText(keyword);
-    }
+		return this.getText(keyword);
+	}
 
-    @Override
+	@Override
 	protected void processIntention(@Nonnull PsiElement element)
-        throws IncorrectOperationException {
-        final JSBlockStatement blockStatement = (JSBlockStatement) element;
-        final JSStatement[]    statements     = blockStatement.getStatements();
-        final JSStatement      statement      = statements[0];
+			throws IncorrectOperationException
+	{
+		final JSBlockStatement blockStatement = (JSBlockStatement) element;
+		final JSStatement[] statements = blockStatement.getStatements();
+		final JSStatement statement = statements[0];
 
-        // handle comments
-        final JSElement parent = (JSElement) blockStatement.getParent();
+		// handle comments
+		final JSElement parent = (JSElement) blockStatement.getParent();
 
-        assert (parent != null);
+		assert (parent != null);
 
-        final JSElement grandParent = (JSElement) parent.getParent();
+		final JSElement grandParent = (JSElement) parent.getParent();
 
-        assert (grandParent != null);
+		assert (grandParent != null);
 
-        PsiElement sibling = statement.getFirstChild();
+		PsiElement sibling = statement.getFirstChild();
 
-        assert (sibling != null);
+		assert (sibling != null);
 
-        sibling = sibling.getNextSibling();
-        while (sibling != null && !sibling.equals(statement)) {
-            if (sibling instanceof PsiComment) {
-                grandParent.addBefore(sibling, parent);
-            }
-            sibling = sibling.getNextSibling();
-        }
+		sibling = sibling.getNextSibling();
+		while(sibling != null && !sibling.equals(statement))
+		{
+			if(sibling instanceof PsiComment)
+			{
+				grandParent.addBefore(sibling, parent);
+			}
+			sibling = sibling.getNextSibling();
+		}
 
-        final PsiElement lastChild = blockStatement.getLastChild();
+		final PsiElement lastChild = blockStatement.getLastChild();
 
-        if (lastChild instanceof PsiComment) {
-            final JSElement nextSibling = (JSElement) parent.getNextSibling();
+		if(lastChild instanceof PsiComment)
+		{
+			final JSElement nextSibling = (JSElement) parent.getNextSibling();
 
-            grandParent.addAfter(lastChild, nextSibling);
-        }
+			grandParent.addAfter(lastChild, nextSibling);
+		}
 
-        String text = statement.getText();
-        JSElementFactory.replaceStatement(blockStatement, text);
-    }
+		String text = statement.getText();
+		JSElementFactory.replaceStatement(blockStatement, text);
+	}
 
-    public static class RemoveBracesPredicate implements JSElementPredicate {
-        @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-            if (!(element instanceof JSBlockStatement)) {
-                return false;
-            }
+	public static class RemoveBracesPredicate implements JSElementPredicate
+	{
+		@Override
+		public boolean satisfiedBy(@Nonnull PsiElement element)
+		{
+			if(!(element instanceof JSBlockStatement))
+			{
+				return false;
+			}
 
-            final JSBlockStatement blockStatement = (JSBlockStatement) element;
-            final PsiElement parent         = blockStatement.getParent();
+			final JSBlockStatement blockStatement = (JSBlockStatement) element;
+			final PsiElement parent = blockStatement.getParent();
 
-            if (!(parent instanceof JSIfStatement      ||
-                  parent instanceof JSWhileStatement   ||
-                  parent instanceof JSDoWhileStatement ||
-                  parent instanceof JSForStatement     ||
-                  parent instanceof JSForInStatement)) {
-                return false;
-            }
+			if(!(parent instanceof JSIfStatement ||
+					parent instanceof JSWhileStatement ||
+					parent instanceof JSDoWhileStatement ||
+					parent instanceof JSForStatement ||
+					parent instanceof JSForInStatement))
+			{
+				return false;
+			}
 
-            final JSStatement[] statements = blockStatement.getStatements();
+			final JSStatement[] statements = blockStatement.getStatements();
 
-            return (statements.length == 1 && !(statements[0] instanceof JSVarStatement));
-        }
-    }
+			return (statements.length == 1 && !(statements[0] instanceof JSVarStatement));
+		}
+	}
 }
