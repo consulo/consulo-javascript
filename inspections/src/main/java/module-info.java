@@ -2,7 +2,7 @@
  * @author VISTALL
  * @since 29-Aug-22
  */
-module consulo.javascript.inspections
+open module consulo.javascript.inspections
 {
 	// TODO remove in future
 	requires java.desktop;
