@@ -32,12 +32,15 @@ import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.UIEvent;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -94,11 +97,11 @@ public class DescriptionByAnotherPsiElementEditorNotification<T extends PsiEleme
 		{
 			EditorNotificationBuilder panel = supplier.get();
 			panel.withText(LocalizeValue.localizeTODO(StringUtil.SINGLE_QUOTER.apply(myProvider.getId()) + " model description is available for this file"));
-			panel.withAction(LocalizeValue.localizeTODO("Choose " + myProvider.getPsiElementName()), new Runnable()
+			panel.withAction(LocalizeValue.localizeTODO("Choose " + myProvider.getPsiElementName()), new Consumer<UIEvent<Component>>()
 			{
 				@Override
 				@RequiredUIAccess
-				public void run()
+				public void accept(UIEvent<Component> uiEvent)
 				{
 					T chooseElement = myProvider.chooseElement(myProject);
 					if(chooseElement == null)
@@ -118,10 +121,11 @@ public class DescriptionByAnotherPsiElementEditorNotification<T extends PsiEleme
 			EditorNotificationBuilder panel = supplier.get();
 			panel.withText(LocalizeValue.localizeTODO(StringUtil.SINGLE_QUOTER.apply(myProvider.getId()) + " model description is registered for this file. " + myProvider.getPsiElementName() + ": "
 					+ registeredPsiElementId));
-			panel.withAction(LocalizeValue.localizeTODO("Cancel"), new Runnable()
+			panel.withAction(LocalizeValue.localizeTODO("Cancel"), new Consumer<UIEvent<Component>>()
 			{
 				@Override
-				public void run()
+				@RequiredUIAccess
+				public void accept(UIEvent<Component> uiEvent)
 				{
 					if(DescriptionByAnotherPsiElementService.getInstance(myProject).removeFile(file))
 					{
