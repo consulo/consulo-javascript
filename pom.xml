@@ -21,7 +21,7 @@
 	<parent>
 		<groupId>consulo</groupId>
 		<artifactId>arch.managment</artifactId>
-		<version>2-SNAPSHOT</version>
+		<version>3-SNAPSHOT</version>
 		<relativePath/>
 	</parent>
 
@@ -38,7 +38,7 @@
 
 	<groupId>consulo.plugin</groupId>
 	<artifactId>consulo.javascript.parent</artifactId>
-	<version>2-SNAPSHOT</version>
+	<version>3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<modules>
@@ -58,6 +58,7 @@
 		<module>lang-version-impl/ecmascript4-impl</module>
 		<module>lang-version-impl/ecmascript-impl</module>
 		<module>lang-version-impl/json-javascript-impl</module>
+		<module>regexp-impl</module>
 		<module>plugin</module>
 	</modules>
 </project>

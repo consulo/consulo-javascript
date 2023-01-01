@@ -19,14 +19,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>consulo</groupId>
-		<artifactId>arch.ide-provided</artifactId>
-		<version>2-SNAPSHOT</version>
+		<artifactId>arch.ide-api-provided</artifactId>
+		<version>3-SNAPSHOT</version>
 		<relativePath/>
 	</parent>
 
 	<groupId>consulo.plugin</groupId>
 	<artifactId>consulo.javascript</artifactId>
-	<version>2-SNAPSHOT</version>
+	<version>3-SNAPSHOT</version>
 	<packaging>consulo-plugin</packaging>
 
 	<repositories>
@@ -45,10 +45,9 @@
 			<plugin>
 				<groupId>consulo.maven</groupId>
 				<artifactId>maven-consulo-plugin</artifactId>
-				<version>2-SNAPSHOT</version>
 				<extensions>true</extensions>
 				<configuration>
-					<repositoryChannel>nightly</repositoryChannel>
+					<repositoryChannel>valhalla</repositoryChannel>
 					<dependencies>
 						<dependency>com.intellij.xml</dependency>
 						<dependency>com.intellij.regexp</dependency>
@@ -168,6 +167,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>consulo.javascript-regexp.impl</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>consulo.internal</groupId>
 			<artifactId>lib.org.chromium.sdk</artifactId>
 			<version>1.0-SNAPSHOT</version>
@@ -179,20 +184,6 @@
 			<artifactId>com.intellij.xml</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>com.intellij.regexp</artifactId>
-			<version>${project.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>${project.parent.groupId}</groupId>
-			<artifactId>consulo-lang-impl-testing</artifactId>
-			<version>${project.parent.version}</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

@@ -16,28 +16,42 @@
 
 package consulo.json.validation.descriptionByAnotherPsiElement;
 
-import java.util.function.Consumer;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.component.ComponentManager;
+import consulo.component.extension.ExtensionExtender;
+import consulo.fileEditor.EditorNotificationProvider;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
-
-import com.intellij.openapi.components.ComponentManager;
-import com.intellij.openapi.project.Project;
-import consulo.editor.notifications.EditorNotificationProvider;
-import consulo.extensions.ExtensionExtender;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
  * @since 12.11.2015
  */
+@ExtensionImpl
 @SuppressWarnings("unchecked")
 public class DescriptionByAnotherPsiElementRegistrar implements ExtensionExtender<EditorNotificationProvider>
 {
 	@Override
 	public void extend(@Nonnull ComponentManager componentManager, @Nonnull Consumer<EditorNotificationProvider> consumer)
 	{
-		for(final DescriptionByAnotherPsiElementProvider<?> provider : DescriptionByAnotherPsiElementProvider.EP_NAME.getExtensionList())
+		for(final DescriptionByAnotherPsiElementProvider<?> provider : componentManager.getExtensionPoint(DescriptionByAnotherPsiElementProvider.class))
 		{
 			consumer.accept(new DescriptionByAnotherPsiElementEditorNotification((Project) componentManager, provider));
 		}
+	}
+
+	@Nonnull
+	@Override
+	public Class<EditorNotificationProvider> getExtensionClass()
+	{
+		return EditorNotificationProvider.class;
+	}
+
+	@Override
+	public boolean hasAnyExtensions(ComponentManager componentManager)
+	{
+		return componentManager.getExtensionPoint(DescriptionByAnotherPsiElementProvider.class).hasAnyExtensions();
 	}
 }

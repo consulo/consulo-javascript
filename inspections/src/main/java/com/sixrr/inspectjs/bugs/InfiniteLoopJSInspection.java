@@ -1,7 +1,5 @@
 package com.sixrr.inspectjs.bugs;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.psi.JSDoWhileStatement;
 import com.intellij.lang.javascript.psi.JSForStatement;
 import com.intellij.lang.javascript.psi.JSWhileStatement;
@@ -10,7 +8,11 @@ import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
+import consulo.annotation.component.ExtensionImpl;
 
+import javax.annotation.Nonnull;
+
+@ExtensionImpl
 public class InfiniteLoopJSInspection extends JavaScriptInspection {
 
     @Override

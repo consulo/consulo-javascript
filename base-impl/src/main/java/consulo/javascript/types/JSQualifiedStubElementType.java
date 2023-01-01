@@ -17,14 +17,14 @@
 
 package consulo.javascript.types;
 
-import javax.annotation.Nonnull;
-
-import org.jetbrains.annotations.NonNls;
 import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
-import com.intellij.lang.javascript.psi.JSStubElementType;
+import consulo.javascript.impl.language.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.stubs.JSQualifiedStub;
-import com.intellij.psi.stubs.IndexSink;
-import consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
+import consulo.javascript.language.psi.stub.JavaScriptIndexKeys;
+import consulo.language.psi.stub.IndexSink;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

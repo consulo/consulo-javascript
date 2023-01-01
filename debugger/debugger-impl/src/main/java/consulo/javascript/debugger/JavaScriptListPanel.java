@@ -16,25 +16,23 @@
 
 package consulo.javascript.debugger;
 
-import java.awt.BorderLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.Comparator;
+import consulo.language.editor.FileColorManager;
+import consulo.navigation.OpenFileDescriptorFactory;
+import consulo.project.Project;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.JBList;
+import consulo.ui.ex.awt.JBScrollPane;
+import consulo.ui.ex.awt.SortedListModel;
+import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.JList;
-import javax.swing.JPanel;
-
-import com.intellij.ide.actions.OpenFileAction;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.ColoredListCellRenderer;
-import com.intellij.ui.FileColorManager;
-import com.intellij.ui.SortedListModel;
-import com.intellij.ui.components.JBList;
-import com.intellij.ui.components.JBScrollPane;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Comparator;
 
 /**
  * @author VISTALL
@@ -104,7 +102,7 @@ public abstract class JavaScriptListPanel<T> extends JPanel
 
 					if(virtualFile != null)
 					{
-						OpenFileAction.openFile(virtualFile, myProject);
+						OpenFileDescriptorFactory.getInstance(myProject).builder(virtualFile).build().navigate(true);
 					}
 				}
 			}

@@ -17,22 +17,21 @@
 
 package com.intellij.lang.javascript.types;
 
-import java.io.IOException;
-
-import javax.annotation.Nonnull;
-
-import consulo.annotation.access.RequiredReadAction;
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSAttributeList;
-import com.intellij.lang.javascript.psi.JSStubElementType;
+import consulo.javascript.impl.language.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.impl.JSAttributeListImpl;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeListStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSAttributeListStubImpl;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
-import com.intellij.util.io.StringRef;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.index.io.StringRef;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.stub.StubInputStream;
+import consulo.language.psi.stub.StubOutputStream;
+
+import javax.annotation.Nonnull;
+import java.io.IOException;
 
 /**
  * @author Maxim.Mossienko

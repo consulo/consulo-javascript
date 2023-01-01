@@ -1,6 +1,6 @@
 package com.sixrr.inspectjs;
 
-import com.intellij.codeInspection.LocalInspectionTool;
+import consulo.language.editor.inspection.LocalInspectionTool;
 
 import java.util.Comparator;
 

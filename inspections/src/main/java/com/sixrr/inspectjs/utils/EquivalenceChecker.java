@@ -2,10 +2,10 @@ package com.sixrr.inspectjs.utils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.javascript.lang.psi.JavaScriptType;
+import consulo.javascript.language.psi.JavaScriptType;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
 
 @SuppressWarnings({"OverlyComplexMethod",
         "MethodWithMultipleLoops",

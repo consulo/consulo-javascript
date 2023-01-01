@@ -1,15 +1,15 @@
 package consulo.javascript.lang.parsing;
 
-import com.intellij.codeInsight.daemon.XmlErrorMessages;
-import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.ICustomParsingType;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.ILazyParseableElementType;
-import com.intellij.psi.xml.XmlElementType;
-import com.intellij.psi.xml.XmlTokenType;
+import consulo.language.ast.ICustomParsingType;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.ILazyParseableElementType;
+import consulo.language.ast.TokenType;
+import consulo.language.parser.PsiBuilder;
+import consulo.xml.codeInsight.daemon.XmlErrorMessages;
+import consulo.xml.psi.xml.XmlElementType;
+import consulo.xml.psi.xml.XmlTokenType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -17,8 +17,8 @@ import java.util.Stack;
 
 /**
  * @author VISTALL
- * @see com.intellij.psi.impl.source.parsing.xml.XmlParsing
- * @see com.intellij.lang.html.HtmlParsing
+ * @see XmlParsing
+ * @see HtmlParsing
  * @since 2019-12-17
  */
 public class JSXParser

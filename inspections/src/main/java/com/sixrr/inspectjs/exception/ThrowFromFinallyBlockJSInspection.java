@@ -8,7 +8,9 @@ import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
+import consulo.annotation.component.ExtensionImpl;
 
+@ExtensionImpl
 public class ThrowFromFinallyBlockJSInspection extends JavaScriptInspection {
     @Override
 	@Nonnull

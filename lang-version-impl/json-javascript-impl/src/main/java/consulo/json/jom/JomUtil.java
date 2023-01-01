@@ -1,12 +1,11 @@
 package consulo.json.jom;
 
-import java.lang.reflect.Method;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ObjectUtil;
+import java.lang.reflect.Method;
 
 /**
  * @author VISTALL

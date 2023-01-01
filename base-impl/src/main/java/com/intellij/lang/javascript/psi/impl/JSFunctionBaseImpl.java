@@ -17,24 +17,23 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import com.intellij.javascript.documentation.JSDocumentationUtils;
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.stubs.JSFunctionStub;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.StubBasedPsiElement;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.util.IncorrectOperationException;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.lang.JavaScriptLanguage;
+import consulo.javascript.language.JavaScriptLanguage;
 import consulo.javascript.lang.JavaScriptTokenSets;
-import consulo.javascript.lang.psi.JavaScriptType;
-import consulo.javascript.lang.psi.JavaScriptTypeElement;
+import consulo.javascript.language.psi.JavaScriptType;
+import consulo.javascript.language.psi.JavaScriptTypeElement;
+import consulo.language.ast.ASTNode;
 
 import javax.annotation.Nonnull;
 

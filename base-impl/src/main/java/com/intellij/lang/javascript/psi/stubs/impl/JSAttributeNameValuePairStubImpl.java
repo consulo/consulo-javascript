@@ -20,7 +20,7 @@ package com.intellij.lang.javascript.psi.stubs.impl;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSAttributeNameValuePair;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeNameValuePairStub;
-import com.intellij.psi.stubs.StubElement;
+import consulo.language.psi.stub.StubElement;
 
 /**
  * @author Maxim.Mossienko

@@ -25,11 +25,11 @@ import consulo.annotation.access.RequiredReadAction;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.stubs.JSFunctionStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSFunctionStubImpl;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
-import com.intellij.util.io.StringRef;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.stub.StubInputStream;
+import consulo.language.psi.stub.StubOutputStream;
+import consulo.index.io.StringRef;
 import consulo.javascript.types.JSQualifiedStubElementType;
 
 /**

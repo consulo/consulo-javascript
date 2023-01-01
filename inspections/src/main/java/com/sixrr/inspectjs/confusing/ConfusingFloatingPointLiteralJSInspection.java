@@ -1,19 +1,21 @@
 package com.sixrr.inspectjs.confusing;
 
-import com.intellij.codeInspection.ProblemDescriptor;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.inspection.ProblemDescriptor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
 import consulo.javascript.psi.JSSimpleLiteralExpression;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 import com.sixrr.inspectjs.*;
+import consulo.language.psi.PsiElement;
+import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@ExtensionImpl
 public class ConfusingFloatingPointLiteralJSInspection extends JavaScriptInspection {
     @NonNls
     private static final Pattern pickyFloatingPointPattern =

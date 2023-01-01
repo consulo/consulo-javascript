@@ -16,27 +16,28 @@
 
 package com.intellij.lang.javascript;
 
-import com.intellij.lang.*;
 import com.intellij.lang.javascript.highlighting.JavaScriptHighlightingLexer;
 import com.intellij.lang.javascript.parsing.JSDocParsing;
-import com.intellij.lexer.FlexAdapter;
-import com.intellij.lexer.Lexer;
-import com.intellij.lexer.MergingLexerAdapter;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.ILazyParseableElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.xml.XmlTokenType;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptContextKeywordElementType;
-import consulo.javascript.lang.JavaScriptLanguage;
+import consulo.javascript.language.JavaScriptLanguage;
 import consulo.javascript.lang.parsing.JavaScriptParser;
 import consulo.javascript.lang.parsing.JavaScriptParsingContext;
 import consulo.javascript.lang.parsing.Parsing;
-import consulo.lang.LanguageVersion;
+import consulo.javascript.language.JavaScriptBundle;
+import consulo.language.Language;
+import consulo.language.ast.*;
+import consulo.language.lexer.FlexAdapter;
+import consulo.language.lexer.Lexer;
+import consulo.language.lexer.MergingLexerAdapter;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.parser.PsiBuilder;
+import consulo.language.parser.PsiBuilderFactory;
+import consulo.language.psi.PsiElement;
+import consulo.language.version.LanguageVersion;
+import consulo.project.Project;
+import consulo.xml.psi.xml.XmlTokenType;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -341,7 +342,7 @@ public interface JSTokenTypes
 			final LanguageVersion tempLanguageVersion = chameleon.getUserData(LanguageVersion.KEY);
 			final LanguageVersion languageVersion = tempLanguageVersion == null ? psi.getLanguageVersion() : tempLanguageVersion;
 			final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, chameleon, createLexer(), languageForParser, languageVersion, chameleon.getChars());
-			final JavaScriptParser parser = (JavaScriptParser) LanguageParserDefinitions.INSTANCE.forLanguage(languageForParser).createParser(languageVersion);
+			final JavaScriptParser parser = (JavaScriptParser) ParserDefinition.forLanguage(languageForParser).createParser(languageVersion);
 
 			JavaScriptParsingContext parsingContext = parser.createParsingContext();
 			doParse(parsingContext, builder);

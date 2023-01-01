@@ -22,19 +22,19 @@
  */
 package com.intellij.javascript.documentation;
 
-import com.intellij.codeInsight.documentation.DocumentationManager;
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.*;
-import com.intellij.psi.templateLanguages.OuterLanguageElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.ast.TokenType;
+import consulo.language.editor.documentation.DocumentationManagerUtil;
+import consulo.language.psi.*;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.Ref;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -814,7 +814,7 @@ public class JSDocumentationUtils
 		String fileName = containingFile == null ? null : !JSResolveUtil.isPredefinedFile(containingFile) ? containingFile.getVirtualFile()
 				.getPresentableUrl() : containingFile.getViewProvider().getVirtualFile().getName();
 
-		DocumentationManager.createHyperlink(buffer, (fileName != null ? fileName + ":" : "") + elementName + (element != null ? ":" + element
+		DocumentationManagerUtil.createHyperlink(buffer, (fileName != null ? fileName + ":" : "") + elementName + (element != null ? ":" + element
 				.getTextOffset() : ""), presentableName + (presentableFileName != null ? " in " + presentableFileName : ""), true);
 	}
 

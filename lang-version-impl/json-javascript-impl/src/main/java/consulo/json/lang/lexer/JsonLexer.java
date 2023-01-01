@@ -2,9 +2,9 @@
 
 package consulo.json.lang.lexer;
 
-import com.intellij.lexer.LexerBase;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.lang.javascript.JSTokenTypes;
+import consulo.language.ast.IElementType;
+import consulo.language.lexer.LexerBase;
 
 
 /**
@@ -13,7 +13,8 @@ import com.intellij.lang.javascript.JSTokenTypes;
  * on 15.02.16 12:22 from the specification file
  * <tt>R:/_github.com/consulo/consulo-javascript/json-javascript-impl/src/org/mustbe/consulo/json/lang/lexer/json.flex</tt>
  */
-public class JsonLexer extends LexerBase {
+public class JsonLexer extends LexerBase
+{
   /** initial size of the lookahead buffer */
   private static final int ZZ_BUFFERSIZE = 16384;
 

@@ -19,9 +19,9 @@ package com.intellij.lang.javascript.psi;
 import javax.annotation.Nonnull;
 
 import com.intellij.lang.javascript.psi.stubs.JSAttributeStub;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.StubBasedPsiElement;
-import com.intellij.util.ArrayFactory;
+import consulo.language.psi.PsiNamedElement;
+import consulo.language.psi.StubBasedPsiElement;
+import consulo.util.collection.ArrayFactory;
 
 /**
  * @author  Maxim.Mossienko

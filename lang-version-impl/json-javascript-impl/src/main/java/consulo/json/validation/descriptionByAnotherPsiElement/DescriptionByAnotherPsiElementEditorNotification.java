@@ -16,36 +16,39 @@
 
 package consulo.json.validation.descriptionByAnotherPsiElement;
 
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.impl.PsiModificationTrackerImpl;
-import com.intellij.psi.util.PsiModificationTracker;
-import com.intellij.ui.EditorNotificationPanel;
-import com.intellij.ui.EditorNotifications;
-import consulo.editor.notifications.EditorNotificationProvider;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.fileEditor.EditorNotificationBuilder;
+import consulo.fileEditor.EditorNotificationProvider;
+import consulo.fileEditor.EditorNotifications;
+import consulo.fileEditor.FileEditor;
 import consulo.json.JsonFileType;
 import consulo.json.jom.JomElement;
 import consulo.json.jom.JomFileElement;
 import consulo.json.jom.JomManager;
+import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.PsiModificationTracker;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.dataholder.Key;
+import consulo.ui.event.UIEvent;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 12.11.2015
  */
-public class DescriptionByAnotherPsiElementEditorNotification<T extends PsiElement> implements EditorNotificationProvider<EditorNotificationPanel>
+public class DescriptionByAnotherPsiElementEditorNotification<T extends PsiElement> implements EditorNotificationProvider
 {
-	private Key<EditorNotificationPanel> myPanelKey;
 	private Project myProject;
 	private DescriptionByAnotherPsiElementProvider<T> myProvider;
 
@@ -53,21 +56,19 @@ public class DescriptionByAnotherPsiElementEditorNotification<T extends PsiEleme
 	{
 		myProject = project;
 		myProvider = provider;
-
-		myPanelKey = Key.create("DescriptionByAnotherPsiElementEditorNotification." + provider.getId());
 	}
 
 	@Nonnull
 	@Override
-	public Key<EditorNotificationPanel> getKey()
+	public String getId()
 	{
-		return myPanelKey;
+		return myProvider.getId();
 	}
 
-	@Nullable
 	@Override
-	@RequiredUIAccess
-	public EditorNotificationPanel createNotificationPanel(@Nonnull final VirtualFile file, @Nonnull FileEditor fileEditor)
+	@Nullable
+	@RequiredReadAction
+	public EditorNotificationBuilder buildNotification(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor, @Nonnull Supplier<EditorNotificationBuilder> supplier)
 	{
 		if(file.getFileType() != JsonFileType.INSTANCE)
 		{
@@ -94,13 +95,13 @@ public class DescriptionByAnotherPsiElementEditorNotification<T extends PsiEleme
 		String registeredPsiElementId = DescriptionByAnotherPsiElementService.getInstance(myProject).getRegisteredPsiElementId(file);
 		if(registeredPsiElementId == null)
 		{
-			EditorNotificationPanel panel = new EditorNotificationPanel();
-			panel.text(StringUtil.SINGLE_QUOTER.fun(myProvider.getId()) + " model description is available for this file");
-			panel.createActionLabel("Choose " + myProvider.getPsiElementName(), new Runnable()
+			EditorNotificationBuilder panel = supplier.get();
+			panel.withText(LocalizeValue.localizeTODO(StringUtil.SINGLE_QUOTER.apply(myProvider.getId()) + " model description is available for this file"));
+			panel.withAction(LocalizeValue.localizeTODO("Choose " + myProvider.getPsiElementName()), new Consumer<UIEvent<Component>>()
 			{
 				@Override
 				@RequiredUIAccess
-				public void run()
+				public void accept(UIEvent<Component> uiEvent)
 				{
 					T chooseElement = myProvider.chooseElement(myProject);
 					if(chooseElement == null)
@@ -117,12 +118,14 @@ public class DescriptionByAnotherPsiElementEditorNotification<T extends PsiEleme
 		}
 		else
 		{
-			EditorNotificationPanel panel = new EditorNotificationPanel();
-			panel.text(StringUtil.SINGLE_QUOTER.fun(myProvider.getId()) + " model description is registered for this file. " + myProvider.getPsiElementName() + ": " + registeredPsiElementId);
-			panel.createActionLabel("Cancel", new Runnable()
+			EditorNotificationBuilder panel = supplier.get();
+			panel.withText(LocalizeValue.localizeTODO(StringUtil.SINGLE_QUOTER.apply(myProvider.getId()) + " model description is registered for this file. " + myProvider.getPsiElementName() + ": "
+					+ registeredPsiElementId));
+			panel.withAction(LocalizeValue.localizeTODO("Cancel"), new Consumer<UIEvent<Component>>()
 			{
 				@Override
-				public void run()
+				@RequiredUIAccess
+				public void accept(UIEvent<Component> uiEvent)
 				{
 					if(DescriptionByAnotherPsiElementService.getInstance(myProject).removeFile(file))
 					{
@@ -136,7 +139,7 @@ public class DescriptionByAnotherPsiElementEditorNotification<T extends PsiEleme
 
 	private void wantUpdate(PsiFile psiFile)
 	{
-		((PsiModificationTrackerImpl) PsiModificationTracker.SERVICE.getInstance(myProject)).incCounter();
+		PsiModificationTracker.getInstance(myProject).incCounter();
 
 		DaemonCodeAnalyzer.getInstance(myProject).restart(psiFile);
 

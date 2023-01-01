@@ -15,103 +15,120 @@
  */
 package org.intellij.idea.lang.javascript.intention.opassign;
 
-import javax.annotation.Nonnull;
-
-import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
-import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
-import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
-import org.intellij.idea.lang.javascript.psiutil.EquivalenceChecker;
-import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
-import org.intellij.idea.lang.javascript.psiutil.SideEffectChecker;
-import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSAssignmentExpression;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSDefinitionExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
+import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
+import org.intellij.idea.lang.javascript.psiutil.*;
 
-public class JSReplaceWithOperatorAssignmentIntention extends JSMutablyNamedIntention {
-    @Override
-	public String getTextForElement(PsiElement element) {
-        final JSAssignmentExpression exp = (JSAssignmentExpression) element;
-        final JSBinaryExpression     rhs = (JSBinaryExpression) exp.getROperand();
-        assert (rhs != null);
-        final IElementType           sign = rhs.getOperationSign();
+import javax.annotation.Nonnull;
 
-        return this.getText(BinaryOperatorUtils.getOperatorText(sign));
-    }
+@ExtensionImpl
+@IntentionMetaData(ignoreId = "JSReplaceWithOperatorAssignmentIntention", categories = {
+		"JavaScript",
+		"Other"
+}, fileExtensions = "js")
+public class JSReplaceWithOperatorAssignmentIntention extends JSMutablyNamedIntention
+{
+	@Override
+	public String getTextForElement(PsiElement element)
+	{
+		final JSAssignmentExpression exp = (JSAssignmentExpression) element;
+		final JSBinaryExpression rhs = (JSBinaryExpression) exp.getROperand();
+		assert (rhs != null);
+		final IElementType sign = rhs.getOperationSign();
 
-    @Override
+		return this.getText(BinaryOperatorUtils.getOperatorText(sign));
+	}
+
+	@Override
 	@Nonnull
-    public JSElementPredicate getElementPredicate() {
-        return new Predicate();
-    }
+	public JSElementPredicate getElementPredicate()
+	{
+		return new Predicate();
+	}
 
-    @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSAssignmentExpression exp = (JSAssignmentExpression) element;
-        final JSBinaryExpression     rhs = (JSBinaryExpression) exp.getROperand();
-        final JSExpression           lhs = exp.getLOperand();
+	@Override
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
+	{
+		final JSAssignmentExpression exp = (JSAssignmentExpression) element;
+		final JSBinaryExpression rhs = (JSBinaryExpression) exp.getROperand();
+		final JSExpression lhs = exp.getLOperand();
 
-        assert (rhs != null);
+		assert (rhs != null);
 
-        final IElementType  sign    = rhs.getOperationSign();
-        final String        operand = BinaryOperatorUtils.getOperatorText(sign);
-        final JSExpression  rhsrhs  = rhs.getROperand();
+		final IElementType sign = rhs.getOperationSign();
+		final String operand = BinaryOperatorUtils.getOperatorText(sign);
+		final JSExpression rhsrhs = rhs.getROperand();
 
-        assert (rhsrhs != null);
+		assert (rhsrhs != null);
 
-        JSElementFactory.replaceExpression(exp, lhs.getText() + operand + '=' + rhsrhs.getText());
-    }
+		JSElementFactory.replaceExpression(exp, lhs.getText() + operand + '=' + rhsrhs.getText());
+	}
 
-    private static class Predicate implements JSElementPredicate {
-        @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-            if (!(element instanceof JSAssignmentExpression)) {
-                return false;
-            }
-            if (ErrorUtil.containsError(element)) {
-                return false;
-            }
-            final JSAssignmentExpression assignment = (JSAssignmentExpression) element;
-            final IElementType           tokenType  = assignment.getOperationSign();
-            if (!JSTokenTypes.EQ.equals(tokenType)) {
-                return false;
-            }
-            JSExpression       lhs = assignment.getLOperand();
-            final JSExpression rhs = assignment.getROperand();
+	private static class Predicate implements JSElementPredicate
+	{
+		@Override
+		public boolean satisfiedBy(@Nonnull PsiElement element)
+		{
+			if(!(element instanceof JSAssignmentExpression))
+			{
+				return false;
+			}
+			if(ErrorUtil.containsError(element))
+			{
+				return false;
+			}
+			final JSAssignmentExpression assignment = (JSAssignmentExpression) element;
+			final IElementType tokenType = assignment.getOperationSign();
+			if(!JSTokenTypes.EQ.equals(tokenType))
+			{
+				return false;
+			}
+			JSExpression lhs = assignment.getLOperand();
+			final JSExpression rhs = assignment.getROperand();
 
-            if (lhs instanceof JSDefinitionExpression) {
-                lhs = ((JSDefinitionExpression) lhs).getExpression();
-            }
-            if (lhs == null || rhs == null) {
-                return false;
-            }
-            if (!(rhs instanceof JSBinaryExpression)) {
-                return false;
-            }
-            final JSBinaryExpression binaryRhs = (JSBinaryExpression) rhs;
-            final JSExpression       rhsRhs    = binaryRhs.getROperand();
-            final JSExpression       rhsLhs    = binaryRhs.getLOperand();
+			if(lhs instanceof JSDefinitionExpression)
+			{
+				lhs = ((JSDefinitionExpression) lhs).getExpression();
+			}
+			if(lhs == null || rhs == null)
+			{
+				return false;
+			}
+			if(!(rhs instanceof JSBinaryExpression))
+			{
+				return false;
+			}
+			final JSBinaryExpression binaryRhs = (JSBinaryExpression) rhs;
+			final JSExpression rhsRhs = binaryRhs.getROperand();
+			final JSExpression rhsLhs = binaryRhs.getLOperand();
 
-            if (rhsRhs == null) {
-                return false;
-            }
+			if(rhsRhs == null)
+			{
+				return false;
+			}
 
-            final IElementType rhsTokenType = binaryRhs.getOperationSign();
+			final IElementType rhsTokenType = binaryRhs.getOperationSign();
 
-            if (JSTokenTypes.OROR  .equals(rhsTokenType)  ||
-                JSTokenTypes.ANDAND.equals(rhsTokenType)) {
-                return false;
-            }
-            if (SideEffectChecker.mayHaveSideEffects(lhs)) {
-                return false;
-            }
-            return EquivalenceChecker.expressionsAreEquivalent(lhs, rhsLhs);
-        }
-    }
+			if(JSTokenTypes.OROR.equals(rhsTokenType) ||
+					JSTokenTypes.ANDAND.equals(rhsTokenType))
+			{
+				return false;
+			}
+			if(SideEffectChecker.mayHaveSideEffects(lhs))
+			{
+				return false;
+			}
+			return EquivalenceChecker.expressionsAreEquivalent(lhs, rhsLhs);
+		}
+	}
 }

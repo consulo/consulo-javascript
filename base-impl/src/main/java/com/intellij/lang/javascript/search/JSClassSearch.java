@@ -18,14 +18,18 @@ package com.intellij.lang.javascript.search;
 
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSReferenceList;
-import com.intellij.openapi.extensions.Extensions;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.SearchScope;
-import com.intellij.psi.stubs.StubIndex;
-import com.intellij.psi.stubs.StubIndexKey;
-import com.intellij.util.*;
-import consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
+import consulo.application.util.function.CommonProcessors;
+import consulo.application.util.function.Processor;
+import consulo.application.util.query.Query;
+import consulo.application.util.query.QueryExecutor;
+import consulo.application.util.query.QueryFactory;
+import consulo.component.extension.Extensions;
+import consulo.content.scope.SearchScope;
+import consulo.javascript.language.psi.stub.JavaScriptIndexKeys;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.stub.StubIndex;
+import consulo.language.psi.stub.StubIndexKey;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

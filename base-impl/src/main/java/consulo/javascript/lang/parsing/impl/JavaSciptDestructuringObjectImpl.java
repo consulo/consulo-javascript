@@ -1,12 +1,12 @@
 package consulo.javascript.lang.parsing.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSDestructuringObject;
 import com.intellij.lang.javascript.psi.JSDestructuringShorthandedProperty;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.impl.JSElementImpl;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.language.ast.ASTNode;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;

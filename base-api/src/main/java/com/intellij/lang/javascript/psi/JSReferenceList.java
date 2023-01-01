@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 
 import consulo.annotation.access.RequiredReadAction;
 import com.intellij.lang.javascript.psi.stubs.JSReferenceListStub;
-import com.intellij.psi.StubBasedPsiElement;
+import consulo.language.psi.StubBasedPsiElement;
 
 /**
  * @author Maxim.Mossienko

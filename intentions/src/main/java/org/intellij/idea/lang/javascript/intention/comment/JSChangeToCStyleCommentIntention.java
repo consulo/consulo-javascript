@@ -16,104 +16,128 @@
 package org.intellij.idea.lang.javascript.intention.comment;
 
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.util.lang.StringUtil;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JSChangeToCStyleCommentIntention extends JSIntention {
+@ExtensionImpl
+@IntentionMetaData(ignoreId = "JSChangeToCStyleCommentIntention", categories = {
+		"JavaScript",
+		"Comments"
+}, fileExtensions = "js")
+public class JSChangeToCStyleCommentIntention extends JSIntention
+{
 
-    @Override
+	@Override
 	@Nonnull
-    protected JSElementPredicate getElementPredicate() {
-        return new EndOfLineCommentPredicate();
-    }
+	protected JSElementPredicate getElementPredicate()
+	{
+		return new EndOfLineCommentPredicate();
+	}
 
-    @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        PsiComment firstComment = (PsiComment) element;
+	@Override
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
+	{
+		PsiComment firstComment = (PsiComment) element;
 
-        while (true) {
-            final PsiElement prevComment = JSElementFactory.getNonWhiteSpaceSibling(firstComment, false);
+		while(true)
+		{
+			final PsiElement prevComment = JSElementFactory.getNonWhiteSpaceSibling(firstComment, false);
 
-            if (!isEndOfLineComment(prevComment)) {
-                break;
-            }
-            assert (prevComment != null);
-            firstComment = (PsiComment) prevComment;
-        }
+			if(!isEndOfLineComment(prevComment))
+			{
+				break;
+			}
+			assert (prevComment != null);
+			firstComment = (PsiComment) prevComment;
+		}
 
-        final StringBuilder     buffer           = new StringBuilder(getCommentContents(firstComment));
-        final List<PsiElement>  elementsToDelete = new ArrayList<PsiElement>();
-        PsiElement              nextComment      = firstComment;
+		final StringBuilder buffer = new StringBuilder(getCommentContents(firstComment));
+		final List<PsiElement> elementsToDelete = new ArrayList<PsiElement>();
+		PsiElement nextComment = firstComment;
 
-        while (true) {
-            elementsToDelete.add(nextComment);
+		while(true)
+		{
+			elementsToDelete.add(nextComment);
 
-            nextComment = JSElementFactory.getNonWhiteSpaceSibling(nextComment, true);
-            if (!isEndOfLineComment(nextComment)) {
-                break;
-            }
-            assert (nextComment != null);
+			nextComment = JSElementFactory.getNonWhiteSpaceSibling(nextComment, true);
+			if(!isEndOfLineComment(nextComment))
+			{
+				break;
+			}
+			assert (nextComment != null);
 
-            final PsiElement prevSibling = nextComment.getPrevSibling();
+			final PsiElement prevSibling = nextComment.getPrevSibling();
 
-            assert (prevSibling != null);
-            elementsToDelete.add(prevSibling);
+			assert (prevSibling != null);
+			elementsToDelete.add(prevSibling);
 
-            buffer.append(prevSibling.getText())  // White space
-                  .append(getCommentContents((PsiComment) nextComment));
-        }
+			buffer.append(prevSibling.getText())  // White space
+					.append(getCommentContents((PsiComment) nextComment));
+		}
 
-        final String text = StringUtil.replace(buffer.toString(), "*/", "* /");
-        final String newCommentString;
+		final String text = StringUtil.replace(buffer.toString(), "*/", "* /");
+		final String newCommentString;
 
-        if (text.indexOf('\n') >= 0) {
-            newCommentString = "/*\n" + text + "\n*/";
-        } else {
-            newCommentString = "/*" + text + "*/";
-        }
+		if(text.indexOf('\n') >= 0)
+		{
+			newCommentString = "/*\n" + text + "\n*/";
+		}
+		else
+		{
+			newCommentString = "/*" + text + "*/";
+		}
 
-        JSElementFactory.addElementBefore(firstComment, newCommentString);
-        for (final PsiElement elementToDelete : elementsToDelete) {
-            JSElementFactory.removeElement(elementToDelete);
-        }
-    }
+		JSElementFactory.addElementBefore(firstComment, newCommentString);
+		for(final PsiElement elementToDelete : elementsToDelete)
+		{
+			JSElementFactory.removeElement(elementToDelete);
+		}
+	}
 
-    private static boolean isEndOfLineComment(PsiElement element) {
-        if (!(element instanceof PsiComment)) {
-            return false;
-        }
+	private static boolean isEndOfLineComment(PsiElement element)
+	{
+		if(!(element instanceof PsiComment))
+		{
+			return false;
+		}
 
-        final PsiComment   comment   = (PsiComment) element;
-        final IElementType tokenType = comment.getTokenType();
+		final PsiComment comment = (PsiComment) element;
+		final IElementType tokenType = comment.getTokenType();
 
-        return JSTokenTypes.END_OF_LINE_COMMENT.equals(tokenType);
-    }
+		return JSTokenTypes.END_OF_LINE_COMMENT.equals(tokenType);
+	}
 
-    private static String getCommentContents(PsiComment comment) {
-        return comment.getText().substring(2);
-    }
+	private static String getCommentContents(PsiComment comment)
+	{
+		return comment.getText().substring(2);
+	}
 
-    private static class EndOfLineCommentPredicate implements JSElementPredicate {
+	private static class EndOfLineCommentPredicate implements JSElementPredicate
+	{
 
-        @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-            if (!(element instanceof PsiComment)) {
-                return false;
-            }
+		@Override
+		public boolean satisfiedBy(@Nonnull PsiElement element)
+		{
+			if(!(element instanceof PsiComment))
+			{
+				return false;
+			}
 
-            final IElementType type = ((PsiComment) element).getTokenType();
+			final IElementType type = ((PsiComment) element).getTokenType();
 
-            return JSTokenTypes.END_OF_LINE_COMMENT.equals(type);
-        }
-    }
+			return JSTokenTypes.END_OF_LINE_COMMENT.equals(type);
+		}
+	}
 }

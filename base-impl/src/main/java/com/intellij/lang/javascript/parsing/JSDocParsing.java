@@ -17,11 +17,11 @@
 package com.intellij.lang.javascript.parsing;
 
 import org.jetbrains.annotations.NonNls;
-import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.javascript.JavaScriptBundle;
+import consulo.language.parser.PsiBuilder;
+import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.JSDocTokenTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 
 /**
  * @author Maxim.Mossienko

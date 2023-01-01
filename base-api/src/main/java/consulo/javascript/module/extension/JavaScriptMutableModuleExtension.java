@@ -16,9 +16,10 @@
 
 package consulo.javascript.module.extension;
 
-import javax.annotation.Nonnull;
-import consulo.lang.LanguageVersion;
+import consulo.language.version.LanguageVersion;
 import consulo.module.extension.MutableModuleExtensionWithSdk;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

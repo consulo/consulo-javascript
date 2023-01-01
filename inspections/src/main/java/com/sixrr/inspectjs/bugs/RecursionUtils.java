@@ -2,11 +2,11 @@ package com.sixrr.inspectjs.bugs;
 
 import javax.annotation.Nonnull;
 
-import com.intellij.psi.*;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.sixrr.inspectjs.utils.BoolUtils;
+import consulo.language.psi.PsiElement;
 
 public class RecursionUtils {
 

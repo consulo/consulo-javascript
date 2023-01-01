@@ -15,59 +15,73 @@
  */
 package org.intellij.idea.lang.javascript.intention.bool;
 
-import javax.annotation.Nonnull;
-
+import com.intellij.lang.javascript.psi.JSBinaryExpression;
+import com.intellij.lang.javascript.psi.JSExpression;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.ComparisonUtils;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
-import com.intellij.lang.javascript.psi.JSBinaryExpression;
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
+import javax.annotation.Nonnull;
 
-public class JSNegateComparisonIntention extends JSMutablyNamedIntention {
-    @Override
-	public String getTextForElement(PsiElement element) {
-        final JSBinaryExpression expression          = (JSBinaryExpression) element;
-        String                   operatorText        = "";
-        String                   negatedOperatorText = "";
+@ExtensionImpl
+@IntentionMetaData(ignoreId = "JSNegateComparisonIntention", categories = {
+		"JavaScript",
+		"Boolean"
+}, fileExtensions = "js")
+public class JSNegateComparisonIntention extends JSMutablyNamedIntention
+{
+	@Override
+	public String getTextForElement(PsiElement element)
+	{
+		final JSBinaryExpression expression = (JSBinaryExpression) element;
+		String operatorText = "";
+		String negatedOperatorText = "";
 
-        if (expression != null) {
-            final IElementType sign = expression.getOperationSign();
+		if(expression != null)
+		{
+			final IElementType sign = expression.getOperationSign();
 
-            operatorText        = ComparisonUtils.getOperatorText(sign);
-            negatedOperatorText = ComparisonUtils.getNegatedOperatorText(sign);
-        }
+			operatorText = ComparisonUtils.getOperatorText(sign);
+			negatedOperatorText = ComparisonUtils.getNegatedOperatorText(sign);
+		}
 
-        if (operatorText.equals(negatedOperatorText)) {
-            return this.getSuffixedDisplayName("equals", operatorText);
-        } else {
-            return this.getSuffixedDisplayName("not-equals", operatorText, negatedOperatorText);
-        }
-    }
+		if(operatorText.equals(negatedOperatorText))
+		{
+			return this.getSuffixedDisplayName("equals", operatorText);
+		}
+		else
+		{
+			return this.getSuffixedDisplayName("not-equals", operatorText, negatedOperatorText);
+		}
+	}
 
-    @Override
+	@Override
 	@Nonnull
-    public JSElementPredicate getElementPredicate() {
-        return new ComparisonPredicate();
-    }
+	public JSElementPredicate getElementPredicate()
+	{
+		return new ComparisonPredicate();
+	}
 
-    @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSBinaryExpression exp             = (JSBinaryExpression) element;
-        final JSExpression       lhs             = exp.getLOperand();
-        final JSExpression       rhs             = exp.getROperand();
-        final IElementType       sign            = exp.getOperationSign();
-        final String             negatedOperator = ComparisonUtils.getNegatedOperatorText(sign);
-        final String             lhsText         = lhs.getText();
+	@Override
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
+	{
+		final JSBinaryExpression exp = (JSBinaryExpression) element;
+		final JSExpression lhs = exp.getLOperand();
+		final JSExpression rhs = exp.getROperand();
+		final IElementType sign = exp.getOperationSign();
+		final String negatedOperator = ComparisonUtils.getNegatedOperatorText(sign);
+		final String lhsText = lhs.getText();
 
-        assert (rhs != null);
+		assert (rhs != null);
 
-        JSElementFactory.replaceExpressionWithNegatedExpressionString(exp, lhsText +
-                                                                           negatedOperator +
-                                                                           rhs.getText());
-    }
+		JSElementFactory.replaceExpressionWithNegatedExpressionString(exp, lhsText +
+				negatedOperator +
+				rhs.getText());
+	}
 }

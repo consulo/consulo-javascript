@@ -1,8 +1,5 @@
 package com.sixrr.inspectjs.validity;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.lang.javascript.psi.JSBlockStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
@@ -10,7 +7,12 @@ import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
+import consulo.annotation.component.ExtensionImpl;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+@ExtensionImpl
 public class UnreachableCodeJSInspection extends JavaScriptInspection {
 
     @Override

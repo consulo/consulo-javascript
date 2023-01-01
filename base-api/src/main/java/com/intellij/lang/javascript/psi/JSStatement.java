@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript.psi;
 
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.util.IncorrectOperationException;
 
 /**
  * Created by IntelliJ IDEA.

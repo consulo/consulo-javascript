@@ -1,25 +1,28 @@
 package consulo.json.lang;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import com.intellij.lang.PsiParser;
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.util.Factory;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.ide.hightlight.JavaScriptHighlighter;
 import consulo.javascript.lang.BaseJavaScriptLanguageVersion;
-import consulo.javascript.lang.JavaScriptLanguage;
+import consulo.javascript.language.JavaScriptLanguage;
 import consulo.json.JsonFileType;
 import consulo.json.lang.lexer.JsonLexer;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.lexer.Lexer;
+import consulo.language.parser.PsiParser;
+import consulo.virtualFileSystem.fileType.FileType;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 05.03.2015
  */
+@ExtensionImpl
 public class JsonJavaScriptVersion extends BaseJavaScriptLanguageVersion
 {
-	private static final Factory<Lexer> ourLexerFactory = JsonLexer::new;
+	private static final Supplier<Lexer> ourLexerFactory = JsonLexer::new;
 
 	@Nonnull
 	public static JsonJavaScriptVersion getInstance()
@@ -50,7 +53,7 @@ public class JsonJavaScriptVersion extends BaseJavaScriptLanguageVersion
 	@Override
 	public Lexer createLexer()
 	{
-		return ourLexerFactory.create();
+		return ourLexerFactory.get();
 	}
 
 	@Nonnull

@@ -1,6 +1,6 @@
 package com.sixrr.inspectjs.ui;
 
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.sixrr.inspectjs.InspectionJSBundle;
 
 import javax.swing.*;

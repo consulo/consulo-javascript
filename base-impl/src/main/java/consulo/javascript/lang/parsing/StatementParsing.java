@@ -16,11 +16,11 @@
 
 package consulo.javascript.lang.parsing;
 
-import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.JavaScriptBundle;
-import com.intellij.psi.tree.IElementType;
+import consulo.javascript.language.JavaScriptBundle;
+import consulo.language.ast.IElementType;
+import consulo.language.parser.PsiBuilder;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
@@ -267,7 +267,7 @@ public class StatementParsing extends Parsing
 	}
 
 
-	void parseIncludeDirective(final PsiBuilder builder)
+	public void parseIncludeDirective(final PsiBuilder builder)
 	{
 		StatementParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.INCLUDE_KEYWORD);
 		final PsiBuilder.Marker useNSStatement = builder.mark();
@@ -826,7 +826,7 @@ public class StatementParsing extends Parsing
 		parseBlockOrFunctionBody(builder, BlockType.FUNCTION_BODY);
 	}
 
-	enum BlockType
+	public enum BlockType
 	{
 		FUNCTION_BODY, BLOCK, PACKAGE_OR_CLASS_BODY
 	}

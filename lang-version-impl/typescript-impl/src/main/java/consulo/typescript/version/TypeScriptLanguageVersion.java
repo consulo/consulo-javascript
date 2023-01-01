@@ -1,8 +1,9 @@
 package consulo.typescript.version;
 
-import consulo.javascript.lang.BaseEcmaScriptJavaScriptVersion;
-import consulo.javascript.lang.JavaScriptFeature;
-import consulo.javascript.lang.JavaScriptLanguage;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.ecmascript.lang.BaseEcmaScriptJavaScriptVersion;
+import consulo.javascript.language.JavaScriptFeature;
+import consulo.javascript.language.JavaScriptLanguage;
 
 import javax.annotation.Nonnull;
 
@@ -10,6 +11,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 20-Jul-22
  */
+@ExtensionImpl
 public class TypeScriptLanguageVersion extends BaseEcmaScriptJavaScriptVersion
 {
 	@Nonnull

@@ -16,18 +16,17 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.codeInsight.daemon.EmptyResolveMessageProvider;
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSDocTokenTypes;
-import com.intellij.lang.javascript.JavaScriptBundle;
+import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.util.JSLookupUtil;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilBase;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.IncorrectOperationException;
+import consulo.document.util.TextRange;
+import consulo.language.editor.util.PsiUtilBase;
+import consulo.language.psi.*;
+import consulo.language.util.IncorrectOperationException;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.util.collection.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

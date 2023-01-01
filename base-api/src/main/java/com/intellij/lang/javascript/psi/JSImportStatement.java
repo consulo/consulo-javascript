@@ -17,9 +17,9 @@
 package com.intellij.lang.javascript.psi;
 
 import com.intellij.lang.javascript.psi.stubs.JSImportStatementStub;
-import com.intellij.psi.StubBasedPsiElement;
 import consulo.annotation.DeprecationInfo;
 import consulo.javascript.psi.JavaScriptImportStatementBase;
+import consulo.language.psi.StubBasedPsiElement;
 
 /**
  * @by Maxim.Mossienko

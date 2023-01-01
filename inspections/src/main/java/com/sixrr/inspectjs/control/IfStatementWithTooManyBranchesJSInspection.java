@@ -2,7 +2,8 @@ package com.sixrr.inspectjs.control;
 
 import com.intellij.lang.javascript.psi.JSIfStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
-import com.intellij.psi.PsiElement;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.psi.PsiElement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
@@ -12,6 +13,7 @@ import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
+@ExtensionImpl
 public class IfStatementWithTooManyBranchesJSInspection extends JavaScriptInspection {
     private static final int DEFAULT_BRANCH_LIMIT = 3;
 

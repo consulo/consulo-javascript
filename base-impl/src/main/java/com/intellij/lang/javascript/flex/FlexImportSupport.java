@@ -20,9 +20,9 @@ import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.JSImportStatement;
 import com.intellij.lang.javascript.psi.resolve.JSImportedElementResolveResult;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.util.ArrayUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiNamedElement;
+import consulo.util.collection.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -154,7 +154,7 @@ public class FlexImportSupport
 
 
 	public static JSImportedElementResolveResult tryFindInMap(final String referenceName, final PsiNamedElement file, final Map<String, Object> map,
-			String qName)
+															  String qName)
 	{
 		JSImportedElementResolveResult resolveResult = tryEntry(map.get(referenceName), referenceName, file, qName);
 		if(resolveResult == null)

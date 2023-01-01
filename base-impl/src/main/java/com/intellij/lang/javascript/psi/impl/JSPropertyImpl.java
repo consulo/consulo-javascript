@@ -16,24 +16,24 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSProperty;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiModificationTracker;
-import com.intellij.util.IncorrectOperationException;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.util.CachedValueProvider;
 import consulo.javascript.lang.JavaScriptTokenSets;
-import consulo.javascript.lang.psi.JavaScriptType;
+import consulo.javascript.language.psi.JavaScriptType;
 import consulo.javascript.psi.JSComputedName;
 import consulo.javascript.psi.impl.reference.JSPropertyNameReferenceProvider;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.TokenSet;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiModificationTracker;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.util.LanguageCachedValueUtil;
+import consulo.language.util.IncorrectOperationException;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -54,7 +54,7 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 	@Nonnull
 	public PsiReference[] getReferences()
 	{
-		return CachedValuesManager.getCachedValue(this, new CachedValueProvider<PsiReference[]>()
+		return LanguageCachedValueUtil.getCachedValue(this, new CachedValueProvider<PsiReference[]>()
 		{
 			@Nullable
 			@Override
@@ -75,7 +75,7 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty
 		{
 			return PsiReference.EMPTY_ARRAY;
 		}
-		PsiReference reference = JSPropertyNameReferenceProvider.EP_NAME.composite().getReference(this);
+		PsiReference reference = JSPropertyNameReferenceProvider.EP_NAME.computeSafeIfAny(it -> it.getReference(this));
 		if(reference != null)
 		{
 			return new PsiReference[]{reference};

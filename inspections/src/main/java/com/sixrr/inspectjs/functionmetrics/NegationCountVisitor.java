@@ -5,7 +5,7 @@ import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSPrefixExpression;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
 import javax.annotation.Nonnull;
 

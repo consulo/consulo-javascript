@@ -16,21 +16,6 @@
 
 package com.intellij.javascript.documentation;
 
-import java.io.File;
-import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.jetbrains.annotations.NonNls;
-import consulo.annotation.access.RequiredReadAction;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.documentation.CodeDocumentationProvider;
-import com.intellij.lang.documentation.DocumentationProvider;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.index.JavaScriptIndex;
@@ -39,29 +24,41 @@ import com.intellij.lang.javascript.psi.impl.JSPsiImplUtils;
 import com.intellij.lang.javascript.psi.resolve.BaseJSSymbolProcessor;
 import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.ResolveResult;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.xml.XmlToken;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.editor.documentation.CodeDocumentationProvider;
+import consulo.language.editor.documentation.DocumentationProvider;
+import consulo.language.editor.documentation.LanguageDocumentationProvider;
+import consulo.language.psi.*;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigationItem;
+import consulo.project.Project;
+import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.Ref;
+import consulo.xml.psi.xml.XmlToken;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.File;
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Created by IntelliJ IDEA.
  * User: Maxim.Mossienko
  * Date: Nov 4, 2005
  * Time: 5:04:28 PM
  */
-public class JSDocumentationProvider implements CodeDocumentationProvider
+@ExtensionImpl
+public class JSDocumentationProvider implements CodeDocumentationProvider, LanguageDocumentationProvider
 {
 	private DocumentationProvider cssProvider;
 	@NonNls
@@ -1155,4 +1152,10 @@ public class JSDocumentationProvider implements CodeDocumentationProvider
 	}
 
 
+	@Nonnull
+	@Override
+	public Language getLanguage()
+	{
+		return JavaScriptLanguage.INSTANCE;
+	}
 }

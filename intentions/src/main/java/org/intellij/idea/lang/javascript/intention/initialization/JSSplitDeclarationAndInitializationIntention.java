@@ -19,87 +19,109 @@ import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSPsiImplUtils;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.util.IncorrectOperationException;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.util.IncorrectOperationException;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JSSplitDeclarationAndInitializationIntention extends JSIntention {
-    @NonNls private static final String VAR_KEYWORD = "var ";
+@ExtensionImpl
+@IntentionMetaData(ignoreId = "JSSplitDeclarationAndInitializationIntention", categories = {
+		"JavaScript",
+		"Declaration"
+}, fileExtensions = "js")
+public class JSSplitDeclarationAndInitializationIntention extends JSIntention
+{
+	@NonNls
+	private static final String VAR_KEYWORD = "var ";
 
-    @Override
+	@Override
 	@Nonnull
-    protected JSElementPredicate getElementPredicate() {
-        return new Predicate();
-    }
+	protected JSElementPredicate getElementPredicate()
+	{
+		return new Predicate();
+	}
 
-    @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        assert (element instanceof JSVarStatement);
+	@Override
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
+	{
+		assert (element instanceof JSVarStatement);
 
-        final JSVarStatement varStatement      = (JSVarStatement) element;
-        StringBuilder        declarationBuffer = new StringBuilder();
-        List<String>         initializations   = new ArrayList<String>();
+		final JSVarStatement varStatement = (JSVarStatement) element;
+		StringBuilder declarationBuffer = new StringBuilder();
+		List<String> initializations = new ArrayList<String>();
 
-        for (JSVariable variable : varStatement.getVariables()) {
-            declarationBuffer.append((declarationBuffer.length() == 0) ? VAR_KEYWORD : ",")
-                             .append(variable.getName());
+		for(JSVariable variable : varStatement.getVariables())
+		{
+			declarationBuffer.append((declarationBuffer.length() == 0) ? VAR_KEYWORD : ",")
+					.append(variable.getName());
 
-            String s = JSPsiImplUtils.getTypeFromDeclaration(variable);
-            final PsiFile containingFile = element.getContainingFile();
+			String s = JSPsiImplUtils.getTypeFromDeclaration(variable);
+			final PsiFile containingFile = element.getContainingFile();
 
-            if (s == null && containingFile.getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4) {
-                s = JSResolveUtil.getExpressionType(variable.getInitializer(), containingFile);
-            }
+			if(s == null && containingFile.getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4)
+			{
+				s = JSResolveUtil.getExpressionType(variable.getInitializer(), containingFile);
+			}
 
-            if (s != null) {
-                declarationBuffer.append(":").append(s);
-            }
-            if (variable.hasInitializer()) {
-                initializations.add(variable.getName() + '=' + variable.getInitializer().getText() + ';');
-            }
-        }
-        declarationBuffer.append(';');
+			if(s != null)
+			{
+				declarationBuffer.append(":").append(s);
+			}
+			if(variable.hasInitializer())
+			{
+				initializations.add(variable.getName() + '=' + variable.getInitializer().getText() + ';');
+			}
+		}
+		declarationBuffer.append(';');
 
-        // Do replacement.
-        JSStatement newStatement = JSElementFactory.replaceStatement(varStatement, declarationBuffer.toString());
+		// Do replacement.
+		JSStatement newStatement = JSElementFactory.replaceStatement(varStatement, declarationBuffer.toString());
 
-        for (final String initialization : initializations) {
-            newStatement = JSElementFactory.addStatementAfter(newStatement, initialization);
-        }
-    }
+		for(final String initialization : initializations)
+		{
+			newStatement = JSElementFactory.addStatementAfter(newStatement, initialization);
+		}
+	}
 
-    private static class Predicate implements JSElementPredicate {
-        @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-            PsiElement elementParent;
+	private static class Predicate implements JSElementPredicate
+	{
+		@Override
+		public boolean satisfiedBy(@Nonnull PsiElement element)
+		{
+			PsiElement elementParent;
 
-            if (!(element instanceof JSVarStatement) ||
-                (elementParent = element.getParent()) instanceof JSForStatement ||
-                elementParent instanceof JSClass
-               ) {
-                return false;
-            }
+			if(!(element instanceof JSVarStatement) ||
+					(elementParent = element.getParent()) instanceof JSForStatement ||
+					elementParent instanceof JSClass
+			)
+			{
+				return false;
+			}
 
-            final JSVarStatement varStatement = (JSVarStatement) element;
-            if (ErrorUtil.containsError(varStatement)) {
-                return false;
-            }
+			final JSVarStatement varStatement = (JSVarStatement) element;
+			if(ErrorUtil.containsError(varStatement))
+			{
+				return false;
+			}
 
-            for (JSVariable variable : varStatement.getVariables()) {
-                if (variable.hasInitializer()) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
+			for(JSVariable variable : varStatement.getVariables())
+			{
+				if(variable.hasInitializer())
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+	}
 }

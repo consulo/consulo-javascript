@@ -2,7 +2,7 @@ package com.sixrr.inspectjs.utils;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import consulo.javascript.psi.JSSimpleLiteralExpression;
 
 import java.util.HashMap;

@@ -8,12 +8,15 @@ import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.utils.EquivalenceChecker;
+import consulo.annotation.component.ExtensionImpl;
+
 import javax.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+@ExtensionImpl
 public class DuplicateCaseLabelJSInspection extends JavaScriptInspection {
     @Override
 	@Nonnull

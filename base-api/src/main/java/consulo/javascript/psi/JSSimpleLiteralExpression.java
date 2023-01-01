@@ -17,11 +17,11 @@
 
 package consulo.javascript.psi;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
 import consulo.annotation.access.RequiredReadAction;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

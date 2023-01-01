@@ -1,6 +1,6 @@
 package consulo.javascript.lang.parsing.impl;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.psi.JSDestructuringElement;
 import com.intellij.lang.javascript.psi.JSDestructuringObject;
 import com.intellij.lang.javascript.psi.JSElementVisitor;

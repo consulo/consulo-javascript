@@ -16,7 +16,6 @@
 
 package com.intellij.lang.javascript.flex;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSLanguageInjector;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.*;
@@ -26,18 +25,21 @@ import com.intellij.lang.javascript.psi.impl.JSPsiImplUtils;
 import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
-import com.intellij.openapi.util.UserDataCache;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
-import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.search.PsiElementProcessor;
-import com.intellij.psi.util.*;
-import com.intellij.psi.xml.*;
-import com.intellij.util.IncorrectOperationException;
 import com.intellij.xml.XmlElementDescriptor;
+import consulo.application.util.*;
+import consulo.language.ast.ASTNode;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.psi.*;
+import consulo.language.psi.resolve.PsiElementProcessor;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.IncorrectOperationException;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.xml.psi.XmlRecursiveElementVisitor;
+import consulo.xml.psi.xml.*;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -49,7 +51,6 @@ import java.util.*;
  */
 public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 {
-
 	@NonNls
 	public static final String COMPONENT_TAG_NAME = "Component";
 	@NonNls
@@ -197,7 +198,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 
 	@Override
 	protected boolean processMembers(final PsiScopeProcessor processor, final ResolveState substitutor, final PsiElement lastParent,
-			final PsiElement place)
+									 final PsiElement place)
 	{
 		for(JSFile file : ourCachedScripts.get(CACHED_SCRIPTS_KEY, getParent(), null).getValue())
 		{
@@ -729,7 +730,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass
 				XmlAttributeValue value = ((XmlAttribute) element).getValueElement();
 				if(value != null)
 				{
-					InjectedLanguageUtil.enumerate(value, new PsiLanguageInjectionHost.InjectedPsiVisitor()
+					InjectedLanguageManager.getInstance(element.getProject()).enumerate(value, new PsiLanguageInjectionHost.InjectedPsiVisitor()
 					{
 						@Override
 						public void visit(@Nonnull PsiFile injectedPsi, @Nonnull List<PsiLanguageInjectionHost.Shred> places)

@@ -1,19 +1,20 @@
 package com.sixrr.inspectjs.control;
 
-import javax.annotation.Nonnull;
-
-import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.psi.JSContinueStatement;
 import com.intellij.lang.javascript.psi.JSLoopStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.IncorrectOperationException;
 import com.sixrr.inspectjs.*;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@ExtensionImpl
 public class UnnecessaryLabelOnContinueStatementJSInspection extends JavaScriptInspection {
     private final UnnecessaryLabelOnContinueStatementFix fix =
             new UnnecessaryLabelOnContinueStatementFix();

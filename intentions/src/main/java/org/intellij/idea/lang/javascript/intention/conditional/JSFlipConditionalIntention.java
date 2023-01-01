@@ -16,57 +16,70 @@
 package org.intellij.idea.lang.javascript.intention.conditional;
 
 
-import javax.annotation.Nonnull;
-
+import com.intellij.lang.javascript.psi.JSConditionalExpression;
+import com.intellij.lang.javascript.psi.JSExpression;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.BoolUtils;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
-import com.intellij.lang.javascript.psi.JSConditionalExpression;
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
+import javax.annotation.Nonnull;
 
-public class JSFlipConditionalIntention extends JSIntention {
-    @Override
+@ExtensionImpl
+@IntentionMetaData(ignoreId = "JSFlipConditionalIntention", categories = {
+		"JavaScript",
+		"Conditional"
+}, fileExtensions = "js")
+public class JSFlipConditionalIntention extends JSIntention
+{
+	@Override
 	@Nonnull
-    public JSElementPredicate getElementPredicate() {
-        return new FlipConditionalPredicate();
-    }
+	public JSElementPredicate getElementPredicate()
+	{
+		return new FlipConditionalPredicate();
+	}
 
-    @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSConditionalExpression exp            = (JSConditionalExpression) element;
-        final JSExpression            condition      = exp.getCondition();
-        final JSExpression            elseExpression = exp.getElse();
-        final JSExpression            thenExpression = exp.getThen();
+	@Override
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
+	{
+		final JSConditionalExpression exp = (JSConditionalExpression) element;
+		final JSExpression condition = exp.getCondition();
+		final JSExpression elseExpression = exp.getElse();
+		final JSExpression thenExpression = exp.getThen();
 
-        assert (elseExpression != null);
-        assert (thenExpression != null);
+		assert (elseExpression != null);
+		assert (thenExpression != null);
 
-        final String newExpression = BoolUtils.getNegatedExpressionText(condition) + '?' +
-                                     elseExpression.getText() + ':' + thenExpression.getText();
+		final String newExpression = BoolUtils.getNegatedExpressionText(condition) + '?' +
+				elseExpression.getText() + ':' + thenExpression.getText();
 
-        JSElementFactory.replaceExpression(exp, newExpression);
-    }
+		JSElementFactory.replaceExpression(exp, newExpression);
+	}
 
-    private static class FlipConditionalPredicate implements JSElementPredicate {
-        @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-            if (!(element instanceof JSConditionalExpression)) {
-                return false;
-            }
-            if (ErrorUtil.containsError(element)){
-                return false;
-            }
+	private static class FlipConditionalPredicate implements JSElementPredicate
+	{
+		@Override
+		public boolean satisfiedBy(@Nonnull PsiElement element)
+		{
+			if(!(element instanceof JSConditionalExpression))
+			{
+				return false;
+			}
+			if(ErrorUtil.containsError(element))
+			{
+				return false;
+			}
 
-            final JSConditionalExpression condition = (JSConditionalExpression) element;
+			final JSConditionalExpression condition = (JSConditionalExpression) element;
 
-            return (condition.getCondition() != null &&
-                    condition.getThen()      != null &&
-                    condition.getElse()      != null);
-        }
-    }
+			return (condition.getCondition() != null &&
+					condition.getThen() != null &&
+					condition.getElse() != null);
+		}
+	}
 }

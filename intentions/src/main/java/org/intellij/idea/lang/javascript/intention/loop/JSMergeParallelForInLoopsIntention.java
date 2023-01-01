@@ -15,14 +15,16 @@
  */
 package org.intellij.idea.lang.javascript.intention.loop;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSForInStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.JSVarStatement;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.ast.ASTNode;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ControlFlowUtils;
@@ -33,146 +35,175 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 
-public class JSMergeParallelForInLoopsIntention extends JSIntention {
+@ExtensionImpl
+@IntentionMetaData(ignoreId = "JSMergeParallelForInLoopsIntention", categories = {
+		"JavaScript",
+		"Control Flow"
+}, fileExtensions = "js")
+public class JSMergeParallelForInLoopsIntention extends JSIntention
+{
 
-    @NonNls private static final String FOR_IN_PREFIX            = "for (";
-    @NonNls private static final String FOR_IN_COLLECTION_PREFIX = " in ";
+	@NonNls
+	private static final String FOR_IN_PREFIX = "for (";
+	@NonNls
+	private static final String FOR_IN_COLLECTION_PREFIX = " in ";
 
-    @Override
+	@Override
 	@Nonnull
-    public JSElementPredicate getElementPredicate() {
-        return new MergeParallelForInLoopsPredicate();
-    }
+	public JSElementPredicate getElementPredicate()
+	{
+		return new MergeParallelForInLoopsPredicate();
+	}
 
-    @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final PsiElement  nextElement = JSElementFactory.getNonWhiteSpaceSibling(element, true);
+	@Override
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
+	{
+		final PsiElement nextElement = JSElementFactory.getNonWhiteSpaceSibling(element, true);
 
-        assert (nextElement != null);
+		assert (nextElement != null);
 
-        final JSForInStatement firstStatement  = (JSForInStatement) element;
-        final JSForInStatement secondStatement = (JSForInStatement) nextElement;
-        final StringBuilder    statementBuffer = new StringBuilder();
+		final JSForInStatement firstStatement = (JSForInStatement) element;
+		final JSForInStatement secondStatement = (JSForInStatement) nextElement;
+		final StringBuilder statementBuffer = new StringBuilder();
 
-        this.mergeForInStatements(statementBuffer, firstStatement, secondStatement);
-        JSElementFactory.replaceStatement(firstStatement, statementBuffer.toString());
-        JSElementFactory.removeElement(secondStatement);
-    }
+		this.mergeForInStatements(statementBuffer, firstStatement, secondStatement);
+		JSElementFactory.replaceStatement(firstStatement, statementBuffer.toString());
+		JSElementFactory.removeElement(secondStatement);
+	}
 
-    private void mergeForInStatements(StringBuilder  statementBuffer,
-                                      JSForInStatement firstStatement,
-                                      JSForInStatement secondStatement) {
-        final JSExpression   variableExpression   = getVariableExpression(firstStatement);
-        final JSVarStatement declaration          = firstStatement.getDeclarationStatement();
-        final JSExpression   collectionExpression = getCollectionExpression(firstStatement);
-        final JSStatement    firstBody            = firstStatement .getBody();
-        final JSStatement    secondBody           = secondStatement.getBody();
+	private void mergeForInStatements(StringBuilder statementBuffer,
+									  JSForInStatement firstStatement,
+									  JSForInStatement secondStatement)
+	{
+		final JSExpression variableExpression = getVariableExpression(firstStatement);
+		final JSVarStatement declaration = firstStatement.getDeclarationStatement();
+		final JSExpression collectionExpression = getCollectionExpression(firstStatement);
+		final JSStatement firstBody = firstStatement.getBody();
+		final JSStatement secondBody = secondStatement.getBody();
 
-        statementBuffer.append(FOR_IN_PREFIX)
-                       .append((declaration == null) ? variableExpression.getText() : declaration.getText())
-                       .append(FOR_IN_COLLECTION_PREFIX)
-                       .append(collectionExpression.getText())
-                       .append(')');
-        ControlFlowUtils.appendStatementsInSequence(statementBuffer, firstBody, secondBody);
-    }
+		statementBuffer.append(FOR_IN_PREFIX)
+				.append((declaration == null) ? variableExpression.getText() : declaration.getText())
+				.append(FOR_IN_COLLECTION_PREFIX)
+				.append(collectionExpression.getText())
+				.append(')');
+		ControlFlowUtils.appendStatementsInSequence(statementBuffer, firstBody, secondBody);
+	}
 
-    private static class MergeParallelForInLoopsPredicate implements JSElementPredicate {
-        @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-            if (!(element instanceof JSForInStatement) || ErrorUtil.containsError(element)) {
-                return false;
-            }
+	private static class MergeParallelForInLoopsPredicate implements JSElementPredicate
+	{
+		@Override
+		public boolean satisfiedBy(@Nonnull PsiElement element)
+		{
+			if(!(element instanceof JSForInStatement) || ErrorUtil.containsError(element))
+			{
+				return false;
+			}
 
-            final PsiElement nextStatement = JSElementFactory.getNonWhiteSpaceSibling(element, true);
+			final PsiElement nextStatement = JSElementFactory.getNonWhiteSpaceSibling(element, true);
 
-            if (!(nextStatement instanceof JSForInStatement) ||
-                  ErrorUtil.containsError(nextStatement)) {
-                return false;
-            }
+			if(!(nextStatement instanceof JSForInStatement) ||
+					ErrorUtil.containsError(nextStatement))
+			{
+				return false;
+			}
 
-            return forInStatementsCanBeMerged((JSForInStatement) element,
-                                              (JSForInStatement) nextStatement);
-        }
+			return forInStatementsCanBeMerged((JSForInStatement) element,
+					(JSForInStatement) nextStatement);
+		}
 
-        public static boolean forInStatementsCanBeMerged(JSForInStatement statement1,
-                                                         JSForInStatement statement2) {
+		public static boolean forInStatementsCanBeMerged(JSForInStatement statement1,
+														 JSForInStatement statement2)
+		{
 
-//            final JSExpression firstVarExpression  = statement1.getVariableExpression();
-//            final JSExpression secondVarExpression = statement2.getVariableExpression();
-            final JSExpression firstVarExpression  = getVariableExpression(statement1);
-            final JSExpression secondVarExpression = getVariableExpression(statement2);
-            if (!EquivalenceChecker.expressionsAreEquivalent(firstVarExpression,
-                                                             secondVarExpression)) {
-                return false;
-            }
+			//            final JSExpression firstVarExpression  = statement1.getVariableExpression();
+			//            final JSExpression secondVarExpression = statement2.getVariableExpression();
+			final JSExpression firstVarExpression = getVariableExpression(statement1);
+			final JSExpression secondVarExpression = getVariableExpression(statement2);
+			if(!EquivalenceChecker.expressionsAreEquivalent(firstVarExpression,
+					secondVarExpression))
+			{
+				return false;
+			}
 
-            final JSVarStatement firstDeclaration  = statement1.getDeclarationStatement();
-            final JSVarStatement secondDeclaration = statement2.getDeclarationStatement();
-            if (!EquivalenceChecker.statementsAreEquivalent(firstDeclaration,
-                                                            secondDeclaration)) {
-                return false;
-            }
+			final JSVarStatement firstDeclaration = statement1.getDeclarationStatement();
+			final JSVarStatement secondDeclaration = statement2.getDeclarationStatement();
+			if(!EquivalenceChecker.statementsAreEquivalent(firstDeclaration,
+					secondDeclaration))
+			{
+				return false;
+			}
 
-//            final JSExpression firstCollection  = statement1.getCollectionExpression();
-//            final JSExpression secondCollection = statement2.getCollectionExpression();
-            final JSExpression firstCollection  = getCollectionExpression(statement1);
-            final JSExpression secondCollection = getCollectionExpression(statement2);
-            if (!EquivalenceChecker.expressionsAreEquivalent(firstCollection,
-                                                             secondCollection)) {
-                return false;
-            }
+			//            final JSExpression firstCollection  = statement1.getCollectionExpression();
+			//            final JSExpression secondCollection = statement2.getCollectionExpression();
+			final JSExpression firstCollection = getCollectionExpression(statement1);
+			final JSExpression secondCollection = getCollectionExpression(statement2);
+			if(!EquivalenceChecker.expressionsAreEquivalent(firstCollection,
+					secondCollection))
+			{
+				return false;
+			}
 
-            final JSStatement firstBody  = statement1.getBody();
-            final JSStatement secondBody = statement2.getBody();
-            return (firstBody == null || secondBody == null ||
-                    ControlFlowUtils.canBeMerged(firstBody, secondBody));
-        }
-    }
+			final JSStatement firstBody = statement1.getBody();
+			final JSStatement secondBody = statement2.getBody();
+			return (firstBody == null || secondBody == null ||
+					ControlFlowUtils.canBeMerged(firstBody, secondBody));
+		}
+	}
 
-    /**
-     * Method provided as a workaround of a bug in the JavaScript language IDEA plugin.
-     * @param forInStatement the for-in statement
-     * @return the for-in statement collection expression
-     */
-    private static JSExpression getCollectionExpression(JSForInStatement forInStatement) {
-        final ASTNode statementNode = forInStatement.getNode();
-        ASTNode       child         = ((statementNode == null) ? null : statementNode.getFirstChildNode());
-        boolean       inPassed      = false;
+	/**
+	 * Method provided as a workaround of a bug in the JavaScript language IDEA plugin.
+	 *
+	 * @param forInStatement the for-in statement
+	 * @return the for-in statement collection expression
+	 */
+	private static JSExpression getCollectionExpression(JSForInStatement forInStatement)
+	{
+		final ASTNode statementNode = forInStatement.getNode();
+		ASTNode child = ((statementNode == null) ? null : statementNode.getFirstChildNode());
+		boolean inPassed = false;
 
-        while (child != null) {
-            if (child.getElementType() == JSTokenTypes.IN_KEYWORD) {
-                inPassed = true;
-            }
-            if (inPassed && child.getPsi() instanceof JSExpression) {
-                return (JSExpression) child.getPsi();
-            }
-            child = child.getTreeNext();
-        }
+		while(child != null)
+		{
+			if(child.getElementType() == JSTokenTypes.IN_KEYWORD)
+			{
+				inPassed = true;
+			}
+			if(inPassed && child.getPsi() instanceof JSExpression)
+			{
+				return (JSExpression) child.getPsi();
+			}
+			child = child.getTreeNext();
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * Method provided as a workaround of a bug in the JavaScript language IDEA plugin.
-     * @param forInStatement the for-in statement
-     * @return the for-in statement collection expression
-     */
-    private static JSExpression getVariableExpression(JSForInStatement forInStatement) {
-        final ASTNode statementNode = forInStatement.getNode();
-        ASTNode       child         = ((statementNode == null) ? null : statementNode.getFirstChildNode());
+	/**
+	 * Method provided as a workaround of a bug in the JavaScript language IDEA plugin.
+	 *
+	 * @param forInStatement the for-in statement
+	 * @return the for-in statement collection expression
+	 */
+	private static JSExpression getVariableExpression(JSForInStatement forInStatement)
+	{
+		final ASTNode statementNode = forInStatement.getNode();
+		ASTNode child = ((statementNode == null) ? null : statementNode.getFirstChildNode());
 
-        while (child != null) {
-            if (child.getElementType() == JSTokenTypes.IN_KEYWORD) {
-                return null;
-            }
+		while(child != null)
+		{
+			if(child.getElementType() == JSTokenTypes.IN_KEYWORD)
+			{
+				return null;
+			}
 
-            if (child.getPsi() instanceof JSExpression) {
-                return (JSExpression) child.getPsi();
-            }
-            child = child.getTreeNext();
-        }
+			if(child.getPsi() instanceof JSExpression)
+			{
+				return (JSExpression) child.getPsi();
+			}
+			child = child.getTreeNext();
+		}
 
-        return null;
-    }
+		return null;
+	}
 
 }

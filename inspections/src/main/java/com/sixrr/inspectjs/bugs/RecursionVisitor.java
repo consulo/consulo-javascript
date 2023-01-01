@@ -1,7 +1,7 @@
 package com.sixrr.inspectjs.bugs;
 
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
 import javax.annotation.Nonnull;
 

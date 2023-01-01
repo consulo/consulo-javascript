@@ -15,98 +15,133 @@
  */
 package org.intellij.idea.lang.javascript.intention.bool;
 
+import com.intellij.lang.javascript.JSTokenTypes;
+import com.intellij.lang.javascript.psi.JSBinaryExpression;
+import com.intellij.lang.javascript.psi.JSExpression;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
 import org.intellij.idea.lang.javascript.psiutil.BoolUtils;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
+
 import javax.annotation.Nonnull;
 
-import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.psi.JSBinaryExpression;
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
+@ExtensionImpl
+@IntentionMetaData(ignoreId = "JSRemoveBooleanEqualityIntention", categories = {
+		"JavaScript",
+		"Boolean"
+}, fileExtensions = "js")
+public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention
+{
+	@Override
+	protected String getTextForElement(PsiElement element)
+	{
+		final JSBinaryExpression binaryExpression = (JSBinaryExpression) element;
 
-public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention {
-    @Override
-	protected String getTextForElement(PsiElement element) {
-        final JSBinaryExpression binaryExpression = (JSBinaryExpression) element;
+		return this.getText(BinaryOperatorUtils.getOperatorText(binaryExpression.getOperationSign()));
+	}
 
-        return this.getText(BinaryOperatorUtils.getOperatorText(binaryExpression.getOperationSign()));
-    }
-
-    @Override
+	@Override
 	@Nonnull
-    public JSElementPredicate getElementPredicate() {
-        return new BooleanLiteralEqualityPredicate();
-    }
+	public JSElementPredicate getElementPredicate()
+	{
+		return new BooleanLiteralEqualityPredicate();
+	}
 
-    @Override
+	@Override
 	public void processIntention(@Nonnull PsiElement element)
-            throws IncorrectOperationException {
-        final JSBinaryExpression exp      = (JSBinaryExpression) element;
-        final boolean            isEquals = exp.getOperationSign().equals(JSTokenTypes.EQEQ);
-        final JSExpression       lhs      = exp.getLOperand();
-        final JSExpression       rhs      = exp.getROperand();
+			throws IncorrectOperationException
+	{
+		final JSBinaryExpression exp = (JSBinaryExpression) element;
+		final boolean isEquals = exp.getOperationSign().equals(JSTokenTypes.EQEQ);
+		final JSExpression lhs = exp.getLOperand();
+		final JSExpression rhs = exp.getROperand();
 
-        assert (lhs != null);
-        assert (rhs != null);
+		assert (lhs != null);
+		assert (rhs != null);
 
-        final String lhsText = lhs.getText();
-        final String rhsText = rhs.getText();
+		final String lhsText = lhs.getText();
+		final String rhsText = rhs.getText();
 
-        if (BoolUtils.TRUE.equals(lhsText)) {
-            if (isEquals) {
-                JSElementFactory.replaceExpression(exp, rhsText);
-            } else{
-                JSElementFactory.replaceExpressionWithNegatedExpression(rhs, exp);
-            }
-        } else if (BoolUtils.FALSE.equals(lhsText)) {
-            if (isEquals) {
-                JSElementFactory.replaceExpressionWithNegatedExpression(rhs, exp);
-            } else {
-                JSElementFactory.replaceExpression(exp, rhsText);
-            }
-        } else if (BoolUtils.TRUE.equals(rhsText)) {
-            if (isEquals) {
-                JSElementFactory.replaceExpression(exp, lhsText);
-            } else {
-                JSElementFactory.replaceExpressionWithNegatedExpression(lhs, exp);
-            }
-        } else {
-            if (isEquals) {
-                JSElementFactory.replaceExpressionWithNegatedExpression(lhs, exp);
-            } else {
-                JSElementFactory.replaceExpression(exp, lhsText);
-            }
-        }
-    }
+		if(BoolUtils.TRUE.equals(lhsText))
+		{
+			if(isEquals)
+			{
+				JSElementFactory.replaceExpression(exp, rhsText);
+			}
+			else
+			{
+				JSElementFactory.replaceExpressionWithNegatedExpression(rhs, exp);
+			}
+		}
+		else if(BoolUtils.FALSE.equals(lhsText))
+		{
+			if(isEquals)
+			{
+				JSElementFactory.replaceExpressionWithNegatedExpression(rhs, exp);
+			}
+			else
+			{
+				JSElementFactory.replaceExpression(exp, rhsText);
+			}
+		}
+		else if(BoolUtils.TRUE.equals(rhsText))
+		{
+			if(isEquals)
+			{
+				JSElementFactory.replaceExpression(exp, lhsText);
+			}
+			else
+			{
+				JSElementFactory.replaceExpressionWithNegatedExpression(lhs, exp);
+			}
+		}
+		else
+		{
+			if(isEquals)
+			{
+				JSElementFactory.replaceExpressionWithNegatedExpression(lhs, exp);
+			}
+			else
+			{
+				JSElementFactory.replaceExpression(exp, lhsText);
+			}
+		}
+	}
 
-    private static class BooleanLiteralEqualityPredicate implements JSElementPredicate {
-        @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-            if (!(element instanceof JSBinaryExpression)) {
-                return false;
-            }
-            if (ErrorUtil.containsError(element)) {
-                return false;
-            }
+	private static class BooleanLiteralEqualityPredicate implements JSElementPredicate
+	{
+		@Override
+		public boolean satisfiedBy(@Nonnull PsiElement element)
+		{
+			if(!(element instanceof JSBinaryExpression))
+			{
+				return false;
+			}
+			if(ErrorUtil.containsError(element))
+			{
+				return false;
+			}
 
-            final JSBinaryExpression expression = (JSBinaryExpression) element;
-            final IElementType       sign       = expression.getOperationSign();
+			final JSBinaryExpression expression = (JSBinaryExpression) element;
+			final IElementType sign = expression.getOperationSign();
 
-            if (!(sign.equals(JSTokenTypes.EQEQ) || sign.equals(JSTokenTypes.NE))) {
-                return false;
-            }
+			if(!(sign.equals(JSTokenTypes.EQEQ) || sign.equals(JSTokenTypes.NE)))
+			{
+				return false;
+			}
 
-            final JSExpression lhs = expression.getLOperand();
-            final JSExpression rhs = expression.getROperand();
+			final JSExpression lhs = expression.getLOperand();
+			final JSExpression rhs = expression.getROperand();
 
-            return (lhs != null && rhs != null &&
-                    (BoolUtils.isBooleanLiteral(lhs) || BoolUtils.isBooleanLiteral(rhs)));
-        }
-    }
+			return (lhs != null && rhs != null &&
+					(BoolUtils.isBooleanLiteral(lhs) || BoolUtils.isBooleanLiteral(rhs)));
+		}
+	}
 }

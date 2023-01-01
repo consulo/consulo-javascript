@@ -6,10 +6,13 @@ import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.ui.SingleCheckboxOptionsPanel;
+import consulo.annotation.component.ExtensionImpl;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
+@ExtensionImpl
 public class EmptyStatementBodyJSInspection extends JavaScriptInspection {
     /**
      * @noinspection PublicField

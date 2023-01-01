@@ -1,7 +1,7 @@
 package consulo.javascript.ecmascript4.psi.impl;
 
 import com.intellij.lang.javascript.psi.JSImportStatement;
-import com.intellij.lang.javascript.psi.JSStubElementType;
+import consulo.javascript.impl.language.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.stubs.JSImportStatementStub;
 import com.intellij.lang.javascript.types.JSImportStatementElementType;
 

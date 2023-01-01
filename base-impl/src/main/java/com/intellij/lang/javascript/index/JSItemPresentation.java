@@ -21,11 +21,11 @@ import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSNamedElement;
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.util.Iconable;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import consulo.ide.IconDescriptorUpdaters;
+import consulo.component.util.Iconable;
+import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.navigation.ItemPresentation;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 

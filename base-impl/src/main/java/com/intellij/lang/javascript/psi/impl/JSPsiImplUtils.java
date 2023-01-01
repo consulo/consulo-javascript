@@ -17,35 +17,34 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import com.intellij.javascript.documentation.JSDocumentationUtils;
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubIndex;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.xml.XmlFile;
-import com.intellij.util.Consumer;
-import com.intellij.util.IncorrectOperationException;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.lang.psi.JavaScriptTypeElement;
+import consulo.content.base.SourcesOrderRootType;
+import consulo.javascript.language.psi.JavaScriptTypeElement;
 import consulo.javascript.lang.psi.impl.elementType.BaseJavaScriptElementType;
-import consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
+import consulo.javascript.language.psi.stub.JavaScriptIndexKeys;
 import consulo.javascript.psi.JavaScriptImportStatementBase;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.*;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.stub.StubIndex;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.IncorrectOperationException;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import consulo.util.collection.HashingStrategy;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.xml.psi.xml.XmlFile;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -54,6 +53,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author Maxim.Mossienko
@@ -238,7 +238,7 @@ public class JSPsiImplUtils
 	{
 		if(candidatesConsumer != null)
 		{
-			candidatesConsumer.consume(jsClass);
+			candidatesConsumer.accept(jsClass);
 		}
 
 		PsiElement sourceElement = findSourceElement(jsClass);
@@ -272,7 +272,7 @@ public class JSPsiImplUtils
 
 			if(candidatesConsumer != null)
 			{
-				candidatesConsumer.consume(candidate);
+				candidatesConsumer.accept(candidate);
 			}
 
 			PsiElement candidateSourceElement = findSourceElement(candidate);
@@ -313,7 +313,7 @@ public class JSPsiImplUtils
 
 		for(OrderEntry orderEntry : orderEntries)
 		{
-			VirtualFile[] files = orderEntry.getFiles(OrderRootType.SOURCES);
+			VirtualFile[] files = orderEntry.getFiles(SourcesOrderRootType.getInstance());
 
 			for(VirtualFile file : files)
 			{

@@ -1,14 +1,16 @@
 package com.sixrr.inspectjs.exception;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.psi.JSReturnStatement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
+import consulo.annotation.component.ExtensionImpl;
 
+import javax.annotation.Nonnull;
+
+@ExtensionImpl
 public class ReturnFromFinallyBlockJSInspection extends JavaScriptInspection {
     @Override
 	@Nonnull

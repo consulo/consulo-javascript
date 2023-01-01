@@ -16,10 +16,10 @@
 
 package consulo.javascript.lang.parsing;
 
-import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.JavaScriptBundle;
+import consulo.javascript.language.JavaScriptBundle;
+import consulo.language.parser.PsiBuilder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -1,16 +1,17 @@
 package com.sixrr.inspectjs.control;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.psi.JSBreakStatement;
 import com.intellij.lang.javascript.psi.JSCaseClause;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import consulo.annotation.component.ExtensionImpl;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@ExtensionImpl
 public class BreakStatementJSInspection extends JavaScriptInspection {
 
     @Override

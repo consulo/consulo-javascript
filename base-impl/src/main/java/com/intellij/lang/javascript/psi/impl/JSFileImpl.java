@@ -21,7 +21,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSFile;
@@ -29,15 +28,16 @@ import com.intellij.lang.javascript.psi.JSPackageStatement;
 import com.intellij.lang.javascript.psi.JSSourceElement;
 import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.StubBasedPsiElement;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.util.IncorrectOperationException;
-import consulo.javascript.lang.JavaScriptLanguage;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.language.psi.StubBasedPsiElement;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.language.file.FileViewProvider;
+import consulo.language.impl.psi.PsiFileBase;
 
 /**
  * Created by IntelliJ IDEA.

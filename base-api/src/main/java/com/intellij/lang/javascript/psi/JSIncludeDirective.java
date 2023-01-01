@@ -17,8 +17,8 @@
 package com.intellij.lang.javascript.psi;
 
 import com.intellij.lang.javascript.psi.stubs.JSIncludeDirectiveStub;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.StubBasedPsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.StubBasedPsiElement;
 
 /**
  * @by Maxim.Mossienko

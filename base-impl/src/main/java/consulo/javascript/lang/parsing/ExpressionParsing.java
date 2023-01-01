@@ -17,13 +17,13 @@
 package consulo.javascript.lang.parsing;
 
 import com.intellij.javascript.documentation.JSDocumentationUtils;
-import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.JavaScriptBundle;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.javascript.language.JavaScriptBundle;
 import consulo.javascript.lang.JavaScriptTokenSets;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.parser.PsiBuilder;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 
@@ -1009,7 +1009,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 		return true;
 	}
 
-	protected boolean tryParseType(final PsiBuilder builder)
+	public boolean tryParseType(final PsiBuilder builder)
 	{
 		return false;
 	}

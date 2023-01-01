@@ -16,41 +16,33 @@
 
 package com.intellij.lang.javascript;
 
-import javax.annotation.Nonnull;
-
-import org.jetbrains.annotations.NonNls;
-import com.intellij.lang.Language;
-import com.intellij.lang.injection.MultiHostInjector;
-import com.intellij.lang.injection.MultiHostRegistrar;
 import com.intellij.lang.javascript.flex.AnnotationBackedDescriptor;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.html.HtmlTag;
-import com.intellij.psi.meta.PsiMetaData;
-import com.intellij.psi.templateLanguages.OuterLanguageElement;
-import com.intellij.psi.xml.XmlAttribute;
-import com.intellij.psi.xml.XmlAttributeValue;
-import com.intellij.psi.xml.XmlElementType;
-import com.intellij.psi.xml.XmlTag;
-import com.intellij.psi.xml.XmlTagChild;
-import com.intellij.psi.xml.XmlTagValue;
-import com.intellij.psi.xml.XmlText;
-import com.intellij.psi.xml.XmlToken;
-import com.intellij.psi.xml.XmlTokenType;
 import com.intellij.xml.XmlElementDescriptorWithCDataContent;
-import consulo.javascript.lang.JavaScriptLanguage;
-import consulo.lang.LanguagePointerUtil;
-import consulo.util.pointers.NamedPointer;
+import consulo.component.util.pointer.NamedPointer;
+import consulo.document.util.TextRange;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.language.Language;
+import consulo.language.LanguagePointerUtil;
+import consulo.language.inject.MultiHostInjector;
+import consulo.language.inject.MultiHostRegistrar;
+import consulo.language.psi.OuterLanguageElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiLanguageInjectionHost;
+import consulo.language.psi.meta.PsiMetaData;
+import consulo.util.lang.StringUtil;
+import consulo.xml.psi.html.HtmlTag;
+import consulo.xml.psi.xml.*;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
  *         Date: Apr 28, 2008
  *         Time: 8:40:38 PM
  */
-public class JSLanguageInjector implements MultiHostInjector
+public abstract class JSLanguageInjector implements MultiHostInjector
 {
 	@NonNls
 	private static final String JAVASCRIPT_PREFIX = "javascript:";
@@ -62,7 +54,6 @@ public class JSLanguageInjector implements MultiHostInjector
 	@Override
 	public void injectLanguages(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement host)
 	{
-
 		if(host instanceof XmlAttributeValue)
 		{
 			final PsiElement attribute = host.getParent();

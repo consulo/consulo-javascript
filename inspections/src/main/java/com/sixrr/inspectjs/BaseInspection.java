@@ -1,42 +1,28 @@
 package com.sixrr.inspectjs;
 
-import java.lang.reflect.Method;
+import com.intellij.lang.javascript.psi.JSFunction;
+import com.intellij.lang.javascript.psi.JSSuppressionHolder;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.language.Language;
+import consulo.language.editor.inspection.CustomSuppressableInspectionTool;
+import consulo.language.editor.inspection.LocalInspectionTool;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.editor.inspection.SuppressionUtil;
+import consulo.language.editor.intention.SuppressIntentionAction;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiNamedElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import org.jetbrains.annotations.NonNls;
-import com.intellij.codeInspection.CustomSuppressableInspectionTool;
-import com.intellij.codeInspection.LocalInspectionTool;
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.codeInspection.SuppressIntentionAction;
-import com.intellij.codeInspection.SuppressionUtil;
-import com.intellij.lang.javascript.psi.JSFunction;
-import com.intellij.lang.javascript.psi.JSSuppressionHolder;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.util.PsiTreeUtil;
+import java.lang.reflect.Method;
 
 public abstract class BaseInspection extends LocalInspectionTool implements CustomSuppressableInspectionTool
 {
-	private final String m_shortName = null;
-
-	@Override
-	@Nonnull
-	public String getShortName()
-	{
-		if(m_shortName == null)
-		{
-			final Class<? extends BaseInspection> aClass = getClass();
-			@NonNls final String name = aClass.getName();
-			assert name.endsWith("Inspection") : "class name must end with the 'Inspection' to correctly calculate the short name: " + name;
-			return name.substring(name.lastIndexOf((int) '.') + 1, name.length() - "Inspection".length());
-		}
-		return m_shortName;
-	}
-
 	@Override
 	@Nonnull
 	public PsiElementVisitor buildVisitor(@Nonnull ProblemsHolder problemsHolder, boolean onTheFly)
@@ -52,6 +38,20 @@ public abstract class BaseInspection extends LocalInspectionTool implements Cust
 		visitor.setOnTheFly(onTheFly);
 		visitor.setInspection(this);
 		return visitor;
+	}
+
+	@Nullable
+	@Override
+	public Language getLanguage()
+	{
+		return JavaScriptLanguage.INSTANCE;
+	}
+
+	@Nonnull
+	@Override
+	public HighlightDisplayLevel getDefaultLevel()
+	{
+		return HighlightDisplayLevel.WARNING;
 	}
 
 	public boolean canBuildVisitor(@Nonnull PsiFile psiFile)

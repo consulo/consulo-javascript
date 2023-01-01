@@ -2,8 +2,9 @@ package com.sixrr.inspectjs.exception;
 
 import com.intellij.lang.javascript.psi.JSParameter;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
-import com.intellij.psi.PsiElement;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
+import consulo.language.psi.PsiElement;
+
 import javax.annotation.Nonnull;
 
 class CatchParameterUsedVisitor extends JSRecursiveElementVisitor {

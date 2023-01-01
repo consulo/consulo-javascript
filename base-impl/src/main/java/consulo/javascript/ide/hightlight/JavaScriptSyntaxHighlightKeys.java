@@ -16,10 +16,10 @@
 
 package consulo.javascript.ide.hightlight;
 
-import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
-import com.intellij.openapi.editor.HighlighterColors;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import consulo.codeEditor.DefaultLanguageHighlighterColors;
+import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.codeEditor.HighlighterColors;
 import consulo.ui.color.RGBColor;
 import consulo.ui.style.StandardColors;
 
@@ -60,12 +60,12 @@ public interface JavaScriptSyntaxHighlightKeys
 	TextAttributesKey JS_BAD_CHARACTER = TextAttributesKey.createTextAttributesKey("JS.BADCHARACTER", HighlighterColors.BAD_CHARACTER);
 	TextAttributesKey JS_DOC_TAG = TextAttributesKey.createTextAttributesKey("JS.DOC_TAG", DefaultLanguageHighlighterColors.DOC_COMMENT_TAG);
 	TextAttributesKey JS_DOC_MARKUP = TextAttributesKey.createTextAttributesKey("JS.DOC_MARKUP", DefaultLanguageHighlighterColors.DOC_COMMENT_MARKUP);
-	TextAttributesKey JS_VALID_STRING_ESCAPE = TextAttributesKey.createTextAttributesKey("JS.VALID_STRING_ESCAPE", DefaultLanguageHighlighterColors.VALID_STRING_ESCAPE);
+	TextAttributesKey JS_VALID_STRING_ESCAPE = TextAttributesKey.createTextAttributesKey("JS.VALID_STRING_ESCAPE",DefaultLanguageHighlighterColors.VALID_STRING_ESCAPE);
 	TextAttributesKey JS_INVALID_STRING_ESCAPE = TextAttributesKey.createTextAttributesKey("JS.INVALID_STRING_ESCAPE", DefaultLanguageHighlighterColors.INVALID_STRING_ESCAPE);
 	TextAttributesKey JS_LOCAL_VARIABLE = TextAttributesKey.createTextAttributesKey("JS.LOCAL_VARIABLE", DefaultLanguageHighlighterColors.LOCAL_VARIABLE);
 	TextAttributesKey JS_PARAMETER = TextAttributesKey.createTextAttributesKey("JS.PARAMETER", DefaultLanguageHighlighterColors.PARAMETER);
 	TextAttributesKey JS_INSTANCE_MEMBER_VARIABLE = TextAttributesKey.createTextAttributesKey("JS.INSTANCE_MEMBER_VARIABLE", DefaultLanguageHighlighterColors.INSTANCE_FIELD);
-	TextAttributesKey JS_STATIC_MEMBER_VARIABLE = TextAttributesKey.createTextAttributesKey("JS.STATIC_MEMBER_VARIABLE", DefaultLanguageHighlighterColors.STATIC_FIELD);
+	TextAttributesKey JS_STATIC_MEMBER_VARIABLE = TextAttributesKey.createTextAttributesKey("JS.STATIC_MEMBER_VARIABLE",DefaultLanguageHighlighterColors.STATIC_FIELD);
 	TextAttributesKey JS_GLOBAL_VARIABLE = TextAttributesKey.createTextAttributesKey("JS.GLOBAL_VARIABLE", DefaultLanguageHighlighterColors.STATIC_FIELD);
 	TextAttributesKey JS_GLOBAL_FUNCTION = TextAttributesKey.createTextAttributesKey("JS.GLOBAL_FUNCTION", DefaultLanguageHighlighterColors.STATIC_METHOD);
 	TextAttributesKey JS_STATIC_MEMBER_FUNCTION = TextAttributesKey.createTextAttributesKey("JS.STATIC_MEMBER_FUNCTION", DefaultLanguageHighlighterColors.STATIC_METHOD);

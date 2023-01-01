@@ -16,11 +16,12 @@
 
 package consulo.json.validation.descriptionByAnotherPsiElement;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.json.validation.descriptor.JsonObjectDescriptor;
+import consulo.language.psi.PsiElement;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -30,10 +31,9 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 12.11.2015
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface DescriptionByAnotherPsiElementProvider<T extends PsiElement>
 {
-	ExtensionPointName<DescriptionByAnotherPsiElementProvider<?>> EP_NAME = ExtensionPointName.create("consulo.javascript.jsonDescriptionByAnotherPsiElementProvider");
-
 	@Nonnull
 	String getId();
 

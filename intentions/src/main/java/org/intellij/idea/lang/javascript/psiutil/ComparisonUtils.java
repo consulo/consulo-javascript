@@ -15,83 +15,98 @@
  */
 package org.intellij.idea.lang.javascript.psiutil;
 
-import java.util.Map;
-import java.util.HashMap;
-
-import com.intellij.psi.tree.IElementType;
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.JSTokenTypes;
+import com.intellij.lang.javascript.psi.JSBinaryExpression;
+import com.intellij.lang.javascript.psi.JSExpression;
+import consulo.language.ast.IElementType;
 
-public class ComparisonUtils {
+import java.util.HashMap;
+import java.util.Map;
 
-    private static final Map<IElementType, OperatorTexts> operators;
+public class ComparisonUtils
+{
 
-    private ComparisonUtils() {}
+	private static final Map<IElementType, OperatorTexts> operators;
 
-    public static boolean isComparisonOperator(JSExpression expression) {
-        return (expression instanceof JSBinaryExpression &&
-                operators.containsKey(((JSBinaryExpression) expression).getOperationSign()));
-    }
+	private ComparisonUtils()
+	{
+	}
 
-    public static String getOperatorText(IElementType operator) {
-        return operators.get(operator).getText();
-    }
+	public static boolean isComparisonOperator(JSExpression expression)
+	{
+		return (expression instanceof JSBinaryExpression &&
+				operators.containsKey(((JSBinaryExpression) expression).getOperationSign()));
+	}
 
-    public static boolean isEqualityTestExpression(JSBinaryExpression expression) {
-        IElementType operator = expression.getOperationSign();
-        return (operator.equals(JSTokenTypes.EQEQ) || operator.equals(JSTokenTypes.NE));
-    }
+	public static String getOperatorText(IElementType operator)
+	{
+		return operators.get(operator).getText();
+	}
 
-    public static boolean mayBeEqualExpression(JSBinaryExpression expression) {
-        IElementType operator = expression.getOperationSign();
-        return (operator.equals(JSTokenTypes.EQEQ) || operator.equals(JSTokenTypes.EQEQEQ) ||
-                operator.equals(JSTokenTypes.LE)   || operator.equals(JSTokenTypes.GE));
-    }
+	public static boolean isEqualityTestExpression(JSBinaryExpression expression)
+	{
+		IElementType operator = expression.getOperationSign();
+		return (operator.equals(JSTokenTypes.EQEQ) || operator.equals(JSTokenTypes.NE));
+	}
 
-    public static String getNegatedOperatorText(IElementType operator) {
-        return operators.get(operator).getNegatedText();
-    }
+	public static boolean mayBeEqualExpression(JSBinaryExpression expression)
+	{
+		IElementType operator = expression.getOperationSign();
+		return (operator.equals(JSTokenTypes.EQEQ) || operator.equals(JSTokenTypes.EQEQEQ) ||
+				operator.equals(JSTokenTypes.LE) || operator.equals(JSTokenTypes.GE));
+	}
 
-    public static String getFlippedOperatorText(IElementType operator) {
-        return operators.get(operator).getFlippedText();
-    }
+	public static String getNegatedOperatorText(IElementType operator)
+	{
+		return operators.get(operator).getNegatedText();
+	}
 
-    static {
-        operators = new HashMap<IElementType, OperatorTexts>(8);
+	public static String getFlippedOperatorText(IElementType operator)
+	{
+		return operators.get(operator).getFlippedText();
+	}
 
-        operators.put(JSTokenTypes.EQEQ,   new OperatorTexts("==",  "!=",  "=="));
-        operators.put(JSTokenTypes.EQEQEQ, new OperatorTexts("===", "!==", "==="));
-        operators.put(JSTokenTypes.NE,     new OperatorTexts("!=",  "==",  "!="));
-        operators.put(JSTokenTypes.NEQEQ,  new OperatorTexts("!==", "===", "!=="));
-        operators.put(JSTokenTypes.GT,     new OperatorTexts(">",   "<=",  "<"));
-        operators.put(JSTokenTypes.LT,     new OperatorTexts("<",   ">=",  ">"));
-        operators.put(JSTokenTypes.GE,     new OperatorTexts(">=",  "<",   "<="));
-        operators.put(JSTokenTypes.LE,     new OperatorTexts("<=",  ">",   ">="));
-    }
+	static
+	{
+		operators = new HashMap<IElementType, OperatorTexts>(8);
 
-    private static class OperatorTexts {
-        private String text;
-        private String negatedText;
-        private String flippedText;
+		operators.put(JSTokenTypes.EQEQ, new OperatorTexts("==", "!=", "=="));
+		operators.put(JSTokenTypes.EQEQEQ, new OperatorTexts("===", "!==", "==="));
+		operators.put(JSTokenTypes.NE, new OperatorTexts("!=", "==", "!="));
+		operators.put(JSTokenTypes.NEQEQ, new OperatorTexts("!==", "===", "!=="));
+		operators.put(JSTokenTypes.GT, new OperatorTexts(">", "<=", "<"));
+		operators.put(JSTokenTypes.LT, new OperatorTexts("<", ">=", ">"));
+		operators.put(JSTokenTypes.GE, new OperatorTexts(">=", "<", "<="));
+		operators.put(JSTokenTypes.LE, new OperatorTexts("<=", ">", ">="));
+	}
 
-        public OperatorTexts(String text, String negatedText, String flippedText) {
-            this.text        = text;
-            this.negatedText = negatedText;
-            this.flippedText = flippedText;
-        }
+	private static class OperatorTexts
+	{
+		private String text;
+		private String negatedText;
+		private String flippedText;
 
-        public String getText() {
-            return this.text;
-        }
+		public OperatorTexts(String text, String negatedText, String flippedText)
+		{
+			this.text = text;
+			this.negatedText = negatedText;
+			this.flippedText = flippedText;
+		}
 
-        public String getNegatedText() {
-            return this.negatedText;
-        }
+		public String getText()
+		{
+			return this.text;
+		}
 
-        public String getFlippedText() {
-            return this.flippedText;
-        }
-    }
+		public String getNegatedText()
+		{
+			return this.negatedText;
+		}
+
+		public String getFlippedText()
+		{
+			return this.flippedText;
+		}
+	}
 }
 

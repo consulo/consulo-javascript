@@ -15,86 +15,96 @@
  */
 package org.intellij.idea.lang.javascript.intention.increment;
 
-import javax.annotation.Nonnull;
-
+import com.intellij.lang.javascript.psi.*;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
-import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
-import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
-import org.intellij.idea.lang.javascript.psiutil.ExpressionUtil;
-import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.intellij.idea.lang.javascript.psiutil.TreeUtil;
+import org.intellij.idea.lang.javascript.psiutil.*;
 
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSExpressionStatement;
-import com.intellij.lang.javascript.psi.JSPostfixExpression;
-import com.intellij.lang.javascript.psi.JSPrefixExpression;
-import com.intellij.lang.javascript.psi.JSReturnStatement;
-import com.intellij.lang.javascript.psi.JSStatement;
-import com.intellij.lang.javascript.psi.JSThrowStatement;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
+import javax.annotation.Nonnull;
 
-public class JSExtractIncrementIntention extends JSMutablyNamedIntention {
-    @Override
-	public String getTextForElement(PsiElement element) {
-        return this.getText(BinaryOperatorUtils.getOperatorText(getOperationSign(element)));
-    }
+@ExtensionImpl
+@IntentionMetaData(ignoreId = "JSExtractIncrementIntention", categories = {
+		"JavaScript",
+		"Other"
+}, fileExtensions = "js")
+public class JSExtractIncrementIntention extends JSMutablyNamedIntention
+{
+	@Override
+	public String getTextForElement(PsiElement element)
+	{
+		return this.getText(BinaryOperatorUtils.getOperatorText(getOperationSign(element)));
+	}
 
-    @Override
+	@Override
 	@Nonnull
-    public JSElementPredicate getElementPredicate() {
-        return new ExtractIncrementPredicate();
-    }
+	public JSElementPredicate getElementPredicate()
+	{
+		return new ExtractIncrementPredicate();
+	}
 
-    @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final boolean      isPostfix = (element instanceof JSPostfixExpression);
-        final JSExpression operand   = (isPostfix ? ((JSPostfixExpression) element).getExpression()
-                                                  : ((JSPrefixExpression)  element).getExpression());
-        final JSStatement  statement = TreeUtil.getParentOfType(element, JSStatement.class);
+	@Override
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
+	{
+		final boolean isPostfix = (element instanceof JSPostfixExpression);
+		final JSExpression operand = (isPostfix ? ((JSPostfixExpression) element).getExpression()
+				: ((JSPrefixExpression) element).getExpression());
+		final JSStatement statement = TreeUtil.getParentOfType(element, JSStatement.class);
 
-        assert (statement != null);
+		assert (statement != null);
 
-        if (isPostfix) {
-            JSElementFactory.addStatementAfter (statement, element.getText() + ';');
-        } else {
-            JSElementFactory.addStatementBefore(statement, element.getText() + ';');
-        }
-        JSElementFactory.replaceExpression((JSExpression) element, operand.getText());
-    }
+		if(isPostfix)
+		{
+			JSElementFactory.addStatementAfter(statement, element.getText() + ';');
+		}
+		else
+		{
+			JSElementFactory.addStatementBefore(statement, element.getText() + ';');
+		}
+		JSElementFactory.replaceExpression((JSExpression) element, operand.getText());
+	}
 
-    private static IElementType getOperationSign(PsiElement element) {
-        return ((element instanceof JSPostfixExpression)
-                     ? ((JSPostfixExpression) element).getOperationSign()
-                     : ((JSPrefixExpression)  element).getOperationSign());
-    }
+	private static IElementType getOperationSign(PsiElement element)
+	{
+		return ((element instanceof JSPostfixExpression)
+				? ((JSPostfixExpression) element).getOperationSign()
+				: ((JSPrefixExpression) element).getOperationSign());
+	}
 
-    private static class ExtractIncrementPredicate implements JSElementPredicate {
-        @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-            if (!ExpressionUtil.isIncrementDecrementExpression(element)) {
-                return false;
-            }
-            if (ErrorUtil.containsError(element)) {
-                return false;
-            }
+	private static class ExtractIncrementPredicate implements JSElementPredicate
+	{
+		@Override
+		public boolean satisfiedBy(@Nonnull PsiElement element)
+		{
+			if(!ExpressionUtil.isIncrementDecrementExpression(element))
+			{
+				return false;
+			}
+			if(ErrorUtil.containsError(element))
+			{
+				return false;
+			}
 
-            final PsiElement parent = element.getParent();
+			final PsiElement parent = element.getParent();
 
-            if (parent instanceof JSExpressionStatement) {
-                return false;
-            }
+			if(parent instanceof JSExpressionStatement)
+			{
+				return false;
+			}
 
-            final JSStatement containingStatement = TreeUtil.getParentOfType(element, JSStatement.class);
+			final JSStatement containingStatement = TreeUtil.getParentOfType(element, JSStatement.class);
 
-            if (element instanceof JSPostfixExpression &&
-                (containingStatement instanceof JSReturnStatement ||
-                 containingStatement instanceof JSThrowStatement)) {
-                return false;
-            }
-            return (containingStatement != null);
-        }
-    }
+			if(element instanceof JSPostfixExpression &&
+					(containingStatement instanceof JSReturnStatement ||
+							containingStatement instanceof JSThrowStatement))
+			{
+				return false;
+			}
+			return (containingStatement != null);
+		}
+	}
 }

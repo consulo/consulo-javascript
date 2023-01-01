@@ -1,7 +1,8 @@
 package com.sixrr.inspectjs.dataflow;
 
-import com.intellij.psi.*;
 import com.intellij.lang.javascript.psi.*;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
 
 public class VariableAccessUtils {
     public static boolean mayEvaluateToVariable(JSExpression expression,

@@ -16,14 +16,14 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSDocTagValue;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.text.StringTokenizer;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiNamedElement;
+import consulo.language.psi.PsiReference;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.text.StringTokenizer;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

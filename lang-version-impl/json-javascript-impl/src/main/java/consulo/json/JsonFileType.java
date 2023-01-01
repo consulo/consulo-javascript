@@ -16,16 +16,16 @@
 
 package consulo.json;
 
-import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.icon.JavaScriptIconGroup;
-import consulo.javascript.lang.JavaScriptFileTypeWithVersion;
-import consulo.javascript.lang.JavaScriptLanguage;
+import consulo.javascript.language.JavaScriptFileTypeWithVersion;
+import consulo.javascript.language.JavaScriptLanguage;
 import consulo.json.lang.JsonJavaScriptVersion;
+import consulo.language.file.LanguageFileType;
 import consulo.localize.LocalizeValue;
+import consulo.module.Module;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -22,194 +22,33 @@
 	<vendor>JetBrains &amp; consulo.io</vendor>
 	<resource-bundle>messages.JavaScriptBundle</resource-bundle>
 	<depends>com.intellij.xml</depends>
-	<depends config-file="regexp.xml" optional="true">com.intellij.regexp</depends>
+	<depends optional="true">com.intellij.regexp</depends>
 	<tags>
 		<tag>custom.language</tag>
 	</tags>
 
-	<import path="/META-INF/Intentions.xml"/>
-	<import path="/META-INF/json.xml"/>
-	<import path="/META-INF/ecma4.xml"/>
-	<import path="/META-INF/ecma6.xml"/>
-	<import path="/META-INF/actionscript.xml"/>
-	<import path="/META-INF/typescript.xml"/>
-	<import path="/META-INF/jsx.xml"/>
-
 	<actions>
-		<action id="JavaScript.File" class="consulo.javascript.ide.actions.JavaScriptCreateFileAction">
+		<action id="JavaScript.File" class="consulo.javascript.impl.ide.actions.JavaScriptCreateFileAction">
 			<add-to-group group-id="NewGroup1" anchor="after" relative-to-action="NewClass"/>
 		</action>
-	</actions>
 
-	<extensions defaultExtensionNs="com.intellij">
-		<internalFileTemplate name="JavaScriptFile"/>
-
-		<applicationService serviceInterface="consulo.javascript.lang.StandardJavaScriptVersions" serviceImplementation="consulo.javascript.lang.StandardJavaScriptVersionsImpl"/>
-
-		<lang.versionResolver language="JavaScript" implementationClass="consulo.javascript.lang.JavaScriptLanguageVersionResolver"/>
-
-		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.lang.JavaScript15LanguageVersion"/>
-		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.lang.JavaScript16LanguageVersion"/>
-		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.lang.JavaScript17LanguageVersion"/>
-		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.lang.JavaScript18LanguageVersion"/>
-		<lang.defineVersion language="JavaScript" implementationClass="consulo.javascript.lang.JavaScript185LanguageVersion"/>
-
-		<copyright.updater filetype="JavaScript" implementationClass="consulo.javascript.copyright.UpdateJavaScriptFileCopyrightProvider"/>
-
-		<colorSettingsPage implementation="com.intellij.lang.javascript.highlighting.JavaScriptColorsAndFontsPage"/>
-
-		<gotoClassContributor implementation="consulo.javascript.lang.navigation.JavaScriptClassContributor"/>
-		<gotoSymbolContributor implementation="com.intellij.lang.javascript.navigation.JavaScriptSymbolContributor"/>
-
-		<iconDescriptorUpdater implementation="consulo.javascript.ide.JavaScriptIconDescriptorUpdater"/>
-
-		<fileTypeFactory implementation="consulo.javascript.lang.JavaScriptFileTypeFactory"/>
-
-		<highlightVisitor implementation="com.intellij.lang.javascript.highlighting.JavaScriptHighlightVisitor"/>
-
-		<lang.parserDefinition language="JavaScript" implementationClass="consulo.javascript.lang.JavaScriptParsingDefinition"/>
-
-		<annotator language="JavaScript" implementationClass="com.intellij.lang.javascript.validation.JSAnnotatingVisitor"/>
-		<readWriteAccessDetector implementation="com.intellij.lang.javascript.findUsages.JSReadWriteAccessDetector"/>
-		<lang.refactoringSupport language="JavaScript"
-								 implementationClass="com.intellij.lang.javascript.refactoring.JavascriptRefactoringSupportProvider"/>
-		<lang.formatter language="JavaScript" implementationClass="com.intellij.lang.javascript.formatter.JavascriptFormattingModelBuilder"/>
-		<lang.documentationProvider language="JavaScript" implementationClass="com.intellij.javascript.documentation.JSDocumentationProvider"/>
-
-		<lang.namesValidator language="JavaScript" implementationClass="com.intellij.lang.javascript.refactoring.BasicJavascriptNamesValidator"/>
-
-		<lang.surroundDescriptor language="JavaScript"
-								 implementationClass="com.intellij.lang.javascript.surroundWith.JSExpressionSurroundDescriptor"/>
-		<lang.surroundDescriptor language="JavaScript"
-								 implementationClass="com.intellij.lang.javascript.surroundWith.JSStatementsSurroundDescriptor"/>
-
-		<codeInsight.gotoSuper language="JavaScript" implementationClass="com.intellij.lang.javascript.navigation.JavaScriptGotoSuperHandler"/>
-		<codeInsight.overrideMethod language="JavaScript"
-									implementationClass="com.intellij.lang.javascript.generation.JavaScriptOverrideMethodsHandler"/>
-		<codeInsight.implementMethod language="JavaScript"
-									 implementationClass="com.intellij.lang.javascript.generation.JavaScriptImplementMethodsHandler"/>
-
-		<lang.findUsagesProvider language="JavaScript" implementationClass="com.intellij.lang.javascript.findUsages.JavaScriptFindUsagesProvider"/>
-
-		<lang.syntaxHighlighterFactory language="JavaScript"
-									   implementationClass="consulo.javascript.ide.hightlight.JavaScriptSyntaxHighlightFactory"/>
-		<lang.commenter language="JavaScript" implementationClass="com.intellij.lang.javascript.JavascriptCommenter"/>
-
-		<lang.braceMatcher language="JavaScript" implementationClass="com.intellij.lang.javascript.highlighting.JSBraceMatcher"/>
-
-		<lang.foldingBuilder language="JavaScript" implementationClass="com.intellij.lang.javascript.folding.JavaScriptFoldingBuilder"/>
-		<lang.psiStructureViewFactory language="JavaScript"
-									  implementationClass="com.intellij.lang.javascript.structureView.JSStructureViewBuilderFactory"/>
-
-		<codeInsight.parameterInfo language="JavaScript" implementationClass="com.intellij.javascript.JSParameterInfoHandler"/>
-		<fileStructureGroupRuleProvider implementation="com.intellij.lang.javascript.findUsages.JavaScriptClassGroupRuleProvider"/>
-		<fileStructureGroupRuleProvider implementation="com.intellij.lang.javascript.findUsages.JavaScriptFunctionGroupRuleProvider"/>
-
-		<stubIndex implementation="com.intellij.lang.javascript.psi.stubs.JSNameIndex"/>
-		<stubIndex implementation="consulo.javascript.psi.stubs.index.JavaScriptClassNameIndex"/>
-		<stubIndex implementation="com.intellij.lang.javascript.psi.stubs.JSQualifiedElementIndex"/>
-		<stubIndex implementation="com.intellij.lang.javascript.psi.stubs.JSSuperClassIndex"/>
-		<stubIndex implementation="com.intellij.lang.javascript.psi.stubs.JSImplementedInterfacesIndex"/>
-
-		<fileTypeIndentOptionsProvider implementation="com.intellij.lang.javascript.formatter.JavaScriptIndentOptionsProvider"/>
-		<codeStyleSettingsProvider implementation="com.intellij.lang.javascript.formatter.JSCodeStyleSettingsProvider"/>
-		<langCodeStyleSettingsProvider implementation="consulo.javascript.formatter.JavaScriptLanguageCodeStyleSettingsProvider"/>
-		<liveTemplateContext implementation="com.intellij.lang.javascript.JavaScriptCodeContextType"/>
-
-		<codeInsight.lineMarkerProvider language="JavaScript"
-										implementationClass="com.intellij.lang.javascript.highlighting.JavaScriptLineMarkerProvider"/>
-		<gotoTargetRendererProvider implementation="com.intellij.lang.javascript.search.JSGotoTargetRendererProvider"/>
-		<definitionsScopedSearch implementation="com.intellij.lang.javascript.search.JSDefinitionsSearchExecutor"/>
-		<referencesSearch implementation="com.intellij.lang.javascript.search.JSReferencesSearchExecutor"/>
-		<declarationRangeHandler key="com.intellij.lang.javascript.psi.JSNamedElement"
-								 implementationClass="com.intellij.lang.javascript.search.JSDeclarationRangeHandler"/>
-		<multiHostInjector forClass="com.intellij.psi.xml.XmlText" implementationClass="com.intellij.lang.javascript.JSLanguageInjector"/>
-		<multiHostInjector forClass="com.intellij.psi.xml.XmlAttributeValue" implementationClass="com.intellij.lang.javascript.JSLanguageInjector"/>
-		<stubElementTypeHolder class="com.intellij.lang.javascript.JSElementTypes"/>
-
-		<lang.importOptimizer language="XML" implementationClass="com.intellij.lang.javascript.flex.ECMAScriptImportOptimizer"/>
-		<lang.smartEnterProcessor language="JavaScript" implementationClass="com.intellij.lang.javascript.JSSmartEnterProcessor"/>
-
-		<lang.implementationTextSelectioner language="JavaScript" implementationClass="com.intellij.javascript.JSImplementationTextSelectioner"/>
-		<lang.elementManipulator forClass="com.intellij.lang.javascript.psi.impl.JSIncludeDirectiveImpl"
-								 implementationClass="com.intellij.javascript.manipulators.JSIncludeDirectiveManipulator"/>
-		<lang.elementManipulator forClass="com.intellij.lang.javascript.psi.JSAttributeNameValuePair"
-								 implementationClass="com.intellij.javascript.manipulators.JSAttributeNameValuePairManipulator"/>
-		<lang.elementManipulator forClass="com.intellij.lang.javascript.psi.JSDocTag"
-								 implementationClass="com.intellij.javascript.manipulators.JSDocTagManipulator"/>
-
-		<lang.fileViewProviderFactory language="JavaScript" implementationClass="consulo.javascript.lang.viewProvider.JSFileViewProviderFactory" />
-
-		<completion.contributor language="JavaScript" implementationClass="consulo.javascript.ide.completion.JavaScriptKeywordCompletionContributor"/>
-
-		<completion.confidence language="JavaScript" implementationClass="com.intellij.codeInsight.completion.SkipAutopopupInStrings"/>
-
-		<quoteHandler fileType="JavaScript" className="consulo.javascript.lang.JavaScriptQuoteHandler"/>
-
-		<liveTemplateMacro implementation="com.intellij.javascript.JSClassNameMacro"/>
-		<liveTemplateMacro implementation="com.intellij.javascript.JSMethodNameMacro"/>
-
-		<inspectionToolProvider implementation="com.intellij.lang.javascript.inspections.JSInspectionToolProvider"/>
-		<inspectionToolProvider implementation="com.sixrr.inspectjs.InspectionJSPlugin" />
-
-		<filePropertyPusher implementation="consulo.javascript.lang.JavaScriptLanguageVersionPusher" />
-
-		<targetElementUtilEx implementation="com.intellij.lang.javascript.JavaScriptTargetElementUtilEx"/>
-
-		<findUsagesHandlerFactory implementation="consulo.javascript.findUsages.JavaScriptFindUsagesHandlerFactory"/>
-
-		<navbar implementation="consulo.javascript.ide.navigationToolbar.JavaScriptNavBarModelExtension" />
-
-		<sdkType implementation="consulo.javascript.client.module.sdk.ClientJavaScriptSdkType"/>
-		<predefinedBundlesProvider implementation="consulo.javascript.client.module.sdk.ClientJavaScriptPredefinedBundlesProvider"/>
-		<moduleExtensionProvider key="client-javascript"
-								 icon="consulo.javascript.JavaScriptIconGroup@javascript"
-								 name="JavaScript (Client)"
-								 allowMixin="true"
-								 immutableClass="consulo.javascript.client.module.extension.ClientJavaScriptModuleExtension"
-								 mutableClass="consulo.javascript.client.module.extension.ClientJavaScriptMutableModuleExtension"/>
-
-		<xdebugger.breakpointType implementation="consulo.javascript.debugger.JavaScriptLineBreakpointType"/>
-		<xdebugger.lineBreakpointTypeResolver filetype="JavaScript" implementationClass="consulo.javascript.debugger.JavaScriptLineBreakpointTypeResolver"/>
-	</extensions>
-
-	<extensionPoints>
-		<extensionPoint name="indexer" interface="consulo.javascript.index.JavaScriptIndexer"/>
-
-		<extensionPoint name="keywordCompletionExtender" interface="consulo.javascript.ide.completion.JavaScriptKeywordCompletionExtender" />
-
-		<extensionPoint name="resolveHelper" interface="com.intellij.lang.javascript.flex.JSResolveHelper"/>
-		<extensionPoint name="classInheritorsProvider" interface="com.intellij.lang.javascript.search.JSClassInheritorsProvider"/>
-
-		<extensionPoint name="propertyNameReferenceProvider" interface="consulo.javascript.psi.impl.reference.JSPropertyNameReferenceProvider"/>
-
-		<extensionPoint name="quickFixFactory" beanClass="com.intellij.util.KeyedLazyInstanceEP">
-			<with attribute="implementationClass" implements="consulo.javascript.ide.codeInsight.JavaScriptQuickFixFactory"/>
-		</extensionPoint>
-	</extensionPoints>
-
-	<extensions defaultExtensionNs="consulo.javascript">
-		<propertyNameReferenceProvider implementation="consulo.javascript.psi.impl.reference.DefaultJSPropertyNameReferenceProvider" id="default"/>
-	</extensions>
-
-	<actions>
-		<action id="Generate.GetAccessor.Actionscript" class="com.intellij.lang.javascript.generation.JavaScriptGenerateGetAccessorAction"
+		<action id="Generate.GetAccessor.Actionscript" class="com.intellij.lang.javascript.impl.generation.JavaScriptGenerateGetAccessorAction"
 				text="Getter">
 			<add-to-group anchor="last" group-id="GenerateGroup"/>
 		</action>
-		<action id="Generate.SetAccessor.Actionscript" class="com.intellij.lang.javascript.generation.JavaScriptGenerateSetAccessorAction"
+		<action id="Generate.SetAccessor.Actionscript" class="com.intellij.lang.javascript.impl.generation.JavaScriptGenerateSetAccessorAction"
 				text="Setter">
 			<add-to-group anchor="last" group-id="GenerateGroup"/>
 		</action>
-		<action id="Generate.GetSetAccessor.Actionscript" class="com.intellij.lang.javascript.generation.JavaScriptGenerateGetSetAccessorAction"
+		<action id="Generate.GetSetAccessor.Actionscript" class="com.intellij.lang.javascript.impl.generation.JavaScriptGenerateGetSetAccessorAction"
 				text="Getter and Setter">
 			<add-to-group anchor="last" group-id="GenerateGroup"/>
 		</action>
-		<action id="Generate.Constructor.Actionscript" class="com.intellij.lang.javascript.generation.JavaScriptGenerateConstructorAction"
+		<action id="Generate.Constructor.Actionscript" class="com.intellij.lang.javascript.impl.generation.JavaScriptGenerateConstructorAction"
 				text="Constructor">
 			<add-to-group anchor="last" group-id="GenerateGroup"/>
 		</action>
-		<action id="Generate.ToString.Actionscript" class="com.intellij.lang.javascript.generation.JavaScriptGenerateToStringAction"
+		<action id="Generate.ToString.Actionscript" class="com.intellij.lang.javascript.impl.generation.JavaScriptGenerateToStringAction"
 				text="toString() member function">
 			<add-to-group anchor="last" group-id="GenerateGroup"/>
 		</action>

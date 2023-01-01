@@ -16,31 +16,19 @@
 
 package com.intellij.lang.javascript.psi.util;
 
-import static com.intellij.lang.javascript.JSElementTypes.ASSIGNMENT_EXPRESSION;
-import static com.intellij.lang.javascript.JSElementTypes.BINARY_EXPRESSION;
-import static com.intellij.lang.javascript.JSElementTypes.CONDITIONAL_EXPRESSION;
-import static com.intellij.lang.javascript.JSElementTypes.POSTFIX_EXPRESSION;
-import static com.intellij.lang.javascript.JSElementTypes.PREFIX_EXPRESSION;
-import static com.intellij.lang.javascript.JSTokenTypes.*;
+import com.intellij.lang.javascript.psi.*;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.template.TemplateLanguageFileViewProvider;
+import consulo.xml.psi.xml.XmlAttributeValue;
+import consulo.xml.psi.xml.XmlFile;
+import consulo.xml.psi.xml.XmlTag;
+import consulo.xml.psi.xml.XmlTagChild;
 
-import com.intellij.lang.javascript.psi.JSBinaryExpression;
-import com.intellij.lang.javascript.psi.JSCallExpression;
-import com.intellij.lang.javascript.psi.JSDefinitionExpression;
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSIndexedPropertyAccessExpression;
-import com.intellij.lang.javascript.psi.JSNewExpression;
-import com.intellij.lang.javascript.psi.JSParenthesizedExpression;
-import com.intellij.lang.javascript.psi.JSReferenceExpression;
-import com.intellij.lang.javascript.psi.JSStatement;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.templateLanguages.TemplateLanguageFileViewProvider;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.xml.XmlAttributeValue;
-import com.intellij.psi.xml.XmlFile;
-import com.intellij.psi.xml.XmlTag;
-import com.intellij.psi.xml.XmlTagChild;
+import static com.intellij.lang.javascript.JSElementTypes.*;
+import static com.intellij.lang.javascript.JSTokenTypes.*;
 
 /**
  * @author max

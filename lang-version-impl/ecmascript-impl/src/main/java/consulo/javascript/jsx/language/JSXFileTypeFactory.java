@@ -1,7 +1,8 @@
 package consulo.javascript.jsx.language;
 
-import com.intellij.openapi.fileTypes.FileTypeConsumer;
-import com.intellij.openapi.fileTypes.FileTypeFactory;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.virtualFileSystem.fileType.FileTypeConsumer;
+import consulo.virtualFileSystem.fileType.FileTypeFactory;
 
 import javax.annotation.Nonnull;
 
@@ -9,6 +10,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2019-12-16
  */
+@ExtensionImpl
 public class JSXFileTypeFactory extends FileTypeFactory
 {
 	@Override

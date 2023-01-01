@@ -1,20 +1,24 @@
 package consulo.javascript.lang;
 
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.util.Factory;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.ide.hightlight.JavaScriptHighlighter;
 import consulo.javascript.lang.lexer.JavaScript15Lexer;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.javascript.language.StandardJavaScriptVersions;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.lexer.Lexer;
 
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 05.03.2015
  */
+@ExtensionImpl
 public class JavaScript15LanguageVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersions.Marker
 {
-	private static final Factory<Lexer> ourLexerFactory = () -> new JavaScript15Lexer();
+	private static final Supplier<Lexer> ourLexerFactory = () -> new JavaScript15Lexer();
 
 	@Nonnull
 	public static JavaScript15LanguageVersion getInstance()
@@ -37,7 +41,7 @@ public class JavaScript15LanguageVersion extends BaseJavaScriptLanguageVersion i
 	@Override
 	public Lexer createLexer()
 	{
-		return ourLexerFactory.create();
+		return ourLexerFactory.get();
 	}
 
 	@Nonnull

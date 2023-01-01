@@ -15,51 +15,66 @@
  */
 package org.intellij.idea.lang.javascript.psiutil;
 
+import com.intellij.lang.javascript.psi.JSLiteralExpression;
+import org.jetbrains.annotations.NonNls;
+
 import java.math.BigInteger;
 import java.util.regex.Pattern;
 
-import org.jetbrains.annotations.NonNls;
-
-import com.intellij.lang.javascript.psi.JSLiteralExpression;
-
 /**
+ *
  */
-public class NumberUtil {
-    private NumberUtil() {}
+public class NumberUtil
+{
+	private NumberUtil()
+	{
+	}
 
-    @NonNls public static final Pattern decimalPattern = Pattern.compile("[0-9]+");
-    @NonNls public static final Pattern octalPattern   = Pattern.compile("0[0-7]+");
-    @NonNls public static final Pattern hexPattern     = Pattern.compile("0[xX][0-9a-fA-F]+");
+	@NonNls
+	public static final Pattern decimalPattern = Pattern.compile("[0-9]+");
+	@NonNls
+	public static final Pattern octalPattern = Pattern.compile("0[0-7]+");
+	@NonNls
+	public static final Pattern hexPattern = Pattern.compile("0[xX][0-9a-fA-F]+");
 
-    public static BigInteger getLiteralNumber(JSLiteralExpression expression) {
-        String  expressionText = expression.getText();
-        int     radix          = 10;
+	public static BigInteger getLiteralNumber(JSLiteralExpression expression)
+	{
+		String expressionText = expression.getText();
+		int radix = 10;
 
-        if (expressionText == null || expressionText.length() == 0) {
-            return new BigInteger(new byte[] { 0 });
-        }
+		if(expressionText == null || expressionText.length() == 0)
+		{
+			return new BigInteger(new byte[]{0});
+		}
 
-        if (expressionText.charAt(0) == '0') {
-            if (expressionText.length() > 2 && Character.toUpperCase(expressionText.charAt(1)) == 'X') {
-                expressionText = expressionText.substring(2);
-                radix = 16;
-            } else if (octalPattern.matcher(expressionText).matches()) {
-                radix = 8;
-            }
-        }
+		if(expressionText.charAt(0) == '0')
+		{
+			if(expressionText.length() > 2 && Character.toUpperCase(expressionText.charAt(1)) == 'X')
+			{
+				expressionText = expressionText.substring(2);
+				radix = 16;
+			}
+			else if(octalPattern.matcher(expressionText).matches())
+			{
+				radix = 8;
+			}
+		}
 
-        return new BigInteger(expressionText, radix);
-    }
+		return new BigInteger(expressionText, radix);
+	}
 
-    public static boolean isOctal(String number) {
-        return octalPattern.matcher(number).matches();
-    }
+	public static boolean isOctal(String number)
+	{
+		return octalPattern.matcher(number).matches();
+	}
 
-    public static boolean isDecimal(String number) {
-        return decimalPattern.matcher(number).matches();
-    }
+	public static boolean isDecimal(String number)
+	{
+		return decimalPattern.matcher(number).matches();
+	}
 
-    public static boolean isHex(String number) {
-        return hexPattern.matcher(number).matches();
-    }
+	public static boolean isHex(String number)
+	{
+		return hexPattern.matcher(number).matches();
+	}
 }

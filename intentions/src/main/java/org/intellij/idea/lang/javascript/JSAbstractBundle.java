@@ -18,48 +18,61 @@ package org.intellij.idea.lang.javascript;
 /**
  * Abstract super class for JS inspection and intention bundles
  */
-public abstract class JSAbstractBundle {
-    protected JSAbstractBundle() {}
+public abstract class JSAbstractBundle
+{
+	protected JSAbstractBundle()
+	{
+	}
 
-    public static String getKey(String className, String classNameSuffix,
-                                String alternateClassNameSuffix, Object... suffixes) {
-        String name        = className;
-        int    dollarIndex = name.indexOf((int) '$');
+	public static String getKey(String className, String classNameSuffix,
+								String alternateClassNameSuffix, Object... suffixes)
+	{
+		String name = className;
+		int dollarIndex = name.indexOf((int) '$');
 
-        if (dollarIndex >= 0) {
-            name = name.substring(0, dollarIndex);
-        }
-        if (name.endsWith(classNameSuffix)) {
-            name = name.substring(0, name.length() - classNameSuffix.length());
-        }
-        if (alternateClassNameSuffix != null && name.endsWith(alternateClassNameSuffix)) {
-            name = name.substring(0, name.length() - alternateClassNameSuffix.length());
-        }
+		if(dollarIndex >= 0)
+		{
+			name = name.substring(0, dollarIndex);
+		}
+		if(name.endsWith(classNameSuffix))
+		{
+			name = name.substring(0, name.length() - classNameSuffix.length());
+		}
+		if(alternateClassNameSuffix != null && name.endsWith(alternateClassNameSuffix))
+		{
+			name = name.substring(0, name.length() - alternateClassNameSuffix.length());
+		}
 
-        final int           length           = name.length();
-        final StringBuilder buffer           = new StringBuilder(length + 10);
-        boolean             addWordSeparator = false;
+		final int length = name.length();
+		final StringBuilder buffer = new StringBuilder(length + 10);
+		boolean addWordSeparator = false;
 
-        for (int index = 0; index < length; index++){
-            final char c = name.charAt(index);
+		for(int index = 0; index < length; index++)
+		{
+			final char c = name.charAt(index);
 
-            if (Character.isUpperCase(c)) {
-                if (addWordSeparator) {
-                    buffer.append('-');
-                    addWordSeparator = false;
-                }
-                buffer.append(Character.toLowerCase(c));
-            } else {
-                addWordSeparator = (c != '.');
-                buffer.append(c);
-            }
-        }
+			if(Character.isUpperCase(c))
+			{
+				if(addWordSeparator)
+				{
+					buffer.append('-');
+					addWordSeparator = false;
+				}
+				buffer.append(Character.toLowerCase(c));
+			}
+			else
+			{
+				addWordSeparator = (c != '.');
+				buffer.append(c);
+			}
+		}
 
-        for (final Object suffix : suffixes) {
-            buffer.append(suffix);
-        }
+		for(final Object suffix : suffixes)
+		{
+			buffer.append(suffix);
+		}
 
-        return buffer.toString();
-    }
+		return buffer.toString();
+	}
 
 }

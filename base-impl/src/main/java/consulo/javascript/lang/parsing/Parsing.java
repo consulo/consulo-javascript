@@ -16,12 +16,12 @@
 
 package consulo.javascript.lang.parsing;
 
-import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
 import consulo.javascript.lang.JavaScriptContextKeywordElementType;
 import consulo.javascript.lang.parsing.impl.JavaScriptStrictParserBuilder;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.parser.PsiBuilder;
 import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;

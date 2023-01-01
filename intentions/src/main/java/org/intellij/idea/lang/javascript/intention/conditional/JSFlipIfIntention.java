@@ -15,8 +15,14 @@
  */
 package org.intellij.idea.lang.javascript.intention.conditional;
 
-import javax.annotation.Nonnull;
-
+import com.intellij.lang.javascript.psi.JSBlockStatement;
+import com.intellij.lang.javascript.psi.JSExpression;
+import com.intellij.lang.javascript.psi.JSIfStatement;
+import com.intellij.lang.javascript.psi.JSStatement;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.BoolUtils;
@@ -24,53 +30,61 @@ import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.jetbrains.annotations.NonNls;
 
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSIfStatement;
-import com.intellij.lang.javascript.psi.JSStatement;
-import com.intellij.lang.javascript.psi.JSBlockStatement;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
+import javax.annotation.Nonnull;
 
-public class JSFlipIfIntention extends JSIntention {
+@ExtensionImpl
+@IntentionMetaData(ignoreId = "JSFlipIfIntention", categories = {
+		"JavaScript",
+		"Conditional"
+}, fileExtensions = "js")
+public class JSFlipIfIntention extends JSIntention
+{
 
-    @NonNls private static final String IF_PREFIX    = "if (";
-    @NonNls private static final String ELSE_KEYWORD = "else ";
+	@NonNls
+	private static final String IF_PREFIX = "if (";
+	@NonNls
+	private static final String ELSE_KEYWORD = "else ";
 
-    @Override
+	@Override
 	@Nonnull
-    public JSElementPredicate getElementPredicate() {
-        return new FlipIfPredicate();
-    }
+	public JSElementPredicate getElementPredicate()
+	{
+		return new FlipIfPredicate();
+	}
 
-    @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSIfStatement exp             = (JSIfStatement) element;
-        final JSExpression  condition       = exp.getCondition();
-        final JSStatement   thenBranch      = exp.getThen();
-        final JSStatement   elseBranch      = exp.getElse();
-        final String        negatedText     = BoolUtils.getNegatedExpressionText(condition);
-        final boolean       emptyThenBranch = (thenBranch == null  ||
-                                               (thenBranch instanceof JSBlockStatement &&
-                                                ((JSBlockStatement) thenBranch).getStatements().length == 0));
-        final String        thenText        = (emptyThenBranch      ? ""   : ELSE_KEYWORD + thenBranch.getText());
-        final String        elseText        = ((elseBranch == null) ? "{}" : elseBranch.getText());
+	@Override
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
+	{
+		final JSIfStatement exp = (JSIfStatement) element;
+		final JSExpression condition = exp.getCondition();
+		final JSStatement thenBranch = exp.getThen();
+		final JSStatement elseBranch = exp.getElse();
+		final String negatedText = BoolUtils.getNegatedExpressionText(condition);
+		final boolean emptyThenBranch = (thenBranch == null ||
+				(thenBranch instanceof JSBlockStatement &&
+						((JSBlockStatement) thenBranch).getStatements().length == 0));
+		final String thenText = (emptyThenBranch ? "" : ELSE_KEYWORD + thenBranch.getText());
+		final String elseText = ((elseBranch == null) ? "{}" : elseBranch.getText());
 
-        final String newStatement = IF_PREFIX + negatedText + ')' + elseText + thenText;
+		final String newStatement = IF_PREFIX + negatedText + ')' + elseText + thenText;
 
-        JSElementFactory.replaceStatement(exp, newStatement);
-    }
+		JSElementFactory.replaceStatement(exp, newStatement);
+	}
 
-    private static class FlipIfPredicate implements JSElementPredicate {
-        @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-            if (!(element instanceof JSIfStatement) ||
-                ErrorUtil.containsError(element)) {
-                return false;
-            }
+	private static class FlipIfPredicate implements JSElementPredicate
+	{
+		@Override
+		public boolean satisfiedBy(@Nonnull PsiElement element)
+		{
+			if(!(element instanceof JSIfStatement) ||
+					ErrorUtil.containsError(element))
+			{
+				return false;
+			}
 
-            final JSIfStatement condition = (JSIfStatement) element;
+			final JSIfStatement condition = (JSIfStatement) element;
 
-            return (condition.getCondition() != null);
-        }
-    }
+			return (condition.getCondition() != null);
+		}
+	}
 }

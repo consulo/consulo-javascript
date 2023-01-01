@@ -16,10 +16,11 @@
 
 package com.intellij.lang.javascript;
 
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.language.ast.IElementType;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
-import com.intellij.psi.tree.IElementType;
-import consulo.javascript.lang.JavaScriptLanguage;
 
 /**
  * Created by IntelliJ IDEA.

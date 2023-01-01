@@ -1,7 +1,7 @@
 package consulo.javascript.lang.parsing;
 
-import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.impl.PsiBuilderAdapter;
+import consulo.language.parser.PsiBuilder;
+import consulo.language.parser.PsiBuilderAdapter;
 
 /**
  * @author VISTALL

@@ -1,12 +1,14 @@
 package com.sixrr.inspectjs.functionmetrics;
 
 import com.intellij.lang.javascript.psi.JSFunction;
-import com.intellij.psi.PsiElement;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.psi.PsiElement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import javax.annotation.Nonnull;
 
+@ExtensionImpl
 public class NestingDepthJSInspection extends FunctionMetricsInspection {
     @Override
 	@Nonnull

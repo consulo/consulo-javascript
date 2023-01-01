@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript;
 
-import com.intellij.lexer.FlexAdapter;
+import consulo.language.lexer.FlexAdapter;
 
 /**
  * @author Maxim.Mossienko

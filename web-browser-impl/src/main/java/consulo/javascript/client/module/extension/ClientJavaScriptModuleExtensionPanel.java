@@ -16,16 +16,15 @@
 
 package consulo.javascript.client.module.extension;
 
-import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.LabeledComponent;
-import com.intellij.openapi.ui.VerticalFlowLayout;
-import com.intellij.ui.CollectionComboBoxModel;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.language.version.LanguageVersion;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.CollectionComboBoxModel;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.javascript.lang.BaseJavaScriptLanguageVersion;
-import consulo.javascript.lang.JavaScriptLanguageVersion;
-import consulo.javascript.lang.StandardJavaScriptVersions;
+import consulo.javascript.language.JavaScriptLanguageVersion;
+import consulo.javascript.language.StandardJavaScriptVersions;
 import consulo.javascript.module.extension.JavaScriptMutableModuleExtension;
-import consulo.lang.LanguageVersion;
+import consulo.ui.ex.awt.LabeledComponent;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

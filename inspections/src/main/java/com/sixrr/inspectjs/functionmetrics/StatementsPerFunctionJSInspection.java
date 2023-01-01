@@ -1,16 +1,17 @@
 package com.sixrr.inspectjs.functionmetrics;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.psi.JSBlockStatement;
 import com.intellij.lang.javascript.psi.JSFunction;
-import com.intellij.psi.PsiElement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.psi.PsiElement;
 
-public class StatementsPerFunctionJSInspection
-        extends FunctionMetricsInspection {
+import javax.annotation.Nonnull;
+
+@ExtensionImpl
+public class StatementsPerFunctionJSInspection extends FunctionMetricsInspection {
     @Override
 	@Nonnull
     public String getID() {

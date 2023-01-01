@@ -2,8 +2,8 @@ package com.sixrr.inspectjs.dataflow;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
 import javax.annotation.Nonnull;
 

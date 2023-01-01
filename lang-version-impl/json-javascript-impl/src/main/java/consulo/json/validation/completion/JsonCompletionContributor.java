@@ -16,46 +16,41 @@
 
 package consulo.json.validation.completion;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-
-import com.intellij.codeInsight.completion.CompletionContributor;
-import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.codeInsight.completion.CompletionType;
-import com.intellij.codeInsight.completion.InsertHandler;
-import com.intellij.codeInsight.completion.InsertionContext;
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.icons.AllIcons;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSObjectLiteralExpression;
 import com.intellij.lang.javascript.psi.JSProperty;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.patterns.StandardPatterns;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.util.ProcessingContext;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.codeInsight.completion.CompletionProvider;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.AllIcons;
+import consulo.javascript.language.JavaScriptLanguage;
 import consulo.json.validation.JsonFileDescriptorProviders;
 import consulo.json.validation.NativeArray;
 import consulo.json.validation.descriptor.JsonObjectDescriptor;
 import consulo.json.validation.descriptor.JsonPropertyDescriptor;
 import consulo.json.validation.inspections.PropertyValidationInspection;
+import consulo.language.Language;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.editor.completion.*;
+import consulo.language.editor.completion.lookup.InsertHandler;
+import consulo.language.editor.completion.lookup.InsertionContext;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
+import consulo.language.pattern.StandardPatterns;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.util.ProcessingContext;
 import consulo.ui.image.Image;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.StringUtil;
+
+import javax.annotation.Nonnull;
+import java.util.*;
 
 /**
  * @author VISTALL
  * @since 10.11.2015
  */
+@ExtensionImpl
 public class JsonCompletionContributor extends CompletionContributor
 {
 	public JsonCompletionContributor()
@@ -205,8 +200,8 @@ public class JsonCompletionContributor extends CompletionContributor
 			{
 				continue;
 			}
-			LookupElementBuilder builder = LookupElementBuilder.create(quotes ? StringUtil.QUOTER.fun(key) : key);
-			builder = builder.withPresentableText(quotes ? StringUtil.QUOTER.fun(key) : key);
+			LookupElementBuilder builder = LookupElementBuilder.create(quotes ? StringUtil.QUOTER.apply(key) : key);
+			builder = builder.withPresentableText(quotes ? StringUtil.QUOTER.apply(key) : key);
 			builder = builder.withIcon((Image) AllIcons.Nodes.Property);
 			final JsonPropertyDescriptor value = entry.getValue();
 			if(value.isDeprecated())
@@ -275,5 +270,12 @@ public class JsonCompletionContributor extends CompletionContributor
 		}
 		// JsonObjectDescriptor
 		return "object";
+	}
+
+	@Nonnull
+	@Override
+	public Language getLanguage()
+	{
+		return JavaScriptLanguage.INSTANCE;
 	}
 }

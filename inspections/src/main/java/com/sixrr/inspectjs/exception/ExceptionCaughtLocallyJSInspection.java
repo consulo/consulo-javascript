@@ -1,17 +1,19 @@
 package com.sixrr.inspectjs.exception;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.JSThrowStatement;
 import com.intellij.lang.javascript.psi.JSTryStatement;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.psi.util.PsiTreeUtil;
 
+import javax.annotation.Nonnull;
+
+@ExtensionImpl
 public class ExceptionCaughtLocallyJSInspection extends JavaScriptInspection {
 
     @Override

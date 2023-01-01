@@ -16,19 +16,22 @@
 
 package consulo.json.jom;
 
-import javax.annotation.Nonnull;
-
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.psi.PsiFile;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.component.extension.ExtensionPointName;
+import consulo.language.psi.PsiFile;
 import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 10.11.2015
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class JomFileDescriptor<T extends JomElement>
 {
-	public static ExtensionPointName<JomFileDescriptor> EP_NAME = new ExtensionPointName<JomFileDescriptor>("consulo.javascript.jomFileDescriptor");
+	public static ExtensionPointName<JomFileDescriptor> EP_NAME = ExtensionPointName.create(JomFileDescriptor.class);
 
 	private Class<T> myDefinitionClass;
 

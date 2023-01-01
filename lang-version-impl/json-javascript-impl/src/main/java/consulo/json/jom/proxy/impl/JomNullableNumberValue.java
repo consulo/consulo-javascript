@@ -1,21 +1,21 @@
 package consulo.json.jom.proxy.impl;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-
-import javax.annotation.Nonnull;
-
+import com.intellij.lang.javascript.JSTokenTypes;
+import com.intellij.lang.javascript.psi.JSLiteralExpression;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.json.jom.proxy.JomBadValueExpressionException;
 import consulo.json.jom.proxy.JomValueConverter;
-import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.psi.JSLiteralExpression;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.ReflectionUtil;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.lazy.LazyValue;
+import consulo.util.lang.reflect.ReflectionUtil;
+
+import javax.annotation.Nonnull;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -25,24 +25,19 @@ public class JomNullableNumberValue<T> implements JomValueConverter.Converter<T>
 {
 	protected Class<T> myClass;
 
-	protected NotNullLazyValue<Method> myParseMethodValue = new NotNullLazyValue<Method>()
+	protected Supplier<Method> myParseMethodValue;
+
+	public JomNullableNumberValue(Class<T> aClass)
 	{
-		@Nonnull
-		@Override
-		@SuppressWarnings("unchecked")
-		protected Method compute()
+		myClass = aClass;
+		myParseMethodValue = LazyValue.notNull(() ->
 		{
 			Class primitiveType = ReflectionUtil.getStaticFieldValue(myClass, Class.class, "TYPE");
 
 			Method method = ReflectionUtil.getMethod(myClass, "parse" + StringUtil.capitalize(primitiveType.getSimpleName()), String.class);
 			assert method != null;
 			return method;
-		}
-	};
-
-	public JomNullableNumberValue(Class<T> aClass)
-	{
-		myClass = aClass;
+		});
 	}
 
 	@Override
@@ -63,7 +58,7 @@ public class JomNullableNumberValue<T> implements JomValueConverter.Converter<T>
 			{
 				try
 				{
-					return (T) myParseMethodValue.getValue().invoke(null, value.getText());
+					return (T) myParseMethodValue.get().invoke(null, value.getText());
 				}
 				catch(Exception e)
 				{

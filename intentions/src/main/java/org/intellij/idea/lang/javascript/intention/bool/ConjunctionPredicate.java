@@ -15,29 +15,32 @@
  */
 package org.intellij.idea.lang.javascript.intention.bool;
 
-import javax.annotation.Nonnull;
-
+import com.intellij.lang.javascript.JSTokenTypes;
+import com.intellij.lang.javascript.psi.JSBinaryExpression;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 
-import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.psi.JSBinaryExpression;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.PsiElement;
+import javax.annotation.Nonnull;
 
-class ConjunctionPredicate implements JSElementPredicate {
-    @Override
-	public boolean satisfiedBy(@Nonnull PsiElement element) {
-        if (!(element instanceof JSBinaryExpression)) {
-            return false;
-        }
-        if (ErrorUtil.containsError(element)) {
-            return false;
-        }
+class ConjunctionPredicate implements JSElementPredicate
+{
+	@Override
+	public boolean satisfiedBy(@Nonnull PsiElement element)
+	{
+		if(!(element instanceof JSBinaryExpression))
+		{
+			return false;
+		}
+		if(ErrorUtil.containsError(element))
+		{
+			return false;
+		}
 
-        final JSBinaryExpression expression = (JSBinaryExpression) element;
-        final IElementType       sign       = expression.getOperationSign();
+		final JSBinaryExpression expression = (JSBinaryExpression) element;
+		final IElementType sign = expression.getOperationSign();
 
-        return (sign.equals(JSTokenTypes.ANDAND) || sign.equals(JSTokenTypes.OROR));
-    }
+		return (sign.equals(JSTokenTypes.ANDAND) || sign.equals(JSTokenTypes.OROR));
+	}
 }

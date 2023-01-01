@@ -15,10 +15,11 @@
  */
 package org.intellij.idea.lang.javascript.intention;
 
+import consulo.language.psi.PsiElement;
+
 import javax.annotation.Nonnull;
 
-import com.intellij.psi.PsiElement;
-
-public interface JSElementPredicate {
-    boolean satisfiedBy(@Nonnull PsiElement element);
+public interface JSElementPredicate
+{
+	boolean satisfiedBy(@Nonnull PsiElement element);
 }

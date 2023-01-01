@@ -15,141 +15,173 @@
  */
 package org.intellij.idea.lang.javascript.intention;
 
+import com.intellij.lang.javascript.psi.JSElement;
+import consulo.language.psi.PsiElement;
+import consulo.xml.psi.xml.XmlFile;
+import org.intellij.idea.lang.javascript.psiutil.ArrayStack;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.intellij.idea.lang.javascript.psiutil.ArrayStack;
+public abstract class JSElementIterator implements Iterator<PsiElement>
+{
 
-import com.intellij.lang.javascript.psi.JSElement;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.xml.XmlFile;
+	private boolean reverse;
+	private final int minTextOffset;
+	private final int maxTextOffset;
+	private ArrayStack<PsiElement> elementStack;
+	private PsiElement next;
+	private boolean retrieveNext;
 
-public abstract class JSElementIterator implements Iterator<PsiElement> {
+	public JSElementIterator(PsiElement element)
+	{
+		this(element, false, 0, Integer.MAX_VALUE);
+	}
 
-    private boolean                reverse;
-    private final int              minTextOffset;
-    private final int              maxTextOffset;
-    private ArrayStack<PsiElement> elementStack;
-    private PsiElement             next;
-    private boolean                retrieveNext;
+	public JSElementIterator(PsiElement element, boolean reverse)
+	{
+		this(element, reverse, 0, Integer.MAX_VALUE);
+	}
 
-    public JSElementIterator(PsiElement element) {
-        this(element, false, 0, Integer.MAX_VALUE);
-    }
+	public JSElementIterator(PsiElement element, boolean reverse, int minTextOffset, int maxTextOffset)
+	{
+		this.reverse = reverse;
+		this.minTextOffset = minTextOffset;
+		this.maxTextOffset = maxTextOffset;
+		this.retrieveNext = true;
+		this.elementStack = new ArrayStack<PsiElement>();
 
-    public JSElementIterator(PsiElement element, boolean reverse) {
-        this(element, reverse, 0, Integer.MAX_VALUE);
-    }
+		if(element instanceof XmlFile)
+		{
+			for(JSElement embeddedElement : JSFunctionVisitor.getEmbeddedJSElements((XmlFile) element))
+			{
+				if(reverse)
+				{
+					this.elementStack.add(0, embeddedElement);
+				}
+				else
+				{
+					this.elementStack.add(embeddedElement);
+				}
+			}
+		}
+		else if(element instanceof JSElement)
+		{
+			this.elementStack.push(element);
+		}
+		else
+		{
+			throw new ClassCastException(element.getClass().getName());
+		}
+	}
 
-    public JSElementIterator(PsiElement element, boolean reverse, int minTextOffset, int maxTextOffset) {
-        this.reverse       = reverse;
-        this.minTextOffset = minTextOffset;
-        this.maxTextOffset = maxTextOffset;
-        this.retrieveNext  = true;
-        this.elementStack  = new ArrayStack<PsiElement>();
+	/**
+	 * Returns <tt>true</tt> if this element should be part of the iteration,
+	 * <tt>false</tt> otherwise.
+	 *
+	 * @param element this element
+	 * @return <tt>true</tt> if this element should be part of the iteration,
+	 * <tt>false</tt> otherwise.
+	 */
+	protected abstract boolean visitElement(PsiElement element);
 
-        if (element instanceof XmlFile) {
-            for (JSElement embeddedElement : JSFunctionVisitor.getEmbeddedJSElements((XmlFile) element)) {
-                if (reverse) {
-                    this.elementStack.add(0, embeddedElement);
-                } else {
-                    this.elementStack.add(embeddedElement);
-                }
-            }
-        } else if (element instanceof JSElement) {
-            this.elementStack.push(element);
-        } else {
-            throw new ClassCastException(element.getClass().getName());
-        }
-    }
+	private void findNext()
+	{
+		PsiElement element = null;
+		boolean pass = false;
 
-    /**
-     * Returns <tt>true</tt> if this element should be part of the iteration,
-     * <tt>false</tt> otherwise.
-     * @param element  this element
-     * @return <tt>true</tt> if this element should be part of the iteration,
-     *         <tt>false</tt> otherwise.
-     */
-    protected abstract boolean visitElement(PsiElement element);
+		if(!this.elementStack.empty())
+		{
+			do
+			{
+				element = this.elementStack.pop();
 
-    private void findNext() {
-        PsiElement element = null;
-        boolean    pass    = false;
+				final int elementTextOffset = element.getTextOffset();
+				final int elementTextEndOffset = elementTextOffset + element.getTextLength();
 
-        if (!this.elementStack.empty()) {
-            do {
-                element = this.elementStack.pop();
+				if(elementTextEndOffset >= this.minTextOffset &&
+						elementTextOffset <= this.maxTextOffset)
+				{
+					pass = this.visitElement(element);
+					this.pushChildren(element.getChildren(),
+							(this.reverse ? elementTextOffset : elementTextEndOffset));
+				}
+			}
+			while(!(pass || this.elementStack.empty()));
+		}
 
-                final int elementTextOffset    = element.getTextOffset();
-                final int elementTextEndOffset = elementTextOffset + element.getTextLength();
+		this.next = (pass ? element : null);
+		this.retrieveNext = false;
+	}
 
-                if (elementTextEndOffset >= this.minTextOffset &&
-                    elementTextOffset    <= this.maxTextOffset) {
-                    pass = this.visitElement(element);
-                    this.pushChildren(element.getChildren(),
-                                      (this.reverse ? elementTextOffset : elementTextEndOffset));
-                }
-            } while (!(pass || this.elementStack.empty()));
-        }
+	private void pushChildren(PsiElement[] children, int elementTextOffset)
+	{
+		int childTextOffset = elementTextOffset;
 
-        this.next         = (pass ? element : null);
-        this.retrieveNext = false;
-    }
+		if(this.reverse)
+		{
+			int index = 0;
 
-    private void pushChildren(PsiElement[] children, int elementTextOffset) {
-        int childTextOffset = elementTextOffset;
+			while(index < children.length && childTextOffset <= this.maxTextOffset)
+			{
+				final PsiElement child = children[index];
 
-        if (this.reverse) {
-            int index = 0;
+				childTextOffset = child.getTextOffset();
+				if(childTextOffset <= this.maxTextOffset)
+				{
+					this.elementStack.push(child);
+				}
+				index++;
+			}
+		}
+		else
+		{
+			int index = children.length - 1;
 
-            while (index < children.length && childTextOffset <= this.maxTextOffset) {
-                final PsiElement child = children[index];
+			while(index >= 0 && childTextOffset >= this.minTextOffset)
+			{
+				final PsiElement child = children[index];
 
-                childTextOffset = child.getTextOffset();
-                if (childTextOffset <= this.maxTextOffset) {
-                    this.elementStack.push(child);
-                }
-                index++;
-            }
-        } else {
-            int index = children.length - 1;
+				childTextOffset = child.getTextOffset() + child.getTextLength();
+				if(childTextOffset >= this.minTextOffset)
+				{
+					this.elementStack.push(child);
+				}
+				index--;
+			}
+		}
+	}
 
-            while (index >= 0 && childTextOffset >= this.minTextOffset) {
-                final PsiElement child = children[index];
+	@Override
+	public boolean hasNext()
+	{
+		if(this.retrieveNext)
+		{
+			this.findNext();
+		}
 
-                childTextOffset = child.getTextOffset() + child.getTextLength();
-                if (childTextOffset >= this.minTextOffset) {
-                    this.elementStack.push(child);
-                }
-                index--;
-            }
-        }
-    }
+		return (this.next != null);
+	}
 
-    @Override
-	public boolean hasNext() {
-        if (this.retrieveNext) {
-            this.findNext();
-        }
+	@Override
+	public PsiElement next()
+	{
+		if(this.retrieveNext)
+		{
+			this.findNext();  // hasNext() has not been called
+		}
+		if(this.next == null)
+		{
+			throw new NoSuchElementException();
+		}
 
-        return (this.next != null);
-    }
+		this.retrieveNext = true;
+		return this.next;
+	}
 
-    @Override
-	public PsiElement next() {
-        if (this.retrieveNext) {
-            this.findNext();  // hasNext() has not been called
-        }
-        if (this.next == null) {
-            throw new NoSuchElementException();
-        }
-
-        this.retrieveNext = true;
-        return this.next;
-    }
-
-    @Override
-	public void remove() {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public void remove()
+	{
+		throw new UnsupportedOperationException();
+	}
 }

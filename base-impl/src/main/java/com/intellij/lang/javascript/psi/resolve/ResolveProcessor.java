@@ -16,7 +16,6 @@
 
 package com.intellij.lang.javascript.psi.resolve;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
@@ -24,20 +23,21 @@ import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSClassImpl;
 import com.intellij.lang.javascript.psi.util.JSLookupUtil;
 import com.intellij.lang.javascript.validation.JSUnusedImportsHelper;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.ResolveResult;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.xml.XmlAttributeValue;
-import com.intellij.psi.xml.XmlTag;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.SmartList;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.psi.impl.resolve.ResolveHelper;
 import consulo.javascript.psi.JavaScriptImportStatementBase;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiNamedElement;
+import consulo.language.psi.ResolveResult;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.xml.psi.xml.XmlAttributeValue;
+import consulo.xml.psi.xml.XmlTag;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

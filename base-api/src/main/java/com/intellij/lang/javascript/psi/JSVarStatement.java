@@ -17,8 +17,8 @@
 package com.intellij.lang.javascript.psi;
 
 import com.intellij.lang.javascript.psi.stubs.JSVarStatementStub;
-import com.intellij.psi.StubBasedPsiElement;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.language.psi.StubBasedPsiElement;
 
 import javax.annotation.Nullable;
 

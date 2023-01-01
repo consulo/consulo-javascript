@@ -2,19 +2,22 @@ package com.sixrr.inspectjs.confusing;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.ast.IElementType;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.ui.SingleIntegerFieldOptionsPanel;
+import consulo.language.psi.PsiElement;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@ExtensionImpl
 public class OverlyComplexArithmeticExpressionJSInspection extends JavaScriptInspection {
     private static final int TERM_LIMIT = 6;
 

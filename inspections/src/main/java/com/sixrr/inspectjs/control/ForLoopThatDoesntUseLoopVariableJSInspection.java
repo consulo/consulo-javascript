@@ -1,11 +1,13 @@
 package com.sixrr.inspectjs.control;
 
+import com.intellij.lang.javascript.psi.*;
+import com.sixrr.inspectjs.*;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.psi.PsiElement;
+
 import javax.annotation.Nonnull;
 
-import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.PsiElement;
-import com.sixrr.inspectjs.*;
-
+@ExtensionImpl
 public class ForLoopThatDoesntUseLoopVariableJSInspection
         extends JavaScriptInspection {
 

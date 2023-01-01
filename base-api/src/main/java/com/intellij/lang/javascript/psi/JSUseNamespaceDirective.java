@@ -17,7 +17,7 @@
 package com.intellij.lang.javascript.psi;
 
 import com.intellij.lang.javascript.psi.stubs.JSUseNamespaceDirectiveStub;
-import com.intellij.psi.StubBasedPsiElement;
+import consulo.language.psi.StubBasedPsiElement;
 
 /**
  * @by Maxim.Mossienko

@@ -19,7 +19,7 @@ public class JomNumberValue<T> extends JomNullableNumberValue<T>
 	{
 		try
 		{
-			return (T) myParseMethodValue.getValue().invoke(null, "0");
+			return (T) myParseMethodValue.get().invoke(null, "0");
 		}
 		catch(Exception e)
 		{

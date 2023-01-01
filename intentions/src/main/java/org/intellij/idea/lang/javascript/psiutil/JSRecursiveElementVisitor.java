@@ -22,9 +22,12 @@ import com.intellij.lang.javascript.psi.JSElementVisitor;
  * Represents a JS element visitor which recursively visits the children of the element
  * on which the visit was started.
  */
-public abstract class JSRecursiveElementVisitor extends JSElementVisitor {
-    @Override public void visitJSElement(JSElement element) {
-        element.acceptChildren(this);
-    }
+public abstract class JSRecursiveElementVisitor extends JSElementVisitor
+{
+	@Override
+	public void visitJSElement(JSElement element)
+	{
+		element.acceptChildren(this);
+	}
 }
 

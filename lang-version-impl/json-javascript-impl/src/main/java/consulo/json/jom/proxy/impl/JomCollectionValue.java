@@ -11,9 +11,9 @@ import consulo.json.jom.proxy.JomBadValueExpressionException;
 import consulo.json.jom.proxy.JomValueConverter;
 import com.intellij.lang.javascript.psi.JSArrayLiteralExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.openapi.util.Pair;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.ReflectionUtil;
+import consulo.language.psi.PsiElement;
+import consulo.util.lang.Pair;
+import consulo.util.lang.reflect.ReflectionUtil;
 
 /**
  * @author VISTALL

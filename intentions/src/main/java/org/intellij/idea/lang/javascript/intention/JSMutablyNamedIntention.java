@@ -15,34 +15,42 @@
  */
 package org.intellij.idea.lang.javascript.intention;
 
+import consulo.codeEditor.Editor;
+import consulo.language.psi.PsiElement;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
-
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NonNls;
-
 import javax.annotation.Nullable;
 
-public abstract class JSMutablyNamedIntention extends JSIntention {
-    private String text;
+public abstract class JSMutablyNamedIntention extends JSIntention
+{
+	private String myText;
 
-    @NonNls protected abstract String getTextForElement(PsiElement element);
+	protected abstract String getTextForElement(PsiElement element);
 
-    @Override
+	@Override
 	@Nonnull
-	public String getText() {
-      return text;
-    }
+	public String getText()
+	{
+		if(myText != null)
+		{
+			return myText;
+		}
+		return super.getText();
+	}
 
-    @Override
-	public boolean isAvailable(@Nonnull Project project, Editor editor, @Nullable PsiElement node) {
-      final PsiElement element = findMatchingElement(node);
-      if (element != null) {
-        text = getTextForElement(element);
-        return true;
-      } else {
-        return false;
-      }
-    }
+	@Override
+	public boolean isAvailable(@Nonnull Project project, Editor editor, @Nullable PsiElement node)
+	{
+		final PsiElement element = findMatchingElement(node);
+		if(element != null)
+		{
+			myText = getTextForElement(element);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }

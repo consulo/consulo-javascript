@@ -16,16 +16,14 @@
  */
 package com.intellij.lang.javascript.types;
 
-import com.intellij.lang.Language;
 import com.intellij.lang.javascript.psi.JSFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.StubBuilder;
-import com.intellij.psi.stubs.*;
-import com.intellij.psi.tree.IStubFileElementType;
-import com.intellij.util.io.StringRef;
+import consulo.index.io.StringRef;
+import consulo.language.psi.stub.*;
 import consulo.javascript.index.JavaScriptIndexer;
 import consulo.javascript.psi.stubs.JSFileStub;
-import consulo.javascript.psi.stubs.impl.JSFileStubImpl;
+import consulo.javascript.impl.language.psi.stub.JSFileStubImpl;
+import consulo.language.Language;
+import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;

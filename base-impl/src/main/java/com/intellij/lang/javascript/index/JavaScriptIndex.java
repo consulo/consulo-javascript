@@ -16,8 +16,8 @@
 
 package com.intellij.lang.javascript.index;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 
 /**
  * @author maxim, yole

@@ -1,14 +1,16 @@
 package com.sixrr.inspectjs.control;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.psi.JSCaseClause;
 import com.intellij.lang.javascript.psi.JSSwitchStatement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import consulo.annotation.component.ExtensionImpl;
 
+import javax.annotation.Nonnull;
+
+@ExtensionImpl
 public class DefaultNotLastCaseInSwitchJSInspection extends JavaScriptInspection {
 
     @Override

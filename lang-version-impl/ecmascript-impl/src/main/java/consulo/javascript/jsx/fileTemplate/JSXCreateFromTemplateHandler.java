@@ -1,15 +1,19 @@
 package consulo.javascript.jsx.fileTemplate;
 
-import com.intellij.ide.fileTemplates.DefaultCreateFromTemplateHandler;
-import com.intellij.ide.fileTemplates.FileTemplate;
-import com.intellij.lang.javascript.JavaScriptFileType;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.language.JavaScriptFileType;
+import consulo.fileTemplate.CreateFromTemplateHandler;
+import consulo.fileTemplate.FileTemplate;
 import consulo.javascript.jsx.language.JSXFileType;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2019-12-17
  */
-public class JSXCreateFromTemplateHandler extends DefaultCreateFromTemplateHandler
+@ExtensionImpl
+public class JSXCreateFromTemplateHandler implements CreateFromTemplateHandler
 {
 	@Override
 	public boolean handlesTemplate(FileTemplate template)
@@ -17,13 +21,14 @@ public class JSXCreateFromTemplateHandler extends DefaultCreateFromTemplateHandl
 		return template.getExtension().equals(JavaScriptFileType.INSTANCE.getDefaultExtension());
 	}
 
+	@Nonnull
 	@Override
-	protected String checkAppendExtension(String fileName, FileTemplate template)
+	public String checkAppendExtension(String fileName, FileTemplate template)
 	{
 		if(fileName.endsWith("." + JSXFileType.INSTANCE.getDefaultExtension()))
 		{
 			return fileName;
 		}
-		return super.checkAppendExtension(fileName, template);
+		return CreateFromTemplateHandler.super.checkAppendExtension(fileName, template);
 	}
 }

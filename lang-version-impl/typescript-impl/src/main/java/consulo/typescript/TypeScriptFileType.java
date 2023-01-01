@@ -16,15 +16,15 @@
 
 package consulo.typescript;
 
-import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.module.Module;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.icon.JavaScriptIconGroup;
-import consulo.javascript.lang.JavaScriptFileTypeWithVersion;
-import consulo.javascript.lang.JavaScriptLanguage;
+import consulo.javascript.language.JavaScriptFileTypeWithVersion;
+import consulo.javascript.language.JavaScriptLanguage;
 import consulo.javascript.localize.JavaScriptLocalize;
-import consulo.lang.LanguageVersion;
+import consulo.language.version.LanguageVersion;
+import consulo.language.file.LanguageFileType;
 import consulo.localize.LocalizeValue;
 import consulo.typescript.version.TypeScriptLanguageVersion;
 import consulo.ui.image.Image;
@@ -70,7 +70,7 @@ public class TypeScriptFileType extends LanguageFileType implements JavaScriptFi
 	@Override
 	public Image getIcon()
 	{
-		return JavaScriptIconGroup.typeScript();
+		return JavaScriptIconGroup.typescript();
 	}
 
 	@RequiredReadAction

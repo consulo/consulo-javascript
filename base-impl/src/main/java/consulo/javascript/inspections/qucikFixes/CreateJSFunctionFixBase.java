@@ -17,19 +17,19 @@
 
 package consulo.javascript.inspections.qucikFixes;
 
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import org.jetbrains.annotations.PropertyKey;
-import com.intellij.codeInsight.template.Template;
-import com.intellij.lang.javascript.JavaScriptBundle;
+import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.inspections.qucikFixes.BaseCreateFix;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.lang.JavaScriptFeature;
+import consulo.javascript.language.JavaScriptFeature;
+import consulo.language.editor.template.Template;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import org.jetbrains.annotations.PropertyKey;
+
+import javax.annotation.Nonnull;
+import java.util.Set;
 
 /**
 * @author VISTALL
@@ -63,7 +63,7 @@ public abstract class CreateJSFunctionFixBase extends BaseCreateFix
 	@RequiredReadAction
 	@Override
 	protected void buildTemplate(Template template, JSReferenceExpression referenceExpression, Set<JavaScriptFeature> features, boolean staticContext, PsiFile file,
-			PsiElement anchorParent)
+								 PsiElement anchorParent)
 	{
 		boolean classFeature = features.contains(JavaScriptFeature.CLASS);
 		String referencedName = classFeature ? referenceExpression.getReferencedName() : referenceExpression.getText();

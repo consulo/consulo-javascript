@@ -1,23 +1,21 @@
 package com.sixrr.inspectjs.style;
 
+import com.intellij.lang.javascript.psi.*;
+import com.sixrr.inspectjs.*;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiErrorElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
+import consulo.xml.psi.xml.XmlAttributeValue;
+import consulo.xml.psi.xml.XmlTagChild;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.lang.javascript.psi.*;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiErrorElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.xml.XmlAttributeValue;
-import com.intellij.psi.xml.XmlTagChild;
-import com.intellij.util.IncorrectOperationException;
-import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
-import com.sixrr.inspectjs.InspectionJSFix;
-import com.sixrr.inspectjs.JSGroupNames;
-import com.sixrr.inspectjs.JavaScriptInspection;
-
+@ExtensionImpl
 public class UnterminatedStatementJSInspection extends JavaScriptInspection
 {
 	@Override

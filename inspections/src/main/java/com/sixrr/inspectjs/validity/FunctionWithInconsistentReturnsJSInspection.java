@@ -1,16 +1,18 @@
 package com.sixrr.inspectjs.validity;
 
-import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
+import consulo.language.editor.inspection.ProblemHighlightType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@ExtensionImpl
 public class FunctionWithInconsistentReturnsJSInspection extends JavaScriptInspection
 {
 

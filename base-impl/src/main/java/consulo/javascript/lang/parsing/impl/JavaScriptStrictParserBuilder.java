@@ -1,18 +1,18 @@
 package consulo.javascript.lang.parsing.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nullable;
-import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.ThreeState;
-import consulo.javascript.lang.JavaScriptConstants;
+import consulo.javascript.language.JavaScriptConstants;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.javascript.lang.parsing.JavaScriptParserBuilder;
+import consulo.language.ast.IElementType;
+import consulo.language.parser.PsiBuilder;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.ThreeState;
+
+import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author VISTALL

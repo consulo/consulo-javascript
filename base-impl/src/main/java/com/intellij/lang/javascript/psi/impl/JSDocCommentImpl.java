@@ -16,13 +16,13 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSDocTokenTypes;
 import com.intellij.lang.javascript.psi.JSDocComment;
 import com.intellij.lang.javascript.psi.JSDocTag;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.ASTNode;
 
 import javax.annotation.Nonnull;
 

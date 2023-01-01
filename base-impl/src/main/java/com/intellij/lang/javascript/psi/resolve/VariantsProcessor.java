@@ -16,19 +16,19 @@
 
 package com.intellij.lang.javascript.psi.resolve;
 
-import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.util.JSLookupUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.ArrayUtil;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.lang.JavaScriptFeature;
+import consulo.javascript.language.JavaScriptFeature;
 import consulo.javascript.psi.JavaScriptImportStatementBase;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiNamedElement;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.util.collection.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
 
 import java.util.*;
