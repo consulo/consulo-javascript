@@ -13,6 +13,7 @@ open module consulo.javascript
 
 	// TODO remove in future
 	requires java.desktop;
+	requires forms.rt;
 
 	exports com.intellij.javascript;
 	exports com.intellij.javascript.manipulators;
