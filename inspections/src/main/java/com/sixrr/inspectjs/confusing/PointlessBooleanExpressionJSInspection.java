@@ -1,5 +1,6 @@
 package com.sixrr.inspectjs.confusing;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -49,8 +50,9 @@ public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection
         return new PointlessBooleanExpressionVisitor();
     }
 
-    @Override
-	public String buildErrorString(Object... args) {
+    @RequiredReadAction
+	@Override
+	public String buildErrorString(Object state, Object... args) {
         if ( args[0]instanceof JSBinaryExpression) {
             return InspectionJSBundle.message("pointless.boolean.error.string", calculateSimplifiedBinaryExpression((JSBinaryExpression) args[0]));
         } else {
@@ -143,7 +145,7 @@ public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location) {
+	public InspectionJSFix buildFix(PsiElement location, Object state) {
         return fix;
     }
 

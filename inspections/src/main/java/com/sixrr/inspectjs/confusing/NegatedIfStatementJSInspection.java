@@ -8,6 +8,7 @@ import com.intellij.lang.javascript.psi.JSStatement;
 import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.BoolUtils;
 import com.sixrr.inspectjs.utils.ParenthesesUtils;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.inspection.ProblemDescriptor;
@@ -36,9 +37,10 @@ public class NegatedIfStatementJSInspection extends JavaScriptInspection {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
-    @Override
+    @RequiredReadAction
+	@Override
 	@Nullable
-    protected String buildErrorString(Object... args) {
+    protected String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message("negated.ref.statement.error.string");
     }
 
@@ -48,7 +50,7 @@ public class NegatedIfStatementJSInspection extends JavaScriptInspection {
     }
 
     @Override
-	protected InspectionJSFix buildFix(PsiElement location) {
+	protected InspectionJSFix buildFix(PsiElement location, Object state) {
         return fix;
     }
 

@@ -44,9 +44,10 @@ public class BadExpressionStatementJSInspection extends JavaScriptInspection
 		return true;
 	}
 
+	@RequiredReadAction
 	@Override
 	@Nullable
-	protected String buildErrorString(Object... args)
+	protected String buildErrorString(Object state, Object... args)
 	{
 		return InspectionJSBundle.message("expression.statement.is.not.assignment.or.call.error.string");
 	}

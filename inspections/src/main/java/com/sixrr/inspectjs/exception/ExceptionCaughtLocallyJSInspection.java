@@ -8,6 +8,7 @@ import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.util.PsiTreeUtil;
 
@@ -33,8 +34,9 @@ public class ExceptionCaughtLocallyJSInspection extends JavaScriptInspection {
         return true;
     }
 
-    @Override
-	public String buildErrorString(Object... args) {
+    @RequiredReadAction
+	@Override
+	public String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message("exception.caught.locally.error.string");
     }
 

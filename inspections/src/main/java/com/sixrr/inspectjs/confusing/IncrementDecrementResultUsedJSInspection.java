@@ -2,6 +2,7 @@ package com.sixrr.inspectjs.confusing;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
 import consulo.language.ast.IElementType;
@@ -27,9 +28,10 @@ public class IncrementDecrementResultUsedJSInspection extends JavaScriptInspecti
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
-    @Override
+    @RequiredReadAction
+	@Override
 	@Nullable
-    protected String buildErrorString(Object... args) {
+    protected String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message("result.of.increment.or.decrement.expression.used.error.string");
     }
 

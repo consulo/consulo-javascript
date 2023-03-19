@@ -6,6 +6,7 @@ import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
 
@@ -32,8 +33,9 @@ public class ThreeNegationsPerFunctionJSInspection extends JavaScriptInspection 
         return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
     }
 
-    @Override
-	public String buildErrorString(Object... args) {
+    @RequiredReadAction
+	@Override
+	public String buildErrorString(Object state, Object... args) {
         final JSFunction function = (JSFunction) ((PsiElement) args[0]).getParent();
         assert function != null;
         final PsiElement lastChild = function.getLastChild();

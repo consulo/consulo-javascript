@@ -1,5 +1,6 @@
 package com.sixrr.inspectjs.confusing;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -41,8 +42,9 @@ public class PointlessArithmeticExpressionJSInspection
         return true;
     }
 
-    @Override
-	public String buildErrorString(Object... args) {
+    @RequiredReadAction
+	@Override
+	public String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message("pointless.arithmetic.error.message", calculateReplacementExpression((JSExpression)args[0]));
     }
 
@@ -82,7 +84,7 @@ public class PointlessArithmeticExpressionJSInspection
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location) {
+	public InspectionJSFix buildFix(PsiElement location, Object state) {
         return fix;
     }
 

@@ -7,6 +7,7 @@ import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.utils.EquivalenceChecker;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
@@ -31,8 +32,9 @@ public class DuplicateConditionJSInspection extends JavaScriptInspection {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
-    @Override
-	public String buildErrorString(Object... args) {
+    @RequiredReadAction
+	@Override
+	public String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message("duplicate.condition.error.string");
     }
 

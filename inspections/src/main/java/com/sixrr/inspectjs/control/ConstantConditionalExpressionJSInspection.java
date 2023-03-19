@@ -2,6 +2,7 @@ package com.sixrr.inspectjs.control;
 
 import com.intellij.lang.javascript.psi.JSConditionalExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
@@ -38,9 +39,10 @@ public class ConstantConditionalExpressionJSInspection
         return new ConstantConditionalExpressionVisitor();
     }
 
-    @Override
+    @RequiredReadAction
+	@Override
 	@Nonnull
-    public String buildErrorString(Object... args) {
+    public String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message("constant.conditional.expression.error.string");
     }
 
@@ -59,7 +61,7 @@ public class ConstantConditionalExpressionJSInspection
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location) {
+	public InspectionJSFix buildFix(PsiElement location, Object state) {
         return new ConstantConditionalFix();
     }
 

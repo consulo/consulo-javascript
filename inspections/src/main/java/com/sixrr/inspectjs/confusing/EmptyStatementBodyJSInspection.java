@@ -5,147 +5,179 @@ import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
-import com.sixrr.inspectjs.ui.SingleCheckboxOptionsPanel;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.inspection.InspectionToolState;
 
 import javax.annotation.Nonnull;
 
-import javax.swing.*;
-
 @ExtensionImpl
-public class EmptyStatementBodyJSInspection extends JavaScriptInspection {
-    /**
-     * @noinspection PublicField
-     */
-    public boolean m_reportEmptyBlocks = false;
-
-    @Override
+public class EmptyStatementBodyJSInspection extends JavaScriptInspection
+{
+	@Override
 	@Nonnull
-    public String getID() {
-        return "StatementWithEmptyBodyJS";
-    }
+	public String getID()
+	{
+		return "StatementWithEmptyBodyJS";
+	}
 
-    @Override
+	@Override
 	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("statement.with.empty.body.display.name");
-    }
+	public String getDisplayName()
+	{
+		return InspectionJSBundle.message("statement.with.empty.body.display.name");
+	}
 
-    @Override
+	@Override
 	@Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.CONFUSING_GROUP_NAME;
-    }
+	public String getGroupDisplayName()
+	{
+		return JSGroupNames.CONFUSING_GROUP_NAME;
+	}
 
-    @Override
-	public boolean isEnabledByDefault() {
-        return true;
-    }
+	@Override
+	public boolean isEnabledByDefault()
+	{
+		return true;
+	}
 
-    @Override
-	public String buildErrorString(Object... args) {
-        if (args[0] instanceof JSIfStatement) {
-            return InspectionJSBundle.message("statement.has.empty.branch.error.string");
-        } else {
-            return InspectionJSBundle.message("statement.has.empty.body.error.string");
-        }
-    }
+	@RequiredReadAction
+	@Override
+	public String buildErrorString(Object state, Object... args)
+	{
+		if(args[0] instanceof JSIfStatement)
+		{
+			return InspectionJSBundle.message("statement.has.empty.branch.error.string");
+		}
+		else
+		{
+			return InspectionJSBundle.message("statement.has.empty.body.error.string");
+		}
+	}
 
-    @Override
-	public JComponent createOptionsPanel() {
-        return new SingleCheckboxOptionsPanel(InspectionJSBundle.message("include.statement.bodies.that.are.empty.code.blocks.parameter"),
-                this, "m_reportEmptyBlocks");
-    }
+	@Nonnull
+	@Override
+	public InspectionToolState<?> createStateProvider()
+	{
+		return new EmptyStatementBodyJSInspectionState();
+	}
 
-    @Override
-	public BaseInspectionVisitor buildVisitor() {
-        return new EmptyStatementVisitor();
-    }
+	@Override
+	public BaseInspectionVisitor buildVisitor()
+	{
+		return new EmptyStatementVisitor();
+	}
 
-    private class EmptyStatementVisitor extends BaseInspectionVisitor {
+	private class EmptyStatementVisitor extends BaseInspectionVisitor<EmptyStatementBodyJSInspectionState>
+	{
 
-        @Override public void visitJSDoWhileStatement(@Nonnull JSDoWhileStatement statement) {
-            super.visitJSDoWhileStatement(statement);
+		@Override
+		public void visitJSDoWhileStatement(@Nonnull JSDoWhileStatement statement)
+		{
+			super.visitJSDoWhileStatement(statement);
 
-            final JSStatement body = statement.getBody();
-            if (body == null) {
-                return;
-            }
-            if (!isEmpty(body)) {
-                return;
-            }
-            registerStatementError(statement, statement);
-        }
+			final JSStatement body = statement.getBody();
+			if(body == null)
+			{
+				return;
+			}
+			if(!isEmpty(body))
+			{
+				return;
+			}
+			registerStatementError(statement, statement);
+		}
 
-        @Override public void visitJSWhileStatement(@Nonnull JSWhileStatement statement) {
-            super.visitJSWhileStatement(statement);
+		@Override
+		public void visitJSWhileStatement(@Nonnull JSWhileStatement statement)
+		{
+			super.visitJSWhileStatement(statement);
 
-            final JSStatement body = statement.getBody();
-            if (body == null) {
-                return;
-            }
-            if (!isEmpty(body)) {
-                return;
-            }
-            registerStatementError(statement, statement);
-        }
+			final JSStatement body = statement.getBody();
+			if(body == null)
+			{
+				return;
+			}
+			if(!isEmpty(body))
+			{
+				return;
+			}
+			registerStatementError(statement, statement);
+		}
 
-        @Override public void visitJSForStatement(@Nonnull JSForStatement statement) {
-            super.visitJSForStatement(statement);
+		@Override
+		public void visitJSForStatement(@Nonnull JSForStatement statement)
+		{
+			super.visitJSForStatement(statement);
 
-            final JSStatement body = statement.getBody();
-            if (body == null) {
-                return;
-            }
-            if (!isEmpty(body)) {
-                return;
-            }
-            registerStatementError(statement, statement);
-        }
+			final JSStatement body = statement.getBody();
+			if(body == null)
+			{
+				return;
+			}
+			if(!isEmpty(body))
+			{
+				return;
+			}
+			registerStatementError(statement, statement);
+		}
 
-        @Override
-		public void visitJSForInStatement(@Nonnull JSForInStatement statement) {
-            super.visitJSForInStatement(statement);
+		@Override
+		public void visitJSForInStatement(@Nonnull JSForInStatement statement)
+		{
+			super.visitJSForInStatement(statement);
 
-            final JSStatement body = statement.getBody();
-            if (body == null) {
-                return;
-            }
-            if (!isEmpty(body)) {
-                return;
-            }
-            registerStatementError(statement, statement);
-        }
+			final JSStatement body = statement.getBody();
+			if(body == null)
+			{
+				return;
+			}
+			if(!isEmpty(body))
+			{
+				return;
+			}
+			registerStatementError(statement, statement);
+		}
 
-        @Override public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
-            super.visitJSIfStatement(statement);
+		@Override
+		public void visitJSIfStatement(@Nonnull JSIfStatement statement)
+		{
+			super.visitJSIfStatement(statement);
 
-            final JSStatement thenBranch = statement.getThen();
-            if (thenBranch != null) {
-                if (isEmpty(thenBranch)) {
-                    registerStatementError(statement, statement);
-                    return;
-                }
-            }
-            final JSStatement elseBranch = statement.getElse();
+			final JSStatement thenBranch = statement.getThen();
+			if(thenBranch != null)
+			{
+				if(isEmpty(thenBranch))
+				{
+					registerStatementError(statement, statement);
+					return;
+				}
+			}
+			final JSStatement elseBranch = statement.getElse();
 
-            if (elseBranch != null) {
-                if (isEmpty(elseBranch)) {
-                    registerStatementError(statement, statement);
-                }
-            }
-        }
+			if(elseBranch != null)
+			{
+				if(isEmpty(elseBranch))
+				{
+					registerStatementError(statement, statement);
+				}
+			}
+		}
 
-        private boolean isEmpty(JSElement body) {
-            if (body instanceof JSEmptyStatement) {
-                return true;
-            } else if (m_reportEmptyBlocks && body instanceof JSBlockStatement) {
-                final JSBlockStatement block = (JSBlockStatement) body;
-                final JSStatement[] statements = block.getStatements();
-                return statements.length == 0;
-            }
-            return false;
-        }
-    }
+		private boolean isEmpty(JSElement body)
+		{
+			if(body instanceof JSEmptyStatement)
+			{
+				return true;
+			}
+			else if(myState.m_reportEmptyBlocks && body instanceof JSBlockStatement)
+			{
+				final JSBlockStatement block = (JSBlockStatement) body;
+				final JSStatement[] statements = block.getStatements();
+				return statements.length == 0;
+			}
+			return false;
+		}
+	}
 }
 

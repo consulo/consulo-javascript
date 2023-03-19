@@ -4,6 +4,7 @@ import com.intellij.lang.javascript.psi.JSIfStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.EquivalenceChecker;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
@@ -28,13 +29,14 @@ public class IfStatementWithIdenticalBranchesJSInspection extends JavaScriptInsp
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
-    @Override
-	public String buildErrorString(Object... args) {
+    @RequiredReadAction
+	@Override
+	public String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message("ref.statement.with.identical.branches.error.string");
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location) {
+	public InspectionJSFix buildFix(PsiElement location, Object state) {
         return fix;
     }
 

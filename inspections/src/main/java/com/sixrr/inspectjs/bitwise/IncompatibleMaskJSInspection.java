@@ -10,6 +10,7 @@ import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.utils.ComparisonUtils;
 import com.sixrr.inspectjs.utils.ExpressionUtil;
 import com.sixrr.inspectjs.utils.ParenthesesUtils;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 
@@ -37,9 +38,10 @@ public class IncompatibleMaskJSInspection extends JavaScriptInspection {
         return JSGroupNames.BITWISE_GROUP_NAME;
     }
 
-    @Override
+    @RequiredReadAction
+	@Override
 	@Nonnull
-    public String buildErrorString(Object... args) {
+    public String buildErrorString(Object state, Object... args) {
         final JSBinaryExpression binaryExpression =
                 (JSBinaryExpression) args[0];
         final IElementType tokenType =

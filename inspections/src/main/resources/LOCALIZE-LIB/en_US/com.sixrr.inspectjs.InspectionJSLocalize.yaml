@@ -1,0 +1,556 @@
+result.of.assignment.used.displayName:
+  text: Result of assignment used
+result.of.assignment.expression.used.error.string:
+  text: 'Result of assignment expression used #loc'
+assignment.to.for.loop.parameter.display.name:
+  text: Assignment to 'for' loop parameter
+assignment.to.for.loop.parameter.error.string:
+  text: 'Assignment to for-loop parameter #ref #loc'
+assignment.to.function.parameter.display.name:
+  text: Assignment to function parameter
+assignment.to.function.parameter.error.string:
+  text: 'Assignment to function parameter ''#ref'' #loc'
+nested.assignment.display.name:
+  text: Nested assignment
+nested.assignment.error.string:
+  text: 'Nested assignment <code>#ref</code> #loc'
+assignment.replaceable.with.operator.assignment.display.name:
+  text: Assignment replaceable with operator assignment
+assignment.replaceable.with.operator.assignment.error.string:
+  text: '#ref could be simplified to {0} #loc'
+silly.assignment.display.name:
+  text: Variable is assigned to itself
+silly.assignment.error.string:
+  text: 'Variable is assigned to itself #loc'
+divide.by.zero.display.name:
+  text: Divide by zero
+division.by.zero.error.string:
+  text: 'Division by zero #loc'
+equality.comparison.with.coercion.display.name:
+  text: Equality comparison which may cause unexpected coercion
+equality.comparison.with.coercion.error.string:
+  text: 'Comparison #ref may cause unexpected type coercion #loc'
+equality.comparison.with.coercion.fix:
+  text: Replace with ''{0}''
+non.short.circuit.boolean.expression.display.name:
+  text: Non short-circuit boolean expression
+non.short.circuit.boolean.expression.error.string:
+  text: 'Non short-circuit boolean expression #loc'
+replace.with.short.circuit.expression.fix.string:
+  text: Replace with short circuit expression
+result.of.object.allocation.ignored.display.name:
+  text: Result of object allocation ignored
+result.of.object.allocation.ignored.error.string:
+  text: 'Result of <code>new #ref()</code> is ignored #loc'
+text.label.in.switch.statement.display.name:
+  text: Text label in 'switch' statement
+text.label.in.switch.statement.error.string:
+  text: 'Text label <code>#ref:</code> in ''switch'' statement #loc'
+anonymous.function.display.name:
+  text: Anonymous function
+anonymous.function.error.string:
+  text: 'Anonymous #ref #loc'
+unnecessary.block.statement.display.name:
+  text: Unnecessary 'block' statement
+comma.expression.display.name:
+  text: Comma expression
+conditional.expression.display.name:
+  text: Conditional expression
+statement.with.empty.body.display.name:
+  text: Statement with empty body
+result.of.increment.or.decrement.used.display.name:
+  text: Result of increment or decrement used
+negated.conditional.expression.display.name:
+  text: Negated conditional expression
+negated.if.statement.display.name:
+  text: Negated 'if' statement
+nested.conditional.expression.display.name:
+  text: Nested conditional expression
+nested.function.display.name:
+  text: Nested function
+octal.integer.display.name:
+  text: Octal Integer
+overly.complex.arithmetic.expression.display.name:
+  text: Overly complex arithmetic expression
+overly.complex.boolean.expression.display.name:
+  text: Overly complex boolean expression
+pointless.arithmetic.expression.display.name:
+  text: Pointless arithmetic expression
+pointless.boolean.expression.display.name:
+  text: Pointless boolean expression
+void.expression.display.name:
+  text: '''void'' expression'
+with.statement.display.name:
+  text: '''with'' statement'
+break.statement.display.name:
+  text: '''break'' statement'
+break.statement.with.label.display.name:
+  text: '''break'' statement with label'
+conditional.expression.with.identical.branches.display.name:
+  text: Conditional expression with identical branches
+constant.conditional.expression.display.name:
+  text: Constant conditional expression
+continue.statement.display.name:
+  text: '''continue'' statement'
+continue.statement.with.label.display.name:
+  text: '''continue'' statement with label'
+default.not.last.case.in.switch.display.name:
+  text: '''default'' not last case in ''switch'''
+duplicate.condition.in.if.statement.display.name:
+  text: Duplicate condition in 'if' statement
+fall.through.in.switch.statement.display.name:
+  text: Fall-through in 'switch' statement
+if.statement.with.identical.branches.display.name:
+  text: '''if'' statement with identical branches'
+if.statement.with.too.many.branches.display.name:
+  text: '''if'' statement with too many branches'
+infinite.loop.statement.display.name:
+  text: Infinite loop statement
+labeled.statement.display.name:
+  text: Labeled statement
+loop.statement.that.doesn.t.loop.display.name:
+  text: Loop statement that doesn't loop
+nested.switch.statement.display.name:
+  text: Nested 'switch' statement
+switch.statement.with.no.default.branch.display.name:
+  text: '''switch'' statement with no default branch'
+redundant.conditional.expression.display.name:
+  text: Redundant conditional expression
+redundant.if.statement.display.name:
+  text: Redundant 'if' statement
+unnecessary.continue.statement.display.name:
+  text: Unnecessary 'continue' statement
+unnecessary.label.display.name:
+  text: Unnecessary label
+unnecessary.label.on.break.statement.display.name:
+  text: Unnecessary label on 'break' statement
+unnecessary.label.on.continue.statement.display.name:
+  text: Unnecessary label on 'continue' statement
+unnecessary.return.statement.display.name:
+  text: Unnecessary 'return' statement
+call.to.document.write.display.name:
+  text: Call to 'document.write()'
+use.of.innerhtml.property.display.name:
+  text: Use of 'innerHTML' property
+platform.detection.display.name:
+  text: Platform detection
+xhtml.incompatibilities.display.name:
+  text: XHTML incompatibilities
+continue.or.break.inside.finally.block.display.name:
+  text: '''continue'' or ''break'' inside ''finally'' block'
+empty.catch.block.display.name:
+  text: Empty 'catch' block
+empty.finally.block.display.name:
+  text: Empty 'finally' block
+empty.try.block.display.name:
+  text: Empty 'try' block
+exception.used.for.local.control.flow.display.name:
+  text: Exception used for local control-flow
+return.inside.finally.block.display.name:
+  text: '''return'' inside ''finally'' block'
+throw.inside.finally.block.display.name:
+  text: '''throw'' inside ''finally'' block'
+overly.complex.function.display.name:
+  text: Overly complex function
+function.with.multiple.loops.display.name:
+  text: Function with multiple loops
+function.with.multiple.return.points.display.name:
+  text: Function with multiple return points
+overly.nested.function.display.name:
+  text: Overly nested function
+nesting.depth.limit:
+  text: 'Nesting depth limit:'
+function.with.too.many.parameters.display.name:
+  text: Function with too many parameters
+function.parameter.limit:
+  text: 'Function parameter limit:'
+overly.long.function.display.name:
+  text: Overly long function
+maximum.statements.per.function:
+  text: 'Maximum statements per function:'
+function.with.more.than.three.negations.display.name:
+  text: Function with more than three negations
+function.naming.convention.display.name:
+  text: Function naming convention
+local.variable.naming.convention.display.name:
+  text: Local variable naming convention
+function.parameter.naming.convention.display.name:
+  text: Function parameter naming convention
+expression.statement.which.is.not.assignment.or.call.display.name:
+  text: Expression statement which is not assignment or call
+debugger.statement.display.name:
+  text: '''debugger'' statement'
+duplicate.case.label.display.name:
+  text: Duplicate case label
+duplicate.property.on.object.literal.display.name:
+  text: Duplicate property on object literal
+function.with.inconsistent.returns.display.name:
+  text: Function with inconsistent returns
+reserved.word.used.as.name.display.name:
+  text: Reserved word used as name
+this.expression.which.references.the.global.object.display.name:
+  text: '''this'' expression which references the global object'
+unreachable.code.display.name:
+  text: Unreachable code
+chained.equality.display.name:
+  text: Chained equality
+constant.on.right.side.of.comparison.display.name:
+  text: Constant on right side of comparison
+constant.on.left.side.of.comparison.display.name:
+  text: Constant on left side of comparison
+non.block.statement.body.display.name:
+  text: Non-block statement body
+unterminated.statement.display.name:
+  text: Unterminated statement
+terminate.statement.fix:
+  text: Terminate statement
+unnecessary.block.statement.error.string:
+  text: 'Unnecessary block statement #loc'
+comma.expression.error.string:
+  text: 'Comma expression #loc'
+conditional.expression.error.string:
+  text: 'Conditional expression #loc'
+statement.has.empty.branch.error.string:
+  text: '<code>#ref</code> statement has empty branch #loc'
+statement.has.empty.body.error.string:
+  text: '<code>#ref</code> statement has empty body #loc'
+include.statement.bodies.that.are.empty.code.blocks.parameter:
+  text: Include statement bodies that are empty code blocks
+result.of.increment.or.decrement.expression.used.error.string:
+  text: 'Result of increment or decrement expression used #loc'
+negated.conditional.expression.error.string:
+  text: 'Negated conditional expression #loc'
+invert.condition.fix:
+  text: Invert condition
+negated.ref.statement.error.string:
+  text: 'Negated ''#ref'' statement #loc'
+invert.if.condition.fix:
+  text: Invert If Condition
+nested.conditional.expression.error.string:
+  text: 'Nested conditional expression #loc'
+nested.function.error.string:
+  text: 'Nested function ''#ref'' #loc'
+nested.anonymous.function.error.string:
+  text: 'Nested #ref #loc'
+include.anonymous.functions.parameter:
+  text: Include anonymous functions
+octal.integer.error.string:
+  text: 'Octal integer ''#ref'' #loc'
+maximum.number.of.terms.parameter:
+  text: 'Maximum number of terms:'
+overly.complex.arithmetic.expression.error.string:
+  text: 'Overly complex arithmetic expression #loc'
+pointless.arithmetic.error.message:
+  text: '#ref can be replaced with {0} #loc'
+simplify.fix:
+  text: Simplify
+pointless.boolean.error.string:
+  text: '#ref can be simplified to {0} #loc'
+void.expression.error.string:
+  text: '''#ref'' expression #loc'
+with.expression.error.string:
+  text: '''#ref'' statement #loc'
+break.statement.error.string:
+  text: '''#ref'' statement #loc'
+break.statement.with.label.error.string:
+  text: '''#ref'' statement with label #loc'
+conditional.expression.with.identical.branches.error.string:
+  text: 'Conditional expression #ref with identical branches #loc'
+constant.conditional.expression.error.string:
+  text: '#ref can be simplified #loc'
+continue.statement.error.string:
+  text: '''#ref'' statement #loc'
+continue.statement.with.label.error.string:
+  text: '''#ref'' statement with label #loc'
+default.branch.not.last.case.in.switch.error.string:
+  text: '<code>#ref</code> branch not last case in ''switch'' #loc'
+duplicate.condition.error.string:
+  text: 'Duplicate condition #ref #loc'
+fall.through.in.switch.statement.error.string:
+  text: 'Fall-through in ''switch'' statement #loc'
+ref.statement.with.identical.branches.error.string:
+  text: '<code>#ref</code> statement with identical branches #loc'
+collapse.if.statement.fix:
+  text: Collapse 'if' statement
+maximum.number.of.branches.parameter:
+  text: 'Maximum number of branches:'
+if.statement.with.too.many.branches.error.string:
+  text: '''''#ref'''' has too many branches ({0}) #loc'
+infinite.loop.error.string:
+  text: '<code>#ref</code> statement cannot complete without throwing an exception #loc'
+statement.label.error.string:
+  text: 'Statement label ''#ref'' #loc'
+loop.statement.that.doesnt.loop.error.string:
+  text: '<code>#ref</code> statement doesn''t loop #loc'
+nested.switch.statement.error.string:
+  text: 'Nested ''#ref'' statement #loc'
+switch.statement.with.no.default.branch.error.string:
+  text: '''#ref'' statement with no default branch #loc'
+trivial.conditional.error.string:
+  text: '''''{0}'''' can be simplified to ''''{1}'''' #loc'
+trivial.if.error.string:
+  text: '#ref statement can be simplified #loc'
+unnecessary.continue.error.string:
+  text: '#ref is unnecessary as the last statement in a loop #loc'
+unnecessary.label.error.string:
+  text: 'Unnecessary label #ref #loc'
+remove.label.fix:
+  text: Remove label
+unnecessary.label.on.break.error.string:
+  text: '''#ref'' statement with unnecessary label #loc'
+unnecessary.label.on.continue.error.string:
+  text: '''#ref'' statement with unnecessary label #loc'
+unnecessary.return.error.string:
+  text: '#ref is unnecessary as the last statement in a function with no return value #loc'
+document.write.error.string:
+  text: 'Call to ''#ref()'' #loc'
+inner.html.error.string:
+  text: 'use of ''#ref'' property #loc'
+platform.detection.error.string:
+  text: '''#ref'' probably used for platform detection #loc'
+xhtml.incompatabilities.error.string:
+  text: '''#ref'' may produce inconsistent results for XHTML documents #loc'
+continue.or.break.inside.finally.block.error.string:
+  text: '''#ref'' inside ''finally'' block #loc'
+empty.catch.block.error.string:
+  text: 'Empty ''#ref'' block #loc'
+empty.finally.block.error.string:
+  text: 'Empty ''finally'' block #loc'
+empty.try.block.error.string:
+  text: 'Empty ''#ref'' block #loc'
+exception.caught.locally.error.string:
+  text: '''#ref'' of exception caught locally #loc'
+return.inside.finally.block.error.string:
+  text: '''#ref'' inside ''finally'' block #loc'
+throw.inside.finally.block.error.string:
+  text: '''#ref'' inside ''finally'' block #loc'
+rename.fix:
+  text: Rename
+rename.to.fix:
+  text: Rename to ''{0}''
+function.complexity.limit.parameter:
+  text: 'Function complexity limit:'
+function.ref.is.overly.complex.cyclomatic.complexity.error.string:
+  text: 'function ''''#ref'''' is overly complex (cyclomatic complexity = {0}) #loc'
+anonymous.function.is.overly.complex.cyclomatic.complexity.error.string:
+  text: '#ref  is overly complex (cyclomatic complexity = {0}) #loc'
+function.contains.multiple.loops.error.string:
+  text: 'function ''''#ref'''' contains {0} loops #loc'
+anonymous.function.contains.multiple.loops.error.string:
+  text: '#ref contains {0} loops #loc'
+function.contains.multiple.return.points.error.string:
+  text: 'function ''''#ref'''' has {0} return points #loc'
+anonymous.function.contains.multiple.return.points.error.string:
+  text: '#ref has {0} return points #loc'
+function.is.overly.nested.error.string:
+  text: 'function ''''#ref'''' is overly nested (maximum nesting depth = {0}) #loc'
+anonymous.function.is.overly.nested.error.string:
+  text: '#ref is overly nested (maximum nesting depth = {0}) #loc'
+function.has.too.many.parameters.error.string:
+  text: 'function ''''#ref'''' has too many parameters (parameter count = {0}) #loc'
+anonymous.function.has.too.many.parameters.error.string:
+  text: '#ref has too many parameters (parameter count = {0}) #loc'
+function.is.overly.long.statement.error.string:
+  text: 'function ''''#ref'''' is overly long (statement count = {0}) #loc'
+anonymous.function.is.overly.long.statement.error.string:
+  text: '#ref is overly long (statement count = {0}) #loc'
+function.contains.too.many.negation.error.string:
+  text: 'function ''''#ref'''' contains {0} negations #loc'
+anonymous.function.contains.too.many.negation.error.string:
+  text: '#ref contains {0} negations #loc'
+function.name.is.too.short.error.string:
+  text: 'Function name ''''{0}'''' is too short #loc'
+function.name.is.too.long.error.string:
+  text: 'Function name ''''{0}''''is too long #loc'
+function.name.doesnt.match.regex.error.string:
+  text: 'Function name ''''{0}'''' doesn''''t match regex ''''{1}'''' #loc'
+variable.name.is.too.short.error.string:
+  text: 'Variable name ''#ref'' is too short #loc'
+variable.name.is.too.long.error.string:
+  text: 'Variable name ''#ref'' is too long #loc'
+variable.name.doesnt.match.regex.error.string:
+  text: 'Variable name ''''#ref'''' doesn''''t match regex ''''{0}'''' #loc'
+parameter.name.is.too.short.error.string:
+  text: 'Parameter name ''#ref'' is too short #loc'
+parameter.name.is.too.long.error.string:
+  text: 'Parameter name ''#ref'' is too long #loc'
+parameter.name.doesnt.match.regex.error.string:
+  text: 'Parameter name ''''#ref'''' doesn''''t match regex ''''{0}'''' #loc'
+chained.equality.error.string:
+  text: 'Chained equality comparison <code>#ref</code> #loc'
+constant.on.left.side.of.comparison.error.string:
+  text: '#ref: constant on left side of comparison #loc'
+constant.on.right.side.of.comparison.error.string:
+  text: '#ref: constant on right side of comparison #loc'
+flip.comparison.fix:
+  text: Flip comparison
+non.block.branch.error.string:
+  text: '<code>#ref</code> statement has non-block branch #loc'
+non.block.body.error.string:
+  text: '<code>#ref</code> statement has non-block body #loc'
+unterminated.statement.error.string:
+  text: 'Unterminated statement #loc'
+expression.statement.is.not.assignment.or.call.error.string:
+  text: 'Expression statement is not assignment or call #loc'
+debugger.statement.error.string:
+  text: '''#ref'' statement #loc'
+duplicate.case.label.error.string:
+  text: 'Duplicate case label #ref #loc'
+duplicate.object.property.error.string:
+  text: 'Duplicate object property #ref #loc'
+function.has.inconsistent.return.points.error.string:
+  text: 'function ''#ref'' has inconsistent return points #loc'
+anonymous.function.has.inconsistent.return.points.error.string:
+  text: '#ref has inconsistent return points #loc'
+reserved.word.used.as.name.error.string:
+  text: Reserved word '#ref' used as name
+this.expression.references.global.object.error.string:
+  text: 'Top-level ''#ref'' expression #loc'
+unreachable.code.error.string:
+  text: 'Unreachable code #loc'
+malformed.naming.pattern.alert:
+  text: Malformed Naming Pattern
+replace.with.operator.assign.fix:
+  text: Replace = with {0}=
+overly.complex.boolean.expression.error.string:
+  text: 'Overly complex boolean expression #loc'
+collapse.conditional.expression.fix:
+  text: Collapse conditional expression
+remove.unnecessary.continue.fix:
+  text: Remove unnecessary continue
+remove.unnecessary.return.fix:
+  text: Remove unnecessary return
+pattern.parameter:
+  text: 'Pattern:'
+min.length.parameter:
+  text: 'Min Length:'
+max.length.parameter:
+  text: 'Max Length:'
+wrap.statement.body.fix:
+  text: Wrap statement body
+error.handling.javascript.group.name:
+  text: Error handling
+control.flow.issues.javascript.group.name:
+  text: Control flow issues
+javascript.validity.issues.group.name:
+  text: JavaScript validity issues
+potentially.confusing.code.constructs.javascript.group.name:
+  text: Potentially confusing code constructs
+javascript.function.metrics.group.name:
+  text: JavaScript function metrics
+assignment.issues.javascript.group.name:
+  text: Assignment issues
+naming.conventions.javascript.group.name:
+  text: Naming conventions
+code.style.issues.javascript.group.name:
+  text: Code style issues
+javascript.dom.issues.group.name:
+  text: JavaScript DOM issues
+probable.bugs.javascript.group.name:
+  text: Probable Bugs
+code.maturity.javascript.group.name:
+  text: Code Maturity
+confusing.floating.point.literal.display.name:
+  text: Confusing floating point literal
+confusing.floating.point.literal.problem.descriptor:
+  text: 'Confusing floating point literal <code>#ref</code> #loc'
+confusing.pluses.or.minuses.display.name:
+  text: Confusing sequence of '+' or '-'
+confusing.pluses.or.minuses.error.string:
+  text: 'Sequence of ''+'' or ''-'' may change meaning if whitespace removed #loc'
+confusing.floating.point.literal.change.quickfix:
+  text: Change To canonical form
+string.literal.breaks.html.display.name:
+  text: String literal which breaks HTML parsing
+string.literal.breaks.html.error.string:
+  text: 'String literal #ref may break HTML parsers'
+for.loop.not.use.loop.variable.display.name:
+  text: '''for'' loop where update or condition does not use loop variable'
+for.loop.not.use.loop.variable.problem.descriptor.condition:
+  text: '<code>#ref</code> statement has condition which does not use the for loop variable #loc'
+for.loop.not.use.loop.variable.problem.descriptor.update:
+  text: '<code>#ref</code> statement has update which does not use the for loop variable #loc'
+for.loop.not.use.loop.variable.problem.descriptor.both.condition.and.update:
+  text: '<code>#ref</code> statement has condition and update which do not use the for loop variable #loc'
+unused.catch.parameter.display.name:
+  text: Unused 'catch' parameter
+unused.catch.parameter.problem.descriptor:
+  text: 'Unused catch parameter <code>#ref</code> #loc'
+unused.catch.parameter.ignore.catch.option:
+  text: Ignore catch blocks containing comments
+tail.recursion.display.name:
+  text: Tail recursion
+tail.recursion.problem.descriptor:
+  text: 'Tail recursion #loc'
+redundant.local.variable.display.name:
+  text: Redundant local variable
+data.flow.issues.javascript.group.name:
+  text: Data flow issues
+bitwise.issues.javascript.group.name:
+  text: Bitwise operation issues
+redundant.local.variable.ignore.option:
+  text: Ignore immediately returned or thrown variables
+unnecessary.local.variable.problem.descriptor:
+  text: Unnecessary local variable
+reuse.of.local.variable.display.name:
+  text: Reuse of local variable
+reuse.of.local.variable.problem.descriptor:
+  text: 'Reuse of local variable <code>#ref</code> #loc'
+infinite.recursion.display.name:
+  text: Infinite recursion
+infinite.recursion.problem.descriptor:
+  text: 'Function <code>#ref</code> recurses infinitely, and can only end by throwing an exception #loc'
+constant.if.statement.problem.descriptor:
+  text: '<code>#ref</code> statement can be simplified #loc'
+constant.if.statement.display.name:
+  text: Constant if statement
+constant.conditional.expression.simplify.quickfix:
+  text: Simplify
+caller.error.string:
+  text: 'Use of ''#ref'' property #loc'
+caller.display.name:
+  text: Use of 'caller' property
+dynamically.generated.code.error.string:
+  text: 'Function ''#ref'' indicative of dynamically generated code #loc'
+dynamically.generated.code.display.name:
+  text: Execution of dynamically generated JavaScript
+for.loop.replaceable.by.while.problem.descriptor:
+  text: '<code>#ref</code> loop may be replaced by ''while'' loop #loc'
+for.loop.replaceable.by.while.display.name:
+  text: '''for'' loop may be replaced by ''while'' loop'
+for.loop.replaceable.by.while.replace.quickfix:
+  text: Replace with 'while'
+for.loop.replaceable.by.while.ignore.option:
+  text: Ignore 'infinite' for loops without conditions
+nested.function.call.display.name:
+  text: Nested function call
+nested.function.call.problem.descriptor:
+  text: 'Nested call to function ''#ref'' #loc'
+chained.function.call.display.name:
+  text: Chained function call
+chained.function.call.problem.descriptor:
+  text: 'Chained call to function ''#ref'' #loc'
+magic.number.display.name:
+  text: Magic number
+magic.number.problem.descriptor:
+  text: 'Magic number ''#ref'' #loc'
+incompatible.mask.operation.display.name:
+  text: Incompatible bitwise mask operation
+incompatible.mask.operation.problem.descriptor.always.false:
+  text: '<code>#ref</code> is always false #loc'
+incompatible.mask.operation.problem.descriptor.always.true:
+  text: '<code>#ref</code> is always true #loc'
+pointless.bitwise.expression.display.name:
+  text: Pointless bitwise expression
+pointless.bitwise.expression.ignore.option:
+  text: Ignore named constant in determinining pointless expressions
+pointless.bitwise.expression.problem.descriptor:
+  text: '<code>#ref</code> can be replaced with ''''{0}'''' #loc'
+pointless.bitwise.expression.simplify.quickfix:
+  text: Simplify
+shift.operation.by.inappropriate.constant.display.name:
+  text: Shift operation by inappropriate constant
+shift.operation.by.inappropriate.constant.problem.descriptor.too.large:
+  text: 'Shift operation <code>#ref</code> by overly large constant value #loc'
+shift.operation.by.inappropriate.constant.problem.descriptor.negative:
+  text: 'Shift operation <code>#ref</code> by negative constant value #loc'

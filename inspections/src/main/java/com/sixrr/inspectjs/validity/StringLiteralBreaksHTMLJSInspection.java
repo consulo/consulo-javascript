@@ -1,5 +1,6 @@
 package com.sixrr.inspectjs.validity;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.psi.JSSimpleLiteralExpression;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
@@ -29,9 +30,10 @@ public class StringLiteralBreaksHTMLJSInspection extends JavaScriptInspection {
         return false;
     }
 
-    @Override
+    @RequiredReadAction
+	@Override
 	@Nullable
-    protected String buildErrorString(Object... args) {
+    protected String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message("string.literal.breaks.html.error.string");
     }
 

@@ -4,6 +4,7 @@ import com.intellij.lang.javascript.psi.JSCaseClause;
 import com.intellij.lang.javascript.psi.JSLabeledStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.JSSwitchStatement;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
@@ -27,9 +28,10 @@ public class TextLabelInSwitchStatementJSInspection extends JavaScriptInspection
         return JSGroupNames.BUGS_GROUP_NAME;
     }
 
-    @Override
+    @RequiredReadAction
+	@Override
 	@Nonnull
-    public String buildErrorString(Object... args) {
+    public String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message("text.label.in.switch.statement.error.string");
     }
 

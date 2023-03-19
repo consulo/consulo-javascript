@@ -4,6 +4,7 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.sixrr.inspectjs.*;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.inspection.ProblemDescriptor;
@@ -35,14 +36,15 @@ public class EqualityComparisonWithCoercionJSInspection extends JavaScriptInspec
         return JSGroupNames.BUGS_GROUP_NAME;
     }
 
-    @Override
+    @RequiredReadAction
+	@Override
 	@Nonnull
-    protected String buildErrorString(Object... args) {
+    protected String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message("equality.comparison.with.coercion.error.string");
     }
 
 	@Override
-	protected InspectionJSFix buildFix(PsiElement location) {
+	protected InspectionJSFix buildFix(PsiElement location, Object state) {
 		final JSBinaryExpression expression = (JSBinaryExpression) location;
 		final IElementType sign = expression.getOperationSign();
 		if (JSTokenTypes.EQEQ == sign) {

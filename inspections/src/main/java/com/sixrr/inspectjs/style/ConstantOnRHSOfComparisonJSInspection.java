@@ -5,6 +5,7 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
 import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.ComparisonUtils;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.inspection.ProblemDescriptor;
@@ -36,8 +37,9 @@ public class ConstantOnRHSOfComparisonJSInspection extends JavaScriptInspection 
         return JSGroupNames.STYLE_GROUP_NAME;
     }
 
-    @Override
-	public String buildErrorString(Object... args) {
+    @RequiredReadAction
+	@Override
+	public String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message("constant.on.right.side.of.comparison.error.string");
     }
 
@@ -47,7 +49,7 @@ public class ConstantOnRHSOfComparisonJSInspection extends JavaScriptInspection 
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location) {
+	public InspectionJSFix buildFix(PsiElement location, Object state) {
         return fix;
     }
 

@@ -5,6 +5,7 @@ import com.intellij.lang.javascript.psi.JSIfStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.BoolUtils;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
@@ -34,9 +35,10 @@ public class ConstantIfStatementJSInspection extends JavaScriptInspection {
         return true;
     }
 
-    @Override
+    @RequiredReadAction
+	@Override
 	@Nonnull
-    protected String buildErrorString(Object... args) {
+    protected String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message(
                 "constant.if.statement.problem.descriptor");
     }
@@ -47,7 +49,7 @@ public class ConstantIfStatementJSInspection extends JavaScriptInspection {
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location) {
+	public InspectionJSFix buildFix(PsiElement location, Object state) {
         return new ConstantIfStatementFix();
     }
 

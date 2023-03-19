@@ -3,6 +3,7 @@ package com.sixrr.inspectjs.functionmetrics;
 import com.intellij.lang.javascript.psi.*;
 import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
 
@@ -23,8 +24,9 @@ public class FunctionWithMultipleReturnPointsJSInspection extends JavaScriptInsp
         return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
     }
 
-    @Override
-	public String buildErrorString(Object... args) {
+    @RequiredReadAction
+	@Override
+	public String buildErrorString(Object state, Object... args) {
         final JSFunction function = (JSFunction) ((PsiElement) args[0]).getParent();
         assert function != null;
         final int returnPointCount = countReturnPoints(function);

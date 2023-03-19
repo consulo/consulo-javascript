@@ -5,6 +5,7 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.BoolUtils;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
@@ -47,8 +48,9 @@ public class TrivialConditionalJSInspection
         return new UnnecessaryConditionalExpressionVisitor();
     }
 
-    @Override
-	public String buildErrorString(Object... args) {
+    @RequiredReadAction
+	@Override
+	public String buildErrorString(Object state, Object... args) {
         final JSConditionalExpression exp = (JSConditionalExpression) args[0];
         return InspectionJSBundle.message("trivial.conditional.error.string", exp.getText(), calculateReplacementExpression(exp));
     }
@@ -66,7 +68,7 @@ public class TrivialConditionalJSInspection
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location) {
+	public InspectionJSFix buildFix(PsiElement location, Object state) {
         return fix;
     }
 

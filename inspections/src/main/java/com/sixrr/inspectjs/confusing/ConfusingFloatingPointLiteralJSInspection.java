@@ -1,5 +1,6 @@
 package com.sixrr.inspectjs.confusing;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import com.intellij.lang.javascript.psi.JSExpression;
@@ -34,15 +35,16 @@ public class ConfusingFloatingPointLiteralJSInspection extends JavaScriptInspect
                 "confusing.floating.point.literal.display.name");
     }
 
-    @Override
+    @RequiredReadAction
+	@Override
 	@Nonnull
-    protected String buildErrorString(Object... args) {
+    protected String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message(
                 "confusing.floating.point.literal.problem.descriptor");
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location) {
+	public InspectionJSFix buildFix(PsiElement location, Object state) {
         return new ConfusingFloatingPointLiteralFix();
     }
 

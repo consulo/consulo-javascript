@@ -2,6 +2,7 @@ package com.sixrr.inspectjs.control;
 
 import com.intellij.lang.javascript.psi.*;
 import com.sixrr.inspectjs.*;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
 
@@ -24,9 +25,10 @@ public class ForLoopThatDoesntUseLoopVariableJSInspection
         return JSGroupNames.BUGS_GROUP_NAME;
     }
 
-    @Override
+    @RequiredReadAction
+	@Override
 	@Nonnull
-    public String buildErrorString(Object... args) {
+    public String buildErrorString(Object state, Object... args) {
         final boolean condition = (Boolean) args[0];
         final boolean update = (Boolean) args[1];
         if (condition && update) {

@@ -8,6 +8,7 @@ import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 
 import javax.annotation.Nonnull;
@@ -30,9 +31,10 @@ public class ChainedFunctionCallJSInspection extends JavaScriptInspection {
                 "chained.function.call.display.name");
     }
 
-    @Override
+    @RequiredReadAction
+	@Override
 	@Nonnull
-    protected String buildErrorString(Object... args) {
+    protected String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message(
                 "chained.function.call.problem.descriptor");
     }

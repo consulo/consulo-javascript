@@ -2,12 +2,10 @@ package com.sixrr.inspectjs;
 
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSSuppressionHolder;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.language.Language;
-import consulo.language.editor.inspection.CustomSuppressableInspectionTool;
-import consulo.language.editor.inspection.LocalInspectionTool;
-import consulo.language.editor.inspection.ProblemsHolder;
-import consulo.language.editor.inspection.SuppressionUtil;
+import consulo.language.editor.inspection.*;
 import consulo.language.editor.intention.SuppressIntentionAction;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.psi.PsiElement;
@@ -15,28 +13,27 @@ import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.util.PsiTreeUtil;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.lang.reflect.Method;
 
 public abstract class BaseInspection extends LocalInspectionTool implements CustomSuppressableInspectionTool
 {
 	@Override
 	@Nonnull
-	public PsiElementVisitor buildVisitor(@Nonnull ProblemsHolder problemsHolder, boolean onTheFly)
+	@SuppressWarnings("unchecked")
+	public PsiElementVisitor buildVisitor(@Nonnull ProblemsHolder problemsHolder, boolean onTheFly, LocalInspectionToolSession session, Object state)
 	{
 		if(!canBuildVisitor(problemsHolder.getFile()))
 		{
-			return new PsiElementVisitor()
-			{
-			};
+			return PsiElementVisitor.EMPTY_VISITOR;
 		}
+
 		final BaseInspectionVisitor visitor = buildVisitor();
 		visitor.setProblemsHolder(problemsHolder);
 		visitor.setOnTheFly(onTheFly);
 		visitor.setInspection(this);
+		visitor.setState(state);
 		return visitor;
 	}
 
@@ -60,7 +57,8 @@ public abstract class BaseInspection extends LocalInspectionTool implements Cust
 	}
 
 	@Nullable
-	protected String buildErrorString(Object... args)
+	@RequiredReadAction
+	protected String buildErrorString(Object state, Object... args)
 	{
 		return null;
 	}
@@ -71,7 +69,7 @@ public abstract class BaseInspection extends LocalInspectionTool implements Cust
 	}
 
 	@Nullable
-	protected InspectionJSFix buildFix(PsiElement location)
+	protected InspectionJSFix buildFix(PsiElement location, Object state)
 	{
 		return null;
 	}
@@ -80,20 +78,6 @@ public abstract class BaseInspection extends LocalInspectionTool implements Cust
 	protected InspectionJSFix[] buildFixes(PsiElement location)
 	{
 		return null;
-	}
-
-	public boolean hasQuickFix()
-	{
-		final Method[] methods = getClass().getDeclaredMethods();
-		for(final Method method : methods)
-		{
-			@NonNls final String methodName = method.getName();
-			if("buildFix".equals(methodName))
-			{
-				return true;
-			}
-		}
-		return false;
 	}
 
 	public abstract BaseInspectionVisitor buildVisitor();

@@ -1,74 +1,88 @@
 package com.sixrr.inspectjs.functionmetrics;
 
 import com.intellij.lang.javascript.psi.JSFunction;
-import consulo.annotation.component.ExtensionImpl;
-import consulo.language.psi.PsiElement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.inspection.InspectionToolState;
+import consulo.language.psi.PsiElement;
+
 import javax.annotation.Nonnull;
 
 @ExtensionImpl
-public class NestingDepthJSInspection extends FunctionMetricsInspection {
-    @Override
+public class NestingDepthJSInspection extends JavaScriptInspection
+{
+	@Override
 	@Nonnull
-    public String getID() {
-        return "OverlyNestedFunctionJS";
-    }
+	public String getID()
+	{
+		return "OverlyNestedFunctionJS";
+	}
 
-    @Override
+	@Override
 	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("overly.nested.function.display.name");
-    }
+	public String getDisplayName()
+	{
+		return InspectionJSBundle.message("overly.nested.function.display.name");
+	}
 
-    @Override
+	@Override
 	@Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
-    }
+	public String getGroupDisplayName()
+	{
+		return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
+	}
 
-    @Override
-	protected int getDefaultLimit() {
-        return 5;
-    }
+	@Nonnull
+	@Override
+	public InspectionToolState<?> createStateProvider()
+	{
+		return new NestingDepthJSInspectionState();
+	}
 
-    @Override
-	protected String getConfigurationLabel() {
-        return InspectionJSBundle.message("nesting.depth.limit");
-    }
+	@RequiredReadAction
+	@Override
+	public String buildErrorString(Object state, Object... args)
+	{
+		final JSFunction function = (JSFunction) ((PsiElement) args[0]).getParent();
+		assert function != null;
+		final NestingDepthVisitor visitor = new NestingDepthVisitor();
+		function.accept(visitor);
+		final int nestingDepth = visitor.getMaximumDepth();
+		if(functionHasIdentifier(function))
+		{
+			return InspectionJSBundle.message("function.is.overly.nested.error.string", nestingDepth);
+		}
+		else
+		{
+			return InspectionJSBundle.message("anonymous.function.is.overly.nested.error.string", nestingDepth);
+		}
+	}
 
-    @Override
-	public String buildErrorString(Object... args) {
-        final JSFunction function = (JSFunction) ((PsiElement) args[0]).getParent();
-        assert function != null;
-        final NestingDepthVisitor visitor = new NestingDepthVisitor();
-        function.accept(visitor);
-        final int nestingDepth = visitor.getMaximumDepth();
-        if (functionHasIdentifier(function)) {
-            return InspectionJSBundle.message("function.is.overly.nested.error.string", nestingDepth);
-        }
-        else {
-            return InspectionJSBundle.message("anonymous.function.is.overly.nested.error.string", nestingDepth);
-        }
-    }
+	@Override
+	public BaseInspectionVisitor buildVisitor()
+	{
+		return new Visitor();
+	}
 
-    @Override
-	public BaseInspectionVisitor buildVisitor() {
-        return new Visitor();
-    }
+	private class Visitor extends BaseInspectionVisitor<NestingDepthJSInspectionState>
+	{
 
-    private class Visitor extends BaseInspectionVisitor {
+		@Override
+		public void visitJSFunctionDeclaration(@Nonnull JSFunction function)
+		{
+			final NestingDepthVisitor visitor = new NestingDepthVisitor();
+			function.accept(visitor);
+			final int count = visitor.getMaximumDepth();
 
-        @Override public void visitJSFunctionDeclaration(@Nonnull JSFunction function) {
-            final NestingDepthVisitor visitor = new NestingDepthVisitor();
-            function.accept(visitor);
-            final int count = visitor.getMaximumDepth();
-
-            if (count <= getLimit()) {
-                return;
-            }
-            registerFunctionError(function);
-        }
-    }
+			if(count <= myState.getLimit())
+			{
+				return;
+			}
+			registerFunctionError(function);
+		}
+	}
 }

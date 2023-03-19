@@ -6,6 +6,7 @@ import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.BoolUtils;
 import com.sixrr.inspectjs.utils.ConditionalUtils;
 import com.sixrr.inspectjs.utils.EquivalenceChecker;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.inspection.ProblemDescriptor;
@@ -51,13 +52,14 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
         return true;
     }
 
-    @Override
-	public String buildErrorString(Object... args) {
+    @RequiredReadAction
+	@Override
+	public String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message("trivial.if.error.string");
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location) {
+	public InspectionJSFix buildFix(PsiElement location, Object state) {
         return fix;
     }
 

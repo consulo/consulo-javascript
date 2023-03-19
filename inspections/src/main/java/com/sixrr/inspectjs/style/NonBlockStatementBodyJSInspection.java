@@ -2,6 +2,7 @@ package com.sixrr.inspectjs.style;
 
 import com.intellij.lang.javascript.psi.*;
 import com.sixrr.inspectjs.*;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
@@ -31,8 +32,9 @@ public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
         return false;
     }
 
-    @Override
-	public String buildErrorString(Object... args) {
+    @RequiredReadAction
+	@Override
+	public String buildErrorString(Object state, Object... args) {
         if (args[0] instanceof JSIfStatement) {
             return InspectionJSBundle.message("non.block.branch.error.string");
         } else {
@@ -41,7 +43,7 @@ public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location) {
+	public InspectionJSFix buildFix(PsiElement location, Object state) {
         return fix;
     }
 

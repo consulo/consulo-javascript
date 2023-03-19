@@ -1,6 +1,7 @@
 package com.sixrr.inspectjs.confusing;
 
 import com.intellij.lang.javascript.psi.*;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.util.PsiTreeUtil;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
@@ -51,9 +52,10 @@ public class MagicNumberJSInspection extends JavaScriptInspection {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
-    @Override
+    @RequiredReadAction
+	@Override
 	@Nonnull
-    public String buildErrorString(Object... args) {
+    public String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message(
                 "magic.number.problem.descriptor");
     }

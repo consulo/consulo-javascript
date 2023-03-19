@@ -4,6 +4,7 @@ import com.intellij.lang.javascript.psi.JSContinueStatement;
 import com.intellij.lang.javascript.psi.JSLoopStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.sixrr.inspectjs.*;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
@@ -36,9 +37,10 @@ public class UnnecessaryLabelOnContinueStatementJSInspection extends JavaScriptI
         return true;
     }
 
-    @Override
+    @RequiredReadAction
+	@Override
 	@Nullable
-    protected String buildErrorString(Object... args) {
+    protected String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message("unnecessary.label.on.continue.error.string");
     }
 
@@ -48,7 +50,7 @@ public class UnnecessaryLabelOnContinueStatementJSInspection extends JavaScriptI
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location) {
+	public InspectionJSFix buildFix(PsiElement location, Object state) {
         return fix;
     }
 

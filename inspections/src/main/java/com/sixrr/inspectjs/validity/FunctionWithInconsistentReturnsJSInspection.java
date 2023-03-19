@@ -2,6 +2,7 @@ package com.sixrr.inspectjs.validity;
 
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.*;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
@@ -36,9 +37,10 @@ public class FunctionWithInconsistentReturnsJSInspection extends JavaScriptInspe
 		return true;
 	}
 
+	@RequiredReadAction
 	@Override
 	@Nullable
-	protected String buildErrorString(Object... args)
+	protected String buildErrorString(Object state, Object... args)
 	{
 		final JSFunction function = (JSFunction) ((PsiElement) args[0]).getParent();
 		assert function != null;

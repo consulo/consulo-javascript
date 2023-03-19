@@ -7,6 +7,7 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.BoolUtils;
 import com.sixrr.inspectjs.utils.ParenthesesUtils;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.inspection.ProblemDescriptor;
@@ -33,14 +34,15 @@ public class NegatedConditionalExpressionJSInspection extends JavaScriptInspecti
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
-    @Override
+    @RequiredReadAction
+	@Override
 	@Nullable
-    protected String buildErrorString(Object... args) {
+    protected String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message("negated.conditional.expression.error.string");
     }
 
     @Override
-	protected InspectionJSFix buildFix(PsiElement location) {
+	protected InspectionJSFix buildFix(PsiElement location, Object state) {
         return fix;
     }
 

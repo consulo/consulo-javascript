@@ -2,6 +2,7 @@ package com.sixrr.inspectjs.functionmetrics;
 
 import com.intellij.lang.javascript.psi.JSBlockStatement;
 import com.intellij.lang.javascript.psi.JSFunction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
@@ -25,8 +26,9 @@ public class FunctionWithMultipleLoopsJSInspection extends JavaScriptInspection 
         return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
     }
 
-    @Override
-	public String buildErrorString(Object... args) {
+    @RequiredReadAction
+	@Override
+	public String buildErrorString(Object state, Object... args) {
         final JSFunction function = (JSFunction) ((PsiElement) args[0]).getParent();
         assert function != null;
         final LoopCountVisitor visitor = new LoopCountVisitor();

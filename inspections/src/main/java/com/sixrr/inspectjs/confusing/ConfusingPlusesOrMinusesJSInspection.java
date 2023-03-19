@@ -5,6 +5,7 @@ import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSPostfixExpression;
 import com.intellij.lang.javascript.psi.JSPrefixExpression;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
@@ -29,9 +30,10 @@ public class ConfusingPlusesOrMinusesJSInspection extends JavaScriptInspection {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
-    @Override
+    @RequiredReadAction
+	@Override
 	@Nullable
-    protected String buildErrorString(Object... args) {
+    protected String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message("confusing.pluses.or.minuses.error.string");
     }
 

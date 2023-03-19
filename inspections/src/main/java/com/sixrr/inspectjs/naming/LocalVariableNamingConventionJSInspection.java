@@ -7,89 +7,98 @@ import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.InspectionJSFix;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.fix.RenameFix;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.psi.PsiElement;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 
 @ExtensionImpl
-public class LocalVariableNamingConventionJSInspection extends ConventionInspection {
-    private static final int DEFAULT_MIN_LENGTH = 1;
-    private static final int DEFAULT_MAX_LENGTH = 32;
-    private final RenameFix fix = new RenameFix();
+public class LocalVariableNamingConventionJSInspection extends ConventionInspection
+{
+	private final RenameFix fix = new RenameFix();
 
-    @Override
+	@Override
 	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("local.variable.naming.convention.display.name");
-    }
+	public String getDisplayName()
+	{
+		return InspectionJSBundle.message("local.variable.naming.convention.display.name");
+	}
 
-    @Override
+	@Override
 	@Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.NAMING_CONVENTIONS_GROUP_NAME;
-    }
+	public String getGroupDisplayName()
+	{
+		return JSGroupNames.NAMING_CONVENTIONS_GROUP_NAME;
+	}
 
-    @Override
-	protected InspectionJSFix buildFix(PsiElement location) {
-        return fix;
-    }
+	@Override
+	protected InspectionJSFix buildFix(PsiElement location, Object state)
+	{
+		return fix;
+	}
 
-    @Override
-	protected boolean buildQuickFixesOnlyForOnTheFlyErrors() {
-        return true;
-    }
+	@Override
+	protected boolean buildQuickFixesOnlyForOnTheFlyErrors()
+	{
+		return true;
+	}
 
-    @Override
-	public String buildErrorString(Object... args) {
-        final JSVariable variable = (JSVariable) ((PsiElement)args[0]).getParent();
-        assert variable != null;
-        final String variableName = variable.getName();
-        if (variableName.length() < getMinLength()) {
-            return InspectionJSBundle.message("variable.name.is.too.short.error.string");
-        } else if (variableName.length() > getMaxLength()) {
-            return InspectionJSBundle.message("variable.name.is.too.long.error.string");
-        }
-        return InspectionJSBundle.message("variable.name.doesnt.match.regex.error.string", getRegex());
-    }
+	@RequiredReadAction
+	@Override
+	public String buildErrorString(Object state, Object... args)
+	{
+		LocalVariableNamingConventionJSInspectionState inspectionState = (LocalVariableNamingConventionJSInspectionState) state;
 
-    @Override
-	@NonNls
-    protected String getDefaultRegex() {
-        return "[a-z][A-Za-z]*";
-    }
+		final JSVariable variable = (JSVariable) ((PsiElement) args[0]).getParent();
+		assert variable != null;
+		final String variableName = variable.getName();
+		if(variableName.length() < inspectionState.m_minLength)
+		{
+			return InspectionJSBundle.message("variable.name.is.too.short.error.string");
+		}
+		else if(variableName.length() > inspectionState.m_maxLength)
+		{
+			return InspectionJSBundle.message("variable.name.is.too.long.error.string");
+		}
+		return InspectionJSBundle.message("variable.name.doesnt.match.regex.error.string", inspectionState.m_regex);
+	}
 
-    @Override
-	protected int getDefaultMinLength() {
-        return DEFAULT_MIN_LENGTH;
-    }
+	@Nonnull
+	@Override
+	public InspectionToolState<?> createStateProvider()
+	{
+		return new LocalVariableNamingConventionJSInspectionState();
+	}
 
-    @Override
-	protected int getDefaultMaxLength() {
-        return DEFAULT_MAX_LENGTH;
-    }
+	@Override
+	public BaseInspectionVisitor buildVisitor()
+	{
+		return new Visitor();
+	}
 
-    @Override
-	public BaseInspectionVisitor buildVisitor() {
-        return new Visitor();
-    }
+	private class Visitor extends BaseInspectionVisitor<LocalVariableNamingConventionJSInspectionState>
+	{
+		@Override
+		public void visitJSVarStatement(JSVarStatement jsVarStatement)
+		{
+			super.visitJSVarStatement(jsVarStatement);
+			final JSVariable[] variables = jsVarStatement.getVariables();
+			for(JSVariable variable : variables)
+			{
+				final String name = variable.getName();
+				if(name == null)
+				{
+					continue;
+				}
+				if(isValid(name, myState))
+				{
+					continue;
+				}
+				registerVariableError(variable);
+			}
+		}
 
-    private class Visitor extends BaseInspectionVisitor {
-        @Override public void visitJSVarStatement(JSVarStatement jsVarStatement) {
-            super.visitJSVarStatement(jsVarStatement);
-            final JSVariable[] variables = jsVarStatement.getVariables();
-            for (JSVariable variable : variables) {
-                final String name = variable.getName();
-                if (name == null) {
-                    continue;
-                }
-                if (isValid(name)) {
-                    continue;
-                }
-                registerVariableError(variable);
-            }
-        }
-
-    }
+	}
 }

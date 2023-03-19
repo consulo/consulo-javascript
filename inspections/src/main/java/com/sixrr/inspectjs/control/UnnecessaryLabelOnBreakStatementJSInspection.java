@@ -5,6 +5,7 @@ import com.intellij.lang.javascript.psi.JSLoopStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.JSSwitchStatement;
 import com.sixrr.inspectjs.*;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
@@ -38,7 +39,7 @@ public class UnnecessaryLabelOnBreakStatementJSInspection extends JavaScriptInsp
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location) {
+	public InspectionJSFix buildFix(PsiElement location, Object state) {
         return fix;
     }
 
@@ -58,9 +59,10 @@ public class UnnecessaryLabelOnBreakStatementJSInspection extends JavaScriptInsp
             replaceStatement(breakStatement, "break;");
         }
     }
-    @Override
+    @RequiredReadAction
+	@Override
 	@Nullable
-    protected String buildErrorString(Object... args) {
+    protected String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message("unnecessary.label.on.break.error.string");
     }
 

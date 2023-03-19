@@ -3,6 +3,7 @@ package com.sixrr.inspectjs.bitwise;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
@@ -28,9 +29,10 @@ public class ShiftOutOfRangeJSInspection extends JavaScriptInspection {
         return JSGroupNames.BITWISE_GROUP_NAME;
     }
 
-    @Override
+    @RequiredReadAction
+	@Override
 	@Nonnull
-    public String buildErrorString(Object... args) {
+    public String buildErrorString(Object state, Object... args) {
         final Integer value = (Integer) args[0];
         if (value > 0) {
             return InspectionJSBundle.message(

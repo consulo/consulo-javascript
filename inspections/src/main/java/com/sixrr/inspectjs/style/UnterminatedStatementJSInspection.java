@@ -2,6 +2,7 @@ package com.sixrr.inspectjs.style;
 
 import com.intellij.lang.javascript.psi.*;
 import com.sixrr.inspectjs.*;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
@@ -40,9 +41,10 @@ public class UnterminatedStatementJSInspection extends JavaScriptInspection
 		return JSGroupNames.STYLE_GROUP_NAME;
 	}
 
+	@RequiredReadAction
 	@Override
 	@Nullable
-	protected String buildErrorString(Object... args)
+	protected String buildErrorString(Object state, Object... args)
 	{
 		return InspectionJSBundle.message("unterminated.statement.error.string");
 	}
@@ -54,7 +56,7 @@ public class UnterminatedStatementJSInspection extends JavaScriptInspection
 	}
 
 	@Override
-	public InspectionJSFix buildFix(PsiElement location)
+	public InspectionJSFix buildFix(PsiElement location, Object state)
 	{
 		return fix;
 	}

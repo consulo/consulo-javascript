@@ -6,6 +6,7 @@ import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 
 import javax.annotation.Nonnull;
@@ -35,8 +36,9 @@ public class ReturnFromFinallyBlockJSInspection extends JavaScriptInspection {
         return true;
     }
 
-    @Override
-	public String buildErrorString(Object... args) {
+    @RequiredReadAction
+	@Override
+	public String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message("return.inside.finally.block.error.string");
     }
 

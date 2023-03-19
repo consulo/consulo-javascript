@@ -8,6 +8,7 @@ import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
 
@@ -34,9 +35,10 @@ public class FallthroughInSwitchStatementJSInspection extends JavaScriptInspecti
         return true;
     }
 
-    @Override
+    @RequiredReadAction
+	@Override
 	@Nullable
-    protected String buildErrorString(Object... args) {
+    protected String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message("fall.through.in.switch.statement.error.string");
     }
 

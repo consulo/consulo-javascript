@@ -8,6 +8,7 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.EquivalenceChecker;
 import com.sixrr.inspectjs.utils.SideEffectChecker;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.inspection.ProblemDescriptor;
@@ -39,8 +40,9 @@ public class ReplaceAssignmentWithOperatorAssignmentJSInspection
         return JSGroupNames.ASSIGNMENT_GROUP_NAME;
     }
 
-    @Override
-	public String buildErrorString(Object... args) {
+    @RequiredReadAction
+	@Override
+	public String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message(
                 "assignment.replaceable.with.operator.assignment.error.string",
                 calculateReplacementExpression((JSAssignmentExpression) args[0]));
@@ -65,7 +67,7 @@ public class ReplaceAssignmentWithOperatorAssignmentJSInspection
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location) {
+	public InspectionJSFix buildFix(PsiElement location, Object state) {
         return new ReplaceAssignmentWithOperatorAssignmentFix(
                 (JSAssignmentExpression) location);
     }

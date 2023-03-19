@@ -6,6 +6,7 @@ import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 
 import javax.annotation.Nonnull;
@@ -26,8 +27,9 @@ public class DuplicatePropertyOnObjectJSInspection extends JavaScriptInspection 
         return JSGroupNames.VALIDITY_GROUP_NAME;
     }
 
-    @Override
-	public String buildErrorString(Object... args) {
+    @RequiredReadAction
+	@Override
+	public String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message("duplicate.object.property.error.string");
     }
 

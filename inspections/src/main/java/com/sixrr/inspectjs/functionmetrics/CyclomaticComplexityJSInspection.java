@@ -5,13 +5,16 @@ import com.intellij.lang.javascript.psi.JSFunction;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;
 
 @ExtensionImpl
-public class CyclomaticComplexityJSInspection extends FunctionMetricsInspection
+public class CyclomaticComplexityJSInspection extends JavaScriptInspection
 {
 	@Override
 	@Nonnull
@@ -34,20 +37,16 @@ public class CyclomaticComplexityJSInspection extends FunctionMetricsInspection
 		return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
 	}
 
+	@Nonnull
 	@Override
-	protected int getDefaultLimit()
+	public InspectionToolState<?> createStateProvider()
 	{
-		return 10;
+		return new CyclomaticComplexityJSInspectionState();
 	}
 
+	@RequiredReadAction
 	@Override
-	protected String getConfigurationLabel()
-	{
-		return InspectionJSBundle.message("function.complexity.limit.parameter");
-	}
-
-	@Override
-	public String buildErrorString(Object... args)
+	public String buildErrorString(Object state, Object... args)
 	{
 		final JSFunction function = (JSFunction) ((PsiElement) args[0]).getParent();
 		assert function != null;
@@ -72,7 +71,7 @@ public class CyclomaticComplexityJSInspection extends FunctionMetricsInspection
 		return new Visitor();
 	}
 
-	private class Visitor extends BaseInspectionVisitor
+	private class Visitor extends BaseInspectionVisitor<CyclomaticComplexityJSInspectionState>
 	{
 
 		@Override
@@ -87,7 +86,7 @@ public class CyclomaticComplexityJSInspection extends FunctionMetricsInspection
 			lastChild.accept(visitor);
 			final int complexity = visitor.getComplexity();
 
-			if(complexity <= getLimit())
+			if(complexity <= myState.getLimit())
 			{
 				return;
 			}

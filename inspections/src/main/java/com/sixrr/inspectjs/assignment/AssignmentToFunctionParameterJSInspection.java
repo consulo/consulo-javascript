@@ -2,6 +2,7 @@ package com.sixrr.inspectjs.assignment;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
@@ -29,9 +30,10 @@ public class AssignmentToFunctionParameterJSInspection extends JavaScriptInspect
         return JSGroupNames.ASSIGNMENT_GROUP_NAME;
     }
 
-    @Override
+    @RequiredReadAction
+	@Override
 	@Nullable
-    protected String buildErrorString(Object... args) {
+    protected String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message("assignment.to.function.parameter.error.string");
     }
 

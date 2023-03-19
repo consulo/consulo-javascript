@@ -6,6 +6,7 @@ import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
@@ -34,9 +35,10 @@ public class ReuseOfLocalVariableJSInspection extends JavaScriptInspection
 		return JSGroupNames.DATA_FLOW_ISSUES;
 	}
 
+	@RequiredReadAction
 	@Override
 	@Nonnull
-	public String buildErrorString(Object... args)
+	public String buildErrorString(Object state, Object... args)
 	{
 		return InspectionJSBundle.message(
 				"reuse.of.local.variable.problem.descriptor");

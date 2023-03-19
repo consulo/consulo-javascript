@@ -3,6 +3,7 @@ package com.sixrr.inspectjs.control;
 import com.intellij.lang.javascript.psi.*;
 import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
@@ -39,8 +40,9 @@ public class  UnnecessaryReturnJSInspection extends JavaScriptInspection {
         return true;
     }
 
-    @Override
-	public String buildErrorString(Object... args) {
+    @RequiredReadAction
+	@Override
+	public String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message("unnecessary.return.error.string");
     }
 
@@ -50,7 +52,7 @@ public class  UnnecessaryReturnJSInspection extends JavaScriptInspection {
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location) {
+	public InspectionJSFix buildFix(PsiElement location, Object state) {
         return fix;
     }
 

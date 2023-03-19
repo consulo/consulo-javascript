@@ -1,5 +1,6 @@
 package com.sixrr.inspectjs.control;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import com.intellij.lang.javascript.psi.JSBreakStatement;
@@ -38,15 +39,16 @@ public class UnnecessaryLabelJSInspection extends JavaScriptInspection {
         return new UnusedLabelVisitor();
     }
 
-    @Override
+    @RequiredReadAction
+	@Override
 	@Nonnull
-    protected String buildErrorString(Object... args) {
+    protected String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message("unnecessary.label.error.string");
 
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location) {
+	public InspectionJSFix buildFix(PsiElement location, Object state) {
         return new UnusedLabelFix();
     }
 

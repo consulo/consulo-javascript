@@ -7,6 +7,7 @@ import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.utils.StatementUtils;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 
 import javax.annotation.Nonnull;
@@ -27,9 +28,10 @@ public class EmptyFinallyBlockJSInspection extends JavaScriptInspection {
         return JSGroupNames.ERRORHANDLING_GROUP_NAME;
     }
 
-    @Override
+    @RequiredReadAction
+	@Override
 	@Nullable
-    protected String buildErrorString(Object... args) {
+    protected String buildErrorString(Object state, Object... args) {
         return InspectionJSBundle.message("empty.finally.block.error.string");
     }
 
