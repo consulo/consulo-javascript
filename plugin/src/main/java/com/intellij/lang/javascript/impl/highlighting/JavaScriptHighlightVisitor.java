@@ -16,41 +16,33 @@
 
 package com.intellij.lang.javascript.impl.highlighting;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.codeEditor.DefaultLanguageHighlighterColors;
-import consulo.language.editor.rawHighlight.HighlightInfo;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.language.editor.rawHighlight.HighlightVisitor;
-import consulo.language.editor.rawHighlight.HighlightInfoHolder;
 import com.intellij.lang.javascript.JSTokenTypes;
-import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.*;
-import consulo.colorScheme.TextAttributesKey;
-import consulo.language.psi.*;
-import consulo.language.ast.IElementType;
-import consulo.language.psi.util.PsiTreeUtil;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.codeEditor.DefaultLanguageHighlighterColors;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.javascript.ide.hightlight.JavaScriptSyntaxHighlightKeys;
 import consulo.javascript.lang.JavaScriptContextKeywordElementType;
-import consulo.javascript.language.JavaScriptFeature;
 import consulo.javascript.lang.JavaScriptTokenSets;
+import consulo.javascript.language.JavaScriptBundle;
+import consulo.javascript.language.JavaScriptFeature;
 import consulo.javascript.language.JavaScriptVersionUtil;
 import consulo.javascript.psi.JSSimpleLiteralExpression;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.rawHighlight.HighlightInfo;
+import consulo.language.editor.rawHighlight.HighlightInfoHolder;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.HighlightVisitor;
+import consulo.language.psi.*;
+import consulo.language.psi.util.PsiTreeUtil;
 import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-@ExtensionImpl
 public class JavaScriptHighlightVisitor extends JSElementVisitor implements HighlightVisitor
 {
 	private HighlightInfoHolder myHighlightInfoHolder;
-
-	@Override
-	public boolean suitableForFile(@Nonnull PsiFile psiFile)
-	{
-		return psiFile instanceof JSFile;
-	}
 
 	@Override
 	@RequiredReadAction
@@ -386,13 +378,6 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 		myHighlightInfoHolder = highlightInfoHolder;
 		runnable.run();
 		return true;
-	}
-
-	@Nonnull
-	@Override
-	public HighlightVisitor clone()
-	{
-		return new JavaScriptHighlightVisitor();
 	}
 
 	private static boolean isClass(final PsiElement element)
