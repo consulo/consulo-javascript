@@ -1028,11 +1028,13 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 		return true;
 	}
 
-	public void parseSimpleExpression(final PsiBuilder builder)
+	public boolean parseSimpleExpression(final PsiBuilder builder)
 	{
 		if(!parseUnaryExpression(builder))
 		{
 			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+			return false;
 		}
+		return true;
 	}
 }

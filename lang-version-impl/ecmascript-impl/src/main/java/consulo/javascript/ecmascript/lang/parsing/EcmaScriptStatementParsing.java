@@ -495,12 +495,12 @@ public class EcmaScriptStatementParsing extends StatementParsing
 		final PsiBuilder.Marker referenceList = builder.mark();
 		builder.advanceLexer();
 
-		if(getExpressionParsing().parseQualifiedTypeName(builder))
+		if(getExpressionParsing().parseSimpleExpression(builder))
 		{
 			while(builder.getTokenType() == JSTokenTypes.COMMA)
 			{
 				builder.advanceLexer();
-				if(!getExpressionParsing().parseQualifiedTypeName(builder))
+				if(!getExpressionParsing().parseSimpleExpression(builder))
 				{
 					break;
 				}
