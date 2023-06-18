@@ -22,6 +22,12 @@ public class ParameterNamingConventionJSInspection extends ConventionInspection
 	private final RenameFix fix = new RenameFix();
 
 	@Override
+	public boolean isEnabledByDefault()
+	{
+		return false;
+	}
+
+	@Override
 	@Nonnull
 	public String getDisplayName()
 	{

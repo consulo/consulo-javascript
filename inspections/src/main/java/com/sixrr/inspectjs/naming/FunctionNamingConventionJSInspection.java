@@ -19,6 +19,12 @@ public class FunctionNamingConventionJSInspection extends ConventionInspection
 {
 	private final RenameFix fix = new RenameFix();
 
+	@Override
+	public boolean isEnabledByDefault()
+	{
+		return false;
+	}
+
 	@Nonnull
 	@Override
 	public InspectionToolState<?> createStateProvider()
