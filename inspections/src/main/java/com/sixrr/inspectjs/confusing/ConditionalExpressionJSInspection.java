@@ -12,36 +12,49 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @ExtensionImpl
-public class ConditionalExpressionJSInspection extends JavaScriptInspection {
+public class ConditionalExpressionJSInspection extends JavaScriptInspection
+{
+	@Override
+	public boolean isEnabledByDefault()
+	{
+		return false;
+	}
 
-    @Override
+	@Override
 	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("conditional.expression.display.name");
-    }
+	public String getDisplayName()
+	{
+		return InspectionJSBundle.message("conditional.expression.display.name");
+	}
 
-    @Override
+	@Override
 	@Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.CONFUSING_GROUP_NAME;
-    }
+	public String getGroupDisplayName()
+	{
+		return JSGroupNames.CONFUSING_GROUP_NAME;
+	}
 
-    @RequiredReadAction
+	@RequiredReadAction
 	@Override
 	@Nullable
-    protected String buildErrorString(Object state, Object... args) {
-        return InspectionJSBundle.message("conditional.expression.error.string");
-    }
+	protected String buildErrorString(Object state, Object... args)
+	{
+		return InspectionJSBundle.message("conditional.expression.error.string");
+	}
 
-    @Override
-	public BaseInspectionVisitor buildVisitor() {
-        return new Visitor();
-    }
+	@Override
+	public BaseInspectionVisitor buildVisitor()
+	{
+		return new Visitor();
+	}
 
-    private static class Visitor extends BaseInspectionVisitor {
-        @Override public void visitJSConditionalExpression(JSConditionalExpression jsConditionalExpression) {
-            super.visitJSConditionalExpression(jsConditionalExpression);
-            registerError(jsConditionalExpression);
-        }
-    }
+	private static class Visitor extends BaseInspectionVisitor
+	{
+		@Override
+		public void visitJSConditionalExpression(JSConditionalExpression jsConditionalExpression)
+		{
+			super.visitJSConditionalExpression(jsConditionalExpression);
+			registerError(jsConditionalExpression);
+		}
+	}
 }

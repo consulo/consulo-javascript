@@ -14,71 +14,87 @@ import consulo.annotation.component.ExtensionImpl;
 import javax.annotation.Nonnull;
 
 @ExtensionImpl
-public class ChainedFunctionCallJSInspection extends JavaScriptInspection {
+public class ChainedFunctionCallJSInspection extends JavaScriptInspection
+{
+	@Override
+	public boolean isEnabledByDefault()
+	{
+		return true;
+	}
 
-
-
-    @Override
-	@Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.STYLE_GROUP_NAME;
-    }
-
-    @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message(
-                "chained.function.call.display.name");
-    }
-
-    @RequiredReadAction
 	@Override
 	@Nonnull
-    protected String buildErrorString(Object state, Object... args) {
-        return InspectionJSBundle.message(
-                "chained.function.call.problem.descriptor");
-    }
+	public String getGroupDisplayName()
+	{
+		return JSGroupNames.STYLE_GROUP_NAME;
+	}
 
-    @Override
-	public BaseInspectionVisitor buildVisitor() {
-        return new NestedMethodCallVisitor();
-    }
+	@Override
+	@Nonnull
+	public String getDisplayName()
+	{
+		return InspectionJSBundle.message(
+				"chained.function.call.display.name");
+	}
 
+	@RequiredReadAction
+	@Override
+	@Nonnull
+	protected String buildErrorString(Object state, Object... args)
+	{
+		return InspectionJSBundle.message(
+				"chained.function.call.problem.descriptor");
+	}
 
-    private static class NestedMethodCallVisitor extends BaseInspectionVisitor {
-
-        @Override public void visitJSCallExpression(
-                @Nonnull JSCallExpression expression) {
-            super.visitJSCallExpression(expression);
-            final JSExpression reference =
-                    expression.getMethodExpression();
-            if(!(reference instanceof JSReferenceExpression))
-            {
-                return;
-            }
-            final JSExpression qualifier = ((JSReferenceExpression)reference).getQualifier();
-            if (qualifier == null) {
-                return;
-            }
-            if (!isCallExpression(qualifier)) {
-                return;
-            }
-            registerFunctionCallError(expression);
-        }
+	@Override
+	public BaseInspectionVisitor buildVisitor()
+	{
+		return new NestedMethodCallVisitor();
+	}
 
 
-        private static boolean isCallExpression(JSExpression expression) {
-            if (expression instanceof JSCallExpression ) {
-                return true;
-            }
-            if (expression instanceof JSParenthesizedExpression) {
-                final JSParenthesizedExpression parenthesizedExpression =
-                        (JSParenthesizedExpression) expression;
-                final JSExpression containedExpression =
-                        parenthesizedExpression.getInnerExpression();
-                return isCallExpression(containedExpression);
-            }
-            return false;
-        }
-    }
+	private static class NestedMethodCallVisitor extends BaseInspectionVisitor
+	{
+
+		@Override
+		public void visitJSCallExpression(
+				@Nonnull JSCallExpression expression)
+		{
+			super.visitJSCallExpression(expression);
+			final JSExpression reference =
+					expression.getMethodExpression();
+			if(!(reference instanceof JSReferenceExpression))
+			{
+				return;
+			}
+			final JSExpression qualifier = ((JSReferenceExpression) reference).getQualifier();
+			if(qualifier == null)
+			{
+				return;
+			}
+			if(!isCallExpression(qualifier))
+			{
+				return;
+			}
+			registerFunctionCallError(expression);
+		}
+
+
+		private static boolean isCallExpression(JSExpression expression)
+		{
+			if(expression instanceof JSCallExpression)
+			{
+				return true;
+			}
+			if(expression instanceof JSParenthesizedExpression)
+			{
+				final JSParenthesizedExpression parenthesizedExpression =
+						(JSParenthesizedExpression) expression;
+				final JSExpression containedExpression =
+						parenthesizedExpression.getInnerExpression();
+				return isCallExpression(containedExpression);
+			}
+			return false;
+		}
+	}
 }
