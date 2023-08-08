@@ -90,7 +90,7 @@ public class JavaScriptLanguageCodeStyleSettingsProvider extends LanguageCodeSty
 	{
 		try
 		{
-			return FileUtil.loadTextAndClose(JavaScriptLanguageCodeStyleSettingsProvider.class.getResourceAsStream("/codeStyle" + file));
+			return FileUtil.loadTextAndClose(JavaScriptLanguageCodeStyleSettingsProvider.class.getResourceAsStream("/codeStyle/" + file));
 		}
 		catch(IOException e)
 		{
