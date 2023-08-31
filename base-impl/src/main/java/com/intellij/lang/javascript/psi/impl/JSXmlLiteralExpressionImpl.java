@@ -313,6 +313,13 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
 		return Collections.emptyMap();
 	}
 
+	@RequiredReadAction
+	@Override
+	public int getTextOffset()
+	{
+		return 0;
+	}
+
 	@Nonnull
 	@Override
 	public XmlTagValue getValue()
