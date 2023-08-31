@@ -1,6 +1,7 @@
 package consulo.javascript.lang;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.javascript.internal.DefaultJavaScriptVersion;
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.javascript.language.JavaScriptLanguageVersion;
 import consulo.javascript.language.StandardJavaScriptVersion;
@@ -23,8 +24,16 @@ import java.util.List;
 public class StandardJavaScriptVersionsImpl extends StandardJavaScriptVersions
 {
 	@Nonnull
-	public BaseJavaScriptLanguageVersion getDefaultVersion()
+	public JavaScriptLanguageVersion getDefaultVersion()
 	{
+		LanguageVersion[] versions = JavaScriptLanguage.INSTANCE.getVersions();
+		for(LanguageVersion version : versions)
+		{
+			if(version instanceof DefaultJavaScriptVersion)
+			{
+				return (JavaScriptLanguageVersion) version;
+			}
+		}
 		return JavaScript15LanguageVersion.getInstance();
 	}
 
@@ -46,7 +55,7 @@ public class StandardJavaScriptVersionsImpl extends StandardJavaScriptVersions
 	}
 
 	@Nonnull
-	public BaseJavaScriptLanguageVersion findVersionById(@Nullable String id)
+	public JavaScriptLanguageVersion findVersionById(@Nullable String id)
 	{
 		if(StringUtil.isEmpty(id))
 		{

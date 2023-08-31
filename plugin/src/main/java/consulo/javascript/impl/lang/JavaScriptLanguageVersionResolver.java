@@ -55,7 +55,7 @@ public class JavaScriptLanguageVersionResolver implements LanguageVersionResolve
 		FileType fileType = containingFile.getFileType();
 		if(fileType instanceof JavaScriptFileTypeWithVersion)
 		{
-			Module module = ModuleUtilCore.findModuleForPsiElement(element);
+			Module module = element.getModule();
 			return ((JavaScriptFileTypeWithVersion) fileType).getLanguageVersion(module, element.getContainingFile().getVirtualFile());
 		}
 

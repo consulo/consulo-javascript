@@ -21,4 +21,6 @@ open module consulo.javascript.base.api
 	exports consulo.javascript.psi.impl.reference;
 	exports consulo.javascript.language.psi.stub;
 	exports consulo.javascript.psi.stubs;
+
+	exports consulo.javascript.internal to consulo.javascript.ecmascript.impl, consulo.javascript.base.impl;
 }

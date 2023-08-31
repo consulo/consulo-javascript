@@ -1,6 +1,7 @@
 package consulo.javascript.ecmascript.lang;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.internal.DefaultJavaScriptVersion;
 import consulo.javascript.language.JavaScriptLanguage;
 import jakarta.inject.Inject;
 
@@ -11,7 +12,7 @@ import javax.annotation.Nonnull;
  * @since 06/12/2021
  */
 @ExtensionImpl
-public class EcmaScript12JavaScriptVersion extends EcmaScript6JavaScriptVersion
+public class EcmaScript12JavaScriptVersion extends EcmaScript6JavaScriptVersion implements DefaultJavaScriptVersion
 {
 	@Nonnull
 	public static EcmaScript12JavaScriptVersion getInstance()
