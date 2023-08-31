@@ -21,7 +21,7 @@ import consulo.javascript.ide.hightlight.JavaScriptHighlighter;
 import consulo.javascript.javascript17.lang.lexer.JavaScript17Lexer;
 import consulo.javascript.lang.BaseJavaScriptLanguageVersion;
 import consulo.javascript.language.JavaScriptLanguage;
-import consulo.javascript.language.StandardJavaScriptVersions;
+import consulo.javascript.language.StandardJavaScriptVersion;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.lexer.Lexer;
 
@@ -33,7 +33,7 @@ import java.util.function.Supplier;
  * @since 11.12.2015
  */
 @ExtensionImpl
-public class JavaScript17LanguageVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersions.Marker
+public class JavaScript17LanguageVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersion
 {
 	private static final Supplier<Lexer> ourLexerFactory = JavaScript17Lexer::new;
 

@@ -20,7 +20,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.lang.psi.impl.resolve.JavaScriptVersionWithHelper;
 import consulo.javascript.language.JavaScriptFeature;
 import consulo.javascript.language.JavaScriptLanguage;
-import consulo.javascript.language.StandardJavaScriptVersions;
+import consulo.javascript.language.StandardJavaScriptVersion;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  * @since 12.12.2015
  */
 @ExtensionImpl
-public class EcmaScript6JavaScriptVersion extends BaseEcmaScriptJavaScriptVersion implements StandardJavaScriptVersions.Marker, JavaScriptVersionWithHelper
+public class EcmaScript6JavaScriptVersion extends BaseEcmaScriptJavaScriptVersion implements StandardJavaScriptVersion, JavaScriptVersionWithHelper
 {
 	@Nonnull
 	public static EcmaScript6JavaScriptVersion getInstance()

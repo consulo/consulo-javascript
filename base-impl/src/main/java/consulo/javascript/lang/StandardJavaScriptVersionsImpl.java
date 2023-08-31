@@ -3,6 +3,7 @@ package consulo.javascript.lang;
 import consulo.annotation.component.ServiceImpl;
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.javascript.language.JavaScriptLanguageVersion;
+import consulo.javascript.language.StandardJavaScriptVersion;
 import consulo.javascript.language.StandardJavaScriptVersions;
 import consulo.language.version.LanguageVersion;
 import consulo.util.lang.StringUtil;
@@ -34,7 +35,7 @@ public class StandardJavaScriptVersionsImpl extends StandardJavaScriptVersions
 		LanguageVersion[] versions = JavaScriptLanguage.INSTANCE.getVersions();
 		for(LanguageVersion version : versions)
 		{
-			if(version instanceof StandardJavaScriptVersions.Marker)
+			if(version instanceof StandardJavaScriptVersion)
 			{
 				list.add((BaseJavaScriptLanguageVersion) version);
 			}
@@ -55,7 +56,7 @@ public class StandardJavaScriptVersionsImpl extends StandardJavaScriptVersions
 		LanguageVersion[] versions = JavaScriptLanguage.INSTANCE.getVersions();
 		for(LanguageVersion version : versions)
 		{
-			if(version instanceof StandardJavaScriptVersions.Marker && id.equals(version.getId()))
+			if(version instanceof StandardJavaScriptVersion && id.equals(version.getId()))
 			{
 				return (BaseJavaScriptLanguageVersion) version;
 			}

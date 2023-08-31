@@ -31,14 +31,6 @@ import java.util.List;
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class StandardJavaScriptVersions
 {
-	public static interface Marker
-	{
-		@Deprecated
-		default int getWeight()
-		{
-			return 0;
-		}
-	}
 
 	@Nonnull
 	public static StandardJavaScriptVersions getInstance()

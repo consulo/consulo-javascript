@@ -9,7 +9,7 @@ import consulo.javascript.lang.BaseJavaScriptLanguageVersion;
 import consulo.javascript.lang.lexer.JavaScriptFlexAdapter;
 import consulo.javascript.lang.psi.impl.resolve.JavaScriptVersionWithHelper;
 import consulo.javascript.lang.psi.impl.resolve.ResolveHelper;
-import consulo.javascript.language.StandardJavaScriptVersions;
+import consulo.javascript.language.StandardJavaScriptVersion;
 import consulo.language.ast.TokenSet;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.lexer.Lexer;
@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 06/12/2021
  */
-public abstract class BaseEcmaScriptJavaScriptVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersions.Marker, JavaScriptVersionWithHelper
+public abstract class BaseEcmaScriptJavaScriptVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersion, JavaScriptVersionWithHelper
 {
 	protected BaseEcmaScriptJavaScriptVersion(@Nonnull String id)
 	{

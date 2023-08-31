@@ -4,7 +4,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.ide.hightlight.JavaScriptHighlighter;
 import consulo.javascript.lang.lexer.JavaScript15Lexer;
 import consulo.javascript.language.JavaScriptLanguage;
-import consulo.javascript.language.StandardJavaScriptVersions;
+import consulo.javascript.language.StandardJavaScriptVersion;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.lexer.Lexer;
 
@@ -16,7 +16,7 @@ import java.util.function.Supplier;
  * @since 05.03.2015
  */
 @ExtensionImpl
-public class JavaScript15LanguageVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersions.Marker
+public class JavaScript15LanguageVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersion
 {
 	private static final Supplier<Lexer> ourLexerFactory = () -> new JavaScript15Lexer();
 
