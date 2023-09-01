@@ -19,21 +19,21 @@ package com.intellij.lang.javascript;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.*;
 import com.intellij.lang.javascript.psi.stubs.*;
-import com.intellij.lang.javascript.types.*;
+import com.intellij.lang.javascript.types.JSFileElementType;
+import com.intellij.lang.javascript.types.JSFunctionElementType;
 import consulo.annotation.DeprecationInfo;
 import consulo.javascript.ecmascript4.psi.impl.EcmaScript4ElementTypes;
+import consulo.javascript.impl.language.psi.JSComputedNameImpl;
 import consulo.javascript.impl.language.psi.JSStubElementType;
-import consulo.javascript.language.JavaScriptLanguage;
+import consulo.javascript.impl.language.psi.JavaScriptLambdaExpressionImpl;
+import consulo.javascript.impl.language.psi.JavaScriptSpreadExpressionImpl;
 import consulo.javascript.lang.parsing.impl.JavaSciptDestructuringElementImpl;
 import consulo.javascript.lang.parsing.impl.JavaSciptDestructuringObjectImpl;
 import consulo.javascript.lang.parsing.impl.JavaScriptDestructuringParameterImpl;
 import consulo.javascript.lang.parsing.impl.JavaScriptDestructuringShorthandedPropertyImpl;
 import consulo.javascript.lang.psi.impl.JSRegExpLiteralExpressionImpl;
-import consulo.javascript.impl.language.psi.JSComputedNameImpl;
-import consulo.javascript.impl.language.psi.JavaScriptLambdaExpressionImpl;
-import consulo.javascript.impl.language.psi.JavaScriptSpreadExpressionImpl;
+import consulo.javascript.language.JavaScriptLanguage;
 import consulo.javascript.psi.stubs.JSFileStub;
-import consulo.language.Language;
 import consulo.language.ast.*;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.stub.IStubFileElementType;
@@ -49,15 +49,7 @@ public interface JSElementTypes
 {
 	IStubFileElementType<JSFileStub> FILE = new JSFileElementType(JavaScriptLanguage.INSTANCE);
 
-	IElementType EMBEDDED_CONTENT = new ILazyParseableElementType("EMBEDDED_CONTENT", JavaScriptLanguage.INSTANCE)
-	{
-		@Nonnull
-		@Override
-		public Language getLanguage()
-		{
-			return JavaScriptLanguage.INSTANCE;
-		}
-	};
+	IElementType EMBEDDED_CONTENT = new ILazyParseableElementType("EMBEDDED_CONTENT", JavaScriptLanguage.INSTANCE);
 	IElementType EMBEDDED_EXPRESSION = new ElementTypeAsPsiFactory("EMBEDDED_EXPRESSION", JavaScriptLanguage.INSTANCE, JSEmbeddedContentImpl::new);
 
 	JSStubElementType<JSFunctionStub, JSFunction> FUNCTION_DECLARATION = JSStubElementTypes.FUNCTION_DECLARATION;
