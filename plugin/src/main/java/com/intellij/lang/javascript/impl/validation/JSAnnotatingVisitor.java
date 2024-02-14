@@ -1101,7 +1101,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
     checkFileUnderSourceRoot(packageStatement, new SimpleErrorReportingClient());
   }
 
-  public static class RemoveASTNodeFix implements IntentionAction, LocalQuickFix {
+  public static class RemoveASTNodeFix implements SyntheticIntentionAction, LocalQuickFix {
     private final ASTNode[] myAstNodes;
     private final String myPropKey;
 
