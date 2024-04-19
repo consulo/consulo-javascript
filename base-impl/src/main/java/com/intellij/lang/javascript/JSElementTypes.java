@@ -22,6 +22,7 @@ import com.intellij.lang.javascript.psi.stubs.*;
 import com.intellij.lang.javascript.types.JSFileElementType;
 import com.intellij.lang.javascript.types.JSFunctionElementType;
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.ecmascript4.psi.impl.EcmaScript4ElementTypes;
 import consulo.javascript.impl.language.psi.JSComputedNameImpl;
 import consulo.javascript.impl.language.psi.JSStubElementType;
@@ -34,9 +35,17 @@ import consulo.javascript.lang.parsing.impl.JavaScriptDestructuringShorthandedPr
 import consulo.javascript.lang.psi.impl.JSRegExpLiteralExpressionImpl;
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.javascript.psi.stubs.JSFileStub;
+import consulo.language.Language;
 import consulo.language.ast.*;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.parser.PsiBuilder;
+import consulo.language.parser.PsiBuilderFactory;
+import consulo.language.parser.PsiParser;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.stub.IStubFileElementType;
+import consulo.language.version.LanguageVersion;
+import consulo.language.version.LanguageVersionUtil;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 
@@ -49,7 +58,21 @@ public interface JSElementTypes
 {
 	IStubFileElementType<JSFileStub> FILE = new JSFileElementType(JavaScriptLanguage.INSTANCE);
 
-	IElementType EMBEDDED_CONTENT = new ILazyParseableElementType("EMBEDDED_CONTENT", JavaScriptLanguage.INSTANCE);
+	IElementType EMBEDDED_CONTENT = new ILazyParseableElementType("EMBEDDED_CONTENT", JavaScriptLanguage.INSTANCE)
+	{
+		@Override
+		@RequiredReadAction
+		protected ASTNode doParseContents(@Nonnull final ASTNode chameleon, @Nonnull final PsiElement psi)
+		{
+			LanguageVersion languageVersion = LanguageVersionUtil.findLanguageVersion(getLanguage(), psi);
+			Project project = psi.getProject();
+			Language languageForParser = getLanguageForParser(psi);
+			PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, chameleon, null, languageForParser, languageVersion, chameleon.getChars());
+			PsiParser parser = ParserDefinition.forLanguage(languageForParser).createParser(languageVersion);
+			return parser.parse(this, builder, languageVersion).getFirstChildNode();
+		}
+	};
+
 	IElementType EMBEDDED_EXPRESSION = new ElementTypeAsPsiFactory("EMBEDDED_EXPRESSION", JavaScriptLanguage.INSTANCE, JSEmbeddedContentImpl::new);
 
 	JSStubElementType<JSFunctionStub, JSFunction> FUNCTION_DECLARATION = JSStubElementTypes.FUNCTION_DECLARATION;
@@ -93,7 +116,8 @@ public interface JSElementTypes
 	IElementType DESTRUCTURING_ELEMENT = new ElementTypeAsPsiFactory("DESTRUCTURING_ELEMENT", JavaScriptLanguage.INSTANCE, JavaSciptDestructuringElementImpl::new);
 	IElementType DESTRUCTURING_PARAMETER = new ElementTypeAsPsiFactory("DESTRUCTURING_PARAMETER", JavaScriptLanguage.INSTANCE, JavaScriptDestructuringParameterImpl::new);
 	IElementType DESTRUCTURING_OBJECT = new ElementTypeAsPsiFactory("DESTRUCTURING_OBJECT", JavaScriptLanguage.INSTANCE, JavaSciptDestructuringObjectImpl::new);
-	IElementType DESTRUCTURING_SHORTHANDED_PROPERTY = new ElementTypeAsPsiFactory("DESTRUCTURING_SHORTHANDED_PROPERTY", JavaScriptLanguage.INSTANCE, JavaScriptDestructuringShorthandedPropertyImpl::new);
+	IElementType DESTRUCTURING_SHORTHANDED_PROPERTY = new ElementTypeAsPsiFactory("DESTRUCTURING_SHORTHANDED_PROPERTY", JavaScriptLanguage.INSTANCE,
+			JavaScriptDestructuringShorthandedPropertyImpl::new);
 	IElementType WITH_STATEMENT = new ElementTypeAsPsiFactory("WITH_STATEMENT", JavaScriptLanguage.INSTANCE, JSWithStatementImpl::new);
 	IElementType RETURN_STATEMENT = new ElementTypeAsPsiFactory("RETURN_STATEMENT", JavaScriptLanguage.INSTANCE, JSReturnStatementImpl::new);
 	IElementType THROW_STATEMENT = new ElementTypeAsPsiFactory("THROW_STATEMENT", JavaScriptLanguage.INSTANCE, JSThrowStatementImpl::new);
