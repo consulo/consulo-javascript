@@ -16,13 +16,13 @@
 
 package consulo.javascript.run.debug.v8;
 
-import consulo.application.AllIcons;
 import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.evaluation.XDebuggerEvaluator;
 import consulo.execution.debug.frame.XCompositeNode;
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XValueChildrenList;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import org.chromium.sdk.*;
@@ -131,7 +131,7 @@ public class V8StackFrame extends XStackFrame
 		}
 
 		component.append(":" + (statementStartPosition.getLine() + 1), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-		component.setIcon(AllIcons.Debugger.StackFrame);
+		component.setIcon(PlatformIconGroup.debuggerFrame());
 	}
 
 	@Override
