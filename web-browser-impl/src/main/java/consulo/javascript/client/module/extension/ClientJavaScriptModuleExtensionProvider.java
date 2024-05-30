@@ -42,7 +42,7 @@ public class ClientJavaScriptModuleExtensionProvider implements ModuleExtensionP
 	@Override
 	public Image getIcon()
 	{
-		return JavaScriptIconGroup.javascript();
+		return JavaScriptIconGroup.javascriptmodule();
 	}
 
 	@Nonnull
