@@ -41,11 +41,11 @@ public class ClientJavaScriptSdkType extends SdkType
 		return type == BinariesOrderRootType.getInstance() || type == SourcesOrderRootType.getInstance();
 	}
 
-	@Nullable
+	@Nonnull
 	@Override
 	public Image getIcon()
 	{
-		return JavaScriptIconGroup.javascript();
+		return JavaScriptIconGroup.javascriptmodule();
 	}
 
 	@Override
