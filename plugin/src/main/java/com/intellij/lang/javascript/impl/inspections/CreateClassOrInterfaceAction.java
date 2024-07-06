@@ -16,7 +16,6 @@
 
 package com.intellij.lang.javascript.impl.inspections;
 
-import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.impl.flex.ImportUtils;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
@@ -25,6 +24,7 @@ import consulo.application.ApplicationManager;
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateManager;
 import consulo.fileTemplate.FileTemplateUtil;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiDirectory;
@@ -70,8 +70,9 @@ class CreateClassOrInterfaceAction implements LocalQuickFix
 	@Nonnull
 	public String getName()
 	{
-		final String key = myIsInterface ? "javascript.create.interface.intention.name" : "javascript.create.class.intention.name";
-		return JavaScriptBundle.message(key, classNameToCreate);
+		return myIsInterface 
+			? JavaScriptLocalize.javascriptCreateInterfaceIntentionName(classNameToCreate).get() 
+			: JavaScriptLocalize.javascriptCreateClassIntentionName(classNameToCreate).get();
 	}
 
 	@Override
@@ -86,18 +87,18 @@ class CreateClassOrInterfaceAction implements LocalQuickFix
 	{
 		PsiFile contextFile = myContext.getContainingFile();
 		final PsiElement context = contextFile.getContext();
-		if(context != null)
+		if (context != null)
 		{
 			contextFile = context.getContainingFile();
 		}
 
 		packageName = JSResolveUtil.getExpectedPackageNameFromFile(contextFile.getVirtualFile(), project, false);
 
-		if(!ApplicationManager.getApplication().isUnitTestMode())
+		if (!ApplicationManager.getApplication().isUnitTestMode())
 		{
 			final CreateClassDialog dialog = new CreateClassDialog(project, classNameToCreate, packageName, myIsInterface);
 			dialog.show();
-			if(dialog.getExitCode() != DialogWrapper.OK_EXIT_CODE)
+			if (dialog.getExitCode() != DialogWrapper.OK_EXIT_CODE)
 			{
 				return;
 			}
@@ -116,8 +117,11 @@ class CreateClassOrInterfaceAction implements LocalQuickFix
 			{
 				try
 				{
-					final FileTemplate template = FileTemplateManager.getInstance().getTemplate(myIsInterface ? JavaScriptSupportLoader
-							.ACTION_SCRIPT_INTERFACE_TEMPLATE_NAME : JavaScriptSupportLoader.ACTION_SCRIPT_CLASS_TEMPLATE_NAME);
+					final FileTemplate template = FileTemplateManager.getInstance().getTemplate(
+						myIsInterface
+							? JavaScriptSupportLoader.ACTION_SCRIPT_INTERFACE_TEMPLATE_NAME
+							: JavaScriptSupportLoader.ACTION_SCRIPT_CLASS_TEMPLATE_NAME
+					);
 					@NonNls final String fileName = classNameToCreate + ".as";
 					final Properties props = new Properties();
 					props.setProperty(FileTemplate.ATTRIBUTE_NAME, classNameToCreate);
@@ -125,15 +129,15 @@ class CreateClassOrInterfaceAction implements LocalQuickFix
 					VirtualFile base = ModuleRootManager.getInstance(element).getSourceRoots()[0];
 					VirtualFile relativeFile = VirtualFileUtil.findRelativeFile(packageName, base);
 
-					if(relativeFile == null)
+					if (relativeFile == null)
 					{
 						relativeFile = base;
 						StringTokenizer tokenizer = new StringTokenizer(packageName, ".");
-						while(tokenizer.hasMoreTokens())
+						while (tokenizer.hasMoreTokens())
 						{
 							String nextNameSegment = tokenizer.nextToken();
 							VirtualFile next = relativeFile.findChild(nextNameSegment);
-							if(next == null)
+							if (next == null)
 							{
 								next = relativeFile.createChildDirectory(this, nextNameSegment);
 							}
@@ -148,12 +152,12 @@ class CreateClassOrInterfaceAction implements LocalQuickFix
 					FileTemplateUtil.createFromTemplate(template, fileName, props, psiDirectory);
 
 					String contextPackage = JSResolveUtil.findPackageStatementQualifier(myContext);
-					if(packageName != null && !packageName.equals(contextPackage) && packageName.length() > 0)
+					if (packageName != null && !packageName.equals(contextPackage) && packageName.length() > 0)
 					{
 						ImportUtils.doImport(myContext, packageName + "." + classNameToCreate);
 					}
 				}
-				catch(Exception e)
+				catch (Exception e)
 				{
 					Logger.getInstance(getClass().getName()).error(e);
 				}

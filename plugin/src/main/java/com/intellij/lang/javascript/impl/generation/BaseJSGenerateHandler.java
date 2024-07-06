@@ -19,10 +19,9 @@
  */
 package com.intellij.lang.javascript.impl.generation;
 
-import consulo.javascript.language.JavaScriptBundle;
+import com.intellij.lang.javascript.impl.validation.BaseCreateMethodsFix;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.lang.javascript.impl.validation.BaseCreateMethodsFix;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.javascript.language.JavaScriptLanguage;
@@ -73,7 +72,7 @@ abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler
 			builder.withEmptySelection();
 		}
 
-		builder.withTitle(LocalizeValue.localizeTODO(JavaScriptBundle.message(getTitleKey())));
+		builder.withTitle(getTitle());
 		builder.showAsync(project, dataHolder ->
 		{
 			List data = dataHolder.getUserData(ClassMember.KEY_OF_LIST);
@@ -157,7 +156,7 @@ abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler
 		return clazz;
 	}
 
-	protected abstract String getTitleKey();
+	protected abstract LocalizeValue getTitle();
 
 	protected abstract BaseCreateMethodsFix createFix(JSClass clazz);
 

@@ -17,13 +17,13 @@
 package com.intellij.lang.javascript.impl.inspections;
 
 import com.intellij.lang.javascript.JSElementType;
-import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSEmbeddedContentImpl;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.inspection.ProblemsHolder;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
@@ -57,7 +57,7 @@ public class JSDuplicatedDeclarationInspection extends JSInspection
 	@Nonnull
 	public String getDisplayName()
 	{
-		return JavaScriptBundle.message("js.duplicated.declaration.inspection.name");
+		return JavaScriptLocalize.jsDuplicatedDeclarationInspectionName().get();
 	}
 
 	@Override
@@ -193,10 +193,12 @@ public class JSDuplicatedDeclarationInspection extends JSInspection
 
 				if(processor.getResult() != null && processor.getResult() != scope)
 				{
-					holder.registerProblem(nameIdentifier, JavaScriptBundle.message("javascript.validation.message.duplicate.declaration"),
-							originalScope.getContainingFile().getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4 ? ProblemHighlightType.ERROR :
-									ProblemHighlightType
-									.GENERIC_ERROR_OR_WARNING);
+					holder.registerProblem(
+						nameIdentifier,
+						JavaScriptLocalize.javascriptValidationMessageDuplicateDeclaration().get(),
+						originalScope.getContainingFile().getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4
+							? ProblemHighlightType.ERROR : ProblemHighlightType.GENERIC_ERROR_OR_WARNING
+					);
 				}
 			}
 

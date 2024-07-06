@@ -16,15 +16,16 @@
 
 package com.intellij.lang.javascript.impl.refactoring.introduceConstant;
 
-import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
-import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.impl.refactoring.JSBaseIntroduceHandler;
+import com.intellij.lang.javascript.psi.*;
 import consulo.codeEditor.Editor;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
 import org.jetbrains.annotations.NonNls;
@@ -39,13 +40,13 @@ public class JSIntroduceConstantHandler extends JSBaseIntroduceHandler<JSElement
 	@Override
 	protected String getRefactoringName()
 	{
-		return JavaScriptBundle.message("javascript.introduce.constant.title");
+		return JavaScriptLocalize.javascriptIntroduceConstantTitle().get();
 	}
 
 	@Override
-	protected String getCannotIntroduceMessagePropertyKey()
+	protected LocalizeValue getCannotIntroduceMessage()
 	{
-		return "javascript.introduce.constant.error.no.expression.selected";
+		return JavaScriptLocalize.javascriptIntroduceConstantErrorNoExpressionSelected();
 	}
 
 	@Override
@@ -59,7 +60,7 @@ public class JSIntroduceConstantHandler extends JSBaseIntroduceHandler<JSElement
 	{
 		@NonNls String baseDeclText = "static const " + settings.getVariableName();
 		final JSAttributeList.AccessType type = settings.getAccessType();
-		if(type != JSAttributeList.AccessType.PACKAGE_LOCAL)
+		if (type != JSAttributeList.AccessType.PACKAGE_LOCAL)
 		{
 			baseDeclText = type.toString().toLowerCase() + " " + baseDeclText;
 		}
@@ -82,10 +83,15 @@ public class JSIntroduceConstantHandler extends JSBaseIntroduceHandler<JSElement
 	@Override
 	protected JSExpression findIntroducedExpression(final PsiFile file, final int start, final int end, Editor editor)
 	{
-		if(file.getLanguage() != JavaScriptSupportLoader.ECMA_SCRIPT_L4)
+		if (file.getLanguage() != JavaScriptSupportLoader.ECMA_SCRIPT_L4)
 		{
-			CommonRefactoringUtil.showErrorHint(file.getProject(), editor, JavaScriptBundle.message("javascript.introduce.constant.error.not.available.in.javascript" +
-					".code"), getRefactoringName(), null);
+			CommonRefactoringUtil.showErrorHint(
+				file.getProject(),
+				editor,
+				JavaScriptLocalize.javascriptIntroduceConstantErrorNotAvailableInJavascriptCode().get(),
+				getRefactoringName(),
+				null
+			);
 			return null;
 		}
 
@@ -130,8 +136,13 @@ public class JSIntroduceConstantHandler extends JSBaseIntroduceHandler<JSElement
 
 		if(Boolean.TRUE.equals(hasAccesibilityProblem.get()))
 		{
-			CommonRefactoringUtil.showErrorHint(file.getProject(), editor, JavaScriptBundle.message("javascript.introduce.constant.error.not.constant.expression" +
-					".selected"), getRefactoringName(), null);
+			CommonRefactoringUtil.showErrorHint(
+				file.getProject(),
+				editor,
+				JavaScriptLocalize.javascriptIntroduceConstantErrorNotConstantExpressionSelected().get(),
+				getRefactoringName(),
+				null
+			);
 			return null;
 		}
 		return expression;

@@ -16,21 +16,22 @@
 
 package com.intellij.lang.javascript.impl.generation;
 
-import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.formatter.JSCodeStyleSettings;
+import com.intellij.lang.javascript.impl.validation.BaseCreateMethodsFix;
+import com.intellij.lang.javascript.impl.validation.JSAnnotatingVisitor;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
-import com.intellij.lang.javascript.impl.validation.BaseCreateMethodsFix;
-import com.intellij.lang.javascript.impl.validation.JSAnnotatingVisitor;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.awt.NonFocusableCheckBox;
 import consulo.util.lang.StringUtil;
@@ -65,11 +66,17 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler
 	}
 
 	@Override
-	protected String getTitleKey()
+	protected LocalizeValue getTitle()
 	{
-		return mode == GenerationMode.GETTERS ? "generate.getter.fields.chooser.title" : mode == GenerationMode.SETTERS ? "generate.setter.fields.chooser" +
-				".title" : mode == GenerationMode.GETTERS_AND_SETTERS ? "generate.getter.setter.chooser.title" : mode == GenerationMode.TOSTRING ? "generate.to" +
-				".string.chooser.title" : "generate.constructor.fields.chooser.title";
+		return mode == GenerationMode.GETTERS
+			? JavaScriptLocalize.generateGetterFieldsChooserTitle()
+			: mode == GenerationMode.SETTERS
+			? JavaScriptLocalize.generateSetterFieldsChooserTitle()
+			: mode == GenerationMode.GETTERS_AND_SETTERS
+			? JavaScriptLocalize.generateGetterSetterChooserTitle()
+			: mode == GenerationMode.TOSTRING
+			? JavaScriptLocalize.generateToStringChooserTitle()
+			: JavaScriptLocalize.generateConstructorFieldsChooserTitle();
 	}
 
 	@Override
@@ -80,7 +87,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler
 		{
 			if(!ApplicationManager.getApplication().isUnitTestMode())
 			{
-				myCreateBindableProperties = new NonFocusableCheckBox(JavaScriptBundle.message("generate.getter.fields.bindable.properties"));
+				myCreateBindableProperties = new NonFocusableCheckBox(JavaScriptLocalize.generateGetterFieldsBindableProperties().get());
 				jComponentList.add(myCreateBindableProperties);
 			}
 		}

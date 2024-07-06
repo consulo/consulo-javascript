@@ -17,12 +17,12 @@
 package com.intellij.lang.javascript.impl.inspections;
 
 import com.intellij.javascript.documentation.JSDocumentationUtils;
-import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSAssignmentExpression;
 import com.intellij.lang.javascript.psi.JSDefinitionExpression;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.inspection.ProblemsHolder;
 import consulo.language.psi.PsiElement;
@@ -51,7 +51,7 @@ public class JSDeprecatedSymbolsInspection extends JSInspection
 	@Nonnull
 	public String getDisplayName()
 	{
-		return JavaScriptBundle.message("js.deprecated.symbols.inspection.name");
+		return JavaScriptLocalize.jsDeprecatedSymbolsInspectionName().get();
 	}
 
 	@Override
@@ -79,8 +79,11 @@ public class JSDeprecatedSymbolsInspection extends JSInspection
 					}
 					if(JSDocumentationUtils.isDeprecated(element))
 					{
-						holder.registerProblem(node.getReferenceNameElement(), JavaScriptBundle.message("javascript.deprecated.symbol.used.name.message"),
-								ProblemHighlightType.LIKE_DEPRECATED);
+						holder.registerProblem(
+							node.getReferenceNameElement(),
+							JavaScriptLocalize.javascriptDeprecatedSymbolUsedNameMessage().get(),
+							ProblemHighlightType.LIKE_DEPRECATED
+						);
 						break;
 					}
 				}

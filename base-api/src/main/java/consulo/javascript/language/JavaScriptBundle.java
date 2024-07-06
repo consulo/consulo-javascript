@@ -16,10 +16,16 @@
 
 package consulo.javascript.language;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
+import consulo.javascript.localize.JavaScriptLocalize;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.PropertyKey;
 import consulo.component.util.localize.AbstractBundle;
 
+@Deprecated(forRemoval = true)
+@DeprecationInfo("Use JavaScriptLocalize")
+@MigratedExtensionsTo(JavaScriptLocalize.class)
 public class JavaScriptBundle extends AbstractBundle
 {
 	@NonNls

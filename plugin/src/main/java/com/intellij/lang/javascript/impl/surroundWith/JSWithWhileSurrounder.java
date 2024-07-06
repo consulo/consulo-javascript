@@ -16,9 +16,9 @@
 
 package com.intellij.lang.javascript.impl.surroundWith;
 
-import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSWhileStatement;
 import consulo.document.util.TextRange;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
@@ -35,7 +35,7 @@ public class JSWithWhileSurrounder extends JSStatementSurrounder
 	@Override
 	public String getTemplateDescription()
 	{
-		return JavaScriptBundle.message("javascript.surround.with.while");
+		return JavaScriptLocalize.javascriptSurroundWithWhile().get();
 	}
 
 	@Override

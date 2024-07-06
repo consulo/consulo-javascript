@@ -1,14 +1,14 @@
 package consulo.json.lang;
 
-import consulo.language.ast.ASTNode;
-import consulo.language.parser.PsiBuilder;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
-import consulo.javascript.language.JavaScriptBundle;
-import consulo.language.ast.IElementType;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.javascript.lang.parsing.ExpressionParsing;
 import consulo.javascript.lang.parsing.Parsing;
+import consulo.javascript.localize.JavaScriptLocalize;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.parser.PsiBuilder;
 import consulo.language.parser.PsiParser;
 import consulo.language.version.LanguageVersion;
 import consulo.logging.Logger;
@@ -42,7 +42,7 @@ public class JsonJavaScriptParser implements PsiParser
 			parseArrayLiteralExpression(builder);
 			if(builder.getTokenType() != null)
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.eof"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedEof());
 			}
 		}
 		else if(builder.getTokenType() == JSTokenTypes.LBRACE)
@@ -50,12 +50,12 @@ public class JsonJavaScriptParser implements PsiParser
 			parseObjectLiteralExpression(builder);
 			if(builder.getTokenType() != null)
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.eof"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedEof());
 			}
 		}
 		else
 		{
-			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.lbrace.or.lbracket"));
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedLbraceOrLbracket());
 		}
 
 		while(builder.getTokenType() != null)
@@ -108,14 +108,14 @@ public class JsonJavaScriptParser implements PsiParser
 
 		if(isNotPropertyStart(nameToken))
 		{
-			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.identifier.string.literal.or.numeric.literal"));
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifierStringLiteralOrNumericLiteral());
 		}
 		builder.advanceLexer();
-		Parsing.checkMatches(builder, JSTokenTypes.COLON, JavaScriptBundle.message("javascript.parser.message.expected.colon"));
+		Parsing.checkMatches(builder, JSTokenTypes.COLON, JavaScriptLocalize.javascriptParserMessageExpectedColon());
 
 		if(!parseValue(builder))
 		{
-			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 		}
 		myPropertyDepth--;
 
@@ -150,7 +150,7 @@ public class JsonJavaScriptParser implements PsiParser
 			}
 			else
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.comma"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedComma());
 			}
 
 			elementType = builder.getTokenType();
@@ -164,7 +164,7 @@ public class JsonJavaScriptParser implements PsiParser
 			}
 		}
 
-		Parsing.checkMatches(builder, JSTokenTypes.RBRACE, JavaScriptBundle.message("javascript.parser.message.expected.rbrace"));
+		Parsing.checkMatches(builder, JSTokenTypes.RBRACE, JavaScriptLocalize.javascriptParserMessageExpectedRbrace());
 		expr.done(JSElementTypes.OBJECT_LITERAL_EXPRESSION);
 	}
 
@@ -184,7 +184,7 @@ public class JsonJavaScriptParser implements PsiParser
 		{
 			if(commaExpected)
 			{
-				final boolean b = Parsing.checkMatches(builder, JSTokenTypes.COMMA, JavaScriptBundle.message("javascript.parser.message.expected.comma"));
+				final boolean b = Parsing.checkMatches(builder, JSTokenTypes.COMMA, JavaScriptLocalize.javascriptParserMessageExpectedComma());
 				if(!b)
 				{
 					break;
@@ -201,7 +201,7 @@ public class JsonJavaScriptParser implements PsiParser
 			{
 				if(!parseValue(builder))
 				{
-					builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 					break;
 				}
 				else
@@ -210,7 +210,7 @@ public class JsonJavaScriptParser implements PsiParser
 				}
 			}
 		}
-		Parsing.checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptBundle.message("javascript.parser.message.expected.rbracket"));
+		Parsing.checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptLocalize.javascriptParserMessageExpectedRbracket());
 		expr.done(JSElementTypes.ARRAY_LITERAL_EXPRESSION);
 	}
 

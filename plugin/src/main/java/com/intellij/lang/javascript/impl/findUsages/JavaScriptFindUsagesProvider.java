@@ -16,10 +16,10 @@
 
 package com.intellij.lang.javascript.impl.findUsages;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.*;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.language.JavaScriptLanguage;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.Language;
 import consulo.language.cacheBuilder.WordsScanner;
 import consulo.language.findUsage.FindUsagesProvider;
@@ -48,49 +48,49 @@ public class JavaScriptFindUsagesProvider implements FindUsagesProvider
 	@Nonnull
 	public String getType(@Nonnull PsiElement element)
 	{
-		if(element instanceof JSFunction)
+		if (element instanceof JSFunction)
 		{
-			return JavaScriptBundle.message("javascript.language.term.function");
+			return JavaScriptLocalize.javascriptLanguageTermFunction().get();
 		}
-		if(element instanceof JSClass)
+		if (element instanceof JSClass)
 		{
-			return JavaScriptBundle.message("javascript.language.term.class");
+			return JavaScriptLocalize.javascriptLanguageTermClass().get();
 		}
-		if(element instanceof JSNamespaceDeclaration)
+		if (element instanceof JSNamespaceDeclaration)
 		{
-			return JavaScriptBundle.message("javascript.language.term.namespace");
+			return JavaScriptLocalize.javascriptLanguageTermNamespace().get();
 		}
-		if(element instanceof JSParameter)
+		if (element instanceof JSParameter)
 		{
-			return JavaScriptBundle.message("javascript.language.term.parameter");
+			return JavaScriptLocalize.javascriptLanguageTermParameter().get();
 		}
-		if(element instanceof JSProperty)
+		if (element instanceof JSProperty)
 		{
-			return JavaScriptBundle.message("javascript.language.term.property");
+			return JavaScriptLocalize.javascriptLanguageTermProperty().get();
 		}
-		if(element instanceof JSVariable)
+		if (element instanceof JSVariable)
 		{
-			return JavaScriptBundle.message("javascript.language.term.variable");
+			return JavaScriptLocalize.javascriptLanguageTermVariable().get();
 		}
-		if(element instanceof JSLabeledStatement)
+		if (element instanceof JSLabeledStatement)
 		{
-			return JavaScriptBundle.message("javascript.language.term.label");
+			return JavaScriptLocalize.javascriptLanguageTermLabel().get();
 		}
-		if(element instanceof JSDefinitionExpression)
+		if (element instanceof JSDefinitionExpression)
 		{
-			return JavaScriptBundle.message("javascript.language.term.value");
+			return JavaScriptLocalize.javascriptLanguageTermValue().get();
 		}
-		if(element instanceof XmlTag)
+		if (element instanceof XmlTag)
 		{
-			return JavaScriptBundle.message("javascript.language.term.tag");
+			return JavaScriptLocalize.javascriptLanguageTermTag().get();
 		}
-		if(element instanceof XmlToken)
+		if (element instanceof XmlToken)
 		{
-			return JavaScriptBundle.message("javascript.language.term.attribute.value");
+			return JavaScriptLocalize.javascriptLanguageTermAttributeValue().get();
 		}
-		if(element instanceof JSPackageStatement)
+		if (element instanceof JSPackageStatement)
 		{
-			return JavaScriptBundle.message("javascript.language.term.package");
+			return JavaScriptLocalize.javascriptLanguageTermPackage().get();
 		}
 		return "";
 	}

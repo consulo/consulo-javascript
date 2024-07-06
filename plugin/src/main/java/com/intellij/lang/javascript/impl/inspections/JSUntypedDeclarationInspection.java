@@ -16,7 +16,6 @@
 
 package com.intellij.lang.javascript.impl.inspections;
 
-import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.inspections.qucikFixes.BaseCreateFix;
 import com.intellij.lang.javascript.psi.*;
@@ -26,6 +25,7 @@ import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.javascript.language.JavaScriptFeature;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;
@@ -38,6 +38,7 @@ import consulo.language.editor.template.macro.MacroCallNode;
 import consulo.language.editor.template.macro.MacroFactory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
@@ -66,7 +67,7 @@ public class JSUntypedDeclarationInspection extends JSInspection
 	@Nonnull
 	public String getDisplayName()
 	{
-		return JavaScriptBundle.message("js.untyped.declaration.inspection.name");
+		return JavaScriptLocalize.jsUntypedDeclarationInspectionName().get();
 	}
 
 	@Nonnull
@@ -125,8 +126,15 @@ public class JSUntypedDeclarationInspection extends JSInspection
 				JSPsiImplUtils.getTypeFromDeclaration(node) == null &&
 				(!(node instanceof JSParameter) || !((JSParameter) node).isRest()))
 		{
-			holder.registerProblem(nameIdentifier, JavaScriptBundle.message(node instanceof JSFunction ? "js.untyped.function.problem" : "js.untyped" +
-					".variable.problem", nameIdentifier.getText()), ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new AddTypeToDclFix());
+			LocalizeValue description = node instanceof JSFunction
+				? JavaScriptLocalize.jsUntypedFunctionProblem(nameIdentifier.getText())
+				: JavaScriptLocalize.jsUntypedVariableProblem(nameIdentifier.getText());
+			holder.registerProblem(
+				nameIdentifier, 
+				description.get(),
+				ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
+				new AddTypeToDclFix()
+			);
 		}
 	}
 
@@ -137,7 +145,7 @@ public class JSUntypedDeclarationInspection extends JSInspection
 		@Nonnull
 		public String getName()
 		{
-			return JavaScriptBundle.message("js.untyped.declaration.problem.addtype.fix");
+			return JavaScriptLocalize.jsUntypedDeclarationProblemAddtypeFix().get();
 		}
 
 		@Override

@@ -508,7 +508,7 @@ javascript.fix.remove.access.modifier:
   text: Remove access modifier
 javascript.fix.remove.namespace.reference:
   text: Remove namespace reference
-javascript.incorrect.array.type.in.for.in:
+javascript.incorrect.array.type.in.forin:
   text: Array key type should be String
 javascript.validation.message.unexpected.type.for.rest.parameter:
   text: Rest parameter should have no type

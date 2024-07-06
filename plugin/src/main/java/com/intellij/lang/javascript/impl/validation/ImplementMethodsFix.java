@@ -22,7 +22,7 @@ import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSParameterList;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import consulo.codeEditor.Editor;
-import consulo.javascript.language.JavaScriptBundle;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
@@ -43,7 +43,7 @@ public class ImplementMethodsFix extends BaseCreateMethodsFix<JSFunction> implem
   @Override
   @Nonnull
   public String getText() {
-    return JavaScriptBundle.message("javascript.fix.implement.methods");
+    return JavaScriptLocalize.javascriptFixImplementMethods().get();
   }
 
   @Override

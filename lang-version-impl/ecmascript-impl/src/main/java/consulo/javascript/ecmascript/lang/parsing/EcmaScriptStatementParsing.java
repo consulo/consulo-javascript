@@ -22,7 +22,6 @@ import consulo.javascript.ecmascript.psi.impl.EcmaScript6ElementTypes;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.javascript.lang.parsing.Parsing;
 import consulo.javascript.lang.parsing.StatementParsing;
-import consulo.javascript.language.JavaScriptBundle;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
@@ -100,7 +99,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 	{
 		builder.advanceLexer();
 
-		Parsing.checkMatches(builder, JSTokenTypes.LPAR, JavaScriptBundle.message("javascript.parser.message.expected.lparen"));
+		Parsing.checkMatches(builder, JSTokenTypes.LPAR, JavaScriptLocalize.javascriptParserMessageExpectedLparen());
 		final boolean empty;
 		if(builder.getTokenType() == JSTokenTypes.VAR_KEYWORD || builder.getTokenType() == JSTokenTypes.LET_KEYWORD || builder.getTokenType() == JSTokenTypes.CONST_KEYWORD)
 		{
@@ -124,7 +123,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 			}
 			else
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.semicolon"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedSemicolon());
 			}
 			getExpressionParsing().parseExpressionOptional(builder);
 		}
@@ -133,7 +132,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 			forin = true;
 			if(empty)
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.forloop.left.hand.side.expression.or.variable.declaration"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedForloopLeftHandSideExpressionOrVariableDeclaration());
 			}
 
 			if(builder.getTokenType() == JSTokenTypes.IN_KEYWORD)
@@ -149,10 +148,10 @@ public class EcmaScriptStatementParsing extends StatementParsing
 		}
 		else
 		{
-			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.forloop.in.of.or.semicolon"));
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedForloopInOfOrSemicolon());
 		}
 
-		Parsing.checkMatches(builder, JSTokenTypes.RPAR, JavaScriptBundle.message("javascript.parser.message.expected.rparen"));
+		Parsing.checkMatches(builder, JSTokenTypes.RPAR, JavaScriptLocalize.javascriptParserMessageExpectedRparen());
 		return forin;
 	}
 
@@ -224,7 +223,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 
 					if(!firstBinding)
 					{
-						Parsing.checkMatches(builder, JSTokenTypes.COMMA, "Comma expected");
+						Parsing.checkMatches(builder, JSTokenTypes.COMMA, JavaScriptLocalize.javascriptParserMessageExpectedComma());
 					}
 
 					if(builder.getTokenType() == JSTokenTypes.LBRACE)
@@ -248,7 +247,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 								}
 								else
 								{
-									builder.error("Comma expected");
+									builder.error(JavaScriptLocalize.javascriptParserMessageExpectedComma());
 								}
 							}
 
@@ -280,12 +279,12 @@ public class EcmaScriptStatementParsing extends StatementParsing
 							}
 							else if(builder.getTokenType() != JSTokenTypes.RBRACE)
 							{
-								builder.error("Expected identifier");
+								builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifier());
 								break;
 							}
 						}
 
-						Parsing.checkMatches(builder, JSTokenTypes.RBRACE, "'}' expected");
+						Parsing.checkMatches(builder, JSTokenTypes.RBRACE, JavaScriptLocalize.javascriptParserMessageExpectedRbrace());
 
 						namedImportsMark.done(EcmaScript6ElementTypes.NAMED_IMPORTS);
 					}
@@ -297,7 +296,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 					}
 					else
 					{
-						builder.error(JavaScriptBundle.message("javascript.parser.message.expected.typename"));
+						builder.error(JavaScriptLocalize.javascriptParserMessageExpectedTypename());
 						break;
 					}
 
@@ -315,7 +314,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 				}
 				else
 				{
-					builder.error("Expecte from target");
+					builder.error("Expected from target");
 				}
 			}
 
@@ -376,7 +375,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 	{
 		if(builder.getTokenType() != JSTokenTypes.LBRACE)
 		{
-			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.lbrace"));
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedLbrace());
 			return;
 		}
 
@@ -450,7 +449,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 
 				if(!JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(builder.getTokenType()))
 				{
-					builder.error(JavaScriptBundle.message("javascript.parser.message.expected.identifier"));
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifier());
 				}
 				else
 				{

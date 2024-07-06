@@ -16,12 +16,12 @@
 
 package com.intellij.lang.javascript.impl.surroundWith;
 
-import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSWithStatement;
-import consulo.project.Project;
 import consulo.document.util.TextRange;
-import consulo.language.psi.PsiElement;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.project.Project;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,7 +35,7 @@ public class JSWithWithSurrounder extends JSStatementSurrounder
 	@Override
 	public String getTemplateDescription()
 	{
-		return JavaScriptBundle.message("javascript.surround.with.with");
+		return JavaScriptLocalize.javascriptSurroundWithWith().get();
 	}
 
 	@Override

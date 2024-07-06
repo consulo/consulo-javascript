@@ -19,7 +19,6 @@ package consulo.javascript.ecmascript.lang.parsing;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import consulo.javascript.lang.parsing.ExpressionParsing;
-import consulo.javascript.language.JavaScriptBundle;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.IElementType;
 import consulo.language.parser.PsiBuilder;
@@ -158,14 +157,14 @@ public class EcmaScriptExpressionParsing extends ExpressionParsing<EcmaScriptPar
 			PsiBuilder.Marker mark = builder.mark();
 			builder.advanceLexer();
 			parseExpression(builder);
-			checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptBundle.message("javascript.parser.message.expected.rbracket"));
+			checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptLocalize.javascriptParserMessageExpectedRbracket());
 			mark.done(JSElementTypes.COMPUTED_NAME);
 		}
 		else
 		{
 			if(isNotPropertyStart(builder, nameTokenType))
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.identifier.string.literal.or.numeric.literal"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifierStringLiteralOrNumericLiteral());
 			}
 
 			IElementType setOrGetToken = isContextKeyword(builder, JSTokenTypes.GET_SET_TOKEN_SET);
@@ -220,12 +219,12 @@ public class EcmaScriptExpressionParsing extends ExpressionParsing<EcmaScriptPar
 			}
 			else
 			{
-				checkMatches(builder, JSTokenTypes.COLON, JavaScriptBundle.message("javascript.parser.message.expected.colon"));
+				checkMatches(builder, JSTokenTypes.COLON, JavaScriptLocalize.javascriptParserMessageExpectedColon());
 
 				builder.putUserData(WITHIN_OBJECT_LITERAL_EXPRESSION, Boolean.TRUE);
 				if(!parseAssignmentExpression(builder))
 				{
-					builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 				}
 				builder.putUserData(WITHIN_OBJECT_LITERAL_EXPRESSION, null);
 			}

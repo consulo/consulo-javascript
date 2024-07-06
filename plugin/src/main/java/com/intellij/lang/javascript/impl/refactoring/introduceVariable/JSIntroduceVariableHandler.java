@@ -16,10 +16,11 @@
 
 package com.intellij.lang.javascript.impl.refactoring.introduceVariable;
 
-import consulo.javascript.language.JavaScriptBundle;
+import com.intellij.lang.javascript.impl.refactoring.JSBaseIntroduceHandler;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSStatement;
-import com.intellij.lang.javascript.impl.refactoring.JSBaseIntroduceHandler;
+import consulo.javascript.localize.JavaScriptLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
 /**
@@ -27,17 +28,16 @@ import consulo.project.Project;
  */
 public class JSIntroduceVariableHandler extends JSBaseIntroduceHandler<JSStatement, Settings, JSIntroduceVariableDialog>
 {
-
 	@Override
 	protected String getRefactoringName()
 	{
-		return JavaScriptBundle.message("javascript.introduce.variable.title");
+		return JavaScriptLocalize.javascriptIntroduceVariableTitle().get();
 	}
 
 	@Override
-	protected String getCannotIntroduceMessagePropertyKey()
+	protected LocalizeValue getCannotIntroduceMessage()
 	{
-		return "javascript.introduce.variable.error.no.expression.selected";
+		return JavaScriptLocalize.javascriptIntroduceVariableErrorNoExpressionSelected();
 	}
 
 	@Override

@@ -24,9 +24,9 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.javascript.ide.hightlight.JavaScriptSyntaxHighlightKeys;
 import consulo.javascript.lang.JavaScriptContextKeywordElementType;
 import consulo.javascript.lang.JavaScriptTokenSets;
-import consulo.javascript.language.JavaScriptBundle;
 import consulo.javascript.language.JavaScriptFeature;
 import consulo.javascript.language.JavaScriptVersionUtil;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.javascript.psi.JSSimpleLiteralExpression;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.rawHighlight.HighlightInfo;
@@ -35,6 +35,7 @@ import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.editor.rawHighlight.HighlightVisitor;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
@@ -361,7 +362,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 			return;
 		}
 
-		String message = JavaScriptBundle.message("this.feature.is.not.supported.by.current.language", javaScriptFeature.getName());
+		LocalizeValue message = JavaScriptLocalize.thisFeatureIsNotSupportedByCurrentLanguage(javaScriptFeature.getName());
 
 		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).range(element).descriptionAndTooltip(message).create());
 	}

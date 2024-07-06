@@ -17,8 +17,9 @@
 package com.intellij.lang.javascript.impl.refactoring.introduceField;
 
 import com.intellij.lang.javascript.formatter.JSCodeStyleSettings;
-import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.impl.refactoring.JSBaseClassBasedIntroduceDialog;
+import com.intellij.lang.javascript.psi.*;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.ResolveResult;
@@ -52,7 +53,7 @@ class JSIntroduceFieldDialog extends JSBaseClassBasedIntroduceDialog implements 
 
 	public JSIntroduceFieldDialog(final Project project, final JSExpression[] occurrences, final JSExpression expression)
 	{
-		super(project, occurrences, expression, "javascript.introduce.field.title");
+		super(project, occurrences, expression, JavaScriptLocalize.javascriptIntroduceFieldTitle());
 		doInit();
 	}
 

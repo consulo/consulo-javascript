@@ -16,19 +16,20 @@
 
 package com.intellij.lang.javascript.impl.refactoring.introduceField;
 
-import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
+import com.intellij.lang.javascript.impl.refactoring.JSBaseIntroduceHandler;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
-import com.intellij.lang.javascript.impl.refactoring.JSBaseIntroduceHandler;
 import consulo.codeEditor.Editor;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.xml.psi.xml.XmlFile;
 import org.jetbrains.annotations.NonNls;
@@ -43,13 +44,12 @@ public class JSIntroduceFieldHandler extends JSBaseIntroduceHandler<JSElement, J
 	@Override
 	protected String getRefactoringName()
 	{
-		return JavaScriptBundle.message("javascript.introduce.field.title");
+		return JavaScriptLocalize.javascriptIntroduceFieldTitle().get();
 	}
 
 	@Override
-	protected String getCannotIntroduceMessagePropertyKey()
-	{
-		return "javascript.introduce.field.error.no.expression.selected";
+	protected LocalizeValue getCannotIntroduceMessage() {
+		return JavaScriptLocalize.javascriptIntroduceFieldErrorNoExpressionSelected();
 	}
 
 	@Override
@@ -88,8 +88,13 @@ public class JSIntroduceFieldHandler extends JSBaseIntroduceHandler<JSElement, J
 	{
 		if(file.getLanguage() != JavaScriptSupportLoader.ECMA_SCRIPT_L4)
 		{
-			CommonRefactoringUtil.showErrorHint(file.getProject(), editor, JavaScriptBundle.message("javascript.introduce.field.error.not.available.in.javascript" +
-					".code"), getRefactoringName(), null);
+			CommonRefactoringUtil.showErrorHint(
+				file.getProject(),
+				editor,
+				JavaScriptLocalize.javascriptIntroduceFieldErrorNotAvailableInJavascriptCode().get(),
+				getRefactoringName(),
+				null
+			);
 			return null;
 		}
 

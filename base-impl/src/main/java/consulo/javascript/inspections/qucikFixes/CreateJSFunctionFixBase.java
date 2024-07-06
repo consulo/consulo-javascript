@@ -17,16 +17,16 @@
 
 package consulo.javascript.inspections.qucikFixes;
 
-import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.inspections.qucikFixes.BaseCreateFix;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.language.JavaScriptFeature;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.template.Template;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import org.jetbrains.annotations.PropertyKey;
+import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
@@ -37,33 +37,37 @@ import java.util.Set;
 */
 public abstract class CreateJSFunctionFixBase extends BaseCreateFix
 {
-	private final String myName;
-	private final String myIntentionNameKey;
+	private final LocalizeValue myMessage;
 
-	public CreateJSFunctionFixBase(String name, @PropertyKey(resourceBundle = JavaScriptBundle.BUNDLE) String nameKey)
+	public CreateJSFunctionFixBase(LocalizeValue message)
 	{
-		myName = name;
-		myIntentionNameKey = nameKey;
+		myMessage = message;
 	}
 
 	@Override
 	@Nonnull
 	public String getName()
 	{
-		return JavaScriptBundle.message(myIntentionNameKey, myName);
+		return myMessage.get();
 	}
 
 	@Override
 	@Nonnull
 	public String getFamilyName()
 	{
-		return JavaScriptBundle.message("javascript.create.function.intention.family");
+		return JavaScriptLocalize.javascriptCreateFunctionIntentionFamily().get();
 	}
 
 	@RequiredReadAction
 	@Override
-	protected void buildTemplate(Template template, JSReferenceExpression referenceExpression, Set<JavaScriptFeature> features, boolean staticContext, PsiFile file,
-								 PsiElement anchorParent)
+  protected void buildTemplate(
+		Template template,
+		JSReferenceExpression referenceExpression,
+		Set<JavaScriptFeature> features,
+		boolean staticContext,
+		PsiFile file,
+		PsiElement anchorParent
+	)
 	{
 		boolean classFeature = features.contains(JavaScriptFeature.CLASS);
 		String referencedName = classFeature ? referenceExpression.getReferencedName() : referenceExpression.getText();

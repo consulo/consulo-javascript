@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript.impl.surroundWith;
 
-import consulo.javascript.language.JavaScriptBundle;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
@@ -32,7 +32,7 @@ public class JSWithTryCatchSurrounder extends JSWithTryCatchFinallySurrounder
 	@Override
 	public String getTemplateDescription()
 	{
-		return JavaScriptBundle.message("javascript.surround.with.try.catch");
+		return JavaScriptLocalize.javascriptSurroundWithTryCatch().get();
 	}
 
 	@Override

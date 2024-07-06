@@ -24,6 +24,7 @@ import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.inspections.qucikFixes.CreateJSFunctionFixBase;
 import consulo.javascript.language.JavaScriptFeature;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.Template;
 import consulo.language.psi.PsiElement;
@@ -37,7 +38,11 @@ public class CreateJSFunctionOrMethodFix extends CreateJSFunctionFixBase
 
 	public CreateJSFunctionOrMethodFix(String name, boolean isMethod)
 	{
-		super(name, isMethod ? "javascript.create.method.intention.name" : "javascript.create.function.intention.name");
+		super(
+			isMethod 
+				? JavaScriptLocalize.javascriptCreateMethodIntentionName(name) 
+				: JavaScriptLocalize.javascriptCreateFunctionIntentionName(name)
+		);
 		myIsMethod = isMethod;
 	}
 

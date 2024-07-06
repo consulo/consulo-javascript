@@ -16,13 +16,13 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.*;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.*;
 import consulo.language.psi.resolve.ResolveCache;
@@ -553,7 +553,7 @@ public class JSReferenceSet
 		{
 			String text = getCanonicalText();
 			text = "'" + text.replace("'", "''") + "'";
-			return JavaScriptBundle.message("javascript.unresolved.variable.or.type.name.message2", text);
+			return JavaScriptLocalize.javascriptUnresolvedVariableOrTypeNameMessage2(text).get();
 		}
 	}
 

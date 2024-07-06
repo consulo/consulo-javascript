@@ -18,7 +18,7 @@ package consulo.javascript.lang.parsing;
 
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
-import consulo.javascript.language.JavaScriptBundle;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.parser.PsiBuilder;
 
 import javax.annotation.Nonnull;
@@ -79,7 +79,7 @@ public class FunctionParsing extends Parsing
 		{
 			if(!expressionContext && builder.getTokenType() != JSTokenTypes.LPAR /*get/set as name*/)
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.function.name"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedFunctionName());
 			}
 		}
 
@@ -104,7 +104,7 @@ public class FunctionParsing extends Parsing
 		final PsiBuilder.Marker parameterList;
 		if(builder.getTokenType() != JSTokenTypes.LPAR)
 		{
-			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.lparen"));
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedLparen());
 			parameterList = builder.mark(); // To have non-empty parameters list at all the time.
 			parameterList.done(JSElementTypes.PARAMETER_LIST);
 			return;
@@ -130,7 +130,7 @@ public class FunctionParsing extends Parsing
 				}
 				else
 				{
-					builder.error(JavaScriptBundle.message("javascript.parser.message.expected.comma.or.rparen"));
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedCommaOrRparen());
 					break;
 				}
 			}
@@ -175,7 +175,7 @@ public class FunctionParsing extends Parsing
 		}
 		else
 		{
-			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.formal.parameter.name"));
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedFormalParameterName());
 			parameterMarker.drop();
 		}
 	}
@@ -195,7 +195,7 @@ public class FunctionParsing extends Parsing
 
 			if(!first)
 			{
-				Parsing.checkMatches(builder, JSTokenTypes.COMMA, "Comma expected");
+				Parsing.checkMatches(builder, JSTokenTypes.COMMA, JavaScriptLocalize.javascriptParserMessageExpectedComma());
 			}
 
 			first = false;
@@ -216,7 +216,7 @@ public class FunctionParsing extends Parsing
 			}
 		}
 
-		Parsing.checkMatches(builder, JSTokenTypes.RBRACE, "'}' expected");
+		Parsing.checkMatches(builder, JSTokenTypes.RBRACE, JavaScriptLocalize.javascriptParserMessageExpectedRbrace());
 
 		desctructionObjectMarker.done(JSElementTypes.DESTRUCTURING_OBJECT);
 

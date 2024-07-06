@@ -16,33 +16,33 @@
 
 package com.intellij.lang.javascript.impl.inspections;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.inspection.ProblemDescriptor;
-import consulo.language.editor.inspection.ProblemHighlightType;
-import consulo.language.editor.inspection.ProblemsHolder;
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
-import consulo.language.editor.inspection.LocalQuickFix;
 import com.intellij.lang.javascript.JSElementTypes;
-import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.impl.highlighting.JavaScriptLineMarkerProvider;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSClassImpl;
 import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
-import consulo.logging.Logger;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.localize.JavaScriptLocalize;
+import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.editor.inspection.ProblemHighlightType;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.ResolveResult;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.PropertyKey;
 
 import javax.annotation.Nonnull;
 import java.util.BitSet;
@@ -71,7 +71,7 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 	@Nonnull
 	public String getDisplayName()
 	{
-		return JavaScriptBundle.message("js.unused.local.symbol.inspection.name");
+		return JavaScriptLocalize.jsUnusedLocalSymbolInspectionName().get();
 	}
 
 	@Override
@@ -270,10 +270,10 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 				{
 					continue;
 				}
-				final @NonNls @PropertyKey(resourceBundle = JavaScriptBundle.BUNDLE) String messageId;
+				final LocalizeValue message;
 				final @Nonnull PsiElement highlightedElement;
 
-				if(p instanceof JSParameter)
+				if (p instanceof JSParameter parameter)
 				{
 					// There are cases of predefined sinatures for which we are not interested in reported unused parameters
 					final boolean ecma = node.getContainingFile().getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
@@ -281,13 +281,13 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 					{
 						continue; // do not report unused parameters
 					}
-					else if(ecma && node instanceof JSFunction)
+					else if (ecma && node instanceof JSFunction function)
 					{
-						final JSParameter[] params = ((JSFunction) node).getParameterList().getParameters();
+						final JSParameter[] params = function.getParameterList().getParameters();
 
 						if(params.length == 1)
 						{
-							@NonNls String type = ((JSParameter) p).getTypeString();
+							@NonNls String type = parameter.getTypeString();
 							if(type != null)
 							{
 								type = JSImportHandlingUtil.resolveTypeName(type, p);
@@ -315,11 +315,7 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 										@Override
 										public boolean execute(final PsiElement element, final ResolveState state)
 										{
-											if(!(element instanceof JSClass))
-											{
-												return true;
-											}
-											return !myName.equals(((JSClass) element).getQualifiedName());
+											return !(element instanceof JSClass jsClass && myName.equals(jsClass.getQualifiedName()));
 										}
 									};
 									processor.setLocalResolve(true);
@@ -365,37 +361,46 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 						}
 					}
 
-					if(parameterIndexMap.getInt((JSParameter) p) < lastUsedParameterIndex)
+					if (parameterIndexMap.getInt(parameter) < lastUsedParameterIndex)
 					{
 						continue; // no sense to report unused symbol before used since it will change signature
 					}
 
-					messageId = "js.unused.parameter";
-					highlightedElement = ((JSParameter) p).getNameIdentifier();
+					message = JavaScriptLocalize.jsUnusedParameter();
+					highlightedElement = parameter.getNameIdentifier();
 				}
-				else if(p instanceof JSFunction)
+				else if (p instanceof JSFunction function)
 				{
-					final PsiElement nameIdentifier = ((JSFunction) p).getNameIdentifier();
-					if(nameIdentifier == null)
+					final PsiElement nameIdentifier = function.getNameIdentifier();
+					if (nameIdentifier == null)
 					{
 						continue;
 					}
 					highlightedElement = nameIdentifier;
-					messageId = "js.unused.function.declaration";
+					message = JavaScriptLocalize.jsUnusedFunctionDeclaration();
 				}
 				else
 				{
 					highlightedElement = ((JSVariable) p).getNameIdentifier();
-					messageId = "js.unused.local.variable";
+					message = JavaScriptLocalize.jsUnusedLocalVariable();
 				}
 
 				if(p.getParent() instanceof JSCatchBlock)
 				{
-					holder.registerProblem(highlightedElement, JavaScriptBundle.message(messageId), ProblemHighlightType.LIKE_UNUSED_SYMBOL);
+					holder.registerProblem(
+						highlightedElement,
+						message.get(),
+						ProblemHighlightType.LIKE_UNUSED_SYMBOL
+					);
 				}
 				else
 				{
-					holder.registerProblem(highlightedElement, JavaScriptBundle.message(messageId), ProblemHighlightType.LIKE_UNUSED_SYMBOL, new RemoveElementLocalQuickFix());
+					holder.registerProblem(
+						highlightedElement,
+						message.get(),
+						ProblemHighlightType.LIKE_UNUSED_SYMBOL,
+						new RemoveElementLocalQuickFix()
+					);
 				}
 			}
 		}
@@ -407,7 +412,7 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 
 	private static void handleLocalDeclaration(final JSNamedElement node)
 	{
-		if(node instanceof JSFunction && !isSupportedFunction((JSFunction) node))
+		if (node instanceof JSFunction function && !isSupportedFunction(function))
 		{
 			return;
 		}
@@ -442,7 +447,7 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection
 		@Nonnull
 		public String getName()
 		{
-			return JavaScriptBundle.message("js.unused.symbol.remove");
+			return JavaScriptLocalize.jsUnusedSymbolRemove().get();
 		}
 
 		@Override

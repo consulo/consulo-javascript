@@ -19,8 +19,8 @@ package consulo.javascript.lang.parsing;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
-import consulo.javascript.language.JavaScriptBundle;
 import consulo.javascript.lang.JavaScriptTokenSets;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.parser.PsiBuilder;
@@ -143,11 +143,11 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 				{
 					builder.advanceLexer();
 					parseExpression(builder);
-					Parsing.checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptBundle.message("javascript.parser.message.expected.rbracket"));
+					Parsing.checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptLocalize.javascriptParserMessageExpectedRbracket());
 				}
 				else
 				{
-					builder.error(JavaScriptBundle.message("javascript.parser.message.expected.identifier"));
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifier());
 				}
 			}
 
@@ -188,7 +188,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 					ttext.startsWith("\"") && (!ttext.endsWith("\"") || ttext.length() == 1) ||
 					ttext.startsWith("\'") && (!ttext.endsWith("\'") || ttext.length() == 1))
 			{
-				return JavaScriptBundle.message("javascript.parser.message.unclosed.string.literal");
+				return JavaScriptLocalize.javascriptParserMessageUnclosedStringLiteral().get();
 			}
 		}
 
@@ -245,13 +245,13 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			}
 			else
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.comma"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedComma());
 			}
 
 			elementType = builder.getTokenType();
 			if(elementType == JSTokenTypes.RBRACE)
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.property.expected"));
+				builder.error(JavaScriptLocalize.javascriptParserPropertyExpected());
 			}
 			else if(isNotPropertyStart(builder, elementType))
 			{
@@ -259,7 +259,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			}
 		}
 
-		Parsing.checkMatches(builder, JSTokenTypes.RBRACE, JavaScriptBundle.message("javascript.parser.message.expected.rbrace"));
+		Parsing.checkMatches(builder, JSTokenTypes.RBRACE, JavaScriptLocalize.javascriptParserMessageExpectedRbrace());
 		expr.done(JSElementTypes.OBJECT_LITERAL_EXPRESSION);
 	}
 
@@ -275,16 +275,16 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 
 		if(isNotPropertyStart(builder, nameToken))
 		{
-			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.identifier.string.literal.or.numeric.literal"));
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifierStringLiteralOrNumericLiteral());
 		}
 		builder.advanceLexer();
 
-		Parsing.checkMatches(builder, JSTokenTypes.COLON, JavaScriptBundle.message("javascript.parser.message.expected.colon"));
+		Parsing.checkMatches(builder, JSTokenTypes.COLON, JavaScriptLocalize.javascriptParserMessageExpectedColon());
 
 		builder.putUserData(WITHIN_OBJECT_LITERAL_EXPRESSION, Boolean.TRUE);
 		if(!parseAssignmentExpression(builder))
 		{
-			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 		}
 		builder.putUserData(WITHIN_OBJECT_LITERAL_EXPRESSION, null);
 
@@ -309,7 +309,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			{
 				if(commaExpected)
 				{
-					final boolean b = Parsing.checkMatches(builder, JSTokenTypes.COMMA, JavaScriptBundle.message("javascript.parser.message.expected.comma"));
+					final boolean b = Parsing.checkMatches(builder, JSTokenTypes.COMMA, JavaScriptLocalize.javascriptParserMessageExpectedComma());
 					if(!b)
 					{
 						break;
@@ -326,7 +326,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 				{
 					if(!parseAssignmentExpression(builder))
 					{
-						builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+						builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 						break;
 					}
 					else
@@ -335,7 +335,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 					}
 				}
 			}
-			Parsing.checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptBundle.message("javascript.parser.message.expected.rbracket"));
+			Parsing.checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptLocalize.javascriptParserMessageExpectedRbracket());
 			expr.done(JSElementTypes.ARRAY_LITERAL_EXPRESSION);
 		}
 		finally
@@ -350,7 +350,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 		final PsiBuilder.Marker expr = builder.mark();
 		builder.advanceLexer();
 		parseExpression(builder);
-		Parsing.checkMatches(builder, JSTokenTypes.RPAR, JavaScriptBundle.message("javascript.parser.message.expected.rparen"));
+		Parsing.checkMatches(builder, JSTokenTypes.RPAR, JavaScriptLocalize.javascriptParserMessageExpectedRparen());
 		expr.done(JSElementTypes.PARENTHESIZED_EXPRESSION);
 	}
 
@@ -420,7 +420,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 				}
 				else
 				{
-					builder.error(JavaScriptBundle.message("javascript.parser.message.expected.name"));
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedName());
 				}
 
 				expr.done(JSElementTypes.REFERENCE_EXPRESSION);
@@ -430,7 +430,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			{
 				builder.advanceLexer();
 				parseExpression(builder);
-				Parsing.checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptBundle.message("javascript.parser.message.expected.rbracket"));
+				Parsing.checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptLocalize.javascriptParserMessageExpectedRbracket());
 				expr.done(JSElementTypes.INDEXED_PROPERTY_ACCESS_EXPRESSION);
 				expr = expr.precede();
 			}
@@ -495,7 +495,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			}
 			else
 			{
-				Parsing.checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptBundle.message("javascript.parser.message.expected.name"));
+				Parsing.checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptLocalize.javascriptParserMessageExpectedName());
 			}
 			expr.done(JSElementTypes.REFERENCE_EXPRESSION);
 			expr = expr.precede();
@@ -523,7 +523,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 
 		if(!parseMemberExpression(builder, false))
 		{
-			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 		}
 		return false;
 	}
@@ -548,17 +548,17 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 				}
 				else
 				{
-					builder.error(JavaScriptBundle.message("javascript.parser.message.expected.comma.or.rparen"));
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedCommaOrRparen());
 					break;
 				}
 			}
 			if(!parseAssignmentExpression(builder))
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 		}
 
-		Parsing.checkMatches(builder, JSTokenTypes.RPAR, JavaScriptBundle.message("javascript.parser.message.expected.rparen"));
+		Parsing.checkMatches(builder, JSTokenTypes.RPAR, JavaScriptLocalize.javascriptParserMessageExpectedRparen());
 		arglist.done(JSElementTypes.ARGUMENT_LIST);
 	}
 
@@ -566,7 +566,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 	{
 		if(!parseExpressionOptional(builder))
 		{
-			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 		}
 	}
 
@@ -586,11 +586,11 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 
 		if(JSTokenTypes.ASSIGNMENT_OPERATIONS.contains(builder.getTokenType()) && builder.getUserData(WITHIN_OBJECT_LITERAL_EXPRESSION) == null)
 		{
-			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			builder.advanceLexer();
 			if(!parseAssignmentExpression(builder, allowIn))
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.ASSIGNMENT_EXPRESSION);
 			return true;
@@ -610,7 +610,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseAssignmentExpression(builder, allowIn))
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.ASSIGNMENT_EXPRESSION);
 		}
@@ -638,12 +638,12 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseAssignmentExpression(builder, allowIn))
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
-			Parsing.checkMatches(builder, JSTokenTypes.COLON, JavaScriptBundle.message("javascript.parser.message.expected.colon"));
+			Parsing.checkMatches(builder, JSTokenTypes.COLON, JavaScriptLocalize.javascriptParserMessageExpectedColon());
 			if(!parseAssignmentExpression(builder, allowIn))
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.CONDITIONAL_EXPRESSION);
 		}
@@ -673,7 +673,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseANDExpression(builder, allowIn))
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.BINARY_EXPRESSION);
 			expr = expr.precede();
@@ -697,7 +697,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseBitwiseORExpression(builder, allowIn))
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.BINARY_EXPRESSION);
 			expr = expr.precede();
@@ -721,7 +721,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseBitwiseXORExpression(builder, allowIn))
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.BINARY_EXPRESSION);
 			expr = expr.precede();
@@ -745,7 +745,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseBitwiseANDExpression(builder, allowIn))
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.BINARY_EXPRESSION);
 			expr = expr.precede();
@@ -769,7 +769,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseEqualityExpression(builder, allowIn))
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.BINARY_EXPRESSION);
 			expr = expr.precede();
@@ -793,7 +793,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseRelationalExpression(builder, allowIn))
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.BINARY_EXPRESSION);
 			expr = expr.precede();
@@ -816,7 +816,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseShiftExpression(builder))
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.BINARY_EXPRESSION);
 			expr = expr.precede();
@@ -839,7 +839,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseAdditiveExpression(builder))
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.BINARY_EXPRESSION);
 			expr = expr.precede();
@@ -862,7 +862,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseMultiplicativeExpression(builder))
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.BINARY_EXPRESSION);
 			expr = expr.precede();
@@ -886,7 +886,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseUnaryExpression(builder))
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.BINARY_EXPRESSION);
 			expr = expr.precede();
@@ -915,7 +915,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseUnaryExpression(builder))
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.BINARY_EXPRESSION);
 			expr = expr.precede();
@@ -934,7 +934,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseUnaryExpression(builder))
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.PREFIX_EXPRESSION);
 			return true;
@@ -997,7 +997,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseAssignmentExpression(builder, allowIn))
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 
 			expr.done(JSElementTypes.COMMA_EXPRESSION);
@@ -1023,7 +1023,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 		}
 		else if(!parseQualifiedTypeName(builder))
 		{
-			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.typename"));
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedTypename());
 		}
 		return true;
 	}
@@ -1032,7 +1032,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 	{
 		if(!parseUnaryExpression(builder))
 		{
-			builder.error(JavaScriptBundle.message("javascript.parser.message.expected.expression"));
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			return false;
 		}
 		return true;

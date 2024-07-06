@@ -16,7 +16,6 @@
 
 package com.intellij.lang.javascript.impl.flex;
 
-import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
@@ -26,6 +25,7 @@ import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorPopupHelper;
 import consulo.document.util.TextRange;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.hint.QuestionAction;
 import consulo.language.editor.inspection.LocalQuickFix;
@@ -91,7 +91,9 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
 	@Nonnull
 	public String getText()
 	{
-		return JavaScriptBundle.message(isFunction ? "flex.import.function" : "flex.import.class", calculatedClass);
+		return isFunction 
+			? JavaScriptLocalize.flexImportFunction(calculatedClass).get() 
+			: JavaScriptLocalize.flexImportClass(calculatedClass).get();
 	}
 
 	@Override
@@ -117,38 +119,38 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
 	@Override
 	public boolean isAvailable(@Nonnull final Project project, final Editor editor, final PsiFile file)
 	{
-		if(!myReference.getElement().isValid())
+		if (!myReference.getElement().isValid())
 		{
 			return false;
 		}
 		final long modL = myReference.getElement().getManager().getModificationTracker().getModificationCount();
 
-		if(!isAvailableCalculated || modL != modificationCount)
+		if (!isAvailableCalculated || modL != modificationCount)
 		{
 			final ResolveResult[] results = myReference.multiResolve(false);
 			boolean hasValidResult = false;
 
-			for(ResolveResult r : results)
+			for (ResolveResult r : results)
 			{
-				if(r.isValidResult())
+				if (r.isValidResult())
 				{
 					hasValidResult = true;
 					break;
 				}
 			}
 
-			if(!hasValidResult)
+			if (!hasValidResult)
 			{
 				final Collection<JSQualifiedNamedElement> candidates = getCandidates(editor, file);
 
 				isAvailableCalculated = true;
 				isAvailable = candidates.size() > 0;
-				if(isAvailable)
+				if (isAvailable)
 				{
 					final JSQualifiedNamedElement element = candidates.iterator().next();
 					calculatedClass = element.getQualifiedName();
 					isFunction = element instanceof JSFunction;
-					if(candidates.size() > 1)
+					if (candidates.size() > 1)
 					{
 						calculatedClass += HAS_MORE_SUFFIX;
 					}
@@ -174,7 +176,7 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
 	{
 		final Collection<JSQualifiedNamedElement> candidates;
 
-		if(myReference instanceof JSReferenceExpression && ((JSReferenceExpression) myReference).getQualifier() == null)
+		if (myReference instanceof JSReferenceExpression referenceExpression && referenceExpression.getQualifier() == null)
 		{
 			Collection<JSQualifiedNamedElement> c = getCandidates(editor, file, myReference.getCanonicalText());
 			filterDefaultPackage(c);
@@ -184,15 +186,15 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
 		{
 			JSQualifiedNamedElement invalidResult = null;
 
-			for(ResolveResult r : myReference.multiResolve(false))
+			for (ResolveResult r : myReference.multiResolve(false))
 			{
 				PsiElement element = r.getElement();
-				if(element instanceof JSQualifiedNamedElement)
+				if (element instanceof JSQualifiedNamedElement)
 				{
 					invalidResult = (JSQualifiedNamedElement) element;
 				}
 			}
-			if(invalidResult != null)
+			if (invalidResult != null)
 			{
 				candidates = new SmartList<JSQualifiedNamedElement>();
 				candidates.add(invalidResult);
@@ -208,9 +210,13 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
 	public static Collection<JSQualifiedNamedElement> getCandidates(final Editor editor, final PsiFile file, final String name)
 	{
 		final Module element = ModuleUtilCore.findModuleForPsiElement(file);
-		if(element != null)
+		if (element != null)
 		{
-			return JSResolveUtil.findElementsByName(name, editor.getProject(), GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(element, false));
+			return JSResolveUtil.findElementsByName(
+				name,
+				editor.getProject(),
+				GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(element, false)
+			);
 		}
 		else
 		{
@@ -223,54 +229,55 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
 	{
 		final Collection<JSQualifiedNamedElement> candidates = getCandidates(editor, file);
 
-		if(candidates.size() > 0)
+		if (candidates.size() > 0)
 		{
-			if(candidates.size() > 1)
+			if (candidates.size() > 1)
 			{
-				JBPopup popup = PopupNavigationUtil.getPsiElementPopup(candidates.toArray(new JSQualifiedNamedElement[candidates.size()]),
-						new PsiElementListCellRenderer<JSQualifiedNamedElement>()
+				JBPopup popup = PopupNavigationUtil.getPsiElementPopup(
+					candidates.toArray(new JSQualifiedNamedElement[candidates.size()]),
+					new PsiElementListCellRenderer<>()
+					{
+						@Override
+						public String getElementText(final JSQualifiedNamedElement element)
 						{
-							@Override
-							public String getElementText(final JSQualifiedNamedElement element)
-							{
-								return element.getName();
-							}
-
-							@Override
-							protected String getContainerText(final JSQualifiedNamedElement element, final String name)
-							{
-								final String qName = element.getQualifiedName();
-								final String elementName = element.getName();
-								String s = qName.equals(elementName) ? "" : qName.substring(0, qName.length() - elementName.length() - 1);
-								if("".equals(s))
-								{
-									s = element.getContainingFile().getName();
-								}
-								return "( " + s + " )";
-							}
-
-							@Override
-							protected int getIconFlags()
-							{
-								return 0;
-							}
-						}, JavaScriptBundle.message("choose.class.title"), new PsiElementProcessor<JSQualifiedNamedElement>()
-						{
-							@Override
-							public boolean execute(final JSQualifiedNamedElement element)
-							{
-								CommandProcessor.getInstance().executeCommand(project, new Runnable()
-								{
-									@Override
-									public void run()
-									{
-										doImport(editor, element.getQualifiedName());
-									}
-								}, getClass().getName(), this);
-
-								return false;
-							}
+							return element.getName();
 						}
+
+						@Override
+						protected String getContainerText(final JSQualifiedNamedElement element, final String name)
+						{
+							final String qName = element.getQualifiedName();
+							final String elementName = element.getName();
+							String s = qName.equals(elementName) ? "" : qName.substring(0, qName.length() - elementName.length() - 1);
+							if ("".equals(s))
+							{
+								s = element.getContainingFile().getName();
+							}
+							return "( " + s + " )";
+						}
+
+						@Override
+						protected int getIconFlags()
+						{
+							return 0;
+						}
+					},
+					JavaScriptLocalize.chooseClassTitle().get(),
+					new PsiElementProcessor<>()
+					{
+						@Override
+						public boolean execute(final JSQualifiedNamedElement element)
+						{
+							CommandProcessor.getInstance().executeCommand(
+								project,
+								() -> doImport(editor, element.getQualifiedName()),
+								getClass().getName(),
+								this
+							);
+
+							return false;
+						}
+					}
 				);
 
 				EditorPopupHelper.getInstance().showPopupInBestPositionFor(editor, popup);
@@ -284,14 +291,9 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
 
 	private void doImport(final Editor editor, final String qName)
 	{
-		ApplicationManager.getApplication().runWriteAction(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				final PsiElement element = myReference.getElement();
-				ImportUtils.doImport(element, qName);
-			}
+		ApplicationManager.getApplication().runWriteAction(() -> {
+			final PsiElement element = myReference.getElement();
+			ImportUtils.doImport(element, qName);
 		});
 	}
 
@@ -312,9 +314,9 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
 
 	private static void filterDefaultPackage(Collection<JSQualifiedNamedElement> candidates)
 	{
-		for(Iterator<JSQualifiedNamedElement> i = candidates.iterator(); i.hasNext(); )
+		for (Iterator<JSQualifiedNamedElement> i = candidates.iterator(); i.hasNext(); )
 		{
-			if(!i.next().getQualifiedName().contains("."))
+			if (!i.next().getQualifiedName().contains("."))
 			{
 				i.remove();
 			}

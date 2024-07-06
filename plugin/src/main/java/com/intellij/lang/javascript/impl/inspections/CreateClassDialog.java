@@ -16,21 +16,18 @@
 
 package com.intellij.lang.javascript.impl.inspections;
 
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-
-import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSExpressionStatement;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.language.psi.PsiElement;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
 import consulo.project.Project;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.event.DocumentAdapter;
+
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
 
 /**
  * @author Maxim.Mossienko
@@ -47,7 +44,7 @@ class CreateClassDialog extends DialogWrapper
 	{
 		super(project, false);
 
-		setTitle(JavaScriptBundle.message(isInterface ? "create.interface.dialog.title" : "create.class.dialog.title"));
+		setTitle(isInterface ? JavaScriptLocalize.createInterfaceDialogTitle() : JavaScriptLocalize.createClassDialogTitle());
 		setModal(true);
 
 		myPackageName.getDocument().addDocumentListener(new DocumentAdapter()

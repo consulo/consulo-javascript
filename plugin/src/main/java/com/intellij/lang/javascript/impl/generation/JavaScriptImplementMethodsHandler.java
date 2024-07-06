@@ -19,14 +19,16 @@
  */
 package com.intellij.lang.javascript.impl.generation;
 
-import com.intellij.lang.javascript.psi.JSClass;
-import com.intellij.lang.javascript.psi.JSFunction;
-import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.impl.validation.BaseCreateMethodsFix;
 import com.intellij.lang.javascript.impl.validation.ImplementMethodsFix;
 import com.intellij.lang.javascript.impl.validation.ImplementedMethodProcessor;
+import com.intellij.lang.javascript.psi.JSClass;
+import com.intellij.lang.javascript.psi.JSFunction;
+import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.generation.ImplementMethodHandler;
+import consulo.localize.LocalizeValue;
 
 import java.util.Collection;
 
@@ -49,12 +51,12 @@ public class JavaScriptImplementMethodsHandler extends BaseJSGenerateHandler imp
 	}
 
 	@Override
-	protected String getTitleKey()
+  protected LocalizeValue getTitle()
 	{
-		return "methods.to.implement.chooser.title";
-	}
+		return JavaScriptLocalize.methodsToImplementChooserTitle();
+  }
 
-	@Override
+  @Override
 	protected BaseCreateMethodsFix createFix(final JSClass clazz)
 	{
 		return new ImplementMethodsFix(clazz);

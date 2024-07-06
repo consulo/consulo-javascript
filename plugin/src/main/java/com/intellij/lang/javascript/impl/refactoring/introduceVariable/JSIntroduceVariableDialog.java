@@ -16,17 +16,13 @@
 
 package com.intellij.lang.javascript.impl.refactoring.introduceVariable;
 
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-
-import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.impl.refactoring.JSBaseIntroduceDialog;
+import com.intellij.lang.javascript.psi.JSExpression;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
+
+import javax.swing.*;
 
 /**
  * @author ven
@@ -48,7 +44,7 @@ public class JSIntroduceVariableDialog extends JSBaseIntroduceDialog implements 
 
 	protected JSIntroduceVariableDialog(final Project project, final JSExpression[] occurences, final JSExpression mainOccurence)
 	{
-		super(project, occurences, mainOccurence, "javascript.introduce.variable.title");
+		super(project, occurences, mainOccurence, JavaScriptLocalize.javascriptIntroduceVariableTitle());
 
 		if(ourLastIntroduceType == Settings.IntroducedVarType.CONST)
 		{
