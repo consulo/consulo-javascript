@@ -28,7 +28,6 @@ import consulo.project.Project;
  */
 public class JSIntroduceVariableHandler extends JSBaseIntroduceHandler<JSStatement, Settings, JSIntroduceVariableDialog>
 {
-
 	@Override
 	protected String getRefactoringName()
 	{
@@ -36,7 +35,8 @@ public class JSIntroduceVariableHandler extends JSBaseIntroduceHandler<JSStateme
 	}
 
 	@Override
-	protected LocalizeValue getCannotIntroduceMessage() {
+	protected LocalizeValue getCannotIntroduceMessage()
+	{
 		return JavaScriptLocalize.javascriptIntroduceVariableErrorNoExpressionSelected();
 	}
 

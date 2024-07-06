@@ -40,10 +40,10 @@ import java.util.function.Function;
 public class JavaScriptOverrideMethodsHandler extends BaseJSGenerateHandler implements OverrideMethodHandler
 {
 	@Override
-  protected LocalizeValue getTitle()
+	protected LocalizeValue getTitle()
 	{
 		return JavaScriptLocalize.methodsToOverrideChooserTitle();
-  }
+	}
 
   @Override
 	protected BaseCreateMethodsFix createFix(final JSClass clazz)
