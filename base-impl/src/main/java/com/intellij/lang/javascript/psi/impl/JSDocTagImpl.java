@@ -17,15 +17,15 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import com.intellij.lang.javascript.JSDocTokenTypes;
-import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.util.JSLookupUtil;
 import consulo.document.util.TextRange;
+import consulo.javascript.localize.JavaScriptLocalize;
+import consulo.language.ast.ASTNode;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.*;
-import consulo.language.util.IncorrectOperationException;
-import consulo.language.ast.ASTNode;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.IncorrectOperationException;
 import consulo.util.collection.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
 
@@ -334,8 +334,7 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag
 		@Override
 		public String getUnresolvedMessagePattern()
 		{
-			return JavaScriptBundle.message("javascript.validation.message.incorrect.parameter.name");
+			return JavaScriptLocalize.javascriptValidationMessageIncorrectParameterName().get();
 		}
 	}
-
 }

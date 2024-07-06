@@ -16,13 +16,13 @@
 
 package com.intellij.lang.javascript.impl.surroundWith;
 
-import consulo.language.ast.ASTNode;
-import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSAssignmentExpression;
 import com.intellij.lang.javascript.psi.JSExpressionStatement;
 import com.intellij.lang.javascript.psi.JSFunctionExpression;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import consulo.document.util.TextRange;
+import consulo.javascript.localize.JavaScriptLocalize;
+import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
@@ -31,7 +31,7 @@ public class JSWithFunctionExpressionSurrounder extends JSStatementSurrounder
 	@Override
 	public String getTemplateDescription()
 	{
-		return JavaScriptBundle.message("javascript.surround.with.function.expression");
+		return JavaScriptLocalize.javascriptSurroundWithFunctionExpression().get();
 	}
 
 	@Override

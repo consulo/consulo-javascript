@@ -16,15 +16,12 @@
 
 package com.intellij.lang.javascript.impl.refactoring.introduceConstant;
 
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-
-import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.impl.refactoring.JSBaseClassBasedIntroduceDialog;
+import com.intellij.lang.javascript.psi.JSExpression;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.project.Project;
+
+import javax.swing.*;
 
 /**
  * @author Maxim.Mossienko
@@ -44,7 +41,7 @@ class JSIntroduceConstantDialog extends JSBaseClassBasedIntroduceDialog implemen
 
 	protected JSIntroduceConstantDialog(final Project project, final JSExpression[] occurences, final JSExpression mainOccurence)
 	{
-		super(project, occurences, mainOccurence, "javascript.introduce.constant.title");
+		super(project, occurences, mainOccurence, JavaScriptLocalize.javascriptIntroduceConstantTitle());
 
 		doInit();
 	}

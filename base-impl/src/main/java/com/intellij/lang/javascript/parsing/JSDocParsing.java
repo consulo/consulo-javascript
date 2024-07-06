@@ -16,12 +16,12 @@
 
 package com.intellij.lang.javascript.parsing;
 
-import org.jetbrains.annotations.NonNls;
-import consulo.language.parser.PsiBuilder;
-import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.JSDocTokenTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.IElementType;
+import consulo.language.parser.PsiBuilder;
+import org.jetbrains.annotations.NonNls;
 
 /**
  * @author Maxim.Mossienko
@@ -67,7 +67,7 @@ public class JSDocParsing
 
 				if(isInvalidTokenType(builder))
 				{
-					builder.error(JavaScriptBundle.message("javascript.parser.message.expected.doc.tag.name"));
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedDocTagName().get());
 					return false;
 				}
 
@@ -106,7 +106,7 @@ public class JSDocParsing
 
 				if(isInvalidTokenType(builder))
 				{
-					builder.error(JavaScriptBundle.message("javascript.parser.message.expected.doc.tag.value"));
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedDocTagValue().get());
 					return false;
 				}
 			}

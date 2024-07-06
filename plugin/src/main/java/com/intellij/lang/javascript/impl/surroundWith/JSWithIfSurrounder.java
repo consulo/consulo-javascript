@@ -16,13 +16,13 @@
 
 package com.intellij.lang.javascript.impl.surroundWith;
 
-import consulo.document.util.TextRange;
-import consulo.language.ast.ASTNode;
-import org.jetbrains.annotations.NonNls;
-import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSIfStatement;
-import consulo.project.Project;
+import consulo.document.util.TextRange;
+import consulo.javascript.localize.JavaScriptLocalize;
+import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
+import consulo.project.Project;
+import org.jetbrains.annotations.NonNls;
 
 /**
  * Created by IntelliJ IDEA.
@@ -36,7 +36,7 @@ public class JSWithIfSurrounder extends JSStatementSurrounder
 	@Override
 	public String getTemplateDescription()
 	{
-		return JavaScriptBundle.message("javascript.surround.with.if");
+		return JavaScriptLocalize.javascriptSurroundWithIf().get();
 	}
 
 	@Override

@@ -16,18 +16,18 @@
 
 package com.intellij.lang.javascript.impl.surroundWith;
 
-import javax.annotation.Nonnull;
-
-import consulo.project.Project;
-import org.jetbrains.annotations.NonNls;
-import consulo.language.ast.ASTNode;
-import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.JSCatchBlock;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.JSTryStatement;
 import consulo.document.util.TextRange;
+import consulo.javascript.localize.JavaScriptLocalize;
+import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
+import consulo.project.Project;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,7 +41,7 @@ public class JSWithTryCatchFinallySurrounder extends JSStatementSurrounder
 	@Override
 	public String getTemplateDescription()
 	{
-		return JavaScriptBundle.message("javascript.surround.with.try.catch.finally");
+		return JavaScriptLocalize.javascriptSurroundWithTryCatchFinally().get();
 	}
 
 	@Override

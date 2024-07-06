@@ -50,85 +50,60 @@ public class JSDefinitionsSearchExecutor implements DefinitionsScopedSearchExecu
 		final PsiElement sourceElement = parameters.getElement();
 		if(sourceElement instanceof PsiNamedElement && sourceElement.getLanguage().isKindOf(JavaScriptLanguage.INSTANCE))
 		{
-			ReferencesSearch.search(sourceElement, GlobalSearchScope.projectScope(sourceElement.getProject())).forEach(new Processor<PsiReference>()
-			{
-				@Override
-				public boolean process(final PsiReference t)
+			ReferencesSearch.search(sourceElement, GlobalSearchScope.projectScope(sourceElement.getProject())).forEach(t -> {
+				if (t instanceof JSReferenceExpression referenceExpression)
 				{
-					if(t instanceof JSReferenceExpression)
+					final PsiElement parent = referenceExpression.getParent();
+					final ResolveResult[] resolveResults = referenceExpression.multiResolve(true);
+
+					for (ResolveResult r : resolveResults)
 					{
-						final PsiElement parent = ((JSReferenceExpression) t).getParent();
-						final ResolveResult[] resolveResults = ((JSReferenceExpression) t).multiResolve(true);
+						PsiElement psiElement = r.getElement();
 
-						for(ResolveResult r : resolveResults)
+						if (psiElement != null &&
+								!JavaScriptIndex.isFromPredefinedFile(psiElement.getContainingFile()) &&
+								sourceElement != psiElement)
 						{
-							PsiElement psiElement = r.getElement();
-
-							if(psiElement != null &&
-									!JavaScriptIndex.isFromPredefinedFile(psiElement.getContainingFile()) &&
-									sourceElement != psiElement)
+							if (psiElement instanceof JSFunction fun && sourceElement instanceof JSFunction sourceFun)
 							{
-								if((psiElement instanceof JSFunction) && sourceElement instanceof JSFunction)
+								if ((sourceFun.isGetProperty() && fun.isSetProperty()) || (sourceFun.isSetProperty() && fun.isGetProperty()))
 								{
-									JSFunction fun = (JSFunction) psiElement;
-									JSFunction sourceFun = (JSFunction) sourceElement;
-
-									if((sourceFun.isGetProperty() && fun.isSetProperty()) || (sourceFun.isSetProperty() && fun.isGetProperty()))
-									{
-										return true;
-									}
-								}
-
-								if((psiElement != sourceElement || !(psiElement instanceof JSClass)) && !consumer.process(psiElement))
-								{
-									return false;
+									return true;
 								}
 							}
-						}
 
-						if(!(parent instanceof JSDefinitionExpression))
-						{
-							return false;
+							if ((psiElement != sourceElement || !(psiElement instanceof JSClass)) && !consumer.process(psiElement))
+							{
+								return false;
+							}
 						}
 					}
-					return true;
+
+					if (!(parent instanceof JSDefinitionExpression))
+					{
+						return false;
+					}
 				}
+				return true;
 			});
 
-			if(sourceElement instanceof JSClass)
+			if (sourceElement instanceof JSClass clazz)
 			{
-				final JSClass clazz = (JSClass) sourceElement;
-
-				final Processor<JSClass> delegatingProcessor = new Processor<JSClass>()
-				{
-					@Override
-					public boolean process(final JSClass jsClass)
-					{
-						return consumer.process(jsClass);
-					}
-				};
+				final Processor<JSClass> delegatingProcessor = jsClass -> consumer.process(jsClass);
 				JSClassSearch.searchClassInheritors(clazz, true).forEach(delegatingProcessor);
 
-				if(clazz.isInterface())
+				if (clazz.isInterface())
 				{
 					JSClassSearch.searchInterfaceImplementations(clazz, true).forEach(delegatingProcessor);
 				}
 			}
-			else if(sourceElement instanceof JSFunction)
+			else if (sourceElement instanceof JSFunction baseFunction)
 			{
-				final JSFunction baseFunction = (JSFunction) sourceElement;
-				final Processor<JSFunction> delegatingProcessor = new Processor<JSFunction>()
-				{
-					@Override
-					public boolean process(final JSFunction jsFunction)
-					{
-						return consumer.process(jsFunction);
-					}
-				};
+				final Processor<JSFunction> delegatingProcessor = jsFunction -> consumer.process(jsFunction);
 				JSFunctionsSearch.searchOverridingFunctions(baseFunction, true).forEach(delegatingProcessor);
 
 				final PsiElement parent = baseFunction.getParent();
-				if(parent instanceof JSClass && ((JSClass) parent).isInterface())
+				if (parent instanceof JSClass jsClass && jsClass.isInterface())
 				{
 					JSFunctionsSearch.searchImplementingFunctions(baseFunction, true).forEach(delegatingProcessor);
 				}

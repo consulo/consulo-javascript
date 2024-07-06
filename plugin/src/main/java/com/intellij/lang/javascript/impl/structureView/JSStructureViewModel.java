@@ -22,7 +22,7 @@ import consulo.application.AllIcons;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.fileEditor.structureView.tree.*;
-import consulo.ide.IdeBundle;
+import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.structureView.TextEditorBasedStructureViewModel;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiElement;
@@ -153,7 +153,7 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 		@Nonnull
 		public ActionPresentation getPresentation()
 		{
-			return new ActionPresentationData(IdeBundle.message("action.structureview.show.fields"), null, AllIcons.Nodes.Variable);
+			return new ActionPresentationData(IdeLocalize.actionStructureviewShowFields().get(), null, AllIcons.Nodes.Variable);
 		}
 
 		@Override
@@ -186,7 +186,11 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 		@Nonnull
 		public ActionPresentation getPresentation()
 		{
-			return new ActionPresentationData(IdeBundle.message("action.structureview.show.inherited"), null, PlatformIconGroup.hierarchySupertypes());
+      return new ActionPresentationData(
+				IdeLocalize.actionStructureviewShowInherited().get(),
+				null,
+				PlatformIconGroup.hierarchySupertypes()
+			);
 		}
 
 		@Override
@@ -205,7 +209,7 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel
 		@Override
 		public String getCheckBoxText()
 		{
-			return IdeBundle.message("file.structure.toggle.show.inherited");
+			return IdeLocalize.fileStructureToggleShowInherited().get();
 		}
 
 		@Override

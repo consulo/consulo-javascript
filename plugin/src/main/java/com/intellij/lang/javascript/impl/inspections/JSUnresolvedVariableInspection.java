@@ -16,10 +16,9 @@
 
 package com.intellij.lang.javascript.impl.inspections;
 
-import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
-import com.intellij.lang.javascript.impl.flex.AddImportECMAScriptClassOrFunctionAction;
 import com.intellij.lang.javascript.formatter.JSCodeStyleSettings;
+import com.intellij.lang.javascript.impl.flex.AddImportECMAScriptClassOrFunctionAction;
 import com.intellij.lang.javascript.inspections.qucikFixes.BaseCreateFix;
 import com.intellij.lang.javascript.inspections.qucikFixes.CreateJSFunctionOrMethodFix;
 import com.intellij.lang.javascript.psi.*;
@@ -29,6 +28,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.inspections.qucikFixes.CreateJSFunctionFixBase;
 import consulo.javascript.language.JavaScriptFeature;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemsHolder;
@@ -37,6 +37,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.ResolveResult;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NonNls;
 
@@ -65,7 +66,7 @@ public class JSUnresolvedVariableInspection extends JSInspection
 	@Nonnull
 	public String getDisplayName()
 	{
-		return JavaScriptBundle.message("js.unresolved.variable.inspection.name");
+		return JavaScriptLocalize.jsUnresolvedVariableInspectionName().get();
 	}
 
 	@Override
@@ -244,12 +245,18 @@ public class JSUnresolvedVariableInspection extends JSInspection
 								}
 							}
 
-							final String key = node.getQualifier() == null ? JSResolveUtil.isExprInTypeContext(node) ? "javascript.unresolved.type.name.message" :
-									"javascript.unresolved.variable.or.type.name.message" : "javascript.unresolved.variable.name.message";
+							final LocalizeValue message = node.getQualifier() == null
+								? JSResolveUtil.isExprInTypeContext(node)
+								? JavaScriptLocalize.javascriptUnresolvedTypeNameMessage(node.getReferencedName())
+								: JavaScriptLocalize.javascriptUnresolvedVariableOrTypeNameMessage(node.getReferencedName())
+								: JavaScriptLocalize.javascriptUnresolvedVariableNameMessage(node.getReferencedName());
 
-							holder.registerProblem(nameIdentifier, JavaScriptBundle.message(key, node.getReferencedName()),
-									JSUnresolvedFunctionInspection.getUnresolveReferenceHighlightType(qualifier, node),
-									fixes.size() > 0 ? fixes.toArray(new LocalQuickFix[fixes.size()]) : null);
+							holder.registerProblem(
+								nameIdentifier,
+								message.get(),
+								JSUnresolvedFunctionInspection.getUnresolveReferenceHighlightType(qualifier, node),
+								fixes.size() > 0 ? fixes.toArray(new LocalQuickFix[fixes.size()]) : null
+							);
 						}
 					}
 				}
@@ -271,7 +278,7 @@ public class JSUnresolvedVariableInspection extends JSInspection
 		@Nonnull
 		public String getFamilyName()
 		{
-			return JavaScriptBundle.message("javascript.create.variable.intention.family");
+			return JavaScriptLocalize.javascriptCreateVariableIntentionFamily().get();
 		}
 	}
 
@@ -286,7 +293,7 @@ public class JSUnresolvedVariableInspection extends JSInspection
 		@Nonnull
 		public String getName()
 		{
-			return JavaScriptBundle.message("javascript.create.namespace.intention.name", myReferencedName);
+			return JavaScriptLocalize.javascriptCreateNamespaceIntentionName(myReferencedName).get();
 		}
 
 		@RequiredReadAction
@@ -320,14 +327,25 @@ public class JSUnresolvedVariableInspection extends JSInspection
 		@Nonnull
 		public String getName()
 		{
-			return JavaScriptBundle.message(isField ? isConstant ? "javascript.create.constant.field.intention.name" : "javascript.create.property.intention.name" :
-					isConstant ? "javascript.create.constant.intention.name" : "javascript.create.variable.intention.name", myReferencedName);
+			return isField
+				? isConstant
+				? JavaScriptLocalize.javascriptCreateConstantFieldIntentionName(myReferencedName).get()
+				: JavaScriptLocalize.javascriptCreatePropertyIntentionName(myReferencedName).get()
+				: isConstant
+				? JavaScriptLocalize.javascriptCreateConstantIntentionName(myReferencedName).get()
+				: JavaScriptLocalize.javascriptCreateVariableIntentionName(myReferencedName).get();
 		}
 
 		@RequiredReadAction
 		@Override
-		protected void buildTemplate(final Template template, final JSReferenceExpression referenceExpression, final Set<JavaScriptFeature> features, boolean staticContext,
-				final PsiFile file, final PsiElement anchorParent)
+    protected void buildTemplate(
+			final Template template,
+			final JSReferenceExpression referenceExpression,
+			final Set<JavaScriptFeature> features,
+			boolean staticContext,
+			final PsiFile file,
+			final PsiElement anchorParent
+		)
 		{
 			boolean classFeature = features.contains(JavaScriptFeature.CLASS);
 
@@ -372,7 +390,11 @@ public class JSUnresolvedVariableInspection extends JSInspection
 
 		public CreateJSPropertyAccessorIntentionAction(String name, boolean getter)
 		{
-			super(name, getter ? "javascript.create.get.property.intention.name" : "javascript.create.set.property.intention.name");
+			super(
+				getter
+					? JavaScriptLocalize.javascriptCreateGetPropertyIntentionName(name)
+					: JavaScriptLocalize.javascriptCreateSetPropertyIntentionName(name)
+			);
 			myIsGetter = getter;
 		}
 
@@ -451,7 +473,7 @@ public class JSUnresolvedVariableInspection extends JSInspection
 
 		public CreateJSEventMethod(String invokedName, JSExpression eventNameQualifier)
 		{
-			super(invokedName, "javascript.create.event.handler.intention.name");
+			super(JavaScriptLocalize.javascriptCreateEventHandlerIntentionName(invokedName));
 			myEventQualifier = eventNameQualifier;
 		}
 

@@ -21,6 +21,7 @@ import javax.swing.JRadioButton;
 
 import com.intellij.lang.javascript.psi.JSAttributeList;
 import com.intellij.lang.javascript.psi.JSExpression;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
 /**
@@ -30,9 +31,14 @@ public abstract class JSBaseClassBasedIntroduceDialog extends JSBaseIntroduceDia
 {
 	private static JSAttributeList.AccessType lastType;
 
-	protected JSBaseClassBasedIntroduceDialog(final Project project, final JSExpression[] occurences, final JSExpression mainOccurence, String titleKey)
+	protected JSBaseClassBasedIntroduceDialog(
+		final Project project,
+		final JSExpression[] occurences,
+		final JSExpression mainOccurence,
+		LocalizeValue title
+	)
 	{
-		super(project, occurences, mainOccurence, titleKey);
+		super(project, occurences, mainOccurence, title);
 	}
 
 	@Override

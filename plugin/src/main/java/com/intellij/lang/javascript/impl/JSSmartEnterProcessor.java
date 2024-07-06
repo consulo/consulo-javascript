@@ -23,7 +23,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.javascript.language.JavaScriptLanguage;
-import consulo.javascript.language.JavaScriptBundle;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.editor.action.SmartEnterProcessor;
@@ -108,8 +108,8 @@ public class JSSmartEnterProcessor extends SmartEnterProcessor
 			element = prevMeaningfulElement;
 		}
 
-		if(element instanceof PsiErrorElement && (JavaScriptBundle.message("javascript.parser.message.expected.lbrace").equals(errorDescription = (
-				(PsiErrorElement) element).getErrorDescription()) || JavaScriptBundle.message("javascript.parser.message.expected.statement").equals(errorDescription)))
+		if (element instanceof PsiErrorElement && (JavaScriptLocalize.javascriptParserMessageExpectedLbrace().get().equals(errorDescription = (
+				(PsiErrorElement) element).getErrorDescription()) || JavaScriptLocalize.javascriptParserMessageExpectedStatement().get().equals(errorDescription)))
 		{
 			String semicolon = "";
 
@@ -124,8 +124,8 @@ public class JSSmartEnterProcessor extends SmartEnterProcessor
 			insertCommitReformat(project, editor, psiFile, offset, "{\n\n}" + semicolon, 2, true);
 			return true;
 		}
-		else if(JavaScriptBundle.message("javascript.parser.message.expected.lparen").equals(errorDescription) || JavaScriptBundle.message("javascript.parser.message" +
-				".expected.function.name").equals(errorDescription))
+		else if (JavaScriptLocalize.javascriptParserMessageExpectedLparen().get().equals(errorDescription) 
+			|| JavaScriptLocalize.javascriptParserMessageExpectedFunctionName().get().equals(errorDescription))
 		{
 			insertCommitReformat(project, editor, psiFile, offset, "()", 1, false);
 			return true;

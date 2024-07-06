@@ -16,21 +16,13 @@
 
 package com.intellij.lang.javascript.impl.structureView;
 
-import consulo.javascript.language.JavaScriptBundle;
-import com.intellij.lang.javascript.psi.JSAssignmentExpression;
-import com.intellij.lang.javascript.psi.JSDefinitionExpression;
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSFunction;
-import com.intellij.lang.javascript.psi.JSObjectLiteralExpression;
-import com.intellij.lang.javascript.psi.JSParameter;
-import com.intellij.lang.javascript.psi.JSParameterList;
-import com.intellij.lang.javascript.psi.JSProperty;
-import com.intellij.lang.javascript.psi.JSReferenceExpression;
+import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
-import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -65,34 +57,32 @@ public class JSStructureItemPresentation extends JSStructureViewElement.JSStruct
 	{
 		if(psiElement instanceof JSObjectLiteralExpression)
 		{
-			if(psiElement.getParent() instanceof JSAssignmentExpression)
+			if (psiElement.getParent() instanceof JSAssignmentExpression assignmentExpression)
 			{
-				final JSExpression expression = ((JSDefinitionExpression) ((JSAssignmentExpression) psiElement.getParent()).getLOperand()).getExpression();
+				final JSExpression expression = ((JSDefinitionExpression) assignmentExpression.getLOperand()).getExpression();
 				return JSResolveUtil.findClassIdentifier(expression).getText();
 			}
 			else
 			{
-				return JavaScriptBundle.message("javascript.language.term.prototype");
+				return JavaScriptLocalize.javascriptLanguageTermPrototype().get();
 			}
 		}
 
-		if(psiElement instanceof JSDefinitionExpression)
+		if (psiElement instanceof JSDefinitionExpression definitionExpression)
 		{
-			psiElement = ((JSDefinitionExpression) psiElement).getExpression();
+			psiElement = definitionExpression.getExpression();
 		}
 
-		if(psiElement instanceof JSReferenceExpression)
+		if (psiElement instanceof JSReferenceExpression expression)
 		{
-			JSReferenceExpression expression = (JSReferenceExpression) psiElement;
-
 			String s = expression.getReferencedName();
 
 			if(JSResolveUtil.PROTOTYPE_FIELD_NAME.equals(s))
 			{
 				final JSExpression jsExpression = expression.getQualifier();
-				if(jsExpression instanceof JSReferenceExpression)
+				if (jsExpression instanceof JSReferenceExpression referenceExpression)
 				{
-					s = ((JSReferenceExpression) jsExpression).getReferencedName();
+					s = referenceExpression.getReferencedName();
 				}
 			}
 			return s;
@@ -105,9 +95,9 @@ public class JSStructureItemPresentation extends JSStructureViewElement.JSStruct
 
 		String name = ((PsiNamedElement) psiElement).getName();
 
-		if(psiElement instanceof JSProperty)
+		if (psiElement instanceof JSProperty property)
 		{
-			psiElement = ((JSProperty) psiElement).getValue();
+			psiElement = property.getValue();
 		}
 
 		if(psiElement instanceof JSFunction)
@@ -143,13 +133,13 @@ public class JSStructureItemPresentation extends JSStructureViewElement.JSStruct
 			}
 		}
 
-		if(name == null && psiElement.getParent() instanceof JSAssignmentExpression)
+		if (name == null && psiElement.getParent() instanceof JSAssignmentExpression assignmentExpression)
 		{
-			JSExpression lOperand = ((JSDefinitionExpression) ((JSAssignmentExpression) psiElement.getParent()).getLOperand()).getExpression();
+			JSExpression lOperand = ((JSDefinitionExpression) assignmentExpression.getLOperand()).getExpression();
 			lOperand = JSResolveUtil.findClassIdentifier(lOperand);
-			if(lOperand instanceof JSReferenceExpression)
+			if (lOperand instanceof JSReferenceExpression referenceExpression)
 			{
-				return ((JSReferenceExpression) lOperand).getReferencedName();
+				return referenceExpression.getReferencedName();
 			}
 			return lOperand.getText();
 		}

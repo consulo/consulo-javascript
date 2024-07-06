@@ -19,16 +19,18 @@
  */
 package com.intellij.lang.javascript.impl.generation;
 
+import com.intellij.lang.javascript.impl.validation.BaseCreateMethodsFix;
+import com.intellij.lang.javascript.impl.validation.ImplementedMethodProcessor;
 import com.intellij.lang.javascript.psi.JSAttributeList;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
-import com.intellij.lang.javascript.impl.validation.BaseCreateMethodsFix;
-import com.intellij.lang.javascript.impl.validation.ImplementedMethodProcessor;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.generation.OverrideMethodHandler;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.ResolveState;
+import consulo.localize.LocalizeValue;
 
 import java.util.Collection;
 import java.util.Map;
@@ -38,12 +40,12 @@ import java.util.function.Function;
 public class JavaScriptOverrideMethodsHandler extends BaseJSGenerateHandler implements OverrideMethodHandler
 {
 	@Override
-	protected String getTitleKey()
+  protected LocalizeValue getTitle()
 	{
-		return "methods.to.override.chooser.title";
-	}
+		return JavaScriptLocalize.methodsToOverrideChooserTitle();
+  }
 
-	@Override
+  @Override
 	protected BaseCreateMethodsFix createFix(final JSClass clazz)
 	{
 		return new OverrideMethodsFix(clazz);

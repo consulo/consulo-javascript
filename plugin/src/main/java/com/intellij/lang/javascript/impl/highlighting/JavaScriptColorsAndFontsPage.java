@@ -16,13 +16,13 @@
 
 package com.intellij.lang.javascript.impl.highlighting;
 
-import consulo.javascript.language.JavaScriptBundle;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.colorScheme.setting.ColorDescriptor;
 import consulo.javascript.ide.hightlight.JavaScriptSyntaxHighlightKeys;
 import consulo.javascript.lang.JavaScript15LanguageVersion;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import org.jetbrains.annotations.NonNls;
@@ -47,34 +47,34 @@ public class JavaScriptColorsAndFontsPage implements ColorSettingsPage
 	static
 	{
 		ATTRS = new AttributesDescriptor[]{
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.keyword"), JavaScriptSyntaxHighlightKeys.JS_KEYWORD),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.string"), JavaScriptSyntaxHighlightKeys.JS_STRING),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.valid.string.escape"), JavaScriptSyntaxHighlightKeys.JS_VALID_STRING_ESCAPE),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.invalid.string.escape"), JavaScriptSyntaxHighlightKeys.JS_INVALID_STRING_ESCAPE),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.number"), JavaScriptSyntaxHighlightKeys.JS_NUMBER),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.regexp"), JavaScriptSyntaxHighlightKeys.JS_REGEXP),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.linecomment"), JavaScriptSyntaxHighlightKeys.JS_LINE_COMMENT),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.blockcomment"), JavaScriptSyntaxHighlightKeys.JS_BLOCK_COMMENT),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.doccomment"), JavaScriptSyntaxHighlightKeys.JS_DOC_COMMENT),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.operation"), JavaScriptSyntaxHighlightKeys.JS_OPERATION_SIGN),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.parens"), JavaScriptSyntaxHighlightKeys.JS_PARENTHS),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.brackets"), JavaScriptSyntaxHighlightKeys.JS_BRACKETS),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.braces"), JavaScriptSyntaxHighlightKeys.JS_BRACES),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.comma"), JavaScriptSyntaxHighlightKeys.JS_COMMA),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.dot"), JavaScriptSyntaxHighlightKeys.JS_DOT),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.semicolon"), JavaScriptSyntaxHighlightKeys.JS_SEMICOLON),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.badcharacter"), JavaScriptSyntaxHighlightKeys.JS_BAD_CHARACTER),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.docmarkup"), JavaScriptSyntaxHighlightKeys.JS_DOC_MARKUP),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.doctag"), JavaScriptSyntaxHighlightKeys.JS_DOC_TAG),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.parameter"), JavaScriptSyntaxHighlightKeys.JS_PARAMETER),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.local.variable"), JavaScriptSyntaxHighlightKeys.JS_LOCAL_VARIABLE),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.global.variable"), JavaScriptSyntaxHighlightKeys.JS_GLOBAL_VARIABLE),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.global.function"), JavaScriptSyntaxHighlightKeys.JS_GLOBAL_FUNCTION),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.instance.member.function"), JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_FUNCTION),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.static.member.function"), JavaScriptSyntaxHighlightKeys.JS_STATIC_MEMBER_FUNCTION),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.static.member.variable"), JavaScriptSyntaxHighlightKeys.JS_STATIC_MEMBER_VARIABLE),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.instance.member.variable"), JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_VARIABLE),
-				new AttributesDescriptor(JavaScriptBundle.message("javascript.metadata"), JavaScriptSyntaxHighlightKeys.JS_METADATA),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptKeyword(), JavaScriptSyntaxHighlightKeys.JS_KEYWORD),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptString(), JavaScriptSyntaxHighlightKeys.JS_STRING),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptValidStringEscape(), JavaScriptSyntaxHighlightKeys.JS_VALID_STRING_ESCAPE),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptInvalidStringEscape(), JavaScriptSyntaxHighlightKeys.JS_INVALID_STRING_ESCAPE),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptNumber(), JavaScriptSyntaxHighlightKeys.JS_NUMBER),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptRegexp(), JavaScriptSyntaxHighlightKeys.JS_REGEXP),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptLinecomment(), JavaScriptSyntaxHighlightKeys.JS_LINE_COMMENT),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptBlockcomment(), JavaScriptSyntaxHighlightKeys.JS_BLOCK_COMMENT),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptDoccomment(), JavaScriptSyntaxHighlightKeys.JS_DOC_COMMENT),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptOperation(), JavaScriptSyntaxHighlightKeys.JS_OPERATION_SIGN),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptParens(), JavaScriptSyntaxHighlightKeys.JS_PARENTHS),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptBrackets(), JavaScriptSyntaxHighlightKeys.JS_BRACKETS),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptBraces(), JavaScriptSyntaxHighlightKeys.JS_BRACES),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptComma(), JavaScriptSyntaxHighlightKeys.JS_COMMA),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptDot(), JavaScriptSyntaxHighlightKeys.JS_DOT),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptSemicolon(), JavaScriptSyntaxHighlightKeys.JS_SEMICOLON),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptBadcharacter(), JavaScriptSyntaxHighlightKeys.JS_BAD_CHARACTER),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptDocmarkup(), JavaScriptSyntaxHighlightKeys.JS_DOC_MARKUP),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptDoctag(), JavaScriptSyntaxHighlightKeys.JS_DOC_TAG),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptParameter(), JavaScriptSyntaxHighlightKeys.JS_PARAMETER),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptLocalVariable(), JavaScriptSyntaxHighlightKeys.JS_LOCAL_VARIABLE),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptGlobalVariable(), JavaScriptSyntaxHighlightKeys.JS_GLOBAL_VARIABLE),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptGlobalFunction(), JavaScriptSyntaxHighlightKeys.JS_GLOBAL_FUNCTION),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptInstanceMemberFunction(), JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_FUNCTION),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptStaticMemberFunction(), JavaScriptSyntaxHighlightKeys.JS_STATIC_MEMBER_FUNCTION),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptStaticMemberVariable(), JavaScriptSyntaxHighlightKeys.JS_STATIC_MEMBER_VARIABLE),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptInstanceMemberVariable(), JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_VARIABLE),
+				new AttributesDescriptor(JavaScriptLocalize.javascriptMetadata(), JavaScriptSyntaxHighlightKeys.JS_METADATA),
 		};
 		ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("local_variable", JavaScriptSyntaxHighlightKeys.JS_LOCAL_VARIABLE);
 		ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("global_variable", JavaScriptSyntaxHighlightKeys.JS_GLOBAL_VARIABLE);

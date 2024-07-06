@@ -19,7 +19,7 @@ package com.intellij.javascript;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSFunctionExpression;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.javascript.language.JavaScriptBundle;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.ExpressionContext;
@@ -43,7 +43,7 @@ public class JSMethodNameMacro extends Macro
 	@Override
 	public String getPresentableName()
 	{
-		return JavaScriptBundle.message("js.methodname.macro.description");
+		return JavaScriptLocalize.jsMethodnameMacroDescription().get();
 	}
 
 	@Override

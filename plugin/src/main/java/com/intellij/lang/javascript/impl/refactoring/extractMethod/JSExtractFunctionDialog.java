@@ -16,12 +16,10 @@
 
 package com.intellij.lang.javascript.impl.refactoring.extractMethod;
 
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
-import consulo.javascript.language.JavaScriptBundle;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.ui.ex.awt.DialogWrapper;
+
+import javax.swing.*;
 
 /**
  * @author Maxim.Mossienko
@@ -37,7 +35,7 @@ public class JSExtractFunctionDialog extends DialogWrapper implements JSExtractF
 	{
 		super(false);
 
-		setTitle(JavaScriptBundle.message("javascript.extract.method.title"));
+		setTitle(JavaScriptLocalize.javascriptExtractMethodTitle());
 		init();
 	}
 

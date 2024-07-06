@@ -4,7 +4,7 @@ import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import consulo.javascript.lang.parsing.ExpressionParsing;
 import consulo.javascript.lang.parsing.JavaScriptParsingContext;
-import consulo.javascript.language.JavaScriptBundle;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.parser.PsiBuilder;
@@ -90,7 +90,7 @@ public class EcmaScript4ExpressionParsing extends ExpressionParsing
 				}
 				else
 				{
-					builder.error(JavaScriptBundle.message("javascript.parser.message.expected.name"));
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedName().get());
 				}
 
 				expr.done(JSElementTypes.REFERENCE_EXPRESSION);
@@ -100,7 +100,7 @@ public class EcmaScript4ExpressionParsing extends ExpressionParsing
 			{
 				builder.advanceLexer();
 				parseExpression(builder);
-				checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptBundle.message("javascript.parser.message.expected.rbracket"));
+				checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptLocalize.javascriptParserMessageExpectedRbracket().get());
 				expr.done(JSElementTypes.INDEXED_PROPERTY_ACCESS_EXPRESSION);
 				expr = expr.precede();
 			}
@@ -163,7 +163,7 @@ public class EcmaScript4ExpressionParsing extends ExpressionParsing
 			}
 			else
 			{
-				checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptBundle.message("javascript.parser.message.expected.name"));
+				checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptLocalize.javascriptParserMessageExpectedName().get());
 			}
 			expr.done(JSElementTypes.REFERENCE_EXPRESSION);
 			expr = expr.precede();
@@ -205,7 +205,7 @@ public class EcmaScript4ExpressionParsing extends ExpressionParsing
 		PsiBuilder.Marker genericTypeSignature = builder.mark();
 		builder.advanceLexer();
 		parseType(builder);
-		checkMatches(builder, JSTokenTypes.GT, JavaScriptBundle.message("javascript.parser.message.expected.lt"));
+		checkMatches(builder, JSTokenTypes.GT, JavaScriptLocalize.javascriptParserMessageExpectedLt().get());
 		genericTypeSignature.done(JSElementTypes.GENERIC_SIGNATURE);
 	}
 }

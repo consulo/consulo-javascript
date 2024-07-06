@@ -16,45 +16,42 @@
 
 package com.intellij.lang.javascript.impl.refactoring;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
+import com.intellij.lang.javascript.JSTokenTypes;
+import com.intellij.lang.javascript.psi.*;
+import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
+import com.intellij.lang.javascript.psi.impl.JSEmbeddedContentImpl;
+import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorColors;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
 import consulo.dataContext.DataContext;
 import consulo.document.RangeMarker;
+import consulo.document.util.TextRange;
 import consulo.language.editor.PsiEquivalenceUtil;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
+import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.undoRedo.CommandProcessor;
 import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import com.intellij.lang.javascript.JSTokenTypes;
-import consulo.javascript.language.JavaScriptBundle;
-import com.intellij.lang.javascript.psi.*;
-import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
-import com.intellij.lang.javascript.psi.impl.JSEmbeddedContentImpl;
-import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import consulo.logging.Logger;
-import consulo.codeEditor.EditorColors;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.project.Project;
-import consulo.document.util.TextRange;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiWhiteSpace;
-import consulo.language.psi.util.PsiTreeUtil;
-import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
-import consulo.language.util.IncorrectOperationException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author ven
@@ -172,21 +169,14 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
 			return;
 		}
 
-		CommandProcessor.getInstance().executeCommand(project, new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				ApplicationManager.getApplication().runWriteAction(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						doRefactoring(project, editor, new BaseIntroduceContext<S>(expression, occurrences, settings));
-					}
-				});
-			}
-		}, getRefactoringName(), null);
+		CommandProcessor.getInstance().executeCommand(
+			project,
+			() -> ApplicationManager.getApplication().runWriteAction(
+				() -> doRefactoring(project, editor, new BaseIntroduceContext<>(expression, occurrences, settings))
+			),
+			getRefactoringName(),
+			null
+		);
 	}
 
 	protected static final class BaseIntroduceContext<S>
@@ -210,7 +200,7 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
 
 	protected abstract String getRefactoringName();
 
-	protected abstract String getCannotIntroduceMessagePropertyKey();
+	protected abstract LocalizeValue getCannotIntroduceMessage();
 
 	@Nullable
 	protected JSExpression findIntroducedExpression(final PsiFile file, final int start, final int end, Editor editor)
@@ -218,8 +208,13 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
 		final JSExpression expression = findExpressionInRange(file, start, end);
 		if(expression == null)
 		{
-			CommonRefactoringUtil.showErrorHint(file.getProject(), editor, JavaScriptBundle.message(getCannotIntroduceMessagePropertyKey()), getRefactoringName(),
-					null);
+			CommonRefactoringUtil.showErrorHint(
+				file.getProject(),
+				editor,
+				getCannotIntroduceMessage().get(),
+				getRefactoringName(),
+				null
+			);
 		}
 		return expression;
 	}

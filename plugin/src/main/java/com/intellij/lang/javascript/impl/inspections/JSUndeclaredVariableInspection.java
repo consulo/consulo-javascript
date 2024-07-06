@@ -17,12 +17,12 @@
 package com.intellij.lang.javascript.impl.inspections;
 
 import com.intellij.lang.javascript.JSTokenTypes;
-import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.util.JSUtils;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.inspection.LocalQuickFix;
@@ -62,7 +62,7 @@ public class JSUndeclaredVariableInspection extends JSInspection
 	@Nonnull
 	public String getDisplayName()
 	{
-		return JavaScriptBundle.message("js.undeclared.variable.inspection.name");
+		return JavaScriptLocalize.jsUndeclaredVariableInspectionName().get();
 	}
 
 	@Override
@@ -117,8 +117,12 @@ public class JSUndeclaredVariableInspection extends JSInspection
 									fixes.add(new DeclareJSVariableIntentionAction(node));
 								}
 
-								holder.registerProblem(nameIdentifier, JavaScriptBundle.message("javascript.undeclared.variable.name.message", node.getReferencedName()),
-										ProblemHighlightType.GENERIC_ERROR_OR_WARNING, !fixes.isEmpty() ? fixes.toArray(new LocalQuickFix[fixes.size()]) : null);
+								holder.registerProblem(
+									nameIdentifier,
+									JavaScriptLocalize.javascriptUndeclaredVariableNameMessage(node.getReferencedName()).get(),
+									ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
+									!fixes.isEmpty() ? fixes.toArray(new LocalQuickFix[fixes.size()]) : null
+								);
 							}
 						}
 					}
@@ -162,14 +166,14 @@ public class JSUndeclaredVariableInspection extends JSInspection
 		@Nonnull
 		public String getName()
 		{
-			return JavaScriptBundle.message("javascript.declare.variable.intention.name", myReferenceExpression.getReferencedName());
+			return JavaScriptLocalize.javascriptDeclareVariableIntentionName(myReferenceExpression.getReferencedName()).get();
 		}
 
 		@Override
 		@Nonnull
 		public String getFamilyName()
 		{
-			return JavaScriptBundle.message("javascript.create.variable.intention.family");
+			return JavaScriptLocalize.javascriptCreateVariableIntentionFamily().get();
 		}
 
 		@Override

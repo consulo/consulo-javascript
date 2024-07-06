@@ -4,7 +4,7 @@ import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import consulo.javascript.lang.parsing.FunctionParsing;
 import consulo.javascript.lang.parsing.JavaScriptParsingContext;
-import consulo.javascript.language.JavaScriptBundle;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.IElementType;
 import consulo.language.parser.PsiBuilder;
 
@@ -22,7 +22,7 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 	public void parseAttributeWithoutBrackets(final PsiBuilder builder)
 	{
 		final PsiBuilder.Marker attribute = builder.mark();
-		if(!checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptBundle.message("javascript.parser.message.expected.identifier")))
+		if (!checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptLocalize.javascriptParserMessageExpectedIdentifier().get()))
 		{
 			attribute.drop();
 			return;
@@ -53,8 +53,10 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 
 					builder.advanceLexer();
 
-					if(builder.eof() || (!checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptBundle.message("javascript.parser.message.expected.identifier")) &&
-							builder.getTokenType() != JSTokenTypes.RBRACKET))
+					if (builder.eof() || (
+						!checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptLocalize.javascriptParserMessageExpectedIdentifier().get())
+							&& builder.getTokenType() != JSTokenTypes.RBRACKET
+					))
 					{
 						attribute.drop();
 						return;
@@ -67,7 +69,7 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 						if(builder.eof())
 						{
 							attribute.done(JSElementTypes.ATTRIBUTE);
-							builder.error(JavaScriptBundle.message("javascript.parser.message.expected.rbracket"));
+							builder.error(JavaScriptLocalize.javascriptParserMessageExpectedRbracket().get());
 							return;
 						}
 					}
@@ -127,7 +129,7 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 
 	private void parseAttributeBody(final PsiBuilder builder)
 	{
-		final boolean haveLParen = checkMatches(builder, JSTokenTypes.LPAR, JavaScriptBundle.message("javascript.parser.message.expected.lparen"));
+		final boolean haveLParen = checkMatches(builder, JSTokenTypes.LPAR, JavaScriptLocalize.javascriptParserMessageExpectedLparen().get());
 		boolean hasName;
 
 		while(haveLParen)
@@ -137,7 +139,7 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 
 			if(builder.getTokenType() == JSTokenTypes.COMMA)
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.identifer.or.value"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentiferOrValue().get());
 				break;
 			}
 			if(builder.getTokenType() == JSTokenTypes.RBRACKET)
@@ -150,7 +152,7 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 
 			if(hasName && builder.getTokenType() != JSTokenTypes.COMMA && builder.getTokenType() != JSTokenTypes.RPAR)
 			{
-				checkMatches(builder, JSTokenTypes.EQ, JavaScriptBundle.message("javascript.parser.message.expected.equal"));
+				checkMatches(builder, JSTokenTypes.EQ, JavaScriptLocalize.javascriptParserMessageExpectedEqual().get());
 
 				if(builder.getTokenType() != JSTokenTypes.COMMA && builder.getTokenType() != JSTokenTypes.RBRACKET && builder.getTokenType() !=
 						JSTokenTypes.RPAR)
@@ -159,7 +161,7 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 				}
 				else
 				{
-					builder.error(JavaScriptBundle.message("javascript.parser.message.expected.value"));
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedValue().get());
 				}
 			}
 
@@ -175,14 +177,14 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 
 			if(builder.eof())
 			{
-				builder.error(JavaScriptBundle.message("javascript.parser.message.expected.rparen"));
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedRparen().get());
 				return;
 			}
 		}
 
-		if(haveLParen)
+		if (haveLParen)
 		{
-			checkMatches(builder, JSTokenTypes.RPAR, JavaScriptBundle.message("javascript.parser.message.expected.rparen"));
+			checkMatches(builder, JSTokenTypes.RPAR, JavaScriptLocalize.javascriptParserMessageExpectedRparen().get());
 		}
 		else
 		{

@@ -16,19 +16,19 @@
 
 package com.intellij.lang.javascript.impl.surroundWith;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import consulo.language.ast.ASTNode;
-import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import consulo.codeEditor.Editor;
-import consulo.project.Project;
 import consulo.document.util.TextRange;
-import consulo.language.psi.PsiElement;
+import consulo.javascript.localize.JavaScriptLocalize;
+import consulo.language.ast.ASTNode;
 import consulo.language.editor.surroundWith.Surrounder;
+import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -42,7 +42,7 @@ public class JSWithParenthesesSurrounder implements Surrounder
 	@Override
 	public String getTemplateDescription()
 	{
-		return JavaScriptBundle.message("javascript.surround.with.parenthesis");
+		return JavaScriptLocalize.javascriptSurroundWithParenthesis().get();
 	}
 
 	@Override

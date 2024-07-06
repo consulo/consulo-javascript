@@ -20,9 +20,9 @@ import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.javascript.language.JavaScriptLanguage;
-import consulo.javascript.language.JavaScriptBundle;
 import consulo.javascript.language.JavaScriptFileType;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.Language;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
@@ -50,7 +50,7 @@ public class JavaScriptCodeContextType extends TemplateContextType
 
 	public JavaScriptCodeContextType()
 	{
-		super(JAVA_SCRIPT, JavaScriptBundle.message("javascript.template.context.type"));
+		super(JAVA_SCRIPT, JavaScriptLocalize.javascriptTemplateContextType().get());
 	}
 
 	@Override

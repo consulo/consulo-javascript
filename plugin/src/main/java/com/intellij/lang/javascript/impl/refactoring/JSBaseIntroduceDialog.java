@@ -16,12 +16,12 @@
 
 package com.intellij.lang.javascript.impl.refactoring;
 
-import consulo.javascript.language.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSEmbeddedContentImpl;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import consulo.application.Application;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.Language;
 import consulo.language.editor.refactoring.NamesValidator;
 import consulo.language.editor.refactoring.ui.ConflictsDialog;
@@ -30,6 +30,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.ResolveResult;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
@@ -53,14 +54,19 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
 
 	private Alarm myAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
 
-	protected JSBaseIntroduceDialog(final Project project, final JSExpression[] occurences, final JSExpression mainOccurence, String titleKey)
+	protected JSBaseIntroduceDialog(
+		final Project project,
+		final JSExpression[] occurences,
+		final JSExpression mainOccurence,
+		LocalizeValue title
+	)
 	{
 		super(project, false);
 
 		myProject = project;
 		myOccurences = occurences;
 		myMainOccurence = mainOccurence;
-		setTitle(JavaScriptBundle.message(titleKey));
+		setTitle(title);
 	}
 
 	protected void doInit()
@@ -68,7 +74,7 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
 		JCheckBox replaceAllCheckBox = getReplaceAllCheckBox();
 		if(myOccurences.length > 1)
 		{
-			replaceAllCheckBox.setText(JavaScriptBundle.message("javascript.introduce.variable.replace.all.occurrences", myOccurences.length));
+			replaceAllCheckBox.setText(JavaScriptLocalize.javascriptIntroduceVariableReplaceAllOccurrences(myOccurences.length).get());
 		}
 		else
 		{
@@ -213,8 +219,11 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
 		final String name = getVariableName();
 		if(name.length() == 0 || !isValidName(name))
 		{
-			Messages.showErrorDialog(myProject, JavaScriptBundle.message("javascript.introduce.variable.invalid.name"),
-					JavaScriptBundle.message("javascript.introduce.variable.title"));
+			Messages.showErrorDialog(
+				myProject,
+				JavaScriptLocalize.javascriptIntroduceVariableInvalidName().get(),
+				JavaScriptLocalize.javascriptIntroduceVariableTitle().get()
+			);
 			getNameField().requestFocus();
 			return;
 		}
@@ -288,10 +297,10 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
 
 	private boolean showConflictsDialog(final JSNamedElement existing, final String name)
 	{
-		final String message = existing instanceof JSFunction ? JavaScriptBundle.message("javascript.introduce.variable.function.already.exists",
-				CommonRefactoringUtil.htmlEmphasize(name)) : JavaScriptBundle.message("javascript.introduce.variable.variable.already.exists",
-				CommonRefactoringUtil.htmlEmphasize(name));
-		final ConflictsDialog conflictsDialog = new ConflictsDialog(myProject, message);
+		final LocalizeValue message = existing instanceof JSFunction
+			? JavaScriptLocalize.javascriptIntroduceVariableFunctionAlreadyExists(CommonRefactoringUtil.htmlEmphasize(name))
+			: JavaScriptLocalize.javascriptIntroduceVariableVariableAlreadyExists(CommonRefactoringUtil.htmlEmphasize(name));
+		final ConflictsDialog conflictsDialog = new ConflictsDialog(myProject, message.get());
 		conflictsDialog.show();
 		return conflictsDialog.isOK();
 	}

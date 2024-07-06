@@ -21,11 +21,11 @@ import com.intellij.lang.javascript.parsing.JSDocParsing;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.lang.JavaScriptContextKeywordElementType;
-import consulo.javascript.language.JavaScriptLanguage;
 import consulo.javascript.lang.parsing.JavaScriptParser;
 import consulo.javascript.lang.parsing.JavaScriptParsingContext;
 import consulo.javascript.lang.parsing.Parsing;
-import consulo.javascript.language.JavaScriptBundle;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.Language;
 import consulo.language.ast.*;
 import consulo.language.lexer.FlexAdapter;
@@ -167,12 +167,12 @@ public interface JSTokenTypes
 		public void parseScriptExpression(JavaScriptParsingContext context, final PsiBuilder builder)
 		{
 			PsiBuilder.Marker root = builder.mark();
-			Parsing.checkMatches(builder, JSTokenTypes.LBRACE, JavaScriptBundle.message("javascript.parser.message.expected.lbrace"));
+			Parsing.checkMatches(builder, JSTokenTypes.LBRACE, JavaScriptLocalize.javascriptParserMessageExpectedLbrace().get());
 			if(builder.getTokenType() != JSTokenTypes.RBRACE)
 			{
 				context.getExpressionParsing().parseExpression(builder);
 			}
-			Parsing.checkMatches(builder, JSTokenTypes.RBRACE, JavaScriptBundle.message("javascript.parser.message.expected.rbrace"));
+			Parsing.checkMatches(builder, JSTokenTypes.RBRACE, JavaScriptLocalize.javascriptParserMessageExpectedRbrace().get());
 
 			while(!builder.eof())
 			{

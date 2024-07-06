@@ -16,19 +16,18 @@
 
 package com.intellij.lang.javascript.impl.refactoring.extractMethod;
 
-import javax.annotation.Nonnull;
-
-import consulo.javascript.language.JavaScriptBundle;
-import consulo.language.editor.refactoring.action.RefactoringActionHandler;
-import consulo.language.psi.PsiFile;
-import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.javascript.localize.JavaScriptLocalize;
+import consulo.language.editor.refactoring.action.RefactoringActionHandler;
+import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.language.psi.PsiElement;
-import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
-import consulo.application.ApplicationManager;
-import consulo.dataContext.DataContext;
+import consulo.undoRedo.CommandProcessor;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -58,21 +57,12 @@ public class JSExtractFunctionHandler implements RefactoringActionHandler
 			return;
 		}
 
-		CommandProcessor.getInstance().executeCommand(project, new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				ApplicationManager.getApplication().runWriteAction(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						doRefactoring(project, editor, settings);
-					}
-				});
-			}
-		}, JavaScriptBundle.message("javascript.extract.method.title"), null);
+		CommandProcessor.getInstance().executeCommand(
+			project,
+			() -> project.getApplication().runWriteAction(() -> doRefactoring(project, editor, settings)),
+			JavaScriptLocalize.javascriptExtractMethodTitle().get(),
+			null
+		);
 	}
 
 	protected JSExtractFunctionSettings getSettings(final Project project, final Editor editor)
