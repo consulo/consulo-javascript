@@ -167,12 +167,12 @@ public interface JSTokenTypes
 		public void parseScriptExpression(JavaScriptParsingContext context, final PsiBuilder builder)
 		{
 			PsiBuilder.Marker root = builder.mark();
-			Parsing.checkMatches(builder, JSTokenTypes.LBRACE, JavaScriptLocalize.javascriptParserMessageExpectedLbrace().get());
+			Parsing.checkMatches(builder, JSTokenTypes.LBRACE, JavaScriptLocalize.javascriptParserMessageExpectedLbrace());
 			if(builder.getTokenType() != JSTokenTypes.RBRACE)
 			{
 				context.getExpressionParsing().parseExpression(builder);
 			}
-			Parsing.checkMatches(builder, JSTokenTypes.RBRACE, JavaScriptLocalize.javascriptParserMessageExpectedRbrace().get());
+			Parsing.checkMatches(builder, JSTokenTypes.RBRACE, JavaScriptLocalize.javascriptParserMessageExpectedRbrace());
 
 			while(!builder.eof())
 			{

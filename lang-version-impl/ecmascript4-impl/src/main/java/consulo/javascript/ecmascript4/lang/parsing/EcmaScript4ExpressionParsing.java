@@ -90,7 +90,7 @@ public class EcmaScript4ExpressionParsing extends ExpressionParsing
 				}
 				else
 				{
-					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedName().get());
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedName());
 				}
 
 				expr.done(JSElementTypes.REFERENCE_EXPRESSION);

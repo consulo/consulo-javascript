@@ -79,7 +79,7 @@ public class FunctionParsing extends Parsing
 		{
 			if(!expressionContext && builder.getTokenType() != JSTokenTypes.LPAR /*get/set as name*/)
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedFunctionName().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedFunctionName());
 			}
 		}
 
@@ -104,7 +104,7 @@ public class FunctionParsing extends Parsing
 		final PsiBuilder.Marker parameterList;
 		if(builder.getTokenType() != JSTokenTypes.LPAR)
 		{
-			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedLparen().get());
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedLparen());
 			parameterList = builder.mark(); // To have non-empty parameters list at all the time.
 			parameterList.done(JSElementTypes.PARAMETER_LIST);
 			return;
@@ -130,7 +130,7 @@ public class FunctionParsing extends Parsing
 				}
 				else
 				{
-					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedCommaOrRparen().get());
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedCommaOrRparen());
 					break;
 				}
 			}
@@ -175,7 +175,7 @@ public class FunctionParsing extends Parsing
 		}
 		else
 		{
-			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedFormalParameterName().get());
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedFormalParameterName());
 			parameterMarker.drop();
 		}
 	}

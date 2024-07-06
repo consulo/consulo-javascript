@@ -57,7 +57,7 @@ public class EcmaScript4StatementParsing extends StatementParsing
 	{
 		if(!JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(builder.getTokenType()))
 		{
-			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedVariableName().get());
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedVariableName());
 			builder.advanceLexer();
 			return;
 		}
@@ -75,14 +75,14 @@ public class EcmaScript4StatementParsing extends StatementParsing
 			{
 				if(!getExpressionParsing().parseAssignmentExpression(builder))
 				{
-					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 				}
 			}
 			else
 			{
 				if(!getExpressionParsing().parseAssignmentExpressionNoIn(builder))
 				{
-					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 				}
 			}
 		}
@@ -96,7 +96,7 @@ public class EcmaScript4StatementParsing extends StatementParsing
 
 		if(firstToken == null)
 		{
-			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedStatement().get());
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedStatement());
 			return;
 		}
 
@@ -291,7 +291,7 @@ public class EcmaScript4StatementParsing extends StatementParsing
 					}
 					else
 					{
-						builder.error(JavaScriptLocalize.javascriptParserMessageExpectedFunctionVarClassInterfaceNamespace().get());
+						builder.error(JavaScriptLocalize.javascriptParserMessageExpectedFunctionVarClassInterfaceNamespace());
 						marker.drop();
 					}
 				}
@@ -348,7 +348,7 @@ public class EcmaScript4StatementParsing extends StatementParsing
 		}
 		else
 		{
-			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedXml().get());
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedXml());
 		}
 		marker.done(JSElementTypes.ASSIGNMENT_EXPRESSION);
 	}
@@ -364,7 +364,7 @@ public class EcmaScript4StatementParsing extends StatementParsing
 			final PsiBuilder.Marker nsAssignment = builder.mark();
 			if(!getExpressionParsing().parseQualifiedTypeName(builder, true))
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedTypename().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedTypename());
 				nsAssignment.drop();
 				return;
 			}
@@ -374,7 +374,7 @@ public class EcmaScript4StatementParsing extends StatementParsing
 				builder.advanceLexer();
 				if(!getExpressionParsing().parseQualifiedTypeName(builder))
 				{
-					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedTypename().get());
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedTypename());
 				}
 
 				nsAssignment.done(JSElementTypes.ASSIGNMENT_EXPRESSION);
@@ -405,7 +405,7 @@ public class EcmaScript4StatementParsing extends StatementParsing
 
 		if(!getExpressionParsing().parseQualifiedTypeName(builder))
 		{
-			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedTypename().get());
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedTypename());
 		}
 		if(builder.getTokenType() == JSTokenTypes.EQ)
 		{
@@ -424,7 +424,7 @@ public class EcmaScript4StatementParsing extends StatementParsing
 
 		if(builder.getTokenType() != JSTokenTypes.NAMESPACE_KEYWORD)
 		{
-			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedNamespace().get());
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedNamespace());
 		}
 		else
 		{
@@ -432,7 +432,7 @@ public class EcmaScript4StatementParsing extends StatementParsing
 
 			if(!getExpressionParsing().parseQualifiedTypeName(builder))
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedTypename().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedTypename());
 			}
 
 			while(builder.getTokenType() == JSTokenTypes.COMMA)
@@ -440,7 +440,7 @@ public class EcmaScript4StatementParsing extends StatementParsing
 				builder.advanceLexer();
 				if(!getExpressionParsing().parseQualifiedTypeName(builder))
 				{
-					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedTypename().get());
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedTypename());
 					break;
 				}
 			}
@@ -462,7 +462,7 @@ public class EcmaScript4StatementParsing extends StatementParsing
 		builder.advanceLexer();
 		if(!getExpressionParsing().parseQualifiedTypeName(builder))
 		{
-			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedTypename().get());
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedTypename());
 		}
 
 		if(builder.getTokenType() == JSTokenTypes.EXTENDS_KEYWORD)
@@ -511,7 +511,7 @@ public class EcmaScript4StatementParsing extends StatementParsing
 
 		if(builder.getTokenType() != JSTokenTypes.LBRACE)
 		{
-			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedNameOrLbrace().get());
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedNameOrLbrace());
 		}
 		else
 		{

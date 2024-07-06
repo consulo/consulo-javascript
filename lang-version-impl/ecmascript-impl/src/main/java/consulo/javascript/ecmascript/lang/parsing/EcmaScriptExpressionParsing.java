@@ -164,7 +164,7 @@ public class EcmaScriptExpressionParsing extends ExpressionParsing<EcmaScriptPar
 		{
 			if(isNotPropertyStart(builder, nameTokenType))
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifierStringLiteralOrNumericLiteral().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifierStringLiteralOrNumericLiteral());
 			}
 
 			IElementType setOrGetToken = isContextKeyword(builder, JSTokenTypes.GET_SET_TOKEN_SET);
@@ -224,7 +224,7 @@ public class EcmaScriptExpressionParsing extends ExpressionParsing<EcmaScriptPar
 				builder.putUserData(WITHIN_OBJECT_LITERAL_EXPRESSION, Boolean.TRUE);
 				if(!parseAssignmentExpression(builder))
 				{
-					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 				}
 				builder.putUserData(WITHIN_OBJECT_LITERAL_EXPRESSION, null);
 			}

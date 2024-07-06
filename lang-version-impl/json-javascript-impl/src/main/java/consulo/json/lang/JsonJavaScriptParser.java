@@ -42,7 +42,7 @@ public class JsonJavaScriptParser implements PsiParser
 			parseArrayLiteralExpression(builder);
 			if(builder.getTokenType() != null)
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedEof().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedEof());
 			}
 		}
 		else if(builder.getTokenType() == JSTokenTypes.LBRACE)
@@ -50,12 +50,12 @@ public class JsonJavaScriptParser implements PsiParser
 			parseObjectLiteralExpression(builder);
 			if(builder.getTokenType() != null)
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedEof().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedEof());
 			}
 		}
 		else
 		{
-			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedLbraceOrLbracket().get());
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedLbraceOrLbracket());
 		}
 
 		while(builder.getTokenType() != null)
@@ -108,14 +108,14 @@ public class JsonJavaScriptParser implements PsiParser
 
 		if(isNotPropertyStart(nameToken))
 		{
-			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifierStringLiteralOrNumericLiteral().get());
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifierStringLiteralOrNumericLiteral());
 		}
 		builder.advanceLexer();
-		Parsing.checkMatches(builder, JSTokenTypes.COLON, JavaScriptLocalize.javascriptParserMessageExpectedColon().get());
+		Parsing.checkMatches(builder, JSTokenTypes.COLON, JavaScriptLocalize.javascriptParserMessageExpectedColon());
 
 		if(!parseValue(builder))
 		{
-			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 		}
 		myPropertyDepth--;
 
@@ -150,7 +150,7 @@ public class JsonJavaScriptParser implements PsiParser
 			}
 			else
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedComma().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedComma());
 			}
 
 			elementType = builder.getTokenType();
@@ -164,7 +164,7 @@ public class JsonJavaScriptParser implements PsiParser
 			}
 		}
 
-		Parsing.checkMatches(builder, JSTokenTypes.RBRACE, JavaScriptLocalize.javascriptParserMessageExpectedRbrace().get());
+		Parsing.checkMatches(builder, JSTokenTypes.RBRACE, JavaScriptLocalize.javascriptParserMessageExpectedRbrace());
 		expr.done(JSElementTypes.OBJECT_LITERAL_EXPRESSION);
 	}
 
@@ -184,7 +184,7 @@ public class JsonJavaScriptParser implements PsiParser
 		{
 			if(commaExpected)
 			{
-				final boolean b = Parsing.checkMatches(builder, JSTokenTypes.COMMA, JavaScriptLocalize.javascriptParserMessageExpectedComma().get());
+				final boolean b = Parsing.checkMatches(builder, JSTokenTypes.COMMA, JavaScriptLocalize.javascriptParserMessageExpectedComma());
 				if(!b)
 				{
 					break;
@@ -201,7 +201,7 @@ public class JsonJavaScriptParser implements PsiParser
 			{
 				if(!parseValue(builder))
 				{
-					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 					break;
 				}
 				else
@@ -210,7 +210,7 @@ public class JsonJavaScriptParser implements PsiParser
 				}
 			}
 		}
-		Parsing.checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptLocalize.javascriptParserMessageExpectedRbracket().get());
+		Parsing.checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptLocalize.javascriptParserMessageExpectedRbracket());
 		expr.done(JSElementTypes.ARRAY_LITERAL_EXPRESSION);
 	}
 

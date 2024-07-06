@@ -67,7 +67,7 @@ public class JSDocParsing
 
 				if(isInvalidTokenType(builder))
 				{
-					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedDocTagName().get());
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedDocTagName());
 					return false;
 				}
 
@@ -106,7 +106,7 @@ public class JSDocParsing
 
 				if(isInvalidTokenType(builder))
 				{
-					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedDocTagValue().get());
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedDocTagValue());
 					return false;
 				}
 			}

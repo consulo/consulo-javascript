@@ -143,11 +143,11 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 				{
 					builder.advanceLexer();
 					parseExpression(builder);
-					Parsing.checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptLocalize.javascriptParserMessageExpectedRbracket().get());
+					Parsing.checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptLocalize.javascriptParserMessageExpectedRbracket());
 				}
 				else
 				{
-					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifier().get());
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifier());
 				}
 			}
 
@@ -245,13 +245,13 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			}
 			else
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedComma().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedComma());
 			}
 
 			elementType = builder.getTokenType();
 			if(elementType == JSTokenTypes.RBRACE)
 			{
-				builder.error(JavaScriptLocalize.javascriptParserPropertyExpected().get());
+				builder.error(JavaScriptLocalize.javascriptParserPropertyExpected());
 			}
 			else if(isNotPropertyStart(builder, elementType))
 			{
@@ -259,7 +259,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			}
 		}
 
-		Parsing.checkMatches(builder, JSTokenTypes.RBRACE, JavaScriptLocalize.javascriptParserMessageExpectedRbrace().get());
+		Parsing.checkMatches(builder, JSTokenTypes.RBRACE, JavaScriptLocalize.javascriptParserMessageExpectedRbrace());
 		expr.done(JSElementTypes.OBJECT_LITERAL_EXPRESSION);
 	}
 
@@ -275,16 +275,16 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 
 		if(isNotPropertyStart(builder, nameToken))
 		{
-			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifierStringLiteralOrNumericLiteral().get());
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifierStringLiteralOrNumericLiteral());
 		}
 		builder.advanceLexer();
 
-		Parsing.checkMatches(builder, JSTokenTypes.COLON, JavaScriptLocalize.javascriptParserMessageExpectedColon().get());
+		Parsing.checkMatches(builder, JSTokenTypes.COLON, JavaScriptLocalize.javascriptParserMessageExpectedColon());
 
 		builder.putUserData(WITHIN_OBJECT_LITERAL_EXPRESSION, Boolean.TRUE);
 		if(!parseAssignmentExpression(builder))
 		{
-			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 		}
 		builder.putUserData(WITHIN_OBJECT_LITERAL_EXPRESSION, null);
 
@@ -309,11 +309,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			{
 				if(commaExpected)
 				{
-					final boolean b = Parsing.checkMatches(
-						builder,
-						JSTokenTypes.COMMA,
-						JavaScriptLocalize.javascriptParserMessageExpectedComma().get()
-					);
+					final boolean b = Parsing.checkMatches(builder, JSTokenTypes.COMMA, JavaScriptLocalize.javascriptParserMessageExpectedComma());
 					if(!b)
 					{
 						break;
@@ -330,7 +326,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 				{
 					if(!parseAssignmentExpression(builder))
 					{
-						builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+						builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 						break;
 					}
 					else
@@ -339,7 +335,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 					}
 				}
 			}
-			Parsing.checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptLocalize.javascriptParserMessageExpectedRbracket().get());
+			Parsing.checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptLocalize.javascriptParserMessageExpectedRbracket());
 			expr.done(JSElementTypes.ARRAY_LITERAL_EXPRESSION);
 		}
 		finally
@@ -354,7 +350,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 		final PsiBuilder.Marker expr = builder.mark();
 		builder.advanceLexer();
 		parseExpression(builder);
-		Parsing.checkMatches(builder, JSTokenTypes.RPAR, JavaScriptLocalize.javascriptParserMessageExpectedRparen().get());
+		Parsing.checkMatches(builder, JSTokenTypes.RPAR, JavaScriptLocalize.javascriptParserMessageExpectedRparen());
 		expr.done(JSElementTypes.PARENTHESIZED_EXPRESSION);
 	}
 
@@ -424,7 +420,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 				}
 				else
 				{
-					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedName().get());
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedName());
 				}
 
 				expr.done(JSElementTypes.REFERENCE_EXPRESSION);
@@ -434,7 +430,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			{
 				builder.advanceLexer();
 				parseExpression(builder);
-				Parsing.checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptLocalize.javascriptParserMessageExpectedRbracket().get());
+				Parsing.checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptLocalize.javascriptParserMessageExpectedRbracket());
 				expr.done(JSElementTypes.INDEXED_PROPERTY_ACCESS_EXPRESSION);
 				expr = expr.precede();
 			}
@@ -499,7 +495,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			}
 			else
 			{
-				Parsing.checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptLocalize.javascriptParserMessageExpectedName().get());
+				Parsing.checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptLocalize.javascriptParserMessageExpectedName());
 			}
 			expr.done(JSElementTypes.REFERENCE_EXPRESSION);
 			expr = expr.precede();
@@ -527,7 +523,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 
 		if(!parseMemberExpression(builder, false))
 		{
-			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 		}
 		return false;
 	}
@@ -552,17 +548,17 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 				}
 				else
 				{
-					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedCommaOrRparen().get());
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedCommaOrRparen());
 					break;
 				}
 			}
 			if(!parseAssignmentExpression(builder))
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 		}
 
-		Parsing.checkMatches(builder, JSTokenTypes.RPAR, JavaScriptLocalize.javascriptParserMessageExpectedRparen().get());
+		Parsing.checkMatches(builder, JSTokenTypes.RPAR, JavaScriptLocalize.javascriptParserMessageExpectedRparen());
 		arglist.done(JSElementTypes.ARGUMENT_LIST);
 	}
 
@@ -570,7 +566,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 	{
 		if(!parseExpressionOptional(builder))
 		{
-			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 		}
 	}
 
@@ -590,11 +586,11 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 
 		if(JSTokenTypes.ASSIGNMENT_OPERATIONS.contains(builder.getTokenType()) && builder.getUserData(WITHIN_OBJECT_LITERAL_EXPRESSION) == null)
 		{
-			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			builder.advanceLexer();
 			if(!parseAssignmentExpression(builder, allowIn))
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.ASSIGNMENT_EXPRESSION);
 			return true;
@@ -614,7 +610,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseAssignmentExpression(builder, allowIn))
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.ASSIGNMENT_EXPRESSION);
 		}
@@ -642,12 +638,12 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseAssignmentExpression(builder, allowIn))
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
-			Parsing.checkMatches(builder, JSTokenTypes.COLON, JavaScriptLocalize.javascriptParserMessageExpectedColon().get());
+			Parsing.checkMatches(builder, JSTokenTypes.COLON, JavaScriptLocalize.javascriptParserMessageExpectedColon());
 			if(!parseAssignmentExpression(builder, allowIn))
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.CONDITIONAL_EXPRESSION);
 		}
@@ -677,7 +673,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseANDExpression(builder, allowIn))
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.BINARY_EXPRESSION);
 			expr = expr.precede();
@@ -701,7 +697,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseBitwiseORExpression(builder, allowIn))
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.BINARY_EXPRESSION);
 			expr = expr.precede();
@@ -725,7 +721,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseBitwiseXORExpression(builder, allowIn))
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.BINARY_EXPRESSION);
 			expr = expr.precede();
@@ -749,7 +745,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseBitwiseANDExpression(builder, allowIn))
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.BINARY_EXPRESSION);
 			expr = expr.precede();
@@ -773,7 +769,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseEqualityExpression(builder, allowIn))
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.BINARY_EXPRESSION);
 			expr = expr.precede();
@@ -797,7 +793,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseRelationalExpression(builder, allowIn))
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.BINARY_EXPRESSION);
 			expr = expr.precede();
@@ -820,7 +816,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseShiftExpression(builder))
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.BINARY_EXPRESSION);
 			expr = expr.precede();
@@ -843,7 +839,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseAdditiveExpression(builder))
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.BINARY_EXPRESSION);
 			expr = expr.precede();
@@ -866,7 +862,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseMultiplicativeExpression(builder))
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.BINARY_EXPRESSION);
 			expr = expr.precede();
@@ -890,7 +886,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseUnaryExpression(builder))
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.BINARY_EXPRESSION);
 			expr = expr.precede();
@@ -919,7 +915,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseUnaryExpression(builder))
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.BINARY_EXPRESSION);
 			expr = expr.precede();
@@ -938,7 +934,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseUnaryExpression(builder))
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 			expr.done(JSElementTypes.PREFIX_EXPRESSION);
 			return true;
@@ -1001,7 +997,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 			builder.advanceLexer();
 			if(!parseAssignmentExpression(builder, allowIn))
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			}
 
 			expr.done(JSElementTypes.COMMA_EXPRESSION);
@@ -1027,7 +1023,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 		}
 		else if(!parseQualifiedTypeName(builder))
 		{
-			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedTypename().get());
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedTypename());
 		}
 		return true;
 	}
@@ -1036,7 +1032,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 	{
 		if(!parseUnaryExpression(builder))
 		{
-			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression().get());
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
 			return false;
 		}
 		return true;

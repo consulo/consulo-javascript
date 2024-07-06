@@ -17,6 +17,7 @@
 package com.intellij.lang.javascript.impl.structureView;
 
 import consulo.fileEditor.structureView.tree.*;
+import consulo.ide.localize.IdeLocalize;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSFunction;
@@ -46,38 +47,38 @@ class JSSuperGrouper implements Grouper
 	@Nonnull
 	public Collection<Group> group(final Object parent, final Collection<TreeElement> children)
 	{
-		if(isParentGrouped((AbstractTreeNode) parent))
+		if (isParentGrouped((AbstractTreeNode) parent))
 		{
 			return Collections.emptyList();
 		}
-		final Map<String, Group> groups = new HashMap<String, Group>();
+		final Map<String, Group> groups = new HashMap<>();
 
-		for(TreeElement _child : children)
+		for (TreeElement _child : children)
 		{
-			if(!(_child instanceof JSStructureViewElement))
+			if (!(_child instanceof JSStructureViewElement))
 			{
 				continue;
 			}
 			JSStructureViewElement child = (JSStructureViewElement) _child;
 			final PsiElement value = child.getValue();
 
-			if(value instanceof JSVariable)
+			if (value instanceof JSVariable)
 			{
-				if(!child.isInherited())
+				if (!child.isInherited())
 				{
 					continue;
 				}
 				PsiElement parentElement = value.getParent();
-				if(parentElement instanceof JSVarStatement)
+				if (parentElement instanceof JSVarStatement)
 				{
 					parentElement = parentElement.getParent();
 				}
-				if(parentElement instanceof JSClass)
+				if (parentElement instanceof JSClass jsClass)
 				{
-					addGroup(groups, _child, ((JSClass) parentElement).getQualifiedName());
+					addGroup(groups, _child, jsClass.getQualifiedName());
 				}
 			}
-			else if(value instanceof JSFunction)
+			else if (value instanceof JSFunction)
 			{
 				processFunction((JSStructureViewElement) ((AbstractTreeNode) parent).getValue(), groups, _child, value);
 			}
@@ -88,11 +89,10 @@ class JSSuperGrouper implements Grouper
 	private static void processFunction(JSStructureViewElement parentElement, Map<String, Group> groups, TreeElement _child, PsiElement value)
 	{
 		final PsiElement element = JSStructureViewElement.getPsiElementResolveProxy(parentElement);
-		if(element instanceof JSClass)
+		if (element instanceof JSClass parentClass)
 		{
-			JSClass parentClass = (JSClass) element;
 			JSClass declaringClass = JSResolveUtil.findDeclaringClass((JSFunction) value);
-			if(parentClass != declaringClass)
+			if (parentClass != declaringClass)
 			{
 				addGroup(groups, _child, declaringClass.getQualifiedName());
 			}
@@ -101,8 +101,8 @@ class JSSuperGrouper implements Grouper
 
 	private static void addGroup(final Map<String, Group> groups, final TreeElement _child, final String qName)
 	{
-		JSSuperGroup group;
-		if((group = ((JSSuperGroup) groups.get(qName))) == null)
+		JSSuperGroup group = (JSSuperGroup) groups.get(qName);
+		if (group == null)
 		{
 			groups.put(qName, group = new JSSuperGroup(qName));
 		}
@@ -114,7 +114,11 @@ class JSSuperGrouper implements Grouper
 	@Nonnull
 	public ActionPresentation getPresentation()
 	{
-		return new ActionPresentationData(IdeBundle.message("action.structureview.group.methods.by.defining.type"), null, PlatformIconGroup.generalImplementingmethod());
+    return new ActionPresentationData(
+			IdeLocalize.actionStructureviewGroupMethodsByDefiningType().get(),
+			null,
+			PlatformIconGroup.generalImplementingmethod()
+		);
 	}
 
 	@Override
@@ -126,9 +130,9 @@ class JSSuperGrouper implements Grouper
 
 	private static boolean isParentGrouped(AbstractTreeNode parent)
 	{
-		while(parent != null)
+		while (parent != null)
 		{
-			if(parent.getValue() instanceof JSSuperGroup)
+			if (parent.getValue() instanceof JSSuperGroup)
 			{
 				return true;
 			}

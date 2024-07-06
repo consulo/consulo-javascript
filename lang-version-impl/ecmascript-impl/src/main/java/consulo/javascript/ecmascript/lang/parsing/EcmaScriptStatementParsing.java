@@ -99,7 +99,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 	{
 		builder.advanceLexer();
 
-		Parsing.checkMatches(builder, JSTokenTypes.LPAR, JavaScriptLocalize.javascriptParserMessageExpectedLparen().get());
+		Parsing.checkMatches(builder, JSTokenTypes.LPAR, JavaScriptLocalize.javascriptParserMessageExpectedLparen());
 		final boolean empty;
 		if(builder.getTokenType() == JSTokenTypes.VAR_KEYWORD || builder.getTokenType() == JSTokenTypes.LET_KEYWORD || builder.getTokenType() == JSTokenTypes.CONST_KEYWORD)
 		{
@@ -123,7 +123,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 			}
 			else
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedSemicolon().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedSemicolon());
 			}
 			getExpressionParsing().parseExpressionOptional(builder);
 		}
@@ -132,7 +132,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 			forin = true;
 			if(empty)
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedForloopLeftHandSideExpressionOrVariableDeclaration().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedForloopLeftHandSideExpressionOrVariableDeclaration());
 			}
 
 			if(builder.getTokenType() == JSTokenTypes.IN_KEYWORD)
@@ -148,10 +148,10 @@ public class EcmaScriptStatementParsing extends StatementParsing
 		}
 		else
 		{
-			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedForloopInOfOrSemicolon().get());
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedForloopInOfOrSemicolon());
 		}
 
-		Parsing.checkMatches(builder, JSTokenTypes.RPAR, JavaScriptLocalize.javascriptParserMessageExpectedRparen().get());
+		Parsing.checkMatches(builder, JSTokenTypes.RPAR, JavaScriptLocalize.javascriptParserMessageExpectedRparen());
 		return forin;
 	}
 
@@ -247,7 +247,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 								}
 								else
 								{
-									builder.error("Comma expected");
+									builder.error(JavaScriptLocalize.javascriptParserMessageExpectedComma());
 								}
 							}
 
@@ -279,7 +279,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 							}
 							else if(builder.getTokenType() != JSTokenTypes.RBRACE)
 							{
-								builder.error("Expected identifier");
+								builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifier());
 								break;
 							}
 						}
@@ -296,7 +296,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 					}
 					else
 					{
-						builder.error(JavaScriptLocalize.javascriptParserMessageExpectedTypename().get());
+						builder.error(JavaScriptLocalize.javascriptParserMessageExpectedTypename());
 						break;
 					}
 
@@ -314,7 +314,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 				}
 				else
 				{
-					builder.error("Expecte from target");
+					builder.error("Expected from target");
 				}
 			}
 
@@ -375,7 +375,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 	{
 		if(builder.getTokenType() != JSTokenTypes.LBRACE)
 		{
-			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedLbrace().get());
+			builder.error(JavaScriptLocalize.javascriptParserMessageExpectedLbrace());
 			return;
 		}
 
@@ -449,7 +449,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 
 				if(!JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(builder.getTokenType()))
 				{
-					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifier().get());
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifier());
 				}
 				else
 				{

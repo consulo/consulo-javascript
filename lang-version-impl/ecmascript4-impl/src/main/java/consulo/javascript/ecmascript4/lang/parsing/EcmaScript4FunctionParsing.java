@@ -69,7 +69,7 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 						if(builder.eof())
 						{
 							attribute.done(JSElementTypes.ATTRIBUTE);
-							builder.error(JavaScriptLocalize.javascriptParserMessageExpectedRbracket().get());
+							builder.error(JavaScriptLocalize.javascriptParserMessageExpectedRbracket());
 							return;
 						}
 					}
@@ -139,7 +139,7 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 
 			if(builder.getTokenType() == JSTokenTypes.COMMA)
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentiferOrValue().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentiferOrValue());
 				break;
 			}
 			if(builder.getTokenType() == JSTokenTypes.RBRACKET)
@@ -161,7 +161,7 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 				}
 				else
 				{
-					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedValue().get());
+					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedValue());
 				}
 			}
 
@@ -177,7 +177,7 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 
 			if(builder.eof())
 			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedRparen().get());
+				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedRparen());
 				return;
 			}
 		}
