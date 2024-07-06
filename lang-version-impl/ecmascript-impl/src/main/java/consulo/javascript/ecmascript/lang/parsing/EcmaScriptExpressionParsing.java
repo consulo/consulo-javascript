@@ -157,7 +157,7 @@ public class EcmaScriptExpressionParsing extends ExpressionParsing<EcmaScriptPar
 			PsiBuilder.Marker mark = builder.mark();
 			builder.advanceLexer();
 			parseExpression(builder);
-			checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptLocalize.javascriptParserMessageExpectedRbracket().get());
+			checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptLocalize.javascriptParserMessageExpectedRbracket());
 			mark.done(JSElementTypes.COMPUTED_NAME);
 		}
 		else
@@ -219,7 +219,7 @@ public class EcmaScriptExpressionParsing extends ExpressionParsing<EcmaScriptPar
 			}
 			else
 			{
-				checkMatches(builder, JSTokenTypes.COLON, JavaScriptLocalize.javascriptParserMessageExpectedColon().get());
+				checkMatches(builder, JSTokenTypes.COLON, JavaScriptLocalize.javascriptParserMessageExpectedColon());
 
 				builder.putUserData(WITHIN_OBJECT_LITERAL_EXPRESSION, Boolean.TRUE);
 				if(!parseAssignmentExpression(builder))

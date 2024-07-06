@@ -100,7 +100,7 @@ public class EcmaScript4ExpressionParsing extends ExpressionParsing
 			{
 				builder.advanceLexer();
 				parseExpression(builder);
-				checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptLocalize.javascriptParserMessageExpectedRbracket().get());
+				checkMatches(builder, JSTokenTypes.RBRACKET, JavaScriptLocalize.javascriptParserMessageExpectedRbracket());
 				expr.done(JSElementTypes.INDEXED_PROPERTY_ACCESS_EXPRESSION);
 				expr = expr.precede();
 			}
@@ -163,7 +163,7 @@ public class EcmaScript4ExpressionParsing extends ExpressionParsing
 			}
 			else
 			{
-				checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptLocalize.javascriptParserMessageExpectedName().get());
+				checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptLocalize.javascriptParserMessageExpectedName());
 			}
 			expr.done(JSElementTypes.REFERENCE_EXPRESSION);
 			expr = expr.precede();
@@ -205,7 +205,7 @@ public class EcmaScript4ExpressionParsing extends ExpressionParsing
 		PsiBuilder.Marker genericTypeSignature = builder.mark();
 		builder.advanceLexer();
 		parseType(builder);
-		checkMatches(builder, JSTokenTypes.GT, JavaScriptLocalize.javascriptParserMessageExpectedLt().get());
+		checkMatches(builder, JSTokenTypes.GT, JavaScriptLocalize.javascriptParserMessageExpectedLt());
 		genericTypeSignature.done(JSElementTypes.GENERIC_SIGNATURE);
 	}
 }

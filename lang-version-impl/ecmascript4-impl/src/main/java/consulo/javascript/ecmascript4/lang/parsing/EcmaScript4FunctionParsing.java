@@ -22,7 +22,7 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 	public void parseAttributeWithoutBrackets(final PsiBuilder builder)
 	{
 		final PsiBuilder.Marker attribute = builder.mark();
-		if (!checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptLocalize.javascriptParserMessageExpectedIdentifier().get()))
+		if (!checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptLocalize.javascriptParserMessageExpectedIdentifier()))
 		{
 			attribute.drop();
 			return;
@@ -54,7 +54,7 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 					builder.advanceLexer();
 
 					if (builder.eof() || (
-						!checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptLocalize.javascriptParserMessageExpectedIdentifier().get())
+						!checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptLocalize.javascriptParserMessageExpectedIdentifier())
 							&& builder.getTokenType() != JSTokenTypes.RBRACKET
 					))
 					{
@@ -129,7 +129,7 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 
 	private void parseAttributeBody(final PsiBuilder builder)
 	{
-		final boolean haveLParen = checkMatches(builder, JSTokenTypes.LPAR, JavaScriptLocalize.javascriptParserMessageExpectedLparen().get());
+		final boolean haveLParen = checkMatches(builder, JSTokenTypes.LPAR, JavaScriptLocalize.javascriptParserMessageExpectedLparen());
 		boolean hasName;
 
 		while(haveLParen)
@@ -152,7 +152,7 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 
 			if(hasName && builder.getTokenType() != JSTokenTypes.COMMA && builder.getTokenType() != JSTokenTypes.RPAR)
 			{
-				checkMatches(builder, JSTokenTypes.EQ, JavaScriptLocalize.javascriptParserMessageExpectedEqual().get());
+				checkMatches(builder, JSTokenTypes.EQ, JavaScriptLocalize.javascriptParserMessageExpectedEqual());
 
 				if(builder.getTokenType() != JSTokenTypes.COMMA && builder.getTokenType() != JSTokenTypes.RBRACKET && builder.getTokenType() !=
 						JSTokenTypes.RPAR)
@@ -184,7 +184,7 @@ public class EcmaScript4FunctionParsing extends FunctionParsing
 
 		if (haveLParen)
 		{
-			checkMatches(builder, JSTokenTypes.RPAR, JavaScriptLocalize.javascriptParserMessageExpectedRparen().get());
+			checkMatches(builder, JSTokenTypes.RPAR, JavaScriptLocalize.javascriptParserMessageExpectedRparen());
 		}
 		else
 		{

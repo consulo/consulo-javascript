@@ -338,9 +338,9 @@ public class EcmaScript4StatementParsing extends StatementParsing
 		{
 			builder.advanceLexer();
 
-			if (checkMatches(builder, JSTokenTypes.NAMESPACE_KEYWORD, JavaScriptLocalize.javascriptParserMessageExpectedNamespace().get()))
+			if (checkMatches(builder, JSTokenTypes.NAMESPACE_KEYWORD, JavaScriptLocalize.javascriptParserMessageExpectedNamespace()))
 			{
-				if (checkMatches(builder, JSTokenTypes.EQ, JavaScriptLocalize.javascriptParserMessageExpectedEqual().get()))
+				if (checkMatches(builder, JSTokenTypes.EQ, JavaScriptLocalize.javascriptParserMessageExpectedEqual()))
 				{
 					getExpressionParsing().parseExpression(builder);
 				}
@@ -410,7 +410,7 @@ public class EcmaScript4StatementParsing extends StatementParsing
 		if(builder.getTokenType() == JSTokenTypes.EQ)
 		{
 			builder.advanceLexer();
-			checkMatches(builder, JSTokenTypes.STRING_LITERAL, JavaScriptLocalize.javascriptParserMessageExpectedStringLiteral().get());
+			checkMatches(builder, JSTokenTypes.STRING_LITERAL, JavaScriptLocalize.javascriptParserMessageExpectedStringLiteral());
 		}
 		checkForSemicolon(builder);
 		useNSStatement.done(JSElementTypes.NAMESPACE_DECLARATION);

@@ -736,7 +736,7 @@ public class StatementParsing extends Parsing
 
 			if(!first)
 			{
-				Parsing.checkMatches(builder, JSTokenTypes.COMMA, "Comma expected");
+				Parsing.checkMatches(builder, JSTokenTypes.COMMA, JavaScriptLocalize.javascriptParserMessageExpectedComma());
 			}
 
 			first = false;
@@ -757,7 +757,7 @@ public class StatementParsing extends Parsing
 			}
 		}
 
-		Parsing.checkMatches(builder, JSTokenTypes.RBRACE, "'}' expected");
+		Parsing.checkMatches(builder, JSTokenTypes.RBRACE, JavaScriptLocalize.javascriptParserMessageExpectedRbrace());
 
 		desctructionObjectMarker.done(JSElementTypes.DESTRUCTURING_OBJECT);
 

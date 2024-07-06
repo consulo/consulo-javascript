@@ -223,7 +223,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 
 					if(!firstBinding)
 					{
-						Parsing.checkMatches(builder, JSTokenTypes.COMMA, "Comma expected");
+						Parsing.checkMatches(builder, JSTokenTypes.COMMA, JavaScriptLocalize.javascriptParserMessageExpectedComma());
 					}
 
 					if(builder.getTokenType() == JSTokenTypes.LBRACE)
@@ -284,7 +284,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 							}
 						}
 
-						Parsing.checkMatches(builder, JSTokenTypes.RBRACE, "'}' expected");
+						Parsing.checkMatches(builder, JSTokenTypes.RBRACE, JavaScriptLocalize.javascriptParserMessageExpectedRbrace());
 
 						namedImportsMark.done(EcmaScript6ElementTypes.NAMED_IMPORTS);
 					}
