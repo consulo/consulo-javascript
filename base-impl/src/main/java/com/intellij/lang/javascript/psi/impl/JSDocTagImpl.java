@@ -26,6 +26,7 @@ import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.util.collection.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
 
@@ -325,16 +326,11 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag
 			return ArrayUtil.EMPTY_OBJECT_ARRAY;
 		}
 
+		@Nonnull
 		@Override
-		public boolean isSoft()
+		public LocalizeValue buildUnresolvedMessaged(@Nonnull String referenceText)
 		{
-			return false;
-		}
-
-		@Override
-		public String getUnresolvedMessagePattern()
-		{
-			return JavaScriptLocalize.javascriptValidationMessageIncorrectParameterName().get();
+			return JavaScriptLocalize.javascriptValidationMessageIncorrectParameterName();
 		}
 	}
 }

@@ -24,6 +24,7 @@ import com.intellij.lang.javascript.psi.impl.JSPackageStatementImpl;
 import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.util.JSUtils;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
 import consulo.javascript.localize.JavaScriptLocalize;
@@ -32,9 +33,7 @@ import consulo.javascript.psi.JavaScriptLambdaExpression;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.FileModificationService;
-import consulo.language.editor.annotation.Annotation;
-import consulo.language.editor.annotation.AnnotationHolder;
-import consulo.language.editor.annotation.Annotator;
+import consulo.language.editor.annotation.*;
 import consulo.language.editor.impl.intention.RenameFileFix;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.LocalQuickFixProvider;
@@ -58,7 +57,6 @@ import consulo.xml.psi.xml.XmlTagChild;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
-import java.text.MessageFormat;
 import java.util.*;
 
 /**
@@ -76,26 +74,21 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
   @Override
   public void visitJSAttributeNameValuePair(final JSAttributeNameValuePair attributeNameValuePair) {
-    checkReferences(attributeNameValuePair, ProblemKind.ERROR);
+    checkReferences(attributeNameValuePair, HighlightSeverity.ERROR);
   }
 
   @Override
   public void visitJSIncludeDirective(final JSIncludeDirective includeDirective) {
-    checkReferences(includeDirective, ProblemKind.ERROR);
+    checkReferences(includeDirective, HighlightSeverity.ERROR);
   }
 
   @Override
   public void visitJSLiteralExpression(JSSimpleLiteralExpression node) {
-    checkReferences(node, ProblemKind.ERROR);
+    checkReferences(node, HighlightSeverity.ERROR);
   }
 
-  static enum ProblemKind {
-    ERROR,
-    WARNING,
-    INFO
-  }
-
-  private void checkReferences(final PsiElement includeDirective, ProblemKind kind) {
+  @RequiredReadAction
+  private void checkReferences(final PsiElement includeDirective, HighlightSeverity kind) {
     for (PsiReference ref : includeDirective.getReferences()) {
       if (!ref.isSoft() && hasBadResolve(ref)) {
         final TextRange elementRange = ref.getElement().getTextRange();
@@ -105,21 +98,18 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
           elementRange.getStartOffset() + textRange.getStartOffset(),
           elementRange.getStartOffset() + textRange.getEndOffset()
         );
-        final String message =
-          MessageFormat.format(((EmptyResolveMessageProvider)ref).getUnresolvedMessagePattern(), ref.getCanonicalText());
-        Annotation annotation = kind == ProblemKind.ERROR
-          ? myHolder.createErrorAnnotation(range, message)
-          : kind == ProblemKind.WARNING
-          ? myHolder.createWarningAnnotation(range, message)
-          : myHolder.createInfoAnnotation(range, message);
+        final LocalizeValue value = ((EmptyResolveMessageProvider) ref).buildUnresolvedMessaged(ref.getCanonicalText());
+        AnnotationBuilder builder = myHolder.newAnnotation(kind, value);
+        builder = builder.range(range);
 
         if (ref instanceof LocalQuickFixProvider localQuickFixProvider) {
           for (LocalQuickFix fix : localQuickFixProvider.getQuickFixes()) {
             if (fix instanceof IntentionAction intentionAction) {
-              annotation.registerFix(intentionAction, new TextRange(annotation.getStartOffset(), annotation.getEndOffset()));
+               builder = builder.withFix(intentionAction);
             }
           }
         }
+        builder.create();
       }
     }
   }
@@ -142,12 +132,12 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
   @Override
   public void visitJSDocTagValue(final JSDocTagValue tagValue) {
-    checkReferences(tagValue, ProblemKind.WARNING);
+    checkReferences(tagValue, HighlightSeverity.WARNING);
   }
 
   @Override
   public void visitJSDocTag(final JSDocTag tagValue) {
-    checkReferences(tagValue, ProblemKind.WARNING);
+    checkReferences(tagValue, HighlightSeverity.WARNING);
   }
 
   @Override

@@ -28,6 +28,7 @@ import consulo.language.psi.*;
 import consulo.language.psi.resolve.ResolveCache;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
@@ -548,12 +549,12 @@ public class JSReferenceSet
 			return processor.getResults();
 		}
 
+		@Nonnull
 		@Override
-		public String getUnresolvedMessagePattern()
+		public LocalizeValue buildUnresolvedMessaged(@Nonnull String text)
 		{
-			String text = getCanonicalText();
 			text = "'" + text.replace("'", "''") + "'";
-			return JavaScriptLocalize.javascriptUnresolvedVariableOrTypeNameMessage2(text).get();
+			return JavaScriptLocalize.javascriptUnresolvedVariableOrTypeNameMessage2(text);
 		}
 	}
 

@@ -28,6 +28,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.util.IncorrectOperationException;
 import consulo.language.psi.EmptyResolveMessageProvider;
+import consulo.localize.LocalizeValue;
 import consulo.util.collection.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
 
@@ -211,10 +212,11 @@ public class JSAttributeImpl extends JSStubElementImpl<JSAttributeStub> implemen
 			return true;
 		}
 
+		@Nonnull
 		@Override
-		public String getUnresolvedMessagePattern()
+		public LocalizeValue buildUnresolvedMessaged(@Nonnull String referenceText)
 		{
-			return "Unknown metadata tag";
+			return LocalizeValue.localizeTODO("Unknown metadata tag");
 		}
 	}
 }
