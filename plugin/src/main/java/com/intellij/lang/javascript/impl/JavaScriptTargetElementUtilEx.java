@@ -22,8 +22,7 @@ import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.TargetElementUtilExtender;
 import consulo.language.psi.PsiElement;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko

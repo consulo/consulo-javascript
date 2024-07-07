@@ -27,7 +27,7 @@ import consulo.language.psi.PsiManager;
 import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

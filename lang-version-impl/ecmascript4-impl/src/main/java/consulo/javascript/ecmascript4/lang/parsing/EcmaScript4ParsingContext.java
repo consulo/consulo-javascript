@@ -4,8 +4,7 @@ import consulo.javascript.lang.parsing.ExpressionParsing;
 import consulo.javascript.lang.parsing.FunctionParsing;
 import consulo.javascript.lang.parsing.JavaScriptParsingContext;
 import consulo.javascript.lang.parsing.StatementParsing;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -1,6 +1,6 @@
 package consulo.javascript.lang.psi.impl.resolve;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

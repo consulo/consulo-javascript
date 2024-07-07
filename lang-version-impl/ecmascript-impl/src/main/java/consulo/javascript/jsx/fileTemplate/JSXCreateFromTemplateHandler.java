@@ -5,8 +5,7 @@ import consulo.javascript.language.JavaScriptFileType;
 import consulo.fileTemplate.CreateFromTemplateHandler;
 import consulo.fileTemplate.FileTemplate;
 import consulo.javascript.jsx.language.JSXFileType;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

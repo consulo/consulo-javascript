@@ -26,8 +26,8 @@ import consulo.language.ast.StringEscapesTokenTypes;
 import consulo.language.editor.highlight.SyntaxHighlighterBase;
 import consulo.language.lexer.Lexer;
 import consulo.xml.editor.XmlHighlighterColors;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 

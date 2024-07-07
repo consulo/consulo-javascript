@@ -23,7 +23,7 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.sixrr.inspectjs.exception;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import com.intellij.lang.javascript.psi.JSThrowStatement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;

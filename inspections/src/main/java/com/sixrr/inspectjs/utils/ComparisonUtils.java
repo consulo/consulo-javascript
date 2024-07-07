@@ -4,8 +4,8 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import consulo.language.ast.IElementType;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.HashSet;

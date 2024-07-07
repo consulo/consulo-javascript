@@ -22,7 +22,7 @@ import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.psiutil.ComparisonUtils;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class ComparisonPredicate implements JSElementPredicate
 {

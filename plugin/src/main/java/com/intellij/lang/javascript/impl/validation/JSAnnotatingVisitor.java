@@ -56,7 +56,7 @@ import consulo.xml.psi.xml.XmlAttributeValue;
 import consulo.xml.psi.xml.XmlTagChild;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**

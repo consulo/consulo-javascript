@@ -28,8 +28,7 @@ import consulo.javascript.language.JavaScriptLanguage;
 import consulo.language.Language;
 import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.language.psi.PsiFile;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class JSStructureViewBuilderFactory implements PsiStructureViewFactory

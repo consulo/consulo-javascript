@@ -22,7 +22,7 @@ import consulo.component.extension.ExtensionExtender;
 import consulo.fileEditor.EditorNotificationProvider;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**

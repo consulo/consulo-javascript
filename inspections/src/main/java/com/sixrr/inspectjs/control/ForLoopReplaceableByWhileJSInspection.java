@@ -14,7 +14,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class ForLoopReplaceableByWhileJSInspection extends JavaScriptInspection

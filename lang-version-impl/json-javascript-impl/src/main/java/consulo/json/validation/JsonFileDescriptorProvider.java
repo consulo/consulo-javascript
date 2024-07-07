@@ -23,7 +23,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.json.validation.descriptor.JsonObjectDescriptor;
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

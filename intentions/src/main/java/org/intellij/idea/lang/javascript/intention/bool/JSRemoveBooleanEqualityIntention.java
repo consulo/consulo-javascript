@@ -30,7 +30,7 @@ import org.intellij.idea.lang.javascript.psiutil.BoolUtils;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 @IntentionMetaData(ignoreId = "JSRemoveBooleanEqualityIntention", categories = {

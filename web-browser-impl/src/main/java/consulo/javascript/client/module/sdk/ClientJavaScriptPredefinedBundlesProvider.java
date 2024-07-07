@@ -9,8 +9,8 @@ import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModificator;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.Map;
 

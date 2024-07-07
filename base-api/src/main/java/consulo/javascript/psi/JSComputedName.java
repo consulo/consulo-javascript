@@ -16,7 +16,7 @@
 
 package consulo.javascript.psi;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.JSExpression;

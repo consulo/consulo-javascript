@@ -22,8 +22,8 @@
  */
 package com.intellij.javascript.documentation;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface JSDocumentationProcessor
 {
@@ -38,5 +38,5 @@ public interface JSDocumentationProcessor
 	boolean onCommentLine(@Nonnull String line);
 
 	boolean onPatternMatch(@Nonnull MetaDocType type, @Nullable String matchName, @Nullable final String matchValue,
-			@Nullable String remainingLineContent, @Nonnull final String line, final String patternMatched);
+						   @Nullable String remainingLineContent, @Nonnull final String line, final String patternMatched);
 }

@@ -1,9 +1,8 @@
 package consulo.javascript.ecmascript.lang;
 
 import consulo.annotation.component.ExtensionImpl;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
-
-import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

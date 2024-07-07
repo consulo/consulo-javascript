@@ -6,9 +6,9 @@ import com.intellij.lang.javascript.psi.JSDestructuringObject;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.impl.JSElementImpl;
 import consulo.annotation.access.RequiredReadAction;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

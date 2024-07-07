@@ -10,8 +10,7 @@ import consulo.javascript.lang.BaseJavaScriptLanguageVersion;
 import consulo.javascript.language.JavaScriptFeature;
 import consulo.language.lexer.Lexer;
 import consulo.language.parser.PsiParser;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -23,12 +23,11 @@ import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.util.IncorrectOperationException;
+import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.TreeUtil;
-
-import javax.annotation.Nonnull;
 
 @ExtensionImpl
 @IntentionMetaData(ignoreId = "JSMoveCommentToSeparateLineIntention", categories = {

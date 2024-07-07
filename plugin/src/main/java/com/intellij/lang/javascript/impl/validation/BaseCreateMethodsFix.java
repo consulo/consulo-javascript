@@ -27,7 +27,7 @@ import java.util.Set;
 import consulo.language.ast.ASTNode;
 import consulo.language.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.impl.flex.ImportUtils;

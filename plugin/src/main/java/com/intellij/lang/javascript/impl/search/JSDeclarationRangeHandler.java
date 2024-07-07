@@ -22,7 +22,7 @@ import consulo.document.util.TextRange;
 import consulo.language.editor.hint.DeclarationRangeHandler;
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko

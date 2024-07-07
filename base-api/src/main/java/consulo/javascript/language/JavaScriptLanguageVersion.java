@@ -1,11 +1,10 @@
 package consulo.javascript.language;
 
-import consulo.javascript.language.JavaScriptFeature;
 import consulo.language.Language;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionWithParsing;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Set;
 
 /**

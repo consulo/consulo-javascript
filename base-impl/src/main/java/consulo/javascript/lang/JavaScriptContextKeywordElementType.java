@@ -5,8 +5,8 @@ import com.google.common.collect.HashBiMap;
 import com.intellij.lang.javascript.JSElementType;
 import consulo.language.ast.IElementType;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

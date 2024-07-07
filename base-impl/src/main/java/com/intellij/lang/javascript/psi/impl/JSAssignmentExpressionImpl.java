@@ -20,7 +20,7 @@ import com.intellij.lang.javascript.psi.JSAssignmentExpression;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import consulo.language.ast.ASTNode;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.

@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript.impl.surroundWith;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import consulo.codeEditor.Editor;
 import consulo.language.codeStyle.CodeStyleManager;
@@ -25,7 +25,7 @@ import consulo.project.Project;
 import consulo.language.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import consulo.document.util.TextRange;

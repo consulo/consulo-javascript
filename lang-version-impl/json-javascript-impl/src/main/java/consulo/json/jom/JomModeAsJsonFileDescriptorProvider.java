@@ -25,8 +25,8 @@ import consulo.json.validation.descriptor.JsonPropertyDescriptor;
 import consulo.language.psi.PsiFile;
 import consulo.util.collection.ContainerUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

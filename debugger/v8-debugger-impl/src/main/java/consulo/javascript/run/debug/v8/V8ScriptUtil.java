@@ -24,7 +24,7 @@ import consulo.language.file.light.LightVirtualFile;
 import consulo.util.dataholder.Key;
 import org.chromium.sdk.Script;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 
 /**

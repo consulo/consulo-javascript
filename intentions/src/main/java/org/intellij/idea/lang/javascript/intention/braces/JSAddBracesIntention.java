@@ -26,7 +26,7 @@ import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 @IntentionMetaData(ignoreId = "JSAddBracesIntention", categories = {

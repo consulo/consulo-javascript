@@ -23,8 +23,7 @@ import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.stub.StringStubIndexExtension;
 import consulo.language.psi.stub.StubIndexKey;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class JSQualifiedElementIndex extends StringStubIndexExtension<JSQualifiedNamedElement>

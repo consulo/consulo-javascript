@@ -23,8 +23,7 @@ import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.psi.PsiElement;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
-
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Maxim.Mossienko

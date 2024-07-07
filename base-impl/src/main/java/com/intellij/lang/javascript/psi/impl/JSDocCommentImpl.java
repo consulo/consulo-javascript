@@ -23,8 +23,7 @@ import com.intellij.lang.javascript.psi.JSElementVisitor;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
 import consulo.language.ast.ASTNode;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class JSDocCommentImpl extends JSElementImpl implements JSDocComment
 {

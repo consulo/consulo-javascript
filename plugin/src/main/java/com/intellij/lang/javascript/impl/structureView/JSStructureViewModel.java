@@ -35,7 +35,7 @@ import consulo.ui.ex.keymap.KeymapManager;
 import consulo.util.lang.ref.Ref;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Comparator;
 import java.util.List;
 

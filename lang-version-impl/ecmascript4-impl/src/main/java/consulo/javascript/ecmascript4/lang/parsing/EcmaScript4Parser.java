@@ -3,7 +3,7 @@ package consulo.javascript.ecmascript4.lang.parsing;
 import consulo.javascript.lang.parsing.JavaScriptParser;
 import consulo.javascript.lang.parsing.JavaScriptParsingContext;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

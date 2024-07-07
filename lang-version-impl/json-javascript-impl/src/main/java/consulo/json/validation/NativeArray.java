@@ -16,7 +16,7 @@
 
 package consulo.json.validation;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

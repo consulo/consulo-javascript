@@ -7,9 +7,9 @@ import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class OctalIntegerJSInspection extends JavaScriptInspection {

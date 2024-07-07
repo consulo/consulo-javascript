@@ -16,7 +16,7 @@ import consulo.language.lexer.Lexer;
 import consulo.language.lexer.MergingLexerAdapter;
 import consulo.language.parser.PsiParser;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

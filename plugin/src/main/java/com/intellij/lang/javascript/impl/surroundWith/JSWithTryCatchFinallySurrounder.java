@@ -25,9 +25,8 @@ import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
-
-import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.

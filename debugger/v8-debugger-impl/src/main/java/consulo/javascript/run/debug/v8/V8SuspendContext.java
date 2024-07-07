@@ -20,7 +20,7 @@ import consulo.execution.debug.frame.XExecutionStack;
 import consulo.execution.debug.frame.XSuspendContext;
 import org.chromium.sdk.DebugContext;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

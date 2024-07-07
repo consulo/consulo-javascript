@@ -9,7 +9,7 @@ import consulo.language.ast.TokenSet;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.parser.PsiParser;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.LinkedHashSet;
 import java.util.Set;
 

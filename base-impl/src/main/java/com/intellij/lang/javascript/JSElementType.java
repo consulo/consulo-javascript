@@ -18,9 +18,8 @@ package com.intellij.lang.javascript;
 
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.language.ast.IElementType;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
-
-import javax.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.

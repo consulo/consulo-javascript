@@ -35,7 +35,7 @@ import consulo.javascript.language.psi.JavaScriptType;
 import consulo.javascript.language.psi.JavaScriptTypeElement;
 import consulo.language.ast.ASTNode;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -173,7 +173,7 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
 
 	@Override
 	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent,
-			@Nonnull PsiElement place)
+									   @Nonnull PsiElement place)
 	{
 		if(lastParent != null && lastParent.getParent() == this)
 		{

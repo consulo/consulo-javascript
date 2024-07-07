@@ -28,7 +28,7 @@ import consulo.language.ast.TokenSet;
 import consulo.language.parser.PsiBuilder;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

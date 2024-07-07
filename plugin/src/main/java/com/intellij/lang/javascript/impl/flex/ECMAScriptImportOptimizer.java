@@ -37,7 +37,7 @@ import consulo.util.collection.MultiMap;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**

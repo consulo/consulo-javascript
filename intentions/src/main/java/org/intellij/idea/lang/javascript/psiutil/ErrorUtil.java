@@ -19,8 +19,7 @@ import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiErrorElement;
 import consulo.language.psi.PsiRecursiveElementVisitor;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ErrorUtil
 {

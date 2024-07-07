@@ -27,14 +27,13 @@ import consulo.application.util.function.Processor;
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
-import consulo.language.psi.PsiReference;
 import consulo.language.psi.ResolveResult;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.search.DefinitionsScopedSearch;
 import consulo.language.psi.search.DefinitionsScopedSearchExecutor;
 import consulo.language.psi.search.ReferencesSearch;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko

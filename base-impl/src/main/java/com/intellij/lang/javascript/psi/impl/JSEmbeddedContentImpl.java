@@ -29,7 +29,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.xml.psi.xml.XmlTag;
 import consulo.xml.psi.xml.XmlTagChild;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.

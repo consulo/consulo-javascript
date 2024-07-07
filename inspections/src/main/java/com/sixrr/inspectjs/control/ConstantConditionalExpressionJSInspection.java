@@ -10,8 +10,7 @@ import consulo.language.util.IncorrectOperationException;
 import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.BoolUtils;
 import consulo.language.editor.inspection.ProblemDescriptor;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class ConstantConditionalExpressionJSInspection

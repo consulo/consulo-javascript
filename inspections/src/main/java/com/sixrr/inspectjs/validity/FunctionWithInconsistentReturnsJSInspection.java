@@ -10,8 +10,8 @@ import com.sixrr.inspectjs.*;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
 import consulo.language.editor.inspection.ProblemHighlightType;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class FunctionWithInconsistentReturnsJSInspection extends JavaScriptInspection

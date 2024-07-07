@@ -19,8 +19,7 @@ package com.intellij.lang.javascript.impl.formatter.blocks;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
 import consulo.language.codeStyle.Alignment;
 import consulo.language.codeStyle.Block;
 import consulo.language.codeStyle.Indent;
@@ -29,6 +28,7 @@ import consulo.language.codeStyle.Wrap;
 import consulo.language.ast.ASTNode;
 import consulo.document.util.TextRange;
 import consulo.language.codeStyle.ChildAttributes;
+import jakarta.annotation.Nullable;
 
 /**
  * @author yole

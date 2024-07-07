@@ -2,8 +2,8 @@ package consulo.json.jom.proxy.impl;
 
 import java.lang.reflect.Type;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.json.jom.proxy.JomBadValueExpressionException;
 import consulo.json.jom.proxy.JomValueConverter;

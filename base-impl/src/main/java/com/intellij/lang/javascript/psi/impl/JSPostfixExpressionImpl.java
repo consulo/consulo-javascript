@@ -25,7 +25,7 @@ import consulo.javascript.language.psi.JavaScriptType;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * User: max

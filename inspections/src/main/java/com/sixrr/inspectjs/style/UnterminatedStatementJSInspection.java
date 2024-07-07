@@ -12,9 +12,9 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 import consulo.xml.psi.xml.XmlAttributeValue;
 import consulo.xml.psi.xml.XmlTagChild;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class UnterminatedStatementJSInspection extends JavaScriptInspection

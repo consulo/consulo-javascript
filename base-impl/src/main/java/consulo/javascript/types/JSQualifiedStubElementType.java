@@ -22,9 +22,8 @@ import consulo.javascript.impl.language.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.stubs.JSQualifiedStub;
 import consulo.javascript.language.psi.stub.JavaScriptIndexKeys;
 import consulo.language.psi.stub.IndexSink;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
-
-import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL

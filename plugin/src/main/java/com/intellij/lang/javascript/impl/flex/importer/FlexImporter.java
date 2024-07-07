@@ -22,9 +22,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.annotation.Nonnull;
-
 import consulo.language.psi.stub.StubElement;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
 /**

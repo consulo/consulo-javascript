@@ -1,9 +1,8 @@
 package com.sixrr.inspectjs.functionmetrics;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.psi.*;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
+import jakarta.annotation.Nonnull;
 
 class CyclomaticComplexityVisitor extends JSRecursiveElementVisitor {
     private int complexity = 1;

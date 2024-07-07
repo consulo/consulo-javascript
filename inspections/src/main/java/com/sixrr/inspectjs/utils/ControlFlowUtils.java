@@ -1,12 +1,12 @@
 package com.sixrr.inspectjs.utils;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import com.intellij.lang.javascript.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class ControlFlowUtils {
     private ControlFlowUtils() {

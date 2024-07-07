@@ -16,9 +16,9 @@
 
 package com.intellij.lang.javascript.psi;
 
-import javax.annotation.Nullable;
 import com.intellij.lang.javascript.psi.stubs.JSNamespaceDeclarationStub;
 import consulo.language.psi.StubBasedPsiElement;
+import jakarta.annotation.Nullable;
 
 /**
  * @by Maxim.Mossienko

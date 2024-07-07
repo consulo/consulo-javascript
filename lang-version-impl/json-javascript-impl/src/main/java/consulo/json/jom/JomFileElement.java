@@ -22,7 +22,7 @@ import consulo.json.jom.proxy.JomProxyInvocationHandler;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.util.lang.lazy.LazyValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**

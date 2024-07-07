@@ -26,7 +26,7 @@ import consulo.language.ast.IElementTypeAsPsiFactory;
 import consulo.language.psi.stub.IStubElementType;
 import consulo.language.psi.stub.IndexSink;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class JSStubElementType<StubT extends JSStubElement<PsiT>, PsiT extends JSElement> extends IStubElementType<StubT, PsiT> implements IElementTypeAsPsiFactory
 {

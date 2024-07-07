@@ -1,7 +1,7 @@
 package com.sixrr.inspectjs.utils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import consulo.javascript.language.psi.JavaScriptType;
 import com.intellij.lang.javascript.psi.*;
 import consulo.language.psi.PsiElement;

@@ -21,8 +21,7 @@ import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class JSDocTagManipulator extends JSAbstractElementManipulator<JSDocTag>

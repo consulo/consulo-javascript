@@ -8,7 +8,7 @@ import consulo.language.editor.highlight.LanguageVersionableSyntaxHighlighterFac
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.version.LanguageVersion;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

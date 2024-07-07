@@ -27,7 +27,7 @@ import consulo.language.parser.PsiBuilder;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 
 /**

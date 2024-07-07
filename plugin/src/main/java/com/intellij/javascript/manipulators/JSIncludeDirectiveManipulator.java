@@ -20,7 +20,7 @@ import com.intellij.lang.javascript.psi.impl.JSIncludeDirectiveImpl;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author peter

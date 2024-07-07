@@ -5,8 +5,8 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.javascript.psi.stubs.JSFileStub;
 import consulo.language.psi.stub.IndexSink;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
 /**
  * @author VISTALL
  * @since 19.07.2015

@@ -25,8 +25,8 @@ import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.annotation.access.RequiredReadAction;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -80,7 +80,7 @@ public class JSVarStatementImpl extends JSStubbedStatementImpl<JSVarStatementStu
 
 	@Override
 	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent,
-			@Nonnull PsiElement place)
+									   @Nonnull PsiElement place)
 	{
 		final JSVariable[] vars = getVariables();
 

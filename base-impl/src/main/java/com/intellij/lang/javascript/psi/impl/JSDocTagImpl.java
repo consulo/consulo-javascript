@@ -28,9 +28,8 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.util.collection.ArrayUtil;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
-
-import javax.annotation.Nonnull;
 
 public class JSDocTagImpl extends JSElementImpl implements JSDocTag
 {

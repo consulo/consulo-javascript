@@ -19,8 +19,8 @@ package com.intellij.lang.javascript.impl.flex.importer;
 import java.util.LinkedList;
 
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.stubs.impl.JSAttributeNameValuePairStubImpl;
 import com.intellij.lang.javascript.psi.stubs.impl.JSReferenceListStubImpl;

@@ -10,7 +10,7 @@ import consulo.language.lexer.Lexer;
 import consulo.xml.lang.HtmlScriptContentProvider;
 import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

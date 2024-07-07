@@ -3,7 +3,7 @@ package consulo.javascript.psi.stubs;
 import com.intellij.lang.javascript.psi.JSFile;
 import consulo.language.psi.stub.PsiFileStub;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -24,8 +24,8 @@ import consulo.javascript.language.JavaScriptLanguage;
 import consulo.javascript.language.StandardJavaScriptVersion;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.lexer.Lexer;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**

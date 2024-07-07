@@ -22,7 +22,7 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.JSWhileStatement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * User: max

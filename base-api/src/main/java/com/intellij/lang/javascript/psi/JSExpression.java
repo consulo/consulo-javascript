@@ -20,7 +20,7 @@ import consulo.util.collection.ArrayFactory;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.language.psi.JavaScriptType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max

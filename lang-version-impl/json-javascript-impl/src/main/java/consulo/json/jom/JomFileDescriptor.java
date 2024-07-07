@@ -22,7 +22,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

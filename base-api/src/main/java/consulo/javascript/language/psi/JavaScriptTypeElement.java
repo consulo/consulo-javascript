@@ -16,9 +16,8 @@
 
 package consulo.javascript.language.psi;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import com.intellij.lang.javascript.psi.JSElement;
-import consulo.javascript.language.psi.JavaScriptType;
 
 /**
  * @author VISTALL

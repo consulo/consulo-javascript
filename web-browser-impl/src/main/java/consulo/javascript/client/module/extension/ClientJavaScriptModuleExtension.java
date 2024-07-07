@@ -16,8 +16,8 @@ import consulo.module.content.layer.extension.SdkModuleInheritableNamedPointerIm
 import consulo.module.extension.ModuleInheritableNamedPointer;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

@@ -43,8 +43,8 @@ import consulo.util.lang.ref.Ref;
 import consulo.xml.psi.xml.XmlToken;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Collections;

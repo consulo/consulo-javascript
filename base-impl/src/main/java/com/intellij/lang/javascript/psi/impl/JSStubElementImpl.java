@@ -31,8 +31,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
 import consulo.util.dataholder.Key;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * User: max

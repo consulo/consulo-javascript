@@ -3,7 +3,7 @@ package com.sixrr.inspectjs.bugs;
 import com.intellij.lang.javascript.psi.*;
 import consulo.language.psi.PsiElement;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class RecursionVisitor extends JSRecursiveElementVisitor {
 

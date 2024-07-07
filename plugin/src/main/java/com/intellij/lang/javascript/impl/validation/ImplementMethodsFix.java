@@ -26,9 +26,8 @@ import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
-
-import javax.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko

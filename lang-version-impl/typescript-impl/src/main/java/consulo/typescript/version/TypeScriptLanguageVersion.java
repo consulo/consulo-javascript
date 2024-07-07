@@ -5,7 +5,7 @@ import consulo.javascript.ecmascript.lang.BaseEcmaScriptJavaScriptVersion;
 import consulo.javascript.language.JavaScriptFeature;
 import consulo.javascript.language.JavaScriptLanguage;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

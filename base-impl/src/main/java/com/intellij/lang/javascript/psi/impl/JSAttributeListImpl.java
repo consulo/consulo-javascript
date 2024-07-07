@@ -28,9 +28,9 @@ import consulo.language.ast.TokenSet;
 import consulo.language.psi.PsiElement;
 import consulo.language.ast.IElementType;
 import consulo.language.util.IncorrectOperationException;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 

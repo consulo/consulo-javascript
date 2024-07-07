@@ -38,10 +38,10 @@ import consulo.language.psi.PsiElement;
 import consulo.language.version.LanguageVersion;
 import consulo.project.Project;
 import consulo.xml.psi.xml.XmlTokenType;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author max, maxim.mossienko

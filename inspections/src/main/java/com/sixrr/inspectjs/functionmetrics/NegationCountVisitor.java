@@ -7,7 +7,7 @@ import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSPrefixExpression;
 import consulo.language.ast.IElementType;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class NegationCountVisitor extends JSRecursiveElementVisitor {
     private int negationCount = 0;

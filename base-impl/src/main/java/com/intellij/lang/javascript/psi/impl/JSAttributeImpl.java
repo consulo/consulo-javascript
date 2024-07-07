@@ -32,7 +32,7 @@ import consulo.localize.LocalizeValue;
 import consulo.util.collection.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @by Maxim.Mossienko

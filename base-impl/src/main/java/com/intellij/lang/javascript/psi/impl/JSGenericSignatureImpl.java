@@ -20,7 +20,7 @@ import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSGenericSignature;
 import consulo.language.ast.ASTNode;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class JSGenericSignatureImpl extends JSElementImpl implements JSGenericSignature
 {

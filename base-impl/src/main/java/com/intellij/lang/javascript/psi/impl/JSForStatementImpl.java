@@ -24,7 +24,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -129,7 +129,7 @@ public class JSForStatementImpl extends JSStatementImpl implements JSForStatemen
 
 	@Override
 	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent,
-			@Nonnull PsiElement place)
+									   @Nonnull PsiElement place)
 	{
 		if(lastParent != null)
 		{

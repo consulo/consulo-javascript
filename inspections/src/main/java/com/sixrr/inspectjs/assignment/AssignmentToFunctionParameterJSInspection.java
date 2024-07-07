@@ -12,8 +12,8 @@ import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import consulo.language.psi.PsiReference;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class AssignmentToFunctionParameterJSInspection extends JavaScriptInspection {

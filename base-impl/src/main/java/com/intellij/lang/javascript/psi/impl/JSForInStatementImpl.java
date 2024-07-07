@@ -25,7 +25,7 @@ import consulo.language.psi.resolve.ResolveState;
 import consulo.language.ast.TokenSet;
 import consulo.annotation.access.RequiredReadAction;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.

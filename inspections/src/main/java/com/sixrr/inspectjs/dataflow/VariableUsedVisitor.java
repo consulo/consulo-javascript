@@ -1,6 +1,6 @@
 package com.sixrr.inspectjs.dataflow;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;

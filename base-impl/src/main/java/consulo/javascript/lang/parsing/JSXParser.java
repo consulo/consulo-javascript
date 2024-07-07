@@ -11,8 +11,8 @@ import consulo.xml.codeInsight.daemon.XmlErrorMessages;
 import consulo.xml.psi.xml.XmlElementType;
 import consulo.xml.psi.xml.XmlTokenType;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Stack;
 
 /**

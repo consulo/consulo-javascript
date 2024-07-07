@@ -19,7 +19,7 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import consulo.annotation.access.RequiredReadAction;
 import com.intellij.lang.javascript.psi.JSParameter;
 import consulo.javascript.impl.language.psi.JSStubElementType;

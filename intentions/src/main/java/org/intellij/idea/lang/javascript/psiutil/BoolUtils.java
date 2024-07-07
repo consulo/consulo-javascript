@@ -19,9 +19,8 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import consulo.language.ast.IElementType;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
-
-import javax.annotation.Nullable;
 
 public class BoolUtils
 {

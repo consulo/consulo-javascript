@@ -16,8 +16,8 @@ import com.sixrr.inspectjs.utils.ComparisonUtils;
 import com.sixrr.inspectjs.utils.ParenthesesUtils;
 import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;

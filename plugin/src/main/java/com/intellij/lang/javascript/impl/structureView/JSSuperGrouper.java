@@ -25,11 +25,10 @@ import com.intellij.lang.javascript.psi.JSVarStatement;
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import consulo.language.psi.PsiElement;
-import consulo.ide.IdeBundle;
 import consulo.platform.base.icon.PlatformIconGroup;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;

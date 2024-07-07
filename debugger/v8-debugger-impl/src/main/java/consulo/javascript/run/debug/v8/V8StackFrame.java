@@ -25,10 +25,10 @@ import consulo.execution.debug.frame.XValueChildrenList;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
+import jakarta.annotation.Nonnull;
 import org.chromium.sdk.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 

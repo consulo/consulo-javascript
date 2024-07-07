@@ -44,8 +44,8 @@ import consulo.ui.ex.RelativePoint;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.Ref;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.function.Function;

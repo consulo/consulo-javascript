@@ -1,6 +1,6 @@
 package consulo.javascript.impl.formatter;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import consulo.language.codeStyle.ui.setting.CodeStyleAbstractConfigurable;
 import consulo.language.codeStyle.CodeStyleSettings;

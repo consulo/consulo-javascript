@@ -7,7 +7,7 @@ import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.impl.JSElementImpl;
 import consulo.annotation.access.RequiredReadAction;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

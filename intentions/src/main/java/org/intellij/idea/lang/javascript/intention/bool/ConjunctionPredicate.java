@@ -19,10 +19,9 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
+import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
-
-import javax.annotation.Nonnull;
 
 class ConjunctionPredicate implements JSElementPredicate
 {

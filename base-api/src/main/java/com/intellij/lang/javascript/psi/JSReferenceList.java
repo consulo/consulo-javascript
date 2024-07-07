@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript.psi;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import consulo.annotation.access.RequiredReadAction;
 import com.intellij.lang.javascript.psi.stubs.JSReferenceListStub;

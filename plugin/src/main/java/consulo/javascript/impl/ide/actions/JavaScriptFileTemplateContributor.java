@@ -3,8 +3,7 @@ package consulo.javascript.impl.ide.actions;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.fileTemplate.FileTemplateContributor;
 import consulo.fileTemplate.FileTemplateRegistrator;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -22,11 +22,11 @@ import com.intellij.lang.javascript.psi.JSVariable;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.xml.psi.xml.XmlFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.intellij.idea.lang.javascript.intention.JSElementIterator;
 import org.intellij.idea.lang.javascript.intention.JSFunctionVisitor;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

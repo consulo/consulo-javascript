@@ -20,13 +20,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import consulo.application.AllIcons;
 import consulo.fileEditor.structureView.tree.Group;
 import consulo.navigation.ItemPresentation;
 import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Maxim.Mossienko

@@ -11,7 +11,7 @@ import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class TextLabelInSwitchStatementJSInspection extends JavaScriptInspection {

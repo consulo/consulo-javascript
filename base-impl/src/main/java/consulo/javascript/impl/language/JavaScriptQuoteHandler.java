@@ -27,8 +27,7 @@ import consulo.language.editor.action.JavaLikeQuoteHandler;
 import consulo.language.editor.action.SimpleTokenSetQuoteHandler;
 import consulo.language.psi.PsiElement;
 import consulo.virtualFileSystem.fileType.FileType;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

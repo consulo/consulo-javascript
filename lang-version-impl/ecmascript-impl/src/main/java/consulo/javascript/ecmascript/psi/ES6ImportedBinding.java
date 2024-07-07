@@ -3,8 +3,7 @@ package consulo.javascript.ecmascript.psi;
 import com.intellij.lang.javascript.psi.JSElement;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiNameIdentifierOwner;
-
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

@@ -12,7 +12,7 @@ import consulo.language.util.IncorrectOperationException;
 import com.sixrr.inspectjs.*;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class UnnecessaryLabelJSInspection extends JavaScriptInspection {

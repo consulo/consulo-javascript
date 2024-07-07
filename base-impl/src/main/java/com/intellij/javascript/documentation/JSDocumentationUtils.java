@@ -37,8 +37,8 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -808,7 +808,7 @@ public class JSDocumentationUtils
 	}
 
 	public static void appendHyperLinkToElement(@Nullable PsiElement element, String elementName, final StringBuilder buffer,
-			final String presentableName, final @Nullable String presentableFileName)
+												final String presentableName, final @Nullable String presentableFileName)
 	{
 		final PsiFile containingFile = element != null ? element.getContainingFile() : null;
 		String fileName = containingFile == null ? null : !JSResolveUtil.isPredefinedFile(containingFile) ? containingFile.getVirtualFile()

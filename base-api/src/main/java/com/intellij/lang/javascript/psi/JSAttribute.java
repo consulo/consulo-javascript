@@ -16,12 +16,11 @@
 
 package com.intellij.lang.javascript.psi;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.psi.stubs.JSAttributeStub;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.StubBasedPsiElement;
 import consulo.util.collection.ArrayFactory;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author  Maxim.Mossienko

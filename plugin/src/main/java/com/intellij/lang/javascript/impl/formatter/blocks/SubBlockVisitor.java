@@ -29,8 +29,8 @@ import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.ast.IElementType;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
+import jakarta.annotation.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -25,7 +25,7 @@ import consulo.javascript.impl.language.psi.stub.JSFileStubImpl;
 import consulo.language.Language;
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**

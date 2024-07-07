@@ -8,7 +8,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.language.psi.JavaScriptType;
 import consulo.language.ast.ASTNode;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

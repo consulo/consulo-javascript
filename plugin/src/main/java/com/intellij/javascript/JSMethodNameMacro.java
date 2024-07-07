@@ -29,7 +29,7 @@ import consulo.language.editor.template.macro.Macro;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class JSMethodNameMacro extends Macro

@@ -28,7 +28,7 @@ import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author yole

@@ -44,7 +44,7 @@ import consulo.util.collection.primitive.objects.ObjectMaps;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.HashSet;

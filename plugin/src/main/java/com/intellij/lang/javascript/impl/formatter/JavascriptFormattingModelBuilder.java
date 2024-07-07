@@ -28,7 +28,7 @@ import consulo.language.codeStyle.*;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class JavascriptFormattingModelBuilder implements FormattingModelBuilder

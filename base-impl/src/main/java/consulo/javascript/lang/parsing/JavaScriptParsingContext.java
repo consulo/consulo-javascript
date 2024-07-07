@@ -3,8 +3,7 @@ package consulo.javascript.lang.parsing;
 import com.intellij.lang.javascript.JSTokenTypes;
 import consulo.language.ast.IElementType;
 import consulo.language.parser.PsiBuilder;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

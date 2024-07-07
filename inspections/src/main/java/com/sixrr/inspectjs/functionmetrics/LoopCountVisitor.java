@@ -2,7 +2,7 @@ package com.sixrr.inspectjs.functionmetrics;
 
 import com.intellij.lang.javascript.psi.*;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class LoopCountVisitor extends JSRecursiveElementVisitor {
     private int loopCount = 0;

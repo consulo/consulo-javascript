@@ -35,7 +35,7 @@ import consulo.xml.psi.html.HtmlTag;
 import consulo.xml.psi.xml.*;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko

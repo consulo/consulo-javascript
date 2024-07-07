@@ -2,8 +2,7 @@ package consulo.javascript.module.extension;
 
 import consulo.language.version.LanguageVersion;
 import consulo.module.extension.ModuleExtensionWithSdk;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

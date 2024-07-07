@@ -19,8 +19,7 @@ package com.intellij.lang.javascript.psi;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
 import consulo.util.collection.ArrayFactory;
-
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * User: max

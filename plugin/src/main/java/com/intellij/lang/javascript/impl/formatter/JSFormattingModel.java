@@ -16,8 +16,6 @@
 
 package com.intellij.lang.javascript.impl.formatter;
 
-import javax.annotation.Nonnull;
-
 import consulo.language.codeStyle.FormattingModel;
 import consulo.language.codeStyle.FormattingModelProvider;
 import consulo.language.ast.ASTNode;
@@ -26,6 +24,7 @@ import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.Block;
 import consulo.language.codeStyle.FormattingDocumentModel;
 import consulo.language.psi.PsiFile;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author ven

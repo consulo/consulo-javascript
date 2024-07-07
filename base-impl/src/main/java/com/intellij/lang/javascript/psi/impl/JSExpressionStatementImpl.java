@@ -28,7 +28,7 @@ import consulo.language.psi.resolve.ResolveState;
 import consulo.navigation.ItemPresentation;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.

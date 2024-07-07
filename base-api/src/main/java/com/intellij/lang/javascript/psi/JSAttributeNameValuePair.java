@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript.psi;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeNameValuePairStub;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.StubBasedPsiElement;

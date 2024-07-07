@@ -36,8 +36,8 @@ import consulo.util.collection.ArrayFactory;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -339,7 +339,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 
 	@Override
 	public boolean processDeclarations(@Nonnull final PsiScopeProcessor processor, @Nonnull final ResolveState substitutor,
-			final PsiElement lastParent, @Nonnull final PsiElement place)
+									   final PsiElement lastParent, @Nonnull final PsiElement place)
 	{
 		final ResolveProcessor resolveProcessor = processor instanceof ResolveProcessor ? (ResolveProcessor) processor : null;
 		final boolean toProcessClass = resolveProcessor != null && resolveProcessor.isTypeContext();

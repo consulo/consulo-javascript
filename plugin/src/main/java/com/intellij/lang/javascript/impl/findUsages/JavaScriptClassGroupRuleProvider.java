@@ -22,8 +22,7 @@ import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.usage.UsageGroup;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko

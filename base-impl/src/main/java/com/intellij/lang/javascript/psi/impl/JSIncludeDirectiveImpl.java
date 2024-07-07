@@ -30,7 +30,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.path.FileReferenceSet;
 import consulo.javascript.lang.JavaScriptTokenSets;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @by Maxim.Mossienko

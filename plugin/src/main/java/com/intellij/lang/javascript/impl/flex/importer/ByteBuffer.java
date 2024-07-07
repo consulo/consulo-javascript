@@ -22,7 +22,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.zip.InflaterInputStream;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko

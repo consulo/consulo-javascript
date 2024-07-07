@@ -10,7 +10,7 @@ import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RenameRefactoring;
 import com.sixrr.inspectjs.InspectionJSFix;
 import com.sixrr.inspectjs.InspectionJSBundle;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class RenameFix extends InspectionJSFix {
     private final String m_targetName;

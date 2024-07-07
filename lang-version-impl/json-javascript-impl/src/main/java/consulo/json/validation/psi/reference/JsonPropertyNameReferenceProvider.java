@@ -24,9 +24,8 @@ import consulo.json.validation.descriptor.JsonPropertyDescriptor;
 import consulo.json.validation.inspections.PropertyValidationInspection;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

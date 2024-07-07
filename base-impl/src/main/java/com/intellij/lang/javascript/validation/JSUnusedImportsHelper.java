@@ -38,8 +38,8 @@ import consulo.xml.psi.xml.XmlAttributeValue;
 import consulo.xml.psi.xml.XmlFile;
 import consulo.xml.psi.xml.XmlTag;
 import consulo.xml.psi.xml.XmlText;
+import jakarta.annotation.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 public class JSUnusedImportsHelper
@@ -324,7 +324,7 @@ public class JSUnusedImportsHelper
 	}
 
 	private static void collectElements(@Nullable final XmlTag rootTag, final PsiFile file, final Map<XmlTag, Collection<PsiElement>> result,
-			final Collection<JSFile> processedFiles)
+										final Collection<JSFile> processedFiles)
 	{
 		if(processedFiles.contains(file))
 		{

@@ -11,8 +11,8 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.language.psi.JavaScriptType;
 import consulo.javascript.language.psi.JavaScriptTypeElement;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

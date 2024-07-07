@@ -25,7 +25,7 @@ import consulo.javascript.language.psi.stub.JavaScriptIndexKeys;
 import consulo.language.psi.stub.StringStubIndexExtension;
 import consulo.language.psi.stub.StubIndexKey;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

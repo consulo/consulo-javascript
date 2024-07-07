@@ -1,9 +1,6 @@
 package com.sixrr.inspectjs.naming;
 
-import consulo.configurable.UnnamedConfigurable;
 import consulo.language.editor.inspection.InspectionToolState;
-
-import javax.annotation.Nullable;
 
 /**
  * @author VISTALL

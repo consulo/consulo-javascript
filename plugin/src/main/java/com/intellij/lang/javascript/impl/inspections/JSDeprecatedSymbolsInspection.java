@@ -29,7 +29,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.ResolveResult;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @by Maxim.Mossienko

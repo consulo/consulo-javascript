@@ -24,7 +24,7 @@ import consulo.javascript.language.JavaScriptLanguageVersion;
 import consulo.language.psi.PsiElement;
 import consulo.language.version.LanguageVersion;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

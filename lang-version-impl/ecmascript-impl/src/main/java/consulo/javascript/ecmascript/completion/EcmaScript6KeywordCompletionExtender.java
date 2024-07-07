@@ -7,8 +7,7 @@ import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.language.util.ProcessingContext;
 import consulo.javascript.ide.completion.JavaScriptKeywordCompletionExtender;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

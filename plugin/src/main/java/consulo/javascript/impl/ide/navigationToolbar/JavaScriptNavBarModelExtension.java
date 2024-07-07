@@ -7,9 +7,9 @@ import com.intellij.lang.javascript.impl.structureView.JSStructureItemPresentati
 import consulo.language.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.language.JavaScriptLanguage;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

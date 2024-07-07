@@ -21,7 +21,7 @@ import consulo.ui.image.Image;
 import org.chromium.sdk.JsEvaluateContext;
 import org.chromium.sdk.JsValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

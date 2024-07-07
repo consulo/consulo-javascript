@@ -46,10 +46,11 @@ import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.undoRedo.CommandProcessor;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -3,7 +3,7 @@ package consulo.javascript.ecmascript.psi;
 import com.intellij.lang.javascript.psi.JSElement;
 import consulo.annotation.access.RequiredReadAction;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

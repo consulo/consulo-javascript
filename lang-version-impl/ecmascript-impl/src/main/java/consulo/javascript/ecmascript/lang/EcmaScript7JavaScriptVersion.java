@@ -4,7 +4,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.language.JavaScriptFeature;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

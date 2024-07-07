@@ -23,8 +23,7 @@ import com.intellij.lang.javascript.DialectOptionHolder;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.language.Language;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class BasicJavascriptNamesValidator extends JSNamesValidator

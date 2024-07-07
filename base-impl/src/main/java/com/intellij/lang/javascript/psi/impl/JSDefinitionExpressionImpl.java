@@ -23,7 +23,7 @@ import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.util.IncorrectOperationException;
 import consulo.language.ast.ASTNode;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -75,7 +75,7 @@ public class JSDefinitionExpressionImpl extends JSExpressionImpl implements JSDe
 
 	@Override
 	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent,
-			@Nonnull PsiElement place)
+									   @Nonnull PsiElement place)
 	{
 		if(lastParent == null)
 		{

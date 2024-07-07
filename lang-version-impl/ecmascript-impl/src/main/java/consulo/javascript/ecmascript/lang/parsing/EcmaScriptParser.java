@@ -21,7 +21,7 @@ import consulo.javascript.lang.parsing.JavaScriptParserBuilder;
 import consulo.javascript.lang.parsing.JavaScriptParsingContext;
 import consulo.language.parser.PsiBuilder;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

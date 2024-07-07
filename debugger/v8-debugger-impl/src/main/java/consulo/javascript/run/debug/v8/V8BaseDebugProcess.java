@@ -38,13 +38,14 @@ import consulo.process.ProcessHandler;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nullable;
 import org.chromium.sdk.Breakpoint;
 import org.chromium.sdk.DebugContext;
 import org.chromium.sdk.JavascriptVm;
 import org.chromium.sdk.Script;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;

@@ -10,8 +10,7 @@ import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class ContinueOrBreakFromFinallyBlockJSInspection extends JavaScriptInspection {

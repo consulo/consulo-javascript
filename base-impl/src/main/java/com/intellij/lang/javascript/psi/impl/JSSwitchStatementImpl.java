@@ -23,8 +23,7 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSSwitchStatement;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.TokenSet;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.

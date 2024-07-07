@@ -15,10 +15,9 @@ import com.sixrr.inspectjs.JavaScriptInspection;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.ecmascript.psi.ES6ExportDefaultAssignment;
 import consulo.language.psi.PsiElement;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 @ExtensionImpl
 public class BadExpressionStatementJSInspection extends JavaScriptInspection

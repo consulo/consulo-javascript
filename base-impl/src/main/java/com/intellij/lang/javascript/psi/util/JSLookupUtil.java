@@ -28,8 +28,8 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.javascript.language.psi.JavaScriptType;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class JSLookupUtil
 {

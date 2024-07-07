@@ -26,7 +26,7 @@ import consulo.javascript.language.StandardJavaScriptVersions;
 import consulo.javascript.module.extension.JavaScriptMutableModuleExtension;
 import consulo.ui.ex.awt.LabeledComponent;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;

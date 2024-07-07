@@ -26,8 +26,8 @@ import com.intellij.lang.javascript.psi.JSTryStatement;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Created by IntelliJ IDEA.

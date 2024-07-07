@@ -23,7 +23,7 @@ import com.intellij.lang.javascript.psi.JSParameterList;
 import com.intellij.lang.javascript.psi.stubs.JSParameterListStub;
 import consulo.language.ast.ASTNode;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.

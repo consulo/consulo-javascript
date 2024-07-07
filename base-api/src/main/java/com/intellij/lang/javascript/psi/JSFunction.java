@@ -21,8 +21,8 @@ import consulo.javascript.language.psi.JavaScriptType;
 import consulo.javascript.language.psi.JavaScriptTypeElement;
 import consulo.util.collection.ArrayFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author max

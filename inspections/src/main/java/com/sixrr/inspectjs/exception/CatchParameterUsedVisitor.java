@@ -5,7 +5,7 @@ import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.sixrr.inspectjs.JSRecursiveElementVisitor;
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class CatchParameterUsedVisitor extends JSRecursiveElementVisitor {
     private final JSParameter parameter;

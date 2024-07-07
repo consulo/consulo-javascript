@@ -10,7 +10,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 

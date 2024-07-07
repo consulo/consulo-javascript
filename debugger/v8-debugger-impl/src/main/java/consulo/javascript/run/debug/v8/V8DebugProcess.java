@@ -24,7 +24,7 @@ import consulo.annotation.UsedInPlugin;
 import org.chromium.sdk.JavascriptVmFactory;
 import org.chromium.sdk.StandaloneVm;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.net.InetSocketAddress;
 
 /**

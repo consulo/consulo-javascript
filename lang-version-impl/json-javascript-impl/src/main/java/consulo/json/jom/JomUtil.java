@@ -2,9 +2,9 @@ package consulo.json.jom;
 
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.lang.reflect.Method;
 
 /**

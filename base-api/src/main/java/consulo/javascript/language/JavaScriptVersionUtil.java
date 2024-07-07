@@ -19,7 +19,7 @@ package consulo.javascript.language;
 import consulo.language.psi.PsiElement;
 import consulo.language.version.LanguageVersion;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Set;
 

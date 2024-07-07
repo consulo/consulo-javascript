@@ -16,8 +16,6 @@
 
 package consulo.json.validation;
 
-import javax.annotation.Nullable;
-
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.CachedValuesManager;
 import consulo.json.JsonFileType;
@@ -25,6 +23,7 @@ import consulo.json.validation.descriptor.JsonObjectDescriptor;
 import consulo.language.psi.PsiFile;
 import consulo.application.util.CachedValueProvider;
 import consulo.language.psi.PsiModificationTracker;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

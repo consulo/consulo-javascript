@@ -18,8 +18,7 @@ package org.intellij.idea.lang.javascript.psiutil;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import consulo.language.ast.IElementType;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class RecursionUtil
 {

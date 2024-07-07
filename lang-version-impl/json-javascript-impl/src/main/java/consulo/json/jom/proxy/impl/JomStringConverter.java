@@ -2,7 +2,7 @@ package consulo.json.jom.proxy.impl;
 
 import java.lang.reflect.Type;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import consulo.javascript.psi.JSSimpleLiteralExpression;
 import consulo.language.psi.PsiElement;

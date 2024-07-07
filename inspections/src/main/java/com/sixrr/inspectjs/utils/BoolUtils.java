@@ -1,6 +1,6 @@
 package com.sixrr.inspectjs.utils;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
@@ -9,7 +9,7 @@ import com.intellij.lang.javascript.psi.JSParenthesizedExpression;
 import com.intellij.lang.javascript.psi.JSPrefixExpression;
 import consulo.language.ast.IElementType;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 
 public class BoolUtils {

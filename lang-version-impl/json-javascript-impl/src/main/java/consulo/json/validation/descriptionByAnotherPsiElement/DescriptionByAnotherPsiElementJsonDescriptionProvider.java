@@ -26,7 +26,7 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

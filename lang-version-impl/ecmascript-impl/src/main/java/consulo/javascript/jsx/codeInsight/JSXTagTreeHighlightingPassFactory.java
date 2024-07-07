@@ -10,7 +10,7 @@ import consulo.language.editor.impl.highlight.TextEditorHighlightingPassFactory;
 import consulo.language.psi.PsiFile;
 import consulo.xml.codeInsight.daemon.impl.tagTreeHighlighting.XmlTagTreeHighlightingPass;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

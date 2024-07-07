@@ -28,8 +28,8 @@ import consulo.language.editor.highlight.SyntaxHighlighterBase;
 import consulo.language.lexer.Lexer;
 import consulo.util.collection.MultiMap;
 import consulo.xml.editor.XmlHighlighterColors;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**

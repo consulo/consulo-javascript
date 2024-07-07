@@ -26,7 +26,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.language.psi.JavaScriptType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.

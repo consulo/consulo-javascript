@@ -17,7 +17,7 @@ package org.intellij.idea.lang.javascript.intention;
 
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface JSElementPredicate
 {

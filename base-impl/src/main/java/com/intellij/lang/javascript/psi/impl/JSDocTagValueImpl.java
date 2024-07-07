@@ -26,7 +26,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.text.StringTokenizer;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class JSDocTagValueImpl extends JSElementImpl implements JSDocTagValue
 {

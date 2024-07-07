@@ -5,7 +5,7 @@ import consulo.javascript.impl.language.JavaScriptQuoteHandler;
 import consulo.json.JsonFileType;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -28,10 +28,11 @@ import consulo.language.editor.CodeInsightBundle;
 import consulo.language.psi.PsiElement;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -240,7 +241,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor
 
 	@Override
 	public boolean onPatternMatch(@Nonnull MetaDocType metaDocType, @Nullable String matchName, @Nullable String matchValue,
-			@Nullable String remainingLineContent, @Nonnull final String line, final String patternMatched)
+								  @Nullable String remainingLineContent, @Nonnull final String line, final String patternMatched)
 	{
 		if(metaDocType == MetaDocType.DEFAULT)
 		{

@@ -11,7 +11,7 @@ import com.sixrr.inspectjs.*;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

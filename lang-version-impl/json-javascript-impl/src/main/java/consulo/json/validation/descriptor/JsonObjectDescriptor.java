@@ -19,13 +19,10 @@ package consulo.json.validation.descriptor;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import consulo.json.validation.NativeArray;
-import consulo.util.collection.ContainerUtil;
-import consulo.language.impl.ast.Factory;
-import consulo.util.collection.Maps;
 
 /**
  * @author VISTALL

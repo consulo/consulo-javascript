@@ -28,7 +28,7 @@ import consulo.language.psi.PsiNamedElement;
 import consulo.xml.psi.xml.XmlTag;
 import consulo.xml.psi.xml.XmlToken;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * User: max

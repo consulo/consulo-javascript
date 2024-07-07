@@ -24,8 +24,8 @@ import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.ResolveState;
+import jakarta.annotation.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;

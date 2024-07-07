@@ -1,6 +1,6 @@
 package com.sixrr.inspectjs.bugs;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import consulo.language.ast.IElementType;
 import com.intellij.lang.javascript.psi.*;

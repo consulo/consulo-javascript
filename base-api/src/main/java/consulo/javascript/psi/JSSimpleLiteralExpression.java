@@ -20,8 +20,7 @@ package consulo.javascript.psi;
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.IElementType;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

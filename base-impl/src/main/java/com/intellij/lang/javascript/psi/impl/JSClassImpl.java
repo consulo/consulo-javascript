@@ -16,7 +16,7 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NonNls;

@@ -3,8 +3,7 @@ package consulo.javascript.jsx.language;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.ecmascript.lang.EcmaScript6JavaScriptVersion;
 import consulo.javascript.language.JavaScriptLanguage;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

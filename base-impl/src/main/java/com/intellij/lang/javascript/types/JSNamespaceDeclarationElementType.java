@@ -19,8 +19,6 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import javax.annotation.Nonnull;
-
 import consulo.annotation.access.RequiredReadAction;
 import com.intellij.lang.javascript.psi.JSNamespaceDeclaration;
 import com.intellij.lang.javascript.psi.impl.JSNamespaceDeclarationImpl;
@@ -33,6 +31,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.psi.stub.StubElement;
 import consulo.language.psi.stub.StubInputStream;
 import consulo.language.psi.stub.StubOutputStream;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko

@@ -19,8 +19,7 @@ package com.intellij.lang.javascript.psi;
 import com.intellij.lang.javascript.psi.stubs.JSVarStatementStub;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.StubBasedPsiElement;
-
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Created by IntelliJ IDEA.

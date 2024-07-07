@@ -18,10 +18,10 @@ package consulo.javascript.run.debug.v8;
 
 import consulo.execution.debug.frame.XExecutionStack;
 import consulo.execution.debug.frame.XStackFrame;
+import jakarta.annotation.Nullable;
 import org.chromium.sdk.CallFrame;
 import org.chromium.sdk.DebugContext;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 

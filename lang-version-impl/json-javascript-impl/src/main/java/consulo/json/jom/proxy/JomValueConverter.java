@@ -8,8 +8,8 @@ import consulo.json.jom.JomElement;
 import consulo.json.jom.proxy.impl.*;
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.*;

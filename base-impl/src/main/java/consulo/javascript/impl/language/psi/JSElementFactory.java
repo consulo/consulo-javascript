@@ -20,8 +20,7 @@ import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.impl.JSExpressionCodeFragmentImpl;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

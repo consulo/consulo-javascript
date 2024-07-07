@@ -22,8 +22,8 @@ import com.intellij.lang.javascript.psi.impl.JSElementImpl;
 import consulo.javascript.psi.JSComputedName;
 import consulo.language.ast.ASTNode;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

@@ -18,8 +18,7 @@ package com.intellij.lang.javascript.psi.impl;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
 
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -38,6 +37,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.language.file.FileViewProvider;
 import consulo.language.impl.psi.PsiFileBase;
+import jakarta.annotation.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -61,7 +61,7 @@ public class JSFileImpl extends PsiFileBase implements JSFile
 
 	@Override
 	public boolean processDeclarations(@Nonnull final PsiScopeProcessor processor, @Nonnull final ResolveState state, @Nullable PsiElement lastParent,
-			@Nonnull PsiElement place)
+									   @Nonnull PsiElement place)
 	{
 		boolean result = JSResolveUtil.processDeclarationsInScope(this, processor, state, lastParent, place);
 		if(lastParent == null)

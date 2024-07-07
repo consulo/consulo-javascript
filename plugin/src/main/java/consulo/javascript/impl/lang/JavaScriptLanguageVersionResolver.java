@@ -32,8 +32,8 @@ import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionResolver;
 import consulo.language.Language;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

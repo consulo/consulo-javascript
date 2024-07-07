@@ -22,8 +22,7 @@ import consulo.javascript.ecmascript.codeInsight.quickFixes.EcmaScript6CreateJSF
 import consulo.javascript.ecmascript.lang.BaseEcmaScriptJavaScriptVersion;
 import consulo.javascript.ide.codeInsight.JavaScriptQuickFixFactory;
 import consulo.javascript.language.JavaScriptLanguageVersion;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

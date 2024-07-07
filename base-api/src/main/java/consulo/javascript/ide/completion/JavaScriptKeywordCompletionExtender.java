@@ -7,7 +7,7 @@ import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.CompletionResultSet;
 import consulo.language.util.ProcessingContext;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

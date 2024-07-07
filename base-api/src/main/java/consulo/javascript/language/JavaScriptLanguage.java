@@ -20,8 +20,8 @@ import consulo.language.Language;
 import consulo.language.file.LanguageFileType;
 import consulo.language.version.LanguageVersion;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 

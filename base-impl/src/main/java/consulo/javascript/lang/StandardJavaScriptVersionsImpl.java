@@ -8,10 +8,10 @@ import consulo.javascript.language.StandardJavaScriptVersion;
 import consulo.javascript.language.StandardJavaScriptVersions;
 import consulo.language.version.LanguageVersion;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 

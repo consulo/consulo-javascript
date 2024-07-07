@@ -6,7 +6,7 @@ import consulo.language.editor.rawHighlight.HighlightVisitor;
 import consulo.language.editor.rawHighlight.HighlightVisitorFactory;
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

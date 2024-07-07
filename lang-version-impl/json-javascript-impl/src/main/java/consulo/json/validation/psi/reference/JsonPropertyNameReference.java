@@ -16,14 +16,13 @@
 
 package consulo.json.validation.psi.reference;
 
-import javax.annotation.Nullable;
-
 import consulo.annotation.access.RequiredReadAction;
 import consulo.json.validation.descriptor.JsonPropertyDescriptor;
 import consulo.json.validation.inspections.PropertyValidationInspection;
 import com.intellij.lang.javascript.psi.JSProperty;
 import com.intellij.lang.javascript.psi.impl.reference.JSPropertyNameReference;
 import consulo.language.psi.PsiElement;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

@@ -21,7 +21,7 @@ import java.util.Set;
 
 import consulo.util.collection.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import consulo.util.lang.StringUtil;
 
 /**

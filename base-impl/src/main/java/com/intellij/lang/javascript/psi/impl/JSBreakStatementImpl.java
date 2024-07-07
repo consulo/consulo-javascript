@@ -19,8 +19,7 @@ package com.intellij.lang.javascript.psi.impl;
 import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.

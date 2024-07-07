@@ -14,8 +14,8 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.xml.psi.xml.XmlAttributeValue;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class ThisExpressionReferencesGlobalObjectJSInspection extends JavaScriptInspection {

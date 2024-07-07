@@ -8,7 +8,7 @@ import consulo.javascript.impl.language.psi.JSStubElementType;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

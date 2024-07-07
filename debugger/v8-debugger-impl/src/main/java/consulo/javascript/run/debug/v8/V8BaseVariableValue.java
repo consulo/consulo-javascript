@@ -22,8 +22,8 @@ import consulo.execution.debug.frame.presentation.XValuePresentation;
 import consulo.ui.image.Image;
 import org.chromium.sdk.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 
 /**

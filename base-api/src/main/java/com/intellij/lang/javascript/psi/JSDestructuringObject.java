@@ -2,7 +2,7 @@ package com.intellij.lang.javascript.psi;
 
 import consulo.annotation.access.RequiredReadAction;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

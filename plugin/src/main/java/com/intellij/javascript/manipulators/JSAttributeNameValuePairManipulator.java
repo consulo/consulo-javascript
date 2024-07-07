@@ -23,7 +23,7 @@ import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
