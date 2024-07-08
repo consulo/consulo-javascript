@@ -98,7 +98,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
           elementRange.getStartOffset() + textRange.getStartOffset(),
           elementRange.getStartOffset() + textRange.getEndOffset()
         );
-        final LocalizeValue value = ((EmptyResolveMessageProvider) ref).buildUnresolvedMessaged(ref.getCanonicalText());
+        final LocalizeValue value = ((EmptyResolveMessageProvider) ref).buildUnresolvedMessage(ref.getCanonicalText());
         AnnotationBuilder builder = myHolder.newAnnotation(kind, value);
         builder = builder.range(range);
 

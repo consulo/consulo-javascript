@@ -551,7 +551,7 @@ public class JSReferenceSet
 
 		@Nonnull
 		@Override
-		public LocalizeValue buildUnresolvedMessaged(@Nonnull String text)
+		public LocalizeValue buildUnresolvedMessage(@Nonnull String text)
 		{
 			text = "'" + text.replace("'", "''") + "'";
 			return JavaScriptLocalize.javascriptUnresolvedVariableOrTypeNameMessage2(text);

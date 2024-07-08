@@ -327,7 +327,7 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag
 
 		@Nonnull
 		@Override
-		public LocalizeValue buildUnresolvedMessaged(@Nonnull String referenceText)
+		public LocalizeValue buildUnresolvedMessage(@Nonnull String referenceText)
 		{
 			return JavaScriptLocalize.javascriptValidationMessageIncorrectParameterName();
 		}

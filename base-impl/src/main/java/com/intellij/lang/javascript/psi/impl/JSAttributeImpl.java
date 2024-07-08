@@ -214,7 +214,7 @@ public class JSAttributeImpl extends JSStubElementImpl<JSAttributeStub> implemen
 
 		@Nonnull
 		@Override
-		public LocalizeValue buildUnresolvedMessaged(@Nonnull String referenceText)
+		public LocalizeValue buildUnresolvedMessage(@Nonnull String referenceText)
 		{
 			return LocalizeValue.localizeTODO("Unknown metadata tag");
 		}
