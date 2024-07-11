@@ -24,6 +24,7 @@ import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.parser.PsiBuilder;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 
@@ -72,7 +73,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 		}
 		else if(firstToken == JSTokenTypes.REGEXP_LITERAL)
 		{
-			String errorMessage = validateLiteral(builder);
+			LocalizeValue errorMessage = validateLiteral(builder);
 			Parsing.buildTokenElement(JSElementTypes.REGEXP_LITERAL_EXPRESSION, builder);
 			if(errorMessage != null)
 			{
@@ -89,7 +90,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 				firstToken == JSTokenTypes.FALSE_KEYWORD ||
 				firstToken == JSTokenTypes.TRUE_KEYWORD)
 		{
-			String errorMessage = validateLiteral(builder);
+			LocalizeValue errorMessage = validateLiteral(builder);
 			Parsing.buildTokenElement(JSElementTypes.LITERAL_EXPRESSION, builder);
 			if(errorMessage != null)
 			{
@@ -176,7 +177,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 	}
 
 	@Nullable
-	public static String validateLiteral(final PsiBuilder builder)
+	public static LocalizeValue validateLiteral(final PsiBuilder builder)
 	{
 		final IElementType ttype = builder.getTokenType();
 		if(ttype == JSTokenTypes.STRING_LITERAL || ttype == JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL)
@@ -188,7 +189,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 					ttext.startsWith("\"") && (!ttext.endsWith("\"") || ttext.length() == 1) ||
 					ttext.startsWith("\'") && (!ttext.endsWith("\'") || ttext.length() == 1))
 			{
-				return JavaScriptLocalize.javascriptParserMessageUnclosedStringLiteral().get();
+				return JavaScriptLocalize.javascriptParserMessageUnclosedStringLiteral();
 			}
 		}
 

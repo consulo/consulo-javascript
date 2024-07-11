@@ -7,12 +7,13 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.ILazyParseableElementType;
 import consulo.language.ast.TokenType;
 import consulo.language.parser.PsiBuilder;
-import consulo.xml.codeInsight.daemon.XmlErrorMessages;
+import consulo.localize.LocalizeValue;
+import consulo.xml.impl.localize.XmlErrorLocalize;
 import consulo.xml.psi.xml.XmlElementType;
 import consulo.xml.psi.xml.XmlTokenType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Stack;
 
 /**
@@ -48,7 +49,7 @@ public class JSXParser
 		return myBuilder.getTokenType();
 	}
 
-	private void error(String error)
+	private void error(LocalizeValue error)
 	{
 		myBuilder.error(error);
 	}
@@ -65,7 +66,7 @@ public class JSXParser
 		{
 			final PsiBuilder.Marker error = mark();
 			advance();
-			error.error(XmlErrorMessages.message("xml.parsing.multiple.root.tags"));
+			error.error(XmlErrorLocalize.xmlParsingMultipleRootTags());
 		}
 		else
 		{
@@ -75,7 +76,7 @@ public class JSXParser
 		final String tagName;
 		if(token() != JSTokenTypes.XML_NAME || myBuilder.rawLookup(-1) == TokenType.WHITE_SPACE)
 		{
-			error(XmlErrorMessages.message("xml.parsing.tag.name.expected"));
+			error(XmlErrorLocalize.xmlParsingTagNameExpected());
 			tagName = "";
 		}
 		else
@@ -118,7 +119,7 @@ public class JSXParser
 		}
 		else
 		{
-			error(XmlErrorMessages.message("tag.start.is.not.closed"));
+			error(XmlErrorLocalize.tagStartIsNotClosed());
 			myTagNamesStack.pop();
 			tag.done(JSElementTypes.XML_LITERAL_EXPRESSION);
 			return null;
@@ -126,7 +127,7 @@ public class JSXParser
 
 		if(myTagNamesStack.size() > BALANCING_DEPTH_THRESHOLD)
 		{
-			error(XmlErrorMessages.message("way.too.unbalanced"));
+			error(XmlErrorLocalize.wayTooUnbalanced());
 			tag.done(JSElementTypes.XML_LITERAL_EXPRESSION);
 			return null;
 		}
@@ -166,7 +167,7 @@ public class JSXParser
 				{
 					final PsiBuilder.Marker error = mark();
 					advance();
-					error.error(XmlErrorMessages.message("unescaped.ampersand.or.nonterminated.character.entity.reference"));
+					error.error(XmlErrorLocalize.unescapedAmpersandOrNonterminatedCharacterEntityReference());
 				}
 				else
 				{
@@ -180,7 +181,7 @@ public class JSXParser
 			}
 			else
 			{
-				error(XmlErrorMessages.message("xml.parsing.unclosed.attribute.value"));
+				error(XmlErrorLocalize.xmlParsingUnclosedAttributeValue());
 			}
 		}
 		else if(token() == JSTokenTypes.XML_JS_SCRIPT)
@@ -219,7 +220,7 @@ public class JSXParser
 				xmlText = startText(xmlText);
 				final PsiBuilder.Marker error = mark();
 				advance();
-				error.error(XmlErrorMessages.message("unescaped.ampersand.or.nonterminated.character.entity.reference"));
+				error.error(XmlErrorLocalize.unescapedAmpersandOrNonterminatedCharacterEntityReference());
 			}
 			else if(tt instanceof ICustomParsingType || tt instanceof ILazyParseableElementType)
 			{
@@ -282,7 +283,7 @@ public class JSXParser
 				{
 					footer.rollbackTo();
 					myTagNamesStack.pop();
-					tag.doneBefore(JSElementTypes.XML_LITERAL_EXPRESSION, content, XmlErrorMessages.message("named.element.is.not.closed", tagName));
+					tag.doneBefore(JSElementTypes.XML_LITERAL_EXPRESSION, content, XmlErrorLocalize.namedElementIsNotClosed(tagName));
 					content.drop();
 					return;
 				}
@@ -293,7 +294,7 @@ public class JSXParser
 
 			while(token() != XmlTokenType.XML_TAG_END && token() != XmlTokenType.XML_START_TAG_START && token() != XmlTokenType.XML_END_TAG_START && !eof())
 			{
-				error(XmlErrorMessages.message("xml.parsing.unexpected.token"));
+				error(XmlErrorLocalize.xmlParsingUnexpectedToken());
 				advance();
 			}
 
@@ -303,12 +304,12 @@ public class JSXParser
 			}
 			else
 			{
-				error(XmlErrorMessages.message("xml.parsing.closing.tag.is.not.done"));
+				error(XmlErrorLocalize.xmlParsingClosingTagIsNotDone());
 			}
 		}
 		else
 		{
-			error(XmlErrorMessages.message("xml.parsing.unexpected.end.of.file"));
+			error(XmlErrorLocalize.xmlParsingUnexpectedEndOfFile());
 		}
 
 		content.drop();

@@ -26,6 +26,7 @@ import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.breakpoint.XLineBreakpoint;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.frame.XSuspendContext;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.ui.XDebugTabLayouter;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.layout.RunnerLayoutUi;
@@ -260,19 +261,19 @@ public abstract class V8BaseDebugProcess<V extends JavascriptVm> extends XDebugP
 	@Override
 	public String getCurrentStateMessage()
 	{
-		if(myVm == null)
+		if (myVm == null)
 		{
-			return XDebuggerBundle.message("debugger.state.message.disconnected");
+			return XDebuggerLocalize.debuggerStateMessageDisconnected().get();
 		}
 		else
 		{
-			if(myVm.isAttached())
+			if (myVm.isAttached())
 			{
 				return "Attached";
 			}
 			else
 			{
-				return XDebuggerBundle.message("debugger.state.message.disconnected");
+				return XDebuggerLocalize.debuggerStateMessageDisconnected().get();
 			}
 		}
 	}
