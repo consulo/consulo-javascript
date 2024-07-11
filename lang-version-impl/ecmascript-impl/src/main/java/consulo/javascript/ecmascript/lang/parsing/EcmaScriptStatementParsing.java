@@ -271,7 +271,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 									}
 									else
 									{
-										importSpecificMark.error("Expected identifier");
+										importSpecificMark.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifier());
 									}
 								}
 
@@ -314,7 +314,7 @@ public class EcmaScriptStatementParsing extends StatementParsing
 				}
 				else
 				{
-					builder.error("Expected from target");
+					builder.error("Expected 'from' target");
 				}
 			}
 

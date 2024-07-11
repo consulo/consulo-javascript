@@ -211,7 +211,7 @@ public class FunctionParsing extends Parsing
 			{
 				PsiBuilder.Marker err = builder.mark();
 				builder.advanceLexer();
-				err.error("Expected identifier");
+				err.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifier());
 			}
 		}
 

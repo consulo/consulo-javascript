@@ -11,6 +11,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.parser.PsiBuilder;
 import consulo.language.parser.PsiParser;
 import consulo.language.version.LanguageVersion;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 
 import jakarta.annotation.Nonnull;
@@ -224,7 +225,7 @@ public class JsonJavaScriptParser implements PsiParser
 				firstToken == JSTokenTypes.FALSE_KEYWORD ||
 				firstToken == JSTokenTypes.TRUE_KEYWORD)
 		{
-			String errorMessage = ExpressionParsing.validateLiteral(builder);
+			LocalizeValue errorMessage = ExpressionParsing.validateLiteral(builder);
 			Parsing.buildTokenElement(JSElementTypes.LITERAL_EXPRESSION, builder);
 			if(errorMessage != null)
 			{
