@@ -2,13 +2,12 @@ package com.sixrr.inspectjs.confusing;
 
 import com.intellij.lang.javascript.psi.*;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.InspectionToolState;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
@@ -25,7 +24,7 @@ public class EmptyStatementBodyJSInspection extends JavaScriptInspection
 	@Nonnull
 	public String getDisplayName()
 	{
-		return InspectionJSBundle.message("statement.with.empty.body.display.name");
+		return InspectionJSLocalize.statementWithEmptyBodyDisplayName().get();
 	}
 
 	@Override
@@ -45,14 +44,9 @@ public class EmptyStatementBodyJSInspection extends JavaScriptInspection
 	@Override
 	public String buildErrorString(Object state, Object... args)
 	{
-		if(args[0] instanceof JSIfStatement)
-		{
-			return InspectionJSBundle.message("statement.has.empty.branch.error.string");
-		}
-		else
-		{
-			return InspectionJSBundle.message("statement.has.empty.body.error.string");
-		}
+		return args[0] instanceof JSIfStatement
+			? InspectionJSLocalize.statementHasEmptyBranchErrorString().get()
+			: InspectionJSLocalize.statementHasEmptyBodyErrorString().get();
 	}
 
 	@Nonnull
@@ -70,7 +64,6 @@ public class EmptyStatementBodyJSInspection extends JavaScriptInspection
 
 	private class EmptyStatementVisitor extends BaseInspectionVisitor<EmptyStatementBodyJSInspectionState>
 	{
-
 		@Override
 		public void visitJSDoWhileStatement(@Nonnull JSDoWhileStatement statement)
 		{

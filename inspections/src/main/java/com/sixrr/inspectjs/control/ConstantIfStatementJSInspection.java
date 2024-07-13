@@ -3,7 +3,11 @@ package com.sixrr.inspectjs.control;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSIfStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
-import com.sixrr.inspectjs.*;
+import com.sixrr.inspectjs.BaseInspectionVisitor;
+import com.sixrr.inspectjs.InspectionJSFix;
+import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import com.sixrr.inspectjs.utils.BoolUtils;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
@@ -11,63 +15,55 @@ import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class ConstantIfStatementJSInspection extends JavaScriptInspection {
-
     @Override
-	@Nonnull
+    @Nonnull
     public String getDisplayName() {
-        return InspectionJSBundle.message(
-                "constant.if.statement.display.name");
+        return InspectionJSLocalize.constantIfStatementDisplayName().get();
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
     @Override
-	public boolean isEnabledByDefault() {
+    public boolean isEnabledByDefault() {
         return true;
     }
 
     @RequiredReadAction
-	@Override
-	@Nonnull
+    @Override
+    @Nonnull
     protected String buildErrorString(Object state, Object... args) {
-        return InspectionJSBundle.message(
-                "constant.if.statement.problem.descriptor");
+        return InspectionJSLocalize.constantIfStatementProblemDescriptor().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new ConstantIfStatementVisitor();
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location, Object state) {
+    public InspectionJSFix buildFix(PsiElement location, Object state) {
         return new ConstantIfStatementFix();
     }
 
     private static class ConstantIfStatementFix extends InspectionJSFix {
-
         @Override
-		@Nonnull
+        @Nonnull
         public String getName() {
-            return InspectionJSBundle.message(
-                    "constant.conditional.expression.simplify.quickfix");
+            return InspectionJSLocalize.constantConditionalExpressionSimplifyQuickfix().get();
         }
 
         @Override
-		public void doFix(Project project, ProblemDescriptor descriptor)
-                throws IncorrectOperationException {
+        public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
             final PsiElement ifKeyword = descriptor.getPsiElement();
-            final JSIfStatement statement =
-                    (JSIfStatement) ifKeyword.getParent();
+            final JSIfStatement statement = (JSIfStatement) ifKeyword.getParent();
             assert statement != null;
             final JSStatement thenBranch = statement.getThen();
             final JSStatement elseBranch = statement.getElse();
@@ -83,20 +79,15 @@ public class ConstantIfStatementJSInspection extends JavaScriptInspection {
             }
         }
 
-        private static void replaceStatementWithUnwrapping(
-                JSStatement branch, JSIfStatement statement)
-                throws IncorrectOperationException {
-            {
-                final String elseText = branch.getText();
-                replaceStatement(statement, elseText);
-            }
+        private static void replaceStatementWithUnwrapping(JSStatement branch, JSIfStatement statement) throws IncorrectOperationException {
+            final String elseText = branch.getText();
+            replaceStatement(statement, elseText);
         }
     }
 
-    private static class ConstantIfStatementVisitor
-            extends BaseInspectionVisitor {
-
-        @Override public void visitJSIfStatement(JSIfStatement statement) {
+    private static class ConstantIfStatementVisitor extends BaseInspectionVisitor {
+        @Override
+        public void visitJSIfStatement(JSIfStatement statement) {
             super.visitJSIfStatement(statement);
             final JSExpression condition = statement.getCondition();
             if (condition == null) {

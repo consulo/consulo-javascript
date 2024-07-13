@@ -2,12 +2,11 @@ package com.sixrr.inspectjs.confusing;
 
 import com.intellij.lang.javascript.psi.JSConditionalExpression;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -24,7 +23,7 @@ public class ConditionalExpressionJSInspection extends JavaScriptInspection
 	@Nonnull
 	public String getDisplayName()
 	{
-		return InspectionJSBundle.message("conditional.expression.display.name");
+		return InspectionJSLocalize.conditionalExpressionDisplayName().get();
 	}
 
 	@Override
@@ -39,7 +38,7 @@ public class ConditionalExpressionJSInspection extends JavaScriptInspection
 	@Nullable
 	protected String buildErrorString(Object state, Object... args)
 	{
-		return InspectionJSBundle.message("conditional.expression.error.string");
+		return InspectionJSLocalize.conditionalExpressionErrorString().get();
 	}
 
 	@Override

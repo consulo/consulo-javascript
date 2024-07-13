@@ -2,6 +2,7 @@ package com.sixrr.inspectjs.control;
 
 import com.intellij.lang.javascript.psi.*;
 import com.sixrr.inspectjs.*;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
@@ -9,70 +10,59 @@ import consulo.language.psi.PsiElement;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-public class ForLoopThatDoesntUseLoopVariableJSInspection
-        extends JavaScriptInspection {
-
+public class ForLoopThatDoesntUseLoopVariableJSInspection extends JavaScriptInspection {
     @Override
-	@Nonnull
+    @Nonnull
     public String getDisplayName() {
-        return InspectionJSBundle.message(
-                "for.loop.not.use.loop.variable.display.name");
+        return InspectionJSLocalize.forLoopNotUseLoopVariableDisplayName().get();
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.BUGS_GROUP_NAME;
     }
 
     @RequiredReadAction
-	@Override
-	@Nonnull
+    @Override
+    @Nonnull
     public String buildErrorString(Object state, Object... args) {
         final boolean condition = (Boolean) args[0];
         final boolean update = (Boolean) args[1];
         if (condition && update) {
-            return InspectionJSBundle.message(
-                    "for.loop.not.use.loop.variable.problem.descriptor.both.condition.and.update");
+            return InspectionJSLocalize.forLoopNotUseLoopVariableProblemDescriptorBothConditionAndUpdate().get();
         }
         if (condition) {
-            return InspectionJSBundle.message(
-                    "for.loop.not.use.loop.variable.problem.descriptor.condition");
+            return InspectionJSLocalize.forLoopNotUseLoopVariableProblemDescriptorCondition().get();
         }
-        return InspectionJSBundle.message(
-                "for.loop.not.use.loop.variable.problem.descriptor.update");
+        return InspectionJSLocalize.forLoopNotUseLoopVariableProblemDescriptorUpdate().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new ForLoopThatDoesntUseLoopVariableVisitor();
     }
 
     //TODO: right now this only works with a variable declared in the for loop
     //TODO: make it work with an implicit declaration as well
-    private static class ForLoopThatDoesntUseLoopVariableVisitor
-            extends BaseInspectionVisitor {
-
-        @Override public void visitJSForStatement(@Nonnull JSForStatement statement) {
+    private static class ForLoopThatDoesntUseLoopVariableVisitor extends BaseInspectionVisitor {
+        @Override
+        public void visitJSForStatement(@Nonnull JSForStatement statement) {
             super.visitJSForStatement(statement);
             if (conditionUsesInitializer(statement)) {
                 if (!updateUsesInitializer(statement)) {
-                    registerStatementError(statement,
-                            Boolean.FALSE, Boolean.TRUE);
+                    registerStatementError(statement, Boolean.FALSE, Boolean.TRUE);
                 }
             } else {
                 if (updateUsesInitializer(statement)) {
-                    registerStatementError(statement,
-                            Boolean.TRUE, Boolean.FALSE);
+                    registerStatementError(statement, Boolean.TRUE, Boolean.FALSE);
                 } else {
-                    registerStatementError(statement,
-                            Boolean.TRUE, Boolean.TRUE);
+                    registerStatementError(statement, Boolean.TRUE, Boolean.TRUE);
                 }
             }
         }
 
-        private static boolean conditionUsesInitializer(
-                JSForStatement statement) {
+        private static boolean conditionUsesInitializer(JSForStatement statement) {
             final JSExpression condition = statement.getCondition();
             if (condition == null) {
                 return true;
@@ -105,8 +95,7 @@ public class ForLoopThatDoesntUseLoopVariableJSInspection
             return expressionUsesVariable(update, variables[0]);
         }
 
-        private static boolean expressionUsesVariable(JSExpression expression,
-                                                      JSVariable localVar) {
+        private static boolean expressionUsesVariable(JSExpression expression, JSVariable localVar) {
             final UseVisitor useVisitor = new UseVisitor(localVar);
             expression.accept(useVisitor);
             return useVisitor.isUsed();
@@ -114,7 +103,6 @@ public class ForLoopThatDoesntUseLoopVariableJSInspection
     }
 
     private static class UseVisitor extends JSRecursiveElementVisitor {
-
         private final JSVariable variable;
         private boolean used = false;
 

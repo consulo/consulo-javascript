@@ -1,12 +1,15 @@
 package com.sixrr.inspectjs.functionmetrics;
 
 import com.intellij.lang.javascript.psi.*;
-import com.sixrr.inspectjs.*;
+import com.sixrr.inspectjs.BaseInspectionVisitor;
+import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JSRecursiveElementVisitor;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
@@ -22,7 +25,7 @@ public class FunctionWithMultipleReturnPointsJSInspection extends JavaScriptInsp
 	@Nonnull
 	public String getDisplayName()
 	{
-		return InspectionJSBundle.message("function.with.multiple.return.points.display.name");
+		return InspectionJSLocalize.functionWithMultipleReturnPointsDisplayName().get();
 	}
 
 	@Override
@@ -41,11 +44,11 @@ public class FunctionWithMultipleReturnPointsJSInspection extends JavaScriptInsp
 		final int returnPointCount = countReturnPoints(function);
 		if(functionHasIdentifier(function))
 		{
-			return InspectionJSBundle.message("function.contains.multiple.return.points.error.string", returnPointCount);
+			return InspectionJSLocalize.functionContainsMultipleReturnPointsErrorString(returnPointCount).get();
 		}
 		else
 		{
-			return InspectionJSBundle.message("anonymous.function.contains.multiple.return.points.error.string", returnPointCount);
+			return InspectionJSLocalize.anonymousFunctionContainsMultipleReturnPointsErrorString(returnPointCount).get();
 		}
 	}
 
@@ -129,4 +132,3 @@ public class FunctionWithMultipleReturnPointsJSInspection extends JavaScriptInsp
 		}
 	}
 }
-

@@ -2,37 +2,36 @@ package com.sixrr.inspectjs.confusing;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.annotation.component.ExtensionImpl;
-import consulo.language.psi.PsiElement;
-import consulo.language.ast.IElementType;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class IncrementDecrementResultUsedJSInspection extends JavaScriptInspection {
-
     @Override
-	@Nonnull
+    @Nonnull
     public String getDisplayName() {
-        return InspectionJSBundle.message("result.of.increment.or.decrement.used.display.name");
+        return InspectionJSLocalize.resultOfIncrementOrDecrementUsedDisplayName().get();
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
     @RequiredReadAction
-	@Override
-	@Nullable
+    @Override
+    @Nullable
     protected String buildErrorString(Object state, Object... args) {
-        return InspectionJSBundle.message("result.of.increment.or.decrement.expression.used.error.string");
+        return InspectionJSLocalize.resultOfIncrementOrDecrementExpressionUsedErrorString().get();
     }
 
     @Override

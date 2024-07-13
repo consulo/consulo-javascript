@@ -1,17 +1,21 @@
 package com.sixrr.inspectjs.confusing;
 
-import consulo.annotation.access.RequiredReadAction;
-import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.inspection.ProblemDescriptor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
+import com.sixrr.inspectjs.BaseInspectionVisitor;
+import com.sixrr.inspectjs.InspectionJSFix;
+import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.psi.JSSimpleLiteralExpression;
-import consulo.language.util.IncorrectOperationException;
-import com.sixrr.inspectjs.*;
+import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
-import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NonNls;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,50 +23,42 @@ import java.util.regex.Pattern;
 @ExtensionImpl
 public class ConfusingFloatingPointLiteralJSInspection extends JavaScriptInspection {
     @NonNls
-    private static final Pattern pickyFloatingPointPattern =
-            Pattern.compile("[0-9]+\\.[0-9]+((e|E)(-)?[0-9]+)?(f|F|d|D)?");
+    private static final Pattern PICKY_FLOATING_POINT_PATTERN = Pattern.compile("[0-9]+\\.[0-9]+((e|E)(-)?[0-9]+)?(f|F|d|D)?");
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getDisplayName() {
-        return InspectionJSBundle.message(
-                "confusing.floating.point.literal.display.name");
+        return InspectionJSLocalize.confusingFloatingPointLiteralDisplayName().get();
     }
 
     @RequiredReadAction
-	@Override
-	@Nonnull
+    @Override
+    @Nonnull
     protected String buildErrorString(Object state, Object... args) {
-        return InspectionJSBundle.message(
-                "confusing.floating.point.literal.problem.descriptor");
+        return InspectionJSLocalize.confusingFloatingPointLiteralProblemDescriptor().get();
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location, Object state) {
+    public InspectionJSFix buildFix(PsiElement location, Object state) {
         return new ConfusingFloatingPointLiteralFix();
     }
 
-    private static class ConfusingFloatingPointLiteralFix
-            extends InspectionJSFix {
-
+    private static class ConfusingFloatingPointLiteralFix extends InspectionJSFix {
         @Override
-		@Nonnull
+        @Nonnull
         public String getName() {
-            return InspectionJSBundle.message(
-                    "confusing.floating.point.literal.change.quickfix");
+            return InspectionJSLocalize.confusingFloatingPointLiteralChangeQuickfix().get();
         }
 
         @Override
-		public void doFix(Project project, ProblemDescriptor descriptor)
-                throws IncorrectOperationException {
-            final JSExpression literalExpression =
-                    (JSExpression) descriptor.getPsiElement();
+        public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
+            final JSExpression literalExpression = (JSExpression) descriptor.getPsiElement();
             final String text = literalExpression.getText();
             final String newText = getCanonicalForm(text);
             replaceExpression(literalExpression, newText);
@@ -112,15 +108,13 @@ public class ConfusingFloatingPointLiteralJSInspection extends JavaScriptInspect
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new ConfusingFloatingPointLiteralVisitor();
     }
 
-    private static class ConfusingFloatingPointLiteralVisitor
-            extends BaseInspectionVisitor {
-
-        @Override public void visitJSLiteralExpression(
-                @Nonnull JSSimpleLiteralExpression literal) {
+    private static class ConfusingFloatingPointLiteralVisitor extends BaseInspectionVisitor {
+        @Override
+        public void visitJSLiteralExpression(@Nonnull JSSimpleLiteralExpression literal) {
             super.visitJSLiteralExpression(literal);
             final String text = literal.getText();
             if (text == null) {
@@ -137,7 +131,7 @@ public class ConfusingFloatingPointLiteralJSInspection extends JavaScriptInspect
     }
 
     private static boolean isConfusing(String text) {
-        final Matcher matcher = pickyFloatingPointPattern.matcher(text);
+        final Matcher matcher = PICKY_FLOATING_POINT_PATTERN.matcher(text);
         return !matcher.matches();
     }
 
@@ -149,5 +143,4 @@ public class ConfusingFloatingPointLiteralJSInspection extends JavaScriptInspect
         }
         return text.contains(".") || text.contains("e") || text.contains("E");
     }
-
 }

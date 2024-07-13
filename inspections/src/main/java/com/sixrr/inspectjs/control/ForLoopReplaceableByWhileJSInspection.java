@@ -4,7 +4,11 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSForStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.JSVarStatement;
-import com.sixrr.inspectjs.*;
+import com.sixrr.inspectjs.BaseInspectionVisitor;
+import com.sixrr.inspectjs.InspectionJSFix;
+import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.InspectionToolState;
@@ -12,9 +16,8 @@ import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NonNls;
 
 @ExtensionImpl
 public class ForLoopReplaceableByWhileJSInspection extends JavaScriptInspection
@@ -23,7 +26,7 @@ public class ForLoopReplaceableByWhileJSInspection extends JavaScriptInspection
 	@Nonnull
 	public String getDisplayName()
 	{
-		return InspectionJSBundle.message("for.loop.replaceable.by.while.display.name");
+		return InspectionJSLocalize.forLoopReplaceableByWhileDisplayName().get();
 	}
 
 	@Override
@@ -45,8 +48,7 @@ public class ForLoopReplaceableByWhileJSInspection extends JavaScriptInspection
 	@Nonnull
 	protected String buildErrorString(Object state, Object... args)
 	{
-		return InspectionJSBundle.message(
-				"for.loop.replaceable.by.while.problem.descriptor");
+		return InspectionJSLocalize.forLoopReplaceableByWhileProblemDescriptor().get();
 	}
 
 	@Nonnull
@@ -69,28 +71,18 @@ public class ForLoopReplaceableByWhileJSInspection extends JavaScriptInspection
 		@Nonnull
 		public String getName()
 		{
-			return InspectionJSBundle.message(
-					"for.loop.replaceable.by.while.replace.quickfix");
+			return InspectionJSLocalize.forLoopReplaceableByWhileReplaceQuickfix().get();
 		}
 
 		@Override
 		public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException
 		{
 			final PsiElement forKeywordElement = descriptor.getPsiElement();
-			final JSForStatement forStatement =
-					(JSForStatement) forKeywordElement.getParent();
+			final JSForStatement forStatement = (JSForStatement) forKeywordElement.getParent();
 			assert forStatement != null;
 			final JSExpression condition = forStatement.getCondition();
 			final JSStatement body = forStatement.getBody();
-			final String bodyText;
-			if(body == null)
-			{
-				bodyText = "";
-			}
-			else
-			{
-				bodyText = body.getText();
-			}
+			final String bodyText = body == null ? "" : body.getText();
 			@NonNls final String whileStatement;
 			if(condition == null)
 			{
@@ -98,8 +90,7 @@ public class ForLoopReplaceableByWhileJSInspection extends JavaScriptInspection
 			}
 			else
 			{
-				whileStatement = "while(" + condition.getText() + ')' +
-						bodyText;
+				whileStatement = "while(" + condition.getText() + ')' + bodyText;
 			}
 			replaceStatement(forStatement, whileStatement);
 		}
@@ -113,7 +104,6 @@ public class ForLoopReplaceableByWhileJSInspection extends JavaScriptInspection
 
 	private class ForLoopReplaceableByWhileVisitor extends BaseInspectionVisitor<ForLoopReplaceableByWhileJSInspectionState>
 	{
-
 		@Override
 		public void visitJSForStatement(@Nonnull JSForStatement statement)
 		{

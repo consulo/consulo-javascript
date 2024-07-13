@@ -7,6 +7,7 @@ import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import jakarta.annotation.Nullable;
@@ -16,34 +17,33 @@ import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class DocumentWriteJSInspection extends JavaScriptInspection {
-
     @Override
-	@Nonnull
+    @Nonnull
     public String getDisplayName() {
-        return InspectionJSBundle.message("call.to.document.write.display.name");
+        return InspectionJSLocalize.callToDocumentWriteDisplayName().get();
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.DOM_GROUP_NAME;
     }
 
     @RequiredReadAction
-	@Override
-	@Nullable
+    @Override
+    @Nullable
     protected String buildErrorString(Object state, Object... args) {
-        return InspectionJSBundle.message("document.write.error.string");
+        return InspectionJSLocalize.documentWriteErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
     private static class Visitor extends BaseInspectionVisitor {
-
-        @Override public void visitJSCallExpression(JSCallExpression jsCallExpression) {
+        @Override
+        public void visitJSCallExpression(JSCallExpression jsCallExpression) {
             super.visitJSCallExpression(jsCallExpression);
             final JSExpression methodExpression;
             try {

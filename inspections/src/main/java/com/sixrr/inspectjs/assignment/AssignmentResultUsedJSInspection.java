@@ -2,9 +2,9 @@ package com.sixrr.inspectjs.assignment;
 
 import com.intellij.lang.javascript.psi.*;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
@@ -13,33 +13,33 @@ import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class AssignmentResultUsedJSInspection extends JavaScriptInspection {
-
     @Override
-	@Nonnull
+    @Nonnull
     public String getDisplayName() {
-        return InspectionJSBundle.message("result.of.assignment.used.displayName");
+        return InspectionJSLocalize.resultOfAssignmentUsedDisplayname().get();
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.ASSIGNMENT_GROUP_NAME;
     }
 
     @RequiredReadAction
-	@Override
-	@Nullable
+    @Override
+    @Nullable
     protected String buildErrorString(Object state, Object... args) {
-        return InspectionJSBundle.message("result.of.assignment.expression.used.error.string");
+        return InspectionJSLocalize.resultOfAssignmentExpressionUsedErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
     private static class Visitor extends BaseInspectionVisitor {
-        @Override public void visitJSAssignmentExpression(JSAssignmentExpression jsAssignmentExpression) {
+        @Override
+        public void visitJSAssignmentExpression(JSAssignmentExpression jsAssignmentExpression) {
             super.visitJSAssignmentExpression(jsAssignmentExpression);
             final PsiElement parent = jsAssignmentExpression.getParent();
             if (parent == null) {

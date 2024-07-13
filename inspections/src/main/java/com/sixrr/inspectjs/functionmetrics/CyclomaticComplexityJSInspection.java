@@ -3,14 +3,13 @@ package com.sixrr.inspectjs.functionmetrics;
 import com.intellij.lang.javascript.psi.JSBlockStatement;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.psi.PsiElement;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
@@ -27,7 +26,7 @@ public class CyclomaticComplexityJSInspection extends JavaScriptInspection
 	@Nonnull
 	public String getDisplayName()
 	{
-		return InspectionJSBundle.message("overly.complex.function.display.name");
+		return InspectionJSLocalize.overlyComplexFunctionDisplayName().get();
 	}
 
 	@Override
@@ -57,11 +56,11 @@ public class CyclomaticComplexityJSInspection extends JavaScriptInspection
 		final int coupling = visitor.getComplexity();
 		if(functionHasIdentifier(function))
 		{
-			return InspectionJSBundle.message("function.ref.is.overly.complex.cyclomatic.complexity.error.string", coupling);
+			return InspectionJSLocalize.functionRefIsOverlyComplexCyclomaticComplexityErrorString(coupling).get();
 		}
 		else
 		{
-			return InspectionJSBundle.message("anonymous.function.is.overly.complex.cyclomatic.complexity.error.string", coupling);
+			return InspectionJSLocalize.anonymousFunctionIsOverlyComplexCyclomaticComplexityErrorString(coupling).get();
 		}
 	}
 
@@ -94,4 +93,3 @@ public class CyclomaticComplexityJSInspection extends JavaScriptInspection
 		}
 	}
 }
-

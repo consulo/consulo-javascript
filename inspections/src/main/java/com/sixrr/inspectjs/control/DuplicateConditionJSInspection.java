@@ -3,9 +3,9 @@ package com.sixrr.inspectjs.control;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import com.sixrr.inspectjs.utils.EquivalenceChecker;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
@@ -20,32 +20,31 @@ import java.util.Set;
 @ExtensionImpl
 public class DuplicateConditionJSInspection extends JavaScriptInspection {
     @Override
-	@Nonnull
+    @Nonnull
     public String getDisplayName() {
-        return InspectionJSBundle.message("duplicate.condition.in.if.statement.display.name");
+        return InspectionJSLocalize.duplicateConditionInIfStatementDisplayName().get();
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
     @RequiredReadAction
-	@Override
-	public String buildErrorString(Object state, Object... args) {
-        return InspectionJSBundle.message("duplicate.condition.error.string");
+    @Override
+    public String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.duplicateConditionErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new DuplicateConditionVisitor();
     }
 
-    private static class DuplicateConditionVisitor
-            extends BaseInspectionVisitor {
-
-        @Override public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
+    private static class DuplicateConditionVisitor extends BaseInspectionVisitor {
+        @Override
+        public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
             super.visitJSIfStatement(statement);
             final PsiElement parent = statement.getParent();
             if (parent instanceof JSIfStatement) {
@@ -61,8 +60,7 @@ public class DuplicateConditionJSInspection extends JavaScriptInspection {
             if (numConditions < 2) {
                 return;
             }
-            final JSExpression[] conditionArray =
-                    conditions.toArray(new JSExpression[numConditions]);
+            final JSExpression[] conditionArray = conditions.toArray(new JSExpression[numConditions]);
             final boolean[] matched = new boolean[conditionArray.length];
             Arrays.fill(matched, false);
             for (int i = 0; i < conditionArray.length; i++) {
@@ -90,8 +88,7 @@ public class DuplicateConditionJSInspection extends JavaScriptInspection {
             }
         }
 
-        private void collectConditionsForIfStatement(JSIfStatement statement,
-                                                     Set<JSExpression> conditions) {
+        private void collectConditionsForIfStatement(JSIfStatement statement, Set<JSExpression> conditions) {
             final JSExpression condition = statement.getCondition();
             collectConditionsForExpression(condition, conditions);
             final JSStatement branch = statement.getElse();
@@ -104,13 +101,12 @@ public class DuplicateConditionJSInspection extends JavaScriptInspection {
             if (condition == null) {
                 return;
             }
-            if (condition instanceof JSParenthesizedExpression) {
-                final JSExpression contents = ((JSParenthesizedExpression) condition).getInnerExpression();
+            if (condition instanceof JSParenthesizedExpression parenthesizedExpression) {
+                final JSExpression contents = parenthesizedExpression.getInnerExpression();
                 collectConditionsForExpression(contents, conditions);
                 return;
             }
-            if (condition instanceof JSBinaryExpression) {
-                final JSBinaryExpression binaryExpression = (JSBinaryExpression) condition;
+            if (condition instanceof JSBinaryExpression binaryExpression) {
                 final IElementType sign = binaryExpression.getOperationSign();
                 if (JSTokenTypes.OROR.equals(sign)) {
                     final JSExpression lhs = binaryExpression.getLOperand();

@@ -5,46 +5,44 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSNewExpression;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-
 @ExtensionImpl
 public class DynamicallyGeneratedCodeJSInspection extends JavaScriptInspection {
-
     @Override
-	@Nonnull
+    @Nonnull
     public String getDisplayName() {
-        return InspectionJSBundle.message("dynamically.generated.code.display.name");
+        return InspectionJSLocalize.dynamicallyGeneratedCodeDisplayName().get();
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
     @RequiredReadAction
-	@Override
-	@Nullable
+    @Override
+    @Nullable
     protected String buildErrorString(Object state, Object... args) {
-        return InspectionJSBundle.message("dynamically.generated.code.error.string");
+        return InspectionJSLocalize.dynamicallyGeneratedCodeErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
     private static class Visitor extends BaseInspectionVisitor {
-
-        @Override public void visitJSCallExpression(JSCallExpression jsCallExpression) {
+        @Override
+        public void visitJSCallExpression(JSCallExpression jsCallExpression) {
             super.visitJSCallExpression(jsCallExpression);
             final JSExpression methodExpression;
             try {
@@ -65,9 +63,9 @@ public class DynamicallyGeneratedCodeJSInspection extends JavaScriptInspection {
             registerError(methodExpression);
         }
 
-        @Override public void visitJSNewExpression(JSNewExpression jsNewExpression) {
-            super.visitJSNewExpression(
-                    jsNewExpression);
+        @Override
+        public void visitJSNewExpression(JSNewExpression jsNewExpression) {
+            super.visitJSNewExpression(jsNewExpression);
             final JSExpression methodExpression;
             try {
                 methodExpression = jsNewExpression.getMethodExpression();

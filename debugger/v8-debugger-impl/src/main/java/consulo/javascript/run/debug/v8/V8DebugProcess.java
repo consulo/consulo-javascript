@@ -16,15 +16,15 @@
 
 package consulo.javascript.run.debug.v8;
 
-import consulo.execution.ExecutionResult;
-import consulo.process.ExecutionException;
-import consulo.execution.debug.XDebugSession;
-import consulo.execution.debug.XDebuggerBundle;
 import consulo.annotation.UsedInPlugin;
+import consulo.execution.ExecutionResult;
+import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.process.ExecutionException;
+import jakarta.annotation.Nonnull;
 import org.chromium.sdk.JavascriptVmFactory;
 import org.chromium.sdk.StandaloneVm;
 
-import jakarta.annotation.Nonnull;
 import java.net.InetSocketAddress;
 
 /**
@@ -52,7 +52,7 @@ public class V8DebugProcess extends V8BaseDebugProcess<StandaloneVm>
 	{
 		if(myVm == null)
 		{
-			return XDebuggerBundle.message("debugger.state.message.disconnected");
+			return XDebuggerLocalize.debuggerStateMessageDisconnected().get();
 		}
 		else
 		{
@@ -65,7 +65,7 @@ public class V8DebugProcess extends V8BaseDebugProcess<StandaloneVm>
 				String disconnectReason = myVm.getDisconnectReason();
 				if(disconnectReason == null)
 				{
-					return XDebuggerBundle.message("debugger.state.message.disconnected");
+					return XDebuggerLocalize.debuggerStateMessageDisconnected().get();
 				}
 				return "Disconnected: " + disconnectReason;
 			}

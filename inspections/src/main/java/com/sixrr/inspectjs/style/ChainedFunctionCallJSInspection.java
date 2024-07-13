@@ -5,9 +5,9 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSParenthesizedExpression;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import jakarta.annotation.Nonnull;
@@ -32,8 +32,7 @@ public class ChainedFunctionCallJSInspection extends JavaScriptInspection
 	@Nonnull
 	public String getDisplayName()
 	{
-		return InspectionJSBundle.message(
-				"chained.function.call.display.name");
+		return InspectionJSLocalize.chainedFunctionCallDisplayName().get();
 	}
 
 	@RequiredReadAction
@@ -41,8 +40,7 @@ public class ChainedFunctionCallJSInspection extends JavaScriptInspection
 	@Nonnull
 	protected String buildErrorString(Object state, Object... args)
 	{
-		return InspectionJSBundle.message(
-				"chained.function.call.problem.descriptor");
+		return InspectionJSLocalize.chainedFunctionCallProblemDescriptor().get();
 	}
 
 	@Override
@@ -51,17 +49,13 @@ public class ChainedFunctionCallJSInspection extends JavaScriptInspection
 		return new NestedMethodCallVisitor();
 	}
 
-
 	private static class NestedMethodCallVisitor extends BaseInspectionVisitor
 	{
-
 		@Override
-		public void visitJSCallExpression(
-				@Nonnull JSCallExpression expression)
+		public void visitJSCallExpression(@Nonnull JSCallExpression expression)
 		{
 			super.visitJSCallExpression(expression);
-			final JSExpression reference =
-					expression.getMethodExpression();
+			final JSExpression reference = expression.getMethodExpression();
 			if(!(reference instanceof JSReferenceExpression))
 			{
 				return;
@@ -87,10 +81,8 @@ public class ChainedFunctionCallJSInspection extends JavaScriptInspection
 			}
 			if(expression instanceof JSParenthesizedExpression)
 			{
-				final JSParenthesizedExpression parenthesizedExpression =
-						(JSParenthesizedExpression) expression;
-				final JSExpression containedExpression =
-						parenthesizedExpression.getInnerExpression();
+				final JSParenthesizedExpression parenthesizedExpression = (JSParenthesizedExpression) expression;
+				final JSExpression containedExpression = parenthesizedExpression.getInnerExpression();
 				return isCallExpression(containedExpression);
 			}
 			return false;

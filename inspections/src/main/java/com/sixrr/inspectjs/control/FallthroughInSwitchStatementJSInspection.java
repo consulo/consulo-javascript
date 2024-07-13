@@ -4,51 +4,50 @@ import com.intellij.lang.javascript.psi.JSCaseClause;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.JSSwitchStatement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class FallthroughInSwitchStatementJSInspection extends JavaScriptInspection {
-
     @Override
-	@Nonnull
+    @Nonnull
     public String getDisplayName() {
-        return InspectionJSBundle.message("fall.through.in.switch.statement.display.name");
+        return InspectionJSLocalize.fallThroughInSwitchStatementDisplayName().get();
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
     @Override
-	public boolean isEnabledByDefault() {
+    public boolean isEnabledByDefault() {
         return true;
     }
 
     @RequiredReadAction
-	@Override
-	@Nullable
+    @Override
+    @Nullable
     protected String buildErrorString(Object state, Object... args) {
-        return InspectionJSBundle.message("fall.through.in.switch.statement.error.string");
+        return InspectionJSLocalize.fallThroughInSwitchStatementErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
     private static class Visitor extends BaseInspectionVisitor {
-        @Override public void visitJSSwitchStatement(JSSwitchStatement jsSwitchStatement) {
+        @Override
+        public void visitJSSwitchStatement(JSSwitchStatement jsSwitchStatement) {
             final JSCaseClause[] caseClauses = jsSwitchStatement.getCaseClauses();
             for (int i = 0; i < caseClauses.length-1; i++) {
                 final JSCaseClause clause = caseClauses[i];

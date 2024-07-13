@@ -4,13 +4,12 @@ import com.intellij.lang.javascript.psi.JSCaseClause;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSSwitchStatement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import com.sixrr.inspectjs.utils.EquivalenceChecker;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
@@ -20,40 +19,39 @@ import java.util.Set;
 @ExtensionImpl
 public class DuplicateCaseLabelJSInspection extends JavaScriptInspection {
     @Override
-	@Nonnull
+    @Nonnull
     public String getDisplayName() {
-        return InspectionJSBundle.message("duplicate.case.label.display.name");
+        return InspectionJSLocalize.duplicateCaseLabelDisplayName().get();
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.VALIDITY_GROUP_NAME;
     }
 
     @RequiredReadAction
-	@Override
-	public String buildErrorString(Object state, Object... args) {
-        return InspectionJSBundle.message("duplicate.case.label.error.string");
+    @Override
+    public String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.duplicateCaseLabelErrorString().get();
     }
 
     @Override
-	public boolean isEnabledByDefault() {
+    public boolean isEnabledByDefault() {
         return true;
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
-    private static class Visitor
-            extends BaseInspectionVisitor {
-
-        @Override public void visitJSSwitchStatement(@Nonnull JSSwitchStatement statement) {
+    private static class Visitor extends BaseInspectionVisitor {
+        @Override
+        public void visitJSSwitchStatement(@Nonnull JSSwitchStatement statement) {
             super.visitJSSwitchStatement(statement);
 
-            final Set<JSExpression> conditions = new HashSet<JSExpression>();
+            final Set<JSExpression> conditions = new HashSet<>();
             collectCaseLabels(statement, conditions);
             final int numConditions = conditions.size();
             if (numConditions < 2) {
@@ -102,8 +100,7 @@ public class DuplicateCaseLabelJSInspection extends JavaScriptInspection {
             }
         }
 
-        private static void collectCaseLabels(JSSwitchStatement statement,
-                                              Set<JSExpression> conditions) {
+        private static void collectCaseLabels(JSSwitchStatement statement, Set<JSExpression> conditions) {
             final JSCaseClause[] clauses = statement.getCaseClauses();
             for (JSCaseClause clause : clauses) {
                 if (!clause.isDefault()) {

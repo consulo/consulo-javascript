@@ -6,42 +6,40 @@ import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class DefaultNotLastCaseInSwitchJSInspection extends JavaScriptInspection {
-
     @Override
-	@Nonnull
+    @Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getDisplayName() {
-        return InspectionJSBundle.message("default.not.last.case.in.switch.display.name");
+        return InspectionJSLocalize.defaultNotLastCaseInSwitchDisplayName().get();
     }
 
     @RequiredReadAction
-	@Override
-	@Nonnull
+    @Override
+    @Nonnull
     protected String buildErrorString(Object state, Object... args) {
-        return InspectionJSBundle.message("default.branch.not.last.case.in.switch.error.string");
+        return InspectionJSLocalize.defaultBranchNotLastCaseInSwitchErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new DefaultNotLastCaseInSwitchVisitor();
     }
 
-    private static class DefaultNotLastCaseInSwitchVisitor
-            extends BaseInspectionVisitor {
-
-        @Override public void visitJSSwitchStatement(
-                @Nonnull JSSwitchStatement statement) {
+    private static class DefaultNotLastCaseInSwitchVisitor extends BaseInspectionVisitor {
+        @Override
+        public void visitJSSwitchStatement(@Nonnull JSSwitchStatement statement) {
             super.visitJSSwitchStatement(statement);
             final JSCaseClause[] caseClauses = statement.getCaseClauses();
             if (caseClauses == null) {
