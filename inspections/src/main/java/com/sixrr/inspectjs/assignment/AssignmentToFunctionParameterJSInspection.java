@@ -2,54 +2,53 @@ package com.sixrr.inspectjs.assignment;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
+import com.sixrr.inspectjs.BaseInspectionVisitor;
+import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
-import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
-import com.sixrr.inspectjs.JSGroupNames;
-import com.sixrr.inspectjs.JavaScriptInspection;
-import consulo.language.psi.PsiReference;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class AssignmentToFunctionParameterJSInspection extends JavaScriptInspection {
-
     @Override
-	@Nonnull
+    @Nonnull
     public String getDisplayName() {
-        return InspectionJSBundle.message("assignment.to.function.parameter.display.name");
+        return InspectionJSLocalize.assignmentToFunctionParameterDisplayName().get();
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.ASSIGNMENT_GROUP_NAME;
     }
 
     @RequiredReadAction
-	@Override
-	@Nullable
+    @Override
+    @Nullable
     protected String buildErrorString(Object state, Object... args) {
-        return InspectionJSBundle.message("assignment.to.function.parameter.error.string");
+        return InspectionJSLocalize.assignmentToFunctionParameterErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
     private static class Visitor extends BaseInspectionVisitor {
-        @Override public void visitJSAssignmentExpression(JSAssignmentExpression jsAssignmentExpression) {
+        @Override
+        public void visitJSAssignmentExpression(JSAssignmentExpression jsAssignmentExpression) {
             super.visitJSAssignmentExpression(jsAssignmentExpression);
             final JSExpression lhs = jsAssignmentExpression.getLOperand();
             checkOperand(lhs);
         }
 
-        @Override public void visitJSPrefixExpression(JSPrefixExpression expression) {
+        @Override
+        public void visitJSPrefixExpression(JSPrefixExpression expression) {
             super.visitJSPrefixExpression(expression);
             final IElementType sign = expression.getOperationSign();
             if (!JSTokenTypes.PLUSPLUS.equals(sign) &&
@@ -60,7 +59,8 @@ public class AssignmentToFunctionParameterJSInspection extends JavaScriptInspect
             checkOperand(operand);
         }
 
-        @Override public void visitJSPostfixExpression(JSPostfixExpression jsPostfixExpression) {
+        @Override
+        public void visitJSPostfixExpression(JSPostfixExpression jsPostfixExpression) {
             super.visitJSPostfixExpression(jsPostfixExpression);
             final IElementType sign = jsPostfixExpression.getOperationSign();
             if (!JSTokenTypes.PLUSPLUS.equals(sign) &&
@@ -75,10 +75,10 @@ public class AssignmentToFunctionParameterJSInspection extends JavaScriptInspect
             if (operand == null) {
                 return;
             }
-            if (operand instanceof JSDefinitionExpression) {
-                final JSExpression definiend = ((JSDefinitionExpression) operand).getExpression();
-                if (definiend instanceof JSReferenceExpression) {
-                    final PsiElement referent = ((PsiReference) definiend).resolve();
+            if (operand instanceof JSDefinitionExpression definitionExpression) {
+                final JSExpression definiend = definitionExpression.getExpression();
+                if (definiend instanceof JSReferenceExpression referenceExpression) {
+                    final PsiElement referent = referenceExpression.resolve();
                     if (referent == null) {
                         return;
                     }
@@ -88,8 +88,8 @@ public class AssignmentToFunctionParameterJSInspection extends JavaScriptInspect
                     registerError(operand);
                 }
             }
-            if (operand instanceof JSReferenceExpression) {
-                final PsiElement referent = ((PsiReference) operand).resolve();
+            if (operand instanceof JSReferenceExpression referenceExpression) {
+                final PsiElement referent = referenceExpression.resolve();
                 if (referent == null) {
                     return;
                 }

@@ -3,14 +3,13 @@ package com.sixrr.inspectjs.control;
 import com.intellij.lang.javascript.psi.JSIfStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.psi.PsiElement;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
@@ -20,7 +19,7 @@ public class IfStatementWithTooManyBranchesJSInspection extends JavaScriptInspec
 	@Nonnull
 	public String getDisplayName()
 	{
-		return InspectionJSBundle.message("if.statement.with.too.many.branches.display.name");
+		return InspectionJSLocalize.ifStatementWithTooManyBranchesDisplayName().get();
 	}
 
 	@Override
@@ -43,7 +42,7 @@ public class IfStatementWithTooManyBranchesJSInspection extends JavaScriptInspec
 	{
 		final JSIfStatement statement = (JSIfStatement) args[0];
 		final int branches = calculateNumBranches(statement);
-		return InspectionJSBundle.message("if.statement.with.too.many.branches.error.string", branches);
+		return InspectionJSLocalize.ifStatementWithTooManyBranchesErrorString(branches).get();
 	}
 
 	private static int calculateNumBranches(JSIfStatement statement)
@@ -68,7 +67,6 @@ public class IfStatementWithTooManyBranchesJSInspection extends JavaScriptInspec
 
 	private class Visitor extends BaseInspectionVisitor<IfStatementWithTooManyBranchesJSInspectionState>
 	{
-
 		@Override
 		public void visitJSIfStatement(@Nonnull JSIfStatement statement)
 		{

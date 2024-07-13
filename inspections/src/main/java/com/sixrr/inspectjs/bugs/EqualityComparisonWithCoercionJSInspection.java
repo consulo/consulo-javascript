@@ -3,7 +3,11 @@ package com.sixrr.inspectjs.bugs;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
-import com.sixrr.inspectjs.*;
+import com.sixrr.inspectjs.BaseInspectionVisitor;
+import com.sixrr.inspectjs.InspectionJSFix;
+import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
@@ -11,9 +15,8 @@ import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NonNls;
 
 @ExtensionImpl
 public class EqualityComparisonWithCoercionJSInspection extends JavaScriptInspection {
@@ -27,7 +30,7 @@ public class EqualityComparisonWithCoercionJSInspection extends JavaScriptInspec
     @Override
 	@Nonnull
     public String getDisplayName() {
-        return InspectionJSBundle.message("equality.comparison.with.coercion.display.name");
+        return InspectionJSLocalize.equalityComparisonWithCoercionDisplayName().get();
     }
 
     @Override
@@ -40,7 +43,7 @@ public class EqualityComparisonWithCoercionJSInspection extends JavaScriptInspec
 	@Override
 	@Nonnull
     protected String buildErrorString(Object state, Object... args) {
-        return InspectionJSBundle.message("equality.comparison.with.coercion.error.string");
+        return InspectionJSLocalize.equalityComparisonWithCoercionErrorString().get();
     }
 
 	@Override
@@ -66,7 +69,7 @@ public class EqualityComparisonWithCoercionJSInspection extends JavaScriptInspec
 		@Override
 		@Nonnull
 		public String getName() {
-			return InspectionJSBundle.message("equality.comparison.with.coercion.fix", sign);
+			return InspectionJSLocalize.equalityComparisonWithCoercionFix(sign).get();
 		}
 
 		@Override

@@ -2,14 +2,17 @@ package com.sixrr.inspectjs.validity;
 
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.*;
+import com.sixrr.inspectjs.BaseInspectionVisitor;
+import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JSRecursiveElementVisitor;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
+import com.sixrr.inspectjs.utils.ControlFlowUtils;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
-import com.sixrr.inspectjs.*;
-import com.sixrr.inspectjs.utils.ControlFlowUtils;
-import consulo.language.editor.inspection.ProblemHighlightType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -21,7 +24,7 @@ public class FunctionWithInconsistentReturnsJSInspection extends JavaScriptInspe
 	@Nonnull
 	public String getDisplayName()
 	{
-		return InspectionJSBundle.message("function.with.inconsistent.returns.display.name");
+		return InspectionJSLocalize.functionWithInconsistentReturnsDisplayName().get();
 	}
 
 	@Override
@@ -46,11 +49,11 @@ public class FunctionWithInconsistentReturnsJSInspection extends JavaScriptInspe
 		assert function != null;
 		if(functionHasIdentifier(function))
 		{
-			return InspectionJSBundle.message("function.has.inconsistent.return.points.error.string");
+			return InspectionJSLocalize.functionHasInconsistentReturnPointsErrorString().get();
 		}
 		else
 		{
-			return InspectionJSBundle.message("anonymous.function.has.inconsistent.return.points.error.string");
+			return InspectionJSLocalize.anonymousFunctionHasInconsistentReturnPointsErrorString().get();
 		}
 	}
 

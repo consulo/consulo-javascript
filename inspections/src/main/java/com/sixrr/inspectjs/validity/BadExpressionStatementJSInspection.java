@@ -1,20 +1,20 @@
 package com.sixrr.inspectjs.validity;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.ResolveResult;
-import consulo.language.ast.IElementType;
-import consulo.language.psi.util.PsiTreeUtil;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.ecmascript.psi.ES6ExportDefaultAssignment;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.ResolveResult;
+import consulo.language.psi.util.PsiTreeUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
@@ -27,7 +27,7 @@ public class BadExpressionStatementJSInspection extends JavaScriptInspection
 	@Nonnull
 	public String getDisplayName()
 	{
-		return InspectionJSBundle.message("expression.statement.which.is.not.assignment.or.call.display.name");
+		return InspectionJSLocalize.expressionStatementWhichIsNotAssignmentOrCallDisplayName().get();
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class BadExpressionStatementJSInspection extends JavaScriptInspection
 	@Nullable
 	protected String buildErrorString(Object state, Object... args)
 	{
-		return InspectionJSBundle.message("expression.statement.is.not.assignment.or.call.error.string");
+		return InspectionJSLocalize.expressionStatementIsNotAssignmentOrCallErrorString().get();
 	}
 
 	@Override

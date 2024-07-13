@@ -3,12 +3,11 @@ package com.sixrr.inspectjs.validity;
 import com.intellij.lang.javascript.psi.JSObjectLiteralExpression;
 import com.intellij.lang.javascript.psi.JSProperty;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
@@ -16,37 +15,36 @@ import java.util.Arrays;
 @ExtensionImpl
 public class DuplicatePropertyOnObjectJSInspection extends JavaScriptInspection {
     @Override
-	@Nonnull
+    @Nonnull
     public String getDisplayName() {
-        return InspectionJSBundle.message("duplicate.property.on.object.literal.display.name");
+        return InspectionJSLocalize.duplicatePropertyOnObjectLiteralDisplayName().get();
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.VALIDITY_GROUP_NAME;
     }
 
     @RequiredReadAction
-	@Override
-	public String buildErrorString(Object state, Object... args) {
-        return InspectionJSBundle.message("duplicate.object.property.error.string");
+    @Override
+    public String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.duplicateObjectPropertyErrorString().get();
     }
 
     @Override
-	public boolean isEnabledByDefault() {
+    public boolean isEnabledByDefault() {
         return true;
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
-    private static class Visitor
-            extends BaseInspectionVisitor {
-
-        @Override public void visitJSObjectLiteralExpression(JSObjectLiteralExpression jsObjectLiteralExpression) {
+    private static class Visitor extends BaseInspectionVisitor {
+        @Override
+        public void visitJSObjectLiteralExpression(JSObjectLiteralExpression jsObjectLiteralExpression) {
             super.visitJSObjectLiteralExpression(jsObjectLiteralExpression);
             final JSProperty[] properties = jsObjectLiteralExpression.getProperties();
             final boolean[] matched = new boolean[properties.length];
@@ -75,8 +73,6 @@ public class DuplicatePropertyOnObjectJSInspection extends JavaScriptInspection 
                     }
                 }
             }
-
         }
-
     }
 }

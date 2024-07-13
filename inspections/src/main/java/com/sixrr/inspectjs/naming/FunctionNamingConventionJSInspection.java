@@ -2,16 +2,15 @@ package com.sixrr.inspectjs.naming;
 
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.InspectionJSFix;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.fix.RenameFix;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
@@ -36,7 +35,7 @@ public class FunctionNamingConventionJSInspection extends ConventionInspection
 	@Nonnull
 	public String getDisplayName()
 	{
-		return InspectionJSBundle.message("function.naming.convention.display.name");
+		return InspectionJSLocalize.functionNamingConventionDisplayName().get();
 	}
 
 	@Override
@@ -68,13 +67,13 @@ public class FunctionNamingConventionJSInspection extends ConventionInspection
 		assert functionName != null;
 		if(functionName.length() < inspectionState.m_minLength)
 		{
-			return InspectionJSBundle.message("function.name.is.too.short.error.string", functionName);
+			return InspectionJSLocalize.functionNameIsTooShortErrorString(functionName).get();
 		}
 		else if(functionName.length() > inspectionState.m_maxLength)
 		{
-			return InspectionJSBundle.message("function.name.is.too.long.error.string", functionName);
+			return InspectionJSLocalize.functionNameIsTooLongErrorString(functionName).get();
 		}
-		return InspectionJSBundle.message("function.name.doesnt.match.regex.error.string", functionName, inspectionState.m_regex);
+		return InspectionJSLocalize.functionNameDoesntMatchRegexErrorString(functionName, inspectionState.m_regex).get();
 	}
 
 	@Override

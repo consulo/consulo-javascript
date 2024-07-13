@@ -2,7 +2,11 @@ package com.sixrr.inspectjs.control;
 
 import com.intellij.lang.javascript.psi.JSIfStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
-import com.sixrr.inspectjs.*;
+import com.sixrr.inspectjs.BaseInspectionVisitor;
+import com.sixrr.inspectjs.InspectionJSFix;
+import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import com.sixrr.inspectjs.utils.EquivalenceChecker;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
@@ -10,7 +14,6 @@ import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
@@ -18,41 +21,39 @@ public class IfStatementWithIdenticalBranchesJSInspection extends JavaScriptInsp
     private InspectionJSFix fix = new CollapseIfFix();
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getDisplayName() {
-        return InspectionJSBundle.message("if.statement.with.identical.branches.display.name");
+        return InspectionJSLocalize.ifStatementWithIdenticalBranchesDisplayName().get();
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
     @RequiredReadAction
-	@Override
-	public String buildErrorString(Object state, Object... args) {
-        return InspectionJSBundle.message("ref.statement.with.identical.branches.error.string");
+    @Override
+    public String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.refStatementWithIdenticalBranchesErrorString().get();
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location, Object state) {
+    public InspectionJSFix buildFix(PsiElement location, Object state) {
         return fix;
     }
 
     private static class CollapseIfFix extends InspectionJSFix {
         @Override
-		@Nonnull
+        @Nonnull
         public String getName() {
-            return InspectionJSBundle.message("collapse.if.statement.fix");
+            return InspectionJSLocalize.collapseIfStatementFix().get();
         }
 
         @Override
-		public void doFix(Project project, ProblemDescriptor descriptor)
-                throws IncorrectOperationException {
+        public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
             final PsiElement identifier = descriptor.getPsiElement();
-            final JSIfStatement statement =
-                    (JSIfStatement) identifier.getParent();
+            final JSIfStatement statement = (JSIfStatement) identifier.getParent();
             assert statement != null;
             final JSStatement thenBranch = statement.getThen();
             final String bodyText = thenBranch.getText();
@@ -61,7 +62,7 @@ public class IfStatementWithIdenticalBranchesJSInspection extends JavaScriptInsp
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new IfStatementWithIdenticalBranchesVisitor();
     }
 
