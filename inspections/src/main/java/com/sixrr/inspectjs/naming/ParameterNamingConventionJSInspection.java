@@ -5,15 +5,14 @@ import com.intellij.lang.javascript.psi.JSParameter;
 import com.intellij.lang.javascript.psi.JSParameterList;
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.InspectionJSFix;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.fix.RenameFix;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.psi.PsiElement;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
@@ -31,7 +30,7 @@ public class ParameterNamingConventionJSInspection extends ConventionInspection
 	@Nonnull
 	public String getDisplayName()
 	{
-		return InspectionJSBundle.message("function.parameter.naming.convention.display.name");
+		return InspectionJSLocalize.functionParameterNamingConventionDisplayName().get();
 	}
 
 	@Nonnull
@@ -69,15 +68,15 @@ public class ParameterNamingConventionJSInspection extends ConventionInspection
 		final JSParameter parameter = (JSParameter) ((PsiElement) args[0]).getParent();
 		assert parameter != null;
 		final String parameterName = parameter.getName();
-		if(parameterName.length() < inspectionState.m_minLength)
+		if (parameterName.length() < inspectionState.m_minLength)
 		{
-			return InspectionJSBundle.message("parameter.name.is.too.short.error.string");
+			return InspectionJSLocalize.parameterNameIsTooShortErrorString().get();
 		}
-		else if(parameterName.length() > inspectionState.m_maxLength)
+		else if (parameterName.length() > inspectionState.m_maxLength)
 		{
-			return InspectionJSBundle.message("parameter.name.is.too.long.error.string");
+			return InspectionJSLocalize.parameterNameIsTooLongErrorString().get();
 		}
-		return InspectionJSBundle.message("parameter.name.doesnt.match.regex.error.string", inspectionState.m_regex);
+		return InspectionJSLocalize.parameterNameDoesntMatchRegexErrorString(inspectionState.m_regex).get();
 	}
 
 	@Override

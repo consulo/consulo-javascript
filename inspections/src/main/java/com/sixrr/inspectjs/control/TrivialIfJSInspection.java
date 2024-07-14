@@ -2,7 +2,11 @@ package com.sixrr.inspectjs.control;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
-import com.sixrr.inspectjs.*;
+import com.sixrr.inspectjs.BaseInspectionVisitor;
+import com.sixrr.inspectjs.InspectionJSFix;
+import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import com.sixrr.inspectjs.utils.BoolUtils;
 import com.sixrr.inspectjs.utils.ConditionalUtils;
 import com.sixrr.inspectjs.utils.EquivalenceChecker;
@@ -15,10 +19,8 @@ import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
-
+import org.jetbrains.annotations.NonNls;
 
 @ExtensionImpl
 public class TrivialIfJSInspection extends JavaScriptInspection {
@@ -31,51 +33,49 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getDisplayName() {
-        return InspectionJSBundle.message("redundant.if.statement.display.name");
+        return InspectionJSLocalize.redundantIfStatementDisplayName().get();
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new TrivialIfVisitor();
     }
 
     @Override
-	public boolean isEnabledByDefault() {
+    public boolean isEnabledByDefault() {
         return true;
     }
 
     @RequiredReadAction
-	@Override
-	public String buildErrorString(Object state, Object... args) {
-        return InspectionJSBundle.message("trivial.if.error.string");
+    @Override
+    public String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.trivialIfErrorString().get();
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location, Object state) {
+    public InspectionJSFix buildFix(PsiElement location, Object state) {
         return fix;
     }
 
     private static class TrivialIfFix extends InspectionJSFix {
         @Override
-		@Nonnull
+        @Nonnull
         public String getName() {
-            return InspectionJSBundle.message("simplify.fix");
+            return InspectionJSLocalize.simplifyFix().get();
         }
 
         @Override
-		public void doFix(Project project, ProblemDescriptor descriptor)
-                throws IncorrectOperationException {
+        public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
             final PsiElement ifKeywordElement = descriptor.getPsiElement();
-            final JSIfStatement statement =
-                    (JSIfStatement) ifKeywordElement.getParent();
+            final JSIfStatement statement = (JSIfStatement) ifKeywordElement.getParent();
             if (isSimplifiableAssignment(statement)) {
                 replaceSimplifiableAssignment(statement);
             } else if (isSimplifiableReturn(statement)) {
@@ -95,107 +95,74 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
             }
         }
 
-        private void replaceSimplifiableImplicitReturn(JSIfStatement statement)
-                throws IncorrectOperationException {
+        private void replaceSimplifiableImplicitReturn(JSIfStatement statement) throws IncorrectOperationException {
             final JSExpression condition = statement.getCondition();
             final String conditionText = condition.getText();
-            final PsiElement nextStatement =
-                    PsiTreeUtil.skipSiblingsForward(statement,
-                            new Class[]{
-                                    PsiWhiteSpace.class});
+            final PsiElement nextStatement = PsiTreeUtil.skipSiblingsForward(statement, new Class[]{PsiWhiteSpace.class});
             @NonNls final String newStatement = "return " + conditionText + ';';
             replaceStatement(statement, newStatement);
             assert nextStatement != null;
             deleteElement(nextStatement);
         }
 
-        private void repaceSimplifiableReturn(JSIfStatement statement)
-                throws IncorrectOperationException {
+        private void repaceSimplifiableReturn(JSIfStatement statement) throws IncorrectOperationException {
             final JSExpression condition = statement.getCondition();
             final String conditionText = condition.getText();
             @NonNls final String newStatement = "return " + conditionText + ';';
             replaceStatement(statement, newStatement);
         }
 
-        private void replaceSimplifiableAssignment(JSIfStatement statement)
-                throws IncorrectOperationException {
+        private void replaceSimplifiableAssignment(JSIfStatement statement) throws IncorrectOperationException {
             final JSExpression condition = statement.getCondition();
             final String conditionText = condition.getText();
             final JSStatement thenBranch = statement.getThen();
-            final JSExpressionStatement assignmentStatement =
-                    (JSExpressionStatement) ConditionalUtils.stripBraces(thenBranch);
-            final JSAssignmentExpression assignmentExpression =
-                    (JSAssignmentExpression) assignmentStatement.getExpression();
-            final IElementType operator =
-                    assignmentExpression.getOperationSign();
+            final JSExpressionStatement assignmentStatement = (JSExpressionStatement) ConditionalUtils.stripBraces(thenBranch);
+            final JSAssignmentExpression assignmentExpression = (JSAssignmentExpression) assignmentStatement.getExpression();
+            final IElementType operator = assignmentExpression.getOperationSign();
             final String operatorText = getTextForOperator(operator);
             final JSExpression lhs = assignmentExpression.getLOperand();
             final String lhsText = lhs.getText();
-            replaceStatement(statement,
-                    lhsText + operatorText + conditionText + ';');
+            replaceStatement(statement, lhsText + operatorText + conditionText + ';');
         }
 
-        private void replaceSimplifiableImplicitAssignment(JSIfStatement statement)
-                throws IncorrectOperationException {
-            final PsiElement prevStatement =
-                    PsiTreeUtil.skipSiblingsBackward(statement,
-                            new Class[]{
-                                    PsiWhiteSpace.class});
+        private void replaceSimplifiableImplicitAssignment(JSIfStatement statement) throws IncorrectOperationException {
+            final PsiElement prevStatement = PsiTreeUtil.skipSiblingsBackward(statement, new Class[]{PsiWhiteSpace.class});
             if (prevStatement == null) {
                 return;
             }
             final JSExpression condition = statement.getCondition();
             final String conditionText = condition.getText();
             final JSStatement thenBranch = statement.getThen();
-            final JSExpressionStatement assignmentStatement =
-                    (JSExpressionStatement) ConditionalUtils.stripBraces(thenBranch);
-            final JSAssignmentExpression assignmentExpression =
-                    (JSAssignmentExpression) assignmentStatement.getExpression();
-            final IElementType operator =
-                    assignmentExpression.getOperationSign();
+            final JSExpressionStatement assignmentStatement = (JSExpressionStatement) ConditionalUtils.stripBraces(thenBranch);
+            final JSAssignmentExpression assignmentExpression = (JSAssignmentExpression) assignmentStatement.getExpression();
+            final IElementType operator = assignmentExpression.getOperationSign();
             final JSExpression lhs = assignmentExpression.getLOperand();
             final String lhsText = lhs.getText();
-            replaceStatement(statement,
-                    lhsText + operator + conditionText + ';');
+            replaceStatement(statement, lhsText + operator + conditionText + ';');
             deleteElement(prevStatement);
         }
 
-        private void replaceSimplifiableImplicitAssignmentNegated(JSIfStatement statement)
-                throws IncorrectOperationException {
-            final PsiElement prevStatement =
-                    PsiTreeUtil.skipSiblingsBackward(statement,
-                            new Class[]{
-                                    PsiWhiteSpace.class});
-
+        private void replaceSimplifiableImplicitAssignmentNegated(JSIfStatement statement) throws IncorrectOperationException {
+            final PsiElement prevStatement = PsiTreeUtil.skipSiblingsBackward(statement, new Class[]{PsiWhiteSpace.class});
             final JSExpression condition = statement.getCondition();
-            final String conditionText =
-                    BoolUtils.getNegatedExpressionText(condition);
+            final String conditionText = BoolUtils.getNegatedExpressionText(condition);
             final JSStatement thenBranch = statement.getThen();
-            final JSExpressionStatement assignmentStatement =
-                    (JSExpressionStatement) ConditionalUtils.stripBraces(thenBranch);
-            final JSAssignmentExpression assignmentExpression =
-                    (JSAssignmentExpression) assignmentStatement.getExpression();
-            final IElementType operator =
-                    assignmentExpression.getOperationSign();
+            final JSExpressionStatement assignmentStatement = (JSExpressionStatement) ConditionalUtils.stripBraces(thenBranch);
+            final JSAssignmentExpression assignmentExpression = (JSAssignmentExpression) assignmentStatement.getExpression();
+            final IElementType operator = assignmentExpression.getOperationSign();
             final String operatorText = getTextForOperator(operator);
             final JSExpression lhs = assignmentExpression.getLOperand();
             final String lhsText = lhs.getText();
-            replaceStatement(statement,
-                    lhsText + operatorText + conditionText + ';');
+            replaceStatement(statement, lhsText + operatorText + conditionText + ';');
             assert prevStatement != null;
             deleteElement(prevStatement);
         }
 
-        private void replaceSimplifiableImplicitReturnNegated(JSIfStatement statement)
-                throws IncorrectOperationException {
+        private void replaceSimplifiableImplicitReturnNegated(JSIfStatement statement) throws IncorrectOperationException {
             final JSExpression condition = statement.getCondition();
 
-            final String conditionText =
-                    BoolUtils.getNegatedExpressionText(condition);
-            final PsiElement nextStatement =
-                    PsiTreeUtil.skipSiblingsForward(statement,
-                            new Class[]{
-                                    PsiWhiteSpace.class});
+            final String conditionText = BoolUtils.getNegatedExpressionText(condition);
+            final PsiElement nextStatement = PsiTreeUtil.skipSiblingsForward(statement, new Class[]{PsiWhiteSpace.class});
             if (nextStatement == null) {
                 return;
             }
@@ -204,39 +171,31 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
             deleteElement(nextStatement);
         }
 
-        private void repaceSimplifiableReturnNegated(JSIfStatement statement)
-                throws IncorrectOperationException {
+        private void repaceSimplifiableReturnNegated(JSIfStatement statement) throws IncorrectOperationException {
             final JSExpression condition = statement.getCondition();
-            final String conditionText =
-                    BoolUtils.getNegatedExpressionText(condition);
+            final String conditionText = BoolUtils.getNegatedExpressionText(condition);
             @NonNls final String newStatement = "return " + conditionText + ';';
             replaceStatement(statement, newStatement);
         }
 
-        private void replaceSimplifiableAssignmentNegated(JSIfStatement statement)
-                throws IncorrectOperationException {
+        private void replaceSimplifiableAssignmentNegated(JSIfStatement statement) throws IncorrectOperationException {
             final JSExpression condition = statement.getCondition();
-            final String conditionText =
-                    BoolUtils.getNegatedExpressionText(condition);
+            final String conditionText = BoolUtils.getNegatedExpressionText(condition);
             final JSStatement thenBranch = statement.getThen();
-            final JSExpressionStatement assignmentStatement =
-                    (JSExpressionStatement) ConditionalUtils.stripBraces(thenBranch);
-            final JSAssignmentExpression assignmentExpression =
-                    (JSAssignmentExpression) assignmentStatement.getExpression();
-            final IElementType operator =
-                    assignmentExpression.getOperationSign();
+            final JSExpressionStatement assignmentStatement = (JSExpressionStatement) ConditionalUtils.stripBraces(thenBranch);
+            final JSAssignmentExpression assignmentExpression = (JSAssignmentExpression) assignmentStatement.getExpression();
+            final IElementType operator = assignmentExpression.getOperationSign();
             final String operatorText = getTextForOperator(operator);
             final JSExpression lhs = assignmentExpression.getLOperand();
             final String lhsText = lhs.getText();
-            replaceStatement(statement,
-                    lhsText + operatorText + conditionText + ';');
+            replaceStatement(statement, lhsText + operatorText + conditionText + ';');
         }
 
     }
 
     private static class TrivialIfVisitor extends BaseInspectionVisitor {
-
-        @Override public void visitJSIfStatement(@Nonnull JSIfStatement ifStatement) {
+        @Override
+        public void visitJSIfStatement(@Nonnull JSIfStatement ifStatement) {
             super.visitJSIfStatement(ifStatement);
             final JSExpression condition = ifStatement.getCondition();
             if (condition == null) {
@@ -287,17 +246,13 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
         }
         JSStatement thenBranch = ifStatement.getThen();
         thenBranch = ConditionalUtils.stripBraces(thenBranch);
-        final PsiElement nextStatement =
-                PsiTreeUtil.skipSiblingsForward(ifStatement,
-                        new Class[]{
-                                PsiWhiteSpace.class});
+        final PsiElement nextStatement = PsiTreeUtil.skipSiblingsForward(ifStatement, new Class[]{PsiWhiteSpace.class});
         if (!(nextStatement instanceof JSStatement)) {
             return false;
         }
 
         final JSStatement elseBranch = (JSStatement) nextStatement;
-        return ConditionalUtils.isReturn(thenBranch, "true")
-                && ConditionalUtils.isReturn(elseBranch, "false");
+        return ConditionalUtils.isReturn(thenBranch, "true") && ConditionalUtils.isReturn(elseBranch, "false");
     }
 
     public static boolean isSimplifiableImplicitReturnNegated(JSIfStatement ifStatement) {
@@ -307,16 +262,12 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
         JSStatement thenBranch = ifStatement.getThen();
         thenBranch = ConditionalUtils.stripBraces(thenBranch);
 
-        final PsiElement nextStatement =
-                PsiTreeUtil.skipSiblingsForward(ifStatement,
-                        new Class[]{
-                                PsiWhiteSpace.class});
+        final PsiElement nextStatement = PsiTreeUtil.skipSiblingsForward(ifStatement, new Class[]{PsiWhiteSpace.class});
         if (!(nextStatement instanceof JSStatement)) {
             return false;
         }
         final JSStatement elseBranch = (JSStatement) nextStatement;
-        return ConditionalUtils.isReturn(thenBranch, "false")
-                && ConditionalUtils.isReturn(elseBranch, "true");
+        return ConditionalUtils.isReturn(thenBranch, "false") && ConditionalUtils.isReturn(elseBranch, "true");
     }
 
     public static boolean isSimplifiableReturn(JSIfStatement ifStatement) {
@@ -324,8 +275,7 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
         thenBranch = ConditionalUtils.stripBraces(thenBranch);
         JSStatement elseBranch = ifStatement.getElse();
         elseBranch = ConditionalUtils.stripBraces(elseBranch);
-        return ConditionalUtils.isReturn(thenBranch, "true")
-                && ConditionalUtils.isReturn(elseBranch, "false");
+        return ConditionalUtils.isReturn(thenBranch, "true") && ConditionalUtils.isReturn(elseBranch, "false");
     }
 
     public static boolean isSimplifiableReturnNegated(JSIfStatement ifStatement) {
@@ -333,8 +283,7 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
         thenBranch = ConditionalUtils.stripBraces(thenBranch);
         JSStatement elseBranch = ifStatement.getElse();
         elseBranch = ConditionalUtils.stripBraces(elseBranch);
-        return ConditionalUtils.isReturn(thenBranch, "false")
-                && ConditionalUtils.isReturn(elseBranch, "true");
+        return ConditionalUtils.isReturn(thenBranch, "false") && ConditionalUtils.isReturn(elseBranch, "true");
     }
 
     public static boolean isSimplifiableAssignment(JSIfStatement ifStatement) {
@@ -342,12 +291,9 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
         thenBranch = ConditionalUtils.stripBraces(thenBranch);
         JSStatement elseBranch = ifStatement.getElse();
         elseBranch = ConditionalUtils.stripBraces(elseBranch);
-        if (ConditionalUtils.isAssignment(thenBranch, "true") &&
-                ConditionalUtils.isAssignment(elseBranch, "false")) {
-            final JSAssignmentExpression thenExpression =
-                    (JSAssignmentExpression) ((JSExpressionStatement) thenBranch).getExpression();
-            final JSAssignmentExpression elseExpression =
-                    (JSAssignmentExpression) ((JSExpressionStatement) elseBranch).getExpression();
+        if (ConditionalUtils.isAssignment(thenBranch, "true") && ConditionalUtils.isAssignment(elseBranch, "false")) {
+            final JSAssignmentExpression thenExpression = (JSAssignmentExpression) ((JSExpressionStatement) thenBranch).getExpression();
+            final JSAssignmentExpression elseExpression = (JSAssignmentExpression) ((JSExpressionStatement) elseBranch).getExpression();
             final IElementType thenSign = thenExpression.getOperationSign();
             final IElementType elseSign = elseExpression.getOperationSign();
             if (!thenSign.equals(elseSign)) {
@@ -355,8 +301,7 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
             }
             final JSExpression thenLhs = thenExpression.getLOperand();
             final JSExpression elseLhs = elseExpression.getLOperand();
-            return EquivalenceChecker.expressionsAreEquivalent(thenLhs,
-                    elseLhs);
+            return EquivalenceChecker.expressionsAreEquivalent(thenLhs, elseLhs);
         } else {
             return false;
         }
@@ -367,12 +312,9 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
         thenBranch = ConditionalUtils.stripBraces(thenBranch);
         JSStatement elseBranch = ifStatement.getElse();
         elseBranch = ConditionalUtils.stripBraces(elseBranch);
-        if (ConditionalUtils.isAssignment(thenBranch, "false") &&
-                ConditionalUtils.isAssignment(elseBranch, "true")) {
-            final JSAssignmentExpression thenExpression =
-                    (JSAssignmentExpression) ((JSExpressionStatement) thenBranch).getExpression();
-            final JSAssignmentExpression elseExpression =
-                    (JSAssignmentExpression) ((JSExpressionStatement) elseBranch).getExpression();
+        if (ConditionalUtils.isAssignment(thenBranch, "false") && ConditionalUtils.isAssignment(elseBranch, "true")) {
+            final JSAssignmentExpression thenExpression = (JSAssignmentExpression) ((JSExpressionStatement) thenBranch).getExpression();
+            final JSAssignmentExpression elseExpression = (JSAssignmentExpression) ((JSExpressionStatement) elseBranch).getExpression();
             final IElementType thenSign = thenExpression.getOperationSign();
             final IElementType elseSign = elseExpression.getOperationSign();
             if (!thenSign.equals(elseSign)) {
@@ -380,8 +322,7 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
             }
             final JSExpression thenLhs = thenExpression.getLOperand();
             final JSExpression elseLhs = elseExpression.getLOperand();
-            return EquivalenceChecker.expressionsAreEquivalent(thenLhs,
-                    elseLhs);
+            return EquivalenceChecker.expressionsAreEquivalent(thenLhs, elseLhs);
         } else {
             return false;
         }
@@ -393,22 +334,16 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
         }
         JSStatement thenBranch = ifStatement.getThen();
         thenBranch = ConditionalUtils.stripBraces(thenBranch);
-        final PsiElement nextStatement =
-                PsiTreeUtil.skipSiblingsBackward(ifStatement,
-                        new Class[]{
-                                PsiWhiteSpace.class});
+        final PsiElement nextStatement = PsiTreeUtil.skipSiblingsBackward(ifStatement, new Class[]{PsiWhiteSpace.class});
         if (!(nextStatement instanceof JSStatement)) {
             return false;
         }
         JSStatement elseBranch = (JSStatement) nextStatement;
 
         elseBranch = ConditionalUtils.stripBraces(elseBranch);
-        if (ConditionalUtils.isAssignment(thenBranch, "true") &&
-                ConditionalUtils.isAssignment(elseBranch, "false")) {
-            final JSAssignmentExpression thenExpression =
-                    (JSAssignmentExpression) ((JSExpressionStatement) thenBranch).getExpression();
-            final JSAssignmentExpression elseExpression =
-                    (JSAssignmentExpression) ((JSExpressionStatement) elseBranch).getExpression();
+        if (ConditionalUtils.isAssignment(thenBranch, "true") && ConditionalUtils.isAssignment(elseBranch, "false")) {
+            final JSAssignmentExpression thenExpression = (JSAssignmentExpression) ((JSExpressionStatement) thenBranch).getExpression();
+            final JSAssignmentExpression elseExpression = (JSAssignmentExpression) ((JSExpressionStatement) elseBranch).getExpression();
             final IElementType thenSign = thenExpression.getOperationSign();
             final IElementType elseSign = elseExpression.getOperationSign();
             if (!thenSign.equals(elseSign)) {
@@ -416,8 +351,7 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
             }
             final JSExpression thenLhs = thenExpression.getLOperand();
             final JSExpression elseLhs = elseExpression.getLOperand();
-            return EquivalenceChecker.expressionsAreEquivalent(thenLhs,
-                    elseLhs);
+            return EquivalenceChecker.expressionsAreEquivalent(thenLhs, elseLhs);
         } else {
             return false;
         }
@@ -429,22 +363,16 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
         }
         JSStatement thenBranch = ifStatement.getThen();
         thenBranch = ConditionalUtils.stripBraces(thenBranch);
-        final PsiElement nextStatement =
-                PsiTreeUtil.skipSiblingsBackward(ifStatement,
-                        new Class[]{
-                                PsiWhiteSpace.class});
+        final PsiElement nextStatement = PsiTreeUtil.skipSiblingsBackward(ifStatement, new Class[]{PsiWhiteSpace.class});
         if (!(nextStatement instanceof JSStatement)) {
             return false;
         }
         JSStatement elseBranch = (JSStatement) nextStatement;
 
         elseBranch = ConditionalUtils.stripBraces(elseBranch);
-        if (ConditionalUtils.isAssignment(thenBranch, "false") &&
-                ConditionalUtils.isAssignment(elseBranch, "true")) {
-            final JSAssignmentExpression thenExpression =
-                    (JSAssignmentExpression) ((JSExpressionStatement) thenBranch).getExpression();
-            final JSAssignmentExpression elseExpression =
-                    (JSAssignmentExpression) ((JSExpressionStatement) elseBranch).getExpression();
+        if (ConditionalUtils.isAssignment(thenBranch, "false") && ConditionalUtils.isAssignment(elseBranch, "true")) {
+            final JSAssignmentExpression thenExpression = (JSAssignmentExpression) ((JSExpressionStatement) thenBranch).getExpression();
+            final JSAssignmentExpression elseExpression = (JSAssignmentExpression) ((JSExpressionStatement) elseBranch).getExpression();
             final IElementType thenSign = thenExpression.getOperationSign();
             final IElementType elseSign = elseExpression.getOperationSign();
             if (!thenSign.equals(elseSign)) {
@@ -452,8 +380,7 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
             }
             final JSExpression thenLhs = thenExpression.getLOperand();
             final JSExpression elseLhs = elseExpression.getLOperand();
-            return EquivalenceChecker.expressionsAreEquivalent(thenLhs,
-                    elseLhs);
+            return EquivalenceChecker.expressionsAreEquivalent(thenLhs, elseLhs);
         } else {
             return false;
         }

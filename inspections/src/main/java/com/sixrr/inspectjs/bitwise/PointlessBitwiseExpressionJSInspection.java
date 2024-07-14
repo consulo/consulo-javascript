@@ -4,7 +4,11 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
-import com.sixrr.inspectjs.*;
+import com.sixrr.inspectjs.BaseInspectionVisitor;
+import com.sixrr.inspectjs.InspectionJSFix;
+import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import com.sixrr.inspectjs.utils.ExpressionUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
@@ -14,15 +18,15 @@ import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.HashSet;
 import java.util.Set;
 
 @ExtensionImpl
 public class PointlessBitwiseExpressionJSInspection extends JavaScriptInspection
 {
-	static final Set<IElementType> bitwiseTokens = new HashSet<IElementType>(6);
+	static final Set<IElementType> bitwiseTokens = new HashSet<>(6);
 
 	static
 	{
@@ -38,8 +42,7 @@ public class PointlessBitwiseExpressionJSInspection extends JavaScriptInspection
 	@Nonnull
 	public String getDisplayName()
 	{
-		return InspectionJSBundle.message(
-				"pointless.bitwise.expression.display.name");
+		return InspectionJSLocalize.pointlessBitwiseExpressionDisplayName().get();
 	}
 
 	@Override
@@ -55,9 +58,7 @@ public class PointlessBitwiseExpressionJSInspection extends JavaScriptInspection
 	public String buildErrorString(Object state, Object... args)
 	{
 		final String replacementExpression = calculateReplacementExpression((JSExpression) args[0], (PointlessBitwiseExpressionJSInspectionState) state);
-		return InspectionJSBundle.message(
-				"pointless.bitwise.expression.problem.descriptor",
-				replacementExpression);
+		return InspectionJSLocalize.pointlessBitwiseExpressionProblemDescriptor(replacementExpression).get();
 	}
 
 	@Override
@@ -159,8 +160,7 @@ public class PointlessBitwiseExpressionJSInspection extends JavaScriptInspection
 		@Nonnull
 		public String getName()
 		{
-			return InspectionJSBundle.message(
-					"pointless.bitwise.expression.simplify.quickfix");
+			return InspectionJSLocalize.pointlessBitwiseExpressionSimplifyQuickfix().get();
 		}
 
 		@Override
@@ -264,12 +264,11 @@ public class PointlessBitwiseExpressionJSInspection extends JavaScriptInspection
 
 	private boolean isAllOnes(JSExpression expression, PointlessBitwiseExpressionJSInspectionState state)
 	{
-		if(state.m_ignoreExpressionsContainingConstants && !(expression instanceof JSLiteralExpression))
+		if (state.m_ignoreExpressionsContainingConstants && !(expression instanceof JSLiteralExpression))
 		{
 			return false;
 		}
-		final Object value =
-				ExpressionUtil.computeConstantExpression(expression);
-		return value != null && value instanceof Integer && (Integer) value == 0xffffffff;
+		final Object value = ExpressionUtil.computeConstantExpression(expression);
+		return value instanceof Integer intValue && intValue == 0xffffffff;
 	}
 }

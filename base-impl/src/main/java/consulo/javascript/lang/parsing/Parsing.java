@@ -43,14 +43,14 @@ public class Parsing<C extends JavaScriptParsingContext>
 
 	public boolean isContextKeyword(@Nonnull PsiBuilder builder, @Nonnull IElementType elementType)
 	{
-		if(builder.getTokenType() == JSTokenTypes.IDENTIFIER)
+		if (builder.getTokenType() == JSTokenTypes.IDENTIFIER)
 		{
 			IElementType contextKeywordElementType = JavaScriptContextKeywordElementType.getKeywordByText(builder.getTokenText());
-			if(contextKeywordElementType == null)
+			if (contextKeywordElementType == null)
 			{
 				return false;
 			}
-			if(elementType == contextKeywordElementType)
+			if (elementType == contextKeywordElementType)
 			{
 				return true;
 			}
@@ -61,14 +61,14 @@ public class Parsing<C extends JavaScriptParsingContext>
 	@Nullable
 	public IElementType isContextKeyword(@Nonnull PsiBuilder builder, @Nonnull TokenSet tokenSet)
 	{
-		if(builder.getTokenType() == JSTokenTypes.IDENTIFIER)
+		if (builder.getTokenType() == JSTokenTypes.IDENTIFIER)
 		{
 			IElementType contextKeywordElementType = JavaScriptContextKeywordElementType.getKeywordByText(builder.getTokenText());
-			if(contextKeywordElementType == null)
+			if (contextKeywordElementType == null)
 			{
 				return null;
 			}
-			if(tokenSet.contains(contextKeywordElementType))
+			if (tokenSet.contains(contextKeywordElementType))
 			{
 				return contextKeywordElementType;
 			}
@@ -92,11 +92,11 @@ public class Parsing<C extends JavaScriptParsingContext>
 	public void advanceContextKeyword(@Nonnull PsiBuilder builder, @Nonnull TokenSet tokenSet)
 	{
 		IElementType elementType = isContextKeyword(builder, tokenSet);
-		if(elementType != null)
+		if (elementType != null)
 		{
-			if(builder instanceof JavaScriptStrictParserBuilder)
+			if (builder instanceof JavaScriptStrictParserBuilder strictParserBuilder)
 			{
-				((JavaScriptStrictParserBuilder) builder).disableNonStrictRemap(builder.getCurrentOffset());
+				strictParserBuilder.disableNonStrictRemap(builder.getCurrentOffset());
 			}
 			builder.remapCurrentToken(elementType);
 			builder.advanceLexer();
@@ -127,7 +127,7 @@ public class Parsing<C extends JavaScriptParsingContext>
 
 	public static boolean checkMatches(final PsiBuilder builder, final IElementType token, final LocalizeValue message)
 	{
-		if(builder.getTokenType() == token)
+		if (builder.getTokenType() == token)
 		{
 			builder.advanceLexer();
 			return true;

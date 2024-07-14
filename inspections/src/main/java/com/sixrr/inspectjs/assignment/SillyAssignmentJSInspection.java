@@ -6,54 +6,49 @@ import com.intellij.lang.javascript.psi.JSDefinitionExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import com.sixrr.inspectjs.utils.EquivalenceChecker;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-public class SillyAssignmentJSInspection
-        extends JavaScriptInspection {
-
-
+public class SillyAssignmentJSInspection extends JavaScriptInspection {
     @Override
-	@Nonnull
+    @Nonnull
     public String getDisplayName() {
-        return InspectionJSBundle.message("silly.assignment.display.name");
+        return InspectionJSLocalize.sillyAssignmentDisplayName().get();
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.ASSIGNMENT_GROUP_NAME;
     }
 
     @RequiredReadAction
-	@Override
-	public String buildErrorString(Object state, Object... args) {
-        return InspectionJSBundle.message("silly.assignment.error.string");
+    @Override
+    public String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.sillyAssignmentErrorString().get();
     }
 
     @Override
-	public boolean isEnabledByDefault() {
+    public boolean isEnabledByDefault() {
         return true;
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
-    private static class Visitor
-            extends BaseInspectionVisitor {
-
-        @Override public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression assignment) {
+    private static class Visitor extends BaseInspectionVisitor {
+        @Override
+        public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression assignment) {
             super.visitJSAssignmentExpression(assignment);
 
             final IElementType sign = assignment.getOperationSign();

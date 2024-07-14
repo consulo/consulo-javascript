@@ -3,15 +3,14 @@ package com.sixrr.inspectjs.naming;
 import com.intellij.lang.javascript.psi.JSVarStatement;
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.InspectionJSFix;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.fix.RenameFix;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.psi.PsiElement;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
@@ -29,7 +28,7 @@ public class LocalVariableNamingConventionJSInspection extends ConventionInspect
 	@Nonnull
 	public String getDisplayName()
 	{
-		return InspectionJSBundle.message("local.variable.naming.convention.display.name");
+		return InspectionJSLocalize.localVariableNamingConventionDisplayName().get();
 	}
 
 	@Override
@@ -60,15 +59,15 @@ public class LocalVariableNamingConventionJSInspection extends ConventionInspect
 		final JSVariable variable = (JSVariable) ((PsiElement) args[0]).getParent();
 		assert variable != null;
 		final String variableName = variable.getName();
-		if(variableName.length() < inspectionState.m_minLength)
+		if (variableName.length() < inspectionState.m_minLength)
 		{
-			return InspectionJSBundle.message("variable.name.is.too.short.error.string");
+			return InspectionJSLocalize.variableNameIsTooShortErrorString().get();
 		}
-		else if(variableName.length() > inspectionState.m_maxLength)
+		else if (variableName.length() > inspectionState.m_maxLength)
 		{
-			return InspectionJSBundle.message("variable.name.is.too.long.error.string");
+			return InspectionJSLocalize.variableNameIsTooLongErrorString().get();
 		}
-		return InspectionJSBundle.message("variable.name.doesnt.match.regex.error.string", inspectionState.m_regex);
+		return InspectionJSLocalize.variableNameDoesntMatchRegexErrorString(inspectionState.m_regex).get();
 	}
 
 	@Nonnull
@@ -91,20 +90,19 @@ public class LocalVariableNamingConventionJSInspection extends ConventionInspect
 		{
 			super.visitJSVarStatement(jsVarStatement);
 			final JSVariable[] variables = jsVarStatement.getVariables();
-			for(JSVariable variable : variables)
+			for (JSVariable variable : variables)
 			{
 				final String name = variable.getName();
-				if(name == null)
+				if (name == null)
 				{
 					continue;
 				}
-				if(isValid(name, myState))
+				if (isValid(name, myState))
 				{
 					continue;
 				}
 				registerVariableError(variable);
 			}
 		}
-
 	}
 }

@@ -4,7 +4,11 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSConditionalExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
-import com.sixrr.inspectjs.*;
+import com.sixrr.inspectjs.BaseInspectionVisitor;
+import com.sixrr.inspectjs.InspectionJSFix;
+import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import com.sixrr.inspectjs.utils.BoolUtils;
 import com.sixrr.inspectjs.utils.ParenthesesUtils;
 import consulo.annotation.access.RequiredReadAction;
@@ -14,7 +18,6 @@ import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -23,65 +26,59 @@ public class NegatedConditionalExpressionJSInspection extends JavaScriptInspecti
     private final NegatedConditionalFix fix = new NegatedConditionalFix();
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getDisplayName() {
-        return InspectionJSBundle.message("negated.conditional.expression.display.name");
+        return InspectionJSLocalize.negatedConditionalExpressionDisplayName().get();
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
     @RequiredReadAction
-	@Override
-	@Nullable
+    @Override
+    @Nullable
     protected String buildErrorString(Object state, Object... args) {
-        return InspectionJSBundle.message("negated.conditional.expression.error.string");
+        return InspectionJSLocalize.negatedConditionalExpressionErrorString().get();
     }
 
     @Override
-	protected InspectionJSFix buildFix(PsiElement location, Object state) {
+    protected InspectionJSFix buildFix(PsiElement location, Object state) {
         return fix;
     }
 
     private static class NegatedConditionalFix extends InspectionJSFix {
         @Override
-		@Nonnull
+        @Nonnull
         public String getName() {
-            return InspectionJSBundle.message("invert.condition.fix");
+            return InspectionJSLocalize.invertConditionFix().get();
         }
 
         @Override
-		public void doFix(Project project,
-                          ProblemDescriptor descriptor)
-                throws IncorrectOperationException {
-            final JSConditionalExpression exp =
-                    (JSConditionalExpression) descriptor.getPsiElement();
+        public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
+            final JSConditionalExpression exp = (JSConditionalExpression) descriptor.getPsiElement();
             assert exp != null;
-            final JSExpression elseBranch = (JSExpression) exp.getElse();
+            final JSExpression elseBranch = exp.getElse();
             final JSExpression thenBranch = exp.getThen();
             final JSExpression condition = exp.getCondition();
-            final String negatedCondition =
-                    BoolUtils.getNegatedExpressionText(condition);
+            final String negatedCondition = BoolUtils.getNegatedExpressionText(condition);
             assert elseBranch != null;
             assert thenBranch != null;
-            final String newStatement =
-                    negatedCondition + '?' + elseBranch.getText() + ':' +
-                            thenBranch.getText();
+            final String newStatement = negatedCondition + '?' + elseBranch.getText() + ':' + thenBranch.getText();
             replaceExpression(exp, newStatement);
         }
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
     private static class Visitor extends BaseInspectionVisitor {
-
-        @Override public void visitJSConditionalExpression(JSConditionalExpression exp) {
+        @Override
+        public void visitJSConditionalExpression(JSConditionalExpression exp) {
             super.visitJSConditionalExpression(exp);
             JSExpression condition = exp.getCondition();
             condition = ParenthesesUtils.stripExpression(condition);
@@ -95,8 +92,7 @@ public class NegatedConditionalExpressionJSInspection extends JavaScriptInspecti
             if (!(expression instanceof JSBinaryExpression)) {
                 return false;
             }
-            final JSBinaryExpression binaryExpression =
-                    (JSBinaryExpression) expression;
+            final JSBinaryExpression binaryExpression = (JSBinaryExpression) expression;
             final IElementType sign = binaryExpression.getOperationSign();
             return JSTokenTypes.NE.equals(sign) ||JSTokenTypes.NEQEQ.equals(sign);
         }

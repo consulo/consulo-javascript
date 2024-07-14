@@ -1,15 +1,15 @@
 package com.sixrr.inspectjs.fix;
 
-import consulo.language.editor.refactoring.RefactoringFactory;
-import consulo.project.Project;
+import com.sixrr.inspectjs.InspectionJSFix;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.dataContext.DataManager;
 import consulo.language.editor.inspection.ProblemDescriptor;
-import consulo.language.psi.PsiElement;
-import consulo.language.editor.refactoring.action.RefactoringActionHandlerFactory;
-import consulo.language.editor.refactoring.action.RefactoringActionHandler;
+import consulo.language.editor.refactoring.RefactoringFactory;
 import consulo.language.editor.refactoring.RenameRefactoring;
-import com.sixrr.inspectjs.InspectionJSFix;
-import com.sixrr.inspectjs.InspectionJSBundle;
+import consulo.language.editor.refactoring.action.RefactoringActionHandler;
+import consulo.language.editor.refactoring.action.RefactoringActionHandlerFactory;
+import consulo.language.psi.PsiElement;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
 public class RenameFix extends InspectionJSFix {
@@ -26,22 +26,19 @@ public class RenameFix extends InspectionJSFix {
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getName() {
-        if (m_targetName == null) {
-            return InspectionJSBundle.message("rename.fix");
-        } else {
-            return InspectionJSBundle.message("rename.to.fix", m_targetName);
-        }
+        return m_targetName == null
+            ? InspectionJSLocalize.renameFix().get()
+            : InspectionJSLocalize.renameToFix(m_targetName).get();
     }
 
     @Override
-	public void doFix(Project project, ProblemDescriptor descriptor) {
+    public void doFix(Project project, ProblemDescriptor descriptor) {
         final PsiElement nameIdentifier = descriptor.getPsiElement();
         final PsiElement elementToRename = nameIdentifier.getParent();
         if (m_targetName == null) {
-            final RefactoringActionHandlerFactory factory =
-                    RefactoringActionHandlerFactory.getInstance();
+            final RefactoringActionHandlerFactory factory = RefactoringActionHandlerFactory.getInstance();
             final RefactoringActionHandler renameHandler = factory.createRenameHandler();
             renameHandler.invoke(project, new PsiElement[]{elementToRename}, DataManager.getInstance().getDataContext());
         } else {

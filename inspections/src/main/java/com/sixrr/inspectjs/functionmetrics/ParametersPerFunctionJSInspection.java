@@ -4,14 +4,13 @@ import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSParameter;
 import com.intellij.lang.javascript.psi.JSParameterList;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.psi.PsiElement;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
@@ -28,7 +27,7 @@ public class ParametersPerFunctionJSInspection extends JavaScriptInspection
 	@Nonnull
 	public String getDisplayName()
 	{
-		return InspectionJSBundle.message("function.with.too.many.parameters.display.name");
+		return InspectionJSLocalize.functionWithTooManyParametersDisplayName().get();
 	}
 
 	@Override
@@ -54,14 +53,9 @@ public class ParametersPerFunctionJSInspection extends JavaScriptInspection
 		final JSParameterList parameterList = function.getParameterList();
 		final JSParameter[] parameters = parameterList.getParameters();
 		final int numParameters = parameters.length;
-		if(functionHasIdentifier(function))
-		{
-			return InspectionJSBundle.message("function.has.too.many.parameters.error.string", numParameters);
-		}
-		else
-		{
-			return InspectionJSBundle.message("anonymous.function.has.too.many.parameters.error.string", numParameters);
-		}
+		return functionHasIdentifier(function)
+			? InspectionJSLocalize.functionHasTooManyParametersErrorString(numParameters).get()
+			: InspectionJSLocalize.anonymousFunctionHasTooManyParametersErrorString(numParameters).get();
 	}
 
 	@Override
@@ -72,7 +66,6 @@ public class ParametersPerFunctionJSInspection extends JavaScriptInspection
 
 	private class Visitor extends BaseInspectionVisitor<ParametersPerFunctionJSInspectionState>
 	{
-
 		@Override
 		public void visitJSFunctionDeclaration(@Nonnull JSFunction function)
 		{
@@ -95,4 +88,3 @@ public class ParametersPerFunctionJSInspection extends JavaScriptInspection
 		}
 	}
 }
-
