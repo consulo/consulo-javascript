@@ -24,14 +24,13 @@ package com.intellij.javascript.documentation;
 
 import com.intellij.lang.javascript.index.JSSymbolUtil;
 import com.intellij.lang.javascript.psi.*;
-import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
-
-import jakarta.annotation.Nonnull;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -519,7 +518,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor
 			if(methodInfo.parameterInfoMap.size() > 0)
 			{
 				result.append("<DT><b>");
-				result.append(CodeInsightBundle.message("javadoc.parameters"));
+				result.append(CodeInsightLocalize.javadocParameters().get());
 				result.append("</b></DT>");
 			}
 
@@ -540,7 +539,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor
 			if(methodInfo.returnInfo.description.length() > 0)
 			{
 				result.append("<DT><b>");
-				result.append(CodeInsightBundle.message("javadoc.returns"));
+				result.append(CodeInsightLocalize.javadocReturns().get());
 				result.append("</b></DT>");
 
 				result.append("<DD>");

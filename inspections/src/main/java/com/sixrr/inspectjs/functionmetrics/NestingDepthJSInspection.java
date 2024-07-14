@@ -2,14 +2,13 @@ package com.sixrr.inspectjs.functionmetrics;
 
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.psi.PsiElement;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
@@ -26,7 +25,7 @@ public class NestingDepthJSInspection extends JavaScriptInspection
 	@Nonnull
 	public String getDisplayName()
 	{
-		return InspectionJSBundle.message("overly.nested.function.display.name");
+		return InspectionJSLocalize.overlyNestedFunctionDisplayName().get();
 	}
 
 	@Override
@@ -52,14 +51,9 @@ public class NestingDepthJSInspection extends JavaScriptInspection
 		final NestingDepthVisitor visitor = new NestingDepthVisitor();
 		function.accept(visitor);
 		final int nestingDepth = visitor.getMaximumDepth();
-		if(functionHasIdentifier(function))
-		{
-			return InspectionJSBundle.message("function.is.overly.nested.error.string", nestingDepth);
-		}
-		else
-		{
-			return InspectionJSBundle.message("anonymous.function.is.overly.nested.error.string", nestingDepth);
-		}
+		return functionHasIdentifier(function)
+			? InspectionJSLocalize.functionIsOverlyNestedErrorString(nestingDepth).get()
+			: InspectionJSLocalize.anonymousFunctionIsOverlyNestedErrorString(nestingDepth).get();
 	}
 
 	@Override
@@ -70,7 +64,6 @@ public class NestingDepthJSInspection extends JavaScriptInspection
 
 	private class Visitor extends BaseInspectionVisitor<NestingDepthJSInspectionState>
 	{
-
 		@Override
 		public void visitJSFunctionDeclaration(@Nonnull JSFunction function)
 		{
@@ -78,11 +71,9 @@ public class NestingDepthJSInspection extends JavaScriptInspection
 			function.accept(visitor);
 			final int count = visitor.getMaximumDepth();
 
-			if(count <= myState.getLimit())
-			{
-				return;
+			if (count > myState.getLimit()) {
+				registerFunctionError(function);
 			}
-			registerFunctionError(function);
 		}
 	}
 }

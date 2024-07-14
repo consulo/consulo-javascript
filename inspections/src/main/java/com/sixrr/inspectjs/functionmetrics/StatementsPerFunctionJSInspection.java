@@ -3,14 +3,13 @@ package com.sixrr.inspectjs.functionmetrics;
 import com.intellij.lang.javascript.psi.JSBlockStatement;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.psi.PsiElement;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
@@ -27,7 +26,7 @@ public class StatementsPerFunctionJSInspection extends JavaScriptInspection
 	@Nonnull
 	public String getDisplayName()
 	{
-		return InspectionJSBundle.message("overly.long.function.display.name");
+		return InspectionJSLocalize.overlyLongFunctionDisplayName().get();
 	}
 
 	@Override
@@ -55,14 +54,9 @@ public class StatementsPerFunctionJSInspection extends JavaScriptInspection
 		assert lastChild != null;
 		lastChild.accept(visitor);
 		final int coupling = visitor.getStatementCount();
-		if(functionHasIdentifier(function))
-		{
-			return InspectionJSBundle.message("function.is.overly.long.statement.error.string", coupling);
-		}
-		else
-		{
-			return InspectionJSBundle.message("anonymous.function.is.overly.long.statement.error.string", coupling);
-		}
+		return functionHasIdentifier(function)
+			? InspectionJSLocalize.functionIsOverlyLongStatementErrorString(coupling).get()
+			: InspectionJSLocalize.anonymousFunctionIsOverlyLongStatementErrorString(coupling).get();
 	}
 
 	@Override
@@ -73,7 +67,6 @@ public class StatementsPerFunctionJSInspection extends JavaScriptInspection
 
 	private class Visitor extends BaseInspectionVisitor<StatementsPerFunctionJSInspectionState>
 	{
-
 		@Override
 		public void visitJSFunctionDeclaration(@Nonnull JSFunction function)
 		{
@@ -95,4 +88,3 @@ public class StatementsPerFunctionJSInspection extends JavaScriptInspection
 		}
 	}
 }
-

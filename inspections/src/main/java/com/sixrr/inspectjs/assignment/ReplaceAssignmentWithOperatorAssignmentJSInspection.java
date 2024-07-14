@@ -5,7 +5,11 @@ import com.intellij.lang.javascript.psi.JSAssignmentExpression;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSDefinitionExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
-import com.sixrr.inspectjs.*;
+import com.sixrr.inspectjs.BaseInspectionVisitor;
+import com.sixrr.inspectjs.InspectionJSFix;
+import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import com.sixrr.inspectjs.utils.EquivalenceChecker;
 import com.sixrr.inspectjs.utils.SideEffectChecker;
 import consulo.annotation.access.RequiredReadAction;
@@ -19,38 +23,34 @@ import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
 @ExtensionImpl
-public class ReplaceAssignmentWithOperatorAssignmentJSInspection
-        extends JavaScriptInspection {
+public class ReplaceAssignmentWithOperatorAssignmentJSInspection extends JavaScriptInspection {
     @Override
-	@Nonnull
+    @Nonnull
     public String getID() {
         return "AssignmentReplaceableWithOperatorAssignmentJS";
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getDisplayName() {
-        return InspectionJSBundle.message("assignment.replaceable.with.operator.assignment.display.name");
+        return InspectionJSLocalize.assignmentReplaceableWithOperatorAssignmentDisplayName().get();
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.ASSIGNMENT_GROUP_NAME;
     }
 
     @RequiredReadAction
-	@Override
-	public String buildErrorString(Object state, Object... args) {
-        return InspectionJSBundle.message(
-                "assignment.replaceable.with.operator.assignment.error.string",
-                calculateReplacementExpression((JSAssignmentExpression) args[0]));
+    @Override
+    public String buildErrorString(Object state, Object... args) {
+        String expression = calculateReplacementExpression((JSAssignmentExpression)args[0]);
+        return InspectionJSLocalize.assignmentReplaceableWithOperatorAssignmentErrorString(expression).get();
     }
 
-    private static String calculateReplacementExpression(
-            JSAssignmentExpression expression) {
-        final JSBinaryExpression rhs =
-                (JSBinaryExpression) expression.getROperand();
+    private static String calculateReplacementExpression(JSAssignmentExpression expression) {
+        final JSBinaryExpression rhs = (JSBinaryExpression) expression.getROperand();
         final JSExpression lhs = expression.getLOperand();
         assert rhs != null;
         final IElementType sign = rhs.getOperationSign();
@@ -61,52 +61,44 @@ public class ReplaceAssignmentWithOperatorAssignmentJSInspection
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new ReplaceAssignmentWithOperatorAssignmentVisitor();
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location, Object state) {
-        return new ReplaceAssignmentWithOperatorAssignmentFix(
-                (JSAssignmentExpression) location);
+    public InspectionJSFix buildFix(PsiElement location, Object state) {
+        return new ReplaceAssignmentWithOperatorAssignmentFix((JSAssignmentExpression) location);
     }
 
-    private static class ReplaceAssignmentWithOperatorAssignmentFix
-            extends InspectionJSFix {
+    private static class ReplaceAssignmentWithOperatorAssignmentFix extends InspectionJSFix {
         private final String m_name;
 
-        private ReplaceAssignmentWithOperatorAssignmentFix(
-                JSAssignmentExpression expression) {
+        private ReplaceAssignmentWithOperatorAssignmentFix(JSAssignmentExpression expression) {
             super();
-            final JSBinaryExpression rhs =
-                    (JSBinaryExpression) expression.getROperand();
+            final JSBinaryExpression rhs = (JSBinaryExpression) expression.getROperand();
             assert rhs != null;
             final IElementType sign = rhs.getOperationSign();
             String signText = getTextForOperator(sign);
-            m_name = InspectionJSBundle.message("replace.with.operator.assign.fix", signText);
+            m_name = InspectionJSLocalize.replaceWithOperatorAssignFix(signText).get();
         }
 
         @Override
-		@Nonnull
+        @Nonnull
         public String getName() {
             return m_name;
         }
 
         @Override
-		public void doFix(Project project, ProblemDescriptor descriptor)
-                throws IncorrectOperationException {
-            final JSAssignmentExpression expression =
-                    (JSAssignmentExpression) descriptor.getPsiElement();
-            final String newExpression =
-                    calculateReplacementExpression(expression);
+        public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
+            final JSAssignmentExpression expression = (JSAssignmentExpression) descriptor.getPsiElement();
+            final String newExpression = calculateReplacementExpression(expression);
             replaceExpression(expression, newExpression);
         }
     }
 
-    private static class ReplaceAssignmentWithOperatorAssignmentVisitor
-            extends BaseInspectionVisitor {
-
-        @Override public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression assignment) {
+    private static class ReplaceAssignmentWithOperatorAssignmentVisitor extends BaseInspectionVisitor {
+        @Override
+        public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression assignment) {
             super.visitJSAssignmentExpression(assignment);
 
             final IElementType sign = assignment.getOperationSign();

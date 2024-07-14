@@ -3,29 +3,26 @@ package com.sixrr.inspectjs.dataflow;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.util.PsiTreeUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class ReuseOfLocalVariableJSInspection extends JavaScriptInspection
 {
-
 	@Override
 	@Nonnull
 	public String getDisplayName()
 	{
-		return InspectionJSBundle.message(
-				"reuse.of.local.variable.display.name");
+		return InspectionJSLocalize.reuseOfLocalVariableDisplayName().get();
 	}
 
 	@Override
@@ -40,10 +37,8 @@ public class ReuseOfLocalVariableJSInspection extends JavaScriptInspection
 	@Nonnull
 	public String buildErrorString(Object state, Object... args)
 	{
-		return InspectionJSBundle.message(
-				"reuse.of.local.variable.problem.descriptor");
+		return InspectionJSLocalize.reuseOfLocalVariableProblemDescriptor().get();
 	}
-
 
 	@Override
 	public BaseInspectionVisitor buildVisitor()
@@ -51,13 +46,10 @@ public class ReuseOfLocalVariableJSInspection extends JavaScriptInspection
 		return new ReuseOfLocalVariableVisitor();
 	}
 
-	private static class ReuseOfLocalVariableVisitor
-			extends BaseInspectionVisitor
+	private static class ReuseOfLocalVariableVisitor extends BaseInspectionVisitor
 	{
-
 		@Override
-		public void visitJSAssignmentExpression(
-				@Nonnull JSAssignmentExpression assignment)
+		public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression assignment)
 		{
 			super.visitJSAssignmentExpression(assignment);
 			if(assignment.getROperand() == null)
@@ -119,8 +111,7 @@ public class ReuseOfLocalVariableJSInspection extends JavaScriptInspection
 				// that a variable is used in only one branch of a try statement
 				return;
 			}
-			final PsiElement assignmentBlock =
-					assignmentParent.getParent();
+			final PsiElement assignmentBlock = assignmentParent.getParent();
 			if(assignmentBlock == null)
 			{
 				return;
@@ -131,8 +122,7 @@ public class ReuseOfLocalVariableJSInspection extends JavaScriptInspection
 				return;
 			}
 			final JSStatement[] statements = variableBlock.getStatements();
-			final PsiElement containingStatement =
-					getChildWhichContainsElement(variableBlock, assignment);
+			final PsiElement containingStatement = getChildWhichContainsElement(variableBlock, assignment);
 			int statementPosition = -1;
 			for(int i = 0; i < statements.length; i++)
 			{
@@ -156,8 +146,7 @@ public class ReuseOfLocalVariableJSInspection extends JavaScriptInspection
 			registerError(lhs);
 		}
 
-		private static boolean loopExistsBetween(
-				JSAssignmentExpression assignment, JSBlockStatement block)
+		private static boolean loopExistsBetween(JSAssignmentExpression assignment, JSBlockStatement block)
 		{
 			PsiElement elementToTest = assignment;
 			while(elementToTest != null)
@@ -175,8 +164,7 @@ public class ReuseOfLocalVariableJSInspection extends JavaScriptInspection
 			return false;
 		}
 
-		private static boolean tryExistsBetween(
-				JSAssignmentExpression assignment, JSBlockStatement block)
+		private static boolean tryExistsBetween(JSAssignmentExpression assignment, JSBlockStatement block)
 		{
 			PsiElement elementToTest = assignment;
 			while(elementToTest != null)
@@ -198,9 +186,7 @@ public class ReuseOfLocalVariableJSInspection extends JavaScriptInspection
 		 * @noinspection AssignmentToMethodParameter
 		 */
 		@Nullable
-		public static PsiElement getChildWhichContainsElement(
-				@Nonnull JSBlockStatement ancestor,
-				@Nonnull PsiElement descendant)
+		public static PsiElement getChildWhichContainsElement(@Nonnull JSBlockStatement ancestor, @Nonnull PsiElement descendant)
 		{
 			PsiElement element = descendant;
 			while(!element.equals(ancestor))

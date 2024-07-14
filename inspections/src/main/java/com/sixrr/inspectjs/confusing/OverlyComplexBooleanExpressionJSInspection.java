@@ -6,15 +6,14 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSParenthesizedExpression;
 import com.intellij.lang.javascript.psi.JSPrefixExpression;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.psi.PsiElement;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
@@ -24,7 +23,7 @@ public class OverlyComplexBooleanExpressionJSInspection extends JavaScriptInspec
 	@Nonnull
 	public String getDisplayName()
 	{
-		return InspectionJSBundle.message("overly.complex.boolean.expression.display.name");
+		return InspectionJSLocalize.overlyComplexBooleanExpressionDisplayName().get();
 	}
 
 	@Override
@@ -51,7 +50,7 @@ public class OverlyComplexBooleanExpressionJSInspection extends JavaScriptInspec
 	@Override
 	protected String buildErrorString(Object state, Object... args)
 	{
-		return InspectionJSBundle.message("overly.complex.boolean.expression.error.string");
+		return InspectionJSLocalize.overlyComplexBooleanExpressionErrorString().get();
 	}
 
 	@Override

@@ -2,38 +2,34 @@ package com.sixrr.inspectjs.control;
 
 import com.intellij.lang.javascript.psi.*;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class TailRecursionJSInspection extends JavaScriptInspection {
-
     @Override
-	@Nonnull
+    @Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getDisplayName() {
-        return InspectionJSBundle.message(
-                "tail.recursion.display.name");
+        return InspectionJSLocalize.tailRecursionDisplayName().get();
     }
 
     @RequiredReadAction
-	@Override
-	@Nonnull
+    @Override
+    @Nonnull
     protected String buildErrorString(Object state, Object... args) {
-        return InspectionJSBundle.message(
-                "tail.recursion.problem.descriptor");
+        return InspectionJSLocalize.tailRecursionProblemDescriptor().get();
     }
 
     /*

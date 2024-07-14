@@ -23,18 +23,18 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.MutableLookupElement;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.parameterInfo.*;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.ResolveResult;
 import consulo.language.psi.search.DefinitionsScopedSearch;
 import consulo.util.collection.ArrayUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 
 /**
@@ -251,7 +251,7 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 		}
 		else
 		{
-			info.text = CodeInsightBundle.message("parameter.info.no.parameters");
+			info.text = CodeInsightLocalize.parameterInfoNoParameters().get();
 		}
 		return info;
 	}

@@ -32,8 +32,8 @@ import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.language.editor.PsiEquivalenceUtil;
 import consulo.language.editor.highlight.HighlightManager;
-import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
+import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -46,10 +46,9 @@ import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.undoRedo.CommandProcessor;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
-
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -339,10 +338,10 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
 				}
 			}
 
-			final JSExpression refExpr = (JSExpression) JSChangeUtil.createExpressionFromText(project, settings.getVariableName());
+			final JSExpression refExpr = JSChangeUtil.createExpressionFromText(project, settings.getVariableName());
 			if(replaceAllOccurences)
 			{
-				List<JSExpression> toHighight = new ArrayList<JSExpression>();
+				List<JSExpression> toHighight = new ArrayList<>();
 				for(JSExpression occurence : occurrences)
 				{
 					if(occurence != expression || !replacedOriginal)
@@ -368,10 +367,13 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
 		}
 	}
 
-	protected JSVarStatement prepareDeclaration(final String varDeclText, BaseIntroduceContext<S> context, final Project project) throws IncorrectOperationException
+	protected JSVarStatement prepareDeclaration(final String varDeclText, BaseIntroduceContext<S> context, final Project project)
+		throws IncorrectOperationException
 	{
-		JSVarStatement declaration = (JSVarStatement) JSChangeUtil.createStatementFromText(project, varDeclText + " = 0" + JSChangeUtil.getSemicolon
-				(project)).getPsi();
+		JSVarStatement declaration = (JSVarStatement) JSChangeUtil.createStatementFromText(
+			project,
+			varDeclText + " = 0" + JSChangeUtil.getSemicolon(project)
+		).getPsi();
 		declaration.getVariables()[0].getInitializer().replace(context.expression);
 		return declaration;
 	}
@@ -405,9 +407,9 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
 		HighlightManager highlightManager = HighlightManager.getInstance(project);
 		EditorColorsManager colorsManager = EditorColorsManager.getInstance();
 		TextAttributes attributes = colorsManager.getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
-		ArrayList<RangeHighlighter> result = new ArrayList<RangeHighlighter>();
+		ArrayList<RangeHighlighter> result = new ArrayList<>();
 		highlightManager.addOccurrenceHighlights(editor, occurences, attributes, true, result);
-		WindowManager.getInstance().getStatusBar(project).setInfo(RefactoringBundle.message("press.escape.to.remove.the.highlighting"));
+		WindowManager.getInstance().getStatusBar(project).setInfo(RefactoringLocalize.pressEscapeToRemoveTheHighlighting().get());
 		return result;
 	}
 
@@ -455,12 +457,12 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
 
 		JSElement parent = PsiTreeUtil.getParentOfType(expression, JSFile.class, JSClass.class);
 
-		if(parent instanceof JSFile)
+		if (parent instanceof JSFile)
 		{
 			final PsiElement classRef = JSResolveUtil.getClassReferenceForXmlFromContext(parent);
-			if(classRef instanceof JSClass)
+			if (classRef instanceof JSClass jsClass)
 			{
-				parent = (JSElement) classRef;
+				parent = jsClass;
 			}
 		}
 

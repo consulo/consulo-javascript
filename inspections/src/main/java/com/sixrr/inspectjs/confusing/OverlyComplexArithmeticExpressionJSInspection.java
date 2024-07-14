@@ -3,9 +3,9 @@ package com.sixrr.inspectjs.confusing;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
@@ -23,7 +23,7 @@ public class OverlyComplexArithmeticExpressionJSInspection extends JavaScriptIns
 	@Nonnull
 	public String getDisplayName()
 	{
-		return InspectionJSBundle.message("overly.complex.arithmetic.expression.display.name");
+		return InspectionJSLocalize.overlyComplexArithmeticExpressionDisplayName().get();
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class OverlyComplexArithmeticExpressionJSInspection extends JavaScriptIns
 	@Override
 	protected String buildErrorString(Object state, Object... args)
 	{
-		return InspectionJSBundle.message("overly.complex.arithmetic.expression.error.string");
+		return InspectionJSLocalize.overlyComplexArithmeticExpressionErrorString().get();
 	}
 
 	@Override

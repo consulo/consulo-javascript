@@ -1,55 +1,55 @@
 package com.sixrr.inspectjs.confusing;
 
-import consulo.annotation.access.RequiredReadAction;
-import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.inspection.ProblemDescriptor;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
-import consulo.language.psi.PsiElement;
+import com.sixrr.inspectjs.BaseInspectionVisitor;
+import com.sixrr.inspectjs.InspectionJSFix;
+import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
-import com.sixrr.inspectjs.*;
 import consulo.project.Project;
-import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NonNls;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @ExtensionImpl
-public class PointlessArithmeticExpressionJSInspection
-        extends JavaScriptInspection {
-
-
+public class PointlessArithmeticExpressionJSInspection extends JavaScriptInspection {
     private final PointlessArithmeticFix fix = new PointlessArithmeticFix();
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getDisplayName() {
-        return InspectionJSBundle.message("pointless.arithmetic.expression.display.name");
+        return InspectionJSLocalize.pointlessArithmeticExpressionDisplayName().get();
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
     @Override
-	public boolean isEnabledByDefault() {
+    public boolean isEnabledByDefault() {
         return true;
     }
 
     @RequiredReadAction
-	@Override
-	public String buildErrorString(Object state, Object... args) {
-        return InspectionJSBundle.message("pointless.arithmetic.error.message", calculateReplacementExpression((JSExpression)args[0]));
+    @Override
+    public String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.pointlessArithmeticErrorMessage(calculateReplacementExpression((JSExpression)args[0])).get();
     }
 
-    private String calculateReplacementExpression(
-            JSExpression expression) {
+    private String calculateReplacementExpression(JSExpression expression) {
         final JSBinaryExpression exp = (JSBinaryExpression) expression;
         final IElementType sign = exp.getOperationSign();
         final JSExpression lhs = exp.getLOperand();
@@ -79,36 +79,32 @@ public class PointlessArithmeticExpressionJSInspection
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new PointlessArithmeticVisitor();
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location, Object state) {
+    public InspectionJSFix buildFix(PsiElement location, Object state) {
         return fix;
     }
 
     private class PointlessArithmeticFix extends InspectionJSFix {
         @Override
-		@Nonnull
+        @Nonnull
         public String getName() {
-            return InspectionJSBundle.message("simplify.fix");
+            return InspectionJSLocalize.simplifyFix().get();
         }
 
         @Override
-		public void doFix(Project project, ProblemDescriptor descriptor)
-                throws IncorrectOperationException {
-            final JSExpression expression = (JSExpression) descriptor
-                    .getPsiElement();
-            final String newExpression =
-                    calculateReplacementExpression(expression);
+        public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
+            final JSExpression expression = (JSExpression) descriptor.getPsiElement();
+            final String newExpression = calculateReplacementExpression(expression);
             replaceExpression(expression, newExpression);
         }
     }
 
     private class PointlessArithmeticVisitor extends BaseInspectionVisitor {
-        private final Set<IElementType> arithmeticTokens =
-                new HashSet<IElementType>(4);
+        private final Set<IElementType> arithmeticTokens = new HashSet<>(4);
 
         {
             arithmeticTokens.add(JSTokenTypes.PLUS);
@@ -117,8 +113,8 @@ public class PointlessArithmeticExpressionJSInspection
             arithmeticTokens.add(JSTokenTypes.DIV);
         }
 
-        @Override public void visitJSBinaryExpression(
-                @Nonnull JSBinaryExpression expression) {
+        @Override
+        public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             if (!(expression.getROperand() != null)) {
                 return;
@@ -158,13 +154,11 @@ public class PointlessArithmeticExpressionJSInspection
         return isZero(rhs);
     }
 
-    private boolean additionExpressionIsPointless(JSExpression lhs,
-                                                  JSExpression rhs) {
+    private boolean additionExpressionIsPointless(JSExpression lhs, JSExpression rhs) {
         return (isZero(lhs) && !isString(rhs)) || (isZero(rhs) && !isString(lhs));
     }
 
-    private boolean multiplyExpressionIsPointless(JSExpression lhs,
-                                                  JSExpression rhs) {
+    private boolean multiplyExpressionIsPointless(JSExpression lhs, JSExpression rhs) {
         return isZero(lhs) || isZero(rhs) || isOne(lhs) || isOne(rhs);
     }
 
@@ -185,10 +179,10 @@ public class PointlessArithmeticExpressionJSInspection
                 text.equals("0l");
     }
 
-  private static boolean isString(JSExpression expression) {
+    private static boolean isString(JSExpression expression) {
         if (expression instanceof JSLiteralExpression) {
-          final String s = expression.getText();
-          return s.startsWith("'") || s.startsWith("\"");
+            final String s = expression.getText();
+            return s.startsWith("'") || s.startsWith("\"");
         }
         return false;
     }

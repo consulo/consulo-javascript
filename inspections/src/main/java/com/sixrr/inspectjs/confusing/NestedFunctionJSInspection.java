@@ -3,16 +3,15 @@ package com.sixrr.inspectjs.confusing;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSFunctionExpression;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
 
 @ExtensionImpl
@@ -22,7 +21,7 @@ public class NestedFunctionJSInspection extends JavaScriptInspection
 	@Nonnull
 	public String getDisplayName()
 	{
-		return InspectionJSBundle.message("nested.function.display.name");
+		return InspectionJSLocalize.nestedFunctionDisplayName().get();
 	}
 
 	@Override
@@ -38,11 +37,11 @@ public class NestedFunctionJSInspection extends JavaScriptInspection
 	protected String buildErrorString(Object state, Object... args)
 	{
 		final JSFunction function = (JSFunction) ((PsiElement) args[0]).getParent();
-		if(functionHasIdentifier(function))
+		if (functionHasIdentifier(function))
 		{
-			return InspectionJSBundle.message("nested.function.error.string");
+			return InspectionJSLocalize.nestedFunctionErrorString().get();
 		}
-		return InspectionJSBundle.message("nested.anonymous.function.error.string");
+		return InspectionJSLocalize.nestedAnonymousFunctionErrorString().get();
 	}
 
 
