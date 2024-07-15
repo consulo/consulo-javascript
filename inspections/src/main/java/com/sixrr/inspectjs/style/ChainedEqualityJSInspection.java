@@ -28,7 +28,7 @@ public class ChainedEqualityJSInspection extends JavaScriptInspection {
     @Override
     @Nonnull
     public String getGroupDisplayName() {
-        return JSGroupNames.STYLE_GROUP_NAME;
+        return JSGroupNames.STYLE_GROUP_NAME.get();
     }
 
     @RequiredReadAction

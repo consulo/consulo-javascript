@@ -23,7 +23,7 @@ public class InfiniteRecursionJSInspection extends JavaScriptInspection {
     @Override
     @Nonnull
     public String getGroupDisplayName() {
-        return JSGroupNames.BUGS_GROUP_NAME;
+        return JSGroupNames.BUGS_GROUP_NAME.get();
     }
 
     @RequiredReadAction

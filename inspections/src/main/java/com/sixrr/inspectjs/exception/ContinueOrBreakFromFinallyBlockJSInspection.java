@@ -23,7 +23,7 @@ public class ContinueOrBreakFromFinallyBlockJSInspection extends JavaScriptInspe
     @Override
     @Nonnull
     public String getGroupDisplayName() {
-        return JSGroupNames.ERRORHANDLING_GROUP_NAME;
+        return JSGroupNames.ERRORHANDLING_GROUP_NAME.get();
     }
 
     @Override

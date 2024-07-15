@@ -5,6 +5,7 @@ import com.sixrr.inspectjs.BaseInspectionVisitor;
 import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.InspectionToolState;
@@ -21,15 +22,14 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection
 	@Nonnull
 	public String getDisplayName()
 	{
-		return InspectionJSBundle.message(
-				"redundant.local.variable.display.name");
+		return InspectionJSLocalize.redundantLocalVariableDisplayName().get();
 	}
 
 	@Override
 	@Nonnull
 	public String getGroupDisplayName()
 	{
-		return JSGroupNames.DATA_FLOW_ISSUES;
+		return JSGroupNames.DATA_FLOW_ISSUES.get();
 	}
 
 	@Nonnull
@@ -50,8 +50,7 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection
 	@Nonnull
 	public String buildErrorString(Object state, Object... args)
 	{
-		return InspectionJSBundle.message(
-				"unnecessary.local.variable.problem.descriptor");
+		return InspectionJSLocalize.unnecessaryLocalVariableProblemDescriptor().get();
 	}
 
 	@Override
@@ -75,7 +74,6 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection
 			final JSVariable[] variables = varStatement.getVariables();
 			for(JSVariable variable : variables)
 			{
-
 				if(isCopyVariable(variable))
 				{
 					registerVariableError(variable);
@@ -121,8 +119,7 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection
 			{
 				return false;
 			}
-			final JSBlockStatement containingScope =
-					PsiTreeUtil.getParentOfType(variable, JSBlockStatement.class);
+			final JSBlockStatement containingScope = PsiTreeUtil.getParentOfType(variable, JSBlockStatement.class);
 			if(containingScope == null || isClassMember(referent))
 			{
 				return false;
@@ -135,8 +132,7 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection
 				return false;
 			}
 			final JSVariable initialization = (JSVariable) referent;
-			final VariableAssignedVisitor visitor2 =
-					new VariableAssignedVisitor(initialization);
+			final VariableAssignedVisitor visitor2 = new VariableAssignedVisitor(initialization);
 			containingScope.accept(visitor2);
 			if(visitor2.isAssigned())
 			{
@@ -154,8 +150,7 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection
 
 		private boolean isImmediatelyReturned(JSVariable variable)
 		{
-			final JSBlockStatement containingScope =
-					PsiTreeUtil.getParentOfType(variable, JSBlockStatement.class);
+			final JSBlockStatement containingScope = PsiTreeUtil.getParentOfType(variable, JSBlockStatement.class);
 			if(containingScope == null)
 			{
 				return false;
@@ -184,8 +179,7 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection
 			{
 				return false;
 			}
-			final JSReturnStatement returnStatement =
-					(JSReturnStatement) nextStatement;
+			final JSReturnStatement returnStatement = (JSReturnStatement) nextStatement;
 			final JSExpression returnValue = returnStatement.getExpression();
 			if(returnValue == null)
 			{
@@ -201,15 +195,12 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection
 
 		private boolean isImmediatelyThrown(JSVariable variable)
 		{
-			final JSBlockStatement containingScope =
-					PsiTreeUtil.getParentOfType(variable, JSBlockStatement.class);
+			final JSBlockStatement containingScope = PsiTreeUtil.getParentOfType(variable, JSBlockStatement.class);
 			if(containingScope == null)
 			{
 				return false;
 			}
-			final JSVarStatement declarationStatement =
-					PsiTreeUtil.getParentOfType(variable,
-							JSVarStatement.class);
+			final JSVarStatement declarationStatement = PsiTreeUtil.getParentOfType(variable, JSVarStatement.class);
 			if(declarationStatement == null)
 			{
 				return false;
@@ -231,8 +222,7 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection
 			{
 				return false;
 			}
-			final JSThrowStatement throwStatement =
-					(JSThrowStatement) nextStatement;
+			final JSThrowStatement throwStatement = (JSThrowStatement) nextStatement;
 			final JSExpression returnValue = throwStatement.getExpression();
 			if(returnValue == null)
 			{
@@ -248,15 +238,12 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection
 
 		private boolean isImmediatelyAssigned(JSVariable variable)
 		{
-			final JSBlockStatement containingScope =
-					PsiTreeUtil.getParentOfType(variable, JSBlockStatement.class);
+			final JSBlockStatement containingScope = PsiTreeUtil.getParentOfType(variable, JSBlockStatement.class);
 			if(containingScope == null)
 			{
 				return false;
 			}
-			final JSVarStatement declarationStatement =
-					PsiTreeUtil.getParentOfType(variable,
-							JSVarStatement.class);
+			final JSVarStatement declarationStatement = PsiTreeUtil.getParentOfType(variable, JSVarStatement.class);
 			if(declarationStatement == null)
 			{
 				return false;
@@ -280,16 +267,13 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection
 			{
 				return false;
 			}
-			final JSExpressionStatement expressionStatement =
-					(JSExpressionStatement) nextStatement;
-			final JSExpression expression =
-					expressionStatement.getExpression();
+			final JSExpressionStatement expressionStatement = (JSExpressionStatement) nextStatement;
+			final JSExpression expression = expressionStatement.getExpression();
 			if(!(expression instanceof JSAssignmentExpression))
 			{
 				return false;
 			}
-			final JSAssignmentExpression assignmentExpression =
-					(JSAssignmentExpression) expression;
+			final JSAssignmentExpression assignmentExpression = (JSAssignmentExpression) expression;
 			final JSExpression rhs = assignmentExpression.getROperand();
 			if(rhs == null)
 			{
@@ -299,8 +283,7 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection
 			{
 				return false;
 			}
-			final JSReferenceExpression reference =
-					(JSReferenceExpression) rhs;
+			final JSReferenceExpression reference = (JSReferenceExpression) rhs;
 			final PsiElement referent = reference.resolve();
 			if(referent == null || !referent.equals(variable))
 			{
@@ -313,8 +296,7 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection
 			}
 			for(int i = followingStatementNumber; i < statements.length; i++)
 			{
-				if(VariableAccessUtils.variableIsUsed(variable,
-						statements[i]))
+				if(VariableAccessUtils.variableIsUsed(variable, statements[i]))
 				{
 					return false;
 				}
@@ -322,18 +304,14 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection
 			return true;
 		}
 
-		private boolean isImmediatelyAssignedAsDeclaration(
-				JSVariable variable)
+		private boolean isImmediatelyAssignedAsDeclaration(JSVariable variable)
 		{
-			final JSBlockStatement containingScope =
-					PsiTreeUtil.getParentOfType(variable, JSBlockStatement.class);
+			final JSBlockStatement containingScope = PsiTreeUtil.getParentOfType(variable, JSBlockStatement.class);
 			if(containingScope == null)
 			{
 				return false;
 			}
-			final JSVarStatement declarationStatement =
-					PsiTreeUtil.getParentOfType(variable,
-							JSVarStatement.class);
+			final JSVarStatement declarationStatement = PsiTreeUtil.getParentOfType(variable, JSVarStatement.class);
 			if(declarationStatement == null)
 			{
 				return false;
@@ -357,15 +335,13 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection
 			{
 				return false;
 			}
-			final JSVarStatement declaration =
-					(JSVarStatement) nextStatement;
+			final JSVarStatement declaration = (JSVarStatement) nextStatement;
 			final JSVariable[] declarations = declaration.getVariables();
 			if(declarations.length != 1)
 			{
 				return false;
 			}
-			final JSExpression rhs =
-					declarations[0].getInitializer();
+			final JSExpression rhs = declarations[0].getInitializer();
 			if(rhs == null)
 			{
 				return false;
@@ -381,8 +357,7 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection
 			}
 			for(int i = followingStatementNumber; i < statements.length; i++)
 			{
-				if(VariableAccessUtils.variableIsUsed(variable,
-						statements[i]))
+				if(VariableAccessUtils.variableIsUsed(variable, statements[i]))
 				{
 					return false;
 				}
@@ -390,8 +365,7 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection
 			return true;
 		}
 
-		private boolean variableIsUsedInInnerFunction(JSBlockStatement block,
-													  JSVariable variable)
+		private boolean variableIsUsedInInnerFunction(JSBlockStatement block, JSVariable variable)
 		{
 			final VariableUsedInInnerFunctionVisitor visitor = new VariableUsedInInnerFunctionVisitor(variable);
 			block.accept(visitor);

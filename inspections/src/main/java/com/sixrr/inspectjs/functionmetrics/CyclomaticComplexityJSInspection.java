@@ -33,7 +33,7 @@ public class CyclomaticComplexityJSInspection extends JavaScriptInspection
 	@Nonnull
 	public String getGroupDisplayName()
 	{
-		return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
+		return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME.get();
 	}
 
 	@Nonnull

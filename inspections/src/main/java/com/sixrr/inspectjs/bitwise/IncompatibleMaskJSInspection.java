@@ -32,7 +32,7 @@ public class IncompatibleMaskJSInspection extends JavaScriptInspection {
     @Override
     @Nonnull
     public String getGroupDisplayName() {
-        return JSGroupNames.BITWISE_GROUP_NAME;
+        return JSGroupNames.BITWISE_GROUP_NAME.get();
     }
 
     @RequiredReadAction

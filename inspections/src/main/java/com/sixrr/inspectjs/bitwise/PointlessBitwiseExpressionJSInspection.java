@@ -49,7 +49,7 @@ public class PointlessBitwiseExpressionJSInspection extends JavaScriptInspection
 	@Nonnull
 	public String getGroupDisplayName()
 	{
-		return JSGroupNames.BITWISE_GROUP_NAME;
+		return JSGroupNames.BITWISE_GROUP_NAME.get();
 	}
 
 	@RequiredReadAction

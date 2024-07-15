@@ -22,7 +22,7 @@ public class PlatformDetectionJSInspection extends JavaScriptInspection {
     @Override
     @Nonnull
     public String getGroupDisplayName() {
-        return JSGroupNames.DOM_GROUP_NAME;
+        return JSGroupNames.DOM_GROUP_NAME.get();
     }
 
     @RequiredReadAction

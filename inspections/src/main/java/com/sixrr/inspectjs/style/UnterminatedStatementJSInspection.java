@@ -1,7 +1,11 @@
 package com.sixrr.inspectjs.style;
 
 import com.intellij.lang.javascript.psi.*;
-import com.sixrr.inspectjs.*;
+import com.sixrr.inspectjs.BaseInspectionVisitor;
+import com.sixrr.inspectjs.InspectionJSFix;
+import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.ProblemDescriptor;
@@ -13,7 +17,6 @@ import consulo.project.Project;
 import consulo.xml.psi.xml.XmlAttributeValue;
 import consulo.xml.psi.xml.XmlTagChild;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
 
 @ExtensionImpl
@@ -31,14 +34,14 @@ public class UnterminatedStatementJSInspection extends JavaScriptInspection
 	@Nonnull
 	public String getDisplayName()
 	{
-		return InspectionJSBundle.message("unterminated.statement.display.name");
+		return InspectionJSLocalize.unterminatedStatementDisplayName().get();
 	}
 
 	@Override
 	@Nonnull
 	public String getGroupDisplayName()
 	{
-		return JSGroupNames.STYLE_GROUP_NAME;
+		return JSGroupNames.STYLE_GROUP_NAME.get();
 	}
 
 	@RequiredReadAction
@@ -46,7 +49,7 @@ public class UnterminatedStatementJSInspection extends JavaScriptInspection
 	@Nullable
 	protected String buildErrorString(Object state, Object... args)
 	{
-		return InspectionJSBundle.message("unterminated.statement.error.string");
+		return InspectionJSLocalize.unterminatedStatementErrorString().get();
 	}
 
 	@Override
@@ -67,7 +70,7 @@ public class UnterminatedStatementJSInspection extends JavaScriptInspection
 		@Nonnull
 		public String getName()
 		{
-			return InspectionJSBundle.message("terminate.statement.fix");
+			return InspectionJSLocalize.terminateStatementFix().get();
 		}
 
 		@Override
@@ -89,7 +92,6 @@ public class UnterminatedStatementJSInspection extends JavaScriptInspection
 
 	private static class Visitor extends BaseInspectionVisitor
 	{
-
 		@Override
 		public void visitJSExpressionStatement(JSExpressionStatement statement)
 		{
