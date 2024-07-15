@@ -21,12 +21,12 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
+import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.jetbrains.annotations.NonNls;
-
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 @IntentionMetaData(ignoreId = "JSAddBracesIntention", categories = {
@@ -71,8 +71,8 @@ public class JSAddBracesIntention extends JSMutablyNamedIntention
 			keyword = firstChild.getText();
 		}
 
-		return this.getText(keyword);
-	}
+		return JSIntentionBundle.message("braces.add-braces.display-name", keyword);
+  }
 
 	@Override
 	protected void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException

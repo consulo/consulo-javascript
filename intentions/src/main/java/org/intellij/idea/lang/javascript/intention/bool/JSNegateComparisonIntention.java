@@ -24,6 +24,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
+import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.ComparisonUtils;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
@@ -50,14 +51,9 @@ public class JSNegateComparisonIntention extends JSMutablyNamedIntention
 			negatedOperatorText = ComparisonUtils.getNegatedOperatorText(sign);
 		}
 
-		if(operatorText.equals(negatedOperatorText))
-		{
-			return this.getSuffixedDisplayName("equals", operatorText);
-		}
-		else
-		{
-			return this.getSuffixedDisplayName("not-equals", operatorText, negatedOperatorText);
-		}
+		return operatorText.equals(negatedOperatorText)
+			? JSIntentionBundle.message("bool.negate-comparison.display-name.equals", operatorText)
+			: JSIntentionBundle.message("bool.negate-comparison.display-name.not-equals", operatorText, negatedOperatorText);
 	}
 
 	@Override

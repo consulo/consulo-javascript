@@ -27,6 +27,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nullable;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
+import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
 import org.intellij.idea.lang.javascript.psiutil.ExpressionUtil;
@@ -71,8 +72,8 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention
 		assert (rhs != null);
 		assert (leftSide != null);
 
-		return this.getText(leftSide.getText(), BinaryOperatorUtils.getOperatorText(operationSign), rhs.getText());
-	}
+		return JSIntentionBundle.message("constant.constant-subexpression.display-name", leftSide.getText(),BinaryOperatorUtils.getOperatorText(operationSign),rhs.getText());
+  }
 
 	@Override
 	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException

@@ -27,6 +27,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
+import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.*;
 
@@ -45,8 +46,8 @@ public class JSReplaceWithOperatorAssignmentIntention extends JSMutablyNamedInte
 		assert (rhs != null);
 		final IElementType sign = rhs.getOperationSign();
 
-		return this.getText(BinaryOperatorUtils.getOperatorText(sign));
-	}
+		return JSIntentionBundle.message("opassign.replace-with-operator-assignment.display-name", BinaryOperatorUtils.getOperatorText(sign));
+  }
 
 	@Override
 	@Nonnull

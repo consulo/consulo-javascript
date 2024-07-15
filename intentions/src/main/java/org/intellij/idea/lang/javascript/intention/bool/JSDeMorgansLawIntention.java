@@ -24,13 +24,13 @@ import consulo.language.ast.IElementType;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
+import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BoolUtils;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.jetbrains.annotations.NonNls;
-
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 @IntentionMetaData(ignoreId = "JSDeMorgansLawIntention", categories = {
@@ -53,7 +53,9 @@ public class JSDeMorgansLawIntention extends JSMutablyNamedIntention
 	{
 		final IElementType tokenType = ((JSBinaryExpression) element).getOperationSign();
 
-		return this.getSuffixedDisplayName(tokenType.equals(JSTokenTypes.ANDAND) ? AND_SUFFIX : OR_SUFFIX);
+		return tokenType.equals(JSTokenTypes.ANDAND)
+				? JSIntentionBundle.message("bool.de-morgans-law.display-name.ANDAND")
+				: JSIntentionBundle.message("bool.de-morgans-law.display-name.OROR");
 	}
 
 	@Override

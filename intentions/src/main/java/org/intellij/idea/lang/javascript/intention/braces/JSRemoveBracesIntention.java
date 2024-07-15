@@ -22,6 +22,7 @@ import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
+import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.jetbrains.annotations.NonNls;
@@ -70,12 +71,11 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention
 			keyword = keywordChild.getText();
 		}
 
-		return this.getText(keyword);
-	}
+		return JSIntentionBundle.message("braces.remove-braces.display-name", keyword);
+  }
 
 	@Override
-	protected void processIntention(@Nonnull PsiElement element)
-			throws IncorrectOperationException
+	protected void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		final JSBlockStatement blockStatement = (JSBlockStatement) element;
 		final JSStatement[] statements = blockStatement.getStatements();

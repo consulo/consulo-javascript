@@ -24,10 +24,9 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 import consulo.xml.psi.xml.XmlElement;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 public abstract class JSIntention extends PsiElementBaseIntentionAction {
   private static final String INTENTION_SUFFIX = "Intention";
@@ -100,15 +99,5 @@ public abstract class JSIntention extends PsiElementBaseIntentionAction {
   @Nonnull
   public String getText() {
     return JSIntentionBundle.message(this.getTextKey(DISPLAY_NAME));
-  }
-
-  @SuppressWarnings({"UnresolvedPropertyKey"})
-  public String getText(@NonNls Object... arguments) {
-    return JSIntentionBundle.message(this.getTextKey(DISPLAY_NAME), arguments);
-  }
-
-  @SuppressWarnings({"UnresolvedPropertyKey"})
-  protected String getSuffixedDisplayName(@NonNls String suffix, @NonNls Object... arguments) {
-    return JSIntentionBundle.message(this.getTextKey(DISPLAY_NAME, '.', suffix), arguments);
   }
 }

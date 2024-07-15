@@ -23,6 +23,7 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
+import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
@@ -52,8 +53,12 @@ public class JSReplaceMultiplyWithShiftIntention extends JSMutablyNamedIntention
 			operatorString = (tokenType.equals(JSTokenTypes.MULT) ? "<<" : ">>");
 		}
 
-		return this.getText(BinaryOperatorUtils.getOperatorText(tokenType), operatorString);
-	}
+		return JSIntentionBundle.message(
+			"number.replace-multiply-with-shift.display-name",
+			BinaryOperatorUtils.getOperatorText(tokenType),
+			operatorString
+		);
+  }
 
 	@Override
 	@Nonnull
