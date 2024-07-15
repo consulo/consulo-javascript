@@ -1,17 +1,20 @@
 package com.sixrr.inspectjs;
 
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
+import consulo.localize.LocalizeValue;
+
 public interface JSGroupNames {
-    String ERRORHANDLING_GROUP_NAME = InspectionJSBundle.message("error.handling.javascript.group.name");
-    String CONTROL_FLOW_GROUP_NAME = InspectionJSBundle.message("control.flow.issues.javascript.group.name");
-    String VALIDITY_GROUP_NAME = InspectionJSBundle.message("javascript.validity.issues.group.name");
-    String CONFUSING_GROUP_NAME = InspectionJSBundle.message("potentially.confusing.code.constructs.javascript.group.name");
-    String FUNCTIONMETRICS_GROUP_NAME = InspectionJSBundle.message("javascript.function.metrics.group.name");
-    String ASSIGNMENT_GROUP_NAME = InspectionJSBundle.message("assignment.issues.javascript.group.name");
-    String NAMING_CONVENTIONS_GROUP_NAME = InspectionJSBundle.message("naming.conventions.javascript.group.name");
-    String STYLE_GROUP_NAME = InspectionJSBundle.message("code.style.issues.javascript.group.name");
-    String DOM_GROUP_NAME = InspectionJSBundle.message("javascript.dom.issues.group.name");
-    String BUGS_GROUP_NAME = InspectionJSBundle.message("probable.bugs.javascript.group.name");
-    String MATURITY_GROUP_NAME = InspectionJSBundle.message("code.maturity.javascript.group.name");
-    String DATA_FLOW_ISSUES = InspectionJSBundle.message("data.flow.issues.javascript.group.name");
-    String BITWISE_GROUP_NAME = InspectionJSBundle.message("bitwise.issues.javascript.group.name");
+    LocalizeValue ERRORHANDLING_GROUP_NAME = InspectionJSLocalize.errorHandlingJavascriptGroupName();
+    LocalizeValue CONTROL_FLOW_GROUP_NAME = InspectionJSLocalize.controlFlowIssuesJavascriptGroupName();
+    LocalizeValue VALIDITY_GROUP_NAME = InspectionJSLocalize.javascriptValidityIssuesGroupName();
+    LocalizeValue CONFUSING_GROUP_NAME = InspectionJSLocalize.potentiallyConfusingCodeConstructsJavascriptGroupName();
+    LocalizeValue FUNCTIONMETRICS_GROUP_NAME = InspectionJSLocalize.javascriptFunctionMetricsGroupName();
+    LocalizeValue ASSIGNMENT_GROUP_NAME = InspectionJSLocalize.assignmentIssuesJavascriptGroupName();
+    LocalizeValue NAMING_CONVENTIONS_GROUP_NAME = InspectionJSLocalize.namingConventionsJavascriptGroupName();
+    LocalizeValue STYLE_GROUP_NAME = InspectionJSLocalize.codeStyleIssuesJavascriptGroupName();
+    LocalizeValue DOM_GROUP_NAME = InspectionJSLocalize.javascriptDomIssuesGroupName();
+    LocalizeValue BUGS_GROUP_NAME = InspectionJSLocalize.probableBugsJavascriptGroupName();
+    LocalizeValue MATURITY_GROUP_NAME = InspectionJSLocalize.codeMaturityJavascriptGroupName();
+    LocalizeValue DATA_FLOW_ISSUES = InspectionJSLocalize.dataFlowIssuesJavascriptGroupName();
+    LocalizeValue BITWISE_GROUP_NAME = InspectionJSLocalize.bitwiseIssuesJavascriptGroupName();
 }

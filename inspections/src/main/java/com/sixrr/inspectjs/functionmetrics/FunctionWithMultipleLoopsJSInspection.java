@@ -22,7 +22,7 @@ public class FunctionWithMultipleLoopsJSInspection extends JavaScriptInspection 
     @Override
     @Nonnull
     public String getGroupDisplayName() {
-        return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
+        return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME.get();
     }
 
     @RequiredReadAction

@@ -27,7 +27,7 @@ public class SillyAssignmentJSInspection extends JavaScriptInspection {
     @Override
     @Nonnull
     public String getGroupDisplayName() {
-        return JSGroupNames.ASSIGNMENT_GROUP_NAME;
+        return JSGroupNames.ASSIGNMENT_GROUP_NAME.get();
     }
 
     @RequiredReadAction

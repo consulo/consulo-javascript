@@ -25,7 +25,7 @@ public class DynamicallyGeneratedCodeJSInspection extends JavaScriptInspection {
     @Override
     @Nonnull
     public String getGroupDisplayName() {
-        return JSGroupNames.CONFUSING_GROUP_NAME;
+        return JSGroupNames.CONFUSING_GROUP_NAME.get();
     }
 
     @RequiredReadAction

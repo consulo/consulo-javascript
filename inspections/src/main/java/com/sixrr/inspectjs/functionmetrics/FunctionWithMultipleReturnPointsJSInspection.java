@@ -32,7 +32,7 @@ public class FunctionWithMultipleReturnPointsJSInspection extends JavaScriptInsp
 	@Nonnull
 	public String getGroupDisplayName()
 	{
-		return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
+		return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME.get();
 	}
 
 	@RequiredReadAction

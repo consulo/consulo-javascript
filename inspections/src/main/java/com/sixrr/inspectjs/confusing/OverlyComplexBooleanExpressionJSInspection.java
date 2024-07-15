@@ -30,7 +30,7 @@ public class OverlyComplexBooleanExpressionJSInspection extends JavaScriptInspec
 	@Nonnull
 	public String getGroupDisplayName()
 	{
-		return JSGroupNames.CONFUSING_GROUP_NAME;
+		return JSGroupNames.CONFUSING_GROUP_NAME.get();
 	}
 
 	@Nonnull

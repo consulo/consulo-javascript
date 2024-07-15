@@ -2,46 +2,45 @@ package com.sixrr.inspectjs.confusing;
 
 import com.intellij.lang.javascript.psi.JSPrefixExpression;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 @ExtensionImpl
 public class VoidExpressionJSInspection extends JavaScriptInspection {
-
     @Override
-	@Nonnull
+    @Nonnull
     public String getDisplayName() {
-        return InspectionJSBundle.message("void.expression.display.name");
+        return InspectionJSLocalize.voidExpressionDisplayName().get();
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getGroupDisplayName() {
-        return JSGroupNames.CONFUSING_GROUP_NAME;
+        return JSGroupNames.CONFUSING_GROUP_NAME.get();
     }
 
     @RequiredReadAction
-	@Override
-	@Nullable
+    @Override
+    @Nullable
     protected String buildErrorString(Object state, Object... args) {
-        return InspectionJSBundle.message("void.expression.error.string");
+        return InspectionJSLocalize.voidExpressionErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
     private static class Visitor extends BaseInspectionVisitor {
-        @Override public void visitJSPrefixExpression(JSPrefixExpression expression) {
+        @Override
+        public void visitJSPrefixExpression(JSPrefixExpression expression) {
             super.visitJSPrefixExpression(expression);
             final PsiElement firstChild = expression.getFirstChild();
             if(firstChild == null)

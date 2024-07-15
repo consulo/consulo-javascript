@@ -25,7 +25,7 @@ public class ChainedFunctionCallJSInspection extends JavaScriptInspection
 	@Nonnull
 	public String getGroupDisplayName()
 	{
-		return JSGroupNames.STYLE_GROUP_NAME;
+		return JSGroupNames.STYLE_GROUP_NAME.get();
 	}
 
 	@Override

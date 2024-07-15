@@ -1,7 +1,11 @@
 package com.sixrr.inspectjs.control;
 
 import com.intellij.lang.javascript.psi.*;
-import com.sixrr.inspectjs.*;
+import com.sixrr.inspectjs.BaseInspectionVisitor;
+import com.sixrr.inspectjs.InspectionJSFix;
+import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
@@ -17,54 +21,53 @@ public class  UnnecessaryReturnJSInspection extends JavaScriptInspection {
     private final UnnecessaryReturnFix fix = new UnnecessaryReturnFix();
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getID() {
         return "UnnecessaryReturnStatementJS";
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getDisplayName() {
-        return InspectionJSBundle.message("unnecessary.return.statement.display.name");
+        return InspectionJSLocalize.unnecessaryReturnStatementDisplayName().get();
     }
 
     @Override
-	@Nonnull
+    @Nonnull
     public String getGroupDisplayName() {
-        return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
+        return JSGroupNames.CONTROL_FLOW_GROUP_NAME.get();
     }
 
     @Override
-	public boolean isEnabledByDefault() {
+    public boolean isEnabledByDefault() {
         return true;
     }
 
     @RequiredReadAction
-	@Override
-	public String buildErrorString(Object state, Object... args) {
-        return InspectionJSBundle.message("unnecessary.return.error.string");
+    @Override
+    public String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.unnecessaryReturnErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new UnnecessaryReturnVisitor();
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location, Object state) {
+    public InspectionJSFix buildFix(PsiElement location, Object state) {
         return fix;
     }
 
     private static class UnnecessaryReturnFix extends InspectionJSFix {
         @Override
-		@Nonnull
+        @Nonnull
         public String getName() {
-            return InspectionJSBundle.message("remove.unnecessary.return.fix");
+            return InspectionJSLocalize.removeUnnecessaryReturnFix().get();
         }
 
         @Override
-		public void doFix(Project project, ProblemDescriptor descriptor)
-                throws IncorrectOperationException {
+        public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
             final PsiElement returnKeywordElement = descriptor.getPsiElement();
             final PsiElement returnStatement = returnKeywordElement.getParent();
             assert returnStatement != null;
@@ -73,8 +76,8 @@ public class  UnnecessaryReturnJSInspection extends JavaScriptInspection {
     }
 
     private static class UnnecessaryReturnVisitor extends BaseInspectionVisitor {
-
-        @Override public void visitJSReturnStatement(@Nonnull JSReturnStatement statement) {
+        @Override
+        public void visitJSReturnStatement(@Nonnull JSReturnStatement statement) {
             super.visitJSReturnStatement(statement);
 
             final JSExpression returnValue = statement.getExpression();
@@ -82,8 +85,7 @@ public class  UnnecessaryReturnJSInspection extends JavaScriptInspection {
             {
                 return;
             }
-            final JSFunction function =
-                    PsiTreeUtil.getParentOfType(statement, JSFunction.class);
+            final JSFunction function = PsiTreeUtil.getParentOfType(statement, JSFunction.class);
             if (function == null) {
                 return;
             }

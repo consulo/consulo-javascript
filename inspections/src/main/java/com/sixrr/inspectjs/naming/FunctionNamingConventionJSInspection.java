@@ -42,7 +42,7 @@ public class FunctionNamingConventionJSInspection extends ConventionInspection
 	@Nonnull
 	public String getGroupDisplayName()
 	{
-		return JSGroupNames.NAMING_CONVENTIONS_GROUP_NAME;
+		return JSGroupNames.NAMING_CONVENTIONS_GROUP_NAME.get();
 	}
 
 	@Override

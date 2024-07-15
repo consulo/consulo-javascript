@@ -5,15 +5,14 @@ import com.intellij.lang.javascript.psi.JSParameter;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.JSTryStatement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
@@ -23,15 +22,14 @@ public class UnusedCatchParameterJSInspection extends JavaScriptInspection
 	@Nonnull
 	public String getDisplayName()
 	{
-		return InspectionJSBundle.message(
-				"unused.catch.parameter.display.name");
+		return InspectionJSLocalize.unusedCatchParameterDisplayName().get();
 	}
 
 	@Override
 	@Nonnull
 	public String getGroupDisplayName()
 	{
-		return JSGroupNames.ERRORHANDLING_GROUP_NAME;
+		return JSGroupNames.ERRORHANDLING_GROUP_NAME.get();
 	}
 
 	@Nonnull
@@ -46,8 +44,7 @@ public class UnusedCatchParameterJSInspection extends JavaScriptInspection
 	@Nonnull
 	protected String buildErrorString(Object state, Object... args)
 	{
-		return InspectionJSBundle.message(
-				"unused.catch.parameter.problem.descriptor");
+		return InspectionJSLocalize.unusedCatchParameterProblemDescriptor().get();
 	}
 
 	@Override
@@ -58,7 +55,6 @@ public class UnusedCatchParameterJSInspection extends JavaScriptInspection
 
 	private class EmptyCatchBlockVisitor extends BaseInspectionVisitor<UnusedCatchParameterJSInspectionState>
 	{
-
 		@Override
 		public void visitJSTryStatement(@Nonnull JSTryStatement statement)
 		{
@@ -95,8 +91,7 @@ public class UnusedCatchParameterJSInspection extends JavaScriptInspection
 					}
 				}
 			}
-			final CatchParameterUsedVisitor visitor =
-					new CatchParameterUsedVisitor(param);
+			final CatchParameterUsedVisitor visitor = new CatchParameterUsedVisitor(param);
 			block.accept(visitor);
 			if(!visitor.isUsed())
 			{

@@ -24,7 +24,7 @@ public class AssignmentToFunctionParameterJSInspection extends JavaScriptInspect
     @Override
     @Nonnull
     public String getGroupDisplayName() {
-        return JSGroupNames.ASSIGNMENT_GROUP_NAME;
+        return JSGroupNames.ASSIGNMENT_GROUP_NAME.get();
     }
 
     @RequiredReadAction

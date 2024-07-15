@@ -41,7 +41,7 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
     @Override
     @Nonnull
     public String getGroupDisplayName() {
-        return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
+        return JSGroupNames.CONTROL_FLOW_GROUP_NAME.get();
     }
 
     @Override

@@ -29,7 +29,7 @@ public class ReuseOfLocalVariableJSInspection extends JavaScriptInspection
 	@Nonnull
 	public String getGroupDisplayName()
 	{
-		return JSGroupNames.DATA_FLOW_ISSUES;
+		return JSGroupNames.DATA_FLOW_ISSUES.get();
 	}
 
 	@RequiredReadAction

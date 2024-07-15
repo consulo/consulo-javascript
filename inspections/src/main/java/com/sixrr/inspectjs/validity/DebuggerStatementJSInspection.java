@@ -24,7 +24,7 @@ public class DebuggerStatementJSInspection extends JavaScriptInspection {
     @Override
     @Nonnull
     public String getGroupDisplayName() {
-        return JSGroupNames.VALIDITY_GROUP_NAME;
+        return JSGroupNames.VALIDITY_GROUP_NAME.get();
     }
 
     @Override
