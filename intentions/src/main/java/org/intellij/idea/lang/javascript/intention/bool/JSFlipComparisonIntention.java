@@ -24,6 +24,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
+import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.ComparisonUtils;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
@@ -42,23 +43,23 @@ public class JSFlipComparisonIntention extends JSMutablyNamedIntention
 		String operatorText = null;
 		String flippedOperatorText = null;
 
-		if(exp != null)
+		if (exp != null)
 		{
 			operatorText = ComparisonUtils.getOperatorText(exp.getOperationSign());
 			flippedOperatorText = ComparisonUtils.getFlippedOperatorText(exp.getOperationSign());
 		}
 
-		if(exp == null)
+		if (exp == null)
 		{
-			return this.getSuffixedDisplayName("unknown");
+			return JSIntentionBundle.message("bool.flip-comparison.display-name.unknown");
 		}
-		else if(operatorText.equals(flippedOperatorText))
+		else if (operatorText.equals(flippedOperatorText))
 		{
-			return this.getSuffixedDisplayName("equals", operatorText);
+			return JSIntentionBundle.message("bool.flip-comparison.display-name.equals", operatorText);
 		}
 		else
 		{
-			return this.getSuffixedDisplayName("not-equals", operatorText, flippedOperatorText);
+			return JSIntentionBundle.message("bool.flip-comparison.display-name.not-equals", operatorText, flippedOperatorText);
 		}
 	}
 
