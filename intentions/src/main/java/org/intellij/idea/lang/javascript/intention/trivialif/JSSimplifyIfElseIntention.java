@@ -30,10 +30,11 @@ import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSSimplifyIfElseIntention", categories = {
-		"JavaScript",
-		"Control Flow"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSSimplifyIfElseIntention",
+	categories = {"JavaScript", "Control Flow"},
+	fileExtensions = "js"
+)
 public class JSSimplifyIfElseIntention extends JSIntention
 {
 	@Override
@@ -46,7 +47,7 @@ public class JSSimplifyIfElseIntention extends JSIntention
 	@Override
 	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
-		final PsiElement statement = (element.getParent() instanceof JSIfStatement ? element.getParent() : element);
+		final PsiElement statement = element.getParent() instanceof JSIfStatement ? element.getParent() : element;
 
 		ConditionalUtils.replaceAssignmentOrReturnIfSimplifiable((JSIfStatement) statement);
 	}
@@ -56,16 +57,16 @@ public class JSSimplifyIfElseIntention extends JSIntention
 		@Override
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
-			if(!(element instanceof JSElement))
+			if (!(element instanceof JSElement))
 			{
 				return false;
 			}
 
 			PsiElement parent = element.getParent();
 
-			if(!(parent instanceof JSIfStatement))
+			if (!(parent instanceof JSIfStatement))
 			{
-				if(element instanceof JSIfStatement)
+				if (element instanceof JSIfStatement)
 				{
 					parent = element;
 				}
@@ -74,7 +75,7 @@ public class JSSimplifyIfElseIntention extends JSIntention
 					return false;
 				}
 			}
-			if(ErrorUtil.containsError(parent))
+			if (ErrorUtil.containsError(parent))
 			{
 				return false;
 			}
@@ -82,20 +83,19 @@ public class JSSimplifyIfElseIntention extends JSIntention
 			final JSIfStatement ifStatement = (JSIfStatement) parent;
 			final JSExpression condition = ifStatement.getCondition();
 
-			if(condition == null || !condition.isValid())
+			if (condition == null || !condition.isValid())
 			{
 				return false;
 			}
 
-			return (ConditionalUtils.isSimplifiableAssignment(ifStatement, false) ||
-					ConditionalUtils.isSimplifiableAssignment(ifStatement, true) ||
-					ConditionalUtils.isSimplifiableReturn(ifStatement, false) ||
-					ConditionalUtils.isSimplifiableReturn(ifStatement, true) ||
-					ConditionalUtils.isSimplifiableImplicitReturn(ifStatement, false) ||
-					ConditionalUtils.isSimplifiableImplicitReturn(ifStatement, true) ||
-					ConditionalUtils.isSimplifiableImplicitAssignment(ifStatement, false) ||
-					ConditionalUtils.isSimplifiableImplicitAssignment(ifStatement, true));
-
+			return ConditionalUtils.isSimplifiableAssignment(ifStatement, false)
+				|| ConditionalUtils.isSimplifiableAssignment(ifStatement, true)
+				|| ConditionalUtils.isSimplifiableReturn(ifStatement, false)
+				|| ConditionalUtils.isSimplifiableReturn(ifStatement, true)
+				|| ConditionalUtils.isSimplifiableImplicitReturn(ifStatement, false)
+				|| ConditionalUtils.isSimplifiableImplicitReturn(ifStatement, true)
+				|| ConditionalUtils.isSimplifiableImplicitAssignment(ifStatement, false)
+				|| ConditionalUtils.isSimplifiableImplicitAssignment(ifStatement, true);
 		}
 	}
 }

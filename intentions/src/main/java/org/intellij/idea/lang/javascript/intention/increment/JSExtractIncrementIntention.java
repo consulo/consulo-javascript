@@ -16,6 +16,7 @@
 package org.intellij.idea.lang.javascript.intention.increment;
 
 import com.intellij.lang.javascript.psi.*;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.intention.IntentionMetaData;
@@ -28,10 +29,11 @@ import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.*;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSExtractIncrementIntention", categories = {
-		"JavaScript",
-		"Other"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSExtractIncrementIntention",
+	categories = {"JavaScript", "Other"},
+	fileExtensions = "js"
+)
 public class JSExtractIncrementIntention extends JSMutablyNamedIntention
 {
 	@Override
@@ -48,16 +50,18 @@ public class JSExtractIncrementIntention extends JSMutablyNamedIntention
 	}
 
 	@Override
+	@RequiredReadAction
 	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		final boolean isPostfix = (element instanceof JSPostfixExpression);
-		final JSExpression operand = (isPostfix ? ((JSPostfixExpression) element).getExpression()
-				: ((JSPrefixExpression) element).getExpression());
+		final JSExpression operand = isPostfix
+			? ((JSPostfixExpression) element).getExpression()
+			: ((JSPrefixExpression) element).getExpression();
 		final JSStatement statement = TreeUtil.getParentOfType(element, JSStatement.class);
 
 		assert (statement != null);
 
-		if(isPostfix)
+		if (isPostfix)
 		{
 			JSElementFactory.addStatementAfter(statement, element.getText() + ';');
 		}
@@ -68,11 +72,12 @@ public class JSExtractIncrementIntention extends JSMutablyNamedIntention
 		JSElementFactory.replaceExpression((JSExpression) element, operand.getText());
 	}
 
+	@RequiredReadAction
 	private static IElementType getOperationSign(PsiElement element)
 	{
-		return ((element instanceof JSPostfixExpression)
-				? ((JSPostfixExpression) element).getOperationSign()
-				: ((JSPrefixExpression) element).getOperationSign());
+		return element instanceof JSPostfixExpression postfixExpression
+				? postfixExpression.getOperationSign()
+				: ((JSPrefixExpression) element).getOperationSign();
 	}
 
 	private static class ExtractIncrementPredicate implements JSElementPredicate
@@ -80,27 +85,16 @@ public class JSExtractIncrementIntention extends JSMutablyNamedIntention
 		@Override
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
-			if(!ExpressionUtil.isIncrementDecrementExpression(element))
-			{
-				return false;
-			}
-			if(ErrorUtil.containsError(element))
-			{
-				return false;
-			}
-
-			final PsiElement parent = element.getParent();
-
-			if(parent instanceof JSExpressionStatement)
-			{
-				return false;
+			if (!ExpressionUtil.isIncrementDecrementExpression(element)
+				|| ErrorUtil.containsError(element)
+				|| element.getParent() instanceof JSExpressionStatement) {
+        return false;
 			}
 
 			final JSStatement containingStatement = TreeUtil.getParentOfType(element, JSStatement.class);
 
-			if(element instanceof JSPostfixExpression &&
-					(containingStatement instanceof JSReturnStatement ||
-							containingStatement instanceof JSThrowStatement))
+			if (element instanceof JSPostfixExpression
+				&& (containingStatement instanceof JSReturnStatement || containingStatement instanceof JSThrowStatement))
 			{
 				return false;
 			}

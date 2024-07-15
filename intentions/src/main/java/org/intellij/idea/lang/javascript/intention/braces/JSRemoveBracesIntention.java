@@ -16,6 +16,7 @@
 package org.intellij.idea.lang.javascript.intention.braces;
 
 import com.intellij.lang.javascript.psi.*;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiComment;
@@ -30,10 +31,11 @@ import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSRemoveBracesIntention", categories = {
-		"JavaScript",
-		"Control Flow"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSRemoveBracesIntention",
+	categories = {"JavaScript", "Control Flow"},
+	fileExtensions = "js"
+)
 public class JSRemoveBracesIntention extends JSMutablyNamedIntention
 {
 	@NonNls
@@ -49,6 +51,7 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention
 	}
 
 	@Override
+	@RequiredReadAction
 	protected String getTextForElement(PsiElement element)
 	{
 		final JSElement parent = (JSElement) element.getParent();
@@ -61,7 +64,7 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention
 			final JSIfStatement ifStatement = (JSIfStatement) parent;
 			final JSStatement elseBranch = ifStatement.getElse();
 
-			keyword = (element.equals(elseBranch) ? ELSE_KEYWORD : IF_KEYWORD);
+			keyword = element.equals(elseBranch) ? ELSE_KEYWORD : IF_KEYWORD;
 		}
 		else
 		{
@@ -75,6 +78,7 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention
   }
 
 	@Override
+	@RequiredReadAction
 	protected void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		final JSBlockStatement blockStatement = (JSBlockStatement) element;
@@ -95,9 +99,9 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention
 		assert (sibling != null);
 
 		sibling = sibling.getNextSibling();
-		while(sibling != null && !sibling.equals(statement))
+		while (sibling != null && !sibling.equals(statement))
 		{
-			if(sibling instanceof PsiComment)
+			if (sibling instanceof PsiComment)
 			{
 				grandParent.addBefore(sibling, parent);
 			}
@@ -106,7 +110,7 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention
 
 		final PsiElement lastChild = blockStatement.getLastChild();
 
-		if(lastChild instanceof PsiComment)
+		if (lastChild instanceof PsiComment)
 		{
 			final JSElement nextSibling = (JSElement) parent.getNextSibling();
 
@@ -122,7 +126,7 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention
 		@Override
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
-			if(!(element instanceof JSBlockStatement))
+			if (!(element instanceof JSBlockStatement))
 			{
 				return false;
 			}

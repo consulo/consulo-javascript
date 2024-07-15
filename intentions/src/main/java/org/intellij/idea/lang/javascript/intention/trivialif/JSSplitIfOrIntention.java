@@ -20,6 +20,7 @@ import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSIfStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
@@ -29,24 +30,17 @@ import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
-import org.jetbrains.annotations.NonNls;
 
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSSplitIfOrIntention", categories = {
-		"JavaScript",
-		"Control Flow"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSSplitIfOrIntention",
+	categories = {"JavaScript", "Control Flow"},
+	fileExtensions = "js"
+)
 public class JSSplitIfOrIntention extends JSIntention
 {
-	@NonNls
-	private static final String IF_STATEMENT_PREFIX = "if (";
-	@NonNls
-	private static final String ELSE_IF_STATEMENT_PREFIX = "else if (";
-	@NonNls
-	private static final String ELSE_KEYWORD = "else ";
-
 	@Override
 	@Nonnull
 	public JSElementPredicate getElementPredicate()
@@ -55,6 +49,7 @@ public class JSSplitIfOrIntention extends JSIntention
 	}
 
 	@Override
+	@RequiredReadAction
 	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		final PsiElement jsElement = (element.getParent() instanceof JSIfStatement ? element.getParent() : element);
@@ -73,22 +68,18 @@ public class JSSplitIfOrIntention extends JSIntention
 		final JSStatement elseBranch = ifStatement.getElse();
 		final String thenText = thenBranch.getText();
 
-		assert (condition.getOperationSign().equals(JSTokenTypes.OROR));
+		assert JSTokenTypes.OROR.equals(condition.getOperationSign());
 
 		final StringBuilder statement = new StringBuilder(ifStatement.getTextLength());
 
-		statement.append(IF_STATEMENT_PREFIX)
-				.append(lhsText)
-				.append(')')
-				.append(thenText)
-				.append(ELSE_IF_STATEMENT_PREFIX)
-				.append(rhsText)
-				.append(')')
-				.append(thenText);
-		if(elseBranch != null)
+		statement.append("if (").append(lhsText).append(')')
+			.append(thenText)
+			.append("else if (").append(rhsText).append(')')
+			.append(thenText);
+
+		if (elseBranch != null)
 		{
-			statement.append(ELSE_KEYWORD)
-					.append(elseBranch.getText());
+			statement.append("else ").append(elseBranch.getText());
 		}
 
 		JSElementFactory.replaceStatement(ifStatement, statement.toString());
@@ -97,13 +88,14 @@ public class JSSplitIfOrIntention extends JSIntention
 	private static class SplitIfOrPredicate implements JSElementPredicate
 	{
 		@Override
+		@RequiredReadAction
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
 			PsiElement parent = element.getParent();
 
-			if(!(parent instanceof JSIfStatement))
+			if (!(parent instanceof JSIfStatement))
 			{
-				if(element instanceof JSIfStatement)
+				if (element instanceof JSIfStatement)
 				{
 					parent = element;
 				}
@@ -116,13 +108,8 @@ public class JSSplitIfOrIntention extends JSIntention
 			final JSIfStatement ifStatement = (JSIfStatement) parent;
 			final JSExpression condition = ifStatement.getCondition();
 
-			if(condition == null || ErrorUtil.containsError(condition))
-			{
-				return false;
-			}
-
-			return (condition instanceof JSBinaryExpression &&
-					((JSBinaryExpression) condition).getOperationSign().equals(JSTokenTypes.OROR));
+			return condition != null && !ErrorUtil.containsError(condition) && condition instanceof JSBinaryExpression binaryExpression
+				&& JSTokenTypes.OROR.equals(binaryExpression.getOperationSign());
 		}
 	}
 }

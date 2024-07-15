@@ -17,6 +17,7 @@ package org.intellij.idea.lang.javascript.intention.bool;
 
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.intention.IntentionMetaData;
@@ -30,20 +31,22 @@ import org.intellij.idea.lang.javascript.psiutil.ComparisonUtils;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSNegateComparisonIntention", categories = {
-		"JavaScript",
-		"Boolean"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSNegateComparisonIntention",
+	categories = {"JavaScript", "Boolean"},
+	fileExtensions = "js"
+)
 public class JSNegateComparisonIntention extends JSMutablyNamedIntention
 {
 	@Override
+	@RequiredReadAction
 	public String getTextForElement(PsiElement element)
 	{
 		final JSBinaryExpression expression = (JSBinaryExpression) element;
 		String operatorText = "";
 		String negatedOperatorText = "";
 
-		if(expression != null)
+		if (expression != null)
 		{
 			final IElementType sign = expression.getOperationSign();
 
@@ -64,6 +67,7 @@ public class JSNegateComparisonIntention extends JSMutablyNamedIntention
 	}
 
 	@Override
+	@RequiredReadAction
 	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		final JSBinaryExpression exp = (JSBinaryExpression) element;
@@ -75,8 +79,6 @@ public class JSNegateComparisonIntention extends JSMutablyNamedIntention
 
 		assert (rhs != null);
 
-		JSElementFactory.replaceExpressionWithNegatedExpressionString(exp, lhsText +
-				negatedOperator +
-				rhs.getText());
+		JSElementFactory.replaceExpressionWithNegatedExpressionString(exp, lhsText + negatedOperator + rhs.getText());
 	}
 }

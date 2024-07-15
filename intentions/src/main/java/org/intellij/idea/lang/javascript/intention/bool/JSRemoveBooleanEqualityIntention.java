@@ -33,10 +33,11 @@ import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSRemoveBooleanEqualityIntention", categories = {
-		"JavaScript",
-		"Boolean"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSRemoveBooleanEqualityIntention",
+	categories = {"JavaScript", "Boolean"},
+	fileExtensions = "js"
+)
 public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention
 {
 	@Override
@@ -44,7 +45,10 @@ public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention
 	{
 		final JSBinaryExpression binaryExpression = (JSBinaryExpression) element;
 
-		return JSIntentionBundle.message("bool.remove-boolean-equality.display-name", BinaryOperatorUtils.getOperatorText(binaryExpression.getOperationSign()));
+		return JSIntentionBundle.message(
+			"bool.remove-boolean-equality.display-name",
+			BinaryOperatorUtils.getOperatorText(binaryExpression.getOperationSign())
+		);
   }
 
 	@Override
@@ -55,8 +59,7 @@ public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention
 	}
 
 	@Override
-	public void processIntention(@Nonnull PsiElement element)
-			throws IncorrectOperationException
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		final JSBinaryExpression exp = (JSBinaryExpression) element;
 		final boolean isEquals = exp.getOperationSign().equals(JSTokenTypes.EQEQ);
@@ -69,9 +72,9 @@ public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention
 		final String lhsText = lhs.getText();
 		final String rhsText = rhs.getText();
 
-		if(BoolUtils.TRUE.equals(lhsText))
+		if (BoolUtils.TRUE.equals(lhsText))
 		{
-			if(isEquals)
+			if (isEquals)
 			{
 				JSElementFactory.replaceExpression(exp, rhsText);
 			}
@@ -80,9 +83,9 @@ public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention
 				JSElementFactory.replaceExpressionWithNegatedExpression(rhs, exp);
 			}
 		}
-		else if(BoolUtils.FALSE.equals(lhsText))
+		else if (BoolUtils.FALSE.equals(lhsText))
 		{
-			if(isEquals)
+			if (isEquals)
 			{
 				JSElementFactory.replaceExpressionWithNegatedExpression(rhs, exp);
 			}
@@ -91,9 +94,9 @@ public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention
 				JSElementFactory.replaceExpression(exp, rhsText);
 			}
 		}
-		else if(BoolUtils.TRUE.equals(rhsText))
+		else if (BoolUtils.TRUE.equals(rhsText))
 		{
-			if(isEquals)
+			if (isEquals)
 			{
 				JSElementFactory.replaceExpression(exp, lhsText);
 			}
@@ -104,7 +107,7 @@ public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention
 		}
 		else
 		{
-			if(isEquals)
+			if (isEquals)
 			{
 				JSElementFactory.replaceExpressionWithNegatedExpression(lhs, exp);
 			}
@@ -120,19 +123,15 @@ public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention
 		@Override
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
-			if(!(element instanceof JSBinaryExpression))
+			if (!(element instanceof JSBinaryExpression) || ErrorUtil.containsError(element))
 			{
-				return false;
-			}
-			if(ErrorUtil.containsError(element))
-			{
-				return false;
+        return false;
 			}
 
 			final JSBinaryExpression expression = (JSBinaryExpression) element;
 			final IElementType sign = expression.getOperationSign();
 
-			if(!(sign.equals(JSTokenTypes.EQEQ) || sign.equals(JSTokenTypes.NE)))
+			if (!(sign.equals(JSTokenTypes.EQEQ) || sign.equals(JSTokenTypes.NE)))
 			{
 				return false;
 			}
@@ -140,8 +139,7 @@ public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention
 			final JSExpression lhs = expression.getLOperand();
 			final JSExpression rhs = expression.getROperand();
 
-			return (lhs != null && rhs != null &&
-					(BoolUtils.isBooleanLiteral(lhs) || BoolUtils.isBooleanLiteral(rhs)));
+			return lhs != null && rhs != null && (BoolUtils.isBooleanLiteral(lhs) || BoolUtils.isBooleanLiteral(rhs));
 		}
 	}
 }

@@ -16,7 +16,7 @@
 package org.intellij.idea.lang.javascript.intention.number;
 
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
-import consulo.annotation.component.ExtensionImpl;
+import consulo.annotation.access.RequiredReadAction;import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
@@ -28,10 +28,11 @@ import org.intellij.idea.lang.javascript.psiutil.NumberUtil;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSConvertIntegerToHexIntention", categories = {
-		"JavaScript",
-		"Numbers"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSConvertIntegerToHexIntention",
+	categories = {"JavaScript", "Numbers"},
+	fileExtensions = "js"
+)
 public class JSConvertIntegerToHexIntention extends JSIntention
 {
 	@Override
@@ -52,14 +53,10 @@ public class JSConvertIntegerToHexIntention extends JSIntention
 	private static class ConvertIntegerToHexPredicate implements JSElementPredicate
 	{
 		@Override
+		@RequiredReadAction
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
-			if(!(element instanceof JSLiteralExpression))
-			{
-				return false;
-			}
-
-			return NumberUtil.isDecimal(element.getText());
+			return element instanceof JSLiteralExpression && NumberUtil.isDecimal(element.getText());
 		}
 	}
 }
