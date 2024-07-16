@@ -19,6 +19,7 @@ import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.intention.IntentionMetaData;
@@ -37,10 +38,11 @@ import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSConstantSubexpressionIntention", categories = {
-		"JavaScript",
-		"Other"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSConstantSubexpressionIntention",
+	categories = {"JavaScript", "Other"},
+	fileExtensions = "js"
+)
 public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention
 {
 	@Override
@@ -51,31 +53,29 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention
 	}
 
 	@Override
+	@RequiredReadAction
 	protected String getTextForElement(PsiElement element)
 	{
 		final PsiElement parent = element.getParent();
 		final JSBinaryExpression binaryExpression = (JSBinaryExpression) (parent instanceof JSBinaryExpression ? parent : element);
 		final JSExpression lhs = binaryExpression.getLOperand();
-		final JSExpression leftSide;
-
-		if(lhs instanceof JSBinaryExpression)
-		{
-			leftSide = ((JSBinaryExpression) lhs).getROperand();
-		}
-		else
-		{
-			leftSide = lhs;
-		}
+		final JSExpression leftSide = lhs instanceof JSBinaryExpression lhsBinaryExpression ? lhsBinaryExpression.getROperand() : lhs;
 		final IElementType operationSign = binaryExpression.getOperationSign();
 		final JSExpression rhs = binaryExpression.getROperand();
 
 		assert (rhs != null);
 		assert (leftSide != null);
 
-		return JSIntentionBundle.message("constant.constant-subexpression.display-name", leftSide.getText(),BinaryOperatorUtils.getOperatorText(operationSign),rhs.getText());
+		return JSIntentionBundle.message(
+			"constant.constant-subexpression.display-name",
+			leftSide.getText(),
+			BinaryOperatorUtils.getOperatorText(operationSign),
+			rhs.getText()
+		);
   }
 
 	@Override
+	@RequiredReadAction
 	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		final PsiElement parent = element.getParent();
@@ -83,14 +83,13 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention
 		String newExpression = "";
 		final Object constantValue;
 
-		if(expression instanceof JSBinaryExpression)
+		if (expression instanceof JSBinaryExpression)
 		{
 			final JSBinaryExpression binaryExpression = (JSBinaryExpression) expression;
 			final JSExpression lhs = binaryExpression.getLOperand();
 
-			if(lhs instanceof JSBinaryExpression)
+			if (lhs instanceof JSBinaryExpression lhsBinaryExpression)
 			{
-				final JSBinaryExpression lhsBinaryExpression = (JSBinaryExpression) lhs;
 				final JSExpression rightSide = lhsBinaryExpression.getROperand();
 
 				newExpression += getLeftSideText(lhsBinaryExpression);
@@ -104,9 +103,9 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention
 			constantValue = ExpressionUtil.computeConstantExpression(expression);
 		}
 
-		if(constantValue instanceof String)
+		if (constantValue instanceof String strValue)
 		{
-			newExpression += '"' + StringUtil.escapeStringCharacters(constantValue.toString()) + '"';
+			newExpression += '"' + StringUtil.escapeStringCharacters(strValue) + '"';
 		}
 		else
 		{
@@ -115,6 +114,7 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention
 		JSElementFactory.replaceExpression(expression, newExpression);
 	}
 
+	@RequiredReadAction
 	private static String getLeftSideText(JSBinaryExpression binaryExpression)
 	{
 		return binaryExpression.getLOperand().getText() +
@@ -130,20 +130,21 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention
 	 * @return the found common sub-expression if found, or <tt>null</tt> otherwise.
 	 */
 	@Nullable
+	@RequiredReadAction
 	private static JSBinaryExpression getSubexpression(JSBinaryExpression expression)
 	{
 		final JSExpression rhs = expression.getROperand();
 		final IElementType sign = expression.getOperationSign();
 		final int parentPrecendence = ParenthesesUtils.getPrecendence(expression);
 
-		if(rhs == null)
+		if (rhs == null)
 		{
 			return null;
 		}
 
 		final JSExpression lhs = expression.getLOperand();
 
-		if(!(lhs instanceof JSBinaryExpression))
+		if (!(lhs instanceof JSBinaryExpression))
 		{
 			return expression;
 		}
@@ -152,26 +153,17 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention
 		final int childPrecendence = ParenthesesUtils.getPrecendence(lhsBinaryExpression);
 		final JSExpression leftSide = lhsBinaryExpression.getROperand();
 
-		if(leftSide == null)
+		if (leftSide == null || parentPrecendence > childPrecendence)
 		{
-			return null;
-		}
-
-		if(parentPrecendence > childPrecendence)
-		{
-			return null;
+      return null;
 		}
 
 		try
 		{
-			final String subExpressionText = leftSide.getText() + BinaryOperatorUtils.getOperatorText(sign) +
-					rhs.getText();
-			final JSExpression subExpression = JSChangeUtil.createExpressionFromText(expression.getProject(),
-					subExpressionText);
-
-			return (JSBinaryExpression) subExpression;
+			final String subExpressionText = leftSide.getText() + BinaryOperatorUtils.getOperatorText(sign) + rhs.getText();
+			return (JSBinaryExpression) JSChangeUtil.createExpressionFromText(expression.getProject(), subExpressionText);
 		}
-		catch(Throwable ignore)
+		catch (Throwable ignore)
 		{
 			return null;
 		}
@@ -180,10 +172,10 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention
 	private static class ConstantSubexpressionPredicate implements JSElementPredicate
 	{
 		@Override
+		@RequiredReadAction
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
-			if(!(element instanceof JSElement ||
-					element.getPrevSibling() instanceof JSElement))
+			if (!(element instanceof JSElement || element.getPrevSibling() instanceof JSElement))
 			{
 				return false;
 			}
@@ -192,8 +184,7 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention
 
 			if(!(parent instanceof JSBinaryExpression))
 			{
-				if(element instanceof JSBinaryExpression &&
-						((JSBinaryExpression) element).getLOperand() instanceof JSBinaryExpression)
+				if (element instanceof JSBinaryExpression binaryExpression && binaryExpression.getLOperand() instanceof JSBinaryExpression)
 				{
 					parent = element;
 				}
@@ -205,30 +196,24 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention
 			final JSBinaryExpression binaryExpression = (JSBinaryExpression) parent;
 
 			final JSBinaryExpression subexpression = getSubexpression(binaryExpression);
-			if(subexpression == null)
+			if (subexpression == null)
 			{
 				return false;
 			}
-			if(binaryExpression.equals(subexpression) &&
-					!isPartOfConstantExpression(binaryExpression))
+			if (binaryExpression.equals(subexpression) && !isPartOfConstantExpression(binaryExpression))
 			{
 				// handled by JSConstantExpressionIntention
 				return false;
 			}
-			if(!ExpressionUtil.isConstantExpression(subexpression))
-			{
-				return false;
-			}
-
-			return (ExpressionUtil.computeConstantExpression(subexpression) != null);
+			return ExpressionUtil.isConstantExpression(subexpression)
+				&& ExpressionUtil.computeConstantExpression(subexpression) != null;
 		}
 
 		private static boolean isPartOfConstantExpression(JSBinaryExpression binaryExpression)
 		{
 			final PsiElement containingElement = binaryExpression.getParent();
 
-			return (containingElement instanceof JSExpression &&
-					ExpressionUtil.isConstantExpression((JSExpression) containingElement));
+			return containingElement instanceof JSExpression expression && ExpressionUtil.isConstantExpression(expression);
 		}
 	}
 }

@@ -31,10 +31,11 @@ import org.intellij.idea.lang.javascript.psiutil.TreeUtil;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSChangeToEndOfLineCommentIntention", categories = {
-		"JavaScript",
-		"Comments"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSChangeToEndOfLineCommentIntention",
+	categories = {"JavaScript", "Comments"},
+	fileExtensions = "js"
+)
 public class JSChangeToEndOfLineCommentIntention extends JSIntention
 {
 	@Override
@@ -58,15 +59,15 @@ public class JSChangeToEndOfLineCommentIntention extends JSIntention
 		final String[] newComments = buildCommentStrings(lines);
 		PsiElement currentElement = element;
 
-		for(int index = newComments.length; --index >= 0; )
+		for (int index = newComments.length; --index >= 0; )
 		{
-			if(newComments[index].length() > 0)
+			if (newComments[index].length() > 0)
 			{
 				currentElement = JSElementFactory.addElementBefore(currentElement, "\n");
 				currentElement = JSElementFactory.addElementBefore(currentElement, newComments[index]);
 			}
 		}
-		if(whitespace != null)
+		if (whitespace != null)
 		{
 			JSElementFactory.removeElement(whitespace);
 		}
@@ -80,12 +81,12 @@ public class JSChangeToEndOfLineCommentIntention extends JSIntention
 		for(int i = lines.length - 1; i >= 0 && lastNonEmtpyLine == -1; i--)
 		{
 			final String line = lines[i].trim();
-			if(line.length() != 0)
+			if (!line.isEmpty())
 			{
 				lastNonEmtpyLine = i;
 			}
 		}
-		if(lastNonEmtpyLine == -1)
+		if (lastNonEmtpyLine == -1)
 		{
 			return new String[]{"//"};
 		}
@@ -93,19 +94,19 @@ public class JSChangeToEndOfLineCommentIntention extends JSIntention
 		final StringBuilder buffer = new StringBuilder();
 		final String[] commentStrings = new String[lastNonEmtpyLine + 1];
 
-		for(int i = 0; i <= lastNonEmtpyLine; i++)
+		for (int i = 0; i <= lastNonEmtpyLine; i++)
 		{
 			final String line = lines[i];
 
-			if(line.trim().length() != 0)
+			if (line.trim().length() != 0)
 			{
 				buffer.replace(0, buffer.length(), "//");
 
-				if(line.startsWith(" *"))
+				if (line.startsWith(" *"))
 				{
 					buffer.append(line.substring(2));
 				}
-				else if(line.startsWith("*"))
+				else if (line.startsWith("*"))
 				{
 					buffer.append(line.substring(1));
 				}
@@ -122,11 +123,10 @@ public class JSChangeToEndOfLineCommentIntention extends JSIntention
 
 	private static class CStyleCommentPredicate implements JSElementPredicate
 	{
-
 		@Override
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
-			if(!(element instanceof PsiComment))
+			if (!(element instanceof PsiComment))
 			{
 				return false;
 			}
@@ -134,18 +134,17 @@ public class JSChangeToEndOfLineCommentIntention extends JSIntention
 			final PsiComment comment = (PsiComment) element;
 			final IElementType type = comment.getTokenType();
 
-			if(!(JSTokenTypes.C_STYLE_COMMENT.equals(type) || JSTokenTypes.C_STYLE_COMMENT.equals(type)))
+			if (!(JSTokenTypes.C_STYLE_COMMENT.equals(type) || JSTokenTypes.C_STYLE_COMMENT.equals(type)))
 			{
 				return false;
 			}
 			final PsiElement sibling = TreeUtil.getNextLeaf(comment);
-			if(!(sibling instanceof PsiWhiteSpace))
+			if (!(sibling instanceof PsiWhiteSpace))
 			{
 				return false;
 			}
 			final String whitespaceText = sibling.getText();
-			return (whitespaceText.indexOf((int) '\n') >= 0 ||
-					whitespaceText.indexOf((int) '\r') >= 0);
+			return whitespaceText.indexOf((int) '\n') >= 0 || whitespaceText.indexOf((int) '\r') >= 0;
 		}
 	}
 }

@@ -32,10 +32,11 @@ import org.intellij.idea.lang.javascript.psiutil.ExpressionUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSConstantExpressionIntention", categories = {
-		"JavaScript",
-		"Other"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSConstantExpressionIntention",
+	categories = {"JavaScript", "Other"},
+	fileExtensions = "js"
+)
 public class JSConstantExpressionIntention extends JSIntention
 {
 	@Override
@@ -52,9 +53,9 @@ public class JSConstantExpressionIntention extends JSIntention
 		final Object value = ExpressionUtil.computeConstantExpression(expression);
 		final String newExpression;
 
-		if(value instanceof String)
+		if (value instanceof String strValue)
 		{
-			newExpression = '"' + StringUtil.escapeStringCharacters((String) value) + '"';
+			newExpression = '"' + StringUtil.escapeStringCharacters(strValue) + '"';
 		}
 		else
 		{
@@ -68,42 +69,23 @@ public class JSConstantExpressionIntention extends JSIntention
 		@Override
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
-			if(!(element instanceof JSExpression))
+			if (!(element instanceof JSExpression) || ErrorUtil.containsError(element))
 			{
-				return false;
-			}
-			if(ErrorUtil.containsError(element))
-			{
-				return false;
+        return false;
 			}
 			final JSExpression expression = (JSExpression) element;
 
-			if(element instanceof JSLiteralExpression ||
-					(element instanceof JSReferenceExpression &&
-							((JSReferenceExpression) element).getQualifier() != null
-					) ||
-					expression instanceof JSCallExpression
-			)
-			{
-				return false;
-			}
-			if(!ExpressionUtil.isConstantExpression(expression))
-			{
-				return false;
-			}
-
-			if(ExpressionUtil.computeConstantExpression(expression) == null)
-			{
+			if (element instanceof JSLiteralExpression
+				|| (element instanceof JSReferenceExpression referenceExpression && referenceExpression.getQualifier() != null)
+				|| expression instanceof JSCallExpression
+				|| !ExpressionUtil.isConstantExpression(expression)
+				|| ExpressionUtil.computeConstantExpression(expression) == null) {
 				return false;
 			}
 
 			final PsiElement parent = element.getParent();
 
-			if(!(parent instanceof JSExpression))
-			{
-				return true;
-			}
-			return (!ExpressionUtil.isConstantExpression((JSExpression) parent));
+			return !(parent instanceof JSExpression parentExpression && ExpressionUtil.isConstantExpression(parentExpression));
 		}
 	}
 }

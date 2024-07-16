@@ -16,7 +16,7 @@
 package org.intellij.idea.lang.javascript.intention.string;
 
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
-import consulo.annotation.component.ExtensionImpl;
+import consulo.annotation.access.RequiredReadAction;import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
@@ -27,10 +27,11 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSDoubleToSingleQuotedStringIntention", categories = {
-		"JavaScript",
-		"Other"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSDoubleToSingleQuotedStringIntention",
+	categories = {"JavaScript", "Other"},
+	fileExtensions = "js"
+)
 public class JSDoubleToSingleQuotedStringIntention extends JSIntention
 {
 	@Override
@@ -41,6 +42,7 @@ public class JSDoubleToSingleQuotedStringIntention extends JSIntention
 	}
 
 	@Override
+	@RequiredReadAction
 	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		final JSLiteralExpression stringLiteral = (JSLiteralExpression) element;
@@ -54,11 +56,11 @@ public class JSDoubleToSingleQuotedStringIntention extends JSIntention
 		int simpleIndex = stringLiteral.lastIndexOf(StringUtil.SIMPLE_QUOTE);
 		int doubleIndex = stringLiteral.lastIndexOf(StringUtil.DOUBLE_QUOTE, stringLiteral.length() - 2);
 
-		while(simpleIndex >= 0 || doubleIndex > 0)
+		while (simpleIndex >= 0 || doubleIndex > 0)
 		{
-			if(simpleIndex > doubleIndex)
+			if (simpleIndex > doubleIndex)
 			{
-				if(stringLiteral.charAt(simpleIndex - 1) != StringUtil.BACKSLASH)
+				if (stringLiteral.charAt(simpleIndex - 1) != StringUtil.BACKSLASH)
 				{
 					buffer.insert(simpleIndex, StringUtil.BACKSLASH);
 				}
@@ -66,7 +68,7 @@ public class JSDoubleToSingleQuotedStringIntention extends JSIntention
 			}
 			else
 			{
-				if(stringLiteral.charAt(doubleIndex - 1) == StringUtil.BACKSLASH)
+				if (stringLiteral.charAt(doubleIndex - 1) == StringUtil.BACKSLASH)
 				{
 					buffer.deleteCharAt(doubleIndex - 1);
 				}
@@ -81,15 +83,10 @@ public class JSDoubleToSingleQuotedStringIntention extends JSIntention
 
 	private static class DoubleToSingleQuotedStringPredicate implements JSElementPredicate
 	{
-
 		@Override
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
-			if(!(element instanceof JSLiteralExpression))
-			{
-				return false;
-			}
-			return StringUtil.isDoubleQuoteStringLiteral((JSLiteralExpression) element);
+			return element instanceof JSLiteralExpression literalExpression && StringUtil.isDoubleQuoteStringLiteral(literalExpression);
 		}
 	}
 }

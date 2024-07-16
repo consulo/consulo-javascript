@@ -17,6 +17,7 @@ package org.intellij.idea.lang.javascript.intention.number;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.intention.IntentionMetaData;
@@ -32,25 +33,27 @@ import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSReplaceMultiplyWithShiftIntention", categories = {
-		"JavaScript",
-		"Shift"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSReplaceMultiplyWithShiftIntention",
+	categories = {"JavaScript", "Shift"},
+	fileExtensions = "js"
+)
 public class JSReplaceMultiplyWithShiftIntention extends JSMutablyNamedIntention
 {
 	@Override
+	@RequiredReadAction
 	protected String getTextForElement(PsiElement element)
 	{
 		final IElementType tokenType = ((JSBinaryExpression) element).getOperationSign();
 		final String operatorString;
 
-		if(element instanceof JSAssignmentExpression)
+		if (element instanceof JSAssignmentExpression)
 		{
-			operatorString = (tokenType.equals(JSTokenTypes.MULTEQ) ? "<<=" : ">>=");
+			operatorString = tokenType.equals(JSTokenTypes.MULTEQ) ? "<<=" : ">>=";
 		}
 		else
 		{
-			operatorString = (tokenType.equals(JSTokenTypes.MULT) ? "<<" : ">>");
+			operatorString = tokenType.equals(JSTokenTypes.MULT) ? "<<" : ">>";
 		}
 
 		return JSIntentionBundle.message(
@@ -68,12 +71,12 @@ public class JSReplaceMultiplyWithShiftIntention extends JSMutablyNamedIntention
 	}
 
 	@Override
-	public void processIntention(@Nonnull PsiElement element)
-			throws IncorrectOperationException
+	@RequiredReadAction
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
-		if(element instanceof JSAssignmentExpression)
+		if (element instanceof JSAssignmentExpression assignmentExpression)
 		{
-			this.replaceMultiplyOrDivideAssignWithShiftAssign((JSAssignmentExpression) element);
+			this.replaceMultiplyOrDivideAssignWithShiftAssign(assignmentExpression);
 		}
 		else
 		{
@@ -81,28 +84,27 @@ public class JSReplaceMultiplyWithShiftIntention extends JSMutablyNamedIntention
 		}
 	}
 
-	private void replaceMultiplyOrDivideAssignWithShiftAssign(JSAssignmentExpression exp)
-			throws IncorrectOperationException
+	@RequiredReadAction
+	private void replaceMultiplyOrDivideAssignWithShiftAssign(JSAssignmentExpression exp) throws IncorrectOperationException
 	{
 		final JSExpression lhs = exp.getLOperand();
 		final JSExpression rhs = exp.getROperand();
 		final IElementType tokenType = exp.getOperationSign();
-		final String assignString = (tokenType.equals(JSTokenTypes.MULTEQ) ? "<<=" : ">>=");
-		final String expString = lhs.getText() + assignString +
-				ShiftUtils.getLogBase2(rhs);
+		final String assignString = JSTokenTypes.MULTEQ.equals(tokenType) ? "<<=" : ">>=";
+		final String expString = lhs.getText() + assignString + ShiftUtils.getLogBase2(rhs);
 
 		JSElementFactory.replaceExpression(exp, expString);
 	}
 
-	private void replaceMultiplyOrDivideWithShift(JSBinaryExpression exp)
-			throws IncorrectOperationException
+	@RequiredReadAction
+	private void replaceMultiplyOrDivideWithShift(JSBinaryExpression exp) throws IncorrectOperationException
 	{
 		JSExpression lhs = exp.getLOperand();
 		JSExpression rhs = exp.getROperand();
 		final IElementType tokenType = exp.getOperationSign();
-		final String operatorString = (tokenType.equals(JSTokenTypes.MULT) ? "<<" : ">>");
+		final String operatorString = JSTokenTypes.MULT.equals(tokenType) ? "<<" : ">>";
 
-		if(ShiftUtils.isPowerOfTwo(lhs) && tokenType.equals(JSTokenTypes.MULT))
+		if (ShiftUtils.isPowerOfTwo(lhs) && JSTokenTypes.MULT.equals(tokenType))
 		{
 			JSExpression swap = lhs;
 
@@ -114,13 +116,9 @@ public class JSReplaceMultiplyWithShiftIntention extends JSMutablyNamedIntention
 		String expString = lhsText + operatorString + ShiftUtils.getLogBase2(rhs);
 		final JSElement parent = (JSElement) exp.getParent();
 
-		if(parent != null && parent instanceof JSExpression)
-		{
-			if(!(parent instanceof JSParenthesizedExpression) &&
-					ParenthesesUtils.getPrecendence((JSExpression) parent) < ParenthesesUtils.SHIFT_PRECENDENCE)
-			{
-				expString = '(' + expString + ')';
-			}
+		if (parent != null && parent instanceof JSExpression parentExpression && !(parent instanceof JSParenthesizedExpression)
+			&& ParenthesesUtils.getPrecendence(parentExpression) < ParenthesesUtils.SHIFT_PRECENDENCE) {
+			expString = '(' + expString + ')';
 		}
 		JSElementFactory.replaceExpression(exp, expString);
 	}
@@ -128,46 +126,35 @@ public class JSReplaceMultiplyWithShiftIntention extends JSMutablyNamedIntention
 	private static class MultiplyByPowerOfTwoPredicate implements JSElementPredicate
 	{
 		@Override
+		@RequiredReadAction
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
-			if(element instanceof JSAssignmentExpression)
-			{
-				return isMultiplyByPowerOfTwo((JSAssignmentExpression) element);
-			}
-			else if(element instanceof JSBinaryExpression)
-			{
-				return isMultiplyByPowerOfTwo((JSBinaryExpression) element);
-			}
-			else
-			{
-				return false;
-			}
+			return element instanceof JSAssignmentExpression assignmentExpression
+				? isMultiplyByPowerOfTwo(assignmentExpression)
+				: element instanceof JSBinaryExpression binaryExpression && isMultiplyByPowerOfTwo(binaryExpression);
 		}
 
+		@RequiredReadAction
 		private static boolean isMultiplyByPowerOfTwo(JSAssignmentExpression expression)
 		{
 			final IElementType operator = expression.getOperationSign();
 
-			if(operator == null || !(operator.equals(JSTokenTypes.MULTEQ) || operator.equals(JSTokenTypes.DIVEQ)))
+			if (operator == null || !(operator.equals(JSTokenTypes.MULTEQ) || operator.equals(JSTokenTypes.DIVEQ)))
 			{
 				return false;
 			}
 
 			final JSExpression rightExpression = expression.getROperand();
 
-			if(rightExpression == null)
-			{
-				return false;
-			}
-
-			return ShiftUtils.isPowerOfTwo(rightExpression);
+			return rightExpression != null && ShiftUtils.isPowerOfTwo(rightExpression);
 		}
 
+		@RequiredReadAction
 		private static boolean isMultiplyByPowerOfTwo(JSBinaryExpression expression)
 		{
 			final IElementType operator = expression.getOperationSign();
 
-			if(operator == null || !(operator.equals(JSTokenTypes.MULT) || operator.equals(JSTokenTypes.DIV)))
+			if (operator == null || !(operator.equals(JSTokenTypes.MULT) || operator.equals(JSTokenTypes.DIV)))
 			{
 				return false;
 			}
@@ -175,11 +162,8 @@ public class JSReplaceMultiplyWithShiftIntention extends JSMutablyNamedIntention
 			final JSExpression leftOperand = expression.getLOperand();
 			final JSExpression rightOperand = expression.getROperand();
 
-			if(leftOperand == null || rightOperand == null)
-			{
-				return false;
-			}
-			return (ShiftUtils.isPowerOfTwo(leftOperand) || ShiftUtils.isPowerOfTwo(rightOperand));
+			return leftOperand != null && rightOperand != null
+				&& (ShiftUtils.isPowerOfTwo(leftOperand) || ShiftUtils.isPowerOfTwo(rightOperand));
 		}
 	}
 }

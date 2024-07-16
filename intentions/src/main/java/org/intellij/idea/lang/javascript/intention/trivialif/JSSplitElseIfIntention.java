@@ -17,7 +17,7 @@ package org.intellij.idea.lang.javascript.intention.trivialif;
 
 import com.intellij.lang.javascript.psi.JSIfStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
-import consulo.annotation.component.ExtensionImpl;
+import consulo.annotation.access.RequiredReadAction;import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
@@ -29,10 +29,11 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSSplitElseIfIntention", categories = {
-		"JavaScript",
-		"Control Flow"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSSplitElseIfIntention",
+	categories = {"JavaScript", "Control Flow"},
+	fileExtensions = "js"
+)
 public class JSSplitElseIfIntention extends JSIntention
 {
 	@Override
@@ -43,6 +44,7 @@ public class JSSplitElseIfIntention extends JSIntention
 	}
 
 	@Override
+	@RequiredReadAction
 	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		final JSIfStatement parentStatement = (JSIfStatement) element.getParent();
@@ -62,22 +64,21 @@ public class JSSplitElseIfIntention extends JSIntention
 		{
 			final PsiElement parent = element.getParent();
 
-			if(!(parent instanceof JSIfStatement))
+			if (!(parent instanceof JSIfStatement))
 			{
 				return false;
 			}
 
 			final JSIfStatement ifStatement = (JSIfStatement) parent;
 
-			if(ErrorUtil.containsError(ifStatement))
+			if (ErrorUtil.containsError(ifStatement))
 			{
 				return false;
 			}
 			final JSStatement thenBranch = ifStatement.getThen();
 			final JSStatement elseBranch = ifStatement.getElse();
 
-			return (thenBranch != null && elseBranch != null &&
-					elseBranch instanceof JSIfStatement);
+			return thenBranch != null && elseBranch != null && elseBranch instanceof JSIfStatement;
 		}
 	}
 }

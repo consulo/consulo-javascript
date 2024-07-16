@@ -16,7 +16,7 @@
 package org.intellij.idea.lang.javascript.intention.number;
 
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
-import consulo.annotation.component.ExtensionImpl;
+import consulo.annotation.access.RequiredReadAction;import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
@@ -28,10 +28,11 @@ import org.intellij.idea.lang.javascript.psiutil.NumberUtil;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSConvertIntegerToOctalIntention", categories = {
-		"JavaScript",
-		"Numbers"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSConvertIntegerToOctalIntention",
+	categories = {"JavaScript", "Numbers"},
+	fileExtensions = "js"
+)
 public class JSConvertIntegerToOctalIntention extends JSIntention
 {
 	@Override
@@ -52,6 +53,7 @@ public class JSConvertIntegerToOctalIntention extends JSIntention
 	private static class ConvertIntegerToOctalPredicate implements JSElementPredicate
 	{
 		@Override
+		@RequiredReadAction
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
 			if(!(element instanceof JSLiteralExpression))
@@ -61,10 +63,7 @@ public class JSConvertIntegerToOctalIntention extends JSIntention
 
 			final String elementText = element.getText();
 
-			return (NumberUtil.isHex(elementText) ||
-					(NumberUtil.isDecimal(elementText) &&
-							!NumberUtil.isOctal(elementText)));
+			return NumberUtil.isHex(elementText) || (NumberUtil.isDecimal(elementText) && !NumberUtil.isOctal(elementText));
 		}
 	}
-
 }

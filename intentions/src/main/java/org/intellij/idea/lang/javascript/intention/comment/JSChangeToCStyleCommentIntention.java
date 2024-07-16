@@ -16,6 +16,7 @@
 package org.intellij.idea.lang.javascript.intention.comment;
 
 import com.intellij.lang.javascript.JSTokenTypes;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.intention.IntentionMetaData;
@@ -32,13 +33,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSChangeToCStyleCommentIntention", categories = {
-		"JavaScript",
-		"Comments"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSChangeToCStyleCommentIntention",
+	categories = {"JavaScript", "Comments"},
+	fileExtensions = "js"
+)
 public class JSChangeToCStyleCommentIntention extends JSIntention
 {
-
 	@Override
 	@Nonnull
 	protected JSElementPredicate getElementPredicate()
@@ -47,15 +48,16 @@ public class JSChangeToCStyleCommentIntention extends JSIntention
 	}
 
 	@Override
+	@RequiredReadAction
 	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		PsiComment firstComment = (PsiComment) element;
 
-		while(true)
+		while (true)
 		{
 			final PsiElement prevComment = JSElementFactory.getNonWhiteSpaceSibling(firstComment, false);
 
-			if(!isEndOfLineComment(prevComment))
+			if (!isEndOfLineComment(prevComment))
 			{
 				break;
 			}
@@ -64,15 +66,15 @@ public class JSChangeToCStyleCommentIntention extends JSIntention
 		}
 
 		final StringBuilder buffer = new StringBuilder(getCommentContents(firstComment));
-		final List<PsiElement> elementsToDelete = new ArrayList<PsiElement>();
+		final List<PsiElement> elementsToDelete = new ArrayList<>();
 		PsiElement nextComment = firstComment;
 
-		while(true)
+		while (true)
 		{
 			elementsToDelete.add(nextComment);
 
 			nextComment = JSElementFactory.getNonWhiteSpaceSibling(nextComment, true);
-			if(!isEndOfLineComment(nextComment))
+			if (!isEndOfLineComment(nextComment))
 			{
 				break;
 			}
@@ -84,23 +86,16 @@ public class JSChangeToCStyleCommentIntention extends JSIntention
 			elementsToDelete.add(prevSibling);
 
 			buffer.append(prevSibling.getText())  // White space
-					.append(getCommentContents((PsiComment) nextComment));
+				.append(getCommentContents((PsiComment) nextComment));
 		}
 
 		final String text = StringUtil.replace(buffer.toString(), "*/", "* /");
-		final String newCommentString;
-
-		if(text.indexOf('\n') >= 0)
-		{
-			newCommentString = "/*\n" + text + "\n*/";
-		}
-		else
-		{
-			newCommentString = "/*" + text + "*/";
-		}
+		final String newCommentString = text.indexOf('\n') >= 0
+			? "/*\n" + text + "\n*/"
+			: "/*" + text + "*/";
 
 		JSElementFactory.addElementBefore(firstComment, newCommentString);
-		for(final PsiElement elementToDelete : elementsToDelete)
+		for (final PsiElement elementToDelete : elementsToDelete)
 		{
 			JSElementFactory.removeElement(elementToDelete);
 		}
@@ -108,17 +103,10 @@ public class JSChangeToCStyleCommentIntention extends JSIntention
 
 	private static boolean isEndOfLineComment(PsiElement element)
 	{
-		if(!(element instanceof PsiComment))
-		{
-			return false;
-		}
-
-		final PsiComment comment = (PsiComment) element;
-		final IElementType tokenType = comment.getTokenType();
-
-		return JSTokenTypes.END_OF_LINE_COMMENT.equals(tokenType);
+		return element instanceof PsiComment comment && JSTokenTypes.END_OF_LINE_COMMENT.equals(comment.getTokenType());
 	}
 
+	@RequiredReadAction
 	private static String getCommentContents(PsiComment comment)
 	{
 		return comment.getText().substring(2);
@@ -130,14 +118,7 @@ public class JSChangeToCStyleCommentIntention extends JSIntention
 		@Override
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
-			if(!(element instanceof PsiComment))
-			{
-				return false;
-			}
-
-			final IElementType type = ((PsiComment) element).getTokenType();
-
-			return JSTokenTypes.END_OF_LINE_COMMENT.equals(type);
+			return element instanceof PsiComment comment && JSTokenTypes.END_OF_LINE_COMMENT.equals(comment.getTokenType());
 		}
 	}
 }

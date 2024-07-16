@@ -19,6 +19,7 @@ import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSPsiImplUtils;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
@@ -35,10 +36,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSSplitDeclarationAndInitializationIntention", categories = {
-		"JavaScript",
-		"Declaration"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSSplitDeclarationAndInitializationIntention",
+	categories = {"JavaScript", "Declaration"},
+	fileExtensions = "js"
+)
 public class JSSplitDeclarationAndInitializationIntention extends JSIntention
 {
 	@NonNls
@@ -52,32 +54,33 @@ public class JSSplitDeclarationAndInitializationIntention extends JSIntention
 	}
 
 	@Override
+	@RequiredReadAction
 	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		assert (element instanceof JSVarStatement);
 
 		final JSVarStatement varStatement = (JSVarStatement) element;
 		StringBuilder declarationBuffer = new StringBuilder();
-		List<String> initializations = new ArrayList<String>();
+		List<String> initializations = new ArrayList<>();
 
-		for(JSVariable variable : varStatement.getVariables())
+		for (JSVariable variable : varStatement.getVariables())
 		{
-			declarationBuffer.append((declarationBuffer.length() == 0) ? VAR_KEYWORD : ",")
+			declarationBuffer.append(declarationBuffer.isEmpty() ? VAR_KEYWORD : ",")
 					.append(variable.getName());
 
 			String s = JSPsiImplUtils.getTypeFromDeclaration(variable);
 			final PsiFile containingFile = element.getContainingFile();
 
-			if(s == null && containingFile.getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4)
+			if (s == null && containingFile.getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4)
 			{
 				s = JSResolveUtil.getExpressionType(variable.getInitializer(), containingFile);
 			}
 
-			if(s != null)
+			if (s != null)
 			{
 				declarationBuffer.append(":").append(s);
 			}
-			if(variable.hasInitializer())
+			if (variable.hasInitializer())
 			{
 				initializations.add(variable.getName() + '=' + variable.getInitializer().getText() + ';');
 			}
@@ -87,7 +90,7 @@ public class JSSplitDeclarationAndInitializationIntention extends JSIntention
 		// Do replacement.
 		JSStatement newStatement = JSElementFactory.replaceStatement(varStatement, declarationBuffer.toString());
 
-		for(final String initialization : initializations)
+		for (final String initialization : initializations)
 		{
 			newStatement = JSElementFactory.addStatementAfter(newStatement, initialization);
 		}
@@ -100,8 +103,8 @@ public class JSSplitDeclarationAndInitializationIntention extends JSIntention
 		{
 			PsiElement elementParent;
 
-			if(!(element instanceof JSVarStatement) ||
-					(elementParent = element.getParent()) instanceof JSForStatement ||
+			if(!(element instanceof JSVarStatement)
+				|| (elementParent = element.getParent()) instanceof JSForStatement ||
 					elementParent instanceof JSClass
 			)
 			{
@@ -109,14 +112,14 @@ public class JSSplitDeclarationAndInitializationIntention extends JSIntention
 			}
 
 			final JSVarStatement varStatement = (JSVarStatement) element;
-			if(ErrorUtil.containsError(varStatement))
+			if (ErrorUtil.containsError(varStatement))
 			{
 				return false;
 			}
 
-			for(JSVariable variable : varStatement.getVariables())
+			for (JSVariable variable : varStatement.getVariables())
 			{
-				if(variable.hasInitializer())
+				if (variable.hasInitializer())
 				{
 					return true;
 				}

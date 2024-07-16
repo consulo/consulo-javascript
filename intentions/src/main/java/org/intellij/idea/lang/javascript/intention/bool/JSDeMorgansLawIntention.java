@@ -19,6 +19,7 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.JSExpression;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.intention.IntentionMetaData;
@@ -33,28 +34,26 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.jetbrains.annotations.NonNls;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSDeMorgansLawIntention", categories = {
-		"JavaScript",
-		"Boolean"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSDeMorgansLawIntention",
+	categories = {"JavaScript", "Boolean"},
+	fileExtensions = "js"
+)
 public class JSDeMorgansLawIntention extends JSMutablyNamedIntention
 {
 	@NonNls
 	private static final String AND_OPERATOR = "&&";
 	@NonNls
 	private static final String OR_OPERATOR = "||";
-	@NonNls
-	private static final String AND_SUFFIX = "ANDAND";
-	@NonNls
-	private static final String OR_SUFFIX = "OROR";
 
 	@Override
+	@RequiredReadAction
 	protected String getTextForElement(PsiElement element)
 	{
 		final IElementType tokenType = ((JSBinaryExpression) element).getOperationSign();
 
 		return tokenType.equals(JSTokenTypes.ANDAND)
-				? JSIntentionBundle.message("bool.de-morgans-law.display-name.ANDAND")
+			? JSIntentionBundle.message("bool.de-morgans-law.display-name.ANDAND")
 				: JSIntentionBundle.message("bool.de-morgans-law.display-name.OROR");
 	}
 
@@ -72,7 +71,7 @@ public class JSDeMorgansLawIntention extends JSMutablyNamedIntention
 		final IElementType tokenType = exp.getOperationSign();
 		JSElement parent = (JSElement) exp.getParent();
 
-		while(isConjunctionExpression(parent, tokenType))
+		while (isConjunctionExpression(parent, tokenType))
 		{
 			exp = (JSBinaryExpression) parent;
 			assert (exp != null);
@@ -84,8 +83,7 @@ public class JSDeMorgansLawIntention extends JSMutablyNamedIntention
 		JSElementFactory.replaceExpressionWithNegatedExpressionString(exp, newExpression);
 	}
 
-	private String convertConjunctionExpression(JSBinaryExpression exp,
-												IElementType tokenType)
+	private String convertConjunctionExpression(JSBinaryExpression exp, IElementType tokenType)
 	{
 		final String leftText = this.getOperandText(exp.getLOperand(), tokenType);
 		final String rightText = this.getOperandText(exp.getROperand(), tokenType);
@@ -96,22 +94,14 @@ public class JSDeMorgansLawIntention extends JSMutablyNamedIntention
 
 	private String getOperandText(JSExpression operand, IElementType tokenType)
 	{
-		return (isConjunctionExpression(operand, tokenType)
-				? this.convertConjunctionExpression((JSBinaryExpression) operand, tokenType)
-				: BoolUtils.getNegatedExpressionText(operand));
+		return isConjunctionExpression(operand, tokenType)
+			? this.convertConjunctionExpression((JSBinaryExpression) operand, tokenType)
+			: BoolUtils.getNegatedExpressionText(operand);
 	}
 
-	private static boolean isConjunctionExpression(JSElement exp,
-												   IElementType conjunctionType)
+	@RequiredReadAction
+	private static boolean isConjunctionExpression(JSElement exp, IElementType conjunctionType)
 	{
-		if(!(exp instanceof JSBinaryExpression))
-		{
-			return false;
-		}
-
-		final JSBinaryExpression binaryExpression = (JSBinaryExpression) exp;
-		final IElementType tokenType = binaryExpression.getOperationSign();
-
-		return tokenType.equals(conjunctionType);
+		return exp instanceof JSBinaryExpression binaryExpression && binaryExpression.getOperationSign().equals(conjunctionType);
 	}
 }

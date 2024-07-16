@@ -16,6 +16,7 @@
 package org.intellij.idea.lang.javascript.intention.braces;
 
 import com.intellij.lang.javascript.psi.*;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiComment;
@@ -29,13 +30,13 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.jetbrains.annotations.NonNls;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSAddBracesIntention", categories = {
-		"JavaScript",
-		"Control Flow"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSAddBracesIntention",
+	categories = {"JavaScript", "Control Flow"},
+	fileExtensions = "js"
+)
 public class JSAddBracesIntention extends JSMutablyNamedIntention
 {
-
 	@NonNls
 	private static final String IF_KEYWORD = "if";
 	@NonNls
@@ -75,6 +76,7 @@ public class JSAddBracesIntention extends JSMutablyNamedIntention
   }
 
 	@Override
+	@RequiredReadAction
 	protected void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		if(!(element instanceof JSStatement))
@@ -84,16 +86,9 @@ public class JSAddBracesIntention extends JSMutablyNamedIntention
 		final JSStatement statement = (JSStatement) element;
 		final JSElement parent = (JSElement) element.getParent();
 		final String text = element.getText();
-		String newText;
-
-		if(parent.getLastChild() instanceof PsiComment)
-		{
-			newText = '{' + text + "\n}";
-		}
-		else
-		{
-			newText = '{' + text + '}';
-		}
+		String newText = parent.getLastChild() instanceof PsiComment
+			? '{' + text + "\n}"
+			: '{' + text + '}';
 		JSElementFactory.replaceStatement(statement, newText);
 	}
 
@@ -112,29 +107,23 @@ public class JSAddBracesIntention extends JSMutablyNamedIntention
 			}
 
 			final PsiElement parentElement = element.getParent();
-			if(!(parentElement instanceof JSElement))
+			if (!(parentElement instanceof JSElement))
 			{
 				return false;
 			}
 			final JSElement parent = (JSElement) parentElement;
 
-			if(parent instanceof JSIfStatement)
+			if (parent instanceof JSIfStatement ifStatement)
 			{
-				final JSIfStatement ifStatement = (JSIfStatement) parent;
-
-				return (!(element instanceof JSIfStatement &&
-						element.equals(ifStatement.getElse())));
+				return !(element instanceof JSIfStatement && element.equals(ifStatement.getElse()));
 			}
 
-			if(parent instanceof JSForStatement ||
-					parent instanceof JSForInStatement
-			)
+			if (parent instanceof JSForStatement || parent instanceof JSForInStatement)
 			{
 				return element.equals(((JSLoopStatement) parent).getBody());
 			}
 
-			return (parent instanceof JSWhileStatement ||
-					parent instanceof JSDoWhileStatement);
+			return parent instanceof JSWhileStatement || parent instanceof JSDoWhileStatement;
 		}
 	}
 }
