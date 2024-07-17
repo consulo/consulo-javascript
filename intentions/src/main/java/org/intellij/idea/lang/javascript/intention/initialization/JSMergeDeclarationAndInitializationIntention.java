@@ -98,28 +98,28 @@ public class JSMergeDeclarationAndInitializationIntention extends JSIntention
 	private static class Predicate implements JSElementPredicate
 	{
 		@Override
+		@RequiredReadAction
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
-			if (!(element instanceof JSVarStatement varStatement && !ErrorUtil.containsError(varStatement))) {
-				return false;
-			}
-
-			for (JSVariable variable : varStatement.getVariables())
+			if (element instanceof JSVarStatement varStatement && !ErrorUtil.containsError(varStatement))
 			{
-				if (variable.hasInitializer()) {
-					continue;
-				}
-
-				final Iterator<PsiElement> referenceIterator =
-					FindReferenceUtil.getReferencesAfter(variable, variable.getTextRange().getEndOffset()).iterator();
-				final JSReferenceExpression firstReference = (JSReferenceExpression) (referenceIterator.hasNext() ? referenceIterator.next() : null);
-
-				if (firstReference != null
-					&& firstReference.getParent() instanceof JSDefinitionExpression definitionExpression
-					&& definitionExpression.getParent() instanceof JSAssignmentExpression assignmentExpression
-					&& assignmentExpression.getParent() instanceof JSExpressionStatement)
+				for (JSVariable variable : varStatement.getVariables())
 				{
-					return true;
+					if (variable.hasInitializer()) {
+						continue;
+					}
+
+					final Iterator<PsiElement> referenceIterator =
+						FindReferenceUtil.getReferencesAfter(variable, variable.getTextRange().getEndOffset()).iterator();
+					final JSReferenceExpression firstReference =
+						(JSReferenceExpression)(referenceIterator.hasNext() ? referenceIterator.next() : null);
+
+					if (firstReference != null
+						&& firstReference.getParent() instanceof JSDefinitionExpression definitionExpression
+						&& definitionExpression.getParent() instanceof JSAssignmentExpression assignmentExpression
+						&& assignmentExpression.getParent() instanceof JSExpressionStatement) {
+						return true;
+					}
 				}
 			}
 			return false;

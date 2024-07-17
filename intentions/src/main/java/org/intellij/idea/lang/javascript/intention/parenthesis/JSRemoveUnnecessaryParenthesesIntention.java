@@ -66,50 +66,39 @@ public class JSRemoveUnnecessaryParenthesesIntention extends JSIntention
 		@RequiredReadAction
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
-			if (!(element instanceof JSParenthesizedExpression expression && !ErrorUtil.containsError(element)))
+			if (element instanceof JSParenthesizedExpression expression && !ErrorUtil.containsError(element))
 			{
-				return false;
-			}
+				if (!(expression.getParent() instanceof JSExpression parentExpression))
+				{
+          return true;
+				}
 
-			if (!(expression.getParent() instanceof JSExpression parentExpression))
-			{
-				return true;
-			}
+				final JSExpression body = expression.getInnerExpression();
 
-			final JSExpression body = expression.getInnerExpression();
+				if (body instanceof JSParenthesizedExpression)
+				{
+					return true;
+				}
 
-			if (body instanceof JSParenthesizedExpression)
-			{
-				return true;
-			}
+				final int parentPrecendence = ParenthesesUtils.getPrecendence(parentExpression);
+				final int childPrecendence = ParenthesesUtils.getPrecendence(body);
 
-			final int parentPrecendence = ParenthesesUtils.getPrecendence(parentExpression);
-			final int childPrecendence = ParenthesesUtils.getPrecendence(body);
-
-			if (parentPrecendence > childPrecendence)
-			{
-				return !(body instanceof JSFunctionExpression);
-			}
-			else if (parentPrecendence == childPrecendence)
-			{
-				if (parentExpression instanceof JSBinaryExpression parentBinaryExpression
+				if (parentPrecendence > childPrecendence)
+				{
+					return !(body instanceof JSFunctionExpression);
+				}
+				else if (parentPrecendence == childPrecendence
+					&& parentExpression instanceof JSBinaryExpression parentBinaryExpression
 					&& body instanceof JSBinaryExpression bodyBinaryExpression)
 				{
 					final IElementType parentOperator = parentBinaryExpression.getOperationSign();
 					final IElementType childOperator = bodyBinaryExpression.getOperationSign();
 					final JSExpression lhs = parentBinaryExpression.getLOperand();
 
-					return (lhs.equals(expression) && parentOperator.equals(childOperator));
-				}
-				else
-				{
-					return false;
+					return lhs.equals(expression) && parentOperator.equals(childOperator);
 				}
 			}
-			else
-			{
-				return false;
-			}
+			return false;
 		}
 	}
 }

@@ -71,23 +71,23 @@ public class JSRemoveConditionalIntention extends JSIntention
 		@RequiredReadAction
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
-			if (!(element instanceof JSConditionalExpression condition  && !ErrorUtil.containsError(element))) {
-				return false;
-			}
-
-			final JSExpression thenExpression = ParenthesesUtils.stripParentheses(condition.getThen());
-			final JSExpression elseExpression = ParenthesesUtils.stripParentheses(condition.getElse());
-
-			if (condition.getCondition() == null || thenExpression == null || elseExpression == null)
+			if (element instanceof JSConditionalExpression condition && !ErrorUtil.containsError(element))
 			{
-				return false;
+				final JSExpression thenExpression = ParenthesesUtils.stripParentheses(condition.getThen());
+        final JSExpression elseExpression = ParenthesesUtils.stripParentheses(condition.getElse());
+
+				if (condition.getCondition() == null || thenExpression == null || elseExpression == null)
+				{
+					return false;
+				}
+
+				final String thenText = thenExpression.getText();
+				final String elseText = elseExpression.getText();
+
+				return (BoolUtils.TRUE.equals(elseText) && BoolUtils.FALSE.equals(thenText))
+					|| (BoolUtils.TRUE.equals(thenText) && BoolUtils.FALSE.equals(elseText));
 			}
-
-			final String thenText = thenExpression.getText();
-			final String elseText = elseExpression.getText();
-
-			return (BoolUtils.TRUE.equals(elseText) && BoolUtils.FALSE.equals(thenText))
-				|| (BoolUtils.TRUE.equals(thenText) && BoolUtils.FALSE.equals(elseText));
+			return false;
 		}
 	}
 }

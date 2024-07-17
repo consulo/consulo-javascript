@@ -71,28 +71,27 @@ public class JSRemoveRedundantElseIntention extends JSIntention
 		@Override
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
-			if (!(element instanceof JSIfStatement ifStatement && !ErrorUtil.containsError(ifStatement))
-				|| ifStatement.getElse() == null) {
-				return false;
-			}
-
-			JSStatement thenBranch = ifStatement.getThen();
-			while (thenBranch instanceof JSBlockStatement thenBlockStatement)
+			if (element instanceof JSIfStatement ifStatement && !ErrorUtil.containsError(ifStatement) && ifStatement.getElse() != null)
 			{
-				JSStatement[] thenStatements = thenBlockStatement.getStatements();
+				JSStatement thenBranch = ifStatement.getThen();
+				while (thenBranch instanceof JSBlockStatement thenBlockStatement)
+				{
+					JSStatement[] thenStatements = thenBlockStatement.getStatements();
 
-				if (thenStatements.length == 0)
-				{
-					return true;
+					if (thenStatements.length == 0)
+					{
+						return true;
+					}
+					else if (thenStatements.length > 1)
+					{
+						return false;
+					}
+					thenBranch = thenStatements[0];
 				}
-				else if (thenStatements.length > 1)
-				{
-					return false;
-				}
-				thenBranch = thenStatements[0];
+
+				return thenBranch instanceof JSReturnStatement;
 			}
-
-			return thenBranch instanceof JSReturnStatement;
+			return false;
 		}
 	}
 }

@@ -74,9 +74,12 @@ public class JSMergeIfOrIntention extends JSIntention
 		final String childConditionText = ParenthesesUtils.getParenthesized(childCondition, ParenthesesUtils.OR_PRECENDENCE);
 		final String parentConditionText = ParenthesesUtils.getParenthesized(condition, ParenthesesUtils.OR_PRECENDENCE);
 		final JSStatement parentThenBranch = parentStatement.getThen();
-		final StringBuilder statement =
-			new StringBuilder("if (").append(parentConditionText).append(" || ").append(childConditionText).append(')')
-				.append(parentThenBranch.getText());
+		final StringBuilder statement = new StringBuilder("if (")
+			.append(parentConditionText)
+			.append(" || ")
+			.append(childConditionText)
+			.append(')')
+			.append(parentThenBranch.getText());
 		final JSStatement childElseBranch = childStatement.getElse();
 
 		if (childElseBranch != null)

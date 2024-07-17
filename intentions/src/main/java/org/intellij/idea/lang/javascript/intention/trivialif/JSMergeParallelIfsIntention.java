@@ -97,15 +97,10 @@ public class JSMergeParallelIfsIntention extends JSIntention
 		@Override
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
-			if (!(element instanceof JSIfStatement ifStatement && !ErrorUtil.containsError(element)))
-			{
-				return false;
-			}
-
-			final PsiElement nextStatement = JSElementFactory.getNonWhiteSpaceSibling(element, true);
-
-			return nextStatement instanceof JSIfStatement nextIfStatement
-				&& !ErrorUtil.containsError(nextStatement)
+			return element instanceof JSIfStatement ifStatement
+				&& !ErrorUtil.containsError(element)
+				&& JSElementFactory.getNonWhiteSpaceSibling(element, true) instanceof JSIfStatement nextIfStatement
+				&& !ErrorUtil.containsError(nextIfStatement)
 				&& ifStatementsCanBeMerged(ifStatement, nextIfStatement);
 		}
 

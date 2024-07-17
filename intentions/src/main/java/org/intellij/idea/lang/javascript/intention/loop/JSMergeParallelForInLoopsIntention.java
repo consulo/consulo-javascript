@@ -88,15 +88,10 @@ public class JSMergeParallelForInLoopsIntention extends JSIntention
 		@Override
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
-			if (!(element instanceof JSForInStatement forInStatement && !ErrorUtil.containsError(element)))
-			{
-				return false;
-			}
-
-			final PsiElement nextStatement = JSElementFactory.getNonWhiteSpaceSibling(element, true);
-
-			return nextStatement instanceof JSForInStatement nextForInStatement
-				&& !ErrorUtil.containsError(nextStatement)
+			return element instanceof JSForInStatement forInStatement
+				&& !ErrorUtil.containsError(element)
+				&& JSElementFactory.getNonWhiteSpaceSibling(element, true) instanceof JSForInStatement nextForInStatement
+				&& !ErrorUtil.containsError(nextForInStatement)
 				&& forInStatementsCanBeMerged(forInStatement, nextForInStatement);
 		}
 

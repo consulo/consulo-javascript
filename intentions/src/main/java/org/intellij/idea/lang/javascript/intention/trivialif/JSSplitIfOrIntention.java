@@ -108,7 +108,9 @@ public class JSSplitIfOrIntention extends JSIntention
 			final JSIfStatement ifStatement = (JSIfStatement) parent;
 			final JSExpression condition = ifStatement.getCondition();
 
-			return condition != null && !ErrorUtil.containsError(condition) && condition instanceof JSBinaryExpression binaryExpression
+			return condition != null
+				&& !ErrorUtil.containsError(condition)
+				&& condition instanceof JSBinaryExpression binaryExpression
 				&& JSTokenTypes.OROR.equals(binaryExpression.getOperationSign());
 		}
 	}
