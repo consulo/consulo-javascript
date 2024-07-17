@@ -16,6 +16,7 @@
 package org.intellij.idea.lang.javascript.intention.comment;
 
 import com.intellij.lang.javascript.JSTokenTypes;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.intention.IntentionMetaData;
@@ -23,12 +24,11 @@ import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.util.IncorrectOperationException;
+import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.TreeUtil;
-
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 @IntentionMetaData(
@@ -46,6 +46,7 @@ public class JSChangeToEndOfLineCommentIntention extends JSIntention
 	}
 
 	@Override
+	@RequiredReadAction
 	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		final PsiElement parent = element.getParent();
@@ -78,7 +79,7 @@ public class JSChangeToEndOfLineCommentIntention extends JSIntention
 	{
 		int lastNonEmtpyLine = -1;
 
-		for(int i = lines.length - 1; i >= 0 && lastNonEmtpyLine == -1; i--)
+		for (int i = lines.length - 1; i >= 0 && lastNonEmtpyLine == -1; i--)
 		{
 			final String line = lines[i].trim();
 			if (!line.isEmpty())
@@ -124,6 +125,7 @@ public class JSChangeToEndOfLineCommentIntention extends JSIntention
 	private static class CStyleCommentPredicate implements JSElementPredicate
 	{
 		@Override
+		@RequiredReadAction
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
 			if (!(element instanceof PsiComment))

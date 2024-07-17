@@ -32,7 +32,7 @@ public abstract class JSMutablyNamedIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		if(myText != null)
+		if (myText != null)
 		{
 			return myText;
 		}
@@ -43,7 +43,7 @@ public abstract class JSMutablyNamedIntention extends JSIntention
 	public boolean isAvailable(@Nonnull Project project, Editor editor, @Nullable PsiElement node)
 	{
 		final PsiElement element = findMatchingElement(node);
-		if(element != null)
+		if (element != null)
 		{
 			myText = getTextForElement(element);
 			return true;

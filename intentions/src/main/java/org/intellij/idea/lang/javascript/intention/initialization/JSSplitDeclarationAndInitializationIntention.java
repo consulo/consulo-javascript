@@ -25,13 +25,13 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,7 +103,7 @@ public class JSSplitDeclarationAndInitializationIntention extends JSIntention
 		{
 			PsiElement elementParent;
 
-			if(!(element instanceof JSVarStatement)
+			if (!(element instanceof JSVarStatement)
 				|| (elementParent = element.getParent()) instanceof JSForStatement ||
 					elementParent instanceof JSClass
 			)

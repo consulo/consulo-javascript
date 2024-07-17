@@ -19,6 +19,7 @@ import com.intellij.lang.javascript.psi.JSBlockStatement;
 import com.intellij.lang.javascript.psi.JSIfStatement;
 import com.intellij.lang.javascript.psi.JSReturnStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
@@ -28,18 +29,15 @@ import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NonNls;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSRemoveRedundantElseIntention", categories = {
-		"JavaScript",
-		"Control Flow"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSRemoveRedundantElseIntention",
+	categories = {"JavaScript", "Control Flow"},
+	fileExtensions = "js"
+)
 public class JSRemoveRedundantElseIntention extends JSIntention
 {
-	@NonNls
-	private static final String IF_STATEMENT_PREFIX = "if (";
-
 	@Override
 	@Nonnull
 	public JSElementPredicate getElementPredicate()
@@ -48,6 +46,7 @@ public class JSRemoveRedundantElseIntention extends JSIntention
 	}
 
 	@Override
+	@RequiredReadAction
 	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		final JSIfStatement ifStatement = (JSIfStatement) element;
@@ -57,11 +56,11 @@ public class JSRemoveRedundantElseIntention extends JSIntention
 		assert (thenBranch != null);
 		assert (elseBranch != null);
 
-		final String newIfText = IF_STATEMENT_PREFIX + ifStatement.getCondition().getText() + ')' + thenBranch.getText();
+		final String newIfText = "if (" + ifStatement.getCondition().getText() + ')' + thenBranch.getText();
 		final String elseText = elseBranch.getText();
-		final String newStatement = (elseBranch instanceof JSBlockStatement
-				? elseText.substring(elseText.indexOf('{') + 1, elseText.lastIndexOf('}') - 1).trim()
-				: elseText);
+		final String newStatement = elseBranch instanceof JSBlockStatement
+			? elseText.substring(elseText.indexOf('{') + 1, elseText.lastIndexOf('}') - 1).trim()
+			: elseText;
 
 		JSElementFactory.addStatementAfter(ifStatement, newStatement);
 		JSElementFactory.replaceStatement(ifStatement, newIfText);
@@ -72,42 +71,28 @@ public class JSRemoveRedundantElseIntention extends JSIntention
 		@Override
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
-			if(!(element instanceof JSIfStatement))
-			{
+			if (!(element instanceof JSIfStatement ifStatement && !ErrorUtil.containsError(ifStatement))
+				|| ifStatement.getElse() == null) {
 				return false;
 			}
 
-			final JSIfStatement ifStatement = (JSIfStatement) element;
-
-			if(ErrorUtil.containsError(ifStatement))
-			{
-				return false;
-			}
-
-			final JSStatement elseBranch = ifStatement.getElse();
 			JSStatement thenBranch = ifStatement.getThen();
-
-			if(elseBranch == null)
+			while (thenBranch instanceof JSBlockStatement thenBlockStatement)
 			{
-				return false;
-			}
+				JSStatement[] thenStatements = thenBlockStatement.getStatements();
 
-			while(thenBranch != null && thenBranch instanceof JSBlockStatement)
-			{
-				JSStatement[] thenStatements = ((JSBlockStatement) thenBranch).getStatements();
-
-				if(thenStatements.length == 0)
+				if (thenStatements.length == 0)
 				{
 					return true;
 				}
-				else if(thenStatements.length > 1)
+				else if (thenStatements.length > 1)
 				{
 					return false;
 				}
 				thenBranch = thenStatements[0];
 			}
 
-			return (thenBranch != null && thenBranch instanceof JSReturnStatement);
+			return thenBranch instanceof JSReturnStatement;
 		}
 	}
 }

@@ -19,6 +19,7 @@ import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSIfStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
@@ -34,10 +35,11 @@ import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSMergeIfAndIntention", categories = {
-		"JavaScript",
-		"Control Flow"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSMergeIfAndIntention",
+	categories = {"JavaScript", "Control Flow"},
+	fileExtensions = "js"
+)
 public class JSMergeIfAndIntention extends JSIntention
 {
 	@NonNls
@@ -51,6 +53,7 @@ public class JSMergeIfAndIntention extends JSIntention
 	}
 
 	@Override
+	@RequiredReadAction
 	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		assert (element.getParent() != null);
@@ -63,8 +66,7 @@ public class JSMergeIfAndIntention extends JSIntention
 		final String childConditionText = ParenthesesUtils.getParenthesized(childCondition, ParenthesesUtils.AND_PRECENDENCE);
 		final String parentConditionText = ParenthesesUtils.getParenthesized(parentCondition, ParenthesesUtils.AND_PRECENDENCE);
 		final JSStatement childThenBranch = childStatement.getThen();
-		final String statement = IF_STATEMENT_PREFIX + parentConditionText + " && " + childConditionText + ')' +
-				childThenBranch.getText();
+		final String statement = IF_STATEMENT_PREFIX + parentConditionText + " && " + childConditionText + ')' + childThenBranch.getText();
 
 		JSElementFactory.replaceStatement(parentStatement, statement);
 	}
@@ -75,16 +77,16 @@ public class JSMergeIfAndIntention extends JSIntention
 		@Override
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
-			if(!(element instanceof JSElement))
+			if (!(element instanceof JSElement))
 			{
 				return false;
 			}
 
 			PsiElement parent = element.getParent();
 
-			if(!(parent instanceof JSIfStatement))
+			if (!(parent instanceof JSIfStatement))
 			{
-				if(element instanceof JSIfStatement)
+				if (element instanceof JSIfStatement)
 				{
 					parent = element;
 				}
@@ -96,7 +98,7 @@ public class JSMergeIfAndIntention extends JSIntention
 
 			final JSIfStatement ifStatement = (JSIfStatement) parent;
 
-			if(ErrorUtil.containsError(ifStatement))
+			if (ErrorUtil.containsError(ifStatement))
 			{
 				return false;
 			}
@@ -104,18 +106,7 @@ public class JSMergeIfAndIntention extends JSIntention
 			final JSStatement thenBranch = ConditionalUtils.stripBraces(ifStatement.getThen());
 			final JSStatement elseBranch = ConditionalUtils.stripBraces(ifStatement.getElse());
 
-			if(thenBranch == null || elseBranch != null)
-			{
-				return false;
-			}
-			if(!(thenBranch instanceof JSIfStatement))
-			{
-				return false;
-			}
-
-			final JSIfStatement childIfStatement = (JSIfStatement) thenBranch;
-
-			return (childIfStatement.getElse() == null);
+			return elseBranch == null && thenBranch instanceof JSIfStatement childIfStatement && childIfStatement.getElse() == null;
 		}
 	}
 }

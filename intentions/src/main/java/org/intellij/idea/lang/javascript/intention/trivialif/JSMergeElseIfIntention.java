@@ -31,10 +31,11 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSMergeElseIfIntention", categories = {
-		"JavaScript",
-		"Control Flow"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSMergeElseIfIntention",
+	categories = {"JavaScript", "Control Flow"},
+	fileExtensions = "js"
+)
 public class JSMergeElseIfIntention extends JSIntention
 {
 	@Override
@@ -62,48 +63,17 @@ public class JSMergeElseIfIntention extends JSIntention
 		@Override
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
-			if(!(element instanceof JSElement))
-			{
-				return false;
-			}
+			return element instanceof JSElement
+				&& element.getParent() instanceof JSIfStatement ifStatement
+				&& !ErrorUtil.containsError(ifStatement)
+				&& ifStatement.getThen() != null
+				&& ifStatement.getElse() instanceof JSBlockStatement elseBlock
+				&& isSingleIfStatement(elseBlock.getStatements());
+		}
 
-			final PsiElement parent = element.getParent();
-
-			if(!(parent instanceof JSIfStatement))
-			{
-				return false;
-			}
-
-			final JSIfStatement ifStatement = (JSIfStatement) parent;
-
-			if(ErrorUtil.containsError(ifStatement))
-			{
-				return false;
-			}
-
-			final JSStatement thenBranch = ifStatement.getThen();
-			final JSStatement elseBranch = ifStatement.getElse();
-
-			if(thenBranch == null)
-			{
-				return false;
-			}
-			if(elseBranch == null)
-			{
-				return false;
-			}
-			if(!(elseBranch instanceof JSBlockStatement))
-			{
-				return false;
-			}
-
-			final JSStatement[] statements = ((JSBlockStatement) elseBranch).getStatements();
-
-			if(statements.length != 1)
-			{
-				return false;
-			}
-			return (statements[0] != null && statements[0] instanceof JSIfStatement);
+		private boolean isSingleIfStatement(JSStatement[] statements)
+		{
+			return statements.length == 1 && statements[0] instanceof JSIfStatement;
 		}
 	}
 }

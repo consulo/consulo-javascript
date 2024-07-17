@@ -18,6 +18,7 @@ package org.intellij.idea.lang.javascript.intention.trivialif;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSIfStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
@@ -28,22 +29,17 @@ import org.intellij.idea.lang.javascript.psiutil.ControlFlowUtils;
 import org.intellij.idea.lang.javascript.psiutil.EquivalenceChecker;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NonNls;
 
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSMergeParallelIfsIntention", categories = {
-		"JavaScript",
-		"Control Flow"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSMergeParallelIfsIntention",
+	categories = {"JavaScript", "Control Flow"},
+	fileExtensions = "js"
+)
 public class JSMergeParallelIfsIntention extends JSIntention
 {
-	@NonNls
-	private static final String IF_STATEMENT_PREFIX = "if (";
-	@NonNls
-	private static final String ELSE_KEYWORD = "else ";
-
 	@Override
 	@Nonnull
 	public JSElementPredicate getElementPredicate()
@@ -52,6 +48,7 @@ public class JSMergeParallelIfsIntention extends JSIntention
 	}
 
 	@Override
+	@RequiredReadAction
 	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		final PsiElement nextElement = JSElementFactory.getNonWhiteSpaceSibling(element, true);
@@ -67,9 +64,8 @@ public class JSMergeParallelIfsIntention extends JSIntention
 		JSElementFactory.removeElement(secondStatement);
 	}
 
-	private void mergeIfStatements(StringBuilder statementBuffer,
-								   JSIfStatement firstStatement,
-								   JSIfStatement secondStatement)
+	@RequiredReadAction
+	private void mergeIfStatements(StringBuilder statementBuffer, JSIfStatement firstStatement, JSIfStatement secondStatement)
 	{
 		final JSExpression condition = firstStatement.getCondition();
 		final JSStatement firstThenBranch = firstStatement.getThen();
@@ -77,22 +73,17 @@ public class JSMergeParallelIfsIntention extends JSIntention
 		final JSStatement firstElseBranch = firstStatement.getElse();
 		final JSStatement secondElseBranch = secondStatement.getElse();
 
-		statementBuffer.append(IF_STATEMENT_PREFIX)
-				.append(condition.getText())
-				.append(')');
+		statementBuffer.append("if (").append(condition.getText()).append(')');
 		ControlFlowUtils.appendStatementsInSequence(statementBuffer, firstThenBranch, secondThenBranch);
 
-		if(firstElseBranch != null || secondElseBranch != null)
+		if (firstElseBranch != null || secondElseBranch != null)
 		{
-			statementBuffer.append(ELSE_KEYWORD);
-			if(firstElseBranch instanceof JSIfStatement &&
-					secondElseBranch instanceof JSIfStatement &&
-					MergeParallelIfsPredicate.ifStatementsCanBeMerged((JSIfStatement) firstElseBranch,
-							(JSIfStatement) secondElseBranch))
+			statementBuffer.append("else ");
+			if (firstElseBranch instanceof JSIfStatement firstIfStatement
+				&& secondElseBranch instanceof JSIfStatement secondIfStatement
+				&& MergeParallelIfsPredicate.ifStatementsCanBeMerged(firstIfStatement, secondIfStatement))
 			{
-				this.mergeIfStatements(statementBuffer,
-						(JSIfStatement) firstElseBranch,
-						(JSIfStatement) secondElseBranch);
+				this.mergeIfStatements(statementBuffer, firstIfStatement, secondIfStatement);
 			}
 			else
 			{
@@ -106,46 +97,41 @@ public class JSMergeParallelIfsIntention extends JSIntention
 		@Override
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
-			if(!(element instanceof JSIfStatement) || ErrorUtil.containsError(element))
+			if (!(element instanceof JSIfStatement ifStatement && !ErrorUtil.containsError(element)))
 			{
 				return false;
 			}
 
 			final PsiElement nextStatement = JSElementFactory.getNonWhiteSpaceSibling(element, true);
 
-			if(!(nextStatement instanceof JSIfStatement) || ErrorUtil.containsError(nextStatement))
-			{
-				return false;
-			}
-
-			return ifStatementsCanBeMerged((JSIfStatement) element,
-					(JSIfStatement) nextStatement);
+			return nextStatement instanceof JSIfStatement nextIfStatement
+				&& !ErrorUtil.containsError(nextStatement)
+				&& ifStatementsCanBeMerged(ifStatement, nextIfStatement);
 		}
 
-		public static boolean ifStatementsCanBeMerged(JSIfStatement statement1,
-													  JSIfStatement statement2)
+		public static boolean ifStatementsCanBeMerged(JSIfStatement statement1, JSIfStatement statement2)
 		{
 			final JSStatement thenBranch = statement1.getThen();
 			final JSStatement elseBranch = statement1.getElse();
-			if(thenBranch == null)
+			if (thenBranch == null)
 			{
 				return false;
 			}
 			final JSExpression firstCondition = statement1.getCondition();
 			final JSExpression secondCondition = statement2.getCondition();
-			if(!EquivalenceChecker.expressionsAreEquivalent(firstCondition,
-					secondCondition))
+			if (!EquivalenceChecker.expressionsAreEquivalent(firstCondition, secondCondition))
 			{
 				return false;
 			}
+
 			final JSStatement nextThenBranch = statement2.getThen();
-			if(!ControlFlowUtils.canBeMerged(thenBranch, nextThenBranch))
+			if (!ControlFlowUtils.canBeMerged(thenBranch, nextThenBranch))
 			{
 				return false;
 			}
+
 			final JSStatement nextElseBranch = statement2.getElse();
-			return (elseBranch == null || nextElseBranch == null ||
-					ControlFlowUtils.canBeMerged(elseBranch, nextElseBranch));
+			return (elseBranch == null || nextElseBranch == null || ControlFlowUtils.canBeMerged(elseBranch, nextElseBranch));
 		}
 	}
 }

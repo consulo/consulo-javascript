@@ -33,10 +33,11 @@ import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSJoinConcatenatedStringLiteralsIntention", categories = {
-		"JavaScript",
-		"Other"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSJoinConcatenatedStringLiteralsIntention",
+	categories = {"JavaScript", "Other"},
+	fileExtensions = "js"
+)
 public class JSJoinConcatenatedStringLiteralsIntention extends JSIntention
 {
 	@Override
@@ -47,8 +48,8 @@ public class JSJoinConcatenatedStringLiteralsIntention extends JSIntention
 	}
 
 	@Override
-	public void processIntention(@Nonnull PsiElement element)
-			throws IncorrectOperationException
+	@RequiredReadAction
+	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		final JSBinaryExpression expression = (JSBinaryExpression) element;
 		final JSExpression lhs = expression.getLOperand();
@@ -62,13 +63,13 @@ public class JSJoinConcatenatedStringLiteralsIntention extends JSIntention
 		String rhsText = rhs.getText();
 		final String newExpression;
 
-		if(StringUtil.isSimpleQuoteStringLiteral(leftLiteral) &&
-				StringUtil.isDoubleQuoteStringLiteral(rightLiteral))
+		if (StringUtil.isSimpleQuoteStringLiteral(leftLiteral)
+			&& StringUtil.isDoubleQuoteStringLiteral(rightLiteral))
 		{
 			rhsText = JSDoubleToSingleQuotedStringIntention.changeQuotes(rhsText);
 		}
-		else if(StringUtil.isDoubleQuoteStringLiteral(leftLiteral) &&
-				StringUtil.isSimpleQuoteStringLiteral(rightLiteral))
+		else if (StringUtil.isDoubleQuoteStringLiteral(leftLiteral)
+			&& StringUtil.isSimpleQuoteStringLiteral(rightLiteral))
 		{
 			rhsText = JSSingleToDoubleQuotedStringIntention.changeQuotes(rhsText);
 		}
@@ -80,41 +81,21 @@ public class JSJoinConcatenatedStringLiteralsIntention extends JSIntention
 	private static class StringConcatPredicate implements JSElementPredicate
 	{
 		@Override
+		@RequiredReadAction
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
-			if(!(element instanceof JSBinaryExpression))
-			{
-				return false;
-			}
-
-			final JSBinaryExpression expression = (JSBinaryExpression) element;
-			final IElementType sign = expression.getOperationSign();
-
-			if(!sign.equals(JSTokenTypes.PLUS))
-			{
-				return false;
-			}
-			final JSExpression lhs = expression.getLOperand();
-			final JSExpression rhs = expression.getROperand();
-
-			if(!isApplicableLiteral(lhs))
-			{
-				return false;
-			}
-			if(!isApplicableLiteral(rhs))
-			{
-				return false;
-			}
-
-			return true;
+			return element instanceof JSBinaryExpression expression
+				&& JSTokenTypes.PLUS.equals(expression.getOperationSign())
+				&& isApplicableLiteral(expression.getLOperand())
+				&& isApplicableLiteral(expression.getROperand());
 		}
 
 		@RequiredReadAction
 		private static boolean isApplicableLiteral(JSExpression lhs)
 		{
-			return lhs != null &&
-					lhs instanceof JSSimpleLiteralExpression &&
-					JavaScriptTokenSets.STRING_LITERALS.contains(((JSSimpleLiteralExpression) lhs).getLiteralElementType());
+			return lhs != null
+				&& lhs instanceof JSSimpleLiteralExpression simpleLiteralExpression
+				&& JavaScriptTokenSets.STRING_LITERALS.contains(simpleLiteralExpression.getLiteralElementType());
 		}
 	}
 }

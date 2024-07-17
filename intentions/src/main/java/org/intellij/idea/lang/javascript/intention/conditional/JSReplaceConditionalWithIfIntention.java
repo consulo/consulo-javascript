@@ -27,10 +27,11 @@ import org.intellij.idea.lang.javascript.psiutil.ConditionalUtils;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSReplaceConditionalWithIfIntention", categories = {
-		"JavaScript",
-		"Conditional"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSReplaceConditionalWithIfIntention",
+	categories = {"JavaScript", "Conditional"},
+	fileExtensions = "js"
+)
 public class JSReplaceConditionalWithIfIntention extends JSIntention
 {
 	@Override
