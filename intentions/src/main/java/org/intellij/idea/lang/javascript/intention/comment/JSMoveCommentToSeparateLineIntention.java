@@ -16,6 +16,7 @@
 package org.intellij.idea.lang.javascript.intention.comment;
 
 import com.intellij.lang.javascript.JSTokenTypes;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.intention.IntentionMetaData;
@@ -30,10 +31,11 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.TreeUtil;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSMoveCommentToSeparateLineIntention", categories = {
-		"JavaScript",
-		"Comments"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSMoveCommentToSeparateLineIntention",
+	categories = {"JavaScript", "Comments"},
+	fileExtensions = "js"
+)
 public class JSMoveCommentToSeparateLineIntention extends JSIntention
 {
 	@Override
@@ -44,20 +46,21 @@ public class JSMoveCommentToSeparateLineIntention extends JSIntention
 	}
 
 	@Override
+	@RequiredReadAction
 	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		final PsiComment selectedComment = (PsiComment) element;
 		PsiElement elementToCheck = selectedComment;
 		final PsiWhiteSpace whiteSpace;
 
-		while(true)
+		while (true)
 		{
 			elementToCheck = TreeUtil.getPrevLeaf(elementToCheck);
-			if(elementToCheck == null)
+			if (elementToCheck == null)
 			{
 				return;
 			}
-			if(isLineBreakWhiteSpace(elementToCheck))
+			if (isLineBreakWhiteSpace(elementToCheck))
 			{
 				whiteSpace = (PsiWhiteSpace) elementToCheck;
 				break;
@@ -70,56 +73,52 @@ public class JSMoveCommentToSeparateLineIntention extends JSIntention
 		JSElementFactory.removeElement(selectedComment);
 	}
 
+	@RequiredReadAction
 	private static boolean isLineBreakWhiteSpace(PsiElement element)
 	{
-		return (element instanceof PsiWhiteSpace &&
-				containsLineBreak(element.getText()));
+		return (element instanceof PsiWhiteSpace && containsLineBreak(element.getText()));
 	}
 
 	private static boolean containsLineBreak(String text)
 	{
-		return (text.indexOf((int) '\n') >= 0 ||
-				text.indexOf((int) '\r') >= 0);
+		return (text.indexOf((int) '\n') >= 0 || text.indexOf((int) '\r') >= 0);
 	}
 
 	private static class CommentOnLineWithSourcePredicate implements JSElementPredicate
 	{
-
 		@Override
+		@RequiredReadAction
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
-			if(!(element instanceof PsiComment))
+			if (!(element instanceof PsiComment))
 			{
 				return false;
 			}
 			final PsiComment comment = (PsiComment) element;
 			final IElementType type = comment.getTokenType();
 
-			if(!(JSTokenTypes.C_STYLE_COMMENT.equals(type) ||
-					JSTokenTypes.END_OF_LINE_COMMENT.equals(type)))
+			if (!(JSTokenTypes.C_STYLE_COMMENT.equals(type) || JSTokenTypes.END_OF_LINE_COMMENT.equals(type)))
 			{
 				return false; // can't move JSP comments
 			}
 
 			final PsiElement prevSibling = TreeUtil.getPrevLeaf(element);
-			if(!(prevSibling instanceof PsiWhiteSpace))
+			if (!(prevSibling instanceof PsiWhiteSpace))
 			{
 				return true;
 			}
 			final String prevSiblingText = prevSibling.getText();
-			if(prevSiblingText.indexOf('\n') < 0 &&
-					prevSiblingText.indexOf('\r') < 0)
+			if (prevSiblingText.indexOf('\n') < 0 && prevSiblingText.indexOf('\r') < 0)
 			{
 				return true;
 			}
 			final PsiElement nextSibling = TreeUtil.getNextLeaf(element);
-			if(!(nextSibling instanceof PsiWhiteSpace))
+			if (!(nextSibling instanceof PsiWhiteSpace))
 			{
 				return true;
 			}
 			final String nextSiblingText = nextSibling.getText();
-			return (nextSiblingText.indexOf('\n') < 0 &&
-					nextSiblingText.indexOf('\r') < 0);
+			return (nextSiblingText.indexOf('\n') < 0 && nextSiblingText.indexOf('\r') < 0);
 		}
 	}
 }

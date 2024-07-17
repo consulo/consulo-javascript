@@ -25,12 +25,12 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.util.IncorrectOperationException;
+import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.*;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 @ExtensionImpl
@@ -78,7 +78,7 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention
 		final String declarationString;
 		final String expressionText;
 
-		if(hadSideEffects)
+		if (hadSideEffects)
 		{
 			final String variableName = "i"; // TODO JavaCodeStyleManager.getInstance(switchExpression.getProject()).suggestUniqueVariableName("i", switchExpression, true);
 
@@ -93,9 +93,9 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention
 
 		boolean renameBreaks = false;
 
-		for(JSCaseClause caseClause : switchStatement.getCaseClauses())
+		for (JSCaseClause caseClause : switchStatement.getCaseClauses())
 		{
-			if(CaseUtil.containsHiddenBreak(caseClause))
+			if (CaseUtil.containsHiddenBreak(caseClause))
 			{
 				renameBreaks = true;
 				break;
@@ -105,11 +105,10 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention
 		final StringBuilder ifStatementBuffer = new StringBuilder(1024);
 		String breakLabel = null;
 
-		if(renameBreaks)
+		if (renameBreaks)
 		{
 			breakLabel = CaseUtil.findUniqueLabel(switchStatement, DEFAULT_LABEL_NAME);
-			ifStatementBuffer.append(breakLabel)
-					.append(':');
+			ifStatementBuffer.append(breakLabel).append(':');
 		}
 
 		final List<SwitchStatementBranch> openBranches = new ArrayList<>();
@@ -117,15 +116,15 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention
 		final List<SwitchStatementBranch> allBranches = new ArrayList<>();
 		SwitchStatementBranch currentBranch = null;
 
-		for(JSCaseClause caseClause : switchStatement.getCaseClauses())
+		for (JSCaseClause caseClause : switchStatement.getCaseClauses())
 		{
 			final PsiElement[] caseClauseChildren = caseClause.getChildren();
 
-			for(PsiElement child : caseClauseChildren)
+			for (PsiElement child : caseClauseChildren)
 			{
-				if(child == caseClauseChildren[0])
+				if (child == caseClauseChildren[0])
 				{
-					if(currentBranch == null)
+					if (currentBranch == null)
 					{
 						openBranches.clear();
 						currentBranch = new SwitchStatementBranch();
@@ -133,20 +132,20 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention
 						allBranches.add(currentBranch);
 						openBranches.add(currentBranch);
 					}
-					else if(currentBranch.hasStatements())
+					else if (currentBranch.hasStatements())
 					{
 						currentBranch = new SwitchStatementBranch();
 						allBranches.add(currentBranch);
 						openBranches.add(currentBranch);
 					}
 
-					if(caseClause.isDefault())
+					if (caseClause.isDefault())
 					{
 						currentBranch.setDefault();
 					}
 				}
 
-				if(child instanceof JSExpression)
+				if (child instanceof JSExpression)
 				{
 					// Processes case clause expression
 					final JSExpression value = ParenthesesUtils.stripParentheses(caseClause.getCaseExpression());
@@ -154,7 +153,7 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention
 					assert (currentBranch != null);
 					currentBranch.addLabel(value.getText());
 				}
-				else if(child instanceof JSStatement)
+				else if (child instanceof JSStatement)
 				{
 					// Processes case clause statements
 					final JSStatement statement = (JSStatement) child;
@@ -482,7 +481,7 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention
 
 		public void addWhiteSpace(PsiElement whiteSpace)
 		{
-			if(this.bodyElements.size() > 0)
+			if (this.bodyElements.size() > 0)
 			{
 				this.pendingWhiteSpace.add(whiteSpace);
 			}

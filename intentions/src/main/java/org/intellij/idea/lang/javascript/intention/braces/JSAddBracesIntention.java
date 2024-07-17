@@ -27,7 +27,6 @@ import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NonNls;
 
 @ExtensionImpl
 @IntentionMetaData(
@@ -37,11 +36,6 @@ import org.jetbrains.annotations.NonNls;
 )
 public class JSAddBracesIntention extends JSMutablyNamedIntention
 {
-	@NonNls
-	private static final String IF_KEYWORD = "if";
-	@NonNls
-	private static final String ELSE_KEYWORD = "else";
-
 	@Override
 	@Nonnull
 	protected JSElementPredicate getElementPredicate()
@@ -50,6 +44,7 @@ public class JSAddBracesIntention extends JSMutablyNamedIntention
 	}
 
 	@Override
+	@RequiredReadAction
 	protected String getTextForElement(PsiElement element)
 	{
 		final JSElement parent = (JSElement) element.getParent();
@@ -57,12 +52,11 @@ public class JSAddBracesIntention extends JSMutablyNamedIntention
 
 		assert (parent != null);
 
-		if(parent instanceof JSIfStatement)
+		if (parent instanceof JSIfStatement ifStatement)
 		{
-			final JSIfStatement ifStatement = (JSIfStatement) parent;
 			final JSStatement elseBranch = ifStatement.getElse();
 
-			keyword = (element.equals(elseBranch) ? ELSE_KEYWORD : IF_KEYWORD);
+			keyword = (element.equals(elseBranch) ? "else" : "if");
 		}
 		else
 		{
@@ -79,11 +73,10 @@ public class JSAddBracesIntention extends JSMutablyNamedIntention
 	@RequiredReadAction
 	protected void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
-		if(!(element instanceof JSStatement))
+		if (!(element instanceof JSStatement statement))
 		{
 			return;
 		}
-		final JSStatement statement = (JSStatement) element;
 		final JSElement parent = (JSElement) element.getParent();
 		final String text = element.getText();
 		String newText = parent.getLastChild() instanceof PsiComment
@@ -95,23 +88,12 @@ public class JSAddBracesIntention extends JSMutablyNamedIntention
 	private static class AddBracesPredicate implements JSElementPredicate
 	{
 		@Override
-		public boolean satisfiedBy(@Nonnull PsiElement element)
-		{
-			if(!(element instanceof JSStatement))
-			{
+		public boolean satisfiedBy(@Nonnull PsiElement element) {
+			if (!(element instanceof JSStatement)
+				|| element instanceof JSBlockStatement
+				|| !(element.getParent() instanceof JSElement parent)) {
 				return false;
 			}
-			if(element instanceof JSBlockStatement)
-			{
-				return false;
-			}
-
-			final PsiElement parentElement = element.getParent();
-			if (!(parentElement instanceof JSElement))
-			{
-				return false;
-			}
-			final JSElement parent = (JSElement) parentElement;
 
 			if (parent instanceof JSIfStatement ifStatement)
 			{

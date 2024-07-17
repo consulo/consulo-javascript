@@ -17,6 +17,7 @@ package org.intellij.idea.lang.javascript.intention.conditional;
 
 import com.intellij.lang.javascript.psi.JSConditionalExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
@@ -31,10 +32,11 @@ import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-@IntentionMetaData(ignoreId = "JSRemoveConditionalIntention", categories = {
-		"JavaScript",
-		"Conditional"
-}, fileExtensions = "js")
+@IntentionMetaData(
+	ignoreId = "JSRemoveConditionalIntention",
+	categories = {"JavaScript", "Conditional"},
+	fileExtensions = "js"
+)
 public class JSRemoveConditionalIntention extends JSIntention
 {
 	@Override
@@ -45,6 +47,7 @@ public class JSRemoveConditionalIntention extends JSIntention
 	}
 
 	@Override
+	@RequiredReadAction
 	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		final JSConditionalExpression exp = (JSConditionalExpression) element;
@@ -56,42 +59,35 @@ public class JSRemoveConditionalIntention extends JSIntention
 		final String thenExpressionText = thenExpression.getText();
 		final String newExpression;
 
-		newExpression = (thenExpressionText.equals(BoolUtils.TRUE)
-				? condition.getText()
-				: BoolUtils.getNegatedExpressionText(condition));
+		newExpression = thenExpressionText.equals(BoolUtils.TRUE)
+			? condition.getText()
+			: BoolUtils.getNegatedExpressionText(condition);
 		JSElementFactory.replaceExpression(exp, newExpression);
 	}
 
 	private static class RemoveConditionalPredicate implements JSElementPredicate
 	{
 		@Override
+		@RequiredReadAction
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
-			if(!(element instanceof JSConditionalExpression))
+			if (element instanceof JSConditionalExpression condition && !ErrorUtil.containsError(element))
 			{
-				return false;
+				final JSExpression thenExpression = ParenthesesUtils.stripParentheses(condition.getThen());
+        final JSExpression elseExpression = ParenthesesUtils.stripParentheses(condition.getElse());
+
+				if (condition.getCondition() == null || thenExpression == null || elseExpression == null)
+				{
+					return false;
+				}
+
+				final String thenText = thenExpression.getText();
+				final String elseText = elseExpression.getText();
+
+				return (BoolUtils.TRUE.equals(elseText) && BoolUtils.FALSE.equals(thenText))
+					|| (BoolUtils.TRUE.equals(thenText) && BoolUtils.FALSE.equals(elseText));
 			}
-			if(ErrorUtil.containsError(element))
-			{
-				return false;
-			}
-
-			final JSConditionalExpression condition = (JSConditionalExpression) element;
-			final JSExpression thenExpression = ParenthesesUtils.stripParentheses(condition.getThen());
-			final JSExpression elseExpression = ParenthesesUtils.stripParentheses(condition.getElse());
-
-			if(condition.getCondition() == null ||
-					thenExpression == null ||
-					elseExpression == null)
-			{
-				return false;
-			}
-
-			final String thenText = thenExpression.getText();
-			final String elseText = elseExpression.getText();
-
-			return ((BoolUtils.TRUE.equals(elseText) && BoolUtils.FALSE.equals(thenText)) ||
-					(BoolUtils.TRUE.equals(thenText) && BoolUtils.FALSE.equals(elseText)));
+			return false;
 		}
 	}
 }

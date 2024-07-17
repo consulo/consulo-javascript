@@ -22,13 +22,11 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NonNls;
-
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 @IntentionMetaData(
@@ -38,11 +36,6 @@ import jakarta.annotation.Nonnull;
 )
 public class JSRemoveBracesIntention extends JSMutablyNamedIntention
 {
-	@NonNls
-	private static final String IF_KEYWORD = "if";
-	@NonNls
-	private static final String ELSE_KEYWORD = "else";
-
 	@Override
 	@Nonnull
 	protected JSElementPredicate getElementPredicate()
@@ -59,12 +52,11 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention
 
 		assert (parent != null);
 
-		if(parent instanceof JSIfStatement)
+		if (parent instanceof JSIfStatement ifStatement)
 		{
-			final JSIfStatement ifStatement = (JSIfStatement) parent;
 			final JSStatement elseBranch = ifStatement.getElse();
 
-			keyword = element.equals(elseBranch) ? ELSE_KEYWORD : IF_KEYWORD;
+			keyword = element.equals(elseBranch) ? "else" : "if";
 		}
 		else
 		{
@@ -126,26 +118,21 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention
 		@Override
 		public boolean satisfiedBy(@Nonnull PsiElement element)
 		{
-			if (!(element instanceof JSBlockStatement))
+			if (!(element instanceof JSBlockStatement blockStatement))
 			{
 				return false;
 			}
 
-			final JSBlockStatement blockStatement = (JSBlockStatement) element;
 			final PsiElement parent = blockStatement.getParent();
 
-			if(!(parent instanceof JSIfStatement ||
-					parent instanceof JSWhileStatement ||
-					parent instanceof JSDoWhileStatement ||
-					parent instanceof JSForStatement ||
-					parent instanceof JSForInStatement))
-			{
-				return false;
+			return (parent instanceof JSIfStatement || parent instanceof JSWhileStatement || parent instanceof JSDoWhileStatement
+				|| parent instanceof JSForStatement || parent instanceof JSForInStatement)
+				&& isSingleNonVarStatement(blockStatement.getStatements());
 			}
 
-			final JSStatement[] statements = blockStatement.getStatements();
-
-			return (statements.length == 1 && !(statements[0] instanceof JSVarStatement));
+		private boolean isSingleNonVarStatement(JSStatement[] statements)
+		{
+			return statements.length == 1 && !(statements[0] instanceof JSVarStatement);
 		}
 	}
 }
