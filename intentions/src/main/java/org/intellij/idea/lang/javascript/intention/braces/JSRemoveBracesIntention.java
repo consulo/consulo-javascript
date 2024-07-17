@@ -37,6 +37,11 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 public class JSRemoveBracesIntention extends JSMutablyNamedIntention
 {
 	@Override
+	protected String getBasicText() {
+		return JSIntentionBundle.message("braces.remove-braces.family-name");
+	}
+
+	@Override
 	@Nonnull
 	protected JSElementPredicate getElementPredicate()
 	{

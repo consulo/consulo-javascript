@@ -26,6 +26,7 @@ import consulo.language.util.IncorrectOperationException;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
+import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.psiutil.*;
 import org.jetbrains.annotations.NonNls;
 
@@ -49,6 +50,11 @@ public class JSReplaceIfWithSwitchIntention extends JSIntention
 	private static final String LABELED_BREAK_STATEMENT_PREFIX = "break ";
 	@NonNls
 	private static final String BREAK_STATEMENT = "\nbreak;";
+
+	@Override
+	protected String getBasicText() {
+		return JSIntentionBundle.message("switchtoif.replace-if-with-switch.display-name");
+	}
 
 	@Override
 	@Nonnull

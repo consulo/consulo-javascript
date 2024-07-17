@@ -30,6 +30,7 @@ import consulo.language.util.IncorrectOperationException;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
+import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
 @ExtensionImpl
@@ -40,6 +41,11 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 )
 public class JSJoinConcatenatedStringLiteralsIntention extends JSIntention
 {
+	@Override
+	protected String getBasicText() {
+		return JSIntentionBundle.message("string.join-concatenated-string-literals.display-name");
+	}
+
 	@Override
 	@Nonnull
 	protected JSElementPredicate getElementPredicate()

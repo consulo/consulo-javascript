@@ -24,6 +24,7 @@ import consulo.language.util.IncorrectOperationException;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
+import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.NumberUtil;
 
@@ -35,6 +36,11 @@ import org.intellij.idea.lang.javascript.psiutil.NumberUtil;
 )
 public class JSConvertIntegerToOctalIntention extends JSIntention
 {
+	@Override
+	protected String getBasicText() {
+		return JSIntentionBundle.message("number.convert-integer-to-octal.display-name");
+	}
+
 	@Override
 	@Nonnull
 	public JSElementPredicate getElementPredicate()

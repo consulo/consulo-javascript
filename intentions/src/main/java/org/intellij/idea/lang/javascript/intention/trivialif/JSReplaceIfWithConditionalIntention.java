@@ -26,8 +26,8 @@ import consulo.language.util.IncorrectOperationException;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
+import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.psiutil.*;
-import org.jetbrains.annotations.NonNls;
 
 @ExtensionImpl
 @IntentionMetaData(
@@ -37,8 +37,10 @@ import org.jetbrains.annotations.NonNls;
 )
 public class JSReplaceIfWithConditionalIntention extends JSIntention
 {
-	@NonNls
-	private static final String RETURN_KEYWORD = "return ";
+	@Override
+	protected String getBasicText() {
+		return JSIntentionBundle.message("trivialif.replace-if-with-conditional.display-name");
+	}
 
 	@Override
 	@Nonnull
@@ -65,7 +67,7 @@ public class JSReplaceIfWithConditionalIntention extends JSIntention
 		}
 		else if (ReplaceIfWithConditionalPredicate.isReplaceableReturn(ifStatement))
 		{
-			final StringBuilder newStatement = new StringBuilder(RETURN_KEYWORD);
+			final StringBuilder newStatement = new StringBuilder("return ");
 
 			getReturnReplacement(newStatement, ifStatement);
 			newStatement.append(';');
@@ -154,7 +156,7 @@ public class JSReplaceIfWithConditionalIntention extends JSIntention
 		final String elseValue = ParenthesesUtils.getParenthesized(elseReturnValue, ParenthesesUtils.CONDITIONAL_PRECENDENCE);
 		final String conditionText = ParenthesesUtils.getParenthesized(condition, ParenthesesUtils.CONDITIONAL_PRECENDENCE);
 
-		return RETURN_KEYWORD + conditionText + '?' + thenValue + ':' + elseValue + ';';
+		return "return " + conditionText + '?' + thenValue + ':' + elseValue + ';';
 	}
 
 	private static class ReplaceIfWithConditionalPredicate implements JSElementPredicate

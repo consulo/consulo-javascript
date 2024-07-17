@@ -26,11 +26,11 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
+import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.psiutil.ConditionalUtils;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
-import org.jetbrains.annotations.NonNls;
 
 import jakarta.annotation.Nonnull;
 
@@ -42,8 +42,10 @@ import jakarta.annotation.Nonnull;
 )
 public class JSMergeIfAndIntention extends JSIntention
 {
-	@NonNls
-	private static final String IF_STATEMENT_PREFIX = "if (";
+	@Override
+	protected String getBasicText() {
+		return JSIntentionBundle.message("trivialif.merge-if-and.display-name");
+	}
 
 	@Override
 	@Nonnull
@@ -66,7 +68,7 @@ public class JSMergeIfAndIntention extends JSIntention
 		final String childConditionText = ParenthesesUtils.getParenthesized(childCondition, ParenthesesUtils.AND_PRECENDENCE);
 		final String parentConditionText = ParenthesesUtils.getParenthesized(parentCondition, ParenthesesUtils.AND_PRECENDENCE);
 		final JSStatement childThenBranch = childStatement.getThen();
-		final String statement = IF_STATEMENT_PREFIX + parentConditionText + " && " + childConditionText + ')' + childThenBranch.getText();
+		final String statement = "if (" + parentConditionText + " && " + childConditionText + ')' + childThenBranch.getText();
 
 		JSElementFactory.replaceStatement(parentStatement, statement);
 	}

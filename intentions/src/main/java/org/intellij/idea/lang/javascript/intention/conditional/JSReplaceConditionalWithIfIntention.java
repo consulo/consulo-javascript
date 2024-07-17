@@ -22,6 +22,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
+import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.psiutil.ConditionalUtils;
 
 import jakarta.annotation.Nonnull;
@@ -34,6 +35,11 @@ import jakarta.annotation.Nonnull;
 )
 public class JSReplaceConditionalWithIfIntention extends JSIntention
 {
+	@Override
+	protected String getBasicText() {
+		return JSIntentionBundle.message("conditional.replace-conditional-with-if.display-name");
+	}
+
 	@Override
 	@Nonnull
 	public JSElementPredicate getElementPredicate()

@@ -44,6 +44,11 @@ public class JSAddBracesIntention extends JSMutablyNamedIntention
 	}
 
 	@Override
+	protected String getBasicText() {
+		return JSIntentionBundle.message("braces.add-braces.family-name");
+	}
+
+	@Override
 	@RequiredReadAction
 	protected String getTextForElement(PsiElement element)
 	{

@@ -53,6 +53,11 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention
 	}
 
 	@Override
+	protected String getBasicText() {
+		return JSIntentionBundle.message("constant.constant-subexpression.family-name");
+	}
+
+	@Override
 	@RequiredReadAction
 	protected String getTextForElement(PsiElement element)
 	{

@@ -28,6 +28,7 @@ import consulo.language.util.IncorrectOperationException;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
+import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
@@ -47,6 +48,11 @@ public class JSSplitIfAndIntention extends JSIntention
 	private static final String INNER_IF_STATEMENT_PREFIX = ") {\n if (";
 	@NonNls
 	private static final String ELSE_KEYWORD = "else ";
+
+	@Override
+	protected String getBasicText() {
+		return JSIntentionBundle.message("trivialif.split-if-and.display-name");
+	}
 
 	@Override
 	@Nonnull
