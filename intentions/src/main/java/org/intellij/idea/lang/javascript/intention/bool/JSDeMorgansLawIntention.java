@@ -48,7 +48,7 @@ public class JSDeMorgansLawIntention extends JSMutablyNamedIntention
 
 	@Override
 	@Nonnull
-	public String getText()
+	protected String getBasicText()
 	{
 		return JSIntentionBundle.message("bool.de-morgans-law.family-name");
 	}
