@@ -37,7 +37,9 @@ import org.intellij.idea.lang.javascript.psiutil.NumberUtil;
 public class JSConvertIntegerToOctalIntention extends JSIntention
 {
 	@Override
-	protected String getBasicText() {
+	@Nonnull
+	public String getText()
+	{
 		return JSIntentionBundle.message("number.convert-integer-to-octal.display-name");
 	}
 

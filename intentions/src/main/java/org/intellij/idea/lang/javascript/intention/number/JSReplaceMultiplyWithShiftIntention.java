@@ -40,8 +40,10 @@ import jakarta.annotation.Nonnull;
 )
 public class JSReplaceMultiplyWithShiftIntention extends JSMutablyNamedIntention
 {
+	@Nonnull
 	@Override
-	protected String getBasicText() {
+	protected String getBasicText()
+	{
 		return JSIntentionBundle.message("number.replace-multiply-with-shift.family-name");
 	}
 

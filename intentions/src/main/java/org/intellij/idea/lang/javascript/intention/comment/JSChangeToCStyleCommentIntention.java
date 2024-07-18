@@ -42,7 +42,9 @@ import java.util.List;
 public class JSChangeToCStyleCommentIntention extends JSIntention
 {
 	@Override
-	protected String getBasicText() {
+	@Nonnull
+	public String getText()
+	{
 		return JSIntentionBundle.message("comment.change-to-cstyle-comment.display-name");
 	}
 

@@ -40,7 +40,9 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 public class JSRemoveRedundantElseIntention extends JSIntention
 {
 	@Override
-	protected String getBasicText() {
+	@Nonnull
+	public String getText()
+	{
 		return JSIntentionBundle.message("trivialif.remove-redundant-else.display-name");
 	}
 

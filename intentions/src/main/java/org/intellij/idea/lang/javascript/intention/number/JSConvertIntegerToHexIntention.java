@@ -37,7 +37,9 @@ import jakarta.annotation.Nonnull;
 public class JSConvertIntegerToHexIntention extends JSIntention
 {
 	@Override
-	protected String getBasicText() {
+	@Nonnull
+	public String getText()
+	{
 		return JSIntentionBundle.message("number.convert-integer-to-hex.display-name");
 	}
 

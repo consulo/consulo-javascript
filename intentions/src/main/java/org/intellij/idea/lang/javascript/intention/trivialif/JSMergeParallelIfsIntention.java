@@ -42,7 +42,9 @@ import jakarta.annotation.Nonnull;
 public class JSMergeParallelIfsIntention extends JSIntention
 {
 	@Override
-	protected String getBasicText() {
+	@Nonnull
+	public String getText()
+	{
 		return JSIntentionBundle.message("trivialif.merge-parallel-ifs.display-name");
 	}
 

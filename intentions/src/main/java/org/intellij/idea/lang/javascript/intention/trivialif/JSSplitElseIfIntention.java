@@ -38,7 +38,9 @@ import jakarta.annotation.Nonnull;
 public class JSSplitElseIfIntention extends JSIntention
 {
 	@Override
-	protected String getBasicText() {
+	@Nonnull
+	public String getText()
+	{
 		return JSIntentionBundle.message("trivialif.split-else-if.display-name");
 	}
 

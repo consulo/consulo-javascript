@@ -43,8 +43,10 @@ public class JSAddBracesIntention extends JSMutablyNamedIntention
 		return new AddBracesPredicate();
 	}
 
-	@Override
-	protected String getBasicText() {
+	@Nonnull
+  @Override
+	protected String getBasicText()
+	{
 		return JSIntentionBundle.message("braces.add-braces.family-name");
 	}
 

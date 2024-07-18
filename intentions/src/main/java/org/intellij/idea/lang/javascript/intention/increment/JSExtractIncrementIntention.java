@@ -37,7 +37,9 @@ import org.intellij.idea.lang.javascript.psiutil.*;
 public class JSExtractIncrementIntention extends JSMutablyNamedIntention
 {
 	@Override
-	protected String getBasicText() {
+	@Nonnull
+	protected String getBasicText()
+	{
 		return JSIntentionBundle.message("increment.extract-increment.family-name");
 	}
 

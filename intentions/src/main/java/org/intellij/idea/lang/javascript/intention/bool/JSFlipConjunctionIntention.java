@@ -39,8 +39,10 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 )
 public class JSFlipConjunctionIntention extends JSMutablyNamedIntention
 {
+	@Nonnull
 	@Override
-	protected String getBasicText() {
+	protected String getBasicText()
+	{
 		return JSIntentionBundle.message("bool.flip-conjunction.family-name");
 	}
 

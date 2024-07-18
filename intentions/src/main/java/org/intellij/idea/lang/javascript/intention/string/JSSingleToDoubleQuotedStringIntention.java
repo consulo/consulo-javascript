@@ -37,7 +37,9 @@ import jakarta.annotation.Nonnull;
 public class JSSingleToDoubleQuotedStringIntention extends JSIntention
 {
 	@Override
-	protected String getBasicText() {
+	@Nonnull
+	public String getText()
+	{
 		return JSIntentionBundle.message("string.single-to-double-quoted-string.display-name");
 	}
 

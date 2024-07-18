@@ -40,7 +40,9 @@ import jakarta.annotation.Nonnull;
 public class JSMergeIfOrIntention extends JSIntention
 {
 	@Override
-	protected String getBasicText() {
+	@Nonnull
+	public String getText()
+	{
 		return JSIntentionBundle.message("trivialif.merge-if-or.display-name");
 	}
 

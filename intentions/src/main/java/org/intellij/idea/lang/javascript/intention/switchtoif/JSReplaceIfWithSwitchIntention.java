@@ -52,7 +52,9 @@ public class JSReplaceIfWithSwitchIntention extends JSIntention
 	private static final String BREAK_STATEMENT = "\nbreak;";
 
 	@Override
-	protected String getBasicText() {
+	@Nonnull
+	public String getText()
+	{
 		return JSIntentionBundle.message("switchtoif.replace-if-with-switch.display-name");
 	}
 

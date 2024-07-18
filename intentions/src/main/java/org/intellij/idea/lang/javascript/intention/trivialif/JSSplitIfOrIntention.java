@@ -43,7 +43,9 @@ import jakarta.annotation.Nonnull;
 public class JSSplitIfOrIntention extends JSIntention
 {
 	@Override
-	protected String getBasicText() {
+	@Nonnull
+	public String getText()
+	{
 		return JSIntentionBundle.message("trivialif.split-if-or.display-name");
 	}
 

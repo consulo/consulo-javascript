@@ -43,7 +43,9 @@ import jakarta.annotation.Nonnull;
 public class JSMergeParallelForLoopsIntention extends JSIntention
 {
 	@Override
-	protected String getBasicText() {
+	@Nonnull
+	public String getText()
+	{
 		return JSIntentionBundle.message("loop.merge-parallel-for-loops.display-name");
 	}
 

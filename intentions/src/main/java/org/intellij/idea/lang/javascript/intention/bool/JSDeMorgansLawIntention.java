@@ -47,7 +47,9 @@ public class JSDeMorgansLawIntention extends JSMutablyNamedIntention
 	private static final String OR_OPERATOR = "||";
 
 	@Override
-	protected String getBasicText() {
+	@Nonnull
+	public String getText()
+	{
 		return JSIntentionBundle.message("bool.de-morgans-law.family-name");
 	}
 

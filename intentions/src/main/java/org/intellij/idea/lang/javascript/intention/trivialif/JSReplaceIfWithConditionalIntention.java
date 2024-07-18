@@ -38,7 +38,9 @@ import org.intellij.idea.lang.javascript.psiutil.*;
 public class JSReplaceIfWithConditionalIntention extends JSIntention
 {
 	@Override
-	protected String getBasicText() {
+	@Nonnull
+	public String getText()
+	{
 		return JSIntentionBundle.message("trivialif.replace-if-with-conditional.display-name");
 	}
 

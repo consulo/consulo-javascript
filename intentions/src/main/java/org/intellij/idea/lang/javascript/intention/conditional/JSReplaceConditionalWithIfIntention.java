@@ -36,7 +36,9 @@ import jakarta.annotation.Nonnull;
 public class JSReplaceConditionalWithIfIntention extends JSIntention
 {
 	@Override
-	protected String getBasicText() {
+	@Nonnull
+	public String getText()
+	{
 		return JSIntentionBundle.message("conditional.replace-conditional-with-if.display-name");
 	}
 

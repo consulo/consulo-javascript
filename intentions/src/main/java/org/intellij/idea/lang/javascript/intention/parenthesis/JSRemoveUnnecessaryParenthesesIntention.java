@@ -42,7 +42,9 @@ import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
 public class JSRemoveUnnecessaryParenthesesIntention extends JSIntention
 {
 	@Override
-	protected String getBasicText() {
+	@Nonnull
+	public String getText()
+	{
 		return JSIntentionBundle.message("parenthesis.remove-unnecessary-parentheses.display-name");
 	}
 

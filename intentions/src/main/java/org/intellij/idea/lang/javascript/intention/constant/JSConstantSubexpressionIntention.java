@@ -52,8 +52,10 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention
 		return new ConstantSubexpressionPredicate();
 	}
 
-	@Override
-	protected String getBasicText() {
+	@Nonnull
+  @Override
+	protected String getBasicText()
+	{
 		return JSIntentionBundle.message("constant.constant-subexpression.family-name");
 	}
 

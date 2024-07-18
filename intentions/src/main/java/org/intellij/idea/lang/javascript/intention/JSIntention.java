@@ -89,9 +89,5 @@ public abstract class JSIntention extends PsiElementBaseIntentionAction {
 
   @Override
   @Nonnull
-  public String getText() {
-    return getBasicText();
-  }
-
-  protected abstract String getBasicText();
+  public abstract String getText();
 }

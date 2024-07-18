@@ -40,8 +40,10 @@ import org.intellij.idea.lang.javascript.psiutil.*;
 )
 public class JSReplaceWithOperatorAssignmentIntention extends JSMutablyNamedIntention
 {
+	@Nonnull
 	@Override
-	protected String getBasicText() {
+	protected String getBasicText()
+	{
 		return JSIntentionBundle.message("opassign.replace-with-operator-assignment.family-name");
 	}
 

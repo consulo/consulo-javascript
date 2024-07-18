@@ -42,7 +42,9 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 public class JSJoinConcatenatedStringLiteralsIntention extends JSIntention
 {
 	@Override
-	protected String getBasicText() {
+	@Nonnull
+	public String getText()
+	{
 		return JSIntentionBundle.message("string.join-concatenated-string-literals.display-name");
 	}
 

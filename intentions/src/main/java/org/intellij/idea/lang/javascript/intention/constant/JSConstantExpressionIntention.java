@@ -41,7 +41,9 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 public class JSConstantExpressionIntention extends JSIntention
 {
 	@Override
-	protected String getBasicText() {
+	@Nonnull
+	public String getText()
+	{
 		return JSIntentionBundle.message("constant.constant-expression.display-name");
 	}
 

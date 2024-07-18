@@ -40,7 +40,9 @@ import java.util.Iterator;
 public class JSMergeDeclarationAndInitializationIntention extends JSIntention
 {
 	@Override
-	protected String getBasicText() {
+	@Nonnull
+	public String getText()
+	{
 		return JSIntentionBundle.message("initialization.merge-declaration-and-initialization.display-name");
 	}
 

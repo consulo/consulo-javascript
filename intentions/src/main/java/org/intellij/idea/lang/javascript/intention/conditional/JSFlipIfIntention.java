@@ -41,7 +41,9 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 public class JSFlipIfIntention extends JSIntention
 {
 	@Override
-	protected String getBasicText() {
+	@Nonnull
+	public String getText()
+	{
 		return JSIntentionBundle.message("conditional.flip-if.display-name");
 	}
 

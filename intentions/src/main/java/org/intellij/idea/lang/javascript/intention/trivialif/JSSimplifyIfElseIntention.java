@@ -38,8 +38,10 @@ import jakarta.annotation.Nonnull;
 )
 public class JSSimplifyIfElseIntention extends JSIntention
 {
+	@Nonnull
 	@Override
-	protected String getBasicText() {
+	public String getText()
+	{
 		return JSIntentionBundle.message("trivialif.simplify-if-else.display-name");
 	}
 

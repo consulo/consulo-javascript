@@ -40,7 +40,9 @@ import org.intellij.idea.lang.javascript.psiutil.TreeUtil;
 public class JSChangeToEndOfLineCommentIntention extends JSIntention
 {
 	@Override
-	protected String getBasicText() {
+	@Nonnull
+	public String getText()
+	{
 		return JSIntentionBundle.message("comment.change-to-end-of-line-comment.display-name");
 	}
 

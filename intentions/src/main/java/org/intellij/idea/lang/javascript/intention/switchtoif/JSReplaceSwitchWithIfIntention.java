@@ -58,7 +58,9 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention
 	private static final String DEFAULT_LABEL_NAME = "Label";
 
 	@Override
-	protected String getBasicText() {
+	@Nonnull
+	public String getText()
+	{
 		return JSIntentionBundle.message("switchtoif.replace-switch-with-if.display-name");
 	}
 

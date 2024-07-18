@@ -48,7 +48,9 @@ public class JSSplitDeclarationAndInitializationIntention extends JSIntention
 	private static final String VAR_KEYWORD = "var ";
 
 	@Override
-	protected String getBasicText() {
+	@Nonnull
+	public String getText()
+	{
 		return JSIntentionBundle.message("initialization.split-declaration-and-initialization.display-name");
 	}
 

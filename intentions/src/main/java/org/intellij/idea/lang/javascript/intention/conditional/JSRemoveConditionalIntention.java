@@ -41,7 +41,9 @@ import jakarta.annotation.Nonnull;
 public class JSRemoveConditionalIntention extends JSIntention
 {
 	@Override
-	protected String getBasicText() {
+	@Nonnull
+	public String getText()
+	{
 		return JSIntentionBundle.message("conditional.remove-conditional.display-name");
 	}
 

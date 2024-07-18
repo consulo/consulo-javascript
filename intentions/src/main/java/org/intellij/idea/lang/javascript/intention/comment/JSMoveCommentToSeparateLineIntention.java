@@ -40,7 +40,9 @@ import org.intellij.idea.lang.javascript.psiutil.TreeUtil;
 public class JSMoveCommentToSeparateLineIntention extends JSIntention
 {
 	@Override
-	protected String getBasicText() {
+	@Nonnull
+	public String getText()
+	{
 		return JSIntentionBundle.message("comment.move-comment-to-separate-line.display-name");
 	}
 
