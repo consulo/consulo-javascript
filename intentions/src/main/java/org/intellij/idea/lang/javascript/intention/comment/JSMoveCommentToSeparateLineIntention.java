@@ -27,6 +27,7 @@ import consulo.language.util.IncorrectOperationException;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
+import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.TreeUtil;
 
@@ -38,6 +39,13 @@ import org.intellij.idea.lang.javascript.psiutil.TreeUtil;
 )
 public class JSMoveCommentToSeparateLineIntention extends JSIntention
 {
+	@Override
+	@Nonnull
+	public String getText()
+	{
+		return JSIntentionBundle.message("comment.move-comment-to-separate-line.display-name");
+	}
+
 	@Override
 	@Nonnull
 	protected JSElementPredicate getElementPredicate()

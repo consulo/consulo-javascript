@@ -28,10 +28,10 @@ import consulo.language.util.IncorrectOperationException;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
+import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
-import org.jetbrains.annotations.NonNls;
 
 @ExtensionImpl
 @IntentionMetaData(
@@ -41,12 +41,12 @@ import org.jetbrains.annotations.NonNls;
 )
 public class JSSplitIfAndIntention extends JSIntention
 {
-	@NonNls
-	private static final String IF_STATEMENT_PREFIX = "if (";
-	@NonNls
-	private static final String INNER_IF_STATEMENT_PREFIX = ") {\n if (";
-	@NonNls
-	private static final String ELSE_KEYWORD = "else ";
+	@Override
+	@Nonnull
+	public String getText()
+	{
+		return JSIntentionBundle.message("trivialif.split-if-and.display-name");
+	}
 
 	@Override
 	@Nonnull
@@ -81,20 +81,20 @@ public class JSSplitIfAndIntention extends JSIntention
 
 		final StringBuilder statement = new StringBuilder(ifStatement.getTextLength() + elseLength + 30);
 
-		statement.append(IF_STATEMENT_PREFIX)
+		statement.append("if (")
 			.append(lhsText)
-			.append(INNER_IF_STATEMENT_PREFIX)
+			.append(") {\n if (")
 			.append(rhsText)
 			.append(')')
 			.append(thenText);
 		if (elseBranch != null)
 		{
-			statement.append(ELSE_KEYWORD).append(elseText);
+			statement.append("else ").append(elseText);
 		}
 		statement.append('}');
 		if (elseBranch != null)
 		{
-			statement.append(ELSE_KEYWORD).append(elseText);
+			statement.append("else ").append(elseText);
 		}
 
 		JSElementFactory.replaceStatement(ifStatement, statement.toString());

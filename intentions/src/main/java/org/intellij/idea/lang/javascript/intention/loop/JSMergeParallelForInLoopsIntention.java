@@ -27,6 +27,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
+import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.psiutil.ControlFlowUtils;
 import org.intellij.idea.lang.javascript.psiutil.EquivalenceChecker;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
@@ -42,6 +43,13 @@ import jakarta.annotation.Nonnull;
 )
 public class JSMergeParallelForInLoopsIntention extends JSIntention
 {
+	@Override
+	@Nonnull
+	public String getText()
+	{
+		return JSIntentionBundle.message("loop.merge-parallel-for-in-loops.display-name");
+	}
+
 	@Override
 	@Nonnull
 	public JSElementPredicate getElementPredicate()

@@ -32,12 +32,11 @@ public abstract class JSMutablyNamedIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		if (myText != null)
-		{
-			return myText;
-		}
-		return super.getText();
+		return myText != null ? myText : getBasicText();
 	}
+
+	@Nonnull
+	protected abstract String getBasicText();
 
 	@Override
 	public boolean isAvailable(@Nonnull Project project, Editor editor, @Nullable PsiElement node)

@@ -24,6 +24,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
+import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.psiutil.ConditionalUtils;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 
@@ -37,6 +38,13 @@ import jakarta.annotation.Nonnull;
 )
 public class JSSimplifyIfElseIntention extends JSIntention
 {
+	@Nonnull
+	@Override
+	public String getText()
+	{
+		return JSIntentionBundle.message("trivialif.simplify-if-else.display-name");
+	}
+
 	@Override
 	@Nonnull
 	public JSElementPredicate getElementPredicate()

@@ -22,6 +22,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
+import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.NumberUtil;
 
@@ -35,6 +36,13 @@ import jakarta.annotation.Nonnull;
 )
 public class JSConvertIntegerToDecimalIntention extends JSIntention
 {
+	@Override
+	@Nonnull
+	public String getText()
+	{
+		return JSIntentionBundle.message("number.convert-integer-to-decimal.display-name");
+	}
+
 	@Override
 	@Nonnull
 	public JSElementPredicate getElementPredicate()

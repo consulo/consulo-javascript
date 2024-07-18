@@ -15,20 +15,23 @@
  */
 package org.intellij.idea.lang.javascript.intention.parenthesis;
 
-import com.intellij.lang.javascript.psi.*;
+import com.intellij.lang.javascript.psi.JSBinaryExpression;
+import com.intellij.lang.javascript.psi.JSExpression;
+import com.intellij.lang.javascript.psi.JSFunctionExpression;
+import com.intellij.lang.javascript.psi.JSParenthesizedExpression;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
+import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
-
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 @IntentionMetaData(
@@ -38,6 +41,13 @@ import jakarta.annotation.Nonnull;
 )
 public class JSRemoveUnnecessaryParenthesesIntention extends JSIntention
 {
+	@Override
+	@Nonnull
+	public String getText()
+	{
+		return JSIntentionBundle.message("parenthesis.remove-unnecessary-parentheses.display-name");
+	}
+
 	@Override
 	@Nonnull
 	public JSElementPredicate getElementPredicate()
@@ -70,7 +80,7 @@ public class JSRemoveUnnecessaryParenthesesIntention extends JSIntention
 			{
 				if (!(expression.getParent() instanceof JSExpression parentExpression))
 				{
-          return true;
+					return true;
 				}
 
 				final JSExpression body = expression.getInnerExpression();

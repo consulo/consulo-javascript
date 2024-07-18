@@ -87,17 +87,7 @@ public abstract class JSIntention extends PsiElementBaseIntentionAction {
     return true;
   }
 
-  protected String getTextKey(@NonNls Object... suffixes) {
-    return JSIntentionBundle.getKey(this.getClass().getName().substring(PACKAGE_NAME.length() + 1).replace("JS", ""),
-                                    INTENTION_SUFFIX,
-                                    null,
-                                    suffixes);
-  }
-
   @Override
-  @SuppressWarnings({"UnresolvedPropertyKey"})
   @Nonnull
-  public String getText() {
-    return JSIntentionBundle.message(this.getTextKey(DISPLAY_NAME));
-  }
+  public abstract String getText();
 }

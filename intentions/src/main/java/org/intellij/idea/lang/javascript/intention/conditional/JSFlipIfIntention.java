@@ -27,6 +27,7 @@ import consulo.language.util.IncorrectOperationException;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
+import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.psiutil.BoolUtils;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
@@ -39,6 +40,13 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 )
 public class JSFlipIfIntention extends JSIntention
 {
+	@Override
+	@Nonnull
+	public String getText()
+	{
+		return JSIntentionBundle.message("conditional.flip-if.display-name");
+	}
+
 	@Override
 	@Nonnull
 	public JSElementPredicate getElementPredicate()

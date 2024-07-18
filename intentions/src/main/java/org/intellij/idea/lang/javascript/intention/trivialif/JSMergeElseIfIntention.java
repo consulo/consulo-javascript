@@ -25,6 +25,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
+import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
@@ -38,6 +39,13 @@ import jakarta.annotation.Nonnull;
 )
 public class JSMergeElseIfIntention extends JSIntention
 {
+	@Override
+	@Nonnull
+	public String getText()
+	{
+		return JSIntentionBundle.message("trivialif.merge-else-if.display-name");
+	}
+
 	@Override
 	@Nonnull
 	public JSElementPredicate getElementPredicate()

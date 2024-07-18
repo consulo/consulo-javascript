@@ -39,6 +39,13 @@ import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
 )
 public class JSReplaceShiftWithMultiplyIntention extends JSMutablyNamedIntention
 {
+	@Nonnull
+	@Override
+	protected String getBasicText()
+	{
+		return JSIntentionBundle.message("number.replace-shift-with-multiply.family-name");
+	}
+
 	@Override
 	@RequiredReadAction
 	protected String getTextForElement(PsiElement element)

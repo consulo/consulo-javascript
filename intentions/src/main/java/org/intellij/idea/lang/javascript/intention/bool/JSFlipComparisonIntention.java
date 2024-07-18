@@ -38,6 +38,13 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 )
 public class JSFlipComparisonIntention extends JSMutablyNamedIntention
 {
+	@Nonnull
+	@Override
+	protected String getBasicText()
+	{
+		return JSIntentionBundle.message("bool.flip-comparison.family-name");
+	}
+
 	@Override
 	@RequiredReadAction
 	public String getTextForElement(PsiElement element)
