@@ -19,13 +19,14 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
-import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
@@ -41,14 +42,14 @@ public class JSReplaceShiftWithMultiplyIntention extends JSMutablyNamedIntention
 {
 	@Nonnull
 	@Override
-	protected String getBasicText()
+	protected LocalizeValue getBasicText()
 	{
-		return JSIntentionBundle.message("number.replace.shift.with.multiply");
+		return JSIntentionLocalize.numberReplaceShiftWithMultiply();
 	}
 
 	@Override
 	@RequiredReadAction
-	protected String getTextForElement(PsiElement element)
+	protected LocalizeValue getTextForElement(PsiElement element)
 	{
 		final IElementType tokenType = ((JSBinaryExpression) element).getOperationSign();
 		final String operatorString;
@@ -62,12 +63,8 @@ public class JSReplaceShiftWithMultiplyIntention extends JSMutablyNamedIntention
 			operatorString = JSTokenTypes.LTLT.equals(tokenType) ? "*" : "/";
 		}
 
-		return JSIntentionBundle.message(
-			"number.replace.shift.with.multiply.message",
-			BinaryOperatorUtils.getOperatorText(tokenType),
-			operatorString
-		);
-  }
+		return JSIntentionLocalize.numberReplaceShiftWithMultiplyMessage(BinaryOperatorUtils.getOperatorText(tokenType), operatorString);
+	}
 
 	@Override
 	@Nonnull

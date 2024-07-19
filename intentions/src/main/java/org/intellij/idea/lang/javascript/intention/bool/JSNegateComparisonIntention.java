@@ -19,13 +19,14 @@ import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
-import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.ComparisonUtils;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
@@ -40,14 +41,14 @@ public class JSNegateComparisonIntention extends JSMutablyNamedIntention
 {
 	@Nonnull
 	@Override
-	protected String getBasicText()
+	protected LocalizeValue getBasicText()
 	{
-		return JSIntentionBundle.message("bool.negate.comparison");
+		return JSIntentionLocalize.boolNegateComparison();
 	}
 
 	@Override
 	@RequiredReadAction
-	public String getTextForElement(PsiElement element)
+	public LocalizeValue getTextForElement(PsiElement element)
 	{
 		final JSBinaryExpression expression = (JSBinaryExpression) element;
 		String operatorText = "";
@@ -62,8 +63,8 @@ public class JSNegateComparisonIntention extends JSMutablyNamedIntention
 		}
 
 		return operatorText.equals(negatedOperatorText)
-			? JSIntentionBundle.message("bool.negate.comparison.equals", operatorText)
-			: JSIntentionBundle.message("bool.negate.comparison.not.equals", operatorText, negatedOperatorText);
+			? JSIntentionLocalize.boolNegateComparisonEquals(operatorText)
+			: JSIntentionLocalize.boolNegateComparisonNotEquals(operatorText, negatedOperatorText);
 	}
 
 	@Override

@@ -21,21 +21,21 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
-import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
 import org.intellij.idea.lang.javascript.psiutil.ExpressionUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
-
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 @IntentionMetaData(
@@ -53,15 +53,15 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention
 	}
 
 	@Nonnull
-  @Override
-	protected String getBasicText()
+	@Override
+	protected LocalizeValue getBasicText()
 	{
-		return JSIntentionBundle.message("constant.compute.subexpression");
+		return JSIntentionLocalize.constantComputeSubexpression();
 	}
 
 	@Override
 	@RequiredReadAction
-	protected String getTextForElement(PsiElement element)
+	protected LocalizeValue getTextForElement(PsiElement element)
 	{
 		final PsiElement parent = element.getParent();
 		final JSBinaryExpression binaryExpression = (JSBinaryExpression) (parent instanceof JSBinaryExpression ? parent : element);
@@ -73,13 +73,12 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention
 		assert (rhs != null);
 		assert (leftSide != null);
 
-		return JSIntentionBundle.message(
-			"constant.compute.subexpression.message",
+		return JSIntentionLocalize.constantComputeSubexpressionMessage(
 			leftSide.getText(),
 			BinaryOperatorUtils.getOperatorText(operationSign),
 			rhs.getText()
 		);
-  }
+	}
 
 	@Override
 	@RequiredReadAction

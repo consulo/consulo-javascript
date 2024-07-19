@@ -18,6 +18,7 @@ package org.intellij.idea.lang.javascript.intention.comment;
 import com.intellij.lang.javascript.JSTokenTypes;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiComment;
@@ -27,7 +28,6 @@ import consulo.language.util.IncorrectOperationException;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
-import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.TreeUtil;
 
@@ -43,7 +43,7 @@ public class JSChangeToEndOfLineCommentIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		return JSIntentionBundle.message("comment.change.to.end.of.line.comment");
+		return JSIntentionLocalize.commentChangeToEndOfLineComment().get();
 	}
 
 	@Override

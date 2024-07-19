@@ -19,18 +19,18 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
-import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
-
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 @IntentionMetaData(
@@ -42,14 +42,14 @@ public class JSReplaceMultiplyWithShiftIntention extends JSMutablyNamedIntention
 {
 	@Nonnull
 	@Override
-	protected String getBasicText()
+	protected LocalizeValue getBasicText()
 	{
-		return JSIntentionBundle.message("number.replace.multiply.with.shift");
+		return JSIntentionLocalize.numberReplaceMultiplyWithShift();
 	}
 
 	@Override
 	@RequiredReadAction
-	protected String getTextForElement(PsiElement element)
+	protected LocalizeValue getTextForElement(PsiElement element)
 	{
 		final IElementType tokenType = ((JSBinaryExpression) element).getOperationSign();
 		final String operatorString;
@@ -63,12 +63,8 @@ public class JSReplaceMultiplyWithShiftIntention extends JSMutablyNamedIntention
 			operatorString = tokenType.equals(JSTokenTypes.MULT) ? "<<" : ">>";
 		}
 
-		return JSIntentionBundle.message(
-			"number.replace.multiply.with.shift.message",
-			BinaryOperatorUtils.getOperatorText(tokenType),
-			operatorString
-		);
-  }
+		return JSIntentionLocalize.numberReplaceMultiplyWithShiftMessage(BinaryOperatorUtils.getOperatorText(tokenType), operatorString);
+	}
 
 	@Override
 	@Nonnull

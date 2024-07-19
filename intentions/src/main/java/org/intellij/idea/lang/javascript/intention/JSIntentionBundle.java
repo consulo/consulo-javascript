@@ -15,13 +15,19 @@
  */
 package org.intellij.idea.lang.javascript.intention;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.application.CommonBundle;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
 import org.intellij.idea.lang.javascript.JSAbstractBundle;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.PropertyKey;
 
 import java.util.ResourceBundle;
 
+@Deprecated
+@DeprecationInfo("Use JSIntentionLocalize")
+@MigratedExtensionsTo(JSIntentionLocalize.class)
 public class JSIntentionBundle extends JSAbstractBundle
 {
 

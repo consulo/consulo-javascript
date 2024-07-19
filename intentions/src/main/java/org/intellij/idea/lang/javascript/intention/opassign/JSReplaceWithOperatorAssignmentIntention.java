@@ -22,13 +22,14 @@ import com.intellij.lang.javascript.psi.JSDefinitionExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
-import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.*;
 
@@ -42,22 +43,22 @@ public class JSReplaceWithOperatorAssignmentIntention extends JSMutablyNamedInte
 {
 	@Nonnull
 	@Override
-	protected String getBasicText()
+	protected LocalizeValue getBasicText()
 	{
-		return JSIntentionBundle.message("opassign.replace.with.operator.assignment");
+		return JSIntentionLocalize.opassignReplaceWithOperatorAssignment();
 	}
 
 	@Override
 	@RequiredReadAction
-	public String getTextForElement(PsiElement element)
+	public LocalizeValue getTextForElement(PsiElement element)
 	{
 		final JSAssignmentExpression exp = (JSAssignmentExpression) element;
 		final JSBinaryExpression rhs = (JSBinaryExpression) exp.getROperand();
 		assert (rhs != null);
 		final IElementType sign = rhs.getOperationSign();
 
-		return JSIntentionBundle.message("opassign.replace.with.operator.assignment.message", BinaryOperatorUtils.getOperatorText(sign));
-  }
+		return JSIntentionLocalize.opassignReplaceWithOperatorAssignmentMessage(BinaryOperatorUtils.getOperatorText(sign));
+	}
 
 	@Override
 	@Nonnull
