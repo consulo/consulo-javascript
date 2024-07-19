@@ -1,0 +1,118 @@
+bool.de.morgans.law:
+  text: DeMorgan law
+bool.de.morgans.law.and.to.or:
+  text: Replace && with ||
+bool.de.morgans.law.or.to.and:
+  text: Replace || with &&
+bool.flip.comparison:
+  text: Flip comparison
+bool.flip.comparison.equals:
+  text: Flip {0}
+bool.flip.comparison.not.equals:
+  text: Flip {0} to {1}
+bool.flip.comparison.unknown:
+  text: Flip comparison
+bool.flip.conjunction:
+  text: Flip conjunction operands
+bool.flip.conjunction.message:
+  text: Flip {0}
+bool.negate.comparison:
+  text: Negate comparison
+bool.negate.comparison.equals:
+  text: Negate {0}
+bool.negate.comparison.not.equals:
+  text: Negate {0} to {1}
+bool.remove.boolean.equality:
+  text: Remove boolean equality
+bool.remove.boolean.equality.message:
+  text: Simplify {0}
+braces.add:
+  text: Add braces
+braces.add.message:
+  text: Add braces from ''{0}'' statement
+braces.remove:
+  text: Remove braces
+braces.remove.message:
+  text: Remove braces from ''{0}'' statement
+comment.change.to.cstyle.comment:
+  text: Replace with C-style comment
+comment.change.to.end.of.line.comment:
+  text: Replace with end-of-line comment
+comment.move.comment.to.separate.line:
+  text: Move comment to separate line
+conditional.flip.conditional:
+  text: 'Flip ?:'
+conditional.flip.if:
+  text: Flip if-else
+conditional.remove.conditional:
+  text: 'Simplify ?:'
+conditional.replace.conditional.with.if:
+  text: 'Replace ?: with if-else'
+constant.compute.expression:
+  text: Compute constant value
+constant.compute.subexpression:
+  text: Compute constant value for subexpression
+constant.compute.subexpression.message:
+  text: Compute constant value of {0} {1} {2}
+increment.extract:
+  text: Extract increment
+increment.extract.message:
+  text: Extract {0}
+initialization.merge.declaration.and.initialization:
+  text: Merge declaration and initialization
+initialization.split.declaration.and.initialization:
+  text: Split into declaration and initialization
+loop.merge.parallel.for.loops:
+  text: Merge 'for' loops
+loop.merge.parallel.for.in.loops:
+  text: Merge 'for-in' loops
+number.convert.integer.to.decimal:
+  text: Convert to decimal
+number.convert.integer.to.hex:
+  text: Convert to hex
+number.convert.integer.to.octal:
+  text: Convert to octal
+number.replace.multiply.with.shift:
+  text: Replace multiply with shift
+number.replace.multiply.with.shift.message:
+  text: Replace {0} with {1}
+number.replace.shift.with.multiply:
+  text: Replace shift with multiply
+number.replace.shift.with.multiply.message:
+  text: Replace {0} with {1}
+opassign.replace.with.operator.assignment:
+  text: Replace assignment with operator assignment
+opassign.replace.with.operator.assignment.message:
+  text: Replace = with {0}=
+parenthesis.remove.unnecessary.parentheses:
+  text: Remove unnecessary parentheses
+string.double.quoted.to.single.quoted:
+  text: Replace double-quoted string with single-quoted string
+string.join.concatenated.string.literals:
+  text: Join concatenated String literals
+string.single.to.double.quoted.string:
+  text: Replace single-quoted string with double-quoted string
+switchtoif.replace.if.with.switch:
+  text: Replace if with switch
+switchtoif.replace.switch.with.if:
+  text: Replace switch with if
+trivialif.merge.else.if:
+  text: Merge else-if
+trivialif.merge.if.and:
+  text: Merge 'if's
+trivialif.merge.if.or:
+  text: Merge 'if's
+trivialif.merge.parallel.ifs:
+  text: Merge 'if's
+trivialif.remove.redundant.else:
+  text: Remove redundant else
+trivialif.replace.if.with.conditional:
+  text: 'Replace if-else with ?:'
+trivialif.simplify.if.else:
+  text: Simplify if-else
+trivialif.split.else.if:
+  text: Split else-if
+trivialif.split.if.and:
+  text: Split AND-ed if
+trivialif.split.if.or:
+  text: Split OR-ed if

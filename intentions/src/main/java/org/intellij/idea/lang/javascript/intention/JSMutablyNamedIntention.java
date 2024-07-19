@@ -17,6 +17,7 @@ package org.intellij.idea.lang.javascript.intention;
 
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
@@ -26,17 +27,17 @@ public abstract class JSMutablyNamedIntention extends JSIntention
 {
 	private String myText;
 
-	protected abstract String getTextForElement(PsiElement element);
+	protected abstract LocalizeValue getTextForElement(PsiElement element);
 
 	@Override
 	@Nonnull
 	public String getText()
 	{
-		return myText != null ? myText : getBasicText();
+		return myText != null ? myText : getBasicText().get();
 	}
 
 	@Nonnull
-	protected abstract String getBasicText();
+	protected abstract LocalizeValue getBasicText();
 
 	@Override
 	public boolean isAvailable(@Nonnull Project project, Editor editor, @Nullable PsiElement node)
@@ -44,7 +45,7 @@ public abstract class JSMutablyNamedIntention extends JSIntention
 		final PsiElement element = findMatchingElement(node);
 		if (element != null)
 		{
-			myText = getTextForElement(element);
+			myText = getTextForElement(element).get();
 			return true;
 		}
 		else

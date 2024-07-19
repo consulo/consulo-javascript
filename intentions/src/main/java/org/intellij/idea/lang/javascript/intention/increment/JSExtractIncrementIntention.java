@@ -18,13 +18,14 @@ package org.intellij.idea.lang.javascript.intention.increment;
 import com.intellij.lang.javascript.psi.*;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
-import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.*;
 
@@ -38,16 +39,17 @@ public class JSExtractIncrementIntention extends JSMutablyNamedIntention
 {
 	@Override
 	@Nonnull
-	protected String getBasicText()
+	protected LocalizeValue getBasicText()
 	{
-		return JSIntentionBundle.message("increment.extract");
+		return JSIntentionLocalize.incrementExtract();
 	}
 
 	@Override
-	public String getTextForElement(PsiElement element)
+	@RequiredReadAction
+	public LocalizeValue getTextForElement(PsiElement element)
 	{
-		return JSIntentionBundle.message("increment.extract.message", BinaryOperatorUtils.getOperatorText(getOperationSign(element)));
-  }
+		return JSIntentionLocalize.incrementExtractMessage(BinaryOperatorUtils.getOperatorText(getOperationSign(element)));
+	}
 
 	@Override
 	@Nonnull
@@ -100,7 +102,7 @@ public class JSExtractIncrementIntention extends JSMutablyNamedIntention
 
 			final JSStatement containingStatement = TreeUtil.getParentOfType(element, JSStatement.class);
 
-			if (element instanceof JSPostfixExpression
+            if (element instanceof JSPostfixExpression
 				&& (containingStatement instanceof JSReturnStatement || containingStatement instanceof JSThrowStatement))
 			{
 				return false;

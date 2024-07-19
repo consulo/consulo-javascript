@@ -20,16 +20,15 @@ import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.JSIfStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
-import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 @IntentionMetaData(
@@ -43,7 +42,7 @@ public class JSMergeElseIfIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		return JSIntentionBundle.message("trivialif.merge.else.if");
+		return JSIntentionLocalize.trivialifMergeElseIf().get();
 	}
 
 	@Override

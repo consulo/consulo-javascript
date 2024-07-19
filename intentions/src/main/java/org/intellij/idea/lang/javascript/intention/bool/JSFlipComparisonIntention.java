@@ -19,13 +19,14 @@ import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
-import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.ComparisonUtils;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
@@ -40,14 +41,14 @@ public class JSFlipComparisonIntention extends JSMutablyNamedIntention
 {
 	@Nonnull
 	@Override
-	protected String getBasicText()
+	protected LocalizeValue getBasicText()
 	{
-		return JSIntentionBundle.message("bool.flip.comparison");
+		return JSIntentionLocalize.boolFlipComparison();
 	}
 
 	@Override
 	@RequiredReadAction
-	public String getTextForElement(PsiElement element)
+	public LocalizeValue getTextForElement(PsiElement element)
 	{
 		final JSBinaryExpression exp = (JSBinaryExpression) element;
 		String operatorText = null;
@@ -61,15 +62,15 @@ public class JSFlipComparisonIntention extends JSMutablyNamedIntention
 
 		if (exp == null)
 		{
-			return JSIntentionBundle.message("bool.flip.comparison.unknown");
+			return JSIntentionLocalize.boolFlipComparisonUnknown();
 		}
 		else if (operatorText.equals(flippedOperatorText))
 		{
-			return JSIntentionBundle.message("bool.flip.comparison.equals", operatorText);
+			return JSIntentionLocalize.boolFlipComparisonEquals(operatorText);
 		}
 		else
 		{
-			return JSIntentionBundle.message("bool.flip.comparison.not.equals", operatorText, flippedOperatorText);
+			return JSIntentionLocalize.boolFlipComparisonNotEquals(operatorText, flippedOperatorText);
 		}
 	}
 

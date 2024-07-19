@@ -20,13 +20,14 @@ import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.JSExpression;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
-import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
@@ -41,20 +42,20 @@ public class JSFlipConjunctionIntention extends JSMutablyNamedIntention
 {
 	@Nonnull
 	@Override
-	protected String getBasicText()
+	protected LocalizeValue getBasicText()
 	{
-		return JSIntentionBundle.message("bool.flip.conjunction");
+		return JSIntentionLocalize.boolFlipConjunction();
 	}
 
 	@Override
 	@RequiredReadAction
-	protected String getTextForElement(PsiElement element)
+	protected LocalizeValue getTextForElement(PsiElement element)
 	{
 		final JSBinaryExpression binaryExpression = (JSBinaryExpression) element;
 		final IElementType sign = binaryExpression.getOperationSign();
 
-		return JSIntentionBundle.message("bool.flip.conjunction.message", BinaryOperatorUtils.getOperatorText(sign));
-  }
+		return JSIntentionLocalize.boolFlipConjunctionMessage(BinaryOperatorUtils.getOperatorText(sign));
+	}
 
 	@Override
 	@Nonnull

@@ -18,14 +18,16 @@ package org.intellij.idea.lang.javascript.intention.bool;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
-import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
 import org.intellij.idea.lang.javascript.psiutil.BoolUtils;
@@ -42,21 +44,21 @@ public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention
 {
 	@Nonnull
 	@Override
-	protected String getBasicText()
+	protected LocalizeValue getBasicText()
 	{
-		return JSIntentionBundle.message("bool.remove.boolean.equality");
+		return JSIntentionLocalize.boolRemoveBooleanEquality();
 	}
 
 	@Override
-	protected String getTextForElement(PsiElement element)
+	@RequiredReadAction
+	protected LocalizeValue getTextForElement(PsiElement element)
 	{
 		final JSBinaryExpression binaryExpression = (JSBinaryExpression) element;
 
-		return JSIntentionBundle.message(
-			"bool.remove.boolean.equality.message",
+		return JSIntentionLocalize.boolRemoveBooleanEqualityMessage(
 			BinaryOperatorUtils.getOperatorText(binaryExpression.getOperationSign())
 		);
-  }
+	}
 
 	@Override
 	@Nonnull

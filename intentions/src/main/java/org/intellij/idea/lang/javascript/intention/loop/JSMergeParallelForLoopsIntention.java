@@ -21,18 +21,17 @@ import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.JSVarStatement;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
-import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.psiutil.ControlFlowUtils;
 import org.intellij.idea.lang.javascript.psiutil.EquivalenceChecker;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 @IntentionMetaData(
@@ -46,7 +45,7 @@ public class JSMergeParallelForLoopsIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		return JSIntentionBundle.message("loop.merge.parallel.for.loops");
+		return JSIntentionLocalize.loopMergeParallelForLoops().get();
 	}
 
 	@Override

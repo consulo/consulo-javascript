@@ -17,15 +17,14 @@ package org.intellij.idea.lang.javascript.intention.conditional;
 
 import com.intellij.lang.javascript.psi.JSConditionalExpression;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
-import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.psiutil.ConditionalUtils;
-
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 @IntentionMetaData(
@@ -39,7 +38,7 @@ public class JSReplaceConditionalWithIfIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		return JSIntentionBundle.message("conditional.replace.conditional.with.if");
+		return JSIntentionLocalize.conditionalReplaceConditionalWithIf().get();
 	}
 
 	@Override
