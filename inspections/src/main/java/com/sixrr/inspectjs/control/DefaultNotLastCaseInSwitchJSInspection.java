@@ -3,7 +3,6 @@ package com.sixrr.inspectjs.control;
 import com.intellij.lang.javascript.psi.JSCaseClause;
 import com.intellij.lang.javascript.psi.JSSwitchStatement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.localize.InspectionJSLocalize;
