@@ -44,7 +44,7 @@ public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention
 	@Override
 	protected String getBasicText()
 	{
-		return JSIntentionBundle.message("bool.remove-boolean-equality.family-name");
+		return JSIntentionBundle.message("bool.remove.boolean.equality");
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention
 		final JSBinaryExpression binaryExpression = (JSBinaryExpression) element;
 
 		return JSIntentionBundle.message(
-			"bool.remove-boolean-equality.display-name",
+			"bool.remove.boolean.equality.message",
 			BinaryOperatorUtils.getOperatorText(binaryExpression.getOperationSign())
 		);
   }

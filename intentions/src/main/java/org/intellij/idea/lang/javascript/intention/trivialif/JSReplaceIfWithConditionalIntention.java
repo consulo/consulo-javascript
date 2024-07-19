@@ -41,7 +41,7 @@ public class JSReplaceIfWithConditionalIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		return JSIntentionBundle.message("trivialif.replace-if-with-conditional.display-name");
+		return JSIntentionBundle.message("trivialif.replace.if.with.conditional");
 	}
 
 	@Override

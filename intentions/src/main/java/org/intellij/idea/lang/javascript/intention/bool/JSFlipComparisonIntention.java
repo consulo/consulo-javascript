@@ -42,7 +42,7 @@ public class JSFlipComparisonIntention extends JSMutablyNamedIntention
 	@Override
 	protected String getBasicText()
 	{
-		return JSIntentionBundle.message("bool.flip-comparison.family-name");
+		return JSIntentionBundle.message("bool.flip.comparison");
 	}
 
 	@Override
@@ -61,15 +61,15 @@ public class JSFlipComparisonIntention extends JSMutablyNamedIntention
 
 		if (exp == null)
 		{
-			return JSIntentionBundle.message("bool.flip-comparison.display-name.unknown");
+			return JSIntentionBundle.message("bool.flip.comparison.unknown");
 		}
 		else if (operatorText.equals(flippedOperatorText))
 		{
-			return JSIntentionBundle.message("bool.flip-comparison.display-name.equals", operatorText);
+			return JSIntentionBundle.message("bool.flip.comparison.equals", operatorText);
 		}
 		else
 		{
-			return JSIntentionBundle.message("bool.flip-comparison.display-name.not-equals", operatorText, flippedOperatorText);
+			return JSIntentionBundle.message("bool.flip.comparison.not.equals", operatorText, flippedOperatorText);
 		}
 	}
 

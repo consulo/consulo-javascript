@@ -40,7 +40,7 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention
 	@Override
 	protected String getBasicText()
 	{
-		return JSIntentionBundle.message("braces.remove-braces.family-name");
+		return JSIntentionBundle.message("braces.remove");
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention
 			keyword = keywordChild.getText();
 		}
 
-		return JSIntentionBundle.message("braces.remove-braces.display-name", keyword);
+		return JSIntentionBundle.message("braces.remove.message", keyword);
   }
 
 	@Override

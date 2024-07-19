@@ -43,7 +43,7 @@ public class JSMergeDeclarationAndInitializationIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		return JSIntentionBundle.message("initialization.merge-declaration-and-initialization.display-name");
+		return JSIntentionBundle.message("initialization.merge.declaration.and.initialization");
 	}
 
 	@Override

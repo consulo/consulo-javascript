@@ -42,7 +42,7 @@ public class JSSimplifyIfElseIntention extends JSIntention
 	@Override
 	public String getText()
 	{
-		return JSIntentionBundle.message("trivialif.simplify-if-else.display-name");
+		return JSIntentionBundle.message("trivialif.simplify.if.else");
 	}
 
 	@Override

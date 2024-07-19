@@ -39,7 +39,7 @@ public class JSDoubleToSingleQuotedStringIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		return JSIntentionBundle.message("string.double-to-single-quoted-string.display-name");
+		return JSIntentionBundle.message("string.double.quoted.to.single.quoted");
 	}
 
 	@Override

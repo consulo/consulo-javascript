@@ -45,7 +45,7 @@ public class JSRemoveUnnecessaryParenthesesIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		return JSIntentionBundle.message("parenthesis.remove-unnecessary-parentheses.display-name");
+		return JSIntentionBundle.message("parenthesis.remove.unnecessary.parentheses");
 	}
 
 	@Override

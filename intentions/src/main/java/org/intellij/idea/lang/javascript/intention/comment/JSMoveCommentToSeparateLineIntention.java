@@ -43,7 +43,7 @@ public class JSMoveCommentToSeparateLineIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		return JSIntentionBundle.message("comment.move-comment-to-separate-line.display-name");
+		return JSIntentionBundle.message("comment.move.comment.to.separate.line");
 	}
 
 	@Override

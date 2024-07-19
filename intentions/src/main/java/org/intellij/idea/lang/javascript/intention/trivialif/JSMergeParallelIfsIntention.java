@@ -45,7 +45,7 @@ public class JSMergeParallelIfsIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		return JSIntentionBundle.message("trivialif.merge-parallel-ifs.display-name");
+		return JSIntentionBundle.message("trivialif.merge.parallel.ifs");
 	}
 
 	@Override

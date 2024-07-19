@@ -55,7 +55,7 @@ public class JSReplaceIfWithSwitchIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		return JSIntentionBundle.message("switchtoif.replace-if-with-switch.display-name");
+		return JSIntentionBundle.message("switchtoif.replace.if.with.switch");
 	}
 
 	@Override

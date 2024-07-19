@@ -46,7 +46,7 @@ public class JSMergeIfAndIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		return JSIntentionBundle.message("trivialif.merge-if-and.display-name");
+		return JSIntentionBundle.message("trivialif.merge.if.and");
 	}
 
 	@Override

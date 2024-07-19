@@ -44,7 +44,7 @@ public class JSReplaceWithOperatorAssignmentIntention extends JSMutablyNamedInte
 	@Override
 	protected String getBasicText()
 	{
-		return JSIntentionBundle.message("opassign.replace-with-operator-assignment.family-name");
+		return JSIntentionBundle.message("opassign.replace.with.operator.assignment");
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class JSReplaceWithOperatorAssignmentIntention extends JSMutablyNamedInte
 		assert (rhs != null);
 		final IElementType sign = rhs.getOperationSign();
 
-		return JSIntentionBundle.message("opassign.replace-with-operator-assignment.display-name", BinaryOperatorUtils.getOperatorText(sign));
+		return JSIntentionBundle.message("opassign.replace.with.operator.assignment.message", BinaryOperatorUtils.getOperatorText(sign));
   }
 
 	@Override

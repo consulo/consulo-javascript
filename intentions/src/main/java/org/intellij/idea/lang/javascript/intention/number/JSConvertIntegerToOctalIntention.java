@@ -40,7 +40,7 @@ public class JSConvertIntegerToOctalIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		return JSIntentionBundle.message("number.convert-integer-to-octal.display-name");
+		return JSIntentionBundle.message("number.convert.integer.to.octal");
 	}
 
 	@Override

@@ -44,7 +44,7 @@ public class JSConstantExpressionIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		return JSIntentionBundle.message("constant.constant-expression.display-name");
+		return JSIntentionBundle.message("constant.compute.expression");
 	}
 
 	@Override

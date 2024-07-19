@@ -43,7 +43,7 @@ public class JSChangeToEndOfLineCommentIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		return JSIntentionBundle.message("comment.change-to-end-of-line-comment.display-name");
+		return JSIntentionBundle.message("comment.change.to.end.of.line.comment");
 	}
 
 	@Override

@@ -44,7 +44,7 @@ public class JSReplaceMultiplyWithShiftIntention extends JSMutablyNamedIntention
 	@Override
 	protected String getBasicText()
 	{
-		return JSIntentionBundle.message("number.replace-multiply-with-shift.family-name");
+		return JSIntentionBundle.message("number.replace.multiply.with.shift");
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class JSReplaceMultiplyWithShiftIntention extends JSMutablyNamedIntention
 		}
 
 		return JSIntentionBundle.message(
-			"number.replace-multiply-with-shift.display-name",
+			"number.replace.multiply.with.shift.message",
 			BinaryOperatorUtils.getOperatorText(tokenType),
 			operatorString
 		);

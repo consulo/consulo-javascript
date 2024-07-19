@@ -40,13 +40,13 @@ public class JSExtractIncrementIntention extends JSMutablyNamedIntention
 	@Nonnull
 	protected String getBasicText()
 	{
-		return JSIntentionBundle.message("increment.extract-increment.family-name");
+		return JSIntentionBundle.message("increment.extract");
 	}
 
 	@Override
 	public String getTextForElement(PsiElement element)
 	{
-		return JSIntentionBundle.message("increment.extract-increment.display-name", BinaryOperatorUtils.getOperatorText(getOperationSign(element)));
+		return JSIntentionBundle.message("increment.extract.message", BinaryOperatorUtils.getOperatorText(getOperationSign(element)));
   }
 
 	@Override
