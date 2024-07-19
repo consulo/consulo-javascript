@@ -44,7 +44,7 @@ public class JSFlipConditionalIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		return JSIntentionBundle.message("conditional.flip-conditional.display-name");
+		return JSIntentionBundle.message("conditional.flip.conditional");
 	}
 
 	@Override

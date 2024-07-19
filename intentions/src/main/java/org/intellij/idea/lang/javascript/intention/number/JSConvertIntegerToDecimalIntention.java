@@ -40,7 +40,7 @@ public class JSConvertIntegerToDecimalIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		return JSIntentionBundle.message("number.convert-integer-to-decimal.display-name");
+		return JSIntentionBundle.message("number.convert.integer.to.decimal");
 	}
 
 	@Override

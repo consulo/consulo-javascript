@@ -45,7 +45,7 @@ public class JSJoinConcatenatedStringLiteralsIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		return JSIntentionBundle.message("string.join-concatenated-string-literals.display-name");
+		return JSIntentionBundle.message("string.join.concatenated.string.literals");
 	}
 
 	@Override

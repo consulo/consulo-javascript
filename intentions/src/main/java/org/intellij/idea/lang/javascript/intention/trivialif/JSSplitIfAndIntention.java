@@ -45,7 +45,7 @@ public class JSSplitIfAndIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		return JSIntentionBundle.message("trivialif.split-if-and.display-name");
+		return JSIntentionBundle.message("trivialif.split.if.and");
 	}
 
 	@Override

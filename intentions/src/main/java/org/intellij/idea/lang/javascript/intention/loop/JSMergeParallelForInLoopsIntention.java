@@ -47,7 +47,7 @@ public class JSMergeParallelForInLoopsIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		return JSIntentionBundle.message("loop.merge-parallel-for-in-loops.display-name");
+		return JSIntentionBundle.message("loop.merge.parallel.for.in.loops");
 	}
 
 	@Override

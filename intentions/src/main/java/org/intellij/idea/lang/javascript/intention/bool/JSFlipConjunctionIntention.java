@@ -43,7 +43,7 @@ public class JSFlipConjunctionIntention extends JSMutablyNamedIntention
 	@Override
 	protected String getBasicText()
 	{
-		return JSIntentionBundle.message("bool.flip-conjunction.family-name");
+		return JSIntentionBundle.message("bool.flip.conjunction");
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class JSFlipConjunctionIntention extends JSMutablyNamedIntention
 		final JSBinaryExpression binaryExpression = (JSBinaryExpression) element;
 		final IElementType sign = binaryExpression.getOperationSign();
 
-		return JSIntentionBundle.message("bool.flip-conjunction.display-name", BinaryOperatorUtils.getOperatorText(sign));
+		return JSIntentionBundle.message("bool.flip.conjunction.message", BinaryOperatorUtils.getOperatorText(sign));
   }
 
 	@Override

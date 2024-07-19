@@ -43,7 +43,7 @@ public class JSRemoveRedundantElseIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		return JSIntentionBundle.message("trivialif.remove-redundant-else.display-name");
+		return JSIntentionBundle.message("trivialif.remove.redundant.else");
 	}
 
 	@Override

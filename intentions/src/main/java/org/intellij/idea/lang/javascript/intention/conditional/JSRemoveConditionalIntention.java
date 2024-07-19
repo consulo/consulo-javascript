@@ -44,7 +44,7 @@ public class JSRemoveConditionalIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		return JSIntentionBundle.message("conditional.remove-conditional.display-name");
+		return JSIntentionBundle.message("conditional.remove.conditional");
 	}
 
 	@Override

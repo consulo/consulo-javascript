@@ -31,7 +31,6 @@ import org.intellij.idea.lang.javascript.intention.JSIntentionBundle;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BoolUtils;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NonNls;
 
 @ExtensionImpl
 @IntentionMetaData(
@@ -41,16 +40,11 @@ import org.jetbrains.annotations.NonNls;
 )
 public class JSDeMorgansLawIntention extends JSMutablyNamedIntention
 {
-	@NonNls
-	private static final String AND_OPERATOR = "&&";
-	@NonNls
-	private static final String OR_OPERATOR = "||";
-
 	@Override
 	@Nonnull
 	protected String getBasicText()
 	{
-		return JSIntentionBundle.message("bool.de-morgans-law.family-name");
+		return JSIntentionBundle.message("bool.de.morgans.law");
 	}
 
 	@Override
@@ -59,9 +53,9 @@ public class JSDeMorgansLawIntention extends JSMutablyNamedIntention
 	{
 		final IElementType tokenType = ((JSBinaryExpression) element).getOperationSign();
 
-		return tokenType.equals(JSTokenTypes.ANDAND)
-			? JSIntentionBundle.message("bool.de-morgans-law.display-name.ANDAND")
-				: JSIntentionBundle.message("bool.de-morgans-law.display-name.OROR");
+		return JSTokenTypes.ANDAND.equals(tokenType)
+			? JSIntentionBundle.message("bool.de.morgans.law.and.to.or")
+			: JSIntentionBundle.message("bool.de.morgans.law.or.to.and");
 	}
 
 	@Override
@@ -72,6 +66,7 @@ public class JSDeMorgansLawIntention extends JSMutablyNamedIntention
 	}
 
 	@Override
+	@RequiredReadAction
 	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
 	{
 		JSBinaryExpression exp = (JSBinaryExpression) element;
@@ -90,15 +85,17 @@ public class JSDeMorgansLawIntention extends JSMutablyNamedIntention
 		JSElementFactory.replaceExpressionWithNegatedExpressionString(exp, newExpression);
 	}
 
+	@RequiredReadAction
 	private String convertConjunctionExpression(JSBinaryExpression exp, IElementType tokenType)
 	{
 		final String leftText = this.getOperandText(exp.getLOperand(), tokenType);
 		final String rightText = this.getOperandText(exp.getROperand(), tokenType);
-		final String flippedConjunction = (tokenType.equals(JSTokenTypes.ANDAND) ? OR_OPERATOR : AND_OPERATOR);
+		final String flippedConjunction = tokenType.equals(JSTokenTypes.ANDAND) ? "||" : "&&";
 
 		return leftText + flippedConjunction + rightText;
 	}
 
+	@RequiredReadAction
 	private String getOperandText(JSExpression operand, IElementType tokenType)
 	{
 		return isConjunctionExpression(operand, tokenType)

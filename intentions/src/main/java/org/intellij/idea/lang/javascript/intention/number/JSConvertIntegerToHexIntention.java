@@ -40,7 +40,7 @@ public class JSConvertIntegerToHexIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		return JSIntentionBundle.message("number.convert-integer-to-hex.display-name");
+		return JSIntentionBundle.message("number.convert.integer.to.hex");
 	}
 
 	@Override

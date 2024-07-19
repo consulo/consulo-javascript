@@ -56,7 +56,7 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention
   @Override
 	protected String getBasicText()
 	{
-		return JSIntentionBundle.message("constant.constant-subexpression.family-name");
+		return JSIntentionBundle.message("constant.compute.subexpression");
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention
 		assert (leftSide != null);
 
 		return JSIntentionBundle.message(
-			"constant.constant-subexpression.display-name",
+			"constant.compute.subexpression.message",
 			leftSide.getText(),
 			BinaryOperatorUtils.getOperatorText(operationSign),
 			rhs.getText()

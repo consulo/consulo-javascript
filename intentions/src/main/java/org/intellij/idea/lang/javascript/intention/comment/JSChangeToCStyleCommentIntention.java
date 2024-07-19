@@ -45,7 +45,7 @@ public class JSChangeToCStyleCommentIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		return JSIntentionBundle.message("comment.change-to-cstyle-comment.display-name");
+		return JSIntentionBundle.message("comment.change.to.cstyle.comment");
 	}
 
 	@Override

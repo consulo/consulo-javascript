@@ -51,7 +51,7 @@ public class JSSplitDeclarationAndInitializationIntention extends JSIntention
 	@Nonnull
 	public String getText()
 	{
-		return JSIntentionBundle.message("initialization.split-declaration-and-initialization.display-name");
+		return JSIntentionBundle.message("initialization.split.declaration.and.initialization");
 	}
 
 	@Override

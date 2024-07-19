@@ -42,7 +42,7 @@ public class JSNegateComparisonIntention extends JSMutablyNamedIntention
 	@Override
 	protected String getBasicText()
 	{
-		return JSIntentionBundle.message("bool.negate-comparison.family-name");
+		return JSIntentionBundle.message("bool.negate.comparison");
 	}
 
 	@Override
@@ -62,8 +62,8 @@ public class JSNegateComparisonIntention extends JSMutablyNamedIntention
 		}
 
 		return operatorText.equals(negatedOperatorText)
-			? JSIntentionBundle.message("bool.negate-comparison.display-name.equals", operatorText)
-			: JSIntentionBundle.message("bool.negate-comparison.display-name.not-equals", operatorText, negatedOperatorText);
+			? JSIntentionBundle.message("bool.negate.comparison.equals", operatorText)
+			: JSIntentionBundle.message("bool.negate.comparison.not.equals", operatorText, negatedOperatorText);
 	}
 
 	@Override
