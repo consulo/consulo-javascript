@@ -22,6 +22,7 @@
 	<vendor>JetBrains &amp; consulo.io</vendor>
 	<depends>com.intellij.xml</depends>
 	<depends optional="true">com.intellij.regexp</depends>
+	<localize>consulo.јavascript.JavaScriptLocalize</localize>
 	<tags>
 		<tag>custom.language</tag>
 	</tags>
