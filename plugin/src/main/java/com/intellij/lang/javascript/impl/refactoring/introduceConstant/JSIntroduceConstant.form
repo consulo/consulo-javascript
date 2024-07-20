@@ -15,7 +15,7 @@
         <properties>
           <labelFor value="2c355"/>
           <requestFocusEnabled value="false"/>
-          <text resource-bundle="com/intellij/lang/javascript/JavaScriptBundle" key="javascript.introduce.variable.name.prompt"/>
+          <text value="Name:"/>
         </properties>
       </component>
       <component id="2c355" class="javax.swing.JTextField" binding="myNameField">

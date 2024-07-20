@@ -1,5 +1,5 @@
 <!--
-  - Copyright 2013-2019 consulo.io
+  - Copyright 2013-2024 consulo.io
   -
   - Licensed under the Apache License, Version 2.0 (the "License");
   - you may not use this file except in compliance with the License.
@@ -20,9 +20,9 @@
 	<version>SNAPSHOT</version>
 	<category>Custom Languages</category>
 	<vendor>JetBrains &amp; consulo.io</vendor>
-	<resource-bundle>messages.JavaScriptBundle</resource-bundle>
 	<depends>com.intellij.xml</depends>
 	<depends optional="true">com.intellij.regexp</depends>
+	<localize>consulo.јavascript.JavaScriptLocalize</localize>
 	<tags>
 		<tag>custom.language</tag>
 	</tags>
