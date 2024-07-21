@@ -28,39 +28,33 @@ import org.intellij.idea.lang.javascript.psiutil.ConditionalUtils;
 
 @ExtensionImpl
 @IntentionMetaData(
-	ignoreId = "JSReplaceConditionalWithIfIntention",
-	categories = {"JavaScript", "Conditional"},
-	fileExtensions = "js"
+    ignoreId = "JSReplaceConditionalWithIfIntention",
+    categories = {"JavaScript", "Conditional"},
+    fileExtensions = "js"
 )
-public class JSReplaceConditionalWithIfIntention extends JSIntention
-{
-	@Override
-	@Nonnull
-	public String getText()
-	{
-		return JSIntentionLocalize.conditionalReplaceConditionalWithIf().get();
-	}
+public class JSReplaceConditionalWithIfIntention extends JSIntention {
+    @Override
+    @Nonnull
+    public String getText() {
+        return JSIntentionLocalize.conditionalReplaceConditionalWithIf().get();
+    }
 
-	@Override
-	@Nonnull
-	public JSElementPredicate getElementPredicate()
-	{
-		return new ReplaceConditionalWithIfPredicate();
-	}
+    @Override
+    @Nonnull
+    public JSElementPredicate getElementPredicate() {
+        return new ReplaceConditionalWithIfPredicate();
+    }
 
-	@Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
-	{
-		assert (element instanceof JSConditionalExpression);
-		ConditionalUtils.replaceConditionalWithIf((JSConditionalExpression) element);
-	}
+    @Override
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        assert (element instanceof JSConditionalExpression);
+        ConditionalUtils.replaceConditionalWithIf((JSConditionalExpression)element);
+    }
 
-	private static class ReplaceConditionalWithIfPredicate implements JSElementPredicate
-	{
-		@Override
-		public boolean satisfiedBy(@Nonnull PsiElement element)
-		{
-			return (element instanceof JSConditionalExpression);
-		}
-	}
+    private static class ReplaceConditionalWithIfPredicate implements JSElementPredicate {
+        @Override
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            return (element instanceof JSConditionalExpression);
+        }
+    }
 }

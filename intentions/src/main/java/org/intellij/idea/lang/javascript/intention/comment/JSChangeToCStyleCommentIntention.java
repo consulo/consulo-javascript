@@ -34,98 +34,85 @@ import java.util.List;
 
 @ExtensionImpl
 @IntentionMetaData(
-	ignoreId = "JSChangeToCStyleCommentIntention",
-	categories = {"JavaScript", "Comments"},
-	fileExtensions = "js"
+    ignoreId = "JSChangeToCStyleCommentIntention",
+    categories = {"JavaScript", "Comments"},
+    fileExtensions = "js"
 )
-public class JSChangeToCStyleCommentIntention extends JSIntention
-{
-	@Override
-	@Nonnull
-	public String getText()
-	{
-		return JSIntentionLocalize.commentChangeToCstyleComment().get();
-	}
+public class JSChangeToCStyleCommentIntention extends JSIntention {
+    @Override
+    @Nonnull
+    public String getText() {
+        return JSIntentionLocalize.commentChangeToCstyleComment().get();
+    }
 
-	@Override
-	@Nonnull
-	protected JSElementPredicate getElementPredicate()
-	{
-		return new EndOfLineCommentPredicate();
-	}
+    @Override
+    @Nonnull
+    protected JSElementPredicate getElementPredicate() {
+        return new EndOfLineCommentPredicate();
+    }
 
-	@Override
-	@RequiredReadAction
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
-	{
-		PsiComment firstComment = (PsiComment) element;
+    @Override
+    @RequiredReadAction
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        PsiComment firstComment = (PsiComment)element;
 
-		while (true)
-		{
-			final PsiElement prevComment = JSElementFactory.getNonWhiteSpaceSibling(firstComment, false);
+        while (true) {
+            final PsiElement prevComment = JSElementFactory.getNonWhiteSpaceSibling(firstComment, false);
 
-			if (!isEndOfLineComment(prevComment))
-			{
-				break;
-			}
-			assert (prevComment != null);
-			firstComment = (PsiComment) prevComment;
-		}
+            if (!isEndOfLineComment(prevComment)) {
+                break;
+            }
+            assert (prevComment != null);
+            firstComment = (PsiComment)prevComment;
+        }
 
-		final StringBuilder buffer = new StringBuilder(getCommentContents(firstComment));
-		final List<PsiElement> elementsToDelete = new ArrayList<>();
-		PsiElement nextComment = firstComment;
+        final StringBuilder buffer = new StringBuilder(getCommentContents(firstComment));
+        final List<PsiElement> elementsToDelete = new ArrayList<>();
+        PsiElement nextComment = firstComment;
 
-		while (true)
-		{
-			elementsToDelete.add(nextComment);
+        while (true) {
+            elementsToDelete.add(nextComment);
 
-			nextComment = JSElementFactory.getNonWhiteSpaceSibling(nextComment, true);
-			if (!isEndOfLineComment(nextComment))
-			{
-				break;
-			}
-			assert (nextComment != null);
+            nextComment = JSElementFactory.getNonWhiteSpaceSibling(nextComment, true);
+            if (!isEndOfLineComment(nextComment)) {
+                break;
+            }
+            assert (nextComment != null);
 
-			final PsiElement prevSibling = nextComment.getPrevSibling();
+            final PsiElement prevSibling = nextComment.getPrevSibling();
 
-			assert (prevSibling != null);
-			elementsToDelete.add(prevSibling);
+            assert (prevSibling != null);
+            elementsToDelete.add(prevSibling);
 
-			buffer.append(prevSibling.getText())  // White space
-				.append(getCommentContents((PsiComment) nextComment));
-		}
+            buffer.append(prevSibling.getText())  // White space
+                .append(getCommentContents((PsiComment)nextComment));
+        }
 
-		final String text = StringUtil.replace(buffer.toString(), "*/", "* /");
-		final String newCommentString = text.indexOf('\n') >= 0
-			? "/*\n" + text + "\n*/"
-			: "/*" + text + "*/";
+        final String text = StringUtil.replace(buffer.toString(), "*/", "* /");
+        final String newCommentString = text.indexOf('\n') >= 0
+            ? "/*\n" + text + "\n*/"
+            : "/*" + text + "*/";
 
-		JSElementFactory.addElementBefore(firstComment, newCommentString);
-		for (final PsiElement elementToDelete : elementsToDelete)
-		{
-			JSElementFactory.removeElement(elementToDelete);
-		}
-	}
+        JSElementFactory.addElementBefore(firstComment, newCommentString);
+        for (final PsiElement elementToDelete : elementsToDelete) {
+            JSElementFactory.removeElement(elementToDelete);
+        }
+    }
 
-	private static boolean isEndOfLineComment(PsiElement element)
-	{
-		return element instanceof PsiComment comment && JSTokenTypes.END_OF_LINE_COMMENT.equals(comment.getTokenType());
-	}
+    private static boolean isEndOfLineComment(PsiElement element) {
+        return element instanceof PsiComment comment && JSTokenTypes.END_OF_LINE_COMMENT.equals(comment.getTokenType());
+    }
 
-	@RequiredReadAction
-	private static String getCommentContents(PsiComment comment)
-	{
-		return comment.getText().substring(2);
-	}
+    @RequiredReadAction
+    private static String getCommentContents(PsiComment comment) {
+        return comment.getText().substring(2);
+    }
 
-	private static class EndOfLineCommentPredicate implements JSElementPredicate
-	{
+    private static class EndOfLineCommentPredicate implements JSElementPredicate {
 
-		@Override
-		public boolean satisfiedBy(@Nonnull PsiElement element)
-		{
-			return element instanceof PsiComment comment && JSTokenTypes.END_OF_LINE_COMMENT.equals(comment.getTokenType());
-		}
-	}
+        @Override
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            return element instanceof PsiComment comment && JSTokenTypes.END_OF_LINE_COMMENT.equals(comment.getTokenType());
+        }
+    }
 }

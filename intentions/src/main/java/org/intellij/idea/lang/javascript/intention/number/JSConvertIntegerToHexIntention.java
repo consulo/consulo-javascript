@@ -30,41 +30,35 @@ import org.intellij.idea.lang.javascript.psiutil.NumberUtil;
 
 @ExtensionImpl
 @IntentionMetaData(
-	ignoreId = "JSConvertIntegerToHexIntention",
-	categories = {"JavaScript", "Numbers"},
-	fileExtensions = "js"
+    ignoreId = "JSConvertIntegerToHexIntention",
+    categories = {"JavaScript", "Numbers"},
+    fileExtensions = "js"
 )
-public class JSConvertIntegerToHexIntention extends JSIntention
-{
-	@Override
-	@Nonnull
-	public String getText()
-	{
-		return JSIntentionLocalize.numberConvertIntegerToHex().get();
-	}
+public class JSConvertIntegerToHexIntention extends JSIntention {
+    @Override
+    @Nonnull
+    public String getText() {
+        return JSIntentionLocalize.numberConvertIntegerToHex().get();
+    }
 
-	@Override
-	@Nonnull
-	public JSElementPredicate getElementPredicate()
-	{
-		return new ConvertIntegerToHexPredicate();
-	}
+    @Override
+    @Nonnull
+    public JSElementPredicate getElementPredicate() {
+        return new ConvertIntegerToHexPredicate();
+    }
 
-	@Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
-	{
-		final JSLiteralExpression exp = (JSLiteralExpression) element;
+    @Override
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        final JSLiteralExpression exp = (JSLiteralExpression)element;
 
-		JSElementFactory.replaceExpression(exp, "0x" + NumberUtil.getLiteralNumber(exp).toString(16));
-	}
+        JSElementFactory.replaceExpression(exp, "0x" + NumberUtil.getLiteralNumber(exp).toString(16));
+    }
 
-	private static class ConvertIntegerToHexPredicate implements JSElementPredicate
-	{
-		@Override
-		@RequiredReadAction
-		public boolean satisfiedBy(@Nonnull PsiElement element)
-		{
-			return element instanceof JSLiteralExpression && NumberUtil.isDecimal(element.getText());
-		}
-	}
+    private static class ConvertIntegerToHexPredicate implements JSElementPredicate {
+        @Override
+        @RequiredReadAction
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            return element instanceof JSLiteralExpression && NumberUtil.isDecimal(element.getText());
+        }
+    }
 }

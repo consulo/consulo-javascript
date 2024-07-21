@@ -31,89 +31,78 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
 @ExtensionImpl
 @IntentionMetaData(
-	ignoreId = "JSAddBracesIntention",
-	categories = {"JavaScript", "Control Flow"},
-	fileExtensions = "js"
+    ignoreId = "JSAddBracesIntention",
+    categories = {"JavaScript", "Control Flow"},
+    fileExtensions = "js"
 )
-public class JSAddBracesIntention extends JSMutablyNamedIntention
-{
-	@Override
-	@Nonnull
-	protected JSElementPredicate getElementPredicate()
-	{
-		return new AddBracesPredicate();
-	}
+public class JSAddBracesIntention extends JSMutablyNamedIntention {
+    @Override
+    @Nonnull
+    protected JSElementPredicate getElementPredicate() {
+        return new AddBracesPredicate();
+    }
 
-	@Nonnull
-	@Override
-	protected LocalizeValue getBasicText()
-	{
-		return JSIntentionLocalize.bracesAdd();
-	}
+    @Nonnull
+    @Override
+    protected LocalizeValue getBasicText() {
+        return JSIntentionLocalize.bracesAdd();
+    }
 
-	@Override
-	@RequiredReadAction
-	protected LocalizeValue getTextForElement(PsiElement element)
-	{
-		final JSElement parent = (JSElement) element.getParent();
-		final String keyword;
+    @Override
+    @RequiredReadAction
+    protected LocalizeValue getTextForElement(PsiElement element) {
+        final JSElement parent = (JSElement)element.getParent();
+        final String keyword;
 
-		assert (parent != null);
+        assert (parent != null);
 
-		if (parent instanceof JSIfStatement ifStatement)
-		{
-			final JSStatement elseBranch = ifStatement.getElse();
+        if (parent instanceof JSIfStatement ifStatement) {
+            final JSStatement elseBranch = ifStatement.getElse();
 
-			keyword = (element.equals(elseBranch) ? "else" : "if");
-		}
-		else
-		{
-			final PsiElement firstChild = parent.getFirstChild();
+            keyword = (element.equals(elseBranch) ? "else" : "if");
+        }
+        else {
+            final PsiElement firstChild = parent.getFirstChild();
 
-			assert (firstChild != null);
-			keyword = firstChild.getText();
-		}
+            assert (firstChild != null);
+            keyword = firstChild.getText();
+        }
 
-		return JSIntentionLocalize.bracesAddMessage(keyword);
-  }
+        return JSIntentionLocalize.bracesAddMessage(keyword);
+    }
 
-	@Override
-	@RequiredReadAction
-	protected void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
-	{
-		if (!(element instanceof JSStatement statement))
-		{
-			return;
-		}
-		final JSElement parent = (JSElement) element.getParent();
-		final String text = element.getText();
-		String newText = parent.getLastChild() instanceof PsiComment
-			? '{' + text + "\n}"
-			: '{' + text + '}';
-		JSElementFactory.replaceStatement(statement, newText);
-	}
+    @Override
+    @RequiredReadAction
+    protected void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        if (!(element instanceof JSStatement statement)) {
+            return;
+        }
+        final JSElement parent = (JSElement)element.getParent();
+        final String text = element.getText();
+        String newText = parent.getLastChild() instanceof PsiComment
+            ? '{' + text + "\n}"
+            : '{' + text + '}';
+        JSElementFactory.replaceStatement(statement, newText);
+    }
 
-	private static class AddBracesPredicate implements JSElementPredicate
-	{
-		@Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-			if (!(element instanceof JSStatement)
-				|| element instanceof JSBlockStatement
-				|| !(element.getParent() instanceof JSElement parent)) {
-				return false;
-			}
+    private static class AddBracesPredicate implements JSElementPredicate {
+        @Override
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            if (!(element instanceof JSStatement)
+                || element instanceof JSBlockStatement
+                || !(element.getParent() instanceof JSElement parent)) {
+                return false;
+            }
 
-			if (parent instanceof JSIfStatement ifStatement)
-			{
-				return !(element instanceof JSIfStatement && element.equals(ifStatement.getElse()));
-			}
+            if (parent instanceof JSIfStatement ifStatement) {
+                return !(element instanceof JSIfStatement && element.equals(ifStatement.getElse()));
+            }
 
-			if (parent instanceof JSForStatement || parent instanceof JSForInStatement)
-			{
-				return element.equals(((JSLoopStatement) parent).getBody());
-			}
+            if (parent instanceof JSForStatement || parent instanceof JSForInStatement) {
+                return element.equals(((JSLoopStatement)parent).getBody());
+            }
 
-			return parent instanceof JSWhileStatement || parent instanceof JSDoWhileStatement;
-		}
-	}
+            return parent instanceof JSWhileStatement || parent instanceof JSDoWhileStatement;
+        }
+    }
 }

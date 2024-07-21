@@ -33,66 +33,57 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
 @ExtensionImpl
 @IntentionMetaData(
-	ignoreId = "JSFlipComparisonIntention",
-	categories = {"JavaScript", "Boolean"},
-	fileExtensions = "js"
+    ignoreId = "JSFlipComparisonIntention",
+    categories = {"JavaScript", "Boolean"},
+    fileExtensions = "js"
 )
-public class JSFlipComparisonIntention extends JSMutablyNamedIntention
-{
-	@Nonnull
-	@Override
-	protected LocalizeValue getBasicText()
-	{
-		return JSIntentionLocalize.boolFlipComparison();
-	}
+public class JSFlipComparisonIntention extends JSMutablyNamedIntention {
+    @Nonnull
+    @Override
+    protected LocalizeValue getBasicText() {
+        return JSIntentionLocalize.boolFlipComparison();
+    }
 
-	@Override
-	@RequiredReadAction
-	public LocalizeValue getTextForElement(PsiElement element)
-	{
-		final JSBinaryExpression exp = (JSBinaryExpression) element;
-		String operatorText = null;
-		String flippedOperatorText = null;
+    @Override
+    @RequiredReadAction
+    public LocalizeValue getTextForElement(PsiElement element) {
+        final JSBinaryExpression exp = (JSBinaryExpression)element;
+        String operatorText = null;
+        String flippedOperatorText = null;
 
-		if (exp != null)
-		{
-			operatorText = ComparisonUtils.getOperatorText(exp.getOperationSign());
-			flippedOperatorText = ComparisonUtils.getFlippedOperatorText(exp.getOperationSign());
-		}
+        if (exp != null) {
+            operatorText = ComparisonUtils.getOperatorText(exp.getOperationSign());
+            flippedOperatorText = ComparisonUtils.getFlippedOperatorText(exp.getOperationSign());
+        }
 
-		if (exp == null)
-		{
-			return JSIntentionLocalize.boolFlipComparisonUnknown();
-		}
-		else if (operatorText.equals(flippedOperatorText))
-		{
-			return JSIntentionLocalize.boolFlipComparisonEquals(operatorText);
-		}
-		else
-		{
-			return JSIntentionLocalize.boolFlipComparisonNotEquals(operatorText, flippedOperatorText);
-		}
-	}
+        if (exp == null) {
+            return JSIntentionLocalize.boolFlipComparisonUnknown();
+        }
+        else if (operatorText.equals(flippedOperatorText)) {
+            return JSIntentionLocalize.boolFlipComparisonEquals(operatorText);
+        }
+        else {
+            return JSIntentionLocalize.boolFlipComparisonNotEquals(operatorText, flippedOperatorText);
+        }
+    }
 
-	@Override
-	@Nonnull
-	public JSElementPredicate getElementPredicate()
-	{
-		return new ComparisonPredicate();
-	}
+    @Override
+    @Nonnull
+    public JSElementPredicate getElementPredicate() {
+        return new ComparisonPredicate();
+    }
 
-	@Override
-	@RequiredReadAction
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
-	{
-		final JSBinaryExpression exp = (JSBinaryExpression) element;
-		final JSExpression lhs = exp.getLOperand();
-		final JSExpression rhs = exp.getROperand();
-		final IElementType sign = exp.getOperationSign();
+    @Override
+    @RequiredReadAction
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        final JSBinaryExpression exp = (JSBinaryExpression)element;
+        final JSExpression lhs = exp.getLOperand();
+        final JSExpression rhs = exp.getROperand();
+        final IElementType sign = exp.getOperationSign();
 
-		assert (rhs != null);
+        assert (rhs != null);
 
-		final String expString = rhs.getText() + ComparisonUtils.getFlippedOperatorText(sign) + lhs.getText();
-		JSElementFactory.replaceExpression(exp, expString);
-	}
+        final String expString = rhs.getText() + ComparisonUtils.getFlippedOperatorText(sign) + lhs.getText();
+        JSElementFactory.replaceExpression(exp, expString);
+    }
 }

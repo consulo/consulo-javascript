@@ -34,53 +34,47 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
 @ExtensionImpl
 @IntentionMetaData(
-	ignoreId = "JSFlipIfIntention",
-	categories = {"JavaScript", "Conditional"},
-	fileExtensions = "js"
+    ignoreId = "JSFlipIfIntention",
+    categories = {"JavaScript", "Conditional"},
+    fileExtensions = "js"
 )
-public class JSFlipIfIntention extends JSIntention
-{
-	@Override
-	@Nonnull
-	public String getText()
-	{
-		return JSIntentionLocalize.conditionalFlipIf().get();
-	}
+public class JSFlipIfIntention extends JSIntention {
+    @Override
+    @Nonnull
+    public String getText() {
+        return JSIntentionLocalize.conditionalFlipIf().get();
+    }
 
-	@Override
-	@Nonnull
-	public JSElementPredicate getElementPredicate()
-	{
-		return new FlipIfPredicate();
-	}
+    @Override
+    @Nonnull
+    public JSElementPredicate getElementPredicate() {
+        return new FlipIfPredicate();
+    }
 
-	@Override
-	@RequiredReadAction
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
-	{
-		final JSIfStatement exp = (JSIfStatement) element;
-		final JSExpression condition = exp.getCondition();
-		final JSStatement thenBranch = exp.getThen();
-		final JSStatement elseBranch = exp.getElse();
-		final String negatedText = BoolUtils.getNegatedExpressionText(condition);
-		final boolean emptyThenBranch =
-			(thenBranch == null || (thenBranch instanceof JSBlockStatement blockStatement && blockStatement.getStatements().length == 0));
-		final String thenText = emptyThenBranch ? "" : "else " + thenBranch.getText();
-		final String elseText = elseBranch == null ? "{}" : elseBranch.getText();
+    @Override
+    @RequiredReadAction
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        final JSIfStatement exp = (JSIfStatement)element;
+        final JSExpression condition = exp.getCondition();
+        final JSStatement thenBranch = exp.getThen();
+        final JSStatement elseBranch = exp.getElse();
+        final String negatedText = BoolUtils.getNegatedExpressionText(condition);
+        final boolean emptyThenBranch =
+            (thenBranch == null || (thenBranch instanceof JSBlockStatement blockStatement && blockStatement.getStatements().length == 0));
+        final String thenText = emptyThenBranch ? "" : "else " + thenBranch.getText();
+        final String elseText = elseBranch == null ? "{}" : elseBranch.getText();
 
-		final String newStatement = "if (" + negatedText + ')' + elseText + thenText;
+        final String newStatement = "if (" + negatedText + ')' + elseText + thenText;
 
-		JSElementFactory.replaceStatement(exp, newStatement);
-	}
+        JSElementFactory.replaceStatement(exp, newStatement);
+    }
 
-	private static class FlipIfPredicate implements JSElementPredicate
-	{
-		@Override
-		public boolean satisfiedBy(@Nonnull PsiElement element)
-		{
-			return element instanceof JSIfStatement ifStatement
-				&& !ErrorUtil.containsError(ifStatement)
-				&& ifStatement.getCondition() != null;
-		}
-	}
+    private static class FlipIfPredicate implements JSElementPredicate {
+        @Override
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            return element instanceof JSIfStatement ifStatement
+                && !ErrorUtil.containsError(ifStatement)
+                && ifStatement.getCondition() != null;
+        }
+    }
 }

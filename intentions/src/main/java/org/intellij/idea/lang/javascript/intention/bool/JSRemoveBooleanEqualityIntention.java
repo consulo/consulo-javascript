@@ -36,119 +36,98 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
 @ExtensionImpl
 @IntentionMetaData(
-	ignoreId = "JSRemoveBooleanEqualityIntention",
-	categories = {"JavaScript", "Boolean"},
-	fileExtensions = "js"
+    ignoreId = "JSRemoveBooleanEqualityIntention",
+    categories = {"JavaScript", "Boolean"},
+    fileExtensions = "js"
 )
-public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention
-{
-	@Nonnull
-	@Override
-	protected LocalizeValue getBasicText()
-	{
-		return JSIntentionLocalize.boolRemoveBooleanEquality();
-	}
+public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention {
+    @Nonnull
+    @Override
+    protected LocalizeValue getBasicText() {
+        return JSIntentionLocalize.boolRemoveBooleanEquality();
+    }
 
-	@Override
-	@RequiredReadAction
-	protected LocalizeValue getTextForElement(PsiElement element)
-	{
-		final JSBinaryExpression binaryExpression = (JSBinaryExpression) element;
+    @Override
+    @RequiredReadAction
+    protected LocalizeValue getTextForElement(PsiElement element) {
+        final JSBinaryExpression binaryExpression = (JSBinaryExpression)element;
 
-		return JSIntentionLocalize.boolRemoveBooleanEqualityMessage(
-			BinaryOperatorUtils.getOperatorText(binaryExpression.getOperationSign())
-		);
-	}
+        return JSIntentionLocalize.boolRemoveBooleanEqualityMessage(
+            BinaryOperatorUtils.getOperatorText(binaryExpression.getOperationSign())
+        );
+    }
 
-	@Override
-	@Nonnull
-	public JSElementPredicate getElementPredicate()
-	{
-		return new BooleanLiteralEqualityPredicate();
-	}
+    @Override
+    @Nonnull
+    public JSElementPredicate getElementPredicate() {
+        return new BooleanLiteralEqualityPredicate();
+    }
 
-	@Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
-	{
-		final JSBinaryExpression exp = (JSBinaryExpression) element;
-		final boolean isEquals = exp.getOperationSign().equals(JSTokenTypes.EQEQ);
-		final JSExpression lhs = exp.getLOperand();
-		final JSExpression rhs = exp.getROperand();
+    @Override
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        final JSBinaryExpression exp = (JSBinaryExpression)element;
+        final boolean isEquals = exp.getOperationSign().equals(JSTokenTypes.EQEQ);
+        final JSExpression lhs = exp.getLOperand();
+        final JSExpression rhs = exp.getROperand();
 
-		assert (lhs != null);
-		assert (rhs != null);
+        assert (lhs != null);
+        assert (rhs != null);
 
-		final String lhsText = lhs.getText();
-		final String rhsText = rhs.getText();
+        final String lhsText = lhs.getText();
+        final String rhsText = rhs.getText();
 
-		if (BoolUtils.TRUE.equals(lhsText))
-		{
-			if (isEquals)
-			{
-				JSElementFactory.replaceExpression(exp, rhsText);
-			}
-			else
-			{
-				JSElementFactory.replaceExpressionWithNegatedExpression(rhs, exp);
-			}
-		}
-		else if (BoolUtils.FALSE.equals(lhsText))
-		{
-			if (isEquals)
-			{
-				JSElementFactory.replaceExpressionWithNegatedExpression(rhs, exp);
-			}
-			else
-			{
-				JSElementFactory.replaceExpression(exp, rhsText);
-			}
-		}
-		else if (BoolUtils.TRUE.equals(rhsText))
-		{
-			if (isEquals)
-			{
-				JSElementFactory.replaceExpression(exp, lhsText);
-			}
-			else
-			{
-				JSElementFactory.replaceExpressionWithNegatedExpression(lhs, exp);
-			}
-		}
-		else
-		{
-			if (isEquals)
-			{
-				JSElementFactory.replaceExpressionWithNegatedExpression(lhs, exp);
-			}
-			else
-			{
-				JSElementFactory.replaceExpression(exp, lhsText);
-			}
-		}
-	}
+        if (BoolUtils.TRUE.equals(lhsText)) {
+            if (isEquals) {
+                JSElementFactory.replaceExpression(exp, rhsText);
+            }
+            else {
+                JSElementFactory.replaceExpressionWithNegatedExpression(rhs, exp);
+            }
+        }
+        else if (BoolUtils.FALSE.equals(lhsText)) {
+            if (isEquals) {
+                JSElementFactory.replaceExpressionWithNegatedExpression(rhs, exp);
+            }
+            else {
+                JSElementFactory.replaceExpression(exp, rhsText);
+            }
+        }
+        else if (BoolUtils.TRUE.equals(rhsText)) {
+            if (isEquals) {
+                JSElementFactory.replaceExpression(exp, lhsText);
+            }
+            else {
+                JSElementFactory.replaceExpressionWithNegatedExpression(lhs, exp);
+            }
+        }
+        else {
+            if (isEquals) {
+                JSElementFactory.replaceExpressionWithNegatedExpression(lhs, exp);
+            }
+            else {
+                JSElementFactory.replaceExpression(exp, lhsText);
+            }
+        }
+    }
 
-	private static class BooleanLiteralEqualityPredicate implements JSElementPredicate
-	{
-		@Override
-		public boolean satisfiedBy(@Nonnull PsiElement element)
-		{
-			if (!(element instanceof JSBinaryExpression) || ErrorUtil.containsError(element))
-			{
-        return false;
-			}
+    private static class BooleanLiteralEqualityPredicate implements JSElementPredicate {
+        @Override
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            if (!(element instanceof JSBinaryExpression) || ErrorUtil.containsError(element)) {
+                return false;
+            }
 
-			final JSBinaryExpression expression = (JSBinaryExpression) element;
-			final IElementType sign = expression.getOperationSign();
+            final JSBinaryExpression expression = (JSBinaryExpression)element;
+            final IElementType sign = expression.getOperationSign();
 
-			if (!(sign.equals(JSTokenTypes.EQEQ) || sign.equals(JSTokenTypes.NE)))
-			{
-				return false;
-			}
+            if (!(JSTokenTypes.EQEQ.equals(sign) || JSTokenTypes.NE.equals(sign))) {
+                return false;
+            }
 
-			final JSExpression lhs = expression.getLOperand();
-			final JSExpression rhs = expression.getROperand();
+            final JSExpression lhs = expression.getLOperand();
+            final JSExpression rhs = expression.getROperand();
 
-			return lhs != null && rhs != null && (BoolUtils.isBooleanLiteral(lhs) || BoolUtils.isBooleanLiteral(rhs));
-		}
-	}
+            return lhs != null && rhs != null && (BoolUtils.isBooleanLiteral(lhs) || BoolUtils.isBooleanLiteral(rhs));
+        }
+    }
 }

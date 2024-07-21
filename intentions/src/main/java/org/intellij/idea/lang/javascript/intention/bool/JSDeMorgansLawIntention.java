@@ -35,78 +35,69 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
 @ExtensionImpl
 @IntentionMetaData(
-	ignoreId = "JSDeMorgansLawIntention",
-	categories = {"JavaScript", "Boolean"},
-	fileExtensions = "js"
+    ignoreId = "JSDeMorgansLawIntention",
+    categories = {"JavaScript", "Boolean"},
+    fileExtensions = "js"
 )
-public class JSDeMorgansLawIntention extends JSMutablyNamedIntention
-{
-	@Override
-	@Nonnull
-	protected LocalizeValue getBasicText()
-	{
-		return JSIntentionLocalize.boolDeMorgansLaw();
-	}
+public class JSDeMorgansLawIntention extends JSMutablyNamedIntention {
+    @Override
+    @Nonnull
+    protected LocalizeValue getBasicText() {
+        return JSIntentionLocalize.boolDeMorgansLaw();
+    }
 
-	@Override
-	@RequiredReadAction
-	protected LocalizeValue getTextForElement(PsiElement element)
-	{
-		final IElementType tokenType = ((JSBinaryExpression) element).getOperationSign();
+    @Override
+    @RequiredReadAction
+    protected LocalizeValue getTextForElement(PsiElement element) {
+        final IElementType tokenType = ((JSBinaryExpression)element).getOperationSign();
 
-		return JSTokenTypes.ANDAND.equals(tokenType)
-			? JSIntentionLocalize.boolDeMorgansLawAndToOr()
-			: JSIntentionLocalize.boolDeMorgansLawOrToAnd();
-	}
+        return JSTokenTypes.ANDAND.equals(tokenType)
+            ? JSIntentionLocalize.boolDeMorgansLawAndToOr()
+            : JSIntentionLocalize.boolDeMorgansLawOrToAnd();
+    }
 
-	@Override
-	@Nonnull
-	public JSElementPredicate getElementPredicate()
-	{
-		return new ConjunctionPredicate();
-	}
+    @Override
+    @Nonnull
+    public JSElementPredicate getElementPredicate() {
+        return new ConjunctionPredicate();
+    }
 
-	@Override
-	@RequiredReadAction
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
-	{
-		JSBinaryExpression exp = (JSBinaryExpression) element;
-		final IElementType tokenType = exp.getOperationSign();
-		JSElement parent = (JSElement) exp.getParent();
+    @Override
+    @RequiredReadAction
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        JSBinaryExpression exp = (JSBinaryExpression)element;
+        final IElementType tokenType = exp.getOperationSign();
+        JSElement parent = (JSElement)exp.getParent();
 
-		while (isConjunctionExpression(parent, tokenType))
-		{
-			exp = (JSBinaryExpression) parent;
-			assert (exp != null);
-			parent = (JSElement) exp.getParent();
-		}
+        while (isConjunctionExpression(parent, tokenType)) {
+            exp = (JSBinaryExpression)parent;
+            assert (exp != null);
+            parent = (JSElement)exp.getParent();
+        }
 
-		final String newExpression = this.convertConjunctionExpression(exp, tokenType);
+        final String newExpression = this.convertConjunctionExpression(exp, tokenType);
 
-		JSElementFactory.replaceExpressionWithNegatedExpressionString(exp, newExpression);
-	}
+        JSElementFactory.replaceExpressionWithNegatedExpressionString(exp, newExpression);
+    }
 
-	@RequiredReadAction
-	private String convertConjunctionExpression(JSBinaryExpression exp, IElementType tokenType)
-	{
-		final String leftText = this.getOperandText(exp.getLOperand(), tokenType);
-		final String rightText = this.getOperandText(exp.getROperand(), tokenType);
-		final String flippedConjunction = tokenType.equals(JSTokenTypes.ANDAND) ? "||" : "&&";
+    @RequiredReadAction
+    private String convertConjunctionExpression(JSBinaryExpression exp, IElementType tokenType) {
+        final String leftText = this.getOperandText(exp.getLOperand(), tokenType);
+        final String rightText = this.getOperandText(exp.getROperand(), tokenType);
+        final String flippedConjunction = tokenType.equals(JSTokenTypes.ANDAND) ? "||" : "&&";
 
-		return leftText + flippedConjunction + rightText;
-	}
+        return leftText + flippedConjunction + rightText;
+    }
 
-	@RequiredReadAction
-	private String getOperandText(JSExpression operand, IElementType tokenType)
-	{
-		return isConjunctionExpression(operand, tokenType)
-			? this.convertConjunctionExpression((JSBinaryExpression) operand, tokenType)
-			: BoolUtils.getNegatedExpressionText(operand);
-	}
+    @RequiredReadAction
+    private String getOperandText(JSExpression operand, IElementType tokenType) {
+        return isConjunctionExpression(operand, tokenType)
+            ? this.convertConjunctionExpression((JSBinaryExpression)operand, tokenType)
+            : BoolUtils.getNegatedExpressionText(operand);
+    }
 
-	@RequiredReadAction
-	private static boolean isConjunctionExpression(JSElement exp, IElementType conjunctionType)
-	{
-		return exp instanceof JSBinaryExpression binaryExpression && binaryExpression.getOperationSign().equals(conjunctionType);
-	}
+    @RequiredReadAction
+    private static boolean isConjunctionExpression(JSElement exp, IElementType conjunctionType) {
+        return exp instanceof JSBinaryExpression binaryExpression && binaryExpression.getOperationSign().equals(conjunctionType);
+    }
 }
