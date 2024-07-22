@@ -31,62 +31,54 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
 @ExtensionImpl
 @IntentionMetaData(
-	ignoreId = "JSSplitElseIfIntention",
-	categories = {"JavaScript", "Control Flow"},
-	fileExtensions = "js"
+    ignoreId = "JSSplitElseIfIntention",
+    categories = {"JavaScript", "Control Flow"},
+    fileExtensions = "js"
 )
-public class JSSplitElseIfIntention extends JSIntention
-{
-	@Override
-	@Nonnull
-	public String getText()
-	{
-		return JSIntentionLocalize.trivialifSplitElseIf().get();
-	}
+public class JSSplitElseIfIntention extends JSIntention {
+    @Override
+    @Nonnull
+    public String getText() {
+        return JSIntentionLocalize.trivialifSplitElseIf().get();
+    }
 
-	@Override
-	@Nonnull
-	public JSElementPredicate getElementPredicate()
-	{
-		return new SplitElseIfPredicate();
-	}
+    @Override
+    @Nonnull
+    public JSElementPredicate getElementPredicate() {
+        return new SplitElseIfPredicate();
+    }
 
-	@Override
-	@RequiredReadAction
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
-	{
-		final JSIfStatement parentStatement = (JSIfStatement) element.getParent();
+    @Override
+    @RequiredReadAction
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        final JSIfStatement parentStatement = (JSIfStatement)element.getParent();
 
-		assert (parentStatement != null);
+        assert (parentStatement != null);
 
-		final JSStatement elseBranch = parentStatement.getElse();
-		final String newStatement = '{' + elseBranch.getText() + '}';
+        final JSStatement elseBranch = parentStatement.getElse();
+        final String newStatement = '{' + elseBranch.getText() + '}';
 
-		JSElementFactory.replaceStatement(elseBranch, newStatement);
-	}
+        JSElementFactory.replaceStatement(elseBranch, newStatement);
+    }
 
-	private static class SplitElseIfPredicate implements JSElementPredicate
-	{
-		@Override
-		public boolean satisfiedBy(@Nonnull PsiElement element)
-		{
-			final PsiElement parent = element.getParent();
+    private static class SplitElseIfPredicate implements JSElementPredicate {
+        @Override
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            final PsiElement parent = element.getParent();
 
-			if (!(parent instanceof JSIfStatement))
-			{
-				return false;
-			}
+            if (!(parent instanceof JSIfStatement)) {
+                return false;
+            }
 
-			final JSIfStatement ifStatement = (JSIfStatement) parent;
+            final JSIfStatement ifStatement = (JSIfStatement)parent;
 
-			if (ErrorUtil.containsError(ifStatement))
-			{
-				return false;
-			}
-			final JSStatement thenBranch = ifStatement.getThen();
-			final JSStatement elseBranch = ifStatement.getElse();
+            if (ErrorUtil.containsError(ifStatement)) {
+                return false;
+            }
+            final JSStatement thenBranch = ifStatement.getThen();
+            final JSStatement elseBranch = ifStatement.getElse();
 
-			return thenBranch != null && elseBranch != null && elseBranch instanceof JSIfStatement;
-		}
-	}
+            return thenBranch != null && elseBranch != null && elseBranch instanceof JSIfStatement;
+        }
+    }
 }

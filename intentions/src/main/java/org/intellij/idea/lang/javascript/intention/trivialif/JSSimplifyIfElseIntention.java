@@ -31,78 +31,66 @@ import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 
 @ExtensionImpl
 @IntentionMetaData(
-	ignoreId = "JSSimplifyIfElseIntention",
-	categories = {"JavaScript", "Control Flow"},
-	fileExtensions = "js"
+    ignoreId = "JSSimplifyIfElseIntention",
+    categories = {"JavaScript", "Control Flow"},
+    fileExtensions = "js"
 )
-public class JSSimplifyIfElseIntention extends JSIntention
-{
-	@Nonnull
-	@Override
-	public String getText()
-	{
-		return JSIntentionLocalize.trivialifSimplifyIfElse().get();
-	}
+public class JSSimplifyIfElseIntention extends JSIntention {
+    @Nonnull
+    @Override
+    public String getText() {
+        return JSIntentionLocalize.trivialifSimplifyIfElse().get();
+    }
 
-	@Override
-	@Nonnull
-	public JSElementPredicate getElementPredicate()
-	{
-		return new SimplifyIfElsePredicate();
-	}
+    @Override
+    @Nonnull
+    public JSElementPredicate getElementPredicate() {
+        return new SimplifyIfElsePredicate();
+    }
 
-	@Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
-	{
-		final PsiElement statement = element.getParent() instanceof JSIfStatement ? element.getParent() : element;
+    @Override
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        final PsiElement statement = element.getParent() instanceof JSIfStatement ? element.getParent() : element;
 
-		ConditionalUtils.replaceAssignmentOrReturnIfSimplifiable((JSIfStatement) statement);
-	}
+        ConditionalUtils.replaceAssignmentOrReturnIfSimplifiable((JSIfStatement)statement);
+    }
 
-	private static class SimplifyIfElsePredicate implements JSElementPredicate
-	{
-		@Override
-		public boolean satisfiedBy(@Nonnull PsiElement element)
-		{
-			if (!(element instanceof JSElement))
-			{
-				return false;
-			}
+    private static class SimplifyIfElsePredicate implements JSElementPredicate {
+        @Override
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            if (!(element instanceof JSElement)) {
+                return false;
+            }
 
-			PsiElement parent = element.getParent();
+            PsiElement parent = element.getParent();
 
-			if (!(parent instanceof JSIfStatement))
-			{
-				if (element instanceof JSIfStatement)
-				{
-					parent = element;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			if (ErrorUtil.containsError(parent))
-			{
-				return false;
-			}
+            if (!(parent instanceof JSIfStatement)) {
+                if (element instanceof JSIfStatement) {
+                    parent = element;
+                }
+                else {
+                    return false;
+                }
+            }
+            if (ErrorUtil.containsError(parent)) {
+                return false;
+            }
 
-			final JSIfStatement ifStatement = (JSIfStatement) parent;
-			final JSExpression condition = ifStatement.getCondition();
+            final JSIfStatement ifStatement = (JSIfStatement)parent;
+            final JSExpression condition = ifStatement.getCondition();
 
-			if (condition == null || !condition.isValid())
-			{
-				return false;
-			}
+            if (condition == null || !condition.isValid()) {
+                return false;
+            }
 
-			return ConditionalUtils.isSimplifiableAssignment(ifStatement, false)
-				|| ConditionalUtils.isSimplifiableAssignment(ifStatement, true)
-				|| ConditionalUtils.isSimplifiableReturn(ifStatement, false)
-				|| ConditionalUtils.isSimplifiableReturn(ifStatement, true)
-				|| ConditionalUtils.isSimplifiableImplicitReturn(ifStatement, false)
-				|| ConditionalUtils.isSimplifiableImplicitReturn(ifStatement, true)
-				|| ConditionalUtils.isSimplifiableImplicitAssignment(ifStatement, false)
-				|| ConditionalUtils.isSimplifiableImplicitAssignment(ifStatement, true);
-		}
-	}
+            return ConditionalUtils.isSimplifiableAssignment(ifStatement, false)
+                || ConditionalUtils.isSimplifiableAssignment(ifStatement, true)
+                || ConditionalUtils.isSimplifiableReturn(ifStatement, false)
+                || ConditionalUtils.isSimplifiableReturn(ifStatement, true)
+                || ConditionalUtils.isSimplifiableImplicitReturn(ifStatement, false)
+                || ConditionalUtils.isSimplifiableImplicitReturn(ifStatement, true)
+                || ConditionalUtils.isSimplifiableImplicitAssignment(ifStatement, false)
+                || ConditionalUtils.isSimplifiableImplicitAssignment(ifStatement, true);
+        }
+    }
 }

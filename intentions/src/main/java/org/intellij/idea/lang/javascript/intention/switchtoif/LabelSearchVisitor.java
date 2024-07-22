@@ -19,31 +19,26 @@ import com.intellij.lang.javascript.psi.JSLabeledStatement;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import org.intellij.idea.lang.javascript.psiutil.JSRecursiveElementVisitor;
 
-class LabelSearchVisitor extends JSRecursiveElementVisitor
-{
-	private final String labelName;
-	private boolean used;
+class LabelSearchVisitor extends JSRecursiveElementVisitor {
+    private final String labelName;
+    private boolean used;
 
-	LabelSearchVisitor(String name)
-	{
-		this.labelName = name;
-	}
+    LabelSearchVisitor(String name) {
+        this.labelName = name;
+    }
 
-	@Override
-	public void visitJSReferenceExpression(JSReferenceExpression expression)
-	{
-	}
+    @Override
+    public void visitJSReferenceExpression(JSReferenceExpression expression) {
+    }
 
-	@Override
-	public void visitJSLabeledStatement(JSLabeledStatement statement)
-	{
-		final String labelText = statement.getLabel();
+    @Override
+    public void visitJSLabeledStatement(JSLabeledStatement statement) {
+        final String labelText = statement.getLabel();
 
-		this.used = (labelText != null && labelText.equals(this.labelName));
-	}
+        this.used = labelText != null && labelText.equals(this.labelName);
+    }
 
-	public boolean isUsed()
-	{
-		return this.used;
-	}
+    public boolean isUsed() {
+        return this.used;
+    }
 }

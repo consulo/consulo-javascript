@@ -30,48 +30,41 @@ import org.intellij.idea.lang.javascript.psiutil.NumberUtil;
 
 @ExtensionImpl
 @IntentionMetaData(
-	ignoreId = "JSConvertIntegerToOctalIntention",
-	categories = {"JavaScript", "Numbers"},
-	fileExtensions = "js"
+    ignoreId = "JSConvertIntegerToOctalIntention",
+    categories = {"JavaScript", "Numbers"},
+    fileExtensions = "js"
 )
-public class JSConvertIntegerToOctalIntention extends JSIntention
-{
-	@Override
-	@Nonnull
-	public String getText()
-	{
-		return JSIntentionLocalize.numberConvertIntegerToOctal().get();
-	}
+public class JSConvertIntegerToOctalIntention extends JSIntention {
+    @Override
+    @Nonnull
+    public String getText() {
+        return JSIntentionLocalize.numberConvertIntegerToOctal().get();
+    }
 
-	@Override
-	@Nonnull
-	public JSElementPredicate getElementPredicate()
-	{
-		return new ConvertIntegerToOctalPredicate();
-	}
+    @Override
+    @Nonnull
+    public JSElementPredicate getElementPredicate() {
+        return new ConvertIntegerToOctalPredicate();
+    }
 
-	@Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
-	{
-		final JSLiteralExpression exp = (JSLiteralExpression) element;
+    @Override
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        final JSLiteralExpression exp = (JSLiteralExpression)element;
 
-		JSElementFactory.replaceExpression(exp, '0' + NumberUtil.getLiteralNumber(exp).toString(8));
-	}
+        JSElementFactory.replaceExpression(exp, '0' + NumberUtil.getLiteralNumber(exp).toString(8));
+    }
 
-	private static class ConvertIntegerToOctalPredicate implements JSElementPredicate
-	{
-		@Override
-		@RequiredReadAction
-		public boolean satisfiedBy(@Nonnull PsiElement element)
-		{
-			if (!(element instanceof JSLiteralExpression))
-			{
-				return false;
-			}
+    private static class ConvertIntegerToOctalPredicate implements JSElementPredicate {
+        @Override
+        @RequiredReadAction
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            if (!(element instanceof JSLiteralExpression)) {
+                return false;
+            }
 
-			final String elementText = element.getText();
+            final String elementText = element.getText();
 
-			return NumberUtil.isHex(elementText) || (NumberUtil.isDecimal(elementText) && !NumberUtil.isOctal(elementText));
-		}
-	}
+            return NumberUtil.isHex(elementText) || (NumberUtil.isDecimal(elementText) && !NumberUtil.isOctal(elementText));
+        }
+    }
 }
