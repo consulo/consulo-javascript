@@ -35,90 +35,80 @@ import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
 
 @ExtensionImpl
 @IntentionMetaData(
-	ignoreId = "JSSplitIfOrIntention",
-	categories = {"JavaScript", "Control Flow"},
-	fileExtensions = "js"
+    ignoreId = "JSSplitIfOrIntention",
+    categories = {"JavaScript", "Control Flow"},
+    fileExtensions = "js"
 )
-public class JSSplitIfOrIntention extends JSIntention
-{
-	@Override
-	@Nonnull
-	public String getText()
-	{
-		return JSIntentionLocalize.trivialifSplitIfOr().get();
-	}
+public class JSSplitIfOrIntention extends JSIntention {
+    @Override
+    @Nonnull
+    public String getText() {
+        return JSIntentionLocalize.trivialifSplitIfOr().get();
+    }
 
-	@Override
-	@Nonnull
-	public JSElementPredicate getElementPredicate()
-	{
-		return new SplitIfOrPredicate();
-	}
+    @Override
+    @Nonnull
+    public JSElementPredicate getElementPredicate() {
+        return new SplitIfOrPredicate();
+    }
 
-	@Override
-	@RequiredReadAction
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
-	{
-		final PsiElement jsElement = (element.getParent() instanceof JSIfStatement ? element.getParent() : element);
+    @Override
+    @RequiredReadAction
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        final PsiElement jsElement = (element.getParent() instanceof JSIfStatement ? element.getParent() : element);
 
-		assert (jsElement != null);
-		assert (jsElement instanceof JSIfStatement);
+        assert (jsElement != null);
+        assert (jsElement instanceof JSIfStatement);
 
-		final JSIfStatement ifStatement = (JSIfStatement) jsElement;
+        final JSIfStatement ifStatement = (JSIfStatement)jsElement;
 
-		assert (ifStatement.getCondition() instanceof JSBinaryExpression);
+        assert (ifStatement.getCondition() instanceof JSBinaryExpression);
 
-		final JSBinaryExpression condition = (JSBinaryExpression) ifStatement.getCondition();
-		final String lhsText = ParenthesesUtils.removeParentheses(condition.getLOperand());
-		final String rhsText = ParenthesesUtils.removeParentheses(condition.getROperand());
-		final JSStatement thenBranch = ifStatement.getThen();
-		final JSStatement elseBranch = ifStatement.getElse();
-		final String thenText = thenBranch.getText();
+        final JSBinaryExpression condition = (JSBinaryExpression)ifStatement.getCondition();
+        final String lhsText = ParenthesesUtils.removeParentheses(condition.getLOperand());
+        final String rhsText = ParenthesesUtils.removeParentheses(condition.getROperand());
+        final JSStatement thenBranch = ifStatement.getThen();
+        final JSStatement elseBranch = ifStatement.getElse();
+        final String thenText = thenBranch.getText();
 
-		assert JSTokenTypes.OROR.equals(condition.getOperationSign());
+        assert JSTokenTypes.OROR.equals(condition.getOperationSign());
 
-		final StringBuilder statement = new StringBuilder(ifStatement.getTextLength());
+        final StringBuilder statement = new StringBuilder(ifStatement.getTextLength());
 
-		statement.append("if (").append(lhsText).append(')')
-			.append(thenText)
-			.append("else if (").append(rhsText).append(')')
-			.append(thenText);
+        statement.append("if (").append(lhsText).append(')')
+            .append(thenText)
+            .append("else if (").append(rhsText).append(')')
+            .append(thenText);
 
-		if (elseBranch != null)
-		{
-			statement.append("else ").append(elseBranch.getText());
-		}
+        if (elseBranch != null) {
+            statement.append("else ").append(elseBranch.getText());
+        }
 
-		JSElementFactory.replaceStatement(ifStatement, statement.toString());
-	}
+        JSElementFactory.replaceStatement(ifStatement, statement.toString());
+    }
 
-	private static class SplitIfOrPredicate implements JSElementPredicate
-	{
-		@Override
-		@RequiredReadAction
-		public boolean satisfiedBy(@Nonnull PsiElement element)
-		{
-			PsiElement parent = element.getParent();
+    private static class SplitIfOrPredicate implements JSElementPredicate {
+        @Override
+        @RequiredReadAction
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            PsiElement parent = element.getParent();
 
-			if (!(parent instanceof JSIfStatement))
-			{
-				if (element instanceof JSIfStatement)
-				{
-					parent = element;
-				}
-				else
-				{
-					return false;
-				}
-			}
+            if (!(parent instanceof JSIfStatement)) {
+                if (element instanceof JSIfStatement) {
+                    parent = element;
+                }
+                else {
+                    return false;
+                }
+            }
 
-			final JSIfStatement ifStatement = (JSIfStatement) parent;
-			final JSExpression condition = ifStatement.getCondition();
+            final JSIfStatement ifStatement = (JSIfStatement)parent;
+            final JSExpression condition = ifStatement.getCondition();
 
-			return condition != null
-				&& !ErrorUtil.containsError(condition)
-				&& condition instanceof JSBinaryExpression binaryExpression
-				&& JSTokenTypes.OROR.equals(binaryExpression.getOperationSign());
-		}
-	}
+            return condition != null
+                && !ErrorUtil.containsError(condition)
+                && condition instanceof JSBinaryExpression binaryExpression
+                && JSTokenTypes.OROR.equals(binaryExpression.getOperationSign());
+        }
+    }
 }

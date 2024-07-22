@@ -22,181 +22,141 @@ import consulo.language.ast.IElementType;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 
-public class BoolUtils
-{
+public class BoolUtils {
+    @NonNls
+    public static final String TRUE = "true";
+    @NonNls
+    public static final String FALSE = "false";
 
-	@NonNls
-	public static final String TRUE = "true";
-	@NonNls
-	public static final String FALSE = "false";
+    private BoolUtils() {
+    }
 
-	private BoolUtils()
-	{
-	}
+    public static boolean isNegated(JSExpression condition) {
+        return (findNegation(condition) != null);
+    }
 
-	public static boolean isNegated(JSExpression condition)
-	{
-		return (findNegation(condition) != null);
-	}
+    @Nullable
+    public static JSExpression findNegation(JSExpression condition) {
+        JSExpression ancestor = condition;
 
-	@Nullable
-	public static JSExpression findNegation(JSExpression condition)
-	{
-		JSExpression ancestor = condition;
+        while (ancestor.getParent() instanceof JSParenthesizedExpression) {
+            ancestor = (JSExpression)ancestor.getParent();
+        }
 
-		while(ancestor.getParent() instanceof JSParenthesizedExpression)
-		{
-			ancestor = (JSExpression) ancestor.getParent();
-		}
+        if (ancestor.getParent() instanceof JSPrefixExpression) {
+            final JSPrefixExpression prefixAncestor = (JSPrefixExpression)ancestor.getParent();
+            if (JSTokenTypes.EXCL.equals(prefixAncestor.getOperationSign())) {
+                return prefixAncestor;
+            }
+        }
 
-		if(ancestor.getParent() instanceof JSPrefixExpression)
-		{
-			final JSPrefixExpression prefixAncestor = (JSPrefixExpression) ancestor.getParent();
-			if(prefixAncestor.getOperationSign().equals(JSTokenTypes.EXCL))
-			{
-				return prefixAncestor;
-			}
-		}
+        return null;
+    }
 
-		return null;
-	}
+    public static boolean isNegation(JSExpression condition) {
+        return isNegation(condition, false);
+    }
 
-	public static boolean isNegation(JSExpression condition)
-	{
-		return isNegation(condition, false);
-	}
+    public static boolean isNegation(JSExpression condition, boolean ignoreNegatedNullComparison) {
+        if (condition instanceof JSPrefixExpression prefixExpression) {
+            final IElementType sign = prefixExpression.getOperationSign();
 
-	public static boolean isNegation(JSExpression condition, boolean ignoreNegatedNullComparison)
-	{
-		if(condition instanceof JSPrefixExpression)
-		{
-			final JSPrefixExpression prefixExpression = (JSPrefixExpression) condition;
-			final IElementType sign = prefixExpression.getOperationSign();
+            return JSTokenTypes.EXCL.equals(sign);
+        }
+        else if (condition instanceof JSBinaryExpression binaryExpression) {
+            final IElementType sign = binaryExpression.getOperationSign();
+            final JSExpression lhs = binaryExpression.getLOperand();
+            final JSExpression rhs = binaryExpression.getROperand();
 
-			return sign.equals(JSTokenTypes.EXCL);
-		}
-		else if(condition instanceof JSBinaryExpression)
-		{
-			final JSBinaryExpression binaryExpression = (JSBinaryExpression) condition;
-			final IElementType sign = binaryExpression.getOperationSign();
-			final JSExpression lhs = binaryExpression.getLOperand();
-			final JSExpression rhs = binaryExpression.getROperand();
+            if (rhs != null && JSTokenTypes.NE.equals(sign)) {
+                if (!ignoreNegatedNullComparison) {
+                    return true;
+                }
 
-			if(rhs != null && sign.equals(JSTokenTypes.NE))
-			{
-				if(!ignoreNegatedNullComparison)
-				{
-					return true;
-				}
+                return !isNullLiteral(lhs) && !isNullLiteral(rhs);
+            }
+            else {
+                return false;
+            }
+        }
+        else if (condition instanceof JSParenthesizedExpression parenExp) {
+            return isNegation(parenExp.getInnerExpression());
+        }
+        else {
+            return false;
+        }
+    }
 
-				return !isNullLiteral(lhs) && !isNullLiteral(rhs);
-			}
-			else
-			{
-				return false;
-			}
-		}
-		else if(condition instanceof JSParenthesizedExpression)
-		{
-			return isNegation(((JSParenthesizedExpression) condition).getInnerExpression());
-		}
-		else
-		{
-			return false;
-		}
-	}
+    private static boolean isNullLiteral(final JSExpression lhs) {
+        return lhs.getNode() != null && JSTokenTypes.NULL_KEYWORD.equals(lhs.getNode().getElementType());
+    }
 
-	private static boolean isNullLiteral(final JSExpression lhs)
-	{
-		return lhs.getNode() != null && JSTokenTypes.NULL_KEYWORD.equals(lhs.getNode().getElementType());
-	}
+    public static JSExpression getNegated(JSExpression condition) {
+        if (condition instanceof JSPrefixExpression prefixExp) {
+            final JSExpression operand = prefixExp.getExpression();
 
-	public static JSExpression getNegated(JSExpression condition)
-	{
-		if(condition instanceof JSPrefixExpression)
-		{
-			final JSPrefixExpression prefixExp = (JSPrefixExpression) condition;
-			final JSExpression operand = prefixExp.getExpression();
+            return ParenthesesUtils.stripParentheses(operand);
+        }
+        else if (condition instanceof JSBinaryExpression binaryExpression) {
+            final IElementType sign = binaryExpression.getOperationSign();
+            final JSExpression lhs = binaryExpression.getLOperand();
+            final JSExpression rhs = binaryExpression.getROperand();
+            final String negatedSign = ComparisonUtils.getNegatedOperatorText(sign);
+            final String negatedText = lhs.getText() + negatedSign + rhs.getText();
 
-			return ParenthesesUtils.stripParentheses(operand);
-		}
-		else if(condition instanceof JSBinaryExpression)
-		{
-			final JSBinaryExpression binaryExpression = (JSBinaryExpression) condition;
-			final IElementType sign = binaryExpression.getOperationSign();
-			final JSExpression lhs = binaryExpression.getLOperand();
-			final JSExpression rhs = binaryExpression.getROperand();
-			final String negatedSign = ComparisonUtils.getNegatedOperatorText(sign);
-			final String negatedText = lhs.getText() + negatedSign + rhs.getText();
+            return JSChangeUtil.createExpressionFromText(condition.getProject(), negatedText);
+        }
+        else if (condition instanceof JSParenthesizedExpression parenExp) {
+            return getNegated(parenExp.getInnerExpression());
+        }
+        return condition;
+    }
 
-			return (JSExpression) JSChangeUtil.createExpressionFromText(
-					condition.getProject(),
-					negatedText);
-		}
-		else if(condition instanceof JSParenthesizedExpression)
-		{
-			return getNegated(((JSParenthesizedExpression) condition).getInnerExpression());
-		}
-		return condition;
-	}
+    public static boolean isBooleanLiteral(JSExpression condition) {
+        if (!(condition instanceof JSLiteralExpression)) {
+            return false;
+        }
 
-	public static boolean isBooleanLiteral(JSExpression condition)
-	{
-		if(!(condition instanceof JSLiteralExpression))
-		{
-			return false;
-		}
+        final String text = condition.getText();
 
-		final String text = condition.getText();
+        return (TRUE.equals(text) || FALSE.equals(text));
+    }
 
-		return (TRUE.equals(text) || FALSE.equals(text));
-	}
+    public static Boolean getBooleanLiteral(JSExpression condition) {
+        if (!(condition instanceof JSLiteralExpression)) {
+            return null;
+        }
 
-	public static Boolean getBooleanLiteral(JSExpression condition)
-	{
-		if(!(condition instanceof JSLiteralExpression))
-		{
-			return null;
-		}
+        final String text = condition.getText();
 
-		final String text = condition.getText();
+        return TRUE.equals(text) ? Boolean.TRUE
+            : FALSE.equals(text) ? Boolean.FALSE
+            : null;
+    }
 
-		return (TRUE.equals(text) ? Boolean.TRUE :
-				FALSE.equals(text) ? Boolean.FALSE
-						: null);
-	}
+    public static boolean isTrue(@Nullable JSExpression condition) {
+        return condition instanceof JSLiteralExpression && TRUE.equals(condition.getText());
+    }
 
-	public static boolean isTrue(@Nullable JSExpression condition)
-	{
-		return (condition instanceof JSLiteralExpression &&
-				TRUE.equals(condition.getText()));
-	}
+    public static boolean isFalse(@Nullable JSExpression condition) {
+        return condition instanceof JSLiteralExpression && FALSE.equals(condition.getText());
+    }
 
-	public static boolean isFalse(@Nullable JSExpression condition)
-	{
-		return (condition instanceof JSLiteralExpression &&
-				FALSE.equals(condition.getText()));
-	}
+    public static String getNegatedExpressionText(JSExpression condition) {
+        if (BoolUtils.isNegation(condition)) {
+            return ParenthesesUtils.getParenthesized(BoolUtils.getNegated(condition), ParenthesesUtils.OR_PRECENDENCE);
+        }
+        else if (ComparisonUtils.isComparisonOperator(condition)) {
+            final JSBinaryExpression binaryExpression = (JSBinaryExpression)condition;
+            final IElementType sign = binaryExpression.getOperationSign();
+            final String negatedComparison = ComparisonUtils.getNegatedOperatorText(sign);
+            final JSExpression leftOperand = binaryExpression.getLOperand();
+            final JSExpression rightOperand = binaryExpression.getROperand();
 
-	public static String getNegatedExpressionText(JSExpression condition)
-	{
-		if(BoolUtils.isNegation(condition))
-		{
-			return ParenthesesUtils.getParenthesized(BoolUtils.getNegated(condition), ParenthesesUtils.OR_PRECENDENCE);
-		}
-		else if(ComparisonUtils.isComparisonOperator(condition))
-		{
-			final JSBinaryExpression binaryExpression = (JSBinaryExpression) condition;
-			final IElementType sign = binaryExpression.getOperationSign();
-			final String negatedComparison = ComparisonUtils.getNegatedOperatorText(sign);
-			final JSExpression leftOperand = binaryExpression.getLOperand();
-			final JSExpression rightOperand = binaryExpression.getROperand();
-
-			return leftOperand.getText() + negatedComparison + (rightOperand != null ? rightOperand.getText() : "");
-		}
-		else
-		{
-			return '!' + ParenthesesUtils.getParenthesized(condition, ParenthesesUtils.PREFIX_PRECENDENCE);
-		}
-	}
+            return leftOperand.getText() + negatedComparison + (rightOperand != null ? rightOperand.getText() : "");
+        }
+        else {
+            return '!' + ParenthesesUtils.getParenthesized(condition, ParenthesesUtils.PREFIX_PRECENDENCE);
+        }
+    }
 }

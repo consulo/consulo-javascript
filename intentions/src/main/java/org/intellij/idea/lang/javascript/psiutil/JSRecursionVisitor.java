@@ -19,66 +19,53 @@ import com.intellij.lang.javascript.psi.*;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 
-public class JSRecursionVisitor extends JSRecursiveElementVisitor
-{
+public class JSRecursionVisitor extends JSRecursiveElementVisitor {
+    private final JSFunction function;
+    private final String functionName;
+    private boolean recursive;
 
-	private final JSFunction function;
-	private final String functionName;
-	private boolean recursive;
+    public JSRecursionVisitor(JSFunction function) {
+        this.function = function;
+        this.functionName = function.getName();
+    }
 
-	public JSRecursionVisitor(JSFunction function)
-	{
-		this.function = function;
-		this.functionName = function.getName();
-	}
+    @Override
+    public void visitJSElement(JSElement element) {
+        if (!this.recursive) {
+            super.visitJSElement(element);
+        }
+    }
 
-	@Override
-	public void visitJSElement(JSElement element)
-	{
-		if(!this.recursive)
-		{
-			super.visitJSElement(element);
-		}
-	}
+    @Override
+    public void visitJSCallExpression(JSCallExpression call) {
+        if (!this.recursive) {
+            super.visitJSCallExpression(call);
 
-	@Override
-	public void visitJSCallExpression(JSCallExpression call)
-	{
-		if(!this.recursive)
-		{
-			super.visitJSCallExpression(call);
+            final JSExpression methodExpression = call.getMethodExpression();
+            final String qualifiedMethodText = methodExpression.getText();
+            final String methodText = qualifiedMethodText.substring(qualifiedMethodText.lastIndexOf('.') + 1);
 
-			final JSExpression methodExpression = call.getMethodExpression();
-			final String qualifiedMethodText = methodExpression.getText();
-			final String methodText = qualifiedMethodText.substring(qualifiedMethodText.lastIndexOf('.') + 1);
+            if (methodText.equals(this.functionName)) {
+                final PsiReference methodReference = methodExpression.getReference();
+                final PsiElement referent = methodReference == null ? null : methodReference.resolve();
 
-			if(methodText.equals(this.functionName))
-			{
-				final PsiReference methodReference = methodExpression.getReference();
-				final PsiElement referent = ((methodReference == null) ? null : methodReference.resolve());
+                if (referent != null) {
+                    if (referent instanceof JSFunction) {
+                        this.recursive = referent.equals(this.function);
+                    }
+                    else if (referent instanceof JSFunctionExpression functionExpression) {
+                        this.recursive = functionExpression.getFunction().equals(this.function);
+                    }
+                }
+            }
+        }
+    }
 
-				if(referent != null)
-				{
-					if(referent instanceof JSFunction)
-					{
-						this.recursive = referent.equals(this.function);
-					}
-					else if(referent instanceof JSFunctionExpression)
-					{
-						this.recursive = ((JSFunctionExpression) referent).getFunction().equals(this.function);
-					}
-				}
-			}
-		}
-	}
+    public boolean isFunctionNamed() {
+        return (this.functionName != null);
+    }
 
-	public boolean isFunctionNamed()
-	{
-		return (this.functionName != null);
-	}
-
-	public boolean isRecursive()
-	{
-		return this.recursive;
-	}
+    public boolean isRecursive() {
+        return this.recursive;
+    }
 }

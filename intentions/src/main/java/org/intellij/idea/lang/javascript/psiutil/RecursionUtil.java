@@ -20,718 +20,508 @@ import com.intellij.lang.javascript.psi.*;
 import consulo.language.ast.IElementType;
 import jakarta.annotation.Nonnull;
 
-public class RecursionUtil
-{
+public class RecursionUtil {
+    private RecursionUtil() {
+    }
 
-	private RecursionUtil()
-	{
-	}
+    public static boolean statementMayReturnBeforeRecursing(JSStatement statement, JSFunction method) {
+        if (statement == null) {
+            return true;
+        }
 
-	public static boolean statementMayReturnBeforeRecursing(
-			JSStatement statement, JSFunction method)
-	{
-		if(statement == null)
-		{
-			return true;
-		}
+        if (statement instanceof JSBreakStatement
+            || statement instanceof JSContinueStatement
+            || statement instanceof JSThrowStatement
+            || statement instanceof JSExpressionStatement
+            || statement instanceof JSEmptyStatement
+            || statement instanceof JSVarStatement) {
+            return false;
+        }
+        else if (statement instanceof JSReturnStatement returnStatement) {
+            final JSExpression returnValue = returnStatement.getExpression();
+            return returnValue == null || !RecursionUtil.expressionDefinitelyRecurses(returnValue, method);
+        }
+        else if (statement instanceof JSForStatement forStatement) {
+            return RecursionUtil.forStatementMayReturnBeforeRecursing(forStatement, method);
+        }
+        else if (statement instanceof JSForInStatement forInStatement) {
+            return RecursionUtil.forInStatementMayReturnBeforeRecursing(forInStatement, method);
+        }
+        else if (statement instanceof JSWhileStatement whileStatement) {
+            return RecursionUtil.whileStatementMayReturnBeforeRecursing(whileStatement, method);
+        }
+        else if (statement instanceof JSDoWhileStatement doWhileStatement) {
+            return RecursionUtil.doWhileStatementMayReturnBeforeRecursing(doWhileStatement, method);
+        }
+        else if (statement instanceof JSBlockStatement blockStatement) {
+            return RecursionUtil.blockStatementMayReturnBeforeRecursing(blockStatement, method, false);
+        }
+        else if (statement instanceof JSLabeledStatement labeledStatement) {
+            return RecursionUtil.labeledStatementMayReturnBeforeRecursing(labeledStatement, method);
+        }
+        else if (statement instanceof JSIfStatement ifStatement) {
+            return RecursionUtil.ifStatementMayReturnBeforeRecursing(ifStatement, method);
+        }
+        else if (statement instanceof JSTryStatement tryStatement) {
+            return RecursionUtil.tryStatementMayReturnBeforeRecursing(tryStatement, method);
+        }
+        else if (statement instanceof JSSwitchStatement switchStatement) {
+            return RecursionUtil.switchStatementMayReturnBeforeRecursing(switchStatement, method);
+        }
+        else {
+            // unknown statement type
+            return true;
+        }
+    }
 
-		if(statement instanceof JSBreakStatement ||
-				statement instanceof JSContinueStatement ||
-				statement instanceof JSThrowStatement ||
-				statement instanceof JSExpressionStatement ||
-				statement instanceof JSEmptyStatement ||
-				statement instanceof JSVarStatement)
-		{
-			return false;
-		}
-		else if(statement instanceof JSReturnStatement)
-		{
-			final JSReturnStatement returnStatement =
-					(JSReturnStatement) statement;
-			final JSExpression returnValue = returnStatement.getExpression();
-			return (returnValue == null ||
-					!RecursionUtil.expressionDefinitelyRecurses(returnValue, method));
-		}
-		else if(statement instanceof JSForStatement)
-		{
-			return RecursionUtil.forStatementMayReturnBeforeRecursing(
-					(JSForStatement) statement, method);
-		}
-		else if(statement instanceof JSForInStatement)
-		{
-			return RecursionUtil.forInStatementMayReturnBeforeRecursing(
-					(JSForInStatement) statement, method);
-		}
-		else if(statement instanceof JSWhileStatement)
-		{
-			return RecursionUtil.whileStatementMayReturnBeforeRecursing(
-					(JSWhileStatement) statement, method);
-		}
-		else if(statement instanceof JSDoWhileStatement)
-		{
-			return RecursionUtil.doWhileStatementMayReturnBeforeRecursing(
-					(JSDoWhileStatement) statement, method);
-		}
-		else if(statement instanceof JSBlockStatement)
-		{
-			final JSBlockStatement blockStatement =
-					(JSBlockStatement) statement;
-			return RecursionUtil.blockStatementMayReturnBeforeRecursing(blockStatement, method, false);
-		}
-		else if(statement instanceof JSLabeledStatement)
-		{
-			return RecursionUtil.labeledStatementMayReturnBeforeRecursing(
-					(JSLabeledStatement) statement, method);
-		}
-		else if(statement instanceof JSIfStatement)
-		{
-			return RecursionUtil.ifStatementMayReturnBeforeRecursing(
-					(JSIfStatement) statement, method);
-		}
-		else if(statement instanceof JSTryStatement)
-		{
-			return RecursionUtil.tryStatementMayReturnBeforeRecursing(
-					(JSTryStatement) statement, method);
-		}
-		else if(statement instanceof JSSwitchStatement)
-		{
-			return RecursionUtil.switchStatementMayReturnBeforeRecursing(
-					(JSSwitchStatement) statement, method);
-		}
-		else
-		{
-			// unknown statement type
-			return true;
-		}
-	}
+    private static boolean doWhileStatementMayReturnBeforeRecursing(JSDoWhileStatement loopStatement, JSFunction method) {
+        final JSStatement body = loopStatement.getBody();
+        return RecursionUtil.statementMayReturnBeforeRecursing(body, method);
+    }
 
-	private static boolean doWhileStatementMayReturnBeforeRecursing(
-			JSDoWhileStatement loopStatement, JSFunction method)
-	{
-		final JSStatement body = loopStatement.getBody();
-		return RecursionUtil.statementMayReturnBeforeRecursing(body, method);
-	}
+    private static boolean whileStatementMayReturnBeforeRecursing(JSWhileStatement loopStatement, JSFunction method) {
+        final JSExpression test = loopStatement.getCondition();
+        if (RecursionUtil.expressionDefinitelyRecurses(test, method)) {
+            return false;
+        }
+        final JSStatement body = loopStatement.getBody();
+        return RecursionUtil.statementMayReturnBeforeRecursing(body, method);
+    }
 
-	private static boolean whileStatementMayReturnBeforeRecursing(
-			JSWhileStatement loopStatement, JSFunction method)
-	{
-		final JSExpression test = loopStatement.getCondition();
-		if(RecursionUtil.expressionDefinitelyRecurses(test, method))
-		{
-			return false;
-		}
-		final JSStatement body = loopStatement.getBody();
-		return RecursionUtil.statementMayReturnBeforeRecursing(body, method);
-	}
+    private static boolean forStatementMayReturnBeforeRecursing(JSForStatement loopStatement, JSFunction method) {
+        if (RecursionUtil.statementMayReturnBeforeRecursing(loopStatement.getVarDeclaration(), method)) {
+            return true;
+        }
+        if (RecursionUtil.expressionDefinitelyRecurses(loopStatement.getInitialization(), method)) {
+            return false;
+        }
+        if (RecursionUtil.expressionDefinitelyRecurses(loopStatement.getCondition(), method)) {
+            return false;
+        }
+        return RecursionUtil.statementMayReturnBeforeRecursing(loopStatement.getBody(), method);
+    }
 
-	private static boolean forStatementMayReturnBeforeRecursing(
-			JSForStatement loopStatement, JSFunction method)
-	{
+    private static boolean forInStatementMayReturnBeforeRecursing(JSForInStatement loopStatement, JSFunction method) {
+        final JSExpression collection = loopStatement.getCollectionExpression();
+        if (RecursionUtil.expressionDefinitelyRecurses(collection, method)) {
+            return false;
+        }
+        final JSStatement body = loopStatement.getBody();
+        return RecursionUtil.statementMayReturnBeforeRecursing(body, method);
+    }
 
-		if(RecursionUtil.statementMayReturnBeforeRecursing(loopStatement.getVarDeclaration(), method))
-		{
-			return true;
-		}
-		if(RecursionUtil.expressionDefinitelyRecurses(loopStatement.getInitialization(), method))
-		{
-			return false;
-		}
-		if(RecursionUtil.expressionDefinitelyRecurses(loopStatement.getCondition(), method))
-		{
-			return false;
-		}
-		return RecursionUtil.statementMayReturnBeforeRecursing(loopStatement.getBody(), method);
-	}
+    private static boolean switchStatementMayReturnBeforeRecursing(JSSwitchStatement switchStatement, JSFunction method) {
+        for (final JSCaseClause clause : switchStatement.getCaseClauses()) {
+            for (final JSStatement statement : clause.getStatements()) {
+                if (RecursionUtil.statementMayReturnBeforeRecursing(statement, method)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
-	private static boolean forInStatementMayReturnBeforeRecursing(
-			JSForInStatement loopStatement, JSFunction method)
-	{
-		final JSExpression collection = loopStatement.getCollectionExpression();
-		if(RecursionUtil.expressionDefinitelyRecurses(collection, method))
-		{
-			return false;
-		}
-		final JSStatement body = loopStatement.getBody();
-		return RecursionUtil.statementMayReturnBeforeRecursing(body, method);
-	}
+    private static boolean tryStatementMayReturnBeforeRecursing(JSTryStatement tryStatement, JSFunction method) {
+        final JSStatement finallyStatement = tryStatement.getFinallyStatement();
 
-	private static boolean switchStatementMayReturnBeforeRecursing(
-			JSSwitchStatement switchStatement, JSFunction method)
-	{
+        if (finallyStatement != null) {
+            if (RecursionUtil.statementMayReturnBeforeRecursing(finallyStatement, method)) {
+                return true;
+            }
+            if (RecursionUtil.statementDefinitelyRecurses(finallyStatement, method)) {
+                return false;
+            }
+        }
 
-		for(final JSCaseClause clause : switchStatement.getCaseClauses())
-		{
-			for(final JSStatement statement : clause.getStatements())
-			{
-				if(RecursionUtil.statementMayReturnBeforeRecursing(statement, method))
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+        final JSStatement statement = tryStatement.getStatement();
 
-	private static boolean tryStatementMayReturnBeforeRecursing(
-			JSTryStatement tryStatement, JSFunction method)
-	{
-		final JSStatement finallyStatement = tryStatement.getFinallyStatement();
+        if (RecursionUtil.statementMayReturnBeforeRecursing(statement, method)) {
+            return true;
+        }
 
-		if(finallyStatement != null)
-		{
-			if(RecursionUtil.statementMayReturnBeforeRecursing(finallyStatement, method))
-			{
-				return true;
-			}
-			if(RecursionUtil.statementDefinitelyRecurses(finallyStatement, method))
-			{
-				return false;
-			}
-		}
+        final JSCatchBlock catchBlock = tryStatement.getCatchBlock();
 
-		final JSStatement statement = tryStatement.getStatement();
+        if (catchBlock != null) {
+            final JSStatement catchStatement = catchBlock.getStatement();
 
-		if(RecursionUtil.statementMayReturnBeforeRecursing(statement, method))
-		{
-			return true;
-		}
+            if (RecursionUtil.statementMayReturnBeforeRecursing(catchStatement, method)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-		final JSCatchBlock catchBlock = tryStatement.getCatchBlock();
+    private static boolean ifStatementMayReturnBeforeRecursing(JSIfStatement ifStatement, JSFunction method) {
+        final JSExpression test = ifStatement.getCondition();
+        if (RecursionUtil.expressionDefinitelyRecurses(test, method)) {
+            return false;
+        }
+        final JSStatement thenBranch = ifStatement.getThen();
+        if (RecursionUtil.statementMayReturnBeforeRecursing(thenBranch, method)) {
+            return true;
+        }
+        final JSStatement elseBranch = ifStatement.getElse();
+        return elseBranch != null && RecursionUtil.statementMayReturnBeforeRecursing(elseBranch, method);
+    }
 
-		if(catchBlock != null)
-		{
-			final JSStatement catchStatement = catchBlock.getStatement();
+    private static boolean labeledStatementMayReturnBeforeRecursing(JSLabeledStatement labeledStatement, JSFunction method) {
+        final JSStatement statement = labeledStatement.getStatement();
+        return RecursionUtil.statementMayReturnBeforeRecursing(statement, method);
+    }
 
-			if(RecursionUtil.statementMayReturnBeforeRecursing(catchStatement, method))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
+    private static boolean blockStatementMayReturnBeforeRecursing(JSBlockStatement block, JSFunction method, boolean endsInImplicitReturn) {
+        if (block == null) {
+            return true;
+        }
 
-	private static boolean ifStatementMayReturnBeforeRecursing(
-			JSIfStatement ifStatement, JSFunction method)
-	{
-		final JSExpression test = ifStatement.getCondition();
-		if(RecursionUtil.expressionDefinitelyRecurses(test, method))
-		{
-			return false;
-		}
-		final JSStatement thenBranch = ifStatement.getThen();
-		if(RecursionUtil.statementMayReturnBeforeRecursing(thenBranch, method))
-		{
-			return true;
-		}
-		final JSStatement elseBranch = ifStatement.getElse();
-		return elseBranch != null &&
-				RecursionUtil.statementMayReturnBeforeRecursing(elseBranch, method);
-	}
+        final JSStatement[] statements = block.getStatements();
 
-	private static boolean labeledStatementMayReturnBeforeRecursing(
-			JSLabeledStatement labeledStatement, JSFunction method)
-	{
-		final JSStatement statement = labeledStatement.getStatement();
-		return RecursionUtil.statementMayReturnBeforeRecursing(statement, method);
-	}
+        for (final JSStatement statement : statements) {
+            if (RecursionUtil.statementMayReturnBeforeRecursing(statement, method)) {
+                return true;
+            }
+            if (RecursionUtil.statementDefinitelyRecurses(statement, method)) {
+                return false;
+            }
+        }
+        return endsInImplicitReturn;
+    }
 
-	private static boolean blockStatementMayReturnBeforeRecursing(
-			JSBlockStatement block, JSFunction method, boolean endsInImplicitReturn)
-	{
-		if(block == null)
-		{
-			return true;
-		}
+    public static boolean functionMayRecurse(@Nonnull JSFunction function) {
+        final JSRecursionVisitor recursionVisitor = new JSRecursionVisitor(function);
 
-		final JSStatement[] statements = block.getStatements();
+        if (recursionVisitor.isFunctionNamed()) {
+            function.accept(recursionVisitor);
+        }
+        return recursionVisitor.isRecursive();
+    }
 
-		for(final JSStatement statement : statements)
-		{
-			if(RecursionUtil.statementMayReturnBeforeRecursing(statement, method))
-			{
-				return true;
-			}
-			if(RecursionUtil.statementDefinitelyRecurses(statement, method))
-			{
-				return false;
-			}
-		}
-		return endsInImplicitReturn;
-	}
+    private static boolean expressionDefinitelyRecurses(JSExpression exp, JSFunction method) {
+        if (exp == null) {
+            return false;
+        }
+        if (exp instanceof JSNewExpression newExpression) {
+            return RecursionUtil.newExpressionDefinitelyRecurses(newExpression, method);
+        }
+        if (exp instanceof JSCallExpression callExpression) {
+            return RecursionUtil.callExpressionDefinitelyRecurses(callExpression, method);
+        }
+        if (exp instanceof JSAssignmentExpression assignmentExpression) {
+            return RecursionUtil.assignmentExpressionDefinitelyRecurses(assignmentExpression, method);
+        }
+        if (exp instanceof JSArrayLiteralExpression arrayLiteralExpression) {
+            return RecursionUtil.arrayLiteralExpressionDefinitelyRecurses(arrayLiteralExpression, method);
+        }
+        if (exp instanceof JSIndexedPropertyAccessExpression indexedPropertyAccessExpression) {
+            return RecursionUtil.indexedPropertyAccessExpressionDefinitelyRecurses(indexedPropertyAccessExpression, method);
+        }
+        if (exp instanceof JSPrefixExpression prefixExpression) {
+            return RecursionUtil.prefixExpressionDefinitelyRecurses(prefixExpression, method);
+        }
+        if (exp instanceof JSPostfixExpression postfixExpression) {
+            return RecursionUtil.postfixExpressionDefinitelyRecurses(postfixExpression, method);
+        }
+        if (exp instanceof JSBinaryExpression binaryExpression) {
+            return RecursionUtil.binaryExpressionDefinitelyRecurses(binaryExpression, method);
+        }
+        if (exp instanceof JSConditionalExpression conditionalExpression) {
+            return RecursionUtil.conditionalExpressionDefinitelyRecurses(conditionalExpression, method);
+        }
+        if (exp instanceof JSParenthesizedExpression parenthesizedExpression) {
+            return RecursionUtil.parenthesizedExpressionDefinitelyRecurses(parenthesizedExpression, method);
+        }
+        if (exp instanceof JSReferenceExpression referenceExpression) {
+            return RecursionUtil.referenceExpressionDefinitelyRecurses(referenceExpression, method);
+        }
+        if (exp instanceof JSLiteralExpression || exp instanceof JSThisExpression) {
+            return false;
+        }
+        return false;
+    }
 
-	public static boolean functionMayRecurse(@Nonnull JSFunction function)
-	{
-		final JSRecursionVisitor recursionVisitor = new JSRecursionVisitor(function);
+    private static boolean conditionalExpressionDefinitelyRecurses(JSConditionalExpression expression, JSFunction method) {
+        final JSExpression condExpression = expression.getCondition();
 
-		if(recursionVisitor.isFunctionNamed())
-		{
-			function.accept(recursionVisitor);
-		}
-		return recursionVisitor.isRecursive();
-	}
+        return RecursionUtil.expressionDefinitelyRecurses(condExpression, method) ||
+            (RecursionUtil.expressionDefinitelyRecurses(expression.getThen(), method) &&
+                RecursionUtil.expressionDefinitelyRecurses(expression.getElse(), method));
+    }
 
-	private static boolean expressionDefinitelyRecurses(JSExpression exp,
-														JSFunction method)
-	{
-		if(exp == null)
-		{
-			return false;
-		}
-		if(exp instanceof JSNewExpression)
-		{
-			return RecursionUtil.newExpressionDefinitelyRecurses(
-					(JSNewExpression) exp, method);
-		}
-		if(exp instanceof JSCallExpression)
-		{
-			return RecursionUtil.callExpressionDefinitelyRecurses(
-					(JSCallExpression) exp, method);
-		}
-		if(exp instanceof JSAssignmentExpression)
-		{
-			return RecursionUtil.assignmentExpressionDefinitelyRecurses(
-					(JSAssignmentExpression) exp, method);
-		}
-		if(exp instanceof JSArrayLiteralExpression)
-		{
-			return RecursionUtil.arrayLiteralExpressionDefinitelyRecurses(
-					(JSArrayLiteralExpression) exp, method);
-		}
-		if(exp instanceof JSIndexedPropertyAccessExpression)
-		{
-			return RecursionUtil.indexedPropertyAccessExpressionDefinitelyRecurses(
-					(JSIndexedPropertyAccessExpression) exp, method);
-		}
-		if(exp instanceof JSPrefixExpression)
-		{
-			return RecursionUtil.prefixExpressionDefinitelyRecurses(
-					(JSPrefixExpression) exp, method);
-		}
-		if(exp instanceof JSPostfixExpression)
-		{
-			return RecursionUtil.postfixExpressionDefinitelyRecurses(
-					(JSPostfixExpression) exp, method);
-		}
-		if(exp instanceof JSBinaryExpression)
-		{
-			return RecursionUtil.binaryExpressionDefinitelyRecurses(
-					(JSBinaryExpression) exp, method);
-		}
-		if(exp instanceof JSConditionalExpression)
-		{
-			return RecursionUtil.conditionalExpressionDefinitelyRecurses(
-					(JSConditionalExpression) exp, method);
-		}
-		if(exp instanceof JSParenthesizedExpression)
-		{
-			return RecursionUtil.parenthesizedExpressionDefinitelyRecurses(
-					(JSParenthesizedExpression) exp, method);
-		}
-		if(exp instanceof JSReferenceExpression)
-		{
-			return RecursionUtil.referenceExpressionDefinitelyRecurses(
-					(JSReferenceExpression) exp, method);
-		}
-		if(exp instanceof JSLiteralExpression ||
-				exp instanceof JSThisExpression)
-		{
-			return false;
-		}
-		return false;
-	}
+    private static boolean binaryExpressionDefinitelyRecurses(JSBinaryExpression expression, JSFunction method) {
+        final JSExpression lhs = expression.getLOperand();
 
-	private static boolean conditionalExpressionDefinitelyRecurses(
-			JSConditionalExpression expression, JSFunction method)
-	{
-		final JSExpression condExpression = expression.getCondition();
+        if (RecursionUtil.expressionDefinitelyRecurses(lhs, method)) {
+            return true;
+        }
 
-		return RecursionUtil.expressionDefinitelyRecurses(condExpression, method) ||
-				(RecursionUtil.expressionDefinitelyRecurses(expression.getThen(), method) &&
-						RecursionUtil.expressionDefinitelyRecurses(expression.getElse(), method));
+        final IElementType tokenType = expression.getOperationSign();
 
-	}
+        if (JSTokenTypes.ANDAND.equals(tokenType) || JSTokenTypes.OROR.equals(tokenType)) {
+            return false;
+        }
 
-	private static boolean binaryExpressionDefinitelyRecurses(
-			JSBinaryExpression expression, JSFunction method)
-	{
-		final JSExpression lhs = expression.getLOperand();
+        return RecursionUtil.expressionDefinitelyRecurses(expression.getROperand(), method);
+    }
 
-		if(RecursionUtil.expressionDefinitelyRecurses(lhs, method))
-		{
-			return true;
-		}
+    private static boolean indexedPropertyAccessExpressionDefinitelyRecurses(
+        JSIndexedPropertyAccessExpression expression,
+        JSFunction method
+    ) {
+        final JSExpression arrayExp = expression.getQualifier();
+        final JSExpression indexExp = expression.getIndexExpression();
+        return RecursionUtil.expressionDefinitelyRecurses(arrayExp, method)
+            || RecursionUtil.expressionDefinitelyRecurses(indexExp, method);
+    }
 
-		final IElementType tokenType = expression.getOperationSign();
+    private static boolean arrayLiteralExpressionDefinitelyRecurses(JSArrayLiteralExpression expression, JSFunction method) {
+        for (final JSExpression initializer : expression.getExpressions()) {
+            if (RecursionUtil.expressionDefinitelyRecurses(initializer, method)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-		if(tokenType.equals(JSTokenTypes.ANDAND) ||
-				tokenType.equals(JSTokenTypes.OROR))
-		{
-			return false;
-		}
+    private static boolean prefixExpressionDefinitelyRecurses(JSPrefixExpression expression, JSFunction method) {
+        final JSExpression operand = expression.getExpression();
+        return RecursionUtil.expressionDefinitelyRecurses(operand, method);
+    }
 
-		return RecursionUtil.expressionDefinitelyRecurses(expression.getROperand(), method);
-	}
+    private static boolean postfixExpressionDefinitelyRecurses(JSPostfixExpression expression, JSFunction method) {
+        final JSExpression operand = expression.getExpression();
+        return RecursionUtil.expressionDefinitelyRecurses(operand, method);
+    }
 
-	private static boolean indexedPropertyAccessExpressionDefinitelyRecurses(
-			JSIndexedPropertyAccessExpression expression, JSFunction method)
-	{
-		final JSExpression arrayExp = expression.getQualifier();
-		final JSExpression indexExp = expression.getIndexExpression();
-		return (RecursionUtil.expressionDefinitelyRecurses(arrayExp, method) ||
-				RecursionUtil.expressionDefinitelyRecurses(indexExp, method));
-	}
+    private static boolean parenthesizedExpressionDefinitelyRecurses(JSParenthesizedExpression expression, JSFunction method) {
+        final JSExpression innerExpression = expression.getInnerExpression();
+        return RecursionUtil.expressionDefinitelyRecurses(innerExpression, method);
+    }
 
-	private static boolean arrayLiteralExpressionDefinitelyRecurses(
-			JSArrayLiteralExpression expression, JSFunction method)
-	{
-		for(final JSExpression initializer : expression.getExpressions())
-		{
-			if(RecursionUtil.expressionDefinitelyRecurses(initializer, method))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
+    private static boolean referenceExpressionDefinitelyRecurses(JSReferenceExpression expression, JSFunction method) {
+        final JSExpression qualifierExpression = expression.getQualifier();
+        return (qualifierExpression != null &&
+            RecursionUtil.expressionDefinitelyRecurses(qualifierExpression, method));
+    }
 
-	private static boolean prefixExpressionDefinitelyRecurses(
-			JSPrefixExpression expression, JSFunction method)
-	{
-		final JSExpression operand = expression.getExpression();
-		return RecursionUtil.expressionDefinitelyRecurses(operand, method);
-	}
+    private static boolean assignmentExpressionDefinitelyRecurses(JSAssignmentExpression assignmentExpression, JSFunction method) {
+        final JSExpression lhs = assignmentExpression.getLOperand();
+        final JSExpression rhs = assignmentExpression.getROperand();
+        return RecursionUtil.expressionDefinitelyRecurses(rhs, method)
+            || RecursionUtil.expressionDefinitelyRecurses(lhs, method);
+    }
 
-	private static boolean postfixExpressionDefinitelyRecurses(
-			JSPostfixExpression expression, JSFunction method)
-	{
-		final JSExpression operand = expression.getExpression();
-		return RecursionUtil.expressionDefinitelyRecurses(operand, method);
-	}
+    private static boolean newExpressionDefinitelyRecurses(JSNewExpression exp, JSFunction method) {
+        final JSArgumentList argumentList = exp.getArgumentList();
+        if (argumentList != null) {
+            final JSExpression[] args = argumentList.getArguments();
+            for (final JSExpression arg : args) {
+                if (RecursionUtil.expressionDefinitelyRecurses(arg, method)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
-	private static boolean parenthesizedExpressionDefinitelyRecurses(
-			JSParenthesizedExpression expression, JSFunction method)
-	{
-		final JSExpression innerExpression = expression.getInnerExpression();
-		return RecursionUtil.expressionDefinitelyRecurses(innerExpression, method);
-	}
+    private static boolean callExpressionDefinitelyRecurses(JSCallExpression exp, JSFunction method) {
+        final JSFunction calledMethod = ControlFlowUtils.resolveMethod(exp);
 
-	private static boolean referenceExpressionDefinitelyRecurses(
-			JSReferenceExpression expression, JSFunction method)
-	{
-		final JSExpression qualifierExpression = expression.getQualifier();
-		return (qualifierExpression != null &&
-				RecursionUtil.expressionDefinitelyRecurses(qualifierExpression, method));
-	}
+        if (calledMethod != null && calledMethod.equals(method)) {
+            return true;
+        }
 
-	private static boolean assignmentExpressionDefinitelyRecurses(
-			JSAssignmentExpression assignmentExpression, JSFunction method)
-	{
-		final JSExpression lhs = assignmentExpression.getLOperand();
-		final JSExpression rhs = assignmentExpression.getROperand();
-		return (RecursionUtil.expressionDefinitelyRecurses(rhs, method) ||
-				RecursionUtil.expressionDefinitelyRecurses(lhs, method));
-	}
+        final JSExpression methodExpression = exp.getMethodExpression();
 
-	private static boolean newExpressionDefinitelyRecurses(JSNewExpression exp,
-														   JSFunction method)
-	{
-		final JSArgumentList argumentList = exp.getArgumentList();
-		if(argumentList != null)
-		{
-			final JSExpression[] args = argumentList.getArguments();
-			for(final JSExpression arg : args)
-			{
-				if(RecursionUtil.expressionDefinitelyRecurses(arg, method))
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+        if (methodExpression == null) {
+            return false;
+        }
+        else if (RecursionUtil.expressionDefinitelyRecurses(methodExpression, method)) {
+            return true;
+        }
 
-	private static boolean callExpressionDefinitelyRecurses(
-			JSCallExpression exp, JSFunction method)
-	{
-		final JSFunction calledMethod = ControlFlowUtils.resolveMethod(exp);
+        for (final JSExpression arg : exp.getArgumentList().getArguments()) {
+            if (RecursionUtil.expressionDefinitelyRecurses(arg, method)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-		if(calledMethod != null && calledMethod.equals(method))
-		{
-			return true;
-		}
+    private static boolean statementDefinitelyRecurses(JSStatement statement, JSFunction method) {
+        if (statement == null) {
+            return false;
+        }
+        if (statement instanceof JSBreakStatement
+            || statement instanceof JSContinueStatement
+            || statement instanceof JSThrowStatement
+            || statement instanceof JSEmptyStatement) {
+            return false;
+        }
+        else if (statement instanceof JSExpressionStatement expressionStatement) {
+            final JSExpression expression = expressionStatement.getExpression();
+            return RecursionUtil.expressionDefinitelyRecurses(expression, method);
+        }
+        else if (statement instanceof JSVarStatement varStatement) {
+            for (final JSVariable variable : varStatement.getVariables()) {
+                final JSExpression initializer = variable.getInitializer();
+                if (RecursionUtil.expressionDefinitelyRecurses(initializer, method)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        else if (statement instanceof JSReturnStatement returnStatement) {
+            final JSExpression returnValue = returnStatement.getExpression();
+            if (returnValue != null) {
+                if (RecursionUtil.expressionDefinitelyRecurses(returnValue, method)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        else if (statement instanceof JSForStatement forStatement) {
+            return RecursionUtil.forStatementDefinitelyRecurses(forStatement, method);
+        }
+        else if (statement instanceof JSForInStatement forInStatement) {
+            return RecursionUtil.forInStatementDefinitelyRecurses(forInStatement, method);
+        }
+        else if (statement instanceof JSWhileStatement whileStatement) {
+            return RecursionUtil.whileStatementDefinitelyRecurses(whileStatement, method);
+        }
+        else if (statement instanceof JSDoWhileStatement doWhileStatement) {
+            return RecursionUtil.doWhileStatementDefinitelyRecurses(doWhileStatement, method);
+        }
+        else if (statement instanceof JSBlockStatement blockStatement) {
+            return RecursionUtil.blockStatementDefinitelyRecurses(blockStatement, method);
+        }
+        else if (statement instanceof JSLabeledStatement labeledStatement) {
+            return RecursionUtil.labeledStatementDefinitelyRecurses(labeledStatement, method);
+        }
+        else if (statement instanceof JSIfStatement ifStatement) {
+            return RecursionUtil.ifStatementDefinitelyRecurses(ifStatement, method);
+        }
+        else if (statement instanceof JSTryStatement tryStatement) {
+            return RecursionUtil.tryStatementDefinitelyRecurses(tryStatement, method);
+        }
+        else if (statement instanceof JSSwitchStatement switchStatement) {
+            return RecursionUtil.switchStatementDefinitelyRecurses(switchStatement, method);
+        }
+        else {
+            // unknown statement type
+            return false;
+        }
+    }
 
-		final JSExpression methodExpression = exp.getMethodExpression();
+    private static boolean switchStatementDefinitelyRecurses(JSSwitchStatement switchStatement, JSFunction method) {
+        final JSExpression switchExpression = switchStatement.getSwitchExpression();
+        return RecursionUtil.expressionDefinitelyRecurses(switchExpression, method);
+    }
 
-		if(methodExpression == null)
-		{
-			return false;
-		}
-		else if(RecursionUtil.expressionDefinitelyRecurses(methodExpression, method))
-		{
-			return true;
-		}
+    private static boolean tryStatementDefinitelyRecurses(JSTryStatement tryStatement, JSFunction method) {
+        final JSStatement statement = tryStatement.getStatement();
+        if (RecursionUtil.statementDefinitelyRecurses(statement, method)) {
+            return true;
+        }
+        final JSStatement finallyStatement = tryStatement.getFinallyStatement();
+        return RecursionUtil.statementDefinitelyRecurses(finallyStatement, method);
+    }
 
-		for(final JSExpression arg : exp.getArgumentList().getArguments())
-		{
-			if(RecursionUtil.expressionDefinitelyRecurses(arg, method))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
+    private static boolean blockStatementDefinitelyRecurses(JSBlockStatement block, JSFunction method) {
+        if (block != null) {
+            for (final JSStatement statement : block.getStatements()) {
+                if (RecursionUtil.statementDefinitelyRecurses(statement, method)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
-	private static boolean statementDefinitelyRecurses(JSStatement statement,
-													   JSFunction method)
-	{
-		if(statement == null)
-		{
-			return false;
-		}
-		if(statement instanceof JSBreakStatement ||
-				statement instanceof JSContinueStatement ||
-				statement instanceof JSThrowStatement ||
-				statement instanceof JSEmptyStatement)
-		{
-			return false;
-		}
-		else if(statement instanceof JSExpressionStatement)
-		{
-			final JSExpressionStatement expressionStatement =
-					(JSExpressionStatement) statement;
-			final JSExpression expression =
-					expressionStatement.getExpression();
-			return RecursionUtil.expressionDefinitelyRecurses(expression, method);
-		}
-		else if(statement instanceof JSVarStatement)
-		{
-			final JSVarStatement varStatement =
-					(JSVarStatement) statement;
-			for(final JSVariable variable : varStatement.getVariables())
-			{
-				final JSExpression initializer = variable.getInitializer();
-				if(RecursionUtil.expressionDefinitelyRecurses(initializer, method))
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-		else if(statement instanceof JSReturnStatement)
-		{
-			final JSReturnStatement returnStatement =
-					(JSReturnStatement) statement;
-			final JSExpression returnValue = returnStatement.getExpression();
-			if(returnValue != null)
-			{
-				if(RecursionUtil.expressionDefinitelyRecurses(returnValue, method))
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-		else if(statement instanceof JSForStatement)
-		{
-			return RecursionUtil.forStatementDefinitelyRecurses((JSForStatement)
-					statement, method);
-		}
-		else if(statement instanceof JSForInStatement)
-		{
-			return RecursionUtil.forInStatementDefinitelyRecurses(
-					(JSForInStatement) statement, method);
-		}
-		else if(statement instanceof JSWhileStatement)
-		{
-			return RecursionUtil.whileStatementDefinitelyRecurses(
-					(JSWhileStatement) statement, method);
-		}
-		else if(statement instanceof JSDoWhileStatement)
-		{
-			return RecursionUtil.doWhileStatementDefinitelyRecurses(
-					(JSDoWhileStatement) statement, method);
-		}
-		else if(statement instanceof JSBlockStatement)
-		{
-			return RecursionUtil.blockStatementDefinitelyRecurses(
-					(JSBlockStatement) statement, method);
-		}
-		else if(statement instanceof JSLabeledStatement)
-		{
-			return RecursionUtil.labeledStatementDefinitelyRecurses(
-					(JSLabeledStatement) statement, method);
-		}
-		else if(statement instanceof JSIfStatement)
-		{
-			return RecursionUtil.ifStatementDefinitelyRecurses(
-					(JSIfStatement) statement, method);
-		}
-		else if(statement instanceof JSTryStatement)
-		{
-			return RecursionUtil.tryStatementDefinitelyRecurses(
-					(JSTryStatement) statement, method);
-		}
-		else if(statement instanceof JSSwitchStatement)
-		{
-			return RecursionUtil.switchStatementDefinitelyRecurses(
-					(JSSwitchStatement) statement, method);
-		}
-		else
-		{
-			// unknown statement type
-			return false;
-		}
-	}
+    private static boolean ifStatementDefinitelyRecurses(JSIfStatement ifStatement, JSFunction method) {
+        final JSExpression condition = ifStatement.getCondition();
+        if (RecursionUtil.expressionDefinitelyRecurses(condition, method)) {
+            return true;
+        }
+        final JSStatement thenBranch = ifStatement.getThen();
+        final JSStatement elseBranch = ifStatement.getElse();
+        if (thenBranch == null || elseBranch == null) {
+            return false;
+        }
+        return RecursionUtil.statementDefinitelyRecurses(thenBranch, method)
+            && RecursionUtil.statementDefinitelyRecurses(elseBranch, method);
+    }
 
-	private static boolean switchStatementDefinitelyRecurses(
-			JSSwitchStatement switchStatement, JSFunction method)
-	{
-		final JSExpression switchExpression = switchStatement.getSwitchExpression();
-		return RecursionUtil.expressionDefinitelyRecurses(switchExpression, method);
-	}
+    private static boolean forStatementDefinitelyRecurses(JSForStatement forStatement, JSFunction method) {
+        final JSStatement declaration = forStatement.getVarDeclaration();
+        final JSExpression initialization = forStatement.getInitialization();
 
-	private static boolean tryStatementDefinitelyRecurses(
-			JSTryStatement tryStatement, JSFunction method)
-	{
-		final JSStatement statement = tryStatement.getStatement();
-		if(RecursionUtil.statementDefinitelyRecurses(statement, method))
-		{
-			return true;
-		}
-		final JSStatement finallyStatement = tryStatement.getFinallyStatement();
-		return RecursionUtil.statementDefinitelyRecurses(finallyStatement, method);
-	}
+        if (declaration != null &&
+            RecursionUtil.statementDefinitelyRecurses(declaration, method)) {
+            return true;
+        }
+        else if (initialization != null &&
+            RecursionUtil.expressionDefinitelyRecurses(initialization, method)) {
+            return true;
+        }
 
-	private static boolean blockStatementDefinitelyRecurses(JSBlockStatement block,
-															JSFunction method)
-	{
-		if(block != null)
-		{
-			for(final JSStatement statement : block.getStatements())
-			{
-				if(RecursionUtil.statementDefinitelyRecurses(statement, method))
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+        final JSExpression condition = forStatement.getCondition();
 
-	private static boolean ifStatementDefinitelyRecurses(
-			JSIfStatement ifStatement, JSFunction method)
-	{
-		final JSExpression condition = ifStatement.getCondition();
-		if(RecursionUtil.expressionDefinitelyRecurses(condition, method))
-		{
-			return true;
-		}
-		final JSStatement thenBranch = ifStatement.getThen();
-		final JSStatement elseBranch = ifStatement.getElse();
-		if(thenBranch == null || elseBranch == null)
-		{
-			return false;
-		}
-		return RecursionUtil.statementDefinitelyRecurses(thenBranch, method) &&
-				RecursionUtil.statementDefinitelyRecurses(elseBranch, method);
-	}
+        if (RecursionUtil.expressionDefinitelyRecurses(condition, method)) {
+            return true;
+        }
+        if (BoolUtils.isTrue(condition)) {
+            final JSStatement body = forStatement.getBody();
+            return RecursionUtil.statementDefinitelyRecurses(body, method);
+        }
+        return false;
+    }
 
-	private static boolean forStatementDefinitelyRecurses(
-			JSForStatement forStatement, JSFunction method)
-	{
-		final JSStatement declaration = forStatement.getVarDeclaration();
-		final JSExpression initialization = forStatement.getInitialization();
+    private static boolean forInStatementDefinitelyRecurses(JSForInStatement foreachStatement, JSFunction method) {
+        final JSExpression collection = foreachStatement.getCollectionExpression();
+        return RecursionUtil.expressionDefinitelyRecurses(collection, method);
+    }
 
-		if(declaration != null &&
-				RecursionUtil.statementDefinitelyRecurses(declaration, method))
-		{
-			return true;
-		}
-		else if(initialization != null &&
-				RecursionUtil.expressionDefinitelyRecurses(initialization, method))
-		{
-			return true;
-		}
+    private static boolean whileStatementDefinitelyRecurses(JSWhileStatement whileStatement, JSFunction method) {
+        final JSExpression condition = whileStatement.getCondition();
+        if (RecursionUtil.expressionDefinitelyRecurses(condition, method)) {
+            return true;
+        }
+        if (BoolUtils.isTrue(condition)) {
+            final JSStatement body = whileStatement.getBody();
+            return RecursionUtil.statementDefinitelyRecurses(body, method);
+        }
+        return false;
+    }
 
-		final JSExpression condition = forStatement.getCondition();
+    private static boolean doWhileStatementDefinitelyRecurses(JSDoWhileStatement doWhileStatement, JSFunction method) {
+        final JSStatement body = doWhileStatement.getBody();
+        if (RecursionUtil.statementDefinitelyRecurses(body, method)) {
+            return true;
+        }
+        final JSExpression condition = doWhileStatement.getCondition();
+        return RecursionUtil.expressionDefinitelyRecurses(condition, method);
+    }
 
-		if(RecursionUtil.expressionDefinitelyRecurses(condition, method))
-		{
-			return true;
-		}
-		if(BoolUtils.isTrue(condition))
-		{
-			final JSStatement body = forStatement.getBody();
-			return RecursionUtil.statementDefinitelyRecurses(body, method);
-		}
-		return false;
-	}
+    private static boolean labeledStatementDefinitelyRecurses(JSLabeledStatement labeledStatement, JSFunction method) {
+        final JSStatement body = labeledStatement.getStatement();
+        return RecursionUtil.statementDefinitelyRecurses(body, method);
+    }
 
-	private static boolean forInStatementDefinitelyRecurses(
-			JSForInStatement foreachStatement, JSFunction method)
-	{
-		final JSExpression collection = foreachStatement.getCollectionExpression();
-		return RecursionUtil.expressionDefinitelyRecurses(collection, method);
-	}
+    public static boolean functionDefinitelyRecurses(@Nonnull JSFunction method) {
+        final JSSourceElement[] body = method.getBody();
 
-	private static boolean whileStatementDefinitelyRecurses(
-			JSWhileStatement whileStatement, JSFunction method)
-	{
-
-		final JSExpression condition = whileStatement.getCondition();
-		if(RecursionUtil.expressionDefinitelyRecurses(condition, method))
-		{
-			return true;
-		}
-		if(BoolUtils.isTrue(condition))
-		{
-			final JSStatement body = whileStatement.getBody();
-			return RecursionUtil.statementDefinitelyRecurses(body, method);
-		}
-		return false;
-	}
-
-	private static boolean doWhileStatementDefinitelyRecurses(
-			JSDoWhileStatement doWhileStatement, JSFunction method)
-	{
-
-		final JSStatement body = doWhileStatement.getBody();
-		if(RecursionUtil.statementDefinitelyRecurses(body, method))
-		{
-			return true;
-		}
-		final JSExpression condition = doWhileStatement.getCondition();
-		return RecursionUtil.expressionDefinitelyRecurses(condition, method);
-	}
-
-	private static boolean labeledStatementDefinitelyRecurses(
-			JSLabeledStatement labeledStatement, JSFunction method)
-	{
-		final JSStatement body = labeledStatement.getStatement();
-		return RecursionUtil.statementDefinitelyRecurses(body, method);
-	}
-
-	public static boolean functionDefinitelyRecurses(
-			@Nonnull JSFunction method)
-	{
-		final JSSourceElement[] body = method.getBody();
-
-		if(body != null)
-		{
-			for(final JSSourceElement element : body)
-			{
-				if(element instanceof JSStatement &&
-						RecursionUtil.statementDefinitelyRecurses((JSStatement) element, method))
-				{
-					return true;
-				}
-				else if(element instanceof JSExpression &&
-						RecursionUtil.expressionDefinitelyRecurses((JSExpression) element, method))
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+        if (body != null) {
+            for (final JSSourceElement element : body) {
+                if (element instanceof JSStatement &&
+                    RecursionUtil.statementDefinitelyRecurses((JSStatement)element, method)) {
+                    return true;
+                }
+                else if (element instanceof JSExpression &&
+                    RecursionUtil.expressionDefinitelyRecurses((JSExpression)element, method)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

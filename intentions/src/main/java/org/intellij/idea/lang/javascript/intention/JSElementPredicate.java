@@ -19,7 +19,6 @@ import consulo.language.psi.PsiElement;
 
 import jakarta.annotation.Nonnull;
 
-public interface JSElementPredicate
-{
-	boolean satisfiedBy(@Nonnull PsiElement element);
+public interface JSElementPredicate {
+    boolean satisfiedBy(@Nonnull PsiElement element);
 }
