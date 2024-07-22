@@ -38,101 +38,86 @@ import java.util.List;
 
 @ExtensionImpl
 @IntentionMetaData(
-	ignoreId = "JSSplitDeclarationAndInitializationIntention",
-	categories = {"JavaScript", "Declaration"},
-	fileExtensions = "js"
+    ignoreId = "JSSplitDeclarationAndInitializationIntention",
+    categories = {"JavaScript", "Declaration"},
+    fileExtensions = "js"
 )
-public class JSSplitDeclarationAndInitializationIntention extends JSIntention
-{
-	@NonNls
-	private static final String VAR_KEYWORD = "var ";
+public class JSSplitDeclarationAndInitializationIntention extends JSIntention {
+    @NonNls
+    private static final String VAR_KEYWORD = "var ";
 
-	@Override
-	@Nonnull
-	public String getText()
-	{
-		return JSIntentionLocalize.initializationSplitDeclarationAndInitialization().get();
-	}
+    @Override
+    @Nonnull
+    public String getText() {
+        return JSIntentionLocalize.initializationSplitDeclarationAndInitialization().get();
+    }
 
-	@Override
-	@Nonnull
-	protected JSElementPredicate getElementPredicate()
-	{
-		return new Predicate();
-	}
+    @Override
+    @Nonnull
+    protected JSElementPredicate getElementPredicate() {
+        return new Predicate();
+    }
 
-	@Override
-	@RequiredReadAction
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
-	{
-		assert (element instanceof JSVarStatement);
+    @Override
+    @RequiredReadAction
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        assert (element instanceof JSVarStatement);
 
-		final JSVarStatement varStatement = (JSVarStatement) element;
-		StringBuilder declarationBuffer = new StringBuilder();
-		List<String> initializations = new ArrayList<>();
+        final JSVarStatement varStatement = (JSVarStatement)element;
+        StringBuilder declarationBuffer = new StringBuilder();
+        List<String> initializations = new ArrayList<>();
 
-		for (JSVariable variable : varStatement.getVariables())
-		{
-			declarationBuffer.append(declarationBuffer.isEmpty() ? VAR_KEYWORD : ",")
-					.append(variable.getName());
+        for (JSVariable variable : varStatement.getVariables()) {
+            declarationBuffer.append(declarationBuffer.isEmpty() ? VAR_KEYWORD : ",")
+                .append(variable.getName());
 
-			String s = JSPsiImplUtils.getTypeFromDeclaration(variable);
-			final PsiFile containingFile = element.getContainingFile();
+            String s = JSPsiImplUtils.getTypeFromDeclaration(variable);
+            final PsiFile containingFile = element.getContainingFile();
 
-			if (s == null && containingFile.getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4)
-			{
-				s = JSResolveUtil.getExpressionType(variable.getInitializer(), containingFile);
-			}
+            if (s == null && containingFile.getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4) {
+                s = JSResolveUtil.getExpressionType(variable.getInitializer(), containingFile);
+            }
 
-			if (s != null)
-			{
-				declarationBuffer.append(":").append(s);
-			}
-			if (variable.hasInitializer())
-			{
-				initializations.add(variable.getName() + '=' + variable.getInitializer().getText() + ';');
-			}
-		}
-		declarationBuffer.append(';');
+            if (s != null) {
+                declarationBuffer.append(":").append(s);
+            }
+            if (variable.hasInitializer()) {
+                initializations.add(variable.getName() + '=' + variable.getInitializer().getText() + ';');
+            }
+        }
+        declarationBuffer.append(';');
 
-		// Do replacement.
-		JSStatement newStatement = JSElementFactory.replaceStatement(varStatement, declarationBuffer.toString());
+        // Do replacement.
+        JSStatement newStatement = JSElementFactory.replaceStatement(varStatement, declarationBuffer.toString());
 
-		for (final String initialization : initializations)
-		{
-			newStatement = JSElementFactory.addStatementAfter(newStatement, initialization);
-		}
-	}
+        for (final String initialization : initializations) {
+            newStatement = JSElementFactory.addStatementAfter(newStatement, initialization);
+        }
+    }
 
-	private static class Predicate implements JSElementPredicate
-	{
-		@Override
-		public boolean satisfiedBy(@Nonnull PsiElement element)
-		{
-			PsiElement elementParent;
+    private static class Predicate implements JSElementPredicate {
+        @Override
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            PsiElement elementParent;
 
-			if (!(element instanceof JSVarStatement)
-				|| (elementParent = element.getParent()) instanceof JSForStatement ||
-					elementParent instanceof JSClass
-			)
-			{
-				return false;
-			}
+            if (!(element instanceof JSVarStatement)
+                || (elementParent = element.getParent()) instanceof JSForStatement ||
+                elementParent instanceof JSClass
+            ) {
+                return false;
+            }
 
-			final JSVarStatement varStatement = (JSVarStatement) element;
-			if (ErrorUtil.containsError(varStatement))
-			{
-				return false;
-			}
+            final JSVarStatement varStatement = (JSVarStatement)element;
+            if (ErrorUtil.containsError(varStatement)) {
+                return false;
+            }
 
-			for (JSVariable variable : varStatement.getVariables())
-			{
-				if (variable.hasInitializer())
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-	}
+            for (JSVariable variable : varStatement.getVariables()) {
+                if (variable.hasInitializer()) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
 }

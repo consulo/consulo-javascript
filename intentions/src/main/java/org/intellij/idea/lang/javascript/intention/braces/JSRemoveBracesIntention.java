@@ -31,116 +31,102 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
 @ExtensionImpl
 @IntentionMetaData(
-	ignoreId = "JSRemoveBracesIntention",
-	categories = {"JavaScript", "Control Flow"},
-	fileExtensions = "js"
+    ignoreId = "JSRemoveBracesIntention",
+    categories = {"JavaScript", "Control Flow"},
+    fileExtensions = "js"
 )
-public class JSRemoveBracesIntention extends JSMutablyNamedIntention
-{
-	@Nonnull
-	@Override
-	protected LocalizeValue getBasicText()
-	{
-		return JSIntentionLocalize.bracesRemove();
-	}
+public class JSRemoveBracesIntention extends JSMutablyNamedIntention {
+    @Nonnull
+    @Override
+    protected LocalizeValue getBasicText() {
+        return JSIntentionLocalize.bracesRemove();
+    }
 
-	@Override
-	@Nonnull
-	protected JSElementPredicate getElementPredicate()
-	{
-		return new RemoveBracesPredicate();
-	}
+    @Override
+    @Nonnull
+    protected JSElementPredicate getElementPredicate() {
+        return new RemoveBracesPredicate();
+    }
 
-	@Override
-	@RequiredReadAction
-	protected LocalizeValue getTextForElement(PsiElement element)
-	{
-		final JSElement parent = (JSElement) element.getParent();
-		final String keyword;
+    @Override
+    @RequiredReadAction
+    protected LocalizeValue getTextForElement(PsiElement element) {
+        final JSElement parent = (JSElement)element.getParent();
+        final String keyword;
 
-		assert (parent != null);
+        assert (parent != null);
 
-		if (parent instanceof JSIfStatement ifStatement)
-		{
-			final JSStatement elseBranch = ifStatement.getElse();
+        if (parent instanceof JSIfStatement ifStatement) {
+            final JSStatement elseBranch = ifStatement.getElse();
 
-			keyword = element.equals(elseBranch) ? "else" : "if";
-		}
-		else
-		{
-			final PsiElement keywordChild = parent.getFirstChild();
+            keyword = element.equals(elseBranch) ? "else" : "if";
+        }
+        else {
+            final PsiElement keywordChild = parent.getFirstChild();
 
-			assert (keywordChild != null);
-			keyword = keywordChild.getText();
-		}
+            assert (keywordChild != null);
+            keyword = keywordChild.getText();
+        }
 
-		return JSIntentionLocalize.bracesRemoveMessage(keyword);
-  }
+        return JSIntentionLocalize.bracesRemoveMessage(keyword);
+    }
 
-	@Override
-	@RequiredReadAction
-	protected void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
-	{
-		final JSBlockStatement blockStatement = (JSBlockStatement) element;
-		final JSStatement[] statements = blockStatement.getStatements();
-		final JSStatement statement = statements[0];
+    @Override
+    @RequiredReadAction
+    protected void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        final JSBlockStatement blockStatement = (JSBlockStatement)element;
+        final JSStatement[] statements = blockStatement.getStatements();
+        final JSStatement statement = statements[0];
 
-		// handle comments
-		final JSElement parent = (JSElement) blockStatement.getParent();
+        // handle comments
+        final JSElement parent = (JSElement)blockStatement.getParent();
 
-		assert (parent != null);
+        assert (parent != null);
 
-		final JSElement grandParent = (JSElement) parent.getParent();
+        final JSElement grandParent = (JSElement)parent.getParent();
 
-		assert (grandParent != null);
+        assert (grandParent != null);
 
-		PsiElement sibling = statement.getFirstChild();
+        PsiElement sibling = statement.getFirstChild();
 
-		assert (sibling != null);
+        assert (sibling != null);
 
-		sibling = sibling.getNextSibling();
-		while (sibling != null && !sibling.equals(statement))
-		{
-			if (sibling instanceof PsiComment)
-			{
-				grandParent.addBefore(sibling, parent);
-			}
-			sibling = sibling.getNextSibling();
-		}
+        sibling = sibling.getNextSibling();
+        while (sibling != null && !sibling.equals(statement)) {
+            if (sibling instanceof PsiComment) {
+                grandParent.addBefore(sibling, parent);
+            }
+            sibling = sibling.getNextSibling();
+        }
 
-		final PsiElement lastChild = blockStatement.getLastChild();
+        final PsiElement lastChild = blockStatement.getLastChild();
 
-		if (lastChild instanceof PsiComment)
-		{
-			final JSElement nextSibling = (JSElement) parent.getNextSibling();
+        if (lastChild instanceof PsiComment) {
+            final JSElement nextSibling = (JSElement)parent.getNextSibling();
 
-			grandParent.addAfter(lastChild, nextSibling);
-		}
+            grandParent.addAfter(lastChild, nextSibling);
+        }
 
-		String text = statement.getText();
-		JSElementFactory.replaceStatement(blockStatement, text);
-	}
+        String text = statement.getText();
+        JSElementFactory.replaceStatement(blockStatement, text);
+    }
 
-	public static class RemoveBracesPredicate implements JSElementPredicate
-	{
-		@Override
-		public boolean satisfiedBy(@Nonnull PsiElement element)
-		{
-			if (!(element instanceof JSBlockStatement blockStatement))
-			{
-				return false;
-			}
+    public static class RemoveBracesPredicate implements JSElementPredicate {
+        @Override
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            if (!(element instanceof JSBlockStatement blockStatement)) {
+                return false;
+            }
 
-			final PsiElement parent = blockStatement.getParent();
+            final PsiElement parent = blockStatement.getParent();
 
-			return (parent instanceof JSIfStatement || parent instanceof JSWhileStatement || parent instanceof JSDoWhileStatement
-				|| parent instanceof JSForStatement || parent instanceof JSForInStatement)
-				&& isSingleNonVarStatement(blockStatement.getStatements());
-			}
+            return (parent instanceof JSIfStatement || parent instanceof JSWhileStatement || parent instanceof JSDoWhileStatement
+                || parent instanceof JSForStatement || parent instanceof JSForInStatement)
+                && isSingleNonVarStatement(blockStatement.getStatements());
+        }
 
-		private boolean isSingleNonVarStatement(JSStatement[] statements)
-		{
-			return statements.length == 1 && !(statements[0] instanceof JSVarStatement);
-		}
-	}
+        private boolean isSingleNonVarStatement(JSStatement[] statements) {
+            return statements.length == 1 && !(statements[0] instanceof JSVarStatement);
+        }
+    }
 }

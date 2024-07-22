@@ -33,68 +33,60 @@ import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
 
 @ExtensionImpl
 @IntentionMetaData(
-	ignoreId = "JSRemoveConditionalIntention",
-	categories = {"JavaScript", "Conditional"},
-	fileExtensions = "js"
+    ignoreId = "JSRemoveConditionalIntention",
+    categories = {"JavaScript", "Conditional"},
+    fileExtensions = "js"
 )
-public class JSRemoveConditionalIntention extends JSIntention
-{
-	@Override
-	@Nonnull
-	public String getText()
-	{
-		return JSIntentionLocalize.conditionalRemoveConditional().get();
-	}
+public class JSRemoveConditionalIntention extends JSIntention {
+    @Override
+    @Nonnull
+    public String getText() {
+        return JSIntentionLocalize.conditionalRemoveConditional().get();
+    }
 
-	@Override
-	@Nonnull
-	public JSElementPredicate getElementPredicate()
-	{
-		return new RemoveConditionalPredicate();
-	}
+    @Override
+    @Nonnull
+    public JSElementPredicate getElementPredicate() {
+        return new RemoveConditionalPredicate();
+    }
 
-	@Override
-	@RequiredReadAction
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
-	{
-		final JSConditionalExpression exp = (JSConditionalExpression) element;
-		final JSExpression condition = exp.getCondition();
-		final JSExpression thenExpression = exp.getThen();
+    @Override
+    @RequiredReadAction
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        final JSConditionalExpression exp = (JSConditionalExpression)element;
+        final JSExpression condition = exp.getCondition();
+        final JSExpression thenExpression = exp.getThen();
 
-		assert (thenExpression != null);
+        assert (thenExpression != null);
 
-		final String thenExpressionText = thenExpression.getText();
-		final String newExpression;
+        final String thenExpressionText = thenExpression.getText();
+        final String newExpression;
 
-		newExpression = thenExpressionText.equals(BoolUtils.TRUE)
-			? condition.getText()
-			: BoolUtils.getNegatedExpressionText(condition);
-		JSElementFactory.replaceExpression(exp, newExpression);
-	}
+        newExpression = thenExpressionText.equals(BoolUtils.TRUE)
+            ? condition.getText()
+            : BoolUtils.getNegatedExpressionText(condition);
+        JSElementFactory.replaceExpression(exp, newExpression);
+    }
 
-	private static class RemoveConditionalPredicate implements JSElementPredicate
-	{
-		@Override
-		@RequiredReadAction
-		public boolean satisfiedBy(@Nonnull PsiElement element)
-		{
-			if (element instanceof JSConditionalExpression condition && !ErrorUtil.containsError(element))
-			{
-				final JSExpression thenExpression = ParenthesesUtils.stripParentheses(condition.getThen());
-				final JSExpression elseExpression = ParenthesesUtils.stripParentheses(condition.getElse());
+    private static class RemoveConditionalPredicate implements JSElementPredicate {
+        @Override
+        @RequiredReadAction
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            if (element instanceof JSConditionalExpression condition && !ErrorUtil.containsError(element)) {
+                final JSExpression thenExpression = ParenthesesUtils.stripParentheses(condition.getThen());
+                final JSExpression elseExpression = ParenthesesUtils.stripParentheses(condition.getElse());
 
-				if (condition.getCondition() == null || thenExpression == null || elseExpression == null)
-				{
-					return false;
-				}
+                if (condition.getCondition() == null || thenExpression == null || elseExpression == null) {
+                    return false;
+                }
 
-				final String thenText = thenExpression.getText();
-				final String elseText = elseExpression.getText();
+                final String thenText = thenExpression.getText();
+                final String elseText = elseExpression.getText();
 
-				return (BoolUtils.TRUE.equals(elseText) && BoolUtils.FALSE.equals(thenText))
-					|| (BoolUtils.TRUE.equals(thenText) && BoolUtils.FALSE.equals(elseText));
-			}
-			return false;
-		}
-	}
+                return (BoolUtils.TRUE.equals(elseText) && BoolUtils.FALSE.equals(thenText))
+                    || (BoolUtils.TRUE.equals(thenText) && BoolUtils.FALSE.equals(elseText));
+            }
+            return false;
+        }
+    }
 }

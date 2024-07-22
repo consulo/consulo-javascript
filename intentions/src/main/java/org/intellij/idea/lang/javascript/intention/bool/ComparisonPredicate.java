@@ -24,25 +24,19 @@ import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 
 import jakarta.annotation.Nonnull;
 
-class ComparisonPredicate implements JSElementPredicate
-{
-	@Override
-	public boolean satisfiedBy(@Nonnull PsiElement element)
-	{
-		if(!(element instanceof JSBinaryExpression))
-		{
-			return false;
-		}
-		if(ErrorUtil.containsError(element))
-		{
-			return false;
-		}
+class ComparisonPredicate implements JSElementPredicate {
+    @Override
+    public boolean satisfiedBy(@Nonnull PsiElement element) {
+        if (!(element instanceof JSBinaryExpression)) {
+            return false;
+        }
+        if (ErrorUtil.containsError(element)) {
+            return false;
+        }
 
-		final JSBinaryExpression expression = (JSBinaryExpression) element;
-		final JSExpression rhs = expression.getROperand();
+        final JSBinaryExpression expression = (JSBinaryExpression)element;
+        final JSExpression rhs = expression.getROperand();
 
-		return (rhs != null &&
-				ComparisonUtils.isComparisonOperator((JSExpression) element));
-
-	}
+        return (rhs != null && ComparisonUtils.isComparisonOperator((JSExpression)element));
+    }
 }

@@ -31,83 +31,72 @@ import org.intellij.idea.lang.javascript.psiutil.*;
 
 @ExtensionImpl
 @IntentionMetaData(
-	ignoreId = "JSExtractIncrementIntention",
-	categories = {"JavaScript", "Other"},
-	fileExtensions = "js"
+    ignoreId = "JSExtractIncrementIntention",
+    categories = {"JavaScript", "Other"},
+    fileExtensions = "js"
 )
-public class JSExtractIncrementIntention extends JSMutablyNamedIntention
-{
-	@Override
-	@Nonnull
-	protected LocalizeValue getBasicText()
-	{
-		return JSIntentionLocalize.incrementExtract();
-	}
+public class JSExtractIncrementIntention extends JSMutablyNamedIntention {
+    @Override
+    @Nonnull
+    protected LocalizeValue getBasicText() {
+        return JSIntentionLocalize.incrementExtract();
+    }
 
-	@Override
-	@RequiredReadAction
-	public LocalizeValue getTextForElement(PsiElement element)
-	{
-		return JSIntentionLocalize.incrementExtractMessage(BinaryOperatorUtils.getOperatorText(getOperationSign(element)));
-	}
+    @Override
+    @RequiredReadAction
+    public LocalizeValue getTextForElement(PsiElement element) {
+        return JSIntentionLocalize.incrementExtractMessage(BinaryOperatorUtils.getOperatorText(getOperationSign(element)));
+    }
 
-	@Override
-	@Nonnull
-	public JSElementPredicate getElementPredicate()
-	{
-		return new ExtractIncrementPredicate();
-	}
+    @Override
+    @Nonnull
+    public JSElementPredicate getElementPredicate() {
+        return new ExtractIncrementPredicate();
+    }
 
-	@Override
-	@RequiredReadAction
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
-	{
-		final boolean isPostfix = (element instanceof JSPostfixExpression);
-		final JSExpression operand = isPostfix
-			? ((JSPostfixExpression) element).getExpression()
-			: ((JSPrefixExpression) element).getExpression();
-		final JSStatement statement = TreeUtil.getParentOfType(element, JSStatement.class);
+    @Override
+    @RequiredReadAction
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        final boolean isPostfix = (element instanceof JSPostfixExpression);
+        final JSExpression operand = isPostfix
+            ? ((JSPostfixExpression)element).getExpression()
+            : ((JSPrefixExpression)element).getExpression();
+        final JSStatement statement = TreeUtil.getParentOfType(element, JSStatement.class);
 
-		assert (statement != null);
+        assert (statement != null);
 
-		if (isPostfix)
-		{
-			JSElementFactory.addStatementAfter(statement, element.getText() + ';');
-		}
-		else
-		{
-			JSElementFactory.addStatementBefore(statement, element.getText() + ';');
-		}
-		JSElementFactory.replaceExpression((JSExpression) element, operand.getText());
-	}
+        if (isPostfix) {
+            JSElementFactory.addStatementAfter(statement, element.getText() + ';');
+        }
+        else {
+            JSElementFactory.addStatementBefore(statement, element.getText() + ';');
+        }
+        JSElementFactory.replaceExpression((JSExpression)element, operand.getText());
+    }
 
-	@RequiredReadAction
-	private static IElementType getOperationSign(PsiElement element)
-	{
-		return element instanceof JSPostfixExpression postfixExpression
-				? postfixExpression.getOperationSign()
-				: ((JSPrefixExpression) element).getOperationSign();
-	}
+    @RequiredReadAction
+    private static IElementType getOperationSign(PsiElement element) {
+        return element instanceof JSPostfixExpression postfixExpression
+            ? postfixExpression.getOperationSign()
+            : ((JSPrefixExpression)element).getOperationSign();
+    }
 
-	private static class ExtractIncrementPredicate implements JSElementPredicate
-	{
-		@Override
-		public boolean satisfiedBy(@Nonnull PsiElement element)
-		{
-			if (!ExpressionUtil.isIncrementDecrementExpression(element)
-				|| ErrorUtil.containsError(element)
-				|| element.getParent() instanceof JSExpressionStatement) {
-        return false;
-			}
+    private static class ExtractIncrementPredicate implements JSElementPredicate {
+        @Override
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            if (!ExpressionUtil.isIncrementDecrementExpression(element)
+                || ErrorUtil.containsError(element)
+                || element.getParent() instanceof JSExpressionStatement) {
+                return false;
+            }
 
-			final JSStatement containingStatement = TreeUtil.getParentOfType(element, JSStatement.class);
+            final JSStatement containingStatement = TreeUtil.getParentOfType(element, JSStatement.class);
 
             if (element instanceof JSPostfixExpression
-				&& (containingStatement instanceof JSReturnStatement || containingStatement instanceof JSThrowStatement))
-			{
-				return false;
-			}
-			return (containingStatement != null);
-		}
-	}
+                && (containingStatement instanceof JSReturnStatement || containingStatement instanceof JSThrowStatement)) {
+                return false;
+            }
+            return (containingStatement != null);
+        }
+    }
 }
