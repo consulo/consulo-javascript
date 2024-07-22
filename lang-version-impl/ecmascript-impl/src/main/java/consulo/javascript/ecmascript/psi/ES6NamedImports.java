@@ -12,9 +12,8 @@ import jakarta.annotation.Nonnull;
  * import { test } ...
  * .......^^^^^^^ named imports group
  */
-public interface ES6NamedImports extends JSElement
-{
-	@Nonnull
-	@RequiredReadAction
-	ES6ImportedBinding[] getBindings();
+public interface ES6NamedImports extends JSElement {
+    @Nonnull
+    @RequiredReadAction
+    ES6ImportedBinding[] getBindings();
 }

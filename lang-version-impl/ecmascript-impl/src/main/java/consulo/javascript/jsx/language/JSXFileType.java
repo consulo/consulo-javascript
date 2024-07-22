@@ -18,48 +18,41 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 2019-12-16
  */
-public class JSXFileType extends LanguageFileType implements JavaScriptFileTypeWithVersion
-{
-	public static final JSXFileType INSTANCE = new JSXFileType();
+public class JSXFileType extends LanguageFileType implements JavaScriptFileTypeWithVersion {
+    public static final JSXFileType INSTANCE = new JSXFileType();
 
-	private JSXFileType()
-	{
-		super(JavaScriptLanguage.INSTANCE);
-	}
+    private JSXFileType() {
+        super(JavaScriptLanguage.INSTANCE);
+    }
 
-	@Nonnull
-	@Override
-	public String getId()
-	{
-		return "JSX";
-	}
+    @Nonnull
+    @Override
+    public String getId() {
+        return "JSX";
+    }
 
-	@Nonnull
-	@Override
-	public LocalizeValue getDescription()
-	{
-		return LocalizeValue.localizeTODO("JSX files");
-	}
+    @Nonnull
+    @Override
+    public LocalizeValue getDescription() {
+        return LocalizeValue.localizeTODO("JSX files");
+    }
 
-	@Nonnull
-	@Override
-	public String getDefaultExtension()
-	{
-		return "jsx";
-	}
+    @Nonnull
+    @Override
+    public String getDefaultExtension() {
+        return "jsx";
+    }
 
-	@Nullable
-	@Override
-	public Image getIcon()
-	{
-		return JavaScriptIconGroup.jsx();
-	}
+    @Nullable
+    @Override
+    public Image getIcon() {
+        return JavaScriptIconGroup.jsx();
+    }
 
-	@RequiredReadAction
-	@Nonnull
-	@Override
-	public LanguageVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile)
-	{
-		return JSXJavaScriptVersion.getInstance();
-	}
+    @RequiredReadAction
+    @Nonnull
+    @Override
+    public LanguageVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile) {
+        return JSXJavaScriptVersion.getInstance();
+    }
 }

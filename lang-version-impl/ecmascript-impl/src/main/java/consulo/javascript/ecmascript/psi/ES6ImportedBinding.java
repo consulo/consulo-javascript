@@ -15,9 +15,8 @@ import jakarta.annotation.Nullable;
  * <p>
  * import * as util ...
  */
-public interface ES6ImportedBinding extends JSElement, PsiNameIdentifierOwner
-{
-	@Nullable
-	@RequiredReadAction
-	ES6ImportSpecifier getImportSpecifier();
+public interface ES6ImportedBinding extends JSElement, PsiNameIdentifierOwner {
+    @Nullable
+    @RequiredReadAction
+    ES6ImportSpecifier getImportSpecifier();
 }

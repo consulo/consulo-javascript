@@ -8,6 +8,5 @@ import consulo.javascript.psi.JavaScriptImportStatementBase;
  *
  * import ...
  */
-public interface ES6ImportDeclaration extends JavaScriptImportStatementBase
-{
+public interface ES6ImportDeclaration extends JavaScriptImportStatementBase {
 }
