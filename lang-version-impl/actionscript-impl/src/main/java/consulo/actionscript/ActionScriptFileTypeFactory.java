@@ -10,11 +10,9 @@ import jakarta.annotation.Nonnull;
  * @since 06.04.2015
  */
 @ExtensionImpl
-public class ActionScriptFileTypeFactory extends FileTypeFactory
-{
-	@Override
-	public void createFileTypes(@Nonnull FileTypeConsumer consumer)
-	{
-		consumer.consume(ActionScriptFileType.INSTANCE);
-	}
+public class ActionScriptFileTypeFactory extends FileTypeFactory {
+    @Override
+    public void createFileTypes(@Nonnull FileTypeConsumer consumer) {
+        consumer.consume(ActionScriptFileType.INSTANCE);
+    }
 }

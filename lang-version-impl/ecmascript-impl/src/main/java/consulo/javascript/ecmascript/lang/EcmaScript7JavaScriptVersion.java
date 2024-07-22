@@ -11,26 +11,22 @@ import jakarta.annotation.Nonnull;
  * @since 06/12/2021
  */
 @ExtensionImpl
-public class EcmaScript7JavaScriptVersion extends EcmaScript6JavaScriptVersion
-{
-	@Inject
-	public EcmaScript7JavaScriptVersion()
-	{
-		super("ECMASCRIPT_7");
+public class EcmaScript7JavaScriptVersion extends EcmaScript6JavaScriptVersion {
+    @Inject
+    public EcmaScript7JavaScriptVersion() {
+        super("ECMASCRIPT_7");
 
-		addFeature(JavaScriptFeature.EXPONENTIATION_OPERATOR);
-	}
+        addFeature(JavaScriptFeature.EXPONENTIATION_OPERATOR);
+    }
 
-	@Nonnull
-	@Override
-	public String getPresentableName()
-	{
-		return "ECMAScript 7";
-	}
+    @Nonnull
+    @Override
+    public String getPresentableName() {
+        return "ECMAScript 7";
+    }
 
-	@Override
-	public int getWeight()
-	{
-		return 700;
-	}
+    @Override
+    public int getWeight() {
+        return 700;
+    }
 }

@@ -14,11 +14,9 @@ import jakarta.annotation.Nonnull;
  * @since 2019-12-17
  */
 @ExtensionImpl
-public class EcmaScript6KeywordCompletionExtender implements JavaScriptKeywordCompletionExtender
-{
-	@Override
-	public void fillCompletion(@Nonnull CompletionParameters parameters, ProcessingContext context, @Nonnull CompletionResultSet result)
-	{
-		result.addElement(LookupElementBuilder.create("let").withInsertHandler(AddSpaceInsertHandler.INSTANCE).bold());
-	}
+public class EcmaScript6KeywordCompletionExtender implements JavaScriptKeywordCompletionExtender {
+    @Override
+    public void fillCompletion(@Nonnull CompletionParameters parameters, ProcessingContext context, @Nonnull CompletionResultSet result) {
+        result.addElement(LookupElementBuilder.create("let").withInsertHandler(AddSpaceInsertHandler.INSTANCE).bold());
+    }
 }

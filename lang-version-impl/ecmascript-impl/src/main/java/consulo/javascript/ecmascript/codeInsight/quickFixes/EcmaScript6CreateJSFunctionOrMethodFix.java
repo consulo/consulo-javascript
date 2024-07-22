@@ -22,10 +22,8 @@ import com.intellij.lang.javascript.inspections.qucikFixes.CreateJSFunctionOrMet
  * @author VISTALL
  * @since 24.02.2016
  */
-public class EcmaScript6CreateJSFunctionOrMethodFix extends CreateJSFunctionOrMethodFix
-{
-	public EcmaScript6CreateJSFunctionOrMethodFix(String name, boolean isMethod)
-	{
-		super(name, isMethod);
-	}
+public class EcmaScript6CreateJSFunctionOrMethodFix extends CreateJSFunctionOrMethodFix {
+    public EcmaScript6CreateJSFunctionOrMethodFix(String name, boolean isMethod) {
+        super(name, isMethod);
+    }
 }

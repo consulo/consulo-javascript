@@ -29,17 +29,14 @@ import jakarta.annotation.Nonnull;
  * @since 24.02.2016
  */
 @ExtensionImpl
-public class EcmaScript6QuickFixFactory extends JavaScriptQuickFixFactory
-{
-	@Override
-	public CreateJSFunctionOrMethodFix createFunctionOrMethodFix(String referenceName, boolean isMethod)
-	{
-		return new EcmaScript6CreateJSFunctionOrMethodFix(referenceName, isMethod);
-	}
+public class EcmaScript6QuickFixFactory extends JavaScriptQuickFixFactory {
+    @Override
+    public CreateJSFunctionOrMethodFix createFunctionOrMethodFix(String referenceName, boolean isMethod) {
+        return new EcmaScript6CreateJSFunctionOrMethodFix(referenceName, isMethod);
+    }
 
-	@Override
-	public boolean isMyVersion(@Nonnull JavaScriptLanguageVersion version)
-	{
-		return version instanceof BaseEcmaScriptJavaScriptVersion;
-	}
+    @Override
+    public boolean isMyVersion(@Nonnull JavaScriptLanguageVersion version) {
+        return version instanceof BaseEcmaScriptJavaScriptVersion;
+    }
 }

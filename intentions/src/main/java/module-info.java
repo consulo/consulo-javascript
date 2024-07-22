@@ -4,10 +4,10 @@
  */
 module consulo.javascript.intentions
 {
-	// TODO remove in future
-	requires java.desktop;
+    // TODO remove in future
+    requires java.desktop;
 
-	requires consulo.javascript.base.impl;
+    requires consulo.javascript.base.impl;
 
-	requires com.intellij.xml;
+    requires com.intellij.xml;
 }

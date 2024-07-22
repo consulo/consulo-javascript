@@ -19,34 +19,29 @@ import jakarta.annotation.Nonnull;
 @Deprecated
 @DeprecationInfo("This language version was dropped. We keep it only for history, many options may not supported")
 @ExtensionImpl
-public class EcmaScript4JavaScriptVersion extends BaseJavaScriptLanguageVersion
-{
-	private final DialectOptionHolder myDialectOptionHolder = new DialectOptionHolder(true, false);
+public class EcmaScript4JavaScriptVersion extends BaseJavaScriptLanguageVersion {
+    private final DialectOptionHolder myDialectOptionHolder = new DialectOptionHolder(true, false);
 
-	public EcmaScript4JavaScriptVersion()
-	{
-		super("ECMA4");
-		addFeature(JavaScriptFeature.CLASS);
-	}
+    public EcmaScript4JavaScriptVersion() {
+        super("ECMA4");
+        addFeature(JavaScriptFeature.CLASS);
+    }
 
-	@Nonnull
-	@Override
-	public PsiParser createParser()
-	{
-		return new EcmaScript4Parser();
-	}
+    @Nonnull
+    @Override
+    public PsiParser createParser() {
+        return new EcmaScript4Parser();
+    }
 
-	@Nonnull
-	@Override
-	public JSHighlighter getSyntaxHighlighter()
-	{
-		return new JSHighlighter(myDialectOptionHolder);
-	}
+    @Nonnull
+    @Override
+    public JSHighlighter getSyntaxHighlighter() {
+        return new JSHighlighter(myDialectOptionHolder);
+    }
 
-	@Nonnull
-	@Override
-	public Lexer createLexer()
-	{
-		return new JavaScriptParsingFlexLexer(myDialectOptionHolder);
-	}
+    @Nonnull
+    @Override
+    public Lexer createLexer() {
+        return new JavaScriptParsingFlexLexer(myDialectOptionHolder);
+    }
 }

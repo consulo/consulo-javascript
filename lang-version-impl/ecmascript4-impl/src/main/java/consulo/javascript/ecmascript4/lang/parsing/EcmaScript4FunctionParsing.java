@@ -12,183 +12,153 @@ import consulo.language.parser.PsiBuilder;
  * @author VISTALL
  * @since 24.08.14
  */
-public class EcmaScript4FunctionParsing extends FunctionParsing
-{
-	public EcmaScript4FunctionParsing(JavaScriptParsingContext context)
-	{
-		super(context);
-	}
+public class EcmaScript4FunctionParsing extends FunctionParsing {
+    public EcmaScript4FunctionParsing(JavaScriptParsingContext context) {
+        super(context);
+    }
 
-	public void parseAttributeWithoutBrackets(final PsiBuilder builder)
-	{
-		final PsiBuilder.Marker attribute = builder.mark();
-		if (!checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptLocalize.javascriptParserMessageExpectedIdentifier()))
-		{
-			attribute.drop();
-			return;
-		}
-		parseAttributeBody(builder);
-		attribute.done(JSElementTypes.ATTRIBUTE);
-	}
+    public void parseAttributeWithoutBrackets(final PsiBuilder builder) {
+        final PsiBuilder.Marker attribute = builder.mark();
+        if (!checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptLocalize.javascriptParserMessageExpectedIdentifier())) {
+            attribute.drop();
+            return;
+        }
+        parseAttributeBody(builder);
+        attribute.done(JSElementTypes.ATTRIBUTE);
+    }
 
-	void parseAttributesList(final PsiBuilder builder)
-	{
-		final PsiBuilder.Marker modifierList = builder.mark();
+    void parseAttributesList(final PsiBuilder builder) {
+        final PsiBuilder.Marker modifierList = builder.mark();
 
-		boolean seenNs = false;
-		boolean seenAnyAttributes = false;
+        boolean seenNs = false;
+        boolean seenAnyAttributes = false;
 
-		try
-		{
-			boolean hasSomethingInAttrList = true;
+        try {
+            boolean hasSomethingInAttrList = true;
 
-			while(hasSomethingInAttrList)
-			{
-				hasSomethingInAttrList = false;
+            while (hasSomethingInAttrList) {
+                hasSomethingInAttrList = false;
 
-				while(builder.getTokenType() == JSTokenTypes.LBRACKET)
-				{
-					seenAnyAttributes = true;
-					PsiBuilder.Marker attribute = builder.mark();
+                while (builder.getTokenType() == JSTokenTypes.LBRACKET) {
+                    seenAnyAttributes = true;
+                    PsiBuilder.Marker attribute = builder.mark();
 
-					builder.advanceLexer();
+                    builder.advanceLexer();
 
-					if (builder.eof() || (
-						!checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptLocalize.javascriptParserMessageExpectedIdentifier())
-							&& builder.getTokenType() != JSTokenTypes.RBRACKET
-					))
-					{
-						attribute.drop();
-						return;
-					}
+                    if (builder.eof() || (
+                        !checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptLocalize.javascriptParserMessageExpectedIdentifier())
+                            && builder.getTokenType() != JSTokenTypes.RBRACKET
+                    )) {
+                        attribute.drop();
+                        return;
+                    }
 
-					while(builder.getTokenType() != JSTokenTypes.RBRACKET)
-					{
-						parseAttributeBody(builder);
+                    while (builder.getTokenType() != JSTokenTypes.RBRACKET) {
+                        parseAttributeBody(builder);
 
-						if(builder.eof())
-						{
-							attribute.done(JSElementTypes.ATTRIBUTE);
-							builder.error(JavaScriptLocalize.javascriptParserMessageExpectedRbracket());
-							return;
-						}
-					}
+                        if (builder.eof()) {
+                            attribute.done(JSElementTypes.ATTRIBUTE);
+                            builder.error(JavaScriptLocalize.javascriptParserMessageExpectedRbracket());
+                            return;
+                        }
+                    }
 
-					builder.advanceLexer();
-					attribute.done(JSElementTypes.ATTRIBUTE);
-					hasSomethingInAttrList = true;
-				}
+                    builder.advanceLexer();
+                    attribute.done(JSElementTypes.ATTRIBUTE);
+                    hasSomethingInAttrList = true;
+                }
 
-				if(builder.getTokenType() == JSTokenTypes.INCLUDE_KEYWORD)
-				{
-					hasSomethingInAttrList = true;
-					getStatementParsing().parseIncludeDirective(builder);
-				}
+                if (builder.getTokenType() == JSTokenTypes.INCLUDE_KEYWORD) {
+                    hasSomethingInAttrList = true;
+                    getStatementParsing().parseIncludeDirective(builder);
+                }
 
-				if(builder.getTokenType() == JSTokenTypes.IDENTIFIER && !seenNs)
-				{
-					hasSomethingInAttrList = true;
-					seenNs = true;
-					PsiBuilder.Marker marker = builder.mark();
-					builder.advanceLexer();
-					marker.done(JSElementTypes.REFERENCE_EXPRESSION);
-				}
+                if (builder.getTokenType() == JSTokenTypes.IDENTIFIER && !seenNs) {
+                    hasSomethingInAttrList = true;
+                    seenNs = true;
+                    PsiBuilder.Marker marker = builder.mark();
+                    builder.advanceLexer();
+                    marker.done(JSElementTypes.REFERENCE_EXPRESSION);
+                }
 
-				while(JSTokenTypes.MODIFIERS.contains(builder.getTokenType()))
-				{
-					seenAnyAttributes = true;
-					hasSomethingInAttrList = true;
-					builder.advanceLexer();
-				}
+                while (JSTokenTypes.MODIFIERS.contains(builder.getTokenType())) {
+                    seenAnyAttributes = true;
+                    hasSomethingInAttrList = true;
+                    builder.advanceLexer();
+                }
 
-				if(builder.eof())
-				{
-					return;
-				}
-			}
-		}
-		finally
-		{
-			final IElementType currentTokenType = builder.getTokenType();
+                if (builder.eof()) {
+                    return;
+                }
+            }
+        }
+        finally {
+            final IElementType currentTokenType = builder.getTokenType();
 
-			if(seenNs &&
-					!seenAnyAttributes &&
-					(currentTokenType != JSTokenTypes.VAR_KEYWORD &&
-							currentTokenType != JSTokenTypes.FUNCTION_KEYWORD &&
-							currentTokenType != JSTokenTypes.CLASS_KEYWORD &&
-							currentTokenType != JSTokenTypes.INTERFACE_KEYWORD))
-			{
-				modifierList.drop();
-			}
-			else
-			{
-				modifierList.done(JSElementTypes.ATTRIBUTE_LIST);
-			}
-		}
-	}
+            if (seenNs && !seenAnyAttributes
+                && currentTokenType != JSTokenTypes.VAR_KEYWORD
+                && currentTokenType != JSTokenTypes.FUNCTION_KEYWORD
+                && currentTokenType != JSTokenTypes.CLASS_KEYWORD
+                && currentTokenType != JSTokenTypes.INTERFACE_KEYWORD) {
+                modifierList.drop();
+            }
+            else {
+                modifierList.done(JSElementTypes.ATTRIBUTE_LIST);
+            }
+        }
+    }
 
-	private void parseAttributeBody(final PsiBuilder builder)
-	{
-		final boolean haveLParen = checkMatches(builder, JSTokenTypes.LPAR, JavaScriptLocalize.javascriptParserMessageExpectedLparen());
-		boolean hasName;
+    private void parseAttributeBody(final PsiBuilder builder) {
+        final boolean haveLParen = checkMatches(builder, JSTokenTypes.LPAR, JavaScriptLocalize.javascriptParserMessageExpectedLparen());
+        boolean hasName;
 
-		while(haveLParen)
-		{
-			PsiBuilder.Marker attributeNameValuePair;
-			hasName = builder.getTokenType() == JSTokenTypes.IDENTIFIER;
+        while (haveLParen) {
+            PsiBuilder.Marker attributeNameValuePair;
+            hasName = builder.getTokenType() == JSTokenTypes.IDENTIFIER;
 
-			if(builder.getTokenType() == JSTokenTypes.COMMA)
-			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentiferOrValue());
-				break;
-			}
-			if(builder.getTokenType() == JSTokenTypes.RBRACKET)
-			{
-				break;
-			}
+            if (builder.getTokenType() == JSTokenTypes.COMMA) {
+                builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentiferOrValue());
+                break;
+            }
+            if (builder.getTokenType() == JSTokenTypes.RBRACKET) {
+                break;
+            }
 
-			attributeNameValuePair = builder.mark();
-			builder.advanceLexer();
+            attributeNameValuePair = builder.mark();
+            builder.advanceLexer();
 
-			if(hasName && builder.getTokenType() != JSTokenTypes.COMMA && builder.getTokenType() != JSTokenTypes.RPAR)
-			{
-				checkMatches(builder, JSTokenTypes.EQ, JavaScriptLocalize.javascriptParserMessageExpectedEqual());
+            if (hasName && builder.getTokenType() != JSTokenTypes.COMMA && builder.getTokenType() != JSTokenTypes.RPAR) {
+                checkMatches(builder, JSTokenTypes.EQ, JavaScriptLocalize.javascriptParserMessageExpectedEqual());
 
-				if(builder.getTokenType() != JSTokenTypes.COMMA && builder.getTokenType() != JSTokenTypes.RBRACKET && builder.getTokenType() !=
-						JSTokenTypes.RPAR)
-				{
-					builder.advanceLexer();
-				}
-				else
-				{
-					builder.error(JavaScriptLocalize.javascriptParserMessageExpectedValue());
-				}
-			}
+                if (builder.getTokenType() != JSTokenTypes.COMMA
+                    && builder.getTokenType() != JSTokenTypes.RBRACKET
+                    && builder.getTokenType() != JSTokenTypes.RPAR) {
+                    builder.advanceLexer();
+                }
+                else {
+                    builder.error(JavaScriptLocalize.javascriptParserMessageExpectedValue());
+                }
+            }
 
-			if(attributeNameValuePair != null)
-			{
-				attributeNameValuePair.done(JSElementTypes.ATTRIBUTE_NAME_VALUE_PAIR);
-			}
-			if(builder.getTokenType() != JSTokenTypes.COMMA)
-			{
-				break;
-			}
-			builder.advanceLexer();
+            if (attributeNameValuePair != null) {
+                attributeNameValuePair.done(JSElementTypes.ATTRIBUTE_NAME_VALUE_PAIR);
+            }
+            if (builder.getTokenType() != JSTokenTypes.COMMA) {
+                break;
+            }
+            builder.advanceLexer();
 
-			if(builder.eof())
-			{
-				builder.error(JavaScriptLocalize.javascriptParserMessageExpectedRparen());
-				return;
-			}
-		}
+            if (builder.eof()) {
+                builder.error(JavaScriptLocalize.javascriptParserMessageExpectedRparen());
+                return;
+            }
+        }
 
-		if (haveLParen)
-		{
-			checkMatches(builder, JSTokenTypes.RPAR, JavaScriptLocalize.javascriptParserMessageExpectedRparen());
-		}
-		else
-		{
-			builder.advanceLexer();
-		}
-	}
+        if (haveLParen) {
+            checkMatches(builder, JSTokenTypes.RPAR, JavaScriptLocalize.javascriptParserMessageExpectedRparen());
+        }
+        else {
+            builder.advanceLexer();
+        }
+    }
 }
