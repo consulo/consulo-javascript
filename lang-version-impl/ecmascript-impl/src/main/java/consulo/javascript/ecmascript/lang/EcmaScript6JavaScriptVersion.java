@@ -30,42 +30,36 @@ import jakarta.annotation.Nonnull;
  * @since 12.12.2015
  */
 @ExtensionImpl
-public class EcmaScript6JavaScriptVersion extends BaseEcmaScriptJavaScriptVersion implements StandardJavaScriptVersion, JavaScriptVersionWithHelper
-{
-	@Nonnull
-	public static EcmaScript6JavaScriptVersion getInstance()
-	{
-		return JavaScriptLanguage.INSTANCE.findVersionByClass(EcmaScript6JavaScriptVersion.class);
-	}
+public class EcmaScript6JavaScriptVersion extends BaseEcmaScriptJavaScriptVersion implements StandardJavaScriptVersion, JavaScriptVersionWithHelper {
+    @Nonnull
+    public static EcmaScript6JavaScriptVersion getInstance() {
+        return JavaScriptLanguage.INSTANCE.findVersionByClass(EcmaScript6JavaScriptVersion.class);
+    }
 
-	@Inject
-	public EcmaScript6JavaScriptVersion()
-	{
-		super("ECMASCRIPT_6");
-	}
+    @Inject
+    public EcmaScript6JavaScriptVersion() {
+        super("ECMASCRIPT_6");
+    }
 
-	public EcmaScript6JavaScriptVersion(@Nonnull String id)
-	{
-		super(id);
+    public EcmaScript6JavaScriptVersion(@Nonnull String id) {
+        super(id);
 
-		addFeature(JavaScriptFeature.CLASS);
-		addFeature(JavaScriptFeature.BINARY_LITERAL);
-		addFeature(JavaScriptFeature.OCTAL_LITERAL);
-		addFeature(JavaScriptFeature.PARAMETER_DEFAULT_VALUE);
-		addFeature(JavaScriptFeature.REST_PARAMETER);
-		addFeature(JavaScriptFeature.FUNCTION_PROPERTY);
-	}
+        addFeature(JavaScriptFeature.CLASS);
+        addFeature(JavaScriptFeature.BINARY_LITERAL);
+        addFeature(JavaScriptFeature.OCTAL_LITERAL);
+        addFeature(JavaScriptFeature.PARAMETER_DEFAULT_VALUE);
+        addFeature(JavaScriptFeature.REST_PARAMETER);
+        addFeature(JavaScriptFeature.FUNCTION_PROPERTY);
+    }
 
-	@Nonnull
-	@Override
-	public String getPresentableName()
-	{
-		return "ECMAScript 6";
-	}
+    @Nonnull
+    @Override
+    public String getPresentableName() {
+        return "ECMAScript 6";
+    }
 
-	@Override
-	public int getWeight()
-	{
-		return 600;
-	}
+    @Override
+    public int getWeight() {
+        return 600;
+    }
 }

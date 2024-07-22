@@ -22,48 +22,43 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 06/12/2021
  */
-public abstract class BaseEcmaScriptJavaScriptVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersion, JavaScriptVersionWithHelper
-{
-	protected BaseEcmaScriptJavaScriptVersion(@Nonnull String id)
-	{
-		super(id);
-	}
+public abstract class BaseEcmaScriptJavaScriptVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersion, JavaScriptVersionWithHelper {
+    protected BaseEcmaScriptJavaScriptVersion(@Nonnull String id) {
+        super(id);
+    }
 
-	protected BaseEcmaScriptJavaScriptVersion(String name, String... mimeTypes)
-	{
-		super(name, mimeTypes);
-	}
+    protected BaseEcmaScriptJavaScriptVersion(String name, String... mimeTypes) {
+        super(name, mimeTypes);
+    }
 
-	@Nonnull
-	@Override
-	public Lexer createLexer()
-	{
-		return createLexer(false);
-	}
+    @Nonnull
+    @Override
+    public Lexer createLexer() {
+        return createLexer(false);
+    }
 
-	@Nonnull
-	@Override
-	public SyntaxHighlighter getSyntaxHighlighter()
-	{
-		return new JavaScriptHighlighter(() -> createLexer(true));
-	}
+    @Nonnull
+    @Override
+    public SyntaxHighlighter getSyntaxHighlighter() {
+        return new JavaScriptHighlighter(() -> createLexer(true));
+    }
 
-	private Lexer createLexer(boolean hightlight)
-	{
-		return new MergingLexerAdapter(new JavaScriptFlexAdapter(new _EcmaScript6Lexer(hightlight)), TokenSet.create(JSTokenTypes.XML_JS_SCRIPT));
-	}
+    private Lexer createLexer(boolean hightlight) {
+        return new MergingLexerAdapter(
+            new JavaScriptFlexAdapter(new _EcmaScript6Lexer(hightlight)),
+            TokenSet.create(JSTokenTypes.XML_JS_SCRIPT)
+        );
+    }
 
-	@Nonnull
-	@Override
-	public PsiParser createParser()
-	{
-		return new EcmaScriptParser();
-	}
+    @Nonnull
+    @Override
+    public PsiParser createParser() {
+        return new EcmaScriptParser();
+    }
 
-	@Nonnull
-	@Override
-	public ResolveHelper getHelper()
-	{
-		return EcmaScript6ResolveHelper.INSTANCE;
-	}
+    @Nonnull
+    @Override
+    public ResolveHelper getHelper() {
+        return EcmaScript6ResolveHelper.INSTANCE;
+    }
 }

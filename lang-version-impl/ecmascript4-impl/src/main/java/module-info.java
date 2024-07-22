@@ -4,8 +4,8 @@
  */
 module consulo.javascript.ecmascript4.impl
 {
-	requires transitive consulo.javascript.base.impl;
+    requires transitive consulo.javascript.base.impl;
 
-	exports consulo.javascript.ecmascript4.lang;
-	exports consulo.javascript.ecmascript4.lang.parsing;
+    exports consulo.javascript.ecmascript4.lang;
+    exports consulo.javascript.ecmascript4.lang.parsing;
 }

@@ -26,19 +26,16 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 15.02.2016
  */
-public class EcmaScriptParsingContext extends JavaScriptParsingContext
-{
-	@Nonnull
-	@Override
-	protected StatementParsing createStatementParsing()
-	{
-		return new EcmaScriptStatementParsing(this);
-	}
+public class EcmaScriptParsingContext extends JavaScriptParsingContext {
+    @Nonnull
+    @Override
+    protected StatementParsing createStatementParsing() {
+        return new EcmaScriptStatementParsing(this);
+    }
 
-	@Nonnull
-	@Override
-	protected ExpressionParsing createExpressionParsing()
-	{
-		return new EcmaScriptExpressionParsing(this);
-	}
+    @Nonnull
+    @Override
+    protected ExpressionParsing createExpressionParsing() {
+        return new EcmaScriptExpressionParsing(this);
+    }
 }
