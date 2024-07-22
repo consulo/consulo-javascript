@@ -34,124 +34,108 @@ import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
 
 @ExtensionImpl
 @IntentionMetaData(
-	ignoreId = "JSReplaceShiftWithMultiplyIntention",
-	categories = {"JavaScript", "Shift"},
-	fileExtensions = "js"
+    ignoreId = "JSReplaceShiftWithMultiplyIntention",
+    categories = {"JavaScript", "Shift"},
+    fileExtensions = "js"
 )
-public class JSReplaceShiftWithMultiplyIntention extends JSMutablyNamedIntention
-{
-	@Nonnull
-	@Override
-	protected LocalizeValue getBasicText()
-	{
-		return JSIntentionLocalize.numberReplaceShiftWithMultiply();
-	}
+public class JSReplaceShiftWithMultiplyIntention extends JSMutablyNamedIntention {
+    @Nonnull
+    @Override
+    protected LocalizeValue getBasicText() {
+        return JSIntentionLocalize.numberReplaceShiftWithMultiply();
+    }
 
-	@Override
-	@RequiredReadAction
-	protected LocalizeValue getTextForElement(PsiElement element)
-	{
-		final IElementType tokenType = ((JSBinaryExpression) element).getOperationSign();
-		final String operatorString;
+    @Override
+    @RequiredReadAction
+    protected LocalizeValue getTextForElement(PsiElement element) {
+        final IElementType tokenType = ((JSBinaryExpression)element).getOperationSign();
+        final String operatorString;
 
-		if (element instanceof JSAssignmentExpression)
-		{
-			operatorString = JSTokenTypes.LTLTEQ.equals(tokenType) ? "*=" : "/=";
-		}
-		else
-		{
-			operatorString = JSTokenTypes.LTLT.equals(tokenType) ? "*" : "/";
-		}
+        if (element instanceof JSAssignmentExpression) {
+            operatorString = JSTokenTypes.LTLTEQ.equals(tokenType) ? "*=" : "/=";
+        }
+        else {
+            operatorString = JSTokenTypes.LTLT.equals(tokenType) ? "*" : "/";
+        }
 
-		return JSIntentionLocalize.numberReplaceShiftWithMultiplyMessage(BinaryOperatorUtils.getOperatorText(tokenType), operatorString);
-	}
+        return JSIntentionLocalize.numberReplaceShiftWithMultiplyMessage(BinaryOperatorUtils.getOperatorText(tokenType), operatorString);
+    }
 
-	@Override
-	@Nonnull
-	public JSElementPredicate getElementPredicate()
-	{
-		return new ShiftByLiteralPredicate();
-	}
+    @Override
+    @Nonnull
+    public JSElementPredicate getElementPredicate() {
+        return new ShiftByLiteralPredicate();
+    }
 
-	@Override
-	@RequiredReadAction
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
-	{
-		if (element instanceof JSAssignmentExpression assignmentExpression)
-		{
-			this.replaceShiftAssignWithMultiplyOrDivideAssign(assignmentExpression);
-		}
-		else
-		{
-			assert (element instanceof JSBinaryExpression);
-			this.replaceShiftWithMultiplyOrDivide((JSBinaryExpression) element);
-		}
-	}
+    @Override
+    @RequiredReadAction
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        if (element instanceof JSAssignmentExpression assignmentExpression) {
+            this.replaceShiftAssignWithMultiplyOrDivideAssign(assignmentExpression);
+        }
+        else {
+            assert (element instanceof JSBinaryExpression);
+            this.replaceShiftWithMultiplyOrDivide((JSBinaryExpression)element);
+        }
+    }
 
-	@RequiredReadAction
-	private void replaceShiftAssignWithMultiplyOrDivideAssign(JSAssignmentExpression exp) throws IncorrectOperationException
-	{
-		final JSExpression lhs = exp.getLOperand();
-		final JSExpression rhs = exp.getROperand();
-		final IElementType tokenType = exp.getOperationSign();
-		final String assignString = JSTokenTypes.LTLTEQ.equals(tokenType) ? "*=" : "/=";
+    @RequiredReadAction
+    private void replaceShiftAssignWithMultiplyOrDivideAssign(JSAssignmentExpression exp) throws IncorrectOperationException {
+        final JSExpression lhs = exp.getLOperand();
+        final JSExpression rhs = exp.getROperand();
+        final IElementType tokenType = exp.getOperationSign();
+        final String assignString = JSTokenTypes.LTLTEQ.equals(tokenType) ? "*=" : "/=";
 
-		final String expString = lhs.getText() + assignString + ShiftUtils.getExpBase2(rhs);
+        final String expString = lhs.getText() + assignString + ShiftUtils.getExpBase2(rhs);
 
-		JSElementFactory.replaceExpression(exp, expString);
-	}
+        JSElementFactory.replaceExpression(exp, expString);
+    }
 
-	@RequiredReadAction
-	private void replaceShiftWithMultiplyOrDivide(JSBinaryExpression exp) throws IncorrectOperationException
-	{
-		final JSExpression lhs = exp.getLOperand();
-		final JSExpression rhs = exp.getROperand();
-		final IElementType tokenType = exp.getOperationSign();
-		final String operatorString = JSTokenTypes.LTLT.equals(tokenType) ? "*" : "/";
-		final String lhsText = ParenthesesUtils.getParenthesized(lhs, ParenthesesUtils.MULTIPLICATIVE_PRECENDENCE);
-		String expString = lhsText + operatorString + ShiftUtils.getExpBase2(rhs);
-		final JSElement parent = (JSElement) exp.getParent();
+    @RequiredReadAction
+    private void replaceShiftWithMultiplyOrDivide(JSBinaryExpression exp) throws IncorrectOperationException {
+        final JSExpression lhs = exp.getLOperand();
+        final JSExpression rhs = exp.getROperand();
+        final IElementType tokenType = exp.getOperationSign();
+        final String operatorString = JSTokenTypes.LTLT.equals(tokenType) ? "*" : "/";
+        final String lhsText = ParenthesesUtils.getParenthesized(lhs, ParenthesesUtils.MULTIPLICATIVE_PRECENDENCE);
+        String expString = lhsText + operatorString + ShiftUtils.getExpBase2(rhs);
+        final JSElement parent = (JSElement)exp.getParent();
 
-		if (parent != null && parent instanceof JSExpression parentExpression && !(parent instanceof JSParenthesizedExpression)
-			&& ParenthesesUtils.getPrecendence(parentExpression) < ParenthesesUtils.MULTIPLICATIVE_PRECENDENCE) {
-			expString = '(' + expString + ')';
-		}
-		JSElementFactory.replaceExpression(exp, expString);
-	}
+        if (parent != null && parent instanceof JSExpression parentExpression && !(parent instanceof JSParenthesizedExpression)
+            && ParenthesesUtils.getPrecendence(parentExpression) < ParenthesesUtils.MULTIPLICATIVE_PRECENDENCE) {
+            expString = '(' + expString + ')';
+        }
+        JSElementFactory.replaceExpression(exp, expString);
+    }
 
-	private static class ShiftByLiteralPredicate implements JSElementPredicate
-	{
-		@Override
-		@RequiredReadAction
-		public boolean satisfiedBy(@Nonnull PsiElement element)
-		{
-			return element instanceof JSAssignmentExpression assignmentExpression
-				? this.isAssignmentShiftByLiteral(assignmentExpression)
-				: element instanceof JSBinaryExpression binaryExpression && this.isBinaryShiftByLiteral(binaryExpression);
-		}
+    private static class ShiftByLiteralPredicate implements JSElementPredicate {
+        @Override
+        @RequiredReadAction
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            return element instanceof JSAssignmentExpression assignmentExpression
+                ? this.isAssignmentShiftByLiteral(assignmentExpression)
+                : element instanceof JSBinaryExpression binaryExpression && this.isBinaryShiftByLiteral(binaryExpression);
+        }
 
-		@RequiredReadAction
-		private boolean isAssignmentShiftByLiteral(JSAssignmentExpression expression)
-		{
-			final IElementType tokenType = expression.getOperationSign();
+        @RequiredReadAction
+        private boolean isAssignmentShiftByLiteral(JSAssignmentExpression expression) {
+            final IElementType tokenType = expression.getOperationSign();
 
-			if (tokenType == null || !(JSTokenTypes.LTLTEQ.equals(tokenType) || JSTokenTypes.GTGTEQ.equals(tokenType)))
-			{
-				return false;
-			}
+            if (tokenType == null || !(JSTokenTypes.LTLTEQ.equals(tokenType) || JSTokenTypes.GTGTEQ.equals(tokenType))) {
+                return false;
+            }
 
-			final JSExpression rhs = expression.getROperand();
+            final JSExpression rhs = expression.getROperand();
 
-			return rhs != null && ShiftUtils.isIntLiteral(rhs);
-		}
+            return rhs != null && ShiftUtils.isIntLiteral(rhs);
+        }
 
-		@RequiredReadAction
-		private boolean isBinaryShiftByLiteral(JSBinaryExpression expression)
-		{
-			final IElementType tokenType = expression.getOperationSign();
+        @RequiredReadAction
+        private boolean isBinaryShiftByLiteral(JSBinaryExpression expression) {
+            final IElementType tokenType = expression.getOperationSign();
 
-			return (JSTokenTypes.LTLT.equals(tokenType) || JSTokenTypes.GTGT.equals(tokenType))
-				&& ShiftUtils.isIntLiteral(expression.getROperand());
-		}
-	}
+            return (JSTokenTypes.LTLT.equals(tokenType) || JSTokenTypes.GTGT.equals(tokenType))
+                && ShiftUtils.isIntLiteral(expression.getROperand());
+        }
+    }
 }

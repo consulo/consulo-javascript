@@ -32,55 +32,48 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
 @ExtensionImpl
 @IntentionMetaData(
-	ignoreId = "JSMergeElseIfIntention",
-	categories = {"JavaScript", "Control Flow"},
-	fileExtensions = "js"
+    ignoreId = "JSMergeElseIfIntention",
+    categories = {"JavaScript", "Control Flow"},
+    fileExtensions = "js"
 )
-public class JSMergeElseIfIntention extends JSIntention
-{
-	@Override
-	@Nonnull
-	public String getText()
-	{
-		return JSIntentionLocalize.trivialifMergeElseIf().get();
-	}
+public class JSMergeElseIfIntention extends JSIntention {
+    @Override
+    @Nonnull
+    public String getText() {
+        return JSIntentionLocalize.trivialifMergeElseIf().get();
+    }
 
-	@Override
-	@Nonnull
-	public JSElementPredicate getElementPredicate()
-	{
-		return new MergeElseIfPredicate();
-	}
+    @Override
+    @Nonnull
+    public JSElementPredicate getElementPredicate() {
+        return new MergeElseIfPredicate();
+    }
 
-	@Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
-	{
-		final JSIfStatement parentStatement = (JSIfStatement) element.getParent();
+    @Override
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        final JSIfStatement parentStatement = (JSIfStatement)element.getParent();
 
-		assert (parentStatement != null);
+        assert (parentStatement != null);
 
-		final JSBlockStatement elseBranch = (JSBlockStatement) parentStatement.getElse();
-		final JSStatement elseBranchContents = elseBranch.getStatements()[0];
+        final JSBlockStatement elseBranch = (JSBlockStatement)parentStatement.getElse();
+        final JSStatement elseBranchContents = elseBranch.getStatements()[0];
 
-		JSElementFactory.replaceStatement(elseBranch, elseBranchContents.getText());
-	}
+        JSElementFactory.replaceStatement(elseBranch, elseBranchContents.getText());
+    }
 
-	private static class MergeElseIfPredicate implements JSElementPredicate
-	{
-		@Override
-		public boolean satisfiedBy(@Nonnull PsiElement element)
-		{
-			return element instanceof JSElement
-				&& element.getParent() instanceof JSIfStatement ifStatement
-				&& !ErrorUtil.containsError(ifStatement)
-				&& ifStatement.getThen() != null
-				&& ifStatement.getElse() instanceof JSBlockStatement elseBlock
-				&& isSingleIfStatement(elseBlock.getStatements());
-		}
+    private static class MergeElseIfPredicate implements JSElementPredicate {
+        @Override
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            return element instanceof JSElement
+                && element.getParent() instanceof JSIfStatement ifStatement
+                && !ErrorUtil.containsError(ifStatement)
+                && ifStatement.getThen() != null
+                && ifStatement.getElse() instanceof JSBlockStatement elseBlock
+                && isSingleIfStatement(elseBlock.getStatements());
+        }
 
-		private boolean isSingleIfStatement(JSStatement[] statements)
-		{
-			return statements.length == 1 && statements[0] instanceof JSIfStatement;
-		}
-	}
+        private boolean isSingleIfStatement(JSStatement[] statements) {
+            return statements.length == 1 && statements[0] instanceof JSIfStatement;
+        }
+    }
 }

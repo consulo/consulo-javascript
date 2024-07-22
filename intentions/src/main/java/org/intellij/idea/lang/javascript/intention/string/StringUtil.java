@@ -17,32 +17,28 @@ package org.intellij.idea.lang.javascript.intention.string;
 
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
 
-class StringUtil
-{
-	public static final char SIMPLE_QUOTE = '\'';
-	public static final char DOUBLE_QUOTE = '"';
-	public static final char BACKSLASH = '\\';
+class StringUtil {
+    public static final char SIMPLE_QUOTE = '\'';
+    public static final char DOUBLE_QUOTE = '"';
+    public static final char BACKSLASH = '\\';
 
-	private StringUtil()
-	{
-	}
+    private StringUtil() {
+    }
 
-	public static boolean isSimpleQuoteStringLiteral(JSLiteralExpression expression)
-	{
-		final String value = expression.getText();
+    public static boolean isSimpleQuoteStringLiteral(JSLiteralExpression expression) {
+        final String value = expression.getText();
 
-		return (value != null &&
-				value.charAt(0) == SIMPLE_QUOTE &&
-				value.charAt(value.length() - 1) == SIMPLE_QUOTE);
-	}
+        return (value != null &&
+            value.charAt(0) == SIMPLE_QUOTE &&
+            value.charAt(value.length() - 1) == SIMPLE_QUOTE);
+    }
 
-	public static boolean isDoubleQuoteStringLiteral(JSLiteralExpression expression)
-	{
-		final String value = expression.getText();
+    public static boolean isDoubleQuoteStringLiteral(JSLiteralExpression expression) {
+        final String value = expression.getText();
 
-		return (value != null &&
-				value.charAt(0) == DOUBLE_QUOTE &&
-				value.charAt(value.length() - 1) == DOUBLE_QUOTE);
-	}
+        return (value != null &&
+            value.charAt(0) == DOUBLE_QUOTE &&
+            value.charAt(value.length() - 1) == DOUBLE_QUOTE);
+    }
 
 }

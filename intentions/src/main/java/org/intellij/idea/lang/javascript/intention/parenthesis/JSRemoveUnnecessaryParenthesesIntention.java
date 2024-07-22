@@ -35,80 +35,68 @@ import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
 
 @ExtensionImpl
 @IntentionMetaData(
-	ignoreId = "JSRemoveUnnecessaryParenthesesIntention",
-	categories = {"JavaScript", "Other"},
-	fileExtensions = "js"
+    ignoreId = "JSRemoveUnnecessaryParenthesesIntention",
+    categories = {"JavaScript", "Other"},
+    fileExtensions = "js"
 )
-public class JSRemoveUnnecessaryParenthesesIntention extends JSIntention
-{
-	@Override
-	@Nonnull
-	public String getText()
-	{
-		return JSIntentionLocalize.parenthesisRemoveUnnecessaryParentheses().get();
-	}
+public class JSRemoveUnnecessaryParenthesesIntention extends JSIntention {
+    @Override
+    @Nonnull
+    public String getText() {
+        return JSIntentionLocalize.parenthesisRemoveUnnecessaryParentheses().get();
+    }
 
-	@Override
-	@Nonnull
-	public JSElementPredicate getElementPredicate()
-	{
-		return new UnnecessaryParenthesesPredicate();
-	}
+    @Override
+    @Nonnull
+    public JSElementPredicate getElementPredicate() {
+        return new UnnecessaryParenthesesPredicate();
+    }
 
-	@Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
-	{
-		JSExpression exp = (JSExpression) element;
+    @Override
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        JSExpression exp = (JSExpression)element;
 
-		while (exp.getParent() instanceof JSExpression parentExp)
-		{
-			exp = parentExp;
-		}
+        while (exp.getParent() instanceof JSExpression parentExp) {
+            exp = parentExp;
+        }
 
-		final String newExpression = ParenthesesUtils.removeParentheses(exp);
+        final String newExpression = ParenthesesUtils.removeParentheses(exp);
 
-		JSElementFactory.replaceExpression(exp, newExpression);
-	}
+        JSElementFactory.replaceExpression(exp, newExpression);
+    }
 
-	private static class UnnecessaryParenthesesPredicate implements JSElementPredicate
-	{
-		@Override
-		@RequiredReadAction
-		public boolean satisfiedBy(@Nonnull PsiElement element)
-		{
-			if (element instanceof JSParenthesizedExpression expression && !ErrorUtil.containsError(element))
-			{
-				if (!(expression.getParent() instanceof JSExpression parentExpression))
-				{
-					return true;
-				}
+    private static class UnnecessaryParenthesesPredicate implements JSElementPredicate {
+        @Override
+        @RequiredReadAction
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            if (element instanceof JSParenthesizedExpression expression && !ErrorUtil.containsError(element)) {
+                if (!(expression.getParent() instanceof JSExpression parentExpression)) {
+                    return true;
+                }
 
-				final JSExpression body = expression.getInnerExpression();
+                final JSExpression body = expression.getInnerExpression();
 
-				if (body instanceof JSParenthesizedExpression)
-				{
-					return true;
-				}
+                if (body instanceof JSParenthesizedExpression) {
+                    return true;
+                }
 
-				final int parentPrecendence = ParenthesesUtils.getPrecendence(parentExpression);
-				final int childPrecendence = ParenthesesUtils.getPrecendence(body);
+                final int parentPrecendence = ParenthesesUtils.getPrecendence(parentExpression);
+                final int childPrecendence = ParenthesesUtils.getPrecendence(body);
 
-				if (parentPrecendence > childPrecendence)
-				{
-					return !(body instanceof JSFunctionExpression);
-				}
-				else if (parentPrecendence == childPrecendence
-					&& parentExpression instanceof JSBinaryExpression parentBinaryExpression
-					&& body instanceof JSBinaryExpression bodyBinaryExpression)
-				{
-					final IElementType parentOperator = parentBinaryExpression.getOperationSign();
-					final IElementType childOperator = bodyBinaryExpression.getOperationSign();
-					final JSExpression lhs = parentBinaryExpression.getLOperand();
+                if (parentPrecendence > childPrecendence) {
+                    return !(body instanceof JSFunctionExpression);
+                }
+                else if (parentPrecendence == childPrecendence
+                    && parentExpression instanceof JSBinaryExpression parentBinaryExpression
+                    && body instanceof JSBinaryExpression bodyBinaryExpression) {
+                    final IElementType parentOperator = parentBinaryExpression.getOperationSign();
+                    final IElementType childOperator = bodyBinaryExpression.getOperationSign();
+                    final JSExpression lhs = parentBinaryExpression.getLOperand();
 
-					return lhs.equals(expression) && parentOperator.equals(childOperator);
-				}
-			}
-			return false;
-		}
-	}
+                    return lhs.equals(expression) && parentOperator.equals(childOperator);
+                }
+            }
+            return false;
+        }
+    }
 }

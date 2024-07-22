@@ -34,75 +34,66 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
 @ExtensionImpl
 @IntentionMetaData(
-	ignoreId = "JSJoinConcatenatedStringLiteralsIntention",
-	categories = {"JavaScript", "Other"},
-	fileExtensions = "js"
+    ignoreId = "JSJoinConcatenatedStringLiteralsIntention",
+    categories = {"JavaScript", "Other"},
+    fileExtensions = "js"
 )
-public class JSJoinConcatenatedStringLiteralsIntention extends JSIntention
-{
-	@Override
-	@Nonnull
-	public String getText()
-	{
-		return JSIntentionLocalize.stringJoinConcatenatedStringLiterals().get();
-	}
+public class JSJoinConcatenatedStringLiteralsIntention extends JSIntention {
+    @Override
+    @Nonnull
+    public String getText() {
+        return JSIntentionLocalize.stringJoinConcatenatedStringLiterals().get();
+    }
 
-	@Override
-	@Nonnull
-	protected JSElementPredicate getElementPredicate()
-	{
-		return new StringConcatPredicate();
-	}
+    @Override
+    @Nonnull
+    protected JSElementPredicate getElementPredicate() {
+        return new StringConcatPredicate();
+    }
 
-	@Override
-	@RequiredReadAction
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
-	{
-		final JSBinaryExpression expression = (JSBinaryExpression) element;
-		final JSExpression lhs = expression.getLOperand();
-		final JSExpression rhs = expression.getROperand();
+    @Override
+    @RequiredReadAction
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        final JSBinaryExpression expression = (JSBinaryExpression)element;
+        final JSExpression lhs = expression.getLOperand();
+        final JSExpression rhs = expression.getROperand();
 
-		assert (lhs instanceof JSLiteralExpression && rhs instanceof JSLiteralExpression);
+        assert (lhs instanceof JSLiteralExpression && rhs instanceof JSLiteralExpression);
 
-		final JSLiteralExpression leftLiteral = (JSLiteralExpression) lhs;
-		final JSLiteralExpression rightLiteral = (JSLiteralExpression) rhs;
-		String lhsText = lhs.getText();
-		String rhsText = rhs.getText();
-		final String newExpression;
+        final JSLiteralExpression leftLiteral = (JSLiteralExpression)lhs;
+        final JSLiteralExpression rightLiteral = (JSLiteralExpression)rhs;
+        String lhsText = lhs.getText();
+        String rhsText = rhs.getText();
+        final String newExpression;
 
-		if (StringUtil.isSimpleQuoteStringLiteral(leftLiteral)
-			&& StringUtil.isDoubleQuoteStringLiteral(rightLiteral))
-		{
-			rhsText = JSDoubleToSingleQuotedStringIntention.changeQuotes(rhsText);
-		}
-		else if (StringUtil.isDoubleQuoteStringLiteral(leftLiteral)
-			&& StringUtil.isSimpleQuoteStringLiteral(rightLiteral))
-		{
-			rhsText = JSSingleToDoubleQuotedStringIntention.changeQuotes(rhsText);
-		}
+        if (StringUtil.isSimpleQuoteStringLiteral(leftLiteral)
+            && StringUtil.isDoubleQuoteStringLiteral(rightLiteral)) {
+            rhsText = JSDoubleToSingleQuotedStringIntention.changeQuotes(rhsText);
+        }
+        else if (StringUtil.isDoubleQuoteStringLiteral(leftLiteral)
+            && StringUtil.isSimpleQuoteStringLiteral(rightLiteral)) {
+            rhsText = JSSingleToDoubleQuotedStringIntention.changeQuotes(rhsText);
+        }
 
-		newExpression = lhsText.substring(0, lhsText.length() - 1) + rhsText.substring(1);
-		JSElementFactory.replaceExpression(expression, newExpression);
-	}
+        newExpression = lhsText.substring(0, lhsText.length() - 1) + rhsText.substring(1);
+        JSElementFactory.replaceExpression(expression, newExpression);
+    }
 
-	private static class StringConcatPredicate implements JSElementPredicate
-	{
-		@Override
-		@RequiredReadAction
-		public boolean satisfiedBy(@Nonnull PsiElement element)
-		{
-			return element instanceof JSBinaryExpression expression
-				&& JSTokenTypes.PLUS.equals(expression.getOperationSign())
-				&& isApplicableLiteral(expression.getLOperand())
-				&& isApplicableLiteral(expression.getROperand());
-		}
+    private static class StringConcatPredicate implements JSElementPredicate {
+        @Override
+        @RequiredReadAction
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            return element instanceof JSBinaryExpression expression
+                && JSTokenTypes.PLUS.equals(expression.getOperationSign())
+                && isApplicableLiteral(expression.getLOperand())
+                && isApplicableLiteral(expression.getROperand());
+        }
 
-		@RequiredReadAction
-		private static boolean isApplicableLiteral(JSExpression lhs)
-		{
-			return lhs != null
-				&& lhs instanceof JSSimpleLiteralExpression simpleLiteralExpression
-				&& JavaScriptTokenSets.STRING_LITERALS.contains(simpleLiteralExpression.getLiteralElementType());
-		}
-	}
+        @RequiredReadAction
+        private static boolean isApplicableLiteral(JSExpression lhs) {
+            return lhs != null
+                && lhs instanceof JSSimpleLiteralExpression simpleLiteralExpression
+                && JavaScriptTokenSets.STRING_LITERALS.contains(simpleLiteralExpression.getLiteralElementType());
+        }
+    }
 }

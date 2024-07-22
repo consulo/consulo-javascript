@@ -29,72 +29,60 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
 @ExtensionImpl
 @IntentionMetaData(
-	ignoreId = "JSDoubleToSingleQuotedStringIntention",
-	categories = {"JavaScript", "Other"},
-	fileExtensions = "js"
+    ignoreId = "JSDoubleToSingleQuotedStringIntention",
+    categories = {"JavaScript", "Other"},
+    fileExtensions = "js"
 )
-public class JSDoubleToSingleQuotedStringIntention extends JSIntention
-{
-	@Override
-	@Nonnull
-	public String getText()
-	{
-		return JSIntentionLocalize.stringDoubleQuotedToSingleQuoted().get();
-	}
+public class JSDoubleToSingleQuotedStringIntention extends JSIntention {
+    @Override
+    @Nonnull
+    public String getText() {
+        return JSIntentionLocalize.stringDoubleQuotedToSingleQuoted().get();
+    }
 
-	@Override
-	@Nonnull
-	protected JSElementPredicate getElementPredicate()
-	{
-		return new DoubleToSingleQuotedStringPredicate();
-	}
+    @Override
+    @Nonnull
+    protected JSElementPredicate getElementPredicate() {
+        return new DoubleToSingleQuotedStringPredicate();
+    }
 
-	@Override
-	@RequiredReadAction
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
-	{
-		final JSLiteralExpression stringLiteral = (JSLiteralExpression) element;
+    @Override
+    @RequiredReadAction
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        final JSLiteralExpression stringLiteral = (JSLiteralExpression)element;
 
-		JSElementFactory.replaceExpression(stringLiteral, changeQuotes(stringLiteral.getText()));
-	}
+        JSElementFactory.replaceExpression(stringLiteral, changeQuotes(stringLiteral.getText()));
+    }
 
-	static String changeQuotes(String stringLiteral)
-	{
-		StringBuilder buffer = new StringBuilder(stringLiteral);
-		int simpleIndex = stringLiteral.lastIndexOf(StringUtil.SIMPLE_QUOTE);
-		int doubleIndex = stringLiteral.lastIndexOf(StringUtil.DOUBLE_QUOTE, stringLiteral.length() - 2);
+    static String changeQuotes(String stringLiteral) {
+        StringBuilder buffer = new StringBuilder(stringLiteral);
+        int simpleIndex = stringLiteral.lastIndexOf(StringUtil.SIMPLE_QUOTE);
+        int doubleIndex = stringLiteral.lastIndexOf(StringUtil.DOUBLE_QUOTE, stringLiteral.length() - 2);
 
-		while (simpleIndex >= 0 || doubleIndex > 0)
-		{
-			if (simpleIndex > doubleIndex)
-			{
-				if (stringLiteral.charAt(simpleIndex - 1) != StringUtil.BACKSLASH)
-				{
-					buffer.insert(simpleIndex, StringUtil.BACKSLASH);
-				}
-				simpleIndex = stringLiteral.lastIndexOf(StringUtil.SIMPLE_QUOTE, simpleIndex - 1);
-			}
-			else
-			{
-				if (stringLiteral.charAt(doubleIndex - 1) == StringUtil.BACKSLASH)
-				{
-					buffer.deleteCharAt(doubleIndex - 1);
-				}
-				doubleIndex = stringLiteral.lastIndexOf(StringUtil.DOUBLE_QUOTE, doubleIndex - 2);
-			}
-		}
-		buffer.setCharAt(0, StringUtil.SIMPLE_QUOTE);
-		buffer.setCharAt(buffer.length() - 1, StringUtil.SIMPLE_QUOTE);
+        while (simpleIndex >= 0 || doubleIndex > 0) {
+            if (simpleIndex > doubleIndex) {
+                if (stringLiteral.charAt(simpleIndex - 1) != StringUtil.BACKSLASH) {
+                    buffer.insert(simpleIndex, StringUtil.BACKSLASH);
+                }
+                simpleIndex = stringLiteral.lastIndexOf(StringUtil.SIMPLE_QUOTE, simpleIndex - 1);
+            }
+            else {
+                if (stringLiteral.charAt(doubleIndex - 1) == StringUtil.BACKSLASH) {
+                    buffer.deleteCharAt(doubleIndex - 1);
+                }
+                doubleIndex = stringLiteral.lastIndexOf(StringUtil.DOUBLE_QUOTE, doubleIndex - 2);
+            }
+        }
+        buffer.setCharAt(0, StringUtil.SIMPLE_QUOTE);
+        buffer.setCharAt(buffer.length() - 1, StringUtil.SIMPLE_QUOTE);
 
-		return buffer.toString();
-	}
+        return buffer.toString();
+    }
 
-	private static class DoubleToSingleQuotedStringPredicate implements JSElementPredicate
-	{
-		@Override
-		public boolean satisfiedBy(@Nonnull PsiElement element)
-		{
-			return element instanceof JSLiteralExpression literalExpression && StringUtil.isDoubleQuoteStringLiteral(literalExpression);
-		}
-	}
+    private static class DoubleToSingleQuotedStringPredicate implements JSElementPredicate {
+        @Override
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            return element instanceof JSLiteralExpression literalExpression && StringUtil.isDoubleQuoteStringLiteral(literalExpression);
+        }
+    }
 }

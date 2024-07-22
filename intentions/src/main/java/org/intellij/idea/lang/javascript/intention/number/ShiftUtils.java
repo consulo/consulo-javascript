@@ -18,109 +18,85 @@ package org.intellij.idea.lang.javascript.intention.number;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
 
-class ShiftUtils
-{
-	private ShiftUtils()
-	{
-	}
+class ShiftUtils {
+    private ShiftUtils() {
+    }
 
-	public static boolean isPowerOfTwo(JSExpression expression)
-	{
-		if(!(expression instanceof JSLiteralExpression))
-		{
-			return false;
-		}
-		final String value = expression.getText();
-		long intValue;
+    public static boolean isPowerOfTwo(JSExpression expression) {
+        if (!(expression instanceof JSLiteralExpression)) {
+            return false;
+        }
+        final String value = expression.getText();
+        long intValue;
 
-		try
-		{
-			intValue = Integer.decode(value).longValue();
-		}
-		catch(NumberFormatException e)
-		{
-			return false;
-		}
+        try {
+            intValue = Integer.decode(value).longValue();
+        }
+        catch (NumberFormatException e) {
+            return false;
+        }
 
-		if(intValue <= 0)
-		{
-			return false;
-		}
-		while((intValue & 1) == 0)
-		{
-			intValue >>= 1;
-		}
-		return (intValue == 1);
-	}
+        if (intValue <= 0) {
+            return false;
+        }
+        while ((intValue & 1) == 0) {
+            intValue >>= 1;
+        }
+        return (intValue == 1);
+    }
 
-	public static int getLogBase2(JSExpression rhs)
-	{
-		final String value = rhs.getText();
-		long intValue;
+    public static int getLogBase2(JSExpression rhs) {
+        final String value = rhs.getText();
+        long intValue;
 
-		try
-		{
-			intValue = Integer.decode(value).longValue();
-		}
-		catch(NumberFormatException e)
-		{
-			assert (false);
-			return 0;
-		}
+        try {
+            intValue = Integer.decode(value).longValue();
+        }
+        catch (NumberFormatException e) {
+            assert (false);
+            return 0;
+        }
 
-		int log = 0;
-		while((intValue & 1) == 0)
-		{
-			intValue >>= 1;
-			log++;
-		}
-		return log;
-	}
+        int log = 0;
+        while ((intValue & 1) == 0) {
+            intValue >>= 1;
+            log++;
+        }
+        return log;
+    }
 
-	public static int getExpBase2(JSExpression rhs)
-	{
-		final String value = rhs.getText();
-		final long intValue;
+    public static int getExpBase2(JSExpression rhs) {
+        final String value = rhs.getText();
+        final long intValue;
 
-		try
-		{
-			intValue = Integer.decode(value).longValue();
-		}
-		catch(NumberFormatException e)
-		{
-			assert (false);
-			return 0;
-		}
+        try {
+            intValue = Integer.decode(value).longValue();
+        }
+        catch (NumberFormatException e) {
+            assert (false);
+            return 0;
+        }
 
-		int exp = 1;
-		for(int i = 0; i < intValue; i++)
-		{
-			exp <<= 1;
-		}
-		return exp;
-	}
+        int exp = 1;
+        for (int i = 0; i < intValue; i++) {
+            exp <<= 1;
+        }
+        return exp;
+    }
 
-	public static boolean isIntLiteral(JSExpression expression)
-	{
-		if(!(expression instanceof JSLiteralExpression))
-		{
-			return false;
-		}
+    public static boolean isIntLiteral(JSExpression expression) {
+        if (!(expression instanceof JSLiteralExpression)) {
+            return false;
+        }
 
-		if(!(expression instanceof JSLiteralExpression))
-		{
-			return false;
-		}
-		final String value = expression.getText();
+        final String value = expression.getText();
 
-		try
-		{
-			Integer.decode(value);
-			return true;
-		}
-		catch(NumberFormatException e)
-		{
-			return false;
-		}
-	}
+        try {
+            Integer.decode(value);
+            return true;
+        }
+        catch (NumberFormatException e) {
+            return false;
+        }
+    }
 }

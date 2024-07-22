@@ -33,73 +33,63 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
 @ExtensionImpl
 @IntentionMetaData(
-	ignoreId = "JSRemoveRedundantElseIntention",
-	categories = {"JavaScript", "Control Flow"},
-	fileExtensions = "js"
+    ignoreId = "JSRemoveRedundantElseIntention",
+    categories = {"JavaScript", "Control Flow"},
+    fileExtensions = "js"
 )
-public class JSRemoveRedundantElseIntention extends JSIntention
-{
-	@Override
-	@Nonnull
-	public String getText()
-	{
-		return JSIntentionLocalize.trivialifRemoveRedundantElse().get();
-	}
+public class JSRemoveRedundantElseIntention extends JSIntention {
+    @Override
+    @Nonnull
+    public String getText() {
+        return JSIntentionLocalize.trivialifRemoveRedundantElse().get();
+    }
 
-	@Override
-	@Nonnull
-	public JSElementPredicate getElementPredicate()
-	{
-		return new RemoveRedundantElsePredicate();
-	}
+    @Override
+    @Nonnull
+    public JSElementPredicate getElementPredicate() {
+        return new RemoveRedundantElsePredicate();
+    }
 
-	@Override
-	@RequiredReadAction
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException
-	{
-		final JSIfStatement ifStatement = (JSIfStatement) element;
-		final JSStatement thenBranch = ifStatement.getThen();
-		final JSStatement elseBranch = ifStatement.getElse();
+    @Override
+    @RequiredReadAction
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        final JSIfStatement ifStatement = (JSIfStatement)element;
+        final JSStatement thenBranch = ifStatement.getThen();
+        final JSStatement elseBranch = ifStatement.getElse();
 
-		assert (thenBranch != null);
-		assert (elseBranch != null);
+        assert (thenBranch != null);
+        assert (elseBranch != null);
 
-		final String newIfText = "if (" + ifStatement.getCondition().getText() + ')' + thenBranch.getText();
-		final String elseText = elseBranch.getText();
-		final String newStatement = elseBranch instanceof JSBlockStatement
-			? elseText.substring(elseText.indexOf('{') + 1, elseText.lastIndexOf('}') - 1).trim()
-			: elseText;
+        final String newIfText = "if (" + ifStatement.getCondition().getText() + ')' + thenBranch.getText();
+        final String elseText = elseBranch.getText();
+        final String newStatement = elseBranch instanceof JSBlockStatement
+            ? elseText.substring(elseText.indexOf('{') + 1, elseText.lastIndexOf('}') - 1).trim()
+            : elseText;
 
-		JSElementFactory.addStatementAfter(ifStatement, newStatement);
-		JSElementFactory.replaceStatement(ifStatement, newIfText);
-	}
+        JSElementFactory.addStatementAfter(ifStatement, newStatement);
+        JSElementFactory.replaceStatement(ifStatement, newIfText);
+    }
 
-	private static class RemoveRedundantElsePredicate implements JSElementPredicate
-	{
-		@Override
-		public boolean satisfiedBy(@Nonnull PsiElement element)
-		{
-			if (element instanceof JSIfStatement ifStatement && !ErrorUtil.containsError(ifStatement) && ifStatement.getElse() != null)
-			{
-				JSStatement thenBranch = ifStatement.getThen();
-				while (thenBranch instanceof JSBlockStatement thenBlockStatement)
-				{
-					JSStatement[] thenStatements = thenBlockStatement.getStatements();
+    private static class RemoveRedundantElsePredicate implements JSElementPredicate {
+        @Override
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            if (element instanceof JSIfStatement ifStatement && !ErrorUtil.containsError(ifStatement) && ifStatement.getElse() != null) {
+                JSStatement thenBranch = ifStatement.getThen();
+                while (thenBranch instanceof JSBlockStatement thenBlockStatement) {
+                    JSStatement[] thenStatements = thenBlockStatement.getStatements();
 
-					if (thenStatements.length == 0)
-					{
-						return true;
-					}
-					else if (thenStatements.length > 1)
-					{
-						return false;
-					}
-					thenBranch = thenStatements[0];
-				}
+                    if (thenStatements.length == 0) {
+                        return true;
+                    }
+                    else if (thenStatements.length > 1) {
+                        return false;
+                    }
+                    thenBranch = thenStatements[0];
+                }
 
-				return thenBranch instanceof JSReturnStatement;
-			}
-			return false;
-		}
-	}
+                return thenBranch instanceof JSReturnStatement;
+            }
+            return false;
+        }
+    }
 }
