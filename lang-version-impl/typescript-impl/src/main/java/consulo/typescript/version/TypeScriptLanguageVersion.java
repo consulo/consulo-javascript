@@ -12,29 +12,25 @@ import jakarta.annotation.Nonnull;
  * @since 20-Jul-22
  */
 @ExtensionImpl
-public class TypeScriptLanguageVersion extends BaseEcmaScriptJavaScriptVersion
-{
-	@Nonnull
-	public static TypeScriptLanguageVersion getInstance()
-	{
-		return JavaScriptLanguage.INSTANCE.findVersionByClass(TypeScriptLanguageVersion.class);
-	}
+public class TypeScriptLanguageVersion extends BaseEcmaScriptJavaScriptVersion {
+    @Nonnull
+    public static TypeScriptLanguageVersion getInstance() {
+        return JavaScriptLanguage.INSTANCE.findVersionByClass(TypeScriptLanguageVersion.class);
+    }
 
-	public TypeScriptLanguageVersion()
-	{
-		super("TYPESCRIPT", "application/typescript");
-		addFeature(JavaScriptFeature.CLASS);
-		addFeature(JavaScriptFeature.BINARY_LITERAL);
-		addFeature(JavaScriptFeature.OCTAL_LITERAL);
-		addFeature(JavaScriptFeature.PARAMETER_DEFAULT_VALUE);
-		addFeature(JavaScriptFeature.REST_PARAMETER);
-		addFeature(JavaScriptFeature.FUNCTION_PROPERTY);
-	}
+    public TypeScriptLanguageVersion() {
+        super("TYPESCRIPT", "application/typescript");
+        addFeature(JavaScriptFeature.CLASS);
+        addFeature(JavaScriptFeature.BINARY_LITERAL);
+        addFeature(JavaScriptFeature.OCTAL_LITERAL);
+        addFeature(JavaScriptFeature.PARAMETER_DEFAULT_VALUE);
+        addFeature(JavaScriptFeature.REST_PARAMETER);
+        addFeature(JavaScriptFeature.FUNCTION_PROPERTY);
+    }
 
-	@Nonnull
-	@Override
-	public String getPresentableName()
-	{
-		return "TypeScript";
-	}
+    @Nonnull
+    @Override
+    public String getPresentableName() {
+        return "TypeScript";
+    }
 }

@@ -36,90 +36,72 @@ import jakarta.annotation.Nonnull;
  * Time: 6:44:02 PM
  */
 @ExtensionImpl
-public class JavaScriptFindUsagesProvider implements FindUsagesProvider
-{
-	@Override
-	public boolean canFindUsagesFor(@Nonnull PsiElement psiElement)
-	{
-		return psiElement instanceof PsiNamedElement;
-	}
+public class JavaScriptFindUsagesProvider implements FindUsagesProvider {
+    @Override
+    public boolean canFindUsagesFor(@Nonnull PsiElement psiElement) {
+        return psiElement instanceof PsiNamedElement;
+    }
 
-	@Override
-	@Nonnull
-	public String getType(@Nonnull PsiElement element)
-	{
-		if (element instanceof JSFunction)
-		{
-			return JavaScriptLocalize.javascriptLanguageTermFunction().get();
-		}
-		if (element instanceof JSClass)
-		{
-			return JavaScriptLocalize.javascriptLanguageTermClass().get();
-		}
-		if (element instanceof JSNamespaceDeclaration)
-		{
-			return JavaScriptLocalize.javascriptLanguageTermNamespace().get();
-		}
-		if (element instanceof JSParameter)
-		{
-			return JavaScriptLocalize.javascriptLanguageTermParameter().get();
-		}
-		if (element instanceof JSProperty)
-		{
-			return JavaScriptLocalize.javascriptLanguageTermProperty().get();
-		}
-		if (element instanceof JSVariable)
-		{
-			return JavaScriptLocalize.javascriptLanguageTermVariable().get();
-		}
-		if (element instanceof JSLabeledStatement)
-		{
-			return JavaScriptLocalize.javascriptLanguageTermLabel().get();
-		}
-		if (element instanceof JSDefinitionExpression)
-		{
-			return JavaScriptLocalize.javascriptLanguageTermValue().get();
-		}
-		if (element instanceof XmlTag)
-		{
-			return JavaScriptLocalize.javascriptLanguageTermTag().get();
-		}
-		if (element instanceof XmlToken)
-		{
-			return JavaScriptLocalize.javascriptLanguageTermAttributeValue().get();
-		}
-		if (element instanceof JSPackageStatement)
-		{
-			return JavaScriptLocalize.javascriptLanguageTermPackage().get();
-		}
-		return "";
-	}
+    @Override
+    @Nonnull
+    public String getType(@Nonnull PsiElement element) {
+        if (element instanceof JSFunction) {
+            return JavaScriptLocalize.javascriptLanguageTermFunction().get();
+        }
+        if (element instanceof JSClass) {
+            return JavaScriptLocalize.javascriptLanguageTermClass().get();
+        }
+        if (element instanceof JSNamespaceDeclaration) {
+            return JavaScriptLocalize.javascriptLanguageTermNamespace().get();
+        }
+        if (element instanceof JSParameter) {
+            return JavaScriptLocalize.javascriptLanguageTermParameter().get();
+        }
+        if (element instanceof JSProperty) {
+            return JavaScriptLocalize.javascriptLanguageTermProperty().get();
+        }
+        if (element instanceof JSVariable) {
+            return JavaScriptLocalize.javascriptLanguageTermVariable().get();
+        }
+        if (element instanceof JSLabeledStatement) {
+            return JavaScriptLocalize.javascriptLanguageTermLabel().get();
+        }
+        if (element instanceof JSDefinitionExpression) {
+            return JavaScriptLocalize.javascriptLanguageTermValue().get();
+        }
+        if (element instanceof XmlTag) {
+            return JavaScriptLocalize.javascriptLanguageTermTag().get();
+        }
+        if (element instanceof XmlToken) {
+            return JavaScriptLocalize.javascriptLanguageTermAttributeValue().get();
+        }
+        if (element instanceof JSPackageStatement) {
+            return JavaScriptLocalize.javascriptLanguageTermPackage().get();
+        }
+        return "";
+    }
 
-	@Override
-	@Nonnull
-	public String getDescriptiveName(@Nonnull PsiElement element)
-	{
-		String name = ((PsiNamedElement) element).getName();
-		return name != null ? name : "";
-	}
+    @Override
+    @Nonnull
+    public String getDescriptiveName(@Nonnull PsiElement element) {
+        String name = ((PsiNamedElement)element).getName();
+        return name != null ? name : "";
+    }
 
-	@Override
-	@Nonnull
-	public String getNodeText(@Nonnull PsiElement element, boolean useFullName)
-	{
-		return getDescriptiveName(element);
-	}
+    @Override
+    @Nonnull
+    public String getNodeText(@Nonnull PsiElement element, boolean useFullName) {
+        return getDescriptiveName(element);
+    }
 
-	@Override
-	public WordsScanner getWordsScanner()
-	{
-		return new JSWordsScanner();
-	}
+    @Override
+    public WordsScanner getWordsScanner() {
+        return new JSWordsScanner();
+    }
 
-	@Nonnull
-	@Override
-	public Language getLanguage()
-	{
-		return JavaScriptLanguage.INSTANCE;
-	}
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return JavaScriptLanguage.INSTANCE;
+    }
 }

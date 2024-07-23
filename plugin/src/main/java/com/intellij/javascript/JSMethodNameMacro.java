@@ -32,59 +32,48 @@ import consulo.language.psi.util.PsiTreeUtil;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-public class JSMethodNameMacro extends Macro
-{
-	@Override
-	public String getName()
-	{
-		return "jsMethodName";
-	}
+public class JSMethodNameMacro extends Macro {
+    @Override
+    public String getName() {
+        return "jsMethodName";
+    }
 
-	@Override
-	public String getPresentableName()
-	{
-		return JavaScriptLocalize.jsMethodnameMacroDescription().get();
-	}
+    @Override
+    public String getPresentableName() {
+        return JavaScriptLocalize.jsMethodnameMacroDescription().get();
+    }
 
-	@Override
-	public String getDefaultValue()
-	{
-		return "";
-	}
+    @Override
+    public String getDefaultValue() {
+        return "";
+    }
 
-	@Override
-	public Result calculateResult(@Nonnull Expression[] params, ExpressionContext context)
-	{
-		final PsiElement elementAtCaret = JSClassNameMacro.findElementAtCaret(context);
-		if(elementAtCaret != null)
-		{
-			JSFunction function = PsiTreeUtil.getParentOfType(elementAtCaret, JSFunction.class);
-			if(function instanceof JSFunctionExpression)
-			{
-				function = ((JSFunctionExpression) function).getFunction();
-			}
+    @Override
+    public Result calculateResult(@Nonnull Expression[] params, ExpressionContext context) {
+        final PsiElement elementAtCaret = JSClassNameMacro.findElementAtCaret(context);
+        if (elementAtCaret != null) {
+            JSFunction function = PsiTreeUtil.getParentOfType(elementAtCaret, JSFunction.class);
+            if (function instanceof JSFunctionExpression functionExpression) {
+                function = functionExpression.getFunction();
+            }
 
-			if(function != null)
-			{
-				final String name = function.getName();
-				if(name != null)
-				{
-					return new TextResult(name);
-				}
-			}
-		}
-		return null;
-	}
+            if (function != null) {
+                final String name = function.getName();
+                if (name != null) {
+                    return new TextResult(name);
+                }
+            }
+        }
+        return null;
+    }
 
-	@Override
-	public Result calculateQuickResult(@Nonnull Expression[] params, ExpressionContext context)
-	{
-		return null;
-	}
+    @Override
+    public Result calculateQuickResult(@Nonnull Expression[] params, ExpressionContext context) {
+        return null;
+    }
 
-	@Override
-	public LookupElement[] calculateLookupItems(@Nonnull Expression[] params, ExpressionContext context)
-	{
-		return null;
-	}
+    @Override
+    public LookupElement[] calculateLookupItems(@Nonnull Expression[] params, ExpressionContext context) {
+        return null;
+    }
 }

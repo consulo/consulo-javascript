@@ -41,301 +41,253 @@ import java.util.*;
  * @author Maxim.Mossienko
  */
 @ExtensionImpl
-public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabActionSupport<JSArgumentList, JSFunction, JSExpression>
-{
-	private static final Set<Class<?>> ourArgumentListAllowedParentClassesSet = Set.of(JSCallExpression.class);
+public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabActionSupport<JSArgumentList, JSFunction, JSExpression> {
+    private static final Set<Class<?>> ourArgumentListAllowedParentClassesSet = Set.of(JSCallExpression.class);
 
-	@Override
-	public boolean couldShowInLookup()
-	{
-		return true;
-	}
+    @Override
+    public boolean couldShowInLookup() {
+        return true;
+    }
 
-	@Override
-	public Object[] getParametersForLookup(final LookupElement item, final ParameterInfoContext context)
-	{
-		if(!(item instanceof MutableLookupElement))
-		{
-			return null;
-		}
+    @Override
+    public Object[] getParametersForLookup(final LookupElement item, final ParameterInfoContext context) {
+        if (!(item instanceof MutableLookupElement)) {
+            return null;
+        }
 
-		PsiElement element = item.getPsiElement();
-		if(element instanceof JSFunction)
-		{
-			final JSFunction originalFunction = (JSFunction) element;
-			final List<JSFunction> lookupItems = new ArrayList<JSFunction>();
-			Set<String> availableSignatures = new HashSet<String>();
+        PsiElement element = item.getPsiElement();
+        if (element instanceof JSFunction) {
+            final JSFunction originalFunction = (JSFunction)element;
+            final List<JSFunction> lookupItems = new ArrayList<>();
+            Set<String> availableSignatures = new HashSet<>();
 
-			for(PsiElement el : DefinitionsScopedSearch.search(originalFunction))
-			{
-				doAddSignature(lookupItems, availableSignatures, el);
-			}
+            for (PsiElement el : DefinitionsScopedSearch.search(originalFunction)) {
+                doAddSignature(lookupItems, availableSignatures, el);
+            }
 
-			if(lookupItems.size() == 0)
-			{
-				lookupItems.add(originalFunction);
-			}
+            if (lookupItems.size() == 0) {
+                lookupItems.add(originalFunction);
+            }
 
-			return lookupItems.toArray(new Object[lookupItems.size()]);
-		}
+            return lookupItems.toArray(new Object[lookupItems.size()]);
+        }
 
-		return ArrayUtil.EMPTY_OBJECT_ARRAY;
-	}
+        return ArrayUtil.EMPTY_OBJECT_ARRAY;
+    }
 
-	private static void doAddSignature(final List<JSFunction> lookupItems, final Set<String> availableSignatures, final PsiElement el)
-	{
-		if(el instanceof JSFunction)
-		{
-			final JSFunction function = (JSFunction) el;
-			final JSParameterList parameterList = function.getParameterList();
+    private static void doAddSignature(final List<JSFunction> lookupItems, final Set<String> availableSignatures, final PsiElement el) {
+        if (el instanceof JSFunction function) {
+            final JSParameterList parameterList = function.getParameterList();
 
-			if(parameterList != null)
-			{
-				final String typedSignature = buildSignature(parameterList.getParameters(), false, -1).text;
-				final String untypedSignature = buildSignature(parameterList.getParameters(), true, -1).text;
+            if (parameterList != null) {
+                final String typedSignature = buildSignature(parameterList.getParameters(), false, -1).text;
+                final String untypedSignature = buildSignature(parameterList.getParameters(), true, -1).text;
 
-				if(!availableSignatures.contains(typedSignature) && !availableSignatures.contains(untypedSignature))
-				{
-					lookupItems.add(function);
-					availableSignatures.add(typedSignature);
-					availableSignatures.add(untypedSignature);
-				}
-			}
-		}
-	}
+                if (!availableSignatures.contains(typedSignature) && !availableSignatures.contains(untypedSignature)) {
+                    lookupItems.add(function);
+                    availableSignatures.add(typedSignature);
+                    availableSignatures.add(untypedSignature);
+                }
+            }
+        }
+    }
 
-	@Override
-	public JSArgumentList findElementForParameterInfo(final CreateParameterInfoContext context)
-	{
-		JSArgumentList argList = findArgumentList(context.getFile(), context.getOffset());
+    @Override
+    public JSArgumentList findElementForParameterInfo(final CreateParameterInfoContext context) {
+        JSArgumentList argList = findArgumentList(context.getFile(), context.getOffset());
 
-		if(argList != null)
-		{
-			return fillSignaturesForArgumentList(context, argList);
-		}
-		return argList;
-	}
+        if (argList != null) {
+            return fillSignaturesForArgumentList(context, argList);
+        }
+        return argList;
+    }
 
-	@Nullable
-	public static JSArgumentList findArgumentList(final PsiFile file, final int offset)
-	{
-		JSArgumentList argList = ParameterInfoUtils.findParentOfType(file, offset, JSArgumentList.class);
-		if(argList == null)
-		{
-			final JSCallExpression callExpression = ParameterInfoUtils.findParentOfType(file, offset, JSCallExpression.class);
-			if(callExpression != null)
-			{
-				argList = callExpression.getArgumentList();
-			}
-		}
-		return argList;
-	}
+    @Nullable
+    public static JSArgumentList findArgumentList(final PsiFile file, final int offset) {
+        JSArgumentList argList = ParameterInfoUtils.findParentOfType(file, offset, JSArgumentList.class);
+        if (argList == null) {
+            final JSCallExpression callExpression = ParameterInfoUtils.findParentOfType(file, offset, JSCallExpression.class);
+            if (callExpression != null) {
+                argList = callExpression.getArgumentList();
+            }
+        }
+        return argList;
+    }
 
-	@Nullable
-	private static JSArgumentList fillSignaturesForArgumentList(final CreateParameterInfoContext context, final @Nonnull JSArgumentList argList)
-	{
-		final PsiElement psiElement = argList.getParent();
-		if(!(psiElement instanceof JSCallExpression))
-		{
-			return null;
-		}
+    @Nullable
+    private static JSArgumentList fillSignaturesForArgumentList(
+        final CreateParameterInfoContext context,
+        final @Nonnull JSArgumentList argList
+    ) {
+        final PsiElement psiElement = argList.getParent();
+        if (!(psiElement instanceof JSCallExpression)) {
+            return null;
+        }
 
-		final JSCallExpression parent = (JSCallExpression) psiElement;
-		final JSExpression methodExpression = parent.getMethodExpression();
+        final JSCallExpression parent = (JSCallExpression)psiElement;
+        final JSExpression methodExpression = parent.getMethodExpression();
 
-		if(methodExpression instanceof JSReferenceExpression)
-		{
-			final ResolveResult[] resolveResults = ((JSReferenceExpression) methodExpression).multiResolve(true);
+        if (methodExpression instanceof JSReferenceExpression referenceExpression) {
+            final ResolveResult[] resolveResults = referenceExpression.multiResolve(true);
 
-			if(resolveResults.length > 0)
-			{
-				List<JSFunction> items = new ArrayList<JSFunction>(resolveResults.length);
-				Set<String> availableSignatures = new HashSet<String>();
+            if (resolveResults.length > 0) {
+                List<JSFunction> items = new ArrayList<JSFunction>(resolveResults.length);
+                Set<String> availableSignatures = new HashSet<String>();
 
-				for(ResolveResult r : resolveResults)
-				{
-					PsiElement element = r.getElement();
-					if(element instanceof JSProperty)
-					{
-						element = ((JSProperty) element).getValue();
-					}
+                for (ResolveResult r : resolveResults) {
+                    PsiElement element = r.getElement();
+                    if (element instanceof JSProperty property) {
+                        element = property.getValue();
+                    }
 
-					doAddSignature(items, availableSignatures, element);
-				}
+                    doAddSignature(items, availableSignatures, element);
+                }
 
-				context.setItemsToShow(ArrayUtil.toObjectArray(items));
-				return argList;
-			}
-		}
-		else if(methodExpression instanceof JSSuperExpression)
-		{
-			final PsiElement clazz = methodExpression.getReference().resolve();
-			if(clazz instanceof JSFunction)
-			{
-				context.setItemsToShow(new Object[]{clazz});
-				return argList;
-			}
-		}
-		return null;
-	}
+                context.setItemsToShow(ArrayUtil.toObjectArray(items));
+                return argList;
+            }
+        }
+        else if (methodExpression instanceof JSSuperExpression) {
+            final PsiElement clazz = methodExpression.getReference().resolve();
+            if (clazz instanceof JSFunction) {
+                context.setItemsToShow(new Object[]{clazz});
+                return argList;
+            }
+        }
+        return null;
+    }
 
-	@Override
-	public void showParameterInfo(@Nonnull final JSArgumentList element, final CreateParameterInfoContext context)
-	{
-		context.showHint(element, element.getTextOffset(), this);
-	}
+    @Override
+    public void showParameterInfo(@Nonnull final JSArgumentList element, final CreateParameterInfoContext context) {
+        context.showHint(element, element.getTextOffset(), this);
+    }
 
-	@Override
-	public JSArgumentList findElementForUpdatingParameterInfo(final UpdateParameterInfoContext context)
-	{
-		return findArgumentList(context.getFile(), context.getOffset());
-	}
+    @Override
+    public JSArgumentList findElementForUpdatingParameterInfo(final UpdateParameterInfoContext context) {
+        return findArgumentList(context.getFile(), context.getOffset());
+    }
 
-	@Override
-	public void updateParameterInfo(@Nonnull final JSArgumentList o, final UpdateParameterInfoContext context)
-	{
-		if(context.getParameterOwner() != o)
-		{
-			context.removeHint();
-			return;
-		}
-		final int currentParameterIndex = ParameterInfoUtils.getCurrentParameterIndex(o.getNode(), context.getOffset(), JSTokenTypes.COMMA);
-		context.setCurrentParameter(currentParameterIndex);
-	}
+    @Override
+    public void updateParameterInfo(@Nonnull final JSArgumentList o, final UpdateParameterInfoContext context) {
+        if (context.getParameterOwner() != o) {
+            context.removeHint();
+            return;
+        }
+        final int currentParameterIndex = ParameterInfoUtils.getCurrentParameterIndex(o.getNode(), context.getOffset(), JSTokenTypes.COMMA);
+        context.setCurrentParameter(currentParameterIndex);
+    }
 
-	@Override
-	public void updateUI(final JSFunction p, final ParameterInfoUIContext context)
-	{
-		final JSParameterList parameterList = p.getParameterList();
-		final JSParameter[] params = parameterList != null ? parameterList.getParameters() : new JSParameter[0];
-		final int currentParameterIndex = context.getCurrentParameterIndex() >= 0 ? context.getCurrentParameterIndex() : params.length;
-		final JSParameter parameter = currentParameterIndex < params.length ? params[currentParameterIndex] : null;
+    @Override
+    public void updateUI(final JSFunction p, final ParameterInfoUIContext context) {
+        final JSParameterList parameterList = p.getParameterList();
+        final JSParameter[] params = parameterList != null ? parameterList.getParameters() : new JSParameter[0];
+        final int currentParameterIndex = context.getCurrentParameterIndex() >= 0 ? context.getCurrentParameterIndex() : params.length;
+        final JSParameter parameter = currentParameterIndex < params.length ? params[currentParameterIndex] : null;
 
-		final SignatureInfo signatureInfo = buildSignature(params, false, currentParameterIndex);
-		final String name = signatureInfo.text;
+        final SignatureInfo signatureInfo = buildSignature(params, false, currentParameterIndex);
+        final String name = signatureInfo.text;
 
-		final String currentParameterSignature = parameter != null ? getSignatureForParameter(parameter, false) : null;
-		int highlightStart = parameter != null ? signatureInfo.selectedParameterStart : 0;
-		int highlightEnd = parameter != null ? highlightStart + currentParameterSignature.length() : 0;
-		context.setupUIComponentPresentation(name, highlightStart, highlightEnd, false, false, false, context.getDefaultParameterColor());
-	}
+        final String currentParameterSignature = parameter != null ? getSignatureForParameter(parameter, false) : null;
+        int highlightStart = parameter != null ? signatureInfo.selectedParameterStart : 0;
+        int highlightEnd = parameter != null ? highlightStart + currentParameterSignature.length() : 0;
+        context.setupUIComponentPresentation(name, highlightStart, highlightEnd, false, false, false, context.getDefaultParameterColor());
+    }
 
-	private static class SignatureInfo
-	{
-		String text;
-		int selectedParameterStart = -1;
-	}
+    private static class SignatureInfo {
+        String text;
+        int selectedParameterStart = -1;
+    }
 
-	private static
-	@Nonnull
-	SignatureInfo buildSignature(final JSParameter[] params, final boolean skipType, int selectedParameterIndex)
-	{
-		SignatureInfo info = new SignatureInfo();
-		if(params.length > 0)
-		{
-			StringBuilder result = new StringBuilder();
-			for(int i = 0; i < params.length; ++i)
-			{
-				if(result.length() > 0)
-				{
-					result.append(", ");
-				}
-				if(selectedParameterIndex == i)
-				{
-					info.selectedParameterStart = result.length();
-				}
-				result.append(getSignatureForParameter(params[i], skipType));
-			}
+    private static
+    @Nonnull
+    SignatureInfo buildSignature(final JSParameter[] params, final boolean skipType, int selectedParameterIndex) {
+        SignatureInfo info = new SignatureInfo();
+        if (params.length > 0) {
+            StringBuilder result = new StringBuilder();
+            for (int i = 0; i < params.length; ++i) {
+                if (result.length() > 0) {
+                    result.append(", ");
+                }
+                if (selectedParameterIndex == i) {
+                    info.selectedParameterStart = result.length();
+                }
+                result.append(getSignatureForParameter(params[i], skipType));
+            }
 
-			info.text = result.toString();
-		}
-		else
-		{
-			info.text = CodeInsightLocalize.parameterInfoNoParameters().get();
-		}
-		return info;
-	}
+            info.text = result.toString();
+        }
+        else {
+            info.text = CodeInsightLocalize.parameterInfoNoParameters().get();
+        }
+        return info;
+    }
 
-	public static String getSignatureForParameter(final JSParameter p, boolean skipType)
-	{
-		final String s = skipType ? null : p.getTypeString();
+    public static String getSignatureForParameter(final JSParameter p, boolean skipType) {
+        final String s = skipType ? null : p.getTypeString();
 
-		if(s != null && s.length() > 0)
-		{
-			final boolean ecmal4 = p.getContainingFile().getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
-			String result;
+        if (s != null && s.length() > 0) {
+            final boolean ecmal4 = p.getContainingFile().getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
+            String result;
 
-			if(ecmal4)
-			{
-				if(p.isRest())
-				{
-					result = "...";
-				}
-				else
-				{
-					result = p.getName() + ":" + s;
-				}
-			}
-			else
-			{
-				result = "[" + s + "] " + p.getName();
-			}
-			final String initializerText = p.getInitializerText();
-			if(initializerText != null)
-			{
-				result += " = " + initializerText;
-			}
-			return result;
-		}
-		return p.getName();
-	}
+            if (ecmal4) {
+                if (p.isRest()) {
+                    result = "...";
+                }
+                else {
+                    result = p.getName() + ":" + s;
+                }
+            }
+            else {
+                result = "[" + s + "] " + p.getName();
+            }
+            final String initializerText = p.getInitializerText();
+            if (initializerText != null) {
+                result += " = " + initializerText;
+            }
+            return result;
+        }
+        return p.getName();
+    }
 
-	@Override
-	@Nonnull
-	public JSExpression[] getActualParameters(@Nonnull final JSArgumentList jsArgumentList)
-	{
-		return jsArgumentList.getArguments();
-	}
+    @Override
+    @Nonnull
+    public JSExpression[] getActualParameters(@Nonnull final JSArgumentList jsArgumentList) {
+        return jsArgumentList.getArguments();
+    }
 
-	@Override
-	@Nonnull
-	public IElementType getActualParameterDelimiterType()
-	{
-		return JSTokenTypes.COMMA;
-	}
+    @Override
+    @Nonnull
+    public IElementType getActualParameterDelimiterType() {
+        return JSTokenTypes.COMMA;
+    }
 
-	@Override
-	@Nonnull
-	public IElementType getActualParametersRBraceType()
-	{
-		return JSTokenTypes.RBRACE;
-	}
+    @Override
+    @Nonnull
+    public IElementType getActualParametersRBraceType() {
+        return JSTokenTypes.RBRACE;
+    }
 
-	@Override
-	@Nonnull
-	public Set<Class<?>> getArgumentListAllowedParentClasses()
-	{
-		return ourArgumentListAllowedParentClassesSet;
-	}
+    @Override
+    @Nonnull
+    public Set<Class<?>> getArgumentListAllowedParentClasses() {
+        return ourArgumentListAllowedParentClassesSet;
+    }
 
-	@Nonnull
-	@Override
-	public Set<? extends Class<?>> getArgListStopSearchClasses()
-	{
-		return Collections.emptySet();
-	}
+    @Nonnull
+    @Override
+    public Set<? extends Class<?>> getArgListStopSearchClasses() {
+        return Collections.emptySet();
+    }
 
-	@Override
-	@Nonnull
-	public Class<JSArgumentList> getArgumentListClass()
-	{
-		return JSArgumentList.class;
-	}
+    @Override
+    @Nonnull
+    public Class<JSArgumentList> getArgumentListClass() {
+        return JSArgumentList.class;
+    }
 
-	@Nonnull
-	@Override
-	public Language getLanguage()
-	{
-		return JavaScriptLanguage.INSTANCE;
-	}
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return JavaScriptLanguage.INSTANCE;
+    }
 }

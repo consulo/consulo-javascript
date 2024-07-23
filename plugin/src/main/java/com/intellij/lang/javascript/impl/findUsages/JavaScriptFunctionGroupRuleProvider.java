@@ -27,25 +27,20 @@ import jakarta.annotation.Nonnull;
  * @author Maxim.Mossienko
  */
 @ExtensionImpl
-public class JavaScriptFunctionGroupRuleProvider extends JavaScriptGroupRuleProviderBase<JSFunction>
-{
-	@Override
-	protected Class<? extends JSNamedElement> getUsageClass()
-	{
-		return JSFunction.class;
-	}
+public class JavaScriptFunctionGroupRuleProvider extends JavaScriptGroupRuleProviderBase<JSFunction> {
+    @Override
+    protected Class<? extends JSNamedElement> getUsageClass() {
+        return JSFunction.class;
+    }
 
-	@Override
-	protected UsageGroup createUsageGroup(final JSFunction jsFunction)
-	{
-		return new FunctionUsageGroup(jsFunction);
-	}
+    @Override
+    protected UsageGroup createUsageGroup(final JSFunction jsFunction) {
+        return new FunctionUsageGroup(jsFunction);
+    }
 
-	private static class FunctionUsageGroup extends JavaScriptGroupRuleProviderBase.PsiNamedElementUsageGroupBase<JSFunction>
-	{
-		public FunctionUsageGroup(@Nonnull JSFunction function)
-		{
-			super(function, AllIcons.Nodes.Function);
-		}
-	}
+    private static class FunctionUsageGroup extends JavaScriptGroupRuleProviderBase.PsiNamedElementUsageGroupBase<JSFunction> {
+        public FunctionUsageGroup(@Nonnull JSFunction function) {
+            super(function, AllIcons.Nodes.Function);
+        }
+    }
 }

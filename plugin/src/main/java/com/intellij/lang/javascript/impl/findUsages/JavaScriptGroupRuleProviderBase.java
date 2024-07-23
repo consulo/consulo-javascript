@@ -45,171 +45,141 @@ import jakarta.annotation.Nullable;
 /**
  * @author Maxim.Mossienko
  */
-abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> implements FileStructureGroupRuleProvider
-{
-	@Override
-	@Nullable
-	public UsageGroupingRule getUsageGroupingRule(final Project project)
-	{
-		return new UsageGroupingRule()
-		{
-			@Override
-			@Nullable
-			public UsageGroup groupUsage(final Usage usage)
-			{
-				if(usage instanceof PsiElementUsage)
-				{
-					PsiElement psiElement = ((PsiElementUsage) usage).getElement();
+abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> implements FileStructureGroupRuleProvider {
+    @Override
+    @Nullable
+    public UsageGroupingRule getUsageGroupingRule(final Project project) {
+        return new UsageGroupingRule() {
+            @Override
+            @Nullable
+            public UsageGroup groupUsage(final Usage usage) {
+                if (usage instanceof PsiElementUsage) {
+                    PsiElement psiElement = ((PsiElementUsage)usage).getElement();
 
-					if(!psiElement.getLanguage().isKindOf(JavaScriptLanguage.INSTANCE))
-					{
-						return null;
-					}
-					final JSNamedElement element = PsiTreeUtil.getParentOfType(psiElement, getUsageClass());
+                    if (!psiElement.getLanguage().isKindOf(JavaScriptLanguage.INSTANCE)) {
+                        return null;
+                    }
+                    final JSNamedElement element = PsiTreeUtil.getParentOfType(psiElement, getUsageClass());
 
-					if(isAcceptableElement(element))
-					{
-						return createUsageGroup((T) element);
-					}
-				}
-				return null;
-			}
-		};
-	}
+                    if (isAcceptableElement(element)) {
+                        return createUsageGroup((T)element);
+                    }
+                }
+                return null;
+            }
+        };
+    }
 
-	protected boolean isAcceptableElement(JSNamedElement element)
-	{
-		return element != null;
-	}
+    protected boolean isAcceptableElement(JSNamedElement element) {
+        return element != null;
+    }
 
-	protected abstract Class<? extends JSNamedElement> getUsageClass();
+    protected abstract Class<? extends JSNamedElement> getUsageClass();
 
-	protected abstract UsageGroup createUsageGroup(final T t);
+    protected abstract UsageGroup createUsageGroup(final T t);
 
-	/**
-	 * @author Maxim.Mossienko
-	 */
-	abstract static class PsiNamedElementUsageGroupBase<T extends PsiNamedElement & NavigationItem> implements UsageGroup, TypeSafeDataProvider
-	{
-		private SmartPsiElementPointer myElementPointer;
-		private String myName;
-		private Image myIcon;
+    /**
+     * @author Maxim.Mossienko
+     */
+    abstract static class PsiNamedElementUsageGroupBase<T extends PsiNamedElement & NavigationItem> implements UsageGroup, TypeSafeDataProvider {
+        private SmartPsiElementPointer myElementPointer;
+        private String myName;
+        private Image myIcon;
 
-		PsiNamedElementUsageGroupBase(@Nonnull T element, Image icon)
-		{
-			myIcon = icon;
+        PsiNamedElementUsageGroupBase(@Nonnull T element, Image icon) {
+            myIcon = icon;
 
-			myName = element.getName();
-			if(myName == null)
-			{
-				myName = "<anonymous>";
-			}
-			myElementPointer = SmartPointerManager.getInstance(element.getProject()).createLazyPointer(element);
-		}
+            myName = element.getName();
+            if (myName == null) {
+                myName = "<anonymous>";
+            }
+            myElementPointer = SmartPointerManager.getInstance(element.getProject()).createLazyPointer(element);
+        }
 
-		@Override
-		public Image getIcon()
-		{
-			return myIcon;
-		}
+        @Override
+        public Image getIcon() {
+            return myIcon;
+        }
 
-		public T getElement()
-		{
-			return (T) myElementPointer.getElement();
-		}
+        public T getElement() {
+            return (T)myElementPointer.getElement();
+        }
 
-		@Override
-		@Nonnull
-		public String getText(UsageView view)
-		{
-			return myName;
-		}
+        @Override
+        @Nonnull
+        public String getText(UsageView view) {
+            return myName;
+        }
 
-		@Override
-		public FileStatus getFileStatus()
-		{
-			return isValid() ? FileStatusManager.getInstance(getElement().getProject()).getStatus(getElement().getContainingFile().getVirtualFile()) : null;
-		}
+        @Override
+        public FileStatus getFileStatus() {
+            return isValid() ? FileStatusManager.getInstance(getElement().getProject())
+                .getStatus(getElement().getContainingFile().getVirtualFile()) : null;
+        }
 
-		@Override
-		public boolean isValid()
-		{
-			final T element = getElement();
-			return element != null && element.isValid();
-		}
+        @Override
+        public boolean isValid() {
+            final T element = getElement();
+            return element != null && element.isValid();
+        }
 
-		@Override
-		public void navigate(boolean focus) throws UnsupportedOperationException
-		{
-			if(canNavigate())
-			{
-				getElement().navigate(focus);
-			}
-		}
+        @Override
+        public void navigate(boolean focus) throws UnsupportedOperationException {
+            if (canNavigate()) {
+                getElement().navigate(focus);
+            }
+        }
 
-		@Override
-		public boolean canNavigate()
-		{
-			return isValid();
-		}
+        @Override
+        public boolean canNavigate() {
+            return isValid();
+        }
 
-		@Override
-		public boolean canNavigateToSource()
-		{
-			return canNavigate();
-		}
+        @Override
+        public boolean canNavigateToSource() {
+            return canNavigate();
+        }
 
-		@Override
-		public void update()
-		{
-		}
+        @Override
+        public void update() {
+        }
 
-		@Override
-		public int compareTo(final UsageGroup o)
-		{
-			return myName.compareTo(((PsiNamedElementUsageGroupBase) o).myName);
-		}
+        @Override
+        public int compareTo(final UsageGroup o) {
+            return myName.compareTo(((PsiNamedElementUsageGroupBase)o).myName);
+        }
 
-		@Override
-		public boolean equals(final Object obj)
-		{
-			if(!(obj instanceof PsiNamedElementUsageGroupBase))
-			{
-				return false;
-			}
-			PsiNamedElementUsageGroupBase group = (PsiNamedElementUsageGroupBase) obj;
-			if(isValid() && group.isValid())
-			{
-				return getElement().getManager().areElementsEquivalent(getElement(), group.getElement());
-			}
-			return Comparing.equal(myName, ((PsiNamedElementUsageGroupBase) obj).myName);
-		}
+        @Override
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof PsiNamedElementUsageGroupBase)) {
+                return false;
+            }
+            PsiNamedElementUsageGroupBase group = (PsiNamedElementUsageGroupBase)obj;
+            if (isValid() && group.isValid()) {
+                return getElement().getManager().areElementsEquivalent(getElement(), group.getElement());
+            }
+            return Comparing.equal(myName, ((PsiNamedElementUsageGroupBase)obj).myName);
+        }
 
-		@Override
-		public int hashCode()
-		{
-			return myName.hashCode();
-		}
+        @Override
+        public int hashCode() {
+            return myName.hashCode();
+        }
 
-		@Override
-		public void calcData(final Key<?> key, final DataSink sink)
-		{
-			if(!isValid())
-			{
-				return;
-			}
-			if(LangDataKeys.PSI_ELEMENT == key)
-			{
-				sink.put(LangDataKeys.PSI_ELEMENT, getElement());
-			}
-			if(UsageView.USAGE_INFO_KEY == key)
-			{
-				T element = getElement();
-				if(element != null)
-				{
-					sink.put(UsageView.USAGE_INFO_KEY, new UsageInfo(element));
-				}
-			}
-		}
-	}
+        @Override
+        public void calcData(final Key<?> key, final DataSink sink) {
+            if (!isValid()) {
+                return;
+            }
+            if (LangDataKeys.PSI_ELEMENT == key) {
+                sink.put(LangDataKeys.PSI_ELEMENT, getElement());
+            }
+            if (UsageView.USAGE_INFO_KEY == key) {
+                T element = getElement();
+                if (element != null) {
+                    sink.put(UsageView.USAGE_INFO_KEY, new UsageInfo(element));
+                }
+            }
+        }
+    }
 }

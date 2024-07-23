@@ -35,61 +35,50 @@ import consulo.language.psi.PsiReference;
  * Time: 21:51:25
  */
 @ExtensionImpl
-public class JSReadWriteAccessDetector extends ReadWriteAccessDetector
-{
-	@Override
-	public boolean isReadWriteAccessible(PsiElement element)
-	{
-		return element instanceof JSVariable ||
-				((element instanceof JSFunction) && (((JSFunction) element).isGetProperty() || ((JSFunction) element).isSetProperty())) ||
-				element instanceof JSDefinitionExpression;
-	}
+public class JSReadWriteAccessDetector extends ReadWriteAccessDetector {
+    @Override
+    public boolean isReadWriteAccessible(PsiElement element) {
+        return element instanceof JSVariable
+            || (element instanceof JSFunction function && (function.isGetProperty() || function.isSetProperty()))
+            || element instanceof JSDefinitionExpression;
+    }
 
-	@Override
-	public boolean isDeclarationWriteAccess(PsiElement element)
-	{
-		return (element instanceof JSVariable && ((JSVariable) element).getInitializer() != null);
-	}
+    @Override
+    public boolean isDeclarationWriteAccess(PsiElement element) {
+        return (element instanceof JSVariable variable && variable.getInitializer() != null);
+    }
 
-	@Override
-	public Access getReferenceAccess(PsiElement referencedElement, PsiReference reference)
-	{
-		return getExpressionAccess(reference.getElement());
-	}
+    @Override
+    public Access getReferenceAccess(PsiElement referencedElement, PsiReference reference) {
+        return getExpressionAccess(reference.getElement());
+    }
 
-	@Override
-	public Access getExpressionAccess(PsiElement expression)
-	{
-		expression = expression.getParent();
-		if(expression instanceof JSDefinitionExpression)
-		{
-			PsiElement grandParent = expression.getParent();
-			if(grandParent instanceof JSAssignmentExpression && ((JSAssignmentExpression) grandParent).getOperationSign() == JSTokenTypes.EQ)
-			{
-				return Access.Write;
-			}
+    @Override
+    public Access getExpressionAccess(PsiElement expression) {
+        expression = expression.getParent();
+        if (expression instanceof JSDefinitionExpression) {
+            PsiElement grandParent = expression.getParent();
+            if (expression.getParent() instanceof JSAssignmentExpression assignmentExpression
+                && assignmentExpression.getOperationSign() == JSTokenTypes.EQ) {
+                return Access.Write;
+            }
 
-			return Access.ReadWrite;
-		}
-		if(expression instanceof JSPrefixExpression)
-		{
-			if(isIncrementOrDecrement(((JSPrefixExpression) expression).getOperationSign()))
-			{
-				return Access.ReadWrite;
-			}
-		}
-		else if(expression instanceof JSPostfixExpression)
-		{
-			if(isIncrementOrDecrement(((JSPostfixExpression) expression).getOperationSign()))
-			{
-				return Access.ReadWrite;
-			}
-		}
-		return Access.Read;
-	}
+            return Access.ReadWrite;
+        }
+        if (expression instanceof JSPrefixExpression prefixExpression) {
+            if (isIncrementOrDecrement(prefixExpression.getOperationSign())) {
+                return Access.ReadWrite;
+            }
+        }
+        else if (expression instanceof JSPostfixExpression postfixExpression) {
+            if (isIncrementOrDecrement(postfixExpression.getOperationSign())) {
+                return Access.ReadWrite;
+            }
+        }
+        return Access.Read;
+    }
 
-	private static boolean isIncrementOrDecrement(IElementType sign)
-	{
-		return sign == JSTokenTypes.PLUSPLUS || sign == JSTokenTypes.MINUSMINUS;
-	}
+    private static boolean isIncrementOrDecrement(IElementType sign) {
+        return sign == JSTokenTypes.PLUSPLUS || sign == JSTokenTypes.MINUSMINUS;
+    }
 }
