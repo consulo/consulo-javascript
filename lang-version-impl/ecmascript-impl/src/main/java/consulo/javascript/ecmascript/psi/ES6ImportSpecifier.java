@@ -9,6 +9,5 @@ import consulo.language.psi.PsiNameIdentifierOwner;
  *
  * import {import as importSpecifier} ...
  */
-public interface ES6ImportSpecifier extends JSElement, PsiNameIdentifierOwner
-{
+public interface ES6ImportSpecifier extends JSElement, PsiNameIdentifierOwner {
 }

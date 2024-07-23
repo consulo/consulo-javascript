@@ -11,11 +11,9 @@ import jakarta.annotation.Nonnull;
  * @since 05.03.2015
  */
 @ExtensionImpl
-public class EcmaScriptFileTypeFactory extends FileTypeFactory
-{
-	@Override
-	public void createFileTypes(@Nonnull FileTypeConsumer consumer)
-	{
-		consumer.consume(EcmaScriptFileType.INSTANCE, "es;js2");
-	}
+public class EcmaScriptFileTypeFactory extends FileTypeFactory {
+    @Override
+    public void createFileTypes(@Nonnull FileTypeConsumer consumer) {
+        consumer.consume(EcmaScriptFileType.INSTANCE, "es;js2");
+    }
 }

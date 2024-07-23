@@ -20,66 +20,61 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 2019-12-14
  */
-public class ES6ImportedBindingImpl extends JSElementImpl implements ES6ImportedBinding
-{
-	public ES6ImportedBindingImpl(ASTNode node)
-	{
-		super(node);
-	}
+public class ES6ImportedBindingImpl extends JSElementImpl implements ES6ImportedBinding {
+    public ES6ImportedBindingImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSElement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSElement(this);
+    }
 
-	@RequiredReadAction
-	@Override
-	public String getName()
-	{
-		PsiElement nameIdentifier = getNameIdentifier();
-		return nameIdentifier == null ? null : nameIdentifier.getText();
-	}
+    @RequiredReadAction
+    @Override
+    public String getName() {
+        PsiElement nameIdentifier = getNameIdentifier();
+        return nameIdentifier == null ? null : nameIdentifier.getText();
+    }
 
-	@RequiredReadAction
-	@Nullable
-	@Override
-	public PsiElement getNameIdentifier()
-	{
-		ES6ImportSpecifier importSpecifier = getImportSpecifier();
-		if(importSpecifier != null)
-		{
-			return importSpecifier.getNameIdentifier();
-		}
-		return findChildByType(JSTokenTypes.IDENTIFIER);
-	}
+    @RequiredReadAction
+    @Nullable
+    @Override
+    public PsiElement getNameIdentifier() {
+        ES6ImportSpecifier importSpecifier = getImportSpecifier();
+        if (importSpecifier != null) {
+            return importSpecifier.getNameIdentifier();
+        }
+        return findChildByType(JSTokenTypes.IDENTIFIER);
+    }
 
-	@RequiredReadAction
-	@Override
-	public int getTextOffset()
-	{
-		PsiElement nameIdentifier = getNameIdentifier();
-		return nameIdentifier == null ? super.getTextOffset() : nameIdentifier.getTextOffset();
-	}
+    @RequiredReadAction
+    @Override
+    public int getTextOffset() {
+        PsiElement nameIdentifier = getNameIdentifier();
+        return nameIdentifier == null ? super.getTextOffset() : nameIdentifier.getTextOffset();
+    }
 
-	@RequiredWriteAction
-	@Override
-	public PsiElement setName(@Nonnull String s) throws IncorrectOperationException
-	{
-		return null;
-	}
+    @RequiredWriteAction
+    @Override
+    public PsiElement setName(@Nonnull String s) throws IncorrectOperationException {
+        return null;
+    }
 
-	@Override
-	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent, @Nonnull PsiElement place)
-	{
-		return processor.execute(this, state);
-	}
+    @Override
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        return processor.execute(this, state);
+    }
 
-	@RequiredReadAction
-	@Nullable
-	@Override
-	public ES6ImportSpecifier getImportSpecifier()
-	{
-		return findChildByClass(ES6ImportSpecifier.class);
-	}
+    @RequiredReadAction
+    @Nullable
+    @Override
+    public ES6ImportSpecifier getImportSpecifier() {
+        return findChildByClass(ES6ImportSpecifier.class);
+    }
 }

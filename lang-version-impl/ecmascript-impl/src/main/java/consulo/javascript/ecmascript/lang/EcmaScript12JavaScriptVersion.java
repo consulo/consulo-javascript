@@ -12,30 +12,25 @@ import jakarta.annotation.Nonnull;
  * @since 06/12/2021
  */
 @ExtensionImpl
-public class EcmaScript12JavaScriptVersion extends EcmaScript6JavaScriptVersion implements DefaultJavaScriptVersion
-{
-	@Nonnull
-	public static EcmaScript12JavaScriptVersion getInstance()
-	{
-		return JavaScriptLanguage.INSTANCE.findVersionByClass(EcmaScript12JavaScriptVersion.class);
-	}
+public class EcmaScript12JavaScriptVersion extends EcmaScript6JavaScriptVersion implements DefaultJavaScriptVersion {
+    @Nonnull
+    public static EcmaScript12JavaScriptVersion getInstance() {
+        return JavaScriptLanguage.INSTANCE.findVersionByClass(EcmaScript12JavaScriptVersion.class);
+    }
 
-	@Inject
-	public EcmaScript12JavaScriptVersion()
-	{
-		super("ECMASCRIPT_12");
-	}
+    @Inject
+    public EcmaScript12JavaScriptVersion() {
+        super("ECMASCRIPT_12");
+    }
 
-	@Nonnull
-	@Override
-	public String getPresentableName()
-	{
-		return "ECMAScript 12";
-	}
+    @Nonnull
+    @Override
+    public String getPresentableName() {
+        return "ECMAScript 12";
+    }
 
-	@Override
-	public int getWeight()
-	{
-		return 1200;
-	}
+    @Override
+    public int getWeight() {
+        return 1200;
+    }
 }

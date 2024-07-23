@@ -36,58 +36,49 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 23.12.13.
  */
-public class EcmaScriptFileType extends LanguageFileType implements JavaScriptFileTypeWithVersion
-{
-	public static final EcmaScriptFileType INSTANCE = new EcmaScriptFileType();
+public class EcmaScriptFileType extends LanguageFileType implements JavaScriptFileTypeWithVersion {
+    public static final EcmaScriptFileType INSTANCE = new EcmaScriptFileType();
 
-	private EcmaScriptFileType()
-	{
-		super(JavaScriptLanguage.INSTANCE);
-	}
+    private EcmaScriptFileType() {
+        super(JavaScriptLanguage.INSTANCE);
+    }
 
-	@Nonnull
-	@Override
-	public String getId()
-	{
-		return "ECMASCRIPT";
-	}
+    @Nonnull
+    @Override
+    public String getId() {
+        return "ECMASCRIPT";
+    }
 
-	@Nonnull
-	@Override
-	public LocalizeValue getDescription()
-	{
-		return LocalizeValue.localizeTODO("ECMAScript files");
-	}
+    @Nonnull
+    @Override
+    public LocalizeValue getDescription() {
+        return LocalizeValue.localizeTODO("ECMAScript files");
+    }
 
-	@Nonnull
-	@Override
-	public String getDefaultExtension()
-	{
-		return "es";
-	}
+    @Nonnull
+    @Override
+    public String getDefaultExtension() {
+        return "es";
+    }
 
-	@Nullable
-	@Override
-	public Image getIcon()
-	{
-		return JavaScriptIconGroup.ecmascript();
-	}
+    @Nullable
+    @Override
+    public Image getIcon() {
+        return JavaScriptIconGroup.ecmascript();
+    }
 
-	@RequiredReadAction
-	@Nonnull
-	@Override
-	public LanguageVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile)
-	{
-		if(module == null)
-		{
-			return EcmaScript12JavaScriptVersion.getInstance();
-		}
+    @RequiredReadAction
+    @Nonnull
+    @Override
+    public LanguageVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile) {
+        if (module == null) {
+            return EcmaScript12JavaScriptVersion.getInstance();
+        }
 
-		JavaScriptModuleExtension<?> extension = ModuleUtilCore.getExtension(module, JavaScriptModuleExtension.class);
-		if(extension != null)
-		{
-			return extension.getLanguageVersion();
-		}
-		return EcmaScript12JavaScriptVersion.getInstance();
-	}
+        JavaScriptModuleExtension<?> extension = ModuleUtilCore.getExtension(module, JavaScriptModuleExtension.class);
+        if (extension != null) {
+            return extension.getLanguageVersion();
+        }
+        return EcmaScript12JavaScriptVersion.getInstance();
+    }
 }

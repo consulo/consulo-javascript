@@ -14,29 +14,28 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 2019-12-14
  */
-public class ES6ImportDeclarationImpl extends JSStatementImpl implements ES6ImportDeclaration
-{
-	public ES6ImportDeclarationImpl(ASTNode node)
-	{
-		super(node);
-	}
+public class ES6ImportDeclarationImpl extends JSStatementImpl implements ES6ImportDeclaration {
+    public ES6ImportDeclarationImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSElement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSElement(this);
+    }
 
-	@Override
-	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent, @Nonnull PsiElement place)
-	{
-		for(PsiElement child : getChildren())
-		{
-			if(!child.processDeclarations(processor, state, lastParent, place))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
+    @Override
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        for (PsiElement child : getChildren()) {
+            if (!child.processDeclarations(processor, state, lastParent, place)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

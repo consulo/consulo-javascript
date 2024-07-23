@@ -17,31 +17,26 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 2020-08-26
  */
-public class ES6ImportSpecifierImpl extends JSElementImpl implements ES6ImportSpecifier
-{
-	public ES6ImportSpecifierImpl(ASTNode node)
-	{
-		super(node);
-	}
+public class ES6ImportSpecifierImpl extends JSElementImpl implements ES6ImportSpecifier {
+    public ES6ImportSpecifierImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSElement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSElement(this);
+    }
 
-	@RequiredReadAction
-	@Nullable
-	@Override
-	public PsiElement getNameIdentifier()
-	{
-		return findChildByType(JSTokenTypes.IDENTIFIER);
-	}
+    @RequiredReadAction
+    @Nullable
+    @Override
+    public PsiElement getNameIdentifier() {
+        return findChildByType(JSTokenTypes.IDENTIFIER);
+    }
 
-	@RequiredWriteAction
-	@Override
-	public PsiElement setName(@Nonnull String s) throws IncorrectOperationException
-	{
-		return null;
-	}
+    @RequiredWriteAction
+    @Override
+    public PsiElement setName(@Nonnull String s) throws IncorrectOperationException {
+        return null;
+    }
 }
