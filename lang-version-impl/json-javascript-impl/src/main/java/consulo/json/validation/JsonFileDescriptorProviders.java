@@ -29,35 +29,31 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 10.11.2015
  */
-public class JsonFileDescriptorProviders
-{
-	@Nullable
-	@RequiredReadAction
-	public static JsonObjectDescriptor getRootDescriptor(@Nullable final PsiFile file)
-	{
-		if(file == null || file.getFileType() != JsonFileType.INSTANCE)
-		{
-			return null;
-		}
-		return CachedValuesManager.getManager(file.getProject()).createCachedValue(new CachedValueProvider<JsonObjectDescriptor>()
-		{
-			@Nullable
-			@Override
-			@RequiredReadAction
-			public Result<JsonObjectDescriptor> compute()
-			{
-				for(JsonFileDescriptorProvider provider : JsonFileDescriptorProvider.EP_NAME.getExtensions())
-				{
-					if(provider.isMyFile(file))
-					{
-						JsonObjectDescriptor objectDescriptor = new JsonObjectDescriptor();
-						provider.fillRootObject(objectDescriptor, file);
+public class JsonFileDescriptorProviders {
+    @Nullable
+    @RequiredReadAction
+    public static JsonObjectDescriptor getRootDescriptor(@Nullable final PsiFile file) {
+        if (file == null || file.getFileType() != JsonFileType.INSTANCE) {
+            return null;
+        }
+        return CachedValuesManager.getManager(file.getProject()).createCachedValue(
+            new CachedValueProvider<JsonObjectDescriptor>() {
+                @Nullable
+                @Override
+                @RequiredReadAction
+                public Result<JsonObjectDescriptor> compute() {
+                    for (JsonFileDescriptorProvider provider : JsonFileDescriptorProvider.EP_NAME.getExtensions()) {
+                        if (provider.isMyFile(file)) {
+                            JsonObjectDescriptor objectDescriptor = new JsonObjectDescriptor();
+                            provider.fillRootObject(objectDescriptor, file);
 
-						return Result.create(objectDescriptor, file, PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT);
-					}
-				}
-				return null;
-			}
-		}, false).getValue();
-	}
+                            return Result.create(objectDescriptor, file, PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT);
+                        }
+                    }
+                    return null;
+                }
+            },
+            false
+        ).getValue();
+    }
 }

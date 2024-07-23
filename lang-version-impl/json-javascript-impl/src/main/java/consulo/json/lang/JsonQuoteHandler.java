@@ -12,12 +12,10 @@ import jakarta.annotation.Nonnull;
  * @since 29-Aug-22
  */
 @ExtensionImpl
-public class JsonQuoteHandler extends JavaScriptQuoteHandler
-{
-	@Nonnull
-	@Override
-	public FileType getFileType()
-	{
-		return JsonFileType.INSTANCE;
-	}
+public class JsonQuoteHandler extends JavaScriptQuoteHandler {
+    @Nonnull
+    @Override
+    public FileType getFileType() {
+        return JsonFileType.INSTANCE;
+    }
 }

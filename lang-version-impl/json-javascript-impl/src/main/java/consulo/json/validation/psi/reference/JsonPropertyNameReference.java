@@ -28,42 +28,35 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 02.12.2015
  */
-public class JsonPropertyNameReference extends JSPropertyNameReference
-{
-	private JsonPropertyDescriptor myPropertyDescriptor;
+public class JsonPropertyNameReference extends JSPropertyNameReference {
+    private JsonPropertyDescriptor myPropertyDescriptor;
 
-	public JsonPropertyNameReference(JSProperty property, PsiElement nameIdentifier, JsonPropertyDescriptor propertyDescriptor)
-	{
-		super(property, nameIdentifier);
-		myPropertyDescriptor = propertyDescriptor;
-	}
+    public JsonPropertyNameReference(JSProperty property, PsiElement nameIdentifier, JsonPropertyDescriptor propertyDescriptor) {
+        super(property, nameIdentifier);
+        myPropertyDescriptor = propertyDescriptor;
+    }
 
-	@Nullable
-	@Override
-	@RequiredReadAction
-	public PsiElement resolve()
-	{
-		PsiElement navigationElement = myPropertyDescriptor.getNavigationElement();
-		if(navigationElement != null)
-		{
-			return navigationElement;
-		}
-		return super.resolve();
-	}
+    @Nullable
+    @Override
+    @RequiredReadAction
+    public PsiElement resolve() {
+        PsiElement navigationElement = myPropertyDescriptor.getNavigationElement();
+        if (navigationElement != null) {
+            return navigationElement;
+        }
+        return super.resolve();
+    }
 
-	@RequiredReadAction
-	@Override
-	public boolean isReferenceTo(PsiElement element)
-	{
-		if(element instanceof JSProperty)
-		{
-			JsonPropertyDescriptor propertyDescriptor = PropertyValidationInspection.findPropertyDescriptor((JSProperty) element);
-			return myPropertyDescriptor == propertyDescriptor;
-		}
-		else if(element == myPropertyDescriptor.getNavigationElement())
-		{
-			return true;
-		}
-		return false;
-	}
+    @RequiredReadAction
+    @Override
+    public boolean isReferenceTo(PsiElement element) {
+        if (element instanceof JSProperty property) {
+            JsonPropertyDescriptor propertyDescriptor = PropertyValidationInspection.findPropertyDescriptor(property);
+            return myPropertyDescriptor == propertyDescriptor;
+        }
+        else if (element == myPropertyDescriptor.getNavigationElement()) {
+            return true;
+        }
+        return false;
+    }
 }

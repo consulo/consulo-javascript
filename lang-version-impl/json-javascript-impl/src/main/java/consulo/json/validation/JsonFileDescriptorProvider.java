@@ -30,13 +30,12 @@ import jakarta.annotation.Nonnull;
  * @since 10.11.2015
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public interface JsonFileDescriptorProvider
-{
-	ExtensionPointName<JsonFileDescriptorProvider> EP_NAME = ExtensionPointName.create(JsonFileDescriptorProvider.class);
+public interface JsonFileDescriptorProvider {
+    ExtensionPointName<JsonFileDescriptorProvider> EP_NAME = ExtensionPointName.create(JsonFileDescriptorProvider.class);
 
-	@RequiredReadAction
-	boolean isMyFile(@Nonnull PsiFile file);
+    @RequiredReadAction
+    boolean isMyFile(@Nonnull PsiFile file);
 
-	@RequiredReadAction
-	void fillRootObject(@Nonnull JsonObjectDescriptor root, @Nonnull PsiFile file);
+    @RequiredReadAction
+    void fillRootObject(@Nonnull JsonObjectDescriptor root, @Nonnull PsiFile file);
 }

@@ -34,48 +34,41 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 02.12.13.
  */
-public class JsonFileType extends LanguageFileType implements JavaScriptFileTypeWithVersion
-{
-	public static final JsonFileType INSTANCE = new JsonFileType();
+public class JsonFileType extends LanguageFileType implements JavaScriptFileTypeWithVersion {
+    public static final JsonFileType INSTANCE = new JsonFileType();
 
-	private JsonFileType()
-	{
-		super(JavaScriptLanguage.INSTANCE);
-	}
+    private JsonFileType() {
+        super(JavaScriptLanguage.INSTANCE);
+    }
 
-	@Nonnull
-	@Override
-	public String getId()
-	{
-		return "JSON";
-	}
+    @Nonnull
+    @Override
+    public String getId() {
+        return "JSON";
+    }
 
-	@Nonnull
-	@Override
-	public LocalizeValue getDescription()
-	{
-		return LocalizeValue.localizeTODO("Json files");
-	}
+    @Nonnull
+    @Override
+    public LocalizeValue getDescription() {
+        return LocalizeValue.localizeTODO("Json files");
+    }
 
-	@Nonnull
-	@Override
-	public String getDefaultExtension()
-	{
-		return "json";
-	}
+    @Nonnull
+    @Override
+    public String getDefaultExtension() {
+        return "json";
+    }
 
-	@Nullable
-	@Override
-	public Image getIcon()
-	{
-		return JavaScriptIconGroup.json();
-	}
+    @Nullable
+    @Override
+    public Image getIcon() {
+        return JavaScriptIconGroup.json();
+    }
 
-	@RequiredReadAction
-	@Nonnull
-	@Override
-	public JsonJavaScriptVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile)
-	{
-		return JsonJavaScriptVersion.getInstance();
-	}
+    @RequiredReadAction
+    @Nonnull
+    @Override
+    public JsonJavaScriptVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile) {
+        return JsonJavaScriptVersion.getInstance();
+    }
 }

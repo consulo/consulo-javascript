@@ -28,47 +28,39 @@ import consulo.json.validation.NativeArray;
  * @author VISTALL
  * @since 10.11.2015
  */
-public class JsonObjectDescriptor
-{
-	private Map<String, JsonPropertyDescriptor> myProperties = new HashMap<String, JsonPropertyDescriptor>();
+public class JsonObjectDescriptor {
+    private Map<String, JsonPropertyDescriptor> myProperties = new HashMap<>();
 
-	@Nonnull
-	public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @Nonnull final Class<?> value)
-	{
-		if(value == Object.class)
-		{
-			throw new IllegalArgumentException("We cant add object type, use JsonObjectDescriptor as parameter");
-		}
+    @Nonnull
+    public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @Nonnull final Class<?> value) {
+        if (value == Object.class) {
+            throw new IllegalArgumentException("We cant add object type, use JsonObjectDescriptor as parameter");
+        }
 
-		return myProperties.computeIfAbsent(propertyName, p -> new JsonPropertyDescriptor(p, value));
-	}
+        return myProperties.computeIfAbsent(propertyName, p -> new JsonPropertyDescriptor(p, value));
+    }
 
-	@Nonnull
-	public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @Nonnull final JsonObjectDescriptor value)
-	{
-		return myProperties.computeIfAbsent(propertyName, p -> new JsonPropertyDescriptor(p, value));
-	}
+    @Nonnull
+    public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @Nonnull final JsonObjectDescriptor value) {
+        return myProperties.computeIfAbsent(propertyName, p -> new JsonPropertyDescriptor(p, value));
+    }
 
-	@Nonnull
-	public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @Nonnull final NativeArray value)
-	{
-		return myProperties.computeIfAbsent(propertyName, p -> new JsonPropertyDescriptor(p, value));
-	}
+    @Nonnull
+    public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @Nonnull final NativeArray value) {
+        return myProperties.computeIfAbsent(propertyName, p -> new JsonPropertyDescriptor(p, value));
+    }
 
-	@Nullable
-	public JsonPropertyDescriptor getProperty(@Nonnull final String propertyName)
-	{
-		JsonPropertyDescriptor propertyDescriptor = myProperties.get(propertyName);
-		if(propertyDescriptor != null)
-		{
-			return propertyDescriptor;
-		}
+    @Nullable
+    public JsonPropertyDescriptor getProperty(@Nonnull final String propertyName) {
+        JsonPropertyDescriptor propertyDescriptor = myProperties.get(propertyName);
+        if (propertyDescriptor != null) {
+            return propertyDescriptor;
+        }
 
-		return myProperties.get(null);
-	}
+        return myProperties.get(null);
+    }
 
-	public Map<String, JsonPropertyDescriptor> getProperties()
-	{
-		return myProperties;
-	}
+    public Map<String, JsonPropertyDescriptor> getProperties() {
+        return myProperties;
+    }
 }
