@@ -28,66 +28,56 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 10.11.2015
  */
-public class JsonPropertyDescriptor
-{
-	private SmartPsiElementPointer<?> myNavigationElement;
+public class JsonPropertyDescriptor {
+    private SmartPsiElementPointer<?> myNavigationElement;
 
-	private String myName;
-	private Object myValue;
-	private boolean myDeprecated;
-	private boolean myNullable = true;
+    private String myName;
+    private Object myValue;
+    private boolean myDeprecated;
+    private boolean myNullable = true;
 
-	public JsonPropertyDescriptor(@Nullable String name, @Nonnull Object value)
-	{
-		myName = name;
-		myValue = value;
-	}
+    public JsonPropertyDescriptor(@Nullable String name, @Nonnull Object value) {
+        myName = name;
+        myValue = value;
+    }
 
-	public boolean isNullable()
-	{
-		return myNullable;
-	}
+    public boolean isNullable() {
+        return myNullable;
+    }
 
-	public boolean isDeprecated()
-	{
-		return myDeprecated;
-	}
+    public boolean isDeprecated() {
+        return myDeprecated;
+    }
 
-	@Nonnull
-	public JsonPropertyDescriptor deprecated()
-	{
-		myDeprecated = true;
-		return this;
-	}
+    @Nonnull
+    public JsonPropertyDescriptor deprecated() {
+        myDeprecated = true;
+        return this;
+    }
 
-	@Nonnull
-	public JsonPropertyDescriptor notNull()
-	{
-		myNullable = false;
-		return this;
-	}
+    @Nonnull
+    public JsonPropertyDescriptor notNull() {
+        myNullable = false;
+        return this;
+    }
 
-	@Nonnull
-	public Object getValue()
-	{
-		return myValue;
-	}
+    @Nonnull
+    public Object getValue() {
+        return myValue;
+    }
 
-	@Nullable
-	public String getName()
-	{
-		return myName;
-	}
+    @Nullable
+    public String getName() {
+        return myName;
+    }
 
-	@UsedInPlugin
-	public void setNavigationElement(@Nonnull PsiElement element)
-	{
-		myNavigationElement = SmartPointerManager.getInstance(element.getProject()).createSmartPsiElementPointer(element);
-	}
+    @UsedInPlugin
+    public void setNavigationElement(@Nonnull PsiElement element) {
+        myNavigationElement = SmartPointerManager.getInstance(element.getProject()).createSmartPsiElementPointer(element);
+    }
 
-	@Nullable
-	public PsiElement getNavigationElement()
-	{
-		return myNavigationElement == null ? null : myNavigationElement.getElement();
-	}
+    @Nullable
+    public PsiElement getNavigationElement() {
+        return myNavigationElement == null ? null : myNavigationElement.getElement();
+    }
 }

@@ -33,39 +33,33 @@ import jakarta.annotation.Nonnull;
  * @since 12.11.2015
  */
 @ExtensionImpl
-public class DescriptionByAnotherPsiElementJsonDescriptionProvider implements JsonFileDescriptorProvider
-{
-	@RequiredReadAction
-	@Override
-	public boolean isMyFile(@Nonnull PsiFile file)
-	{
-		VirtualFile virtualFile = PsiUtilCore.getVirtualFile(file);
-		if(virtualFile == null)
-		{
-			return false;
-		}
-		return DescriptionByAnotherPsiElementService.getInstance(file.getProject()).getRegisteredPsiElementId(virtualFile) != null;
-	}
+public class DescriptionByAnotherPsiElementJsonDescriptionProvider implements JsonFileDescriptorProvider {
+    @RequiredReadAction
+    @Override
+    public boolean isMyFile(@Nonnull PsiFile file) {
+        VirtualFile virtualFile = PsiUtilCore.getVirtualFile(file);
+        if (virtualFile == null) {
+            return false;
+        }
+        return DescriptionByAnotherPsiElementService.getInstance(file.getProject()).getRegisteredPsiElementId(virtualFile) != null;
+    }
 
-	@RequiredReadAction
-	@Override
-	public void fillRootObject(@Nonnull JsonObjectDescriptor root, @Nonnull PsiFile file)
-	{
-		VirtualFile virtualFile = PsiUtilCore.getVirtualFile(file);
-		if(virtualFile == null)
-		{
-			return;
-		}
+    @RequiredReadAction
+    @Override
+    public void fillRootObject(@Nonnull JsonObjectDescriptor root, @Nonnull PsiFile file) {
+        VirtualFile virtualFile = PsiUtilCore.getVirtualFile(file);
+        if (virtualFile == null) {
+            return;
+        }
 
-		Pair<DescriptionByAnotherPsiElementProvider<PsiElement>, PsiElement> pair = DescriptionByAnotherPsiElementService.getInstance(file.getProject())
-				.getRegisteredPsiElementInfo(virtualFile);
+        Pair<DescriptionByAnotherPsiElementProvider<PsiElement>, PsiElement> pair =
+            DescriptionByAnotherPsiElementService.getInstance(file.getProject()).getRegisteredPsiElementInfo(virtualFile);
 
-		PsiElement psiElement = pair.getSecond();
-		if(psiElement == null)
-		{
-			return;
-		}
+        PsiElement psiElement = pair.getSecond();
+        if (psiElement == null) {
+            return;
+        }
 
-		pair.getFirst().fillRootObject(psiElement, root);
-	}
+        pair.getFirst().fillRootObject(psiElement, root);
+    }
 }

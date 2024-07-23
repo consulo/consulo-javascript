@@ -19,10 +19,12 @@ package consulo.json.validation.descriptionByAnotherPsiElement;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.component.ComponentManager;
 import consulo.component.extension.ExtensionExtender;
+import consulo.component.extension.ExtensionPoint;
 import consulo.fileEditor.EditorNotificationProvider;
 import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Consumer;
 
 /**
@@ -31,27 +33,24 @@ import java.util.function.Consumer;
  */
 @ExtensionImpl
 @SuppressWarnings("unchecked")
-public class DescriptionByAnotherPsiElementRegistrar implements ExtensionExtender<EditorNotificationProvider>
-{
-	@Override
-	public void extend(@Nonnull ComponentManager componentManager, @Nonnull Consumer<EditorNotificationProvider> consumer)
-	{
-		for(final DescriptionByAnotherPsiElementProvider<?> provider : componentManager.getExtensionPoint(DescriptionByAnotherPsiElementProvider.class))
-		{
-			consumer.accept(new DescriptionByAnotherPsiElementEditorNotification((Project) componentManager, provider));
-		}
-	}
+public class DescriptionByAnotherPsiElementRegistrar implements ExtensionExtender<EditorNotificationProvider> {
+    @Override
+    public void extend(@Nonnull ComponentManager componentManager, @Nonnull Consumer<EditorNotificationProvider> consumer) {
+        ExtensionPoint<DescriptionByAnotherPsiElementProvider> extensionPoint =
+            componentManager.getExtensionPoint(DescriptionByAnotherPsiElementProvider.class);
+        for (final DescriptionByAnotherPsiElementProvider<?> provider : extensionPoint) {
+            consumer.accept(new DescriptionByAnotherPsiElementEditorNotification((Project)componentManager, provider));
+        }
+    }
 
-	@Nonnull
-	@Override
-	public Class<EditorNotificationProvider> getExtensionClass()
-	{
-		return EditorNotificationProvider.class;
-	}
+    @Nonnull
+    @Override
+    public Class<EditorNotificationProvider> getExtensionClass() {
+        return EditorNotificationProvider.class;
+    }
 
-	@Override
-	public boolean hasAnyExtensions(ComponentManager componentManager)
-	{
-		return componentManager.getExtensionPoint(DescriptionByAnotherPsiElementProvider.class).hasAnyExtensions();
-	}
+    @Override
+    public boolean hasAnyExtensions(ComponentManager componentManager) {
+        return componentManager.getExtensionPoint(DescriptionByAnotherPsiElementProvider.class).hasAnyExtensions();
+    }
 }

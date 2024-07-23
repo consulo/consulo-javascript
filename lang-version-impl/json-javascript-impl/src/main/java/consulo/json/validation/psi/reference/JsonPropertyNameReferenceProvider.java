@@ -32,21 +32,18 @@ import jakarta.annotation.Nullable;
  * @since 02.12.2015
  */
 @ExtensionImpl(order = "before default")
-public class JsonPropertyNameReferenceProvider implements JSPropertyNameReferenceProvider
-{
-	@RequiredReadAction
-	@Nullable
-	@Override
-	public PsiReference getReference(@Nonnull JSProperty property)
-	{
-		JsonPropertyDescriptor propertyDescriptor = PropertyValidationInspection.findPropertyDescriptor(property);
-		if(propertyDescriptor == null)
-		{
-			return null;
-		}
+public class JsonPropertyNameReferenceProvider implements JSPropertyNameReferenceProvider {
+    @RequiredReadAction
+    @Nullable
+    @Override
+    public PsiReference getReference(@Nonnull JSProperty property) {
+        JsonPropertyDescriptor propertyDescriptor = PropertyValidationInspection.findPropertyDescriptor(property);
+        if (propertyDescriptor == null) {
+            return null;
+        }
 
-		PsiElement nameIdentifier = property.getNameIdentifier();
-		assert nameIdentifier != null;
-		return new JsonPropertyNameReference(property, nameIdentifier, propertyDescriptor);
-	}
+        PsiElement nameIdentifier = property.getNameIdentifier();
+        assert nameIdentifier != null;
+        return new JsonPropertyNameReference(property, nameIdentifier, propertyDescriptor);
+    }
 }

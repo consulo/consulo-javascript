@@ -10,11 +10,9 @@ import jakarta.annotation.Nonnull;
  * @since 05.03.2015
  */
 @ExtensionImpl
-public class JsonFileTypeFactory extends FileTypeFactory
-{
-	@Override
-	public void createFileTypes(@Nonnull FileTypeConsumer consumer)
-	{
-		consumer.consume(JsonFileType.INSTANCE);
-	}
+public class JsonFileTypeFactory extends FileTypeFactory {
+    @Override
+    public void createFileTypes(@Nonnull FileTypeConsumer consumer) {
+        consumer.consume(JsonFileType.INSTANCE);
+    }
 }

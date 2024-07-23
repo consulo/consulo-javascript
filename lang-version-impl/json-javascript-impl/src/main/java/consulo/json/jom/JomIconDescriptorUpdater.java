@@ -29,19 +29,15 @@ import jakarta.annotation.Nonnull;
  * @since 10.11.2015
  */
 @ExtensionImpl
-public class JomIconDescriptorUpdater implements IconDescriptorUpdater
-{
-	@RequiredReadAction
-	@Override
-	public void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags)
-	{
-		if(element instanceof PsiFile)
-		{
-			JomFileElement<JomElement> fileElement = JomManager.getInstance(element.getProject()).getFileElement((PsiFile) element);
-			if(fileElement != null)
-			{
-				iconDescriptor.setMainIcon(fileElement.getFileDescriptor().getIcon());
-			}
-		}
-	}
+public class JomIconDescriptorUpdater implements IconDescriptorUpdater {
+    @RequiredReadAction
+    @Override
+    public void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags) {
+        if (element instanceof PsiFile file) {
+            JomFileElement<JomElement> fileElement = JomManager.getInstance(element.getProject()).getFileElement(file);
+            if (fileElement != null) {
+                iconDescriptor.setMainIcon(fileElement.getFileDescriptor().getIcon());
+            }
+        }
+    }
 }

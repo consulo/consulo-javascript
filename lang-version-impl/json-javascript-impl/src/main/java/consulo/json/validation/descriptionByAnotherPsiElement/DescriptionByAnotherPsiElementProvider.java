@@ -32,28 +32,27 @@ import jakarta.annotation.Nullable;
  * @since 12.11.2015
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public interface DescriptionByAnotherPsiElementProvider<T extends PsiElement>
-{
-	@Nonnull
-	String getId();
+public interface DescriptionByAnotherPsiElementProvider<T extends PsiElement> {
+    @Nonnull
+    String getId();
 
-	@Nonnull
-	String getPsiElementName();
+    @Nonnull
+    String getPsiElementName();
 
-	@Nonnull
-	@RequiredReadAction
-	String getIdFromPsiElement(@Nonnull T element);
+    @Nonnull
+    @RequiredReadAction
+    String getIdFromPsiElement(@Nonnull T element);
 
-	@Nullable
-	@RequiredReadAction
-	T getPsiElementById(@Nonnull String id, @Nonnull Project project);
+    @Nullable
+    @RequiredReadAction
+    T getPsiElementById(@Nonnull String id, @Nonnull Project project);
 
-	@RequiredUIAccess
-	@Nullable
-	T chooseElement(@Nonnull Project project);
+    @RequiredUIAccess
+    @Nullable
+    T chooseElement(@Nonnull Project project);
 
-	@RequiredReadAction
-	boolean isAvailable(@Nonnull Project project);
+    @RequiredReadAction
+    boolean isAvailable(@Nonnull Project project);
 
-	void fillRootObject(@Nonnull T psiElement, @Nonnull JsonObjectDescriptor root);
+    void fillRootObject(@Nonnull T psiElement, @Nonnull JsonObjectDescriptor root);
 }

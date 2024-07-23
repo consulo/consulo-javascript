@@ -43,6 +43,7 @@ import org.jdom.Element;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -55,265 +56,231 @@ import java.util.List;
 @State(name = "JSONDescriptionByAnotherPsiElementService", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
-public class DescriptionByAnotherPsiElementService implements PersistentStateComponent<Element>, Disposable
-{
-	private static class Info implements Disposable
-	{
-		private final VirtualFilePointer myVirtualFilePointer;
-		private SmartPsiElementPointer<? extends PsiElement> myElementPointer;
-		private final DescriptionByAnotherPsiElementProvider myProvider;
+public class DescriptionByAnotherPsiElementService implements PersistentStateComponent<Element>, Disposable {
+    private static class Info implements Disposable {
+        private final VirtualFilePointer myVirtualFilePointer;
+        private SmartPsiElementPointer<? extends PsiElement> myElementPointer;
+        private final DescriptionByAnotherPsiElementProvider myProvider;
 
-		private final String myId;
-		private String myPsiElementId;
-		private Project myProject;
+        private final String myId;
+        private String myPsiElementId;
+        private Project myProject;
 
-		public Info(@Nonnull Project project, @Nonnull VirtualFile virtualFile, @Nonnull PsiElement element, @Nonnull DescriptionByAnotherPsiElementProvider<?> provider)
-		{
-			myProject = project;
-			myId = provider.getId();
-			myProvider = provider;
-			myVirtualFilePointer = VirtualFilePointerManager.getInstance().create(virtualFile, this, null);
-			myElementPointer = SmartPointerManager.getInstance(element.getProject()).createSmartPsiElementPointer(element);
-		}
+        public Info(
+            @Nonnull Project project,
+            @Nonnull VirtualFile virtualFile,
+            @Nonnull PsiElement element,
+            @Nonnull DescriptionByAnotherPsiElementProvider<?> provider
+        ) {
+            myProject = project;
+            myId = provider.getId();
+            myProvider = provider;
+            myVirtualFilePointer = VirtualFilePointerManager.getInstance().create(virtualFile, this, null);
+            myElementPointer = SmartPointerManager.getInstance(element.getProject()).createSmartPsiElementPointer(element);
+        }
 
-		public Info(@Nonnull Project project, @Nonnull String url, @Nonnull final String providerId, @Nonnull String psiElementId)
-		{
-			myProject = project;
-			myVirtualFilePointer = VirtualFilePointerManager.getInstance().create(url, this, null);
+        public Info(@Nonnull Project project, @Nonnull String url, @Nonnull final String providerId, @Nonnull String psiElementId) {
+            myProject = project;
+            myVirtualFilePointer = VirtualFilePointerManager.getInstance().create(url, this, null);
 
-			myProvider = ContainerUtil.find(ApplicationManager.getApplication().getExtensionList(DescriptionByAnotherPsiElementProvider.class), it -> it.getId().equals(providerId));
+            myProvider = ContainerUtil.find(
+                ApplicationManager.getApplication().getExtensionList(DescriptionByAnotherPsiElementProvider.class),
+                it -> it.getId().equals(providerId)
+            );
 
-			myId = providerId;
-			myPsiElementId = psiElementId;
-		}
+            myId = providerId;
+            myPsiElementId = psiElementId;
+        }
 
-		public void tryToInit()
-		{
-			if(myProvider == null || myElementPointer != null)
-			{
-				return;
-			}
+        public void tryToInit() {
+            if (myProvider == null || myElementPointer != null) {
+                return;
+            }
 
-			ApplicationManager.getApplication().runReadAction(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					PsiElement psiElementById = myProvider.getPsiElementById(myPsiElementId, myProject);
-					if(psiElementById == null)
-					{
-						return;
-					}
-					myElementPointer = SmartPointerManager.getInstance(myProject).createSmartPsiElementPointer(psiElementById);
-				}
-			});
-		}
+            ApplicationManager.getApplication().runReadAction(new Runnable() {
+                @Override
+                public void run() {
+                    PsiElement psiElementById = myProvider.getPsiElementById(myPsiElementId, myProject);
+                    if (psiElementById == null) {
+                        return;
+                    }
+                    myElementPointer = SmartPointerManager.getInstance(myProject).createSmartPsiElementPointer(psiElementById);
+                }
+            });
+        }
 
-		@Nonnull
-		public String getId()
-		{
-			if(myId != null)
-			{
-				return myId;
-			}
-			return myProvider.getId();
-		}
+        @Nonnull
+        public String getId() {
+            if (myId != null) {
+                return myId;
+            }
+            return myProvider.getId();
+        }
 
-		@Nonnull
-		public String getUrl()
-		{
-			return myVirtualFilePointer.getUrl();
-		}
+        @Nonnull
+        public String getUrl() {
+            return myVirtualFilePointer.getUrl();
+        }
 
-		@Nullable
-		@SuppressWarnings("unchecked")
-		public String getPsiElementId()
-		{
-			if(myPsiElementId != null)
-			{
-				return myPsiElementId;
-			}
+        @Nullable
+        @SuppressWarnings("unchecked")
+        public String getPsiElementId() {
+            if (myPsiElementId != null) {
+                return myPsiElementId;
+            }
 
-			return ApplicationManager.getApplication().runReadAction(new Computable<String>()
-			{
-				@Override
-				public String compute()
-				{
-					PsiElement element = myElementPointer.getElement();
-					if(element == null)
-					{
-						return null;
-					}
-					return myProvider.getIdFromPsiElement(element);
-				}
-			});
-		}
+            return ApplicationManager.getApplication().runReadAction(new Computable<String>() {
+                @Override
+                public String compute() {
+                    PsiElement element = myElementPointer.getElement();
+                    if (element == null) {
+                        return null;
+                    }
+                    return myProvider.getIdFromPsiElement(element);
+                }
+            });
+        }
 
-		@Nullable
-		public PsiElement getPsiElement()
-		{
-			if(myElementPointer == null)
-			{
-				if(myProvider == null)
-				{
-					return null;
-				}
-				return ApplicationManager.getApplication().runReadAction(new Computable<PsiElement>()
-				{
-					@Override
-					public PsiElement compute()
-					{
-						PsiElement element = myElementPointer == null ? null : myElementPointer.getElement();
-						if(element == null)
-						{
-							return null;
-						}
-						return myProvider.getPsiElementById(myPsiElementId, myProject);
-					}
-				});
-			}
-			else
-			{
-				return myElementPointer.getElement();
-			}
-		}
+        @Nullable
+        public PsiElement getPsiElement() {
+            if (myElementPointer == null) {
+                if (myProvider == null) {
+                    return null;
+                }
+                return ApplicationManager.getApplication().runReadAction(new Computable<PsiElement>() {
+                    @Override
+                    public PsiElement compute() {
+                        PsiElement element = myElementPointer == null ? null : myElementPointer.getElement();
+                        if (element == null) {
+                            return null;
+                        }
+                        return myProvider.getPsiElementById(myPsiElementId, myProject);
+                    }
+                });
+            }
+            else {
+                return myElementPointer.getElement();
+            }
+        }
 
-		@Override
-		public void dispose()
-		{
-		}
-	}
+        @Override
+        public void dispose() {
+        }
+    }
 
-	@Nonnull
-	public static DescriptionByAnotherPsiElementService getInstance(@Nonnull Project project)
-	{
-		return ServiceManager.getService(project, DescriptionByAnotherPsiElementService.class);
-	}
+    @Nonnull
+    public static DescriptionByAnotherPsiElementService getInstance(@Nonnull Project project) {
+        return ServiceManager.getService(project, DescriptionByAnotherPsiElementService.class);
+    }
 
-	private final Project myProject;
-	private final List<Info> myRegisteredFiles = new ArrayList<Info>();
+    private final Project myProject;
+    private final List<Info> myRegisteredFiles = new ArrayList<>();
 
-	@Inject
-	public DescriptionByAnotherPsiElementService(Project project)
-	{
-		myProject = project;
-	}
+    @Inject
+    public DescriptionByAnotherPsiElementService(Project project) {
+        myProject = project;
+    }
 
-	public <T extends PsiElement> void registerFile(@Nonnull VirtualFile virtualFile, @Nonnull T element, @Nonnull DescriptionByAnotherPsiElementProvider<?> provider)
-	{
-		Info info = new Info(myProject, virtualFile, element, provider);
-		Disposer.register(this, info);
-		myRegisteredFiles.add(info);
-	}
+    public <T extends PsiElement> void registerFile(
+        @Nonnull VirtualFile virtualFile,
+        @Nonnull T element,
+        @Nonnull DescriptionByAnotherPsiElementProvider<?> provider
+    ) {
+        Info info = new Info(myProject, virtualFile, element, provider);
+        Disposer.register(this, info);
+        myRegisteredFiles.add(info);
+    }
 
 
-	public boolean removeFile(@Nonnull VirtualFile file)
-	{
-		Iterator<Info> iterator = myRegisteredFiles.iterator();
-		while(iterator.hasNext())
-		{
-			Info info = iterator.next();
-			if(file.equals(info.myVirtualFilePointer.getFile()))
-			{
-				iterator.remove();
-				Disposer.dispose(info);
-				return true;
-			}
-		}
-		return false;
-	}
+    public boolean removeFile(@Nonnull VirtualFile file) {
+        Iterator<Info> iterator = myRegisteredFiles.iterator();
+        while (iterator.hasNext()) {
+            Info info = iterator.next();
+            if (file.equals(info.myVirtualFilePointer.getFile())) {
+                iterator.remove();
+                Disposer.dispose(info);
+                return true;
+            }
+        }
+        return false;
+    }
 
-	@Nullable
-	public String getRegisteredPsiElementId(@Nonnull VirtualFile virtualFile)
-	{
-		for(Info registeredFile : myRegisteredFiles)
-		{
-			VirtualFile file = registeredFile.myVirtualFilePointer.getFile();
-			if(virtualFile.equals(file))
-			{
-				return registeredFile.getPsiElementId();
-			}
-		}
-		return null;
-	}
+    @Nullable
+    public String getRegisteredPsiElementId(@Nonnull VirtualFile virtualFile) {
+        for (Info registeredFile : myRegisteredFiles) {
+            VirtualFile file = registeredFile.myVirtualFilePointer.getFile();
+            if (virtualFile.equals(file)) {
+                return registeredFile.getPsiElementId();
+            }
+        }
+        return null;
+    }
 
-	@Nonnull
-	@SuppressWarnings("unchecked")
-	public <T extends PsiElement> Pair<DescriptionByAnotherPsiElementProvider<T>, T> getRegisteredPsiElementInfo(@Nonnull VirtualFile virtualFile)
-	{
-		for(Info info : myRegisteredFiles)
-		{
-			VirtualFile file = info.myVirtualFilePointer.getFile();
-			if(virtualFile.equals(file))
-			{
-				PsiElement psiElement = info.getPsiElement();
-				if(psiElement == null)
-				{
-					return Pair.empty();
-				}
-				return new Pair.NonNull(info.myProvider, psiElement);
-			}
-		}
-		return Pair.empty();
-	}
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    public <T extends PsiElement> Pair<DescriptionByAnotherPsiElementProvider<T>, T> getRegisteredPsiElementInfo(
+        @Nonnull VirtualFile virtualFile
+    ) {
+        for (Info info : myRegisteredFiles) {
+            VirtualFile file = info.myVirtualFilePointer.getFile();
+            if (virtualFile.equals(file)) {
+                PsiElement psiElement = info.getPsiElement();
+                if (psiElement == null) {
+                    return Pair.empty();
+                }
+                return new Pair.NonNull(info.myProvider, psiElement);
+            }
+        }
+        return Pair.empty();
+    }
 
-	@Nullable
-	@Override
-	public Element getState()
-	{
-		Element stateElement = new Element("state");
-		for(final Info registeredFile : myRegisteredFiles)
-		{
-			String psiElementId = registeredFile.getPsiElementId();
-			if(psiElementId == null)
-			{
-				continue;
-			}
+    @Nullable
+    @Override
+    public Element getState() {
+        Element stateElement = new Element("state");
+        for (final Info registeredFile : myRegisteredFiles) {
+            String psiElementId = registeredFile.getPsiElementId();
+            if (psiElementId == null) {
+                continue;
+            }
 
-			Element fileElement = new Element("file");
-			fileElement.setAttribute("id", registeredFile.getId());
-			fileElement.setAttribute("url", registeredFile.getUrl());
-			fileElement.setAttribute("psiElementId", psiElementId);
-			stateElement.addContent(fileElement);
-		}
-		return stateElement;
-	}
+            Element fileElement = new Element("file");
+            fileElement.setAttribute("id", registeredFile.getId());
+            fileElement.setAttribute("url", registeredFile.getUrl());
+            fileElement.setAttribute("psiElementId", psiElementId);
+            stateElement.addContent(fileElement);
+        }
+        return stateElement;
+    }
 
-	@Override
-	public void loadState(Element state)
-	{
-		if(!myRegisteredFiles.isEmpty())
-		{
-			for(Info registeredFile : myRegisteredFiles)
-			{
-				Disposer.dispose(registeredFile);
-			}
-			myRegisteredFiles.clear();
-		}
+    @Override
+    public void loadState(Element state) {
+        if (!myRegisteredFiles.isEmpty()) {
+            for (Info registeredFile : myRegisteredFiles) {
+                Disposer.dispose(registeredFile);
+            }
+            myRegisteredFiles.clear();
+        }
 
-		for(Element element : state.getChildren("file"))
-		{
-			String id = element.getAttributeValue("id");
-			String url = element.getAttributeValue("url");
-			String psiElementId = element.getAttributeValue("psiElementId");
+        for (Element element : state.getChildren("file")) {
+            String id = element.getAttributeValue("id");
+            String url = element.getAttributeValue("url");
+            String psiElementId = element.getAttributeValue("psiElementId");
 
-			final Info info = new Info(myProject, url, id, psiElementId);
-			ApplicationManager.getApplication().runReadAction(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					info.tryToInit();
-				}
-			});
-			Disposer.register(this, info);
-			myRegisteredFiles.add(info);
-		}
-	}
+            final Info info = new Info(myProject, url, id, psiElementId);
+            ApplicationManager.getApplication().runReadAction(new Runnable() {
+                @Override
+                public void run() {
+                    info.tryToInit();
+                }
+            });
+            Disposer.register(this, info);
+            myRegisteredFiles.add(info);
+        }
+    }
 
-	@Override
-	public void dispose()
-	{
-		myRegisteredFiles.clear();
-	}
+    @Override
+    public void dispose() {
+        myRegisteredFiles.clear();
+    }
 }

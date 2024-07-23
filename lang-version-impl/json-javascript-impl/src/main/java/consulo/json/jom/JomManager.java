@@ -44,72 +44,60 @@ import jakarta.annotation.Nullable;
 @Singleton
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
-public class JomManager
-{
-	@Nonnull
-	public static JomManager getInstance(@Nonnull Project project)
-	{
-		return ServiceManager.getService(project, JomManager.class);
-	}
+public class JomManager {
+    @Nonnull
+    public static JomManager getInstance(@Nonnull Project project) {
+        return ServiceManager.getService(project, JomManager.class);
+    }
 
-	private static final Key<CachedValue<JomFileElement<?>>> JOM_FILE_ELEMENT = Key.create("jom.file.lement");
+    private static final Key<CachedValue<JomFileElement<?>>> JOM_FILE_ELEMENT = Key.create("jom.file.lement");
 
-	private final Project myProject;
+    private final Project myProject;
 
-	@Inject
-	public JomManager(Project project)
-	{
-		myProject = project;
-	}
+    @Inject
+    public JomManager(Project project) {
+        myProject = project;
+    }
 
-	@Nullable
-	@RequiredReadAction
-	@SuppressWarnings("unchecked")
-	public <T extends JomElement> JomFileElement<T> getFileElement(@Nonnull final PsiFile psiFile)
-	{
-		FileType fileType = psiFile.getFileType();
-		if(fileType != JsonFileType.INSTANCE)
-		{
-			return null;
-		}
+    @Nullable
+    @RequiredReadAction
+    @SuppressWarnings("unchecked")
+    public <T extends JomElement> JomFileElement<T> getFileElement(@Nonnull final PsiFile psiFile) {
+        FileType fileType = psiFile.getFileType();
+        if (fileType != JsonFileType.INSTANCE) {
+            return null;
+        }
 
-		CachedValue<JomFileElement<?>> cachedValue = psiFile.getUserData(JOM_FILE_ELEMENT);
-		if(cachedValue == null)
-		{
-			cachedValue = CachedValuesManager.getManager(myProject).createCachedValue(new CachedValueProvider<JomFileElement<?>>()
-			{
-				@Nullable
-				@Override
-				public Result<JomFileElement<?>> compute()
-				{
-					JomFileElement<?> value = null;
-					JomFileDescriptor fileDescriptor = findFileDescriptor(psiFile);
-					if(fileDescriptor != null)
-					{
-						value = new JomFileElement((JSFile) psiFile, fileDescriptor);
-					}
-					return Result.<JomFileElement<?>>create(value, psiFile, PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT);
-				}
-			}, false);
+        CachedValue<JomFileElement<?>> cachedValue = psiFile.getUserData(JOM_FILE_ELEMENT);
+        if (cachedValue == null) {
+            cachedValue = CachedValuesManager.getManager(myProject).createCachedValue(new CachedValueProvider<JomFileElement<?>>() {
+                @Nullable
+                @Override
+                public Result<JomFileElement<?>> compute() {
+                    JomFileElement<?> value = null;
+                    JomFileDescriptor fileDescriptor = findFileDescriptor(psiFile);
+                    if (fileDescriptor != null) {
+                        value = new JomFileElement((JSFile)psiFile, fileDescriptor);
+                    }
+                    return Result.<JomFileElement<?>>create(value, psiFile, PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT);
+                }
+            }, false);
 
-			psiFile.putUserData(JOM_FILE_ELEMENT, cachedValue);
-		}
+            psiFile.putUserData(JOM_FILE_ELEMENT, cachedValue);
+        }
 
-		return (JomFileElement<T>) cachedValue.getValue();
-	}
+        return (JomFileElement<T>)cachedValue.getValue();
+    }
 
-	@Nullable
-	private static JomFileDescriptor findFileDescriptor(@Nonnull PsiFile psiFile)
-	{
-		JomFileDescriptor jomFileDescriptor = null;
-		for(JomFileDescriptor temp : JomFileDescriptor.EP_NAME.getExtensions())
-		{
-			if(temp.isMyFile(psiFile))
-			{
-				jomFileDescriptor = temp;
-				break;
-			}
-		}
-		return jomFileDescriptor;
-	}
+    @Nullable
+    private static JomFileDescriptor findFileDescriptor(@Nonnull PsiFile psiFile) {
+        JomFileDescriptor jomFileDescriptor = null;
+        for (JomFileDescriptor temp : JomFileDescriptor.EP_NAME.getExtensions()) {
+            if (temp.isMyFile(psiFile)) {
+                jomFileDescriptor = temp;
+                break;
+            }
+        }
+        return jomFileDescriptor;
+    }
 }

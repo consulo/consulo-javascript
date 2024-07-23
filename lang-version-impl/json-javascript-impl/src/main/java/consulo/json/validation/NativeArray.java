@@ -22,18 +22,15 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 25.11.2015
  */
-public class NativeArray
-{
-	private final Object myComponentType;
+public class NativeArray {
+    private final Object myComponentType;
 
-	public NativeArray(@Nonnull Object componentType)
-	{
-		myComponentType = componentType;
-	}
+    public NativeArray(@Nonnull Object componentType) {
+        myComponentType = componentType;
+    }
 
-	@Nonnull
-	public Object getComponentType()
-	{
-		return myComponentType;
-	}
+    @Nonnull
+    public Object getComponentType() {
+        return myComponentType;
+    }
 }

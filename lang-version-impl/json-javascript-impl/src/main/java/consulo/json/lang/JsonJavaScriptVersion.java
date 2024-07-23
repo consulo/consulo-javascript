@@ -21,45 +21,39 @@ import java.util.function.Supplier;
  * @since 05.03.2015
  */
 @ExtensionImpl
-public class JsonJavaScriptVersion extends BaseJavaScriptLanguageVersion
-{
-	private static final Supplier<Lexer> ourLexerFactory = JsonLexer::new;
+public class JsonJavaScriptVersion extends BaseJavaScriptLanguageVersion {
+    private static final Supplier<Lexer> ourLexerFactory = JsonLexer::new;
 
-	@Nonnull
-	public static JsonJavaScriptVersion getInstance()
-	{
-		return JavaScriptLanguage.INSTANCE.findVersionByClass(JsonJavaScriptVersion.class);
-	}
+    @Nonnull
+    public static JsonJavaScriptVersion getInstance() {
+        return JavaScriptLanguage.INSTANCE.findVersionByClass(JsonJavaScriptVersion.class);
+    }
 
-	public JsonJavaScriptVersion()
-	{
-		super("JSON", "application/json");
-	}
+    public JsonJavaScriptVersion() {
+        super("JSON", "application/json");
+    }
 
-	@Nullable
-	@Override
-	public FileType getAssociatedFileType()
-	{
-		return JsonFileType.INSTANCE;
-	}
+    @Nullable
+    @Override
+    public FileType getAssociatedFileType() {
+        return JsonFileType.INSTANCE;
+    }
 
-	@Nonnull
-	@Override
-	public SyntaxHighlighter getSyntaxHighlighter()
-	{
-		return new JavaScriptHighlighter(ourLexerFactory);
-	}
+    @Nonnull
+    @Override
+    public SyntaxHighlighter getSyntaxHighlighter() {
+        return new JavaScriptHighlighter(ourLexerFactory);
+    }
 
-	@Nonnull
-	@Override
-	public Lexer createLexer()
-	{
-		return ourLexerFactory.get();
-	}
+    @Nonnull
+    @Override
+    public Lexer createLexer() {
+        return ourLexerFactory.get();
+    }
 
-	@Nonnull
-	@Override
-	public PsiParser createParser()
-	{
-		return new JsonJavaScriptParser();
-	}}
+    @Nonnull
+    @Override
+    public PsiParser createParser() {
+        return new JsonJavaScriptParser();
+    }
+}
