@@ -26,6 +26,7 @@ import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.lexer.Lexer;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Supplier;
 
 /**
@@ -33,45 +34,38 @@ import java.util.function.Supplier;
  * @since 11.12.2015
  */
 @ExtensionImpl
-public class JavaScript185LanguageVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersion
-{
-	private static final Supplier<Lexer> ourLexerFactory = JavaScript17Lexer::new;
+public class JavaScript185LanguageVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersion {
+    private static final Supplier<Lexer> ourLexerFactory = JavaScript17Lexer::new;
 
-	@Nonnull
-	public static JavaScript185LanguageVersion getInstance()
-	{
-		return JavaScriptLanguage.INSTANCE.findVersionByClass(JavaScript185LanguageVersion.class);
-	}
+    @Nonnull
+    public static JavaScript185LanguageVersion getInstance() {
+        return JavaScriptLanguage.INSTANCE.findVersionByClass(JavaScript185LanguageVersion.class);
+    }
 
-	public JavaScript185LanguageVersion()
-	{
-		super("JAVASCRIPT_1_8_5");
-	}
+    public JavaScript185LanguageVersion() {
+        super("JAVASCRIPT_1_8_5");
+    }
 
-	@Nonnull
-	@Override
-	public String getPresentableName()
-	{
-		return "JavaScript 1.8.5";
-	}
+    @Nonnull
+    @Override
+    public String getPresentableName() {
+        return "JavaScript 1.8.5";
+    }
 
-	@Nonnull
-	@Override
-	public Lexer createLexer()
-	{
-		return ourLexerFactory.get();
-	}
+    @Nonnull
+    @Override
+    public Lexer createLexer() {
+        return ourLexerFactory.get();
+    }
 
-	@Nonnull
-	@Override
-	public SyntaxHighlighter getSyntaxHighlighter()
-	{
-		return new JavaScriptHighlighter(ourLexerFactory);
-	}
+    @Nonnull
+    @Override
+    public SyntaxHighlighter getSyntaxHighlighter() {
+        return new JavaScriptHighlighter(ourLexerFactory);
+    }
 
-	@Override
-	public int getWeight()
-	{
-		return 40;
-	}
+    @Override
+    public int getWeight() {
+        return 40;
+    }
 }

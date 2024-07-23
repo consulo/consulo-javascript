@@ -26,6 +26,7 @@ import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.lexer.Lexer;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Supplier;
 
 /**
@@ -33,45 +34,38 @@ import java.util.function.Supplier;
  * @since 11.12.2015
  */
 @ExtensionImpl
-public class JavaScript16LanguageVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersion
-{
-	private static final Supplier<Lexer> ourLexerFactory = () -> new JavaScript16Lexer();
+public class JavaScript16LanguageVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersion {
+    private static final Supplier<Lexer> ourLexerFactory = () -> new JavaScript16Lexer();
 
-	@Nonnull
-	public static JavaScript16LanguageVersion getInstance()
-	{
-		return JavaScriptLanguage.INSTANCE.findVersionByClass(JavaScript16LanguageVersion.class);
-	}
+    @Nonnull
+    public static JavaScript16LanguageVersion getInstance() {
+        return JavaScriptLanguage.INSTANCE.findVersionByClass(JavaScript16LanguageVersion.class);
+    }
 
-	public JavaScript16LanguageVersion()
-	{
-		super("JAVASCRIPT_1_6");
-	}
+    public JavaScript16LanguageVersion() {
+        super("JAVASCRIPT_1_6");
+    }
 
-	@Nonnull
-	@Override
-	public String getPresentableName()
-	{
-		return "JavaScript 1.6";
-	}
+    @Nonnull
+    @Override
+    public String getPresentableName() {
+        return "JavaScript 1.6";
+    }
 
-	@Nonnull
-	@Override
-	public Lexer createLexer()
-	{
-		return ourLexerFactory.get();
-	}
+    @Nonnull
+    @Override
+    public Lexer createLexer() {
+        return ourLexerFactory.get();
+    }
 
-	@Nonnull
-	@Override
-	public SyntaxHighlighter getSyntaxHighlighter()
-	{
-		return new JavaScriptHighlighter(ourLexerFactory);
-	}
+    @Nonnull
+    @Override
+    public SyntaxHighlighter getSyntaxHighlighter() {
+        return new JavaScriptHighlighter(ourLexerFactory);
+    }
 
-	@Override
-	public int getWeight()
-	{
-		return 10;
-	}
+    @Override
+    public int getWeight() {
+        return 10;
+    }
 }

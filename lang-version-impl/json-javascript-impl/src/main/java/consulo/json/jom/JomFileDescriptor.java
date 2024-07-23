@@ -29,25 +29,22 @@ import jakarta.annotation.Nonnull;
  * @since 10.11.2015
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class JomFileDescriptor<T extends JomElement>
-{
-	public static ExtensionPointName<JomFileDescriptor> EP_NAME = ExtensionPointName.create(JomFileDescriptor.class);
+public abstract class JomFileDescriptor<T extends JomElement> {
+    public static ExtensionPointName<JomFileDescriptor> EP_NAME = ExtensionPointName.create(JomFileDescriptor.class);
 
-	private Class<T> myDefinitionClass;
+    private Class<T> myDefinitionClass;
 
-	public JomFileDescriptor(@Nonnull Class<T> definitionClass)
-	{
-		myDefinitionClass = definitionClass;
-	}
+    public JomFileDescriptor(@Nonnull Class<T> definitionClass) {
+        myDefinitionClass = definitionClass;
+    }
 
-	@Nonnull
-	public Class<T> getDefinitionClass()
-	{
-		return myDefinitionClass;
-	}
+    @Nonnull
+    public Class<T> getDefinitionClass() {
+        return myDefinitionClass;
+    }
 
-	@Nonnull
-	public abstract Image getIcon();
+    @Nonnull
+    public abstract Image getIcon();
 
-	public abstract boolean isMyFile(@Nonnull PsiFile psiFile);
+    public abstract boolean isMyFile(@Nonnull PsiFile psiFile);
 }
