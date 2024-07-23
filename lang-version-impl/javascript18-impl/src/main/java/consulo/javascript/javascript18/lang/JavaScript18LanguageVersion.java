@@ -33,45 +33,38 @@ import java.util.function.Supplier;
  * @since 11.12.2015
  */
 @ExtensionImpl
-public class JavaScript18LanguageVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersion
-{
-	private static final Supplier<Lexer> ourLexerFactory = JavaScript17Lexer::new;
+public class JavaScript18LanguageVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersion {
+    private static final Supplier<Lexer> ourLexerFactory = JavaScript17Lexer::new;
 
-	@Nonnull
-	public static JavaScript18LanguageVersion getInstance()
-	{
-		return JavaScriptLanguage.INSTANCE.findVersionByClass(JavaScript18LanguageVersion.class);
-	}
+    @Nonnull
+    public static JavaScript18LanguageVersion getInstance() {
+        return JavaScriptLanguage.INSTANCE.findVersionByClass(JavaScript18LanguageVersion.class);
+    }
 
-	public JavaScript18LanguageVersion()
-	{
-		super("JAVASCRIPT_1_8");
-	}
+    public JavaScript18LanguageVersion() {
+        super("JAVASCRIPT_1_8");
+    }
 
-	@Nonnull
-	@Override
-	public String getPresentableName()
-	{
-		return "JavaScript 1.8";
-	}
+    @Nonnull
+    @Override
+    public String getPresentableName() {
+        return "JavaScript 1.8";
+    }
 
-	@Nonnull
-	@Override
-	public Lexer createLexer()
-	{
-		return ourLexerFactory.get();
-	}
+    @Nonnull
+    @Override
+    public Lexer createLexer() {
+        return ourLexerFactory.get();
+    }
 
-	@Nonnull
-	@Override
-	public SyntaxHighlighter getSyntaxHighlighter()
-	{
-		return new JavaScriptHighlighter(ourLexerFactory);
-	}
+    @Nonnull
+    @Override
+    public SyntaxHighlighter getSyntaxHighlighter() {
+        return new JavaScriptHighlighter(ourLexerFactory);
+    }
 
-	@Override
-	public int getWeight()
-	{
-		return 30;
-	}
+    @Override
+    public int getWeight() {
+        return 30;
+    }
 }

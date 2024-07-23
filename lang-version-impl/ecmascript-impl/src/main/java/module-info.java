@@ -2,8 +2,7 @@
  * @author VISTALL
  * @since 23-Aug-22
  */
-module consulo.javascript.ecmascript.impl
-{
+module consulo.javascript.ecmascript.impl {
     requires transitive consulo.javascript.base.impl;
 
     requires consulo.language.editor.impl;

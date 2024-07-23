@@ -20,7 +20,5 @@ package consulo.json.jom;
  * @author VISTALL
  * @since 10.11.2015
  */
-public interface JomElement
-{
-
+public interface JomElement {
 }

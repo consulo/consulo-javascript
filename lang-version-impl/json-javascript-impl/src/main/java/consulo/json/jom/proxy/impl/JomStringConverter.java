@@ -17,27 +17,26 @@ import consulo.util.lang.StringUtil;
  * @author VISTALL
  * @since 13.11.2015
  */
-public class JomStringConverter implements JomValueConverter.Converter<String>
-{
-	@Override
-	public String getDefaultValue()
-	{
-		return null;
-	}
+public class JomStringConverter implements JomValueConverter.Converter<String> {
+    @Override
+    public String getDefaultValue() {
+        return null;
+    }
 
-	@RequiredReadAction
-	@Override
-	public String parseValue(@Nonnull Class type, @Nonnull Type genericType, @Nonnull PsiElement value) throws JomBadValueExpressionException
-	{
-		if(value instanceof JSSimpleLiteralExpression)
-		{
-			IElementType elementType = ((JSSimpleLiteralExpression) value).getLiteralElementType();
-			if(JavaScriptTokenSets.STRING_LITERALS.contains(elementType))
-			{
-				return StringUtil.unquoteString(value.getText());
-			}
-		}
+    @RequiredReadAction
+    @Override
+    public String parseValue(
+        @Nonnull Class type,
+        @Nonnull Type genericType,
+        @Nonnull PsiElement value
+    ) throws JomBadValueExpressionException {
+        if (value instanceof JSSimpleLiteralExpression simpleLiteralExpression) {
+            IElementType elementType = simpleLiteralExpression.getLiteralElementType();
+            if (JavaScriptTokenSets.STRING_LITERALS.contains(elementType)) {
+                return StringUtil.unquoteString(value.getText());
+            }
+        }
 
-		throw new JomBadValueExpressionException();
-	}
+        throw new JomBadValueExpressionException();
+    }
 }

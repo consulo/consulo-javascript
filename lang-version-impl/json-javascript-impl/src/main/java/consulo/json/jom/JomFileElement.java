@@ -23,40 +23,39 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.util.lang.lazy.LazyValue;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 10.11.2015
  */
-public class JomFileElement<T extends JomElement>
-{
-	private final JomFileDescriptor<T> myFileDescriptor;
-	private final JSFile myPsiFile;
-	private final Supplier<T> myRootValue;
+public class JomFileElement<T extends JomElement> {
+    private final JomFileDescriptor<T> myFileDescriptor;
+    private final JSFile myPsiFile;
+    private final Supplier<T> myRootValue;
 
-	public JomFileElement(JSFile psiFile, JomFileDescriptor<T> fileDescriptor)
-	{
-		myPsiFile = psiFile;
-		myFileDescriptor = fileDescriptor;
-		myRootValue = LazyValue.notNull(() -> (T) JomProxyInvocationHandler.createProxy(myFileDescriptor.getDefinitionClass(), PsiTreeUtil.findChildOfType(myPsiFile, JSObjectLiteralExpression.class)));
-	}
+    public JomFileElement(JSFile psiFile, JomFileDescriptor<T> fileDescriptor) {
+        myPsiFile = psiFile;
+        myFileDescriptor = fileDescriptor;
+        myRootValue = LazyValue.notNull(() -> (T)JomProxyInvocationHandler.createProxy(
+            myFileDescriptor.getDefinitionClass(),
+            PsiTreeUtil.findChildOfType(myPsiFile, JSObjectLiteralExpression.class)
+        ));
+    }
 
-	@Nonnull
-	public T getRootElement()
-	{
-		return myRootValue.get();
-	}
+    @Nonnull
+    public T getRootElement() {
+        return myRootValue.get();
+    }
 
-	@Nonnull
-	public JomFileDescriptor<T> getFileDescriptor()
-	{
-		return myFileDescriptor;
-	}
+    @Nonnull
+    public JomFileDescriptor<T> getFileDescriptor() {
+        return myFileDescriptor;
+    }
 
-	@Nonnull
-	public JSFile getFile()
-	{
-		return myPsiFile;
-	}
+    @Nonnull
+    public JSFile getFile() {
+        return myPsiFile;
+    }
 }
