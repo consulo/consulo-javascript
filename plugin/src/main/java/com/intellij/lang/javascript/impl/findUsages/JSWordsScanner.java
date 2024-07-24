@@ -29,11 +29,14 @@ import consulo.language.cacheBuilder.DefaultWordsScanner;
  * Time: 9:34:58 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSWordsScanner extends DefaultWordsScanner
-{
-	public JSWordsScanner()
-	{
-		super(new JSFlexAdapter(false, DialectOptionHolder.dummy()), JSTokenTypes.IDENTIFIER_TOKENS_SET, JSTokenTypes.COMMENTS, JavaScriptTokenSets.STRING_LITERALS);
-		setMayHaveFileRefsInLiterals(true);
-	}
+public class JSWordsScanner extends DefaultWordsScanner {
+    public JSWordsScanner() {
+        super(
+            new JSFlexAdapter(false, DialectOptionHolder.dummy()),
+            JSTokenTypes.IDENTIFIER_TOKENS_SET,
+            JSTokenTypes.COMMENTS,
+            JavaScriptTokenSets.STRING_LITERALS
+        );
+        setMayHaveFileRefsInLiterals(true);
+    }
 }

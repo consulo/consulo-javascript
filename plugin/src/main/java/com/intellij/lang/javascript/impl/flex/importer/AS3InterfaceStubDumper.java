@@ -34,54 +34,52 @@ import consulo.language.psi.stub.StubElement;
  * Time: 0:43:37
  * To change this template use File | Settings | File Templates.
  */
-class AS3InterfaceStubDumper extends AS3InterfaceDumper
-{
-	final LinkedList<StubElement> parents;
+class AS3InterfaceStubDumper extends AS3InterfaceDumper {
+    final LinkedList<StubElement> parents;
 
-	public AS3InterfaceStubDumper(StubElement parent)
-	{
-		parents = new LinkedList<StubElement>();
-		parents.add(parent);
-	}
+    public AS3InterfaceStubDumper(StubElement parent) {
+        parents = new LinkedList<>();
+        parents.add(parent);
+    }
 
-	@Override
-	public void processMetadata(MetaData metaData)
-	{
-		/*parents.addLast(new JSAttributeStubImpl(metaData.name, parents.getLast()));
-		super.processMetadata(metaData);
+    @Override
+    public void processMetadata(MetaData metaData) {
+        /*parents.addLast(new JSAttributeStubImpl(metaData.name, parents.getLast()));
+        super.processMetadata(metaData);
 		parents.removeLast();     */
-	}
+    }
 
-	@Override
-	public void addMetaDataValue(String s, String s1)
-	{
-		new JSAttributeNameValuePairStubImpl(s, StringUtil.stripQuotesAroundValue(s1), parents.getLast());
-	}
+    @Override
+    public void addMetaDataValue(String s, String s1) {
+        new JSAttributeNameValuePairStubImpl(s, StringUtil.stripQuotesAroundValue(s1), parents.getLast());
+    }
 
-	@Override
-	protected void processArgumentList(MethodInfo methodInfo, String parentName)
-	{
+    @Override
+    protected void processArgumentList(MethodInfo methodInfo, String parentName) {
 		/*parents.add(new JSParameterListStubImpl(parents.getLast()));
 		super.processArgumentList(methodInfo, parentName);
 		parents.removeLast();   */
-	}
+    }
 
-	@Override
-	public void processParameter(@Nonnull String name, @Nullable Multiname type, String parentName, @Nullable Multiname value, boolean rest)
-	{
+    @Override
+    public void processParameter(
+        @Nonnull String name,
+        @Nullable Multiname type,
+        String parentName,
+        @Nullable Multiname value,
+        boolean rest
+    ) {
 		/*new JSParameterStubImpl(name, rest ? JSParameterStubImpl.REST_MASK : 0, getMultinameAsPackageName(type, parentName, true),
 			getValueRepr(value),
 				parents.getLast());*/
-	}
+    }
 
-	@Override
-	public void append(@Nonnull @NonNls String str)
-	{
-	}
+    @Override
+    public void append(@Nonnull @NonNls String str) {
+    }
 
-	@Override
-	public void processFunction(MethodInfo methodInfo, boolean referenceNameRequested, Abc abc, String indent, String attr)
-	{
+    @Override
+    public void processFunction(MethodInfo methodInfo, boolean referenceNameRequested, Abc abc, String indent, String attr) {
 		/*parents.add(new JSFunctionStubImpl(methodInfo.name.name, methodInfo.isGetMethod() ? JSFunctionStubImpl.GET_PROPERTY_MASK : methodInfo
 			.isSetMethod
 				() ? JSFunctionStubImpl.SET_PROPERTY_MASK : methodInfo.parentTraits != null && methodInfo.parentTraits.name == methodInfo.name ?
@@ -90,11 +88,10 @@ class AS3InterfaceStubDumper extends AS3InterfaceDumper
 				referenceNameRequested), parents.getLast()));
 		super.processFunction(methodInfo, referenceNameRequested, abc, indent, attr);
 		parents.removeLast();    */
-	}
+    }
 
-	@Override
-	public void processVariable(SlotInfo info, String indent, String attr)
-	{
+    @Override
+    public void processVariable(SlotInfo info, String indent, String attr) {
 		/*parents.add(new JSVarStatementStubImpl(parents.getLast()));
 		super.processVariable(info, indent, attr);
 		String parentName = info.getParentName();
@@ -102,20 +99,18 @@ class AS3InterfaceStubDumper extends AS3InterfaceDumper
 		new JSVariableStubImpl(qName.substring(qName.lastIndexOf('.') + 1), info.isConst() ? JSVariableStubImpl.CONST_MASK : 0,
 				getMultinameAsPackageName(info.type, parentName, false), getValueRepr(info.value), qName, parents.getLast());
 		parents.removeLast();  */
-	}
+    }
 
-	@Override
-	public void processClass(SlotInfo slotInfo, Abc abc, String attr, String indent)
-	{
+    @Override
+    public void processClass(SlotInfo slotInfo, Abc abc, String attr, String indent) {
 		/*parents.add(new JSClassStubImpl(slotInfo.name.name, slotInfo.isInterfaceClass() ? JSClassStubImpl.INTERFACE_MASK : 0,
 				getMultinameAsPackageName(slotInfo.name, null, false), parents.getLast()));
 		super.processClass(slotInfo, abc, attr, indent);
 		parents.removeLast();   */
-	}
+    }
 
-	@Override
-	protected void processModifierList(MemberInfo memberInfo, String attr, String indent)
-	{
+    @Override
+    protected void processModifierList(MemberInfo memberInfo, String attr, String indent) {
 		/*StringTokenizer tokenizer = new StringTokenizer(attr, " ");
 		List<JSAttributeList.ModifierType> modifiers = new SmartList<JSAttributeList.ModifierType>();
 		JSAttributeList.AccessType accessType = null;
@@ -157,31 +152,34 @@ class AS3InterfaceStubDumper extends AS3InterfaceDumper
 		parents.add(new JSAttributeListStubImpl(parents.getLast(), ns, accessType, modifiers.toArray(new JSAttributeList.ModifierType[modifiers.size()])));
 		super.processModifierList(memberInfo, attr, indent);
 		parents.removeLast();  */
-	}
+    }
 
-	@Override
-	protected void dumpExtendsList(Traits it)
-	{
-		if(!it.base.isStarReference())
-		{
-			new JSReferenceListStubImpl(new String[]{getMultinameAsPackageName(it.base, null, true)}, parents.getLast(), JSElementTypes.EXTENDS_LIST);
-		}
-	}
+    @Override
+    protected void dumpExtendsList(Traits it) {
+        if (!it.base.isStarReference()) {
+            new JSReferenceListStubImpl(
+                new String[]{getMultinameAsPackageName(it.base, null, true)},
+                parents.getLast(),
+                JSElementTypes.EXTENDS_LIST
+            );
+        }
+    }
 
-	@Override
-	protected void dumpInterfacesList(String indent, Traits it, boolean anInterface)
-	{
-		String[] interfaces;
-		if(it.interfaces.length > 0)
-		{
-			interfaces = new String[it.interfaces.length];
+    @Override
+    protected void dumpInterfacesList(String indent, Traits it, boolean anInterface) {
+        String[] interfaces;
+        if (it.interfaces.length > 0) {
+            interfaces = new String[it.interfaces.length];
 
-			int i = 0;
-			for(Multiname name : it.interfaces)
-			{
-				interfaces[i++] = getMultinameAsPackageName(name, null, true);
-			}
-			new JSReferenceListStubImpl(interfaces, parents.getLast(), anInterface ? JSElementTypes.EXTENDS_LIST : JSElementTypes.IMPLEMENTS_LIST);
-		}
-	}
+            int i = 0;
+            for (Multiname name : it.interfaces) {
+                interfaces[i++] = getMultinameAsPackageName(name, null, true);
+            }
+            new JSReferenceListStubImpl(
+                interfaces,
+                parents.getLast(),
+                anInterface ? JSElementTypes.EXTENDS_LIST : JSElementTypes.IMPLEMENTS_LIST
+            );
+        }
+    }
 }

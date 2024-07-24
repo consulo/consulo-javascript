@@ -24,20 +24,17 @@ import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-public class JSDocTagManipulator extends JSAbstractElementManipulator<JSDocTag>
-{
-	@Override
-	protected JSDocTag createTree(final String newText, final Project project)
-	{
-		String ToCreate = "/** " + newText + " */";
-		final PsiElement element = JSChangeUtil.createJSTreeFromText(project, ToCreate).getPsi();
-		return ((JSDocComment) element).getTags()[0];
-	}
+public class JSDocTagManipulator extends JSAbstractElementManipulator<JSDocTag> {
+    @Override
+    protected JSDocTag createTree(final String newText, final Project project) {
+        String ToCreate = "/** " + newText + " */";
+        final PsiElement element = JSChangeUtil.createJSTreeFromText(project, ToCreate).getPsi();
+        return ((JSDocComment)element).getTags()[0];
+    }
 
-	@Nonnull
-	@Override
-	public Class<JSDocTag> getElementClass()
-	{
-		return JSDocTag.class;
-	}
+    @Nonnull
+    @Override
+    public Class<JSDocTag> getElementClass() {
+        return JSDocTag.class;
+    }
 }

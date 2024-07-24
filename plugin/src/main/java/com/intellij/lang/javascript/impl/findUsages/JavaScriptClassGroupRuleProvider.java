@@ -28,31 +28,25 @@ import jakarta.annotation.Nonnull;
  * @author Maxim.Mossienko
  */
 @ExtensionImpl
-public class JavaScriptClassGroupRuleProvider extends JavaScriptGroupRuleProviderBase<JSClass>
-{
-	@Override
-	protected Class<? extends JSNamedElement> getUsageClass()
-	{
-		return JSClass.class;
-	}
+public class JavaScriptClassGroupRuleProvider extends JavaScriptGroupRuleProviderBase<JSClass> {
+    @Override
+    protected Class<? extends JSNamedElement> getUsageClass() {
+        return JSClass.class;
+    }
 
-	@Override
-	protected UsageGroup createUsageGroup(final JSClass clazz)
-	{
-		return new ClassUsageGroup(clazz);
-	}
+    @Override
+    protected UsageGroup createUsageGroup(final JSClass clazz) {
+        return new ClassUsageGroup(clazz);
+    }
 
-	@Override
-	protected boolean isAcceptableElement(JSNamedElement element)
-	{
-		return super.isAcceptableElement(element) && !JSResolveUtil.isArtificialClassUsedForReferenceList((JSClass) element);
-	}
+    @Override
+    protected boolean isAcceptableElement(JSNamedElement element) {
+        return super.isAcceptableElement(element) && !JSResolveUtil.isArtificialClassUsedForReferenceList((JSClass)element);
+    }
 
-	private static class ClassUsageGroup extends JavaScriptGroupRuleProviderBase.PsiNamedElementUsageGroupBase<JSClass>
-	{
-		public ClassUsageGroup(@Nonnull JSClass clazz)
-		{
-			super(clazz, AllIcons.Nodes.Class);
-		}
-	}
+    private static class ClassUsageGroup extends JavaScriptGroupRuleProviderBase.PsiNamedElementUsageGroupBase<JSClass> {
+        public ClassUsageGroup(@Nonnull JSClass clazz) {
+            super(clazz, AllIcons.Nodes.Class);
+        }
+    }
 }

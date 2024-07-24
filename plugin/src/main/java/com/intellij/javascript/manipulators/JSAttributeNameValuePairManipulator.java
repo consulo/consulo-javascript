@@ -29,20 +29,17 @@ import jakarta.annotation.Nonnull;
  * @author peter
  */
 @ExtensionImpl
-public class JSAttributeNameValuePairManipulator extends JSAbstractElementManipulator<JSAttributeNameValuePair>
-{
-	@Override
-	protected JSAttributeNameValuePair createTree(final String newText, final Project project)
-	{
-		@NonNls String ToCreate = "[A(" + newText + ")] class C {}";
-		final PsiElement element = JSChangeUtil.createStatementFromText(project, ToCreate).getPsi();
-		return ((JSClass) element).getAttributeList().getAttributes()[0].getValues()[0];
-	}
+public class JSAttributeNameValuePairManipulator extends JSAbstractElementManipulator<JSAttributeNameValuePair> {
+    @Override
+    protected JSAttributeNameValuePair createTree(final String newText, final Project project) {
+        @NonNls String ToCreate = "[A(" + newText + ")] class C {}";
+        final PsiElement element = JSChangeUtil.createStatementFromText(project, ToCreate).getPsi();
+        return ((JSClass)element).getAttributeList().getAttributes()[0].getValues()[0];
+    }
 
-	@Nonnull
-	@Override
-	public Class<JSAttributeNameValuePair> getElementClass()
-	{
-		return JSAttributeNameValuePair.class;
-	}
+    @Nonnull
+    @Override
+    public Class<JSAttributeNameValuePair> getElementClass() {
+        return JSAttributeNameValuePair.class;
+    }
 }

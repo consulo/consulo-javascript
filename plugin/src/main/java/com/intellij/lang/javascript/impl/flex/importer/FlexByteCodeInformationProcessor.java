@@ -22,50 +22,49 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Oct 20, 2008
- *         Time: 7:02:07 PM
+ * Date: Oct 20, 2008
+ * Time: 7:02:07 PM
  */
-interface FlexByteCodeInformationProcessor
-{
-	void dumpStat(@Nonnull @NonNls String stat);
+interface FlexByteCodeInformationProcessor {
+    void dumpStat(@Nonnull @NonNls String stat);
 
-	void hasError(@Nonnull String error);
+    void hasError(@Nonnull String error);
 
-	void append(@Nonnull @NonNls String str);
+    void append(@Nonnull @NonNls String str);
 
-	void processMultinameAsPackageName(@Nonnull Multiname name, @Nullable String parentName, boolean referenceNameRequested);
+    void processMultinameAsPackageName(@Nonnull Multiname name, @Nullable String parentName, boolean referenceNameRequested);
 
-	void dumpToplevelAnonymousMethod(final @Nonnull Abc abc, final @Nonnull MethodInfo m);
+    void dumpToplevelAnonymousMethod(final @Nonnull Abc abc, final @Nonnull MethodInfo m);
 
-	void dumpTopLevelTraits(final @Nonnull Abc abc, final @Nonnull Traits t, final String indent);
+    void dumpTopLevelTraits(final @Nonnull Abc abc, final @Nonnull Traits t, final String indent);
 
-	boolean doDumpMember(final @Nonnull MemberInfo memberInfo);
+    boolean doDumpMember(final @Nonnull MemberInfo memberInfo);
 
-	void appendMethodSeparator();
+    void appendMethodSeparator();
 
-	void appendFieldSeparator();
+    void appendFieldSeparator();
 
-	String getAbcInSwfIndent();
+    String getAbcInSwfIndent();
 
-	boolean doDumpMetaData(final @Nonnull MetaData md);
+    boolean doDumpMetaData(final @Nonnull MetaData md);
 
-	String REST_PARAMETER_TYPE = "...";
+    String REST_PARAMETER_TYPE = "...";
 
-	void processParameter(final @Nonnull String name, @Nullable Multiname type, String parentName, @Nullable Multiname value, boolean rest);
+    void processParameter(final @Nonnull String name, @Nullable Multiname type, String parentName, @Nullable Multiname value, boolean rest);
 
-	boolean doStarTypeDumpInExtends();
+    boolean doStarTypeDumpInExtends();
 
-	boolean doStarMetaAttrNameDump();
+    boolean doStarMetaAttrNameDump();
 
-	void setProcessingInterface(final boolean anInterface);
+    void setProcessingInterface(final boolean anInterface);
 
-	String getParentName(final MemberInfo member);
+    String getParentName(final MemberInfo member);
 
-	void processVariable(SlotInfo info, String indent, String attr);
+    void processVariable(SlotInfo info, String indent, String attr);
 
-	void processFunction(MethodInfo methodInfo, boolean referenceNameRequested, Abc abc, String indent, String attr);
+    void processFunction(MethodInfo methodInfo, boolean referenceNameRequested, Abc abc, String indent, String attr);
 
-	void processMetadata(MetaData metaData);
+    void processMetadata(MetaData metaData);
 
-	void processClass(SlotInfo slotInfo, Abc abc, String attr, String indent);
+    void processClass(SlotInfo slotInfo, Abc abc, String attr, String indent);
 }

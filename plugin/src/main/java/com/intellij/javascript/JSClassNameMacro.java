@@ -36,74 +36,63 @@ import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-public class JSClassNameMacro extends Macro
-{
-	@Override
-	@NonNls
-	public String getName()
-	{
-		return "jsClassName";
-	}
+public class JSClassNameMacro extends Macro {
+    @Override
+    @NonNls
+    public String getName() {
+        return "jsClassName";
+    }
 
-	@Override
-	public String getPresentableName()
-	{
-		return JavaScriptLocalize.jsClassnameMacroDescription().get();
-	}
+    @Override
+    public String getPresentableName() {
+        return JavaScriptLocalize.jsClassnameMacroDescription().get();
+    }
 
-	@Override
-	@NonNls
-	public String getDefaultValue()
-	{
-		return "";
-	}
+    @Override
+    @NonNls
+    public String getDefaultValue() {
+        return "";
+    }
 
-	@Override
-	public Result calculateResult(@Nonnull final Expression[] params, final ExpressionContext context)
-	{
-		final PsiElement elementAtCaret = findElementAtCaret(context);
-		final JSResolveUtil.ContextResolver resolver = new JSResolveUtil.ContextResolver(elementAtCaret);
+    @Override
+    public Result calculateResult(@Nonnull final Expression[] params, final ExpressionContext context) {
+        final PsiElement elementAtCaret = findElementAtCaret(context);
+        final JSResolveUtil.ContextResolver resolver = new JSResolveUtil.ContextResolver(elementAtCaret);
 
-		String text = resolver.getQualifierAsString();
-		if(text == null)
-		{
-			final JSFunction previousFunction = PsiTreeUtil.getPrevSiblingOfType(elementAtCaret, JSFunction.class);
+        String text = resolver.getQualifierAsString();
+        if (text == null) {
+            final JSFunction previousFunction = PsiTreeUtil.getPrevSiblingOfType(elementAtCaret, JSFunction.class);
 
-			if(previousFunction != null)
-			{
-				text = previousFunction.getName();
-			}
-		}
+            if (previousFunction != null) {
+                text = previousFunction.getName();
+            }
+        }
 
-		if(text != null)
-		{
-			return new TextResult(text);
-		}
+        if (text != null) {
+            return new TextResult(text);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public static PsiElement findElementAtCaret(final ExpressionContext context)
-	{
-		Project project = context.getProject();
-		int templateStartOffset = context.getTemplateStartOffset();
-		int offset = templateStartOffset > 0 ? context.getTemplateStartOffset() - 1 : context.getTemplateStartOffset();
+    public static PsiElement findElementAtCaret(final ExpressionContext context) {
+        Project project = context.getProject();
+        int templateStartOffset = context.getTemplateStartOffset();
+        int offset = templateStartOffset > 0 ? context.getTemplateStartOffset() - 1 : context.getTemplateStartOffset();
 
-		PsiDocumentManager.getInstance(project).commitAllDocuments();
+        PsiDocumentManager.getInstance(project).commitAllDocuments();
 
-		PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(context.getEditor().getDocument());
-		return file.findElementAt(offset);
-	}
+        PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(context.getEditor().getDocument());
+        return file.findElementAt(offset);
+    }
 
-	@Override
-	public Result calculateQuickResult(@Nonnull final Expression[] params, final ExpressionContext context)
-	{
-		return null;
-	}
+    @Override
+    public Result calculateQuickResult(@Nonnull final Expression[] params, final ExpressionContext context) {
+        return null;
+    }
 
-	@Override
-	public LookupElement[] calculateLookupItems(@Nonnull final Expression[] params, final ExpressionContext context)
-	{
-		return null;
-	}
+    @Override
+    public LookupElement[] calculateLookupItems(@Nonnull final Expression[] params, final ExpressionContext context) {
+        return null;
+    }
 }

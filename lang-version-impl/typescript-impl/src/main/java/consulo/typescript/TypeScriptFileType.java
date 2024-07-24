@@ -36,48 +36,41 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 03.03.2016
  */
-public class TypeScriptFileType extends LanguageFileType implements JavaScriptFileTypeWithVersion
-{
-	public static final TypeScriptFileType INSTANCE = new TypeScriptFileType();
+public class TypeScriptFileType extends LanguageFileType implements JavaScriptFileTypeWithVersion {
+    public static final TypeScriptFileType INSTANCE = new TypeScriptFileType();
 
-	private TypeScriptFileType()
-	{
-		super(JavaScriptLanguage.INSTANCE);
-	}
+    private TypeScriptFileType() {
+        super(JavaScriptLanguage.INSTANCE);
+    }
 
-	@Nonnull
-	@Override
-	public String getId()
-	{
-		return "TypeScript";
-	}
+    @Nonnull
+    @Override
+    public String getId() {
+        return "TypeScript";
+    }
 
-	@Nonnull
-	@Override
-	public LocalizeValue getDescription()
-	{
-		return JavaScriptLocalize.typescriptFiletypeDescription();
-	}
+    @Nonnull
+    @Override
+    public LocalizeValue getDescription() {
+        return JavaScriptLocalize.typescriptFiletypeDescription();
+    }
 
-	@Nonnull
-	@Override
-	public String getDefaultExtension()
-	{
-		return "ts";
-	}
+    @Nonnull
+    @Override
+    public String getDefaultExtension() {
+        return "ts";
+    }
 
-	@Nullable
-	@Override
-	public Image getIcon()
-	{
-		return JavaScriptIconGroup.typescript();
-	}
+    @Nullable
+    @Override
+    public Image getIcon() {
+        return JavaScriptIconGroup.typescript();
+    }
 
-	@RequiredReadAction
-	@Nonnull
-	@Override
-	public LanguageVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile)
-	{
-		return TypeScriptLanguageVersion.getInstance();
-	}
+    @RequiredReadAction
+    @Nonnull
+    @Override
+    public LanguageVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile) {
+        return TypeScriptLanguageVersion.getInstance();
+    }
 }
