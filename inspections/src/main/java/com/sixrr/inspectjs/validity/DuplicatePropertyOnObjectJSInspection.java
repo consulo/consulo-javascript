@@ -61,9 +61,8 @@ public class DuplicatePropertyOnObjectJSInspection extends JavaScriptInspection 
                     final JSProperty property2 = properties[j];
                     final String property1Name = property1.getName();
                     final String property2Name = property2.getName();
-                    if(property1Name !=null && property2Name!=null &&
-                            property1Name.equals(property2Name))
-                    {
+                    if (property1Name != null && property2Name != null &&
+                        property1Name.equals(property2Name)) {
                         registerError(property2.getFirstChild());
                         if (!matched[i]) {
                             registerError(property1.getFirstChild());

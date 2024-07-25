@@ -11,16 +11,17 @@ class InspectionComparator implements Comparator<Class<? extends LocalInspection
     }
 
     @Override
-	public int compare(Class<? extends LocalInspectionTool> class1,
-                       Class<? extends LocalInspectionTool> class2) {
+    public int compare(Class<? extends LocalInspectionTool> class1, Class<? extends LocalInspectionTool> class2) {
         final LocalInspectionTool inspection1;
         final LocalInspectionTool inspection2;
         try {
             inspection1 = class1.newInstance();
             inspection2 = class2.newInstance();
-        } catch (InstantiationException ignore) {
+        }
+        catch (InstantiationException ignore) {
             return -1;
-        } catch (IllegalAccessException ignore) {
+        }
+        catch (IllegalAccessException ignore) {
             return -1;
         }
         final String groupName1 = inspection1.getGroupDisplayName();
@@ -40,7 +41,7 @@ class InspectionComparator implements Comparator<Class<? extends LocalInspection
     }
 
     private static String stripQuotes(String str) {
-        if (str.indexOf((int) '\'') < 0 && str.indexOf((int) '"') < 0) {
+        if (str.indexOf((int)'\'') < 0 && str.indexOf((int)'"') < 0) {
             return str;
         }
         final int length = str.length();

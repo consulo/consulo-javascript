@@ -23,22 +23,22 @@ public class SingleIntegerFieldOptionsPanel extends JPanel {
         final Document document = valueField.getDocument();
         document.addDocumentListener(new DocumentListener() {
             @Override
-			public void changedUpdate(DocumentEvent e) {
+            public void changedUpdate(DocumentEvent e) {
                 textChanged();
             }
 
             @Override
-			public void insertUpdate(DocumentEvent e) {
+            public void insertUpdate(DocumentEvent e) {
                 textChanged();
             }
 
             @Override
-			public void removeUpdate(DocumentEvent e) {
+            public void removeUpdate(DocumentEvent e) {
                 textChanged();
             }
 
             private void textChanged() {
-                setPropertyValue(owner, property, ((Number) valueField.getValue()).intValue());
+                setPropertyValue(owner, property, ((Number)valueField.getValue()).intValue());
             }
         });
         final GridBagConstraints constraints = new GridBagConstraints();
@@ -59,14 +59,16 @@ public class SingleIntegerFieldOptionsPanel extends JPanel {
     private void setPropertyValue(BaseInspection owner, String property, int value) {
         try {
             owner.getClass().getField(property).setInt(owner, value);
-        } catch (Exception e) {
+        }
+        catch (Exception ignore) {
         }
     }
 
     private int getPropertyValue(BaseInspection owner, String property) {
         try {
             return owner.getClass().getField(property).getInt(owner);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return 0;
         }
     }

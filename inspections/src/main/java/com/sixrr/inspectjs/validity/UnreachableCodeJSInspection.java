@@ -49,9 +49,9 @@ public class UnreachableCodeJSInspection extends JavaScriptInspection {
         public void visitJSBlock(JSBlockStatement statement) {
             super.visitJSBlock(statement);
             final JSStatement[] statements = statement.getStatements();
-            for (int i = 0; i < statements.length-1; i++) {
+            for (int i = 0; i < statements.length - 1; i++) {
                 if (!ControlFlowUtils.statementMayCompleteNormally(statements[i])) {
-                    registerStatementError(statements[i+1]);
+                    registerStatementError(statements[i + 1]);
                 }
             }
         }
