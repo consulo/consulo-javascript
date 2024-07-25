@@ -39,6 +39,7 @@ public class EmptyCatchBlockJSInspection extends JavaScriptInspection {
     public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
+
     private static class Visitor extends BaseInspectionVisitor {
         @Override
         public void visitJSTryStatement(JSTryStatement jsTryStatement) {
@@ -48,8 +49,7 @@ public class EmptyCatchBlockJSInspection extends JavaScriptInspection {
                 return;
             }
             final JSStatement body = catchBlock.getStatement();
-            if(StatementUtils.isEmpty(body))
-            {
+            if (StatementUtils.isEmpty(body)) {
                 final PsiElement catchToken = catchBlock.getFirstChild();
                 registerError(catchToken);
             }

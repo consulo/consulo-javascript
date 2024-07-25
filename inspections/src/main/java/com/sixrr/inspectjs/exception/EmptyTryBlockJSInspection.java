@@ -46,8 +46,7 @@ public class EmptyTryBlockJSInspection extends JavaScriptInspection {
             if (statement == null) {
                 return;
             }
-            if(StatementUtils.isEmpty(statement))
-            {
+            if (StatementUtils.isEmpty(statement)) {
                 registerStatementError(jsTryStatement);
             }
         }

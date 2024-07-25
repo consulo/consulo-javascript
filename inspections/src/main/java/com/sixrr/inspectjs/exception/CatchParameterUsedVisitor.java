@@ -16,13 +16,15 @@ class CatchParameterUsedVisitor extends JSRecursiveElementVisitor {
         parameter = variable;
     }
 
-    @Override public void visitElement(@Nonnull PsiElement element) {
+    @Override
+    public void visitElement(@Nonnull PsiElement element) {
         if (!used) {
             super.visitElement(element);
         }
     }
 
-    @Override public void visitJSReferenceExpression(@Nonnull JSReferenceExpression reference) {
+    @Override
+    public void visitJSReferenceExpression(@Nonnull JSReferenceExpression reference) {
         if (used) {
             return;
         }

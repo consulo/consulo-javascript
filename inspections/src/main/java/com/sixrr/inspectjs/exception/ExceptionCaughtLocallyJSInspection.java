@@ -58,9 +58,7 @@ public class ExceptionCaughtLocallyJSInspection extends JavaScriptInspection {
     public static boolean isCaughtLocally(@Nonnull JSThrowStatement throwStatement) {
         JSElement currentElement = throwStatement;
         while (true) {
-            final JSTryStatement tryStatement =
-                    PsiTreeUtil.getParentOfType(currentElement,
-                            JSTryStatement.class);
+            final JSTryStatement tryStatement = PsiTreeUtil.getParentOfType(currentElement, JSTryStatement.class);
             if (tryStatement == null) {
                 return false;
             }

@@ -28,25 +28,23 @@ public class FunctionWithMultipleLoopsJSInspection extends JavaScriptInspection 
     @RequiredReadAction
     @Override
     public String buildErrorString(Object state, Object... args) {
-        final JSFunction function = (JSFunction) ((PsiElement) args[0]).getParent();
+        final JSFunction function = (JSFunction)((PsiElement)args[0]).getParent();
         assert function != null;
         final LoopCountVisitor visitor = new LoopCountVisitor();
         final PsiElement lastChild = function.getLastChild();
         assert lastChild != null;
         lastChild.accept(visitor);
         final int loopCount = visitor.getCount();
-        if (functionHasIdentifier(function)) {
-            return InspectionJSLocalize.functionContainsMultipleLoopsErrorString(loopCount).get();
-        }
-        else {
-            return InspectionJSLocalize.anonymousFunctionContainsMultipleLoopsErrorString(loopCount).get();
-        }
+        return functionHasIdentifier(function)
+            ? InspectionJSLocalize.functionContainsMultipleLoopsErrorString(loopCount).get()
+            : InspectionJSLocalize.anonymousFunctionContainsMultipleLoopsErrorString(loopCount).get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
+
     private static class Visitor extends BaseInspectionVisitor {
         @Override
         public void visitJSFunctionDeclaration(@Nonnull JSFunction function) {

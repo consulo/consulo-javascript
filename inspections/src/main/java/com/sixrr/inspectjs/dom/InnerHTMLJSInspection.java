@@ -42,9 +42,8 @@ public class InnerHTMLJSInspection extends JavaScriptInspection {
         public void visitJSReferenceExpression(JSReferenceExpression expression) {
             super.visitJSReferenceExpression(expression);
             final String referenceName = expression.getReferencedName();
-            if (!"innerHTML".equalsIgnoreCase(referenceName))
-            {
-                 return;
+            if (!"innerHTML".equalsIgnoreCase(referenceName)) {
+                return;
             }
             registerError(expression);
         }
