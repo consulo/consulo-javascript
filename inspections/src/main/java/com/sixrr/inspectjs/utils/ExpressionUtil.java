@@ -24,28 +24,32 @@ public class ExpressionUtil {
 
     private static class IsConstantExpressionVisitor extends JSElementVisitor {
         private boolean isConstant = false;
-        private final Map<JSVariable, Boolean> isVariableConstant = new HashMap<JSVariable, Boolean>();
+        private final Map<JSVariable, Boolean> isVariableConstant = new HashMap<>();
 
         public boolean isConstant() {
             return isConstant;
         }
 
-        @Override public void visitJSExpression(JSExpression expression) {
+        @Override
+        public void visitJSExpression(JSExpression expression) {
             isConstant = false;
         }
 
-        @Override public void visitJSLiteralExpression(JSSimpleLiteralExpression expression) {
+        @Override
+        public void visitJSLiteralExpression(JSSimpleLiteralExpression expression) {
             isConstant = true;
         }
 
-        @Override public void visitJSParenthesizedExpression(JSParenthesizedExpression expression) {
+        @Override
+        public void visitJSParenthesizedExpression(JSParenthesizedExpression expression) {
             final JSExpression expr = expression.getInnerExpression();
             if (expr != null) {
                 expr.accept(this);
             }
         }
 
-        @Override public void visitJSPrefixExpression(JSPrefixExpression expression) {
+        @Override
+        public void visitJSPrefixExpression(JSPrefixExpression expression) {
             final JSExpression operand = expression.getExpression();
             if (operand == null) {
                 isConstant = false;
@@ -59,16 +63,17 @@ public class ExpressionUtil {
 
             final IElementType opType = expression.getOperationSign();
 
-            if (JSTokenTypes.PLUS.equals(opType) ||
-                    JSTokenTypes.MINUS.equals(opType) ||
-                    JSTokenTypes.TILDE.equals(opType) ||
-                    JSTokenTypes.EXCL.equals(opType)) {
+            if (JSTokenTypes.PLUS.equals(opType)
+                || JSTokenTypes.MINUS.equals(opType)
+                || JSTokenTypes.TILDE.equals(opType)
+                || JSTokenTypes.EXCL.equals(opType)) {
                 return;
             }
             isConstant = false;
         }
 
-        @Override public void visitJSBinaryExpression(JSBinaryExpression expression) {
+        @Override
+        public void visitJSBinaryExpression(JSBinaryExpression expression) {
             expression.getLOperand().accept(this);
             if (!isConstant) {
                 return;
@@ -79,7 +84,8 @@ public class ExpressionUtil {
             }
         }
 
-        @Override public void visitJSConditionalExpression(JSConditionalExpression expression) {
+        @Override
+        public void visitJSConditionalExpression(JSConditionalExpression expression) {
             final JSExpression thenExpr = expression.getThen();
             final JSExpression elseExpr = expression.getElse();
             if (thenExpr == null || elseExpr == null) {
@@ -98,15 +104,16 @@ public class ExpressionUtil {
             elseExpr.accept(this);
         }
 
-        @Override public void visitJSReferenceExpression(JSReferenceExpression expression) {
-            final JSElement refElement = (JSElement) expression.resolve();
+        @Override
+        public void visitJSReferenceExpression(JSReferenceExpression expression) {
+            final JSElement refElement = (JSElement)expression.resolve();
 
             if (!(refElement instanceof JSVariable)) {
                 isConstant = false;
                 return;
             }
 
-            final JSVariable variable = (JSVariable) refElement;
+            final JSVariable variable = (JSVariable)refElement;
             final Boolean isConst = isVariableConstant.get(variable);
 
             if (isConst != null) {

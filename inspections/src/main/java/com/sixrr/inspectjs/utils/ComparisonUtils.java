@@ -54,7 +54,7 @@ public class ComparisonUtils {
         if (!(exp instanceof JSBinaryExpression)) {
             return false;
         }
-        final JSBinaryExpression binaryExpression = (JSBinaryExpression) exp;
+        final JSBinaryExpression binaryExpression = (JSBinaryExpression)exp;
         final IElementType sign = binaryExpression.getOperationSign();
         return s_comparisonStrings.contains(sign);
     }

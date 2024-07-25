@@ -15,13 +15,7 @@ public class SingleCheckboxOptionsPanel extends JPanel {
         final boolean selected = getPropertyValue(owner, property);
         final JCheckBox checkBox = new JCheckBox(label, selected);
         final ButtonModel model = checkBox.getModel();
-        model.addChangeListener(new ChangeListener() {
-
-            @Override
-			public void stateChanged(ChangeEvent e) {
-                setPropertyValue(owner, property, model.isSelected());
-            }
-        });
+        model.addChangeListener(e -> setPropertyValue(owner, property, model.isSelected()));
 
         final GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 0;
@@ -35,14 +29,16 @@ public class SingleCheckboxOptionsPanel extends JPanel {
     private void setPropertyValue(BaseInspection owner, String property, boolean selected) {
         try {
             owner.getClass().getField(property).setBoolean(owner, selected);
-        } catch (Exception e) {
+        }
+        catch (Exception ignore) {
         }
     }
 
     private boolean getPropertyValue(BaseInspection owner, String property) {
         try {
             return owner.getClass().getField(property).getBoolean(owner);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return false;
         }
     }

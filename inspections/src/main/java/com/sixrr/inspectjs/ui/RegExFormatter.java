@@ -12,19 +12,20 @@ public class RegExFormatter extends DefaultFormatter {
     }
 
     @Override
-	public Object stringToValue(String text) throws ParseException {
+    public Object stringToValue(String text) throws ParseException {
         try {
             return Pattern.compile(text);
-        } catch (final PatternSyntaxException e) {
+        }
+        catch (final PatternSyntaxException e) {
             throw new ParseException(e.getMessage(), e.getIndex());
         }
     }
 
     @Override
-	public String valueToString(Object value) throws ParseException {
+    public String valueToString(Object value) throws ParseException {
         if (value == null) {
             return "";
         }
-        return ((Pattern) value).pattern();
+        return ((Pattern)value).pattern();
     }
 }

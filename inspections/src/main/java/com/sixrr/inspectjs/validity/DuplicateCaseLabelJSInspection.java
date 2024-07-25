@@ -57,8 +57,7 @@ public class DuplicateCaseLabelJSInspection extends JavaScriptInspection {
             if (numConditions < 2) {
                 return;
             }
-            final JSExpression[] conditionArray =
-                    conditions.toArray(new JSExpression[numConditions]);
+            final JSExpression[] conditionArray = conditions.toArray(new JSExpression[numConditions]);
             final boolean[] matched = new boolean[conditionArray.length];
             Arrays.fill(matched, false);
             for (int i = 0; i < conditionArray.length; i++) {
@@ -71,9 +70,7 @@ public class DuplicateCaseLabelJSInspection extends JavaScriptInspection {
                         continue;
                     }
                     final JSExpression testCondition = conditionArray[j];
-                    final boolean areEquivalent =
-                            EquivalenceChecker.expressionsAreEquivalent(condition,
-                                    testCondition);
+                    final boolean areEquivalent = EquivalenceChecker.expressionsAreEquivalent(condition, testCondition);
                     if (areEquivalent) {
                         registerError(testCondition);
                         if (!matched[i]) {
