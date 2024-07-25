@@ -34,71 +34,60 @@ import jakarta.annotation.Nullable;
  * @author Maxim.Mossienko
  * @since 9:55:49 PM Apr 7, 2006
  */
-public class JSItemPresentation implements ItemPresentation
-{
-	private JSNamedElement myElement;
+public class JSItemPresentation implements ItemPresentation {
+    private JSNamedElement myElement;
 
-	public JSItemPresentation(final JSNamedElement elementProxy)
-	{
-		this.myElement = elementProxy;
-	}
+    public JSItemPresentation(final JSNamedElement elementProxy) {
+        this.myElement = elementProxy;
+    }
 
-	@Override
-	public String getPresentableText()
-	{
-		return myElement.getName();
-	}
+    @Override
+    public String getPresentableText() {
+        return myElement.getName();
+    }
 
-	@Override
-	@Nullable
-	public String getLocationString()
-	{
-		final PsiFile psiFile = myElement.getContainingFile();
-		if(myElement instanceof JSVariable || myElement instanceof JSFunction)
-		{
-			PsiElement possibleClazz = JSResolveUtil.findParent(myElement);
+    @Override
+    @Nullable
+    public String getLocationString() {
+        final PsiFile psiFile = myElement.getContainingFile();
+        if (myElement instanceof JSVariable || myElement instanceof JSFunction) {
+            PsiElement possibleClazz = JSResolveUtil.findParent(myElement);
 
-			if(possibleClazz instanceof JSClass)
-			{
-				final StringBuilder presentation = new StringBuilder();
+            if (possibleClazz instanceof JSClass) {
+                final StringBuilder presentation = new StringBuilder();
 
-				presentation.append(((JSClass) possibleClazz).getQualifiedName());
-				presentation.append('(').append(getFileName(psiFile)).append(')');
-				return presentation.toString();
-			}
-		}
-		else if(myElement instanceof JSClass)
-		{
-			final String s = ((JSClass) myElement).getQualifiedName();
-			final int i = s.lastIndexOf('.');
+                presentation.append(((JSClass)possibleClazz).getQualifiedName());
+                presentation.append('(').append(getFileName(psiFile)).append(')');
+                return presentation.toString();
+            }
+        }
+        else if (myElement instanceof JSClass) {
+            final String s = ((JSClass)myElement).getQualifiedName();
+            final int i = s.lastIndexOf('.');
 
-			if(i != -1)
-			{
-				final StringBuilder presentation = new StringBuilder();
+            if (i != -1) {
+                final StringBuilder presentation = new StringBuilder();
 
-				presentation.append(s.substring(0, i));
-				presentation.append('(').append(getFileName(psiFile)).append(')');
-				return presentation.toString();
-			}
-		}
-		return getFileName(psiFile);
-	}
+                presentation.append(s.substring(0, i));
+                presentation.append('(').append(getFileName(psiFile)).append(')');
+                return presentation.toString();
+            }
+        }
+        return getFileName(psiFile);
+    }
 
-	private static String getFileName(final PsiFile psiFile)
-	{
-		final String s = psiFile.getName();
-		if(JSResolveUtil.isPredefinedFile(psiFile))
-		{
-			return s.substring(s.lastIndexOf('/') + 1);
-		}
-		return s;
-	}
+    private static String getFileName(final PsiFile psiFile) {
+        final String s = psiFile.getName();
+        if (JSResolveUtil.isPredefinedFile(psiFile)) {
+            return s.substring(s.lastIndexOf('/') + 1);
+        }
+        return s;
+    }
 
-	@Override
-	@Nullable
-	@RequiredUIAccess
-	public Image getIcon()
-	{
-		return IconDescriptorUpdaters.getIcon(myElement, Iconable.ICON_FLAG_VISIBILITY);
-	}
+    @Override
+    @Nullable
+    @RequiredUIAccess
+    public Image getIcon() {
+        return IconDescriptorUpdaters.getIcon(myElement, Iconable.ICON_FLAG_VISIBILITY);
+    }
 }

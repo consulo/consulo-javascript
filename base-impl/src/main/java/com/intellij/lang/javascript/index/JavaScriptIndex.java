@@ -23,22 +23,18 @@ import consulo.language.psi.PsiFile;
  * @author maxim, yole
  */
 @Deprecated
-public final class JavaScriptIndex
-{
-	public static final String ECMASCRIPT_JS2 = "ECMAScript.js2";
+public final class JavaScriptIndex {
+    public static final String ECMASCRIPT_JS2 = "ECMAScript.js2";
 
-	public static boolean isFromPredefinedFile(final PsiFile containingFile)
-	{
-		return false;
-	}
+    public static boolean isFromPredefinedFile(final PsiFile containingFile) {
+        return false;
+    }
 
-	public static PsiElement findSymbolByFileAndNameAndOffset(final String fileName, final String name, final int offset)
-	{
-		return null;
-	}
+    public static PsiElement findSymbolByFileAndNameAndOffset(final String fileName, final String name, final int offset) {
+        return null;
+    }
 
-	public static PsiElement findSymbolWithNameAndOffsetInEntry(final String nameId, final int offset)
-	{
-		return null;
-	}
+    public static PsiElement findSymbolWithNameAndOffsetInEntry(final String nameId, final int offset) {
+        return null;
+    }
 }

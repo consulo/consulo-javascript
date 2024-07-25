@@ -21,63 +21,48 @@ import com.intellij.lang.javascript.psi.resolve.BaseJSSymbolProcessor;
 /**
  * @author Maxim.Mossienko
  */
-public class JSTypeEvaluateManager
-{
-	public static boolean isArrayType(String s)
-	{
-		if(s == null)
-		{
-			return false;
-		}
-		return s.endsWith("[]") ||
-				s.indexOf('[') != -1 ||
-				s.startsWith("Vector") && s.indexOf('<') != -1;
-	}
+public class JSTypeEvaluateManager {
+    public static boolean isArrayType(String s) {
+        if (s == null) {
+            return false;
+        }
+        return s.endsWith("[]") || s.indexOf('[') != -1
+            || s.startsWith("Vector") && s.indexOf('<') != -1;
+    }
 
-	public static String getComponentType(String s)
-	{
-		if(s.endsWith("[]"))
-		{
-			return s.substring(0, s.length() - 2);
-		}
-		else
-		{
-			int i = s.indexOf('[');
-			if(i != -1)
-			{
-				return s.substring(i + 1);
-			}
-			else if(s.startsWith("Vector"))
-			{
-				i = s.indexOf('<');
-				int i2 = s.lastIndexOf('>');
-				if(i2 == -1)
-				{
-					i2 = s.length();
-				}
-				if(i != -1 && i2 != -1 && i2 > i)
-				{
-					return s.substring(i + 1, i2);
-				}
-			}
-		}
-		return s;
-	}
+    public static String getComponentType(String s) {
+        if (s.endsWith("[]")) {
+            return s.substring(0, s.length() - 2);
+        }
+        else {
+            int i = s.indexOf('[');
+            if (i != -1) {
+                return s.substring(i + 1);
+            }
+            else if (s.startsWith("Vector")) {
+                i = s.indexOf('<');
+                int i2 = s.lastIndexOf('>');
+                if (i2 == -1) {
+                    i2 = s.length();
+                }
+                if (i != -1 && i2 != -1 && i2 > i) {
+                    return s.substring(i + 1, i2);
+                }
+            }
+        }
+        return s;
+    }
 
-	public static String getInstanceNameByType(String className)
-	{
-		if("Document".equals(className))
-		{
-			return "HTMLDocument";
-		}
-		if("Element".equals(className))
-		{
-			return BaseJSSymbolProcessor.HTML_ELEMENT_TYPE_NAME;
-		}
-		if("DOMNode".equalsIgnoreCase(className))
-		{
-			return BaseJSSymbolProcessor.HTML_ELEMENT_TYPE_NAME;
-		}
-		return className;
-	}
+    public static String getInstanceNameByType(String className) {
+        if ("Document".equals(className)) {
+            return "HTMLDocument";
+        }
+        if ("Element".equals(className)) {
+            return BaseJSSymbolProcessor.HTML_ELEMENT_TYPE_NAME;
+        }
+        if ("DOMNode".equalsIgnoreCase(className)) {
+            return BaseJSSymbolProcessor.HTML_ELEMENT_TYPE_NAME;
+        }
+        return className;
+    }
 }

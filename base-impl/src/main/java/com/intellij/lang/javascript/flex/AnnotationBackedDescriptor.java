@@ -23,9 +23,8 @@ import com.intellij.xml.XmlElementDescriptorWithCDataContent;
 /**
  * @author Maxim.Mossienko
  */
-public interface AnnotationBackedDescriptor extends XmlAttributeDescriptor, XmlElementDescriptor, XmlElementDescriptorWithCDataContent
-{
-	String getType();
+public interface AnnotationBackedDescriptor extends XmlAttributeDescriptor, XmlElementDescriptor, XmlElementDescriptorWithCDataContent {
+    String getType();
 
-	String getArrayType();
+    String getArrayType();
 }

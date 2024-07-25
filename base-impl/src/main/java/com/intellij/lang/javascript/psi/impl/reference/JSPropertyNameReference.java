@@ -34,104 +34,88 @@ import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-public class JSPropertyNameReference implements PsiReference
-{
-	private final JSProperty myProperty;
-	private final PsiElement myNameIdentifier;
+public class JSPropertyNameReference implements PsiReference {
+    private final JSProperty myProperty;
+    private final PsiElement myNameIdentifier;
 
-	public JSPropertyNameReference(JSProperty property, PsiElement nameIdentifier)
-	{
-		this.myProperty = property;
-		myNameIdentifier = nameIdentifier;
-	}
+    public JSPropertyNameReference(JSProperty property, PsiElement nameIdentifier) {
+        this.myProperty = property;
+        myNameIdentifier = nameIdentifier;
+    }
 
-	@Override
-	public PsiElement getElement()
-	{
-		return myNameIdentifier;
-	}
+    @Override
+    public PsiElement getElement() {
+        return myNameIdentifier;
+    }
 
-	@Override
-	@RequiredReadAction
-	public TextRange getRangeInElement()
-	{
-		int quotesDelta = myNameIdentifier.getNode().getElementType() == JSTokenTypes.STRING_LITERAL ? 1 : 0;
-		final int startOffsetInParent = myNameIdentifier.getStartOffsetInParent();
-		int startOffset = startOffsetInParent + quotesDelta;
-		int endOffset = startOffsetInParent + myNameIdentifier.getTextLength() - quotesDelta;
-		if(endOffset <= startOffset)
-		{
-			return new TextRange(0, myProperty.getTextLength());
-		}
-		return new TextRange(startOffset, endOffset);
-	}
+    @Override
+    @RequiredReadAction
+    public TextRange getRangeInElement() {
+        int quotesDelta = myNameIdentifier.getNode().getElementType() == JSTokenTypes.STRING_LITERAL ? 1 : 0;
+        final int startOffsetInParent = myNameIdentifier.getStartOffsetInParent();
+        int startOffset = startOffsetInParent + quotesDelta;
+        int endOffset = startOffsetInParent + myNameIdentifier.getTextLength() - quotesDelta;
+        if (endOffset <= startOffset) {
+            return new TextRange(0, myProperty.getTextLength());
+        }
+        return new TextRange(startOffset, endOffset);
+    }
 
-	@Override
-	@Nullable
-	public PsiElement resolve()
-	{
-		return myProperty;
-	}
+    @Override
+    @Nullable
+    public PsiElement resolve() {
+        return myProperty;
+    }
 
-	@Nonnull
-	@Override
-	@RequiredReadAction
-	public String getCanonicalText()
-	{
-		return StringUtil.stripQuotesAroundValue(myNameIdentifier.getText());
-	}
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public String getCanonicalText() {
+        return StringUtil.stripQuotesAroundValue(myNameIdentifier.getText());
+    }
 
-	@Override
-	public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException
-	{
-		myProperty.setName(newElementName);
-		return null;
-	}
+    @Override
+    public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
+        myProperty.setName(newElementName);
+        return null;
+    }
 
-	@Override
-	public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException
-	{
-		return null;
-	}
+    @Override
+    public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
+        return null;
+    }
 
-	@Override
-	@RequiredReadAction
-	public boolean isReferenceTo(PsiElement element)
-	{
-		final PsiElement element2 = resolve();
-		boolean proxyExpanded = false;
+    @Override
+    @RequiredReadAction
+    public boolean isReferenceTo(PsiElement element) {
+        final PsiElement element2 = resolve();
+        boolean proxyExpanded = false;
 
-		if(element instanceof JSDefinitionExpression)
-		{
-			final JSExpression expression = ((JSDefinitionExpression) element).getExpression();
-			if(expression instanceof JSReferenceExpression)
-			{
-				return ((JSReferenceExpression) expression).isReferenceTo(element2);
-			}
-		}
+        if (element instanceof JSDefinitionExpression definition
+            && definition.getExpression() instanceof JSReferenceExpression referenceExpression) {
+            return referenceExpression.isReferenceTo(element2);
+        }
 
-		if(element != element2 && element instanceof JSProperty && element2 instanceof JSProperty)
-		{
-			return ((JSProperty) element).getName().equals(((JSProperty) element2).getName());
-		}
-		return proxyExpanded && element == element2;
-	}
+        if (element != element2 && element instanceof JSProperty elem1Prop && element2 instanceof JSProperty elem2Prop) {
+            return elem1Prop.getName().equals(elem2Prop.getName());
+        }
+        return proxyExpanded && element == element2;
+    }
 
-	@Nonnull
-	@Override
-	@RequiredReadAction
-	public Object[] getVariants()
-	{
-		final VariantsProcessor processor = new VariantsProcessor(null, myProperty.getContainingFile(), false, myProperty);
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public Object[] getVariants() {
+        final VariantsProcessor processor =
+            new VariantsProcessor(null, myProperty.getContainingFile(), false, myProperty);
 
-		JSResolveUtil.processGlobalSymbols(myProperty, processor);
+        JSResolveUtil.processGlobalSymbols(myProperty, processor);
 
-		return processor.getResult();
-	}
+        return processor.getResult();
+    }
 
-	@Override
-	public boolean isSoft()
-	{
-		return true;
-	}
+    @Override
+    public boolean isSoft() {
+        return true;
+    }
 }

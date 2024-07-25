@@ -36,16 +36,20 @@ import jakarta.annotation.Nullable;
 @Deprecated
 @DeprecationInfo("We need this?")
 @ExtensionAPI(ComponentScope.APPLICATION)
-public interface JSResolveHelper
-{
-	ExtensionPointName<JSResolveHelper> EP_NAME = ExtensionPointName.create(JSResolveHelper.class);
+public interface JSResolveHelper {
+    ExtensionPointName<JSResolveHelper> EP_NAME = ExtensionPointName.create(JSResolveHelper.class);
 
-	// TODO: drop module
-	@Nullable
-	PsiElement findClassByQName(final String link, final Project project, final String className, GlobalSearchScope scope);
+    // TODO: drop module
+    @Nullable
+    PsiElement findClassByQName(final String link, final Project project, final String className, GlobalSearchScope scope);
 
-	void importClass(final PsiScopeProcessor processor, final PsiNamedElement file, final String packageQualifierText);
+    void importClass(final PsiScopeProcessor processor, final PsiNamedElement file, final String packageQualifierText);
 
-	boolean processPackage(final String packageQualifierText, String resolvedName, final Processor<VirtualFile> processor,
-						   GlobalSearchScope globalSearchScope, Project project);
+    boolean processPackage(
+        final String packageQualifierText,
+		String resolvedName,
+		final Processor<VirtualFile> processor,
+        GlobalSearchScope globalSearchScope,
+		Project project
+    );
 }
