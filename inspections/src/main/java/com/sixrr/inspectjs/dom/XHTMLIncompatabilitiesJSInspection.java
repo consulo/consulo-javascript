@@ -39,7 +39,8 @@ public class XHTMLIncompatabilitiesJSInspection extends JavaScriptInspection {
 
     private static class Visitor extends BaseInspectionVisitor {
         @SuppressWarnings({"HardCodedStringLiteral"})
-        @Override public void visitJSReferenceExpression(JSReferenceExpression referenceExpression) {
+        @Override
+        public void visitJSReferenceExpression(JSReferenceExpression referenceExpression) {
             super.visitJSReferenceExpression(referenceExpression);
             final JSExpression qualifier = referenceExpression.getQualifier();
             if (qualifier == null) {
@@ -52,12 +53,12 @@ public class XHTMLIncompatabilitiesJSInspection extends JavaScriptInspection {
             }
             final String methodName = referenceExpression.getReferencedName();
             if (!"images".equalsIgnoreCase(methodName) &&
-                    !"body".equalsIgnoreCase(methodName) &&
-                    !"applets".equalsIgnoreCase(methodName) &&
-                    !"links".equalsIgnoreCase(methodName) &&
-                    !"forms".equalsIgnoreCase(methodName) &&
-                    !"anchors".equalsIgnoreCase(methodName)
-                    ) {
+                !"body".equalsIgnoreCase(methodName) &&
+                !"applets".equalsIgnoreCase(methodName) &&
+                !"links".equalsIgnoreCase(methodName) &&
+                !"forms".equalsIgnoreCase(methodName) &&
+                !"anchors".equalsIgnoreCase(methodName)
+            ) {
                 return;
             }
             registerError(referenceExpression);

@@ -41,7 +41,8 @@ public class RenameFix extends InspectionJSFix {
             final RefactoringActionHandlerFactory factory = RefactoringActionHandlerFactory.getInstance();
             final RefactoringActionHandler renameHandler = factory.createRenameHandler();
             renameHandler.invoke(project, new PsiElement[]{elementToRename}, DataManager.getInstance().getDataContext());
-        } else {
+        }
+        else {
             final RefactoringFactory factory = RefactoringFactory.getInstance(project);
             final RenameRefactoring renameRefactoring = factory.createRename(elementToRename, m_targetName);
             renameRefactoring.run();

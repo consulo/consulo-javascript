@@ -13,29 +13,29 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 13/03/2023
  */
-public class UnusedCatchParameterJSInspectionState implements InspectionToolState<UnusedCatchParameterJSInspectionState>
-{
-	public boolean m_ignoreCatchBlocksWithComments = false;
+public class UnusedCatchParameterJSInspectionState implements InspectionToolState<UnusedCatchParameterJSInspectionState> {
+    public boolean m_ignoreCatchBlocksWithComments = false;
 
-	@Nullable
-	@Override
-	public UnnamedConfigurable createConfigurable()
-	{
-		ConfigurableBuilder<ConfigurableBuilderState> builder = ConfigurableBuilder.newBuilder();
-		builder.checkBox(InspectionJSLocalize.unusedCatchParameterIgnoreCatchOption(), () -> m_ignoreCatchBlocksWithComments, b -> m_ignoreCatchBlocksWithComments = b);
-		return builder.buildUnnamed();
-	}
+    @Nullable
+    @Override
+    public UnnamedConfigurable createConfigurable() {
+        ConfigurableBuilder<ConfigurableBuilderState> builder = ConfigurableBuilder.newBuilder();
+        builder.checkBox(
+            InspectionJSLocalize.unusedCatchParameterIgnoreCatchOption(),
+            () -> m_ignoreCatchBlocksWithComments,
+            b -> m_ignoreCatchBlocksWithComments = b
+        );
+        return builder.buildUnnamed();
+    }
 
-	@Nullable
-	@Override
-	public UnusedCatchParameterJSInspectionState getState()
-	{
-		return this;
-	}
+    @Nullable
+    @Override
+    public UnusedCatchParameterJSInspectionState getState() {
+        return this;
+    }
 
-	@Override
-	public void loadState(UnusedCatchParameterJSInspectionState state)
-	{
-		XmlSerializerUtil.copyBean(state, this);
-	}
+    @Override
+    public void loadState(UnusedCatchParameterJSInspectionState state) {
+        XmlSerializerUtil.copyBean(state, this);
+    }
 }

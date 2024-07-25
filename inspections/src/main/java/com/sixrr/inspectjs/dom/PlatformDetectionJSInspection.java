@@ -39,7 +39,8 @@ public class PlatformDetectionJSInspection extends JavaScriptInspection {
 
     private static class Visitor extends BaseInspectionVisitor {
         @SuppressWarnings({"HardCodedStringLiteral"})
-        @Override public void visitJSReferenceExpression(JSReferenceExpression referenceExpression) {
+        @Override
+        public void visitJSReferenceExpression(JSReferenceExpression referenceExpression) {
             super.visitJSReferenceExpression(referenceExpression);
             final JSExpression qualifier = referenceExpression.getQualifier();
             if (qualifier == null) {
@@ -49,18 +50,19 @@ public class PlatformDetectionJSInspection extends JavaScriptInspection {
             if ("navigator".equalsIgnoreCase(qualifierText)) {
                 final String methodName = referenceExpression.getReferencedName();
                 if (!"userAgent".equalsIgnoreCase(methodName) &&
-                        !"appName".equalsIgnoreCase(methodName) &&
-                        !"appCodeName".equalsIgnoreCase(methodName) &&
-                        !"platform".equalsIgnoreCase(methodName) &&
-                        !"oscpu".equalsIgnoreCase(methodName)
-                        ) {
+                    !"appName".equalsIgnoreCase(methodName) &&
+                    !"appCodeName".equalsIgnoreCase(methodName) &&
+                    !"platform".equalsIgnoreCase(methodName) &&
+                    !"oscpu".equalsIgnoreCase(methodName)
+                ) {
                     return;
                 }
                 registerError(referenceExpression);
-            } else if ("document".equalsIgnoreCase(qualifierText)) {
+            }
+            else if ("document".equalsIgnoreCase(qualifierText)) {
                 final String methodName = referenceExpression.getReferencedName();
                 if (!"all".equalsIgnoreCase(methodName) &&
-                        !"layers".equalsIgnoreCase(methodName)) {
+                    !"layers".equalsIgnoreCase(methodName)) {
                     return;
                 }
                 registerError(referenceExpression);

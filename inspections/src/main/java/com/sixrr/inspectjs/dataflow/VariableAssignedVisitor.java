@@ -8,24 +8,24 @@ import com.sixrr.inspectjs.JSRecursiveElementVisitor;
 import jakarta.annotation.Nonnull;
 
 public class VariableAssignedVisitor extends JSRecursiveElementVisitor {
-
     private boolean assigned = false;
     @Nonnull
-	private final JSVariable variable;
+    private final JSVariable variable;
 
     public VariableAssignedVisitor(@Nonnull JSVariable variable) {
         super();
         this.variable = variable;
     }
 
-    @Override public void visitElement(@Nonnull PsiElement element) {
+    @Override
+    public void visitElement(@Nonnull PsiElement element) {
         if (!assigned) {
             super.visitElement(element);
         }
     }
 
-    @Override public void visitJSAssignmentExpression(
-            @Nonnull JSAssignmentExpression assignment) {
+    @Override
+    public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression assignment) {
         if (assigned) {
             return;
         }
@@ -36,15 +36,15 @@ public class VariableAssignedVisitor extends JSRecursiveElementVisitor {
         }
     }
 
-    @Override public void visitJSPrefixExpression(
-            @Nonnull JSPrefixExpression expression) {
+    @Override
+    public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
         if (assigned) {
             return;
         }
         super.visitJSPrefixExpression(expression);
         final IElementType operationSign = expression.getOperationSign();
         if (!JSTokenTypes.PLUSPLUS.equals(operationSign) &&
-                !JSTokenTypes.MINUSMINUS.equals(operationSign)) {
+            !JSTokenTypes.MINUSMINUS.equals(operationSign)) {
             return;
         }
         final JSExpression operand = expression.getExpression();
@@ -53,15 +53,15 @@ public class VariableAssignedVisitor extends JSRecursiveElementVisitor {
         }
     }
 
-    @Override public void visitJSPostfixExpression(
-            @Nonnull JSPostfixExpression postfixExpression) {
+    @Override
+    public void visitJSPostfixExpression(@Nonnull JSPostfixExpression postfixExpression) {
         if (assigned) {
             return;
         }
         super.visitJSPostfixExpression(postfixExpression);
         final IElementType operationSign = postfixExpression.getOperationSign();
         if (!JSTokenTypes.PLUSPLUS.equals(operationSign) &&
-                !JSTokenTypes.MINUSMINUS.equals(operationSign)) {
+            !JSTokenTypes.MINUSMINUS.equals(operationSign)) {
             return;
         }
         final JSExpression operand = postfixExpression.getExpression();
