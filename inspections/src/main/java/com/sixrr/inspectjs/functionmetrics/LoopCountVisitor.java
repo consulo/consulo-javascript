@@ -7,7 +7,8 @@ import jakarta.annotation.Nonnull;
 class LoopCountVisitor extends JSRecursiveElementVisitor {
     private int loopCount = 0;
 
-    @Override public void visitJSElement(JSElement jsElement) {
+    @Override
+    public void visitJSElement(JSElement jsElement) {
         int oldCount = 0;
         if (jsElement instanceof JSFunction) {
             oldCount = loopCount;
@@ -19,22 +20,26 @@ class LoopCountVisitor extends JSRecursiveElementVisitor {
         }
     }
 
-    @Override public void visitJSForStatement(@Nonnull JSForStatement jsForStatement) {
+    @Override
+    public void visitJSForStatement(@Nonnull JSForStatement jsForStatement) {
         super.visitJSForStatement(jsForStatement);
         loopCount++;
     }
 
-    @Override public void visitJSForInStatement(@Nonnull JSForInStatement jsForStatement) {
+    @Override
+    public void visitJSForInStatement(@Nonnull JSForInStatement jsForStatement) {
         super.visitJSForInStatement(jsForStatement);
         loopCount++;
     }
 
-    @Override public void visitJSWhileStatement(@Nonnull JSWhileStatement jsWhileStatement) {
+    @Override
+    public void visitJSWhileStatement(@Nonnull JSWhileStatement jsWhileStatement) {
         super.visitJSWhileStatement(jsWhileStatement);
         loopCount++;
     }
 
-    @Override public void visitJSDoWhileStatement(@Nonnull JSDoWhileStatement jsDoWhileStatement) {
+    @Override
+    public void visitJSDoWhileStatement(@Nonnull JSDoWhileStatement jsDoWhileStatement) {
         super.visitJSDoWhileStatement(jsDoWhileStatement);
         loopCount++;
     }
