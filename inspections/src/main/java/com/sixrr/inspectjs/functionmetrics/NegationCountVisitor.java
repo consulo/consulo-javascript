@@ -12,7 +12,8 @@ import jakarta.annotation.Nonnull;
 class NegationCountVisitor extends JSRecursiveElementVisitor {
     private int negationCount = 0;
 
-    @Override public void visitJSElement(JSElement jsElement) {
+    @Override
+    public void visitJSElement(JSElement jsElement) {
         int oldCount = 0;
         if (jsElement instanceof JSFunction) {
             oldCount = negationCount;
@@ -24,7 +25,8 @@ class NegationCountVisitor extends JSRecursiveElementVisitor {
         }
     }
 
-    @Override public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
+    @Override
+    public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
         super.visitJSBinaryExpression(expression);
         final IElementType sign = expression.getOperationSign();
         if (JSTokenTypes.NE.equals(sign) || JSTokenTypes.NEQEQ.equals(sign)) {
@@ -32,7 +34,8 @@ class NegationCountVisitor extends JSRecursiveElementVisitor {
         }
     }
 
-    @Override public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
+    @Override
+    public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
         super.visitJSPrefixExpression(expression);
         final IElementType sign = expression.getOperationSign();
         if (JSTokenTypes.EXCL.equals(sign)) {

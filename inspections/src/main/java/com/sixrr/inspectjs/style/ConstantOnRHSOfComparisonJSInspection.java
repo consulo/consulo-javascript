@@ -65,7 +65,7 @@ public class ConstantOnRHSOfComparisonJSInspection extends JavaScriptInspection 
 
         @Override
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final JSBinaryExpression expression = (JSBinaryExpression) descriptor.getPsiElement();
+            final JSBinaryExpression expression = (JSBinaryExpression)descriptor.getPsiElement();
             final JSExpression rhs = expression.getROperand();
             final JSExpression lhs = expression.getLOperand();
             final IElementType sign = expression.getOperationSign();
@@ -90,7 +90,7 @@ public class ConstantOnRHSOfComparisonJSInspection extends JavaScriptInspection 
             final JSExpression lhs = expression.getLOperand();
             final JSExpression rhs = expression.getROperand();
             if (lhs instanceof JSLiteralExpression ||
-                    !(rhs instanceof JSLiteralExpression)) {
+                !(rhs instanceof JSLiteralExpression)) {
                 return;
             }
             registerError(expression);

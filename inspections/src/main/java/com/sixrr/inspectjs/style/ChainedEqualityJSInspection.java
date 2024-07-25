@@ -57,7 +57,7 @@ public class ChainedEqualityJSInspection extends JavaScriptInspection {
             if (!(lhs instanceof JSBinaryExpression)) {
                 return;
             }
-            if (!isEqualityComparison((JSBinaryExpression) lhs)) {
+            if (!isEqualityComparison((JSBinaryExpression)lhs)) {
                 return;
             }
             registerError(expression);
