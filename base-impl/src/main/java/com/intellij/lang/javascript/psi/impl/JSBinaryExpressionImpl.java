@@ -40,69 +40,63 @@ import jakarta.annotation.Nullable;
  * Time: 11:41:42 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSBinaryExpressionImpl extends JSExpressionImpl implements JSBinaryExpression
-{
-	private static final TokenSet BINARY_OPERATIONS = TokenSet.orSet(JSTokenTypes.OPERATIONS, JSTokenTypes.RELATIONAL_OPERATIONS);
-	private static final TokenSet BINARY_OPERATIONS_WITH_DEFS = TokenSet.create(JSTokenTypes.COMMA, JSTokenTypes.EQ);
+public class JSBinaryExpressionImpl extends JSExpressionImpl implements JSBinaryExpression {
+    private static final TokenSet BINARY_OPERATIONS = TokenSet.orSet(JSTokenTypes.OPERATIONS, JSTokenTypes.RELATIONAL_OPERATIONS);
+    private static final TokenSet BINARY_OPERATIONS_WITH_DEFS = TokenSet.create(JSTokenTypes.COMMA, JSTokenTypes.EQ);
 
-	public JSBinaryExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+    public JSBinaryExpressionImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getLOperand()
-	{
-		final ASTNode astNode = getNode();
-		final JSExpression firstExpression = PsiTreeUtil.findChildOfType(astNode.getPsi(), JSExpression.class);
-		if(firstExpression != null && astNode.findChildByType(BINARY_OPERATIONS, firstExpression.getNode()) == null)
-		{
-			return null; // =a
-		}
-		return firstExpression != null ? firstExpression : null;
-	}
+    @Override
+    public JSExpression getLOperand() {
+        final ASTNode astNode = getNode();
+        final JSExpression firstExpression = PsiTreeUtil.findChildOfType(astNode.getPsi(), JSExpression.class);
+        if (firstExpression != null && astNode.findChildByType(BINARY_OPERATIONS, firstExpression.getNode()) == null) {
+            return null; // =a
+        }
+        return firstExpression != null ? firstExpression : null;
+    }
 
-	@Override
-	public JSExpression getROperand()
-	{
-		final ASTNode myNode = getNode();
-		final ASTNode secondExpression = myNode.findChildByType(JSElementTypes.EXPRESSIONS, myNode.findChildByType(BINARY_OPERATIONS));
-		return secondExpression != null ? (JSExpression) secondExpression.getPsi() : null;
-	}
+    @Override
+    public JSExpression getROperand() {
+        final ASTNode myNode = getNode();
+        final ASTNode secondExpression = myNode.findChildByType(JSElementTypes.EXPRESSIONS, myNode.findChildByType(BINARY_OPERATIONS));
+        return secondExpression != null ? (JSExpression)secondExpression.getPsi() : null;
+    }
 
-	@RequiredReadAction
-	@Nullable
-	@Override
-	public PsiElement getOperationElement()
-	{
-		final ASTNode operationASTNode = getNode().findChildByType(BINARY_OPERATIONS);
-		return operationASTNode != null ? operationASTNode.getPsi() : null;
-	}
+    @RequiredReadAction
+    @Nullable
+    @Override
+    public PsiElement getOperationElement() {
+        final ASTNode operationASTNode = getNode().findChildByType(BINARY_OPERATIONS);
+        return operationASTNode != null ? operationASTNode.getPsi() : null;
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSBinaryExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSBinaryExpression(this);
+    }
 
-	@Override
-	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent,
-									   @Nonnull PsiElement place)
-	{
-		final IElementType operationType = getOperationSign();
+    @Override
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        final IElementType operationType = getOperationSign();
 
-		if(BINARY_OPERATIONS_WITH_DEFS.contains(operationType))
-		{
-			final JSExpression loperand = getLOperand();
-			final JSExpression roperand = getROperand();
+        if (BINARY_OPERATIONS_WITH_DEFS.contains(operationType)) {
+            final JSExpression loperand = getLOperand();
+            final JSExpression roperand = getROperand();
 
-			if(loperand != null)
-			{
-				return loperand.processDeclarations(processor, state, lastParent, place) && (roperand != null ? roperand.processDeclarations(processor, state,
-						lastParent, place) : true);
-			}
-		}
+            if (loperand != null) {
+                return loperand.processDeclarations(processor, state, lastParent, place)
+                    && (roperand != null ? roperand.processDeclarations(processor, state, lastParent, place) : true);
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 }
