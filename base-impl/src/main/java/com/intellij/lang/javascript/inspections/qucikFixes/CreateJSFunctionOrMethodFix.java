@@ -32,97 +32,91 @@ import consulo.language.psi.PsiFile;
 
 import java.util.Set;
 
-public class CreateJSFunctionOrMethodFix extends CreateJSFunctionFixBase
-{
-	protected final boolean myIsMethod;
+public class CreateJSFunctionOrMethodFix extends CreateJSFunctionFixBase {
+    protected final boolean myIsMethod;
 
-	public CreateJSFunctionOrMethodFix(String name, boolean isMethod)
-	{
-		super(
-			isMethod 
-				? JavaScriptLocalize.javascriptCreateMethodIntentionName(name) 
-				: JavaScriptLocalize.javascriptCreateFunctionIntentionName(name)
-		);
-		myIsMethod = isMethod;
-	}
+    public CreateJSFunctionOrMethodFix(String name, boolean isMethod) {
+        super(
+            isMethod
+                ? JavaScriptLocalize.javascriptCreateMethodIntentionName(name)
+                : JavaScriptLocalize.javascriptCreateFunctionIntentionName(name)
+        );
+        myIsMethod = isMethod;
+    }
 
-	@Override
-	protected void writeFunctionAndName(Template template, String createdMethodName, Set<JavaScriptFeature> features)
-	{
-		boolean ecma = features.contains(JavaScriptFeature.CLASS);
-		if(!myIsMethod || ecma)
-		{
-			template.addTextSegment("function ");
-		}
-		template.addTextSegment(createdMethodName);
-		if(myIsMethod && !ecma)
-		{
-			template.addTextSegment(" = function ");
-		}
-	}
+    @Override
+    protected void writeFunctionAndName(Template template, String createdMethodName, Set<JavaScriptFeature> features) {
+        boolean ecma = features.contains(JavaScriptFeature.CLASS);
+        if (!myIsMethod || ecma) {
+            template.addTextSegment("function ");
+        }
+        template.addTextSegment(createdMethodName);
+        if (myIsMethod && !ecma) {
+            template.addTextSegment(" = function ");
+        }
+    }
 
-	@Override
-	protected void addParameters(Template template, JSReferenceExpression referenceExpression, PsiFile file, Set<JavaScriptFeature> features)
-	{
-		JSCallExpression methodInvokation = (JSCallExpression) referenceExpression.getParent();
-		final JSArgumentList list = methodInvokation.getArgumentList();
-		final JSExpression[] expressions = list.getArguments();
-		int paramCount = expressions.length;
+    @Override
+    protected void addParameters(
+        Template template,
+        JSReferenceExpression referenceExpression,
+        PsiFile file,
+        Set<JavaScriptFeature> features
+    ) {
+        JSCallExpression methodInvokation = (JSCallExpression)referenceExpression.getParent();
+        final JSArgumentList list = methodInvokation.getArgumentList();
+        final JSExpression[] expressions = list.getArguments();
+        int paramCount = expressions.length;
 
-		for(int i = 0; i < paramCount; ++i)
-		{
-			if(i != 0)
-			{
-				template.addTextSegment(", ");
-			}
-			String var = null;
+        for (int i = 0; i < paramCount; ++i) {
+            if (i != 0) {
+                template.addTextSegment(", ");
+            }
+            String var = null;
 
-			final JSExpression passedParameterValue = expressions[i];
-			if(passedParameterValue instanceof JSReferenceExpression)
-			{
-				var = ((JSReferenceExpression) passedParameterValue).getReferencedName();
-			}
+            final JSExpression passedParameterValue = expressions[i];
+            if (passedParameterValue instanceof JSReferenceExpression parameterRefExpr) {
+                var = parameterRefExpr.getReferencedName();
+            }
 
-			if(var == null || var.length() == 0)
-			{
-				var = "param" + (i != 0 ? Integer.toString(i + 1) : "");
-			}
+            if (var == null || var.length() == 0) {
+                var = "param" + (i != 0 ? Integer.toString(i + 1) : "");
+            }
 
-			final String var1 = var;
-			Expression expression = new MyExpression(var1);
+            final String var1 = var;
+            Expression expression = new MyExpression(var1);
 
-			template.addVariable(var, expression, expression, true);
-			if(features.contains(JavaScriptFeature.CLASS))
-			{
-				template.addTextSegment(":");
-				BaseCreateFix.guessExprTypeAndAddSuchVariable(passedParameterValue, template, var1, file, features);
-			}
-		}
+            template.addVariable(var, expression, expression, true);
+            if (features.contains(JavaScriptFeature.CLASS)) {
+                template.addTextSegment(":");
+                BaseCreateFix.guessExprTypeAndAddSuchVariable(passedParameterValue, template, var1, file, features);
+            }
+        }
+    }
 
-	}
+    @Override
+    protected void addReturnType(Template template, JSReferenceExpression referenceExpression, PsiFile file) {
+        guessTypeAndAddTemplateVariable(template, referenceExpression, file);
+    }
 
-	@Override
-	protected void addReturnType(Template template, JSReferenceExpression referenceExpression, PsiFile file)
-	{
-		guessTypeAndAddTemplateVariable(template, referenceExpression, file);
-	}
+    @Override
+    protected void addBody(Template template, JSReferenceExpression refExpr, PsiFile file) {
+        template.addEndVariable();
+    }
 
-	@Override
-	protected void addBody(Template template, JSReferenceExpression refExpr, PsiFile file)
-	{
-		template.addEndVariable();
-	}
+    @RequiredReadAction
+    @Override
+    protected void buildTemplate(
+        final Template template,
+        JSReferenceExpression referenceExpression,
+        Set<JavaScriptFeature> features,
+        boolean staticContext,
+        PsiFile file, PsiElement anchorParent
+    ) {
+        super.buildTemplate(template, referenceExpression, features, staticContext, file, anchorParent);
 
-	@RequiredReadAction
-	@Override
-	protected void buildTemplate(final Template template, JSReferenceExpression referenceExpression, Set<JavaScriptFeature> features, boolean staticContext,
-			PsiFile file, PsiElement anchorParent)
-	{
-		super.buildTemplate(template, referenceExpression, features, staticContext, file, anchorParent);
-
-		if(myIsMethod && !features.contains(JavaScriptFeature.CLASS))
-		{
-			addSemicolonSegment(template, file);
-		}
-	}
+        if (myIsMethod && !features.contains(JavaScriptFeature.CLASS)) {
+            addSemicolonSegment(template, file);
+        }
+    }
 }

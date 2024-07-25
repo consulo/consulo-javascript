@@ -29,16 +29,13 @@ import jakarta.annotation.Nonnull;
  * Time: 11:41:42 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSAssignmentExpressionImpl extends JSBinaryExpressionImpl implements JSAssignmentExpression
-{
-	public JSAssignmentExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSAssignmentExpressionImpl extends JSBinaryExpressionImpl implements JSAssignmentExpression {
+    public JSAssignmentExpressionImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSAssignmentExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSAssignmentExpression(this);
+    }
 }

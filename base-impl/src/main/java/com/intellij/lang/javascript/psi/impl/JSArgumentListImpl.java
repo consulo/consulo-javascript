@@ -31,29 +31,24 @@ import jakarta.annotation.Nonnull;
  * Date: Jan 30, 2005
  * Time: 9:15:02 PM
  */
-public class JSArgumentListImpl extends JSElementImpl implements JSArgumentList
-{
-	public JSArgumentListImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSArgumentListImpl extends JSElementImpl implements JSArgumentList {
+    public JSArgumentListImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression[] getArguments()
-	{
-		return findChildrenByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression[] getArguments() {
+        return findChildrenByClass(JSExpression.class);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSArgumentList(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSArgumentList(this);
+    }
 
-	@Override
-	public void delete() throws IncorrectOperationException
-	{
-		PsiElement element = getParent();
-		element.replace(((JSCallExpression) element).getMethodExpression());
-	}
+    @Override
+    public void delete() throws IncorrectOperationException {
+        PsiElement element = getParent();
+        element.replace(((JSCallExpression)element).getMethodExpression());
+    }
 }
