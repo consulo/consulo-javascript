@@ -392,11 +392,9 @@ public class EquivalenceChecker {
             return false;
         }
         return switch (type1) {
-            case THIS_EXPRESSION:
-            case SUPER_EXPRESSION -> true;
-            case LITERAL_EXPRESSION:
-            case CLASS_OBJECT_EXPRESSION:
-            case REFERENCE_EXPRESSION -> expToCompare1.getText().equals(expToCompare2.getText());
+            case THIS_EXPRESSION, SUPER_EXPRESSION -> true;
+            case LITERAL_EXPRESSION, CLASS_OBJECT_EXPRESSION, REFERENCE_EXPRESSION ->
+                expToCompare1.getText().equals(expToCompare2.getText());
             case CALL_EXPRESSION -> methodCallExpressionsAreEquivalent((JSCallExpression)expToCompare1, (JSCallExpression)expToCompare2);
             case NEW_EXPRESSION -> newExpressionsAreEquivalent((JSNewExpression)expToCompare1, (JSNewExpression)expToCompare2);
             case ARRAY_LITERAL_EXPRESSION -> arrayInitializerExpressionsAreEquivalent(
