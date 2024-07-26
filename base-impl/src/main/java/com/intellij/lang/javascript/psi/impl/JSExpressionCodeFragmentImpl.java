@@ -32,72 +32,59 @@ import jakarta.annotation.Nonnull;
 /**
  * @author nik
  */
-public class JSExpressionCodeFragmentImpl extends JSFileImpl implements JSExpressionCodeFragment
-{
-	private PsiElement myContext;
-	private boolean myPhysical;
-	private FileViewProvider myViewProvider;
+public class JSExpressionCodeFragmentImpl extends JSFileImpl implements JSExpressionCodeFragment {
+    private PsiElement myContext;
+    private boolean myPhysical;
+    private FileViewProvider myViewProvider;
 
-	public JSExpressionCodeFragmentImpl(Project project, @NonNls String name, CharSequence text, boolean isPhysical)
-	{
-		super(new SingleRootFileViewProvider(PsiManager.getInstance(project), new LightVirtualFile(name, FileTypeManager.getInstance().getFileTypeByFileName(name), text), isPhysical));
-		myPhysical = isPhysical;
-		((SingleRootFileViewProvider) getViewProvider()).forceCachedPsi(this);
-	}
+    public JSExpressionCodeFragmentImpl(Project project, @NonNls String name, CharSequence text, boolean isPhysical) {
+        super(new SingleRootFileViewProvider(
+            PsiManager.getInstance(project),
+            new LightVirtualFile(name, FileTypeManager.getInstance().getFileTypeByFileName(name), text),
+            isPhysical
+        ));
+        myPhysical = isPhysical;
+        ((SingleRootFileViewProvider)getViewProvider()).forceCachedPsi(this);
+    }
 
-	//todo[nik] extract these methods from PsiCodeFragmentImpl?
-	@Override
-	protected JSExpressionCodeFragmentImpl clone()
-	{
-		final JSExpressionCodeFragmentImpl clone = (JSExpressionCodeFragmentImpl) cloneImpl((FileElement) calcTreeElement().clone());
-		clone.myPhysical = false;
-		clone.myOriginalFile = this;
-		SingleRootFileViewProvider cloneViewProvider = new SingleRootFileViewProvider(getManager(), new LightVirtualFile(getName(), getLanguage(), getText()), false);
-		cloneViewProvider.forceCachedPsi(clone);
-		clone.myViewProvider = cloneViewProvider;
-		return clone;
-	}
+    //todo[nik] extract these methods from PsiCodeFragmentImpl?
+    @Override
+    protected JSExpressionCodeFragmentImpl clone() {
+        final JSExpressionCodeFragmentImpl clone = (JSExpressionCodeFragmentImpl)cloneImpl((FileElement)calcTreeElement().clone());
+        clone.myPhysical = false;
+        clone.myOriginalFile = this;
+        SingleRootFileViewProvider cloneViewProvider =
+            new SingleRootFileViewProvider(getManager(), new LightVirtualFile(getName(), getLanguage(), getText()), false);
+        cloneViewProvider.forceCachedPsi(clone);
+        clone.myViewProvider = cloneViewProvider;
+        return clone;
+    }
 
-	@Override
-	public PsiElement getContext()
-	{
-		return myContext;
-	}
+    @Override
+    public PsiElement getContext() {
+        return myContext;
+    }
 
-	@Override
-	@Nonnull
-	public FileViewProvider getViewProvider()
-	{
-		if(myViewProvider != null)
-		{
-			return myViewProvider;
+    @Override
+    @Nonnull
+    public FileViewProvider getViewProvider() {
+        return myViewProvider != null ? myViewProvider : super.getViewProvider();
+    }
+
+    @Override
+    public boolean isValid() {
+		if (!super.isValid() || myContext != null && !myContext.isValid()) {
+            return false;
 		}
-		return super.getViewProvider();
-	}
+        return true;
+    }
 
-	@Override
-	public boolean isValid()
-	{
-		if(!super.isValid())
-		{
-			return false;
-		}
-		if(myContext != null && !myContext.isValid())
-		{
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public boolean isPhysical() {
+        return myPhysical;
+    }
 
-	@Override
-	public boolean isPhysical()
-	{
-		return myPhysical;
-	}
-
-	public void setContext(PsiElement context)
-	{
-		myContext = context;
-	}
-
+    public void setContext(PsiElement context) {
+        myContext = context;
+    }
 }

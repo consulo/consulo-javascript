@@ -46,147 +46,127 @@ import jakarta.annotation.Nullable;
  * Time: 12:25:04 AM
  * To change this template use File | Settings | File Templates.
  */
-public class JSFileImpl extends PsiFileBase implements JSFile
-{
-	public JSFileImpl(FileViewProvider fileViewProvider)
-	{
-		super(fileViewProvider, JavaScriptLanguage.INSTANCE);
-	}
+public class JSFileImpl extends PsiFileBase implements JSFile {
+    public JSFileImpl(FileViewProvider fileViewProvider) {
+        super(fileViewProvider, JavaScriptLanguage.INSTANCE);
+    }
 
-	@Override
-	public String toString()
-	{
-		return "JSFile:" + getName();
-	}
+    @Override
+    public String toString() {
+        return "JSFile:" + getName();
+    }
 
-	@Override
-	public boolean processDeclarations(@Nonnull final PsiScopeProcessor processor, @Nonnull final ResolveState state, @Nullable PsiElement lastParent,
-									   @Nonnull PsiElement place)
-	{
-		boolean result = JSResolveUtil.processDeclarationsInScope(this, processor, state, lastParent, place);
-		if(lastParent == null)
-		{
-			return result;
-		}
+    @Override
+    public boolean processDeclarations(
+        @Nonnull final PsiScopeProcessor processor,
+        @Nonnull final ResolveState state,
+        @Nullable PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        boolean result = JSResolveUtil.processDeclarationsInScope(this, processor, state, lastParent, place);
+        if (lastParent == null) {
+            return result;
+        }
 
-		if(result)
-		{
-			if(getContext() == null)
-			{
-				if(!(lastParent instanceof JSPackageStatement))
-				{
-					result = JSImportHandlingUtil.tryResolveImports(processor, this, place);
-				}
+        if (result) {
+            if (getContext() == null) {
+                if (!(lastParent instanceof JSPackageStatement)) {
+                    result = JSImportHandlingUtil.tryResolveImports(processor, this, place);
+                }
 
-				if(result &&
-						JSResolveUtil.isNewResolveAndCompletion(this) &&
-						(JSResolveUtil.shouldProcessImports(place, processor)))
-				{
-					result = JSResolveUtil.processGlobalThings(processor, state, place, this);
-				}
-			}
-		}
+                if (result &&
+                    JSResolveUtil.isNewResolveAndCompletion(this) &&
+                    (JSResolveUtil.shouldProcessImports(place, processor))) {
+                    result = JSResolveUtil.processGlobalThings(processor, state, place, this);
+                }
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	@Override
-	public void accept(@Nonnull PsiElementVisitor visitor)
-	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			((JSElementVisitor) visitor).visitJSElement(this);
-		}
-		else
-		{
-			super.accept(visitor);
-		}
-	}
+    @Override
+    public void accept(@Nonnull PsiElementVisitor visitor) {
+        if (visitor instanceof JSElementVisitor elementVisitor) {
+            elementVisitor.visitJSElement(this);
+        }
+        else {
+            super.accept(visitor);
+        }
+    }
 
-	@Override
-	public PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor) throws IncorrectOperationException
-	{
-		if(JSChangeUtil.isStatementOrComment(first))
-		{
-			return JSChangeUtil.doAddRangeBefore(this, first, last, anchor);
-		}
-		return super.addRangeBefore(first, last, anchor);
-	}
+    @Override
+    public PsiElement addRangeBefore(
+        @Nonnull PsiElement first,
+        @Nonnull PsiElement last,
+        PsiElement anchor
+    ) throws IncorrectOperationException {
+        if (JSChangeUtil.isStatementOrComment(first)) {
+            return JSChangeUtil.doAddRangeBefore(this, first, last, anchor);
+        }
+        return super.addRangeBefore(first, last, anchor);
+    }
 
-	@Override
-	public PsiElement addRange(PsiElement first, PsiElement last) throws IncorrectOperationException
-	{
-		return addRangeAfter(first, last, null);
-	}
+    @Override
+    public PsiElement addRange(PsiElement first, PsiElement last) throws IncorrectOperationException {
+        return addRangeAfter(first, last, null);
+    }
 
-	@Override
-	public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException
-	{
-		if(JSChangeUtil.isStatementOrComment(element))
-		{
-			return JSChangeUtil.doAddAfter(this, element, anchor);
-		}
-		return super.addAfter(element, anchor);
-	}
+    @Override
+    public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+        if (JSChangeUtil.isStatementOrComment(element)) {
+            return JSChangeUtil.doAddAfter(this, element, anchor);
+        }
+        return super.addAfter(element, anchor);
+    }
 
-	@Override
-	public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException
-	{
-		if(JSChangeUtil.isStatementOrComment(element))
-		{
-			return JSChangeUtil.doAddBefore(this, element, anchor);
-		}
-		return super.addBefore(element, anchor);
-	}
+    @Override
+    public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+        if (JSChangeUtil.isStatementOrComment(element)) {
+            return JSChangeUtil.doAddBefore(this, element, anchor);
+        }
+        return super.addBefore(element, anchor);
+    }
 
-	@Override
-	public PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor) throws IncorrectOperationException
-	{
-		if(JSChangeUtil.isStatementOrComment(first))
-		{
-			return JSChangeUtil.doAddRangeAfter(this, first, last, anchor);
-		}
+    @Override
+    public PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor) throws IncorrectOperationException {
+        if (JSChangeUtil.isStatementOrComment(first)) {
+            return JSChangeUtil.doAddRangeAfter(this, first, last, anchor);
+        }
 
-		return super.addRangeAfter(first, last, anchor);
-	}
+        return super.addRangeAfter(first, last, anchor);
+    }
 
-	@Override
-	public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException
-	{
-		return addAfter(element, null);
-	}
+    @Override
+    public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
+        return addAfter(element, null);
+    }
 
-	@Override
-	public StubBasedPsiElement findStubbedElementAtOffset(final int offset, final Class<? extends StubBasedPsiElement> clazz)
-	{
-		final StubElement stub = getStub();
+    @Override
+    public StubBasedPsiElement findStubbedElementAtOffset(final int offset, final Class<? extends StubBasedPsiElement> clazz) {
+        final StubElement stub = getStub();
 
-		if(stub != null)
-		{
-			final List<StubElement> children = stub.getChildrenStubs();
+        if (stub != null) {
+            final List<StubElement> children = stub.getChildrenStubs();
 
-			for(StubElement child : children)
-			{
-				final PsiElement psi = child.getPsi();
+            for (StubElement child : children) {
+                final PsiElement psi = child.getPsi();
 
-				if(psi.getTextRange().getStartOffset() == offset && clazz.isInstance(psi))
-				{
-					return (StubBasedPsiElement) psi;
-				}
-			}
-		}
-		return null;
-	}
+                if (psi.getTextRange().getStartOffset() == offset && clazz.isInstance(psi)) {
+                    return (StubBasedPsiElement)psi;
+                }
+            }
+        }
+        return null;
+    }
 
-	@Override
-	public JSSourceElement[] getStatements()
-	{
-		final StubElement stub = getStub();
-		if(stub != null)
-		{
-			return (JSSourceElement[]) stub.getChildrenByType(JSElementTypes.SOURCE_ELEMENTS, JSSourceElement.EMPTY_ARRAY);
-		}
-		return findChildrenByClass(JSSourceElement.class);
-	}
+    @Override
+    public JSSourceElement[] getStatements() {
+        final StubElement stub = getStub();
+        if (stub != null) {
+            return (JSSourceElement[])stub.getChildrenByType(JSElementTypes.SOURCE_ELEMENTS, JSSourceElement.EMPTY_ARRAY);
+        }
+        return findChildrenByClass(JSSourceElement.class);
+    }
 }
 

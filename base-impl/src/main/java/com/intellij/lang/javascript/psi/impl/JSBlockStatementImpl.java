@@ -35,43 +35,35 @@ import jakarta.annotation.Nonnull;
  * Time: 9:17:15 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSBlockStatementImpl extends JSStatementImpl implements JSBlockStatement
-{
-	public JSBlockStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSBlockStatementImpl extends JSStatementImpl implements JSBlockStatement {
+    public JSBlockStatementImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSStatement[] getStatements()
-	{
-		return findChildrenByClass(JSStatement.class);
-	}
+    @Override
+    public JSStatement[] getStatements() {
+        return findChildrenByClass(JSStatement.class);
+    }
 
-	public JSLabeledStatement setLabel(String label)
-	{
-		throw new UnsupportedOperationException("TODO: implement");
-	}
+    public JSLabeledStatement setLabel(String label) {
+        throw new UnsupportedOperationException("TODO: implement");
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSBlock(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSBlock(this);
+    }
 
-	@Override
-	public PsiElement add(@Nonnull final PsiElement element) throws IncorrectOperationException
-	{
-		if(element instanceof JSStatement)
-		{
-			ASTNode node = getNode().findChildByType(JSTokenTypes.RBRACE);
-			if(node != null)
-			{
-				PsiElement psiElement = super.addAfter(element, node.getTreePrev().getPsi());
-				CodeStyleManager.getInstance(getProject()).reformatNewlyAddedElement(getNode(), psiElement.getNode());
-				return psiElement;
-			}
-		}
-		return super.add(element);
-	}
+    @Override
+    public PsiElement add(@Nonnull final PsiElement element) throws IncorrectOperationException {
+        if (element instanceof JSStatement) {
+            ASTNode node = getNode().findChildByType(JSTokenTypes.RBRACE);
+            if (node != null) {
+                PsiElement psiElement = super.addAfter(element, node.getTreePrev().getPsi());
+                CodeStyleManager.getInstance(getProject()).reformatNewlyAddedElement(getNode(), psiElement.getNode());
+                return psiElement;
+            }
+        }
+        return super.add(element);
+    }
 }

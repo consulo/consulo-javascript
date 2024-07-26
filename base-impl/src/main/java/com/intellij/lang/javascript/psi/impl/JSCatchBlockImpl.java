@@ -36,52 +36,47 @@ import jakarta.annotation.Nonnull;
  * Time: 10:06:09 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSCatchBlockImpl extends JSElementImpl implements JSCatchBlock
-{
-	public JSCatchBlockImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSCatchBlockImpl extends JSElementImpl implements JSCatchBlock {
+    public JSCatchBlockImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSParameter getParameter()
-	{
-		final ASTNode node = getNode().findChildByType(JSElementTypes.FORMAL_PARAMETER);
-		return node != null ? (JSParameter) node.getPsi() : null;
-	}
+    @Override
+    public JSParameter getParameter() {
+        final ASTNode node = getNode().findChildByType(JSElementTypes.FORMAL_PARAMETER);
+        return node != null ? (JSParameter)node.getPsi() : null;
+    }
 
-	@Override
-	public JSStatement getStatement()
-	{
-		return findChildByClass(JSStatement.class);
-	}
+    @Override
+    public JSStatement getStatement() {
+        return findChildByClass(JSStatement.class);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSCatchBlock(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSCatchBlock(this);
+    }
 
-	@Override
-	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent,
-									   @Nonnull PsiElement place)
-	{
-		if(lastParent != null)
-		{
-			final JSParameter param = getParameter();
-			if(param != null)
-			{
-				return processor.execute(param, state);
-			}
-		}
+    @Override
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        if (lastParent != null) {
+            final JSParameter param = getParameter();
+            if (param != null) {
+                return processor.execute(param, state);
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	@Override
-	public void delete() throws IncorrectOperationException
-	{
-		final ASTNode astNode = getNode();
-		astNode.getTreeParent().removeChild(astNode);
-	}
+    @Override
+    public void delete() throws IncorrectOperationException {
+        final ASTNode astNode = getNode();
+        astNode.getTreeParent().removeChild(astNode);
+    }
 }
