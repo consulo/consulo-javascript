@@ -28,16 +28,13 @@ import jakarta.annotation.Nonnull;
  * Time: 11:41:42 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSCommaExpressionImpl extends JSBinaryExpressionImpl implements JSCommaExpression
-{
-	public JSCommaExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSCommaExpressionImpl extends JSBinaryExpressionImpl implements JSCommaExpression {
+    public JSCommaExpressionImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSCommaExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSCommaExpression(this);
+    }
 }

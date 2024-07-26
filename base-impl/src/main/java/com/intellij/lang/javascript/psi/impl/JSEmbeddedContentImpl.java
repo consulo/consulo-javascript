@@ -38,82 +38,63 @@ import jakarta.annotation.Nonnull;
  * Time: 12:02:38 AM
  * To change this template use File | Settings | File Templates.
  */
-public class JSEmbeddedContentImpl extends JSElementImpl implements XmlTagChild
-{
-	public JSEmbeddedContentImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSEmbeddedContentImpl extends JSElementImpl implements XmlTagChild {
+    public JSEmbeddedContentImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSElement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSElement(this);
+    }
 
-	@Override
-	public XmlTag getParentTag()
-	{
-		final PsiElement parent = getParent();
-		if(parent instanceof XmlTag)
-		{
-			return (XmlTag) parent;
-		}
-		return null;
-	}
+    @Override
+    public XmlTag getParentTag() {
+        final PsiElement parent = getParent();
+        return parent instanceof XmlTag parentTag ? parentTag : null;
+    }
 
-	@Override
-	public XmlTagChild getNextSiblingInTag()
-	{
-		PsiElement nextSibling = getNextSibling();
-		if(nextSibling instanceof XmlTagChild)
-		{
-			return (XmlTagChild) nextSibling;
-		}
-		return null;
-	}
+    @Override
+    public XmlTagChild getNextSiblingInTag() {
+        PsiElement nextSibling = getNextSibling();
+        return nextSibling instanceof XmlTagChild tagChild ? tagChild : null;
+    }
 
-	@Override
-	public XmlTagChild getPrevSiblingInTag()
-	{
-		final PsiElement prevSibling = getPrevSibling();
-		if(prevSibling instanceof XmlTagChild)
-		{
-			return (XmlTagChild) prevSibling;
-		}
-		return null;
-	}
+    @Override
+    public XmlTagChild getPrevSiblingInTag() {
+        final PsiElement prevSibling = getPrevSibling();
+        return prevSibling instanceof XmlTagChild tagChild ? tagChild : null;
+    }
 
-	@Override
-	public boolean processElements(PsiElementProcessor processor, PsiElement place)
-	{
-		// TODO
-		return true;
-	}
+    @Override
+    public boolean processElements(PsiElementProcessor processor, PsiElement place) {
+        // TODO
+        return true;
+    }
 
-	@Override
-	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent,
-			@Nonnull PsiElement place)
-	{
-		return JSResolveUtil.processDeclarationsInScope(this, processor, state, lastParent, place);
-	}
+    @Override
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        return JSResolveUtil.processDeclarationsInScope(this, processor, state, lastParent, place);
+    }
 
-	@Override
-	public String toString()
-	{
-		String s = super.toString();
-		final IElementType type = getNode().getElementType();
-		if(type != JSElementTypes.EMBEDDED_CONTENT)
-		{
-			s += ":" + type;
-		}
-		return s;
-	}
+    @Override
+    public String toString() {
+        String s = super.toString();
+        final IElementType type = getNode().getElementType();
+        if (type != JSElementTypes.EMBEDDED_CONTENT) {
+            s += ":" + type;
+        }
+        return s;
+    }
 
-	@Override
-	public void delete() throws IncorrectOperationException
-	{
-		final ASTNode astNode = getNode();
-		astNode.getTreeParent().removeChild(astNode);
-	}
+    @Override
+    public void delete() throws IncorrectOperationException {
+        final ASTNode astNode = getNode();
+        astNode.getTreeParent().removeChild(astNode);
+    }
 }

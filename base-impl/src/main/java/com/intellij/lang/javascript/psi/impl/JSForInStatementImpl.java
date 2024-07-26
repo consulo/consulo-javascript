@@ -33,114 +33,97 @@ import jakarta.annotation.Nonnull;
  * Date: Jan 30, 2005
  * Time: 11:20:30 PM
  */
-public class JSForInStatementImpl extends JSStatementImpl implements JSForInStatement
-{
-	private static final TokenSet ourSeparatorElementType = TokenSet.create(JSTokenTypes.IN_KEYWORD, JSTokenTypes.OF_KEYWORD);
+public class JSForInStatementImpl extends JSStatementImpl implements JSForInStatement {
+    private static final TokenSet ourSeparatorElementType = TokenSet.create(JSTokenTypes.IN_KEYWORD, JSTokenTypes.OF_KEYWORD);
 
-	public JSForInStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+    public JSForInStatementImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSVarStatement getDeclarationStatement()
-	{
-		return findChildByClass(JSVarStatement.class);
-	}
+    @Override
+    public JSVarStatement getDeclarationStatement() {
+        return findChildByClass(JSVarStatement.class);
+    }
 
-	@Override
-	public JSExpression getVariableExpression()
-	{
-		ASTNode child = getNode().getFirstChildNode();
-		while(child != null)
-		{
-			if(ourSeparatorElementType.contains(child.getElementType()))
-			{
-				return null;
-			}
-			if(child.getPsi() instanceof JSExpression)
-			{
-				return (JSExpression) child.getPsi();
-			}
-			child = child.getTreeNext();
-		}
-		return null;
-	}
+    @Override
+    public JSExpression getVariableExpression() {
+        ASTNode child = getNode().getFirstChildNode();
+        while (child != null) {
+            if (ourSeparatorElementType.contains(child.getElementType())) {
+                return null;
+            }
+            if (child.getPsi() instanceof JSExpression) {
+                return (JSExpression)child.getPsi();
+            }
+            child = child.getTreeNext();
+        }
+        return null;
+    }
 
-	@Override
-	public JSExpression getCollectionExpression()
-	{
-		ASTNode child = getNode().getFirstChildNode();
-		boolean inPassed = false;
-		while(child != null)
-		{
-			if(ourSeparatorElementType.contains(child.getElementType()))
-			{
-				inPassed = true;
-			}
-			if(inPassed && child.getPsi() instanceof JSExpression)
-			{
-				return (JSExpression) child.getPsi();
-			}
-			child = child.getTreeNext();
-		}
+    @Override
+    public JSExpression getCollectionExpression() {
+        ASTNode child = getNode().getFirstChildNode();
+        boolean inPassed = false;
+        while (child != null) {
+            if (ourSeparatorElementType.contains(child.getElementType())) {
+                inPassed = true;
+            }
+            if (inPassed && child.getPsi() instanceof JSExpression) {
+                return (JSExpression)child.getPsi();
+            }
+            child = child.getTreeNext();
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	@RequiredReadAction
-	public boolean isForEach()
-	{
-		return findChildByType(TokenSet.create(JSTokenTypes.EACH_KEYWORD, JSTokenTypes.OF_KEYWORD)) != null ;
-	}
+    @Override
+    @RequiredReadAction
+    public boolean isForEach() {
+        return findChildByType(TokenSet.create(JSTokenTypes.EACH_KEYWORD, JSTokenTypes.OF_KEYWORD)) != null;
+    }
 
-	@Override
-	public JSStatement getBody()
-	{
-		ASTNode child = getNode().getFirstChildNode();
-		boolean passedRParen = false;
-		while(child != null)
-		{
-			if(child.getElementType() == JSTokenTypes.RPAR)
-			{
-				passedRParen = true;
-			}
-			else if(passedRParen && child.getPsi() instanceof JSStatement)
-			{
-				return (JSStatement) child.getPsi();
-			}
-			child = child.getTreeNext();
-		}
+    @Override
+    public JSStatement getBody() {
+        ASTNode child = getNode().getFirstChildNode();
+        boolean passedRParen = false;
+        while (child != null) {
+            if (child.getElementType() == JSTokenTypes.RPAR) {
+                passedRParen = true;
+            }
+            else if (passedRParen && child.getPsi() instanceof JSStatement statement) {
+                return statement;
+            }
+            child = child.getTreeNext();
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent, @Nonnull PsiElement place)
-	{
-		if(lastParent != null)
-		{
-			final JSVarStatement statement = getDeclarationStatement();
-			if(statement != null)
-			{
-				return statement.processDeclarations(processor, state, lastParent, place);
-			}
-			else
-			{
-				final JSExpression expression = getVariableExpression();
-				if(expression != null && !processor.execute(expression, null))
-				{
-					return false;
-				}
-			}
-		}
-		return true;
-	}
+    @Override
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        if (lastParent != null) {
+            final JSVarStatement statement = getDeclarationStatement();
+            if (statement != null) {
+                return statement.processDeclarations(processor, state, lastParent, place);
+            }
+            else {
+                final JSExpression expression = getVariableExpression();
+                if (expression != null && !processor.execute(expression, null)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSForInStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSForInStatement(this);
+    }
 }

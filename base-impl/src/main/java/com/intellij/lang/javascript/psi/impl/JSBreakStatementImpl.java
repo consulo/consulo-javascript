@@ -28,30 +28,24 @@ import jakarta.annotation.Nonnull;
  * Time: 9:52:04 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSBreakStatementImpl extends JSStatementWithLabelReferenceImpl implements JSBreakStatement
-{
-	public JSBreakStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSBreakStatementImpl extends JSStatementWithLabelReferenceImpl implements JSBreakStatement {
+    public JSBreakStatementImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSBreakStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSBreakStatement(this);
+    }
 
-	@Override
-	public JSStatement getStatementToBreak()
-	{
-		String label = getLabel();
-		if(label == null)
-		{
-			return PsiTreeUtil.getParentOfType(this, JSLoopStatement.class, JSSwitchStatement.class);
-		}
-		else
-		{
-			return (JSStatement) getReferences()[0].resolve();
-		}
-	}
+    @Override
+    public JSStatement getStatementToBreak() {
+        String label = getLabel();
+        if (label == null) {
+            return PsiTreeUtil.getParentOfType(this, JSLoopStatement.class, JSSwitchStatement.class);
+        }
+        else {
+            return (JSStatement)getReferences()[0].resolve();
+        }
+    }
 }

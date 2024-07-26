@@ -37,65 +37,56 @@ import jakarta.annotation.Nonnull;
  * Time: 9:26:39 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSExpressionStatementImpl extends JSStatementImpl implements JSExpressionStatement
-{
-	public JSExpressionStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSExpressionStatementImpl extends JSStatementImpl implements JSExpressionStatement {
+    public JSExpressionStatementImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@RequiredReadAction
-	@Override
-	public JSExpression getExpression()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @RequiredReadAction
+    @Override
+    public JSExpression getExpression() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSExpressionStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSExpressionStatement(this);
+    }
 
-	@Override
-	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent,
-									   @Nonnull PsiElement place)
-	{
-		if(lastParent == null)
-		{
-			final JSExpression expression = getExpression();
-			if(expression != null)
-			{
-				return expression.processDeclarations(processor, state, lastParent, place);
-			}
-		}
+    @Override
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+		@Nonnull ResolveState state,
+		PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        if (lastParent == null) {
+            final JSExpression expression = getExpression();
+            if (expression != null) {
+                return expression.processDeclarations(processor, state, lastParent, place);
+            }
+        }
 
-		return super.processDeclarations(processor, state, lastParent, place);
-	}
+        return super.processDeclarations(processor, state, lastParent, place);
+    }
 
-	@Override
-	public ItemPresentation getPresentation()
-	{
-		return new ItemPresentation()
-		{
-			@Override
-			public String getPresentableText()
-			{
-				return getText();
-			}
+    @Override
+    public ItemPresentation getPresentation() {
+        return new ItemPresentation() {
+            @Override
+            public String getPresentableText() {
+                return getText();
+            }
 
-			@Override
-			public String getLocationString()
-			{
-				return "";
-			}
+            @Override
+            public String getLocationString() {
+                return "";
+            }
 
-			@Override
-			public Image getIcon()
-			{
-				return IconDescriptorUpdaters.getIcon(JSExpressionStatementImpl.this, 0);
-			}
-		};
-
-	}
+            @Override
+            public Image getIcon() {
+                return IconDescriptorUpdaters.getIcon(JSExpressionStatementImpl.this, 0);
+            }
+        };
+    }
 }

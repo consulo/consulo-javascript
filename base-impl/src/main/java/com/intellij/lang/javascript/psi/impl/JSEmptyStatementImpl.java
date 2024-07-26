@@ -28,16 +28,13 @@ import jakarta.annotation.Nonnull;
  * Time: 9:48:05 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSEmptyStatementImpl extends JSStatementImpl implements JSEmptyStatement
-{
-	public JSEmptyStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSEmptyStatementImpl extends JSStatementImpl implements JSEmptyStatement {
+    public JSEmptyStatementImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSEmptyStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSEmptyStatement(this);
+    }
 }

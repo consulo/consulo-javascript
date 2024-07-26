@@ -32,29 +32,24 @@ import jakarta.annotation.Nonnull;
  * Time: 12:02:38 AM
  * To change this template use File | Settings | File Templates.
  */
-public class JSCallExpressionImpl extends JSExpressionImpl implements JSCallExpression
-{
-	public JSCallExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSCallExpressionImpl extends JSExpressionImpl implements JSCallExpression {
+    public JSCallExpressionImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getMethodExpression()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression getMethodExpression() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	public JSArgumentList getArgumentList()
-	{
-		ASTNode node = getNode().findChildByType(JSElementTypes.ARGUMENT_LIST);
-		return node != null ? (JSArgumentList) node.getPsi() : null;
-	}
+    @Override
+    public JSArgumentList getArgumentList() {
+        ASTNode node = getNode().findChildByType(JSElementTypes.ARGUMENT_LIST);
+        return node != null ? (JSArgumentList)node.getPsi() : null;
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSCallExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSCallExpression(this);
+    }
 }

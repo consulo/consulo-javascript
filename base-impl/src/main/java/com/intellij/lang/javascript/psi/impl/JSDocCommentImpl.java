@@ -25,33 +25,27 @@ import consulo.language.psi.PsiElement;
 import consulo.language.ast.ASTNode;
 import jakarta.annotation.Nonnull;
 
-public class JSDocCommentImpl extends JSElementImpl implements JSDocComment
-{
-	public JSDocCommentImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSDocCommentImpl extends JSElementImpl implements JSDocComment {
+    public JSDocCommentImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public IElementType getTokenType()
-	{
-		return getNode().getElementType();
-	}
+    @Override
+    public IElementType getTokenType() {
+        return getNode().getElementType();
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSDocComment(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSDocComment(this);
+    }
 
-	@Override
-	public JSDocTag[] getTags()
-	{
-		final PsiElement firstChild = getFirstChild();
-		if(firstChild instanceof JSDocComment)
-		{
-			return ((JSDocComment) firstChild).getTags();
-		}
-		return findChildrenByType(JSDocTokenTypes.DOC_TAG, JSDocTag.class);
-	}
+    @Override
+    public JSDocTag[] getTags() {
+        final PsiElement firstChild = getFirstChild();
+        if (firstChild instanceof JSDocComment docComment) {
+            return docComment.getTags();
+        }
+        return findChildrenByType(JSDocTokenTypes.DOC_TAG, JSDocTag.class);
+    }
 }
