@@ -30,117 +30,104 @@ import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
 /**
  * @author Maxim.Mossienko
  */
-public class JSReferenceListImpl extends JSStubElementImpl<JSReferenceListStub> implements JSReferenceList
-{
-	public JSReferenceListImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSReferenceListImpl extends JSStubElementImpl<JSReferenceListStub> implements JSReferenceList {
+    public JSReferenceListImpl(final ASTNode node) {
+        super(node);
+    }
 
-	public JSReferenceListImpl(final JSReferenceListStub stub, IStubElementType stubElementType)
-	{
-		super(stub, stubElementType);
-	}
+    public JSReferenceListImpl(final JSReferenceListStub stub, IStubElementType stubElementType) {
+        super(stub, stubElementType);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSReferenceList(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSReferenceList(this);
+    }
 
-	@RequiredReadAction
-	@Nonnull
-	@Override
-	public JSReferenceExpression[] getExpressions()
-	{
-		return findChildrenByClass(JSReferenceExpression.class);
-	}
+    @RequiredReadAction
+    @Nonnull
+    @Override
+    public JSReferenceExpression[] getExpressions() {
+        return findChildrenByClass(JSReferenceExpression.class);
+    }
 
-	@Nonnull
-	@Override
-	@RequiredReadAction
-	public String[] getReferenceTexts()
-	{
-		final JSReferenceListStub stub = getStub();
-		if(stub != null)
-		{
-			return stub.getReferenceTexts();
-		}
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public String[] getReferenceTexts() {
+        final JSReferenceListStub stub = getStub();
+        if (stub != null) {
+            return stub.getReferenceTexts();
+        }
 
-		final JSReferenceExpression[] referenceExpressions = getExpressions();
-		if(referenceExpressions.length == 0)
-		{
-			return ArrayUtil.EMPTY_STRING_ARRAY;
-		}
-		int count = referenceExpressions.length;
-		final String[] result = ArrayUtil.newStringArray(count);
+        final JSReferenceExpression[] referenceExpressions = getExpressions();
+        if (referenceExpressions.length == 0) {
+            return ArrayUtil.EMPTY_STRING_ARRAY;
+        }
+        int count = referenceExpressions.length;
+        final String[] result = ArrayUtil.newStringArray(count);
 
-		for(int i = 0; i < count; ++i)
-		{
-			result[i] = referenceExpressions[i].getText();
-		}
-		return result;
-	}
+        for (int i = 0; i < count; ++i) {
+            result[i] = referenceExpressions[i].getText();
+        }
+        return result;
+    }
 
-	@Nonnull
-	@RequiredReadAction
-	@Override
-	public JSClass[] getReferencedClasses()
-	{
-		@NonNls String[] texts = getReferenceTexts();
+    @Nonnull
+    @RequiredReadAction
+    @Override
+    public JSClass[] getReferencedClasses() {
+        @NonNls String[] texts = getReferenceTexts();
 
-		if(texts.length == 0)
-		{
-			return JSClass.EMPTY_ARRAY;
-		}
+        if (texts.length == 0) {
+            return JSClass.EMPTY_ARRAY;
+        }
 
-		final Project project = getProject();
-		final ArrayList<JSClass> supers = new ArrayList<JSClass>(1);
+        final Project project = getProject();
+        final ArrayList<JSClass> supers = new ArrayList<>(1);
 
-		for(String text : texts)
-		{
-			final int index = supers.size();
+        for (String text : texts) {
+            final int index = supers.size();
 
-			text = JSImportHandlingUtil.resolveTypeName(text, this);
+            text = JSImportHandlingUtil.resolveTypeName(text, this);
 
-			final Collection<JSQualifiedNamedElement> candidates = StubIndex.getElements(JavaScriptIndexKeys.ELEMENTS_BY_QNAME, text, project, getResolveScope(), JSQualifiedNamedElement.class);
-			for(JSQualifiedNamedElement _clazz : candidates)
-			{
-				if(!(_clazz instanceof JSClass))
-				{
-					continue;
-				}
-				final JSClass clazz = (JSClass) _clazz;
+            final Collection<JSQualifiedNamedElement> candidates = StubIndex.getElements(JavaScriptIndexKeys.ELEMENTS_BY_QNAME,
+                text,
+                project,
+                getResolveScope(),
+                JSQualifiedNamedElement.class
+            );
+            for (JSQualifiedNamedElement _clazz : candidates) {
+                if (!(_clazz instanceof JSClass)) {
+                    continue;
+                }
+                final JSClass clazz = (JSClass)_clazz;
 
-				if(text.equals(clazz.getQualifiedName()))
-				{
-					if(clazz.canNavigate())
-					{
-						supers.add(index, clazz);
-					}
-					else
-					{
-						supers.add(clazz);
-					}
-				}
-			}
+                if (text.equals(clazz.getQualifiedName())) {
+                    if (clazz.canNavigate()) {
+                        supers.add(index, clazz);
+                    }
+                    else {
+                        supers.add(clazz);
+                    }
+                }
+            }
 
-			if(candidates.size() == 0)
-			{
-				final PsiElement element = JSClassImpl.findClassFromNamespace(text, this);
-				if(element instanceof JSClass)
-				{
-					supers.add((JSClass) element);
-				}
-			}
-		}
+            if (candidates.size() == 0) {
+                final PsiElement element = JSClassImpl.findClassFromNamespace(text, this);
+                if (element instanceof JSClass jsClass) {
+                    supers.add(jsClass);
+                }
+            }
+        }
 
-		return supers.toArray(new JSClass[supers.size()]);
-	}
+        return supers.toArray(new JSClass[supers.size()]);
+    }
 }

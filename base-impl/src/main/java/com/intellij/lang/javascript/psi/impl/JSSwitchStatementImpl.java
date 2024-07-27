@@ -32,30 +32,25 @@ import jakarta.annotation.Nonnull;
  * Time: 10:08:20 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSSwitchStatementImpl extends JSStatementImpl implements JSSwitchStatement
-{
-	private static final TokenSet CASE_CLAUSE_FILTER = TokenSet.create(JSElementTypes.CASE_CLAUSE);
+public class JSSwitchStatementImpl extends JSStatementImpl implements JSSwitchStatement {
+    private static final TokenSet CASE_CLAUSE_FILTER = TokenSet.create(JSElementTypes.CASE_CLAUSE);
 
-	public JSSwitchStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+    public JSSwitchStatementImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getSwitchExpression()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression getSwitchExpression() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	public JSCaseClause[] getCaseClauses()
-	{
-		return findChildrenByClass(JSCaseClause.class);
-	}
+    @Override
+    public JSCaseClause[] getCaseClauses() {
+        return findChildrenByClass(JSCaseClause.class);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSSwitchStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSSwitchStatement(this);
+    }
 }

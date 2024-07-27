@@ -35,68 +35,60 @@ import jakarta.annotation.Nullable;
  * Time: 9:35:47 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSVarStatementImpl extends JSStubbedStatementImpl<JSVarStatementStub> implements JSVarStatement
-{
-	public JSVarStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSVarStatementImpl extends JSStubbedStatementImpl<JSVarStatementStub> implements JSVarStatement {
+    public JSVarStatementImpl(final ASTNode node) {
+        super(node);
+    }
 
-	public JSVarStatementImpl(final JSVarStatementStub node)
-	{
-		super(node, JSElementTypes.VAR_STATEMENT);
-	}
+    public JSVarStatementImpl(final JSVarStatementStub node) {
+        super(node, JSElementTypes.VAR_STATEMENT);
+    }
 
-	@Override
-	public JSVariable[] getVariables()
-	{
-		JSDestructuringElement destructuringElement = getDestructuringElement();
-		if(destructuringElement != null)
-		{
-			return destructuringElement.getVariables();
-		}
-		return getStubOrPsiChildren(JSElementTypes.VARIABLE, JSVariable.EMPTY_ARRAY);
-	}
+    @Override
+    public JSVariable[] getVariables() {
+        JSDestructuringElement destructuringElement = getDestructuringElement();
+        if (destructuringElement != null) {
+            return destructuringElement.getVariables();
+        }
+        return getStubOrPsiChildren(JSElementTypes.VARIABLE, JSVariable.EMPTY_ARRAY);
+    }
 
-	@RequiredReadAction
-	@Nullable
-	@Override
-	public JSDestructuringElement getDestructuringElement()
-	{
-		return findChildByClass(JSDestructuringElement.class);
-	}
+    @RequiredReadAction
+    @Nullable
+    @Override
+    public JSDestructuringElement getDestructuringElement() {
+        return findChildByClass(JSDestructuringElement.class);
+    }
 
-	@Override
-	public void declareVariable(String name, JSExpression initializer)
-	{
-		throw new UnsupportedOperationException("TODO: implement");
-	}
+    @Override
+    public void declareVariable(String name, JSExpression initializer) {
+        throw new UnsupportedOperationException("TODO: implement");
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSVarStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSVarStatement(this);
+    }
 
-	@Override
-	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent,
-									   @Nonnull PsiElement place)
-	{
-		final JSVariable[] vars = getVariables();
+    @Override
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        final JSVariable[] vars = getVariables();
 
-		for(JSVariable var : vars)
-		{
-			if(lastParent != null && lastParent.getParent() == var)
-			{
-				break;
-			}
+        for (JSVariable var : vars) {
+            if (lastParent != null && lastParent.getParent() == var) {
+                break;
+            }
 
-			if(!processor.execute(var, state))
-			{
-				return false;
-			}
-		}
+            if (!processor.execute(var, state)) {
+                return false;
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 }

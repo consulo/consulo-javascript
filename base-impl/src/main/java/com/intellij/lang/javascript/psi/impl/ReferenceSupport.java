@@ -47,180 +47,160 @@ import java.util.function.Function;
  * Time: 20:48:38
  * To change this template use File | Settings | File Templates.
  */
-public class ReferenceSupport
-{
+public class ReferenceSupport {
+    public static PsiReference[] getFileRefs(
+        final PsiElement elt,
+        final PsiElement valueNode,
+        final int offset,
+        final LookupOptions lookupOptions
+    ) {
+        String str = StringUtil.stripQuotesAroundValue(valueNode.getText());
+        return getFileRefs(elt, offset, str, lookupOptions);
+    }
 
-	public static PsiReference[] getFileRefs(final PsiElement elt, final PsiElement valueNode, final int offset, final LookupOptions lookupOptions)
-	{
-		String str = StringUtil.stripQuotesAroundValue(valueNode.getText());
-		return getFileRefs(elt, offset, str, lookupOptions);
-	}
+    public static PsiReference[] getFileRefs(final PsiElement elt, final int offset, String str, final LookupOptions lookupOptions) {
+        if (lookupOptions.IGNORE_TEXT_ARTER_HASH) {
+            int hashIndex = str.indexOf('#');
+            if (hashIndex != -1) {
+                str = str.substring(0, hashIndex);
+            }
+        }
 
-	public static PsiReference[] getFileRefs(final PsiElement elt, final int offset, String str, final LookupOptions lookupOptions)
-	{
+        final FileReferenceSet base = new FileReferenceSet(str, elt, offset, null, SystemInfo.isFileSystemCaseSensitive);
 
-		if(lookupOptions.IGNORE_TEXT_ARTER_HASH)
-		{
-			int hashIndex = str.indexOf('#');
-			if(hashIndex != -1)
-			{
-				str = str.substring(0, hashIndex);
-			}
-		}
+        final boolean lookForAbsolutePath = lookupOptions.ABSOLUTE && new File(str).isAbsolute();
+        final boolean startsWithSlash = str.startsWith("/");
 
-		final FileReferenceSet base = new FileReferenceSet(str, elt, offset, null, SystemInfo.isFileSystemCaseSensitive);
+        base.addCustomization(
+            FileReferenceSet.DEFAULT_PATH_EVALUATOR_OPTION,
+            psiFile -> {
+                final PsiElement context = psiFile.getContext();
+                if (context instanceof PsiLanguageInjectionHost) {
+                    psiFile = context.getContainingFile();
+                }
+                PsiFile originalFile = psiFile.getOriginalFile();
+                if (originalFile != null) {
+                    psiFile = originalFile;
+                }
 
-		final boolean lookForAbsolutePath = lookupOptions.ABSOLUTE && new File(str).isAbsolute();
-		final boolean startsWithSlash = str.startsWith("/");
+                final List<VirtualFile> dirs = new ArrayList<>();
 
-		base.addCustomization(FileReferenceSet.DEFAULT_PATH_EVALUATOR_OPTION, new Function<PsiFile, Collection<PsiFileSystemItem>>()
-		{
-			@Override
-			public Collection<PsiFileSystemItem> apply(PsiFile psiFile)
-			{
-				final PsiElement context = psiFile.getContext();
-				if(context instanceof PsiLanguageInjectionHost)
-				{
-					psiFile = context.getContainingFile();
-				}
-				PsiFile originalFile = psiFile.getOriginalFile();
-				if(originalFile != null)
-				{
-					psiFile = originalFile;
-				}
+                // paths relative to file should not start with slash
+                if (lookupOptions.RELATIVE_TO_FILE && !startsWithSlash) {
+                    appendFileLocation(dirs, psiFile);
+                }
 
-				final List<VirtualFile> dirs = new ArrayList<VirtualFile>();
+                if ((lookupOptions.RELATIVE_TO_SOURCE_ROOTS_START_WITH_SLASH && startsWithSlash)
+                    || (lookupOptions.RELATIVE_TO_SOURCE_ROOTS_START_WITHOUT_SLASH && !startsWithSlash)) {
+                    appendSourceRoots(dirs, psiFile);
+                }
 
-				// paths relative to file should not start with slash
-				if(lookupOptions.RELATIVE_TO_FILE && !startsWithSlash)
-				{
-					appendFileLocation(dirs, psiFile);
-				}
+                if (lookForAbsolutePath) {
+                    appendFileSystemRoot(dirs, psiFile.getProject());
+                }
 
-				if((lookupOptions.RELATIVE_TO_SOURCE_ROOTS_START_WITH_SLASH && startsWithSlash) || (lookupOptions.RELATIVE_TO_SOURCE_ROOTS_START_WITHOUT_SLASH
-						&& !startsWithSlash))
-				{
-					appendSourceRoots(dirs, psiFile);
-				}
+                if (lookupOptions.RELATIVE_TO_PROJECT_BASE_DIR) {
+                    dirs.add(psiFile.getProject().getBaseDir());
+                }
 
-				if(lookForAbsolutePath)
-				{
-					appendFileSystemRoot(dirs, psiFile.getProject());
-				}
+                if (lookupOptions.IN_SDK_AND_LIBRARY_CLASS_ROOTS) {
+                    appendSdkAndLibraryClassRoots(dirs, psiFile);
+                }
 
-				if(lookupOptions.RELATIVE_TO_PROJECT_BASE_DIR)
-				{
-					dirs.add(psiFile.getProject().getBaseDir());
-				}
+                final Collection<PsiFileSystemItem> result = new ArrayList<>();
+                final PsiManager psiManager = PsiManager.getInstance(psiFile.getProject());
+                for (final VirtualFile dir : dirs) {
+                    if (dir != null) {
+                        final PsiDirectory psiDir = psiManager.findDirectory(dir);
+                        if (psiDir != null) {
+                            result.add(psiDir);
+                        }
+                    }
+                }
+                return result;
+            }
+        );
+        return base.getAllReferences();
+    }
 
-				if(lookupOptions.IN_SDK_AND_LIBRARY_CLASS_ROOTS)
-				{
-					appendSdkAndLibraryClassRoots(dirs, psiFile);
-				}
+    private static void appendFileLocation(final List<VirtualFile> dirs, final PsiFile psiFile) {
+        final VirtualFile file = psiFile.getVirtualFile();
+        if (file != null) {
+            dirs.add(file.getParent());
+        }
+    }
 
-				final Collection<PsiFileSystemItem> result = new ArrayList<PsiFileSystemItem>();
-				final PsiManager psiManager = PsiManager.getInstance(psiFile.getProject());
-				for(final VirtualFile dir : dirs)
-				{
-					if(dir != null)
-					{
-						final PsiDirectory psiDir = psiManager.findDirectory(dir);
-						if(psiDir != null)
-						{
-							result.add(psiDir);
-						}
-					}
-				}
-				return result;
-			}
-		});
-		return base.getAllReferences();
-	}
+    private static void appendSourceRoots(final Collection<VirtualFile> dirs, final PsiFile psiFile) {
+        final VirtualFile file = psiFile.getVirtualFile();
+        if (file == null) {
+            return;
+        }
+        final Project project = psiFile.getProject();
+        final ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
+        final Module module = index.getModuleForFile(file);
+        if (module != null && index.getSourceRootForFile(file) != null) {
+            dirs.addAll(Arrays.asList(ModuleRootManager.getInstance(module).getSourceRoots()));
+        }
+    }
 
-	private static void appendFileLocation(final List<VirtualFile> dirs, final PsiFile psiFile)
-	{
-		final VirtualFile file = psiFile.getVirtualFile();
-		if(file != null)
-		{
-			dirs.add(file.getParent());
-		}
-	}
+    private static void appendFileSystemRoot(final Collection<VirtualFile> dirs, final Project project) {
+        final VirtualFile fileSystemRoot;
+        if (SystemInfo.isWindows) {
+            fileSystemRoot = ManagingFS.getInstance().findRoot("", LocalFileSystem.getInstance());
+        }
+        else {
+            fileSystemRoot = LocalFileSystem.getInstance().findFileByPath("/");
+        }
+        dirs.add(fileSystemRoot);
+    }
 
-	private static void appendSourceRoots(final Collection<VirtualFile> dirs, final PsiFile psiFile)
-	{
-		final VirtualFile file = psiFile.getVirtualFile();
-		if(file == null)
-		{
-			return;
-		}
-		final Project project = psiFile.getProject();
-		final ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
-		final Module module = index.getModuleForFile(file);
-		if(module != null && index.getSourceRootForFile(file) != null)
-		{
-			dirs.addAll(Arrays.asList(ModuleRootManager.getInstance(module).getSourceRoots()));
-		}
-	}
+    private static void appendSdkAndLibraryClassRoots(List<VirtualFile> dirs, PsiFile psiFile) {
+        final Module module = ModuleUtilCore.findModuleForPsiElement(psiFile);
+        if (module != null) {
+            final OrderEntry[] orderEntries = ModuleRootManager.getInstance(module).getOrderEntries();
+            for (final OrderEntry orderEntry : orderEntries) {
+                if (orderEntry instanceof OrderEntryWithTracking) {
+                    dirs.addAll(Arrays.asList(orderEntry.getFiles(BinariesOrderRootType.getInstance())));
+                }
+            }
+        }
+    }
 
-	private static void appendFileSystemRoot(final Collection<VirtualFile> dirs, final Project project)
-	{
-		final VirtualFile fileSystemRoot;
-		if(SystemInfo.isWindows)
-		{
-			fileSystemRoot = ManagingFS.getInstance().findRoot("", LocalFileSystem.getInstance());
-		}
-		else
-		{
-			fileSystemRoot = LocalFileSystem.getInstance().findFileByPath("/");
-		}
-		dirs.add(fileSystemRoot);
-	}
+    public static class LookupOptions {
+        // default is absolute or relative to current file
+        public static final LookupOptions DEFAULT = new LookupOptions(false, true, true, false, false, false, false);
+        public static final LookupOptions MX_STYLE_SOURCE = new LookupOptions(false, true, true, true, true, false, true);
+        public static final LookupOptions EMBEDDED_ASSET = new LookupOptions(true, true, true, true, true, false, true);
+        public static final LookupOptions NON_EMBEDDED_ASSET = new LookupOptions(false, true, false, false, true, false, false);
+        public static final LookupOptions FLEX_COMPILER_CONFIG_PATH_ELEMENT =
+            new LookupOptions(false, true, true, false, false, true, false);
 
-	private static void appendSdkAndLibraryClassRoots(List<VirtualFile> dirs, PsiFile psiFile)
-	{
-		final Module module = ModuleUtilCore.findModuleForPsiElement(psiFile);
-		if(module != null)
-		{
-			final OrderEntry[] orderEntries = ModuleRootManager.getInstance(module).getOrderEntries();
-			for(final OrderEntry orderEntry : orderEntries)
-			{
-				if(orderEntry instanceof OrderEntryWithTracking)
-				{
-					dirs.addAll(Arrays.asList(orderEntry.getFiles(BinariesOrderRootType.getInstance())));
-				}
-			}
-		}
-	}
+        public final boolean IGNORE_TEXT_ARTER_HASH;
+        public final boolean ABSOLUTE;
+        public final boolean RELATIVE_TO_FILE;
+        public final boolean RELATIVE_TO_SOURCE_ROOTS_START_WITH_SLASH;
+        public final boolean RELATIVE_TO_SOURCE_ROOTS_START_WITHOUT_SLASH;
+        public final boolean RELATIVE_TO_PROJECT_BASE_DIR;
+        // better name would be RELATIVE_TO_FCSH_START_DIR but FlexUtils.getFlexCompilerStartDirectory
+        // () is not accessible from this class
+        public final boolean IN_SDK_AND_LIBRARY_CLASS_ROOTS;
 
-	public static class LookupOptions
-	{
-		// default is absolute or relative to current file
-		public static final LookupOptions DEFAULT = new LookupOptions(false, true, true, false, false, false, false);
-		public static final LookupOptions MX_STYLE_SOURCE = new LookupOptions(false, true, true, true, true, false, true);
-		public static final LookupOptions EMBEDDED_ASSET = new LookupOptions(true, true, true, true, true, false, true);
-		public static final LookupOptions NON_EMBEDDED_ASSET = new LookupOptions(false, true, false, false, true, false, false);
-		public static final LookupOptions FLEX_COMPILER_CONFIG_PATH_ELEMENT = new LookupOptions(false, true, true, false, false, true, false);
-
-		public final boolean IGNORE_TEXT_ARTER_HASH;
-		public final boolean ABSOLUTE;
-		public final boolean RELATIVE_TO_FILE;
-		public final boolean RELATIVE_TO_SOURCE_ROOTS_START_WITH_SLASH;
-		public final boolean RELATIVE_TO_SOURCE_ROOTS_START_WITHOUT_SLASH;
-		public final boolean RELATIVE_TO_PROJECT_BASE_DIR; // better name would be RELATIVE_TO_FCSH_START_DIR but FlexUtils.getFlexCompilerStartDirectory
-		// () is not accessible from this class
-		public final boolean IN_SDK_AND_LIBRARY_CLASS_ROOTS;
-
-		public LookupOptions(boolean IGNORE_TEXT_ARTER_HASH, boolean ABSOLUTE, boolean RELATIVE_TO_FILE,
-				boolean RELATIVE_TO_SOURCE_ROOTS_START_WITH_SLASH, boolean RELATIVE_TO_SOURCE_ROOTS_START_WITHOUT_SLASH, boolean RELATIVE_TO_PROJECT_BASE_DIR,
-				boolean IN_SDK_AND_LIBRARY_CLASS_ROOTS)
-		{
-			this.IGNORE_TEXT_ARTER_HASH = IGNORE_TEXT_ARTER_HASH;
-			this.ABSOLUTE = ABSOLUTE;
-			this.RELATIVE_TO_FILE = RELATIVE_TO_FILE;
-			this.RELATIVE_TO_SOURCE_ROOTS_START_WITH_SLASH = RELATIVE_TO_SOURCE_ROOTS_START_WITH_SLASH;
-			this.RELATIVE_TO_SOURCE_ROOTS_START_WITHOUT_SLASH = RELATIVE_TO_SOURCE_ROOTS_START_WITHOUT_SLASH;
-			this.RELATIVE_TO_PROJECT_BASE_DIR = RELATIVE_TO_PROJECT_BASE_DIR;
-			this.IN_SDK_AND_LIBRARY_CLASS_ROOTS = IN_SDK_AND_LIBRARY_CLASS_ROOTS;
-		}
-	}
+        public LookupOptions(
+            boolean IGNORE_TEXT_ARTER_HASH,
+            boolean ABSOLUTE,
+            boolean RELATIVE_TO_FILE,
+            boolean RELATIVE_TO_SOURCE_ROOTS_START_WITH_SLASH,
+            boolean RELATIVE_TO_SOURCE_ROOTS_START_WITHOUT_SLASH,
+            boolean RELATIVE_TO_PROJECT_BASE_DIR,
+            boolean IN_SDK_AND_LIBRARY_CLASS_ROOTS
+        ) {
+            this.IGNORE_TEXT_ARTER_HASH = IGNORE_TEXT_ARTER_HASH;
+            this.ABSOLUTE = ABSOLUTE;
+            this.RELATIVE_TO_FILE = RELATIVE_TO_FILE;
+            this.RELATIVE_TO_SOURCE_ROOTS_START_WITH_SLASH = RELATIVE_TO_SOURCE_ROOTS_START_WITH_SLASH;
+            this.RELATIVE_TO_SOURCE_ROOTS_START_WITHOUT_SLASH = RELATIVE_TO_SOURCE_ROOTS_START_WITHOUT_SLASH;
+            this.RELATIVE_TO_PROJECT_BASE_DIR = RELATIVE_TO_PROJECT_BASE_DIR;
+            this.IN_SDK_AND_LIBRARY_CLASS_ROOTS = IN_SDK_AND_LIBRARY_CLASS_ROOTS;
+        }
+    }
 }

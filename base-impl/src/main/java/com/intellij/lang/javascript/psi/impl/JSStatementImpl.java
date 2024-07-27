@@ -21,10 +21,8 @@ import consulo.language.ast.ASTNode;
 /**
  * @author ven
  */
-public abstract class JSStatementImpl extends JSStubbedStatementImpl
-{
-	public JSStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public abstract class JSStatementImpl extends JSStubbedStatementImpl {
+    public JSStatementImpl(final ASTNode node) {
+        super(node);
+    }
 }
