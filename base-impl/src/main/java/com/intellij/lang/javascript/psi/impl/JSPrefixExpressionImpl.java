@@ -36,48 +36,41 @@ import jakarta.annotation.Nullable;
  * Time: 11:52:13 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSPrefixExpressionImpl extends JSExpressionImpl implements JSPrefixExpression
-{
-	public JSPrefixExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSPrefixExpressionImpl extends JSExpressionImpl implements JSPrefixExpression {
+    public JSPrefixExpressionImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getExpression()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression getExpression() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Nullable
-	@RequiredReadAction
-	@Override
-	public IElementType getOperationSign()
-	{
-		PsiElement operatorElement = getOperatorElement();
-		return operatorElement != null ? operatorElement.getNode().getElementType() : null;
-	}
+    @Nullable
+    @RequiredReadAction
+    @Override
+    public IElementType getOperationSign() {
+        PsiElement operatorElement = getOperatorElement();
+        return operatorElement != null ? operatorElement.getNode().getElementType() : null;
+    }
 
-	@RequiredReadAction
-	@Nullable
-	@Override
-	public PsiElement getOperatorElement()
-	{
-		return findChildByType(JSTokenTypes.OPERATIONS);
-	}
+    @RequiredReadAction
+    @Nullable
+    @Override
+    public PsiElement getOperatorElement() {
+        return findChildByType(JSTokenTypes.OPERATIONS);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSPrefixExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSPrefixExpression(this);
+    }
 
-	@RequiredReadAction
-	@Nonnull
-	@Override
-	public JavaScriptType getType()
-	{
-		JSExpression expression = getExpression();
-		return expression == null ? JavaScriptType.UNKNOWN : expression.getType();
-	}
+    @RequiredReadAction
+    @Nonnull
+    @Override
+    public JavaScriptType getType() {
+        JSExpression expression = getExpression();
+        return expression == null ? JavaScriptType.UNKNOWN : expression.getType();
+    }
 }

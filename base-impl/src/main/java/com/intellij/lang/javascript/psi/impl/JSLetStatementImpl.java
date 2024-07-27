@@ -27,28 +27,23 @@ import jakarta.annotation.Nonnull;
 /**
  * @author maxim
  */
-public class JSLetStatementImpl extends JSStatementImpl implements JSLetStatement
-{
-	public JSLetStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSLetStatementImpl extends JSStatementImpl implements JSLetStatement {
+    public JSLetStatementImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSLetStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSLetStatement(this);
+    }
 
-	@Override
-	public JSExpression[] getExpressions()
-	{
-		return findChildrenByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression[] getExpressions() {
+        return findChildrenByClass(JSExpression.class);
+    }
 
-	@Override
-	public JSBlockStatement getBody()
-	{
-		return findChildByClass(JSBlockStatement.class);
-	}
+    @Override
+    public JSBlockStatement getBody() {
+        return findChildByClass(JSBlockStatement.class);
+    }
 }

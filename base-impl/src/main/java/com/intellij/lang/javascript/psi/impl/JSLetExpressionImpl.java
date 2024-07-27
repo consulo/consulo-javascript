@@ -29,22 +29,18 @@ import jakarta.annotation.Nonnull;
  * Time: 6:40:04 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSLetExpressionImpl extends JSExpressionImpl implements JSLetExpression
-{
-	public JSLetExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSLetExpressionImpl extends JSExpressionImpl implements JSLetExpression {
+    public JSLetExpressionImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getExpression()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression getExpression() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSLetExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSLetExpression(this);
+    }
 }

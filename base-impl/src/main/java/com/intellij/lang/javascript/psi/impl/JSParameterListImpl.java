@@ -32,27 +32,22 @@ import jakarta.annotation.Nonnull;
  * Time: 8:41:53 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSParameterListImpl extends JSStubElementImpl<JSParameterListStub> implements JSParameterList
-{
-	public JSParameterListImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSParameterListImpl extends JSStubElementImpl<JSParameterListStub> implements JSParameterList {
+    public JSParameterListImpl(final ASTNode node) {
+        super(node);
+    }
 
-	public JSParameterListImpl(final JSParameterListStub stub)
-	{
-		super(stub, JSElementTypes.PARAMETER_LIST);
-	}
+    public JSParameterListImpl(final JSParameterListStub stub) {
+        super(stub, JSElementTypes.PARAMETER_LIST);
+    }
 
-	@Override
-	public JSParameter[] getParameters()
-	{
-		return getStubOrPsiChildren(JSElementTypes.PARAMETERS, JSParameter.EMPTY_ARRAY);
-	}
+    @Override
+    public JSParameter[] getParameters() {
+        return getStubOrPsiChildren(JSElementTypes.PARAMETERS, JSParameter.EMPTY_ARRAY);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSParameterList(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSParameterList(this);
+    }
 }

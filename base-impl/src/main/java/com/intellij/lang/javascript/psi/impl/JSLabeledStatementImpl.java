@@ -34,64 +34,53 @@ import jakarta.annotation.Nonnull;
  * Time: 9:20:04 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSLabeledStatementImpl extends JSStatementImpl implements JSLabeledStatement, JSNamedElement
-{
-	public JSLabeledStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSLabeledStatementImpl extends JSStatementImpl implements JSLabeledStatement, JSNamedElement {
+    public JSLabeledStatementImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public String getLabel()
-	{
-		return getNameIdentifier().getText();
-	}
+    @Override
+    public String getLabel() {
+        return getNameIdentifier().getText();
+    }
 
-	@Override
-	public PsiElement getLabelIdentifier()
-	{
-		return getNameIdentifier();
-	}
+    @Override
+    public PsiElement getLabelIdentifier() {
+        return getNameIdentifier();
+    }
 
-	@Override
-	public JSStatement getStatement()
-	{
-		return findChildByClass(JSStatement.class);
-	}
+    @Override
+    public JSStatement getStatement() {
+        return findChildByClass(JSStatement.class);
+    }
 
-	@Override
-	public JSStatement unlabel()
-	{
-		throw new UnsupportedOperationException("TODO: implement");
-	}
+    @Override
+    public JSStatement unlabel() {
+        throw new UnsupportedOperationException("TODO: implement");
+    }
 
-	public JSLabeledStatement setLabel(String label)
-	{
-		throw new UnsupportedOperationException("TODO: implement");
-	}
+    public JSLabeledStatement setLabel(String label) {
+        throw new UnsupportedOperationException("TODO: implement");
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSLabeledStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSLabeledStatement(this);
+    }
 
-	@Override
-	public String getName()
-	{
-		return getLabel();
-	}
+    @Override
+    public String getName() {
+        return getLabel();
+    }
 
-	@Override
-	public PsiElement setName(@Nonnull String name) throws IncorrectOperationException
-	{
-		JSChangeUtil.doIdentifierReplacement(this, getLabelIdentifier(), name);
-		return this;
-	}
+    @Override
+    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+        JSChangeUtil.doIdentifierReplacement(this, getLabelIdentifier(), name);
+        return this;
+    }
 
-	@Override
-	public PsiElement getNameIdentifier()
-	{
-		return findChildByType(JSTokenTypes.IDENTIFIER);
-	}
+    @Override
+    public PsiElement getNameIdentifier() {
+        return findChildByType(JSTokenTypes.IDENTIFIER);
+    }
 }

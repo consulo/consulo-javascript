@@ -37,134 +37,107 @@ import jakarta.annotation.Nonnull;
  * Date: Jan 30, 2005
  * Time: 8:25:27 PM
  */
-public class JSFunctionImpl extends JSFunctionBaseImpl<JSFunctionStub, JSFunction> implements JSSuppressionHolder
-{
-	public JSFunctionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSFunctionImpl extends JSFunctionBaseImpl<JSFunctionStub, JSFunction> implements JSSuppressionHolder {
+    public JSFunctionImpl(final ASTNode node) {
+        super(node);
+    }
 
-	public JSFunctionImpl(final JSFunctionStub stub, IStubElementType type)
-	{
-		super(stub, type);
-	}
+    public JSFunctionImpl(final JSFunctionStub stub, IStubElementType type) {
+        super(stub, type);
+    }
 
-	@RequiredReadAction
-	@Override
-	public boolean isGetProperty()
-	{
-		final JSFunctionStub stub = getStub();
-		if(stub != null)
-		{
-			return stub.isGetProperty();
-		}
-		return findChildByType(JSTokenTypes.GET_KEYWORD) != null;
-	}
+    @RequiredReadAction
+    @Override
+    public boolean isGetProperty() {
+        final JSFunctionStub stub = getStub();
+        if (stub != null) {
+            return stub.isGetProperty();
+        }
+        return findChildByType(JSTokenTypes.GET_KEYWORD) != null;
+    }
 
-	@RequiredReadAction
-	@Override
-	public boolean isSetProperty()
-	{
-		final JSFunctionStub stub = getStub();
-		if(stub != null)
-		{
-			return stub.isGetProperty();
-		}
-		return findChildByType(JSTokenTypes.SET_KEYWORD) != null;
-	}
+    @RequiredReadAction
+    @Override
+    public boolean isSetProperty() {
+        final JSFunctionStub stub = getStub();
+        if (stub != null) {
+            return stub.isGetProperty();
+        }
+        return findChildByType(JSTokenTypes.SET_KEYWORD) != null;
+    }
 
-	@RequiredReadAction
-	@Override
-	public boolean isConstructor()
-	{
-		final JSFunctionStub stub = getStub();
-		if(stub != null)
-		{
-			return stub.isConstructor();
-		}
-		final PsiElement parent = JSResolveUtil.findParent(this);
-		if(parent instanceof JSClass && Comparing.equal("constructor", getName(), true))
-		{
-			return true;
-		}
-		return false;
-	}
+    @RequiredReadAction
+    @Override
+    public boolean isConstructor() {
+        final JSFunctionStub stub = getStub();
+        if (stub != null) {
+            return stub.isConstructor();
+        }
+        final PsiElement parent = JSResolveUtil.findParent(this);
+        return parent instanceof JSClass && Comparing.equal("constructor", getName(), true);
+    }
 
-	@Override
-	public JSAttributeList getAttributeList()
-	{
-		return getStubOrPsiChild(JSElementTypes.ATTRIBUTE_LIST);
-	}
+    @Override
+    public JSAttributeList getAttributeList() {
+        return getStubOrPsiChild(JSElementTypes.ATTRIBUTE_LIST);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSFunctionDeclaration(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSFunctionDeclaration(this);
+    }
 
-	@Override
-	public void delete() throws IncorrectOperationException
-	{
-		getNode().getTreeParent().removeChild(getNode());
-	}
+    @Override
+    public void delete() throws IncorrectOperationException {
+        getNode().getTreeParent().removeChild(getNode());
+    }
 
-	@Override
-	public String getQualifiedName()
-	{
-		final JSFunctionStub jsFunctionStub = getStub();
-		if(jsFunctionStub != null)
-		{
-			return jsFunctionStub.getQualifiedName();
-		}
-		final PsiElement parent = JSResolveUtil.findParent(this);
+    @Override
+    public String getQualifiedName() {
+        final JSFunctionStub jsFunctionStub = getStub();
+        if (jsFunctionStub != null) {
+            return jsFunctionStub.getQualifiedName();
+        }
+        final PsiElement parent = JSResolveUtil.findParent(this);
 
-		if(parent instanceof JSFile || parent instanceof JSPackageStatement)
-		{
-			return JSPsiImplUtils.getQName(this);
-		}
-		else
-		{
-			return getName();
-		}
-	}
+        if (parent instanceof JSFile || parent instanceof JSPackageStatement) {
+            return JSPsiImplUtils.getQName(this);
+        }
+        else {
+            return getName();
+        }
+    }
 
-	@Override
-	@Nonnull
-	public SearchScope getUseScope()
-	{
-		if(isConstructor())
-		{
-			return super.getUseScope();
-		}
-		return JSResolveUtil.findUseScope(this);
-	}
+    @Override
+    @Nonnull
+    public SearchScope getUseScope() {
+        if (isConstructor()) {
+            return super.getUseScope();
+        }
+        return JSResolveUtil.findUseScope(this);
+    }
 
-	@Override
-	public PsiElement getNavigationElement()
-	{
-		PsiElement parent = getParent();
-		if(parent instanceof JSClass)
-		{
-			PsiElement parentOriginalElement = parent.getNavigationElement();
+    @Override
+    public PsiElement getNavigationElement() {
+        PsiElement parent = getParent();
+        if (parent instanceof JSClass) {
+            PsiElement parentOriginalElement = parent.getNavigationElement();
 
-			if(parentOriginalElement != parent)
-			{
-				JSFunction functionByNameAndKind = ((JSClass) parentOriginalElement).findFunctionByNameAndKind(getName(), getKind());
-				return functionByNameAndKind != null ? functionByNameAndKind : this;
-			}
-		}
-		return JSPsiImplUtils.findTopLevelNavigatableElement(this);
-	}
+            if (parentOriginalElement != parent) {
+                JSFunction functionByNameAndKind = ((JSClass)parentOriginalElement).findFunctionByNameAndKind(getName(), getKind());
+                return functionByNameAndKind != null ? functionByNameAndKind : this;
+            }
+        }
+        return JSPsiImplUtils.findTopLevelNavigatableElement(this);
+    }
 
-	@Override
-	public PsiElement setName(@Nonnull String name) throws IncorrectOperationException
-	{
-		String oldName = getName();
-		PsiElement element = super.setName(name);
-		if(getParent() instanceof JSPackageStatement)
-		{
-			JSPsiImplUtils.updateFileName(this, name, oldName);
-		}
-		return element;
-	}
+    @Override
+    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+        String oldName = getName();
+        PsiElement element = super.setName(name);
+        if (getParent() instanceof JSPackageStatement) {
+            JSPsiImplUtils.updateFileName(this, name, oldName);
+        }
+        return element;
+    }
 }
