@@ -36,77 +36,63 @@ import jakarta.annotation.Nullable;
  * Time: 9:59:44 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSTryStatementImpl extends JSStatementImpl implements JSTryStatement
-{
-	private static TokenSet ourCatchesTypeSet = TokenSet.create(JSElementTypes.CATCH_BLOCK);
+public class JSTryStatementImpl extends JSStatementImpl implements JSTryStatement {
+    private static TokenSet ourCatchesTypeSet = TokenSet.create(JSElementTypes.CATCH_BLOCK);
 
-	public JSTryStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+    public JSTryStatementImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSStatement getStatement()
-	{
-		ASTNode child = getNode().getFirstChildNode();
-		while(child != null)
-		{
-			final IElementType type = child.getElementType();
-			if(child.getPsi() instanceof JSStatement)
-			{
-				return (JSStatement) child.getPsi();
-			}
-			if(type == JSTokenTypes.FINALLY_KEYWORD)
-			{
-				break;
-			}
-			child = child.getTreeNext();
-		}
-		return null;
-	}
+    @Override
+    public JSStatement getStatement() {
+        ASTNode child = getNode().getFirstChildNode();
+        while (child != null) {
+            final IElementType type = child.getElementType();
+            if (child.getPsi() instanceof JSStatement) {
+                return (JSStatement)child.getPsi();
+            }
+            if (type == JSTokenTypes.FINALLY_KEYWORD) {
+                break;
+            }
+            child = child.getTreeNext();
+        }
+        return null;
+    }
 
-	@Override
-	@Nullable
-	public JSCatchBlock getCatchBlock()
-	{
-		final ASTNode catchChild = getNode().findChildByType(JSElementTypes.CATCH_BLOCK);
-		if(catchChild == null)
-		{
-			return null;
-		}
-		return (JSCatchBlock) catchChild.getPsi();
-	}
+    @Override
+    @Nullable
+    public JSCatchBlock getCatchBlock() {
+        final ASTNode catchChild = getNode().findChildByType(JSElementTypes.CATCH_BLOCK);
+        if (catchChild == null) {
+            return null;
+        }
+        return (JSCatchBlock)catchChild.getPsi();
+    }
 
-	@Override
-	public JSCatchBlock[] getAllCatchBlocks()
-	{
-		return findChildrenByClass(JSCatchBlock.class);
-	}
+    @Override
+    public JSCatchBlock[] getAllCatchBlocks() {
+        return findChildrenByClass(JSCatchBlock.class);
+    }
 
-	@Override
-	public JSStatement getFinallyStatement()
-	{
-		ASTNode child = getNode().getFirstChildNode();
-		boolean foundFinally = false;
-		while(child != null)
-		{
-			final IElementType type = child.getElementType();
-			if(foundFinally && child.getPsi() instanceof JSStatement)
-			{
-				return (JSStatement) child.getPsi();
-			}
-			if(type == JSTokenTypes.FINALLY_KEYWORD)
-			{
-				foundFinally = true;
-			}
-			child = child.getTreeNext();
-		}
-		return null;
-	}
+    @Override
+    public JSStatement getFinallyStatement() {
+        ASTNode child = getNode().getFirstChildNode();
+        boolean foundFinally = false;
+        while (child != null) {
+            final IElementType type = child.getElementType();
+            if (foundFinally && child.getPsi() instanceof JSStatement) {
+                return (JSStatement)child.getPsi();
+            }
+            if (type == JSTokenTypes.FINALLY_KEYWORD) {
+                foundFinally = true;
+            }
+            child = child.getTreeNext();
+        }
+        return null;
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSTryStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSTryStatement(this);
+    }
 }

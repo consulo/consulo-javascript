@@ -38,130 +38,107 @@ import jakarta.annotation.Nullable;
  * Date: Jan 30, 2005
  * Time: 11:24:42 PM
  */
-public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperExpression
-{
-	public JSSuperExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperExpression {
+    public JSSuperExpressionImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSSuperExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSSuperExpression(this);
+    }
 
-	@Override
-	public PsiReference getReference()
-	{
-		return getReferences()[0];
-	}
+    @Override
+    public PsiReference getReference() {
+        return getReferences()[0];
+    }
 
-	@Override
-	@Nonnull
-	public PsiReference[] getReferences()
-	{
-		PsiReference[] refs = {
-				new PsiReference()
-				{
-					@Override
-					public PsiElement getElement()
-					{
-						return JSSuperExpressionImpl.this;
-					}
+    @Override
+    @Nonnull
+    public PsiReference[] getReferences() {
+        PsiReference[] refs = {
+            new PsiReference() {
+                @Override
+                public PsiElement getElement() {
+                    return JSSuperExpressionImpl.this;
+                }
 
-					@Override
-					public TextRange getRangeInElement()
-					{
-						return new TextRange(0, getTextLength());
-					}
+                @Override
+                public TextRange getRangeInElement() {
+                    return new TextRange(0, getTextLength());
+                }
 
-					@Override
-					@Nullable
-					public PsiElement resolve()
-					{
-						final PsiElement element = findClass();
+                @Override
+                @Nullable
+                public PsiElement resolve() {
+                    final PsiElement element = findClass();
 
-						if(getElement().getParent() instanceof JSCallExpression && element instanceof JSClass)
-						{
-							final JSClass clazz = (JSClass) element;
-							final ResolveProcessor processor = new ResolveProcessor(clazz.getName(), JSSuperExpressionImpl.this);
-							element.processDeclarations(processor, ResolveState.initial(), clazz, getElement());
-							if(processor.getResult() != null)
-							{
-								return processor.getResult();
-							}
-						}
+                    if (getElement().getParent() instanceof JSCallExpression && element instanceof JSClass) {
+                        final JSClass clazz = (JSClass)element;
+                        final ResolveProcessor processor = new ResolveProcessor(clazz.getName(), JSSuperExpressionImpl.this);
+                        element.processDeclarations(processor, ResolveState.initial(), clazz, getElement());
+                        if (processor.getResult() != null) {
+                            return processor.getResult();
+                        }
+                    }
 
-						return element;
-					}
+                    return element;
+                }
 
-					private PsiElement findClass()
-					{
-						final JSClass jsClass = PsiTreeUtil.getParentOfType(getElement(), JSClass.class);
+                private PsiElement findClass() {
+                    final JSClass jsClass = PsiTreeUtil.getParentOfType(getElement(), JSClass.class);
 
-						if(jsClass != null)
-						{
-							final JSReferenceList extendsList = jsClass.getExtendsList();
-							if(extendsList != null)
-							{
-								final JSReferenceExpression[] referenceExpressions = extendsList.getExpressions();
-								if(referenceExpressions != null && referenceExpressions.length > 0)
-								{
-									final ResolveResult[] results = referenceExpressions[0].multiResolve(false);
-									return results.length > 0 ? results[0].getElement() : null;
-								}
-							}
-						}
-						else
-						{
-							final JSFile jsFile = PsiTreeUtil.getParentOfType(getElement(), JSFile.class);
+                    if (jsClass != null) {
+                        final JSReferenceList extendsList = jsClass.getExtendsList();
+                        if (extendsList != null) {
+                            final JSReferenceExpression[] referenceExpressions = extendsList.getExpressions();
+                            if (referenceExpressions != null && referenceExpressions.length > 0) {
+                                final ResolveResult[] results = referenceExpressions[0].multiResolve(false);
+                                return results.length > 0 ? results[0].getElement() : null;
+                            }
+                        }
+                    }
+                    else {
+                        final JSFile jsFile = PsiTreeUtil.getParentOfType(getElement(), JSFile.class);
 
-							if(jsFile != null)
-							{
-								return JSResolveUtil.getClassReferenceForXmlFromContext(jsFile);
-							}
-						}
-						return null;
-					}
+                        if (jsFile != null) {
+                            return JSResolveUtil.getClassReferenceForXmlFromContext(jsFile);
+                        }
+                    }
+                    return null;
+                }
 
-					@Override
-					public String getCanonicalText()
-					{
-						return getText();
-					}
+                @Override
+                public String getCanonicalText() {
+                    return getText();
+                }
 
-					@Override
-					public PsiElement handleElementRename(final String newElementName) throws IncorrectOperationException
-					{
-						return null;
-					}
+                @Override
+                public PsiElement handleElementRename(final String newElementName) throws IncorrectOperationException {
+                    return null;
+                }
 
-					@Override
-					public PsiElement bindToElement(@Nonnull final PsiElement element) throws IncorrectOperationException
-					{
-						return null;
-					}
+                @Override
+                public PsiElement bindToElement(@Nonnull final PsiElement element) throws IncorrectOperationException {
+                    return null;
+                }
 
-					@Override
-					public boolean isReferenceTo(final PsiElement element)
-					{
-						return false;
-					}
+                @Override
+                public boolean isReferenceTo(final PsiElement element) {
+                    return false;
+                }
 
-					@Override
-					public Object[] getVariants()
-					{
-						return ArrayUtil.EMPTY_OBJECT_ARRAY;
-					}
+                @Override
+                public Object[] getVariants() {
+                    return ArrayUtil.EMPTY_OBJECT_ARRAY;
+                }
 
-					@Override
-					public boolean isSoft()
-					{
-						return true;
-					}
-				}
-		};
-		return refs;
-	}
+                @Override
+                public boolean isSoft() {
+                    return true;
+                }
+            }
+        };
+        return refs;
+    }
 }

@@ -29,16 +29,13 @@ import jakarta.annotation.Nonnull;
  * Time: 11:24:42 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSThisExpressionImpl extends JSExpressionImpl implements JSThisExpression
-{
-	public JSThisExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSThisExpressionImpl extends JSExpressionImpl implements JSThisExpression {
+    public JSThisExpressionImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSThisExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSThisExpression(this);
+    }
 }
