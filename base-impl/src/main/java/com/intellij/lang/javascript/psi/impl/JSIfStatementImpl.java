@@ -32,55 +32,46 @@ import jakarta.annotation.Nonnull;
  * Time: 9:49:01 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSIfStatementImpl extends JSStatementImpl implements JSIfStatement
-{
-	public JSIfStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSIfStatementImpl extends JSStatementImpl implements JSIfStatement {
+    public JSIfStatementImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getCondition()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression getCondition() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	public JSStatement getThen()
-	{
-		return findChildByClass(JSStatement.class);
-	}
+    @Override
+    public JSStatement getThen() {
+        return findChildByClass(JSStatement.class);
+    }
 
-	@Override
-	public JSStatement getElse()
-	{
-		final ASTNode myNode = getNode();
-		final ASTNode elseNode = myNode.findChildByType(JSTokenTypes.ELSE_KEYWORD);
-		final ASTNode node = elseNode != null ? myNode.findChildByType(JSElementTypes.STATEMENTS, elseNode) : null;
-		return node != null ? (JSStatement) node.getPsi() : null;
-	}
+    @Override
+    public JSStatement getElse() {
+        final ASTNode myNode = getNode();
+        final ASTNode elseNode = myNode.findChildByType(JSTokenTypes.ELSE_KEYWORD);
+        final ASTNode node = elseNode != null ? myNode.findChildByType(JSElementTypes.STATEMENTS, elseNode) : null;
+        return node != null ? (JSStatement)node.getPsi() : null;
+    }
 
-	@Override
-	public void setThen(JSStatement statement)
-	{
-		throw new UnsupportedOperationException("TODO: implement");
-	}
+    @Override
+    public void setThen(JSStatement statement) {
+        throw new UnsupportedOperationException("TODO: implement");
+    }
 
-	@Override
-	public void setElse(JSStatement statement)
-	{
-		throw new UnsupportedOperationException("TODO: implement");
-	}
+    @Override
+    public void setElse(JSStatement statement) {
+        throw new UnsupportedOperationException("TODO: implement");
+    }
 
-	@Override
-	public void setCondition(JSExpression expr)
-	{
-		throw new UnsupportedOperationException("TODO: implement");
-	}
+    @Override
+    public void setCondition(JSExpression expr) {
+        throw new UnsupportedOperationException("TODO: implement");
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSIfStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSIfStatement(this);
+    }
 }

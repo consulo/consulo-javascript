@@ -22,16 +22,13 @@ import consulo.language.ast.ASTNode;
 
 import jakarta.annotation.Nonnull;
 
-public class JSGenericSignatureImpl extends JSElementImpl implements JSGenericSignature
-{
-	public JSGenericSignatureImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSGenericSignatureImpl extends JSElementImpl implements JSGenericSignature {
+    public JSGenericSignatureImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSGenericSignature(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSGenericSignature(this);
+    }
 }

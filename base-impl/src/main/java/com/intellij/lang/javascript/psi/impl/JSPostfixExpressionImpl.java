@@ -32,38 +32,32 @@ import jakarta.annotation.Nonnull;
  * Date: Jan 30, 2005
  * Time: 11:52:13 PM
  */
-public class JSPostfixExpressionImpl extends JSExpressionImpl implements JSPostfixExpression
-{
-	public JSPostfixExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSPostfixExpressionImpl extends JSExpressionImpl implements JSPostfixExpression {
+    public JSPostfixExpressionImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@RequiredReadAction
-	@Nonnull
-	@Override
-	public JavaScriptType getType()
-	{
-		JSExpression expression = getExpression();
-		return expression == null ? JavaScriptType.UNKNOWN : expression.getType();
-	}
+    @RequiredReadAction
+    @Nonnull
+    @Override
+    public JavaScriptType getType() {
+        JSExpression expression = getExpression();
+        return expression == null ? JavaScriptType.UNKNOWN : expression.getType();
+    }
 
-	@Override
-	public JSExpression getExpression()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression getExpression() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	public IElementType getOperationSign()
-	{
-		final ASTNode[] nodes = getNode().getChildren(JSTokenTypes.OPERATIONS);
-		return nodes.length == 1 ? nodes[0].getElementType() : null;
-	}
+    @Override
+    public IElementType getOperationSign() {
+        final ASTNode[] nodes = getNode().getChildren(JSTokenTypes.OPERATIONS);
+        return nodes.length == 1 ? nodes[0].getElementType() : null;
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSPostfixExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSPostfixExpression(this);
+    }
 }
