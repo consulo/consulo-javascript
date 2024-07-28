@@ -246,7 +246,9 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
     }
 
     protected abstract Collection<JSClass> getInheritors(
-        JSClassInheritorsProvider provider, String parentName, Project project,
+        JSClassInheritorsProvider provider,
+        String parentName,
+        Project project,
         GlobalSearchScope scope
     );
 
