@@ -25,13 +25,11 @@ import consulo.language.psi.stub.IStubElementType;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Mar 26, 2008
- *         Time: 11:29:19 PM
+ * Date: Mar 26, 2008
+ * Time: 11:29:19 PM
  */
-public class JSParameterListStubImpl extends StubBase<JSParameterList> implements JSParameterListStub
-{
-	public JSParameterListStubImpl(StubElement parent, IStubElementType elementType)
-	{
-		super(parent, elementType);
-	}
+public class JSParameterListStubImpl extends StubBase<JSParameterList> implements JSParameterListStub {
+    public JSParameterListStubImpl(StubElement parent, IStubElementType elementType) {
+        super(parent, elementType);
+    }
 }

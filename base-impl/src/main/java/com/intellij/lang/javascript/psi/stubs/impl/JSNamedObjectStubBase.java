@@ -24,29 +24,25 @@ import consulo.language.psi.stub.StubBase;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Mar 26, 2008
- *         Time: 7:11:48 PM
+ * Date: Mar 26, 2008
+ * Time: 7:11:48 PM
  */
-public abstract class JSNamedObjectStubBase<T extends PsiNamedElement> extends StubBase<T>
-{
-	protected final String myName;
-	protected final int myFlags;
+public abstract class JSNamedObjectStubBase<T extends PsiNamedElement> extends StubBase<T> {
+    protected final String myName;
+    protected final int myFlags;
 
-	protected JSNamedObjectStubBase(String name, int flags, final StubElement parent, final IStubElementType elementType)
-	{
-		super(parent, elementType);
+    protected JSNamedObjectStubBase(String name, int flags, final StubElement parent, final IStubElementType elementType) {
+        super(parent, elementType);
 
-		myName = name;
-		myFlags = flags;
-	}
+        myName = name;
+        myFlags = flags;
+    }
 
-	public int getFlags()
-	{
-		return myFlags;
-	}
+    public int getFlags() {
+        return myFlags;
+    }
 
-	public String getName()
-	{
-		return myName;
-	}
+    public String getName() {
+        return myName;
+    }
 }

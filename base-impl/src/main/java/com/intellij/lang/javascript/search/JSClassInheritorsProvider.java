@@ -26,11 +26,10 @@ import consulo.project.Project;
 import java.util.Collection;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
-public interface JSClassInheritorsProvider
-{
-	ExtensionPointName<JSClassInheritorsProvider> EP_NAME = ExtensionPointName.create(JSClassInheritorsProvider.class);
+public interface JSClassInheritorsProvider {
+    ExtensionPointName<JSClassInheritorsProvider> EP_NAME = ExtensionPointName.create(JSClassInheritorsProvider.class);
 
-	Collection<JSClass> getImplementingClasses(String parentName, Project project, GlobalSearchScope scope);
+    Collection<JSClass> getImplementingClasses(String parentName, Project project, GlobalSearchScope scope);
 
-	Collection<JSClass> getExtendingClasses(String parentName, Project project, GlobalSearchScope scope);
+    Collection<JSClass> getExtendingClasses(String parentName, Project project, GlobalSearchScope scope);
 }
