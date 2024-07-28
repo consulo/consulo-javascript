@@ -22,10 +22,8 @@ import org.jetbrains.annotations.NonNls;
 /**
  * @author yole
  */
-public class JSDocElementType extends JSElementType
-{
-	public JSDocElementType(@Nonnull @NonNls String debugName)
-	{
-		super(debugName);
-	}
+public class JSDocElementType extends JSElementType {
+    public JSDocElementType(@Nonnull @NonNls String debugName) {
+        super(debugName);
+    }
 }

@@ -34,63 +34,58 @@ import consulo.javascript.types.JSQualifiedStubElementType;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Mar 25, 2008
- *         Time: 10:50:34 PM
+ * Date: Mar 25, 2008
+ * Time: 10:50:34 PM
  */
-public abstract class JSFunctionElementType extends JSQualifiedStubElementType<JSFunctionStub, JSFunction>
-{
-	public JSFunctionElementType(@Nonnull String name)
-	{
-		super(name);
-	}
+public abstract class JSFunctionElementType extends JSQualifiedStubElementType<JSFunctionStub, JSFunction> {
+    public JSFunctionElementType(@Nonnull String name) {
+        super(name);
+    }
 
-	@Override
-	protected boolean doIndexName(JSFunctionStub stub, final String name, final String fqn)
-	{
-		final IStubElementType stubType = stub.getParentStub().getStubType();
+    @Override
+    protected boolean doIndexName(JSFunctionStub stub, final String name, final String fqn) {
+        final IStubElementType stubType = stub.getParentStub().getStubType();
 
-		if(stubType instanceof JSPackageStatementElementType || stubType == null)
-		{
-			return true;
-		}
-		return false;
-	}
+        return stubType instanceof JSPackageStatementElementType || stubType == null;
+    }
 
-	@Override
-	protected boolean doIndexQualifiedName(JSFunctionStub stub, String name, String fqn)
-	{
-		return doIndexName(stub, name, fqn);
-	}
+    @Override
+    protected boolean doIndexQualifiedName(JSFunctionStub stub, String name, String fqn) {
+        return doIndexName(stub, name, fqn);
+    }
 
-	@RequiredReadAction
-	@Override
-	public JSFunctionStub createStub(@Nonnull JSFunction psi, StubElement parentStub)
-	{
-		String name = psi.getName();
-		String qualifiedName = psi.getQualifiedName();
-		String returnTypeString = psi.getReturnTypeString();
-		int flags = JSFunctionStubImpl.buildFlags(psi);
-		return new JSFunctionStubImpl(name, flags, qualifiedName, returnTypeString, parentStub, this);
-	}
+    @RequiredReadAction
+    @Override
+    public JSFunctionStub createStub(@Nonnull JSFunction psi, StubElement parentStub) {
+        String name = psi.getName();
+        String qualifiedName = psi.getQualifiedName();
+        String returnTypeString = psi.getReturnTypeString();
+        int flags = JSFunctionStubImpl.buildFlags(psi);
+        return new JSFunctionStubImpl(name, flags, qualifiedName, returnTypeString, parentStub, this);
+    }
 
-	@Override
-	public void serialize(@Nonnull JSFunctionStub stub, @Nonnull StubOutputStream dataStream) throws IOException
-	{
-		dataStream.writeName(stub.getName());
-		dataStream.writeName(stub.getQualifiedName());
-		dataStream.writeName(stub.getReturnTypeString());
-		dataStream.writeVarInt(stub.getFlags());
-	}
+    @Override
+    public void serialize(@Nonnull JSFunctionStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+        dataStream.writeName(stub.getName());
+        dataStream.writeName(stub.getQualifiedName());
+        dataStream.writeName(stub.getReturnTypeString());
+        dataStream.writeVarInt(stub.getFlags());
+    }
 
-	@Nonnull
-	@Override
-	public JSFunctionStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
-	{
-		StringRef nameRef = dataStream.readName();
-		StringRef qualifiedRef = dataStream.readName();
-		StringRef returnTypeRef = dataStream.readName();
-		int flags = dataStream.readVarInt();
-		return new JSFunctionStubImpl(StringRef.toString(nameRef), flags, StringRef.toString(qualifiedRef), StringRef.toString(returnTypeRef),
-				parentStub, this);
-	}
+    @Nonnull
+    @Override
+    public JSFunctionStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+        StringRef nameRef = dataStream.readName();
+        StringRef qualifiedRef = dataStream.readName();
+        StringRef returnTypeRef = dataStream.readName();
+        int flags = dataStream.readVarInt();
+        return new JSFunctionStubImpl(
+            StringRef.toString(nameRef),
+            flags,
+            StringRef.toString(qualifiedRef),
+            StringRef.toString(returnTypeRef),
+            parentStub,
+            this
+        );
+    }
 }

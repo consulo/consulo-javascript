@@ -39,82 +39,67 @@ import consulo.javascript.language.psi.stub.JavaScriptIndexKeys;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jun 6, 2008
- *         Time: 7:51:24 PM
+ * Date: Jun 6, 2008
+ * Time: 7:51:24 PM
  */
-public class JSReferenceListElementType extends JSStubElementType<JSReferenceListStub, JSReferenceList>
-{
-	public JSReferenceListElementType(@NonNls String name)
-	{
-		super(name);
-	}
+public class JSReferenceListElementType extends JSStubElementType<JSReferenceListStub, JSReferenceList> {
+    public JSReferenceListElementType(@NonNls String name) {
+        super(name);
+    }
 
-	@Override
-	public void indexStub(@Nonnull JSReferenceListStub stub, @Nonnull IndexSink sink)
-	{
-		if(this == JSElementTypes.EXTENDS_LIST)
-		{
-			doIndex(sink, stub, JavaScriptIndexKeys.EXTENDS_INDEX);
-		}
-		else if(this == JSElementTypes.IMPLEMENTS_LIST)
-		{
-			doIndex(sink, stub, JavaScriptIndexKeys.IMPLEMENTED_INDEX);
-		}
-	}
+    @Override
+    public void indexStub(@Nonnull JSReferenceListStub stub, @Nonnull IndexSink sink) {
+        if (this == JSElementTypes.EXTENDS_LIST) {
+            doIndex(sink, stub, JavaScriptIndexKeys.EXTENDS_INDEX);
+        }
+        else if (this == JSElementTypes.IMPLEMENTS_LIST) {
+            doIndex(sink, stub, JavaScriptIndexKeys.IMPLEMENTED_INDEX);
+        }
+    }
 
-	private static void doIndex(IndexSink sink, JSReferenceListStub stub, StubIndexKey<String, JSReferenceList> indexKey)
-	{
-		for(String s : stub.getReferenceTexts())
-		{
-			if(s != null)
-			{
-				sink.occurrence(indexKey, StringUtil.getShortName(s));
-			}
-		}
-	}
+    private static void doIndex(IndexSink sink, JSReferenceListStub stub, StubIndexKey<String, JSReferenceList> indexKey) {
+        for (String s : stub.getReferenceTexts()) {
+            if (s != null) {
+                sink.occurrence(indexKey, StringUtil.getShortName(s));
+            }
+        }
+    }
 
-	@Nonnull
-	@Override
-	public PsiElement createElement(@Nonnull ASTNode astNode)
-	{
-		return new JSReferenceListImpl(astNode);
-	}
+    @Nonnull
+    @Override
+    public PsiElement createElement(@Nonnull ASTNode astNode) {
+        return new JSReferenceListImpl(astNode);
+    }
 
-	@Override
-	public JSReferenceList createPsi(@Nonnull JSReferenceListStub stub)
-	{
-		return new JSReferenceListImpl(stub, this);
-	}
+    @Override
+    public JSReferenceList createPsi(@Nonnull JSReferenceListStub stub) {
+        return new JSReferenceListImpl(stub, this);
+    }
 
-	@RequiredReadAction
-	@Override
-	public JSReferenceListStub createStub(@Nonnull JSReferenceList psi, StubElement parentStub)
-	{
-		String[] referenceTexts = psi.getReferenceTexts();
-		return new JSReferenceListStubImpl(referenceTexts, parentStub, this);
-	}
+    @RequiredReadAction
+    @Override
+    public JSReferenceListStub createStub(@Nonnull JSReferenceList psi, StubElement parentStub) {
+        String[] referenceTexts = psi.getReferenceTexts();
+        return new JSReferenceListStubImpl(referenceTexts, parentStub, this);
+    }
 
-	@Override
-	public void serialize(@Nonnull JSReferenceListStub stub, @Nonnull StubOutputStream dataStream) throws IOException
-	{
-		String[] referenceTexts = stub.getReferenceTexts();
-		dataStream.writeVarInt(referenceTexts.length);
-		for(String referenceText : referenceTexts)
-		{
-			dataStream.writeName(referenceText);
-		}
-	}
+    @Override
+    public void serialize(@Nonnull JSReferenceListStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+        String[] referenceTexts = stub.getReferenceTexts();
+        dataStream.writeVarInt(referenceTexts.length);
+        for (String referenceText : referenceTexts) {
+            dataStream.writeName(referenceText);
+        }
+    }
 
-	@Nonnull
-	@Override
-	public JSReferenceListStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
-	{
-		int count = dataStream.readVarInt();
-		String[] refs = ArrayUtil.newStringArray(count);
-		for(int i = 0; i < count; i++)
-		{
-			refs[i] = StringRef.toString(dataStream.readName());
-		}
-		return new JSReferenceListStubImpl(refs, parentStub, this);
-	}
+    @Nonnull
+    @Override
+    public JSReferenceListStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+        int count = dataStream.readVarInt();
+        String[] refs = ArrayUtil.newStringArray(count);
+        for (int i = 0; i < count; i++) {
+            refs[i] = StringRef.toString(dataStream.readName());
+        }
+        return new JSReferenceListStubImpl(refs, parentStub, this);
+    }
 }

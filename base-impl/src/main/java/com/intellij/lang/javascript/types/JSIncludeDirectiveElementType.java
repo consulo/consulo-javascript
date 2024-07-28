@@ -36,48 +36,41 @@ import consulo.language.psi.stub.StubOutputStream;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jun 7, 2008
- *         Time: 9:23:54 PM
+ * Date: Jun 7, 2008
+ * Time: 9:23:54 PM
  */
-public class JSIncludeDirectiveElementType extends JSStubElementType<JSIncludeDirectiveStub, JSIncludeDirective>
-{
-	public JSIncludeDirectiveElementType()
-	{
-		super("INCLUDE_DIRECTIVE");
-	}
+public class JSIncludeDirectiveElementType extends JSStubElementType<JSIncludeDirectiveStub, JSIncludeDirective> {
+    public JSIncludeDirectiveElementType() {
+        super("INCLUDE_DIRECTIVE");
+    }
 
-	@Override
-	public void serialize(@Nonnull JSIncludeDirectiveStub stub, @Nonnull StubOutputStream dataStream) throws IOException
-	{
-		dataStream.writeName(stub.getIncludeText());
-	}
+    @Override
+    public void serialize(@Nonnull JSIncludeDirectiveStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+        dataStream.writeName(stub.getIncludeText());
+    }
 
-	@Nonnull
-	@Override
-	public JSIncludeDirectiveStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
-	{
-		StringRef includeText = dataStream.readName();
-		return new JSIncludeDirectiveStubImpl(StringRef.toString(includeText), parentStub, this);
-	}
+    @Nonnull
+    @Override
+    public JSIncludeDirectiveStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+        StringRef includeText = dataStream.readName();
+        return new JSIncludeDirectiveStubImpl(StringRef.toString(includeText), parentStub, this);
+    }
 
-	@RequiredReadAction
-	@Override
-	public JSIncludeDirectiveStub createStub(@Nonnull JSIncludeDirective psi, StubElement parentStub)
-	{
-		String includeText = psi.getIncludeText();
-		return new JSIncludeDirectiveStubImpl(includeText, parentStub, this);
-	}
+    @RequiredReadAction
+    @Override
+    public JSIncludeDirectiveStub createStub(@Nonnull JSIncludeDirective psi, StubElement parentStub) {
+        String includeText = psi.getIncludeText();
+        return new JSIncludeDirectiveStubImpl(includeText, parentStub, this);
+    }
 
-	@Nonnull
-	@Override
-	public PsiElement createElement(@Nonnull ASTNode astNode)
-	{
-		return new JSIncludeDirectiveImpl(astNode);
-	}
+    @Nonnull
+    @Override
+    public PsiElement createElement(@Nonnull ASTNode astNode) {
+        return new JSIncludeDirectiveImpl(astNode);
+    }
 
-	@Override
-	public JSIncludeDirective createPsi(@Nonnull JSIncludeDirectiveStub stub)
-	{
-		return new JSIncludeDirectiveImpl(stub);
-	}
+    @Override
+    public JSIncludeDirective createPsi(@Nonnull JSIncludeDirectiveStub stub) {
+        return new JSIncludeDirectiveImpl(stub);
+    }
 }

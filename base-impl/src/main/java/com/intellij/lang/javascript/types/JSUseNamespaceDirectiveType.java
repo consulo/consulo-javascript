@@ -36,47 +36,40 @@ import consulo.language.psi.stub.StubInputStream;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Oct 3, 2008
- *         Time: 9:13:01 PM
+ * Date: Oct 3, 2008
+ * Time: 9:13:01 PM
  */
-public class JSUseNamespaceDirectiveType extends JSStubElementType<JSUseNamespaceDirectiveStub, JSUseNamespaceDirective>
-{
-	public JSUseNamespaceDirectiveType()
-	{
-		super("USE_NAMESPACE_DIRECTIVE");
-	}
+public class JSUseNamespaceDirectiveType extends JSStubElementType<JSUseNamespaceDirectiveStub, JSUseNamespaceDirective> {
+    public JSUseNamespaceDirectiveType() {
+        super("USE_NAMESPACE_DIRECTIVE");
+    }
 
-	@Nonnull
-	@Override
-	public PsiElement createElement(@Nonnull ASTNode astNode)
-	{
-		return new JSUseNamespaceDirectiveImpl(astNode);
-	}
+    @Nonnull
+    @Override
+    public PsiElement createElement(@Nonnull ASTNode astNode) {
+        return new JSUseNamespaceDirectiveImpl(astNode);
+    }
 
-	@Override
-	public JSUseNamespaceDirective createPsi(@Nonnull JSUseNamespaceDirectiveStub stub)
-	{
-		return new JSUseNamespaceDirectiveImpl(stub);
-	}
+    @Override
+    public JSUseNamespaceDirective createPsi(@Nonnull JSUseNamespaceDirectiveStub stub) {
+        return new JSUseNamespaceDirectiveImpl(stub);
+    }
 
-	@RequiredReadAction
-	@Override
-	public JSUseNamespaceDirectiveStub createStub(@Nonnull JSUseNamespaceDirective psi, StubElement parentStub)
-	{
-		return new JSUseNamespaceDirectiveStubImpl(psi.getNamespaceToBeUsed(), parentStub, this);
-	}
+    @RequiredReadAction
+    @Override
+    public JSUseNamespaceDirectiveStub createStub(@Nonnull JSUseNamespaceDirective psi, StubElement parentStub) {
+        return new JSUseNamespaceDirectiveStubImpl(psi.getNamespaceToBeUsed(), parentStub, this);
+    }
 
-	@Override
-	public void serialize(@Nonnull JSUseNamespaceDirectiveStub stub, @Nonnull StubOutputStream dataStream) throws IOException
-	{
-		dataStream.writeName(stub.getNamespaceToUse());
-	}
+    @Override
+    public void serialize(@Nonnull JSUseNamespaceDirectiveStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+        dataStream.writeName(stub.getNamespaceToUse());
+    }
 
-	@Nonnull
-	@Override
-	public JSUseNamespaceDirectiveStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
-	{
-		StringRef nameRef = dataStream.readName();
-		return new JSUseNamespaceDirectiveStubImpl(StringRef.toString(nameRef), parentStub, this);
-	}
+    @Nonnull
+    @Override
+    public JSUseNamespaceDirectiveStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+        StringRef nameRef = dataStream.readName();
+        return new JSUseNamespaceDirectiveStubImpl(StringRef.toString(nameRef), parentStub, this);
+    }
 }

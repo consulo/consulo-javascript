@@ -36,51 +36,44 @@ import consulo.language.psi.stub.StubOutputStream;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jun 8, 2008
- *         Time: 6:20:05 PM
+ * Date: Jun 8, 2008
+ * Time: 6:20:05 PM
  */
-public class JSAttributeNameValuePairType extends JSStubElementType<JSAttributeNameValuePairStub, JSAttributeNameValuePair>
-{
-	public JSAttributeNameValuePairType()
-	{
-		super("ATTRIBUTE_NAME_VALUE_PAIR");
-	}
+public class JSAttributeNameValuePairType extends JSStubElementType<JSAttributeNameValuePairStub, JSAttributeNameValuePair> {
+    public JSAttributeNameValuePairType() {
+        super("ATTRIBUTE_NAME_VALUE_PAIR");
+    }
 
-	@Nonnull
-	@Override
-	public PsiElement createElement(@Nonnull ASTNode astNode)
-	{
-		return new JSAttributeNameValuePairImpl(astNode);
-	}
+    @Nonnull
+    @Override
+    public PsiElement createElement(@Nonnull ASTNode astNode) {
+        return new JSAttributeNameValuePairImpl(astNode);
+    }
 
-	@Override
-	public JSAttributeNameValuePair createPsi(@Nonnull JSAttributeNameValuePairStub stub)
-	{
-		return new JSAttributeNameValuePairImpl(stub);
-	}
+    @Override
+    public JSAttributeNameValuePair createPsi(@Nonnull JSAttributeNameValuePairStub stub) {
+        return new JSAttributeNameValuePairImpl(stub);
+    }
 
-	@RequiredReadAction
-	@Override
-	public JSAttributeNameValuePairStub createStub(@Nonnull JSAttributeNameValuePair psi, StubElement parentStub)
-	{
-		String name = psi.getName();
-		String simpleValue = psi.getSimpleValue();
-		return new JSAttributeNameValuePairStubImpl(name, simpleValue, parentStub);
-	}
+    @RequiredReadAction
+    @Override
+    public JSAttributeNameValuePairStub createStub(@Nonnull JSAttributeNameValuePair psi, StubElement parentStub) {
+        String name = psi.getName();
+        String simpleValue = psi.getSimpleValue();
+        return new JSAttributeNameValuePairStubImpl(name, simpleValue, parentStub);
+    }
 
-	@Override
-	public void serialize(@Nonnull JSAttributeNameValuePairStub stub, @Nonnull StubOutputStream dataStream) throws IOException
-	{
-		dataStream.writeName(stub.getName());
-		dataStream.writeName(stub.getValue());
-	}
+    @Override
+    public void serialize(@Nonnull JSAttributeNameValuePairStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+        dataStream.writeName(stub.getName());
+        dataStream.writeName(stub.getValue());
+    }
 
-	@Nonnull
-	@Override
-	public JSAttributeNameValuePairStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
-	{
-		StringRef name = dataStream.readName();
-		StringRef value = dataStream.readName();
-		return new JSAttributeNameValuePairStubImpl(StringRef.toString(name), StringRef.toString(value), parentStub);
-	}
+    @Nonnull
+    @Override
+    public JSAttributeNameValuePairStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+        StringRef name = dataStream.readName();
+        StringRef value = dataStream.readName();
+        return new JSAttributeNameValuePairStubImpl(StringRef.toString(name), StringRef.toString(value), parentStub);
+    }
 }

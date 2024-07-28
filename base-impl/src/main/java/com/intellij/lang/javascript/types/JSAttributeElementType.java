@@ -36,47 +36,40 @@ import consulo.language.psi.stub.StubInputStream;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Mar 25, 2008
- *         Time: 10:30:20 PM
+ * Date: Mar 25, 2008
+ * Time: 10:30:20 PM
  */
-public class JSAttributeElementType extends JSStubElementType<JSAttributeStub, JSAttribute>
-{
-	public JSAttributeElementType()
-	{
-		super("ATTRIBUTE");
-	}
+public class JSAttributeElementType extends JSStubElementType<JSAttributeStub, JSAttribute> {
+    public JSAttributeElementType() {
+        super("ATTRIBUTE");
+    }
 
-	@Nonnull
-	@Override
-	public PsiElement createElement(@Nonnull ASTNode astNode)
-	{
-		return new JSAttributeImpl(astNode);
-	}
+    @Nonnull
+    @Override
+    public PsiElement createElement(@Nonnull ASTNode astNode) {
+        return new JSAttributeImpl(astNode);
+    }
 
-	@Override
-	public JSAttribute createPsi(@Nonnull JSAttributeStub stub)
-	{
-		return new JSAttributeImpl(stub);
-	}
+    @Override
+    public JSAttribute createPsi(@Nonnull JSAttributeStub stub) {
+        return new JSAttributeImpl(stub);
+    }
 
-	@RequiredReadAction
-	@Override
-	public JSAttributeStub createStub(@Nonnull JSAttribute psi, StubElement parentStub)
-	{
-		return new JSAttributeStubImpl(psi.getName(), 0, parentStub);
-	}
+    @RequiredReadAction
+    @Override
+    public JSAttributeStub createStub(@Nonnull JSAttribute psi, StubElement parentStub) {
+        return new JSAttributeStubImpl(psi.getName(), 0, parentStub);
+    }
 
-	@Override
-	public void serialize(@Nonnull JSAttributeStub stub, @Nonnull StubOutputStream dataStream) throws IOException
-	{
-		dataStream.writeName(stub.getName());
-	}
+    @Override
+    public void serialize(@Nonnull JSAttributeStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+        dataStream.writeName(stub.getName());
+    }
 
-	@Nonnull
-	@Override
-	public JSAttributeStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
-	{
-		StringRef name = dataStream.readName();
-		return new JSAttributeStubImpl(StringRef.toString(name), 0, parentStub);
-	}
+    @Nonnull
+    @Override
+    public JSAttributeStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+        StringRef name = dataStream.readName();
+        return new JSAttributeStubImpl(StringRef.toString(name), 0, parentStub);
+    }
 }
