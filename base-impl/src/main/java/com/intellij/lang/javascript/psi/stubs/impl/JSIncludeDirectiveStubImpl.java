@@ -25,24 +25,23 @@ import consulo.language.psi.stub.StubElement;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jun 6, 2008
- *         Time: 8:00:52 PM
+ * Date: Jun 6, 2008
+ * Time: 8:00:52 PM
  */
-public class JSIncludeDirectiveStubImpl extends StubBase<JSIncludeDirective> implements JSIncludeDirectiveStub
-{
-	private final String myIncludeText;
+public class JSIncludeDirectiveStubImpl extends StubBase<JSIncludeDirective> implements JSIncludeDirectiveStub {
+    private final String myIncludeText;
 
-	public JSIncludeDirectiveStubImpl(final String includeText,
-			final StubElement parentStub,
-			final JSStubElementType<JSIncludeDirectiveStub, JSIncludeDirective> type)
-	{
-		super(parentStub, type);
-		myIncludeText = includeText;
-	}
+    public JSIncludeDirectiveStubImpl(
+        final String includeText,
+        final StubElement parentStub,
+        final JSStubElementType<JSIncludeDirectiveStub, JSIncludeDirective> type
+    ) {
+        super(parentStub, type);
+        myIncludeText = includeText;
+    }
 
-	@Override
-	public String getIncludeText()
-	{
-		return myIncludeText;
-	}
+    @Override
+    public String getIncludeText() {
+        return myIncludeText;
+    }
 }

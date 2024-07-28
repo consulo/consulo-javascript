@@ -25,13 +25,11 @@ import consulo.language.psi.stub.StubBase;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Mar 26, 2008
- *         Time: 11:29:19 PM
+ * Date: Mar 26, 2008
+ * Time: 11:29:19 PM
  */
-public class JSVarStatementStubImpl extends StubBase<JSVarStatement> implements JSVarStatementStub
-{
-	public JSVarStatementStubImpl(StubElement parent, IStubElementType elementType)
-	{
-		super(parent, elementType);
-	}
+public class JSVarStatementStubImpl extends StubBase<JSVarStatement> implements JSVarStatementStub {
+    public JSVarStatementStubImpl(StubElement parent, IStubElementType elementType) {
+        super(parent, elementType);
+    }
 }

@@ -25,24 +25,24 @@ import consulo.language.psi.stub.StubElement;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jun 6, 2008
- *         Time: 8:00:52 PM
+ * Date: Jun 6, 2008
+ * Time: 8:00:52 PM
  */
-public class JSImportStatementStubImpl extends StubBase<JSImportStatement> implements JSImportStatementStub
-{
-	private final String myImportText;
+public class JSImportStatementStubImpl extends StubBase<JSImportStatement> implements JSImportStatementStub {
+    private final String myImportText;
 
-	public JSImportStatementStubImpl(final String importText, final StubElement parentStub, final JSStubElementType<JSImportStatementStub,
-			JSImportStatement> type)
-	{
-		super(parentStub, type);
+    public JSImportStatementStubImpl(
+        final String importText,
+        final StubElement parentStub,
+        final JSStubElementType<JSImportStatementStub, JSImportStatement> type
+    ) {
+        super(parentStub, type);
 
-		myImportText = importText;
-	}
+        myImportText = importText;
+    }
 
-	@Override
-	public String getImportText()
-	{
-		return myImportText;
-	}
+    @Override
+    public String getImportText() {
+        return myImportText;
+    }
 }
