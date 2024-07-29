@@ -38,53 +38,45 @@ import consulo.language.psi.stub.StubOutputStream;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jun 8, 2008
- *         Time: 1:50:59 PM
+ * Date: Jun 8, 2008
+ * Time: 1:50:59 PM
  */
-public class JSVarStatementElementType extends JSStubElementType<JSVarStatementStub, JSVarStatement>
-{
-	public JSVarStatementElementType()
-	{
-		super("VAR_STATEMENT");
-	}
+public class JSVarStatementElementType extends JSStubElementType<JSVarStatementStub, JSVarStatement> {
+    public JSVarStatementElementType() {
+        super("VAR_STATEMENT");
+    }
 
-	@Override
-	public boolean shouldCreateStub(ASTNode node)
-	{
-		final PsiElement element = node.getTreeParent().getPsi();
-		return element instanceof JSClass || element instanceof JSPackageStatement || element instanceof JSFile;
-	}
+    @Override
+    public boolean shouldCreateStub(ASTNode node) {
+        final PsiElement element = node.getTreeParent().getPsi();
+        return element instanceof JSClass || element instanceof JSPackageStatement || element instanceof JSFile;
+    }
 
-	@Nonnull
-	@Override
-	public PsiElement createElement(@Nonnull ASTNode astNode)
-	{
-		return new JSVarStatementImpl(astNode);
-	}
+    @Nonnull
+    @Override
+    public PsiElement createElement(@Nonnull ASTNode astNode) {
+        return new JSVarStatementImpl(astNode);
+    }
 
-	@Override
-	public JSVarStatement createPsi(@Nonnull JSVarStatementStub stub)
-	{
-		return new JSVarStatementImpl(stub);
-	}
+    @Override
+    public JSVarStatement createPsi(@Nonnull JSVarStatementStub stub) {
+        return new JSVarStatementImpl(stub);
+    }
 
-	@RequiredReadAction
-	@Override
-	public JSVarStatementStub createStub(@Nonnull JSVarStatement psi, StubElement parentStub)
-	{
-		return new JSVarStatementStubImpl(parentStub, this);
-	}
+    @RequiredReadAction
+    @Override
+    public JSVarStatementStub createStub(@Nonnull JSVarStatement psi, StubElement parentStub) {
+        return new JSVarStatementStubImpl(parentStub, this);
+    }
 
-	@Override
-	public void serialize(@Nonnull JSVarStatementStub stub, @Nonnull StubOutputStream dataStream) throws IOException
-	{
+    @Override
+    public void serialize(@Nonnull JSVarStatementStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
 
-	}
+    }
 
-	@Nonnull
-	@Override
-	public JSVarStatementStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
-	{
-		return new JSVarStatementStubImpl(parentStub, this);
-	}
+    @Nonnull
+    @Override
+    public JSVarStatementStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+        return new JSVarStatementStubImpl(parentStub, this);
+    }
 }

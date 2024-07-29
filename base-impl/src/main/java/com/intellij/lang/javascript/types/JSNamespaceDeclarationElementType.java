@@ -35,55 +35,53 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jun 6, 2008
- *         Time: 7:49:06 PM
+ * Date: Jun 6, 2008
+ * Time: 7:49:06 PM
  */
-public class JSNamespaceDeclarationElementType extends JSQualifiedStubElementType<JSNamespaceDeclarationStub, JSNamespaceDeclaration>
-{
-	public JSNamespaceDeclarationElementType()
-	{
-		super("NAMESPACE_DECLARATION");
-	}
+public class JSNamespaceDeclarationElementType extends JSQualifiedStubElementType<JSNamespaceDeclarationStub, JSNamespaceDeclaration> {
+    public JSNamespaceDeclarationElementType() {
+        super("NAMESPACE_DECLARATION");
+    }
 
-	@Nonnull
-	@Override
-	public PsiElement createElement(@Nonnull ASTNode astNode)
-	{
-		return new JSNamespaceDeclarationImpl(astNode);
-	}
+    @Nonnull
+    @Override
+    public PsiElement createElement(@Nonnull ASTNode astNode) {
+        return new JSNamespaceDeclarationImpl(astNode);
+    }
 
-	@Override
-	public JSNamespaceDeclaration createPsi(@Nonnull JSNamespaceDeclarationStub stub)
-	{
-		return new JSNamespaceDeclarationImpl(stub);
-	}
+    @Override
+    public JSNamespaceDeclaration createPsi(@Nonnull JSNamespaceDeclarationStub stub) {
+        return new JSNamespaceDeclarationImpl(stub);
+    }
 
-	@RequiredReadAction
-	@Override
-	public JSNamespaceDeclarationStub createStub(@Nonnull JSNamespaceDeclaration psi, StubElement parentStub)
-	{
-		String name = psi.getName();
-		String qualifiedName = psi.getQualifiedName();
-		String initialValueString = psi.getInitialValueString();
-		return new JSNamespaceDeclarationStubImpl(name, qualifiedName, initialValueString, parentStub, this);
-	}
+    @RequiredReadAction
+    @Override
+    public JSNamespaceDeclarationStub createStub(@Nonnull JSNamespaceDeclaration psi, StubElement parentStub) {
+        String name = psi.getName();
+        String qualifiedName = psi.getQualifiedName();
+        String initialValueString = psi.getInitialValueString();
+        return new JSNamespaceDeclarationStubImpl(name, qualifiedName, initialValueString, parentStub, this);
+    }
 
-	@Override
-	public void serialize(@Nonnull JSNamespaceDeclarationStub stub, @Nonnull StubOutputStream dataStream) throws IOException
-	{
-		dataStream.writeName(stub.getName());
-		dataStream.writeName(stub.getQualifiedName());
-		dataStream.writeName(stub.getInitialValueString());
-	}
+    @Override
+    public void serialize(@Nonnull JSNamespaceDeclarationStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+        dataStream.writeName(stub.getName());
+        dataStream.writeName(stub.getQualifiedName());
+        dataStream.writeName(stub.getInitialValueString());
+    }
 
-	@Nonnull
-	@Override
-	public JSNamespaceDeclarationStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
-	{
-		StringRef nameRef = dataStream.readName();
-		StringRef qualifiedRef = dataStream.readName();
-		StringRef initialValueRef = dataStream.readName();
-		return new JSNamespaceDeclarationStubImpl(StringRef.toString(nameRef), StringRef.toString(qualifiedRef),
-				StringRef.toString(initialValueRef), parentStub, this);
-	}
+    @Nonnull
+    @Override
+    public JSNamespaceDeclarationStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+        StringRef nameRef = dataStream.readName();
+        StringRef qualifiedRef = dataStream.readName();
+        StringRef initialValueRef = dataStream.readName();
+        return new JSNamespaceDeclarationStubImpl(
+            StringRef.toString(nameRef),
+            StringRef.toString(qualifiedRef),
+            StringRef.toString(initialValueRef),
+            parentStub,
+            this
+        );
+    }
 }
