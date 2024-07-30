@@ -11,12 +11,10 @@ import jakarta.annotation.Nonnull;
  * @since 29-Aug-22
  */
 @ExtensionImpl
-public class XmlTextJSInjector extends JSLanguageInjector
-{
-	@Nonnull
-	@Override
-	public Class<? extends PsiElement> getElementClass()
-	{
-		return XmlText.class;
-	}
+public class XmlTextJSInjector extends JSLanguageInjector {
+    @Nonnull
+    @Override
+    public Class<? extends PsiElement> getElementClass() {
+        return XmlText.class;
+    }
 }

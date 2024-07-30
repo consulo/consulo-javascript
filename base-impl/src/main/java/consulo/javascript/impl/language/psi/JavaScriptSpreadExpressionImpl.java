@@ -14,37 +14,31 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 2020-01-01
  */
-public class JavaScriptSpreadExpressionImpl extends JSElementImpl implements JSSpreadExpression
-{
-	public JavaScriptSpreadExpressionImpl(ASTNode node)
-	{
-		super(node);
-	}
+public class JavaScriptSpreadExpressionImpl extends JSElementImpl implements JSSpreadExpression {
+    public JavaScriptSpreadExpressionImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getInnerExpression()
-	{
-		return findNotNullChildByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression getInnerExpression() {
+        return findNotNullChildByClass(JSExpression.class);
+    }
 
-	@Nonnull
-	@Override
-	public JSExpression replace(JSExpression other)
-	{
-		return this;
-	}
+    @Nonnull
+    @Override
+    public JSExpression replace(JSExpression other) {
+        return this;
+    }
 
-	@RequiredReadAction
-	@Nonnull
-	@Override
-	public JavaScriptType getType()
-	{
-		return JavaScriptType.UNKNOWN;
-	}
+    @RequiredReadAction
+    @Nonnull
+    @Override
+    public JavaScriptType getType() {
+        return JavaScriptType.UNKNOWN;
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSElement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSElement(this);
+    }
 }

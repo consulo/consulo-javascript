@@ -31,12 +31,10 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  */
 @ExtensionImpl
-public class JavaScriptClassNameIndex extends StringStubIndexExtension<JSClass>
-{
-	@Nonnull
-	@Override
-	public StubIndexKey<String, JSClass> getKey()
-	{
-		return JavaScriptIndexKeys.CLASSES_BY_NAME;
-	}
+public class JavaScriptClassNameIndex extends StringStubIndexExtension<JSClass> {
+    @Nonnull
+    @Override
+    public StubIndexKey<String, JSClass> getKey() {
+        return JavaScriptIndexKeys.CLASSES_BY_NAME;
+    }
 }

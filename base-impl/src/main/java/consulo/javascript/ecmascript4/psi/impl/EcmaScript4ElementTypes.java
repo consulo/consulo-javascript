@@ -9,7 +9,6 @@ import com.intellij.lang.javascript.types.JSImportStatementElementType;
  * @author VISTALL
  * @since 2019-12-14
  */
-public interface EcmaScript4ElementTypes
-{
-	JSStubElementType<JSImportStatementStub, JSImportStatement> IMPORT_STATEMENT = new JSImportStatementElementType();
+public interface EcmaScript4ElementTypes {
+    JSStubElementType<JSImportStatementStub, JSImportStatement> IMPORT_STATEMENT = new JSImportStatementElementType();
 }
