@@ -25,17 +25,14 @@ import jakarta.annotation.Nonnull;
 /**
  * @author nik
  */
-public class JSElementFactory
-{
-	private JSElementFactory()
-	{
-	}
+public class JSElementFactory {
+    private JSElementFactory() {
+    }
 
-	@Nonnull
-	public static JSFile createExpressionCodeFragment(@Nonnull Project project, CharSequence text, PsiElement context, boolean isPhysical)
-	{
-		JSExpressionCodeFragmentImpl codeFragment = new JSExpressionCodeFragmentImpl(project, "fragment.js", text, isPhysical);
-		codeFragment.setContext(context);
-		return codeFragment;
-	}
+    @Nonnull
+    public static JSFile createExpressionCodeFragment(@Nonnull Project project, CharSequence text, PsiElement context, boolean isPhysical) {
+        JSExpressionCodeFragmentImpl codeFragment = new JSExpressionCodeFragmentImpl(project, "fragment.js", text, isPhysical);
+        codeFragment.setContext(context);
+        return codeFragment;
+    }
 }

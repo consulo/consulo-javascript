@@ -29,23 +29,19 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 03.03.2016
  */
-public class JSComputedNameImpl extends JSElementImpl implements JSComputedName
-{
-	public JSComputedNameImpl(ASTNode node)
-	{
-		super(node);
-	}
+public class JSComputedNameImpl extends JSElementImpl implements JSComputedName {
+    public JSComputedNameImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSElement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSElement(this);
+    }
 
-	@Nullable
-	@Override
-	public JSExpression getExpression()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @Nullable
+    @Override
+    public JSExpression getExpression() {
+        return findChildByClass(JSExpression.class);
+    }
 }

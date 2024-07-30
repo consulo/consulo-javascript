@@ -14,24 +14,20 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 2019-12-14
  */
-public class JavaSciptDestructuringElementImpl extends JSElementImpl implements JSDestructuringElement
-{
-	public JavaSciptDestructuringElementImpl(ASTNode node)
-	{
-		super(node);
-	}
+public class JavaSciptDestructuringElementImpl extends JSElementImpl implements JSDestructuringElement {
+    public JavaSciptDestructuringElementImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSElement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSElement(this);
+    }
 
-	@RequiredReadAction
-	@Nullable
-	@Override
-	public JSDestructuringObject getDestructuringObject()
-	{
-		return findChildByClass(JSDestructuringObject.class);
-	}
+    @RequiredReadAction
+    @Nullable
+    @Override
+    public JSDestructuringObject getDestructuringObject() {
+        return findChildByClass(JSDestructuringObject.class);
+    }
 }

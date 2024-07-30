@@ -38,120 +38,105 @@ import org.jetbrains.annotations.NonNls;
  * @author VISTALL
  * @since 03.03.2016
  */
-public class JavaScriptLambdaExpressionImpl extends JSExpressionImpl implements JavaScriptLambdaExpression
-{
-	public JavaScriptLambdaExpressionImpl(ASTNode node)
-	{
-		super(node);
-	}
+public class JavaScriptLambdaExpressionImpl extends JSExpressionImpl implements JavaScriptLambdaExpression {
+    public JavaScriptLambdaExpressionImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	@RequiredReadAction
-	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent, @Nonnull PsiElement place)
-	{
-		if(lastParent != null && lastParent.getParent() == this)
-		{
-			final JSParameter[] params = getParameterList().getParameters();
-			for(JSParameter param : params)
-			{
-				if(!processor.execute(param, state))
-				{
-					return false;
-				}
-			}
+    @Override
+    @RequiredReadAction
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        if (lastParent != null && lastParent.getParent() == this) {
+            final JSParameter[] params = getParameterList().getParameters();
+            for (JSParameter param : params) {
+                if (!processor.execute(param, state)) {
+                    return false;
+                }
+            }
 
-			boolean b = JSResolveUtil.processDeclarationsInScope(this, processor, state, lastParent, place);
-			if(b)
-			{
-				processor.handleEvent(PsiScopeProcessor.Event.SET_DECLARATION_HOLDER, this);
-			}
-			return b;
-		}
+            boolean b = JSResolveUtil.processDeclarationsInScope(this, processor, state, lastParent, place);
+            if (b) {
+                processor.handleEvent(PsiScopeProcessor.Event.SET_DECLARATION_HOLDER, this);
+            }
+            return b;
+        }
 
-		return processor.execute(this, state);
-	}
+        return processor.execute(this, state);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitLambdaExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitLambdaExpression(this);
+    }
 
-	@RequiredReadAction
-	@Nonnull
-	@Override
-	public JSParameterList getParameterList()
-	{
-		return findNotNullChildByClass(JSParameterList.class);
-	}
+    @RequiredReadAction
+    @Nonnull
+    @Override
+    public JSParameterList getParameterList() {
+        return findNotNullChildByClass(JSParameterList.class);
+    }
 
-	@Override
-	public JSSourceElement[] getBody()
-	{
-		final ASTNode[] children = getNode().getChildren(JSElementTypes.SOURCE_ELEMENTS);
-		if(children.length == 0)
-		{
-			return JSSourceElement.EMPTY_ARRAY;
-		}
-		JSSourceElement[] result = new JSSourceElement[children.length];
-		for(int i = 0; i < children.length; i++)
-		{
-			result[i] = (JSSourceElement) children[i].getPsi();
-		}
-		return result;
-	}
+    @Override
+    public JSSourceElement[] getBody() {
+        final ASTNode[] children = getNode().getChildren(JSElementTypes.SOURCE_ELEMENTS);
+        if (children.length == 0) {
+            return JSSourceElement.EMPTY_ARRAY;
+        }
+        JSSourceElement[] result = new JSSourceElement[children.length];
+        for (int i = 0; i < children.length; i++) {
+            result[i] = (JSSourceElement)children[i].getPsi();
+        }
+        return result;
+    }
 
-	@Nonnull
-	@Override
-	public JavaScriptType getReturnType()
-	{
-		return JavaScriptType.UNKNOWN;
-	}
+    @Nonnull
+    @Override
+    public JavaScriptType getReturnType() {
+        return JavaScriptType.UNKNOWN;
+    }
 
-	@Override
-	public String getReturnTypeString()
-	{
-		return null;
-	}
+    @Override
+    public String getReturnTypeString() {
+        return null;
+    }
 
-	@Nullable
-	@Override
-	public JavaScriptTypeElement getReturnTypeElement()
-	{
-		return null;
-	}
+    @Nullable
+    @Override
+    public JavaScriptTypeElement getReturnTypeElement() {
+        return null;
+    }
 
-	@Override
-	public boolean isDeprecated()
-	{
-		return false;
-	}
+    @Override
+    public boolean isDeprecated() {
+        return false;
+    }
 
-	@Nullable
-	@Override
-	public JSAttributeList getAttributeList()
-	{
-		return null;
-	}
+    @Nullable
+    @Override
+    public JSAttributeList getAttributeList() {
+        return null;
+    }
 
-	@Override
-	public String getQualifiedName()
-	{
-		return null;
-	}
+    @Override
+    public String getQualifiedName() {
+        return null;
+    }
 
-	@RequiredReadAction
-	@Nullable
-	@Override
-	public PsiElement getNameIdentifier()
-	{
-		return null;
-	}
+    @RequiredReadAction
+    @Nullable
+    @Override
+    public PsiElement getNameIdentifier() {
+        return null;
+    }
 
-	@RequiredWriteAction
-	@Override
-	public PsiElement setName(@Nonnull @NonNls String name) throws IncorrectOperationException
-	{
-		return null;
-	}
+    @RequiredWriteAction
+    @Override
+    public PsiElement setName(@Nonnull @NonNls String name) throws IncorrectOperationException {
+        return null;
+    }
 }

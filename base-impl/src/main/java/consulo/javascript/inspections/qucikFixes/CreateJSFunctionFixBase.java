@@ -29,85 +29,77 @@ import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Set;
 
 /**
-* @author VISTALL
-* @since 24.02.2016
-*/
-public abstract class CreateJSFunctionFixBase extends BaseCreateFix
-{
-	private final LocalizeValue myMessage;
+ * @author VISTALL
+ * @since 24.02.2016
+ */
+public abstract class CreateJSFunctionFixBase extends BaseCreateFix {
+    private final LocalizeValue myMessage;
 
-	public CreateJSFunctionFixBase(LocalizeValue message)
-	{
-		myMessage = message;
-	}
+    public CreateJSFunctionFixBase(LocalizeValue message) {
+        myMessage = message;
+    }
 
-	@Override
-	@Nonnull
-	public String getName()
-	{
-		return myMessage.get();
-	}
+    @Override
+    @Nonnull
+    public String getName() {
+        return myMessage.get();
+    }
 
-	@Override
-	@Nonnull
-	public String getFamilyName()
-	{
-		return JavaScriptLocalize.javascriptCreateFunctionIntentionFamily().get();
-	}
+    @Override
+    @Nonnull
+    public String getFamilyName() {
+        return JavaScriptLocalize.javascriptCreateFunctionIntentionFamily().get();
+    }
 
-	@RequiredReadAction
-	@Override
-  protected void buildTemplate(
-		Template template,
-		JSReferenceExpression referenceExpression,
-		Set<JavaScriptFeature> features,
-		boolean staticContext,
-		PsiFile file,
-		PsiElement anchorParent
-	)
-	{
-		boolean classFeature = features.contains(JavaScriptFeature.CLASS);
-		String referencedName = classFeature ? referenceExpression.getReferencedName() : referenceExpression.getText();
-		BaseCreateFix.addAccessModifier(template, referenceExpression, classFeature, staticContext);
-		writeFunctionAndName(template, referencedName, features);
-		template.addTextSegment("(");
+    @RequiredReadAction
+    @Override
+    protected void buildTemplate(
+        Template template,
+        JSReferenceExpression referenceExpression,
+        Set<JavaScriptFeature> features,
+        boolean staticContext,
+        PsiFile file,
+        PsiElement anchorParent
+    ) {
+        boolean classFeature = features.contains(JavaScriptFeature.CLASS);
+        String referencedName = classFeature ? referenceExpression.getReferencedName() : referenceExpression.getText();
+        BaseCreateFix.addAccessModifier(template, referenceExpression, classFeature, staticContext);
+        writeFunctionAndName(template, referencedName, features);
+        template.addTextSegment("(");
 
-		addParameters(template, referenceExpression, file, features);
+        addParameters(template, referenceExpression, file, features);
 
-		template.addTextSegment(")");
+        template.addTextSegment(")");
 
-		if(classFeature)
-		{
-			template.addTextSegment(":");
-			addReturnType(template, referenceExpression, file);
-		}
+        if (classFeature) {
+            template.addTextSegment(":");
+            addReturnType(template, referenceExpression, file);
+        }
 
-		JSClass clazz = BaseCreateFix.findClass(file, anchorParent);
-		if(clazz == null || !clazz.isInterface())
-		{
-			template.addTextSegment(" {");
-			addBody(template, referenceExpression, file);
-			template.addTextSegment("}");
-		}
-		else
-		{
-			addSemicolonSegment(template, file);
-			template.addEndVariable();
-		}
-	}
+        JSClass clazz = BaseCreateFix.findClass(file, anchorParent);
+        if (clazz == null || !clazz.isInterface()) {
+            template.addTextSegment(" {");
+            addBody(template, referenceExpression, file);
+            template.addTextSegment("}");
+        }
+        else {
+            addSemicolonSegment(template, file);
+            template.addEndVariable();
+        }
+    }
 
-	protected void writeFunctionAndName(Template template, String referencedName, Set<JavaScriptFeature> features)
-	{
-		template.addTextSegment("function ");
-		template.addTextSegment(referencedName);
-	}
+    protected void writeFunctionAndName(Template template, String referencedName, Set<JavaScriptFeature> features) {
+        template.addTextSegment("function ");
+        template.addTextSegment(referencedName);
+    }
 
-	protected abstract void addParameters(Template template, JSReferenceExpression refExpr, PsiFile file, Set<JavaScriptFeature> features);
+    protected abstract void addParameters(Template template, JSReferenceExpression refExpr, PsiFile file, Set<JavaScriptFeature> features);
 
-	protected abstract void addReturnType(Template template, JSReferenceExpression referenceExpression, PsiFile psifile);
+    protected abstract void addReturnType(Template template, JSReferenceExpression referenceExpression, PsiFile psifile);
 
-	protected abstract void addBody(Template template, JSReferenceExpression refExpr, PsiFile file);
+    protected abstract void addBody(Template template, JSReferenceExpression refExpr, PsiFile file);
 }

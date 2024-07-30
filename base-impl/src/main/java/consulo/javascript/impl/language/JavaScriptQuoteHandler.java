@@ -34,55 +34,47 @@ import jakarta.annotation.Nonnull;
  * @since 09.12.2015
  */
 @ExtensionImpl
-public class JavaScriptQuoteHandler extends SimpleTokenSetQuoteHandler implements JavaLikeQuoteHandler, FileQuoteHandler
-{
-	public JavaScriptQuoteHandler()
-	{
-		super(JavaScriptTokenSets.STRING_LITERALS);
-	}
+public class JavaScriptQuoteHandler extends SimpleTokenSetQuoteHandler implements JavaLikeQuoteHandler, FileQuoteHandler {
+    public JavaScriptQuoteHandler() {
+        super(JavaScriptTokenSets.STRING_LITERALS);
+    }
 
-	@Override
-	public TokenSet getConcatenatableStringTokenTypes()
-	{
-		return TokenSet.EMPTY;
-	}
+    @Override
+    public TokenSet getConcatenatableStringTokenTypes() {
+        return TokenSet.EMPTY;
+    }
 
-	@Override
-	public String getStringConcatenationOperatorRepresentation()
-	{
-		return "";
-	}
+    @Override
+    public String getStringConcatenationOperatorRepresentation() {
+        return "";
+    }
 
-	@Override
-	public TokenSet getStringTokenTypes()
-	{
-		return myLiteralTokenSet;
-	}
+    @Override
+    public TokenSet getStringTokenTypes() {
+        return myLiteralTokenSet;
+    }
 
-	@Override
-	public boolean isAppropriateElementTypeForLiteral(@Nonnull IElementType tokenType)
-	{
-		return JavaScriptTokenSets.COMMENTS.contains(tokenType) ||
-				tokenType == JSTokenTypes.WHITE_SPACE ||
-				tokenType == JSTokenTypes.SEMICOLON ||
-				tokenType == JSTokenTypes.COMMA ||
-				tokenType == JSTokenTypes.RPAR ||
-				tokenType == JSTokenTypes.RBRACKET ||
-				tokenType == JSTokenTypes.RBRACE ||
-				tokenType == JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL ||
-				tokenType == JSTokenTypes.STRING_LITERAL;
-	}
+    @Override
+    public boolean isAppropriateElementTypeForLiteral(@Nonnull IElementType tokenType) {
+        return JavaScriptTokenSets.COMMENTS.contains(tokenType)
+            || tokenType == JSTokenTypes.WHITE_SPACE
+            || tokenType == JSTokenTypes.SEMICOLON
+            || tokenType == JSTokenTypes.COMMA
+            || tokenType == JSTokenTypes.RPAR
+            || tokenType == JSTokenTypes.RBRACKET
+            || tokenType == JSTokenTypes.RBRACE
+            || tokenType == JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL
+            || tokenType == JSTokenTypes.STRING_LITERAL;
+    }
 
-	@Override
-	public boolean needParenthesesAroundConcatenation(PsiElement element)
-	{
-		return false;
-	}
+    @Override
+    public boolean needParenthesesAroundConcatenation(PsiElement element) {
+        return false;
+    }
 
-	@Nonnull
-	@Override
-	public FileType getFileType()
-	{
-		return JavaScriptFileType.INSTANCE;
-	}
+    @Nonnull
+    @Override
+    public FileType getFileType() {
+        return JavaScriptFileType.INSTANCE;
+    }
 }

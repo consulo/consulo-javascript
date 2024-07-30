@@ -11,12 +11,10 @@ import jakarta.annotation.Nonnull;
  * @since 29-Aug-22
  */
 @ExtensionImpl
-public class XmlAttributeValueJSInjector extends JSLanguageInjector
-{
-	@Nonnull
-	@Override
-	public Class<? extends PsiElement> getElementClass()
-	{
-		return XmlAttributeValue.class;
-	}
+public class XmlAttributeValueJSInjector extends JSLanguageInjector {
+    @Nonnull
+    @Override
+    public Class<? extends PsiElement> getElementClass() {
+        return XmlAttributeValue.class;
+    }
 }
