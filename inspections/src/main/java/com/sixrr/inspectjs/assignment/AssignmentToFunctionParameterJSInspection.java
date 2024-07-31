@@ -51,8 +51,7 @@ public class AssignmentToFunctionParameterJSInspection extends JavaScriptInspect
         public void visitJSPrefixExpression(JSPrefixExpression expression) {
             super.visitJSPrefixExpression(expression);
             final IElementType sign = expression.getOperationSign();
-            if (!JSTokenTypes.PLUSPLUS.equals(sign) &&
-                    !JSTokenTypes.MINUSMINUS.equals(sign)) {
+            if (!JSTokenTypes.PLUSPLUS.equals(sign) && !JSTokenTypes.MINUSMINUS.equals(sign)) {
                 return;
             }
             final JSExpression operand = expression.getExpression();
@@ -63,8 +62,7 @@ public class AssignmentToFunctionParameterJSInspection extends JavaScriptInspect
         public void visitJSPostfixExpression(JSPostfixExpression jsPostfixExpression) {
             super.visitJSPostfixExpression(jsPostfixExpression);
             final IElementType sign = jsPostfixExpression.getOperationSign();
-            if (!JSTokenTypes.PLUSPLUS.equals(sign) &&
-                    !JSTokenTypes.MINUSMINUS.equals(sign)) {
+            if (!JSTokenTypes.PLUSPLUS.equals(sign) && !JSTokenTypes.MINUSMINUS.equals(sign)) {
                 return;
             }
             final JSExpression operand = jsPostfixExpression.getExpression();
@@ -72,30 +70,13 @@ public class AssignmentToFunctionParameterJSInspection extends JavaScriptInspect
         }
 
         private void checkOperand(JSExpression operand) {
-            if (operand == null) {
-                return;
+            if (operand instanceof JSDefinitionExpression definitionExpression
+                && definitionExpression.getExpression() instanceof JSReferenceExpression referenceExpression
+                && referenceExpression.resolve() instanceof JSParameter) {
+                registerError(operand);
             }
-            if (operand instanceof JSDefinitionExpression definitionExpression) {
-                final JSExpression definiend = definitionExpression.getExpression();
-                if (definiend instanceof JSReferenceExpression referenceExpression) {
-                    final PsiElement referent = referenceExpression.resolve();
-                    if (referent == null) {
-                        return;
-                    }
-                    if (!(referent instanceof JSParameter)) {
-                        return;
-                    }
-                    registerError(operand);
-                }
-            }
-            if (operand instanceof JSReferenceExpression referenceExpression) {
-                final PsiElement referent = referenceExpression.resolve();
-                if (referent == null) {
-                    return;
-                }
-                if (!(referent instanceof JSParameter)) {
-                    return;
-                }
+            if (operand instanceof JSReferenceExpression referenceExpression
+                && referenceExpression.resolve() instanceof JSParameter) {
                 registerError(operand);
             }
         }

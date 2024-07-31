@@ -45,11 +45,10 @@ public class AssignmentResultUsedJSInspection extends JavaScriptInspection {
             if (parent == null) {
                 return;
             }
-            if (parent instanceof JSForStatement ||
-                    parent instanceof JSForInStatement ||
-                    parent instanceof JSExpressionStatement ||
-                    parent instanceof JSCommaExpression)
-            {
+            if (parent instanceof JSForStatement
+                || parent instanceof JSForInStatement
+                || parent instanceof JSExpressionStatement
+                || parent instanceof JSCommaExpression) {
                 return;
             }
             registerError(jsAssignmentExpression);
