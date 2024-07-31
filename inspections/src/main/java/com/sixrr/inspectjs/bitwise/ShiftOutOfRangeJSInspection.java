@@ -31,7 +31,7 @@ public class ShiftOutOfRangeJSInspection extends JavaScriptInspection {
     @Override
     @Nonnull
     public String buildErrorString(Object state, Object... args) {
-        final Integer value = (Integer) args[0];
+        final Integer value = (Integer)args[0];
         return value > 0
             ? InspectionJSLocalize.shiftOperationByInappropriateConstantProblemDescriptorTooLarge().get()
             : InspectionJSLocalize.shiftOperationByInappropriateConstantProblemDescriptorNegative().get();
@@ -52,10 +52,8 @@ public class ShiftOutOfRangeJSInspection extends JavaScriptInspection {
         public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             final IElementType tokenType = expression.getOperationSign();
-            if (tokenType == null ||
-                  ( !tokenType.equals(JSTokenTypes.LTLT) &&
-                    !tokenType.equals(JSTokenTypes.GTGT) &&
-                    !tokenType.equals(JSTokenTypes.GTGTGT) )) {
+            if (tokenType == null || (!JSTokenTypes.LTLT.equals(tokenType)
+                && !JSTokenTypes.GTGT.equals(tokenType) && !JSTokenTypes.GTGTGT.equals(tokenType))) {
                 return;
             }
             final JSExpression rhs = expression.getROperand();
@@ -69,7 +67,7 @@ public class ShiftOutOfRangeJSInspection extends JavaScriptInspection {
             if (!(valueObject instanceof Integer)) {
                 return;
             }
-            final int value = (Integer) valueObject;
+            final int value = (Integer)valueObject;
             if (value < 0 || value > 31) {
                 registerError(expression, value);
             }

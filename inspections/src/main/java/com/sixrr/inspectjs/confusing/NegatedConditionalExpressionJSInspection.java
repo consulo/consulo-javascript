@@ -58,7 +58,7 @@ public class NegatedConditionalExpressionJSInspection extends JavaScriptInspecti
 
         @Override
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final JSConditionalExpression exp = (JSConditionalExpression) descriptor.getPsiElement();
+            final JSConditionalExpression exp = (JSConditionalExpression)descriptor.getPsiElement();
             assert exp != null;
             final JSExpression elseBranch = exp.getElse();
             final JSExpression thenBranch = exp.getThen();
@@ -92,9 +92,9 @@ public class NegatedConditionalExpressionJSInspection extends JavaScriptInspecti
             if (!(expression instanceof JSBinaryExpression)) {
                 return false;
             }
-            final JSBinaryExpression binaryExpression = (JSBinaryExpression) expression;
+            final JSBinaryExpression binaryExpression = (JSBinaryExpression)expression;
             final IElementType sign = binaryExpression.getOperationSign();
-            return JSTokenTypes.NE.equals(sign) ||JSTokenTypes.NEQEQ.equals(sign);
+            return JSTokenTypes.NE.equals(sign) || JSTokenTypes.NEQEQ.equals(sign);
         }
     }
 }
