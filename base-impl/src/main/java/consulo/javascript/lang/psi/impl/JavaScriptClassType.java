@@ -28,32 +28,24 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 23.02.2016
  */
-public class JavaScriptClassType implements JavaScriptType
-{
-	private JSClass myClass;
+public class JavaScriptClassType implements JavaScriptType {
+    private JSClass myClass;
 
-	public JavaScriptClassType(JSClass aClass)
-	{
-		myClass = aClass;
-	}
+    public JavaScriptClassType(JSClass aClass) {
+        myClass = aClass;
+    }
 
-	@RequiredReadAction
-	@Nonnull
-	@Override
-	public String getPresentableText()
-	{
-		String name = myClass.getName();
-		if(name == null)
-		{
-			return "<anonymous class>";
-		}
-		return name;
-	}
+    @RequiredReadAction
+    @Nonnull
+    @Override
+    public String getPresentableText() {
+        String name = myClass.getName();
+        return name == null ? "<anonymous class>" : name;
+    }
 
-	@Nullable
-	@Override
-	public PsiElement getTargetElement()
-	{
-		return myClass;
-	}
+    @Nullable
+    @Override
+    public PsiElement getTargetElement() {
+        return myClass;
+    }
 }

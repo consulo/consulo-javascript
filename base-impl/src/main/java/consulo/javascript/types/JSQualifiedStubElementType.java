@@ -29,37 +29,31 @@ import org.jetbrains.annotations.NonNls;
  * @author VISTALL
  * @since 03.05.2015
  */
-public abstract class JSQualifiedStubElementType<StubT extends JSQualifiedStub<PsiT>, PsiT extends JSQualifiedNamedElement> extends JSStubElementType<StubT, PsiT>
-{
-	public JSQualifiedStubElementType(@NonNls String debugName)
-	{
-		super(debugName);
-	}
+public abstract class JSQualifiedStubElementType<StubT extends JSQualifiedStub<PsiT>, PsiT extends JSQualifiedNamedElement>
+    extends JSStubElementType<StubT, PsiT> {
+    public JSQualifiedStubElementType(@NonNls String debugName) {
+        super(debugName);
+    }
 
-	@Override
-	public void indexStub(@Nonnull StubT stub, @Nonnull IndexSink sink)
-	{
-		final String name = stub.getName();
-		final String fqn = stub.getQualifiedName();
+    @Override
+    public void indexStub(@Nonnull StubT stub, @Nonnull IndexSink sink) {
+        final String name = stub.getName();
+        final String fqn = stub.getQualifiedName();
 
-		if(name != null && doIndexName(stub, name, fqn))
-		{
-			sink.occurrence(JavaScriptIndexKeys.ELEMENTS_BY_NAME, name);
-		}
+        if (name != null && doIndexName(stub, name, fqn)) {
+            sink.occurrence(JavaScriptIndexKeys.ELEMENTS_BY_NAME, name);
+        }
 
-		if(fqn != null && doIndexQualifiedName(stub, name, fqn))
-		{
-			sink.occurrence(JavaScriptIndexKeys.ELEMENTS_BY_QNAME, fqn);
-		}
-	}
+        if (fqn != null && doIndexQualifiedName(stub, name, fqn)) {
+            sink.occurrence(JavaScriptIndexKeys.ELEMENTS_BY_QNAME, fqn);
+        }
+    }
 
-	protected boolean doIndexQualifiedName(StubT stub, final String name, final String fqn)
-	{
-		return true;
-	}
+    protected boolean doIndexQualifiedName(StubT stub, final String name, final String fqn) {
+        return true;
+    }
 
-	protected boolean doIndexName(StubT stub, final String name, final String fqn)
-	{
-		return true;
-	}
+    protected boolean doIndexName(StubT stub, final String name, final String fqn) {
+        return true;
+    }
 }

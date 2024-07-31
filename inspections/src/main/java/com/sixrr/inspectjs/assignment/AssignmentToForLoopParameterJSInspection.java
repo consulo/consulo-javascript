@@ -51,11 +51,12 @@ public class AssignmentToForLoopParameterJSInspection extends JavaScriptInspecti
             checkForForeachLoopParam(lhs);
         }
 
-        @Override public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
+        @Override
+        public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
             super.visitJSPrefixExpression(expression);
             final IElementType sign = expression.getOperationSign();
             if (!JSTokenTypes.PLUSPLUS.equals(sign) &&
-                    !JSTokenTypes.MINUSMINUS.equals(sign)) {
+                !JSTokenTypes.MINUSMINUS.equals(sign)) {
                 return;
             }
             final JSExpression operand = expression.getExpression();
@@ -66,11 +67,11 @@ public class AssignmentToForLoopParameterJSInspection extends JavaScriptInspecti
             checkForForeachLoopParam(operand);
         }
 
-        @Override public void visitJSPostfixExpression(@Nonnull JSPostfixExpression expression) {
+        @Override
+        public void visitJSPostfixExpression(@Nonnull JSPostfixExpression expression) {
             super.visitJSPostfixExpression(expression);
             final IElementType sign = expression.getOperationSign();
-            if (!JSTokenTypes.PLUSPLUS.equals(sign) &&
-                    !JSTokenTypes.MINUSMINUS.equals(sign)) {
+            if (!JSTokenTypes.PLUSPLUS.equals(sign) && !JSTokenTypes.MINUSMINUS.equals(sign)) {
                 return;
             }
             final JSExpression operand = expression.getExpression();
@@ -85,24 +86,23 @@ public class AssignmentToForLoopParameterJSInspection extends JavaScriptInspecti
             if (!(expression instanceof JSReferenceExpression)) {
                 return;
             }
-            final JSReferenceExpression ref = (JSReferenceExpression) expression;
+            final JSReferenceExpression ref = (JSReferenceExpression)expression;
             final PsiElement element = ref.resolve();
             if (!(element instanceof JSVariable)) {
                 return;
             }
-            final JSVariable variable = (JSVariable) element;
-            if(!(variable.getParent() instanceof JSVarStatement))
-            {
+            final JSVariable variable = (JSVariable)element;
+            if (!(variable.getParent() instanceof JSVarStatement)) {
                 return;
             }
-            final JSVarStatement decl = (JSVarStatement) variable.getParent();
+            final JSVarStatement decl = (JSVarStatement)variable.getParent();
             if (decl == null) {
                 return;
             }
             if (!(decl.getParent() instanceof JSForStatement)) {
                 return;
             }
-            final JSForStatement forStatement = (JSForStatement) decl.getParent();
+            final JSForStatement forStatement = (JSForStatement)decl.getParent();
             assert forStatement != null;
             if (!isInForStatementBody(expression, forStatement)) {
                 return;
@@ -114,12 +114,12 @@ public class AssignmentToForLoopParameterJSInspection extends JavaScriptInspecti
             if (!(expression instanceof JSReferenceExpression)) {
                 return;
             }
-            final JSReferenceExpression ref = (JSReferenceExpression) expression;
+            final JSReferenceExpression ref = (JSReferenceExpression)expression;
             final PsiElement element = ref.resolve();
             if (!(element instanceof JSVariable)) {
                 return;
             }
-            final JSVariable parameter = (JSVariable) element;
+            final JSVariable parameter = (JSVariable)element;
             final PsiElement JSVarStatement = parameter.getParent();
             if (!(JSVarStatement.getParent() instanceof JSForInStatement)) {
                 return;

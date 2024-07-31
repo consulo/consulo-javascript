@@ -16,37 +16,28 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 2019-12-14
  */
-public abstract class ResolveHelper
-{
-	private static final ResolveHelper DEFAULT = new ResolveHelper()
-	{
-	};
+public abstract class ResolveHelper {
+    private static final ResolveHelper DEFAULT = new ResolveHelper() {
+    };
 
-	public static ResolveHelper find(PsiElement element)
-	{
-		LanguageVersion languageVersion = element.getLanguageVersion();
-		if(languageVersion instanceof JavaScriptVersionWithHelper)
-		{
-			return ((JavaScriptVersionWithHelper) languageVersion).getHelper();
-		}
+    public static ResolveHelper find(PsiElement element) {
+        LanguageVersion languageVersion = element.getLanguageVersion();
+        return languageVersion instanceof JavaScriptVersionWithHelper javaScriptVersionWithHelper
+            ? javaScriptVersionWithHelper.getHelper()
+            : DEFAULT;
+    }
 
-		return DEFAULT;
-	}
+    @Nullable
+    public JSImportedElementResolveResult resolveTypeNameUsingImports(final @Nonnull String referencedName, PsiNamedElement parent) {
+        return null;
+    }
 
-	@Nullable
-	public JSImportedElementResolveResult resolveTypeNameUsingImports(final @Nonnull String referencedName, PsiNamedElement parent)
-	{
-		return null;
-	}
+    public boolean execute(ResolveProcessor resolveProcessor, PsiElement element, ResolveState state) {
+        return false;
+    }
 
-	public boolean execute(ResolveProcessor resolveProcessor, PsiElement element, ResolveState state)
-	{
-		return false;
-	}
-
-	@RequiredReadAction
-	public boolean isResolveTo(JSReferenceExpressionImpl expression, PsiElement element)
-	{
-		return false;
-	}
+    @RequiredReadAction
+    public boolean isResolveTo(JSReferenceExpressionImpl expression, PsiElement element) {
+        return false;
+    }
 }

@@ -21,55 +21,44 @@ import java.util.List;
  */
 @Singleton
 @ServiceImpl
-public class StandardJavaScriptVersionsImpl extends StandardJavaScriptVersions
-{
-	@Nonnull
-	public JavaScriptLanguageVersion getDefaultVersion()
-	{
-		LanguageVersion[] versions = JavaScriptLanguage.INSTANCE.getVersions();
-		for(LanguageVersion version : versions)
-		{
-			if(version instanceof DefaultJavaScriptVersion)
-			{
-				return (JavaScriptLanguageVersion) version;
-			}
-		}
-		return JavaScript15LanguageVersion.getInstance();
-	}
+public class StandardJavaScriptVersionsImpl extends StandardJavaScriptVersions {
+    @Nonnull
+    public JavaScriptLanguageVersion getDefaultVersion() {
+        LanguageVersion[] versions = JavaScriptLanguage.INSTANCE.getVersions();
+        for (LanguageVersion version : versions) {
+            if (version instanceof DefaultJavaScriptVersion) {
+                return (JavaScriptLanguageVersion)version;
+            }
+        }
+        return JavaScript15LanguageVersion.getInstance();
+    }
 
-	@Nonnull
-	public List<JavaScriptLanguageVersion> getValidLanguageVersions()
-	{
-		List<JavaScriptLanguageVersion> list = new ArrayList<>();
-		LanguageVersion[] versions = JavaScriptLanguage.INSTANCE.getVersions();
-		for(LanguageVersion version : versions)
-		{
-			if(version instanceof StandardJavaScriptVersion)
-			{
-				list.add((BaseJavaScriptLanguageVersion) version);
-			}
-		}
+    @Nonnull
+    public List<JavaScriptLanguageVersion> getValidLanguageVersions() {
+        List<JavaScriptLanguageVersion> list = new ArrayList<>();
+        LanguageVersion[] versions = JavaScriptLanguage.INSTANCE.getVersions();
+        for (LanguageVersion version : versions) {
+            if (version instanceof StandardJavaScriptVersion) {
+                list.add((BaseJavaScriptLanguageVersion)version);
+            }
+        }
 
-		list.sort((o1, o2) -> StringUtil.naturalCompare(o1.getPresentableName(), o2.getPresentableName()));
-		return list;
-	}
+        list.sort((o1, o2) -> StringUtil.naturalCompare(o1.getPresentableName(), o2.getPresentableName()));
+        return list;
+    }
 
-	@Nonnull
-	public JavaScriptLanguageVersion findVersionById(@Nullable String id)
-	{
-		if(StringUtil.isEmpty(id))
-		{
-			return getDefaultVersion();
-		}
+    @Nonnull
+    public JavaScriptLanguageVersion findVersionById(@Nullable String id) {
+        if (StringUtil.isEmpty(id)) {
+            return getDefaultVersion();
+        }
 
-		LanguageVersion[] versions = JavaScriptLanguage.INSTANCE.getVersions();
-		for(LanguageVersion version : versions)
-		{
-			if(version instanceof StandardJavaScriptVersion && id.equals(version.getId()))
-			{
-				return (BaseJavaScriptLanguageVersion) version;
-			}
-		}
-		return getDefaultVersion();
-	}
+        LanguageVersion[] versions = JavaScriptLanguage.INSTANCE.getVersions();
+        for (LanguageVersion version : versions) {
+            if (version instanceof StandardJavaScriptVersion && id.equals(version.getId())) {
+                return (BaseJavaScriptLanguageVersion)version;
+            }
+        }
+        return getDefaultVersion();
+    }
 }
