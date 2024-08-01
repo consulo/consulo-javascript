@@ -13,29 +13,29 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 13/03/2023
  */
-public class EmptyStatementBodyJSInspectionState implements InspectionToolState<EmptyStatementBodyJSInspectionState>
-{
-	public boolean m_reportEmptyBlocks = false;
+public class EmptyStatementBodyJSInspectionState implements InspectionToolState<EmptyStatementBodyJSInspectionState> {
+    public boolean m_reportEmptyBlocks = false;
 
-	@Nullable
-	@Override
-	public UnnamedConfigurable createConfigurable()
-	{
-		ConfigurableBuilder<ConfigurableBuilderState> builder = ConfigurableBuilder.newBuilder();
-		builder.checkBox(InspectionJSLocalize.includeStatementBodiesThatAreEmptyCodeBlocksParameter(), () -> m_reportEmptyBlocks, b -> m_reportEmptyBlocks = b);
-		return builder.buildUnnamed();
-	}
+    @Nullable
+    @Override
+    public UnnamedConfigurable createConfigurable() {
+        ConfigurableBuilder<ConfigurableBuilderState> builder = ConfigurableBuilder.newBuilder();
+        builder.checkBox(
+            InspectionJSLocalize.includeStatementBodiesThatAreEmptyCodeBlocksParameter(),
+            () -> m_reportEmptyBlocks,
+            b -> m_reportEmptyBlocks = b
+        );
+        return builder.buildUnnamed();
+    }
 
-	@Nullable
-	@Override
-	public EmptyStatementBodyJSInspectionState getState()
-	{
-		return this;
-	}
+    @Nullable
+    @Override
+    public EmptyStatementBodyJSInspectionState getState() {
+        return this;
+    }
 
-	@Override
-	public void loadState(EmptyStatementBodyJSInspectionState state)
-	{
-		XmlSerializerUtil.copyBean(state, this);
-	}
+    @Override
+    public void loadState(EmptyStatementBodyJSInspectionState state) {
+        XmlSerializerUtil.copyBean(state, this);
+    }
 }

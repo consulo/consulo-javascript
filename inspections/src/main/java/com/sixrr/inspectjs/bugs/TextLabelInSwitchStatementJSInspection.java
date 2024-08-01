@@ -56,7 +56,7 @@ public class TextLabelInSwitchStatementJSInspection extends JavaScriptInspection
             if (!(statement instanceof JSLabeledStatement)) {
                 return;
             }
-            final JSLabeledStatement labeledStatement = (JSLabeledStatement) statement;
+            final JSLabeledStatement labeledStatement = (JSLabeledStatement)statement;
             final PsiElement label = labeledStatement.getLabelIdentifier();
             registerError(label);
         }

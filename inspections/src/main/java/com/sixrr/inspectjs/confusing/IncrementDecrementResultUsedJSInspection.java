@@ -35,12 +35,13 @@ public class IncrementDecrementResultUsedJSInspection extends JavaScriptInspecti
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
     private static class Visitor extends BaseInspectionVisitor {
-        @Override public void visitJSPrefixExpression(JSPrefixExpression expression) {
+        @Override
+        public void visitJSPrefixExpression(JSPrefixExpression expression) {
             final IElementType sign = expression.getOperationSign();
             if (!JSTokenTypes.PLUSPLUS.equals(sign) && !JSTokenTypes.MINUSMINUS.equals(sign)) {
                 return;
@@ -51,15 +52,16 @@ public class IncrementDecrementResultUsedJSInspection extends JavaScriptInspecti
             }
 
             if (parent instanceof JSExpressionStatement
-                    || parent instanceof JSForInStatement
-                    || parent instanceof JSForStatement
-                    || parent instanceof JSCommaExpression) {
+                || parent instanceof JSForInStatement
+                || parent instanceof JSForStatement
+                || parent instanceof JSCommaExpression) {
                 return;
             }
             registerError(expression);
         }
 
-        @Override public void visitJSPostfixExpression(JSPostfixExpression jsPostfixExpression) {
+        @Override
+        public void visitJSPostfixExpression(JSPostfixExpression jsPostfixExpression) {
             final IElementType sign = jsPostfixExpression.getOperationSign();
             if (!JSTokenTypes.PLUSPLUS.equals(sign) && !JSTokenTypes.MINUSMINUS.equals(sign)) {
                 return;
@@ -69,9 +71,9 @@ public class IncrementDecrementResultUsedJSInspection extends JavaScriptInspecti
                 return;
             }
             if (parent instanceof JSExpressionStatement
-                    ||parent instanceof JSForInStatement
-                    ||parent instanceof JSForStatement
-                    || parent instanceof JSCommaExpression) {
+                || parent instanceof JSForInStatement
+                || parent instanceof JSForStatement
+                || parent instanceof JSCommaExpression) {
                 return;
             }
             registerError(jsPostfixExpression);

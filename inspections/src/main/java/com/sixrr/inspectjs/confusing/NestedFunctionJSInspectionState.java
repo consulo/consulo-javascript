@@ -12,29 +12,29 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 13/03/2023
  */
-public class NestedFunctionJSInspectionState implements InspectionToolState<NestedFunctionJSInspectionState>
-{
-	public boolean m_includeAnonymousFunctions = false;
+public class NestedFunctionJSInspectionState implements InspectionToolState<NestedFunctionJSInspectionState> {
+    public boolean m_includeAnonymousFunctions = false;
 
-	@Nullable
-	@Override
-	public UnnamedConfigurable createConfigurable()
-	{
-		ConfigurableBuilder<ConfigurableBuilderState> builder = ConfigurableBuilder.newBuilder();
-		builder.checkBox(InspectionJSLocalize.includeAnonymousFunctionsParameter(), () -> m_includeAnonymousFunctions, b -> m_includeAnonymousFunctions = b);
-		return builder.buildUnnamed();
-	}
+    @Nullable
+    @Override
+    public UnnamedConfigurable createConfigurable() {
+        ConfigurableBuilder<ConfigurableBuilderState> builder = ConfigurableBuilder.newBuilder();
+        builder.checkBox(
+            InspectionJSLocalize.includeAnonymousFunctionsParameter(),
+            () -> m_includeAnonymousFunctions,
+            b -> m_includeAnonymousFunctions = b
+        );
+        return builder.buildUnnamed();
+    }
 
-	@Nullable
-	@Override
-	public NestedFunctionJSInspectionState getState()
-	{
-		return this;
-	}
+    @Nullable
+    @Override
+    public NestedFunctionJSInspectionState getState() {
+        return this;
+    }
 
-	@Override
-	public void loadState(NestedFunctionJSInspectionState state)
-	{
-		XmlSerializerUtil.copyBean(state, this);
-	}
+    @Override
+    public void loadState(NestedFunctionJSInspectionState state) {
+        XmlSerializerUtil.copyBean(state, this);
+    }
 }

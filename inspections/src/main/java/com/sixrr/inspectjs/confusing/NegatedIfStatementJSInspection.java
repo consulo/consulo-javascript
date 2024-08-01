@@ -48,7 +48,7 @@ public class NegatedIfStatementJSInspection extends JavaScriptInspection {
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
@@ -67,7 +67,7 @@ public class NegatedIfStatementJSInspection extends JavaScriptInspection {
         @Override
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
             final PsiElement ifToken = descriptor.getPsiElement();
-            final JSIfStatement ifStatement = (JSIfStatement) ifToken.getParent();
+            final JSIfStatement ifStatement = (JSIfStatement)ifToken.getParent();
             assert ifStatement != null;
             final JSStatement elseBranch = ifStatement.getElse();
             final JSStatement thenBranch = ifStatement.getThen();
@@ -76,7 +76,7 @@ public class NegatedIfStatementJSInspection extends JavaScriptInspection {
             String elseText = elseBranch.getText();
             final PsiElement lastChild = elseBranch.getLastChild();
             if (lastChild instanceof PsiComment) {
-                final PsiComment comment = (PsiComment) lastChild;
+                final PsiComment comment = (PsiComment)lastChild;
                 final IElementType tokenType = comment.getTokenType();
                 if (JSTokenTypes.END_OF_LINE_COMMENT.equals(tokenType)) {
                     elseText += '\n';
@@ -114,7 +114,7 @@ public class NegatedIfStatementJSInspection extends JavaScriptInspection {
             if (!(expression instanceof JSBinaryExpression)) {
                 return false;
             }
-            final JSBinaryExpression binaryExpression = (JSBinaryExpression) expression;
+            final JSBinaryExpression binaryExpression = (JSBinaryExpression)expression;
             final IElementType sign = binaryExpression.getOperationSign();
             return JSTokenTypes.NE.equals(sign) || JSTokenTypes.NEQEQ.equals(sign);
         }

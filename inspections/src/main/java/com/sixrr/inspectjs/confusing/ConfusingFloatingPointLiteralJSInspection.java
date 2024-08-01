@@ -58,7 +58,7 @@ public class ConfusingFloatingPointLiteralJSInspection extends JavaScriptInspect
 
         @Override
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final JSExpression literalExpression = (JSExpression) descriptor.getPsiElement();
+            final JSExpression literalExpression = (JSExpression)descriptor.getPsiElement();
             final String text = literalExpression.getText();
             final String newText = getCanonicalForm(text);
             replaceExpression(literalExpression, newText);
@@ -67,43 +67,50 @@ public class ConfusingFloatingPointLiteralJSInspection extends JavaScriptInspect
         private static String getCanonicalForm(String text) {
             final String suffix;
             final String prefix;
-            if (text.indexOf((int) 'e') > 0) {
-                final int breakPoint = text.indexOf((int) 'e');
+            if (text.indexOf((int)'e') > 0) {
+                final int breakPoint = text.indexOf((int)'e');
                 suffix = text.substring(breakPoint);
                 prefix = text.substring(0, breakPoint);
-            } else if (text.indexOf((int) 'E') > 0) {
-                final int breakPoint = text.indexOf((int) 'E');
+            }
+            else if (text.indexOf((int)'E') > 0) {
+                final int breakPoint = text.indexOf((int)'E');
                 suffix = text.substring(breakPoint);
                 prefix = text.substring(0, breakPoint);
-            } else if (text.indexOf((int) 'f') > 0) {
-                final int breakPoint = text.indexOf((int) 'f');
+            }
+            else if (text.indexOf((int)'f') > 0) {
+                final int breakPoint = text.indexOf((int)'f');
                 suffix = text.substring(breakPoint);
                 prefix = text.substring(0, breakPoint);
-            } else if (text.indexOf((int) 'F') > 0) {
-                final int breakPoint = text.indexOf((int) 'F');
+            }
+            else if (text.indexOf((int)'F') > 0) {
+                final int breakPoint = text.indexOf((int)'F');
                 suffix = text.substring(breakPoint);
                 prefix = text.substring(0, breakPoint);
-            } else if (text.indexOf((int) 'd') > 0) {
-                final int breakPoint = text.indexOf((int) 'd');
+            }
+            else if (text.indexOf((int)'d') > 0) {
+                final int breakPoint = text.indexOf((int)'d');
                 suffix = text.substring(breakPoint);
                 prefix = text.substring(0, breakPoint);
-            } else if (text.indexOf((int) 'D') > 0) {
-                final int breakPoint = text.indexOf((int) 'D');
+            }
+            else if (text.indexOf((int)'D') > 0) {
+                final int breakPoint = text.indexOf((int)'D');
                 suffix = text.substring(breakPoint);
                 prefix = text.substring(0, breakPoint);
-            } else {
+            }
+            else {
                 suffix = "";
                 prefix = text;
             }
-            final int indexPoint = prefix.indexOf((int) '.');
+            final int indexPoint = prefix.indexOf((int)'.');
             if (indexPoint < 0) {
                 return prefix + ".0" + suffix;
-            } else if (indexPoint == 0) {
+            }
+            else if (indexPoint == 0) {
                 return '0' + prefix + suffix;
-            } else {
+            }
+            else {
                 return prefix + '0' + suffix;
             }
-
         }
     }
 

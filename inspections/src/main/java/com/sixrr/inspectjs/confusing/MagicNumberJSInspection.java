@@ -21,11 +21,11 @@ import java.util.Set;
 public class MagicNumberJSInspection extends JavaScriptInspection {
     @NonNls
     private static final String[] s_specialCaseLiteralArray = new String[]{
-      "0", "1", "2", "3", "4",
-      "5", "6", "7", "8", "9",
-      "10", "0L", "1L", "2L", "0l",
-      "1l", "2l", "0.0", "1.0", "0.0F",
-      "1.0F", "0.0f", "1.0f"
+        "0", "1", "2", "3", "4",
+        "5", "6", "7", "8", "9",
+        "10", "0L", "1L", "2L", "0l",
+        "1l", "2l", "0.0", "1.0", "0.0F",
+        "1.0F", "0.0f", "1.0f"
     };
 
     /**
@@ -77,19 +77,19 @@ public class MagicNumberJSInspection extends JavaScriptInspection {
             final PsiElement parent = expression.getParent();
             if (parent instanceof JSPrefixExpression) {
                 registerError(parent);
-            } else {
+            }
+            else {
                 registerError(expression);
             }
         }
     }
 
     private static boolean isNumeric(String text) {
-        if (text.isEmpty())
-        {
+        if (text.isEmpty()) {
             return false;
         }
         final char firstChar = text.charAt(0);
-        return Character.isDigit(firstChar)|| firstChar == '.';
+        return Character.isDigit(firstChar) || firstChar == '.';
     }
 
     private static boolean isDeclaredConstant(JSLiteralExpression expression) {

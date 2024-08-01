@@ -39,11 +39,12 @@ public class IncompatibleMaskJSInspection extends JavaScriptInspection {
     @Override
     @Nonnull
     public String buildErrorString(Object state, Object... args) {
-        final JSBinaryExpression binaryExpression = (JSBinaryExpression) args[0];
+        final JSBinaryExpression binaryExpression = (JSBinaryExpression)args[0];
         final IElementType tokenType = binaryExpression.getOperationSign();
         if (JSTokenTypes.EQEQ.equals(tokenType)) {
             return InspectionJSLocalize.incompatibleMaskOperationProblemDescriptorAlwaysFalse().get();
-        } else {
+        }
+        else {
             return InspectionJSLocalize.incompatibleMaskOperationProblemDescriptorAlwaysTrue().get();
         }
     }
@@ -76,11 +77,12 @@ public class IncompatibleMaskJSInspection extends JavaScriptInspection {
                 return;
             }
             if (isConstantMask(strippedLhs) && ExpressionUtil.isConstantExpression(strippedRhs)) {
-                if (isIncompatibleMask((JSBinaryExpression) strippedLhs, strippedRhs)) {
+                if (isIncompatibleMask((JSBinaryExpression)strippedLhs, strippedRhs)) {
                     registerError(expression, expression);
                 }
-            } else if (isConstantMask(strippedRhs) && ExpressionUtil.isConstantExpression(strippedLhs)) {
-                if (isIncompatibleMask((JSBinaryExpression) strippedRhs, strippedLhs)) {
+            }
+            else if (isConstantMask(strippedRhs) && ExpressionUtil.isConstantExpression(strippedLhs)) {
+                if (isIncompatibleMask((JSBinaryExpression)strippedRhs, strippedLhs)) {
                     registerError(expression, expression);
                 }
             }
@@ -89,28 +91,29 @@ public class IncompatibleMaskJSInspection extends JavaScriptInspection {
         private static boolean isIncompatibleMask(JSBinaryExpression maskExpression, JSExpression constantExpression) {
             final IElementType tokenType = maskExpression.getOperationSign();
             final Object constantValue = ExpressionUtil.computeConstantExpression(constantExpression);
-            if (!(constantValue instanceof Integer)){
+            if (!(constantValue instanceof Integer)) {
                 return false;
             }
-            final int constantLongValue = (Integer) constantValue;
+            final int constantLongValue = (Integer)constantValue;
             final JSExpression maskRhs = maskExpression.getROperand();
             final JSExpression maskLhs = maskExpression.getLOperand();
             final int constantMaskValue;
             if (ExpressionUtil.isConstantExpression(maskRhs)) {
                 final Object rhsValue =
-                        ExpressionUtil.computeConstantExpression(maskRhs);
+                    ExpressionUtil.computeConstantExpression(maskRhs);
                 if (!(rhsValue instanceof Integer)) {
                     return false; // Might indeed be the case with "null" literal
                     // whoes constant value evaluates to null. Check out (a|null) case.
                 }
-                constantMaskValue = (Integer) rhsValue;
-            } else {
+                constantMaskValue = (Integer)rhsValue;
+            }
+            else {
                 final Object lhsValue =
-                        ExpressionUtil.computeConstantExpression(maskLhs);
+                    ExpressionUtil.computeConstantExpression(maskLhs);
                 if (!(lhsValue instanceof Integer)) {
                     return false;
                 }
-                constantMaskValue = (Integer) lhsValue;
+                constantMaskValue = (Integer)lhsValue;
             }
 
             if (JSTokenTypes.OR.equals(tokenType)) {
@@ -133,7 +136,7 @@ public class IncompatibleMaskJSInspection extends JavaScriptInspection {
             if (!(expression instanceof JSBinaryExpression)) {
                 return false;
             }
-            final JSBinaryExpression binaryExpression = (JSBinaryExpression) expression;
+            final JSBinaryExpression binaryExpression = (JSBinaryExpression)expression;
             final IElementType tokenType = binaryExpression.getOperationSign();
             if (!JSTokenTypes.OR.equals(tokenType) && !JSTokenTypes.AND.equals(tokenType)) {
                 return false;

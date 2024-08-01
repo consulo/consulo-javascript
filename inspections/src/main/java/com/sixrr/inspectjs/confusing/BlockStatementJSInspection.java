@@ -42,14 +42,13 @@ public class BlockStatementJSInspection extends JavaScriptInspection {
         public void visitJSBlock(JSBlockStatement jsBlockStatement) {
             super.visitJSBlock(jsBlockStatement);
             final PsiElement parent = jsBlockStatement.getParent();
-            if(parent instanceof JSIfStatement||
-                    parent instanceof JSLoopStatement ||
-                    parent instanceof JSWithStatement ||
-                    parent instanceof JSSwitchStatement ||
-                    parent instanceof JSTryStatement ||
-                    parent instanceof JSCatchBlock||
-                    parent instanceof JSFunction)
-            {
+            if (parent instanceof JSIfStatement
+                || parent instanceof JSLoopStatement
+                || parent instanceof JSWithStatement
+                || parent instanceof JSSwitchStatement
+                || parent instanceof JSTryStatement
+                || parent instanceof JSCatchBlock
+                || parent instanceof JSFunction) {
                 return;
             }
             registerStatementError(jsBlockStatement);

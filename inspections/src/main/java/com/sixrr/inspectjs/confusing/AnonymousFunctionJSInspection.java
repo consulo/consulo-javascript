@@ -14,39 +14,38 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 @ExtensionImpl
-public class AnonymousFunctionJSInspection extends JavaScriptInspection{
+public class AnonymousFunctionJSInspection extends JavaScriptInspection {
     @Override
     @Nonnull
-    public String getDisplayName(){
+    public String getDisplayName() {
         return InspectionJSLocalize.anonymousFunctionDisplayName().get();
     }
 
     @Override
     @Nonnull
-    public String getGroupDisplayName(){
+    public String getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME.get();
     }
 
     @RequiredReadAction
     @Override
     @Nullable
-    protected String buildErrorString(Object state, Object... args){
+    protected String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.anonymousFunctionErrorString().get();
     }
 
     @Override
-    public BaseInspectionVisitor buildVisitor(){
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
-    private static class Visitor extends BaseInspectionVisitor{
+    private static class Visitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSFunctionExpression(JSFunctionExpression jsFunctionExpression){
+        public void visitJSFunctionExpression(JSFunctionExpression jsFunctionExpression) {
             super.visitJSFunctionExpression(jsFunctionExpression);
             final JSFunction function = jsFunctionExpression.getFunction();
             final PsiElement identifier = function.getNameIdentifier();
-            if(identifier == null ||
-                    PsiTreeUtil.isAncestor(function, identifier, true)){
+            if (identifier == null || PsiTreeUtil.isAncestor(function, identifier, true)) {
                 return;
             }
             registerError(function.getFirstChild());
