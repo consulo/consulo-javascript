@@ -14,19 +14,16 @@ import jakarta.annotation.Nullable;
  * @since 29-Aug-22
  */
 @ExtensionImpl
-public class JSAnnotatorFactory implements AnnotatorFactory
-{
-	@Nullable
-	@Override
-	public Annotator createAnnotator()
-	{
-		return new JSAnnotatingVisitor();
-	}
+public class JSAnnotatorFactory implements AnnotatorFactory {
+    @Nullable
+    @Override
+    public Annotator createAnnotator() {
+        return new JSAnnotatingVisitor();
+    }
 
-	@Nonnull
-	@Override
-	public Language getLanguage()
-	{
-		return JavaScriptLanguage.INSTANCE;
-	}
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return JavaScriptLanguage.INSTANCE;
+    }
 }

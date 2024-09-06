@@ -51,253 +51,208 @@ import consulo.language.psi.PsiWhiteSpace;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jul 17, 2008
- *         Time: 9:39:02 PM
+ * Date: Jul 17, 2008
+ * Time: 9:39:02 PM
  */
-public abstract class BaseCreateMethodsFix<T extends JSNamedElement & JSAttributeListOwner>
-{
-	private final Set<T> elementsToProcess = new LinkedHashSet<T>();
-	protected final JSClass myJsClass;
-	protected PsiElement anchor;
+public abstract class BaseCreateMethodsFix<T extends JSNamedElement & JSAttributeListOwner> {
+    private final Set<T> elementsToProcess = new LinkedHashSet<>();
+    protected final JSClass myJsClass;
+    protected PsiElement anchor;
 
-	public BaseCreateMethodsFix(final JSClass jsClass)
-	{
-		myJsClass = jsClass;
-	}
+    public BaseCreateMethodsFix(final JSClass jsClass) {
+        myJsClass = jsClass;
+    }
 
-	public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException
-	{
-		evalAnchor(editor, file);
-		for(T e : getElementsToProcess())
-		{
-			anchor = doAddOneMethod(project, buildFunctionText(e), anchor);
-		}
-	}
+    public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
+        evalAnchor(editor, file);
+        for (T e : getElementsToProcess()) {
+            anchor = doAddOneMethod(project, buildFunctionText(e), anchor);
+        }
+    }
 
-	protected void evalAnchor(final Editor editor, final PsiFile file)
-	{
-		anchor = null;
-		final PsiElement at = file.findElementAt(editor.getCaretModel().getOffset());
-		PsiElement parent;
+    protected void evalAnchor(final Editor editor, final PsiFile file) {
+        anchor = null;
+        final PsiElement at = file.findElementAt(editor.getCaretModel().getOffset());
+        PsiElement parent;
 
-		if(at != null && ((parent = at.getParent()) == myJsClass || (parent instanceof JSFile && myJsClass.getParent().getContainingFile() == parent
-				.getContext().getContainingFile())))
-		{
-			final ASTNode atNode = at.getNode();
-			if(atNode.getElementType() == JSTokenTypes.RBRACE)
-			{
-				return;
-			}
+        if (at != null && ((parent = at.getParent()) == myJsClass || (parent instanceof JSFile && myJsClass.getParent()
+            .getContainingFile() == parent
+            .getContext().getContainingFile()))) {
+            final ASTNode atNode = at.getNode();
+            if (atNode.getElementType() == JSTokenTypes.RBRACE) {
+                return;
+            }
 
-			for(ASTNode node = atNode; node != null; node = node.getTreeNext())
-			{
-				if(node.getElementType() == JSTokenTypes.LBRACE)
-				{
-					return;
-				}
-			}
-			anchor = at;
-		}
-	}
+            for (ASTNode node = atNode; node != null; node = node.getTreeNext()) {
+                if (node.getElementType() == JSTokenTypes.LBRACE) {
+                    return;
+                }
+            }
+            anchor = at;
+        }
+    }
 
-	protected PsiElement doAddOneMethod(final Project project, final String functionText, PsiElement anchor) throws IncorrectOperationException
-	{
-		if(functionText != null && functionText.length() > 0)
-		{
-			PsiElement element = JSChangeUtil.createJSTreeFromText(project, functionText).getPsi();
-			if(element instanceof PsiWhiteSpace)
-			{
-				element = element.getNextSibling();
-			}
+    protected PsiElement doAddOneMethod(final Project project, final String functionText, PsiElement anchor)
+        throws IncorrectOperationException {
+        if (functionText != null && functionText.length() > 0) {
+            PsiElement element = JSChangeUtil.createJSTreeFromText(project, functionText).getPsi();
+            if (element instanceof PsiWhiteSpace) {
+                element = element.getNextSibling();
+            }
 
-			boolean defaultAdd = true;
+            boolean defaultAdd = true;
 
-			if(anchor != null && anchor.isValid())
-			{
-				String anchorText;
+            if (anchor != null && anchor.isValid()) {
+                String anchorText;
 
-				if(!(anchor instanceof PsiWhiteSpace) || ((anchorText = anchor.getText()).indexOf("<![CDATA[") == -1 && anchorText.indexOf("]]>") == -1))
-				{
-					defaultAdd = false;
-					anchor = anchor.getParent().addAfter(element, anchor);
-				}
-			}
+                if (!(anchor instanceof PsiWhiteSpace)
+                    || ((anchorText = anchor.getText()).indexOf("<![CDATA[") == -1 && anchorText.indexOf("]]>") == -1)) {
+                    defaultAdd = false;
+                    anchor = anchor.getParent().addAfter(element, anchor);
+                }
+            }
 
-			if(defaultAdd)
-			{
-				anchor = myJsClass.add(element);
-			}
-		}
+            if (defaultAdd) {
+                anchor = myJsClass.add(element);
+            }
+        }
 
-		return anchor;
-	}
+        return anchor;
+    }
 
-	public String buildFunctionText(final T fun)
-	{
-		final JSAttributeList attributeList = fun.getAttributeList();
-		String attrText = attributeList != null ? attributeList.getText() : "";
+    public String buildFunctionText(final T fun) {
+        final JSAttributeList attributeList = fun.getAttributeList();
+        String attrText = attributeList != null ? attributeList.getText() : "";
 
-		attrText = buildFunctionAttrText(attrText, attributeList, fun);
+        attrText = buildFunctionAttrText(attrText, attributeList, fun);
 
-		final JSFunction function = fun instanceof JSFunction ? (JSFunction) fun : null;
-		final JSVariable var = fun instanceof JSVariable ? (JSVariable) fun : null;
-		assert var != null || function != null;
+        final JSFunction function = fun instanceof JSFunction ? (JSFunction)fun : null;
+        final JSVariable var = fun instanceof JSVariable ? (JSVariable)fun : null;
+        assert var != null || function != null;
 
-		final JSParameterList parameterList = (function != null) ? function.getParameterList() : null;
-		final String typeString = importType(function != null ? function.getReturnTypeString() : var.getTypeString(), fun);
-		@NonNls String functionText = attrText;
-		if(functionText.length() > 0)
-		{
-			functionText += " ";
-		}
-		functionText += "function ";
+        final JSParameterList parameterList = (function != null) ? function.getParameterList() : null;
+        final String typeString = importType(function != null ? function.getReturnTypeString() : var.getTypeString(), fun);
+        @NonNls String functionText = attrText;
+        if (functionText.length() > 0) {
+            functionText += " ";
+        }
+        functionText += "function ";
 
-		functionText += buildFunctionKind(fun);
+        functionText += buildFunctionKind(fun);
 
-		functionText += buildName(fun) + " " + buildParameterList(parameterList, fun);
-		if(typeString != null)
-		{
-			functionText += ":" + buildReturnType(typeString);
-		}
+        functionText += buildName(fun) + " " + buildParameterList(parameterList, fun);
+        if (typeString != null) {
+            functionText += ":" + buildReturnType(typeString);
+        }
 
-		functionText += buildFunctionBodyText(typeString, parameterList, fun);
-		return functionText;
-	}
+        functionText += buildFunctionBodyText(typeString, parameterList, fun);
+        return functionText;
+    }
 
-	protected
-	@NonNls
-	String buildReturnType(final String typeString)
-	{
-		return typeString;
-	}
+    protected
+    @NonNls
+    String buildReturnType(final String typeString) {
+        return typeString;
+    }
 
-	protected String importType(final String s, T fun)
-	{
-		if(s == null)
-		{
-			return null;
-		}
-		if(fun instanceof JSFunction)
-		{
-			final String resolvedTypeName = JSImportHandlingUtil.resolveTypeName(s, fun);
+    protected String importType(final String s, T fun) {
+        if (s == null) {
+            return null;
+        }
+        if (fun instanceof JSFunction) {
+            final String resolvedTypeName = JSImportHandlingUtil.resolveTypeName(s, fun);
 
-			if(!resolvedTypeName.equals(s))
-			{
-				ImportUtils.doImport(myJsClass, resolvedTypeName);
-			}
-		}
-		return s;
-	}
+            if (!resolvedTypeName.equals(s)) {
+                ImportUtils.doImport(myJsClass, resolvedTypeName);
+            }
+        }
+        return s;
+    }
 
-	protected String buildParameterList(final JSParameterList parameterList, final T fun)
-	{
-		if(parameterList != null)
-		{
-			for(JSParameter param : parameterList.getParameters())
-			{
-				final String s = param.getTypeString();
-				if(s != null)
-				{
-					importType(s, fun);
-				}
-			}
-		}
-		return (parameterList != null ? parameterList.getText() : "()");
-	}
+    protected String buildParameterList(final JSParameterList parameterList, final T fun) {
+        if (parameterList != null) {
+            for (JSParameter param : parameterList.getParameters()) {
+                final String s = param.getTypeString();
+                if (s != null) {
+                    importType(s, fun);
+                }
+            }
+        }
+        return (parameterList != null ? parameterList.getText() : "()");
+    }
 
-	protected String buildName(final T fun)
-	{
-		return fun.getName();
-	}
+    protected String buildName(final T fun) {
+        return fun.getName();
+    }
 
-	protected
-	@NonNls
-	String buildFunctionKind(final T fun)
-	{
-		if(fun instanceof JSFunction)
-		{
-			final JSFunction function = (JSFunction) fun;
-			if(function.isGetProperty())
-			{
-				return "get ";
-			}
-			else if(function.isSetProperty())
-			{
-				return "set ";
-			}
-		}
-		return "";
-	}
+    protected
+    @NonNls
+    String buildFunctionKind(final T fun) {
+        if (fun instanceof JSFunction) {
+            final JSFunction function = (JSFunction)fun;
+            if (function.isGetProperty()) {
+                return "get ";
+            }
+            else if (function.isSetProperty()) {
+                return "set ";
+            }
+        }
+        return "";
+    }
 
-	protected
-	@NonNls
-	String buildFunctionBodyText(@NonNls String retType, final JSParameterList parameterList, final T func)
-	{
-		return " {}";
-	}
+    protected
+    @NonNls
+    String buildFunctionBodyText(@NonNls String retType, final JSParameterList parameterList, final T func) {
+        return " {}";
+    }
 
-	protected
-	@NonNls
-	String buildFunctionAttrText(@NonNls String attrText, final JSAttributeList attributeList, final T function)
-	{
-		attrText = attrText.replace("native", "").trim();
-		return attrText;
-	}
+    protected
+    @NonNls
+    String buildFunctionAttrText(@NonNls String attrText, final JSAttributeList attributeList, final T function) {
+        attrText = attrText.replace("native", "").trim();
+        return attrText;
+    }
 
-	public void addElementToProcess(final T function)
-	{
-		elementsToProcess.add(function);
-	}
+    public void addElementToProcess(final T function) {
+        elementsToProcess.add(function);
+    }
 
-	public void addElementsToProcessFrom(final Collection<JSNamedElementNode> selectedElements)
-	{
-		for(JSNamedElementNode el : selectedElements)
-		{
-			addElementToProcess((T) el.getPsiElement());
-		}
-	}
+    public void addElementsToProcessFrom(final Collection<JSNamedElementNode> selectedElements) {
+        for (JSNamedElementNode el : selectedElements) {
+            addElementToProcess((T)el.getPsiElement());
+        }
+    }
 
-	public Set<T> getElementsToProcess()
-	{
-		final T[] objects = (T[]) elementsToProcess.toArray(new JSNamedElement[elementsToProcess.size()]);
-		final Comparator<T> tComparator = new Comparator<T>()
-		{
-			@Override
-			public int compare(final T o1, final T o2)
-			{
-				return o1.getTextOffset() - o2.getTextOffset();
-			}
-		};
+    public Set<T> getElementsToProcess() {
+        final T[] objects = (T[])elementsToProcess.toArray(new JSNamedElement[elementsToProcess.size()]);
+        final Comparator<T> tComparator = (o1, o2) -> o1.getTextOffset() - o2.getTextOffset();
 
-		final int size = elementsToProcess.size();
-		final LinkedHashSet<T> result = new LinkedHashSet<T>(size);
-		final List<T> objectsFromSameFile = new ArrayList<T>();
-		PsiFile containingFile = null;
+        final int size = elementsToProcess.size();
+        final LinkedHashSet<T> result = new LinkedHashSet<>(size);
+        final List<T> objectsFromSameFile = new ArrayList<>();
+        PsiFile containingFile = null;
 
-		for(int i = 0; i < size; ++i)
-		{
-			final T object = objects[i];
-			final PsiFile currentContainingFile = object.getContainingFile();
+        for (int i = 0; i < size; ++i) {
+            final T object = objects[i];
+            final PsiFile currentContainingFile = object.getContainingFile();
 
-			if(currentContainingFile != containingFile)
-			{
-				if(containingFile != null)
-				{
-					Collections.sort(objectsFromSameFile, tComparator);
-					result.addAll(objectsFromSameFile);
-					objectsFromSameFile.clear();
-				}
-				containingFile = currentContainingFile;
-			}
+            if (currentContainingFile != containingFile) {
+                if (containingFile != null) {
+                    Collections.sort(objectsFromSameFile, tComparator);
+                    result.addAll(objectsFromSameFile);
+                    objectsFromSameFile.clear();
+                }
+                containingFile = currentContainingFile;
+            }
 
-			objectsFromSameFile.add(object);
-		}
+            objectsFromSameFile.add(object);
+        }
 
-		Collections.sort(objectsFromSameFile, tComparator);
-		result.addAll(objectsFromSameFile);
+        Collections.sort(objectsFromSameFile, tComparator);
+        result.addAll(objectsFromSameFile);
 
-		elementsToProcess.clear();
-		elementsToProcess.addAll(result);
-		return elementsToProcess;
-	}
+        elementsToProcess.clear();
+        elementsToProcess.addAll(result);
+        return elementsToProcess;
+    }
 }
