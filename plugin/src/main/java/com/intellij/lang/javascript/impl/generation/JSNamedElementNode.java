@@ -33,91 +33,74 @@ import consulo.ui.image.ImageEffects;
  * Date: Jul 17, 2008
  * Time: 8:55:57 PM
  */
-public class JSNamedElementNode extends PsiElementMemberChooserObject implements ClassMember
-{
-	public JSNamedElementNode(JSNamedElement node)
-	{
-		super(node, buildTextFor(node), buildIcon(node));
-	}
+public class JSNamedElementNode extends PsiElementMemberChooserObject implements ClassMember {
+    public JSNamedElementNode(JSNamedElement node) {
+        super(node, buildTextFor(node), buildIcon(node));
+    }
 
-	private static Image buildIcon(final JSNamedElement node)
-	{
-		Image icon = IconDescriptorUpdaters.getIcon(node, 0);
+    private static Image buildIcon(final JSNamedElement node) {
+        Image icon = IconDescriptorUpdaters.getIcon(node, 0);
 
-		if(node instanceof JSFunction)
-		{
-			final JSFunction function = (JSFunction) node;
-			final Image accessIcon;
+        if (node instanceof JSFunction) {
+            final JSFunction function = (JSFunction)node;
+            final Image accessIcon;
 
-			if(function.isGetProperty())
-			{
-				accessIcon = AllIcons.Nodes.Read_access;
-			}
-			else if(function.isSetProperty())
-			{
-				accessIcon = AllIcons.Nodes.Write_access;
-			}
-			else
-			{
-				accessIcon = null;
-			}
+            if (function.isGetProperty()) {
+                accessIcon = AllIcons.Nodes.Read_access;
+            }
+            else if (function.isSetProperty()) {
+                accessIcon = AllIcons.Nodes.Write_access;
+            }
+            else {
+                accessIcon = null;
+            }
 
-			if(accessIcon != null)
-			{
-				icon = ImageEffects.appendRight(icon, accessIcon);
-			}
-		}
-		return icon;
-	}
+            if (accessIcon != null) {
+                icon = ImageEffects.appendRight(icon, accessIcon);
+            }
+        }
+        return icon;
+    }
 
-	private static String buildTextFor(final JSNamedElement node)
-	{
-		String text = node.getName();
+    private static String buildTextFor(final JSNamedElement node) {
+        String text = node.getName();
 
-		if(node instanceof JSFunction)
-		{
-			final JSFunction function = (JSFunction) node;
-			text += "(";
-			final JSParameterList parameterList = function.getParameterList();
+        if (node instanceof JSFunction) {
+            final JSFunction function = (JSFunction)node;
+            text += "(";
+            final JSParameterList parameterList = function.getParameterList();
 
-			if(parameterList != null)
-			{
-				boolean first = true;
-				for(JSParameter p : parameterList.getParameters())
-				{
-					if(!first)
-					{
-						text += ", ";
-					}
-					first = false;
-					text += JSParameterInfoHandler.getSignatureForParameter(p, false);
-				}
-			}
+            if (parameterList != null) {
+                boolean first = true;
+                for (JSParameter p : parameterList.getParameters()) {
+                    if (!first) {
+                        text += ", ";
+                    }
+                    first = false;
+                    text += JSParameterInfoHandler.getSignatureForParameter(p, false);
+                }
+            }
 
-			text += ")";
-			final String typeString = function.getReturnTypeString();
-			if(typeString != null)
-			{
-				text += ":" + typeString;
-			}
-		}
-		else if(node instanceof JSVariable)
-		{
-			final JSVariable var = (JSVariable) node;
-			final String typeString = var.getTypeString();
-			if(typeString != null)
-			{
-				text += ":" + typeString;
-			}
-		}
-		return text;
-	}
+            text += ")";
+            final String typeString = function.getReturnTypeString();
+            if (typeString != null) {
+                text += ":" + typeString;
+            }
+        }
+        else if (node instanceof JSVariable) {
+            final JSVariable var = (JSVariable)node;
+            final String typeString = var.getTypeString();
+            if (typeString != null) {
+                text += ":" + typeString;
+            }
+        }
+        return text;
+    }
 
-	@Override
-	public MemberChooserObject getParentNodeDelegate()
-	{
-		final PsiElement element = getPsiElement();
-		PsiElement parent = JSResolveUtil.findParent(element);
-		return new JSNamedElementNode((JSNamedElement) parent);
-	}
+    @Override
+    public MemberChooserObject getParentNodeDelegate() {
+        final PsiElement element = getPsiElement();
+        PsiElement parent = JSResolveUtil.findParent(element);
+        return new JSNamedElementNode((JSNamedElement)parent);
+    }
 }

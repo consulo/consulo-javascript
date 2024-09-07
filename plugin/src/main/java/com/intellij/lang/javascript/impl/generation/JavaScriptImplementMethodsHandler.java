@@ -33,32 +33,26 @@ import consulo.localize.LocalizeValue;
 import java.util.Collection;
 
 @ExtensionImpl
-public class JavaScriptImplementMethodsHandler extends BaseJSGenerateHandler implements ImplementMethodHandler
-{
-	@Override
-	protected void collectCandidates(final JSClass clazz, final Collection<JSNamedElementNode> candidates)
-	{
-		ImplementedMethodProcessor processor = new ImplementedMethodProcessor(clazz)
-		{
-			@Override
-			protected void addNonimplementedFunction(final JSFunction function)
-			{
-				candidates.add(new JSNamedElementNode(function));
-			}
-		};
+public class JavaScriptImplementMethodsHandler extends BaseJSGenerateHandler implements ImplementMethodHandler {
+    @Override
+    protected void collectCandidates(final JSClass clazz, final Collection<JSNamedElementNode> candidates) {
+        ImplementedMethodProcessor processor = new ImplementedMethodProcessor(clazz) {
+            @Override
+            protected void addNonimplementedFunction(final JSFunction function) {
+                candidates.add(new JSNamedElementNode(function));
+            }
+        };
 
-		JSResolveUtil.processInterfaceMethods(clazz, processor);
-	}
+        JSResolveUtil.processInterfaceMethods(clazz, processor);
+    }
 
-	@Override
-  protected LocalizeValue getTitle()
-	{
-		return JavaScriptLocalize.methodsToImplementChooserTitle();
-  }
+    @Override
+    protected LocalizeValue getTitle() {
+        return JavaScriptLocalize.methodsToImplementChooserTitle();
+    }
 
-  @Override
-	protected BaseCreateMethodsFix createFix(final JSClass clazz)
-	{
-		return new ImplementMethodsFix(clazz);
-	}
+    @Override
+    protected BaseCreateMethodsFix createFix(final JSClass clazz) {
+        return new ImplementMethodsFix(clazz);
+    }
 }
