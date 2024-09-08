@@ -209,15 +209,11 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
         }
 
         if (withinImplements) {
-            checkImplementedMethods(jsClass, new SimpleErrorReportingClient());
+            checkImplementedMethods(jsClass, myHolder);
         }
     }
 
-    public interface ErrorReportingClient {
-        AnnotationBuilder newAnnotation(@Nonnull HighlightSeverity severity, @Nonnull LocalizeValue message);
-    }
-
-    public static void checkImplementedMethods(final JSClass jsClass, final ErrorReportingClient reportingClient) {
+    public static void checkImplementedMethods(final JSClass jsClass, final AnnotationHolder holder) {
         final JSResolveUtil.CollectMethodsToImplementProcessor implementedMethodProcessor = new ImplementedMethodProcessor(jsClass) {
             ImplementMethodsFix implementMethodsFix = null;
 
@@ -232,7 +228,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
                     implementMethodsFix = new ImplementMethodsFix(myJsClass);
                 }
                 implementMethodsFix.addElementToProcess(function);
-                reportingClient.newAnnotation(
+                holder.newAnnotation(
                         HighlightSeverity.ERROR,
                         JavaScriptLocalize.javascriptValidationMessageInterfaceMethodNotImplemented(
                             function.getName(),
@@ -250,7 +246,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
                 final JSAttributeList attributeList = implementationFunction.getAttributeList();
                 if (attributeList == null || attributeList.getAccessType() != JSAttributeList.AccessType.PUBLIC) {
                     final ASTNode node = findElementForAccessModifierError(implementationFunction, attributeList);
-                    reportingClient.newAnnotation(
+                    holder.newAnnotation(
                             HighlightSeverity.ERROR,
                             JavaScriptLocalize.javascriptValidationMessageInterfaceMethodInvalidAccessModifier()
                         )
@@ -275,7 +271,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
                     if (incompatibleSignature == SignatureMatchResult.PARAMETERS_DIFFERS) {
                         final JSParameterList parameterList = implementationFunction.getParameterList();
                         final JSParameterList expectedParameterList = interfaceFunction.getParameterList();
-                        reportingClient.newAnnotation(
+                        holder.newAnnotation(
                                 HighlightSeverity.ERROR,
                                 JavaScriptLocalize.javascriptValidationMessageInterfaceMethodInvalidSignature(
                                     expectedParameterList != null ? expectedParameterList.getText() : "()"
@@ -287,7 +283,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
                     else if (incompatibleSignature == SignatureMatchResult.RETURN_TYPE_DIFFERS) {
                         PsiElement implementationReturnTypeExpr = implementationFunction.getReturnTypeElement();
                         PsiElement interfaceReturnTypeExpr = interfaceFunction.getReturnTypeElement();
-                        reportingClient.newAnnotation(
+                        holder.newAnnotation(
                                 HighlightSeverity.ERROR,
                                 JavaScriptLocalize.javascriptValidationMessageInterfaceMethodInvalidSignature2(
                                     interfaceReturnTypeExpr != null ? interfaceReturnTypeExpr.getText() : "*"
@@ -1181,7 +1177,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
             }
         }
 
-        checkFileUnderSourceRoot(aClass, new SimpleErrorReportingClient());
+        checkFileUnderSourceRoot(aClass, myHolder);
     }
 
     private String getTerm(String message) {
@@ -1190,7 +1186,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
     }
 
     @RequiredReadAction
-    public static void checkFileUnderSourceRoot(final JSNamedElement aClass, ErrorReportingClient client) {
+    public static void checkFileUnderSourceRoot(final JSNamedElement aClass, AnnotationHolder holder) {
         PsiElement nameIdentifier = aClass.getNameIdentifier();
         if (nameIdentifier == null) {
             nameIdentifier = aClass.getFirstChild();
@@ -1205,7 +1201,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
             ProjectRootManager.getInstance(containingFile.getProject()).getFileIndex().getSourceRootForFile(file);
 
         if (rootForFile == null) {
-            client.newAnnotation(HighlightSeverity.WARNING, JavaScriptLocalize.javascriptValidationMessageFileShouldBeUnderSourceRoot())
+            holder.newAnnotation(HighlightSeverity.WARNING, JavaScriptLocalize.javascriptValidationMessageFileShouldBeUnderSourceRoot())
                 .range(nameIdentifier.getNode())
                 .create();
         }
@@ -1273,7 +1269,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
             }
         }
 
-        checkFileUnderSourceRoot(packageStatement, new SimpleErrorReportingClient());
+        checkFileUnderSourceRoot(packageStatement, myHolder);
     }
 
     public static class RemoveASTNodeFix implements SyntheticIntentionAction, LocalQuickFix {
@@ -1382,13 +1378,6 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
         @Override
         public boolean startInWriteAction() {
             return true;
-        }
-    }
-
-    private class SimpleErrorReportingClient implements ErrorReportingClient {
-        @Override
-        public AnnotationBuilder newAnnotation(@Nonnull HighlightSeverity severity, @Nonnull LocalizeValue message) {
-            return myHolder.newAnnotation(severity, message);
         }
     }
 
