@@ -19,6 +19,7 @@ package com.intellij.lang.javascript.impl.generation;
 import com.intellij.javascript.JSParameterInfoHandler;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import consulo.language.editor.generation.ClassMember;
 import consulo.language.editor.generation.MemberChooserObject;
@@ -30,19 +31,19 @@ import consulo.ui.image.ImageEffects;
 
 /**
  * @author Maxim.Mossienko
- * Date: Jul 17, 2008
- * Time: 8:55:57 PM
+ * @since 2008-07-17
  */
 public class JSNamedElementNode extends PsiElementMemberChooserObject implements ClassMember {
+    @RequiredReadAction
     public JSNamedElementNode(JSNamedElement node) {
         super(node, buildTextFor(node), buildIcon(node));
     }
 
+    @RequiredReadAction
     private static Image buildIcon(final JSNamedElement node) {
         Image icon = IconDescriptorUpdaters.getIcon(node, 0);
 
-        if (node instanceof JSFunction) {
-            final JSFunction function = (JSFunction)node;
+        if (node instanceof JSFunction function) {
             final Image accessIcon;
 
             if (function.isGetProperty()) {
@@ -62,42 +63,42 @@ public class JSNamedElementNode extends PsiElementMemberChooserObject implements
         return icon;
     }
 
+    @RequiredReadAction
     private static String buildTextFor(final JSNamedElement node) {
-        String text = node.getName();
+        StringBuilder text = new StringBuilder(node.getName());
 
-        if (node instanceof JSFunction) {
-            final JSFunction function = (JSFunction)node;
-            text += "(";
+        if (node instanceof JSFunction function) {
+            text.append("(");
             final JSParameterList parameterList = function.getParameterList();
 
             if (parameterList != null) {
                 boolean first = true;
                 for (JSParameter p : parameterList.getParameters()) {
                     if (!first) {
-                        text += ", ";
+                        text.append(", ");
                     }
                     first = false;
-                    text += JSParameterInfoHandler.getSignatureForParameter(p, false);
+                    text.append(JSParameterInfoHandler.getSignatureForParameter(p, false));
                 }
             }
 
-            text += ")";
+            text.append(")");
             final String typeString = function.getReturnTypeString();
             if (typeString != null) {
-                text += ":" + typeString;
+                text.append(":").append(typeString);
             }
         }
-        else if (node instanceof JSVariable) {
-            final JSVariable var = (JSVariable)node;
+        else if (node instanceof JSVariable var) {
             final String typeString = var.getTypeString();
             if (typeString != null) {
-                text += ":" + typeString;
+                text.append(":").append(typeString);
             }
         }
-        return text;
+        return text.toString();
     }
 
     @Override
+    @RequiredReadAction
     public MemberChooserObject getParentNodeDelegate() {
         final PsiElement element = getPsiElement();
         PsiElement parent = JSResolveUtil.findParent(element);

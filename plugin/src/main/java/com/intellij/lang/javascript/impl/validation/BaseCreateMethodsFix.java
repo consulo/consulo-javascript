@@ -24,8 +24,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.util.IncorrectOperationException;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 
@@ -51,8 +53,7 @@ import consulo.language.psi.PsiWhiteSpace;
 
 /**
  * @author Maxim.Mossienko
- * Date: Jul 17, 2008
- * Time: 9:39:02 PM
+ * @since 2008-07-17
  */
 public abstract class BaseCreateMethodsFix<T extends JSNamedElement & JSAttributeListOwner> {
     private final Set<T> elementsToProcess = new LinkedHashSet<>();
@@ -70,14 +71,14 @@ public abstract class BaseCreateMethodsFix<T extends JSNamedElement & JSAttribut
         }
     }
 
+    @RequiredReadAction
     protected void evalAnchor(final Editor editor, final PsiFile file) {
         anchor = null;
         final PsiElement at = file.findElementAt(editor.getCaretModel().getOffset());
-        PsiElement parent;
+        PsiElement parent = at != null ? at.getParent() : null;
 
-        if (at != null && ((parent = at.getParent()) == myJsClass || (parent instanceof JSFile && myJsClass.getParent()
-            .getContainingFile() == parent
-            .getContext().getContainingFile()))) {
+        if (parent == myJsClass || (parent instanceof JSFile
+            && myJsClass.getParent().getContainingFile() == parent.getContext().getContainingFile())) {
             final ASTNode atNode = at.getNode();
             if (atNode.getElementType() == JSTokenTypes.RBRACE) {
                 return;
@@ -92,9 +93,10 @@ public abstract class BaseCreateMethodsFix<T extends JSNamedElement & JSAttribut
         }
     }
 
+    @RequiredReadAction
     protected PsiElement doAddOneMethod(final Project project, final String functionText, PsiElement anchor)
         throws IncorrectOperationException {
-        if (functionText != null && functionText.length() > 0) {
+        if (StringUtil.isNotEmpty(functionText)) {
             PsiElement element = JSChangeUtil.createJSTreeFromText(project, functionText).getPsi();
             if (element instanceof PsiWhiteSpace) {
                 element = element.getNextSibling();
@@ -103,10 +105,9 @@ public abstract class BaseCreateMethodsFix<T extends JSNamedElement & JSAttribut
             boolean defaultAdd = true;
 
             if (anchor != null && anchor.isValid()) {
-                String anchorText;
+                String anchorText = anchor instanceof PsiWhiteSpace ? anchor.getText() : "";
 
-                if (!(anchor instanceof PsiWhiteSpace)
-                    || ((anchorText = anchor.getText()).indexOf("<![CDATA[") == -1 && anchorText.indexOf("]]>") == -1)) {
+                if (!anchorText.contains("<![CDATA[") && !anchorText.contains("]]>")) {
                     defaultAdd = false;
                     anchor = anchor.getParent().addAfter(element, anchor);
                 }
@@ -120,33 +121,34 @@ public abstract class BaseCreateMethodsFix<T extends JSNamedElement & JSAttribut
         return anchor;
     }
 
+    @RequiredReadAction
     public String buildFunctionText(final T fun) {
         final JSAttributeList attributeList = fun.getAttributeList();
         String attrText = attributeList != null ? attributeList.getText() : "";
 
         attrText = buildFunctionAttrText(attrText, attributeList, fun);
 
-        final JSFunction function = fun instanceof JSFunction ? (JSFunction)fun : null;
-        final JSVariable var = fun instanceof JSVariable ? (JSVariable)fun : null;
+        final JSFunction function = fun instanceof JSFunction jsFun ? jsFun : null;
+        final JSVariable var = fun instanceof JSVariable jsVar ? jsVar : null;
         assert var != null || function != null;
 
         final JSParameterList parameterList = (function != null) ? function.getParameterList() : null;
         final String typeString = importType(function != null ? function.getReturnTypeString() : var.getTypeString(), fun);
-        @NonNls String functionText = attrText;
-        if (functionText.length() > 0) {
-            functionText += " ";
+        StringBuilder functionText = new StringBuilder(attrText);
+        if (!functionText.isEmpty()) {
+            functionText.append(" ");
         }
-        functionText += "function ";
+        functionText.append("function ");
 
-        functionText += buildFunctionKind(fun);
+        functionText.append(buildFunctionKind(fun));
 
-        functionText += buildName(fun) + " " + buildParameterList(parameterList, fun);
+        functionText.append(buildName(fun)).append(" ").append(buildParameterList(parameterList, fun));
         if (typeString != null) {
-            functionText += ":" + buildReturnType(typeString);
+            functionText.append(":").append(buildReturnType(typeString));
         }
 
-        functionText += buildFunctionBodyText(typeString, parameterList, fun);
-        return functionText;
+        functionText.append(buildFunctionBodyText(typeString, parameterList, fun));
+        return functionText.toString();
     }
 
     protected
@@ -169,6 +171,7 @@ public abstract class BaseCreateMethodsFix<T extends JSNamedElement & JSAttribut
         return s;
     }
 
+    @RequiredReadAction
     protected String buildParameterList(final JSParameterList parameterList, final T fun) {
         if (parameterList != null) {
             for (JSParameter param : parameterList.getParameters()) {
@@ -181,15 +184,14 @@ public abstract class BaseCreateMethodsFix<T extends JSNamedElement & JSAttribut
         return (parameterList != null ? parameterList.getText() : "()");
     }
 
+    @RequiredReadAction
     protected String buildName(final T fun) {
         return fun.getName();
     }
 
-    protected
-    @NonNls
-    String buildFunctionKind(final T fun) {
-        if (fun instanceof JSFunction) {
-            final JSFunction function = (JSFunction)fun;
+    @RequiredReadAction
+    protected String buildFunctionKind(final T fun) {
+        if (fun instanceof JSFunction function) {
             if (function.isGetProperty()) {
                 return "get ";
             }
@@ -200,29 +202,26 @@ public abstract class BaseCreateMethodsFix<T extends JSNamedElement & JSAttribut
         return "";
     }
 
-    protected
-    @NonNls
-    String buildFunctionBodyText(@NonNls String retType, final JSParameterList parameterList, final T func) {
+    protected String buildFunctionBodyText(String retType, final JSParameterList parameterList, final T func) {
         return " {}";
     }
 
-    protected
-    @NonNls
-    String buildFunctionAttrText(@NonNls String attrText, final JSAttributeList attributeList, final T function) {
-        attrText = attrText.replace("native", "").trim();
-        return attrText;
+    protected String buildFunctionAttrText(String attrText, final JSAttributeList attributeList, final T function) {
+        return attrText.replace("native", "").trim();
     }
 
     public void addElementToProcess(final T function) {
         elementsToProcess.add(function);
     }
 
+    @SuppressWarnings("unchecked")
     public void addElementsToProcessFrom(final Collection<JSNamedElementNode> selectedElements) {
         for (JSNamedElementNode el : selectedElements) {
             addElementToProcess((T)el.getPsiElement());
         }
     }
 
+    @SuppressWarnings("unchecked")
     public Set<T> getElementsToProcess() {
         final T[] objects = (T[])elementsToProcess.toArray(new JSNamedElement[elementsToProcess.size()]);
         final Comparator<T> tComparator = (o1, o2) -> o1.getTextOffset() - o2.getTextOffset();

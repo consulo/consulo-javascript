@@ -23,7 +23,8 @@ import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
@@ -33,10 +34,9 @@ import consulo.language.psi.resolve.ResolveState;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.NonFocusableCheckBox;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -44,8 +44,7 @@ import java.util.*;
 
 /**
  * @author Maxim.Mossienko
- * Date: Jul 19, 2008
- * Time: 1:11:10 AM
+ * @since 2008-07-19
  */
 class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler {
     private GenerationMode mode;
@@ -80,7 +79,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler {
     protected void appendOwnOptions(List<JComponent> jComponentList) {
         super.appendOwnOptions(jComponentList);
         if (mode == GenerationMode.GETTERS || mode == GenerationMode.GETTERS_AND_SETTERS || mode == GenerationMode.SETTERS) {
-            if (!ApplicationManager.getApplication().isUnitTestMode()) {
+            if (!Application.get().isUnitTestMode()) {
                 myCreateBindableProperties = new NonFocusableCheckBox(JavaScriptLocalize.generateGetterFieldsBindableProperties().get());
                 jComponentList.add(myCreateBindableProperties);
             }
@@ -93,13 +92,14 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler {
             return new BaseCreateMethodsFix<JSVariable>(jsClass) {
                 private boolean toCreateBindableProperties = myCreateBindableProperties != null
                     ? myCreateBindableProperties.isSelected()
-                    : ApplicationManager.getApplication().isUnitTestMode();
+                    : jsClass.getApplication().isUnitTestMode();
                 final MyBaseCreateMethodsFix generateGetterFix =
                     new MyBaseCreateMethodsFix(GenerationMode.GETTERS, jsClass, toCreateBindableProperties);
                 final MyBaseCreateMethodsFix generateSetterFix =
                     new MyBaseCreateMethodsFix(GenerationMode.SETTERS, jsClass, toCreateBindableProperties);
 
                 @Override
+                @RequiredUIAccess
                 public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file)
                     throws IncorrectOperationException {
                     evalAnchor(editor, file);
@@ -114,13 +114,14 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler {
         else if (mode == GenerationMode.CONSTRUCTOR) {
             return new BaseCreateMethodsFix<JSVariable>(jsClass) {
                 @Override
+                @RequiredUIAccess
                 public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file)
                     throws IncorrectOperationException {
                     final JSCodeStyleSettings codeStyleSettings =
                         CodeStyleSettingsManager.getSettings(project).getCustomSettings(JSCodeStyleSettings.class);
                     evalAnchor(editor, file);
-                    @NonNls String functionText = "public function " + jsClass.getName() + "(";
-                    @NonNls String initialization = "";
+                    StringBuilder functionText = new StringBuilder("public function ").append(jsClass.getName()).append("(");
+                    StringBuilder initialization = new StringBuilder();
                     boolean first = true;
                     final String semicolon = JSChangeUtil.getSemicolon(project);
 
@@ -131,7 +132,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler {
                     while (variableIterator.hasNext()) {
                         JSVariable var = variableIterator.next();
                         if (!first) {
-                            functionText += ", ";
+                            functionText.append(", ");
                         }
 
                         first = false;
@@ -140,39 +141,45 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler {
                         String parameterName = transformVarNameToAccessorName(name, codeStyleSettings);
 
                         final String typeString = var.getTypeString();
-                        functionText += parameterName + (typeString != null ? ":" + typeString : "");
+                        functionText.append(parameterName).append(typeString != null ? ":" + typeString : "");
 
                         if (JSResolveUtil.findParent(var) == jsClass) {
                             if (hadSuperClassConstructorInitializationBefore) {
-                                initialization += ")" + semicolon + "\n";
+                                initialization.append(")").append(semicolon).append("\n");
                                 hadSuperClassConstructorInitializationBefore = false;
                             }
-                            initialization += (parameterName.equals(name) ? "this." : "") + name + " = " + parameterName + semicolon + "\n";
+                            initialization.append(parameterName.equals(name) ? "this." : "")
+                                .append(name)
+                                .append(" = ")
+                                .append(parameterName)
+                                .append(semicolon)
+                                .append("\n");
                         }
                         else {
                             if (hadSuperClassConstructorInitializationBefore) {
-                                initialization += ", ";
+                                initialization.append(", ");
                             }
                             else {
-                                initialization += "super(";
+                                initialization.append("super(");
                             }
-                            initialization += parameterName;
+                            initialization.append(parameterName);
                             hadSuperClassConstructorInitializationBefore = true;
                         }
                     }
 
                     if (hadSuperClassConstructorInitializationBefore) {
-                        initialization += ")" + semicolon + "\n";
+                        initialization.append(")").append(semicolon).append("\n");
                     }
-                    functionText += ") {\n";
-                    functionText += initialization;
-                    functionText += "}";
-                    doAddOneMethod(project, functionText, anchor);
+                    functionText.append(") {\n")
+                        .append(initialization)
+                        .append("}");
+                    doAddOneMethod(project, functionText.toString(), anchor);
                 }
 
                 @Override
+                @RequiredReadAction
                 public Set<JSVariable> getElementsToProcess() {
-                    LinkedHashSet<JSVariable> vars = new LinkedHashSet<JSVariable>();
+                    LinkedHashSet<JSVariable> vars = new LinkedHashSet<>();
                     JSFunction nontrivialSuperClassConstructor = JSAnnotatingVisitor.getNontrivialSuperClassConstructor(jsClass);
 
                     if (nontrivialSuperClassConstructor != null) {
@@ -186,6 +193,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler {
         else if (mode == GenerationMode.TOSTRING) {
             return new BaseCreateMethodsFix<JSVariable>(jsClass) {
                 @Override
+                @RequiredUIAccess
                 public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file)
                     throws IncorrectOperationException {
                     evalAnchor(editor, file);
@@ -199,24 +207,26 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler {
                         }, "toString", null, myJsClass
                     );
 
-                    @NonNls String functionText =
-                        "public " + (needOverride[0] ? "override " : "") + "function toString():String {\nreturn " +
-                            (needOverride[0] ? "super.toString() + \"" : "\"" + jsClass.getName()) + "{";
+                    StringBuilder functionText = new StringBuilder().append("public ")
+                        .append(needOverride[0] ? "override " : "")
+                        .append("function toString():String {\nreturn ")
+                        .append(needOverride[0] ? "super.toString() + \"" : "\"" + jsClass.getName())
+                        .append("{");
                     final String semicolon = JSChangeUtil.getSemicolon(project);
 
                     boolean first = true;
 
                     for (JSVariable var : getElementsToProcess()) {
                         if (!first) {
-                            functionText += " + \",";
+                            functionText.append(" + \",");
                         }
                         first = false;
 
-                        functionText += var.getName() + "=\" + String(" + var.getName() + ")";
+                        functionText.append(var.getName()).append("=\" + String(").append(var.getName()).append(")");
                     }
 
-                    functionText += "+\"}\"" + semicolon + "\n}";
-                    doAddOneMethod(project, functionText, anchor);
+                    functionText.append("+\"}\"").append(semicolon).append("\n}");
+                    doAddOneMethod(project, functionText.toString(), anchor);
                 }
             };
         }
@@ -224,12 +234,12 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler {
         return new MyBaseCreateMethodsFix(
             mode,
             jsClass,
-            myCreateBindableProperties != null ? myCreateBindableProperties.isSelected() : false
+            myCreateBindableProperties != null && myCreateBindableProperties.isSelected()
         );
     }
 
-
     @Override
+    @RequiredReadAction
     protected void collectCandidates(final JSClass clazz, final Collection<JSNamedElementNode> candidates) {
         final LinkedHashMap<String, JSNamedElement> candidatesMap = new LinkedHashMap<>();
         final JSCodeStyleSettings codeStyleSettings =
@@ -242,27 +252,22 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler {
             }
 
             @Override
-            public boolean execute(final PsiElement element, final ResolveState state) {
-                final JSNamedElement namedElement = (JSNamedElement)element;
-                if (!(element instanceof JSVariable)) {
-                    if (element instanceof JSFunction) {
-                        final JSFunction function = (JSFunction)element;
-                        if (mode == GenerationMode.GETTERS && function.isGetProperty()
-                            || mode == GenerationMode.SETTERS && function.isSetProperty()) {
-                            candidatesMap.put(function.getName(), function);
-                        }
-
+            @RequiredReadAction
+            public boolean execute(@Nonnull final PsiElement element, final ResolveState state) {
+                if (element instanceof JSVariable variable) {
+                    if (variable.isConst()) {
+                        return true;
                     }
-                    return true;
+                    final String name = variable.getName();
+                    final String accessorName = transformVarNameToAccessorName(name, codeStyleSettings);
+                    if (/*!name.equals(accessorName) &&*/ !candidatesMap.containsKey(accessorName)) {
+                        candidatesMap.put(accessorName, variable);
+                    }
                 }
-                else if (((JSVariable)element).isConst()) {
-                    return true;
-                }
-
-                final String name = namedElement.getName();
-                final String accessorName = transformVarNameToAccessorName(name, codeStyleSettings);
-                if (/*!name.equals(accessorName) &&*/ !candidatesMap.containsKey(accessorName)) {
-                    candidatesMap.put(accessorName, namedElement);
+                else if (element instanceof JSFunction function
+                    && (mode == GenerationMode.GETTERS && function.isGetProperty()
+                    || mode == GenerationMode.SETTERS && function.isSetProperty())) {
+                    candidatesMap.put(function.getName(), function);
                 }
                 return true;
             }
@@ -290,6 +295,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler {
         }
 
         @Override
+        @RequiredReadAction
         protected String buildFunctionBodyText(final String retType, final JSParameterList parameterList, final JSVariable func) {
             final String semicolon = codeStyleSettings.USE_SEMICOLON_AFTER_STATEMENT ? ";" : "";
             String varName = func.getName();
@@ -310,18 +316,23 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler {
         }
 
         @Override
+        @RequiredReadAction
         protected String buildFunctionAttrText(final String attrText, final JSAttributeList attributeList, final JSVariable function) {
-            String baseText =
-                "public" + (attributeList != null && attributeList.hasModifier(JSAttributeList.ModifierType.STATIC) ? " static" : "");
+            StringBuilder baseText = new StringBuilder();
 
             if (bindableProperties && myMode == GenerationMode.GETTERS) {
-                baseText = "[Bindable(event=\"" + getEventName(transformVarNameToAccessorName(
+                baseText.append("[Bindable(event=\"").append(getEventName(transformVarNameToAccessorName(
                     function.getName(),
                     codeStyleSettings
-                )) + "\")]\n" + baseText;
+                ))).append("\")]\n");
             }
 
-            return baseText;
+            baseText.append("public");
+            if (attributeList != null && attributeList.hasModifier(JSAttributeList.ModifierType.STATIC)) {
+                baseText.append(" static");
+            }
+
+            return baseText.toString();
         }
 
         private static String getEventName(String name) {
@@ -329,6 +340,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler {
         }
 
         @Override
+        @RequiredReadAction
         protected String buildFunctionKind(final JSVariable fun) {
             if (myMode == GenerationMode.GETTERS) {
                 return "get ";
@@ -348,11 +360,13 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler {
         }
 
         @Override
+        @RequiredReadAction
         protected String buildName(final JSVariable fun) {
             return transformVarNameToAccessorName(super.buildName(fun), codeStyleSettings);
         }
 
         @Override
+        @RequiredReadAction
         protected String buildParameterList(final JSParameterList parameterList, final JSVariable fun) {
             if (myMode == GenerationMode.SETTERS) {
                 final String s = fun.getTypeString();
@@ -366,8 +380,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler {
         if (StringUtil.startsWith(s, codeStyleSettings.FIELD_PREFIX)) {
             s = s.substring(codeStyleSettings.FIELD_PREFIX.length());
         }
-        s = codeStyleSettings.PROPERTY_PREFIX + s;
-        return s;
+        return codeStyleSettings.PROPERTY_PREFIX + s;
     }
 
     @Override

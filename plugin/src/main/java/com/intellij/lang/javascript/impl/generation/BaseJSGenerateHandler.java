@@ -22,7 +22,7 @@ package com.intellij.lang.javascript.impl.generation;
 import com.intellij.lang.javascript.impl.validation.BaseCreateMethodsFix;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.language.Language;
@@ -36,8 +36,8 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
-
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -53,7 +53,8 @@ abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler
     }
 
     @Override
-    public void invoke(final Project project, final Editor editor, final PsiFile file) {
+    @RequiredUIAccess
+    public void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile file) {
         JSClass clazz = findClass(file, editor);
 
         if (clazz == null) {
@@ -85,8 +86,9 @@ abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler
         final Collection<JSNamedElementNode> selectedElements1 = selectedElements;
         Runnable runnable = new Runnable() {
             @Override
+            @RequiredUIAccess
             public void run() {
-                ApplicationManager.getApplication().runWriteAction(new Runnable() {
+                project.getApplication().runWriteAction(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -118,6 +120,7 @@ abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler
         return false;
     }
 
+    @RequiredReadAction
     static JSClass findClass(PsiFile file, Editor editor) {
         final PsiElement at = file.findElementAt(editor.getCaretModel().getOffset());
         if (at == null) {
@@ -128,8 +131,8 @@ abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler
         if (clazz == null) {
             final PsiFile containingFile = at.getContainingFile();
             final PsiElement element = JSResolveUtil.getClassReferenceForXmlFromContext(containingFile);
-            if (element instanceof JSClass) {
-                clazz = (JSClass)element;
+            if (element instanceof JSClass jsClass) {
+                clazz = jsClass;
             }
         }
         else if (JSResolveUtil.isArtificialClassUsedForReferenceList(clazz)) {

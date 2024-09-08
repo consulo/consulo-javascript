@@ -31,8 +31,7 @@ import org.jetbrains.annotations.NonNls;
 
 /**
  * @author Maxim.Mossienko
- * Date: Jul 17, 2008
- * Time: 9:39:02 PM
+ * @since 2008-07-17
  */
 public class ImplementMethodsFix extends BaseCreateMethodsFix<JSFunction> implements SyntheticIntentionAction {
     public ImplementMethodsFix(final JSClass jsClass) {
@@ -51,36 +50,27 @@ public class ImplementMethodsFix extends BaseCreateMethodsFix<JSFunction> implem
     }
 
     @Override
-    protected
-    @NonNls
-    String buildFunctionAttrText(@NonNls String attrText, final JSAttributeList attributeList, final JSFunction function) {
-        attrText = super.buildFunctionAttrText(attrText, attributeList, function);
-        if (attributeList == null || attributeList.getAccessType() != JSAttributeList.AccessType.PUBLIC) {
-            attrText = "public";
-        }
-        return attrText;
+    protected String buildFunctionAttrText(String attrText, final JSAttributeList attributeList, final JSFunction function) {
+        return attributeList == null || attributeList.getAccessType() != JSAttributeList.AccessType.PUBLIC
+            ? "public"
+            : super.buildFunctionAttrText(attrText, attributeList, function);
     }
 
     @Override
     protected String buildFunctionBodyText(final String retType, final JSParameterList parameterList, final JSFunction func) {
-        @NonNls String s = "{\n";
+        StringBuilder s = new StringBuilder("{\n");
         if (retType != null && !"void".equals(retType)) {
-            s += "return " + defaultValueOfType(retType) + JSChangeUtil.getSemicolon(func.getProject()) + "\n";
+            s.append("return ").append(defaultValueOfType(retType)).append(JSChangeUtil.getSemicolon(func.getProject())).append("\n");
         }
-        s += "}";
-        return s;
+        return s.append("}").toString();
     }
 
-    private static
-    @NonNls
-    String defaultValueOfType(final @NonNls String retType) {
-        if ("int".equals(retType) || "uint".equals(retType) || "Number".equals(retType)) {
-            return "0";
-        }
-        if ("Boolean".equals(retType)) {
-            return "false";
-        }
-        return "null";
+    private static String defaultValueOfType(final String retType) {
+        return switch (retType) {
+            case "int", "uint", "Number" -> "0";
+            case "Boolean" -> "false";
+            default -> "null";
+        };
     }
 
     @Override

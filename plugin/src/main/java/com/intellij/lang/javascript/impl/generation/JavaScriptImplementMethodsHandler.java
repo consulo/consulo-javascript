@@ -25,6 +25,7 @@ import com.intellij.lang.javascript.impl.validation.ImplementedMethodProcessor;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.generation.ImplementMethodHandler;
@@ -38,6 +39,7 @@ public class JavaScriptImplementMethodsHandler extends BaseJSGenerateHandler imp
     protected void collectCandidates(final JSClass clazz, final Collection<JSNamedElementNode> candidates) {
         ImplementedMethodProcessor processor = new ImplementedMethodProcessor(clazz) {
             @Override
+            @RequiredReadAction
             protected void addNonimplementedFunction(final JSFunction function) {
                 candidates.add(new JSNamedElementNode(function));
             }

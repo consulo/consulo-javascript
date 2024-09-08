@@ -25,6 +25,7 @@ import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
@@ -32,11 +33,11 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
- * Date: Jul 19, 2008
- * Time: 7:04:37 PM
+ * @since 2008-07-19
  */
 abstract class BaseJSGenerateAction extends AnAction {
     @Override
+    @RequiredUIAccess
     public void actionPerformed(final AnActionEvent e) {
         Editor editor = e.getData(PlatformDataKeys.EDITOR);
         PsiFile psifile = e.getData(LangDataKeys.PSI_FILE);
@@ -55,6 +56,7 @@ abstract class BaseJSGenerateAction extends AnAction {
     protected abstract JavaScriptGenerateAccessorHandler.GenerationMode getGenerationMode();
 
     @Override
+    @RequiredUIAccess
     public void update(final AnActionEvent e) {
         final VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
 

@@ -16,12 +16,14 @@
 
 package com.intellij.lang.javascript.impl.generation;
 
+import jakarta.annotation.Nonnull;
+
 /**
  * @author Maxim.Mossienko
- * Date: Jul 19, 2008
- * Time: 1:01:05 AM
+ * @since 2008-07-19
  */
 public class JavaScriptGenerateGetAccessorAction extends BaseJSGenerateAction {
+    @Nonnull
     @Override
     protected JavaScriptGenerateAccessorHandler.GenerationMode getGenerationMode() {
         return JavaScriptGenerateAccessorHandler.GenerationMode.GETTERS;

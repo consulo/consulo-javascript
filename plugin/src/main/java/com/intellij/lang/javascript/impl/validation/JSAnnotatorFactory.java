@@ -11,7 +11,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 29-Aug-22
+ * @since 2022-08-29
  */
 @ExtensionImpl
 public class JSAnnotatorFactory implements AnnotatorFactory {
