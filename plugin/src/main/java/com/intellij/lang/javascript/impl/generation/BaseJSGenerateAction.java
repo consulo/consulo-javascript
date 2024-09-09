@@ -25,6 +25,7 @@ import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
@@ -32,58 +33,50 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jul 19, 2008
- *         Time: 7:04:37 PM
+ * @since 2008-07-19
  */
-abstract class BaseJSGenerateAction extends AnAction
-{
-	@Override
-	public void actionPerformed(final AnActionEvent e)
-	{
-		Editor editor = e.getData(PlatformDataKeys.EDITOR);
-		PsiFile psifile = e.getData(LangDataKeys.PSI_FILE);
-		Project project = e.getData(PlatformDataKeys.PROJECT);
+abstract class BaseJSGenerateAction extends AnAction {
+    @Override
+    @RequiredUIAccess
+    public void actionPerformed(final AnActionEvent e) {
+        Editor editor = e.getData(PlatformDataKeys.EDITOR);
+        PsiFile psifile = e.getData(LangDataKeys.PSI_FILE);
+        Project project = e.getData(PlatformDataKeys.PROJECT);
 
-		final VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
-		if(JavaScriptSupportLoader.isFlexMxmFile(file))
-		{
-			editor = BaseCodeInsightAction.getInjectedEditor(project, editor);
-			psifile = PsiUtilBase.getPsiFileInEditor(editor, project);
-		}
+        final VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
+        if (JavaScriptSupportLoader.isFlexMxmFile(file)) {
+            editor = BaseCodeInsightAction.getInjectedEditor(project, editor);
+            psifile = PsiUtilBase.getPsiFileInEditor(editor, project);
+        }
 
-		new JavaScriptGenerateAccessorHandler(getGenerationMode()).invoke(project, editor, psifile);
-	}
+        new JavaScriptGenerateAccessorHandler(getGenerationMode()).invoke(project, editor, psifile);
+    }
 
-	protected abstract
-	@Nonnull
-	JavaScriptGenerateAccessorHandler.GenerationMode getGenerationMode();
+    @Nonnull
+    protected abstract JavaScriptGenerateAccessorHandler.GenerationMode getGenerationMode();
 
-	@Override
-	public void update(final AnActionEvent e)
-	{
-		final VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
+    @Override
+    @RequiredUIAccess
+    public void update(final AnActionEvent e) {
+        final VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
 
-		boolean status = false;
+        boolean status = false;
 
-		if(file != null)
-		{
-			if(file.getFileType() == JavaScriptFileType.INSTANCE)
-			{
-				final Editor editor = e.getData(PlatformDataKeys.EDITOR);
-				final PsiFile psifile = e.getData(LangDataKeys.PSI_FILE);
+        if (file != null) {
+            if (file.getFileType() == JavaScriptFileType.INSTANCE) {
+                final Editor editor = e.getData(PlatformDataKeys.EDITOR);
+                final PsiFile psifile = e.getData(LangDataKeys.PSI_FILE);
 
-				if(editor != null && psifile != null)
-				{
-					status = psifile.getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
-				}
-			}
-			else if(JavaScriptSupportLoader.isFlexMxmFile(file))
-			{
-				status = true;
-			}
-		}
+                if (editor != null && psifile != null) {
+                    status = psifile.getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
+                }
+            }
+            else if (JavaScriptSupportLoader.isFlexMxmFile(file)) {
+                status = true;
+            }
+        }
 
-		e.getPresentation().setEnabled(status);
-		e.getPresentation().setVisible(status);
-	}
+        e.getPresentation().setEnabled(status);
+        e.getPresentation().setVisible(status);
+    }
 }

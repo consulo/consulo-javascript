@@ -22,6 +22,7 @@ import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.ResolveState;
 import jakarta.annotation.Nullable;
@@ -32,161 +33,137 @@ import java.util.function.Function;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jul 17, 2008
- *         Time: 9:50:49 PM
+ * @since 2008-07-17
  */
-public abstract class ImplementedMethodProcessor extends JSResolveUtil.CollectMethodsToImplementProcessor
-{
-	protected final JSClass myJsClass;
+public abstract class ImplementedMethodProcessor extends JSResolveUtil.CollectMethodsToImplementProcessor {
+    protected final JSClass myJsClass;
 
-	public ImplementedMethodProcessor(final JSClass jsClass)
-	{
-		super(null, null);
-		myJsClass = jsClass;
-	}
+    public ImplementedMethodProcessor(final JSClass jsClass) {
+        super(null, null);
+        myJsClass = jsClass;
+    }
 
-	@Override
-	protected boolean process(final ResolveProcessor processor)
-	{
-		Map<String, Object> functions = null;
+    @Override
+    protected boolean process(final ResolveProcessor processor) {
+        Map<String, Object> functions = null;
 
-		for(PsiElement _function : processor.getResults())
-		{
-			if(!(_function instanceof JSFunction))
-			{
-				continue;
-			}
-			final JSFunction function = (JSFunction) _function;
-			final String name = function.getName();
+        for (PsiElement _function : processor.getResults()) {
+            if (!(_function instanceof JSFunction function)) {
+                continue;
+            }
+            final String name = function.getName();
 
-			if(functions == null)
-			{
-				functions = collectAllVisibleClassFunctions(myJsClass, null, new Function<JSFunction, Boolean>()
-				{
-					@Override
-					public Boolean apply(final JSFunction jsFunction)
-					{
-						final JSAttributeList attributeList = jsFunction.getAttributeList();
-						PsiElement parentClass = JSResolveUtil.findParent(jsFunction);
-						if((attributeList == null || attributeList.getAccessType() != JSAttributeList.AccessType.PUBLIC) && myJsClass != parentClass)
-						{
-							return Boolean.FALSE;
-						}
-						return Boolean.TRUE;
-					}
-				});
-			}
+            if (functions == null) {
+                functions = collectAllVisibleClassFunctions(
+                    myJsClass,
+                    null,
+                    jsFunction -> {
+                        final JSAttributeList attributeList = jsFunction.getAttributeList();
+                        PsiElement parentClass = JSResolveUtil.findParent(jsFunction);
+                        if ((attributeList == null || attributeList.getAccessType() != JSAttributeList.AccessType.PUBLIC)
+                            && myJsClass != parentClass) {
+                            return Boolean.FALSE;
+                        }
+                        return Boolean.TRUE;
+                    }
+                );
+            }
 
-			JSFunction o = findFunctionWithTheSameKind(functions, function, name);
+            JSFunction o = findFunctionWithTheSameKind(functions, function, name);
 
-			if(o == null)
-			{
-				if(function.isGetProperty() || function.isSetProperty())
-				{
-					JSVariable var = myJsClass.findFieldByName(name);
-					if(var != null)
-					{
-						JSAttributeList attributeList = var.getAttributeList();
-						if(attributeList != null && attributeList.getAccessType() == JSAttributeList.AccessType.PUBLIC)
-						{
-							continue; // implicit get and set methods
-						}
-					}
-				}
-				addNonimplementedFunction(function);
-			}
-			else
-			{
-				addImplementedFunction(function, o);
-			}
-		}
-		return true;
-	}
+            if (o == null) {
+                if (function.isGetProperty() || function.isSetProperty()) {
+                    JSVariable var = myJsClass.findFieldByName(name);
+                    if (var != null) {
+                        JSAttributeList attributeList = var.getAttributeList();
+                        if (attributeList != null && attributeList.getAccessType() == JSAttributeList.AccessType.PUBLIC) {
+                            continue; // implicit get and set methods
+                        }
+                    }
+                }
+                addNonimplementedFunction(function);
+            }
+            else {
+                addImplementedFunction(function, o);
+            }
+        }
+        return true;
+    }
 
-	protected void addImplementedFunction(final JSFunction interfaceFunction, final JSFunction implementationFunction)
-	{
-	}
+    protected void addImplementedFunction(final JSFunction interfaceFunction, final JSFunction implementationFunction) {
+    }
 
-	public static JSFunction findFunctionWithTheSameKind(final Map<String, Object> functions, final JSFunction function, final String name)
-	{
-		Object o = functions.get(name);
-		if(o instanceof JSFunction && ((JSFunction) o).getKind() != function.getKind())
-		{
-			o = null;
-		}
-		else if(o instanceof JSFunction[])
-		{
-			final JSFunction[] jsFunctions = (JSFunction[]) o;
-			o = null;
-			for(JSFunction fun : jsFunctions)
-			{
-				if(fun.getKind() == function.getKind())
-				{
-					o = fun;
-					break;
-				}
-			}
-		}
-		return (JSFunction) o;
-	}
+    @RequiredReadAction
+    public static JSFunction findFunctionWithTheSameKind(
+        final Map<String, Object> functions,
+        final JSFunction function,
+        final String name
+    ) {
+        Object o = functions.get(name);
+        if (o instanceof JSFunction fun) {
+            return fun.getKind() == function.getKind() ? fun : null;
+        }
+        else if (o instanceof JSFunction[] jsFunctions) {
+            for (JSFunction fun : jsFunctions) {
+                if (fun.getKind() == function.getKind()) {
+                    return fun;
+                }
+            }
+        }
+        return null;
+    }
 
-	public static Map<String, Object> collectAllVisibleClassFunctions(JSClass jsClass, Map<String, Object> _functions,
-			final @Nullable Function<JSFunction, Boolean> filter)
-	{
-		final Map<String, Object> functions = _functions != null ? _functions : new LinkedHashMap<String, Object>();
-		jsClass.processDeclarations(new ResolveProcessor(null)
-		{
-			{
-				setToProcessHierarchy(true);
-				setLocalResolve(true);
-			}
+    public static Map<String, Object> collectAllVisibleClassFunctions(
+        JSClass jsClass,
+        Map<String, Object> _functions,
+        final @Nullable Function<JSFunction, Boolean> filter
+    ) {
+        final Map<String, Object> functions = _functions != null ? _functions : new LinkedHashMap<>();
+        jsClass.processDeclarations(
+            new ResolveProcessor(null) {
+                {
+                    setToProcessHierarchy(true);
+                    setLocalResolve(true);
+                }
 
-			@Override
-			public boolean execute(final PsiElement element, final ResolveState state)
-			{
-				if(element instanceof JSFunction)
-				{
-					final JSFunction function = (JSFunction) element;
-					if(function.isConstructor())
-					{
-						return true; // SWC stubs have constructor methods :(
-					}
+                @Override
+                @RequiredReadAction
+                public boolean execute(final PsiElement element, final ResolveState state) {
+                    if (element instanceof JSFunction function) {
+                        if (function.isConstructor()) {
+                            return true; // SWC stubs have constructor methods :(
+                        }
 
-					final JSAttributeList attributeList = function.getAttributeList();
-					if(attributeList != null && attributeList.getAccessType() == JSAttributeList.AccessType.PRIVATE)
-					{
-						return true;
-					}
+                        final JSAttributeList attributeList = function.getAttributeList();
+                        if (attributeList != null && attributeList.getAccessType() == JSAttributeList.AccessType.PRIVATE) {
+                            return true;
+                        }
 
-					Boolean filterValue;
-					if(filter != null && (filterValue = filter.apply(function)) != null && !filterValue.booleanValue())
-					{
-						return true;
-					}
-					final String s = function.getName();
-					final Object function1 = functions.get(s);
+                        Boolean filterValue = filter != null ? filter.apply(function) : null;
+                        if (filterValue != null && !filterValue) {
+                            return true;
+                        }
+                        final String s = function.getName();
+                        final Object function1 = functions.get(s);
 
-					if(function1 == null)
-					{
-						functions.put(s, function);
-					}
-					else if(function1 instanceof JSFunction)
-					{
-						final JSFunction function2 = (JSFunction) function1;
-						if(findFunctionWithTheSameKind(functions, function, s) == null)
-						{
-							functions.put(s, new JSFunction[]{
-									function2,
-									function
-							});
-						}
-					}
-				}
-				return true;
-			}
-		}, ResolveState.initial(), jsClass, jsClass);
-		return functions;
-	}
+                        if (function1 == null) {
+                            functions.put(s, function);
+                        }
+                        else if (function1 instanceof JSFunction function2) {
+                            if (findFunctionWithTheSameKind(functions, function, s) == null) {
+                                functions.put(s, new JSFunction[]{function2, function});
+                            }
+                        }
+                    }
+                    return true;
+                }
+            },
+            ResolveState.initial(),
+            jsClass,
+            jsClass
+        );
+        return functions;
+    }
 
-	protected abstract void addNonimplementedFunction(final JSFunction function);
+    protected abstract void addNonimplementedFunction(final JSFunction function);
 }

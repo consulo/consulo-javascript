@@ -25,6 +25,7 @@ import com.intellij.lang.javascript.impl.validation.ImplementedMethodProcessor;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.generation.ImplementMethodHandler;
@@ -33,32 +34,27 @@ import consulo.localize.LocalizeValue;
 import java.util.Collection;
 
 @ExtensionImpl
-public class JavaScriptImplementMethodsHandler extends BaseJSGenerateHandler implements ImplementMethodHandler
-{
-	@Override
-	protected void collectCandidates(final JSClass clazz, final Collection<JSNamedElementNode> candidates)
-	{
-		ImplementedMethodProcessor processor = new ImplementedMethodProcessor(clazz)
-		{
-			@Override
-			protected void addNonimplementedFunction(final JSFunction function)
-			{
-				candidates.add(new JSNamedElementNode(function));
-			}
-		};
+public class JavaScriptImplementMethodsHandler extends BaseJSGenerateHandler implements ImplementMethodHandler {
+    @Override
+    protected void collectCandidates(final JSClass clazz, final Collection<JSNamedElementNode> candidates) {
+        ImplementedMethodProcessor processor = new ImplementedMethodProcessor(clazz) {
+            @Override
+            @RequiredReadAction
+            protected void addNonimplementedFunction(final JSFunction function) {
+                candidates.add(new JSNamedElementNode(function));
+            }
+        };
 
-		JSResolveUtil.processInterfaceMethods(clazz, processor);
-	}
+        JSResolveUtil.processInterfaceMethods(clazz, processor);
+    }
 
-	@Override
-  protected LocalizeValue getTitle()
-	{
-		return JavaScriptLocalize.methodsToImplementChooserTitle();
-  }
+    @Override
+    protected LocalizeValue getTitle() {
+        return JavaScriptLocalize.methodsToImplementChooserTitle();
+    }
 
-  @Override
-	protected BaseCreateMethodsFix createFix(final JSClass clazz)
-	{
-		return new ImplementMethodsFix(clazz);
-	}
+    @Override
+    protected BaseCreateMethodsFix createFix(final JSClass clazz) {
+        return new ImplementMethodsFix(clazz);
+    }
 }

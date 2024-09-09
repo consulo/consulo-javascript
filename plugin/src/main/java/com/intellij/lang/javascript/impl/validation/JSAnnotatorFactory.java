@@ -11,22 +11,19 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 29-Aug-22
+ * @since 2022-08-29
  */
 @ExtensionImpl
-public class JSAnnotatorFactory implements AnnotatorFactory
-{
-	@Nullable
-	@Override
-	public Annotator createAnnotator()
-	{
-		return new JSAnnotatingVisitor();
-	}
+public class JSAnnotatorFactory implements AnnotatorFactory {
+    @Nullable
+    @Override
+    public Annotator createAnnotator() {
+        return new JSAnnotatingVisitor();
+    }
 
-	@Nonnull
-	@Override
-	public Language getLanguage()
-	{
-		return JavaScriptLanguage.INSTANCE;
-	}
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return JavaScriptLanguage.INSTANCE;
+    }
 }
