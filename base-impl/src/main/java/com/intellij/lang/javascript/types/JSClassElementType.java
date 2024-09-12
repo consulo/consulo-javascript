@@ -40,63 +40,54 @@ import java.io.IOException;
  * @author Maxim.Mossienko
  * @since 10:30:14 PM Mar 25, 2008
  */
-public class JSClassElementType extends JSQualifiedStubElementType<JSClassStub, JSClass>
-{
-	public JSClassElementType()
-	{
-		super("CLASS");
-	}
+public class JSClassElementType extends JSQualifiedStubElementType<JSClassStub, JSClass> {
+    public JSClassElementType() {
+        super("CLASS");
+    }
 
-	@Override
-	public void indexStub(@Nonnull JSClassStub stub, @Nonnull IndexSink sink)
-	{
-		super.indexStub(stub, sink);
+    @Override
+    public void indexStub(@Nonnull JSClassStub stub, @Nonnull IndexSink sink) {
+        super.indexStub(stub, sink);
 
-		String name = stub.getName();
-		if(!StringUtil.isEmpty(name))
-		{
-			sink.occurrence(JavaScriptIndexKeys.CLASSES_BY_NAME, name);
-		}
-	}
+        String name = stub.getName();
+        if (!StringUtil.isEmpty(name)) {
+            sink.occurrence(JavaScriptIndexKeys.CLASSES_BY_NAME, name);
+        }
+    }
 
-	@Nonnull
-	@Override
-	public PsiElement createElement(@Nonnull ASTNode astNode)
-	{
-		return new JSClassImpl(astNode);
-	}
+    @Nonnull
+    @Override
+    public PsiElement createElement(@Nonnull ASTNode astNode) {
+        return new JSClassImpl(astNode);
+    }
 
-	@Override
-	public JSClass createPsi(@Nonnull JSClassStub stub)
-	{
-		return new JSClassImpl(stub, this);
-	}
+    @Override
+    public JSClass createPsi(@Nonnull JSClassStub stub) {
+        return new JSClassImpl(stub, this);
+    }
 
-	@RequiredReadAction
-	@Override
-	public JSClassStub createStub(@Nonnull JSClass psi, StubElement parentStub)
-	{
-		String name = psi.getName();
-		int flags = JSClassStubImpl.getFlags(psi);
-		String qualifiedName = psi.getQualifiedName();
-		return new JSClassStubImpl(name, flags, qualifiedName, parentStub, this);
-	}
+    @RequiredReadAction
+    @Override
+    public JSClassStub createStub(@Nonnull JSClass psi, StubElement parentStub) {
+        String name = psi.getName();
+        int flags = JSClassStubImpl.getFlags(psi);
+        String qualifiedName = psi.getQualifiedName();
+        return new JSClassStubImpl(name, flags, qualifiedName, parentStub, this);
+    }
 
-	@Override
-	public void serialize(@Nonnull JSClassStub stub, @Nonnull StubOutputStream dataStream) throws IOException
-	{
-		dataStream.writeName(stub.getName());
-		dataStream.writeName(stub.getQualifiedName());
-		dataStream.writeInt(stub.getFlags());
-	}
+    @Override
+    public void serialize(@Nonnull JSClassStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+        dataStream.writeName(stub.getName());
+        dataStream.writeName(stub.getQualifiedName());
+        dataStream.writeInt(stub.getFlags());
+    }
 
-	@Nonnull
-	@Override
-	public JSClassStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
-	{
-		StringRef nameRef = dataStream.readName();
-		StringRef qualifiedRef = dataStream.readName();
-		int flags = dataStream.readInt();
-		return new JSClassStubImpl(StringRef.toString(nameRef), flags, StringRef.toString(qualifiedRef), parentStub, this);
-	}
+    @Nonnull
+    @Override
+    public JSClassStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+        StringRef nameRef = dataStream.readName();
+        StringRef qualifiedRef = dataStream.readName();
+        int flags = dataStream.readInt();
+        return new JSClassStubImpl(StringRef.toString(nameRef), flags, StringRef.toString(qualifiedRef), parentStub, this);
+    }
 }

@@ -4,28 +4,23 @@ import com.sixrr.inspectjs.JavaScriptInspection;
 
 import java.util.regex.Matcher;
 
-public abstract class ConventionInspection extends JavaScriptInspection
-{
-	boolean isValid(String name, ConventionInspectionState state)
-	{
-		final int length = name.length();
-		if(length < state.m_minLength)
-		{
-			return false;
-		}
-		if(length > state.m_maxLength)
-		{
-			return false;
-		}
-		if("serialVersionUID".equals(name))
-		{
-			return true;
-		}
-		final Matcher matcher = state.getPattern().matcher(name);
-		return matcher.matches();
-	}
+public abstract class ConventionInspection extends JavaScriptInspection {
+    boolean isValid(String name, ConventionInspectionState state) {
+        final int length = name.length();
+        if (length < state.m_minLength) {
+            return false;
+        }
+        if (length > state.m_maxLength) {
+            return false;
+        }
+        if ("serialVersionUID".equals(name)) {
+            return true;
+        }
+        final Matcher matcher = state.getPattern().matcher(name);
+        return matcher.matches();
+    }
 
-	private static final int REGEX_COLUMN_COUNT = 25;
+    private static final int REGEX_COLUMN_COUNT = 25;
 
 //	@Override
 //	public JComponent createOptionsPanel()

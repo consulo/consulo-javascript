@@ -25,22 +25,25 @@ class NestingDepthVisitor extends JSRecursiveElementVisitor {
     //    }
     //}
 
-    @Override public void visitJSDoWhileStatement(@Nonnull JSDoWhileStatement statement) {
+    @Override
+    public void visitJSDoWhileStatement(@Nonnull JSDoWhileStatement statement) {
         enterScope();
         super.visitJSDoWhileStatement(statement);
         exitScope();
     }
 
-    @Override public void visitJSForStatement(@Nonnull JSForStatement statement) {
+    @Override
+    public void visitJSForStatement(@Nonnull JSForStatement statement) {
         enterScope();
         super.visitJSForStatement(statement);
         exitScope();
     }
 
-    @Override public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
+    @Override
+    public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
         boolean isAlreadyCounted = false;
         if (statement.getParent() instanceof JSIfStatement) {
-            final JSIfStatement parent = (JSIfStatement) statement.getParent();
+            final JSIfStatement parent = (JSIfStatement)statement.getParent();
             assert parent != null;
             final JSStatement elseBranch = parent.getElse();
             if (statement.equals(elseBranch)) {
@@ -56,19 +59,22 @@ class NestingDepthVisitor extends JSRecursiveElementVisitor {
         }
     }
 
-    @Override public void visitJSTryStatement(@Nonnull JSTryStatement statement) {
+    @Override
+    public void visitJSTryStatement(@Nonnull JSTryStatement statement) {
         enterScope();
         super.visitJSTryStatement(statement);
         exitScope();
     }
 
-    @Override public void visitJSSwitchStatement(@Nonnull JSSwitchStatement statement) {
+    @Override
+    public void visitJSSwitchStatement(@Nonnull JSSwitchStatement statement) {
         enterScope();
         super.visitJSSwitchStatement(statement);
         exitScope();
     }
 
-    @Override public void visitJSWhileStatement(@Nonnull JSWhileStatement statement) {
+    @Override
+    public void visitJSWhileStatement(@Nonnull JSWhileStatement statement) {
         enterScope();
         super.visitJSWhileStatement(statement);
         exitScope();

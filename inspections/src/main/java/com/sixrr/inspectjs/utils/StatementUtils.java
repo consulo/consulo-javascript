@@ -9,14 +9,11 @@ public class StatementUtils {
         super();
     }
 
-    public static boolean   isEmpty(JSStatement body) {
-        if(body instanceof JSEmptyStatement)
-        {
+    public static boolean isEmpty(JSStatement body) {
+        if (body instanceof JSEmptyStatement) {
             return true;
         }
-        else if(body instanceof JSBlockStatement)
-        {
-            final JSBlockStatement block = (JSBlockStatement) body;
+        else if (body instanceof JSBlockStatement block) {
             final JSStatement[] statements = block.getStatements();
             return statements == null || statements.length == 0;
         }

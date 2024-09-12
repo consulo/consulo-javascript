@@ -16,93 +16,84 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSIncludeDirective;
 import com.intellij.lang.javascript.psi.stubs.JSIncludeDirectiveStub;
 import consulo.application.util.SystemInfo;
+import consulo.javascript.lang.JavaScriptTokenSets;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.path.FileReference;
-import consulo.util.lang.StringUtil;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
 import consulo.language.psi.path.FileReferenceSet;
-import consulo.javascript.lang.JavaScriptTokenSets;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
 /**
  * @by Maxim.Mossienko
  */
-public class JSIncludeDirectiveImpl extends JSStubbedStatementImpl<JSIncludeDirectiveStub> implements JSIncludeDirective
-{
-	public JSIncludeDirectiveImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSIncludeDirectiveImpl extends JSStubbedStatementImpl<JSIncludeDirectiveStub> implements JSIncludeDirective {
+    public JSIncludeDirectiveImpl(final ASTNode node) {
+        super(node);
+    }
 
-	public JSIncludeDirectiveImpl(final JSIncludeDirectiveStub stub)
-	{
-		super(stub, JSElementTypes.INCLUDE_DIRECTIVE);
-	}
+    public JSIncludeDirectiveImpl(final JSIncludeDirectiveStub stub) {
+        super(stub, JSElementTypes.INCLUDE_DIRECTIVE);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSIncludeDirective(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSIncludeDirective(this);
+    }
 
-	@Override
-	@Nonnull
-	public PsiReference[] getReferences()
-	{
-		ASTNode node = getIncludedFileNode();
+    @Override
+    @Nonnull
+    public PsiReference[] getReferences() {
+        ASTNode node = getIncludedFileNode();
 
-		if(node != null)
-		{
-			return new FileReferenceSet(StringUtil.stripQuotesAroundValue(node.getText()), this, node.getPsi().getStartOffsetInParent() + 1, null,
-					SystemInfo.isFileSystemCaseSensitive).getAllReferences();
-		}
-		return PsiReference.EMPTY_ARRAY;
-	}
+        if (node != null) {
+            return new FileReferenceSet(
+                StringUtil.stripQuotesAroundValue(node.getText()),
+                this,
+                node.getPsi().getStartOffsetInParent() + 1,
+                null,
+                SystemInfo.isFileSystemCaseSensitive
+            ).getAllReferences();
+        }
+        return PsiReference.EMPTY_ARRAY;
+    }
 
-	private ASTNode getIncludedFileNode()
-	{
-		return getNode().findChildByType(JavaScriptTokenSets.STRING_LITERALS);
-	}
+    private ASTNode getIncludedFileNode() {
+        return getNode().findChildByType(JavaScriptTokenSets.STRING_LITERALS);
+    }
 
-	@Override
-	public String getIncludeText()
-	{
-		final JSIncludeDirectiveStub stub = getStub();
-		if(stub != null)
-		{
-			return stub.getIncludeText();
-		}
-		final ASTNode astNode = getIncludedFileNode();
+    @Override
+    public String getIncludeText() {
+        final JSIncludeDirectiveStub stub = getStub();
+        if (stub != null) {
+            return stub.getIncludeText();
+        }
+        final ASTNode astNode = getIncludedFileNode();
 
-		return astNode != null ? StringUtil.stripQuotesAroundValue(astNode.getText()) : null;
-	}
+        return astNode != null ? StringUtil.stripQuotesAroundValue(astNode.getText()) : null;
+    }
 
-	@Override
-	public PsiFile resolveFile()
-	{
-		final String includeText = getIncludeText();
-		if(includeText == null)
-		{
-			return null;
-		}
-		final FileReference[] references = new FileReferenceSet(includeText, this, 0, null, SystemInfo.isFileSystemCaseSensitive).getAllReferences();
+    @Override
+    public PsiFile resolveFile() {
+        final String includeText = getIncludeText();
+        if (includeText == null) {
+            return null;
+        }
+        final FileReference[] references = new FileReferenceSet(
+            includeText,
+            this,
+            0,
+            null,
+            SystemInfo.isFileSystemCaseSensitive
+        ).getAllReferences();
 
-		if(references != null && references.length > 0)
-		{
-			final PsiElement element = references[references.length - 1].resolve();
-			if(element instanceof PsiFile)
-			{
-				return (PsiFile) element;
-			}
-		}
-		return null;
-	}
+        return references != null && references.length > 0 && references[references.length - 1].resolve() instanceof PsiFile file
+            ? file : null;
+    }
 }

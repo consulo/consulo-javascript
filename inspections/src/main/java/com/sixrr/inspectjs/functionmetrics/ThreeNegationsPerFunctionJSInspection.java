@@ -34,7 +34,7 @@ public class ThreeNegationsPerFunctionJSInspection extends JavaScriptInspection 
     @RequiredReadAction
     @Override
     public String buildErrorString(Object state, Object... args) {
-        final JSFunction function = (JSFunction) ((PsiElement) args[0]).getParent();
+        final JSFunction function = (JSFunction)((PsiElement)args[0]).getParent();
         assert function != null;
         final PsiElement lastChild = function.getLastChild();
         final NegationCountVisitor visitor = new NegationCountVisitor();

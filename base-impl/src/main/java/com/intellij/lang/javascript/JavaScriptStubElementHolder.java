@@ -14,19 +14,16 @@ import java.util.List;
  * @since 29-Aug-22
  */
 @ExtensionImpl
-public class JavaScriptStubElementHolder extends StubElementTypeHolder<JSStubElementTypes>
-{
-	@Nullable
-	@Override
-	public String getExternalIdPrefix()
-	{
-		return "js.";
-	}
+public class JavaScriptStubElementHolder extends StubElementTypeHolder<JSStubElementTypes> {
+    @Nullable
+    @Override
+    public String getExternalIdPrefix() {
+        return "js.";
+    }
 
-	@Nonnull
-	@Override
-	public List<ObjectStubSerializerProvider> loadSerializers()
-	{
-		return allFromStaticFields(JSStubElementTypes.class, Field::get);
-	}
+    @Nonnull
+    @Override
+    public List<ObjectStubSerializerProvider> loadSerializers() {
+        return allFromStaticFields(JSStubElementTypes.class, Field::get);
+    }
 }

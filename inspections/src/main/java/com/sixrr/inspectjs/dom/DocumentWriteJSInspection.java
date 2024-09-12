@@ -47,27 +47,24 @@ public class DocumentWriteJSInspection extends JavaScriptInspection {
             final JSExpression methodExpression;
             try {
                 methodExpression = jsCallExpression.getMethodExpression();
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 return; //catching an intelliJ CCE
             }
-            if(!(methodExpression instanceof JSReferenceExpression))
-            {
+            if (!(methodExpression instanceof JSReferenceExpression)) {
                 return;
             }
-            final JSReferenceExpression referenceExpression = (JSReferenceExpression) methodExpression;
+            final JSReferenceExpression referenceExpression = (JSReferenceExpression)methodExpression;
             final JSExpression qualifier = referenceExpression.getQualifier();
-            if(qualifier == null)
-            {
+            if (qualifier == null) {
                 return;
             }
             @NonNls final String qualifierText = qualifier.getText();
-            if(!"document".equals(qualifierText))
-            {
+            if (!"document".equals(qualifierText)) {
                 return;
             }
             @NonNls final String methodName = referenceExpression.getReferencedName();
-            if(!"write".equals(methodName) && !"writeln".equals(methodName))
-            {
+            if (!"write".equals(methodName) && !"writeln".equals(methodName)) {
                 return;
             }
             registerError(methodExpression);

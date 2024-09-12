@@ -29,30 +29,24 @@ import jakarta.annotation.Nonnull;
  * Time: 9:52:04 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSContinueStatementImpl extends JSStatementWithLabelReferenceImpl implements JSContinueStatement
-{
-	public JSContinueStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSContinueStatementImpl extends JSStatementWithLabelReferenceImpl implements JSContinueStatement {
+    public JSContinueStatementImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSStatement getStatementToContinue()
-	{
-		String label = getLabel();
-		if(label == null)
-		{
-			return PsiTreeUtil.getParentOfType(this, JSLoopStatement.class, JSSwitchStatement.class);
-		}
-		else
-		{
-			return (JSStatement) getReferences()[0].resolve();
-		}
-	}
+    @Override
+    public JSStatement getStatementToContinue() {
+        String label = getLabel();
+        if (label == null) {
+            return PsiTreeUtil.getParentOfType(this, JSLoopStatement.class, JSSwitchStatement.class);
+        }
+        else {
+            return (JSStatement)getReferences()[0].resolve();
+        }
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSContinueStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSContinueStatement(this);
+    }
 }

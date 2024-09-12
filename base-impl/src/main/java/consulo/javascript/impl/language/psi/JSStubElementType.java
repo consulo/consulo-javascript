@@ -28,28 +28,24 @@ import consulo.language.psi.stub.IndexSink;
 
 import jakarta.annotation.Nonnull;
 
-public abstract class JSStubElementType<StubT extends JSStubElement<PsiT>, PsiT extends JSElement> extends IStubElementType<StubT, PsiT> implements IElementTypeAsPsiFactory
-{
-	public JSStubElementType(String debugName)
-	{
-		super(debugName, JavaScriptLanguage.INSTANCE);
-	}
+public abstract class JSStubElementType<StubT extends JSStubElement<PsiT>, PsiT extends JSElement> extends IStubElementType<StubT, PsiT>
+    implements IElementTypeAsPsiFactory {
+    public JSStubElementType(String debugName) {
+        super(debugName, JavaScriptLanguage.INSTANCE);
+    }
 
-	@Override
-	public String toString()
-	{
-		return "js." + super.toString();
-	}
+    @Override
+    public String toString() {
+        return "js." + super.toString();
+    }
 
-	@Override
-	public void indexStub(@Nonnull final StubT stub, @Nonnull final IndexSink sink)
-	{
-	}
+    @Override
+    public void indexStub(@Nonnull final StubT stub, @Nonnull final IndexSink sink) {
+    }
 
-	@Nonnull
-	@Override
-	public String getExternalId()
-	{
-		return toString();
-	}
+    @Nonnull
+    @Override
+    public String getExternalId() {
+        return toString();
+    }
 }

@@ -32,90 +32,71 @@ import jakarta.annotation.Nonnull;
  * Time: 6:40:04 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSDefinitionExpressionImpl extends JSExpressionImpl implements JSDefinitionExpression
-{
-	public JSDefinitionExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSDefinitionExpressionImpl extends JSExpressionImpl implements JSDefinitionExpression {
+    public JSDefinitionExpressionImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getExpression()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression getExpression() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	public String getName()
-	{
-		final JSExpression expression = getExpression();
-		if(expression instanceof JSReferenceExpression)
-		{
-			return ((JSReferenceExpression) expression).getReferencedName();
-		}
-		return null;
-	}
+    @Override
+    public String getName() {
+        return getExpression() instanceof JSReferenceExpression referenceExpression
+            ? referenceExpression.getReferencedName()
+            : null;
+    }
 
-	@Override
-	public PsiElement setName(@Nonnull String name) throws IncorrectOperationException
-	{
-		final JSExpression expression = getExpression();
-		if(expression instanceof JSReferenceExpressionImpl)
-		{
-			return ((JSReferenceExpressionImpl) expression).handleElementRenameInternal(name);
-		}
-		return null;
-	}
+    @Override
+    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+        return getExpression() instanceof JSReferenceExpressionImpl referenceExpression
+            ? referenceExpression.handleElementRenameInternal(name)
+            : null;
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSDefinitionExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSDefinitionExpression(this);
+    }
 
-	@Override
-	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent,
-									   @Nonnull PsiElement place)
-	{
-		if(lastParent == null)
-		{
-			return processor.execute(this, state);
-		}
-		return true;
-	}
+    @Override
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        return lastParent == null ? processor.execute(this, state) : true;
+    }
 
-	@Override
-	public void delete() throws IncorrectOperationException
-	{
-		final PsiElement parent = getParent();
+    @Override
+    public void delete() throws IncorrectOperationException {
+        final PsiElement parent = getParent();
 
-		if(parent instanceof JSAssignmentExpression)
-		{
-			final PsiElement grandParent = parent.getParent();
+        if (parent instanceof JSAssignmentExpression assignment) {
+            final PsiElement grandParent = parent.getParent();
 
-			if(grandParent instanceof JSStatement)
-			{
-				grandParent.delete();
-				return;
-			}
-			else if(grandParent instanceof JSBinaryExpression)
-			{
-				((JSBinaryExpression) grandParent).getROperand().replace(((JSAssignmentExpression) parent).getROperand());
-				return;
-			}
-			else if(grandParent instanceof JSVariable)
-			{
-				final JSExpression initializerExpression = ((JSVariable) grandParent).getInitializer();
-				initializerExpression.replace(((JSAssignmentExpression) parent).getROperand());
-				return;
-			}
-		}
-		super.delete();
-	}
+            if (grandParent instanceof JSStatement) {
+                grandParent.delete();
+                return;
+            }
+            else if (grandParent instanceof JSBinaryExpression binaryExpression) {
+                binaryExpression.getROperand().replace(assignment.getROperand());
+                return;
+            }
+            else if (grandParent instanceof JSVariable variable) {
+                final JSExpression initializerExpression = variable.getInitializer();
+                initializerExpression.replace(assignment.getROperand());
+                return;
+            }
+        }
+        super.delete();
+    }
 
-	@Override
-	public PsiElement getNameIdentifier()
-	{
-		return null;
-	}
+    @Override
+    public PsiElement getNameIdentifier() {
+        return null;
+    }
 }

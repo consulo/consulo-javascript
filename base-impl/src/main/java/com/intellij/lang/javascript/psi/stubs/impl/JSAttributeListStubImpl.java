@@ -25,114 +25,95 @@ import consulo.language.psi.stub.StubBase;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Mar 26, 2008
- *         Time: 11:29:19 PM
+ * Date: Mar 26, 2008
+ * Time: 11:29:19 PM
  */
-public class JSAttributeListStubImpl extends StubBase<JSAttributeList> implements JSAttributeListStub
-{
-	private static final int VISIBILITY_TAG_SHIFT = 0;
-	private static final int VISIBILITY_TAG_MASK = 0x3;
-	private static final int OVERRIDE_PROPERTY_SHIFT = 2;
-	private static final int STATIC_PROPERTY_SHIFT = 3;
-	private static final int DYNAMIC_PROPERTY_SHIFT = 4;
-	private static final int NATIVE_PROPERTY_SHIFT = 5;
-	private static final int FINAL_PROPERTY_SHIFT = 6;
-	private static final int VIRTUAL_PROPERTY_SHIFT = 7;
+public class JSAttributeListStubImpl extends StubBase<JSAttributeList> implements JSAttributeListStub {
+    private static final int VISIBILITY_TAG_SHIFT = 0;
+    private static final int VISIBILITY_TAG_MASK = 0x3;
+    private static final int OVERRIDE_PROPERTY_SHIFT = 2;
+    private static final int STATIC_PROPERTY_SHIFT = 3;
+    private static final int DYNAMIC_PROPERTY_SHIFT = 4;
+    private static final int NATIVE_PROPERTY_SHIFT = 5;
+    private static final int FINAL_PROPERTY_SHIFT = 6;
+    private static final int VIRTUAL_PROPERTY_SHIFT = 7;
 
-	private int myFlags;
-	private String myNamespace;
+    private int myFlags;
+    private String myNamespace;
 
-	public JSAttributeListStubImpl(String namespace, int flags, final StubElement parent, final IStubElementType elementType)
-	{
-		super(parent, elementType);
-		myNamespace = namespace;
-		myFlags = flags;
-	}
+    public JSAttributeListStubImpl(String namespace, int flags, final StubElement parent, final IStubElementType elementType) {
+        super(parent, elementType);
+        myNamespace = namespace;
+        myFlags = flags;
+    }
 
-	@Override
-	public JSAttributeList.AccessType getAccessType()
-	{
-		final int i = (myFlags >> VISIBILITY_TAG_SHIFT) & VISIBILITY_TAG_MASK;
-		return types[i];
-	}
+    @Override
+    public JSAttributeList.AccessType getAccessType() {
+        final int i = (myFlags >> VISIBILITY_TAG_SHIFT) & VISIBILITY_TAG_MASK;
+        return types[i];
+    }
 
-	private static final JSAttributeList.AccessType[] types = JSAttributeList.AccessType.values();
+    private static final JSAttributeList.AccessType[] types = JSAttributeList.AccessType.values();
 
-	@Override
-	public boolean hasModifier(final JSAttributeList.ModifierType modifier)
-	{
-		return ((myFlags >> getFlagShift(modifier)) & 0x1) != 0;
-	}
+    @Override
+    public boolean hasModifier(final JSAttributeList.ModifierType modifier) {
+        return ((myFlags >> getFlagShift(modifier)) & 0x1) != 0;
+    }
 
-	@Override
-	public String getNamespace()
-	{
-		return myNamespace;
-	}
+    @Override
+    public String getNamespace() {
+        return myNamespace;
+    }
 
-	@Override
-	public int getFlags()
-	{
-		return myFlags;
-	}
+    @Override
+    public int getFlags() {
+        return myFlags;
+    }
 
-	public static int getFlags(JSAttributeList attributeList)
-	{
-		final JSAttributeList.AccessType accessType = attributeList.getAccessType();
-		final int ord = accessType.ordinal();
+    public static int getFlags(JSAttributeList attributeList) {
+        final JSAttributeList.AccessType accessType = attributeList.getAccessType();
+        final int ord = accessType.ordinal();
 
-		int flags = (ord << VISIBILITY_TAG_SHIFT);
+        int flags = (ord << VISIBILITY_TAG_SHIFT);
 
-		for(JSAttributeList.ModifierType type : JSAttributeList.ModifierType.values())
-		{
-			flags = setFlag(flags, type, attributeList.hasModifier(type));
-		}
-		return flags;
-	}
+        for (JSAttributeList.ModifierType type : JSAttributeList.ModifierType.values()) {
+            flags = setFlag(flags, type, attributeList.hasModifier(type));
+        }
+        return flags;
+    }
 
-	private static int getFlagShift(final JSAttributeList.ModifierType modifier)
-	{
-		int shift = -1;
-		if(modifier == JSAttributeList.ModifierType.STATIC)
-		{
-			shift = STATIC_PROPERTY_SHIFT;
-		}
-		else if(modifier == JSAttributeList.ModifierType.DYNAMIC)
-		{
-			shift = DYNAMIC_PROPERTY_SHIFT;
-		}
-		else if(modifier == JSAttributeList.ModifierType.OVERRIDE)
-		{
-			shift = OVERRIDE_PROPERTY_SHIFT;
-		}
-		else if(modifier == JSAttributeList.ModifierType.NATIVE)
-		{
-			shift = NATIVE_PROPERTY_SHIFT;
-		}
-		else if(modifier == JSAttributeList.ModifierType.FINAL)
-		{
-			shift = FINAL_PROPERTY_SHIFT;
-		}
-		else if(modifier == JSAttributeList.ModifierType.VIRTUAL)
-		{
-			shift = VIRTUAL_PROPERTY_SHIFT;
-		}
-		if(shift == -1)
-		{
-			throw new IllegalArgumentException("Illegal modifier passed:" + modifier);
-		}
-		return shift;
-	}
+    private static int getFlagShift(final JSAttributeList.ModifierType modifier) {
+        int shift = -1;
+        if (modifier == JSAttributeList.ModifierType.STATIC) {
+            shift = STATIC_PROPERTY_SHIFT;
+        }
+        else if (modifier == JSAttributeList.ModifierType.DYNAMIC) {
+            shift = DYNAMIC_PROPERTY_SHIFT;
+        }
+        else if (modifier == JSAttributeList.ModifierType.OVERRIDE) {
+            shift = OVERRIDE_PROPERTY_SHIFT;
+        }
+        else if (modifier == JSAttributeList.ModifierType.NATIVE) {
+            shift = NATIVE_PROPERTY_SHIFT;
+        }
+        else if (modifier == JSAttributeList.ModifierType.FINAL) {
+            shift = FINAL_PROPERTY_SHIFT;
+        }
+        else if (modifier == JSAttributeList.ModifierType.VIRTUAL) {
+            shift = VIRTUAL_PROPERTY_SHIFT;
+        }
+        if (shift == -1) {
+            throw new IllegalArgumentException("Illegal modifier passed:" + modifier);
+        }
+        return shift;
+    }
 
-	private static int setFlag(int old, final JSAttributeList.ModifierType modifier, boolean value)
-	{
-		if(value)
-		{
-			return old | (1 << getFlagShift(modifier));
-		}
-		else
-		{
-			return old & ~(1 << getFlagShift(modifier));
-		}
-	}
+    private static int setFlag(int old, final JSAttributeList.ModifierType modifier, boolean value) {
+        if (value) {
+            return old | (1 << getFlagShift(modifier));
+        }
+        else {
+            return old & ~(1 << getFlagShift(modifier));
+        }
+    }
 }

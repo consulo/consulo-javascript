@@ -33,89 +33,72 @@ import jakarta.annotation.Nonnull;
  * Time: 11:47:35 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSConditionalExpressionImpl extends JSExpressionImpl implements JSConditionalExpression
-{
-	public JSConditionalExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSConditionalExpressionImpl extends JSExpressionImpl implements JSConditionalExpression {
+    public JSConditionalExpressionImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getCondition()
-	{
-		ASTNode child = getNode().getFirstChildNode();
-		while(child != null)
-		{
-			final IElementType type = child.getElementType();
-			if(type == JSTokenTypes.QUEST)
-			{
-				return null;
-			}
-			if(JSElementTypes.EXPRESSIONS.contains(type))
-			{
-				return (JSExpression) child.getPsi();
-			}
-			child = child.getTreeNext();
-		}
-		return null;
-	}
+    @Override
+    public JSExpression getCondition() {
+        ASTNode child = getNode().getFirstChildNode();
+        while (child != null) {
+            final IElementType type = child.getElementType();
+            if (type == JSTokenTypes.QUEST) {
+                return null;
+            }
+            if (JSElementTypes.EXPRESSIONS.contains(type)) {
+                return (JSExpression)child.getPsi();
+            }
+            child = child.getTreeNext();
+        }
+        return null;
+    }
 
-	@Override
-	public JSExpression getThen()
-	{
-		boolean questPassed = false;
-		ASTNode child = getNode().getFirstChildNode();
-		while(child != null)
-		{
-			final IElementType type = child.getElementType();
-			if(type == JSTokenTypes.QUEST)
-			{
-				questPassed = true;
-			}
-			if(type == JSTokenTypes.COLON)
-			{
-				return null;
-			}
-			if(questPassed && JSElementTypes.EXPRESSIONS.contains(type))
-			{
-				return (JSExpression) child.getPsi();
-			}
+    @Override
+    public JSExpression getThen() {
+        boolean questPassed = false;
+        ASTNode child = getNode().getFirstChildNode();
+        while (child != null) {
+            final IElementType type = child.getElementType();
+            if (type == JSTokenTypes.QUEST) {
+                questPassed = true;
+            }
+            if (type == JSTokenTypes.COLON) {
+                return null;
+            }
+            if (questPassed && JSElementTypes.EXPRESSIONS.contains(type)) {
+                return (JSExpression)child.getPsi();
+            }
 
-			child = child.getTreeNext();
-		}
-		return null;
-	}
+            child = child.getTreeNext();
+        }
+        return null;
+    }
 
-	@Override
-	public JSExpression getElse()
-	{
-		boolean questPassed = false;
-		boolean colonPassed = false;
-		ASTNode child = getNode().getFirstChildNode();
-		while(child != null)
-		{
-			final IElementType type = child.getElementType();
-			if(type == JSTokenTypes.QUEST)
-			{
-				questPassed = true;
-			}
-			if(type == JSTokenTypes.COLON)
-			{
-				colonPassed = true;
-			}
-			if(questPassed && colonPassed && JSElementTypes.EXPRESSIONS.contains(type))
-			{
-				return (JSExpression) child.getPsi();
-			}
+    @Override
+    public JSExpression getElse() {
+        boolean questPassed = false;
+        boolean colonPassed = false;
+        ASTNode child = getNode().getFirstChildNode();
+        while (child != null) {
+            final IElementType type = child.getElementType();
+            if (type == JSTokenTypes.QUEST) {
+                questPassed = true;
+            }
+            if (type == JSTokenTypes.COLON) {
+                colonPassed = true;
+            }
+            if (questPassed && colonPassed && JSElementTypes.EXPRESSIONS.contains(type)) {
+                return (JSExpression)child.getPsi();
+            }
 
-			child = child.getTreeNext();
-		}
-		return null;
-	}
+            child = child.getTreeNext();
+        }
+        return null;
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSConditionalExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSConditionalExpression(this);
+    }
 }

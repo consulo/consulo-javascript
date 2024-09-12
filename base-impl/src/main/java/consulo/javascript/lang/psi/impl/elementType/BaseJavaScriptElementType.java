@@ -25,10 +25,9 @@ import consulo.javascript.language.psi.JavaScriptTypeElement;
  * @author VISTALL
  * @since 01.03.2016
  */
-public abstract class BaseJavaScriptElementType<S extends JSStubElement<P>, P extends JavaScriptTypeElement> extends JSStubElementType<S, P>
-{
-	public BaseJavaScriptElementType(@NonNls String debugName)
-	{
-		super(debugName);
-	}
+public abstract class BaseJavaScriptElementType<S extends JSStubElement<P>, P extends JavaScriptTypeElement>
+    extends JSStubElementType<S, P> {
+    public BaseJavaScriptElementType(@NonNls String debugName) {
+        super(debugName);
+    }
 }

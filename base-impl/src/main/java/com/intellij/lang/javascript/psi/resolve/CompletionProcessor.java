@@ -19,13 +19,11 @@ package com.intellij.lang.javascript.psi.resolve;
 /**
  * @by Maxim.Mossienko
  */
-public class CompletionProcessor extends ResolveProcessor
-{
-	private boolean myInVarDcl;
-	private boolean myInFuncDcl;
+public class CompletionProcessor extends ResolveProcessor {
+    private boolean myInVarDcl;
+    private boolean myInFuncDcl;
 
-	public CompletionProcessor()
-	{
-		super(null);
-	}
+    public CompletionProcessor() {
+        super(null);
+    }
 }

@@ -27,22 +27,18 @@ import jakarta.annotation.Nonnull;
  * Date: Jan 30, 2005
  * Time: 9:57:08 PM
  */
-public class JSReturnStatementImpl extends JSStatementImpl implements JSReturnStatement
-{
-	public JSReturnStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSReturnStatementImpl extends JSStatementImpl implements JSReturnStatement {
+    public JSReturnStatementImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getExpression()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression getExpression() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSReturnStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSReturnStatement(this);
+    }
 }

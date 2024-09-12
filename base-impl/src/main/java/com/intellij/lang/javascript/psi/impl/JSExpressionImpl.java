@@ -25,24 +25,20 @@ import jakarta.annotation.Nonnull;
 /**
  * @author ven
  */
-public abstract class JSExpressionImpl extends JSElementImpl implements JSExpression
-{
-	public JSExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public abstract class JSExpressionImpl extends JSElementImpl implements JSExpression {
+    public JSExpressionImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@RequiredReadAction
-	@Nonnull
-	@Override
-	public JavaScriptType getType()
-	{
-		return JavaScriptType.UNKNOWN;
-	}
+    @RequiredReadAction
+    @Nonnull
+    @Override
+    public JavaScriptType getType() {
+        return JavaScriptType.UNKNOWN;
+    }
 
-	@Override
-	public JSExpression replace(JSExpression newExpr)
-	{
-		return JSChangeUtil.replaceExpression(this, newExpr);
-	}
+    @Override
+    public JSExpression replace(JSExpression newExpr) {
+        return JSChangeUtil.replaceExpression(this, newExpr);
+    }
 }

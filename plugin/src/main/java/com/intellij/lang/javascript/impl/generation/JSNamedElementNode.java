@@ -19,6 +19,7 @@ package com.intellij.lang.javascript.impl.generation;
 import com.intellij.javascript.JSParameterInfoHandler;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import consulo.language.editor.generation.ClassMember;
 import consulo.language.editor.generation.MemberChooserObject;
@@ -30,94 +31,77 @@ import consulo.ui.image.ImageEffects;
 
 /**
  * @author Maxim.Mossienko
- * Date: Jul 17, 2008
- * Time: 8:55:57 PM
+ * @since 2008-07-17
  */
-public class JSNamedElementNode extends PsiElementMemberChooserObject implements ClassMember
-{
-	public JSNamedElementNode(JSNamedElement node)
-	{
-		super(node, buildTextFor(node), buildIcon(node));
-	}
+public class JSNamedElementNode extends PsiElementMemberChooserObject implements ClassMember {
+    @RequiredReadAction
+    public JSNamedElementNode(JSNamedElement node) {
+        super(node, buildTextFor(node), buildIcon(node));
+    }
 
-	private static Image buildIcon(final JSNamedElement node)
-	{
-		Image icon = IconDescriptorUpdaters.getIcon(node, 0);
+    @RequiredReadAction
+    private static Image buildIcon(final JSNamedElement node) {
+        Image icon = IconDescriptorUpdaters.getIcon(node, 0);
 
-		if(node instanceof JSFunction)
-		{
-			final JSFunction function = (JSFunction) node;
-			final Image accessIcon;
+        if (node instanceof JSFunction function) {
+            final Image accessIcon;
 
-			if(function.isGetProperty())
-			{
-				accessIcon = AllIcons.Nodes.Read_access;
-			}
-			else if(function.isSetProperty())
-			{
-				accessIcon = AllIcons.Nodes.Write_access;
-			}
-			else
-			{
-				accessIcon = null;
-			}
+            if (function.isGetProperty()) {
+                accessIcon = AllIcons.Nodes.Read_access;
+            }
+            else if (function.isSetProperty()) {
+                accessIcon = AllIcons.Nodes.Write_access;
+            }
+            else {
+                accessIcon = null;
+            }
 
-			if(accessIcon != null)
-			{
-				icon = ImageEffects.appendRight(icon, accessIcon);
-			}
-		}
-		return icon;
-	}
+            if (accessIcon != null) {
+                icon = ImageEffects.appendRight(icon, accessIcon);
+            }
+        }
+        return icon;
+    }
 
-	private static String buildTextFor(final JSNamedElement node)
-	{
-		String text = node.getName();
+    @RequiredReadAction
+    private static String buildTextFor(final JSNamedElement node) {
+        StringBuilder text = new StringBuilder(node.getName());
 
-		if(node instanceof JSFunction)
-		{
-			final JSFunction function = (JSFunction) node;
-			text += "(";
-			final JSParameterList parameterList = function.getParameterList();
+        if (node instanceof JSFunction function) {
+            text.append("(");
+            final JSParameterList parameterList = function.getParameterList();
 
-			if(parameterList != null)
-			{
-				boolean first = true;
-				for(JSParameter p : parameterList.getParameters())
-				{
-					if(!first)
-					{
-						text += ", ";
-					}
-					first = false;
-					text += JSParameterInfoHandler.getSignatureForParameter(p, false);
-				}
-			}
+            if (parameterList != null) {
+                boolean first = true;
+                for (JSParameter p : parameterList.getParameters()) {
+                    if (!first) {
+                        text.append(", ");
+                    }
+                    first = false;
+                    text.append(JSParameterInfoHandler.getSignatureForParameter(p, false));
+                }
+            }
 
-			text += ")";
-			final String typeString = function.getReturnTypeString();
-			if(typeString != null)
-			{
-				text += ":" + typeString;
-			}
-		}
-		else if(node instanceof JSVariable)
-		{
-			final JSVariable var = (JSVariable) node;
-			final String typeString = var.getTypeString();
-			if(typeString != null)
-			{
-				text += ":" + typeString;
-			}
-		}
-		return text;
-	}
+            text.append(")");
+            final String typeString = function.getReturnTypeString();
+            if (typeString != null) {
+                text.append(":").append(typeString);
+            }
+        }
+        else if (node instanceof JSVariable var) {
+            final String typeString = var.getTypeString();
+            if (typeString != null) {
+                text.append(":").append(typeString);
+            }
+        }
+        return text.toString();
+    }
 
-	@Override
-	public MemberChooserObject getParentNodeDelegate()
-	{
-		final PsiElement element = getPsiElement();
-		PsiElement parent = JSResolveUtil.findParent(element);
-		return new JSNamedElementNode((JSNamedElement) parent);
-	}
+    @Override
+    @RequiredReadAction
+    public MemberChooserObject getParentNodeDelegate() {
+        final PsiElement element = getPsiElement();
+        PsiElement parent = JSResolveUtil.findParent(element);
+        return new JSNamedElementNode((JSNamedElement)parent);
+    }
 }

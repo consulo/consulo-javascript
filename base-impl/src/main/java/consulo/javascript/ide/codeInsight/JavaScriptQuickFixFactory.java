@@ -26,43 +26,40 @@ import consulo.language.version.LanguageVersion;
 
 import jakarta.annotation.Nonnull;
 
+import java.util.List;
+
 /**
  * @author VISTALL
  * @since 23.02.2016
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class JavaScriptQuickFixFactory
-{
-	private static final JavaScriptQuickFixFactory ourDefaultImpl = new JavaScriptQuickFixFactory()
-	{
-		@Override
-		public boolean isMyVersion(@Nonnull JavaScriptLanguageVersion version)
-		{
-			return true;
-		}
-	};
+public abstract class JavaScriptQuickFixFactory {
+    private static final JavaScriptQuickFixFactory ourDefaultImpl = new JavaScriptQuickFixFactory() {
+        @Override
+        public boolean isMyVersion(@Nonnull JavaScriptLanguageVersion version) {
+            return true;
+        }
+    };
 
-	@Nonnull
-	public static JavaScriptQuickFixFactory byElement(PsiElement element)
-	{
-		LanguageVersion languageVersion = element.getLanguageVersion();
-		if(languageVersion instanceof BaseJavaScriptLanguageVersion jsVersion)
-		{
-			for(JavaScriptQuickFixFactory factory : element.getProject().getApplication().getExtensionList(JavaScriptQuickFixFactory.class))
-			{
-				if(factory.isMyVersion(jsVersion))
-				{
-					return factory;
-				}
-			}
-		}
-		return ourDefaultImpl;
-	}
+    @Nonnull
+    public static JavaScriptQuickFixFactory byElement(PsiElement element) {
+        LanguageVersion languageVersion = element.getLanguageVersion();
+        if (languageVersion instanceof BaseJavaScriptLanguageVersion jsVersion) {
+            List<JavaScriptQuickFixFactory> extensionList = element.getProject()
+                .getApplication()
+                .getExtensionList(JavaScriptQuickFixFactory.class);
+            for (JavaScriptQuickFixFactory factory : extensionList) {
+                if (factory.isMyVersion(jsVersion)) {
+                    return factory;
+                }
+            }
+        }
+        return ourDefaultImpl;
+    }
 
-	public CreateJSFunctionOrMethodFix createFunctionOrMethodFix(String referenceName, boolean isMethod)
-	{
-		return new CreateJSFunctionOrMethodFix(referenceName, isMethod);
-	}
+    public CreateJSFunctionOrMethodFix createFunctionOrMethodFix(String referenceName, boolean isMethod) {
+        return new CreateJSFunctionOrMethodFix(referenceName, isMethod);
+    }
 
-	public abstract boolean isMyVersion(@Nonnull JavaScriptLanguageVersion version);
+    public abstract boolean isMyVersion(@Nonnull JavaScriptLanguageVersion version);
 }

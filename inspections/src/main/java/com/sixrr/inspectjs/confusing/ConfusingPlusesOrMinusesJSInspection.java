@@ -42,8 +42,8 @@ public class ConfusingPlusesOrMinusesJSInspection extends JavaScriptInspection {
     }
 
     private static class Visitor extends BaseInspectionVisitor {
-
-        @Override public void visitJSBinaryExpression(JSBinaryExpression jsBinaryExpression) {
+        @Override
+        public void visitJSBinaryExpression(JSBinaryExpression jsBinaryExpression) {
             super.visitJSBinaryExpression(jsBinaryExpression);
             final IElementType sign = jsBinaryExpression.getOperationSign();
             if (!JSTokenTypes.PLUS.equals(sign) && !JSTokenTypes.MINUS.equals(sign)) {
@@ -58,7 +58,7 @@ public class ConfusingPlusesOrMinusesJSInspection extends JavaScriptInspection {
                 return;
             }
             if (lhs instanceof JSPostfixExpression) {
-                final JSPostfixExpression postfixExpression = (JSPostfixExpression) lhs;
+                final JSPostfixExpression postfixExpression = (JSPostfixExpression)lhs;
                 final IElementType innerSign = postfixExpression.getOperationSign();
                 if (matches(sign, innerSign)) {
                     registerError(jsBinaryExpression);
@@ -66,7 +66,7 @@ public class ConfusingPlusesOrMinusesJSInspection extends JavaScriptInspection {
                 }
             }
             if (rhs instanceof JSPrefixExpression) {
-                final JSPrefixExpression postfixExpression = (JSPrefixExpression) rhs;
+                final JSPrefixExpression postfixExpression = (JSPrefixExpression)rhs;
                 final IElementType innerSign = postfixExpression.getOperationSign();
                 if (matches(sign, innerSign)) {
                     registerError(jsBinaryExpression);
@@ -77,7 +77,8 @@ public class ConfusingPlusesOrMinusesJSInspection extends JavaScriptInspection {
         private static boolean matches(IElementType sign, IElementType innerSign) {
             if (JSTokenTypes.PLUS.equals(sign)) {
                 return JSTokenTypes.PLUSPLUS.equals(innerSign);
-            } else {
+            }
+            else {
                 return JSTokenTypes.MINUSMINUS.equals(innerSign);
             }
         }

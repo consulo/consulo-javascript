@@ -6,6 +6,7 @@ import consulo.dataContext.DataContext;
 import consulo.ide.IdeView;
 import consulo.ide.action.CreateFileFromTemplateAction;
 import consulo.ide.action.CreateFileFromTemplateDialog;
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.javascript.module.extension.JavaScriptModuleExtension;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiDirectory;
@@ -26,7 +27,11 @@ public class JavaScriptCreateFileAction extends CreateFileFromTemplateAction
 {
 	public JavaScriptCreateFileAction()
 	{
-		super(LocalizeValue.empty(), LocalizeValue.empty(), JavaScriptFileType.INSTANCE.getIcon());
+		super(
+			JavaScriptLocalize.actionJavascriptFileText(),
+			JavaScriptLocalize.actionJavascriptFileText(),
+			JavaScriptFileType.INSTANCE.getIcon()
+		);
 	}
 
 	@Override

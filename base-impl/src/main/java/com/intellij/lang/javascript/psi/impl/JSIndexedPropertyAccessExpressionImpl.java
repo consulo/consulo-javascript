@@ -31,57 +31,46 @@ import jakarta.annotation.Nonnull;
  * Time: 11:59:36 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSIndexedPropertyAccessExpressionImpl extends JSExpressionImpl implements JSIndexedPropertyAccessExpression
-{
-	public JSIndexedPropertyAccessExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSIndexedPropertyAccessExpressionImpl extends JSExpressionImpl implements JSIndexedPropertyAccessExpression {
+    public JSIndexedPropertyAccessExpressionImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getQualifier()
-	{
-		ASTNode child = getNode().getFirstChildNode();
-		while(child != null)
-		{
-			final IElementType type = child.getElementType();
-			if(type == JSTokenTypes.LBRACKET)
-			{
-				return null;
-			}
-			if(child.getPsi() instanceof JSExpression)
-			{
-				return (JSExpression) child.getPsi();
-			}
-			child = child.getTreeNext();
-		}
-		return null;
-	}
+    @Override
+    public JSExpression getQualifier() {
+        ASTNode child = getNode().getFirstChildNode();
+        while (child != null) {
+            final IElementType type = child.getElementType();
+            if (type == JSTokenTypes.LBRACKET) {
+                return null;
+            }
+            if (child.getPsi() instanceof JSExpression expression) {
+                return expression;
+            }
+            child = child.getTreeNext();
+        }
+        return null;
+    }
 
-	@Override
-	public JSExpression getIndexExpression()
-	{
-		ASTNode child = getNode().getFirstChildNode();
-		boolean bracketPassed = false;
-		while(child != null)
-		{
-			final IElementType type = child.getElementType();
-			if(type == JSTokenTypes.LBRACKET)
-			{
-				bracketPassed = true;
-			}
-			if(bracketPassed && child.getPsi() instanceof JSExpression)
-			{
-				return (JSExpression) child.getPsi();
-			}
-			child = child.getTreeNext();
-		}
-		return null;
-	}
+    @Override
+    public JSExpression getIndexExpression() {
+        ASTNode child = getNode().getFirstChildNode();
+        boolean bracketPassed = false;
+        while (child != null) {
+            final IElementType type = child.getElementType();
+            if (type == JSTokenTypes.LBRACKET) {
+                bracketPassed = true;
+            }
+            if (bracketPassed && child.getPsi() instanceof JSExpression expression) {
+                return expression;
+            }
+            child = child.getTreeNext();
+        }
+        return null;
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSIndexedPropertyAccessExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSIndexedPropertyAccessExpression(this);
+    }
 }

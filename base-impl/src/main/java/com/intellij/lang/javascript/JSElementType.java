@@ -27,10 +27,8 @@ import org.jetbrains.annotations.NonNls;
  * Date: Jan 27, 2005
  * Time: 6:38:56 PM
  */
-public class JSElementType extends IElementType
-{
-	public JSElementType(@NonNls @Nonnull String debugName)
-	{
-		super(debugName, JavaScriptLanguage.INSTANCE);
-	}
+public class JSElementType extends IElementType {
+    public JSElementType(@NonNls @Nonnull String debugName) {
+        super(debugName, JavaScriptLanguage.INSTANCE);
+    }
 }

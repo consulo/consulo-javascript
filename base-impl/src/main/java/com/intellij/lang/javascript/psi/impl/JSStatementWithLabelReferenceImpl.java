@@ -40,157 +40,126 @@ import java.util.List;
  * Time: 9:52:04 PM
  * To change this template use File | Settings | File Templates.
  */
-abstract class JSStatementWithLabelReferenceImpl extends JSStatementImpl
-{
-	private PsiReference[] myReferences;
-	private String myReferencesText;
+abstract class JSStatementWithLabelReferenceImpl extends JSStatementImpl {
+    private PsiReference[] myReferences;
+    private String myReferencesText;
 
-	protected JSStatementWithLabelReferenceImpl(final ASTNode node)
-	{
-		super(node);
-	}
+    protected JSStatementWithLabelReferenceImpl(final ASTNode node) {
+        super(node);
+    }
 
-	public String getLabel()
-	{
-		final ASTNode label = getNode().findChildByType(JSTokenTypes.IDENTIFIER);
-		return label != null ? label.getText() : null;
-	}
+    public String getLabel() {
+        final ASTNode label = getNode().findChildByType(JSTokenTypes.IDENTIFIER);
+        return label != null ? label.getText() : null;
+    }
 
-	@Override
-	@Nonnull
-	public PsiReference[] getReferences()
-	{
-		final String text = getText();
+    @Override
+    @Nonnull
+    public PsiReference[] getReferences() {
+        final String text = getText();
 
-		if(!text.equals(myReferencesText) || myReferences == null)
-		{
-			final ASTNode label = getNode().findChildByType(JSTokenTypes.IDENTIFIER);
-			if(label != null)
-			{
-				myReferences = new PsiReference[]{new JSStatementWithLabelReferenceImpl.LabelReference(label.getPsi())};
-			}
-			else
-			{
-				myReferences = PsiReference.EMPTY_ARRAY;
-			}
-			myReferencesText = text;
-		}
-		return myReferences;
-	}
+        if (!text.equals(myReferencesText) || myReferences == null) {
+            final ASTNode label = getNode().findChildByType(JSTokenTypes.IDENTIFIER);
+            if (label != null) {
+                myReferences = new PsiReference[]{new JSStatementWithLabelReferenceImpl.LabelReference(label.getPsi())};
+            }
+            else {
+                myReferences = PsiReference.EMPTY_ARRAY;
+            }
+            myReferencesText = text;
+        }
+        return myReferences;
+    }
 
-	private class LabelReference implements PsiReference
-	{
-		private PsiElement labelNode;
+    private class LabelReference implements PsiReference {
+        private PsiElement labelNode;
 
-		LabelReference(PsiElement _labelNode)
-		{
-			labelNode = _labelNode;
-		}
+        LabelReference(PsiElement _labelNode) {
+            labelNode = _labelNode;
+        }
 
-		@Override
-		public PsiElement getElement()
-		{
-			return JSStatementWithLabelReferenceImpl.this;
-		}
+        @Override
+        public PsiElement getElement() {
+            return JSStatementWithLabelReferenceImpl.this;
+        }
 
-		@Override
-		public TextRange getRangeInElement()
-		{
-			final int startOffsetInParent = labelNode.getStartOffsetInParent();
-			return new TextRange(startOffsetInParent, startOffsetInParent + labelNode.getTextLength());
-		}
+        @Override
+        public TextRange getRangeInElement() {
+            final int startOffsetInParent = labelNode.getStartOffsetInParent();
+            return new TextRange(startOffsetInParent, startOffsetInParent + labelNode.getTextLength());
+        }
 
-		@Override
-		@Nullable
-		public PsiElement resolve()
-		{
-			final PsiElement[] result = new PsiElement[1];
+        @Override
+        @Nullable
+        public PsiElement resolve() {
+            final PsiElement[] result = new PsiElement[1];
 
-			processElements(new PsiElementProcessor<JSLabeledStatement>()
-			{
-				private final String label = getCanonicalText();
+            processElements(new PsiElementProcessor<>() {
+                private final String label = getCanonicalText();
 
-				@Override
-				public boolean execute(final JSLabeledStatement element)
-				{
-					if(label.equals(element.getLabel()))
-					{
-						result[0] = element;
-						return false;
-					}
-					return true;
-				}
-			});
+                @Override
+                public boolean execute(final JSLabeledStatement element) {
+                    if (label.equals(element.getLabel())) {
+                        result[0] = element;
+                        return false;
+                    }
+                    return true;
+                }
+            });
 
-			return result[0];
-		}
+            return result[0];
+        }
 
-		@Override
-		public String getCanonicalText()
-		{
-			return labelNode.getText();
-		}
+        @Override
+        public String getCanonicalText() {
+            return labelNode.getText();
+        }
 
-		@Override
-		public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException
-		{
-			JSChangeUtil.doIdentifierReplacement(getElement(), labelNode, newElementName);
-			return getElement();
-		}
+        @Override
+        public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
+            JSChangeUtil.doIdentifierReplacement(getElement(), labelNode, newElementName);
+            return getElement();
+        }
 
-		@Override
-		public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException
-		{
-			return null;
-		}
+        @Override
+        public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
+            return null;
+        }
 
-		@Override
-		public boolean isReferenceTo(PsiElement element)
-		{
-			return getManager().areElementsEquivalent(resolve(), element);
-		}
+        @Override
+        public boolean isReferenceTo(PsiElement element) {
+            return getManager().areElementsEquivalent(resolve(), element);
+        }
 
-		@Override
-		public Object[] getVariants()
-		{
-			final List<String> labels = new ArrayList<String>(1);
-			processElements(new PsiElementProcessor<JSLabeledStatement>()
-			{
-				@Override
-				public boolean execute(final JSLabeledStatement element)
-				{
-					labels.add(element.getLabel());
-					return true;
-				}
-			});
-			return ArrayUtil.toStringArray(labels);
-		}
+        @Override
+        public Object[] getVariants() {
+            final List<String> labels = new ArrayList<>(1);
+            processElements(element -> {
+                labels.add(element.getLabel());
+                return true;
+            });
+            return ArrayUtil.toStringArray(labels);
+        }
 
-		private void processElements(PsiElementProcessor<JSLabeledStatement> processor)
-		{
-			PsiElement run = getParent();
-			while(run != null)
-			{
-				if(run instanceof JSLabeledStatement)
-				{
-					if(!processor.execute((JSLabeledStatement) run))
-					{
-						return;
-					}
-				}
+        private void processElements(PsiElementProcessor<JSLabeledStatement> processor) {
+            PsiElement run = getParent();
+            while (run != null) {
+                if (run instanceof JSLabeledStatement) {
+                    if (!processor.execute((JSLabeledStatement)run)) {
+                        return;
+                    }
+                }
 
-				if(run instanceof JSFunction)
-				{
-					break;
-				}
-				run = run.getParent();
-			}
-		}
+                if (run instanceof JSFunction) {
+                    break;
+                }
+                run = run.getParent();
+            }
+        }
 
-		@Override
-		public boolean isSoft()
-		{
-			return false;
-		}
-	}
+        @Override
+        public boolean isSoft() {
+            return false;
+        }
+    }
 }

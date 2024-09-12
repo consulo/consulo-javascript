@@ -31,44 +31,40 @@ import jakarta.annotation.Nonnull;
 /**
  * @by Maxim.Mossienko
  */
-public class JSUseNamespaceDirectiveImpl extends JSStubbedStatementImpl<JSUseNamespaceDirectiveStub> implements JSUseNamespaceDirective
-{
-	public JSUseNamespaceDirectiveImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSUseNamespaceDirectiveImpl extends JSStubbedStatementImpl<JSUseNamespaceDirectiveStub> implements JSUseNamespaceDirective {
+    public JSUseNamespaceDirectiveImpl(final ASTNode node) {
+        super(node);
+    }
 
-	public JSUseNamespaceDirectiveImpl(final JSUseNamespaceDirectiveStub stub)
-	{
-		super(stub, JSElementTypes.USE_NAMESPACE_DIRECTIVE);
-	}
+    public JSUseNamespaceDirectiveImpl(final JSUseNamespaceDirectiveStub stub) {
+        super(stub, JSElementTypes.USE_NAMESPACE_DIRECTIVE);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSUseNamespaceDirective(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSUseNamespaceDirective(this);
+    }
 
-	@Override
-	public String getNamespaceToBeUsed()
-	{
-		final JSUseNamespaceDirectiveStub stub = getStub();
-		if(stub != null)
-		{
-			return stub.getNamespaceToUse();
-		}
-		final ASTNode node = getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
-		return node != null ? node.getText() : null;
-	}
+    @Override
+    public String getNamespaceToBeUsed() {
+        final JSUseNamespaceDirectiveStub stub = getStub();
+        if (stub != null) {
+            return stub.getNamespaceToUse();
+        }
+        final ASTNode node = getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
+        return node != null ? node.getText() : null;
+    }
 
-	@Override
-	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent,
-									   @Nonnull PsiElement place)
-	{
-		if(processor instanceof ResolveProcessor && ((ResolveProcessor) processor).lookingForUseNamespaces())
-		{
-			return processor.execute(this, state);
-		}
-		return true;
-	}
+    @Override
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+		@Nonnull ResolveState state,
+		PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        if (processor instanceof ResolveProcessor resolveProcessor && resolveProcessor.lookingForUseNamespaces()) {
+            return processor.execute(this, state);
+        }
+        return true;
+    }
 }

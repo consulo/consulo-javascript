@@ -19,7 +19,8 @@ public class RegExInputVerifier extends InputVerifier {
             if (formatter != null) {
                 try {
                     formatter.stringToValue(ftf.getText());
-                } catch (final ParseException e) {
+                }
+                catch (final ParseException e) {
                     SwingUtilities.invokeLater(
                         () -> Messages.showErrorDialog(e.getMessage(), InspectionJSLocalize.malformedNamingPatternAlert().get())
                     );

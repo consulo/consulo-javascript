@@ -35,61 +35,61 @@ import consulo.language.psi.stub.StubInputStream;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Mar 25, 2008
- *         Time: 10:30:07 PM
+ * Date: Mar 25, 2008
+ * Time: 10:30:07 PM
  */
-public class JSParameterElementType extends JSStubElementType<JSParameterStub, JSParameter>
-{
-	public JSParameterElementType()
-	{
-		super("FORMAL_PARAMETER");
-	}
+public class JSParameterElementType extends JSStubElementType<JSParameterStub, JSParameter> {
+    public JSParameterElementType() {
+        super("FORMAL_PARAMETER");
+    }
 
-	@Nonnull
-	@Override
-	public PsiElement createElement(@Nonnull ASTNode astNode)
-	{
-		return new JSParameterImpl(astNode);
-	}
+    @Nonnull
+    @Override
+    public PsiElement createElement(@Nonnull ASTNode astNode) {
+        return new JSParameterImpl(astNode);
+    }
 
-	@Override
-	public JSParameter createPsi(@Nonnull JSParameterStub stub)
-	{
-		return new JSParameterImpl(stub);
-	}
+    @Override
+    public JSParameter createPsi(@Nonnull JSParameterStub stub) {
+        return new JSParameterImpl(stub);
+    }
 
-	@RequiredReadAction
-	@Override
-	public JSParameterStub createStub(@Nonnull JSParameter psi, StubElement parentStub)
-	{
-		String name = psi.getName();
-		int flags = JSParameterStubImpl.buildFlags(psi);
-		String typeString = psi.getTypeString();
-		String initializerText = psi.getInitializerText();
-		String qualifiedName = psi.getQualifiedName();
-		return new JSParameterStubImpl(name, flags, typeString, initializerText, qualifiedName, parentStub, this);
-	}
+    @RequiredReadAction
+    @Override
+    public JSParameterStub createStub(@Nonnull JSParameter psi, StubElement parentStub) {
+        String name = psi.getName();
+        int flags = JSParameterStubImpl.buildFlags(psi);
+        String typeString = psi.getTypeString();
+        String initializerText = psi.getInitializerText();
+        String qualifiedName = psi.getQualifiedName();
+        return new JSParameterStubImpl(name, flags, typeString, initializerText, qualifiedName, parentStub, this);
+    }
 
-	@Override
-	public void serialize(@Nonnull JSParameterStub stub, @Nonnull StubOutputStream dataStream) throws IOException
-	{
-		dataStream.writeName(stub.getName());
-		dataStream.writeVarInt(stub.getFlags());
-		dataStream.writeName(stub.getTypeString());
-		dataStream.writeName(stub.getInitializerText());
-		dataStream.writeName(stub.getQualifiedName());
-	}
+    @Override
+    public void serialize(@Nonnull JSParameterStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+        dataStream.writeName(stub.getName());
+        dataStream.writeVarInt(stub.getFlags());
+        dataStream.writeName(stub.getTypeString());
+        dataStream.writeName(stub.getInitializerText());
+        dataStream.writeName(stub.getQualifiedName());
+    }
 
-	@Nonnull
-	@Override
-	public JSParameterStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
-	{
-		StringRef nameRef = dataStream.readName();
-		int flags = dataStream.readVarInt();
-		StringRef typeRef = dataStream.readName();
-		StringRef initializerRef = dataStream.readName();
-		StringRef qualifiedRef = dataStream.readName();
-		return new JSParameterStubImpl(StringRef.toString(nameRef), flags, StringRef.toString(typeRef), StringRef.toString(initializerRef),
-				StringRef.toString(qualifiedRef), parentStub, this);
-	}
+    @Nonnull
+    @Override
+    public JSParameterStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+        StringRef nameRef = dataStream.readName();
+        int flags = dataStream.readVarInt();
+        StringRef typeRef = dataStream.readName();
+        StringRef initializerRef = dataStream.readName();
+        StringRef qualifiedRef = dataStream.readName();
+        return new JSParameterStubImpl(
+            StringRef.toString(nameRef),
+            flags,
+            StringRef.toString(typeRef),
+            StringRef.toString(initializerRef),
+            StringRef.toString(qualifiedRef),
+            parentStub,
+            this
+        );
+    }
 }

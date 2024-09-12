@@ -33,44 +33,36 @@ import jakarta.annotation.Nonnull;
  * Time: 8:47:58 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSVariableImpl extends JSVariableBaseImpl<JSVariableStub, JSVariable>
-{
-	public JSVariableImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSVariableImpl extends JSVariableBaseImpl<JSVariableStub, JSVariable> {
+    public JSVariableImpl(final ASTNode node) {
+        super(node);
+    }
 
-	public JSVariableImpl(final JSVariableStub stub)
-	{
-		super(stub, JSElementTypes.VARIABLE);
-	}
+    public JSVariableImpl(final JSVariableStub stub) {
+        super(stub, JSElementTypes.VARIABLE);
+    }
 
-	@Override
-	public PsiElement getNavigationElement()
-	{
-		PsiElement parent = getParent().getParent();
-		if(parent instanceof JSClass)
-		{
-			PsiElement parentOriginalElement = parent.getNavigationElement();
+    @Override
+    public PsiElement getNavigationElement() {
+        PsiElement parent = getParent().getParent();
+        if (parent instanceof JSClass) {
+            PsiElement parentOriginalElement = parent.getNavigationElement();
 
-			if(parentOriginalElement != parent)
-			{
-				JSVariable jsVariable = ((JSClass) parentOriginalElement).findFieldByName(getName());
-				return jsVariable != null ? jsVariable : this;
-			}
-		}
-		return JSPsiImplUtils.findTopLevelNavigatableElement(this);
-	}
+            if (parentOriginalElement != parent) {
+                JSVariable jsVariable = ((JSClass)parentOriginalElement).findFieldByName(getName());
+                return jsVariable != null ? jsVariable : this;
+            }
+        }
+        return JSPsiImplUtils.findTopLevelNavigatableElement(this);
+    }
 
-	@Override
-	public PsiElement setName(@Nonnull String name) throws IncorrectOperationException
-	{
-		String oldName = getName();
-		PsiElement element = super.setName(name);
-		if(getParent().getParent() instanceof JSPackageStatement)
-		{
-			JSPsiImplUtils.updateFileName(this, name, oldName);
-		}
-		return element;
-	}
+    @Override
+    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+        String oldName = getName();
+        PsiElement element = super.setName(name);
+        if (getParent().getParent() instanceof JSPackageStatement) {
+            JSPsiImplUtils.updateFileName(this, name, oldName);
+        }
+        return element;
+    }
 }

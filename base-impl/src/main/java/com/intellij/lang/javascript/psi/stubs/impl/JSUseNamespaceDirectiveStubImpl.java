@@ -25,22 +25,19 @@ import consulo.language.psi.stub.StubElement;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jun 6, 2008
- *         Time: 8:00:52 PM
+ * Date: Jun 6, 2008
+ * Time: 8:00:52 PM
  */
-public class JSUseNamespaceDirectiveStubImpl extends StubBase<JSUseNamespaceDirective> implements JSUseNamespaceDirectiveStub
-{
-	private String myNamespaceToUse;
+public class JSUseNamespaceDirectiveStubImpl extends StubBase<JSUseNamespaceDirective> implements JSUseNamespaceDirectiveStub {
+    private String myNamespaceToUse;
 
-	public JSUseNamespaceDirectiveStubImpl(String namespaceToUse, StubElement parent, IStubElementType elementType)
-	{
-		super(parent, elementType);
-		myNamespaceToUse = namespaceToUse;
-	}
+    public JSUseNamespaceDirectiveStubImpl(String namespaceToUse, StubElement parent, IStubElementType elementType) {
+        super(parent, elementType);
+        myNamespaceToUse = namespaceToUse;
+    }
 
-	@Override
-	public String getNamespaceToUse()
-	{
-		return myNamespaceToUse;
-	}
+    @Override
+    public String getNamespaceToUse() {
+        return myNamespaceToUse;
+    }
 }

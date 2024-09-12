@@ -32,43 +32,39 @@ import jakarta.annotation.Nonnull;
  * Date: Jan 30, 2005
  * Time: 11:36:30 PM
  */
-public class JSObjectLiteralExpressionImpl extends JSExpressionImpl implements JSObjectLiteralExpression
-{
-	public JSObjectLiteralExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSObjectLiteralExpressionImpl extends JSExpressionImpl implements JSObjectLiteralExpression {
+    public JSObjectLiteralExpressionImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSProperty[] getProperties()
-	{
-		return findChildrenByClass(JSProperty.class);
-	}
+    @Override
+    public JSProperty[] getProperties() {
+        return findChildrenByClass(JSProperty.class);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSObjectLiteralExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSObjectLiteralExpression(this);
+    }
 
-	@Override
-	public boolean processDeclarations(@Nonnull final PsiScopeProcessor processor, @Nonnull final ResolveState state, final PsiElement lastParent,
-									   @Nonnull final PsiElement place)
-	{
-		if(lastParent == null || !(place instanceof JSProperty))
-		{
-			return true;
-		}
-		final JSProperty[] props = getProperties();
+    @Override
+    public boolean processDeclarations(
+        @Nonnull final PsiScopeProcessor processor,
+        @Nonnull final ResolveState state,
+        final PsiElement lastParent,
+        @Nonnull final PsiElement place
+    ) {
+        if (lastParent == null || !(place instanceof JSProperty)) {
+            return true;
+        }
+        final JSProperty[] props = getProperties();
 
-		for(JSProperty property : props)
-		{
-			if(!processor.execute(property, state))
-			{
-				return false;
-			}
-		}
+        for (JSProperty property : props) {
+            if (!processor.execute(property, state)) {
+                return false;
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 }

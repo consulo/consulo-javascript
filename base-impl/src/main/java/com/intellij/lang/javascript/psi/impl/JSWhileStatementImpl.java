@@ -29,28 +29,23 @@ import jakarta.annotation.Nonnull;
  * Date: Jan 30, 2005
  * Time: 10:15:13 PM
  */
-public class JSWhileStatementImpl extends JSStatementImpl implements JSWhileStatement
-{
-	public JSWhileStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSWhileStatementImpl extends JSStatementImpl implements JSWhileStatement {
+    public JSWhileStatementImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getCondition()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression getCondition() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	public JSStatement getBody()
-	{
-		return findChildByClass(JSStatement.class);
-	}
+    @Override
+    public JSStatement getBody() {
+        return findChildByClass(JSStatement.class);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSWhileStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSWhileStatement(this);
+    }
 }

@@ -21,7 +21,7 @@ public class BoolUtils {
         if (!(exp instanceof JSPrefixExpression)) {
             return false;
         }
-        final JSPrefixExpression prefixExp = (JSPrefixExpression) exp;
+        final JSPrefixExpression prefixExp = (JSPrefixExpression)exp;
         final IElementType sign = prefixExp.getOperationSign();
         return JSTokenTypes.EXCL.equals(sign);
     }
@@ -45,29 +45,33 @@ public class BoolUtils {
 
     public static String getNegatedExpressionText(@Nonnull JSExpression condition) {
         if (condition instanceof JSParenthesizedExpression) {
-            final JSExpression contentExpression = ((JSParenthesizedExpression) condition).getInnerExpression();
+            final JSExpression contentExpression = ((JSParenthesizedExpression)condition).getInnerExpression();
             return '(' + getNegatedExpressionText(contentExpression) + ')';
-        } else if (BoolUtils.isNegation(condition)) {
+        }
+        else if (BoolUtils.isNegation(condition)) {
             final JSExpression negated = getNegated(condition);
             return negated.getText();
-        } else if (ComparisonUtils.isComparison(condition)) {
-            final JSBinaryExpression binaryExpression = (JSBinaryExpression) condition;
+        }
+        else if (ComparisonUtils.isComparison(condition)) {
+            final JSBinaryExpression binaryExpression = (JSBinaryExpression)condition;
             final IElementType sign = binaryExpression.getOperationSign();
             final String negatedComparison = ComparisonUtils.getNegatedComparison(sign);
             final JSExpression lhs = binaryExpression.getLOperand();
             final JSExpression rhs = binaryExpression.getROperand();
             assert rhs != null;
             return lhs.getText() + negatedComparison + rhs.getText();
-        } else if (ParenthesesUtils.getPrecendence(condition) >
-                ParenthesesUtils.PREFIX_PRECEDENCE) {
+        }
+        else if (ParenthesesUtils.getPrecendence(condition) >
+            ParenthesesUtils.PREFIX_PRECEDENCE) {
             return "!(" + condition.getText() + ')';
-        } else {
+        }
+        else {
             return '!' + condition.getText();
         }
     }
 
     private static JSExpression getNegated(@Nonnull JSExpression exp) {
-        final JSPrefixExpression prefixExp = (JSPrefixExpression) exp;
+        final JSPrefixExpression prefixExp = (JSPrefixExpression)exp;
         final JSExpression operand = prefixExp.getExpression();
         return ParenthesesUtils.stripParentheses(operand);
     }

@@ -41,112 +41,98 @@ import jakarta.annotation.Nullable;
  * Time: 9:12:51 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSParameterImpl extends JSVariableBaseImpl<JSParameterStub, JSParameter> implements JSParameter
-{
-	public JSParameterImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSParameterImpl extends JSVariableBaseImpl<JSParameterStub, JSParameter> implements JSParameter {
+    public JSParameterImpl(final ASTNode node) {
+        super(node);
+    }
 
-	public JSParameterImpl(final JSParameterStub stub)
-	{
-		super(stub, JSElementTypes.FORMAL_PARAMETER);
-	}
+    public JSParameterImpl(final JSParameterStub stub) {
+        super(stub, JSElementTypes.FORMAL_PARAMETER);
+    }
 
-	@Override
-	public JSFunction getDeclaringFunction()
-	{
-		return (JSFunction) getNode().getTreeParent().getTreeParent().getPsi();
-	}
+    @Override
+    public JSFunction getDeclaringFunction() {
+        return (JSFunction)getNode().getTreeParent().getTreeParent().getPsi();
+    }
 
-	@Override
-	@RequiredReadAction
-	public boolean isRest()
-	{
-		final JSParameterStub parameterStub = getStub();
-		if(parameterStub != null)
-		{
-			return parameterStub.isRest();
-		}
-		return getRestElement() != null;
-	}
+    @Override
+    @RequiredReadAction
+    public boolean isRest() {
+        final JSParameterStub parameterStub = getStub();
+        if (parameterStub != null) {
+            return parameterStub.isRest();
+        }
+        return getRestElement() != null;
+    }
 
-	@Nullable
-	@Override
-	@RequiredReadAction
-	public PsiElement getRestElement()
-	{
-		return findChildByType(JSTokenTypes.DOT_DOT_DOT);
-	}
+    @Nullable
+    @Override
+    @RequiredReadAction
+    public PsiElement getRestElement() {
+        return findChildByType(JSTokenTypes.DOT_DOT_DOT);
+    }
 
-	@Override
-	public boolean isOptional()
-	{
-		final JSParameterStub parameterStub = getStub();
-		if(parameterStub != null)
-		{
-			return parameterStub.isOptional();
-		}
-		if(getInitializer() != null)
-		{
-			return true;
-		}
+    @Override
+    public boolean isOptional() {
+        final JSParameterStub parameterStub = getStub();
+        if (parameterStub != null) {
+            return parameterStub.isOptional();
+        }
+        if (getInitializer() != null) {
+            return true;
+        }
 
-		return JSDocumentationUtils.findOptionalStatusFromComments(this);
-	}
+        return JSDocumentationUtils.findOptionalStatusFromComments(this);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSParameter(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSParameter(this);
+    }
 
-	@Override
-	public JSAttributeList getAttributeList()
-	{
-		return null;
-	}
+    @Override
+    public JSAttributeList getAttributeList() {
+        return null;
+    }
 
-	@Override
-	public void delete() throws IncorrectOperationException
-	{
-		final ASTNode myNode = getNode();
-		final ASTNode parent = myNode.getTreeParent();
+    @Override
+    public void delete() throws IncorrectOperationException {
+        final ASTNode myNode = getNode();
+        final ASTNode parent = myNode.getTreeParent();
 
-		if(parent.getElementType() == JSElementTypes.PARAMETER_LIST)
-		{
-			JSChangeUtil.removeRangeWithRemovalOfCommas(myNode, parent);
-			return;
-		}
+        if (parent.getElementType() == JSElementTypes.PARAMETER_LIST) {
+            JSChangeUtil.removeRangeWithRemovalOfCommas(myNode, parent);
+            return;
+        }
 
-		throw new IncorrectOperationException("Cannot delete variable from parent : " + parent.getElementType());
-	}
+        throw new IncorrectOperationException("Cannot delete variable from parent : " + parent.getElementType());
+    }
 
-	@Override
-	protected String doGetType()
-	{
-		String s = super.doGetType();
+    @Override
+    protected String doGetType() {
+        String s = super.doGetType();
 
-		if(s == null)
-		{
-			final ASTNode astNode = getNode();
-			final ASTNode anchor = astNode.findChildByType(JSTokenTypes.INSTANCEOF_KEYWORD);
+        if (s == null) {
+            final ASTNode astNode = getNode();
+            final ASTNode anchor = astNode.findChildByType(JSTokenTypes.INSTANCEOF_KEYWORD);
 
-			if(anchor != null)
-			{
-				ASTNode type = astNode.findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET, anchor);
-				if(type != null)
-				{
-					s = type.getText();
-				}
-			}
-		}
-		return s;
-	}
+            if (anchor != null) {
+                ASTNode type = astNode.findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET, anchor);
+                if (type != null) {
+                    s = type.getText();
+                }
+            }
+        }
+        return s;
+    }
 
-	@Override
-	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent, @Nonnull PsiElement place)
-	{
-		return processor.execute(this, state);
-	}
+    @Override
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        return processor.execute(this, state);
+    }
 }

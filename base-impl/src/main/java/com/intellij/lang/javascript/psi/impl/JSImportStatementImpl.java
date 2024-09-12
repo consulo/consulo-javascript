@@ -30,40 +30,37 @@ import jakarta.annotation.Nonnull;
 /**
  * @by Maxim.Mossienko
  */
-public class JSImportStatementImpl extends JSStubbedStatementImpl<JSImportStatementStub> implements JSImportStatement
-{
-	public JSImportStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSImportStatementImpl extends JSStubbedStatementImpl<JSImportStatementStub> implements JSImportStatement {
+    public JSImportStatementImpl(final ASTNode node) {
+        super(node);
+    }
 
-	public JSImportStatementImpl(final JSImportStatementStub stub)
-	{
-		super(stub, JSElementTypes.ES4_IMPORT_STATEMENT);
-	}
+    public JSImportStatementImpl(final JSImportStatementStub stub) {
+        super(stub, JSElementTypes.ES4_IMPORT_STATEMENT);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSImportStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSImportStatement(this);
+    }
 
-	@Override
-	public boolean processDeclarations(@Nonnull final PsiScopeProcessor processor, @Nonnull final ResolveState state, final PsiElement lastParent,
-									   @Nonnull final PsiElement place)
-	{
-		return true;
-	}
+    @Override
+    public boolean processDeclarations(
+        @Nonnull final PsiScopeProcessor processor,
+        @Nonnull final ResolveState state,
+        final PsiElement lastParent,
+        @Nonnull final PsiElement place
+    ) {
+        return true;
+    }
 
-	@Override
-	public String getImportText()
-	{
-		final JSImportStatementStub stub = getStub();
-		if(stub != null)
-		{
-			return stub.getImportText();
-		}
-		final ASTNode node = getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
-		return node != null ? node.getText() : null;
-	}
+    @Override
+    public String getImportText() {
+        final JSImportStatementStub stub = getStub();
+        if (stub != null) {
+            return stub.getImportText();
+        }
+        final ASTNode node = getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
+        return node != null ? node.getText() : null;
+    }
 }

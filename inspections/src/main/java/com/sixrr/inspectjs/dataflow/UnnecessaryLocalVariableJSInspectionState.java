@@ -13,29 +13,29 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 13/03/2023
  */
-public class UnnecessaryLocalVariableJSInspectionState implements InspectionToolState<UnnecessaryLocalVariableJSInspectionState>
-{
-	public boolean m_ignoreImmediatelyReturnedVariables = false;
+public class UnnecessaryLocalVariableJSInspectionState implements InspectionToolState<UnnecessaryLocalVariableJSInspectionState> {
+    public boolean m_ignoreImmediatelyReturnedVariables = false;
 
-	@Nullable
-	@Override
-	public UnnamedConfigurable createConfigurable()
-	{
-		ConfigurableBuilder<ConfigurableBuilderState> builder = ConfigurableBuilder.newBuilder();
-		builder.checkBox(InspectionJSLocalize.redundantLocalVariableIgnoreOption(), () -> m_ignoreImmediatelyReturnedVariables, b -> m_ignoreImmediatelyReturnedVariables = b);
-		return builder.buildUnnamed();
-	}
+    @Nullable
+    @Override
+    public UnnamedConfigurable createConfigurable() {
+        ConfigurableBuilder<ConfigurableBuilderState> builder = ConfigurableBuilder.newBuilder();
+        builder.checkBox(
+            InspectionJSLocalize.redundantLocalVariableIgnoreOption(),
+            () -> m_ignoreImmediatelyReturnedVariables,
+            b -> m_ignoreImmediatelyReturnedVariables = b
+        );
+        return builder.buildUnnamed();
+    }
 
-	@Nullable
-	@Override
-	public UnnecessaryLocalVariableJSInspectionState getState()
-	{
-		return this;
-	}
+    @Nullable
+    @Override
+    public UnnecessaryLocalVariableJSInspectionState getState() {
+        return this;
+    }
 
-	@Override
-	public void loadState(UnnecessaryLocalVariableJSInspectionState state)
-	{
-		XmlSerializerUtil.copyBean(state, this);
-	}
+    @Override
+    public void loadState(UnnecessaryLocalVariableJSInspectionState state) {
+        XmlSerializerUtil.copyBean(state, this);
+    }
 }

@@ -24,58 +24,57 @@ import consulo.language.psi.stub.StubElement;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Mar 26, 2008
- *         Time: 11:29:19 PM
+ * Date: Mar 26, 2008
+ * Time: 11:29:19 PM
  */
-public abstract class JSVariableStubBaseImpl<T extends JSVariable> extends JSQualifiedObjectStubBase<T> implements JSVariableStubBase<T>
-{
-	private String myTypeString;
-	private static final int DEPRECATED_MASK = 1;
-	public static final int CONST_MASK = 2;
-	private static final int LOCAL_MASK = 4;
-	static final int LAST_USED_MASK = LOCAL_MASK;
-	private String myInitializerText;
+public abstract class JSVariableStubBaseImpl<T extends JSVariable> extends JSQualifiedObjectStubBase<T> implements JSVariableStubBase<T> {
+    private String myTypeString;
+    private static final int DEPRECATED_MASK = 1;
+    public static final int CONST_MASK = 2;
+    private static final int LOCAL_MASK = 4;
+    static final int LAST_USED_MASK = LOCAL_MASK;
+    private String myInitializerText;
 
-	public JSVariableStubBaseImpl(final String name, int flags, String type, String initial, String qName, final StubElement parentStub,
-			final IStubElementType elementType)
-	{
-		super(name, flags, qName, parentStub, elementType);
-		myTypeString = type;
-		myInitializerText = initial;
-	}
+    public JSVariableStubBaseImpl(
+        final String name,
+        int flags,
+        String type,
+        String initial,
+        String qName,
+        final StubElement parentStub,
+        final IStubElementType elementType
+    ) {
+        super(name, flags, qName, parentStub, elementType);
+        myTypeString = type;
+        myInitializerText = initial;
+    }
 
-	public static int buildFlags(final JSVariable clazz)
-	{
-		return (clazz.isDeprecated() ? DEPRECATED_MASK : 0) | (clazz.isConst() ? CONST_MASK : clazz.isLocal() ? LOCAL_MASK : 0);
-	}
+    public static int buildFlags(final JSVariable clazz) {
+        return (clazz.isDeprecated() ? DEPRECATED_MASK : 0) | (clazz.isConst() ? CONST_MASK : clazz.isLocal() ? LOCAL_MASK : 0);
+    }
 
-	@Override
-	public String getTypeString()
-	{
-		return myTypeString;
-	}
+    @Override
+    public String getTypeString() {
+        return myTypeString;
+    }
 
-	@Override
-	public boolean isDeprecated()
-	{
-		return (myFlags & DEPRECATED_MASK) != 0;
-	}
+    @Override
+    public boolean isDeprecated() {
+        return (myFlags & DEPRECATED_MASK) != 0;
+    }
 
-	@Override
-	public boolean isConst()
-	{
-		return (myFlags & CONST_MASK) != 0;
-	}
+    @Override
+    public boolean isConst() {
+        return (myFlags & CONST_MASK) != 0;
+    }
 
-	@Override
-	public String getInitializerText()
-	{
-		return myInitializerText;
-	}
+    @Override
+    public String getInitializerText() {
+        return myInitializerText;
+    }
 
-	@Override
-	public boolean isLocal()
-	{
-		return (myFlags & LOCAL_MASK) != 0;
-	}
+    @Override
+    public boolean isLocal() {
+        return (myFlags & LOCAL_MASK) != 0;
+    }
 }

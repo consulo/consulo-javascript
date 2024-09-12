@@ -31,38 +31,28 @@ import jakarta.annotation.Nonnull;
  * Time: 10:11:23 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSCaseClauseImpl extends JSElementImpl implements JSCaseClause
-{
-	public JSCaseClauseImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSCaseClauseImpl extends JSElementImpl implements JSCaseClause {
+    public JSCaseClauseImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public boolean isDefault()
-	{
-		return getNode().findChildByType(JSTokenTypes.DEFAULT_KEYWORD) != null;
-	}
+    @Override
+    public boolean isDefault() {
+        return getNode().findChildByType(JSTokenTypes.DEFAULT_KEYWORD) != null;
+    }
 
-	@Override
-	public JSExpression getCaseExpression()
-	{
-		if(isDefault())
-		{
-			return null;
-		}
-		return findChildByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression getCaseExpression() {
+        return isDefault() ? null : findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	public JSStatement[] getStatements()
-	{
-		return findChildrenByClass(JSStatement.class);
-	}
+    @Override
+    public JSStatement[] getStatements() {
+        return findChildrenByClass(JSStatement.class);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSCaseClause(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSCaseClause(this);
+    }
 }

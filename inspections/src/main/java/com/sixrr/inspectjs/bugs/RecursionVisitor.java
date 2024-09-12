@@ -17,14 +17,15 @@ public class RecursionVisitor extends JSRecursiveElementVisitor {
         functionName = function.getName();
     }
 
-    @Override public void visitElement(@Nonnull PsiElement element) {
+    @Override
+    public void visitElement(@Nonnull PsiElement element) {
         if (!recursive) {
             super.visitElement(element);
         }
     }
 
-    @Override public void visitJSCallExpression(
-            @Nonnull JSCallExpression call) {
+    @Override
+    public void visitJSCallExpression(@Nonnull JSCallExpression call) {
         if (recursive) {
             return;
         }
@@ -32,7 +33,7 @@ public class RecursionVisitor extends JSRecursiveElementVisitor {
         final JSExpression methodExpression = call.getMethodExpression();
 
         // method expression could be e.g. a["1"]
-        if (!(methodExpression instanceof JSReferenceExpression)){
+        if (!(methodExpression instanceof JSReferenceExpression)) {
             return;
         }
         final JSReferenceExpression functionExpression = (JSReferenceExpression)methodExpression;

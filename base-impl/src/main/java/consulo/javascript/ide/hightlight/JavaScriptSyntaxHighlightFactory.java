@@ -15,27 +15,22 @@ import jakarta.annotation.Nonnull;
  * @since 05.03.2015
  */
 @ExtensionImpl
-public class JavaScriptSyntaxHighlightFactory extends LanguageVersionableSyntaxHighlighterFactory
-{
-	public JavaScriptSyntaxHighlightFactory()
-	{
-	}
+public class JavaScriptSyntaxHighlightFactory extends LanguageVersionableSyntaxHighlighterFactory {
+    public JavaScriptSyntaxHighlightFactory() {
+    }
 
-	@Nonnull
-	@Override
-	public Language getLanguage()
-	{
-		return JavaScriptLanguage.INSTANCE;
-	}
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return JavaScriptLanguage.INSTANCE;
+    }
 
-	@Nonnull
-	@Override
-	public SyntaxHighlighter getSyntaxHighlighter(@Nonnull LanguageVersion languageVersion)
-	{
-		if(languageVersion instanceof BaseJavaScriptLanguageVersion)
-		{
-			return ((BaseJavaScriptLanguageVersion) languageVersion).getSyntaxHighlighter();
-		}
-		throw new IllegalArgumentException(languageVersion.toString());
-	}
+    @Nonnull
+    @Override
+    public SyntaxHighlighter getSyntaxHighlighter(@Nonnull LanguageVersion languageVersion) {
+        if (languageVersion instanceof BaseJavaScriptLanguageVersion baseJavaScriptLanguageVersion) {
+            return baseJavaScriptLanguageVersion.getSyntaxHighlighter();
+        }
+        throw new IllegalArgumentException(languageVersion.toString());
+    }
 }

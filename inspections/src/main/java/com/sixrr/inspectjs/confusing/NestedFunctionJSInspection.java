@@ -15,71 +15,58 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 @ExtensionImpl
-public class NestedFunctionJSInspection extends JavaScriptInspection
-{
-	@Override
-	@Nonnull
-	public String getDisplayName()
-	{
-		return InspectionJSLocalize.nestedFunctionDisplayName().get();
-	}
+public class NestedFunctionJSInspection extends JavaScriptInspection {
+    @Override
+    @Nonnull
+    public String getDisplayName() {
+        return InspectionJSLocalize.nestedFunctionDisplayName().get();
+    }
 
-	@Override
-	@Nonnull
-	public String getGroupDisplayName()
-	{
-		return JSGroupNames.CONFUSING_GROUP_NAME.get();
-	}
+    @Override
+    @Nonnull
+    public String getGroupDisplayName() {
+        return JSGroupNames.CONFUSING_GROUP_NAME.get();
+    }
 
-	@RequiredReadAction
-	@Override
-	@Nullable
-	protected String buildErrorString(Object state, Object... args)
-	{
-		final JSFunction function = (JSFunction) ((PsiElement) args[0]).getParent();
-		if (functionHasIdentifier(function))
-		{
-			return InspectionJSLocalize.nestedFunctionErrorString().get();
-		}
-		return InspectionJSLocalize.nestedAnonymousFunctionErrorString().get();
-	}
+    @RequiredReadAction
+    @Override
+    @Nullable
+    protected String buildErrorString(Object state, Object... args) {
+        final JSFunction function = (JSFunction)((PsiElement)args[0]).getParent();
+        if (functionHasIdentifier(function)) {
+            return InspectionJSLocalize.nestedFunctionErrorString().get();
+        }
+        return InspectionJSLocalize.nestedAnonymousFunctionErrorString().get();
+    }
 
+    @Nonnull
+    @Override
+    public InspectionToolState<?> createStateProvider() {
+        return new NestedFunctionJSInspectionState();
+    }
 
-	@Nonnull
-	@Override
-	public InspectionToolState<?> createStateProvider()
-	{
-		return new NestedFunctionJSInspectionState();
-	}
+    @Override
+    public BaseInspectionVisitor buildVisitor() {
+        return new Visitor();
+    }
 
-	@Override
-	public BaseInspectionVisitor buildVisitor()
-	{
-		return new Visitor();
-	}
+    private class Visitor extends BaseInspectionVisitor<NestedFunctionJSInspectionState> {
+        @Override
+        public void visitJSFunctionDeclaration(JSFunction function) {
+            super.visitJSFunctionDeclaration(function);
+            if (!myState.m_includeAnonymousFunctions && function.getName() == null) {
+                return;
+            }
+            final JSFunction containingFunction = PsiTreeUtil.getParentOfType(function, JSFunction.class, true);
+            if (containingFunction == null) {
+                return;
+            }
+            registerFunctionError(function);
+        }
 
-	private class Visitor extends BaseInspectionVisitor<NestedFunctionJSInspectionState>
-	{
-		@Override
-		public void visitJSFunctionDeclaration(JSFunction function)
-		{
-			super.visitJSFunctionDeclaration(function);
-			if(!myState.m_includeAnonymousFunctions && function.getName() == null)
-			{
-				return;
-			}
-			final JSFunction containingFunction = PsiTreeUtil.getParentOfType(function, JSFunction.class, true);
-			if(containingFunction == null)
-			{
-				return;
-			}
-			registerFunctionError(function);
-		}
-
-		@Override
-		public void visitJSFunctionExpression(final JSFunctionExpression node)
-		{
-			visitJSFunctionDeclaration(node.getFunction());
-		}
-	}
+        @Override
+        public void visitJSFunctionExpression(final JSFunctionExpression node) {
+            visitJSFunctionDeclaration(node.getFunction());
+        }
+    }
 }

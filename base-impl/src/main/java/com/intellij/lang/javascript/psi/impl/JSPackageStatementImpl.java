@@ -37,181 +37,148 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 
 import jakarta.annotation.Nonnull;
+
 import java.io.IOException;
 
 /**
  * @by Maxim.Mossienko
  */
-public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStatementStub> implements JSPackageStatement
-{
-	public JSPackageStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStatementStub> implements JSPackageStatement {
+    public JSPackageStatementImpl(final ASTNode node) {
+        super(node);
+    }
 
-	public JSPackageStatementImpl(final JSPackageStatementStub stub)
-	{
-		super(stub, JSElementTypes.PACKAGE_STATEMENT);
-	}
+    public JSPackageStatementImpl(final JSPackageStatementStub stub) {
+        super(stub, JSElementTypes.PACKAGE_STATEMENT);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSPackageStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSPackageStatement(this);
+    }
 
-	@Override
-	public String getName()
-	{
-		final JSPackageStatementStub stub = getStub();
-		if(stub != null)
-		{
-			return stub.getName();
-		}
-		final PsiElement node = getNameIdentifier();
-		if(node != null)
-		{
-			return ((JSReferenceExpression) node).getReferencedName();
-		}
-		return null;
-	}
+    @Override
+    public String getName() {
+        final JSPackageStatementStub stub = getStub();
+        if (stub != null) {
+            return stub.getName();
+        }
+        final PsiElement node = getNameIdentifier();
+        if (node != null) {
+            return ((JSReferenceExpression)node).getReferencedName();
+        }
+        return null;
+    }
 
-	@Override
-	public String getQualifiedName()
-	{
-		final JSPackageStatementStub stub = getStub();
-		if(stub != null)
-		{
-			return stub.getQualifiedName();
-		}
+    @Override
+    public String getQualifiedName() {
+        final JSPackageStatementStub stub = getStub();
+        if (stub != null) {
+            return stub.getQualifiedName();
+        }
 
-		final PsiElement node = getNameIdentifier();
-		if(node != null)
-		{
-			return node.getText();
-		}
-		return null;
-	}
+        final PsiElement node = getNameIdentifier();
+        if (node != null) {
+            return node.getText();
+        }
+        return null;
+    }
 
-	@Override
-	public JSSourceElement[] getStatements()
-	{
-		return getStubOrPsiChildren(JSElementTypes.SOURCE_ELEMENTS, JSSourceElement.EMPTY_ARRAY);
-	}
+    @Override
+    public JSSourceElement[] getStatements() {
+        return getStubOrPsiChildren(JSElementTypes.SOURCE_ELEMENTS, JSSourceElement.EMPTY_ARRAY);
+    }
 
-	@Override
-	public void setQualifiedName(final String expectedPackageNameFromFile)
-	{
-		doChangeName(getProject(), this, expectedPackageNameFromFile);
-	}
+    @Override
+    public void setQualifiedName(final String expectedPackageNameFromFile) {
+        doChangeName(getProject(), this, expectedPackageNameFromFile);
+    }
 
-	@Override
-	public PsiElement setName(@NonNls @Nonnull String name) throws IncorrectOperationException
-	{
-		VirtualFile virtualFile = getContainingFile().getVirtualFile();
-		String expectedPackageNameFromFile = JSResolveUtil.getExpectedPackageNameFromFile(virtualFile, getProject(), false);
-		if(expectedPackageNameFromFile != null && expectedPackageNameFromFile.equals(getQualifiedName()))
-		{
-			try
-			{
-				JSPsiImplUtils.doRenameParentDirectoryIfNeeded(virtualFile, name, this);
-			}
-			catch(IOException ex)
-			{
-				throw new IncorrectOperationException("", ex);
-			}
-		}
+    @Override
+    public PsiElement setName(@NonNls @Nonnull String name) throws IncorrectOperationException {
+        VirtualFile virtualFile = getContainingFile().getVirtualFile();
+        String expectedPackageNameFromFile =
+            JSResolveUtil.getExpectedPackageNameFromFile(virtualFile, getProject(), false);
+        if (expectedPackageNameFromFile != null && expectedPackageNameFromFile.equals(getQualifiedName())) {
+            try {
+                JSPsiImplUtils.doRenameParentDirectoryIfNeeded(virtualFile, name, this);
+            }
+            catch (IOException ex) {
+                throw new IncorrectOperationException("", ex);
+            }
+        }
 
-		PsiElement child = getNameIdentifier();
-		if(child instanceof JSReferenceExpression)
-		{
-			JSReferenceExpression expr = (JSReferenceExpression) child;
-			PsiElement element = expr.getReferenceNameElement();
-			if(element != null)
-			{
-				JSChangeUtil.doIdentifierReplacement(expr, element, name);
-			}
-		}
+        PsiElement child = getNameIdentifier();
+        if (child instanceof JSReferenceExpression expr) {
+            PsiElement element = expr.getReferenceNameElement();
+            if (element != null) {
+                JSChangeUtil.doIdentifierReplacement(expr, element, name);
+            }
+        }
 
-		return this;
-	}
+        return this;
+    }
 
-	@Override
-	public boolean processDeclarations(@Nonnull final PsiScopeProcessor processor, @Nonnull final ResolveState substitutor,
-			final PsiElement lastParent, @Nonnull final PsiElement place)
-	{
-		if(lastParent != null && lastParent.getParent() == this)
-		{
-			return JSImportHandlingUtil.tryResolveImports(processor, this, place);
-		}
-		else
-		{
-			return true;
-		}
-	}
+    @Override
+    public boolean processDeclarations(
+        @Nonnull final PsiScopeProcessor processor,
+        @Nonnull final ResolveState substitutor,
+        final PsiElement lastParent,
+        @Nonnull final PsiElement place
+    ) {
+        return !(lastParent != null && lastParent.getParent() == this)
+            || JSImportHandlingUtil.tryResolveImports(processor, this, place);
+    }
 
-	@Override
-	public PsiElement getNameIdentifier()
-	{
-		return findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
-	}
+    @Override
+    public PsiElement getNameIdentifier() {
+        return findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
+    }
 
-	@Override
-	public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException
-	{
-		if(JSChangeUtil.isStatementOrComment(element))
-		{
-			final PsiElement insertedElement = JSChangeUtil.doAddBefore(this, element, anchor);
-			CodeStyleManager.getInstance(getProject()).reformatNewlyAddedElement(getNode(), insertedElement.getNode());
-			return insertedElement;
-		}
-		return super.addBefore(element, anchor);
-	}
+    @Override
+    public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+        if (JSChangeUtil.isStatementOrComment(element)) {
+            final PsiElement insertedElement = JSChangeUtil.doAddBefore(this, element, anchor);
+            CodeStyleManager.getInstance(getProject()).reformatNewlyAddedElement(getNode(), insertedElement.getNode());
+            return insertedElement;
+        }
+        return super.addBefore(element, anchor);
+    }
 
-	@Override
-	public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException
-	{
-		if(JSChangeUtil.isStatementOrComment(element))
-		{
-			final PsiElement insertedElement = JSChangeUtil.doAddAfter(this, element, anchor);
-			CodeStyleManager.getInstance(getProject()).reformatNewlyAddedElement(getNode(), insertedElement.getNode());
-			return insertedElement;
-		}
-		return super.addAfter(element, anchor);
-	}
+    @Override
+    public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+        if (JSChangeUtil.isStatementOrComment(element)) {
+            final PsiElement insertedElement = JSChangeUtil.doAddAfter(this, element, anchor);
+            CodeStyleManager.getInstance(getProject()).reformatNewlyAddedElement(getNode(), insertedElement.getNode());
+            return insertedElement;
+        }
+        return super.addAfter(element, anchor);
+    }
 
-	public static void doChangeName(final Project project, final JSPackageStatement packageStatement, final String expected)
-	{
-		if(expected == null)
-		{
-			return;
-		}
-		final PsiElement node = packageStatement.getNameIdentifier();
-		final ASTNode parent = packageStatement.getNode();
+    public static void doChangeName(final Project project, final JSPackageStatement packageStatement, final String expected) {
+        if (expected == null) {
+            return;
+        }
+        final PsiElement node = packageStatement.getNameIdentifier();
+        final ASTNode parent = packageStatement.getNode();
 
-		if(expected.length() == 0)
-		{
-			if(node != null)
-			{
-				final ASTNode treeNext = node.getNode().getTreeNext();
-				parent.removeChild(node.getNode());
-				if(treeNext.getPsi() instanceof PsiWhiteSpace)
-				{
-					parent.removeChild(treeNext);
-				}
-			}
-		}
-		else
-		{
-			final ASTNode child = JSChangeUtil.createExpressionFromText(project, expected).getNode();
-			if(node != null)
-			{
-				parent.replaceChild(node.getNode(), child);
-			}
-			else
-			{
-				parent.addChild(child, parent.findChildByType(JSTokenTypes.LBRACE));
-			}
-		}
-	}
+        if (expected.length() == 0) {
+            if (node != null) {
+                final ASTNode treeNext = node.getNode().getTreeNext();
+                parent.removeChild(node.getNode());
+                if (treeNext.getPsi() instanceof PsiWhiteSpace) {
+                    parent.removeChild(treeNext);
+                }
+            }
+        }
+        else {
+            final ASTNode child = JSChangeUtil.createExpressionFromText(project, expected).getNode();
+            if (node != null) {
+                parent.replaceChild(node.getNode(), child);
+            }
+            else {
+                parent.addChild(child, parent.findChildByType(JSTokenTypes.LBRACE));
+            }
+        }
+    }
 }

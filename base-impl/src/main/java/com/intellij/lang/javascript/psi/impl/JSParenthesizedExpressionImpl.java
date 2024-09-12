@@ -27,22 +27,18 @@ import jakarta.annotation.Nonnull;
  * Date: Jan 30, 2005
  * Time: 11:30:44 PM
  */
-public class JSParenthesizedExpressionImpl extends JSExpressionImpl implements JSParenthesizedExpression
-{
-	public JSParenthesizedExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSParenthesizedExpressionImpl extends JSExpressionImpl implements JSParenthesizedExpression {
+    public JSParenthesizedExpressionImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getInnerExpression()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression getInnerExpression() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSParenthesizedExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSParenthesizedExpression(this);
+    }
 }

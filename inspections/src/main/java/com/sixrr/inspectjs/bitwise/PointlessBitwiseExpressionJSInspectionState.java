@@ -13,29 +13,29 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 13/03/2023
  */
-public class PointlessBitwiseExpressionJSInspectionState implements InspectionToolState<PointlessBitwiseExpressionJSInspectionState>
-{
-	public boolean m_ignoreExpressionsContainingConstants = false;
+public class PointlessBitwiseExpressionJSInspectionState implements InspectionToolState<PointlessBitwiseExpressionJSInspectionState> {
+    public boolean m_ignoreExpressionsContainingConstants = false;
 
-	@Nullable
-	@Override
-	public UnnamedConfigurable createConfigurable()
-	{
-		ConfigurableBuilder<ConfigurableBuilderState> builder = ConfigurableBuilder.newBuilder();
-		builder.checkBox(InspectionJSLocalize.pointlessBitwiseExpressionIgnoreOption(), () -> m_ignoreExpressionsContainingConstants, b -> m_ignoreExpressionsContainingConstants = b);
-		return builder.buildUnnamed();
-	}
+    @Nullable
+    @Override
+    public UnnamedConfigurable createConfigurable() {
+        ConfigurableBuilder<ConfigurableBuilderState> builder = ConfigurableBuilder.newBuilder();
+        builder.checkBox(
+            InspectionJSLocalize.pointlessBitwiseExpressionIgnoreOption(),
+            () -> m_ignoreExpressionsContainingConstants,
+            b -> m_ignoreExpressionsContainingConstants = b
+        );
+        return builder.buildUnnamed();
+    }
 
-	@Nullable
-	@Override
-	public PointlessBitwiseExpressionJSInspectionState getState()
-	{
-		return this;
-	}
+    @Nullable
+    @Override
+    public PointlessBitwiseExpressionJSInspectionState getState() {
+        return this;
+    }
 
-	@Override
-	public void loadState(PointlessBitwiseExpressionJSInspectionState state)
-	{
-		XmlSerializerUtil.copyBean(state, this);
-	}
+    @Override
+    public void loadState(PointlessBitwiseExpressionJSInspectionState state) {
+        XmlSerializerUtil.copyBean(state, this);
+    }
 }

@@ -56,11 +56,10 @@ public class DivideByZeroJSInspection extends JavaScriptInspection {
             }
             final IElementType tokenType = expression.getOperationSign();
             if (!JSTokenTypes.DIV.equals(tokenType) &&
-                    !JSTokenTypes.PERC.equals(tokenType)) {
+                !JSTokenTypes.PERC.equals(tokenType)) {
                 return;
             }
-            if(!isZero(rhs))
-            {
+            if (!isZero(rhs)) {
                 return;
             }
             registerError(expression);
@@ -75,7 +74,7 @@ public class DivideByZeroJSInspection extends JavaScriptInspection {
             }
             final IElementType tokenType = expression.getOperationSign();
             if (!JSTokenTypes.DIVEQ.equals(tokenType)
-                    && !JSTokenTypes.PERCEQ.equals(tokenType)) {
+                && !JSTokenTypes.PERCEQ.equals(tokenType)) {
                 return;
             }
             if (!isZero(rhs)) {
@@ -86,13 +85,12 @@ public class DivideByZeroJSInspection extends JavaScriptInspection {
     }
 
     private static boolean isZero(JSExpression expression) {
-        @NonNls
-        final String text = expression.getText();
-        return "0".equals(text) ||
-                "0x0".equals(text) ||
-                "0X0".equals(text) ||
-                "0.0".equals(text) ||
-                "0L".equals(text) ||
-                "0l".equals(text);
+        @NonNls final String text = expression.getText();
+        return "0".equals(text)
+            || "0x0".equals(text)
+            || "0X0".equals(text)
+            || "0.0".equals(text)
+            || "0L".equals(text)
+            || "0l".equals(text);
     }
 }

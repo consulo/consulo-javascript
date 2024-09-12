@@ -31,55 +31,49 @@ import consulo.language.psi.stub.StubInputStream;
 import consulo.language.psi.stub.StubOutputStream;
 
 import jakarta.annotation.Nonnull;
+
 import java.io.IOException;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Mar 25, 2008
- *         Time: 10:30:17 PM
+ * Date: Mar 25, 2008
+ * Time: 10:30:17 PM
  */
-public class JSAttributeListElementType extends JSStubElementType<JSAttributeListStub, JSAttributeList>
-{
-	public JSAttributeListElementType()
-	{
-		super("ATTRIBUTE_LIST");
-	}
+public class JSAttributeListElementType extends JSStubElementType<JSAttributeListStub, JSAttributeList> {
+    public JSAttributeListElementType() {
+        super("ATTRIBUTE_LIST");
+    }
 
-	@Nonnull
-	@Override
-	public PsiElement createElement(@Nonnull ASTNode astNode)
-	{
-		return new JSAttributeListImpl(astNode);
-	}
+    @Nonnull
+    @Override
+    public PsiElement createElement(@Nonnull ASTNode astNode) {
+        return new JSAttributeListImpl(astNode);
+    }
 
-	@Override
-	public JSAttributeList createPsi(@Nonnull JSAttributeListStub stub)
-	{
-		return new JSAttributeListImpl(stub);
-	}
+    @Override
+    public JSAttributeList createPsi(@Nonnull JSAttributeListStub stub) {
+        return new JSAttributeListImpl(stub);
+    }
 
-	@RequiredReadAction
-	@Override
-	public JSAttributeListStub createStub(@Nonnull JSAttributeList psi, StubElement parentStub)
-	{
-		String namespace = psi.getNamespace();
-		int flags = JSAttributeListStubImpl.getFlags(psi);
-		return new JSAttributeListStubImpl(namespace, flags, parentStub, this);
-	}
+    @RequiredReadAction
+    @Override
+    public JSAttributeListStub createStub(@Nonnull JSAttributeList psi, StubElement parentStub) {
+        String namespace = psi.getNamespace();
+        int flags = JSAttributeListStubImpl.getFlags(psi);
+        return new JSAttributeListStubImpl(namespace, flags, parentStub, this);
+    }
 
-	@Override
-	public void serialize(@Nonnull JSAttributeListStub stub, @Nonnull StubOutputStream dataStream) throws IOException
-	{
-		dataStream.writeName(stub.getNamespace());
-		dataStream.writeInt(stub.getFlags());
-	}
+    @Override
+    public void serialize(@Nonnull JSAttributeListStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+        dataStream.writeName(stub.getNamespace());
+        dataStream.writeInt(stub.getFlags());
+    }
 
-	@Nonnull
-	@Override
-	public JSAttributeListStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
-	{
-		StringRef namespaceRef = dataStream.readName();
-		int i = dataStream.readInt();
-		return new JSAttributeListStubImpl(StringRef.toString(namespaceRef), i, parentStub, this);
-	}
+    @Nonnull
+    @Override
+    public JSAttributeListStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+        StringRef namespaceRef = dataStream.readName();
+        int i = dataStream.readInt();
+        return new JSAttributeListStubImpl(StringRef.toString(namespaceRef), i, parentStub, this);
+    }
 }

@@ -51,7 +51,8 @@ public class ThisExpressionReferencesGlobalObjectJSInspection extends JavaScript
         @Override
         public void visitJSThisExpression(JSThisExpression jsThisExpression) {
             super.visitJSThisExpression(jsThisExpression);
-            final JSObjectLiteralExpression containingObject = PsiTreeUtil.getParentOfType(jsThisExpression, JSObjectLiteralExpression.class);
+            final JSObjectLiteralExpression containingObject =
+                PsiTreeUtil.getParentOfType(jsThisExpression, JSObjectLiteralExpression.class);
             if (containingObject != null) {
                 return;
             }

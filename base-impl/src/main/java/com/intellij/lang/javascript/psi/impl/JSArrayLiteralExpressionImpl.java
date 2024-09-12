@@ -24,6 +24,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,47 +35,38 @@ import java.util.List;
  * Time: 11:32:23 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSArrayLiteralExpressionImpl extends JSExpressionImpl implements JSArrayLiteralExpression
-{
-	public JSArrayLiteralExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSArrayLiteralExpressionImpl extends JSExpressionImpl implements JSArrayLiteralExpression {
+    public JSArrayLiteralExpressionImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression[] getExpressions()
-	{
-		List<JSExpression> result = new ArrayList<JSExpression>();
-		ASTNode child = getNode().getFirstChildNode();
-		boolean wasExpression = false;
-		while(child != null)
-		{
-			final IElementType type = child.getElementType();
-			if(child.getPsi() instanceof JSExpression)
-			{
-				result.add((JSExpression) child.getPsi());
-				wasExpression = true;
-			}
-			else if(type == JSTokenTypes.COMMA)
-			{
-				if(wasExpression)
-				{
-					wasExpression = false;
-				}
-				else
-				{
-					result.add(null); // Skipped expression like [a,,b]
-				}
-			}
-			child = child.getTreeNext();
-		}
+    @Override
+    public JSExpression[] getExpressions() {
+        List<JSExpression> result = new ArrayList<>();
+        ASTNode child = getNode().getFirstChildNode();
+        boolean wasExpression = false;
+        while (child != null) {
+            final IElementType type = child.getElementType();
+            if (child.getPsi() instanceof JSExpression jsExpression) {
+                result.add(jsExpression);
+                wasExpression = true;
+            }
+            else if (type == JSTokenTypes.COMMA) {
+                if (wasExpression) {
+                    wasExpression = false;
+                }
+                else {
+                    result.add(null); // Skipped expression like [a,,b]
+                }
+            }
+            child = child.getTreeNext();
+        }
 
-		return result.toArray(new JSExpression[result.size()]);
-	}
+        return result.toArray(new JSExpression[result.size()]);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSArrayLiteralExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSArrayLiteralExpression(this);
+    }
 }

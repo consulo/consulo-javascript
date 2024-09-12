@@ -30,28 +30,23 @@ import jakarta.annotation.Nonnull;
  * Time: 9:54:56 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSWithStatementImpl extends JSStatementImpl implements JSWithStatement
-{
-	public JSWithStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSWithStatementImpl extends JSStatementImpl implements JSWithStatement {
+    public JSWithStatementImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getExpression()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression getExpression() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	public JSStatement getStatement()
-	{
-		return findChildByClass(JSStatement.class);
-	}
+    @Override
+    public JSStatement getStatement() {
+        return findChildByClass(JSStatement.class);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSWithStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSWithStatement(this);
+    }
 }

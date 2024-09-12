@@ -33,47 +33,36 @@ import jakarta.annotation.Nonnull;
  * Time: 11:57:36 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSNewExpressionImpl extends JSExpressionImpl implements JSNewExpression
-{
-	public JSNewExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSNewExpressionImpl extends JSExpressionImpl implements JSNewExpression {
+    public JSNewExpressionImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@RequiredReadAction
-	@Nonnull
-	@Override
-	public JavaScriptType getType()
-	{
-		JSExpression methodExpression = getMethodExpression();
+    @RequiredReadAction
+    @Nonnull
+    @Override
+    public JavaScriptType getType() {
+        JSExpression methodExpression = getMethodExpression();
 
-		if(methodExpression instanceof JSReferenceExpression)
-		{
-			PsiElement resolvedElement = ((JSReferenceExpression) methodExpression).resolve();
-			if(resolvedElement instanceof JSClass)
-			{
-				return new JavaScriptClassType((JSClass) resolvedElement);
-			}
-		}
-		return super.getType();
-	}
+        return methodExpression instanceof JSReferenceExpression referenceExpression
+            && referenceExpression.resolve() instanceof JSClass jsClass
+            ? new JavaScriptClassType(jsClass)
+            : super.getType();
+    }
 
-	@Override
-	public JSExpression getMethodExpression()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression getMethodExpression() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	public JSArgumentList getArgumentList()
-	{
-		final ASTNode node = getNode().findChildByType(JSElementTypes.ARGUMENT_LIST);
-		return node != null ? (JSArgumentList) node.getPsi() : null;
-	}
+    @Override
+    public JSArgumentList getArgumentList() {
+        final ASTNode node = getNode().findChildByType(JSElementTypes.ARGUMENT_LIST);
+        return node != null ? (JSArgumentList)node.getPsi() : null;
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSNewExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSNewExpression(this);
+    }
 }

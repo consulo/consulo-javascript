@@ -47,13 +47,14 @@ public class DynamicallyGeneratedCodeJSInspection extends JavaScriptInspection {
             final JSExpression methodExpression;
             try {
                 methodExpression = jsCallExpression.getMethodExpression();
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 return; //catching an intelliJ CCE
             }
             if (!(methodExpression instanceof JSReferenceExpression)) {
                 return;
             }
-            final JSReferenceExpression referenceExpression = (JSReferenceExpression) methodExpression;
+            final JSReferenceExpression referenceExpression = (JSReferenceExpression)methodExpression;
             final JSExpression qualifier = referenceExpression.getQualifier();
 
             @NonNls final String methodName = referenceExpression.getReferencedName();
@@ -69,13 +70,14 @@ public class DynamicallyGeneratedCodeJSInspection extends JavaScriptInspection {
             final JSExpression methodExpression;
             try {
                 methodExpression = jsNewExpression.getMethodExpression();
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 return; //catching an intelliJ CCE
             }
             if (!(methodExpression instanceof JSReferenceExpression)) {
                 return;
             }
-            final JSReferenceExpression referenceExpression = (JSReferenceExpression) methodExpression;
+            final JSReferenceExpression referenceExpression = (JSReferenceExpression)methodExpression;
             final JSExpression qualifier = referenceExpression.getQualifier();
 
             if (qualifier != null) {

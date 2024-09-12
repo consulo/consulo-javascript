@@ -30,28 +30,23 @@ import jakarta.annotation.Nonnull;
  * Time: 10:15:13 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JSDoWhileStatementImpl extends JSStatementImpl implements JSDoWhileStatement
-{
-	public JSDoWhileStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSDoWhileStatementImpl extends JSStatementImpl implements JSDoWhileStatement {
+    public JSDoWhileStatementImpl(final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getCondition()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression getCondition() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	public JSStatement getBody()
-	{
-		return findChildByClass(JSStatement.class);
-	}
+    @Override
+    public JSStatement getBody() {
+        return findChildByClass(JSStatement.class);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSDoWhileStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSDoWhileStatement(this);
+    }
 }

@@ -13,24 +13,20 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 2019-12-14
  */
-public class JavaScriptDestructuringShorthandedPropertyImpl extends JSElementImpl implements JSDestructuringShorthandedProperty
-{
-	public JavaScriptDestructuringShorthandedPropertyImpl(ASTNode node)
-	{
-		super(node);
-	}
+public class JavaScriptDestructuringShorthandedPropertyImpl extends JSElementImpl implements JSDestructuringShorthandedProperty {
+    public JavaScriptDestructuringShorthandedPropertyImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSElement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSElement(this);
+    }
 
-	@Nonnull
-	@RequiredReadAction
-	@Override
-	public JSVariable getVarialbe()
-	{
-		return findNotNullChildByClass(JSVariable.class);
-	}
+    @Nonnull
+    @RequiredReadAction
+    @Override
+    public JSVariable getVarialbe() {
+        return findNotNullChildByClass(JSVariable.class);
+    }
 }

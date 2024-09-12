@@ -20,191 +20,158 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 @ExtensionImpl
-public class UnterminatedStatementJSInspection extends JavaScriptInspection
-{
-	@Override
-	public boolean isEnabledByDefault()
-	{
-		return false;
-	}
+public class UnterminatedStatementJSInspection extends JavaScriptInspection {
+    @Override
+    public boolean isEnabledByDefault() {
+        return false;
+    }
 
-	private final TerminateStatementFix fix = new TerminateStatementFix();
+    private final TerminateStatementFix fix = new TerminateStatementFix();
 
-	@Override
-	@Nonnull
-	public String getDisplayName()
-	{
-		return InspectionJSLocalize.unterminatedStatementDisplayName().get();
-	}
+    @Override
+    @Nonnull
+    public String getDisplayName() {
+        return InspectionJSLocalize.unterminatedStatementDisplayName().get();
+    }
 
-	@Override
-	@Nonnull
-	public String getGroupDisplayName()
-	{
-		return JSGroupNames.STYLE_GROUP_NAME.get();
-	}
+    @Override
+    @Nonnull
+    public String getGroupDisplayName() {
+        return JSGroupNames.STYLE_GROUP_NAME.get();
+    }
 
-	@RequiredReadAction
-	@Override
-	@Nullable
-	protected String buildErrorString(Object state, Object... args)
-	{
-		return InspectionJSLocalize.unterminatedStatementErrorString().get();
-	}
+    @RequiredReadAction
+    @Override
+    @Nullable
+    protected String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.unterminatedStatementErrorString().get();
+    }
 
-	@Override
-	public BaseInspectionVisitor buildVisitor()
-	{
-		return new Visitor();
-	}
+    @Override
+    public BaseInspectionVisitor buildVisitor() {
+        return new Visitor();
+    }
 
-	@Override
-	public InspectionJSFix buildFix(PsiElement location, Object state)
-	{
-		return fix;
-	}
+    @Override
+    public InspectionJSFix buildFix(PsiElement location, Object state) {
+        return fix;
+    }
 
-	private static class TerminateStatementFix extends InspectionJSFix
-	{
-		@Override
-		@Nonnull
-		public String getName()
-		{
-			return InspectionJSLocalize.terminateStatementFix().get();
-		}
+    private static class TerminateStatementFix extends InspectionJSFix {
+        @Override
+        @Nonnull
+        public String getName() {
+            return InspectionJSLocalize.terminateStatementFix().get();
+        }
 
-		@Override
-		public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException
-		{
-			JSStatement expression = PsiTreeUtil.getParentOfType(descriptor.getPsiElement(), JSStatement.class);
-			if(expression instanceof JSBlockStatement && expression.getParent() instanceof JSFunctionExpression)
-			{
-				expression = PsiTreeUtil.getParentOfType(expression, JSStatement.class);
-			}
-			if(expression == null)
-			{
-				return;
-			}
-			final String text = expression.getText();
-			replaceStatement(expression, text + ';');
-		}
-	}
+        @Override
+        public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
+            JSStatement expression = PsiTreeUtil.getParentOfType(descriptor.getPsiElement(), JSStatement.class);
+            if (expression instanceof JSBlockStatement && expression.getParent() instanceof JSFunctionExpression) {
+                expression = PsiTreeUtil.getParentOfType(expression, JSStatement.class);
+            }
+            if (expression == null) {
+                return;
+            }
+            final String text = expression.getText();
+            replaceStatement(expression, text + ';');
+        }
+    }
 
-	private static class Visitor extends BaseInspectionVisitor
-	{
-		@Override
-		public void visitJSExpressionStatement(JSExpressionStatement statement)
-		{
-			super.visitJSExpressionStatement(statement);
-			if(statement.getContainingFile() instanceof JSExpressionCodeFragment || isTerminated(statement))
-			{
-				return;
-			}
-			registerError(statement);
-		}
+    private static class Visitor extends BaseInspectionVisitor {
+        @Override
+        public void visitJSExpressionStatement(JSExpressionStatement statement) {
+            super.visitJSExpressionStatement(statement);
+            if (statement.getContainingFile() instanceof JSExpressionCodeFragment || isTerminated(statement)) {
+                return;
+            }
+            registerError(statement);
+        }
 
-		@Override
-		public void visitJSBreakStatement(JSBreakStatement jsBreakStatement)
-		{
-			super.visitJSBreakStatement(jsBreakStatement);
-			if(isTerminated(jsBreakStatement))
-			{
-				return;
-			}
-			registerError(jsBreakStatement);
-		}
+        @Override
+        public void visitJSBreakStatement(JSBreakStatement jsBreakStatement) {
+            super.visitJSBreakStatement(jsBreakStatement);
+            if (isTerminated(jsBreakStatement)) {
+                return;
+            }
+            registerError(jsBreakStatement);
+        }
 
-		@Override
-		public void visitJSContinueStatement(JSContinueStatement jsContinueStatement)
-		{
-			super.visitJSContinueStatement(jsContinueStatement);
-			if(isTerminated(jsContinueStatement))
-			{
-				return;
-			}
-			registerError(jsContinueStatement);
-		}
+        @Override
+        public void visitJSContinueStatement(JSContinueStatement jsContinueStatement) {
+            super.visitJSContinueStatement(jsContinueStatement);
+            if (isTerminated(jsContinueStatement)) {
+                return;
+            }
+            registerError(jsContinueStatement);
+        }
 
-		@Override
-		public void visitJSReturnStatement(JSReturnStatement jsReturnStatement)
-		{
-			super.visitJSReturnStatement(jsReturnStatement);
-			if(isTerminated(jsReturnStatement))
-			{
-				return;
-			}
-			registerError(jsReturnStatement);
-		}
+        @Override
+        public void visitJSReturnStatement(JSReturnStatement jsReturnStatement) {
+            super.visitJSReturnStatement(jsReturnStatement);
+            if (isTerminated(jsReturnStatement)) {
+                return;
+            }
+            registerError(jsReturnStatement);
+        }
 
-		@Override
-		public void visitJSThrowStatement(JSThrowStatement jsThrowStatement)
-		{
-			super.visitJSThrowStatement(jsThrowStatement);
-			if(isTerminated(jsThrowStatement))
-			{
-				return;
-			}
-			registerError(jsThrowStatement);
-		}
+        @Override
+        public void visitJSThrowStatement(JSThrowStatement jsThrowStatement) {
+            super.visitJSThrowStatement(jsThrowStatement);
+            if (isTerminated(jsThrowStatement)) {
+                return;
+            }
+            registerError(jsThrowStatement);
+        }
 
-		@Override
-		public void visitJSDoWhileStatement(JSDoWhileStatement jsDoWhileStatement)
-		{
-			super.visitJSDoWhileStatement(jsDoWhileStatement);
-			if(isTerminated(jsDoWhileStatement))
-			{
-				return;
-			}
-			registerError(jsDoWhileStatement);
-		}
+        @Override
+        public void visitJSDoWhileStatement(JSDoWhileStatement jsDoWhileStatement) {
+            super.visitJSDoWhileStatement(jsDoWhileStatement);
+            if (isTerminated(jsDoWhileStatement)) {
+                return;
+            }
+            registerError(jsDoWhileStatement);
+        }
 
-		@Override
-		public void visitJSVarStatement(JSVarStatement jsVarStatement)
-		{
-			super.visitJSVarStatement(jsVarStatement);
-			if(isTerminated(jsVarStatement))
-			{
-				return;
-			}
-			registerError(jsVarStatement);
-		}
+        @Override
+        public void visitJSVarStatement(JSVarStatement jsVarStatement) {
+            super.visitJSVarStatement(jsVarStatement);
+            if (isTerminated(jsVarStatement)) {
+                return;
+            }
+            registerError(jsVarStatement);
+        }
 
-		@Override
-		protected PsiElement getEditorErrorLocation(final PsiElement location)
-		{
-			PsiElement editorErrorLocation = PsiTreeUtil.lastChild(location);
-			while(editorErrorLocation instanceof PsiErrorElement || (editorErrorLocation != null && editorErrorLocation.getTextLength() == 0))
-			{
-				editorErrorLocation = PsiTreeUtil.prevLeaf(editorErrorLocation);
-			}
+        @Override
+        protected PsiElement getEditorErrorLocation(final PsiElement location) {
+            PsiElement editorErrorLocation = PsiTreeUtil.lastChild(location);
+            while (editorErrorLocation instanceof PsiErrorElement
+                || (editorErrorLocation != null && editorErrorLocation.getTextLength() == 0)) {
+                editorErrorLocation = PsiTreeUtil.prevLeaf(editorErrorLocation);
+            }
 
-			return editorErrorLocation;
-		}
-	}
+            return editorErrorLocation;
+        }
+    }
 
-	private static boolean isTerminated(JSStatement statement)
-	{
-		final PsiElement parent = statement.getParent();
-		if(parent instanceof JSForInStatement || parent instanceof JSForStatement)
-		{
-			return true;
-		}
-		final String text = statement.getText();
-		if(text == null)
-		{
-			return true;
-		}
+    private static boolean isTerminated(JSStatement statement) {
+        final PsiElement parent = statement.getParent();
+        if (parent instanceof JSForInStatement || parent instanceof JSForStatement) {
+            return true;
+        }
+        final String text = statement.getText();
+        if (text == null) {
+            return true;
+        }
 
-		boolean terminated = text.endsWith(";");
-		if(!terminated)
-		{
-			PsiElement container = PsiTreeUtil.getNonStrictParentOfType(parent, JSFile.class, XmlAttributeValue.class, XmlTagChild.class);
-			if(container instanceof JSFile)
-			{
-				container = container.getContext();
-			}
-			terminated = container instanceof XmlAttributeValue; // some inline javascript
-		}
-		return terminated;
-	}
+        boolean terminated = text.endsWith(";");
+        if (!terminated) {
+            PsiElement container = PsiTreeUtil.getNonStrictParentOfType(parent, JSFile.class, XmlAttributeValue.class, XmlTagChild.class);
+            if (container instanceof JSFile) {
+                container = container.getContext();
+            }
+            terminated = container instanceof XmlAttributeValue; // some inline javascript
+        }
+        return terminated;
+    }
 }
