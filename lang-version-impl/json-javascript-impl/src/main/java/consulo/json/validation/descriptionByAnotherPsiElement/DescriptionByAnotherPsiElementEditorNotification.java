@@ -32,16 +32,11 @@ import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.Component;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.event.UIEvent;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -98,19 +93,15 @@ public class DescriptionByAnotherPsiElementEditorNotification<T extends PsiEleme
             panel.withText(LocalizeValue.localizeTODO(StringUtil.SINGLE_QUOTER.apply(myProvider.getId()) + " model description is available for this file"));
             panel.withAction(
                 LocalizeValue.localizeTODO("Choose " + myProvider.getPsiElementName()),
-                new Consumer<>() {
-                    @Override
-                    @RequiredUIAccess
-                    public void accept(UIEvent<Component> uiEvent) {
-                        T chooseElement = myProvider.chooseElement(myProject);
-                        if (chooseElement == null) {
-                            return;
-                        }
-
-                        DescriptionByAnotherPsiElementService.getInstance(myProject).registerFile(file, chooseElement, myProvider);
-
-                        wantUpdate(psiFile);
+                e -> {
+                    T chooseElement = myProvider.chooseElement(myProject);
+                    if (chooseElement == null) {
+                        return;
                     }
+
+                    DescriptionByAnotherPsiElementService.getInstance(myProject).registerFile(file, chooseElement, myProvider);
+
+                    wantUpdate(psiFile);
                 }
             );
             return panel;
@@ -124,13 +115,9 @@ public class DescriptionByAnotherPsiElementEditorNotification<T extends PsiEleme
             ));
             panel.withAction(
                 LocalizeValue.localizeTODO("Cancel"),
-                new Consumer<>() {
-                    @Override
-                    @RequiredUIAccess
-                    public void accept(UIEvent<Component> uiEvent) {
-                        if (DescriptionByAnotherPsiElementService.getInstance(myProject).removeFile(file)) {
-                            wantUpdate(psiFile);
-                        }
+                e -> {
+                    if(DescriptionByAnotherPsiElementService.getInstance(myProject).removeFile(file)) {
+                        wantUpdate(psiFile);
                     }
                 }
             );
