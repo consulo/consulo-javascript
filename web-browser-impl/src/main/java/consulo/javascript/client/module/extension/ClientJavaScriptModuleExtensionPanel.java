@@ -16,17 +16,13 @@
 
 package consulo.javascript.client.module.extension;
 
-import consulo.language.version.LanguageVersion;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.CollectionComboBoxModel;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.javascript.lang.BaseJavaScriptLanguageVersion;
 import consulo.javascript.language.JavaScriptLanguageVersion;
 import consulo.javascript.language.StandardJavaScriptVersions;
 import consulo.javascript.module.extension.JavaScriptMutableModuleExtension;
-import consulo.ui.ex.awt.LabeledComponent;
-
+import consulo.language.version.LanguageVersion;
+import consulo.ui.ex.awt.*;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -57,10 +53,10 @@ public class ClientJavaScriptModuleExtensionPanel extends JPanel
 				}
 			}
 		});
-		languageVersionComboBox.setRenderer(new ColoredListCellRenderer<BaseJavaScriptLanguageVersion>()
+		languageVersionComboBox.setRenderer(new ColoredListCellRenderer<>()
 		{
 			@Override
-			protected void customizeCellRenderer(@Nonnull JList list, BaseJavaScriptLanguageVersion value, int index, boolean selected, boolean hasFocus)
+			protected void customizeCellRenderer(@Nonnull JList list, JavaScriptLanguageVersion value, int index, boolean selected, boolean hasFocus)
 			{
 				append(value.getPresentableName());
 			}
