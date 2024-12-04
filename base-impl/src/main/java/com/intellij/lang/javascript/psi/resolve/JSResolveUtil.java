@@ -67,6 +67,7 @@ import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.SmartList;
@@ -1428,6 +1429,10 @@ public class JSResolveUtil {
 
     private static PsiElement findClassByQName(final String link, final Project project, final GlobalSearchScope searchScope) {
         synchronized (project) {
+            if (DumbService.isDumb(project)) {
+                return null;
+            }
+
             final PsiElement[] result = new PsiElement[1];
 
             final Collection<JSQualifiedNamedElement> candidates =
