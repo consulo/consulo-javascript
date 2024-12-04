@@ -16,38 +16,33 @@
 
 package consulo.javascript.run.debug.v8;
 
-import consulo.application.AllIcons;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
 import org.chromium.sdk.JsEvaluateContext;
 import org.chromium.sdk.JsValue;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 05.12.2015
  */
-public class V8WatchValue extends V8BaseVariableValue
-{
-	private JsValue myValue;
+public class V8WatchValue extends V8BaseVariableValue {
+    private JsValue myValue;
 
-	public V8WatchValue(@Nonnull JsEvaluateContext evaluateContext, @Nonnull String text, @Nonnull JsValue value)
-	{
-		super(evaluateContext, text);
-		myValue = value;
-	}
+    public V8WatchValue(@Nonnull JsEvaluateContext evaluateContext, @Nonnull String text, @Nonnull JsValue value) {
+        super(evaluateContext, text);
+        myValue = value;
+    }
 
-	@Nonnull
-	@Override
-	protected Image getIconForValue(JsValue value, JsValue.Type valueType)
-	{
-		return AllIcons.Debugger.Watch;
-	}
+    @Nonnull
+    @Override
+    protected Image getIconForValue(JsValue value, JsValue.Type valueType) {
+        return ExecutionDebugIconGroup.nodeWatch();
+    }
 
-	@Nonnull
-	@Override
-	protected JsValue getValue()
-	{
-		return myValue;
-	}
+    @Nonnull
+    @Override
+    protected JsValue getValue() {
+        return myValue;
+    }
 }
