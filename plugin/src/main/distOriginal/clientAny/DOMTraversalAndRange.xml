@@ -37,7 +37,7 @@
 
         <!-- methods -->
         <method name="NodeFilter" returnType="Number">
-           <param name="param" mandatory="true" type="Node"/>
+            <param name="param" mandatory="true" type="Node"/>
         </method>
     </class>
 
@@ -128,9 +128,9 @@
         <method name="toString" returnType="String" throws="DOMException"/>
         <method name="detach" throws="DOMException"/>
 
-       <method name="createContextualFragment" browser="Gecko">
-          <param name="tagString" mandatory="true" type="String"/>
-       </method>
+        <method name="createContextualFragment" browser="Gecko">
+            <param name="tagString" mandatory="true" type="String"/>
+        </method>
     </class>
 
     <class name="DocumentRange" url="ranges.html#Level-2-DocumentRange-idl">

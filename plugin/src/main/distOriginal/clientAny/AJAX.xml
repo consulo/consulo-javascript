@@ -15,41 +15,41 @@
 
 <Library>
     <class name="window">
-      <method name="ActiveXObject" returnType="XMLHttpRequest"/>
-      <method name="XmlHttpRequest" returnType="XMLHttpRequest"/>
+        <method name="ActiveXObject" returnType="XMLHttpRequest"/>
+        <method name="XmlHttpRequest" returnType="XMLHttpRequest"/>
     </class>
 
-    <class name="XMLHttpRequest" >
+    <class name="XMLHttpRequest">
         <property name="constructor" attribute="ReadOnly" url="#1206131"/>
-        
+
         <!-- Function properties of Global Objects -->
-        <method name="abort" />
+        <method name="abort"/>
         <method name="getAllResponseHeaders" returnType="String"/>
         <method name="getResponseHeader" returnType="String">
-          <param name="headerName" mandatory="true" type="String"/>
+            <param name="headerName" mandatory="true" type="String"/>
         </method>
         <method name="overrideMimeType" browser="Gecko">
-          <param name="mimeType" mandatory="true" type="String"/>
+            <param name="mimeType" mandatory="true" type="String"/>
         </method>
 
-        <method name="open" >
-          <param name="method" mandatory="true" type="String"/>
-          <param name="url" mandatory="true" type="String"/>
-          <param name="async" type="Boolean"/>
-          <param name="username" type="String"/>
-          <param name="password" type="String"/>
+        <method name="open">
+            <param name="method" mandatory="true" type="String"/>
+            <param name="url" mandatory="true" type="String"/>
+            <param name="async" type="Boolean"/>
+            <param name="username" type="String"/>
+            <param name="password" type="String"/>
         </method>
 
         <method name="send" returnType="void">
-          <param name="content" mandatory="true" type="String"/>
+            <param name="content" mandatory="true" type="String"/>
         </method>
 
         <method name="setRequestHeader" returnType="void">
-          <param name="label" mandatory="true" type="String"/>
-          <param name="value" mandatory="true" type="String"/>
+            <param name="label" mandatory="true" type="String"/>
+            <param name="value" mandatory="true" type="String"/>
         </method>
 
-        <event name="onreadystatechange" />
+        <event name="onreadystatechange"/>
         <property name="readyState" type="Number"/>
         <property name="responseText" type="String"/>
         <property name="statusText" type="String"/>

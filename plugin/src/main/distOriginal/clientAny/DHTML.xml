@@ -5,512 +5,512 @@
 <Library>
     <doc url="http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109/html.html"/>
     <class name="Object">
-      <method name="__defineGetter__" browser="Gecko">
-          <param name="propertyName" mandatory="true"/>
-          <param name="func" mandatory="true"/>
-      </method>
+        <method name="__defineGetter__" browser="Gecko">
+            <param name="propertyName" mandatory="true"/>
+            <param name="func" mandatory="true"/>
+        </method>
 
-      <method name="__defineSetter__" browser="Gecko">
-          <param name="propertyName" mandatory="true"/>
-          <param name="func" mandatory="true"/>
-      </method>
+        <method name="__defineSetter__" browser="Gecko">
+            <param name="propertyName" mandatory="true"/>
+            <param name="func" mandatory="true"/>
+        </method>
 
-      <method name="__lookupGetter__" browser="Gecko" returnType="Function">
-          <param name="propertyName" mandatory="true"/>
-      </method>
+        <method name="__lookupGetter__" browser="Gecko" returnType="Function">
+            <param name="propertyName" mandatory="true"/>
+        </method>
 
-      <method name="__lookupSetter__" browser="Gecko" returnType="Function">
-          <param name="propertyName" mandatory="true"/>
-      </method>
+        <method name="__lookupSetter__" browser="Gecko" returnType="Function">
+            <param name="propertyName" mandatory="true"/>
+        </method>
 
-      <method name="__proto__" browser="Gecko" returnType="Function">
-          <param name="propertyName" mandatory="true"/>
-      </method>
+        <method name="__proto__" browser="Gecko" returnType="Function">
+            <param name="propertyName" mandatory="true"/>
+        </method>
     </class>
     <class name="Image" extends="HTMLImageElement">
-      <property name="constructor" />
-      <property name="naturalWidth" browser="Gecko"/>
-      <property name="naturalHeight" browser="Gecko"/>
+        <property name="constructor"/>
+        <property name="naturalWidth" browser="Gecko"/>
+        <property name="naturalHeight" browser="Gecko"/>
     </class>
     <class name="Navigator">
-      <property name="userAgent" type="String"/>
-      <property name="product" type="String"/>
-      <property name="appVersion" type="String"/>
-      <property name="appName" type="String"/>
-      <property name="appCodeName" type="String"/>
-      <property name="language" type="String"/>
-      <property name="systemLanguage" type="String" browser="IE"/>
-      <property name="userLanguage" type="String" browser="IE"/>
-      <property name="mimeTypes" type="Array"/>
-      <property name="platform" type="Array"/>
-      <property name="plugins" type="String"/>
+        <property name="userAgent" type="String"/>
+        <property name="product" type="String"/>
+        <property name="appVersion" type="String"/>
+        <property name="appName" type="String"/>
+        <property name="appCodeName" type="String"/>
+        <property name="language" type="String"/>
+        <property name="systemLanguage" type="String" browser="IE"/>
+        <property name="userLanguage" type="String" browser="IE"/>
+        <property name="mimeTypes" type="Array"/>
+        <property name="platform" type="Array"/>
+        <property name="plugins" type="String"/>
 
-      <method name="taintEnabled" returnType="Boolean"/>
-      <method name="javaEnabled" returnType="Boolean"/>
-      <method name="preference" returnType="String">
-        <param name="prefName" type="String" mandatory="true"/>
-        <param name="prefValue" type="String" />
-      </method>
+        <method name="taintEnabled" returnType="Boolean"/>
+        <method name="javaEnabled" returnType="Boolean"/>
+        <method name="preference" returnType="String">
+            <param name="prefName" type="String" mandatory="true"/>
+            <param name="prefValue" type="String"/>
+        </method>
     </class>
 
     <class name="Screen">
-      <property name="width" type="Number"/>
-      <property name="height" type="Number"/>
-      <property name="availHeight" type="Number"/>
-      <property name="availWidth" type="Number"/>
-      <property name="pixelDepth" type="Number"/>
-      <property name="colorDepth" type="Number"/>
+        <property name="width" type="Number"/>
+        <property name="height" type="Number"/>
+        <property name="availHeight" type="Number"/>
+        <property name="availWidth" type="Number"/>
+        <property name="pixelDepth" type="Number"/>
+        <property name="colorDepth" type="Number"/>
     </class>
 
-  <class name="location" >
-    <property name="href" type="String"/>
-    <property name="hash" type="String"/>
-    <property name="port" type="String"/>
-    <property name="host" type="String"/>
-    <property name="hostname" type="String"/>
-    <property name="pathname" type="String"/>
-    <property name="protocol" type="String"/>
-    <property name="port" type="String"/>
-    <property name="search" type="String"/>
-    <property name="target" type="String"/>
+    <class name="location">
+        <property name="href" type="String"/>
+        <property name="hash" type="String"/>
+        <property name="port" type="String"/>
+        <property name="host" type="String"/>
+        <property name="hostname" type="String"/>
+        <property name="pathname" type="String"/>
+        <property name="protocol" type="String"/>
+        <property name="port" type="String"/>
+        <property name="search" type="String"/>
+        <property name="target" type="String"/>
 
-    <method name="reload" returnType="void"/>
-      
-    <method name="replace" returnType="void">
-      <param name="url" mandatory="true" type="String"/>
-    </method>
-  </class>
+        <method name="reload" returnType="void"/>
 
-  <class name="XSLTProcessor" browser="Gecko">
-    <property name="constructor" />
-    <method name="importStylesheet">
-      <param name="domNode" type="Node" mandatory="true"/>
-    </method>
-    <method name="transformToDocument" returnType="Document">
-      <param name="domNode" type="Node" mandatory="true"/>
-    </method>
-    <method name="transformToFragment" returnType="DocumentFragment">
-      <param name="domToBeTransformed" type="Node" mandatory="true"/>
-      <param name="ownerDocument" type="Document" mandatory="true"/>
-    </method>
-  </class>
-
-  <class name="DOMParser" browser="Gecko">
-    <property name="constructor" />
-    <method name="parseFromString" returnType="Document">
-      <param name="stringToParse" type="String" mandatory="true"/>
-      <param name="contentType" type="String" mandatory="true"/>
-    </method>
-  </class>
-
-  <class name="XMLSerializer" browser="Gecko">
-    <property name="constructor" />
-    <method name="serializeToStream" >
-      <param name="domNode" type="Document" mandatory="true"/>
-      <param name="stream" type="Object" mandatory="true"/>
-      <param name="encoding" type="String" mandatory="true"/>
-    </method>
-    <method name="serializeToString" returnType="String">
-      <param name="domNode" type="Document" mandatory="true"/>
-    </method>
-  </class>
-
-  <class name="Event">
-    <property name="data" type="Object[]"/>
-    <property name="height" type="Number"/>
-    <property name="x" type="Number" browser="IE"/>
-    <property name="screenX" type="Number"/>
-    <property name="clientX" type="Number"/>
-    <property name="offsetX" type="Number" browser="IE"/>
-    <property name="layerX" type="Number" browser="Gecko"/>
-
-    <property name="fromElement" type="Object" browser="IE"/>
-    <property name="wheelDelta" type="Number" browser="IE"/>
-    <property name="repeat" type="Boolean" browser="IE"/>
-
-    <property name="pageX" type="Number"/>
-    <property name="y" type="Number" browser="IE"/>
-    <property name="screenY" type="Number"/>
-    <property name="clientY" type="Number"/>
-    <property name="offsetY" type="Number" browser="IE"/>
-    <property name="layerY" type="Number" browser="Gecko"/>
-    <property name="pageY" type="Number"/>
-    <property name="width" type="Number"/>
-    <property name="modifiers" type="Number"/>
-    <property name="keyCode" type="Number"/>
-
-    <property name="type" type="String"/>
-    <property name="which" type="Object"/>
-    <property name="srcElement" type="Object" browser="IE"/>
-    <property name="toElement" type="Object" browser="IE"/>
-
-    <property name="cancelBubble" type="Boolean" browser="IE"/>
-    <property name="returnValue" type="Boolean" browser="IE"/>
-    <property name="altKey" type="Boolean"/>
-    <property name="ctrlKey" type="Boolean"/>
-    <property name="shiftKey" type="Boolean"/>
-    <property name="button" type="Boolean"/>
-    <property name="charCode" type="String" browser="Gecko"/>
-
-    <property name="ABORT" type="String" browser="Gecko" deprecated="true"/>
-    <property name="BLUR" type="String" browser="Gecko" deprecated="true"/>
-    <property name="CLICK" type="String" browser="Gecko" deprecated="true"/>
-    <property name="CHANGE" type="String" browser="Gecko" deprecated="true"/>
-    <property name="DBLCLICK" type="String" browser="Gecko" deprecated="true"/>
-    <property name="DRAGDROP" type="String" browser="Gecko" deprecated="true"/>
-
-    <property name="ERROR" type="String" browser="Gecko" deprecated="true"/>
-    <property name="FOCUS" type="String" browser="Gecko" deprecated="true"/>
-    <property name="KEYDOWN" type="String" browser="Gecko" deprecated="true"/>
-    <property name="KEYPRESS" type="String" browser="Gecko" deprecated="true"/>
-    <property name="KEYUP" type="String" browser="Gecko" deprecated="true"/>
-    <property name="LOAD" type="String" browser="Gecko" deprecated="true"/>
-    <property name="MOUSEDOWN" type="String" browser="Gecko" deprecated="true"/>
-    <property name="MOUSEMOVE" type="String" browser="Gecko" deprecated="true"/>
-
-    <property name="MOUSEOUT" type="String" browser="Gecko" deprecated="true"/>
-    <property name="MOUSEOVER" type="String" browser="Gecko" deprecated="true"/>
-    <property name="MOUSEUP" type="String" browser="Gecko" deprecated="true"/>
-    <property name="MOVE" type="String" browser="Gecko" deprecated="true"/>
-    <property name="RESET" type="String" browser="Gecko" deprecated="true"/>
-    <property name="RESIZE" type="String" browser="Gecko" deprecated="true"/>
-    <property name="SELECT" type="String" browser="Gecko" deprecated="true"/>
-    <property name="SUBMIT" type="String" browser="Gecko" deprecated="true"/>
-    <property name="UNLOAD" type="String" browser="Gecko" deprecated="true"/>
-  </class>
-
-  <class name="Selection">
-    <property name="anchorNode" type="Node" browser="Gecko"/>
-    <property name="anchorOffset" type="Number" browser="Gecko"/>
-    <property name="focusNode" type="Node" browser="Gecko"/>
-    <property name="focusOffset" type="Number" browser="Gecko"/>
-    <property name="isCollapsed" type="Boolean" browser="Gecko"/>
-    <property name="rangeCount" type="Number" browser="Gecko"/>
-
-    <method name="getRangeAt" returnType="Range" browser="Gecko">
-      <param name="index" mandatory="true" type="Number"/>
-    </method>
-
-    <method name="collapse" returnType="void" browser="Gecko">
-      <param name="parentNode" mandatory="true" type="Node"/>
-      <param name="offset" mandatory="true" type="Number"/>
-    </method>
-
-    <method name="extend" returnType="void" browser="Gecko">
-      <param name="parentNode" mandatory="true" type="Node"/>
-      <param name="offset" mandatory="true" type="Number"/>
-    </method>
-
-    <method name="collapseToStart" returnType="void" browser="Gecko"/>
-    <method name="collapseToEnd" returnType="void" browser="Gecko"/>
-    <method name="selectAllChildren" returnType="void" browser="Gecko">
-      <param name="parentNode" mandatory="true" type="Node"/>
-    </method>
-    <method name="addRange" returnType="void" browser="Gecko">
-      <param name="range" mandatory="true" type="Range"/>
-    </method>
-    <method name="removeRange" returnType="void" browser="Gecko">
-      <param name="range" mandatory="true" type="Range"/>
-    </method>
-    <method name="removeAllRanges" returnType="void" browser="Gecko"/>
-    <method name="containsNode" returnType="Boolean" browser="Gecko">
-      <param name="node" mandatory="true" type="Node"/>
-      <param name="partlyContained" mandatory="true" type="Boolean"/>
-    </method>
-
-    <property name="type" browser="IE"/>
-    <method name="clear" returnType="Boolean" browser="IE"/>
-    <method name="empty" returnType="Boolean" browser="IE"/>
-    <method name="createRange" returnType="TextRange" browser="IE"/>
-  </class>
-
-  <class name="TextRange" browser="IE">
-    <property name="htmlText" type="String"/>
-    <property name="text" type="String"/>
-    <property name="boundingWidth" type="Number"/>
-    <property name="boundingHeight" type="Number"/>
-    <property name="boundingLeft" type="Number"/>
-    <property name="offsetLeft" type="Number"/>
-    <property name="boundingTop" type="Number"/>
-    <property name="offsetTop" type="Number"/>
-
-    <method name="collapse" returnType="void">
-      <param name="start" type="Boolean" />
-    </method>
-    <method name="expand" returnType="void">
-      <param name="unit" type="String" />
-    </method>
-
-    <method name="duplicate" returnType="TextRange"/>
-    <method name="select" returnType="void"/>
-    <method name="parentElement" returnType="Node" />
-
-    <method name="inRange" returnType="boolean">
-      <param name="other" mandatory="true" type="TextRange"/>
-    </method>
-    <method name="isEqual" returnType="boolean">
-      <param name="other" mandatory="true" type="TextRange"/>
-    </method>
-    <method name="scrollIntoView" returnType="void">
-      <param name="start" type="Boolean"/>
-    </method>
-    <method name="setEndPoint" returnType="void">
-      <param name="type" mandatory="true" type="String"/>
-      <param name="range" mandatory="true" type="TextRange"/>
-    </method>
-    <method name="compareEndPoint" returnType="void">
-      <param name="type" mandatory="true" type="String"/>
-      <param name="range" mandatory="true" type="TextRange"/>
-    </method>
-    <method name="move" returnType="void">
-      <param name="unit" mandatory="true" type="String"/>
-      <param name="count"  type="Number"/>
-    </method>
-    <method name="moveStart" returnType="void">
-      <param name="unit" mandatory="true" type="String"/>
-      <param name="count"  type="Number"/>
-    </method>
-    <method name="moveEnd" returnType="void">
-      <param name="unit" mandatory="true" type="String"/>
-      <param name="count"  type="Number"/>
-    </method>
-
-    <method name="pasteHTML" returnType="void">
-      <param name="htmlText" mandatory="true" type="String"/>
-    </method>
-
-    <method name="moveToElementText" returnType="void">
-      <param name="element" type="HTMLElement"/>
-    </method>
-
-    <method name="compareEndPoints" returnType="Number">
-      <param name="sType" type="String"/>
-      <param name="oRange" type="TextRange"/>
-    </method>
-  </class>
-
-  <class name="document">
-    <property name="selection" type="Selection" browser="IE"/>
-    <property name="namespaces" type="Array" browser="IE"/>
-    <property name="all" type="All" browser="IE"/>
-    <property name="styleSheets" type="Stylesheet[]" />
-
-    <method name="execCommand" returnType="Boolean" browser="IE">
-      <param name="sCommand" mandatory="true" type="String"/>
-      <param name="bUserInterface" type="Boolean"/>
-      <param name="vValue" type="Object"/>
-    </method>
-  </class>
-
-  <class name="CssRule">
-    <property name="selectorText" type="String" />
-  </class>
-
-  <class name="Stylesheet">
-    <property name="cssRules" type="CssRule[]" elementType="CssRule" browser="Gecko"/>
-    <property name="rules" type="CssRule[]" elementType="CssRule" browser="IE"/>
-    <property name="owningElement" type="HtmlElement" browser="IE"/>
-
-    <method name="addRule" returnType="void" browser="IE">
-      <param name="selector" mandatory="true" type="Object"/>
-      <param name="style" mandatory="true" type="Object"/>
-    </method>
-    <method name="insertRule" returnType="void" browser="Gecko">
-      <param name="ruleText" mandatory="true" type="Object"/>
-      <param name="index" mandatory="true" type="Number"/>
-    </method>
-
-    <method name="removeRule" returnType="void" browser="IE">
-      <param name="index" mandatory="true" type="Number"/>
-    </method>
-    <method name="deleteRule" returnType="void" browser="Gecko">
-      <param name="index" mandatory="true" type="Number"/>
-    </method>
-  </class>
-
-  <class name="MozillaSideBar" browser="Gecko">
-    <method name="addPanel" returnType="void">
-      <param name="title" mandatory="true" type="String"/>
-      <param name="url" mandatory="true" type="String"/>
-      <param name="param3" mandatory="true" type="String"/>
-    </method>
-  </class>
-
-  <class name="IEExternal" browser="IE">
-    <method name="AddFavorite" returnType="void">
-      <param name="title" mandatory="true" type="String"/>
-      <param name="url" type="String"/>
-    </method>
-  </class>
-
-  <class name="history">
-      <method name="back" returnType="void"/>
-      <method name="forward" returnType="void"/>
-      <method name="go" returnType="void">
-        <param name="count" type="Number" mandatory="true"/>
-      </method>
-  </class>
-
-  <class name="window">
-      <property name="document" attribute="ReadOnly" type="HTMLDocument"/>
-      <property name="event" attribute="ReadOnly" type="Event"/>
-      <property name="navigator" attribute="ReadOnly" type="Navigator"/>
-      <property name="screen" attribute="ReadOnly" type="Screen"/>
-      <property name="location" attribute="ReadOnly" type="Location"/>
-
-      <property name="frameElement" type="Object"/>
-      <property name="opener" type="window"/>
-      <property name="window" type="window"/>
-      <property name="parent" type="window"/>
-      <property name="top" type="window"/>
-
-      <property name="self" type="Object"/>
-      <property name="frames" type="Array"/>
-      <property name="innerHeight" type="Number"/>
-      <property name="innerWidth" type="Number"/>
-      <property name="outerHeight" type="Number"/>
-      <property name="outerWidth" type="Number"/>
-
-      <property name="screenLeft" type="Number" browser="IE"/>
-      <property name="screenTop" type="Number" browser="IE"/>
-
-      <property name="scrollX" type="Number"/>
-      <property name="scrollY" type="Number"/>
-      <property name="pageXOffset" type="Number"/>
-      <property name="pageYOffset" type="Number"/>
-      <property name="scrollMaxX" type="Number"/>
-      <property name="scrollMaxY" type="Number"/>
-      <property name="status" type="String"/>
-      <property name="defaultStatus" type="String"/>
-      <property name="toolbar" type="Object"/>
-      <property name="menubar" type="Object"/>
-      <property name="scrollbars" type="Object"/>
-      <property name="directories" type="Object"/>
-      <property name="history" type="history"/>
-
-      <property name="sidebar" type="MozillaSideBar" browser="Gecko"/>
-      <property name="external" type="IEExternal" browser="IE"/>
-      <property name="opera" type="Boolean" browser="Opera"/>
-
-      <method name="getSelection" returnType="Selection" browser="Gecko"/>
-      <method name="print" returnType="void"/>
-      <method name="alert" ECMA="false" url="http://msdn.microsoft.com/workshop/author/dhtml/reference/methods/alert.asp">
-          <param name="sMesssage" mandatory="true"/>
-      </method>
-      <method name="confirm" ECMA="false" url="http://msdn.microsoft.com/workshop/author/dhtml/reference/methods/confirm.asp">
-          <param name="sMesssage" mandatory="true"/>
-      </method>
-      <method name="prompt" ECMA="false" url="http://msdn.microsoft.com/workshop/author/dhtml/reference/methods/prompt.asp">
-          <param name="sMessage" mandatory="true"/>
-          <param name="sDefaultValue"/>
-      </method>
-      <method name="clearInterval">
-        <param name="intervalId" type="Number" mandatory="true"/>
-      </method>
-      <method name="clearTimeout">
-        <param name="intervalId" type="Number" mandatory="true"/>
-      </method>
-      <method name="setInterval" returnType="Number">
-        <param name="vCode" mandatory="true" type="String"/>
-        <param name="iMillis" mandatory="true" type="Number"/>
-      </method>
-      <method name="setTimeout" returnType="Number">
-        <param name="vCode" mandatory="true" type="String"/>
-        <param name="iMillis" mandatory="true" type="Number"/>
-      </method>
-
-      <method name="captureEvents" returnType="void" browser="Gecko" deprecated="true">
-        <param name="eventType" mandatory="true" type="Event"/>
-      </method>
-      <method name="releaseEvents" returnType="void" browser="Gecko" deprecated="true">
-        <param name="eventType" mandatory="true" type="Event"/>
-      </method>
-      <method name="routeEvent" returnType="void" browser="Gecko" deprecated="true">
-        <param name="event" mandatory="true" type="Event"/>
-      </method>
-      <method name="preventBubble" returnType="void" browser="Gecko" deprecated="true">
-        <param name="event" mandatory="true" type="Event"/>
-      </method>
-
-      <method name="GetObject" returnType="Object" browser="IE" deprecated="true">
-        <param name="classOrPath" mandatory="true" type="String"/>
-        <param name="class" type="String"/>
-      </method>
-
-      <method name="ScriptEngine" returnType="String" browser="IE" />
-      <method name="ScriptEngineBuildVersion" returnType="String" browser="IE" />
-      <method name="ScriptEngineMajorVersion" returnType="String" browser="IE" />
-      <method name="ScriptEngineMinorVersion" returnType="String" browser="IE" />
-
-      <method name="scrollTo">
-        <param name="x" type="Number" mandatory="true"/>
-        <param name="y" type="Number" mandatory="true"/>
-      </method>
-
-      <method name="scrollBy">
-        <param name="xDelta" type="Number" mandatory="true"/>
-        <param name="yDelta" type="Number" mandatory="true"/>
-      </method>
-
-      <method name="moveTo">
-        <param name="x" type="Number" mandatory="true"/>
-        <param name="y" type="Number" mandatory="true"/>
-      </method>
-
-      <method name="moveBy">
-        <param name="xDelta" type="Number" mandatory="true"/>
-        <param name="yDelta" type="Number" mandatory="true"/>
-      </method>
-
-      <method name="resizeTo">
-        <param name="width" type="Number" mandatory="true"/>
-        <param name="height" type="Number" mandatory="true"/>
-      </method>
-
-      <method name="resizeBy">
-        <param name="widthDelta" type="Number" mandatory="true"/>
-        <param name="heightDelta" type="Number" mandatory="true"/>
-      </method>
-
-      <method name="getComputedStyle" returnType="style" browser="Gecko">
-        <param name="element" mandatory="true" type="Element"/>
-        <param name="pseudoElt" mandatory="true" type="String"/>
-      </method>
-
-      <method name="showModalDialog" returnType="style" browser="IE">
-        <param name="sUrl" mandatory="true" type="String"/>
-        <param name="vArguments" type="Object"/>
-        <param name="sFeatures" type="String"/>
-      </method>
-
-      <method name="attachEvent" browser="IE">
-        <param name="type" mandatory="true" type="String"/>
-         <param name="listener" mandatory="true" type="Function"/>
-      </method>
-      <method name="detachEvent" browser="IE">
-        <param name="type" mandatory="true" type="String"/>
-         <param name="listener" mandatory="true" type="Function"/>
-      </method>
-
-      <method name="addEventListener" browser="Gecko">
-        <param name="type" mandatory="true" type="String"/>
-         <param name="listener" mandatory="true" type="Function"/>
-        <param name="useCapture" mandatory="true" type="Boolean"/>
-      </method>
-      <method name="removeEventListener" browser="Gecko">
-        <param name="type" mandatory="true" type="String"/>
-         <param name="listener" mandatory="true" type="Function"/>
-        <param name="useCapture" mandatory="true" type="Boolean"/>
-      </method>
-    
-      <method name="execScript" browser="IE">
-        <param name="sScript" mandatory="true" type="String"/>
-      </method>
-
-      <method name="CollectGarbage" browser="IE"/>
+        <method name="replace" returnType="void">
+            <param name="url" mandatory="true" type="String"/>
+        </method>
     </class>
 
-  <class name="Global">
+    <class name="XSLTProcessor" browser="Gecko">
+        <property name="constructor"/>
+        <method name="importStylesheet">
+            <param name="domNode" type="Node" mandatory="true"/>
+        </method>
+        <method name="transformToDocument" returnType="Document">
+            <param name="domNode" type="Node" mandatory="true"/>
+        </method>
+        <method name="transformToFragment" returnType="DocumentFragment">
+            <param name="domToBeTransformed" type="Node" mandatory="true"/>
+            <param name="ownerDocument" type="Document" mandatory="true"/>
+        </method>
+    </class>
+
+    <class name="DOMParser" browser="Gecko">
+        <property name="constructor"/>
+        <method name="parseFromString" returnType="Document">
+            <param name="stringToParse" type="String" mandatory="true"/>
+            <param name="contentType" type="String" mandatory="true"/>
+        </method>
+    </class>
+
+    <class name="XMLSerializer" browser="Gecko">
+        <property name="constructor"/>
+        <method name="serializeToStream">
+            <param name="domNode" type="Document" mandatory="true"/>
+            <param name="stream" type="Object" mandatory="true"/>
+            <param name="encoding" type="String" mandatory="true"/>
+        </method>
+        <method name="serializeToString" returnType="String">
+            <param name="domNode" type="Document" mandatory="true"/>
+        </method>
+    </class>
+
+    <class name="Event">
+        <property name="data" type="Object[]"/>
+        <property name="height" type="Number"/>
+        <property name="x" type="Number" browser="IE"/>
+        <property name="screenX" type="Number"/>
+        <property name="clientX" type="Number"/>
+        <property name="offsetX" type="Number" browser="IE"/>
+        <property name="layerX" type="Number" browser="Gecko"/>
+
+        <property name="fromElement" type="Object" browser="IE"/>
+        <property name="wheelDelta" type="Number" browser="IE"/>
+        <property name="repeat" type="Boolean" browser="IE"/>
+
+        <property name="pageX" type="Number"/>
+        <property name="y" type="Number" browser="IE"/>
+        <property name="screenY" type="Number"/>
+        <property name="clientY" type="Number"/>
+        <property name="offsetY" type="Number" browser="IE"/>
+        <property name="layerY" type="Number" browser="Gecko"/>
+        <property name="pageY" type="Number"/>
+        <property name="width" type="Number"/>
+        <property name="modifiers" type="Number"/>
+        <property name="keyCode" type="Number"/>
+
+        <property name="type" type="String"/>
+        <property name="which" type="Object"/>
+        <property name="srcElement" type="Object" browser="IE"/>
+        <property name="toElement" type="Object" browser="IE"/>
+
+        <property name="cancelBubble" type="Boolean" browser="IE"/>
+        <property name="returnValue" type="Boolean" browser="IE"/>
+        <property name="altKey" type="Boolean"/>
+        <property name="ctrlKey" type="Boolean"/>
+        <property name="shiftKey" type="Boolean"/>
+        <property name="button" type="Boolean"/>
+        <property name="charCode" type="String" browser="Gecko"/>
+
+        <property name="ABORT" type="String" browser="Gecko" deprecated="true"/>
+        <property name="BLUR" type="String" browser="Gecko" deprecated="true"/>
+        <property name="CLICK" type="String" browser="Gecko" deprecated="true"/>
+        <property name="CHANGE" type="String" browser="Gecko" deprecated="true"/>
+        <property name="DBLCLICK" type="String" browser="Gecko" deprecated="true"/>
+        <property name="DRAGDROP" type="String" browser="Gecko" deprecated="true"/>
+
+        <property name="ERROR" type="String" browser="Gecko" deprecated="true"/>
+        <property name="FOCUS" type="String" browser="Gecko" deprecated="true"/>
+        <property name="KEYDOWN" type="String" browser="Gecko" deprecated="true"/>
+        <property name="KEYPRESS" type="String" browser="Gecko" deprecated="true"/>
+        <property name="KEYUP" type="String" browser="Gecko" deprecated="true"/>
+        <property name="LOAD" type="String" browser="Gecko" deprecated="true"/>
+        <property name="MOUSEDOWN" type="String" browser="Gecko" deprecated="true"/>
+        <property name="MOUSEMOVE" type="String" browser="Gecko" deprecated="true"/>
+
+        <property name="MOUSEOUT" type="String" browser="Gecko" deprecated="true"/>
+        <property name="MOUSEOVER" type="String" browser="Gecko" deprecated="true"/>
+        <property name="MOUSEUP" type="String" browser="Gecko" deprecated="true"/>
+        <property name="MOVE" type="String" browser="Gecko" deprecated="true"/>
+        <property name="RESET" type="String" browser="Gecko" deprecated="true"/>
+        <property name="RESIZE" type="String" browser="Gecko" deprecated="true"/>
+        <property name="SELECT" type="String" browser="Gecko" deprecated="true"/>
+        <property name="SUBMIT" type="String" browser="Gecko" deprecated="true"/>
+        <property name="UNLOAD" type="String" browser="Gecko" deprecated="true"/>
+    </class>
+
+    <class name="Selection">
+        <property name="anchorNode" type="Node" browser="Gecko"/>
+        <property name="anchorOffset" type="Number" browser="Gecko"/>
+        <property name="focusNode" type="Node" browser="Gecko"/>
+        <property name="focusOffset" type="Number" browser="Gecko"/>
+        <property name="isCollapsed" type="Boolean" browser="Gecko"/>
+        <property name="rangeCount" type="Number" browser="Gecko"/>
+
+        <method name="getRangeAt" returnType="Range" browser="Gecko">
+            <param name="index" mandatory="true" type="Number"/>
+        </method>
+
+        <method name="collapse" returnType="void" browser="Gecko">
+            <param name="parentNode" mandatory="true" type="Node"/>
+            <param name="offset" mandatory="true" type="Number"/>
+        </method>
+
+        <method name="extend" returnType="void" browser="Gecko">
+            <param name="parentNode" mandatory="true" type="Node"/>
+            <param name="offset" mandatory="true" type="Number"/>
+        </method>
+
+        <method name="collapseToStart" returnType="void" browser="Gecko"/>
+        <method name="collapseToEnd" returnType="void" browser="Gecko"/>
+        <method name="selectAllChildren" returnType="void" browser="Gecko">
+            <param name="parentNode" mandatory="true" type="Node"/>
+        </method>
+        <method name="addRange" returnType="void" browser="Gecko">
+            <param name="range" mandatory="true" type="Range"/>
+        </method>
+        <method name="removeRange" returnType="void" browser="Gecko">
+            <param name="range" mandatory="true" type="Range"/>
+        </method>
+        <method name="removeAllRanges" returnType="void" browser="Gecko"/>
+        <method name="containsNode" returnType="Boolean" browser="Gecko">
+            <param name="node" mandatory="true" type="Node"/>
+            <param name="partlyContained" mandatory="true" type="Boolean"/>
+        </method>
+
+        <property name="type" browser="IE"/>
+        <method name="clear" returnType="Boolean" browser="IE"/>
+        <method name="empty" returnType="Boolean" browser="IE"/>
+        <method name="createRange" returnType="TextRange" browser="IE"/>
+    </class>
+
+    <class name="TextRange" browser="IE">
+        <property name="htmlText" type="String"/>
+        <property name="text" type="String"/>
+        <property name="boundingWidth" type="Number"/>
+        <property name="boundingHeight" type="Number"/>
+        <property name="boundingLeft" type="Number"/>
+        <property name="offsetLeft" type="Number"/>
+        <property name="boundingTop" type="Number"/>
+        <property name="offsetTop" type="Number"/>
+
+        <method name="collapse" returnType="void">
+            <param name="start" type="Boolean"/>
+        </method>
+        <method name="expand" returnType="void">
+            <param name="unit" type="String"/>
+        </method>
+
+        <method name="duplicate" returnType="TextRange"/>
+        <method name="select" returnType="void"/>
+        <method name="parentElement" returnType="Node"/>
+
+        <method name="inRange" returnType="boolean">
+            <param name="other" mandatory="true" type="TextRange"/>
+        </method>
+        <method name="isEqual" returnType="boolean">
+            <param name="other" mandatory="true" type="TextRange"/>
+        </method>
+        <method name="scrollIntoView" returnType="void">
+            <param name="start" type="Boolean"/>
+        </method>
+        <method name="setEndPoint" returnType="void">
+            <param name="type" mandatory="true" type="String"/>
+            <param name="range" mandatory="true" type="TextRange"/>
+        </method>
+        <method name="compareEndPoint" returnType="void">
+            <param name="type" mandatory="true" type="String"/>
+            <param name="range" mandatory="true" type="TextRange"/>
+        </method>
+        <method name="move" returnType="void">
+            <param name="unit" mandatory="true" type="String"/>
+            <param name="count" type="Number"/>
+        </method>
+        <method name="moveStart" returnType="void">
+            <param name="unit" mandatory="true" type="String"/>
+            <param name="count" type="Number"/>
+        </method>
+        <method name="moveEnd" returnType="void">
+            <param name="unit" mandatory="true" type="String"/>
+            <param name="count" type="Number"/>
+        </method>
+
+        <method name="pasteHTML" returnType="void">
+            <param name="htmlText" mandatory="true" type="String"/>
+        </method>
+
+        <method name="moveToElementText" returnType="void">
+            <param name="element" type="HTMLElement"/>
+        </method>
+
+        <method name="compareEndPoints" returnType="Number">
+            <param name="sType" type="String"/>
+            <param name="oRange" type="TextRange"/>
+        </method>
+    </class>
+
+    <class name="document">
+        <property name="selection" type="Selection" browser="IE"/>
+        <property name="namespaces" type="Array" browser="IE"/>
+        <property name="all" type="All" browser="IE"/>
+        <property name="styleSheets" type="Stylesheet[]"/>
+
+        <method name="execCommand" returnType="Boolean" browser="IE">
+            <param name="sCommand" mandatory="true" type="String"/>
+            <param name="bUserInterface" type="Boolean"/>
+            <param name="vValue" type="Object"/>
+        </method>
+    </class>
+
+    <class name="CssRule">
+        <property name="selectorText" type="String"/>
+    </class>
+
+    <class name="Stylesheet">
+        <property name="cssRules" type="CssRule[]" elementType="CssRule" browser="Gecko"/>
+        <property name="rules" type="CssRule[]" elementType="CssRule" browser="IE"/>
+        <property name="owningElement" type="HtmlElement" browser="IE"/>
+
+        <method name="addRule" returnType="void" browser="IE">
+            <param name="selector" mandatory="true" type="Object"/>
+            <param name="style" mandatory="true" type="Object"/>
+        </method>
+        <method name="insertRule" returnType="void" browser="Gecko">
+            <param name="ruleText" mandatory="true" type="Object"/>
+            <param name="index" mandatory="true" type="Number"/>
+        </method>
+
+        <method name="removeRule" returnType="void" browser="IE">
+            <param name="index" mandatory="true" type="Number"/>
+        </method>
+        <method name="deleteRule" returnType="void" browser="Gecko">
+            <param name="index" mandatory="true" type="Number"/>
+        </method>
+    </class>
+
+    <class name="MozillaSideBar" browser="Gecko">
+        <method name="addPanel" returnType="void">
+            <param name="title" mandatory="true" type="String"/>
+            <param name="url" mandatory="true" type="String"/>
+            <param name="param3" mandatory="true" type="String"/>
+        </method>
+    </class>
+
+    <class name="IEExternal" browser="IE">
+        <method name="AddFavorite" returnType="void">
+            <param name="title" mandatory="true" type="String"/>
+            <param name="url" type="String"/>
+        </method>
+    </class>
+
+    <class name="history">
+        <method name="back" returnType="void"/>
+        <method name="forward" returnType="void"/>
+        <method name="go" returnType="void">
+            <param name="count" type="Number" mandatory="true"/>
+        </method>
+    </class>
+
+    <class name="window">
+        <property name="document" attribute="ReadOnly" type="HTMLDocument"/>
+        <property name="event" attribute="ReadOnly" type="Event"/>
+        <property name="navigator" attribute="ReadOnly" type="Navigator"/>
+        <property name="screen" attribute="ReadOnly" type="Screen"/>
+        <property name="location" attribute="ReadOnly" type="Location"/>
+
+        <property name="frameElement" type="Object"/>
+        <property name="opener" type="window"/>
+        <property name="window" type="window"/>
+        <property name="parent" type="window"/>
+        <property name="top" type="window"/>
+
+        <property name="self" type="Object"/>
+        <property name="frames" type="Array"/>
+        <property name="innerHeight" type="Number"/>
+        <property name="innerWidth" type="Number"/>
+        <property name="outerHeight" type="Number"/>
+        <property name="outerWidth" type="Number"/>
+
+        <property name="screenLeft" type="Number" browser="IE"/>
+        <property name="screenTop" type="Number" browser="IE"/>
+
+        <property name="scrollX" type="Number"/>
+        <property name="scrollY" type="Number"/>
+        <property name="pageXOffset" type="Number"/>
+        <property name="pageYOffset" type="Number"/>
+        <property name="scrollMaxX" type="Number"/>
+        <property name="scrollMaxY" type="Number"/>
+        <property name="status" type="String"/>
+        <property name="defaultStatus" type="String"/>
+        <property name="toolbar" type="Object"/>
+        <property name="menubar" type="Object"/>
+        <property name="scrollbars" type="Object"/>
+        <property name="directories" type="Object"/>
+        <property name="history" type="history"/>
+
+        <property name="sidebar" type="MozillaSideBar" browser="Gecko"/>
+        <property name="external" type="IEExternal" browser="IE"/>
+        <property name="opera" type="Boolean" browser="Opera"/>
+
+        <method name="getSelection" returnType="Selection" browser="Gecko"/>
+        <method name="print" returnType="void"/>
+        <method name="alert" ECMA="false" url="http://msdn.microsoft.com/workshop/author/dhtml/reference/methods/alert.asp">
+            <param name="sMesssage" mandatory="true"/>
+        </method>
+        <method name="confirm" ECMA="false" url="http://msdn.microsoft.com/workshop/author/dhtml/reference/methods/confirm.asp">
+            <param name="sMesssage" mandatory="true"/>
+        </method>
+        <method name="prompt" ECMA="false" url="http://msdn.microsoft.com/workshop/author/dhtml/reference/methods/prompt.asp">
+            <param name="sMessage" mandatory="true"/>
+            <param name="sDefaultValue"/>
+        </method>
+        <method name="clearInterval">
+            <param name="intervalId" type="Number" mandatory="true"/>
+        </method>
+        <method name="clearTimeout">
+            <param name="intervalId" type="Number" mandatory="true"/>
+        </method>
+        <method name="setInterval" returnType="Number">
+            <param name="vCode" mandatory="true" type="String"/>
+            <param name="iMillis" mandatory="true" type="Number"/>
+        </method>
+        <method name="setTimeout" returnType="Number">
+            <param name="vCode" mandatory="true" type="String"/>
+            <param name="iMillis" mandatory="true" type="Number"/>
+        </method>
+
+        <method name="captureEvents" returnType="void" browser="Gecko" deprecated="true">
+            <param name="eventType" mandatory="true" type="Event"/>
+        </method>
+        <method name="releaseEvents" returnType="void" browser="Gecko" deprecated="true">
+            <param name="eventType" mandatory="true" type="Event"/>
+        </method>
+        <method name="routeEvent" returnType="void" browser="Gecko" deprecated="true">
+            <param name="event" mandatory="true" type="Event"/>
+        </method>
+        <method name="preventBubble" returnType="void" browser="Gecko" deprecated="true">
+            <param name="event" mandatory="true" type="Event"/>
+        </method>
+
+        <method name="GetObject" returnType="Object" browser="IE" deprecated="true">
+            <param name="classOrPath" mandatory="true" type="String"/>
+            <param name="class" type="String"/>
+        </method>
+
+        <method name="ScriptEngine" returnType="String" browser="IE"/>
+        <method name="ScriptEngineBuildVersion" returnType="String" browser="IE"/>
+        <method name="ScriptEngineMajorVersion" returnType="String" browser="IE"/>
+        <method name="ScriptEngineMinorVersion" returnType="String" browser="IE"/>
+
+        <method name="scrollTo">
+            <param name="x" type="Number" mandatory="true"/>
+            <param name="y" type="Number" mandatory="true"/>
+        </method>
+
+        <method name="scrollBy">
+            <param name="xDelta" type="Number" mandatory="true"/>
+            <param name="yDelta" type="Number" mandatory="true"/>
+        </method>
+
+        <method name="moveTo">
+            <param name="x" type="Number" mandatory="true"/>
+            <param name="y" type="Number" mandatory="true"/>
+        </method>
+
+        <method name="moveBy">
+            <param name="xDelta" type="Number" mandatory="true"/>
+            <param name="yDelta" type="Number" mandatory="true"/>
+        </method>
+
+        <method name="resizeTo">
+            <param name="width" type="Number" mandatory="true"/>
+            <param name="height" type="Number" mandatory="true"/>
+        </method>
+
+        <method name="resizeBy">
+            <param name="widthDelta" type="Number" mandatory="true"/>
+            <param name="heightDelta" type="Number" mandatory="true"/>
+        </method>
+
+        <method name="getComputedStyle" returnType="style" browser="Gecko">
+            <param name="element" mandatory="true" type="Element"/>
+            <param name="pseudoElt" mandatory="true" type="String"/>
+        </method>
+
+        <method name="showModalDialog" returnType="style" browser="IE">
+            <param name="sUrl" mandatory="true" type="String"/>
+            <param name="vArguments" type="Object"/>
+            <param name="sFeatures" type="String"/>
+        </method>
+
+        <method name="attachEvent" browser="IE">
+            <param name="type" mandatory="true" type="String"/>
+            <param name="listener" mandatory="true" type="Function"/>
+        </method>
+        <method name="detachEvent" browser="IE">
+            <param name="type" mandatory="true" type="String"/>
+            <param name="listener" mandatory="true" type="Function"/>
+        </method>
+
+        <method name="addEventListener" browser="Gecko">
+            <param name="type" mandatory="true" type="String"/>
+            <param name="listener" mandatory="true" type="Function"/>
+            <param name="useCapture" mandatory="true" type="Boolean"/>
+        </method>
+        <method name="removeEventListener" browser="Gecko">
+            <param name="type" mandatory="true" type="String"/>
+            <param name="listener" mandatory="true" type="Function"/>
+            <param name="useCapture" mandatory="true" type="Boolean"/>
+        </method>
+
+        <method name="execScript" browser="IE">
+            <param name="sScript" mandatory="true" type="String"/>
+        </method>
+
+        <method name="CollectGarbage" browser="IE"/>
+    </class>
+
+    <class name="Global">
         <!-- Value properties of Global Objects in Browser Content -->
         <property name="window" attribute="ReadOnly" type="window"/>
 
@@ -520,7 +520,7 @@
     </class>
 
 
-  <class name="HTMLCollection" url="#ID-75708506">
+    <class name="HTMLCollection" url="#ID-75708506">
         <!-- properties -->
         <property name="length" attribute="ReadOnly" type="Number" url="#ID-40057551"/>
 
@@ -580,7 +580,7 @@
 
         <property name="defaultView" type="DocumentView" browser="Gecko"/>
         <property name="activeElement" type="DocumentView" browser="IE"/>
-        <property name="compatMode" type="String" />
+        <property name="compatMode" type="String"/>
 
         <method name="createStyleSheet" returnType="Stylesheet" browser="IE"/>
         <property name="parentWindow" type="window" browser="IE"/>
@@ -618,23 +618,23 @@
     </class>
 
     <class name="CommandDispatcher" browser="Gecko">
-        <property name="focusedElement" type="HTMLElement" />
+        <property name="focusedElement" type="HTMLElement"/>
     </class>
 
     <class name="DocumentView" browser="Gecko">
-      <method name="getComputedStyle" returnType="CssStyle">
-         <param name="element" mandatory="true" type="Node"/>
-         <param name="type" mandatory="true" type="String"/>
-      </method>
+        <method name="getComputedStyle" returnType="CssStyle">
+            <param name="element" mandatory="true" type="Node"/>
+            <param name="type" mandatory="true" type="String"/>
+        </method>
     </class>
 
     <class name="CssStyle" browser="Gecko">
-      <method name="getPropertyValue" returnType="String">
-         <param name="propertyName" mandatory="true" type="String"/>
-      </method>
+        <method name="getPropertyValue" returnType="String">
+            <param name="propertyName" mandatory="true" type="String"/>
+        </method>
     </class>
 
-  <class name="HTMLElement" extends="Element" url="#ID-58190037">
+    <class name="HTMLElement" extends="Element" url="#ID-58190037">
         <!-- properties -->
         <property name="id" type="String" url="#ID-63534901"/>
         <property name="title" type="String" url="#ID-78276800"/>
@@ -644,96 +644,96 @@
 
         <property name="children" type="HTMLElement[]" elementType="HTMLElement" browser="IE"/>
 
-        <property name="style" type="style" />
-        <property name="clientWidth" type="Number" />
-        <property name="clientHeight" type="Number" />
-        <property name="clientTop" type="Number" />
-        <property name="clientLeft" type="Number" />
-        <property name="innerHTML" type="String" />
-        <property name="innerText" type="String" browser="IE" />
+        <property name="style" type="style"/>
+        <property name="clientWidth" type="Number"/>
+        <property name="clientHeight" type="Number"/>
+        <property name="clientTop" type="Number"/>
+        <property name="clientLeft" type="Number"/>
+        <property name="innerHTML" type="String"/>
+        <property name="innerText" type="String" browser="IE"/>
 
-        <property name="offsetWidth" type="Number" />
-        <property name="offsetHeight" type="Number" />
-        <property name="offsetTop" type="Number" />
-        <property name="offsetLeft" type="Number" />
-        <property name="offsetParent" type="Number" />
+        <property name="offsetWidth" type="Number"/>
+        <property name="offsetHeight" type="Number"/>
+        <property name="offsetTop" type="Number"/>
+        <property name="offsetLeft" type="Number"/>
+        <property name="offsetParent" type="Number"/>
 
-        <property name="scrollWidth" type="Number" />
-        <property name="scrollHeight" type="Number" />
-        <property name="scrollTop" type="Number" />
-        <property name="scrollLeft" type="Number" />
-        <property name="stylesheet" type="Stylesheet" />
+        <property name="scrollWidth" type="Number"/>
+        <property name="scrollHeight" type="Number"/>
+        <property name="scrollTop" type="Number"/>
+        <property name="scrollLeft" type="Number"/>
+        <property name="stylesheet" type="Stylesheet"/>
 
 
         <!-- methods -->
-      <event name="onblur"/>
-      <event name="onclick"/>
-      <event name="ondblclick"/>
-      <event name="onfocus"/>
-      <event name="onkeydown"/>
-      <event name="onkeyup"/>
-      <event name="onmouseup"/>
-      <event name="onmousedown"/>
-      <event name="onmouseout"/>
-      <event name="onmouseover"/>
-      <event name="onmousemove"/>
-      <event name="onresize"/>
+        <event name="onblur"/>
+        <event name="onclick"/>
+        <event name="ondblclick"/>
+        <event name="onfocus"/>
+        <event name="onkeydown"/>
+        <event name="onkeyup"/>
+        <event name="onmouseup"/>
+        <event name="onmousedown"/>
+        <event name="onmouseout"/>
+        <event name="onmouseover"/>
+        <event name="onmousemove"/>
+        <event name="onresize"/>
 
-      <method name="insertAdjacentHTML" browser="IE">
-          <param name="position" mandatory="true" type="String"/>
-          <param name="htmlContent" mandatory="true" type="String"/>
-       </method>
+        <method name="insertAdjacentHTML" browser="IE">
+            <param name="position" mandatory="true" type="String"/>
+            <param name="htmlContent" mandatory="true" type="String"/>
+        </method>
 
-      <method name="insertAdjacentText" browser="IE">
-          <param name="position" mandatory="true" type="String"/>
-          <param name="textContent" mandatory="true" type="String"/>
-       </method>
+        <method name="insertAdjacentText" browser="IE">
+            <param name="position" mandatory="true" type="String"/>
+            <param name="textContent" mandatory="true" type="String"/>
+        </method>
 
-      <property name="currentStyle" browser="IE" type="IEElementStyle"/>
-      <property name="runtimeStyle" browser="IE" type="IEElementStyle"/>
-      <property name="filters" browser="IE" type="Array"/>
+        <property name="currentStyle" browser="IE" type="IEElementStyle"/>
+        <property name="runtimeStyle" browser="IE" type="IEElementStyle"/>
+        <property name="filters" browser="IE" type="Array"/>
 
-      <method name="attachEvent" browser="IE">
-        <param name="type" mandatory="true" type="String"/>
-         <param name="listener" mandatory="true" type="Function"/>
-      </method>
-      <method name="detachEvent" browser="IE">
-        <param name="type" mandatory="true" type="String"/>
-         <param name="listener" mandatory="true" type="Function"/>
-      </method>
-      <method name="fireEvent" browser="IE">
-        <param name="type" mandatory="true" type="String"/>
-        <param name="event" type="Event"/>
-      </method>
+        <method name="attachEvent" browser="IE">
+            <param name="type" mandatory="true" type="String"/>
+            <param name="listener" mandatory="true" type="Function"/>
+        </method>
+        <method name="detachEvent" browser="IE">
+            <param name="type" mandatory="true" type="String"/>
+            <param name="listener" mandatory="true" type="Function"/>
+        </method>
+        <method name="fireEvent" browser="IE">
+            <param name="type" mandatory="true" type="String"/>
+            <param name="event" type="Event"/>
+        </method>
 
-      <method name="addBehavior" browser="IE" returnType="Number">
-        <param name="sUrl" mandatory="true" type="String"/>
-      </method>
+        <method name="addBehavior" browser="IE" returnType="Number">
+            <param name="sUrl" mandatory="true" type="String"/>
+        </method>
 
-      <method name="removeBehavior" browser="IE" returnType="Boolean">
-        <param name="sID" mandatory="true" type="Number"/>
-      </method>
+        <method name="removeBehavior" browser="IE" returnType="Boolean">
+            <param name="sID" mandatory="true" type="Number"/>
+        </method>
 
-      <method name="getBoundingClientRect" browser="IE" returnType="TextRange"/>
-      <method name="showPopup" browser="Gecko"/>
-      <method name="hidePopup" browser="Gecko"/>
-      <property name="boxObject" browser="Gecko" type="HTMLElement"/>
-      <property name="propertyName" browser="IE" type="String"/>
-      <property name="isDisabled" browser="IE" type="Boolean"/>
+        <method name="getBoundingClientRect" browser="IE" returnType="TextRange"/>
+        <method name="showPopup" browser="Gecko"/>
+        <method name="hidePopup" browser="Gecko"/>
+        <property name="boxObject" browser="Gecko" type="HTMLElement"/>
+        <property name="propertyName" browser="IE" type="String"/>
+        <property name="isDisabled" browser="IE" type="Boolean"/>
 
-      <method name="setCapture" browser="IE">
-        <param name="bContainerCapture" type="Boolean"/>
-      </method>
-      <method name="releaseCapture" browser="IE"/>
-      <method name="clearAttributes" browser="IE"/>
-      <method name="mergeAttributes" browser="IE">
-        <param name="oSource" type="Object"/>
-        <param name="bPreserve" type="Boolean" mandatory="false" />
-      </method>
-  </class>
+        <method name="setCapture" browser="IE">
+            <param name="bContainerCapture" type="Boolean"/>
+        </method>
+        <method name="releaseCapture" browser="IE"/>
+        <method name="clearAttributes" browser="IE"/>
+        <method name="mergeAttributes" browser="IE">
+            <param name="oSource" type="Object"/>
+            <param name="bPreserve" type="Boolean" mandatory="false"/>
+        </method>
+    </class>
 
     <class name="IEElementStyle" extends="style" browser="IE">
-      <property name="hasLayout" type="Boolean" />
+        <property name="hasLayout" type="Boolean"/>
     </class>
 
     <class name="HTMLHtmlElement" extends="HTMLElement" url="#ID-33759296">
@@ -817,8 +817,8 @@
         <property name="vLink" type="String" url="#ID-83224305"/>
 
         <!-- methods -->
-      <event name="onload"/>
-      <event name="onunload"/>
+        <event name="onload"/>
+        <event name="onunload"/>
     </class>
 
     <class name="HTMLFormElement" url="#ID-40002357">
@@ -913,8 +913,8 @@
         <method name="click" url="#ID-2651361"/>
 
         <method name="setSelectionRange" browser="Gecko">
-          <param name="start" type="Number"/>
-          <param name="end" type="Number"/>
+            <param name="start" type="Number"/>
+            <param name="end" type="Number"/>
         </method>
 
         <method name="createTextRange" returnType="TextRange" browser="IE"/>
@@ -1372,7 +1372,7 @@
         <property name="src" type="String" url="#ID-43933957"/>
         <property name="width" type="String" url="#ID-67133005"/>
         <property name="contentDocument" attribute="ReadOnly" type="Document" url="#ID-67133006"/>
-        <property name="contentWindow" attribute="ReadOnly" type="window" />
+        <property name="contentWindow" attribute="ReadOnly" type="window"/>
 
         <!-- methods -->
     </class>

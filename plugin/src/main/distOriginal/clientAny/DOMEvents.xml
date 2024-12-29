@@ -89,9 +89,9 @@
     </class>
 
     <class name="EventListener" url="#Events-EventListener" browser="Gecko">
-       <method name="handleEvent">
+        <method name="handleEvent">
             <param name="evt" mandatory="true" type="Event"/>
-       </method>
+        </method>
     </class>
 
     <class name="EventException" url="#Events-EventException" browser="Gecko">
@@ -106,7 +106,8 @@
 
         <!-- methods -->
         <method name="createEvent" returnType="Event" throws="DOMException">
-            <param name="eventType" mandatory="true" type="String"/></method>
+            <param name="eventType" mandatory="true" type="String"/>
+        </method>
         <method name="canDispatch" returnType="String">
             <param name="namespaceURI" mandatory="true" type="String"/>
             <param name="type" mandatory="true" type="String"/>
@@ -221,7 +222,7 @@
             <param name="metaKeyArg" mandatory="true" type="Boolean"/>
             <param name="buttonArg" mandatory="true" type="Number"/>
             <param name="relatedTargetArg" mandatory="true" type="EventTarget"/>
-       </method>
+        </method>
     </class>
 
     <class name="KeyboardEvent" url="#Events-KeyboardEvent" extends="UIEvent" browser="Gecko">
@@ -255,7 +256,7 @@
             <param name="keyIdentifierArg" mandatory="true" type="String"/>
             <param name="keyLocationArg" mandatory="true" type="Number"/>
             <param name="modifiersList" mandatory="true" type="String"/>
-       </method>
+        </method>
 
     </class>
 
