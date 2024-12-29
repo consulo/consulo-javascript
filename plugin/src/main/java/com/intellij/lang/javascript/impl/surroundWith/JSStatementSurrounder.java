@@ -32,11 +32,8 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 
 /**
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 12.07.2005
- * Time: 16:50:58
- * To change this template use File | Settings | File Templates.
+ * @author yole
+ * @since 2005-07-12
  */
 public abstract class JSStatementSurrounder implements Surrounder
 {

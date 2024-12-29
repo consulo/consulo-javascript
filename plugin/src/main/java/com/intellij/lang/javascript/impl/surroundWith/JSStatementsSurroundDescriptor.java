@@ -37,9 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * User: yole
- * Date: 12.07.2005
- * Time: 14:14:55
+ * @author yole
+ * @since 2005-07-12
  */
 @ExtensionImpl
 public class JSStatementsSurroundDescriptor implements SurroundDescriptor

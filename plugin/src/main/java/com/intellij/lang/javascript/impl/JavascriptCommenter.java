@@ -31,89 +31,75 @@ import jakarta.annotation.Nullable;
  * @author max
  */
 @ExtensionImpl
-public class JavascriptCommenter implements CodeDocumentationAwareCommenter
-{
-	@Override
-	public String getLineCommentPrefix()
-	{
-		return "//";
-	}
+public class JavascriptCommenter implements CodeDocumentationAwareCommenter {
+    @Override
+    public String getLineCommentPrefix() {
+        return "//";
+    }
 
-	@Override
-	public String getBlockCommentPrefix()
-	{
-		return "/*";
-	}
+    @Override
+    public String getBlockCommentPrefix() {
+        return "/*";
+    }
 
-	@Override
-	public String getBlockCommentSuffix()
-	{
-		return "*/";
-	}
+    @Override
+    public String getBlockCommentSuffix() {
+        return "*/";
+    }
 
-	@Nullable
-	@Override
-	public String getCommentedBlockCommentPrefix()
-	{
-		return null;
-	}
+    @Nullable
+    @Override
+    public String getCommentedBlockCommentPrefix() {
+        return null;
+    }
 
-	@Nullable
-	@Override
-	public String getCommentedBlockCommentSuffix()
-	{
-		return null;
-	}
+    @Nullable
+    @Override
+    public String getCommentedBlockCommentSuffix() {
+        return null;
+    }
 
-	@Override
-	@Nullable
-	public IElementType getLineCommentTokenType()
-	{
-		return JSTokenTypes.END_OF_LINE_COMMENT;
-	}
+    @Override
+    @Nullable
+    public IElementType getLineCommentTokenType() {
+        return JSTokenTypes.END_OF_LINE_COMMENT;
+    }
 
-	@Override
-	@Nullable
-	public IElementType getBlockCommentTokenType()
-	{
-		return JSTokenTypes.C_STYLE_COMMENT;
-	}
+    @Override
+    @Nullable
+    public IElementType getBlockCommentTokenType() {
+        return JSTokenTypes.C_STYLE_COMMENT;
+    }
 
-	@Override
-	public String getDocumentationCommentPrefix()
-	{
-		return "/**";
-	}
+    @Override
+    public String getDocumentationCommentPrefix() {
+        return "/**";
+    }
 
-	@Override
-	public String getDocumentationCommentLinePrefix()
-	{
-		return "*";
-	}
+    @Override
+    public String getDocumentationCommentLinePrefix() {
+        return "*";
+    }
 
-	@Override
-	public String getDocumentationCommentSuffix()
-	{
-		return "*/";
-	}
+    @Override
+    public String getDocumentationCommentSuffix() {
+        return "*/";
+    }
 
-	@Override
-	public boolean isDocumentationComment(final PsiComment element)
-	{
-		return element.getTokenType() == JSTokenTypes.DOC_COMMENT;
-	}
+    @Override
+    public boolean isDocumentationComment(final PsiComment element) {
+        return element.getTokenType() == JSTokenTypes.DOC_COMMENT;
+    }
 
-	@Override
-	@Nullable
-	public IElementType getDocumentationCommentTokenType()
-	{
-		return JSTokenTypes.DOC_COMMENT;
-	}
+    @Override
+    @Nullable
+    public IElementType getDocumentationCommentTokenType() {
+        return JSTokenTypes.DOC_COMMENT;
+    }
 
-	@Nonnull
-	@Override
-	public Language getLanguage()
-	{
-		return JavaScriptLanguage.INSTANCE;
-	}
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return JavaScriptLanguage.INSTANCE;
+    }
 }

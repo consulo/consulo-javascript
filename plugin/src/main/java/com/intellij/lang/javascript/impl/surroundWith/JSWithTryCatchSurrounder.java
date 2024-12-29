@@ -21,11 +21,8 @@ import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
 /**
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 12.07.2005
- * Time: 19:29:10
- * To change this template use File | Settings | File Templates.
+ * @author yole
+ * @since 2005-07-12
  */
 public class JSWithTryCatchSurrounder extends JSWithTryCatchFinallySurrounder
 {

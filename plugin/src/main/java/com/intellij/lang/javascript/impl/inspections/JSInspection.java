@@ -36,9 +36,8 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
- * User: Maxim.Mossienko
- * Date: Apr 18, 2006
- * Time: 7:34:46 PM
+ * @author Maxim.Mossienko
+ * @since 2006-08-18
  */
 public abstract class JSInspection extends LocalInspectionTool implements CustomSuppressableInspectionTool
 {

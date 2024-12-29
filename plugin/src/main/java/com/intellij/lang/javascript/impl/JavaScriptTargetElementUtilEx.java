@@ -26,27 +26,21 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Oct 13, 2008
- *         Time: 3:53:42 PM
+ * @since 2008-10-13
  */
 @ExtensionImpl
-public class JavaScriptTargetElementUtilEx implements TargetElementUtilExtender
-{
-	@Override
-	public boolean includeSelfInGotoImplementation(@Nonnull final PsiElement element)
-	{
-		if(element instanceof JSFunction)
-		{
-			final PsiElement parent = JSResolveUtil.findParent(element);
-			if(parent instanceof JSClass && ((JSClass) parent).isInterface())
-			{
-				return false;
-			}
-		}
-		else if(element instanceof JSClass)
-		{
-			return false;
-		}
-		return true;
-	}
+public class JavaScriptTargetElementUtilEx implements TargetElementUtilExtender {
+    @Override
+    public boolean includeSelfInGotoImplementation(@Nonnull final PsiElement element) {
+        if (element instanceof JSFunction) {
+            final PsiElement parent = JSResolveUtil.findParent(element);
+            if (parent instanceof JSClass jsClass && jsClass.isInterface()) {
+                return false;
+            }
+        }
+        else if (element instanceof JSClass) {
+            return false;
+        }
+        return true;
+    }
 }
