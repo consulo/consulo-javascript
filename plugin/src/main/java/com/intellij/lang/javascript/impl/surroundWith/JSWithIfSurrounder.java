@@ -25,11 +25,8 @@ import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;
 
 /**
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 12.07.2005
- * Time: 16:33:55
- * To change this template use File | Settings | File Templates.
+ * @author yole
+ * @since 2005-07-12
  */
 public class JSWithIfSurrounder extends JSStatementSurrounder
 {

@@ -31,11 +31,8 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 12.07.2005
- * Time: 12:47:49
- * To change this template use File | Settings | File Templates.
+ * @author yole
+ * @since 2005-07-12
  */
 public class JSWithParenthesesSurrounder implements Surrounder
 {
