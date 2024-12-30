@@ -1,22 +1,20 @@
-window.ActiveXObject = function() {};//XMLHttpRequest
-window.XmlHttpRequest = function() {};//XMLHttpRequest
-window.prototype = new Object();
+window.ActiveXObject = function () {}; //XMLHttpRequest
+window.XmlHttpRequest = function () {}; //XMLHttpRequest
 
 var XMLHttpRequest = {
-	onreadystatechange: function () {}
+    abort: function () {}, //Object
+    constructor: 0, //Object
+    getAllResponseHeaders: function () {}, //String
+    getResponseHeader: function (headerName) {}, //String
+    readyState: 0, //Number
+    responseText: 0, //String
+    responseXML: 0, //String
+    onreadystatechange: function () {},
+    open: function (method, url, async, username, password) {}, //Object
+    overrideMimeType: function (mimeType) {}, //Gecko,Object
+    send: function (content) {}, //void
+    setRequestHeader: function (label, value) {}, //void
+    statusText: 0, //String
+    status: 0, //Number
 };
-XMLHttpRequest.constructor = 0;//Object
-XMLHttpRequest.readyState = 0;//Number
-XMLHttpRequest.responseText = 0;//String
-XMLHttpRequest.statusText = 0;//String
-XMLHttpRequest.status = 0;//Number
-XMLHttpRequest.responseXML = 0;//String
-XMLHttpRequest.abort = function() {};//Object
-XMLHttpRequest.getAllResponseHeaders = function() {};//String
-XMLHttpRequest.getResponseHeader = function(headerName) {};//String
-XMLHttpRequest.overrideMimeType = function(mimeType) {};//Gecko,Object
-XMLHttpRequest.open = function(method,url,async,username,password) {};//Object
-XMLHttpRequest.send = function(content) {};//void
-XMLHttpRequest.setRequestHeader = function(label,value) {};//void
-
 XMLHttpRequest.prototype = new Object();

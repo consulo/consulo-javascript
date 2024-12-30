@@ -1,40 +1,44 @@
-XPathException.code = 0;//Gecko,Number
-XPathException = {};
-XPathException.prototype = new Object();
+var XPathException = {
+    code: 0, //Gecko,Number
+};
 
-XPathEvaluator.createExpression = function(expression,resolver) {};//Gecko,XPathExpression
-XPathEvaluator.createNSResolver = function(nodeResolver) {};//Gecko,XPathNSResolver
-XPathEvaluator.evaluate = function(expression,contextNode,resolver,type,result) {};//Gecko,Object
-XPathEvaluator.prototype = new Object();
+var XPathEvaluator = {
+    createExpression: function (expression, resolver) {}, //Gecko,XPathExpression
+    createNSResolver: function (nodeResolver) {}, //Gecko,XPathNSResolver
+    evaluate: function (expression, contextNode, resolver, type, result) {}, //Gecko,Object
+};
 
-XPathExpression.evaluate = function(contextNode,type,result) {};//Gecko,Object
-XPathExpression.prototype = new Object();
+var XPathExpression = {
+    evaluate: function (contextNode, type, result) {}, //Gecko,Object
+};
 
-XPathNSResolver.lookupNamespaceURI = function(prefix) {};//Gecko,String
-XPathNSResolver.prototype = new Object();
+var XPathNSResolver = {
+    lookupNamespaceURI: function (prefix) {}, //Gecko,String
+};
 
-XPathResult.resultType = 0;//Gecko,Number
-XPathResult.numberValue = 0;//Gecko,Number
-XPathResult.stringValue = 0;//Gecko,String
-XPathResult.booleanValue = 0;//Gecko,Boolean
-XPathResult.singleNodeValue = 0;//Gecko,Node
-XPathResult.invalidIteratorState = 0;//Gecko,Boolean
-XPathResult.snapshotLength = 0;//Gecko,Number
-XPathResult.ORDERED_NODE_SNAPSHOT_TYPE = 0;//Gecko,Number
-XPathResult.ORDERED_NODE_ITERATOR_TYPE = 0;//Gecko,Number
-XPathResult.ANY_TYPE = 0;//Gecko,Number
-XPathResult.BOOLEAN_TYPE = 0;//Gecko,Number
-XPathResult.NUMBER_TYPE = 0;//Gecko,Number
-XPathResult.STRING_TYPE = 0;//Gecko,Number
-XPathResult.FIRST_ORDERED_NODE_TYPE = 0;//Gecko,Number
-XPathResult.ANY_UNORDERED_NODE_TYPE = 0;//Gecko,Number
-XPathResult.UNORDERED_NODE_ITERATOR_TYPE = 0;//Gecko,Number
-XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE = 0;//Gecko,Number
-XPathResult = {};
-XPathResult.iterateNext = function() {};//Gecko,Node
-XPathResult.snapshotItem = function(index) {};//Gecko,Node
-XPathResult.prototype = new Object();
+var XPathResult = {
+    ANY_TYPE: 0, //Gecko,Number
+    ANY_UNORDERED_NODE_TYPE: 0, //Gecko,Number
+    BOOLEAN_TYPE: 0, //Gecko,Number
+    booleanValue: 0, //Gecko,Boolean
+    FIRST_ORDERED_NODE_TYPE: 0, //Gecko,Number
+    invalidIteratorState: 0, //Gecko,Boolean
+    iterateNext: function () {}, //Gecko,Node
+    NUMBER_TYPE: 0, //Gecko,Number
+    numberValue: 0, //Gecko,Number
+    ORDERED_NODE_ITERATOR_TYPE: 0, //Gecko,Number
+    ORDERED_NODE_SNAPSHOT_TYPE: 0, //Gecko,Number
+    resultType: 0, //Gecko,Number
+    singleNodeValue: 0, //Gecko,Node
+    snapshotItem: function (index) {}, //Gecko,Node
+    snapshotLength: 0, //Gecko,Number
+    STRING_TYPE: 0, //Gecko,Number
+    stringValue: 0, //Gecko,String
+    UNORDERED_NODE_ITERATOR_TYPE: 0, //Gecko,Number
+    UNORDERED_NODE_SNAPSHOT_TYPE: 0, //Gecko,Number
+};
 
-XPathNamespace.ownerElement = 0;//Gecko,Element
-XPathNamespace = {};
+var XPathNamespace = {
+    ownerElement: 0, //Gecko,Element
+};
 XPathNamespace.prototype = new Node();

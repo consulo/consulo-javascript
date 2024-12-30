@@ -1,253 +1,271 @@
-DOMImplementationRegistry.getDOMImplementation = function(features) {};//Object
-DOMImplementationRegistry.getDOMImplementationList = function(features) {};//Object
-DOMImplementationRegistry.prototype = new Object();
+var DOMImplementationRegistry = {
+    getDOMImplementation: function (features) {}, //Object
+    getDOMImplementationList: function (features) {}, //Object
+};
 
-DOMException.code = 0;//Number
-DOMException = {};
-DOMException.prototype = new Object();
+var DOMException = {
+    code: 0, //Number
+};
 
-DOMStringList.length = 0;//Number
-DOMStringList = {};
-DOMStringList.item = function(index) {};//String
-DOMStringList.contains = function(str) {};//Boolean
-DOMStringList.prototype = new Object();
+var DOMStringList = {
+    contains: function (str) {}, //Boolean
+    item: function (index) {}, //String
+    length: 0, //Number
+};
 
-NameList.length = 0;//Number
-NameList = {};
-NameList.getName = function(index) {};//String
-NameList.getNamespaceURI = function(index) {};//String
-NameList.contains = function(str) {};//Boolean
-NameList.containsNS = function(namespaceURI,name) {};//Boolean
-NameList.prototype = new Object();
+var NameList = {
+    contains: function (str) {}, //Boolean
+    containsNS: function (namespaceURI,name) {}, //Boolean
+    getName: function (index) {}, //String
+    getNamespaceURI: function (index) {}, //String
+    length: 0, //Number
+};
 
-DOMImplementationList.length = 0;//Number
-DOMImplementationList = {};
-DOMImplementationList.item = function(index) {};//DOMImplementation
-DOMImplementationList.prototype = new Object();
+var DOMImplementationList = {
+    item: function (index) {}, //DOMImplementation
+    length: 0, //Number
+};
 
-DOMImplementationSource.getDOMImplementation = function(features) {};//DOMImplementation
-DOMImplementationSource.getDOMImplementationList = function(features) {};//DOMImplementationList
-DOMImplementationSource.prototype = new Object();
+var DOMImplementationSource = {
+    getDOMImplementation: function (features) {}, //DOMImplementation
+    getDOMImplementationList: function (features) {}, //DOMImplementationList
+};
 
-DOMImplementation.hasFeature = function(feature,version) {};//Boolean
-DOMImplementation.createDocumentType = function(qualifiedName,publicId,systemId) {};//DocumentType
-DOMImplementation.createDocument = function(namespaceURI,qualifiedName,doctype) {};//Document
-DOMImplementation.getFeature = function(feature,version) {};//Object
-DOMImplementation.prototype = new Object();
+var DOMImplementation = {
+    createDocument: function (namespaceURI,qualifiedName,doctype) {}, //Document
+    createDocumentType: function (qualifiedName,publicId,systemId) {}, //DocumentType
+    getFeature: function (feature,version) {}, //Object
+    hasFeature: function (feature,version) {}, //Boolean
+};
 
+var DocumentFragment = {};
 DocumentFragment.prototype = new Node();
 
-Document.doctype = 0;//DocumentType
-Document.implementation = 0;//DOMImplementation
-Document.documentElement = 0;//Element
-Document.inputEncoding = 0;//String
-Document.xmlEncoding = 0;//String
-Document.xmlStandalone = 0;//Boolean
-Document.xmlVersion = 0;//String
-Document.strictErrorChecking = 0;//Boolean
-Document.documentURI = 0;//String
-Document.domConfig = 0;//DOMConfiguration
-Document.parseError = 0;//IE,IXMLDOMParseError
-Document = {};
-Document.createElement = function(tagName) {};//Element
-Document.createDocumentFragment = function() {};//DocumentFragment
-Document.createTextNode = function(data) {};//Text
-Document.createComment = function(data) {};//Comment
-Document.createCDATASection = function(data) {};//CDATASection
-Document.createProcessingInstruction = function(target,data) {};//ProcessingInstruction
-Document.createAttribute = function(name) {};//Attr
-Document.createEntityReference = function(name) {};//EntityReference
-Document.getElementsByTagName = function(tagname) {};//NodeList
-Document.importNode = function(importedNode,deep) {};//Node
-Document.createElementNS = function(namespaceURI,qualifiedName) {};//Element
-Document.createAttributeNS = function(namespaceURI,qualifiedName) {};//Attr
-Document.getElementsByTagNameNS = function(namespaceURI,localName) {};//NodeList
-Document.getElementById = function(elementId) {};//Element
-Document.adoptNode = function(source) {};//Node
-Document.normalizeDocument = function() {};//Object
-Document.renameNode = function(n,namespaceURI,qualifiedName) {};//Node
-Document.load = function(filename) {};//IE,Object
-Document.loadXML = function(xmlString) {};//IE,Object
-Document.save = function(filename) {};//IE,Object
-Document.setProperty = function(name,value) {};//IE,Object
-Document.selectSingleNode = function(xpathExpression) {};//IE,Object
-Document.selectNodes = function(xpathExpression) {};//IE,Object
+var Document = {
+    adoptNode: function (source) {}, //Node
+    createAttribute: function (name) {}, //Attr
+    createAttributeNS: function (namespaceURI, qualifiedName) {}, //Attr
+    createCDATASection: function (data) {}, //CDATASection
+    createComment: function (data) {}, //Comment
+    createDocumentFragment: function () {}, //DocumentFragment
+    createElement: function (tagName) {}, //Element
+    createElementNS: function (namespaceURI,qualifiedName) {}, //Element
+    createProcessingInstruction: function (target,data) {}, //ProcessingInstruction
+    createTextNode: function (data) {}, //Text
+    createEntityReference: function (name) {}, //EntityReference
+    doctype: 0, //DocumentType
+    documentElement: 0, //Element
+    documentURI: 0, //String
+    domConfig: 0, //DOMConfiguration
+    getElementById: function (elementId) {}, //Element
+    getElementsByTagName: function (tagname) {}, //NodeList
+    getElementsByTagNameNS: function (namespaceURI,localName) {}, //NodeList
+    implementation: 0, //DOMImplementation
+    importNode: function (importedNode,deep) {}, //Node
+    inputEncoding: 0, //String
+    parseError: 0, //IE,IXMLDOMParseError
+    load: function (filename) {}, //IE,Object
+    loadXML: function (xmlString) {}, //IE,Object
+    normalizeDocument: function () {}, //Object
+    renameNode: function (n,namespaceURI,qualifiedName) {}, //Node
+    save: function (filename) {}, //IE,Object
+    setProperty: function (name,value) {}, //IE,Object
+    selectSingleNode: function (xpathExpression) {}, //IE,Object
+    selectNodes: function (xpathExpression) {}, //IE,Object
+    strictErrorChecking: 0, //Boolean
+    xmlEncoding: 0, //String
+    xmlStandalone: 0, //Boolean
+    xmlVersion: 0, //String
+};
 Document.prototype = new Node();
 
-IXMLDOMParseError.reason = 0;//IE,String
-IXMLDOMParseError.errorCode = 0;//IE,Number
-IXMLDOMParseError = {};
-IXMLDOMParseError.prototype = new Object();
+var IXMLDOMParseError = {
+    errorCode: 0, //IE,Number
+    reason: 0, //IE,String
+};
 
-Node.nodeName = 0;//String
-Node.nodeValue = 0;//String
-Node.nodeType = 0;//Number
-Node.parentNode = 0;//Node
-Node.childNodes = 0;//NodeList
-Node.firstChild = 0;//Node
-Node.lastChild = 0;//Node
-Node.previousSibling = 0;//Node
-Node.nextSibling = 0;//Node
-Node.attributes = 0;//NamedNodeMap
-Node.ownerDocument = 0;//Document
-Node.namespaceURI = 0;//String
-Node.prefix = 0;//String
-Node.localName = 0;//String
-Node.baseURI = 0;//String
-Node.textContent = 0;//String
-Node = {};
-Node.insertBefore = function(newChild,refChild) {};//Node
-Node.replaceChild = function(newChild,refChild) {};//Node
-Node.removeChild = function(oldChild) {};//Node
-Node.appendChild = function(newChild) {};//Node
-Node.hasChildNodes = function() {};//Boolean
-Node.cloneNode = function(deep) {};//Node
-Node.normalize = function() {};//Object
-Node.isSupported = function(feature,version) {};//Boolean
-Node.hasAttributes = function() {};//Boolean
-Node.compareDocumentPosition = function(other) {};//Node
-Node.isSameNode = function(other) {};//Boolean
-Node.lookupPrefix = function(namespaceURI) {};//String
-Node.isDefaultNamespace = function(namespaceURI) {};//String
-Node.lookupNamespaceURI = function(prefix) {};//String
-Node.isEqualNode = function(arg) {};//Boolean
-Node.getFeature = function(feature,version) {};//Object
-Node.setUserData = function(key,data,handler) {};//Object
-Node.getUserData = function(key) {};//Object
-Node.prototype = new Object();
+var Node = {
+    nodeName: 0, //String
+    nodeValue: 0, //String
+    nodeType: 0, //Number
+    parentNode: 0, //Node
+    childNodes: 0, //NodeList
+    firstChild: 0, //Node
+    lastChild: 0, //Node
+    previousSibling: 0, //Node
+    nextSibling: 0, //Node
+    attributes: 0, //NamedNodeMap
+    ownerDocument: 0, //Document
+    namespaceURI: 0, //String
+    prefix: 0, //String
+    localName: 0, //String
+    baseURI: 0, //String
+    textContent: 0, //String
+    insertBefore: function (newChild,refChild) {}, //Node
+    replaceChild: function (newChild,refChild) {}, //Node
+    removeChild: function (oldChild) {}, //Node
+    appendChild: function (newChild) {}, //Node
+    hasChildNodes: function () {}, //Boolean
+    cloneNode: function (deep) {}, //Node
+    normalize: function () {}, //Object
+    isSupported: function (feature,version) {}, //Boolean
+    hasAttributes: function () {}, //Boolean
+    compareDocumentPosition: function (other) {}, //Node
+    isSameNode: function (other) {}, //Boolean
+    lookupPrefix: function (namespaceURI) {}, //String
+    isDefaultNamespace: function (namespaceURI) {}, //String
+    lookupNamespaceURI: function (prefix) {}, //String
+    isEqualNode: function (arg) {}, //Boolean
+    getFeature: function (feature,version) {}, //Object
+    setUserData: function (key,data,handler) {}, //Object
+    getUserData: function (key) {}, //Object
+};
 
-NodeList.length = 0;//Number
-NodeList = {};
-NodeList.item = function(index) {};//Node
-NodeList.prototype = new Object();
+var NodeList = {
+    length: 0, //Number
+    item: function (index) {}, //Node
+};
 
-NamedNodeMap.length = 0;//Number
-NamedNodeMap = {};
-NamedNodeMap.getNamedItem = function(name) {};//Node
-NamedNodeMap.setNamedItem = function(arg) {};//Node
-NamedNodeMap.removeNamedItem = function(name) {};//Node
-NamedNodeMap.item = function(index) {};//Node
-NamedNodeMap.getNamedItemNS = function(namespaceURI,localName) {};//Node
-NamedNodeMap.setNamedItemNS = function(arg) {};//Node
-NamedNodeMap.removeNamedItemNS = function(namespaceURI,localName) {};//Node
-NamedNodeMap.prototype = new Object();
+var NamedNodeMap = {
+    length: 0, //Number
+    getNamedItem: function (name) {}, //Node
+    setNamedItem: function (arg) {}, //Node
+    removeNamedItem: function (name) {}, //Node
+    item: function (index) {}, //Node
+    getNamedItemNS: function (namespaceURI, localName) {}, //Node
+    setNamedItemNS: function (arg) {}, //Node
+    removeNamedItemNS: function (namespaceURI, localName) {}, //Node
+};
 
-CharacterData.data = 0;//String
-CharacterData.length = 0;//Number
-CharacterData = {};
-CharacterData.substringData = function(offset,count) {};//String
-CharacterData.appendData = function(arg) {};//Object
-CharacterData.insertData = function(offset,arg) {};//Object
-CharacterData.deleteData = function(offset,count) {};//Object
-CharacterData.replaceData = function(offset,count,arg) {};//Object
+var CharacterData = {
+    data: 0, //String
+    length: 0, //Number
+    substringData: function (offset,count) {}, //String
+    appendData: function (arg) {}, //Object
+    insertData: function (offset,arg) {}, //Object
+    deleteData: function (offset,count) {}, //Object
+    replaceData: function (offset,count,arg) {}, //Object
+};
 CharacterData.prototype = new Node();
 
-Attr.name = 0;//String
-Attr.specified = 0;//Boolean
-Attr.value = 0;//String
-Attr.ownerElement = 0;//Element
-Attr.schemaTypeInfo = 0;//TypeInfo
-Attr.isId = 0;//Boolean
-Attr = {};
+var Attr = {
+    name: 0, //String
+    specified: 0, //Boolean
+    value: 0, //String
+    ownerElement: 0, //Element
+    schemaTypeInfo: 0, //TypeInfo
+    isId: 0, //Boolean
+};
 Attr.prototype = new Node();
 
-Element.tagName = 0;//String
-Element.schemaTypeInfo = 0;//TypeInfo
-Element = {};
-Element.getAttribute = function(name) {};//String
-Element.setAttribute = function(name,value) {};//Object
-Element.removeAttribute = function(name) {};//Object
-Element.getAttributeNode = function(name) {};//Attr
-Element.setAttributeNode = function(newAttr) {};//Attr
-Element.removeAttributeNode = function(oldAttr) {};//Attr
-Element.getElementsByTagName = function(name) {};//NodeList
-Element.getAttributeNS = function(namespaceURI,localName) {};//String
-Element.setAttributeNS = function(namespaceURI,qualifiedName,value) {};//Object
-Element.removeAttributeNS = function(namespaceURI,localName) {};//Object
-Element.getAttributeNodeNS = function(namespaceURI,localName) {};//Object
-Element.setAttributeNodeNS = function(newAttr) {};//Object
-Element.getElementsByTagNameNS = function(namespaceURI,localName) {};//NodeList
-Element.hasAttribute = function(name) {};//Boolean
-Element.hasAttributeNS = function(namespaceURI,localName) {};//Boolean
-Element.setIdAttribute = function(name,isId) {};//Object
-Element.setIdAttributeNS = function(namespaceURI,localName,isId) {};//Object
-Element.setIdAttributeNode = function(idAttr,isId) {};//Object
+var Element = {
+    getAttribute: function (name) {}, //String
+    getAttributeNode: function (name) {}, //Attr
+    getAttributeNodeNS: function (namespaceURI,localName) {}, //Object
+    getAttributeNS: function (namespaceURI, localName) {}, //String
+    getElementsByTagName: function (name) {}, //NodeList
+    getElementsByTagNameNS: function (namespaceURI, localName) {}, //NodeList
+    hasAttribute: function (name) {}, //Boolean
+    hasAttributeNS: function (namespaceURI, localName) {}, //Boolean
+    removeAttribute: function (name) {}, //Object
+    removeAttributeNode: function (oldAttr) {}, //Attr
+    removeAttributeNS: function (namespaceURI,localName) {}, //Object
+    schemaTypeInfo: 0, //TypeInfo
+    setAttribute: function (name,value) {}, //Object
+    setAttributeNode: function (newAttr) {}, //Attr
+    setAttributeNodeNS: function (newAttr) {}, //Object
+    setAttributeNS: function (namespaceURI, qualifiedName, value) {}, //Object
+    setIdAttribute: function (name, isId) {}, //Object
+    setIdAttributeNode: function (idAttr, isId) {}, //Object
+    setIdAttributeNS: function (namespaceURI, localName, isId) {}, //Object
+    tagName: 0, //String
+};
 Element.prototype = new Node();
 
-Text.isElementContentWhitespace = 0;//Boolean
-Text.wholeText = 0;//String
-Text = {};
-Text.splitText = function(offset) {};//Text
-Text.replaceWholeText = function(content) {};//Text
+var Text = {
+    isElementContentWhitespace: 0, //Boolean
+    replaceWholeText: function (content) {}, //Text
+    splitText: function (offset) {}, //Text
+    wholeText: 0, //String
+};
 Text.prototype = new CharacterData();
 
+var Comment = {};
 Comment.prototype = new CharacterData();
 
-TypeInfo.typeName = 0;//String
-TypeInfo.typeNamespace = 0;//String
-TypeInfo = {};
-TypeInfo.isDerivedFrom = function(typeNamespaceArg,typeNameArg,derivationMethod) {};//Boolean
-TypeInfo.prototype = new Object();
+var TypeInfo = {
+    isDerivedFrom: function (typeNamespaceArg,typeNameArg,derivationMethod) {}, //Boolean
+    typeName: 0, //String
+    typeNamespace: 0, //String
+};
 
-UserDataHandler.handle = function(param1,param2,param3,param4,param5) {};//Object
-UserDataHandler.prototype = new Object();
+var UserDataHandler = {
+    handle: function (param1, param2, param3, param4, param5) {}, //Object
+};
 
-DOMError.severity = 0;//Number
-DOMError.message = 0;//String
-DOMError.type = 0;//String
-DOMError.relatedException = 0;//Object
-DOMError.relatedData = 0;//Object
-DOMError.location = 0;//DOMLocator
-DOMError = {};
-DOMError.prototype = new Object();
+var DOMError = {
+    location: 0, //DOMLocator
+    message: 0, //String
+    relatedData: 0, //Object
+    relatedException: 0, //Object
+    severity: 0, //Number
+    type: 0, //String
+};
 
-DOMErrorHandler.handler = function(error) {};//Boolean
-DOMErrorHandler.prototype = new Object();
+var DOMErrorHandler = {
+    handler: function (error) {}, //Boolean
+};
 
-DOMLocator.lineNumber = 0;//Number
-DOMLocator.columnNumber = 0;//Number
-DOMLocator.byteOffset = 0;//Number
-DOMLocator.utf16Offset = 0;//Number
-DOMLocator.relatedNode = 0;//Node
-DOMLocator.uri = 0;//String
-DOMLocator = {};
-DOMLocator.prototype = new Object();
+var DOMLocator = {
+    byteOffset: 0, //Number
+    columnNumber: 0, //Number
+    lineNumber: 0, //Number
+    relatedNode: 0, //Node
+    uri: 0, //String
+    utf16Offset: 0, //Number
+};
 
-DOMConfiguration.parameterNames = 0;//DOMStringList
-DOMConfiguration = {};
-DOMConfiguration.setParameter = function(name,value) {};//Object
-DOMConfiguration.getParameter = function(name) {};//Object
-DOMConfiguration.canSetParameter = function(name,value) {};//Boolean
-DOMConfiguration.prototype = new Object();
+var DOMConfiguration = {
+    canSetParameter: function (name, value) {}, //Boolean
+    getParameter: function (name) {}, //Object
+    parameterNames: 0, //DOMStringList
+    setParameter: function (name, value) {}, //Object
+};
 
+var CDATASection = {};
 CDATASection.prototype = new Text();
 
-DocumentType.name = 0;//String
-DocumentType.entities = 0;//NamedNodeMap
-DocumentType.notations = 0;//NamedNodeMap
-DocumentType.publicId = 0;//String
-DocumentType.systemId = 0;//String
-DocumentType.internalSubset = 0;//String
-DocumentType = {};
+var DocumentType = {
+    entities: 0, //NamedNodeMap
+    internalSubset: 0, //String
+    name: 0, //String
+    notations: 0, //NamedNodeMap
+    publicId: 0, //String
+    systemId: 0, //String
+};
 DocumentType.prototype = new Node();
 
-Notation.publicId = 0;//String
-Notation.systemId = 0;//String
-Notation = {};
+var Notation = {
+    publicId: 0, //String
+    systemId: 0, //String
+};
 Notation.prototype = new Node();
 
-Entity.publicId = 0;//String
-Entity.systemId = 0;//String
-Entity.notationName = 0;//String
-Entity.inputEncoding = 0;//String
-Entity.xmlEncoding = 0;//String
-Entity.xmlVersion = 0;//String
-Entity = {};
+var Entity = {
+    inputEncoding: 0, //String
+    notationName: 0, //String
+    publicId: 0, //String
+    systemId: 0, //String
+    xmlEncoding: 0, //String
+    xmlVersion: 0, //String
+};
 Entity.prototype = new Node();
 
+var EntityReference = {};
 EntityReference.prototype = new Node();
 
-ProcessingInstruction.target = 0;//String
-ProcessingInstruction.data = 0;//String
-ProcessingInstruction = {};
+var ProcessingInstruction = {
+    data: 0, //String
+    target: 0, //String
+};
 ProcessingInstruction.prototype = new Node();

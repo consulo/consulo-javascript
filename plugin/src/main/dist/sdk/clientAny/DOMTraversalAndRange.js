@@ -1,60 +1,64 @@
-NodeIterator.root = 0;//Node
-NodeIterator.whatToShow = 0;//Number
-NodeIterator.filter = 0;//NodeFilter
-NodeIterator.expandEntityReferences = 0;//Boolean
-NodeIterator = {};
-NodeIterator.nextNode = function() {};//Node
-NodeIterator.previousNode = function() {};//Node
-NodeIterator.detach = function() {};//Object
-NodeIterator.prototype = new Object();
+var NodeIterator = {
+    detach: function () {}, //Object
+    expandEntityReferences: 0, //Boolean
+    filter: 0, //NodeFilter
+    nextNode: function () {}, //Node
+    previousNode: function () {}, //Node
+    root: 0, //Node
+    whatToShow: 0, //Number
+};
 
-NodeFilter.NodeFilter = function(param) {};//Number
-NodeFilter.prototype = new Object();
+var NodeFilter = {
+    NodeFilter: function (param) {}, //Number
+};
 
-TreeWalker.parentNode = function() {};//Node
-TreeWalker.firstChild = function() {};//Node
-TreeWalker.lastChild = function() {};//Node
-TreeWalker.previousSibling = function() {};//Node
-TreeWalker.nextSibling = function() {};//Node
-TreeWalker.previousNode = function() {};//Node
-TreeWalker.nextNode = function() {};//Node
-TreeWalker.prototype = new Object();
+var TreeWalker = {
+    firstChild: function () {}, //Node
+    lastChild: function () {}, //Node
+    nextNode: function () {}, //Node
+    nextSibling: function () {}, //Node
+    parentNode: function () {}, //Node
+    previousNode: function () {}, //Node
+    previousSibling: function () {}, //Node
+};
 
-DocumentTraversal.createNodeIterator = function(root,whatToShow,filter,entityReferenceExpansion) {};//NodeIterator
-DocumentTraversal.createTreeWalker = function(root,whatToShow,filter,entityReferenceExpansion) {};//TreeWalker
-DocumentTraversal.prototype = new Object();
+var DocumentTraversal = {
+    createNodeIterator: function (root, whatToShow, filter, entityReferenceExpansion) {}, //NodeIterator
+    createTreeWalker: function (root, whatToShow, filter, entityReferenceExpansion) {}, //TreeWalker
+};
 
-Range.startContainer = 0;//Node
-Range.startOffset = 0;//long
-Range.endContainer = 0;//Node
-Range.endOffset = 0;//long
-Range.collapsed = 0;//Boolean
-Range.commonAncestorContainer = 0;//Node
-Range = {};
-Range.setStart = function(refNode,offset) {};//Object
-Range.setEnd = function(refNode,offset) {};//Object
-Range.setStartBefore = function(refNode) {};//Object
-Range.setStartAfter = function(refNode) {};//Object
-Range.setEndBefore = function(refNode) {};//Object
-Range.setEndAfter = function(refNode) {};//Object
-Range.collapse = function(toStart) {};//Object
-Range.selectNode = function(refNode) {};//Object
-Range.selectNodeContents = function(refNode) {};//Object
-Range.compareBoundaryPoints = function(how,sourceRange) {};//short
-Range.deleteContents = function() {};//Object
-Range.extractContents = function() {};//DocumentFragment
-Range.cloneContents = function() {};//DocumentFragment
-Range.insertNode = function(newNode) {};//Object
-Range.surroundContents = function(newParent) {};//Object
-Range.cloneRange = function() {};//Range
-Range.toString = function() {};//String
-Range.detach = function() {};//Object
-Range.createContextualFragment = function(tagString) {};//Gecko,Object
-Range.prototype = new Object();
+var Range = {
+    cloneContents: function () {}, //DocumentFragment
+    cloneRange: function () {}, //Range
+    collapse: function (toStart) {}, //Object
+    collapsed: 0, //Boolean
+    commonAncestorContainer: 0, //Node
+    compareBoundaryPoints: function (how,sourceRange) {}, //short
+    createContextualFragment: function (tagString) {}, //Gecko,Object
+    deleteContents: function () {}, //Object
+    detach: function () {}, //Object
+    endContainer: 0, //Node
+    endOffset: 0, //long
+    extractContents: function () {}, //DocumentFragment
+    insertNode: function (newNode) {}, //Object
+    selectNode: function (refNode) {}, //Object
+    selectNodeContents: function (refNode) {}, //Object
+    setEnd: function (refNode,offset) {}, //Object
+    setEndAfter: function (refNode) {}, //Object
+    setEndBefore: function (refNode) {}, //Object
+    setStart: function (refNode, offset) {}, //Object
+    setStartAfter: function (refNode) {}, //Object
+    setStartBefore: function (refNode) {}, //Object
+    startContainer: 0, //Node
+    startOffset: 0, //long
+    surroundContents: function (newParent) {}, //Object
+    toString: function () {}, //String
+};
 
-DocumentRange.createRange = function() {};//Range
-DocumentRange.prototype = new Object();
+var DocumentRange = {
+    createRange: function () {}, //Range
+};
 
-RangeException.code = 0;//Number
-RangeException = {};
-RangeException.prototype = new Object();
+var RangeException = {
+    code: 0, //Number
+};
