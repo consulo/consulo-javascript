@@ -1,6 +1,6 @@
 var DOMImplementationRegistry = {
-    getDOMImplementation: function (features) {}, //Object
-    getDOMImplementationList: function (features) {}, //Object
+    getDOMImplementation: function (features) { return {}; },
+    getDOMImplementationList: function (features) { return {}; },
 };
 
 var DOMException = {
@@ -8,16 +8,16 @@ var DOMException = {
 };
 
 var DOMStringList = {
-    contains: function (str) {}, //Boolean
-    item: function (index) {}, //String
+    contains: function (str) { return false; },
+    item: function (index) { return ""; },
     length: 0,
 };
 
 var NameList = {
-    contains: function (str) {}, //Boolean
-    containsNS: function (namespaceURI,name) {}, //Boolean
-    getName: function (index) {}, //String
-    getNamespaceURI: function (index) {}, //String
+    contains: function (str) { return false; },
+    containsNS: function (namespaceURI, name) { return false; },
+    getName: function (index) { return ""; },
+    getNamespaceURI: function (index) { return ""; },
     length: 0,
 };
 
@@ -27,51 +27,51 @@ var DOMImplementationList = {
 };
 
 var DOMImplementationSource = {
-    getDOMImplementation: function (features) {}, //DOMImplementation
-    getDOMImplementationList: function (features) {}, //DOMImplementationList
+    getDOMImplementation: function (features) { return {}; }, //DOMImplementation
+    getDOMImplementationList: function (features) { return {}; }, //DOMImplementationList
 };
 
 var DOMImplementation = {
-    createDocument: function (namespaceURI,qualifiedName,doctype) {}, //Document
-    createDocumentType: function (qualifiedName,publicId,systemId) {}, //DocumentType
-    getFeature: function (feature,version) {}, //Object
-    hasFeature: function (feature,version) {}, //Boolean
+    createDocument: function (namespaceURI, qualifiedName, doctype) { return {}; }, //Document
+    createDocumentType: function (qualifiedName, publicId, systemId) { return {}; }, //DocumentType
+    getFeature: function (feature, version) { return {}; },
+    hasFeature: function (feature, version) { return false; },
 };
 
 var DocumentFragment = {};
 DocumentFragment.prototype = new Node();
 
 var Document = {
-    adoptNode: function (source) {}, //Node
-    createAttribute: function (name) {}, //Attr
-    createAttributeNS: function (namespaceURI, qualifiedName) {}, //Attr
-    createCDATASection: function (data) {}, //CDATASection
-    createComment: function (data) {}, //Comment
-    createDocumentFragment: function () {}, //DocumentFragment
-    createElement: function (tagName) {}, //Element
-    createElementNS: function (namespaceURI,qualifiedName) {}, //Element
-    createProcessingInstruction: function (target,data) {}, //ProcessingInstruction
-    createTextNode: function (data) {}, //Text
-    createEntityReference: function (name) {}, //EntityReference
+    adoptNode: function (source) { return {}; }, //Node
+    createAttribute: function (name) { return {}; }, //Attr
+    createAttributeNS: function (namespaceURI, qualifiedName) { return {}; }, //Attr
+    createCDATASection: function (data) { return {}; }, //CDATASection
+    createComment: function (data) { return {}; }, //Comment
+    createDocumentFragment: function () { return {}; }, //DocumentFragment
+    createElement: function (tagName) { return {}; }, //Element
+    createElementNS: function (namespaceURI, qualifiedName) { return {}; }, //Element
+    createProcessingInstruction: function (target, data) { return {}; }, //ProcessingInstruction
+    createTextNode: function (data) { return {}; }, //Text
+    createEntityReference: function (name) { return {}; }, //EntityReference
     doctype: {}, //DocumentType
     documentElement: {}, //Element
     documentURI: "",
     domConfig: {}, //DOMConfiguration
-    getElementById: function (elementId) {}, //Element
-    getElementsByTagName: function (tagname) {}, //NodeList
-    getElementsByTagNameNS: function (namespaceURI,localName) {}, //NodeList
+    getElementById: function (elementId) { return {}; }, //Element
+    getElementsByTagName: function (tagname) { return {}; }, //NodeList
+    getElementsByTagNameNS: function (namespaceURI, localName) { return {}; }, //NodeList
     implementation: {}, //DOMImplementation
-    importNode: function (importedNode,deep) {}, //Node
+    importNode: function (importedNode, deep) { return {}; }, //Node
     inputEncoding: "",
     parseError: {}, //IE,IXMLDOMParseError
-    load: function (filename) {}, //IE,Object
-    loadXML: function (xmlString) {}, //IE,Object
-    normalizeDocument: function () {}, //Object
-    renameNode: function (n,namespaceURI,qualifiedName) {}, //Node
-    save: function (filename) {}, //IE,Object
-    setProperty: function (name,value) {}, //IE,Object
-    selectSingleNode: function (xpathExpression) {}, //IE,Object
-    selectNodes: function (xpathExpression) {}, //IE,Object
+    load: function (filename) { return {}; }, //IE
+    loadXML: function (xmlString) { return {}; }, //IE
+    normalizeDocument: function () { return {}; },
+    renameNode: function (n, namespaceURI, qualifiedName) { return {}; }, //Node
+    save: function (filename) { return {}; }, //IE
+    setProperty: function (name, value) { return {}; }, //IE
+    selectSingleNode: function (xpathExpression) { return {}; }, //IE
+    selectNodes: function (xpathExpression) { return {}; }, //IE
     strictErrorChecking: false,
     xmlEncoding: "",
     xmlStandalone: false,
@@ -92,17 +92,17 @@ var Node = {
     cloneNode: function (deep) {}, //Node
     compareDocumentPosition: function (other) {}, //Node
     firstChild: {}, //Node
-    getFeature: function (feature,version) {}, //Object
-    getUserData: function (key) {}, //Object
-    hasAttributes: function () {}, //Boolean
-    hasChildNodes: function () {}, //Boolean
-    isDefaultNamespace: function (namespaceURI) {}, //String
-    isEqualNode: function (arg) {}, //Boolean
-    isSameNode: function (other) {}, //Boolean
-    isSupported: function (feature,version) {}, //Boolean
-    lookupNamespaceURI: function (prefix) {}, //String
-    lookupPrefix: function (namespaceURI) {}, //String
-    insertBefore: function (newChild,refChild) {}, //Node
+    getFeature: function (feature, version) { return {}; },
+    getUserData: function (key) { return {}; },
+    hasAttributes: function () { return false; },
+    hasChildNodes: function () { return false; },
+    isDefaultNamespace: function (namespaceURI) { return ""; },
+    isEqualNode: function (arg) { return false; },
+    isSameNode: function (other) { return false; },
+    isSupported: function (feature, version) { return false; },
+    lookupNamespaceURI: function (prefix) { return ""; },
+    lookupPrefix: function (namespaceURI) { return ""; },
+    insertBefore: function (newChild, refChild) { return {}; }, //Node
     lastChild: {}, //Node
     localName: "",
     nodeName: "",
@@ -110,14 +110,14 @@ var Node = {
     nodeType: 0,
     namespaceURI: "",
     nextSibling: {}, //Node
-    normalize: function () {}, //Object
+    normalize: function () { return {}; },
     ownerDocument: {}, //Document
     parentNode: {}, //Node
     prefix: "",
     previousSibling: {}, //Node
-    replaceChild: function (newChild,refChild) {}, //Node
-    removeChild: function (oldChild) {}, //Node
-    setUserData: function (key,data,handler) {}, //Object
+    replaceChild: function (newChild, refChild) { return {}; }, //Node
+    removeChild: function (oldChild) { return {}; }, //Node
+    setUserData: function (key, data, handler) { return {}; },
     textContent: "",
 };
 
@@ -128,23 +128,23 @@ var NodeList = {
 
 var NamedNodeMap = {
     length: 0,
-    getNamedItem: function (name) {}, //Node
-    setNamedItem: function (arg) {}, //Node
-    removeNamedItem: function (name) {}, //Node
-    item: function (index) {}, //Node
-    getNamedItemNS: function (namespaceURI, localName) {}, //Node
-    setNamedItemNS: function (arg) {}, //Node
-    removeNamedItemNS: function (namespaceURI, localName) {}, //Node
+    getNamedItem: function (name) { return {}; }, //Node
+    setNamedItem: function (arg) { return {}; }, //Node
+    removeNamedItem: function (name) { return {}; }, //Node
+    item: function (index) { return {}; }, //Node
+    getNamedItemNS: function (namespaceURI, localName) { return {}; }, //Node
+    setNamedItemNS: function (arg) { return {}; }, //Node
+    removeNamedItemNS: function (namespaceURI, localName) { return {}; }, //Node
 };
 
 var CharacterData = {
     data: "",
     length: 0,
-    substringData: function (offset,count) {}, //String
-    appendData: function (arg) {}, //Object
-    insertData: function (offset,arg) {}, //Object
-    deleteData: function (offset,count) {}, //Object
-    replaceData: function (offset,count,arg) {}, //Object
+    substringData: function (offset,count) { return ""; },
+    appendData: function (arg) { return {}; },
+    insertData: function (offset,arg) { return {}; },
+    deleteData: function (offset,count) { return {}; },
+    replaceData: function (offset,count,arg) { return {}; },
 };
 CharacterData.prototype = new Node();
 
@@ -159,33 +159,33 @@ var Attr = {
 Attr.prototype = new Node();
 
 var Element = {
-    getAttribute: function (name) {}, //String
-    getAttributeNode: function (name) {}, //Attr
-    getAttributeNodeNS: function (namespaceURI,localName) {}, //Object
-    getAttributeNS: function (namespaceURI, localName) {}, //String
-    getElementsByTagName: function (name) {}, //NodeList
-    getElementsByTagNameNS: function (namespaceURI, localName) {}, //NodeList
-    hasAttribute: function (name) {}, //Boolean
-    hasAttributeNS: function (namespaceURI, localName) {}, //Boolean
-    removeAttribute: function (name) {}, //Object
+    getAttribute: function (name) { return ""; },
+    getAttributeNode: function (name) { return {}; }, //Attr
+    getAttributeNodeNS: function (namespaceURI, localName) { return {}; },
+    getAttributeNS: function (namespaceURI, localName) { return ""; },
+    getElementsByTagName: function (name) { return {}; }, //NodeList
+    getElementsByTagNameNS: function (namespaceURI, localName) { return {}; }, //NodeList
+    hasAttribute: function (name) { return false; },
+    hasAttributeNS: function (namespaceURI, localName) { return false; },
+    removeAttribute: function (name) { return {}; },
     removeAttributeNode: function (oldAttr) {}, //Attr
-    removeAttributeNS: function (namespaceURI,localName) {}, //Object
+    removeAttributeNS: function (namespaceURI, localName) { return {}; },
     schemaTypeInfo: {}, //TypeInfo
-    setAttribute: function (name,value) {}, //Object
-    setAttributeNode: function (newAttr) {}, //Attr
-    setAttributeNodeNS: function (newAttr) {}, //Object
-    setAttributeNS: function (namespaceURI, qualifiedName, value) {}, //Object
-    setIdAttribute: function (name, isId) {}, //Object
-    setIdAttributeNode: function (idAttr, isId) {}, //Object
-    setIdAttributeNS: function (namespaceURI, localName, isId) {}, //Object
+    setAttribute: function (name,value) { return {}; },
+    setAttributeNode: function (newAttr) { return {}; }, //Attr
+    setAttributeNodeNS: function (newAttr) { return {}; },
+    setAttributeNS: function (namespaceURI, qualifiedName, value) { return {}; },
+    setIdAttribute: function (name, isId) { return {}; },
+    setIdAttributeNode: function (idAttr, isId) { return {}; },
+    setIdAttributeNS: function (namespaceURI, localName, isId) { return {}; },
     tagName: "",
 };
 Element.prototype = new Node();
 
 var Text = {
     isElementContentWhitespace: false,
-    replaceWholeText: function (content) {}, //Text
-    splitText: function (offset) {}, //Text
+    replaceWholeText: function (content) { return {}; }, //Text
+    splitText: function (offset) { return {}; }, //Text
     wholeText: "",
 };
 Text.prototype = new CharacterData();
@@ -194,13 +194,13 @@ var Comment = {};
 Comment.prototype = new CharacterData();
 
 var TypeInfo = {
-    isDerivedFrom: function (typeNamespaceArg, typeNameArg, derivationMethod) {}, //Boolean
+    isDerivedFrom: function (typeNamespaceArg, typeNameArg, derivationMethod) { return false; },
     typeName: "",
     typeNamespace: "",
 };
 
 var UserDataHandler = {
-    handle: function (param1, param2, param3, param4, param5) {}, //Object
+    handle: function (param1, param2, param3, param4, param5) { return {}; },
 };
 
 var DOMError = {
@@ -213,7 +213,7 @@ var DOMError = {
 };
 
 var DOMErrorHandler = {
-    handler: function (error) {}, //Boolean
+    handler: function (error) { return false; },
 };
 
 var DOMLocator = {
@@ -226,10 +226,10 @@ var DOMLocator = {
 };
 
 var DOMConfiguration = {
-    canSetParameter: function (name, value) {}, //Boolean
-    getParameter: function (name) {}, //Object
+    canSetParameter: function (name, value) { return false; },
+    getParameter: function (name) { return {}; },
     parameterNames: 0, //DOMStringList
-    setParameter: function (name, value) {}, //Object
+    setParameter: function (name, value) { return {}; },
 };
 
 var CDATASection = {};

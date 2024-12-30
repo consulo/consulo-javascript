@@ -1,62 +1,62 @@
 var NodeIterator = {
-    detach: function () {}, //Object
+    detach: function () { return {}; },
     expandEntityReferences: false,
     filter: {}, //NodeFilter
-    nextNode: function () {}, //Node
-    previousNode: function () {}, //Node
+    nextNode: function () { return {}; }, //Node
+    previousNode: function () { return {}; }, //Node
     root: {}, //Node
     whatToShow: 0,
 };
 
 var NodeFilter = {
-    NodeFilter: function (param) {}, //Number
+    NodeFilter: function (param) { return 0; },
 };
 
 var TreeWalker = {
-    firstChild: function () {}, //Node
-    lastChild: function () {}, //Node
-    nextNode: function () {}, //Node
-    nextSibling: function () {}, //Node
-    parentNode: function () {}, //Node
-    previousNode: function () {}, //Node
-    previousSibling: function () {}, //Node
+    firstChild: function () { return {}; }, //Node
+    lastChild: function () { return {}; }, //Node
+    nextNode: function () { return {}; }, //Node
+    nextSibling: function () { return {}; }, //Node
+    parentNode: function () { return {}; }, //Node
+    previousNode: function () { return {}; }, //Node
+    previousSibling: function () { return {}; }, //Node
 };
 
 var DocumentTraversal = {
-    createNodeIterator: function (root, whatToShow, filter, entityReferenceExpansion) {}, //NodeIterator
-    createTreeWalker: function (root, whatToShow, filter, entityReferenceExpansion) {}, //TreeWalker
+    createNodeIterator: function (root, whatToShow, filter, entityReferenceExpansion) { return {}; }, //NodeIterator
+    createTreeWalker: function (root, whatToShow, filter, entityReferenceExpansion) { return {}; }, //TreeWalker
 };
 
 var Range = {
-    cloneContents: function () {}, //DocumentFragment
-    cloneRange: function () {}, //Range
-    collapse: function (toStart) {}, //Object
+    cloneContents: function () { return {}; }, //DocumentFragment
+    cloneRange: function () { return {}; }, //Range
+    collapse: function (toStart) { return {}; },
     collapsed: false,
     commonAncestorContainer: {}, //Node
-    compareBoundaryPoints: function (how,sourceRange) {}, //short
-    createContextualFragment: function (tagString) {}, //Gecko,Object
-    deleteContents: function () {}, //Object
-    detach: function () {}, //Object
+    compareBoundaryPoints: function (how, sourceRange) { return 0; },
+    createContextualFragment: function (tagString) { return {}; }, //Gecko
+    deleteContents: function () { return {}; },
+    detach: function () { return {}; },
     endContainer: {}, //Node
     endOffset: 0,
-    extractContents: function () {}, //DocumentFragment
-    insertNode: function (newNode) {}, //Object
-    selectNode: function (refNode) {}, //Object
-    selectNodeContents: function (refNode) {}, //Object
-    setEnd: function (refNode,offset) {}, //Object
-    setEndAfter: function (refNode) {}, //Object
-    setEndBefore: function (refNode) {}, //Object
-    setStart: function (refNode, offset) {}, //Object
-    setStartAfter: function (refNode) {}, //Object
-    setStartBefore: function (refNode) {}, //Object
+    extractContents: function () { return {}; }, //DocumentFragment
+    insertNode: function (newNode) { return {}; },
+    selectNode: function (refNode) { return {}; },
+    selectNodeContents: function (refNode) { return {}; },
+    setEnd: function (refNode,offset) { return {}; },
+    setEndAfter: function (refNode) { return {}; },
+    setEndBefore: function (refNode) { return {}; },
+    setStart: function (refNode, offset) { return {}; },
+    setStartAfter: function (refNode) { return {}; },
+    setStartBefore: function (refNode) { return {}; },
     startContainer: {}, //Node
     startOffset: 0,
-    surroundContents: function (newParent) {}, //Object
-    toString: function () {}, //String
+    surroundContents: function (newParent) { return {}; },
+    toString: function () { return ""; },
 };
 
 var DocumentRange = {
-    createRange: function () {}, //Range
+    createRange: function () { return {}; }, //Range
 };
 
 var RangeException = {

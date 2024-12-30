@@ -3,17 +3,17 @@ var XPathException = {
 };
 
 var XPathEvaluator = {
-    createExpression: function (expression, resolver) {}, //Gecko,XPathExpression
-    createNSResolver: function (nodeResolver) {}, //Gecko,XPathNSResolver
-    evaluate: function (expression, contextNode, resolver, type, result) {}, //Gecko,Object
+    createExpression: function (expression, resolver) { return {}; }, //Gecko,XPathExpression
+    createNSResolver: function (nodeResolver) { return {}; }, //Gecko,XPathNSResolver
+    evaluate: function (expression, contextNode, resolver, type, result) { return {}; }, //Gecko
 };
 
 var XPathExpression = {
-    evaluate: function (contextNode, type, result) {}, //Gecko,Object
+    evaluate: function (contextNode, type, result) { return {}; }, //Gecko
 };
 
 var XPathNSResolver = {
-    lookupNamespaceURI: function (prefix) {}, //Gecko,String
+    lookupNamespaceURI: function (prefix) { return ""; }, //Gecko
 };
 
 var XPathResult = {
@@ -23,14 +23,14 @@ var XPathResult = {
     booleanValue: false, //Gecko
     FIRST_ORDERED_NODE_TYPE: 0, //Gecko
     invalidIteratorState: false, //Gecko
-    iterateNext: function () {}, //Gecko,Node
+    iterateNext: function () { return {}; }, //Gecko,Node
     NUMBER_TYPE: 0, //Gecko
     numberValue: 0, //Gecko
     ORDERED_NODE_ITERATOR_TYPE: 0, //Gecko
     ORDERED_NODE_SNAPSHOT_TYPE: 0, //Gecko
     resultType: 0, //Gecko
     singleNodeValue: {}, //Gecko,Node
-    snapshotItem: function (index) {}, //Gecko,Node
+    snapshotItem: function (index) { return {}; }, //Gecko,Node
     snapshotLength: 0, //Gecko
     STRING_TYPE: 0, //Gecko
     stringValue: "", //Gecko

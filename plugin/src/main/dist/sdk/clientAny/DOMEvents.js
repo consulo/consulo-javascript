@@ -1,33 +1,33 @@
 var Event = {
-    currentTarget: 0, //Gecko,EventTarget
+    currentTarget: {}, //Gecko,EventTarget
     bubbles: false, //Gecko
     cancelable: false, //Gecko
     eventPhase: 0, //Gecko
-    initEvent: function (eventTypeArg, canBubbleArg, cancelableArg) {}, //Gecko,Object
-    initEventNS: function (namespaceURIArg, eventTypeArg, canBubbleArg, cancelableArg) {}, //Gecko,Object
-    isCustom: function () {}, //Gecko,Boolean
-    isDefaultPrevented: function () {}, //Gecko,Boolean
+    initEvent: function (eventTypeArg, canBubbleArg, cancelableArg) { return {}; }, //Gecko
+    initEventNS: function (namespaceURIArg, eventTypeArg, canBubbleArg, cancelableArg) { return {}; }, //Gecko
+    isCustom: function () { return false; }, //Gecko
+    isDefaultPrevented: function () { return false; }, //Gecko
     namespaceURI: "", //Gecko
-    preventDefault: function () {}, //Gecko,Object
-    stopImmediatePropagation: function () {}, //Gecko,Object
-    stopPropagation: function () {}, //Gecko,Object
-    target: 0, //Gecko,EventTarget
+    preventDefault: function () { return {}; }, //Gecko
+    stopImmediatePropagation: function () { return {}; }, //Gecko
+    stopPropagation: function () { return {}; }, //Gecko
+    target: {}, //Gecko,EventTarget
     timeStamp: 0, //Gecko
     type: "", //Gecko
 };
 
 var EventTarget = {
-    addEventListener: function (type,listener,useCapture) {}, //Gecko,Object
-    addEventListenerNS: function (namespaceURI, type, listener, useCapture, evtGroup) {}, //Gecko,Object
-    dispatchEvent: function (evt) {}, //Gecko,Boolean
-    hasEventListenerNS: function (namespaceURI, type) {}, //Gecko,Boolean
-    removeEventListener: function (type,listener,useCapture) {}, //Gecko,Object
-    removeEventListenerNS: function (namespaceURI, type, listener, useCapture) {}, //Gecko,Object
-    willTriggerNS: function (namespaceURI, type) {}, //Gecko,Boolean
+    addEventListener: function (type,listener,useCapture) { return {}; }, //Gecko
+    addEventListenerNS: function (namespaceURI, type, listener, useCapture, evtGroup) { return {}; }, //Gecko
+    dispatchEvent: function (evt) { return false; }, //Gecko
+    hasEventListenerNS: function (namespaceURI, type) { return false; }, //Gecko
+    removeEventListener: function (type,listener,useCapture) { return {}; }, //Gecko
+    removeEventListenerNS: function (namespaceURI, type, listener, useCapture) { return {}; }, //Gecko
+    willTriggerNS: function (namespaceURI, type) { return false; }, //Gecko
 };
 
 var EventListener = {
-    handleEvent: function (evt) {}, //Gecko,Object
+    handleEvent: function (evt) { return {}; }, //Gecko
 };
 
 var EventException = {
@@ -35,29 +35,29 @@ var EventException = {
 };
 
 var DocumentEvent = {
-    canDispatch: function (namespaceURI, type) {}, //Gecko,String
-    createEvent: function (eventType) {}, //Gecko,Event
+    canDispatch: function (namespaceURI, type) { return ""; }, //Gecko
+    createEvent: function (eventType) { return {}; }, //Gecko,Event
 };
 
 var CustomEvent = {
-    isImmediatePropagationStopped: function () {}, //Gecko,Boolean
-    isPropagationStopped: function () {}, //Gecko,Boolean
-    setDispatchState: function (target, phase) {}, //Gecko,Object
+    isImmediatePropagationStopped: function () { return false; }, //Gecko
+    isPropagationStopped: function () { return false; }, //Gecko
+    setDispatchState: function (target, phase) { return {}; }, //Gecko
 };
 CustomEvent.prototype = new Event();
 
 var UIEvent = {
     detail: 0, //Gecko
-    initUIEvent: function (typeArg, canBubbleArg, cancelableArg, viewArg, detailArg) {}, //Gecko,Object
-    initUIEventNS: function (namespaceURI, typeArg, canBubbleArg, cancelableArg, viewArg, detailArg) {}, //Gecko,Object
+    initUIEvent: function (typeArg, canBubbleArg, cancelableArg, viewArg, detailArg) { return {}; }, //Gecko
+    initUIEventNS: function (namespaceURI, typeArg, canBubbleArg, cancelableArg, viewArg, detailArg) { return {}; }, //Gecko
     view: {}, //Gecko,AbstractView
 };
 UIEvent.prototype = new Event();
 
 var TextEvent = {
     data: "", //Gecko
-    initTextEvent: function (typeArg, canBubbleArg, cancelableArg, viewArg, dataArg) {}, //Gecko,Object
-    initTextEventNS: function (namespaceURI, typeArg, canBubbleArg, cancelableArg, viewArg, dataArg) {}, //Gecko,Object
+    initTextEvent: function (typeArg, canBubbleArg, cancelableArg, viewArg, dataArg) { return {}; }, //Gecko
+    initTextEventNS: function (namespaceURI, typeArg, canBubbleArg, cancelableArg, viewArg, dataArg) { return {}; }, //Gecko
 };
 TextEvent.prototype = new UIEvent();
 
@@ -67,9 +67,9 @@ var MouseEvent = {
     clientX: 0, //Gecko
     clientY: 0, //Gecko
     ctrlKey: false, //Gecko
-    getModifierState: function (keyIdentifierArg) {}, //Gecko,Boolean
-    initMouseEvent: function (typeArg, canBubbleArg, cancelableArg, viewArg, detailArg, screenXArg, screenYArg, clientXArg, clientYArg, ctrlKeyArg, altKeyArg, shiftKeyArg, metaKeyArg, buttonArg, relatedTargetArg) {}, //Gecko,Object
-    initMouseEventNS: function (namespaceURI, typeArg, canBubbleArg, cancelableArg, viewArg, detailArg, screenXArg, screenYArg, clientXArg, clientYArg, ctrlKeyArg, altKeyArg, shiftKeyArg, metaKeyArg, buttonArg, relatedTargetArg) {}, //Gecko,Object
+    getModifierState: function (keyIdentifierArg) { return false; }, //Gecko
+    initMouseEvent: function (typeArg, canBubbleArg, cancelableArg, viewArg, detailArg, screenXArg, screenYArg, clientXArg, clientYArg, ctrlKeyArg, altKeyArg, shiftKeyArg, metaKeyArg, buttonArg, relatedTargetArg) { return {}; }, //Gecko
+    initMouseEventNS: function (namespaceURI, typeArg, canBubbleArg, cancelableArg, viewArg, detailArg, screenXArg, screenYArg, clientXArg, clientYArg, ctrlKeyArg, altKeyArg, shiftKeyArg, metaKeyArg, buttonArg, relatedTargetArg) { return {}; }, //Gecko
     metaKey: false, //Gecko
     screenX: 0, //Gecko
     screenY: 0, //Gecko
@@ -81,9 +81,9 @@ MouseEvent.prototype = new UIEvent();
 var KeyboardEvent = {
     altKey: false, //Gecko
     ctrlKey: false, //Gecko
-    getModifierState: function (keyIdentifierArg) {}, //Gecko,Boolean
-    initKeyboardEvent: function (typeArg, canBubbleArg, cancelableArg, viewArg, keyIdentifierArg, keyLocationArg, modifiersList) {}, //Gecko,Object
-    initKeyboardEventNS: function (namespaceURI, typeArg, canBubbleArg, cancelableArg, viewArg, keyIdentifierArg, keyLocationArg, modifiersList) {}, //Gecko,Object
+    getModifierState: function (keyIdentifierArg) { return false; }, //Gecko
+    initKeyboardEvent: function (typeArg, canBubbleArg, cancelableArg, viewArg, keyIdentifierArg, keyLocationArg, modifiersList) { return {}; }, //Gecko
+    initKeyboardEventNS: function (namespaceURI, typeArg, canBubbleArg, cancelableArg, viewArg, keyIdentifierArg, keyLocationArg, modifiersList) { return {}; }, //Gecko
     keyIdentifier: "", //Gecko
     keyLocation: 0, //Gecko
     metaKey: false, //Gecko
@@ -94,8 +94,8 @@ KeyboardEvent.prototype = new UIEvent();
 var MutationEvent = {
     attrChange: 0, //Gecko
     attrName: "", //Gecko
-    initMutationEvent: function (typeArg, canBubbleArg, cancelableArg, relatedNodeArg, prevValueArg, newValueArg, attrNameArg, attrChangeArg) {}, //Gecko,Object
-    initMutationEventNS: function (namespaceURI, typeArg, canBubbleArg, cancelableArg, relatedNodeArg, prevValueArg, newValueArg, attrNameArg, attrChangeArg) {}, //Gecko,Object
+    initMutationEvent: function (typeArg, canBubbleArg, cancelableArg, relatedNodeArg, prevValueArg, newValueArg, attrNameArg, attrChangeArg) { return {}; }, //Gecko
+    initMutationEventNS: function (namespaceURI, typeArg, canBubbleArg, cancelableArg, relatedNodeArg, prevValueArg, newValueArg, attrNameArg, attrChangeArg) { return {}; }, //Gecko
     newValue: "", //Gecko
     prevValue: "", //Gecko
     relatedNode: {}, //Gecko,Node
@@ -103,8 +103,8 @@ var MutationEvent = {
 MutationEvent.prototype = new UIEvent();
 
 var MutationNameEvent = {
-    initMutationNameEvent: function (typeArg, canBubbleArg, cancelableArg, relatedNodeArg, prevNamespaceURIArg, prevNodeNameArg) {}, //Gecko,Object
-    initMutationNameEventNS: function (namespaceURI, typeArg, canBubbleArg, cancelableArg, relatedNodeArg, prevNamespaceURIArg, prevNodeNameArg) {}, //Gecko,Object
+    initMutationNameEvent: function (typeArg, canBubbleArg, cancelableArg, relatedNodeArg, prevNamespaceURIArg, prevNodeNameArg) { return {}; }, //Gecko
+    initMutationNameEventNS: function (namespaceURI, typeArg, canBubbleArg, cancelableArg, relatedNodeArg, prevNamespaceURIArg, prevNodeNameArg) { return {}; }, //Gecko
     prevNamespaceURI: "", //Gecko
     prevNodeName: "", //Gecko
 };

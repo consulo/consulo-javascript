@@ -1,8 +1,8 @@
-__defineGetter__ = function (propertyName, func) {}; //Gecko,Object
-__defineSetter__ = function (propertyName, func) {}; //Gecko,Object
-__lookupGetter__ = function (propertyName) {}; //Gecko,Function
-__lookupSetter__ = function (propertyName) {}; //Gecko,Function
-__proto__ = function (propertyName) {}; //Gecko,Function
+__defineGetter__ = function (propertyName, func) { return {}; }; //Gecko
+__defineSetter__ = function (propertyName, func) { return {}; }; //Gecko
+__lookupGetter__ = function (propertyName) { return {}; }; //Gecko,Function
+__lookupSetter__ = function (propertyName) { return {}; }; //Gecko,Function
+__proto__ = function (propertyName) { return {}; }; //Gecko,Function
 
 var Image = function () {};
 Image.prototype = new HTMLImageElement();
@@ -14,15 +14,15 @@ var Navigator = {
     appCodeName: "",
     appName: "",
     appVersion: "",
-    javaEnabled: function () {}, //Boolean
+    javaEnabled: function () { return false; },
     language: "",
     mimeTypes: [],
     platform: [],
     plugins: "",
-    preference: function (prefName, prefValue) {}, //String
+    preference: function (prefName, prefValue) { return ""; },
     product: "",
     systemLanguage: "", //IE
-    taintEnabled: function () {}, //Boolean
+    taintEnabled: function () { return false; },
     userAgent: "",
     userLanguage: "", //IE
 };
@@ -44,8 +44,8 @@ var location = {
     pathname: "",
     port: "",
     protocol: "",
-    reload: function () {}, //void
-    replace: function (url) {}, //void
+    reload: function () {},
+    replace: function (url) {},
     search: "",
     target: "",
 };
@@ -53,20 +53,20 @@ var location = {
 var XSLTProcessor = function () {};
 XSLTProcessor.prototype = new Object();
 XSLTProcessor.constructor = {}; //Gecko
-XSLTProcessor.importStylesheet = function (domNode) {}; //Gecko,Object
-XSLTProcessor.transformToDocument = function (domNode) {}; //Gecko,Document
-XSLTProcessor.transformToFragment = function (domToBeTransformed, ownerDocument) {}; //Gecko,DocumentFragment
+XSLTProcessor.importStylesheet = function (domNode) { return {}; }; //Gecko
+XSLTProcessor.transformToDocument = function (domNode) { return {}; }; //Gecko,Document
+XSLTProcessor.transformToFragment = function (domToBeTransformed, ownerDocument) { return {}; }; //Gecko,DocumentFragment
 
 var DOMParser = function () {};
 DOMParser.prototype = new Object();
 DOMParser.constructor = {}; //Gecko
-DOMParser.parseFromString = function (stringToParse, contentType) {}; //Gecko,Document
+DOMParser.parseFromString = function (stringToParse, contentType) { return {}; }; //Gecko,Document
 
 var XMLSerializer = function () {};
 XMLSerializer.prototype = new Object();
 XMLSerializer.constructor = 0; //Gecko,Object
-XMLSerializer.serializeToStream = function (domNode, stream, encoding) {}; //Gecko,Object
-XMLSerializer.serializeToString = function (domNode) {}; //Gecko,String
+XMLSerializer.serializeToStream = function (domNode, stream, encoding) { return {}; }; //Gecko
+XMLSerializer.serializeToString = function (domNode) { return ""; }; //Gecko
 
 var Event = {
     altKey: false,
@@ -131,21 +131,21 @@ var Selection = {
     anchorNode: {}, //Gecko,Node
     anchorOffset: 0, //Gecko
     clear: function () {}, //IE,Boolean
-    collapse: function (parentNode, offset) {}, //Gecko,void
-    collapseToStart: function () {}, //Gecko,void
-    collapseToEnd: function () {}, //Gecko,void
-    containsNode: function (node, partlyContained) {}, //Gecko,Boolean
-    createRange: function () {}, //IE,TextRange
-    empty: function () {}, //IE,Boolean
-    extend: function (parentNode, offset) {}, //Gecko,void
+    collapse: function (parentNode, offset) {}, //Gecko
+    collapseToStart: function () {}, //Gecko
+    collapseToEnd: function () {}, //Gecko
+    containsNode: function (node, partlyContained) { return false; }, //Gecko
+    createRange: function () { return {}; }, //IE,TextRange
+    empty: function () { return true; }, //IE
+    extend: function (parentNode, offset) {}, //Gecko
     focusNode: {}, //Gecko,Node
     focusOffset: 0, //Gecko
-    getRangeAt: function (index) {}, //Gecko,Range
+    getRangeAt: function (index) { return {}; }, //Gecko,Range
     isCollapsed: false, //Gecko
     rangeCount: 0, //Gecko
-    removeRange: function (range) {}, //Gecko,void
-    removeAllRanges: function () {}, //Gecko,void
-    selectAllChildren: function (parentNode) {}, //Gecko,void
+    removeRange: function (range) {}, //Gecko
+    removeAllRanges: function () {}, //Gecko
+    selectAllChildren: function (parentNode) {}, //Gecko
     type: {}, //IE
 };
 
@@ -155,30 +155,30 @@ var TextRange = {
     boundingTop: 0, //IE
     boundingWidth: 0, //IE
     collapse: function (start) {}, //IE,void
-    compareEndPoint: function (type, range) {}, //IE,void
-    compareEndPoints: function (sType, oRange) {}, //IE,Number
-    duplicate: function () {}, //IE,TextRange
-    expand: function (unit) {}, //IE,void
+    compareEndPoint: function (type, range) {}, //IE
+    compareEndPoints: function (sType, oRange) { return 0; }, //IE
+    duplicate: function () { return {}; }, //IE,TextRange
+    expand: function (unit) {}, //IE
     htmlText: "", //IE
-    inRange: function (other) {}, //IE,boolean
-    isEqual: function (other) {}, //IE,boolean
-    move: function (unit, count) {}, //IE,void
-    moveEnd: function (unit, count) {}, //IE,void
-    moveStart: function (unit, count) {}, //IE,void
-    moveToElementText: function (element) {}, //IE,void
+    inRange: function (other) { return false; }, //IE
+    isEqual: function (other) { return false; }, //IE
+    move: function (unit, count) {}, //IE
+    moveEnd: function (unit, count) {}, //IE
+    moveStart: function (unit, count) {}, //IE
+    moveToElementText: function (element) {}, //IE
     offsetLeft: 0, //IE
     offsetTop: 0, //IE
-    parentElement: function () {}, //IE,Node
-    pasteHTML: function (htmlText) {}, //IE,void
-    scrollIntoView: function (start) {}, //IE,void
-    select: function () {}, //IE,void
-    setEndPoint: function (type, range) {}, //IE,void
+    parentElement: function () { return {}; }, //IE,Node
+    pasteHTML: function (htmlText) {}, //IE
+    scrollIntoView: function (start) {}, //IE
+    select: function () {}, //IE
+    setEndPoint: function (type, range) {}, //IE
     text: "", //IE
 };
 
 var document = {
     all: 0, //IE,All
-    execCommand: function (sCommand, bUserInterface, vValue) {}, //IE,Boolean
+    execCommand: function (sCommand, bUserInterface, vValue) { return false; }, //IE
     namespaces: [], //IE
     selection: {}, //IE,Selection
     styleSheets: [], //Stylesheet[]
@@ -189,57 +189,57 @@ var CssRule = {
 };
 
 var Stylesheet = {
-    addRule: function (selector, style) {}, //IE,void
+    addRule: function (selector, style) {}, //IE
     cssRules: [], //Gecko,CssRule[]
-    deleteRule: function (index) {}, //Gecko,void
-    insertRule: function (ruleText, index) {}, //Gecko,void
+    deleteRule: function (index) {}, //Gecko
+    insertRule: function (ruleText, index) {}, //Gecko
     owningElement: {}, //IE,HtmlElement
-    removeRule: function (index) {}, //IE,void
+    removeRule: function (index) {}, //IE
     rules: 0, //IE,CssRule[]
 };
 
 var MozillaSideBar = {
-    addPanel: function (title, url, param3) {}, //Gecko,void
+    addPanel: function (title, url, param3) {}, //Gecko
 };
 
 var IEExternal = {
-    AddFavorite: function (title, url) {}, //IE,void
+    AddFavorite: function (title, url) {}, //IE
 };
 
 var history = {
-    back: function () {}, //void
-    forward: function () {}, //void
-    go: function (count) {}, //void
+    back: function () {},
+    forward: function () {},
+    go: function (count) {},
 };
 
 var window = {
-    addEventListener: function (type, listener, useCapture) {}, //Gecko,Object
-    alert: function (sMesssage) {}, //Object
-    attachEvent: function (type, listener) {}, //IE,Object
-    captureEvents: function (eventType) {}, //Gecko,void,deprecated
-    clearInterval: function (intervalId) {}, //Object
-    clearTimeout: function (intervalId) {}, //Object
-    CollectGarbage: function () {}, //IE,Object
-    confirm: function (sMesssage) {}, //Object
+    addEventListener: function (type, listener, useCapture) { return {}; }, //Gecko
+    alert: function (sMesssage) { return {}; },
+    attachEvent: function (type, listener) { return {}; }, //IE
+    captureEvents: function (eventType) {}, //Gecko,deprecated
+    clearInterval: function (intervalId) { return {}; },
+    clearTimeout: function (intervalId) { return {}; },
+    CollectGarbage: function () { return {}; }, //IE
+    confirm: function (sMesssage) { return {}; },
     defaultStatus: "",
-    detachEvent: function (type, listener) {}, //IE,Object
+    detachEvent: function (type, listener) { return {}; }, //IE
     directories: {},
     document: {}, //HTMLDocument
     external: {}, //IE,IEExternal
     event: {}, //Event
-    execScript: function (sScript) {}, //IE,Object
+    execScript: function (sScript) { return {}; }, //IE
     frameElement: {},
     frames: [],
-    getComputedStyle: function (element, pseudoElt) {}, //Gecko,style
-    GetObject: function (classOrPath, clazz) {}, //IE,Object,deprecated
-    getSelection: function () {}, //Gecko,Selection
+    getComputedStyle: function (element, pseudoElt) { return {}; }, //Gecko,style
+    GetObject: function (classOrPath, clazz) { return {}; }, //IE,deprecated
+    getSelection: function () { return {}; }, //Gecko,Selection
     history: {}, //history
     innerHeight: 0,
     innerWidth: 0,
     location: {}, //Location
     menubar: {},
-    moveBy: function (xDelta, yDelta) {}, //Object
-    moveTo: function (x, y) {}, //Object
+    moveBy: function (xDelta, yDelta) { return {}; },
+    moveTo: function (x, y) { return {}; },
     navigator: {}, //Navigator
     opener: {}, //window
     opera: false, //Opera
@@ -248,52 +248,52 @@ var window = {
     pageXOffset: 0,
     pageYOffset: 0,
     parent: {}, //window
-    preventBubble: function (event) {}, //Gecko,void,deprecated
-    print: function () {}, //void
-    prompt: function (sMessage, sDefaultValue) {}, //Object
-    releaseEvents: function (eventType) {}, //Gecko,void,deprecated
-    removeEventListener: function (type, listener, useCapture) {}, //Gecko,Object
-    resizeBy: function (widthDelta, heightDelta) {}, //Object
-    resizeTo: function (width, height) {}, //Object
-    routeEvent: function (event) {}, //Gecko,void,deprecated
+    preventBubble: function (event) {}, //Gecko,deprecated
+    print: function () {},
+    prompt: function (sMessage, sDefaultValue) { return {}; },
+    releaseEvents: function (eventType) {}, //Gecko,deprecated
+    removeEventListener: function (type, listener, useCapture) { return {}; }, //Gecko
+    resizeBy: function (widthDelta, heightDelta) { return {}; },
+    resizeTo: function (width, height) { return {}; },
+    routeEvent: function (event) {}, //Gecko,deprecated
     screen: {}, //Screen
     screenLeft: 0, //IE
     screenTop: 0, //IE
-    ScriptEngine: function () {}, //IE,String
-    ScriptEngineBuildVersion: function () {}, //IE,String
-    ScriptEngineMajorVersion: function () {}, //IE,String
-    ScriptEngineMinorVersion: function () {}, //IE,String
+    ScriptEngine: function () { return ""; }, //IE
+    ScriptEngineBuildVersion: function () { return ""; }, //IE
+    ScriptEngineMajorVersion: function () { return ""; }, //IE
+    ScriptEngineMinorVersion: function () { return ""; }, //IE
     scrollbars: {},
-    scrollBy: function (xDelta, yDelta) {}, //Object
+    scrollBy: function (xDelta, yDelta) { return {}; },
     scrollMaxX: 0,
     scrollMaxY: 0,
-    scrollTo: function (x, y) {}, //Object
+    scrollTo: function (x, y) { return {}; },
     scrollX: 0,
     scrollY: 0,
     self: {},
-    setInterval: function (vCode, iMillis) {}, //Number
-    setTimeout: function (vCode, iMillis) {}, //Number
-    showModalDialog: function (sUrl, vArguments, sFeatures) {}, //IE,style
+    setInterval: function (vCode, iMillis) { return 0; },
+    setTimeout: function (vCode, iMillis) { return 0; },
+    showModalDialog: function (sUrl, vArguments, sFeatures) { return {}; }, //IE,style
     sidebar: {}, //Gecko,MozillaSideBar
     status: "",
     toolbar: {},
-    top: 0, //window
-    window: 0, //window
+    top: {}, //window
+    window: {}, //window
 };
 
-var escape = function () {}; //Object,deprecated
-var unescape = function () {}; //Object,deprecated
+var escape = function () { return {}; }; //deprecated
+var unescape = function () { return {}; }; //deprecated
 
 var HTMLCollection = {
     length: 0,
-    item: function (index) {}, //Node
-    namedItem: function (name) {}, //Node
+    item: function (index) { return {}; }, //Node
+    namedItem: function (name) { return {}; }, //Node
 };
 
 var HTMLOptionsCollection = {
-    item: function (index) {}, //Node
+    item: function (index) { return {}; }, //Node
     length: 0,
-    namedItem: function (name) {}, //Node
+    namedItem: function (name) { return {}; }, //Node
 };
 
 var HTMLDocument = {
@@ -301,27 +301,27 @@ var HTMLDocument = {
     anchors: {}, //HTMLCollection
     applets: {}, //HTMLCollection
     body: {}, //HTMLElement
-    close: function () {}, //Object
+    close: function () { return {}; },
     commandDispatcher: {}, //Gecko,CommandDispatcher
     compatMode: "",
     cookie: {}, //HTMLCollection
-    createEventObject: function (oExistingEvent) {}, //IE,Even
-    createStyleSheet: function () {}, //IE,Stylesheet
+    createEventObject: function (oExistingEvent) { return {}; }, //IE,Event
+    createStyleSheet: function () { return {}; }, //IE,Stylesheet
     defaultView: {}, //Gecko,DocumentView
     domain: "",
-    elementFromPoint: function (iX, iY) {}, //IE,HTMLElement
+    elementFromPoint: function (iX, iY) { return {}; }, //IE,HTMLElement
     forms: {}, //HTMLCollection
-    getAnonymousElementByAttribute: function (node, attrName, attrValue) {}, //Gecko,NodeList
-    getAnonymousNodes: function (node) {}, //Gecko,Node[]
-    getBoxObjectFor: function (element) {}, //Gecko,Node
-    getElementsByName: function (elementName) {}, //NodeList
-    getElementsByClassName: function (className) {}, //Gecko,NodeList
+    getAnonymousElementByAttribute: function (node, attrName, attrValue) { return {}; }, //Gecko,NodeList
+    getAnonymousNodes: function (node) { return []; }, //Gecko,Node[]
+    getBoxObjectFor: function (element) { return {}; }, //Gecko,Node
+    getElementsByName: function (elementName) { return {}; }, //NodeList
+    getElementsByClassName: function (className) { return {}; }, //Gecko,NodeList
     images: {}, //HTMLCollection
     links: {}, //HTMLCollection
-    open: function () {}, //Object
+    open: function () { return {}; },
     parentWindow: {}, //IE,window
-    querySelector: function (string) {}, //Gecko,Node
-    querySelectorAll: function (string) {}, //Gecko,NodeList
+    querySelector: function (string) { return {}; }, //Gecko,Node
+    querySelectorAll: function (string) { return {}; }, //Gecko,NodeList
     referrer: "",
     title: "",
     URL: "",
@@ -335,39 +335,39 @@ var CommandDispatcher = {
 };
 
 var DocumentView = {
-    getComputedStyle: function (element, type) {}, //Gecko,CssStyle
+    getComputedStyle: function (element, type) { return {}; }, //Gecko,CssStyle
 };
 
 var CssStyle = {
-    getPropertyValue: function (propertyName) {}, //Gecko,String
+    getPropertyValue: function (propertyName) { return {}; }, //Gecko,String
 };
 
 var HTMLElement = {
-    addBehavior: function (sUrl) {}, //IE,Number
-    attachEvent: function (type, listener) {}, //IE,Object
+    addBehavior: function (sUrl) { return 0; }, //IE
+    attachEvent: function (type, listener) { return {}; }, //IE
     boxObject: {}, //Gecko,HTMLElement
     children: [], //IE,HTMLElement[]
     className: "",
-    clearAttributes: function () {}, //IE,Object
+    clearAttributes: function () { return {}; }, //IE
     clientHeight: 0,
     clientLeft: 0,
     clientTop: 0,
     clientWidth: 0,
     currentStyle: {}, //IE,IEElementStyle
-    detachEvent: function (type, listener) {}, //IE,Object
+    detachEvent: function (type, listener) { return {}; }, //IE
     dir: "",
     filters: [], //IE
-    fireEvent: function (type, event) {}, //IE,Object
+    fireEvent: function (type, event) { return {}; }, //IE
     getBoundingClientRect: function () {}, //IE,TextRange
     hidePopup: function () {}, //Gecko,Object
     id: "",
     innerHTML: "",
     innerText: "", //IE
-    insertAdjacentHTML: function (position, htmlContent) {}, //IE,Object
-    insertAdjacentText: function (position, textContent) {}, //IE,Object
+    insertAdjacentHTML: function (position, htmlContent) { return {}; }, //IE
+    insertAdjacentText: function (position, textContent) { return {}; }, //IE
     isDisabled: false, //IE
     lang: "",
-    mergeAttributes: function (oSource, bPreserve) {}, //IE,Object
+    mergeAttributes: function (oSource, bPreserve) { return {}; }, //IE
     offsetHeight: 0,
     offsetLeft: 0,
     offsetParent: 0,
@@ -386,17 +386,17 @@ var HTMLElement = {
     onmousemove: function () {},
     onresize: function () {},
     propertyName: "", //IE
-    releaseCapture: function () {}, //IE,Object
-    removeBehavior: function (sID) {}, //IE,Boolean
+    releaseCapture: function () { return {}; }, //IE
+    removeBehavior: function (sID) { return false; }, //IE
     runtimeStyle: {}, //IE,IEElementStyle
-    setCapture: function (bContainerCapture) {}, //IE,Object
+    setCapture: function (bContainerCapture) { return {}; }, //IE
     scrollWidth: 0,
     scrollHeight: 0,
     scrollTop: 0,
     scrollLeft: 0,
-    showPopup: function () {}, //Gecko,Object
-    style: 0, //style
-    stylesheet: 0, //Stylesheet
+    showPopup: function () { return {}; }, //Gecko
+    style: {}, //style
+    stylesheet: {}, //Stylesheet
     title: "",
 };
 HTMLElement.prototype = new Element();
@@ -405,8 +405,8 @@ var HTMLAnchorElement = {
     accessKey: "",
     charset: "",
     coords: "",
-    blur: function () {}, //Object
-    focus: function () {}, //Object
+    blur: function () { return {}; },
+    focus: function () { return {}; },
     href: "",
     hreflang: "",
     name: "",
@@ -522,8 +522,8 @@ var HTMLFormElement = {
     length: 0,
     method: "",
     name: "",
-    reset: function () {}, //Object
-    submit: function () {}, //Object
+    reset: function () { return {}; },
+    submit: function () { return {}; },
     target: "",
 };
 
@@ -566,20 +566,20 @@ var HTMLInputElement = {
     accessKey: "",
     align: "",
     alt: "",
-    blur: function () {}, //Object
+    blur: function () { return {}; },
     checked: false,
-    click: function () {}, //Object
-    createTextRange: function () {}, //IE,TextRange
+    click: function () { return {}; },
+    createTextRange: function () { return {}; }, //IE,TextRange
     defaultChecked: false,
     defaultValue: "",
     disabled: false,
-    focus: function () {}, //Object
+    focus: function () { return {}; },
     form: {}, //HTMLFormElement
     maxLength: 0,
     name: "",
     readOnly: false,
-    select: function () {}, //Object
-    setSelectionRange: function (start, end) {}, //Gecko,Object
+    select: function () { return {}; },
+    setSelectionRange: function (start, end) { return {}; }, //Gecko
     size: 0,
     src: "",
     tabIndex: 0,
@@ -776,16 +776,16 @@ var HTMLScriptElement = {
 HTMLScriptElement.prototype = new HTMLElement();
 
 var HTMLSelectElement = {
-    add: function (element, before) {}, //Object
-    blur: function () {}, //Object
+    add: function (element, before) { return {}; },
+    blur: function () { return {}; },
     disabled: false,
-    focus: function () {}, //Object
+    focus: function () { return {}; },
     form: {}, //HTMLFormElement
     length: 0,
     multiple: false,
     name: "",
     options: {}, //HTMLOptionsCollection
-    remove: function (index) {}, //Object
+    remove: function (index) { return {}; },
     selectedIndex: 0,
     size: 0,
     tabIndex: 0,
@@ -843,15 +843,15 @@ var HTMLTableElement = {
     caption: {}, //HTMLTableCaptionElement
     cellPadding: "",
     cellSpacing: "",
-    createCaption: function () {}, //HTMLElement
-    createTFoot: function () {}, //HTMLElement
-    createTHead: function () {}, //HTMLElement
-    deleteCaption: function () {}, //Object
-    deleteRow: function (index) {}, //Object
-    deleteTHead: function () {}, //Object
-    deleteTFoot: function () {}, //Object
+    createCaption: function () { return {}; }, //HTMLElement
+    createTFoot: function () { return {}; }, //HTMLElement
+    createTHead: function () { return {}; }, //HTMLElement
+    deleteCaption: function () { return {}; },
+    deleteRow: function (index) { return {}; },
+    deleteTHead: function () { return {}; },
+    deleteTFoot: function () { return {}; },
     frame: "",
-    insertRow: function (index) {}, //HTMLElement
+    insertRow: function (index) { return {}; }, //HTMLElement
     rows: {}, //HTMLCollection
     rules: "",
     summary: "",
@@ -868,8 +868,8 @@ var HTMLTableRowElement = {
     cells: {}, //HTMLCollection
     ch: "",
     chOff: "",
-    deleteCell: function (index) {}, //Object
-    insertCell: function (index) {}, //HTMLElement
+    deleteCell: function (index) { return {}; },
+    insertCell: function (index) { return {}; }, //HTMLElement
     rowIndex: 0,
     sectionRowIndex: 0,
     vAlign: "",
@@ -880,8 +880,8 @@ var HTMLTableSectionElement = {
     align: "",
     ch: "",
     chOff: "",
-    deleteRow: function (index) {}, //Object
-    insertRow: function (index) {}, //HTMLElement
+    deleteRow: function (index) { return {}; },
+    insertRow: function (index) { return {}; }, //HTMLElement
     rows: {}, //HTMLCollection
     vAlign: "",
 };
@@ -889,16 +889,16 @@ HTMLTableSectionElement.prototype = new HTMLElement();
 
 var HTMLTextAreaElement = {
     accessKey: "",
-    blur: function () {}, //Object
+    blur: function () { return {}; },
     cols: 0,
     defaultValue: "",
     disabled: false,
-    focus: function () {}, //Object
+    focus: function () { return {}; },
     form: {}, //HTMLFormElement
     name: "",
     readOnly: false,
     rows: 0,
-    select: function () {}, //Object
+    select: function () { return {}; },
     tabIndex: 0,
     type: "",
     value: "",
