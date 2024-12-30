@@ -6,60 +6,60 @@ __proto__ = function (propertyName) {}; //Gecko,Function
 
 var Image = function () {};
 Image.prototype = new HTMLImageElement();
-Image.constructor = 0; //Object
-Image.naturalWidth = 0; //Gecko,Object
-Image.naturalHeight = 0; //Gecko,Object
+Image.constructor = {};
+Image.naturalWidth = {}; //Gecko
+Image.naturalHeight = {}; //Gecko
 
 var Navigator = {
-    appCodeName: 0, //String
-    appName: 0, //String
-    appVersion: 0, //String
+    appCodeName: "",
+    appName: "",
+    appVersion: "",
     javaEnabled: function () {}, //Boolean
-    language: 0, //String
-    mimeTypes: 0, //Array
-    platform: 0, //Array
-    plugins: 0, //String
+    language: "",
+    mimeTypes: [],
+    platform: [],
+    plugins: "",
     preference: function (prefName, prefValue) {}, //String
-    product: 0, //String
-    systemLanguage: 0, //IE,String
+    product: "",
+    systemLanguage: "", //IE
     taintEnabled: function () {}, //Boolean
-    userAgent: 0, //String
-    userLanguage: 0, //IE,String
+    userAgent: "",
+    userLanguage: "", //IE
 };
 
 var Screen = {
-    availHeight: 0, //Number
-    availWidth: 0, //Number
-    colorDepth: 0, //Number
-    height: 0, //Number
-    pixelDepth: 0, //Number
-    width: 0, //Number
+    availHeight: 0,
+    availWidth: 0,
+    colorDepth: 0,
+    height: 0,
+    pixelDepth: 0,
+    width: 0,
 };
 
 var location = {
-    href: 0, //String
-    hash: 0, //String
-    host: 0, //String
-    hostname: 0, //String
-    pathname: 0, //String
-    port: 0, //String
-    protocol: 0, //String
-    reload() {}, //void
-    replace(url) {}, //void
-    search: 0, //String
-    target: 0, //String
+    href: "",
+    hash: "",
+    host: "",
+    hostname: "",
+    pathname: "",
+    port: "",
+    protocol: "",
+    reload: function () {}, //void
+    replace: function (url) {}, //void
+    search: "",
+    target: "",
 };
 
 var XSLTProcessor = function () {};
 XSLTProcessor.prototype = new Object();
-XSLTProcessor.constructor = 0; //Gecko,Object
+XSLTProcessor.constructor = {}; //Gecko
 XSLTProcessor.importStylesheet = function (domNode) {}; //Gecko,Object
 XSLTProcessor.transformToDocument = function (domNode) {}; //Gecko,Document
 XSLTProcessor.transformToFragment = function (domToBeTransformed, ownerDocument) {}; //Gecko,DocumentFragment
 
 var DOMParser = function () {};
 DOMParser.prototype = new Object();
-DOMParser.constructor = 0; //Gecko,Object
+DOMParser.constructor = {}; //Gecko
 DOMParser.parseFromString = function (stringToParse, contentType) {}; //Gecko,Document
 
 var XMLSerializer = function () {};
@@ -69,67 +69,67 @@ XMLSerializer.serializeToStream = function (domNode, stream, encoding) {}; //Gec
 XMLSerializer.serializeToString = function (domNode) {}; //Gecko,String
 
 var Event = {
-    altKey: 0, //Boolean
-    button: 0, //Boolean
-    cancelBubble: 0, //IE,Boolean
-    charCode: 0, //Gecko,String
-    clientX: 0, //Number
-    clientY: 0, //Number
-    ctrlKey: 0, //Boolean
-    data: 0, //Object[]
-    height: 0, //Number
-    fromElement: 0, //IE,Object
-    keyCode: 0, //Number
-    layerX: 0, //Gecko,Number
-    layerY: 0, //Gecko,Number
-    modifiers: 0, //Number
-    offsetX: 0, //IE,Number
-    offsetY: 0, //IE,Number
-    pageX: 0, //Number
-    pageY: 0, //Number
-    repeat: 0, //IE,Boolean
-    returnValue: 0, //IE,Boolean
-    screenX: 0, //Number
-    screenY: 0, //Number
-    shiftKey: 0, //Boolean
-    srcElement: 0, //IE,Object
-    toElement: 0, //IE,Object
-    type: 0, //String
-    wheelDelta: 0, //IE,Number
-    which: 0, //Object
-    width: 0, //Number
-    x: 0, //IE,Number
-    y: 0, //IE,Number
+    altKey: false,
+    button: false,
+    cancelBubble: false, //IE
+    charCode: "", //Gecko
+    clientX: 0,
+    clientY: 0,
+    ctrlKey: false,
+    data: {},
+    height: 0,
+    fromElement: {}, //IE
+    keyCode: 0,
+    layerX: 0, //Gecko
+    layerY: 0, //Gecko
+    modifiers: 0,
+    offsetX: 0, //IE
+    offsetY: 0, //IE
+    pageX: 0,
+    pageY: 0,
+    repeat: false, //IE
+    returnValue: false, //IE
+    screenX: 0,
+    screenY: 0,
+    shiftKey: false,
+    srcElement: {}, //IE
+    toElement: {}, //IE
+    type: "",
+    wheelDelta: 0, //IE
+    which: {},
+    width: 0,
+    x: 0, //IE
+    y: 0, //IE
     // deprecated
-    ABORT: 0, //Gecko,String,deprecated
-    BLUR: 0, //Gecko,String,deprecated
-    CLICK: 0, //Gecko,String,deprecated
-    CHANGE: 0, //Gecko,String,deprecated
-    DBLCLICK: 0, //Gecko,String,deprecated
-    DRAGDROP: 0, //Gecko,String,deprecated
-    ERROR: 0, //Gecko,String,deprecated
-    FOCUS: 0, //Gecko,String,deprecated
-    KEYDOWN: 0, //Gecko,String,deprecated
-    KEYPRESS: 0, //Gecko,String,deprecated
-    KEYUP: 0, //Gecko,String,deprecated
-    LOAD: 0, //Gecko,String,deprecated
-    MOUSEDOWN: 0, //Gecko,String,deprecated
-    MOUSEMOVE: 0, //Gecko,String,deprecated
-    MOUSEOUT: 0, //Gecko,String,deprecated
-    MOUSEOVER: 0, //Gecko,String,deprecated
-    MOUSEUP: 0, //Gecko,String,deprecated
-    MOVE: 0, //Gecko,String,deprecated
-    RESET: 0, //Gecko,String,deprecated
-    RESIZE: 0, //Gecko,String,deprecated
-    SELECT: 0, //Gecko,String,deprecated
-    SUBMIT: 0, //Gecko,String,deprecated
-    UNLOAD: 0, //Gecko,String,deprecated
+    ABORT: "", //Gecko,deprecated
+    BLUR: "", //Gecko,deprecated
+    CLICK: "", //Gecko,deprecated
+    CHANGE: "", //Gecko,deprecated
+    DBLCLICK: "", //Gecko,deprecated
+    DRAGDROP: "", //Gecko,deprecated
+    ERROR: "", //Gecko,deprecated
+    FOCUS: "", //Gecko,deprecated
+    KEYDOWN: "", //Gecko,deprecated
+    KEYPRESS: "", //Gecko,deprecated
+    KEYUP: "", //Gecko,deprecated
+    LOAD: "", //Gecko,deprecated
+    MOUSEDOWN: "", //Gecko,deprecated
+    MOUSEMOVE: "", //Gecko,deprecated
+    MOUSEOUT: "", //Gecko,deprecated
+    MOUSEOVER: "", //Gecko,deprecated
+    MOUSEUP: "", //Gecko,deprecated
+    MOVE: "", //Gecko,deprecated
+    RESET: "", //Gecko,deprecated
+    RESIZE: "", //Gecko,deprecated
+    SELECT: "", //Gecko,deprecated
+    SUBMIT: "", //Gecko,deprecated
+    UNLOAD: "", //Gecko,deprecated
 };
 
 var Selection = {
     addRange: function (range) {}, //Gecko,void
-    anchorNode: 0, //Gecko,Node
-    anchorOffset: 0, //Gecko,Number
+    anchorNode: {}, //Gecko,Node
+    anchorOffset: 0, //Gecko
     clear: function () {}, //IE,Boolean
     collapse: function (parentNode, offset) {}, //Gecko,void
     collapseToStart: function () {}, //Gecko,void
@@ -138,62 +138,62 @@ var Selection = {
     createRange: function () {}, //IE,TextRange
     empty: function () {}, //IE,Boolean
     extend: function (parentNode, offset) {}, //Gecko,void
-    focusNode: 0, //Gecko,Node
-    focusOffset: 0, //Gecko,Number
+    focusNode: {}, //Gecko,Node
+    focusOffset: 0, //Gecko
     getRangeAt: function (index) {}, //Gecko,Range
-    isCollapsed: 0, //Gecko,Boolean
-    rangeCount: 0, //Gecko,Number
+    isCollapsed: false, //Gecko
+    rangeCount: 0, //Gecko
     removeRange: function (range) {}, //Gecko,void
     removeAllRanges: function () {}, //Gecko,void
     selectAllChildren: function (parentNode) {}, //Gecko,void
-    type: 0, //IE,Object
+    type: {}, //IE
 };
 
 var TextRange = {
-    boundingHeight: 0, //IE,Number
-    boundingLeft: 0, //IE,Number
-    boundingTop: 0, //IE,Number
-    boundingWidth: 0, //IE,Number
+    boundingHeight: 0, //IE
+    boundingLeft: 0, //IE
+    boundingTop: 0, //IE
+    boundingWidth: 0, //IE
     collapse: function (start) {}, //IE,void
     compareEndPoint: function (type, range) {}, //IE,void
     compareEndPoints: function (sType, oRange) {}, //IE,Number
     duplicate: function () {}, //IE,TextRange
     expand: function (unit) {}, //IE,void
-    htmlText: 0, //IE,String
+    htmlText: "", //IE
     inRange: function (other) {}, //IE,boolean
     isEqual: function (other) {}, //IE,boolean
     move: function (unit, count) {}, //IE,void
     moveEnd: function (unit, count) {}, //IE,void
     moveStart: function (unit, count) {}, //IE,void
     moveToElementText: function (element) {}, //IE,void
-    offsetLeft: 0, //IE,Number
-    offsetTop: 0, //IE,Number
+    offsetLeft: 0, //IE
+    offsetTop: 0, //IE
     parentElement: function () {}, //IE,Node
     pasteHTML: function (htmlText) {}, //IE,void
     scrollIntoView: function (start) {}, //IE,void
     select: function () {}, //IE,void
     setEndPoint: function (type, range) {}, //IE,void
-    text: 0, //IE,String
+    text: "", //IE
 };
 
 var document = {
     all: 0, //IE,All
     execCommand: function (sCommand, bUserInterface, vValue) {}, //IE,Boolean
-    namespaces: 0, //IE,Array
-    selection: 0, //IE,Selection
-    styleSheets: 0 //Stylesheet[]
+    namespaces: [], //IE
+    selection: {}, //IE,Selection
+    styleSheets: [], //Stylesheet[]
 };
 
 var CssRule = {
-    selectorText: 0, //String
+    selectorText: "",
 };
 
 var Stylesheet = {
     addRule: function (selector, style) {}, //IE,void
-    cssRules: 0, //Gecko,CssRule[]
+    cssRules: [], //Gecko,CssRule[]
     deleteRule: function (index) {}, //Gecko,void
     insertRule: function (ruleText, index) {}, //Gecko,void
-    owningElement: 0, //IE,HtmlElement
+    owningElement: {}, //IE,HtmlElement
     removeRule: function (index) {}, //IE,void
     rules: 0, //IE,CssRule[]
 };
@@ -221,33 +221,33 @@ var window = {
     clearTimeout: function (intervalId) {}, //Object
     CollectGarbage: function () {}, //IE,Object
     confirm: function (sMesssage) {}, //Object
-    defaultStatus: 0, //String
+    defaultStatus: "",
     detachEvent: function (type, listener) {}, //IE,Object
-    directories: 0, //Object
-    document: 0, //HTMLDocument
-    external: 0, //IE,IEExternal
-    event: 0, //Event
+    directories: {},
+    document: {}, //HTMLDocument
+    external: {}, //IE,IEExternal
+    event: {}, //Event
     execScript: function (sScript) {}, //IE,Object
-    frameElement: 0, //Object
-    frames: 0, //Array
+    frameElement: {},
+    frames: [],
     getComputedStyle: function (element, pseudoElt) {}, //Gecko,style
     GetObject: function (classOrPath, clazz) {}, //IE,Object,deprecated
     getSelection: function () {}, //Gecko,Selection
-    history: 0, //history
-    innerHeight: 0, //Number
-    innerWidth: 0, //Number
-    location: 0, //Location
-    menubar: 0, //Object
+    history: {}, //history
+    innerHeight: 0,
+    innerWidth: 0,
+    location: {}, //Location
+    menubar: {},
     moveBy: function (xDelta, yDelta) {}, //Object
     moveTo: function (x, y) {}, //Object
-    navigator: 0, //Navigator
-    opener: 0, //window
-    opera: 0, //Opera,Boolean
-    outerHeight: 0, //Number
-    outerWidth: 0, //Number
-    pageXOffset: 0, //Number
-    pageYOffset: 0, //Number
-    parent: 0, //window
+    navigator: {}, //Navigator
+    opener: {}, //window
+    opera: false, //Opera
+    outerHeight: 0,
+    outerWidth: 0,
+    pageXOffset: 0,
+    pageYOffset: 0,
+    parent: {}, //window
     preventBubble: function (event) {}, //Gecko,void,deprecated
     print: function () {}, //void
     prompt: function (sMessage, sDefaultValue) {}, //Object
@@ -256,27 +256,27 @@ var window = {
     resizeBy: function (widthDelta, heightDelta) {}, //Object
     resizeTo: function (width, height) {}, //Object
     routeEvent: function (event) {}, //Gecko,void,deprecated
-    screen: 0, //Screen
-    screenLeft: 0, //IE,Number
-    screenTop: 0, //IE,Number
+    screen: {}, //Screen
+    screenLeft: 0, //IE
+    screenTop: 0, //IE
     ScriptEngine: function () {}, //IE,String
     ScriptEngineBuildVersion: function () {}, //IE,String
     ScriptEngineMajorVersion: function () {}, //IE,String
     ScriptEngineMinorVersion: function () {}, //IE,String
-    scrollbars: 0, //Object
+    scrollbars: {},
     scrollBy: function (xDelta, yDelta) {}, //Object
-    scrollMaxX: 0, //Number
-    scrollMaxY: 0, //Number
+    scrollMaxX: 0,
+    scrollMaxY: 0,
     scrollTo: function (x, y) {}, //Object
-    scrollX: 0, //Number
-    scrollY: 0, //Number
-    self: 0, //Object
+    scrollX: 0,
+    scrollY: 0,
+    self: {},
     setInterval: function (vCode, iMillis) {}, //Number
     setTimeout: function (vCode, iMillis) {}, //Number
     showModalDialog: function (sUrl, vArguments, sFeatures) {}, //IE,style
-    sidebar: 0, //Gecko,MozillaSideBar
-    status: 0, //String
-    toolbar: 0, //Object
+    sidebar: {}, //Gecko,MozillaSideBar
+    status: "",
+    toolbar: {},
     top: 0, //window
     window: 0, //window
 };
@@ -285,53 +285,53 @@ var escape = function () {}; //Object,deprecated
 var unescape = function () {}; //Object,deprecated
 
 var HTMLCollection = {
-    length: 0, //Number
+    length: 0,
     item: function (index) {}, //Node
     namedItem: function (name) {}, //Node
 };
 
 var HTMLOptionsCollection = {
     item: function (index) {}, //Node
-    length: 0, //Number
+    length: 0,
     namedItem: function (name) {}, //Node
 };
 
 var HTMLDocument = {
-    activeElement: 0, //IE,DocumentView
-    anchors: 0, //HTMLCollection
-    applets: 0, //HTMLCollection
-    body: 0, //HTMLElement
+    activeElement: {}, //IE,DocumentView
+    anchors: {}, //HTMLCollection
+    applets: {}, //HTMLCollection
+    body: {}, //HTMLElement
     close: function () {}, //Object
-    commandDispatcher: 0, //Gecko,CommandDispatcher
-    compatMode: 0, //String
-    cookie: 0, //HTMLCollection
+    commandDispatcher: {}, //Gecko,CommandDispatcher
+    compatMode: "",
+    cookie: {}, //HTMLCollection
     createEventObject: function (oExistingEvent) {}, //IE,Even
     createStyleSheet: function () {}, //IE,Stylesheet
-    defaultView: 0, //Gecko,DocumentView
-    domain: 0, //String
+    defaultView: {}, //Gecko,DocumentView
+    domain: "",
     elementFromPoint: function (iX, iY) {}, //IE,HTMLElement
-    forms: 0, //HTMLCollection
+    forms: {}, //HTMLCollection
     getAnonymousElementByAttribute: function (node, attrName, attrValue) {}, //Gecko,NodeList
     getAnonymousNodes: function (node) {}, //Gecko,Node[]
     getBoxObjectFor: function (element) {}, //Gecko,Node
     getElementsByName: function (elementName) {}, //NodeList
     getElementsByClassName: function (className) {}, //Gecko,NodeList
-    images: 0, //HTMLCollection
-    links: 0, //HTMLCollection
+    images: {}, //HTMLCollection
+    links: {}, //HTMLCollection
     open: function () {}, //Object
-    parentWindow: 0, //IE,window
+    parentWindow: {}, //IE,window
     querySelector: function (string) {}, //Gecko,Node
     querySelectorAll: function (string) {}, //Gecko,NodeList
-    referrer: 0, //String
-    title: 0, //String
-    URL: 0, //String
-    write: function (text) {}, //Object
-    writeln: function (text) {}, //Object
+    referrer: "",
+    title: "",
+    URL: "",
+    write: function (text) {},
+    writeln: function (text) {},
 };
 HTMLDocument.prototype = new Document();
 
 var CommandDispatcher = {
-    focusedElement: 0, //Gecko,HTMLElement
+    focusedElement: {}, //Gecko,HTMLElement
 };
 
 var DocumentView = {
@@ -345,34 +345,34 @@ var CssStyle = {
 var HTMLElement = {
     addBehavior: function (sUrl) {}, //IE,Number
     attachEvent: function (type, listener) {}, //IE,Object
-    boxObject: 0, //Gecko,HTMLElement
-    children: 0, //IE,HTMLElement[]
-    className: 0, //String
+    boxObject: {}, //Gecko,HTMLElement
+    children: [], //IE,HTMLElement[]
+    className: "",
     clearAttributes: function () {}, //IE,Object
-    clientHeight: 0, //Number
-    clientLeft: 0, //Number
-    clientTop: 0, //Number
-    clientWidth: 0, //Number
-    currentStyle: 0, //IE,IEElementStyle
+    clientHeight: 0,
+    clientLeft: 0,
+    clientTop: 0,
+    clientWidth: 0,
+    currentStyle: {}, //IE,IEElementStyle
     detachEvent: function (type, listener) {}, //IE,Object
-    dir: 0, //String
-    filters: 0, //IE,Array
+    dir: "",
+    filters: [], //IE
     fireEvent: function (type, event) {}, //IE,Object
     getBoundingClientRect: function () {}, //IE,TextRange
     hidePopup: function () {}, //Gecko,Object
-    id: 0, //String
-    innerHTML: 0, //String
-    innerText: 0, //IE,String
+    id: "",
+    innerHTML: "",
+    innerText: "", //IE
     insertAdjacentHTML: function (position, htmlContent) {}, //IE,Object
     insertAdjacentText: function (position, textContent) {}, //IE,Object
-    isDisabled: 0, //IE,Boolean
-    lang: 0, //String
+    isDisabled: false, //IE
+    lang: "",
     mergeAttributes: function (oSource, bPreserve) {}, //IE,Object
-    offsetHeight: 0, //Number
-    offsetLeft: 0, //Number
-    offsetParent: 0, //Number
-    offsetTop: 0, //Number
-    offsetWidth: 0, //Number
+    offsetHeight: 0,
+    offsetLeft: 0,
+    offsetParent: 0,
+    offsetTop: 0,
+    offsetWidth: 0,
     onblur: function () {},
     onclick: function () {},
     ondblclick: function () {},
@@ -385,464 +385,464 @@ var HTMLElement = {
     onmouseover: function () {},
     onmousemove: function () {},
     onresize: function () {},
-    propertyName: 0, //IE,String
+    propertyName: "", //IE
     releaseCapture: function () {}, //IE,Object
     removeBehavior: function (sID) {}, //IE,Boolean
-    runtimeStyle: 0, //IE,IEElementStyle
+    runtimeStyle: {}, //IE,IEElementStyle
     setCapture: function (bContainerCapture) {}, //IE,Object
-    scrollWidth: 0, //Number
-    scrollHeight: 0, //Number
-    scrollTop: 0, //Number
-    scrollLeft: 0, //Number
+    scrollWidth: 0,
+    scrollHeight: 0,
+    scrollTop: 0,
+    scrollLeft: 0,
     showPopup: function () {}, //Gecko,Object
     style: 0, //style
     stylesheet: 0, //Stylesheet
-    title: 0, //String
+    title: "",
 };
 HTMLElement.prototype = new Element();
 
 var HTMLAnchorElement = {
-    accessKey: 0, //String
-    charset: 0, //String
-    coords: 0, //String
+    accessKey: "",
+    charset: "",
+    coords: "",
     blur: function () {}, //Object
     focus: function () {}, //Object
-    href: 0, //String
-    hreflang: 0, //String
-    name: 0, //String
-    rel: 0, //String
-    rev: 0, //String
-    shape: 0, //String
-    tabIndex: 0, //Number
-    target: 0, //String
-    type: 0, //String
+    href: "",
+    hreflang: "",
+    name: "",
+    rel: "",
+    rev: "",
+    shape: "",
+    tabIndex: 0,
+    target: "",
+    type: "",
 };
 HTMLAnchorElement.prototype = new HTMLElement();
 
 var HTMLAppletElement = {
-    align: 0, //String
-    alt: 0, //String
-    archive: 0, //String
-    code: 0, //String
-    codeBase: 0, //String
-    height: 0, //String
-    hspace: 0, //Number
-    name: 0, //String
-    object: 0, //String
-    vspace: 0, //Number
-    width: 0, //String
+    align: "",
+    alt: "",
+    archive: "",
+    code: "",
+    codeBase: "",
+    height: "",
+    hspace: 0,
+    name: "",
+    object: "",
+    vspace: 0,
+    width: "",
 };
 HTMLAppletElement.prototype = new HTMLElement();
 
 var HTMLAreaElement = {
-    accessKey: 0, //String
-    alt: 0, //String
-    coords: 0, //String
-    href: 0, //String
-    noHref: 0, //Boolean
-    shape: 0, //String
-    tabIndex: 0, //Number
-    target: 0, //String
+    accessKey: "",
+    alt: "",
+    coords: "",
+    href: "",
+    noHref: false,
+    shape: "",
+    tabIndex: 0,
+    target: "",
 };
 HTMLAreaElement.prototype = new HTMLElement();
 
 var HTMLBaseElement = {
-    href: 0, //String
-    target: 0, //String
+    href: "",
+    target: "",
 };
 HTMLBaseElement.prototype = new HTMLElement();
 
 var HTMLBaseFontElement = {
-    color: 0, //String
-    face: 0, //String
-    size: 0, //Number
+    color: "",
+    face: "",
+    size: 0,
 };
 HTMLBaseFontElement.prototype = new HTMLElement();
 
 var HTMLBodyElement = {
-    aLink: 0, //String
-    background: 0, //String
-    bgColor: 0, //String
-    link: 0, //String
+    aLink: "",
+    background: "",
+    bgColor: "",
+    link: "",
     onload: function () {},
     onunload: function () {},
-    text: 0, //String
-    vLink: 0 //String
+    text: "",
+    vLink: "",
 };
 HTMLBodyElement.prototype = new HTMLElement();
 
 var HTMLBRElement = {
-    clear: 0 //String
+    clear: "",
 };
 HTMLBRElement.prototype = new HTMLElement();
 
 var HTMLButtonElement = {
-    accessKey: 0, //String
-    disabled: 0, //Boolean
-    form: 0, //HTMLFormElement
-    name: 0, //String
-    tabIndex: 0, //Number
-    type: 0, //String
-    value: 0, //String
+    accessKey: "",
+    disabled: false,
+    form: {}, //HTMLFormElement
+    name: "",
+    tabIndex: 0,
+    type: "",
+    value: "",
 };
 HTMLButtonElement.prototype = new HTMLElement();
 
 var HTMLDirectoryElement = {
-    compact: 0, //Boolean
+    compact: false,
 };
 HTMLDirectoryElement.prototype = new HTMLElement();
 
 var HTMLDivElement = {
-    align: 0, //String
+    align: "",
 };
 HTMLDivElement.prototype = new HTMLElement();
 
 var HTMLDListElement = {
-    compact: 0, //Boolean
+    compact: false,
 };
 HTMLDListElement.prototype = new HTMLElement();
 
 var HTMLFieldSetElement = {
-    form: 0, //HTMLFormElement
+    form: {}, //HTMLFormElement
 };
 HTMLFieldSetElement.prototype = new HTMLElement();
 
 var HTMLFontElement = {
-    color: 0, //String
-    face: 0, //String
-    size: 0, //String
+    color: "",
+    face: "",
+    size: "",
 };
 HTMLFontElement.prototype = new HTMLElement();
 
 var HTMLFormElement = {
-    acceptCharset: 0, //String
-    action: 0, //String
-    elements: 0, //HTMLCollection
-    enctype: 0, //String
-    length: 0, //Number
-    method: 0, //String
-    name: 0, //String
+    acceptCharset: "",
+    action: "",
+    elements: {}, //HTMLCollection
+    enctype: "",
+    length: 0,
+    method: "",
+    name: "",
     reset: function () {}, //Object
     submit: function () {}, //Object
-    target: 0, //String
+    target: "",
 };
 
 var HTMLFrameElement = {
-    contentDocument: 0, //Gecko,Document
-    frameBorder: 0, //String
-    longDesc: 0, //String
-    marginHeight: 0, //String
-    marginWidth: 0, //String
-    name: 0, //String
-    noResize: 0, //Boolean
-    scrolling: 0, //String
-    src: 0, //String
+    contentDocument: {}, //Gecko,Document
+    frameBorder: "",
+    longDesc: "",
+    marginHeight: "",
+    marginWidth: "",
+    name: "",
+    noResize: false,
+    scrolling: "",
+    src: "",
 };
 HTMLFrameElement.prototype = new HTMLElement();
 
 var HTMLFrameSetElement = {
-    cols: 0, //String
-    rows: 0, //String
+    cols: "",
+    rows: "",
 };
 HTMLFrameSetElement.prototype = new HTMLElement();
 
 var HTMLHeadElement = {
-    profile: 0, //String
+    profile: "",
 };
 HTMLHeadElement.prototype = new HTMLElement();
 
 var HTMLHeadingElement = {
-    align: 0, //String
+    align: "",
 };
 HTMLHeadingElement.prototype = new HTMLElement();
 
 var HTMLHtmlElement = {
-    version: 0, //String
+    version: "",
 };
 HTMLHtmlElement.prototype = new HTMLElement();
 
 var HTMLInputElement = {
-    accept: 0, //String
-    accessKey: 0, //String
-    align: 0, //String
-    alt: 0, //String
+    accept: "",
+    accessKey: "",
+    align: "",
+    alt: "",
     blur: function () {}, //Object
-    checked: 0, //Boolean
+    checked: false,
     click: function () {}, //Object
     createTextRange: function () {}, //IE,TextRange
-    defaultChecked: 0, //Boolean
-    defaultValue: 0, //String
-    disabled: 0, //Boolean
+    defaultChecked: false,
+    defaultValue: "",
+    disabled: false,
     focus: function () {}, //Object
-    form: 0, //HTMLFormElement
-    maxLength: 0, //Number
-    name: 0, //String
-    readOnly: 0, //Boolean
+    form: {}, //HTMLFormElement
+    maxLength: 0,
+    name: "",
+    readOnly: false,
     select: function () {}, //Object
     setSelectionRange: function (start, end) {}, //Gecko,Object
-    size: 0, //Number
-    src: 0, //String
-    tabIndex: 0, //Number
-    type: 0, //String
-    useMap: 0, //String
-    value: 0, //String
+    size: 0,
+    src: "",
+    tabIndex: 0,
+    type: "",
+    useMap: "",
+    value: "",
 };
 HTMLInputElement.prototype = new HTMLElement();
 
 var HTMLIsIndexElement = {
-    form: 0, //HTMLFormElement
-    prompt: 0, //String
+    form: {}, //HTMLFormElement
+    prompt: "",
 };
 HTMLIsIndexElement.prototype = new HTMLElement();
 
 var HTMLHRElement = {
-    align: 0, //String
-    noShade: 0, //Boolean
-    size: 0, //String
-    width: 0, //String
+    align: "",
+    noShade: false,
+    size: "",
+    width: "",
 };
 HTMLHRElement.prototype = new HTMLElement();
 
 var HTMLIFrameElement = {
-    align: 0, //String
-    contentDocument: 0, //Document
-    contentWindow: 0, //window
-    frameBorder: 0, //String
-    height: 0, //String
-    longDesc: 0, //String
-    marginHeight: 0, //String
-    marginWidth: 0, //String
-    name: 0, //String
-    scrolling: 0, //String
-    src: 0, //String
-    width: 0, //String
+    align: "",
+    contentDocument: {}, //Document
+    contentWindow: {}, //window
+    frameBorder: "",
+    height: "",
+    longDesc: "",
+    marginHeight: "",
+    marginWidth: "",
+    name: "",
+    scrolling: "",
+    src: "",
+    width: "",
 };
 HTMLIFrameElement.prototype = new HTMLElement();
 
 var HTMLImageElement = {
-    align: 0, //String
-    alt: 0, //String
-    border: 0, //String
-    height: 0, //Number
-    hspace: 0, //Number
-    isMap: 0, //Boolean
-    longDesc: 0, //String
-    name: 0, //String
-    src: 0, //String
-    useMap: 0, //String
-    vspace: 0, //Number
-    width: 0, //Number
+    align: "",
+    alt: "",
+    border: "",
+    height: 0,
+    hspace: 0,
+    isMap: false,
+    longDesc: "",
+    name: "",
+    src: "",
+    useMap: "",
+    vspace: 0,
+    width: 0,
 };
 HTMLImageElement.prototype = new HTMLElement();
 
 var HTMLLabelElement = {
-    accessKey: 0, //String
-    form: 0, //HTMLFormElement
-    htmlFor: 0, //
+    accessKey: "",
+    form: {}, //HTMLFormElement
+    htmlFor: 0,
 };
 HTMLLabelElement.prototype = new HTMLElement();
 
 var HTMLLegendElement = {
-    accessKey: 0, //String
-    align: 0, //String
-    form: 0, //HTMLFormElement
+    accessKey: "",
+    align: "",
+    form: {}, //HTMLFormElement
 };
 HTMLLegendElement.prototype = new HTMLElement();
 
 var HTMLLIElement = {
-    type: 0, //String
-    value: 0, //Number
+    type: "",
+    value: 0,
 };
 HTMLLIElement.prototype = new HTMLElement();
 
 var HTMLLinkElement = {
-    charset: 0, //String
-    disabled: 0, //Boolean
-    href: 0, //String
-    hreflang: 0, //String
-    media: 0, //String
-    rel: 0, //String
-    rev: 0, //String
-    target: 0, //String
-    type: 0, //String
+    charset: "",
+    disabled: false,
+    href: "",
+    hreflang: "",
+    media: "",
+    rel: "",
+    rev: "",
+    target: "",
+    type: "",
 };
 HTMLLinkElement.prototype = new HTMLElement();
 
 var HTMLMapElement = {
-    areas: 0, //HTMLCollection
-    name: 0, //String
+    areas: {}, //HTMLCollection
+    name: "",
 };
 HTMLMapElement.prototype = new HTMLElement();
 
 var HTMLMenuElement = {
-    compact: 0, //Boolean
+    compact: false,
 };
 HTMLMenuElement.prototype = new HTMLElement();
 
 var HTMLMetaElement = {
-    content: 0, //String
-    httpEquiv: 0, //String
-    name: 0, //String
-    scheme: 0, //String
+    content: "",
+    httpEquiv: "",
+    name: "",
+    scheme: "",
 };
 HTMLMetaElement.prototype = new HTMLElement();
 
 var HTMLModElement = {
-    cite: 0, //String
-    dateTime: 0, //String
+    cite: "",
+    dateTime: "",
 };
 HTMLModElement.prototype = new HTMLElement();
 
 var HTMLObjectElement = {
-    align: 0, //String
-    archive: 0, //String
-    border: 0, //String
-    code: 0, //String
-    codeBase: 0, //String
-    codeType: 0, //String
-    contentDocument: 0, //Document
-    data: 0, //String
-    declare: 0, //Boolean
-    form: 0, //HTMLFormElement
-    height: 0, //String
-    hspace: 0, //Number
-    name: 0, //String
-    standby: 0, //String
-    tabIndex: 0, //Number
-    type: 0, //String
-    useMap: 0, //String
-    vspace: 0, //Number
-    width: 0, //String
+    align: "",
+    archive: "",
+    border: "",
+    code: "",
+    codeBase: "",
+    codeType: "",
+    contentDocument: {}, //Document
+    data: "",
+    declare: false,
+    form: {}, //HTMLFormElement
+    height: "",
+    hspace: 0,
+    name: "",
+    standby: "",
+    tabIndex: 0,
+    type: "",
+    useMap: "",
+    vspace: 0,
+    width: "",
 };
 HTMLObjectElement.prototype = new HTMLElement();
 
 var HTMLOListElement = {
-    compact: 0, //Boolean
-    start: 0, //Number
-    type: 0, //String
+    compact: false,
+    start: 0,
+    type: "",
 };
 HTMLOListElement.prototype = new HTMLElement();
 
 var HTMLOptGroupElement = {
-    disabled: 0, //Boolean
-    label: 0, //String
+    disabled: false,
+    label: "",
 };
 HTMLOptGroupElement.prototype = new HTMLElement();
 
 var HTMLOptionElement = {
-    defaultSelected: 0, //Boolean
-    disabled: 0, //Boolean
-    text: 0, //String
-    form: 0, //HTMLFormElement
-    index: 0, //Number
-    label: 0, //String
-    selected: 0, //Boolean
-    value: 0, //String
+    defaultSelected: false,
+    disabled: false,
+    text: "",
+    form: {}, //HTMLFormElement
+    index: 0,
+    label: "",
+    selected: false,
+    value: "",
 };
 HTMLOptionElement.prototype = new HTMLElement();
 
 var HTMLParagraphElement = {
-    align: 0, //String
+    align: "",
 };
 HTMLParagraphElement.prototype = new HTMLElement();
 
 var HTMLParamElement = {
-    name: 0, //String
-    type: 0, //String
-    value: 0, //String
-    valueType: 0, //String
+    name: "",
+    type: "",
+    value: "",
+    valueType: "",
 };
 HTMLParamElement.prototype = new HTMLElement();
 
 var HTMLPreElement = {
-    width: 0, //Number
+    width: 0,
 };
 HTMLPreElement.prototype = new HTMLElement();
 
 var HTMLQuoteElement = {
-    cite: 0, //String
+    cite: "",
 };
 HTMLQuoteElement.prototype = new HTMLElement();
 
 var HTMLScriptElement = {
-    charset: 0, //String
-    defer: 0, //Boolean
-    event: 0, //String
-    htmlFor: 0, //String
-    src: 0, //String
-    text: 0, //String
-    type: 0, //String
+    charset: "",
+    defer: false,
+    event: "",
+    htmlFor: "",
+    src: "",
+    text: "",
+    type: "",
 };
 HTMLScriptElement.prototype = new HTMLElement();
 
 var HTMLSelectElement = {
     add: function (element, before) {}, //Object
     blur: function () {}, //Object
-    disabled: 0, //Boolean
+    disabled: false,
     focus: function () {}, //Object
-    form: 0, //HTMLFormElement
-    length: 0, //Number
-    multiple: 0, //Boolean
-    name: 0, //String
-    options: 0, //HTMLOptionsCollection
+    form: {}, //HTMLFormElement
+    length: 0,
+    multiple: false,
+    name: "",
+    options: {}, //HTMLOptionsCollection
     remove: function (index) {}, //Object
-    selectedIndex: 0, //Number
-    size: 0, //Number
-    tabIndex: 0, //Number
-    type: 0, //String
-    value: 0, //String
+    selectedIndex: 0,
+    size: 0,
+    tabIndex: 0,
+    type: "",
+    value: "",
 };
 HTMLSelectElement.prototype = new HTMLElement();
 
 var HTMLStyleElement = {
-    disabled: 0, //Boolean
-    media: 0, //String
-    type: 0, //String
-    styleSheet: 0, //IE,Stylesheet
+    disabled: false,
+    media: "",
+    type: "",
+    styleSheet: {}, //IE,Stylesheet
 };
 HTMLStyleElement.prototype = new HTMLElement();
 
 var HTMLTableCaptionElement = {
-    align: 0, //String
+    align: "",
 };
 HTMLTableCaptionElement.prototype = new HTMLElement();
 
 var HTMLTableColElement = {
-    align: 0, //String
-    ch: 0, //String
-    chOff: 0, //String
-    span: 0, //Number
-    vAlign: 0, //String
-    width: 0, //String
+    align: "",
+    ch: "",
+    chOff: "",
+    span: 0,
+    vAlign: "",
+    width: "",
 };
 HTMLTableColElement.prototype = new HTMLElement();
 
 var HTMLTableCellElement = {
-    abbr: 0, //String
-    align: 0, //String
-    axis: 0, //String
-    bgColor: 0, //String
-    cellIndex: 0, //Number
-    ch: 0, //String
-    chOff: 0, //String
-    colSpan: 0, //Number
-    headers: 0, //String
-    height: 0, //String
-    noWrap: 0, //Boolean
-    rowSpan: 0, //Number
-    scope: 0, //String
-    vAlign: 0, //String
-    width: 0, //String
+    abbr: "",
+    align: "",
+    axis: "",
+    bgColor: "",
+    cellIndex: 0,
+    ch: "",
+    chOff: "",
+    colSpan: 0,
+    headers: "",
+    height: "",
+    noWrap: false,
+    rowSpan: 0,
+    scope: "",
+    vAlign: "",
+    width: "",
 };
 HTMLTableCellElement.prototype = new HTMLElement();
 
 var HTMLTableElement = {
-    align: 0, //String
-    bgColor: 0, //String
-    border: 0, //String
-    caption: 0, //HTMLTableCaptionElement
-    cellPadding: 0, //String
-    cellSpacing: 0, //String
+    align: "",
+    bgColor: "",
+    border: "",
+    caption: {}, //HTMLTableCaptionElement
+    cellPadding: "",
+    cellSpacing: "",
     createCaption: function () {}, //HTMLElement
     createTFoot: function () {}, //HTMLElement
     createTHead: function () {}, //HTMLElement
@@ -850,73 +850,73 @@ var HTMLTableElement = {
     deleteRow: function (index) {}, //Object
     deleteTHead: function () {}, //Object
     deleteTFoot: function () {}, //Object
-    frame: 0, //String
+    frame: "",
     insertRow: function (index) {}, //HTMLElement
-    rows: 0, //HTMLCollection
-    rules: 0, //String
-    summary: 0, //String
-    tBodies: 0, //HTMLCollection
-    tHead: 0, //HTMLTableSectionElement
-    tFoot: 0, //HTMLTableSectionElement
-    width: 0, //String
+    rows: {}, //HTMLCollection
+    rules: "",
+    summary: "",
+    tBodies: {}, //HTMLCollection
+    tHead: {}, //HTMLTableSectionElement
+    tFoot: {}, //HTMLTableSectionElement
+    width: "",
 };
 HTMLTableElement.prototype = new HTMLElement();
 
 var HTMLTableRowElement = {
-    align: 0, //String
-    bgColor: 0, //String
-    cells: 0, //HTMLCollection
-    ch: 0, //String
-    chOff: 0, //String
+    align: "",
+    bgColor: "",
+    cells: {}, //HTMLCollection
+    ch: "",
+    chOff: "",
     deleteCell: function (index) {}, //Object
     insertCell: function (index) {}, //HTMLElement
-    rowIndex: 0, //Number
-    sectionRowIndex: 0, //Number
-    vAlign: 0, //String
+    rowIndex: 0,
+    sectionRowIndex: 0,
+    vAlign: "",
 };
 HTMLTableRowElement.prototype = new HTMLElement();
 
 var HTMLTableSectionElement = {
-    align: 0, //String
-    ch: 0, //String
-    chOff: 0, //String
+    align: "",
+    ch: "",
+    chOff: "",
     deleteRow: function (index) {}, //Object
     insertRow: function (index) {}, //HTMLElement
-    rows: 0, //HTMLCollection
-    vAlign: 0, //String
+    rows: {}, //HTMLCollection
+    vAlign: "",
 };
 HTMLTableSectionElement.prototype = new HTMLElement();
 
 var HTMLTextAreaElement = {
-    accessKey: 0, //String
+    accessKey: "",
     blur: function () {}, //Object
-    cols: 0, //Number
-    defaultValue: 0, //String
-    disabled: 0, //Boolean
+    cols: 0,
+    defaultValue: "",
+    disabled: false,
     focus: function () {}, //Object
-    form: 0, //HTMLFormElement
-    name: 0, //String
-    readOnly: 0, //Boolean
-    rows: 0, //Number
+    form: {}, //HTMLFormElement
+    name: "",
+    readOnly: false,
+    rows: 0,
     select: function () {}, //Object
-    tabIndex: 0, //Number
-    type: 0, //String
-    value: 0, //String
+    tabIndex: 0,
+    type: "",
+    value: "",
 };
 HTMLTextAreaElement.prototype = new HTMLElement();
 
 var HTMLTitleElement = {
-    text: 0, //String
+    text: "",
 };
 HTMLTitleElement.prototype = new HTMLElement();
 
 var HTMLUListElement = {
-    compact: 0, //Boolean
-    type: 0, //String
+    compact: false,
+    type: "",
 };
 HTMLUListElement.prototype = new HTMLElement();
 
 var IEElementStyle = {
-    hasLayout: 0, //IE,Boolean
+    hasLayout: false, //IE
 };
 IEElementStyle.prototype = new style();

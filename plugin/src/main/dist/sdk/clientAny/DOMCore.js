@@ -4,13 +4,13 @@ var DOMImplementationRegistry = {
 };
 
 var DOMException = {
-    code: 0, //Number
+    code: 0,
 };
 
 var DOMStringList = {
     contains: function (str) {}, //Boolean
     item: function (index) {}, //String
-    length: 0, //Number
+    length: 0,
 };
 
 var NameList = {
@@ -18,12 +18,12 @@ var NameList = {
     containsNS: function (namespaceURI,name) {}, //Boolean
     getName: function (index) {}, //String
     getNamespaceURI: function (index) {}, //String
-    length: 0, //Number
+    length: 0,
 };
 
 var DOMImplementationList = {
     item: function (index) {}, //DOMImplementation
-    length: 0, //Number
+    length: 0,
 };
 
 var DOMImplementationSource = {
@@ -53,17 +53,17 @@ var Document = {
     createProcessingInstruction: function (target,data) {}, //ProcessingInstruction
     createTextNode: function (data) {}, //Text
     createEntityReference: function (name) {}, //EntityReference
-    doctype: 0, //DocumentType
-    documentElement: 0, //Element
-    documentURI: 0, //String
-    domConfig: 0, //DOMConfiguration
+    doctype: {}, //DocumentType
+    documentElement: {}, //Element
+    documentURI: "",
+    domConfig: {}, //DOMConfiguration
     getElementById: function (elementId) {}, //Element
     getElementsByTagName: function (tagname) {}, //NodeList
     getElementsByTagNameNS: function (namespaceURI,localName) {}, //NodeList
-    implementation: 0, //DOMImplementation
+    implementation: {}, //DOMImplementation
     importNode: function (importedNode,deep) {}, //Node
-    inputEncoding: 0, //String
-    parseError: 0, //IE,IXMLDOMParseError
+    inputEncoding: "",
+    parseError: {}, //IE,IXMLDOMParseError
     load: function (filename) {}, //IE,Object
     loadXML: function (xmlString) {}, //IE,Object
     normalizeDocument: function () {}, //Object
@@ -72,62 +72,62 @@ var Document = {
     setProperty: function (name,value) {}, //IE,Object
     selectSingleNode: function (xpathExpression) {}, //IE,Object
     selectNodes: function (xpathExpression) {}, //IE,Object
-    strictErrorChecking: 0, //Boolean
-    xmlEncoding: 0, //String
-    xmlStandalone: 0, //Boolean
-    xmlVersion: 0, //String
+    strictErrorChecking: false,
+    xmlEncoding: "",
+    xmlStandalone: false,
+    xmlVersion: "",
 };
 Document.prototype = new Node();
 
 var IXMLDOMParseError = {
-    errorCode: 0, //IE,Number
-    reason: 0, //IE,String
+    errorCode: 0, //IE
+    reason: "", //IE
 };
 
 var Node = {
-    nodeName: 0, //String
-    nodeValue: 0, //String
-    nodeType: 0, //Number
-    parentNode: 0, //Node
-    childNodes: 0, //NodeList
-    firstChild: 0, //Node
-    lastChild: 0, //Node
-    previousSibling: 0, //Node
-    nextSibling: 0, //Node
-    attributes: 0, //NamedNodeMap
-    ownerDocument: 0, //Document
-    namespaceURI: 0, //String
-    prefix: 0, //String
-    localName: 0, //String
-    baseURI: 0, //String
-    textContent: 0, //String
+    appendChild: function (newChild) {}, //Node
+    attributes: {}, //NamedNodeMap
+    baseURI: "",
+    childNodes: {}, //NodeList
+    cloneNode: function (deep) {}, //Node
+    compareDocumentPosition: function (other) {}, //Node
+    firstChild: {}, //Node
+    getFeature: function (feature,version) {}, //Object
+    getUserData: function (key) {}, //Object
+    hasAttributes: function () {}, //Boolean
+    hasChildNodes: function () {}, //Boolean
+    isDefaultNamespace: function (namespaceURI) {}, //String
+    isEqualNode: function (arg) {}, //Boolean
+    isSameNode: function (other) {}, //Boolean
+    isSupported: function (feature,version) {}, //Boolean
+    lookupNamespaceURI: function (prefix) {}, //String
+    lookupPrefix: function (namespaceURI) {}, //String
     insertBefore: function (newChild,refChild) {}, //Node
+    lastChild: {}, //Node
+    localName: "",
+    nodeName: "",
+    nodeValue: "",
+    nodeType: 0,
+    namespaceURI: "",
+    nextSibling: {}, //Node
+    normalize: function () {}, //Object
+    ownerDocument: {}, //Document
+    parentNode: {}, //Node
+    prefix: "",
+    previousSibling: {}, //Node
     replaceChild: function (newChild,refChild) {}, //Node
     removeChild: function (oldChild) {}, //Node
-    appendChild: function (newChild) {}, //Node
-    hasChildNodes: function () {}, //Boolean
-    cloneNode: function (deep) {}, //Node
-    normalize: function () {}, //Object
-    isSupported: function (feature,version) {}, //Boolean
-    hasAttributes: function () {}, //Boolean
-    compareDocumentPosition: function (other) {}, //Node
-    isSameNode: function (other) {}, //Boolean
-    lookupPrefix: function (namespaceURI) {}, //String
-    isDefaultNamespace: function (namespaceURI) {}, //String
-    lookupNamespaceURI: function (prefix) {}, //String
-    isEqualNode: function (arg) {}, //Boolean
-    getFeature: function (feature,version) {}, //Object
     setUserData: function (key,data,handler) {}, //Object
-    getUserData: function (key) {}, //Object
+    textContent: "",
 };
 
 var NodeList = {
-    length: 0, //Number
+    length: 0,
     item: function (index) {}, //Node
 };
 
 var NamedNodeMap = {
-    length: 0, //Number
+    length: 0,
     getNamedItem: function (name) {}, //Node
     setNamedItem: function (arg) {}, //Node
     removeNamedItem: function (name) {}, //Node
@@ -138,8 +138,8 @@ var NamedNodeMap = {
 };
 
 var CharacterData = {
-    data: 0, //String
-    length: 0, //Number
+    data: "",
+    length: 0,
     substringData: function (offset,count) {}, //String
     appendData: function (arg) {}, //Object
     insertData: function (offset,arg) {}, //Object
@@ -149,12 +149,12 @@ var CharacterData = {
 CharacterData.prototype = new Node();
 
 var Attr = {
-    name: 0, //String
-    specified: 0, //Boolean
-    value: 0, //String
-    ownerElement: 0, //Element
-    schemaTypeInfo: 0, //TypeInfo
-    isId: 0, //Boolean
+    name: "",
+    specified: false,
+    value: "",
+    ownerElement: {}, //Element
+    schemaTypeInfo: {}, //TypeInfo
+    isId: false,
 };
 Attr.prototype = new Node();
 
@@ -170,7 +170,7 @@ var Element = {
     removeAttribute: function (name) {}, //Object
     removeAttributeNode: function (oldAttr) {}, //Attr
     removeAttributeNS: function (namespaceURI,localName) {}, //Object
-    schemaTypeInfo: 0, //TypeInfo
+    schemaTypeInfo: {}, //TypeInfo
     setAttribute: function (name,value) {}, //Object
     setAttributeNode: function (newAttr) {}, //Attr
     setAttributeNodeNS: function (newAttr) {}, //Object
@@ -178,15 +178,15 @@ var Element = {
     setIdAttribute: function (name, isId) {}, //Object
     setIdAttributeNode: function (idAttr, isId) {}, //Object
     setIdAttributeNS: function (namespaceURI, localName, isId) {}, //Object
-    tagName: 0, //String
+    tagName: "",
 };
 Element.prototype = new Node();
 
 var Text = {
-    isElementContentWhitespace: 0, //Boolean
+    isElementContentWhitespace: false,
     replaceWholeText: function (content) {}, //Text
     splitText: function (offset) {}, //Text
-    wholeText: 0, //String
+    wholeText: "",
 };
 Text.prototype = new CharacterData();
 
@@ -194,9 +194,9 @@ var Comment = {};
 Comment.prototype = new CharacterData();
 
 var TypeInfo = {
-    isDerivedFrom: function (typeNamespaceArg,typeNameArg,derivationMethod) {}, //Boolean
-    typeName: 0, //String
-    typeNamespace: 0, //String
+    isDerivedFrom: function (typeNamespaceArg, typeNameArg, derivationMethod) {}, //Boolean
+    typeName: "",
+    typeNamespace: "",
 };
 
 var UserDataHandler = {
@@ -204,12 +204,12 @@ var UserDataHandler = {
 };
 
 var DOMError = {
-    location: 0, //DOMLocator
-    message: 0, //String
-    relatedData: 0, //Object
-    relatedException: 0, //Object
-    severity: 0, //Number
-    type: 0, //String
+    location: {}, //DOMLocator
+    message: "",
+    relatedData: {}, //Object
+    relatedException: {}, //Object
+    severity: 0,
+    type: "",
 };
 
 var DOMErrorHandler = {
@@ -217,12 +217,12 @@ var DOMErrorHandler = {
 };
 
 var DOMLocator = {
-    byteOffset: 0, //Number
-    columnNumber: 0, //Number
-    lineNumber: 0, //Number
+    byteOffset: 0,
+    columnNumber: 0,
+    lineNumber: 0,
     relatedNode: 0, //Node
-    uri: 0, //String
-    utf16Offset: 0, //Number
+    uri: "",
+    utf16Offset: 0,
 };
 
 var DOMConfiguration = {
@@ -236,28 +236,28 @@ var CDATASection = {};
 CDATASection.prototype = new Text();
 
 var DocumentType = {
-    entities: 0, //NamedNodeMap
-    internalSubset: 0, //String
-    name: 0, //String
-    notations: 0, //NamedNodeMap
-    publicId: 0, //String
-    systemId: 0, //String
+    entities: {}, //NamedNodeMap
+    internalSubset: "",
+    name: "",
+    notations: {}, //NamedNodeMap
+    publicId: "",
+    systemId: "",
 };
 DocumentType.prototype = new Node();
 
 var Notation = {
-    publicId: 0, //String
-    systemId: 0, //String
+    publicId: "",
+    systemId: "",
 };
 Notation.prototype = new Node();
 
 var Entity = {
-    inputEncoding: 0, //String
-    notationName: 0, //String
-    publicId: 0, //String
-    systemId: 0, //String
-    xmlEncoding: 0, //String
-    xmlVersion: 0, //String
+    inputEncoding: "",
+    notationName: "",
+    publicId: "",
+    systemId: "",
+    xmlEncoding: "",
+    xmlVersion: "",
 };
 Entity.prototype = new Node();
 
@@ -265,7 +265,7 @@ var EntityReference = {};
 EntityReference.prototype = new Node();
 
 var ProcessingInstruction = {
-    data: 0, //String
-    target: 0, //String
+    data: "",
+    target: "",
 };
 ProcessingInstruction.prototype = new Node();

@@ -1,11 +1,11 @@
 var NodeIterator = {
     detach: function () {}, //Object
-    expandEntityReferences: 0, //Boolean
-    filter: 0, //NodeFilter
+    expandEntityReferences: false,
+    filter: {}, //NodeFilter
     nextNode: function () {}, //Node
     previousNode: function () {}, //Node
-    root: 0, //Node
-    whatToShow: 0, //Number
+    root: {}, //Node
+    whatToShow: 0,
 };
 
 var NodeFilter = {
@@ -31,14 +31,14 @@ var Range = {
     cloneContents: function () {}, //DocumentFragment
     cloneRange: function () {}, //Range
     collapse: function (toStart) {}, //Object
-    collapsed: 0, //Boolean
-    commonAncestorContainer: 0, //Node
+    collapsed: false,
+    commonAncestorContainer: {}, //Node
     compareBoundaryPoints: function (how,sourceRange) {}, //short
     createContextualFragment: function (tagString) {}, //Gecko,Object
     deleteContents: function () {}, //Object
     detach: function () {}, //Object
-    endContainer: 0, //Node
-    endOffset: 0, //long
+    endContainer: {}, //Node
+    endOffset: 0,
     extractContents: function () {}, //DocumentFragment
     insertNode: function (newNode) {}, //Object
     selectNode: function (refNode) {}, //Object
@@ -49,8 +49,8 @@ var Range = {
     setStart: function (refNode, offset) {}, //Object
     setStartAfter: function (refNode) {}, //Object
     setStartBefore: function (refNode) {}, //Object
-    startContainer: 0, //Node
-    startOffset: 0, //long
+    startContainer: {}, //Node
+    startOffset: 0,
     surroundContents: function (newParent) {}, //Object
     toString: function () {}, //String
 };
@@ -60,5 +60,5 @@ var DocumentRange = {
 };
 
 var RangeException = {
-    code: 0, //Number
+    code: 0,
 };
