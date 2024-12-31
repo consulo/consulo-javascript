@@ -1,22 +1,19 @@
-window.ActiveXObject = function() {};//XMLHttpRequest
-window.XmlHttpRequest = function() {};//XMLHttpRequest
-window.prototype = new Object();
+window.ActiveXObject = function () { return {}; }; //XMLHttpRequest
+window.XmlHttpRequest = function () { return {}; }; //XMLHttpRequest
 
 var XMLHttpRequest = {
-	onreadystatechange: function () {}
+    abort: function () {}, //Object
+    constructor: {},
+    getAllResponseHeaders: function () { return ""; },
+    getResponseHeader: function (headerName) { return ""; },
+    readyState: 0,
+    responseText: "",
+    responseXML: "",
+    onreadystatechange: function () {},
+    open: function (method, url, async, username, password) { return {}; },
+    overrideMimeType: function (mimeType) { return {}; }, //Gecko
+    send: function (content) {},
+    setRequestHeader: function (label, value) {},
+    statusText: "",
+    status: 0,
 };
-XMLHttpRequest.constructor = 0;//Object
-XMLHttpRequest.readyState = 0;//Number
-XMLHttpRequest.responseText = 0;//String
-XMLHttpRequest.statusText = 0;//String
-XMLHttpRequest.status = 0;//Number
-XMLHttpRequest.responseXML = 0;//String
-XMLHttpRequest.abort = function() {};//Object
-XMLHttpRequest.getAllResponseHeaders = function() {};//String
-XMLHttpRequest.getResponseHeader = function(headerName) {};//String
-XMLHttpRequest.overrideMimeType = function(mimeType) {};//Gecko,Object
-XMLHttpRequest.open = function(method,url,async,username,password) {};//Object
-XMLHttpRequest.send = function(content) {};//void
-XMLHttpRequest.setRequestHeader = function(label,value) {};//void
-
-XMLHttpRequest.prototype = new Object();
