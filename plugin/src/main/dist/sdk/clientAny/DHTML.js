@@ -1,868 +1,922 @@
-Object.__defineGetter__ = function(propertyName,func) {};//Gecko,Object
-Object.__defineSetter__ = function(propertyName,func) {};//Gecko,Object
-Object.__lookupGetter__ = function(propertyName) {};//Gecko,Function
-Object.__lookupSetter__ = function(propertyName) {};//Gecko,Function
-Object.__proto__ = function(propertyName) {};//Gecko,Function
+__defineGetter__ = function (propertyName, func) { return {}; }; //Gecko
+__defineSetter__ = function (propertyName, func) { return {}; }; //Gecko
+__lookupGetter__ = function (propertyName) { return {}; }; //Gecko,Function
+__lookupSetter__ = function (propertyName) { return {}; }; //Gecko,Function
+__proto__ = function (propertyName) { return {}; }; //Gecko,Function
 
-Image = function() {};
-Image.constructor = 0;//Object
-Image.naturalWidth = 0;//Gecko,Object
-Image.naturalHeight = 0;//Gecko,Object
+var Image = function () {};
 Image.prototype = new HTMLImageElement();
+Image.constructor = {};
+Image.naturalWidth = {}; //Gecko
+Image.naturalHeight = {}; //Gecko
 
-Navigator.userAgent = 0;//String
-Navigator.product = 0;//String
-Navigator.appVersion = 0;//String
-Navigator.appName = 0;//String
-Navigator.appCodeName = 0;//String
-Navigator.language = 0;//String
-Navigator.systemLanguage = 0;//IE,String
-Navigator.userLanguage = 0;//IE,String
-Navigator.mimeTypes = 0;//Array
-Navigator.platform = 0;//Array
-Navigator.plugins = 0;//String
-Navigator = {};
-Navigator.taintEnabled = function() {};//Boolean
-Navigator.javaEnabled = function() {};//Boolean
-Navigator.preference = function(prefName,prefValue) {};//String
-Navigator.prototype = new Object();
+var Navigator = {
+    appCodeName: "",
+    appName: "",
+    appVersion: "",
+    javaEnabled: function () { return false; },
+    language: "",
+    mimeTypes: [],
+    platform: [],
+    plugins: "",
+    preference: function (prefName, prefValue) { return ""; },
+    product: "",
+    systemLanguage: "", //IE
+    taintEnabled: function () { return false; },
+    userAgent: "",
+    userLanguage: "", //IE
+};
 
-Screen.width = 0;//Number
-Screen.height = 0;//Number
-Screen.availHeight = 0;//Number
-Screen.availWidth = 0;//Number
-Screen.pixelDepth = 0;//Number
-Screen.colorDepth = 0;//Number
-Screen = {};
-Screen.prototype = new Object();
+var Screen = {
+    availHeight: 0,
+    availWidth: 0,
+    colorDepth: 0,
+    height: 0,
+    pixelDepth: 0,
+    width: 0,
+};
 
-location.href = 0;//String
-location.hash = 0;//String
-location.port = 0;//String
-location.host = 0;//String
-location.hostname = 0;//String
-location.pathname = 0;//String
-location.protocol = 0;//String
-location.port = 0;//String
-location.search = 0;//String
-location.target = 0;//String
-location = {};
-location.reload = function() {};//void
-location.replace = function(url) {};//void
-location.prototype = new Object();
+var location = {
+    href: "",
+    hash: "",
+    host: "",
+    hostname: "",
+    pathname: "",
+    port: "",
+    protocol: "",
+    reload: function () {},
+    replace: function (url) {},
+    search: "",
+    target: "",
+};
 
-XSLTProcessor = function() {};
-XSLTProcessor.constructor = 0;//Gecko,Object
-XSLTProcessor.importStylesheet = function(domNode) {};//Gecko,Object
-XSLTProcessor.transformToDocument = function(domNode) {};//Gecko,Document
-XSLTProcessor.transformToFragment = function(domToBeTransformed,ownerDocument) {};//Gecko,DocumentFragment
+var XSLTProcessor = function () {};
 XSLTProcessor.prototype = new Object();
+XSLTProcessor.constructor = {}; //Gecko
+XSLTProcessor.importStylesheet = function (domNode) { return {}; }; //Gecko
+XSLTProcessor.transformToDocument = function (domNode) { return {}; }; //Gecko,Document
+XSLTProcessor.transformToFragment = function (domToBeTransformed, ownerDocument) { return {}; }; //Gecko,DocumentFragment
 
-DOMParser = function() {};
-DOMParser.constructor = 0;//Gecko,Object
-DOMParser.parseFromString = function(stringToParse,contentType) {};//Gecko,Document
+var DOMParser = function () {};
 DOMParser.prototype = new Object();
+DOMParser.constructor = {}; //Gecko
+DOMParser.parseFromString = function (stringToParse, contentType) { return {}; }; //Gecko,Document
 
-XMLSerializer = function() {};
-XMLSerializer.constructor = 0;//Gecko,Object
-XMLSerializer.serializeToStream = function(domNode,stream,encoding) {};//Gecko,Object
-XMLSerializer.serializeToString = function(domNode) {};//Gecko,String
+var XMLSerializer = function () {};
 XMLSerializer.prototype = new Object();
+XMLSerializer.constructor = 0; //Gecko,Object
+XMLSerializer.serializeToStream = function (domNode, stream, encoding) { return {}; }; //Gecko
+XMLSerializer.serializeToString = function (domNode) { return ""; }; //Gecko
 
-Event.data = 0;//Object[]
-Event.height = 0;//Number
-Event.x = 0;//IE,Number
-Event.screenX = 0;//Number
-Event.clientX = 0;//Number
-Event.offsetX = 0;//IE,Number
-Event.layerX = 0;//Gecko,Number
-Event.fromElement = 0;//IE,Object
-Event.wheelDelta = 0;//IE,Number
-Event.repeat = 0;//IE,Boolean
-Event.pageX = 0;//Number
-Event.y = 0;//IE,Number
-Event.screenY = 0;//Number
-Event.clientY = 0;//Number
-Event.offsetY = 0;//IE,Number
-Event.layerY = 0;//Gecko,Number
-Event.pageY = 0;//Number
-Event.width = 0;//Number
-Event.modifiers = 0;//Number
-Event.keyCode = 0;//Number
-Event.type = 0;//String
-Event.which = 0;//Object
-Event.srcElement = 0;//IE,Object
-Event.toElement = 0;//IE,Object
-Event.cancelBubble = 0;//IE,Boolean
-Event.returnValue = 0;//IE,Boolean
-Event.altKey = 0;//Boolean
-Event.ctrlKey = 0;//Boolean
-Event.shiftKey = 0;//Boolean
-Event.button = 0;//Boolean
-Event.charCode = 0;//Gecko,String
-Event.ABORT = 0;//Gecko,String,deprecated
-Event.BLUR = 0;//Gecko,String,deprecated
-Event.CLICK = 0;//Gecko,String,deprecated
-Event.CHANGE = 0;//Gecko,String,deprecated
-Event.DBLCLICK = 0;//Gecko,String,deprecated
-Event.DRAGDROP = 0;//Gecko,String,deprecated
-Event.ERROR = 0;//Gecko,String,deprecated
-Event.FOCUS = 0;//Gecko,String,deprecated
-Event.KEYDOWN = 0;//Gecko,String,deprecated
-Event.KEYPRESS = 0;//Gecko,String,deprecated
-Event.KEYUP = 0;//Gecko,String,deprecated
-Event.LOAD = 0;//Gecko,String,deprecated
-Event.MOUSEDOWN = 0;//Gecko,String,deprecated
-Event.MOUSEMOVE = 0;//Gecko,String,deprecated
-Event.MOUSEOUT = 0;//Gecko,String,deprecated
-Event.MOUSEOVER = 0;//Gecko,String,deprecated
-Event.MOUSEUP = 0;//Gecko,String,deprecated
-Event.MOVE = 0;//Gecko,String,deprecated
-Event.RESET = 0;//Gecko,String,deprecated
-Event.RESIZE = 0;//Gecko,String,deprecated
-Event.SELECT = 0;//Gecko,String,deprecated
-Event.SUBMIT = 0;//Gecko,String,deprecated
-Event.UNLOAD = 0;//Gecko,String,deprecated
-Event = {};
-Event.prototype = new Object();
+var Event = {
+    altKey: false,
+    button: false,
+    cancelBubble: false, //IE
+    charCode: "", //Gecko
+    clientX: 0,
+    clientY: 0,
+    ctrlKey: false,
+    data: {},
+    height: 0,
+    fromElement: {}, //IE
+    keyCode: 0,
+    layerX: 0, //Gecko
+    layerY: 0, //Gecko
+    modifiers: 0,
+    offsetX: 0, //IE
+    offsetY: 0, //IE
+    pageX: 0,
+    pageY: 0,
+    repeat: false, //IE
+    returnValue: false, //IE
+    screenX: 0,
+    screenY: 0,
+    shiftKey: false,
+    srcElement: {}, //IE
+    toElement: {}, //IE
+    type: "",
+    wheelDelta: 0, //IE
+    which: {},
+    width: 0,
+    x: 0, //IE
+    y: 0, //IE
+    // deprecated
+    ABORT: "", //Gecko,deprecated
+    BLUR: "", //Gecko,deprecated
+    CLICK: "", //Gecko,deprecated
+    CHANGE: "", //Gecko,deprecated
+    DBLCLICK: "", //Gecko,deprecated
+    DRAGDROP: "", //Gecko,deprecated
+    ERROR: "", //Gecko,deprecated
+    FOCUS: "", //Gecko,deprecated
+    KEYDOWN: "", //Gecko,deprecated
+    KEYPRESS: "", //Gecko,deprecated
+    KEYUP: "", //Gecko,deprecated
+    LOAD: "", //Gecko,deprecated
+    MOUSEDOWN: "", //Gecko,deprecated
+    MOUSEMOVE: "", //Gecko,deprecated
+    MOUSEOUT: "", //Gecko,deprecated
+    MOUSEOVER: "", //Gecko,deprecated
+    MOUSEUP: "", //Gecko,deprecated
+    MOVE: "", //Gecko,deprecated
+    RESET: "", //Gecko,deprecated
+    RESIZE: "", //Gecko,deprecated
+    SELECT: "", //Gecko,deprecated
+    SUBMIT: "", //Gecko,deprecated
+    UNLOAD: "", //Gecko,deprecated
+};
 
-Selection.anchorNode = 0;//Gecko,Node
-Selection.anchorOffset = 0;//Gecko,Number
-Selection.focusNode = 0;//Gecko,Node
-Selection.focusOffset = 0;//Gecko,Number
-Selection.isCollapsed = 0;//Gecko,Boolean
-Selection.rangeCount = 0;//Gecko,Number
-Selection.type = 0;//IE,Object
-Selection = {};
-Selection.getRangeAt = function(index) {};//Gecko,Range
-Selection.collapse = function(parentNode,offset) {};//Gecko,void
-Selection.extend = function(parentNode,offset) {};//Gecko,void
-Selection.collapseToStart = function() {};//Gecko,void
-Selection.collapseToEnd = function() {};//Gecko,void
-Selection.selectAllChildren = function(parentNode) {};//Gecko,void
-Selection.addRange = function(range) {};//Gecko,void
-Selection.removeRange = function(range) {};//Gecko,void
-Selection.removeAllRanges = function() {};//Gecko,void
-Selection.containsNode = function(node,partlyContained) {};//Gecko,Boolean
-Selection.clear = function() {};//IE,Boolean
-Selection.empty = function() {};//IE,Boolean
-Selection.createRange = function() {};//IE,TextRange
-Selection.prototype = new Object();
+var Selection = {
+    addRange: function (range) {}, //Gecko,void
+    anchorNode: {}, //Gecko,Node
+    anchorOffset: 0, //Gecko
+    clear: function () {}, //IE,Boolean
+    collapse: function (parentNode, offset) {}, //Gecko
+    collapseToStart: function () {}, //Gecko
+    collapseToEnd: function () {}, //Gecko
+    containsNode: function (node, partlyContained) { return false; }, //Gecko
+    createRange: function () { return {}; }, //IE,TextRange
+    empty: function () { return true; }, //IE
+    extend: function (parentNode, offset) {}, //Gecko
+    focusNode: {}, //Gecko,Node
+    focusOffset: 0, //Gecko
+    getRangeAt: function (index) { return {}; }, //Gecko,Range
+    isCollapsed: false, //Gecko
+    rangeCount: 0, //Gecko
+    removeRange: function (range) {}, //Gecko
+    removeAllRanges: function () {}, //Gecko
+    selectAllChildren: function (parentNode) {}, //Gecko
+    type: {}, //IE
+};
 
-TextRange.htmlText = 0;//IE,String
-TextRange.text = 0;//IE,String
-TextRange.boundingWidth = 0;//IE,Number
-TextRange.boundingHeight = 0;//IE,Number
-TextRange.boundingLeft = 0;//IE,Number
-TextRange.offsetLeft = 0;//IE,Number
-TextRange.boundingTop = 0;//IE,Number
-TextRange.offsetTop = 0;//IE,Number
-TextRange = {};
-TextRange.collapse = function(start) {};//IE,void
-TextRange.expand = function(unit) {};//IE,void
-TextRange.duplicate = function() {};//IE,TextRange
-TextRange.select = function() {};//IE,void
-TextRange.parentElement = function() {};//IE,Node
-TextRange.inRange = function(other) {};//IE,boolean
-TextRange.isEqual = function(other) {};//IE,boolean
-TextRange.scrollIntoView = function(start) {};//IE,void
-TextRange.setEndPoint = function(type,range) {};//IE,void
-TextRange.compareEndPoint = function(type,range) {};//IE,void
-TextRange.move = function(unit,count) {};//IE,void
-TextRange.moveStart = function(unit,count) {};//IE,void
-TextRange.moveEnd = function(unit,count) {};//IE,void
-TextRange.pasteHTML = function(htmlText) {};//IE,void
-TextRange.moveToElementText = function(element) {};//IE,void
-TextRange.compareEndPoints = function(sType,oRange) {};//IE,Number
-TextRange.prototype = new Object();
+var TextRange = {
+    boundingHeight: 0, //IE
+    boundingLeft: 0, //IE
+    boundingTop: 0, //IE
+    boundingWidth: 0, //IE
+    collapse: function (start) {}, //IE,void
+    compareEndPoint: function (type, range) {}, //IE
+    compareEndPoints: function (sType, oRange) { return 0; }, //IE
+    duplicate: function () { return {}; }, //IE,TextRange
+    expand: function (unit) {}, //IE
+    htmlText: "", //IE
+    inRange: function (other) { return false; }, //IE
+    isEqual: function (other) { return false; }, //IE
+    move: function (unit, count) {}, //IE
+    moveEnd: function (unit, count) {}, //IE
+    moveStart: function (unit, count) {}, //IE
+    moveToElementText: function (element) {}, //IE
+    offsetLeft: 0, //IE
+    offsetTop: 0, //IE
+    parentElement: function () { return {}; }, //IE,Node
+    pasteHTML: function (htmlText) {}, //IE
+    scrollIntoView: function (start) {}, //IE
+    select: function () {}, //IE
+    setEndPoint: function (type, range) {}, //IE
+    text: "", //IE
+};
 
-document.selection = 0;//IE,Selection
-document.namespaces = 0;//IE,Array
-document.all = 0;//IE,All
-document.styleSheets = 0;//Stylesheet[]
-document = {};
-document.execCommand = function(sCommand,bUserInterface,vValue) {};//IE,Boolean
-document.prototype = new Object();
+var document = {
+    all: 0, //IE,All
+    execCommand: function (sCommand, bUserInterface, vValue) { return false; }, //IE
+    namespaces: [], //IE
+    selection: {}, //IE,Selection
+    styleSheets: [], //Stylesheet[]
+};
 
-CssRule.selectorText = 0;//String
-CssRule = {};
-CssRule.prototype = new Object();
+var CssRule = {
+    selectorText: "",
+};
 
-Stylesheet.cssRules = 0;//Gecko,CssRule[]
-Stylesheet.rules = 0;//IE,CssRule[]
-Stylesheet.owningElement = 0;//IE,HtmlElement
-Stylesheet = {};
-Stylesheet.addRule = function(selector,style) {};//IE,void
-Stylesheet.insertRule = function(ruleText,index) {};//Gecko,void
-Stylesheet.removeRule = function(index) {};//IE,void
-Stylesheet.deleteRule = function(index) {};//Gecko,void
-Stylesheet.prototype = new Object();
+var Stylesheet = {
+    addRule: function (selector, style) {}, //IE
+    cssRules: [], //Gecko,CssRule[]
+    deleteRule: function (index) {}, //Gecko
+    insertRule: function (ruleText, index) {}, //Gecko
+    owningElement: {}, //IE,HtmlElement
+    removeRule: function (index) {}, //IE
+    rules: 0, //IE,CssRule[]
+};
 
-MozillaSideBar.addPanel = function(title,url,param3) {};//Gecko,void
-MozillaSideBar.prototype = new Object();
+var MozillaSideBar = {
+    addPanel: function (title, url, param3) {}, //Gecko
+};
 
-IEExternal.AddFavorite = function(title,url) {};//IE,void
-IEExternal.prototype = new Object();
+var IEExternal = {
+    AddFavorite: function (title, url) {}, //IE
+};
 
-history.back = function() {};//void
-history.forward = function() {};//void
-history.go = function(count) {};//void
-history.prototype = new Object();
+var history = {
+    back: function () {},
+    forward: function () {},
+    go: function (count) {},
+};
 
-window.document = 0;//HTMLDocument
-window.event = 0;//Event
-window.navigator = 0;//Navigator
-window.screen = 0;//Screen
-window.location = 0;//Location
-window.frameElement = 0;//Object
-window.opener = 0;//window
-window.window = 0;//window
-window.parent = 0;//window
-window.top = 0;//window
-window.self = 0;//Object
-window.frames = 0;//Array
-window.innerHeight = 0;//Number
-window.innerWidth = 0;//Number
-window.outerHeight = 0;//Number
-window.outerWidth = 0;//Number
-window.screenLeft = 0;//IE,Number
-window.screenTop = 0;//IE,Number
-window.scrollX = 0;//Number
-window.scrollY = 0;//Number
-window.pageXOffset = 0;//Number
-window.pageYOffset = 0;//Number
-window.scrollMaxX = 0;//Number
-window.scrollMaxY = 0;//Number
-window.status = 0;//String
-window.defaultStatus = 0;//String
-window.toolbar = 0;//Object
-window.menubar = 0;//Object
-window.scrollbars = 0;//Object
-window.directories = 0;//Object
-window.history = 0;//history
-window.sidebar = 0;//Gecko,MozillaSideBar
-window.external = 0;//IE,IEExternal
-window.opera = 0;//Opera,Boolean
-window = {};
-window.getSelection = function() {};//Gecko,Selection
-window.print = function() {};//void
-window.alert = function(sMesssage) {};//Object
-window.confirm = function(sMesssage) {};//Object
-window.prompt = function(sMessage,sDefaultValue) {};//Object
-window.clearInterval = function(intervalId) {};//Object
-window.clearTimeout = function(intervalId) {};//Object
-window.setInterval = function(vCode,iMillis) {};//Number
-window.setTimeout = function(vCode,iMillis) {};//Number
-window.captureEvents = function(eventType) {};//Gecko,void,deprecated
-window.releaseEvents = function(eventType) {};//Gecko,void,deprecated
-window.routeEvent = function(event) {};//Gecko,void,deprecated
-window.preventBubble = function(event) {};//Gecko,void,deprecated
-window.GetObject = function(classOrPath,class) {};//IE,Object,deprecated
-window.ScriptEngine = function() {};//IE,String
-window.ScriptEngineBuildVersion = function() {};//IE,String
-window.ScriptEngineMajorVersion = function() {};//IE,String
-window.ScriptEngineMinorVersion = function() {};//IE,String
-window.scrollTo = function(x,y) {};//Object
-window.scrollBy = function(xDelta,yDelta) {};//Object
-window.moveTo = function(x,y) {};//Object
-window.moveBy = function(xDelta,yDelta) {};//Object
-window.resizeTo = function(width,height) {};//Object
-window.resizeBy = function(widthDelta,heightDelta) {};//Object
-window.getComputedStyle = function(element,pseudoElt) {};//Gecko,style
-window.showModalDialog = function(sUrl,vArguments,sFeatures) {};//IE,style
-window.attachEvent = function(type,listener) {};//IE,Object
-window.detachEvent = function(type,listener) {};//IE,Object
-window.addEventListener = function(type,listener,useCapture) {};//Gecko,Object
-window.removeEventListener = function(type,listener,useCapture) {};//Gecko,Object
-window.execScript = function(sScript) {};//IE,Object
-window.CollectGarbage = function() {};//IE,Object
-window.prototype = new Object();
+var window = {
+    addEventListener: function (type, listener, useCapture) { return {}; }, //Gecko
+    alert: function (sMesssage) { return {}; },
+    attachEvent: function (type, listener) { return {}; }, //IE
+    captureEvents: function (eventType) {}, //Gecko,deprecated
+    clearInterval: function (intervalId) { return {}; },
+    clearTimeout: function (intervalId) { return {}; },
+    CollectGarbage: function () { return {}; }, //IE
+    confirm: function (sMesssage) { return {}; },
+    defaultStatus: "",
+    detachEvent: function (type, listener) { return {}; }, //IE
+    directories: {},
+    document: {}, //HTMLDocument
+    external: {}, //IE,IEExternal
+    event: {}, //Event
+    execScript: function (sScript) { return {}; }, //IE
+    frameElement: {},
+    frames: [],
+    getComputedStyle: function (element, pseudoElt) { return {}; }, //Gecko,style
+    GetObject: function (classOrPath, clazz) { return {}; }, //IE,deprecated
+    getSelection: function () { return {}; }, //Gecko,Selection
+    history: {}, //history
+    innerHeight: 0,
+    innerWidth: 0,
+    location: {}, //Location
+    menubar: {},
+    moveBy: function (xDelta, yDelta) { return {}; },
+    moveTo: function (x, y) { return {}; },
+    navigator: {}, //Navigator
+    opener: {}, //window
+    opera: false, //Opera
+    outerHeight: 0,
+    outerWidth: 0,
+    pageXOffset: 0,
+    pageYOffset: 0,
+    parent: {}, //window
+    preventBubble: function (event) {}, //Gecko,deprecated
+    print: function () {},
+    prompt: function (sMessage, sDefaultValue) { return {}; },
+    releaseEvents: function (eventType) {}, //Gecko,deprecated
+    removeEventListener: function (type, listener, useCapture) { return {}; }, //Gecko
+    resizeBy: function (widthDelta, heightDelta) { return {}; },
+    resizeTo: function (width, height) { return {}; },
+    routeEvent: function (event) {}, //Gecko,deprecated
+    screen: {}, //Screen
+    screenLeft: 0, //IE
+    screenTop: 0, //IE
+    ScriptEngine: function () { return ""; }, //IE
+    ScriptEngineBuildVersion: function () { return ""; }, //IE
+    ScriptEngineMajorVersion: function () { return ""; }, //IE
+    ScriptEngineMinorVersion: function () { return ""; }, //IE
+    scrollbars: {},
+    scrollBy: function (xDelta, yDelta) { return {}; },
+    scrollMaxX: 0,
+    scrollMaxY: 0,
+    scrollTo: function (x, y) { return {}; },
+    scrollX: 0,
+    scrollY: 0,
+    self: {},
+    setInterval: function (vCode, iMillis) { return 0; },
+    setTimeout: function (vCode, iMillis) { return 0; },
+    showModalDialog: function (sUrl, vArguments, sFeatures) { return {}; }, //IE,style
+    sidebar: {}, //Gecko,MozillaSideBar
+    status: "",
+    toolbar: {},
+    top: {}, //window
+    window: {}, //window
+};
 
-window = 0;//window
-escape = function() {};//Object,deprecated
-unescape = function() {};//Object,deprecated
+var escape = function () { return {}; }; //deprecated
+var unescape = function () { return {}; }; //deprecated
 
-HTMLCollection.length = 0;//Number
-HTMLCollection = {};
-HTMLCollection.item = function(index) {};//Node
-HTMLCollection.namedItem = function(name) {};//Node
-HTMLCollection.prototype = new Object();
+var HTMLCollection = {
+    length: 0,
+    item: function (index) { return {}; }, //Node
+    namedItem: function (name) { return {}; }, //Node
+};
 
-HTMLOptionsCollection.length = 0;//Number
-HTMLOptionsCollection = {};
-HTMLOptionsCollection.item = function(index) {};//Node
-HTMLOptionsCollection.namedItem = function(name) {};//Node
-HTMLOptionsCollection.prototype = new Object();
+var HTMLOptionsCollection = {
+    item: function (index) { return {}; }, //Node
+    length: 0,
+    namedItem: function (name) { return {}; }, //Node
+};
 
-HTMLDocument.title = 0;//String
-HTMLDocument.referrer = 0;//String
-HTMLDocument.domain = 0;//String
-HTMLDocument.URL = 0;//String
-HTMLDocument.body = 0;//HTMLElement
-HTMLDocument.images = 0;//HTMLCollection
-HTMLDocument.applets = 0;//HTMLCollection
-HTMLDocument.links = 0;//HTMLCollection
-HTMLDocument.forms = 0;//HTMLCollection
-HTMLDocument.anchors = 0;//HTMLCollection
-HTMLDocument.cookie = 0;//HTMLCollection
-HTMLDocument.defaultView = 0;//Gecko,DocumentView
-HTMLDocument.activeElement = 0;//IE,DocumentView
-HTMLDocument.compatMode = 0;//String
-HTMLDocument.parentWindow = 0;//IE,window
-HTMLDocument.commandDispatcher = 0;//Gecko,CommandDispatcher
-HTMLDocument = {};
-HTMLDocument.open = function() {};//Object
-HTMLDocument.close = function() {};//Object
-HTMLDocument.write = function(text) {};//Object
-HTMLDocument.writeln = function(text) {};//Object
-HTMLDocument.getElementsByName = function(elementName) {};//NodeList
-HTMLDocument.getElementsByClassName = function(className) {};//Gecko,NodeList
-HTMLDocument.createStyleSheet = function() {};//IE,Stylesheet
-HTMLDocument.getBoxObjectFor = function(element) {};//Gecko,Node
-HTMLDocument.querySelectorAll = function(string) {};//Gecko,NodeList
-HTMLDocument.querySelector = function(string) {};//Gecko,Node
-HTMLDocument.getAnonymousNodes = function(node) {};//Gecko,Node[]
-HTMLDocument.getAnonymousElementByAttribute = function(node,attrName,attrValue) {};//Gecko,NodeList
-HTMLDocument.elementFromPoint = function(iX,iY) {};//IE,HTMLElement
-HTMLDocument.createEventObject = function(oExistingEvent) {};//IE,Even
+var HTMLDocument = {
+    activeElement: {}, //IE,DocumentView
+    anchors: {}, //HTMLCollection
+    applets: {}, //HTMLCollection
+    body: {}, //HTMLElement
+    close: function () { return {}; },
+    commandDispatcher: {}, //Gecko,CommandDispatcher
+    compatMode: "",
+    cookie: {}, //HTMLCollection
+    createEventObject: function (oExistingEvent) { return {}; }, //IE,Event
+    createStyleSheet: function () { return {}; }, //IE,Stylesheet
+    defaultView: {}, //Gecko,DocumentView
+    domain: "",
+    elementFromPoint: function (iX, iY) { return {}; }, //IE,HTMLElement
+    forms: {}, //HTMLCollection
+    getAnonymousElementByAttribute: function (node, attrName, attrValue) { return {}; }, //Gecko,NodeList
+    getAnonymousNodes: function (node) { return []; }, //Gecko,Node[]
+    getBoxObjectFor: function (element) { return {}; }, //Gecko,Node
+    getElementsByName: function (elementName) { return {}; }, //NodeList
+    getElementsByClassName: function (className) { return {}; }, //Gecko,NodeList
+    images: {}, //HTMLCollection
+    links: {}, //HTMLCollection
+    open: function () { return {}; },
+    parentWindow: {}, //IE,window
+    querySelector: function (string) { return {}; }, //Gecko,Node
+    querySelectorAll: function (string) { return {}; }, //Gecko,NodeList
+    referrer: "",
+    title: "",
+    URL: "",
+    write: function (text) {},
+    writeln: function (text) {},
+};
 HTMLDocument.prototype = new Document();
 
-CommandDispatcher.focusedElement = 0;//Gecko,HTMLElement
-CommandDispatcher = {};
-CommandDispatcher.prototype = new Object();
+var CommandDispatcher = {
+    focusedElement: {}, //Gecko,HTMLElement
+};
 
-DocumentView.getComputedStyle = function(element,type) {};//Gecko,CssStyle
-DocumentView.prototype = new Object();
+var DocumentView = {
+    getComputedStyle: function (element, type) { return {}; }, //Gecko,CssStyle
+};
 
-CssStyle.getPropertyValue = function(propertyName) {};//Gecko,String
-CssStyle.prototype = new Object();
+var CssStyle = {
+    getPropertyValue: function (propertyName) { return {}; }, //Gecko,String
+};
 
-HTMLElement.id = 0;//String
-HTMLElement.title = 0;//String
-HTMLElement.lang = 0;//String
-HTMLElement.dir = 0;//String
-HTMLElement.className = 0;//String
-HTMLElement.children = 0;//IE,HTMLElement[]
-HTMLElement.style = 0;//style
-HTMLElement.clientWidth = 0;//Number
-HTMLElement.clientHeight = 0;//Number
-HTMLElement.clientTop = 0;//Number
-HTMLElement.clientLeft = 0;//Number
-HTMLElement.innerHTML = 0;//String
-HTMLElement.innerText = 0;//IE,String
-HTMLElement.offsetWidth = 0;//Number
-HTMLElement.offsetHeight = 0;//Number
-HTMLElement.offsetTop = 0;//Number
-HTMLElement.offsetLeft = 0;//Number
-HTMLElement.offsetParent = 0;//Number
-HTMLElement.scrollWidth = 0;//Number
-HTMLElement.scrollHeight = 0;//Number
-HTMLElement.scrollTop = 0;//Number
-HTMLElement.scrollLeft = 0;//Number
-HTMLElement.stylesheet = 0;//Stylesheet
-HTMLElement.currentStyle = 0;//IE,IEElementStyle
-HTMLElement.runtimeStyle = 0;//IE,IEElementStyle
-HTMLElement.filters = 0;//IE,Array
-HTMLElement.boxObject = 0;//Gecko,HTMLElement
-HTMLElement.propertyName = 0;//IE,String
-HTMLElement.isDisabled = 0;//IE,Boolean
-HTMLElement = {};
-HTMLElement.insertAdjacentHTML = function(position,htmlContent) {};//IE,Object
-HTMLElement.insertAdjacentText = function(position,textContent) {};//IE,Object
-HTMLElement.attachEvent = function(type,listener) {};//IE,Object
-HTMLElement.detachEvent = function(type,listener) {};//IE,Object
-HTMLElement.fireEvent = function(type,event) {};//IE,Object
-HTMLElement.addBehavior = function(sUrl) {};//IE,Number
-HTMLElement.removeBehavior = function(sID) {};//IE,Boolean
-HTMLElement.getBoundingClientRect = function() {};//IE,TextRange
-HTMLElement.showPopup = function() {};//Gecko,Object
-HTMLElement.hidePopup = function() {};//Gecko,Object
-HTMLElement.setCapture = function(bContainerCapture) {};//IE,Object
-HTMLElement.releaseCapture = function() {};//IE,Object
-HTMLElement.clearAttributes = function() {};//IE,Object
-HTMLElement.mergeAttributes = function(oSource,bPreserve) {};//IE,Object
 var HTMLElement = {
-	onblur: function () {},
-	onclick: function () {},
-	ondblclick: function () {},
-	onfocus: function () {},
-	onkeydown: function () {},
-	onkeyup: function () {},
-	onmouseup: function () {},
-	onmousedown: function () {},
-	onmouseout: function () {},
-	onmouseover: function () {},
-	onmousemove: function () {},
-	onresize: function () {}
+    addBehavior: function (sUrl) { return 0; }, //IE
+    attachEvent: function (type, listener) { return {}; }, //IE
+    boxObject: {}, //Gecko,HTMLElement
+    children: [], //IE,HTMLElement[]
+    className: "",
+    clearAttributes: function () { return {}; }, //IE
+    clientHeight: 0,
+    clientLeft: 0,
+    clientTop: 0,
+    clientWidth: 0,
+    currentStyle: {}, //IE,IEElementStyle
+    detachEvent: function (type, listener) { return {}; }, //IE
+    dir: "",
+    filters: [], //IE
+    fireEvent: function (type, event) { return {}; }, //IE
+    getBoundingClientRect: function () {}, //IE,TextRange
+    hidePopup: function () {}, //Gecko,Object
+    id: "",
+    innerHTML: "",
+    innerText: "", //IE
+    insertAdjacentHTML: function (position, htmlContent) { return {}; }, //IE
+    insertAdjacentText: function (position, textContent) { return {}; }, //IE
+    isDisabled: false, //IE
+    lang: "",
+    mergeAttributes: function (oSource, bPreserve) { return {}; }, //IE
+    offsetHeight: 0,
+    offsetLeft: 0,
+    offsetParent: 0,
+    offsetTop: 0,
+    offsetWidth: 0,
+    onblur: function () {},
+    onclick: function () {},
+    ondblclick: function () {},
+    onfocus: function () {},
+    onkeydown: function () {},
+    onkeyup: function () {},
+    onmouseup: function () {},
+    onmousedown: function () {},
+    onmouseout: function () {},
+    onmouseover: function () {},
+    onmousemove: function () {},
+    onresize: function () {},
+    propertyName: "", //IE
+    releaseCapture: function () { return {}; }, //IE
+    removeBehavior: function (sID) { return false; }, //IE
+    runtimeStyle: {}, //IE,IEElementStyle
+    setCapture: function (bContainerCapture) { return {}; }, //IE
+    scrollWidth: 0,
+    scrollHeight: 0,
+    scrollTop: 0,
+    scrollLeft: 0,
+    showPopup: function () { return {}; }, //Gecko
+    style: {}, //style
+    stylesheet: {}, //Stylesheet
+    title: "",
 };
 HTMLElement.prototype = new Element();
 
-IEElementStyle.hasLayout = 0;//IE,Boolean
-IEElementStyle = {};
-IEElementStyle.prototype = new style();
+var HTMLAnchorElement = {
+    accessKey: "",
+    charset: "",
+    coords: "",
+    blur: function () { return {}; },
+    focus: function () { return {}; },
+    href: "",
+    hreflang: "",
+    name: "",
+    rel: "",
+    rev: "",
+    shape: "",
+    tabIndex: 0,
+    target: "",
+    type: "",
+};
+HTMLAnchorElement.prototype = new HTMLElement();
 
-HTMLHtmlElement.version = 0;//String
-HTMLHtmlElement = {};
-HTMLHtmlElement.prototype = new HTMLElement();
+var HTMLAppletElement = {
+    align: "",
+    alt: "",
+    archive: "",
+    code: "",
+    codeBase: "",
+    height: "",
+    hspace: 0,
+    name: "",
+    object: "",
+    vspace: 0,
+    width: "",
+};
+HTMLAppletElement.prototype = new HTMLElement();
 
-HTMLHeadElement.profile = 0;//String
-HTMLHeadElement = {};
-HTMLHeadElement.prototype = new HTMLElement();
+var HTMLAreaElement = {
+    accessKey: "",
+    alt: "",
+    coords: "",
+    href: "",
+    noHref: false,
+    shape: "",
+    tabIndex: 0,
+    target: "",
+};
+HTMLAreaElement.prototype = new HTMLElement();
 
-HTMLLinkElement.disabled = 0;//Boolean
-HTMLLinkElement.charset = 0;//String
-HTMLLinkElement.href = 0;//String
-HTMLLinkElement.hreflang = 0;//String
-HTMLLinkElement.media = 0;//String
-HTMLLinkElement.rel = 0;//String
-HTMLLinkElement.rev = 0;//String
-HTMLLinkElement.target = 0;//String
-HTMLLinkElement.type = 0;//String
-HTMLLinkElement = {};
-HTMLLinkElement.prototype = new HTMLElement();
-
-HTMLTitleElement.text = 0;//String
-HTMLTitleElement = {};
-HTMLTitleElement.prototype = new HTMLElement();
-
-HTMLMetaElement.content = 0;//String
-HTMLMetaElement.httpEquiv = 0;//String
-HTMLMetaElement.name = 0;//String
-HTMLMetaElement.scheme = 0;//String
-HTMLMetaElement = {};
-HTMLMetaElement.prototype = new HTMLElement();
-
-HTMLBaseElement.href = 0;//String
-HTMLBaseElement.target = 0;//String
-HTMLBaseElement = {};
+var HTMLBaseElement = {
+    href: "",
+    target: "",
+};
 HTMLBaseElement.prototype = new HTMLElement();
 
-HTMLIsIndexElement.form = 0;//HTMLFormElement
-HTMLIsIndexElement.prompt = 0;//String
-HTMLIsIndexElement = {};
-HTMLIsIndexElement.prototype = new HTMLElement();
+var HTMLBaseFontElement = {
+    color: "",
+    face: "",
+    size: 0,
+};
+HTMLBaseFontElement.prototype = new HTMLElement();
 
-HTMLStyleElement.disabled = 0;//Boolean
-HTMLStyleElement.media = 0;//String
-HTMLStyleElement.type = 0;//String
-HTMLStyleElement.styleSheet = 0;//IE,Stylesheet
-HTMLStyleElement = {};
-HTMLStyleElement.prototype = new HTMLElement();
-
-HTMLBodyElement.aLink = 0;//String
-HTMLBodyElement.background = 0;//String
-HTMLBodyElement.bgColor = 0;//String
-HTMLBodyElement.link = 0;//String
-HTMLBodyElement.text = 0;//String
-HTMLBodyElement.vLink = 0;//String
-HTMLBodyElement = {};
 var HTMLBodyElement = {
-	onload: function () {},
-	onunload: function () {}
+    aLink: "",
+    background: "",
+    bgColor: "",
+    link: "",
+    onload: function () {},
+    onunload: function () {},
+    text: "",
+    vLink: "",
 };
 HTMLBodyElement.prototype = new HTMLElement();
 
-HTMLFormElement.elements = 0;//HTMLCollection
-HTMLFormElement.length = 0;//Number
-HTMLFormElement.name = 0;//String
-HTMLFormElement.acceptCharset = 0;//String
-HTMLFormElement.action = 0;//String
-HTMLFormElement.enctype = 0;//String
-HTMLFormElement.method = 0;//String
-HTMLFormElement.target = 0;//String
-HTMLFormElement = {};
-HTMLFormElement.submit = function() {};//Object
-HTMLFormElement.reset = function() {};//Object
-HTMLFormElement.prototype = new Object();
-
-HTMLSelectElement.type = 0;//String
-HTMLSelectElement.selectedIndex = 0;//Number
-HTMLSelectElement.value = 0;//String
-HTMLSelectElement.length = 0;//Number
-HTMLSelectElement.form = 0;//HTMLFormElement
-HTMLSelectElement.options = 0;//HTMLOptionsCollection
-HTMLSelectElement.disabled = 0;//Boolean
-HTMLSelectElement.multiple = 0;//Boolean
-HTMLSelectElement.name = 0;//String
-HTMLSelectElement.size = 0;//Number
-HTMLSelectElement.tabIndex = 0;//Number
-HTMLSelectElement = {};
-HTMLSelectElement.add = function(element,before) {};//Object
-HTMLSelectElement.remove = function(index) {};//Object
-HTMLSelectElement.blur = function() {};//Object
-HTMLSelectElement.focus = function() {};//Object
-HTMLSelectElement.prototype = new HTMLElement();
-
-HTMLOptGroupElement.disabled = 0;//Boolean
-HTMLOptGroupElement.label = 0;//String
-HTMLOptGroupElement = {};
-HTMLOptGroupElement.prototype = new HTMLElement();
-
-HTMLOptionElement.form = 0;//HTMLFormElement
-HTMLOptionElement.defaultSelected = 0;//Boolean
-HTMLOptionElement.text = 0;//String
-HTMLOptionElement.index = 0;//Number
-HTMLOptionElement.disabled = 0;//Boolean
-HTMLOptionElement.label = 0;//String
-HTMLOptionElement.selected = 0;//Boolean
-HTMLOptionElement.value = 0;//String
-HTMLOptionElement = {};
-HTMLOptionElement.prototype = new HTMLElement();
-
-HTMLInputElement.defaultValue = 0;//String
-HTMLInputElement.defaultChecked = 0;//Boolean
-HTMLInputElement.form = 0;//HTMLFormElement
-HTMLInputElement.accept = 0;//String
-HTMLInputElement.accessKey = 0;//String
-HTMLInputElement.align = 0;//String
-HTMLInputElement.alt = 0;//String
-HTMLInputElement.checked = 0;//Boolean
-HTMLInputElement.disabled = 0;//Boolean
-HTMLInputElement.maxLength = 0;//Number
-HTMLInputElement.name = 0;//String
-HTMLInputElement.readOnly = 0;//Boolean
-HTMLInputElement.size = 0;//Number
-HTMLInputElement.src = 0;//String
-HTMLInputElement.tabIndex = 0;//Number
-HTMLInputElement.type = 0;//String
-HTMLInputElement.useMap = 0;//String
-HTMLInputElement.value = 0;//String
-HTMLInputElement = {};
-HTMLInputElement.blur = function() {};//Object
-HTMLInputElement.focus = function() {};//Object
-HTMLInputElement.select = function() {};//Object
-HTMLInputElement.click = function() {};//Object
-HTMLInputElement.setSelectionRange = function(start,end) {};//Gecko,Object
-HTMLInputElement.createTextRange = function() {};//IE,TextRange
-HTMLInputElement.prototype = new HTMLElement();
-
-HTMLTextAreaElement.defaultValue = 0;//String
-HTMLTextAreaElement.form = 0;//HTMLFormElement
-HTMLTextAreaElement.accessKey = 0;//String
-HTMLTextAreaElement.cols = 0;//Number
-HTMLTextAreaElement.disabled = 0;//Boolean
-HTMLTextAreaElement.name = 0;//String
-HTMLTextAreaElement.readOnly = 0;//Boolean
-HTMLTextAreaElement.rows = 0;//Number
-HTMLTextAreaElement.tabIndex = 0;//Number
-HTMLTextAreaElement.type = 0;//String
-HTMLTextAreaElement.value = 0;//String
-HTMLTextAreaElement = {};
-HTMLTextAreaElement.blur = function() {};//Object
-HTMLTextAreaElement.focus = function() {};//Object
-HTMLTextAreaElement.select = function() {};//Object
-HTMLTextAreaElement.prototype = new HTMLElement();
-
-HTMLButtonElement.form = 0;//HTMLFormElement
-HTMLButtonElement.accessKey = 0;//String
-HTMLButtonElement.disabled = 0;//Boolean
-HTMLButtonElement.name = 0;//String
-HTMLButtonElement.tabIndex = 0;//Number
-HTMLButtonElement.type = 0;//String
-HTMLButtonElement.value = 0;//String
-HTMLButtonElement = {};
-HTMLButtonElement.prototype = new HTMLElement();
-
-HTMLLabelElement.form = 0;//HTMLFormElement
-HTMLLabelElement.accessKey = 0;//String
-HTMLLabelElement.htmlFor = 0;//
-HTMLLabelElement = {};
-HTMLLabelElement.prototype = new HTMLElement();
-
-HTMLFieldSetElement.form = 0;//HTMLFormElement
-HTMLFieldSetElement = {};
-HTMLFieldSetElement.prototype = new HTMLElement();
-
-HTMLLegendElement.form = 0;//HTMLFormElement
-HTMLLegendElement.accessKey = 0;//String
-HTMLLegendElement.align = 0;//String
-HTMLLegendElement = {};
-HTMLLegendElement.prototype = new HTMLElement();
-
-HTMLUListElement.compact = 0;//Boolean
-HTMLUListElement.type = 0;//String
-HTMLUListElement = {};
-HTMLUListElement.prototype = new HTMLElement();
-
-HTMLOListElement.compact = 0;//Boolean
-HTMLOListElement.start = 0;//Number
-HTMLOListElement.type = 0;//String
-HTMLOListElement = {};
-HTMLOListElement.prototype = new HTMLElement();
-
-HTMLDListElement.compact = 0;//Boolean
-HTMLDListElement = {};
-HTMLDListElement.prototype = new HTMLElement();
-
-HTMLDirectoryElement.compact = 0;//Boolean
-HTMLDirectoryElement = {};
-HTMLDirectoryElement.prototype = new HTMLElement();
-
-HTMLMenuElement.compact = 0;//Boolean
-HTMLMenuElement = {};
-HTMLMenuElement.prototype = new HTMLElement();
-
-HTMLLIElement.type = 0;//String
-HTMLLIElement.value = 0;//Number
-HTMLLIElement = {};
-HTMLLIElement.prototype = new HTMLElement();
-
-HTMLDivElement.align = 0;//String
-HTMLDivElement = {};
-HTMLDivElement.prototype = new HTMLElement();
-
-HTMLParagraphElement.align = 0;//String
-HTMLParagraphElement = {};
-HTMLParagraphElement.prototype = new HTMLElement();
-
-HTMLHeadingElement.align = 0;//String
-HTMLHeadingElement = {};
-HTMLHeadingElement.prototype = new HTMLElement();
-
-HTMLQuoteElement.cite = 0;//String
-HTMLQuoteElement = {};
-HTMLQuoteElement.prototype = new HTMLElement();
-
-HTMLPreElement.width = 0;//Number
-HTMLPreElement = {};
-HTMLPreElement.prototype = new HTMLElement();
-
-HTMLBRElement.clear = 0;//String
-HTMLBRElement = {};
+var HTMLBRElement = {
+    clear: "",
+};
 HTMLBRElement.prototype = new HTMLElement();
 
-HTMLBaseFontElement.color = 0;//String
-HTMLBaseFontElement.face = 0;//String
-HTMLBaseFontElement.size = 0;//Number
-HTMLBaseFontElement = {};
-HTMLBaseFontElement.prototype = new HTMLElement();
+var HTMLButtonElement = {
+    accessKey: "",
+    disabled: false,
+    form: {}, //HTMLFormElement
+    name: "",
+    tabIndex: 0,
+    type: "",
+    value: "",
+};
+HTMLButtonElement.prototype = new HTMLElement();
 
-HTMLFontElement.color = 0;//String
-HTMLFontElement.face = 0;//String
-HTMLFontElement.size = 0;//String
-HTMLFontElement = {};
+var HTMLDirectoryElement = {
+    compact: false,
+};
+HTMLDirectoryElement.prototype = new HTMLElement();
+
+var HTMLDivElement = {
+    align: "",
+};
+HTMLDivElement.prototype = new HTMLElement();
+
+var HTMLDListElement = {
+    compact: false,
+};
+HTMLDListElement.prototype = new HTMLElement();
+
+var HTMLFieldSetElement = {
+    form: {}, //HTMLFormElement
+};
+HTMLFieldSetElement.prototype = new HTMLElement();
+
+var HTMLFontElement = {
+    color: "",
+    face: "",
+    size: "",
+};
 HTMLFontElement.prototype = new HTMLElement();
 
-HTMLHRElement.align = 0;//String
-HTMLHRElement.noShade = 0;//Boolean
-HTMLHRElement.size = 0;//String
-HTMLHRElement.width = 0;//String
-HTMLHRElement = {};
-HTMLHRElement.prototype = new HTMLElement();
+var HTMLFormElement = {
+    acceptCharset: "",
+    action: "",
+    elements: {}, //HTMLCollection
+    enctype: "",
+    length: 0,
+    method: "",
+    name: "",
+    reset: function () { return {}; },
+    submit: function () { return {}; },
+    target: "",
+};
 
-HTMLModElement.cite = 0;//String
-HTMLModElement.dateTime = 0;//String
-HTMLModElement = {};
-HTMLModElement.prototype = new HTMLElement();
-
-HTMLAnchorElement.accessKey = 0;//String
-HTMLAnchorElement.charset = 0;//String
-HTMLAnchorElement.coords = 0;//String
-HTMLAnchorElement.href = 0;//String
-HTMLAnchorElement.hreflang = 0;//String
-HTMLAnchorElement.name = 0;//String
-HTMLAnchorElement.rel = 0;//String
-HTMLAnchorElement.rev = 0;//String
-HTMLAnchorElement.shape = 0;//String
-HTMLAnchorElement.tabIndex = 0;//Number
-HTMLAnchorElement.target = 0;//String
-HTMLAnchorElement.type = 0;//String
-HTMLAnchorElement = {};
-HTMLAnchorElement.blur = function() {};//Object
-HTMLAnchorElement.focus = function() {};//Object
-HTMLAnchorElement.prototype = new HTMLElement();
-
-HTMLImageElement.name = 0;//String
-HTMLImageElement.align = 0;//String
-HTMLImageElement.alt = 0;//String
-HTMLImageElement.border = 0;//String
-HTMLImageElement.height = 0;//Number
-HTMLImageElement.hspace = 0;//Number
-HTMLImageElement.isMap = 0;//Boolean
-HTMLImageElement.longDesc = 0;//String
-HTMLImageElement.src = 0;//String
-HTMLImageElement.useMap = 0;//String
-HTMLImageElement.vspace = 0;//Number
-HTMLImageElement.width = 0;//Number
-HTMLImageElement = {};
-HTMLImageElement.prototype = new HTMLElement();
-
-HTMLObjectElement.form = 0;//HTMLFormElement
-HTMLObjectElement.code = 0;//String
-HTMLObjectElement.align = 0;//String
-HTMLObjectElement.archive = 0;//String
-HTMLObjectElement.border = 0;//String
-HTMLObjectElement.codeBase = 0;//String
-HTMLObjectElement.codeType = 0;//String
-HTMLObjectElement.data = 0;//String
-HTMLObjectElement.declare = 0;//Boolean
-HTMLObjectElement.height = 0;//String
-HTMLObjectElement.hspace = 0;//Number
-HTMLObjectElement.name = 0;//String
-HTMLObjectElement.standby = 0;//String
-HTMLObjectElement.tabIndex = 0;//Number
-HTMLObjectElement.type = 0;//String
-HTMLObjectElement.useMap = 0;//String
-HTMLObjectElement.vspace = 0;//Number
-HTMLObjectElement.width = 0;//String
-HTMLObjectElement.contentDocument = 0;//Document
-HTMLObjectElement = {};
-HTMLObjectElement.prototype = new HTMLElement();
-
-HTMLParamElement.name = 0;//String
-HTMLParamElement.type = 0;//String
-HTMLParamElement.value = 0;//String
-HTMLParamElement.valueType = 0;//String
-HTMLParamElement = {};
-HTMLParamElement.prototype = new HTMLElement();
-
-HTMLAppletElement.align = 0;//String
-HTMLAppletElement.alt = 0;//String
-HTMLAppletElement.archive = 0;//String
-HTMLAppletElement.code = 0;//String
-HTMLAppletElement.codeBase = 0;//String
-HTMLAppletElement.height = 0;//String
-HTMLAppletElement.hspace = 0;//Number
-HTMLAppletElement.name = 0;//String
-HTMLAppletElement.object = 0;//String
-HTMLAppletElement.vspace = 0;//Number
-HTMLAppletElement.width = 0;//String
-HTMLAppletElement = {};
-HTMLAppletElement.prototype = new HTMLElement();
-
-HTMLMapElement.areas = 0;//HTMLCollection
-HTMLMapElement.name = 0;//String
-HTMLMapElement = {};
-HTMLMapElement.prototype = new HTMLElement();
-
-HTMLAreaElement.accessKey = 0;//String
-HTMLAreaElement.alt = 0;//String
-HTMLAreaElement.coords = 0;//String
-HTMLAreaElement.href = 0;//String
-HTMLAreaElement.noHref = 0;//Boolean
-HTMLAreaElement.shape = 0;//String
-HTMLAreaElement.tabIndex = 0;//Number
-HTMLAreaElement.target = 0;//String
-HTMLAreaElement = {};
-HTMLAreaElement.prototype = new HTMLElement();
-
-HTMLScriptElement.text = 0;//String
-HTMLScriptElement.htmlFor = 0;//String
-HTMLScriptElement.event = 0;//String
-HTMLScriptElement.charset = 0;//String
-HTMLScriptElement.defer = 0;//Boolean
-HTMLScriptElement.src = 0;//String
-HTMLScriptElement.type = 0;//String
-HTMLScriptElement = {};
-HTMLScriptElement.prototype = new HTMLElement();
-
-HTMLTableElement.caption = 0;//HTMLTableCaptionElement
-HTMLTableElement.tHead = 0;//HTMLTableSectionElement
-HTMLTableElement.tFoot = 0;//HTMLTableSectionElement
-HTMLTableElement.rows = 0;//HTMLCollection
-HTMLTableElement.tBodies = 0;//HTMLCollection
-HTMLTableElement.align = 0;//String
-HTMLTableElement.bgColor = 0;//String
-HTMLTableElement.border = 0;//String
-HTMLTableElement.cellPadding = 0;//String
-HTMLTableElement.cellSpacing = 0;//String
-HTMLTableElement.frame = 0;//String
-HTMLTableElement.rules = 0;//String
-HTMLTableElement.summary = 0;//String
-HTMLTableElement.width = 0;//String
-HTMLTableElement = {};
-HTMLTableElement.createTHead = function() {};//HTMLElement
-HTMLTableElement.deleteTHead = function() {};//Object
-HTMLTableElement.createTFoot = function() {};//HTMLElement
-HTMLTableElement.deleteTFoot = function() {};//Object
-HTMLTableElement.createCaption = function() {};//HTMLElement
-HTMLTableElement.deleteCaption = function() {};//Object
-HTMLTableElement.insertRow = function(index) {};//HTMLElement
-HTMLTableElement.deleteRow = function(index) {};//Object
-HTMLTableElement.prototype = new HTMLElement();
-
-HTMLTableCaptionElement.align = 0;//String
-HTMLTableCaptionElement = {};
-HTMLTableCaptionElement.prototype = new HTMLElement();
-
-HTMLTableColElement.align = 0;//String
-HTMLTableColElement.ch = 0;//String
-HTMLTableColElement.chOff = 0;//String
-HTMLTableColElement.span = 0;//Number
-HTMLTableColElement.vAlign = 0;//String
-HTMLTableColElement.width = 0;//String
-HTMLTableColElement = {};
-HTMLTableColElement.prototype = new HTMLElement();
-
-HTMLTableSectionElement.align = 0;//String
-HTMLTableSectionElement.ch = 0;//String
-HTMLTableSectionElement.chOff = 0;//String
-HTMLTableSectionElement.vAlign = 0;//String
-HTMLTableSectionElement.rows = 0;//HTMLCollection
-HTMLTableSectionElement = {};
-HTMLTableSectionElement.insertRow = function(index) {};//HTMLElement
-HTMLTableSectionElement.deleteRow = function(index) {};//Object
-HTMLTableSectionElement.prototype = new HTMLElement();
-
-HTMLTableRowElement.rowIndex = 0;//Number
-HTMLTableRowElement.sectionRowIndex = 0;//Number
-HTMLTableRowElement.cells = 0;//HTMLCollection
-HTMLTableRowElement.align = 0;//String
-HTMLTableRowElement.bgColor = 0;//String
-HTMLTableRowElement.ch = 0;//String
-HTMLTableRowElement.chOff = 0;//String
-HTMLTableRowElement.vAlign = 0;//String
-HTMLTableRowElement = {};
-HTMLTableRowElement.insertCell = function(index) {};//HTMLElement
-HTMLTableRowElement.deleteCell = function(index) {};//Object
-HTMLTableRowElement.prototype = new HTMLElement();
-
-HTMLTableCellElement.cellIndex = 0;//Number
-HTMLTableCellElement.abbr = 0;//String
-HTMLTableCellElement.align = 0;//String
-HTMLTableCellElement.axis = 0;//String
-HTMLTableCellElement.bgColor = 0;//String
-HTMLTableCellElement.ch = 0;//String
-HTMLTableCellElement.chOff = 0;//String
-HTMLTableCellElement.colSpan = 0;//Number
-HTMLTableCellElement.headers = 0;//String
-HTMLTableCellElement.height = 0;//String
-HTMLTableCellElement.noWrap = 0;//Boolean
-HTMLTableCellElement.rowSpan = 0;//Number
-HTMLTableCellElement.scope = 0;//String
-HTMLTableCellElement.vAlign = 0;//String
-HTMLTableCellElement.width = 0;//String
-HTMLTableCellElement = {};
-HTMLTableCellElement.prototype = new HTMLElement();
-
-HTMLFrameSetElement.cols = 0;//String
-HTMLFrameSetElement.rows = 0;//String
-HTMLFrameSetElement = {};
-HTMLFrameSetElement.prototype = new HTMLElement();
-
-HTMLFrameElement.frameBorder = 0;//String
-HTMLFrameElement.longDesc = 0;//String
-HTMLFrameElement.marginHeight = 0;//String
-HTMLFrameElement.marginWidth = 0;//String
-HTMLFrameElement.name = 0;//String
-HTMLFrameElement.noResize = 0;//Boolean
-HTMLFrameElement.scrolling = 0;//String
-HTMLFrameElement.src = 0;//String
-HTMLFrameElement.contentDocument = 0;//Gecko,Document
-HTMLFrameElement = {};
+var HTMLFrameElement = {
+    contentDocument: {}, //Gecko,Document
+    frameBorder: "",
+    longDesc: "",
+    marginHeight: "",
+    marginWidth: "",
+    name: "",
+    noResize: false,
+    scrolling: "",
+    src: "",
+};
 HTMLFrameElement.prototype = new HTMLElement();
 
-HTMLIFrameElement.align = 0;//String
-HTMLIFrameElement.frameBorder = 0;//String
-HTMLIFrameElement.height = 0;//String
-HTMLIFrameElement.longDesc = 0;//String
-HTMLIFrameElement.marginHeight = 0;//String
-HTMLIFrameElement.marginWidth = 0;//String
-HTMLIFrameElement.name = 0;//String
-HTMLIFrameElement.scrolling = 0;//String
-HTMLIFrameElement.src = 0;//String
-HTMLIFrameElement.width = 0;//String
-HTMLIFrameElement.contentDocument = 0;//Document
-HTMLIFrameElement.contentWindow = 0;//window
-HTMLIFrameElement = {};
+var HTMLFrameSetElement = {
+    cols: "",
+    rows: "",
+};
+HTMLFrameSetElement.prototype = new HTMLElement();
+
+var HTMLHeadElement = {
+    profile: "",
+};
+HTMLHeadElement.prototype = new HTMLElement();
+
+var HTMLHeadingElement = {
+    align: "",
+};
+HTMLHeadingElement.prototype = new HTMLElement();
+
+var HTMLHtmlElement = {
+    version: "",
+};
+HTMLHtmlElement.prototype = new HTMLElement();
+
+var HTMLInputElement = {
+    accept: "",
+    accessKey: "",
+    align: "",
+    alt: "",
+    blur: function () { return {}; },
+    checked: false,
+    click: function () { return {}; },
+    createTextRange: function () { return {}; }, //IE,TextRange
+    defaultChecked: false,
+    defaultValue: "",
+    disabled: false,
+    focus: function () { return {}; },
+    form: {}, //HTMLFormElement
+    maxLength: 0,
+    name: "",
+    readOnly: false,
+    select: function () { return {}; },
+    setSelectionRange: function (start, end) { return {}; }, //Gecko
+    size: 0,
+    src: "",
+    tabIndex: 0,
+    type: "",
+    useMap: "",
+    value: "",
+};
+HTMLInputElement.prototype = new HTMLElement();
+
+var HTMLIsIndexElement = {
+    form: {}, //HTMLFormElement
+    prompt: "",
+};
+HTMLIsIndexElement.prototype = new HTMLElement();
+
+var HTMLHRElement = {
+    align: "",
+    noShade: false,
+    size: "",
+    width: "",
+};
+HTMLHRElement.prototype = new HTMLElement();
+
+var HTMLIFrameElement = {
+    align: "",
+    contentDocument: {}, //Document
+    contentWindow: {}, //window
+    frameBorder: "",
+    height: "",
+    longDesc: "",
+    marginHeight: "",
+    marginWidth: "",
+    name: "",
+    scrolling: "",
+    src: "",
+    width: "",
+};
 HTMLIFrameElement.prototype = new HTMLElement();
+
+var HTMLImageElement = {
+    align: "",
+    alt: "",
+    border: "",
+    height: 0,
+    hspace: 0,
+    isMap: false,
+    longDesc: "",
+    name: "",
+    src: "",
+    useMap: "",
+    vspace: 0,
+    width: 0,
+};
+HTMLImageElement.prototype = new HTMLElement();
+
+var HTMLLabelElement = {
+    accessKey: "",
+    form: {}, //HTMLFormElement
+    htmlFor: 0,
+};
+HTMLLabelElement.prototype = new HTMLElement();
+
+var HTMLLegendElement = {
+    accessKey: "",
+    align: "",
+    form: {}, //HTMLFormElement
+};
+HTMLLegendElement.prototype = new HTMLElement();
+
+var HTMLLIElement = {
+    type: "",
+    value: 0,
+};
+HTMLLIElement.prototype = new HTMLElement();
+
+var HTMLLinkElement = {
+    charset: "",
+    disabled: false,
+    href: "",
+    hreflang: "",
+    media: "",
+    rel: "",
+    rev: "",
+    target: "",
+    type: "",
+};
+HTMLLinkElement.prototype = new HTMLElement();
+
+var HTMLMapElement = {
+    areas: {}, //HTMLCollection
+    name: "",
+};
+HTMLMapElement.prototype = new HTMLElement();
+
+var HTMLMenuElement = {
+    compact: false,
+};
+HTMLMenuElement.prototype = new HTMLElement();
+
+var HTMLMetaElement = {
+    content: "",
+    httpEquiv: "",
+    name: "",
+    scheme: "",
+};
+HTMLMetaElement.prototype = new HTMLElement();
+
+var HTMLModElement = {
+    cite: "",
+    dateTime: "",
+};
+HTMLModElement.prototype = new HTMLElement();
+
+var HTMLObjectElement = {
+    align: "",
+    archive: "",
+    border: "",
+    code: "",
+    codeBase: "",
+    codeType: "",
+    contentDocument: {}, //Document
+    data: "",
+    declare: false,
+    form: {}, //HTMLFormElement
+    height: "",
+    hspace: 0,
+    name: "",
+    standby: "",
+    tabIndex: 0,
+    type: "",
+    useMap: "",
+    vspace: 0,
+    width: "",
+};
+HTMLObjectElement.prototype = new HTMLElement();
+
+var HTMLOListElement = {
+    compact: false,
+    start: 0,
+    type: "",
+};
+HTMLOListElement.prototype = new HTMLElement();
+
+var HTMLOptGroupElement = {
+    disabled: false,
+    label: "",
+};
+HTMLOptGroupElement.prototype = new HTMLElement();
+
+var HTMLOptionElement = {
+    defaultSelected: false,
+    disabled: false,
+    text: "",
+    form: {}, //HTMLFormElement
+    index: 0,
+    label: "",
+    selected: false,
+    value: "",
+};
+HTMLOptionElement.prototype = new HTMLElement();
+
+var HTMLParagraphElement = {
+    align: "",
+};
+HTMLParagraphElement.prototype = new HTMLElement();
+
+var HTMLParamElement = {
+    name: "",
+    type: "",
+    value: "",
+    valueType: "",
+};
+HTMLParamElement.prototype = new HTMLElement();
+
+var HTMLPreElement = {
+    width: 0,
+};
+HTMLPreElement.prototype = new HTMLElement();
+
+var HTMLQuoteElement = {
+    cite: "",
+};
+HTMLQuoteElement.prototype = new HTMLElement();
+
+var HTMLScriptElement = {
+    charset: "",
+    defer: false,
+    event: "",
+    htmlFor: "",
+    src: "",
+    text: "",
+    type: "",
+};
+HTMLScriptElement.prototype = new HTMLElement();
+
+var HTMLSelectElement = {
+    add: function (element, before) { return {}; },
+    blur: function () { return {}; },
+    disabled: false,
+    focus: function () { return {}; },
+    form: {}, //HTMLFormElement
+    length: 0,
+    multiple: false,
+    name: "",
+    options: {}, //HTMLOptionsCollection
+    remove: function (index) { return {}; },
+    selectedIndex: 0,
+    size: 0,
+    tabIndex: 0,
+    type: "",
+    value: "",
+};
+HTMLSelectElement.prototype = new HTMLElement();
+
+var HTMLStyleElement = {
+    disabled: false,
+    media: "",
+    type: "",
+    styleSheet: {}, //IE,Stylesheet
+};
+HTMLStyleElement.prototype = new HTMLElement();
+
+var HTMLTableCaptionElement = {
+    align: "",
+};
+HTMLTableCaptionElement.prototype = new HTMLElement();
+
+var HTMLTableColElement = {
+    align: "",
+    ch: "",
+    chOff: "",
+    span: 0,
+    vAlign: "",
+    width: "",
+};
+HTMLTableColElement.prototype = new HTMLElement();
+
+var HTMLTableCellElement = {
+    abbr: "",
+    align: "",
+    axis: "",
+    bgColor: "",
+    cellIndex: 0,
+    ch: "",
+    chOff: "",
+    colSpan: 0,
+    headers: "",
+    height: "",
+    noWrap: false,
+    rowSpan: 0,
+    scope: "",
+    vAlign: "",
+    width: "",
+};
+HTMLTableCellElement.prototype = new HTMLElement();
+
+var HTMLTableElement = {
+    align: "",
+    bgColor: "",
+    border: "",
+    caption: {}, //HTMLTableCaptionElement
+    cellPadding: "",
+    cellSpacing: "",
+    createCaption: function () { return {}; }, //HTMLElement
+    createTFoot: function () { return {}; }, //HTMLElement
+    createTHead: function () { return {}; }, //HTMLElement
+    deleteCaption: function () { return {}; },
+    deleteRow: function (index) { return {}; },
+    deleteTHead: function () { return {}; },
+    deleteTFoot: function () { return {}; },
+    frame: "",
+    insertRow: function (index) { return {}; }, //HTMLElement
+    rows: {}, //HTMLCollection
+    rules: "",
+    summary: "",
+    tBodies: {}, //HTMLCollection
+    tHead: {}, //HTMLTableSectionElement
+    tFoot: {}, //HTMLTableSectionElement
+    width: "",
+};
+HTMLTableElement.prototype = new HTMLElement();
+
+var HTMLTableRowElement = {
+    align: "",
+    bgColor: "",
+    cells: {}, //HTMLCollection
+    ch: "",
+    chOff: "",
+    deleteCell: function (index) { return {}; },
+    insertCell: function (index) { return {}; }, //HTMLElement
+    rowIndex: 0,
+    sectionRowIndex: 0,
+    vAlign: "",
+};
+HTMLTableRowElement.prototype = new HTMLElement();
+
+var HTMLTableSectionElement = {
+    align: "",
+    ch: "",
+    chOff: "",
+    deleteRow: function (index) { return {}; },
+    insertRow: function (index) { return {}; }, //HTMLElement
+    rows: {}, //HTMLCollection
+    vAlign: "",
+};
+HTMLTableSectionElement.prototype = new HTMLElement();
+
+var HTMLTextAreaElement = {
+    accessKey: "",
+    blur: function () { return {}; },
+    cols: 0,
+    defaultValue: "",
+    disabled: false,
+    focus: function () { return {}; },
+    form: {}, //HTMLFormElement
+    name: "",
+    readOnly: false,
+    rows: 0,
+    select: function () { return {}; },
+    tabIndex: 0,
+    type: "",
+    value: "",
+};
+HTMLTextAreaElement.prototype = new HTMLElement();
+
+var HTMLTitleElement = {
+    text: "",
+};
+HTMLTitleElement.prototype = new HTMLElement();
+
+var HTMLUListElement = {
+    compact: false,
+    type: "",
+};
+HTMLUListElement.prototype = new HTMLElement();
+
+var IEElementStyle = {
+    hasLayout: false, //IE
+};
+IEElementStyle.prototype = new style();
