@@ -26,8 +26,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
- * Date: Apr 28, 2008
- * Time: 8:36:19 PM
+ * @since 2008-04-28
  */
 @ExtensionImpl
 public class JSDeclarationRangeHandler implements DeclarationRangeHandler<JSNamedElement>

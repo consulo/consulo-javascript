@@ -22,11 +22,8 @@ import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 
 /**
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 12.07.2005
- * Time: 14:15:25
- * To change this template use File | Settings | File Templates.
+ * @author yole
+ * @since 2005-07-12
  */
 public class JSWithBlockSurrounder extends JSStatementSurrounder
 {
