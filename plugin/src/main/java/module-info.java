@@ -46,7 +46,6 @@ open module consulo.javascript
 	exports consulo.javascript.impl.ide.navigationToolbar;
 	exports consulo.javascript.impl.lang;
 	exports consulo.javascript.impl.lang.navigation;
-	exports consulo.javascript.impl.lang.psi;
 	exports consulo.javascript.impl.psi.impl.reference;
 	exports com.intellij.lang.javascript.impl.validation;
 }

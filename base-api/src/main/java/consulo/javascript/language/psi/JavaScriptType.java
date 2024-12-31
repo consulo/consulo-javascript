@@ -18,7 +18,6 @@ package consulo.javascript.language.psi;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -26,30 +25,26 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 13.12.2015
  */
-public interface JavaScriptType
-{
-	JavaScriptType UNKNOWN = new JavaScriptType()
-	{
-		@RequiredReadAction
-		@Nonnull
-		@Override
-		public String getPresentableText()
-		{
-			return "?";
-		}
+public interface JavaScriptType {
+    JavaScriptType UNKNOWN = new JavaScriptType() {
+        @RequiredReadAction
+        @Nonnull
+        @Override
+        public String getPresentableText() {
+            return "?";
+        }
 
-		@Nullable
-		@Override
-		public PsiElement getTargetElement()
-		{
-			return null;
-		}
-	};
+        @Nullable
+        @Override
+        public PsiElement getTargetElement() {
+            return null;
+        }
+    };
 
-	@Nonnull
-	@RequiredReadAction
-	String getPresentableText();
+    @Nonnull
+    @RequiredReadAction
+    String getPresentableText();
 
-	@Nullable
-	PsiElement getTargetElement();
+    @Nullable
+    PsiElement getTargetElement();
 }

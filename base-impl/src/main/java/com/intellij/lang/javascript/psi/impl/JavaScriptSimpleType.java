@@ -14,48 +14,42 @@
  * limitations under the License.
  */
 
-package consulo.javascript.impl.lang.psi;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+package com.intellij.lang.javascript.psi.impl;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.language.psi.JavaScriptType;
 import consulo.language.psi.PsiElement;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 13.12.2015
  */
-public class JavaScriptSimpleType implements JavaScriptType
-{
-	private String myReferenceName;
-	private PsiElement myElement;
+public class JavaScriptSimpleType implements JavaScriptType {
+    private String myReferenceName;
+    private PsiElement myElement;
 
-	public JavaScriptSimpleType(@Nonnull String referenceName, @Nullable PsiElement element)
-	{
-		myReferenceName = referenceName;
-		myElement = element;
-	}
+    public JavaScriptSimpleType(@Nonnull String referenceName, @Nullable PsiElement element) {
+        myReferenceName = referenceName;
+        myElement = element;
+    }
 
-	@RequiredReadAction
-	@Nonnull
-	@Override
-	public String getPresentableText()
-	{
-		return myReferenceName;
-	}
+    @RequiredReadAction
+    @Nonnull
+    @Override
+    public String getPresentableText() {
+        return myReferenceName;
+    }
 
-	@Nullable
-	@Override
-	public PsiElement getTargetElement()
-	{
-		return myElement;
-	}
+    @Nullable
+    @Override
+    public PsiElement getTargetElement() {
+        return myElement;
+    }
 
-	@Override
-	public String toString()
-	{
-		return "JavaScriptSimpleType: " + myReferenceName;
-	}
+    @Override
+    public String toString() {
+        return "JavaScriptSimpleType: " + myReferenceName;
+    }
 }

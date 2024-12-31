@@ -17,27 +17,27 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import com.intellij.javascript.documentation.JSDocumentationUtils;
-import consulo.application.util.RecursionManager;
-import consulo.application.util.function.Computable;
-import consulo.content.scope.SearchScope;
-import consulo.javascript.impl.language.psi.JSStubElementType;
-import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.stubs.JSVariableStubBase;
-import consulo.language.psi.PsiElement;
-import consulo.language.ast.IElementType;
-import consulo.language.util.IncorrectOperationException;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.util.RecursionManager;
+import consulo.content.scope.SearchScope;
+import consulo.javascript.impl.language.psi.JSStubElementType;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.javascript.language.psi.JavaScriptType;
 import consulo.javascript.language.psi.JavaScriptTypeElement;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.resolve.ResolveState;
-
+import consulo.language.util.IncorrectOperationException;
 import jakarta.annotation.Nonnull;
+
+import java.util.function.Supplier;
 
 /**
  * Created by IntelliJ IDEA.
@@ -127,10 +127,14 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
     public JavaScriptType getType() {
         final JSExpression initializer = getInitializer();
         if (initializer != null) {
-            JavaScriptType javaScriptType = RecursionManager.doPreventingRecursion(this, false, new Computable<JavaScriptType>() {
+            if (initializer instanceof JSObjectLiteralExpression lit) {
+                return new JavaScriptSimpleType(getName(), lit);
+            }
+            
+            JavaScriptType javaScriptType = RecursionManager.doPreventingRecursion(this, false, new Supplier<JavaScriptType>() {
                 @Override
                 @RequiredReadAction
-                public JavaScriptType compute() {
+                public JavaScriptType get() {
                     return initializer.getType();
                 }
             });

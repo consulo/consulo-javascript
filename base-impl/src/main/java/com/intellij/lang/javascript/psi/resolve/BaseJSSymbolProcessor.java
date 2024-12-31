@@ -25,6 +25,7 @@ import consulo.document.util.TextRange;
 import consulo.javascript.language.JavaScriptFeature;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.javascript.language.JavaScriptVersionUtil;
+import consulo.javascript.language.psi.JavaScriptType;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.inject.InjectedLanguageManager;
@@ -611,6 +612,12 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
         }
         else if (rawQualifier != null) {
             typeProcessor.setUnknownElement(rawQualifier);
+        }
+
+        JavaScriptType type = rawQualifier.getType();
+        PsiElement targetElement = type.getTargetElement();
+        if (targetElement instanceof JSExpression jsTarget) {
+            doEvalForExpr(jsTarget, typeProcessor, context);
         }
     }
 

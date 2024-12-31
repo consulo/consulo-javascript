@@ -16,14 +16,13 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.*;
-import consulo.language.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.language.psi.JavaScriptType;
 import consulo.javascript.lang.psi.impl.JavaScriptClassType;
-
+import consulo.javascript.language.psi.JavaScriptType;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -44,10 +43,17 @@ public class JSNewExpressionImpl extends JSExpressionImpl implements JSNewExpres
     public JavaScriptType getType() {
         JSExpression methodExpression = getMethodExpression();
 
-        return methodExpression instanceof JSReferenceExpression referenceExpression
-            && referenceExpression.resolve() instanceof JSClass jsClass
-            ? new JavaScriptClassType(jsClass)
-            : super.getType();
+        if (methodExpression instanceof JSReferenceExpression referenceExpression) {
+            PsiElement element = referenceExpression.resolve();
+            if (element instanceof JSClass jsClass) {
+                return new JavaScriptClassType(jsClass);
+            }
+
+            if (element instanceof JSVariable jsVar) {
+                return jsVar.getType();
+            }
+        }
+        return super.getType();
     }
 
     @Override
