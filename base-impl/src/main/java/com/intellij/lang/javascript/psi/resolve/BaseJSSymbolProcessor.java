@@ -614,8 +614,8 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
             typeProcessor.setUnknownElement(rawQualifier);
         }
 
-        JavaScriptType type = rawQualifier.getType();
-        PsiElement targetElement = type.getTargetElement();
+        JavaScriptType type = rawQualifier == null ? null : rawQualifier.getType();
+        PsiElement targetElement = type == null ? null : type.getTargetElement();
         if (targetElement instanceof JSExpression jsTarget) {
             doEvalForExpr(jsTarget, typeProcessor, context);
         }
