@@ -116,7 +116,7 @@ class JSSuperGrouper implements Grouper
     return new ActionPresentationData(
 			IdeLocalize.actionStructureviewGroupMethodsByDefiningType().get(),
 			null,
-			PlatformIconGroup.generalImplementingmethod()
+			PlatformIconGroup.gutterImplementingmethod()
 		);
 	}
 
