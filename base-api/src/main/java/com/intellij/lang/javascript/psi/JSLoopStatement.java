@@ -23,7 +23,6 @@ package com.intellij.lang.javascript.psi;
  * Time: 7:22:13 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSLoopStatement extends JSStatement
-{
-	JSStatement getBody();
+public interface JSLoopStatement extends JSStatement {
+    JSStatement getBody();
 }

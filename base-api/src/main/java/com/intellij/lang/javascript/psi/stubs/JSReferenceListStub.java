@@ -21,10 +21,9 @@ import consulo.language.psi.stub.StubElement;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jun 6, 2008
- *         Time: 7:52:51 PM
+ * Date: Jun 6, 2008
+ * Time: 7:52:51 PM
  */
-public interface JSReferenceListStub extends JSStubElement<JSReferenceList>, StubElement<JSReferenceList>
-{
-	String[] getReferenceTexts();
+public interface JSReferenceListStub extends JSStubElement<JSReferenceList>, StubElement<JSReferenceList> {
+    String[] getReferenceTexts();
 }

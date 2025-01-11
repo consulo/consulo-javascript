@@ -24,12 +24,11 @@ import consulo.language.psi.StubBasedPsiElement;
 /**
  * @by Maxim.Mossienko
  */
-public interface JSAttributeNameValuePair extends JSElement, PsiNamedElement, StubBasedPsiElement<JSAttributeNameValuePairStub>
-{
-	JSAttributeNameValuePair[] EMPTY_ARRAY = new JSAttributeNameValuePair[0];
+public interface JSAttributeNameValuePair extends JSElement, PsiNamedElement, StubBasedPsiElement<JSAttributeNameValuePairStub> {
+    JSAttributeNameValuePair[] EMPTY_ARRAY = new JSAttributeNameValuePair[0];
 
-	JSExpression getValue();
+    JSExpression getValue();
 
-	@Nullable
-	String getSimpleValue();
+    @Nullable
+    String getSimpleValue();
 }

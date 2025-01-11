@@ -23,17 +23,16 @@ package com.intellij.lang.javascript.psi;
  * Time: 6:56:53 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSIfStatement extends JSStatement
-{
-	JSExpression getCondition();
+public interface JSIfStatement extends JSStatement {
+    JSExpression getCondition();
 
-	JSStatement getThen();
+    JSStatement getThen();
 
-	JSStatement getElse();
+    JSStatement getElse();
 
-	void setThen(JSStatement statement);
+    void setThen(JSStatement statement);
 
-	void setElse(JSStatement statement);
+    void setElse(JSStatement statement);
 
-	void setCondition(JSExpression expr);
+    void setCondition(JSExpression expr);
 }

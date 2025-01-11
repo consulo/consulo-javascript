@@ -28,16 +28,15 @@ import jakarta.annotation.Nullable;
  * Time: 7:41:36 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSPrefixExpression extends JSExpression
-{
-	@Nullable
-	JSExpression getExpression();
+public interface JSPrefixExpression extends JSExpression {
+    @Nullable
+    JSExpression getExpression();
 
-	@Nullable
-	@RequiredReadAction
-	IElementType getOperationSign();
+    @Nullable
+    @RequiredReadAction
+    IElementType getOperationSign();
 
-	@RequiredReadAction
-	@Nullable
-	PsiElement getOperatorElement();
+    @RequiredReadAction
+    @Nullable
+    PsiElement getOperatorElement();
 }

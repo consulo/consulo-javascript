@@ -23,8 +23,7 @@ import jakarta.annotation.Nullable;
  * Date: Jan 30, 2005
  * Time: 9:27:17 PM
  */
-public interface JSYieldStatement extends JSStatement
-{
-	@Nullable
-	JSExpression getExpression();
+public interface JSYieldStatement extends JSStatement {
+    @Nullable
+    JSExpression getExpression();
 }

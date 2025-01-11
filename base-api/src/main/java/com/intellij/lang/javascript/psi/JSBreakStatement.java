@@ -23,9 +23,8 @@ package com.intellij.lang.javascript.psi;
  * Time: 6:58:10 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSBreakStatement extends JSStatement
-{
-	String getLabel();
+public interface JSBreakStatement extends JSStatement {
+    String getLabel();
 
-	JSStatement getStatementToBreak();
+    JSStatement getStatementToBreak();
 }

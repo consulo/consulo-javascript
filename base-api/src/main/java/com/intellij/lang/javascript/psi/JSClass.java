@@ -24,33 +24,32 @@ import consulo.navigation.Navigatable;
 /**
  * @by Maxim.Mossienko
  */
-public interface JSClass extends JSQualifiedNamedElement, JSSourceElement, JSAttributeListOwner, Navigatable, StubBasedPsiElement<JSClassStub>
-{
-	JSClass[] EMPTY_ARRAY = new JSClass[0];
+public interface JSClass extends JSQualifiedNamedElement, JSSourceElement, JSAttributeListOwner, Navigatable, StubBasedPsiElement<JSClassStub> {
+    JSClass[] EMPTY_ARRAY = new JSClass[0];
 
-	@Nullable
-	JSReferenceList getExtendsList();
+    @Nullable
+    JSReferenceList getExtendsList();
 
-	@Nullable
-	JSReferenceList getImplementsList();
+    @Nullable
+    JSReferenceList getImplementsList();
 
-	boolean isInterface();
+    boolean isInterface();
 
-	JSClass[] getSuperClasses();
+    JSClass[] getSuperClasses();
 
-	JSFunction[] getFunctions();
+    JSFunction[] getFunctions();
 
-	JSVariable[] getFields();
+    JSVariable[] getFields();
 
-	JSFunction findFunctionByName(final String name);
+    JSFunction findFunctionByName(final String name);
 
-	JSFunction findFunctionByNameAndKind(final String name, JSFunction.FunctionKind kind);
+    JSFunction findFunctionByNameAndKind(final String name, JSFunction.FunctionKind kind);
 
-	JSVariable findFieldByName(final String name);
+    JSVariable findFieldByName(final String name);
 
-	JSClass[] getSupers();
+    JSClass[] getSupers();
 
-	JSClass[] getImplementedInterfaces();
+    JSClass[] getImplementedInterfaces();
 
-	boolean isDeprecated();
+    boolean isDeprecated();
 }

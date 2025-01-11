@@ -18,7 +18,6 @@ package com.intellij.lang.javascript.psi;
 
 import consulo.language.psi.PsiComment;
 
-public interface JSDocComment extends PsiComment, JSElement
-{
-	JSDocTag[] getTags();
+public interface JSDocComment extends PsiComment, JSElement {
+    JSDocTag[] getTags();
 }

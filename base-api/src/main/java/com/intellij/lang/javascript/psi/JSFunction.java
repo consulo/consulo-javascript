@@ -27,76 +27,66 @@ import jakarta.annotation.Nullable;
 /**
  * @author max
  */
-public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JSAttributeListOwner
-{
-	public static final JSFunction[] EMPTY_ARRAY = new JSFunction[0];
+public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JSAttributeListOwner {
+    public static final JSFunction[] EMPTY_ARRAY = new JSFunction[0];
 
-	public static ArrayFactory<JSFunction> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new JSFunction[count];
+    public static ArrayFactory<JSFunction> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new JSFunction[count];
 
-	@Nullable
-	@RequiredReadAction
-	JSParameterList getParameterList();
+    @Nullable
+    @RequiredReadAction
+    JSParameterList getParameterList();
 
-	JSSourceElement[] getBody();
+    JSSourceElement[] getBody();
 
-	@RequiredReadAction
-	default boolean isGetProperty()
-	{
-		return false;
-	}
+    @RequiredReadAction
+    default boolean isGetProperty() {
+        return false;
+    }
 
-	@RequiredReadAction
-	default boolean isSetProperty()
-	{
-		return false;
-	}
+    @RequiredReadAction
+    default boolean isSetProperty() {
+        return false;
+    }
 
-	@RequiredReadAction
-	default boolean isConstructor()
-	{
-		return false;
-	}
+    @RequiredReadAction
+    default boolean isConstructor() {
+        return false;
+    }
 
-	@Nonnull
-	JavaScriptType getReturnType();
+    @Nonnull
+    JavaScriptType getReturnType();
 
-	String getReturnTypeString();
+    String getReturnTypeString();
 
-	@Nullable
-	JavaScriptTypeElement getReturnTypeElement();
+    @Nullable
+    JavaScriptTypeElement getReturnTypeElement();
 
-	enum FunctionKind
-	{
-		GETTER,
-		SETTER,
-		CONSTRUCTOR,
-		SIMPLE
-	}
+    enum FunctionKind {
+        GETTER,
+        SETTER,
+        CONSTRUCTOR,
+        SIMPLE
+    }
 
-	@Nonnull
-	@RequiredReadAction
-	default FunctionKind getKind()
-	{
-		if(isGetProperty())
-		{
-			return FunctionKind.GETTER;
-		}
-		if(isSetProperty())
-		{
-			return FunctionKind.SETTER;
-		}
-		if(isConstructor())
-		{
-			return FunctionKind.CONSTRUCTOR;
-		}
-		return FunctionKind.SIMPLE;
-	}
+    @Nonnull
+    @RequiredReadAction
+    default FunctionKind getKind() {
+        if (isGetProperty()) {
+            return FunctionKind.GETTER;
+        }
+        if (isSetProperty()) {
+            return FunctionKind.SETTER;
+        }
+        if (isConstructor()) {
+            return FunctionKind.CONSTRUCTOR;
+        }
+        return FunctionKind.SIMPLE;
+    }
 
 
-	boolean isDeprecated();
+    boolean isDeprecated();
 
-	default boolean isReferencesArguments()
-	{
-		return false;
-	}
+    default boolean isReferencesArguments() {
+        return false;
+    }
 }

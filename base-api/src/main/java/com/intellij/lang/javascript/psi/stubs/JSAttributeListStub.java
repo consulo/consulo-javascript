@@ -21,16 +21,15 @@ import consulo.language.psi.stub.StubElement;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Mar 25, 2008
- *         Time: 4:00:16 PM
+ * Date: Mar 25, 2008
+ * Time: 4:00:16 PM
  */
-public interface JSAttributeListStub extends StubElement<JSAttributeList>, JSStubElement<JSAttributeList>
-{
-	JSAttributeList.AccessType getAccessType();
+public interface JSAttributeListStub extends StubElement<JSAttributeList>, JSStubElement<JSAttributeList> {
+    JSAttributeList.AccessType getAccessType();
 
-	boolean hasModifier(final JSAttributeList.ModifierType modifier);
+    boolean hasModifier(final JSAttributeList.ModifierType modifier);
 
-	String getNamespace();
+    String getNamespace();
 
-	int getFlags();
+    int getFlags();
 }

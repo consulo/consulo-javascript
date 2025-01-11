@@ -23,7 +23,6 @@ package com.intellij.lang.javascript.psi;
  * Time: 7:25:13 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSWhileStatement extends JSLoopStatement
-{
-	JSExpression getCondition();
+public interface JSWhileStatement extends JSLoopStatement {
+    JSExpression getCondition();
 }

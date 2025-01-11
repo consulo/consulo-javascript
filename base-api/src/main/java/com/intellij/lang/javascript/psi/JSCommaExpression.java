@@ -23,6 +23,5 @@ package com.intellij.lang.javascript.psi;
  * Time: 7:42:26 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSCommaExpression extends JSBinaryExpression
-{
+public interface JSCommaExpression extends JSBinaryExpression {
 }

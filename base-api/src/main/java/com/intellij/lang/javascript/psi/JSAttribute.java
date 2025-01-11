@@ -23,26 +23,23 @@ import consulo.util.collection.ArrayFactory;
 import jakarta.annotation.Nonnull;
 
 /**
- * @author  Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
-public interface JSAttribute extends JSElement, PsiNamedElement, StubBasedPsiElement<JSAttributeStub>
-{
-	public static final JSAttribute[] EMPTY_ARRAY = new JSAttribute[0];
+public interface JSAttribute extends JSElement, PsiNamedElement, StubBasedPsiElement<JSAttributeStub> {
+    public static final JSAttribute[] EMPTY_ARRAY = new JSAttribute[0];
 
-	public static ArrayFactory<JSAttribute> ARRAY_FACTORY = new ArrayFactory<JSAttribute>()
-	{
-		@Nonnull
-		@Override
-		public JSAttribute[] create(int count)
-		{
-			return count == 0 ? EMPTY_ARRAY : new JSAttribute[count];
-		}
-	};
+    public static ArrayFactory<JSAttribute> ARRAY_FACTORY = new ArrayFactory<JSAttribute>() {
+        @Nonnull
+        @Override
+        public JSAttribute[] create(int count) {
+            return count == 0 ? EMPTY_ARRAY : new JSAttribute[count];
+        }
+    };
 
-	@Override
-	String getName();
+    @Override
+    String getName();
 
-	JSAttributeNameValuePair[] getValues();
+    JSAttributeNameValuePair[] getValues();
 
-	JSAttributeNameValuePair getValueByName(String name);
+    JSAttributeNameValuePair getValueByName(String name);
 }

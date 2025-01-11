@@ -23,12 +23,11 @@ import consulo.language.psi.StubBasedPsiElement;
 
 /**
  * @by Maxim.Mossienko
- *
+ * <p>
  * EcmaScript 4 implementation
  */
 @Deprecated
 @DeprecationInfo("We need rename it")
-public interface JSImportStatement extends JSStatement, StubBasedPsiElement<JSImportStatementStub>, JavaScriptImportStatementBase
-{
-	String getImportText();
+public interface JSImportStatement extends JSStatement, StubBasedPsiElement<JSImportStatementStub>, JavaScriptImportStatementBase {
+    String getImportText();
 }

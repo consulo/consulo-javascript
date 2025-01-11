@@ -24,9 +24,8 @@ import jakarta.annotation.Nullable;
  * Date: Jan 30, 2005
  * Time: 9:27:17 PM
  */
-public interface JSExpressionStatement extends JSStatement
-{
-	@Nullable
-	@RequiredReadAction
-	JSExpression getExpression();
+public interface JSExpressionStatement extends JSStatement {
+    @Nullable
+    @RequiredReadAction
+    JSExpression getExpression();
 }

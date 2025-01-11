@@ -23,11 +23,10 @@ package com.intellij.lang.javascript.psi;
  * Time: 7:40:54 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSConditionalExpression extends JSExpression
-{
-	JSExpression getCondition();
+public interface JSConditionalExpression extends JSExpression {
+    JSExpression getCondition();
 
-	JSExpression getThen();
+    JSExpression getThen();
 
-	JSExpression getElse();
+    JSExpression getElse();
 }

@@ -23,7 +23,6 @@ package com.intellij.lang.javascript.psi;
  * Time: 7:38:54 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSObjectLiteralExpression extends JSExpression
-{
-	JSProperty[] getProperties();
+public interface JSObjectLiteralExpression extends JSExpression {
+    JSProperty[] getProperties();
 }

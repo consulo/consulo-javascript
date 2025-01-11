@@ -23,11 +23,10 @@ package com.intellij.lang.javascript.psi;
  * Time: 7:16:36 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSCaseClause extends JSElement
-{
-	boolean isDefault();
+public interface JSCaseClause extends JSElement {
+    boolean isDefault();
 
-	JSExpression getCaseExpression();
+    JSExpression getCaseExpression();
 
-	JSStatement[] getStatements();
+    JSStatement[] getStatements();
 }

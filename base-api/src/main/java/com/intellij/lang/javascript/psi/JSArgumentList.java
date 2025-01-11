@@ -23,7 +23,6 @@ package com.intellij.lang.javascript.psi;
  * Time: 7:44:58 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSArgumentList extends JSElement
-{
-	JSExpression[] getArguments();
+public interface JSArgumentList extends JSElement {
+    JSExpression[] getArguments();
 }

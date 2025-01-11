@@ -23,8 +23,7 @@ import jakarta.annotation.Nullable;
 /**
  * @by Maxim.Mossienko
  */
-public interface JSAttributeListOwner extends PsiElement
-{
-	@Nullable
-	JSAttributeList getAttributeList();
+public interface JSAttributeListOwner extends PsiElement {
+    @Nullable
+    JSAttributeList getAttributeList();
 }

@@ -29,21 +29,20 @@ import jakarta.annotation.Nonnull;
  * @author max
  * @since 7:39:29 PM Jan 30, 2005
  */
-public interface JSProperty extends JSNamedElement
-{
-	@Nullable
-	@RequiredReadAction
-	JSExpression getValue();
+public interface JSProperty extends JSNamedElement {
+    @Nullable
+    @RequiredReadAction
+    JSExpression getValue();
 
-	@Nullable
-	@RequiredReadAction
-	PsiElement getColonElement();
+    @Nullable
+    @RequiredReadAction
+    PsiElement getColonElement();
 
-	@Nullable
-	@RequiredReadAction
-	JSComputedName getComputedName();
+    @Nullable
+    @RequiredReadAction
+    JSComputedName getComputedName();
 
-	@Nonnull
-	@RequiredReadAction
-	JavaScriptType getType();
+    @Nonnull
+    @RequiredReadAction
+    JavaScriptType getType();
 }

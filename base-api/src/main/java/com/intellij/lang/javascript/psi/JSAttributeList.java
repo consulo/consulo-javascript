@@ -26,33 +26,38 @@ import jakarta.annotation.Nonnull;
 /**
  * @author Maxim.Mossienko
  */
-public interface JSAttributeList extends JSElement, StubBasedPsiElement<JSAttributeListStub>
-{
-	@Nullable
-	String getNamespace();
+public interface JSAttributeList extends JSElement, StubBasedPsiElement<JSAttributeListStub> {
+    @Nullable
+    String getNamespace();
 
-	@Nullable
-	JSReferenceExpression getNamespaceElement();
+    @Nullable
+    JSReferenceExpression getNamespaceElement();
 
-	JSAttribute[] getAttributes();
+    JSAttribute[] getAttributes();
 
-	@Nonnull
-	JSAttribute[] getAttributesByName(@Nonnull String name);
+    @Nonnull
+    JSAttribute[] getAttributesByName(@Nonnull String name);
 
-	enum AccessType
-	{
-		PACKAGE_LOCAL, PUBLIC, PRIVATE, PROTECTED;
-	}
+    enum AccessType {
+        PACKAGE_LOCAL,
+        PUBLIC,
+        PRIVATE,
+        PROTECTED
+    }
 
-	AccessType getAccessType();
+    AccessType getAccessType();
 
-	@Nullable
-	PsiElement findAccessTypeElement();
+    @Nullable
+    PsiElement findAccessTypeElement();
 
-	enum ModifierType
-	{
-		DYNAMIC, NATIVE, OVERRIDE, STATIC, FINAL, VIRTUAL
-	}
+    enum ModifierType {
+        DYNAMIC,
+        NATIVE,
+        OVERRIDE,
+        STATIC,
+        FINAL,
+        VIRTUAL
+    }
 
-	boolean hasModifier(ModifierType modifier);
+    boolean hasModifier(ModifierType modifier);
 }

@@ -24,10 +24,9 @@ import jakarta.annotation.Nullable;
  * @by Maxim.Mossienko
  */
 public interface JSNamespaceDeclaration extends JSStatement, JSQualifiedNamedElement, JSAttributeListOwner,
-		StubBasedPsiElement<JSNamespaceDeclarationStub>
-{
-	@Nullable
-	String getInitialValueString();
+    StubBasedPsiElement<JSNamespaceDeclarationStub> {
+    @Nullable
+    String getInitialValueString();
 
-	boolean isDeprecated();
+    boolean isDeprecated();
 }

@@ -21,10 +21,8 @@ import consulo.language.psi.stub.StubElement;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Mar 26, 2008
- *         Time: 9:39:31 PM
+ * Date: Mar 26, 2008
+ * Time: 9:39:31 PM
  */
-public interface JSStubElement<T extends JSElement> extends StubElement<T>
-{
-
+public interface JSStubElement<T extends JSElement> extends StubElement<T> {
 }

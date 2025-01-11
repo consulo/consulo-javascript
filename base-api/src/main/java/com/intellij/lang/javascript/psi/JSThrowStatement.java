@@ -23,7 +23,6 @@ package com.intellij.lang.javascript.psi;
  * Time: 7:02:11 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSThrowStatement extends JSStatement
-{
-	JSExpression getExpression();
+public interface JSThrowStatement extends JSStatement {
+    JSExpression getExpression();
 }

@@ -23,7 +23,6 @@ package com.intellij.lang.javascript.psi;
  * Time: 7:30:30 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSParenthesizedExpression extends JSExpression
-{
-	JSExpression getInnerExpression();
+public interface JSParenthesizedExpression extends JSExpression {
+    JSExpression getInnerExpression();
 }

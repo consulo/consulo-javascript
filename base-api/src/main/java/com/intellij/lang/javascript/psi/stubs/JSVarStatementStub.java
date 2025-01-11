@@ -20,9 +20,8 @@ import com.intellij.lang.javascript.psi.JSVarStatement;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jun 8, 2008
- *         Time: 1:51:29 PM
+ * Date: Jun 8, 2008
+ * Time: 1:51:29 PM
  */
-public interface JSVarStatementStub extends JSStubElement<JSVarStatement>
-{
+public interface JSVarStatementStub extends JSStubElement<JSVarStatement> {
 }

@@ -22,9 +22,8 @@ import consulo.language.psi.StubBasedPsiElement;
 /**
  * @by Maxim.Mossienko
  */
-public interface JSPackageStatement extends JSStatement, JSQualifiedNamedElement, StubBasedPsiElement<JSPackageStatementStub>
-{
-	JSSourceElement[] getStatements();
+public interface JSPackageStatement extends JSStatement, JSQualifiedNamedElement, StubBasedPsiElement<JSPackageStatementStub> {
+    JSSourceElement[] getStatements();
 
-	void setQualifiedName(final String expectedPackageNameFromFile);
+    void setQualifiedName(final String expectedPackageNameFromFile);
 }

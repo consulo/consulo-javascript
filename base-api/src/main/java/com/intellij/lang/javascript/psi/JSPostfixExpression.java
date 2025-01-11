@@ -26,10 +26,9 @@ import consulo.language.ast.IElementType;
  * Time: 7:41:36 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSPostfixExpression extends JSExpression
-{
-	@Nullable
-	JSExpression getExpression();
+public interface JSPostfixExpression extends JSExpression {
+    @Nullable
+    JSExpression getExpression();
 
-	IElementType getOperationSign();
+    IElementType getOperationSign();
 }

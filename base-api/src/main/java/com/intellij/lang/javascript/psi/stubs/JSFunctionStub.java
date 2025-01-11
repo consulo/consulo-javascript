@@ -20,20 +20,19 @@ import com.intellij.lang.javascript.psi.JSFunction;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Mar 25, 2008
- *         Time: 4:00:16 PM
+ * Date: Mar 25, 2008
+ * Time: 4:00:16 PM
  */
-public interface JSFunctionStub extends JSStubElement<JSFunction>, JSQualifiedStub<JSFunction>
-{
-	String getReturnTypeString();
+public interface JSFunctionStub extends JSStubElement<JSFunction>, JSQualifiedStub<JSFunction> {
+    String getReturnTypeString();
 
-	boolean isGetProperty();
+    boolean isGetProperty();
 
-	boolean isSetProperty();
+    boolean isSetProperty();
 
-	boolean isConstructor();
+    boolean isConstructor();
 
-	boolean isDeprecated();
+    boolean isDeprecated();
 
-	boolean isReferencesArguments();
+    boolean isReferencesArguments();
 }

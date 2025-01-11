@@ -23,6 +23,5 @@ package com.intellij.lang.javascript.psi;
  * Time: 7:44:26 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSNewExpression extends JSCallExpression
-{
+public interface JSNewExpression extends JSCallExpression {
 }

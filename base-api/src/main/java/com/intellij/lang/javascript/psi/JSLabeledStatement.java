@@ -27,15 +27,14 @@ import consulo.annotation.DeprecationInfo;
  * Time: 6:52:43 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSLabeledStatement extends JSStatement, PsiNameIdentifierOwner
-{
-	String getLabel();
+public interface JSLabeledStatement extends JSStatement, PsiNameIdentifierOwner {
+    String getLabel();
 
-	@Deprecated
-	@DeprecationInfo("Use #getNameIdentifier()")
-	PsiElement getLabelIdentifier();
+    @Deprecated
+    @DeprecationInfo("Use #getNameIdentifier()")
+    PsiElement getLabelIdentifier();
 
-	JSStatement getStatement();
+    JSStatement getStatement();
 
-	JSStatement unlabel();
+    JSStatement unlabel();
 }

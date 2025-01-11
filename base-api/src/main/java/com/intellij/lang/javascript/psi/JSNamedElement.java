@@ -23,6 +23,5 @@ import consulo.navigation.NavigationItem;
 /**
  * @author ven
  */
-public interface JSNamedElement extends PsiNamedElement, JSElement, NavigationItem, PsiNameIdentifierOwner
-{
+public interface JSNamedElement extends PsiNamedElement, JSElement, NavigationItem, PsiNameIdentifierOwner {
 }

@@ -28,21 +28,19 @@ import jakarta.annotation.Nullable;
  * Time: 6:49:21 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface JSBinaryExpression extends JSExpression
-{
-	JSExpression getLOperand();
+public interface JSBinaryExpression extends JSExpression {
+    JSExpression getLOperand();
 
-	JSExpression getROperand();
+    JSExpression getROperand();
 
-	@Nullable
-	@RequiredReadAction
-	default IElementType getOperationSign()
-	{
-		PsiElement element = getOperationElement();
-		return element != null ? element.getNode().getElementType() : null;
-	}
+    @Nullable
+    @RequiredReadAction
+    default IElementType getOperationSign() {
+        PsiElement element = getOperationElement();
+        return element != null ? element.getNode().getElementType() : null;
+    }
 
-	@Nullable
-	@RequiredReadAction
-	PsiElement getOperationElement();
+    @Nullable
+    @RequiredReadAction
+    PsiElement getOperationElement();
 }
