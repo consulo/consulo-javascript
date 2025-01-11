@@ -20,9 +20,8 @@ import consulo.annotation.access.RequiredReadAction;
 import jakarta.annotation.Nullable;
 
 /**
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:27:17 PM
+ * @author max
+ * @since 2005-01-30
  */
 public interface JSExpressionStatement extends JSStatement {
     @Nullable

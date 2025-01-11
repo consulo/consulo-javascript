@@ -26,15 +26,15 @@ import consulo.language.psi.StubBasedPsiElement;
  * @author Maxim.Mossienko
  */
 public interface JSReferenceList extends JSElement, StubBasedPsiElement<JSReferenceListStub> {
-    @RequiredReadAction
     @Nonnull
+    @RequiredReadAction
     JSReferenceExpression[] getExpressions();
 
-    @RequiredReadAction
     @Nonnull
+    @RequiredReadAction
     String[] getReferenceTexts();
 
-    @RequiredReadAction
     @Nonnull
+    @RequiredReadAction
     JSClass[] getReferencedClasses();
 }

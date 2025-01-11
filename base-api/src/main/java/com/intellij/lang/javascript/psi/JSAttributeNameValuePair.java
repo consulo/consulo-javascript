@@ -22,7 +22,7 @@ import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.StubBasedPsiElement;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
 public interface JSAttributeNameValuePair extends JSElement, PsiNamedElement, StubBasedPsiElement<JSAttributeNameValuePairStub> {
     JSAttributeNameValuePair[] EMPTY_ARRAY = new JSAttributeNameValuePair[0];

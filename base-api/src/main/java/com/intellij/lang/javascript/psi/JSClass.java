@@ -22,7 +22,7 @@ import consulo.language.psi.StubBasedPsiElement;
 import consulo.navigation.Navigatable;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
 public interface JSClass extends JSQualifiedNamedElement, JSSourceElement, JSAttributeListOwner, Navigatable, StubBasedPsiElement<JSClassStub> {
     JSClass[] EMPTY_ARRAY = new JSClass[0];

@@ -26,8 +26,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author max
- * Date: Jan 30, 2005
- * Time: 6:43:42 PM
+ * @since 2005-01-30
  */
 public interface JSVariable extends JSQualifiedNamedElement, JSAttributeListOwner {
     JSVariable[] EMPTY_ARRAY = new JSVariable[0];

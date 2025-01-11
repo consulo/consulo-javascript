@@ -22,11 +22,8 @@ import consulo.language.psi.StubBasedPsiElement;
 import jakarta.annotation.Nullable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 6:55:04 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public interface JSVarStatement extends JSStatement, StubBasedPsiElement<JSVarStatementStub> {
     JSVariable[] getVariables();

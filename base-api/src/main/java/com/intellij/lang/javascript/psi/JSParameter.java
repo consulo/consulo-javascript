@@ -22,9 +22,8 @@ import consulo.util.collection.ArrayFactory;
 import jakarta.annotation.Nullable;
 
 /**
- * User: max
- * Date: Jan 30, 2005
- * Time: 6:43:02 PM
+ * @author max
+ * @since 2005-01-30
  */
 public interface JSParameter extends JSVariable {
     JSParameter[] EMPTY_ARRAY = new JSParameter[0];

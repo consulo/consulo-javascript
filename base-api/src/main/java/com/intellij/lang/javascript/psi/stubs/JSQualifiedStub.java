@@ -21,8 +21,7 @@ import consulo.language.psi.stub.NamedStub;
 
 /**
  * @author Maxim.Mossienko
- * Date: Jul 30, 2008
- * Time: 9:30:52 PM
+ * @since 2008-07-30
  */
 public interface JSQualifiedStub<T extends JSQualifiedNamedElement> extends NamedStub<T>, JSStubElement<T> {
     String getQualifiedName();

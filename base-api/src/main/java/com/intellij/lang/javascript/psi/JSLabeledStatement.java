@@ -21,11 +21,8 @@ import consulo.language.psi.PsiNameIdentifierOwner;
 import consulo.annotation.DeprecationInfo;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 6:52:43 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public interface JSLabeledStatement extends JSStatement, PsiNameIdentifierOwner {
     String getLabel();

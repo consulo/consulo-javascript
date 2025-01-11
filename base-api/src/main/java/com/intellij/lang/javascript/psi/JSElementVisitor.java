@@ -21,11 +21,8 @@ import consulo.javascript.psi.JavaScriptLambdaExpression;
 import consulo.language.psi.PsiElementVisitor;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Feb 3, 2005
- * Time: 2:25:12 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-02-03
  */
 public class JSElementVisitor extends PsiElementVisitor {
     public void visitJSCallExpression(final JSCallExpression node) {

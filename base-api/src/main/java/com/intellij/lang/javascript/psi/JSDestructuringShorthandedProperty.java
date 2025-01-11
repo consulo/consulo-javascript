@@ -8,7 +8,7 @@ import jakarta.annotation.Nonnull;
  * @since 2019-12-14
  */
 public interface JSDestructuringShorthandedProperty extends JSElement {
-    @RequiredReadAction
     @Nonnull
-    JSVariable getVarialbe();
+    @RequiredReadAction
+    JSVariable getVariable();
 }

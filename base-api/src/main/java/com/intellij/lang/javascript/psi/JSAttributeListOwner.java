@@ -21,7 +21,7 @@ import consulo.language.psi.PsiElement;
 import jakarta.annotation.Nullable;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
 public interface JSAttributeListOwner extends PsiElement {
     @Nullable

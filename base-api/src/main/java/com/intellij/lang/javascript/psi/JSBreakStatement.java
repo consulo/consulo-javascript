@@ -17,11 +17,8 @@
 package com.intellij.lang.javascript.psi;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 6:58:10 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public interface JSBreakStatement extends JSStatement {
     String getLabel();

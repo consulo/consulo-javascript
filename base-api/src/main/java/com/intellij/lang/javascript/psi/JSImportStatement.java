@@ -22,9 +22,9 @@ import consulo.javascript.psi.JavaScriptImportStatementBase;
 import consulo.language.psi.StubBasedPsiElement;
 
 /**
- * @by Maxim.Mossienko
- * <p>
  * EcmaScript 4 implementation
+ *
+ * @author Maxim.Mossienko
  */
 @Deprecated
 @DeprecationInfo("We need rename it")

@@ -20,7 +20,7 @@ import com.intellij.lang.javascript.psi.stubs.JSPackageStatementStub;
 import consulo.language.psi.StubBasedPsiElement;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
 public interface JSPackageStatement extends JSStatement, JSQualifiedNamedElement, StubBasedPsiElement<JSPackageStatementStub> {
     JSSourceElement[] getStatements();

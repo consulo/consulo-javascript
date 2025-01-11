@@ -21,10 +21,11 @@ import consulo.language.psi.StubBasedPsiElement;
 import jakarta.annotation.Nullable;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
-public interface JSNamespaceDeclaration extends JSStatement, JSQualifiedNamedElement, JSAttributeListOwner,
-    StubBasedPsiElement<JSNamespaceDeclarationStub> {
+public interface JSNamespaceDeclaration
+    extends JSStatement, JSQualifiedNamedElement, JSAttributeListOwner, StubBasedPsiElement<JSNamespaceDeclarationStub> {
+
     @Nullable
     String getInitialValueString();
 

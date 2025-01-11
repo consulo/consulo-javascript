@@ -24,7 +24,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author max
- * @since 6:46:19 PM Jan 30, 2005
+ * @since 2005-01-30
  */
 public interface JSExpression extends JSElement {
     JSExpression[] EMPTY_ARRAY = new JSExpression[0];

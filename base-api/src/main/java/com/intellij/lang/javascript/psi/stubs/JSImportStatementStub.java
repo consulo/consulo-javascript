@@ -21,8 +21,7 @@ import consulo.language.psi.stub.StubElement;
 
 /**
  * @author Maxim.Mossienko
- * Date: Jun 6, 2008
- * Time: 7:52:44 PM
+ * @since 2008-06-06
  */
 public interface JSImportStatementStub extends JSStubElement<JSImportStatement>, StubElement<JSImportStatement> {
     String getImportText();

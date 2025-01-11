@@ -21,7 +21,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.StubBasedPsiElement;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
 public interface JSIncludeDirective extends JSStatement, StubBasedPsiElement<JSIncludeDirectiveStub> {
     String getIncludeText();

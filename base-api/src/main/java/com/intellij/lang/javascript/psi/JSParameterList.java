@@ -21,8 +21,7 @@ import consulo.language.psi.StubBasedPsiElement;
 
 /**
  * @author max
- * Date: Jan 30, 2005
- * Time: 6:42:10 PM
+ * @since 2005-01-30
  */
 public interface JSParameterList extends JSElement, StubBasedPsiElement<JSParameterListStub> {
     JSParameter[] getParameters();

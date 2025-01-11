@@ -27,7 +27,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author max
- * @since 7:39:29 PM Jan 30, 2005
+ * @since 2005-01-30
  */
 public interface JSProperty extends JSNamedElement {
     @Nullable

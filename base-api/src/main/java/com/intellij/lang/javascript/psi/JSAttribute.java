@@ -17,6 +17,7 @@
 package com.intellij.lang.javascript.psi;
 
 import com.intellij.lang.javascript.psi.stubs.JSAttributeStub;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.StubBasedPsiElement;
 import consulo.util.collection.ArrayFactory;
@@ -26,9 +27,9 @@ import jakarta.annotation.Nonnull;
  * @author Maxim.Mossienko
  */
 public interface JSAttribute extends JSElement, PsiNamedElement, StubBasedPsiElement<JSAttributeStub> {
-    public static final JSAttribute[] EMPTY_ARRAY = new JSAttribute[0];
+    JSAttribute[] EMPTY_ARRAY = new JSAttribute[0];
 
-    public static ArrayFactory<JSAttribute> ARRAY_FACTORY = new ArrayFactory<JSAttribute>() {
+    ArrayFactory<JSAttribute> ARRAY_FACTORY = new ArrayFactory<>() {
         @Nonnull
         @Override
         public JSAttribute[] create(int count) {
@@ -37,6 +38,7 @@ public interface JSAttribute extends JSElement, PsiNamedElement, StubBasedPsiEle
     };
 
     @Override
+    @RequiredReadAction
     String getName();
 
     JSAttributeNameValuePair[] getValues();

@@ -22,11 +22,8 @@ import consulo.language.psi.PsiElement;
 import jakarta.annotation.Nullable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 7:41:36 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public interface JSPrefixExpression extends JSExpression {
     @Nullable
@@ -36,7 +33,7 @@ public interface JSPrefixExpression extends JSExpression {
     @RequiredReadAction
     IElementType getOperationSign();
 
-    @RequiredReadAction
     @Nullable
+    @RequiredReadAction
     PsiElement getOperatorElement();
 }
