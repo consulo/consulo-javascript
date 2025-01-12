@@ -21,34 +21,34 @@ import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSPackageStatement;
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.stubs.JSVariableStub;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.ast.ASTNode;
 import consulo.language.util.IncorrectOperationException;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 8:47:58 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSVariableImpl extends JSVariableBaseImpl<JSVariableStub, JSVariable> {
-    public JSVariableImpl(final ASTNode node) {
+    public JSVariableImpl(ASTNode node) {
         super(node);
     }
 
-    public JSVariableImpl(final JSVariableStub stub) {
+    public JSVariableImpl(JSVariableStub stub) {
         super(stub, JSElementTypes.VARIABLE);
     }
 
+    @Nonnull
     @Override
+    @RequiredReadAction
     public PsiElement getNavigationElement() {
-        PsiElement parent = getParent().getParent();
-        if (parent instanceof JSClass) {
-            PsiElement parentOriginalElement = parent.getNavigationElement();
+        if (getParent().getParent() instanceof JSClass jsClass) {
+            PsiElement parentOriginalElement = jsClass.getNavigationElement();
 
-            if (parentOriginalElement != parent) {
+            if (parentOriginalElement != jsClass) {
                 JSVariable jsVariable = ((JSClass)parentOriginalElement).findFieldByName(getName());
                 return jsVariable != null ? jsVariable : this;
             }
@@ -57,6 +57,7 @@ public class JSVariableImpl extends JSVariableBaseImpl<JSVariableStub, JSVariabl
     }
 
     @Override
+    @RequiredWriteAction
     public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
         String oldName = getName();
         PsiElement element = super.setName(name);

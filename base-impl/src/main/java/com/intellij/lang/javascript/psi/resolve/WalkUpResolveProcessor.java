@@ -21,6 +21,7 @@ import com.intellij.lang.javascript.index.JSSymbolUtil;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSClassImpl;
 import com.intellij.lang.javascript.psi.impl.JSEmbeddedContentImpl;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.language.JavaScriptFeature;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -52,6 +53,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
     private boolean embeddedToHtmlAttr;
     private boolean myInNewExpression;
 
+    @RequiredReadAction
     public WalkUpResolveProcessor(
         String referenceName,
         String[] contextIds,
@@ -157,13 +159,13 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
                             }
                             type = buildIndexListFromQNameAndCorrectQName(type, source, possibleNameIds);
 
-                            doIterateHierarchy(type, new HierarchyProcessor() {
-                                @Override
-                                public boolean processClass(final JSClass clazz) {
+                            doIterateHierarchy(
+                                type,
+                                clazz -> {
                                     buildIndexListFromQNameAndCorrectQName(clazz.getQualifiedName(), clazz, possibleNameIds);
                                     return true;
                                 }
-                            });
+                            );
                         }
 
                         @Override
@@ -197,17 +199,14 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
     private void iterateContextIds(final String[] contextIds, final List<String[]> possibleNameIds, final boolean allowObject) {
         doIterateTypeHierarchy(
             contextIds,
-            new HierarchyProcessor() {
-                @Override
-                public boolean processClass(final JSClass clazz) {
-                    buildIndexListFromQNameAndCorrectQName(clazz.getQualifiedName(), clazz, possibleNameIds);
-                    return true;
-                }
+            clazz -> {
+                buildIndexListFromQNameAndCorrectQName(clazz.getQualifiedName(), clazz, possibleNameIds);
+                return true;
             }
         );
     }
 
-    protected MatchType isAcceptableQualifiedItem(final String nameId, final PsiElement element) {
+    protected MatchType isAcceptableQualifiedItem(String nameId, PsiElement element) {
         final boolean partialMatch = myReferenceName.equals(nameId);
 
         if (partialMatch) {
@@ -259,7 +258,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
 
     private void addCompleteResult(ResolveResult o) {
         if (myCompleteMatchResults == null) {
-            myCompleteMatchResults = new ArrayList<ResolveResult>(1);
+            myCompleteMatchResults = new ArrayList<>(1);
         }
         if (isFromRelevantFileOrDirectory()) {
             myCompleteMatchResults.add(myFileCompleteResultsCount++, o);
@@ -283,7 +282,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
         }
     }
 
-    protected boolean shouldProcessVariable(final String nameId, JSNamedElement var) {
+    protected boolean shouldProcessVariable(String nameId, JSNamedElement var) {
         return myReferenceName.equals(nameId) && !myDefinitelyNonglobalReference;
     }
 
@@ -320,6 +319,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
     }
 
     @Override
+    @RequiredReadAction
     protected String[] calculateContextIds(final JSReferenceExpression jsReferenceExpression) {
         String[] contextNameIds = null;
         JSExpression qualifier = JSResolveUtil.getRealRefExprQualifier(jsReferenceExpression);
@@ -348,7 +348,8 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
     }
 
     @Override
-    public boolean execute(final PsiElement element, final ResolveState state) {
+    @RequiredReadAction
+    public boolean execute(@Nonnull PsiElement element, final ResolveState state) {
         if ((element instanceof JSNamedElement namedElement && myReferenceName.equals(namedElement.getName())) || element == myContext) {
             addCompleteResult(element);
         }

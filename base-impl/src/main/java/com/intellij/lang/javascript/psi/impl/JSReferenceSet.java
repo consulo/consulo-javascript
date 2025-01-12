@@ -21,6 +21,7 @@ import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.*;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.util.TextRange;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.ASTNode;
@@ -33,8 +34,6 @@ import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 import consulo.xml.psi.xml.*;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -55,11 +54,11 @@ public class JSReferenceSet {
     private final boolean onlyFqns;
     private boolean myOnlyDefaultPackage;
 
-    public JSReferenceSet(final PsiElement element, String text, int offset, boolean soft) {
+    public JSReferenceSet(PsiElement element, String text, int offset, boolean soft) {
         this(element, text, offset, soft, false, false);
     }
 
-    public JSReferenceSet(final PsiElement element, String text, int offset, boolean soft, boolean _onlyPackages, boolean _onlyFqns) {
+    public JSReferenceSet(PsiElement element, String text, int offset, boolean soft, boolean _onlyPackages, boolean _onlyFqns) {
         this.element = element;
         isSoft = soft;
         myReferenceText = text;
@@ -68,14 +67,14 @@ public class JSReferenceSet {
         onlyFqns = _onlyFqns;
     }
 
-    public JSReferenceSet(final PsiElement element, boolean soft) {
+    public JSReferenceSet(PsiElement element, boolean soft) {
         this.element = element;
         isSoft = soft;
         onlyPackages = false;
         onlyFqns = false;
     }
 
-    public JSReferenceSet(final PsiElement element) {
+    public JSReferenceSet(PsiElement element) {
         this(element, true);
     }
 
@@ -95,7 +94,7 @@ public class JSReferenceSet {
             myReferences = PsiReference.EMPTY_ARRAY;
         }
         else {
-            final PsiReference[] list = reparse(StringUtil.stripQuotesAroundValue(text), offset + 1);
+            PsiReference[] list = reparse(StringUtil.stripQuotesAroundValue(text), offset + 1);
             myReferenceText = text;
             myReferences = list;
         }
@@ -112,7 +111,7 @@ public class JSReferenceSet {
         int dotPos = findSeparatorPosition(value, lastPos);
 
         while (dotPos != -1) {
-            final String s = value.substring(lastPos, dotPos).trim();
+            String s = value.substring(lastPos, dotPos).trim();
 
             if (s.length() > 0) {
                 refs.add(new MyPsiReference(s, offset + lastPos, false));
@@ -124,12 +123,12 @@ public class JSReferenceSet {
 
         int end = value.length();
 
-        final int lpar = value.indexOf('(', lastPos);
+        int lpar = value.indexOf('(', lastPos);
         if (lpar != -1) {
             end = lpar;
         }
 
-        final String s = value.substring(lastPos, end).trim();
+        String s = value.substring(lastPos, end).trim();
 
         if (s.length() > 0) {
             refs.add(new MyPsiReference(s, offset + lastPos, lastPos > 0 && value.charAt(lastPos - 1) == '#'));
@@ -138,7 +137,7 @@ public class JSReferenceSet {
         return refs.toArray(new PsiReference[refs.size()]);
     }
 
-    private static int findSeparatorPosition(final String s, int fromIndex) {
+    private static int findSeparatorPosition(String s, int fromIndex) {
         int pos = s.indexOf('.', fromIndex);
         // no more than one ':' and '#' symbol after last '.'
         if (pos == -1 && s.indexOf(":") >= fromIndex) {
@@ -155,41 +154,46 @@ public class JSReferenceSet {
     }
 
     private class MyPsiReference implements PsiPolyVariantReference, EmptyResolveMessageProvider {
-        private
-        @NonNls
-        String myText;
+        private String myText;
         private int myOffset;
         private boolean myMethodRef;
 
-        MyPsiReference(final String s, final int i, boolean methodRef) {
+        MyPsiReference(String s, int i, boolean methodRef) {
             myText = s;
             myOffset = i;
             myMethodRef = methodRef;
         }
 
         @Override
+        @RequiredReadAction
         public PsiElement getElement() {
             return element;
         }
 
+        @Nonnull
         @Override
+        @RequiredReadAction
         public TextRange getRangeInElement() {
             return new TextRange(myOffset, myOffset + myText.length());
         }
 
-        @Override
         @Nullable
+        @Override
+        @RequiredReadAction
         public PsiElement resolve() {
-            final ResolveResult[] resolveResults = multiResolve(false);
+            ResolveResult[] resolveResults = multiResolve(false);
             return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
         }
 
+        @Nonnull
         @Override
+        @RequiredReadAction
         public String getCanonicalText() {
             return myText;
         }
 
         @Override
+        @RequiredWriteAction
         public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
             int i = newElementName.lastIndexOf('.');
             if (i != -1) {
@@ -199,6 +203,7 @@ public class JSReferenceSet {
         }
 
         @Override
+        @RequiredWriteAction
         public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
             String qName = JSPsiImplUtils.getQNameForMove(getElement(), element);
             if (qName != null) {
@@ -212,16 +217,17 @@ public class JSReferenceSet {
         }
 
         @Override
+        @RequiredReadAction
         public boolean isReferenceTo(PsiElement element) {
-            if (element instanceof PsiNamedElement || element instanceof XmlAttributeValue) {
-                return JSResolveUtil.isReferenceTo(this, myText, element);
-            }
-            return false;
+            return (element instanceof PsiNamedElement || element instanceof XmlAttributeValue)
+                && JSResolveUtil.isReferenceTo(this, myText, element);
         }
 
+        @Nonnull
         @Override
+        @RequiredReadAction
         public Object[] getVariants() {
-            final PsiFile containingFile = element.getContainingFile();
+            PsiFile containingFile = element.getContainingFile();
             ResolveProcessor processor = null;
 
             if (isNewResolveAndCompletion(containingFile)) {
@@ -233,9 +239,10 @@ public class JSReferenceSet {
             return getOldVariants(containingFile, processor);
         }
 
+        @RequiredReadAction
         private Object[] getOldVariants(PsiFile containingFile, ResolveProcessor localProcessor) {
-            final List<String> contextIds = fillContextIds();
-            final VariantsProcessor processor =
+            List<String> contextIds = fillContextIds();
+            VariantsProcessor processor =
                 new VariantsProcessor(contextIds != null ? ArrayUtil.toStringArray(contextIds) : null, containingFile, false, element);
 
             processor.setAddOnlyCompleteMatches(contextIds != null || !(element instanceof JSLiteralExpression));
@@ -244,7 +251,7 @@ public class JSReferenceSet {
             }
             //JSResolveUtil.processGlobalSymbols(containingFile, processor);
 
-            final PsiElement context = containingFile.getContext();
+            PsiElement context = containingFile.getContext();
             if (context != null) {
                 JSResolveUtil.treeWalkUp(processor, containingFile, containingFile, element);
             }
@@ -253,10 +260,11 @@ public class JSReferenceSet {
         }
 
         @Nullable
+        @RequiredReadAction
         private List<String> fillContextIds() {
             List<String> contextIds = null;
             PsiReference prevContextReference = null;
-            for (final PsiReference ref : myReferences) {
+            for (PsiReference ref : myReferences) {
                 if (ref == this) {
                     break;
                 }
@@ -271,21 +279,21 @@ public class JSReferenceSet {
                 PsiElement elt = findNearestClass();
 
                 if (elt instanceof JSClass jsClass && !(getElement() instanceof JSLiteralExpression)) {
-                    final String qName = jsClass.getQualifiedName();
+                    String qName = jsClass.getQualifiedName();
                     BaseJSSymbolProcessor.addIndexListFromQName(qName, elt, contextIds = new ArrayList<>());
                 }
             }
             else if (contextIds != null) {
                 PsiElement psiElement = JSResolveUtil.unwrapProxy(prevContextReference.resolve());
 
-                if (psiElement instanceof XmlToken) {
-                    final BaseJSSymbolProcessor.TagContextBuilder builder =
-                        new BaseJSSymbolProcessor.TagContextBuilder(psiElement, BaseJSSymbolProcessor.HTML_ELEMENT_TYPE_NAME);
+                if (psiElement instanceof XmlToken xmlToken) {
+                    BaseJSSymbolProcessor.TagContextBuilder builder =
+                        new BaseJSSymbolProcessor.TagContextBuilder(xmlToken, BaseJSSymbolProcessor.HTML_ELEMENT_TYPE_NAME);
                     psiElement = builder.element;
                 }
                 if (psiElement instanceof JSClass jsClass) {
-                    final String qName = jsClass.getQualifiedName();
-                    BaseJSSymbolProcessor.addIndexListFromQName(qName, psiElement, contextIds = new ArrayList<>());
+                    String qName = jsClass.getQualifiedName();
+                    BaseJSSymbolProcessor.addIndexListFromQName(qName, jsClass, contextIds = new ArrayList<>());
                 }
             }
 
@@ -293,6 +301,7 @@ public class JSReferenceSet {
         }
 
         @Override
+        @RequiredReadAction
         public boolean isSoft() {
             return JSReferenceSet.this.isSoft();
         }
@@ -300,7 +309,7 @@ public class JSReferenceSet {
         @Override
         @Nonnull
         @RequiredReadAction
-        public ResolveResult[] multiResolve(final boolean incompleteCode) {
+        public ResolveResult[] multiResolve(boolean incompleteCode) {
             PsiFile containingFile = element.getContainingFile();
             if (containingFile == null) {
                 return ResolveResult.EMPTY_ARRAY;
@@ -309,6 +318,7 @@ public class JSReferenceSet {
                 .resolveWithCaching(this, MyResolver.INSTANCE, true, incompleteCode, containingFile);
         }
 
+        @RequiredReadAction
         private ResolveResult[] doResolve(PsiFile psiFile) {
             if ("int".equals(myText) ||
                 "uint".equals(myText) ||
@@ -329,9 +339,11 @@ public class JSReferenceSet {
             return JSResolveUtil.isNewResolveAndCompletion(psiFile) || onlyFqns;
         }
 
+        @RequiredReadAction
         private ResolveProcessor doProcess(PsiFile psiFile, String text) {
             ResolveProcessor processor = new ResolveProcessor(text) {
                 @Override
+                @RequiredReadAction
                 public boolean execute(PsiElement element, ResolveState state) {
                     if (onlyPackages) {
                         return false;
@@ -339,8 +351,8 @@ public class JSReferenceSet {
                     if (onlyFqns) {
                         return true;
                     }
-                    if (myOnlyDefaultPackage && element instanceof JSQualifiedNamedElement) {
-                        String qName = ((JSQualifiedNamedElement)element).getQualifiedName();
+                    if (myOnlyDefaultPackage && element instanceof JSQualifiedNamedElement qualifiedNamedElement) {
+                        String qName = qualifiedNamedElement.getQualifiedName();
                         if (qName != null && !StringUtil.isEmpty(StringUtil.getPackageName(qName))) {
                             return true;
                         }
@@ -358,18 +370,18 @@ public class JSReferenceSet {
                 PsiElement elt = findNearestClass();
 
                 if (myOffset > 0) {
-                    if (elt instanceof JSClass && !(element instanceof JSLiteralExpression)) {
+                    if (elt instanceof JSClass jsClass && !(element instanceof JSLiteralExpression)) {
                         processor.setToProcessHierarchy(true);
                         processor.setTypeContext(true);
-                        if (!elt.processDeclarations(processor, ResolveState.initial(), elt, elt)) {
+                        if (!jsClass.processDeclarations(processor, ResolveState.initial(), jsClass, jsClass)) {
                             return processor;
                         }
                     }
                 }
-                else if (elt instanceof JSClass) {
+                else if (elt instanceof JSClass jsClass) {
                     processor.setTypeContext(true);
                     processor.setToProcessMembers(false);
-                    if (!elt.processDeclarations(processor, ResolveState.initial(), elt, elt)) {
+                    if (!jsClass.processDeclarations(processor, ResolveState.initial(), jsClass, jsClass)) {
                         return processor;
                     }
                 }
@@ -378,11 +390,9 @@ public class JSReferenceSet {
             else {
                 PsiElement psiElement = JSResolveUtil.unwrapProxy(myReferences[i - 1].resolve());
 
-                if (psiElement instanceof XmlToken) {
-                    final BaseJSSymbolProcessor.TagContextBuilder builder = new BaseJSSymbolProcessor.TagContextBuilder(
-                        psiElement,
-                        BaseJSSymbolProcessor.HTML_ELEMENT_TYPE_NAME
-                    );
+                if (psiElement instanceof XmlToken xmlToken) {
+                    BaseJSSymbolProcessor.TagContextBuilder builder =
+                        new BaseJSSymbolProcessor.TagContextBuilder(xmlToken, BaseJSSymbolProcessor.HTML_ELEMENT_TYPE_NAME);
                     psiElement = builder.element;
                 }
                 if (psiElement != null) {
@@ -393,13 +403,13 @@ public class JSReferenceSet {
                 }
             }
 
-            if (psiFile instanceof XmlFile && !JavaScriptSupportLoader.isFlexMxmFile(psiFile)) {
+            if (psiFile instanceof XmlFile xmlFile && !JavaScriptSupportLoader.isFlexMxmFile(xmlFile)) {
                 // TODO: short names during completion should be
                 JSResolveUtil.processTopLevelClasses(
                     processor,
                     ResolveState.initial(),
-                    psiFile.getProject(),
-                    psiFile.getResolveScope(),
+                    xmlFile.getProject(),
+                    xmlFile.getResolveScope(),
                     onlyFqns,
                     false
                 );
@@ -407,6 +417,7 @@ public class JSReferenceSet {
             return processor;
         }
 
+        @RequiredReadAction
         private PsiElement findNearestClass() {
             PsiElement elt = element;
             PsiElement parent;
@@ -426,30 +437,28 @@ public class JSReferenceSet {
 
             if (elt != null && !(elt instanceof JSClass)) {
                 elt = elt.getNextSibling();
-                if (elt instanceof PsiWhiteSpace) {
-                    elt = elt.getNextSibling();
+                if (elt instanceof PsiWhiteSpace whiteSpace) {
+                    elt = whiteSpace.getNextSibling();
                 }
             }
             return elt;
         }
 
+        @RequiredReadAction
         private ResolveResult[] doOldResolve(PsiFile psiFile) {
             if ("*".equals(myText)) {
                 return new ResolveResult[]{new JSResolveUtil.MyResolveResult(element)};
             }
-            final List<String> contextIds = fillContextIds();
+            List<String> contextIds = fillContextIds();
 
             String text = myText;
 
-            if (getElement() instanceof JSDocTagValue) {
-                if (myReferences.length == 1 &&
-                    myReferences[myReferences.length - 1] == this &&
-                    !myMethodRef) {
-                    text = StringUtil.capitalize(text);
-                }
+            if (getElement() instanceof JSDocTagValue
+                && myReferences.length == 1 && myReferences[myReferences.length - 1] == this && !myMethodRef) {
+                text = StringUtil.capitalize(text);
             }
 
-            final WalkUpResolveProcessor processor = new WalkUpResolveProcessor(
+            WalkUpResolveProcessor processor = new WalkUpResolveProcessor(
                 text,
                 contextIds != null ? ArrayUtil.toStringArray(contextIds) : null,
                 psiFile,
@@ -459,9 +468,9 @@ public class JSReferenceSet {
 
             processor.setAddOnlyCompleteMatches(contextIds != null || !(element instanceof JSLiteralExpression));
             //JSResolveUtil.processGlobalSymbols(psiFile, processor);
-            final StringBuilder b = new StringBuilder();
+            StringBuilder b = new StringBuilder();
 
-            for (final PsiReference ref : myReferences) {
+            for (PsiReference ref : myReferences) {
                 if (b.length() > 0) {
                     b.append('.');
                 }
@@ -470,9 +479,9 @@ public class JSReferenceSet {
                     break;
                 }
             }
-            final String str = b.toString();
+            String str = b.toString();
 
-            final PsiElement context = psiFile.getContext();
+            PsiElement context = psiFile.getContext();
             if (context != null && str.indexOf('.') == -1) {
                 JSResolveUtil.treeWalkUp(processor, psiFile, psiFile, element);
             }
@@ -493,11 +502,13 @@ public class JSReferenceSet {
 
         @Nonnull
         @Override
+        @RequiredReadAction
         public ResolveResult[] resolve(@Nonnull MyPsiReference ref, @Nonnull PsiFile containingFile, boolean incompleteCode) {
             return ref.doResolve(containingFile);
         }
     }
 
+    @RequiredReadAction
     private static PsiElement handleContentChange(PsiElement elt, TextRange range, String newElementName) {
         if (elt instanceof XmlTag || elt instanceof XmlAttributeValue) {
             int i = newElementName.indexOf('.');
@@ -510,24 +521,24 @@ public class JSReferenceSet {
         String myReferenceText = elt.getText();
         String newLiteralText =
             myReferenceText.substring(0, range.getStartOffset()) + newElementName + myReferenceText.substring(range.getEndOffset());
-        final ASTNode expressionFromText;
+        ASTNode expressionFromText;
 
         Project project = elt.getProject();
         if (elt instanceof JSExpression) {
             expressionFromText = JSChangeUtil.createExpressionFromText(project, newLiteralText).getNode();
         }
         else if (elt instanceof JSAttributeNameValuePair) {
-            final PsiElement element = JSChangeUtil.createJSTreeFromText(project, "[XXX(" + newLiteralText + ")]").getPsi();
+            PsiElement element = JSChangeUtil.createJSTreeFromText(project, "[XXX(" + newLiteralText + ")]").getPsi();
             expressionFromText = ((JSAttribute)element.getFirstChild()).getValues()[0].getNode();
         }
         else {
             assert elt instanceof JSDocTagValue;
-            final PsiElement tag = JSChangeUtil.createJSTreeFromText(project, "/** @see " + newLiteralText + " */").getPsi();
+            PsiElement tag = JSChangeUtil.createJSTreeFromText(project, "/** @see " + newLiteralText + " */").getPsi();
             expressionFromText = ((JSDocTag)tag.getFirstChild().getChildren()[0]).getValue().getNode();
         }
 
         if (expressionFromText.getPsi().getClass() == elt.getClass()) {
-            final ASTNode astNode = elt.getNode();
+            ASTNode astNode = elt.getNode();
             astNode.replaceChild(astNode.getFirstChildNode(), expressionFromText.getFirstChildNode());
         }
 

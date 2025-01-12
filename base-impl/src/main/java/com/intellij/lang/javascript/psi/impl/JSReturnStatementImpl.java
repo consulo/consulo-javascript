@@ -23,12 +23,11 @@ import consulo.language.ast.ASTNode;
 import jakarta.annotation.Nonnull;
 
 /**
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:57:08 PM
+ * @author max
+ * @since 2005-01-30
  */
 public class JSReturnStatementImpl extends JSStatementImpl implements JSReturnStatement {
-    public JSReturnStatementImpl(final ASTNode node) {
+    public JSReturnStatementImpl(ASTNode node) {
         super(node);
     }
 

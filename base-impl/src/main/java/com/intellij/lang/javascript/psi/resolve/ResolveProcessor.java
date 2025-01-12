@@ -209,10 +209,9 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
                         return true;
                     }
                 }
-                else if (!allowUnqualifiedStaticsFromInstance) {
-                    if (attributeList != null && attributeList.hasModifier(JSAttributeList.ModifierType.STATIC)) {
-                        return true;
-                    }
+                else if (!allowUnqualifiedStaticsFromInstance && attributeList != null
+                    && attributeList.hasModifier(JSAttributeList.ModifierType.STATIC)) {
+                    return true;
                 }
             }
 
@@ -223,8 +222,9 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
                 openedNses = JSResolveUtil.calculateOpenNses(place);
             }
 
-            if (openedNses != null && !openedNses.contains(attributeNs) && (!AS3_NAMESPACE.equals(attributeNs) || !ecma) // AS3 is opened by default from
-                // compiler settings
+            if (openedNses != null
+                && !openedNses.contains(attributeNs)
+                && (!AS3_NAMESPACE.equals(attributeNs) || !ecma) // AS3 is opened by default from compiler settings
             ) {
                 if (attributeNs != null || defaultNsIsNotAllowed) {
                     return true;
@@ -259,11 +259,10 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
             if (placeParent instanceof JSDefinitionExpression
                 || (myName == null && placeParent instanceof JSExpressionStatement /* when complete of setter*/)
                 || (place instanceof JSFunction placeFunction && placeFunction.isSetProperty())) {
-                PsiElement clazz;
-                if (function.isGetProperty()
-                    && (myName != null || !(placeParent instanceof JSExpressionStatement)
-                    || !((clazz = function.getParent()) instanceof JSClass) ||
-                    ((JSClass)clazz).findFunctionByNameAndKind(function.getName(), JSFunction.FunctionKind.SETTER) != null)) {
+                if (function.isGetProperty() && (myName != null
+                    || !(placeParent instanceof JSExpressionStatement)
+                    || !(function.getParent() instanceof JSClass jsClass
+                    && jsClass.findFunctionByNameAndKind(function.getName(), JSFunction.FunctionKind.SETTER) == null))) {
                     return true;
                 }
             }
@@ -372,9 +371,10 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
                 if (qName != null && qName.indexOf('.') != -1) {
                     final ResolveProcessor processor = new ResolveProcessor(myName) {
                         @Override
-                        public boolean execute(PsiElement element, ResolveState state) {
-                            if (element instanceof JSQualifiedNamedElement) {
-                                if (!qName.equals(((JSQualifiedNamedElement)element).getQualifiedName())) {
+                        @RequiredReadAction
+                        public boolean execute(@Nonnull PsiElement element, ResolveState state) {
+                            if (element instanceof JSQualifiedNamedElement qualifiedNamedElement) {
+                                if (!qName.equals(qualifiedNamedElement.getQualifiedName())) {
                                     return true;
                                 }
                             }
@@ -385,17 +385,14 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
                         }
                     };
 
-                    if (!JSUnusedImportsHelper.isSomeNodeThatShouldNotHaveImportsWhenQualified(
-                        placeTopParentRefExpr,
-                        element
-                    )) {
+                    if (!JSUnusedImportsHelper.isSomeNodeThatShouldNotHaveImportsWhenQualified(placeTopParentRefExpr, element)) {
                         processor.putUserData(ASKING_FOR_QUALIFIED_IMPORT, qName);
                         JSResolveUtil.treeWalkUp(processor, placeTopParent, placeTopParent, place);
                         boolean noImportNoResolve = processor.getResult() == null;
 
                         if (noImportNoResolve) {
                             if (myResolveStatus == null) {
-                                myResolveStatus = new SmartList<Boolean>();
+                                myResolveStatus = new SmartList<>();
                                 for (int i = 0; i < previousResultsSize; ++i) {
                                     myResolveStatus.add(Boolean.TRUE);
                                 }
@@ -416,14 +413,16 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
         return s;
     }
 
+    @RequiredReadAction
     private static PsiElement getElement(final PsiElement element) {
         return element instanceof XmlTag xmlTag
             ? xmlTag.getAttribute("name").getValueElement().getChildren()[1]
             : element;
-        }
+    }
 
     @Nullable
-    public static String getName(final PsiNamedElement element) {
+    @RequiredReadAction
+    public static String getName(PsiNamedElement element) {
         return element instanceof JSNamedElement ? element.getName() : null;
     }
 
@@ -486,11 +485,12 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
                                         }
 
                                         @Override
-                                        public boolean execute(final PsiElement element, final ResolveState state) {
-                                            if (!(element instanceof JSClass)) {
+                                        @RequiredReadAction
+                                        public boolean execute(@Nonnull PsiElement element, ResolveState state) {
+                                            if (!(element instanceof JSClass jsClass)) {
                                                 return true;
                                             }
-                                            String classQName = ((JSClass)element).getQualifiedName();
+                                            String classQName = jsClass.getQualifiedName();
                                             return qName == classQName || (qName != null && !qName.equals(classQName));
                                         }
                                     },

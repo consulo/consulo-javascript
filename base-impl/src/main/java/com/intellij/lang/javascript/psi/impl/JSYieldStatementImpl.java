@@ -27,7 +27,7 @@ import jakarta.annotation.Nonnull;
  * @author maxim
  */
 public class JSYieldStatementImpl extends JSStatementImpl implements JSYieldStatement {
-    public JSYieldStatementImpl(final ASTNode node) {
+    public JSYieldStatementImpl(ASTNode node) {
         super(node);
     }
 

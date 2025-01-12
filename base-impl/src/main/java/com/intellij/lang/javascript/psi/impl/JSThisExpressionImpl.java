@@ -23,14 +23,11 @@ import consulo.language.ast.ASTNode;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 11:24:42 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSThisExpressionImpl extends JSExpressionImpl implements JSThisExpression {
-    public JSThisExpressionImpl(final ASTNode node) {
+    public JSThisExpressionImpl(ASTNode node) {
         super(node);
     }
 

@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.SystemInfo;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.language.psi.*;
@@ -27,6 +28,7 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -38,27 +40,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Function;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Maxim.Mossienko
- * Date: 08.04.2009
- * Time: 20:48:38
- * To change this template use File | Settings | File Templates.
+ * @author Maxim.Mossienko
+ * @since 2009-04-08
  */
 public class ReferenceSupport {
-    public static PsiReference[] getFileRefs(
-        final PsiElement elt,
-        final PsiElement valueNode,
-        final int offset,
-        final LookupOptions lookupOptions
-    ) {
+    @RequiredReadAction
+    public static PsiReference[] getFileRefs(PsiElement elt, PsiElement valueNode, int offset, LookupOptions lookupOptions) {
         String str = StringUtil.stripQuotesAroundValue(valueNode.getText());
         return getFileRefs(elt, offset, str, lookupOptions);
     }
 
-    public static PsiReference[] getFileRefs(final PsiElement elt, final int offset, String str, final LookupOptions lookupOptions) {
+    public static PsiReference[] getFileRefs(PsiElement elt, int offset, String str, LookupOptions lookupOptions) {
         if (lookupOptions.IGNORE_TEXT_ARTER_HASH) {
             int hashIndex = str.indexOf('#');
             if (hashIndex != -1) {
@@ -66,24 +60,24 @@ public class ReferenceSupport {
             }
         }
 
-        final FileReferenceSet base = new FileReferenceSet(str, elt, offset, null, SystemInfo.isFileSystemCaseSensitive);
+        FileReferenceSet base = new FileReferenceSet(str, elt, offset, null, SystemInfo.isFileSystemCaseSensitive);
 
-        final boolean lookForAbsolutePath = lookupOptions.ABSOLUTE && new File(str).isAbsolute();
-        final boolean startsWithSlash = str.startsWith("/");
+        boolean lookForAbsolutePath = lookupOptions.ABSOLUTE && new File(str).isAbsolute();
+        boolean startsWithSlash = str.startsWith("/");
 
         base.addCustomization(
             FileReferenceSet.DEFAULT_PATH_EVALUATOR_OPTION,
             psiFile -> {
-                final PsiElement context = psiFile.getContext();
-                if (context instanceof PsiLanguageInjectionHost) {
-                    psiFile = context.getContainingFile();
+                PsiElement context = psiFile.getContext();
+                if (context instanceof PsiLanguageInjectionHost languageInjectionHost) {
+                    psiFile = languageInjectionHost.getContainingFile();
                 }
                 PsiFile originalFile = psiFile.getOriginalFile();
                 if (originalFile != null) {
                     psiFile = originalFile;
                 }
 
-                final List<VirtualFile> dirs = new ArrayList<>();
+                List<VirtualFile> dirs = new ArrayList<>();
 
                 // paths relative to file should not start with slash
                 if (lookupOptions.RELATIVE_TO_FILE && !startsWithSlash) {
@@ -107,11 +101,11 @@ public class ReferenceSupport {
                     appendSdkAndLibraryClassRoots(dirs, psiFile);
                 }
 
-                final Collection<PsiFileSystemItem> result = new ArrayList<>();
-                final PsiManager psiManager = PsiManager.getInstance(psiFile.getProject());
-                for (final VirtualFile dir : dirs) {
+                Collection<PsiFileSystemItem> result = new ArrayList<>();
+                PsiManager psiManager = PsiManager.getInstance(psiFile.getProject());
+                for (VirtualFile dir : dirs) {
                     if (dir != null) {
-                        final PsiDirectory psiDir = psiManager.findDirectory(dir);
+                        PsiDirectory psiDir = psiManager.findDirectory(dir);
                         if (psiDir != null) {
                             result.add(psiDir);
                         }
@@ -123,29 +117,29 @@ public class ReferenceSupport {
         return base.getAllReferences();
     }
 
-    private static void appendFileLocation(final List<VirtualFile> dirs, final PsiFile psiFile) {
-        final VirtualFile file = psiFile.getVirtualFile();
+    private static void appendFileLocation(List<VirtualFile> dirs, PsiFile psiFile) {
+        VirtualFile file = psiFile.getVirtualFile();
         if (file != null) {
             dirs.add(file.getParent());
         }
     }
 
-    private static void appendSourceRoots(final Collection<VirtualFile> dirs, final PsiFile psiFile) {
-        final VirtualFile file = psiFile.getVirtualFile();
+    private static void appendSourceRoots(Collection<VirtualFile> dirs, PsiFile psiFile) {
+        VirtualFile file = psiFile.getVirtualFile();
         if (file == null) {
             return;
         }
-        final Project project = psiFile.getProject();
-        final ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
-        final Module module = index.getModuleForFile(file);
+        Project project = psiFile.getProject();
+        ProjectFileIndex index = ProjectRootManager.getInstance(project).getFileIndex();
+        Module module = index.getModuleForFile(file);
         if (module != null && index.getSourceRootForFile(file) != null) {
             dirs.addAll(Arrays.asList(ModuleRootManager.getInstance(module).getSourceRoots()));
         }
     }
 
-    private static void appendFileSystemRoot(final Collection<VirtualFile> dirs, final Project project) {
-        final VirtualFile fileSystemRoot;
-        if (SystemInfo.isWindows) {
+    private static void appendFileSystemRoot(Collection<VirtualFile> dirs, Project project) {
+        VirtualFile fileSystemRoot;
+        if (Platform.current().os().isWindows()) {
             fileSystemRoot = ManagingFS.getInstance().findRoot("", LocalFileSystem.getInstance());
         }
         else {
@@ -154,11 +148,12 @@ public class ReferenceSupport {
         dirs.add(fileSystemRoot);
     }
 
+    @RequiredReadAction
     private static void appendSdkAndLibraryClassRoots(List<VirtualFile> dirs, PsiFile psiFile) {
-        final Module module = ModuleUtilCore.findModuleForPsiElement(psiFile);
+        Module module = ModuleUtilCore.findModuleForPsiElement(psiFile);
         if (module != null) {
-            final OrderEntry[] orderEntries = ModuleRootManager.getInstance(module).getOrderEntries();
-            for (final OrderEntry orderEntry : orderEntries) {
+            OrderEntry[] orderEntries = ModuleRootManager.getInstance(module).getOrderEntries();
+            for (OrderEntry orderEntry : orderEntries) {
                 if (orderEntry instanceof OrderEntryWithTracking) {
                     dirs.addAll(Arrays.asList(orderEntry.getFiles(BinariesOrderRootType.getInstance())));
                 }

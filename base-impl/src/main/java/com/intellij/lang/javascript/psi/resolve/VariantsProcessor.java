@@ -29,7 +29,7 @@ import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.util.collection.ArrayUtil;
-import org.jetbrains.annotations.NonNls;
+import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -49,9 +49,9 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
 
     private boolean myAddOnlyCompleteMatchesSet;
 
-    @NonNls
     private static final String OBJECT_CLASS_NAME = "Object";
 
+    @RequiredReadAction
     public VariantsProcessor(String[] nameIds, PsiFile targetFile, boolean skipDclsInTargetFile, PsiElement context) {
         super(targetFile.getOriginalFile(), skipDclsInTargetFile, context, nameIds);
         nameIds = myContextNameIds;
@@ -115,13 +115,10 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
 
             doIterateTypeHierarchy(
                 nameIds,
-                new HierarchyProcessor() {
-                    @Override
-                    public boolean processClass(final JSClass clazz) {
-                        updateCanUseOnlyCompleteMatchesFromString(clazz.getQualifiedName(), clazz, clazz);
-                        buildIndexListFromQNameAndCorrectQName(clazz.getQualifiedName(), clazz, possibleNameComponents);
-                        return true;
-                    }
+                clazz -> {
+                    updateCanUseOnlyCompleteMatchesFromString(clazz.getQualifiedName(), clazz, clazz);
+                    buildIndexListFromQNameAndCorrectQName(clazz.getQualifiedName(), clazz, possibleNameComponents);
+                    return true;
                 }
             );
         }
@@ -132,6 +129,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
         hasSomeSmartnessAvailable = nameIdsArray != null && nameIdsArray.length > 0;
     }
 
+    @RequiredReadAction
     private void updateCanUseOnlyCompleteMatchesFromString(final String qName, Object source, PsiElement clazz) {
         final boolean wasSet = myAddOnlyCompleteMatchesSet;
 
@@ -171,6 +169,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
         return source instanceof JSFunctionExpression;
     }
 
+    @RequiredReadAction
     private void updateCanUseOnlyCompleteMatches(final JSClass jsClass) {
         final JSAttributeList attributeList = jsClass != null ? jsClass.getAttributeList() : null;
         if (attributeList != null && attributeList.hasModifier(JSAttributeList.ModifierType.DYNAMIC)) {
@@ -178,12 +177,13 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
         }
     }
 
+    @RequiredReadAction
     public void addLocalResults(final List<PsiElement> results) {
         if (results == null) {
             return;
         }
 
-        final Set<String> processedCandidateNames = new HashSet<String>(results.size());
+        final Set<String> processedCandidateNames = new HashSet<>(results.size());
 
         for (PsiElement e : results) {
             if (e instanceof PsiNamedElement namedElement) {
@@ -211,7 +211,8 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
         }
 
         @Override
-        public void process(String type, final EvaluateContext context, final PsiElement source) {
+        @RequiredReadAction
+        public void process(@Nonnull String type, EvaluateContext context, PsiElement source) {
             if (context.visitedTypes.contains(type)) {
                 return;
             }
@@ -235,7 +236,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
         }
 
         @Override
-        public void setUnknownElement(PsiElement element) {
+        public void setUnknownElement(@Nonnull PsiElement element) {
             myUnknownElement = element;
         }
 
@@ -249,17 +250,14 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
         myIteratedTypeName = type;
         doIterateHierarchy(
             type,
-            new HierarchyProcessor() {
-                @Override
-                public boolean processClass(final JSClass clazz) {
-                    String qname = clazz.getQualifiedName();
-                    if (!context.visitedTypes.contains(qname)) {
-                        context.visitedTypes.add(qname);
-                        updateCanUseOnlyCompleteMatchesFromString(qname, clazz, clazz);
-                        buildIndexListFromQNameAndCorrectQName(clazz.getQualifiedName(), clazz, possibleNameIds);
-                    }
-                    return true;
+            clazz -> {
+                String qname = clazz.getQualifiedName();
+                if (!context.visitedTypes.contains(qname)) {
+                    context.visitedTypes.add(qname);
+                    updateCanUseOnlyCompleteMatchesFromString(qname, clazz, clazz);
+                    buildIndexListFromQNameAndCorrectQName(clazz.getQualifiedName(), clazz, possibleNameIds);
                 }
+                return true;
             }
         );
 
@@ -284,7 +282,8 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
     }
 
     @Override
-    public boolean execute(PsiElement element, ResolveState state) {
+    @RequiredReadAction
+    public boolean execute(@Nonnull PsiElement element, ResolveState state) {
         if (element instanceof JSNamedElement namedElement) {
             addCompleteMatch(namedElement, namedElement.getName());
         }
@@ -334,6 +333,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
     }
 
     @Override
+    @RequiredReadAction
     protected String[] calculateContextIds(final JSReferenceExpression jsReferenceExpression) {
         return JSResolveUtil.buildNameIdsForQualifier(JSResolveUtil.getRealRefExprQualifier(jsReferenceExpression));
     }

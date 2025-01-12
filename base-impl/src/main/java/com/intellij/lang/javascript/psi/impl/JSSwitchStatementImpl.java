@@ -26,16 +26,13 @@ import consulo.language.ast.TokenSet;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 10:08:20 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSSwitchStatementImpl extends JSStatementImpl implements JSSwitchStatement {
     private static final TokenSet CASE_CLAUSE_FILTER = TokenSet.create(JSElementTypes.CASE_CLAUSE);
 
-    public JSSwitchStatementImpl(final ASTNode node) {
+    public JSSwitchStatementImpl(ASTNode node) {
         super(node);
     }
 

@@ -23,14 +23,11 @@ import com.intellij.lang.javascript.psi.JSThrowStatement;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:57:08 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSThrowStatementImpl extends JSStatementImpl implements JSThrowStatement {
-    public JSThrowStatementImpl(final ASTNode node) {
+    public JSThrowStatementImpl(ASTNode node) {
         super(node);
     }
 

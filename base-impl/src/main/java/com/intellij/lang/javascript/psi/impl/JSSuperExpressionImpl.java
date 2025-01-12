@@ -19,6 +19,8 @@ package com.intellij.lang.javascript.psi.impl;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.util.PsiTreeUtil;
@@ -33,13 +35,11 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 11:24:42 PM
+ * @author max
+ * @since 2005-01-30
  */
 public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperExpression {
-    public JSSuperExpressionImpl(final ASTNode node) {
+    public JSSuperExpressionImpl(ASTNode node) {
         super(node);
     }
 
@@ -59,24 +59,27 @@ public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperEx
         PsiReference[] refs = {
             new PsiReference() {
                 @Override
+                @RequiredReadAction
                 public PsiElement getElement() {
                     return JSSuperExpressionImpl.this;
                 }
 
+                @Nonnull
                 @Override
+                @RequiredReadAction
                 public TextRange getRangeInElement() {
                     return new TextRange(0, getTextLength());
                 }
 
-                @Override
                 @Nullable
+                @Override
+                @RequiredReadAction
                 public PsiElement resolve() {
-                    final PsiElement element = findClass();
+                    PsiElement element = findClass();
 
-                    if (getElement().getParent() instanceof JSCallExpression && element instanceof JSClass) {
-                        final JSClass clazz = (JSClass)element;
-                        final ResolveProcessor processor = new ResolveProcessor(clazz.getName(), JSSuperExpressionImpl.this);
-                        element.processDeclarations(processor, ResolveState.initial(), clazz, getElement());
+                    if (getElement().getParent() instanceof JSCallExpression && element instanceof JSClass jsClass) {
+                        ResolveProcessor processor = new ResolveProcessor(jsClass.getName(), JSSuperExpressionImpl.this);
+                        element.processDeclarations(processor, ResolveState.initial(), jsClass, getElement());
                         if (processor.getResult() != null) {
                             return processor.getResult();
                         }
@@ -85,21 +88,22 @@ public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperEx
                     return element;
                 }
 
+                @RequiredReadAction
                 private PsiElement findClass() {
-                    final JSClass jsClass = PsiTreeUtil.getParentOfType(getElement(), JSClass.class);
+                    JSClass jsClass = PsiTreeUtil.getParentOfType(getElement(), JSClass.class);
 
                     if (jsClass != null) {
-                        final JSReferenceList extendsList = jsClass.getExtendsList();
+                        JSReferenceList extendsList = jsClass.getExtendsList();
                         if (extendsList != null) {
-                            final JSReferenceExpression[] referenceExpressions = extendsList.getExpressions();
+                            JSReferenceExpression[] referenceExpressions = extendsList.getExpressions();
                             if (referenceExpressions != null && referenceExpressions.length > 0) {
-                                final ResolveResult[] results = referenceExpressions[0].multiResolve(false);
+                                ResolveResult[] results = referenceExpressions[0].multiResolve(false);
                                 return results.length > 0 ? results[0].getElement() : null;
                             }
                         }
                     }
                     else {
-                        final JSFile jsFile = PsiTreeUtil.getParentOfType(getElement(), JSFile.class);
+                        JSFile jsFile = PsiTreeUtil.getParentOfType(getElement(), JSFile.class);
 
                         if (jsFile != null) {
                             return JSResolveUtil.getClassReferenceForXmlFromContext(jsFile);
@@ -108,32 +112,40 @@ public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperEx
                     return null;
                 }
 
+                @Nonnull
                 @Override
+                @RequiredReadAction
                 public String getCanonicalText() {
                     return getText();
                 }
 
                 @Override
-                public PsiElement handleElementRename(final String newElementName) throws IncorrectOperationException {
+                @RequiredWriteAction
+                public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
                     return null;
                 }
 
                 @Override
-                public PsiElement bindToElement(@Nonnull final PsiElement element) throws IncorrectOperationException {
+                @RequiredWriteAction
+                public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
                     return null;
                 }
 
                 @Override
-                public boolean isReferenceTo(final PsiElement element) {
+                @RequiredReadAction
+                public boolean isReferenceTo(PsiElement element) {
                     return false;
                 }
 
+                @Nonnull
                 @Override
+                @RequiredReadAction
                 public Object[] getVariants() {
                     return ArrayUtil.EMPTY_OBJECT_ARRAY;
                 }
 
                 @Override
+                @RequiredReadAction
                 public boolean isSoft() {
                     return true;
                 }

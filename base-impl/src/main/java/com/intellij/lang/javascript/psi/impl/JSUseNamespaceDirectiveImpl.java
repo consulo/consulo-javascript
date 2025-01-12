@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -29,14 +30,14 @@ import consulo.language.psi.resolve.ResolveState;
 import jakarta.annotation.Nonnull;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
 public class JSUseNamespaceDirectiveImpl extends JSStubbedStatementImpl<JSUseNamespaceDirectiveStub> implements JSUseNamespaceDirective {
-    public JSUseNamespaceDirectiveImpl(final ASTNode node) {
+    public JSUseNamespaceDirectiveImpl(ASTNode node) {
         super(node);
     }
 
-    public JSUseNamespaceDirectiveImpl(final JSUseNamespaceDirectiveStub stub) {
+    public JSUseNamespaceDirectiveImpl(JSUseNamespaceDirectiveStub stub) {
         super(stub, JSElementTypes.USE_NAMESPACE_DIRECTIVE);
     }
 
@@ -46,25 +47,24 @@ public class JSUseNamespaceDirectiveImpl extends JSStubbedStatementImpl<JSUseNam
     }
 
     @Override
+    @RequiredReadAction
     public String getNamespaceToBeUsed() {
-        final JSUseNamespaceDirectiveStub stub = getStub();
+        JSUseNamespaceDirectiveStub stub = getStub();
         if (stub != null) {
             return stub.getNamespaceToUse();
         }
-        final ASTNode node = getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
+        ASTNode node = getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
         return node != null ? node.getText() : null;
     }
 
     @Override
     public boolean processDeclarations(
         @Nonnull PsiScopeProcessor processor,
-		@Nonnull ResolveState state,
-		PsiElement lastParent,
+        @Nonnull ResolveState state,
+        PsiElement lastParent,
         @Nonnull PsiElement place
     ) {
-        if (processor instanceof ResolveProcessor resolveProcessor && resolveProcessor.lookingForUseNamespaces()) {
-            return processor.execute(this, state);
-        }
-        return true;
+        return !(processor instanceof ResolveProcessor resolveProcessor && resolveProcessor.lookingForUseNamespaces())
+            || processor.execute(this, state);
     }
 }
