@@ -22,54 +22,48 @@ import consulo.language.version.LanguageVersion;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 05.12.2015
+ * @since 2015-12-05
  */
-public class JavaScriptLanguage extends Language
-{
-	public static final JavaScriptLanguage INSTANCE = new JavaScriptLanguage();
+public class JavaScriptLanguage extends Language {
+    public static final JavaScriptLanguage INSTANCE = new JavaScriptLanguage();
 
-	private Map<String, LanguageVersion> myVersionsById = new HashMap<>();
+    private Map<String, LanguageVersion> myVersionsById = new HashMap<>();
 
-	public JavaScriptLanguage()
-	{
-		super("JavaScript", "text/javascript", "application/javascript");
-	}
+    public JavaScriptLanguage() {
+        super("JavaScript", "text/javascript", "application/javascript");
+    }
 
-	@Nullable
-	public LanguageVersion getVersionById(@Nonnull String id)
-	{
-		Map<String, LanguageVersion> oldMap = myVersionsById;
-		if(oldMap == null)
-		{
-			Map<String, LanguageVersion> newMap = new HashMap<>();
-			for(LanguageVersion version : getVersions())
-			{
-				newMap.put(version.getId(), version);
-			}
+    @Nullable
+    public LanguageVersion getVersionById(@Nonnull String id) {
+        Map<String, LanguageVersion> oldMap = myVersionsById;
+        if (oldMap == null) {
+            Map<String, LanguageVersion> newMap = new HashMap<>();
+            for (LanguageVersion version : getVersions()) {
+                newMap.put(version.getId(), version);
+            }
 
-			myVersionsById = newMap;
+            myVersionsById = newMap;
 
-			return newMap.get(id);
-		}
+            return newMap.get(id);
+        }
 
-		return oldMap.get(id);
-	}
+        return oldMap.get(id);
+    }
 
-	@Nullable
-	@Override
-	public LanguageFileType getAssociatedFileType()
-	{
-		return JavaScriptFileType.INSTANCE;
-	}
+    @Nullable
+    @Override
+    public LanguageFileType getAssociatedFileType() {
+        return JavaScriptFileType.INSTANCE;
+    }
 
-	@Override
-	public boolean isCaseSensitive()
-	{
-		return true;
-	}
+    @Override
+    public boolean isCaseSensitive() {
+        return true;
+    }
 }

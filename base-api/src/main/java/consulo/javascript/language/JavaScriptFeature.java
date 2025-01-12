@@ -20,30 +20,27 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 23.02.2016
+ * @since 2016-02-23
  */
-public enum JavaScriptFeature
-{
-	CLASS("Classes"),
-	OCTAL_LITERAL("Octal literals"),
-	BINARY_LITERAL("Binary literals"),
-	PARAMETER_DEFAULT_VALUE("Default parameter values"),
-	REST_PARAMETER("Rest parameters"),
-	SPREAD_OPERATOR("Spread operator"),
-	OPTIONAL_CHAINING_OPERATOR("Optional chaining operator"),
-	FUNCTION_PROPERTY("Function property"),
-	EXPONENTIATION_OPERATOR("Exponentiation operator");
+public enum JavaScriptFeature {
+    CLASS("Classes"),
+    OCTAL_LITERAL("Octal literals"),
+    BINARY_LITERAL("Binary literals"),
+    PARAMETER_DEFAULT_VALUE("Default parameter values"),
+    REST_PARAMETER("Rest parameters"),
+    SPREAD_OPERATOR("Spread operator"),
+    OPTIONAL_CHAINING_OPERATOR("Optional chaining operator"),
+    FUNCTION_PROPERTY("Function property"),
+    EXPONENTIATION_OPERATOR("Exponentiation operator");
 
-	private String myName;
+    private String myName;
 
-	JavaScriptFeature(String name)
-	{
-		myName = name;
-	}
+    JavaScriptFeature(String name) {
+        myName = name;
+    }
 
-	@Nonnull
-	public String getName()
-	{
-		return myName;
-	}
+    @Nonnull
+    public String getName() {
+        return myName;
+    }
 }

@@ -22,28 +22,27 @@ import consulo.ide.ServiceManager;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 /**
  * @author VISTALL
- * @since 11.12.2015
+ * @since 2015-12-11
  */
 @ServiceAPI(ComponentScope.APPLICATION)
-public abstract class StandardJavaScriptVersions
-{
+public abstract class StandardJavaScriptVersions {
 
-	@Nonnull
-	public static StandardJavaScriptVersions getInstance()
-	{
-		return ServiceManager.getService(StandardJavaScriptVersions.class);
-	}
+    @Nonnull
+    public static StandardJavaScriptVersions getInstance() {
+        return ServiceManager.getService(StandardJavaScriptVersions.class);
+    }
 
-	@Nonnull
-	public abstract JavaScriptLanguageVersion getDefaultVersion();
+    @Nonnull
+    public abstract JavaScriptLanguageVersion getDefaultVersion();
 
-	@Nonnull
-	public abstract List<JavaScriptLanguageVersion> getValidLanguageVersions();
+    @Nonnull
+    public abstract List<JavaScriptLanguageVersion> getValidLanguageVersions();
 
-	@Nonnull
-	public abstract JavaScriptLanguageVersion findVersionById(@Nullable String id);
+    @Nonnull
+    public abstract JavaScriptLanguageVersion findVersionById(@Nullable String id);
 }

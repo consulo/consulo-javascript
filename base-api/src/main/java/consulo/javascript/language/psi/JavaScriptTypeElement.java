@@ -21,10 +21,9 @@ import com.intellij.lang.javascript.psi.JSElement;
 
 /**
  * @author VISTALL
- * @since 29.02.2016
+ * @since 2016-02-29
  */
-public interface JavaScriptTypeElement extends JSElement
-{
-	@Nonnull
-	JavaScriptType getType();
+public interface JavaScriptTypeElement extends JSElement {
+    @Nonnull
+    JavaScriptType getType();
 }

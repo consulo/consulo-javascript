@@ -26,11 +26,10 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 11.12.2015
+ * @since 2015-12-11
  */
-public interface JavaScriptFileTypeWithVersion
-{
-	@Nonnull
-	@RequiredReadAction
-	LanguageVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile);
+public interface JavaScriptFileTypeWithVersion {
+    @Nonnull
+    @RequiredReadAction
+    LanguageVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile);
 }

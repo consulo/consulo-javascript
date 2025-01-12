@@ -14,9 +14,8 @@ import jakarta.annotation.Nonnull;
  * @since 2019-12-17
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public interface JavaScriptKeywordCompletionExtender
-{
-	ExtensionPointName<JavaScriptKeywordCompletionExtender> EP_NAME = ExtensionPointName.create(JavaScriptKeywordCompletionExtender.class);
+public interface JavaScriptKeywordCompletionExtender {
+    ExtensionPointName<JavaScriptKeywordCompletionExtender> EP_NAME = ExtensionPointName.create(JavaScriptKeywordCompletionExtender.class);
 
-	void fillCompletion(@Nonnull CompletionParameters parameters, ProcessingContext context, @Nonnull CompletionResultSet result);
+    void fillCompletion(@Nonnull CompletionParameters parameters, ProcessingContext context, @Nonnull CompletionResultSet result);
 }

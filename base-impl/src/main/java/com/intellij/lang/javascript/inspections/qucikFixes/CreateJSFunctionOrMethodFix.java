@@ -57,6 +57,7 @@ public class CreateJSFunctionOrMethodFix extends CreateJSFunctionFixBase {
     }
 
     @Override
+    @RequiredReadAction
     protected void addParameters(
         Template template,
         JSReferenceExpression referenceExpression,
@@ -95,6 +96,7 @@ public class CreateJSFunctionOrMethodFix extends CreateJSFunctionFixBase {
     }
 
     @Override
+    @RequiredReadAction
     protected void addReturnType(Template template, JSReferenceExpression referenceExpression, PsiFile file) {
         guessTypeAndAddTemplateVariable(template, referenceExpression, file);
     }

@@ -24,6 +24,7 @@ package com.intellij.javascript.documentation;
 
 import com.intellij.lang.javascript.index.JSSymbolUtil;
 import com.intellij.lang.javascript.psi.*;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.util.io.URLUtil;
@@ -75,9 +76,9 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
     private int myNewLinesPendingCount;
     private boolean seenPre;
     private boolean seenSeeAlso;
-    @NonNls
     private static final String BR_DELIMITER = "<BR>\n";
 
+    @RequiredReadAction
     JSDocumentationBuilder(PsiElement element, PsiElement _contextElement) {
         myElement = element;
         contextElement = _contextElement;
@@ -119,7 +120,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
         result = generationInfo.description;
     }
 
-    private void doAppend(final @NonNls String str) {
+    private void doAppend(String str) {
         while (myNewLinesPendingCount > 0) {
             result.append(seenPre ? "\n" : BR_DELIMITER);
             --myNewLinesPendingCount;
@@ -164,7 +165,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
             return true;
         }
 
-        if (line.indexOf("<pre>") != -1) {
+        if (line.contains("<pre>")) {
             seenPre = true;
         }
 
@@ -188,7 +189,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
         doAppend(line);
         myNewLinesPendingCount = parametersStarted && !parametersEnded ? 0 : 1;
 
-        if (line.indexOf("</pre>") != -1) {
+        if (line.contains("</pre>")) {
             seenPre = false;
         }
         return true;
@@ -258,7 +259,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
                 myEventsStarted = true;
                 result.append("<DL><DT><b>Events:</b></DT><DD>");
             }
-            result.append("Event <code>" + matchName + "</code> -" + remainingLineContent);
+            result.append("Event <code>").append(matchName).append("</code> -").append(remainingLineContent);
             return true;
         }
         else if (myEventsStarted) {
@@ -267,7 +268,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
         }
 
         if (metaDocType == MetaDocType.NOTE) {
-            result.append("\n<p><b>Note:</b> " + remainingLineContent);
+            result.append("\n<p><b>Note:</b> ").append(remainingLineContent);
             return true;
         }
 
@@ -391,6 +392,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
         return true;
     }
 
+    @RequiredReadAction
     private String getSeeAlsoLink(String remainingLineContent) {
         if (URLUtil.isAbsoluteURL(remainingLineContent)) {
             return remainingLineContent;
@@ -424,6 +426,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
         return remainingLineContent;
     }
 
+    @RequiredReadAction
     String getDoc() {
         if (seenSeeAlso) {
             seenSeeAlso = false;
@@ -504,27 +507,26 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
         return null;
     }
 
-
+    @RequiredReadAction
     private void startFunction(JSFunction function) {
-        @NonNls String functionName = function.getName();
-        final PsiElement parent = function.getParent();
+        String functionName = function.getName();
+        PsiElement parent = function.getParent();
 
-        if (parent instanceof JSAssignmentExpression) {
-            final String unqualifiedFunctionName = functionName;
-            JSExpression expression = ((JSDefinitionExpression)((JSAssignmentExpression)parent).getLOperand()).getExpression();
+        if (parent instanceof JSAssignmentExpression assignment) {
+            String unqualifiedFunctionName = functionName;
+            JSExpression expression = ((JSDefinitionExpression)assignment.getLOperand()).getExpression();
             functionName = null;
 
-            if (expression instanceof JSReferenceExpression) {
-                final JSExpression qualifierExpression = ((JSReferenceExpression)expression).getQualifier();
-                if (qualifierExpression instanceof JSReferenceExpression) {
-                    expression = JSSymbolUtil.findReferenceExpressionUsedForClassExtending((JSReferenceExpression)qualifierExpression);
-                    functionName = expression.getText() + "." + unqualifiedFunctionName;
-                }
+            if (expression instanceof JSReferenceExpression refExpr
+                && refExpr.getQualifier() instanceof JSReferenceExpression qualifierRefExpr) {
+                expression = JSSymbolUtil.findReferenceExpressionUsedForClassExtending(qualifierRefExpr);
+                functionName = expression.getText() + "." + unqualifiedFunctionName;
             }
 
             if (functionName == null) {
                 functionName = expression.getText();
             }
+
             if (generationInfo.namespace != null && functionName.equals(generationInfo.namespace + "." + unqualifiedFunctionName)) {
                 generationInfo.namespace = null;
             }

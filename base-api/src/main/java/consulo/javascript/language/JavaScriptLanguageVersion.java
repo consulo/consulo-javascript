@@ -5,25 +5,23 @@ import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionWithParsing;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 23-Dec-17
+ * @since 2017-12-23
  */
-public abstract class JavaScriptLanguageVersion extends LanguageVersion implements LanguageVersionWithParsing
-{
-	public JavaScriptLanguageVersion(@Nonnull String id, @Nonnull String name, @Nonnull Language language, String... mimeTypes)
-	{
-		super(id, name, language, mimeTypes);
-	}
+public abstract class JavaScriptLanguageVersion extends LanguageVersion implements LanguageVersionWithParsing {
+    public JavaScriptLanguageVersion(@Nonnull String id, @Nonnull String name, @Nonnull Language language, String... mimeTypes) {
+        super(id, name, language, mimeTypes);
+    }
 
-	@Nonnull
-	public abstract Set<JavaScriptFeature> getFeatures();
+    @Nonnull
+    public abstract Set<JavaScriptFeature> getFeatures();
 
-	@Nonnull
-	public String getPresentableName()
-	{
-		return getName();
-	}
+    @Nonnull
+    public String getPresentableName() {
+        return getName();
+    }
 }

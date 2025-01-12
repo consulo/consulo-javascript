@@ -39,58 +39,50 @@ import jakarta.annotation.Nullable;
  * @author Maxim.Mossienko
  * @since 2006-08-18
  */
-public abstract class JSInspection extends LocalInspectionTool implements CustomSuppressableInspectionTool
-{
-	protected boolean myOnTheFly;
+public abstract class JSInspection extends LocalInspectionTool implements CustomSuppressableInspectionTool {
+    protected boolean myOnTheFly;
 
-	protected abstract JSElementVisitor createVisitor(final ProblemsHolder holder);
+    protected abstract JSElementVisitor createVisitor(ProblemsHolder holder);
 
-	@Override
-	@Nonnull
-	public PsiElementVisitor buildVisitor(@Nonnull ProblemsHolder holder, boolean isOnTheFly)
-	{
-		myOnTheFly = isOnTheFly;
-		return createVisitor(holder);
-	}
+    @Nonnull
+    @Override
+    public PsiElementVisitor buildVisitor(@Nonnull ProblemsHolder holder, boolean isOnTheFly) {
+        myOnTheFly = isOnTheFly;
+        return createVisitor(holder);
+    }
 
-	@Override
-	public boolean isEnabledByDefault()
-	{
-		return true;
-	}
+    @Override
+    public boolean isEnabledByDefault() {
+        return true;
+    }
 
-	@Nullable
-	@Override
-	public Language getLanguage()
-	{
-		return JavaScriptLanguage.INSTANCE;
-	}
+    @Nullable
+    @Override
+    public Language getLanguage() {
+        return JavaScriptLanguage.INSTANCE;
+    }
 
-	@Override
-	@Nonnull
-	public HighlightDisplayLevel getDefaultLevel()
-	{
-		return HighlightDisplayLevel.WEAK_WARNING;
-	}
+    @Nonnull
+    @Override
+    public HighlightDisplayLevel getDefaultLevel() {
+        return HighlightDisplayLevel.WEAK_WARNING;
+    }
 
-	@Override
-	public PsiNamedElement getProblemElement(final PsiElement psiElement)
-	{
-		return PsiTreeUtil.getNonStrictParentOfType(psiElement, JSNamedElement.class);
-	}
+    @Override
+    public PsiNamedElement getProblemElement(PsiElement psiElement) {
+        return PsiTreeUtil.getNonStrictParentOfType(psiElement, JSNamedElement.class);
+    }
 
-	@Override
-	@Nullable
-	public SuppressIntentionAction[] getSuppressActions(final PsiElement element)
-	{
-		return new SuppressIntentionAction[]{
-	/*  new AddNoInspectionCommentFix(HighlightDisplayKey.find(getShortName()), JSSuppressionHolder.class),*/
-		};
-	}
+    @Nonnull
+    @Override
+    public SuppressIntentionAction[] getSuppressActions(PsiElement element) {
+        return new SuppressIntentionAction[]{
+            /*  new AddNoInspectionCommentFix(HighlightDisplayKey.find(getShortName()), JSSuppressionHolder.class),*/
+        };
+    }
 
-	@Override
-	public boolean isSuppressedFor(final PsiElement element)
-	{
-		return SuppressionUtil.isSuppressedInStatement(element, getID(), JSSuppressionHolder.class);
-	}
+    @Override
+    public boolean isSuppressedFor(@Nonnull PsiElement element) {
+        return SuppressionUtil.isSuppressedInStatement(element, getID(), JSSuppressionHolder.class);
+    }
 }

@@ -58,9 +58,9 @@ public interface JSDocumentationProcessor {
     boolean onPatternMatch(
         @Nonnull MetaDocType type,
         @Nullable String matchName,
-        @Nullable final String matchValue,
+        @Nullable String matchValue,
         @Nullable String remainingLineContent,
-        @Nonnull final String line,
-        final String patternMatched
+        @Nonnull String line,
+        String patternMatched
     );
 }

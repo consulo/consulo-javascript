@@ -32,9 +32,8 @@ import jakarta.annotation.Nullable;
 
 
 /**
- * User: max
- * Date: Jan 28, 2005
- * Time: 1:18:22 PM
+ * @author max
+ * @since 2005-01-28
  */
 public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsing<C> {
     private static final Logger LOG = Logger.getInstance(ExpressionParsing.class);
@@ -850,7 +849,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 
     public boolean parseType(final PsiBuilder builder) {
         final IElementType tokenType = builder.getTokenType();
-        if (JSDocumentationUtils.ourPrimitiveTypeFilter.contains(tokenType)) {
+        if (JSDocumentationUtils.PRIMITIVE_TYPE_FILTER.contains(tokenType)) {
             builder.advanceLexer();
         }
         else if (!parseQualifiedTypeName(builder)) {

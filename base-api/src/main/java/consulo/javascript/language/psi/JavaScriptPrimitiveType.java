@@ -23,41 +23,36 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 13.12.2015
+ * @since 2015-12-13
  */
-public class JavaScriptPrimitiveType implements JavaScriptType
-{
-	public static final JavaScriptPrimitiveType BOOL = new JavaScriptPrimitiveType("Boolean");
-	public static final JavaScriptPrimitiveType STRING = new JavaScriptPrimitiveType("String");
-	public static final JavaScriptPrimitiveType NUMBER = new JavaScriptPrimitiveType("Number");
-	public static final JavaScriptPrimitiveType REGEXP = new JavaScriptPrimitiveType("Regexp");
-	public static final JavaScriptPrimitiveType NULL = new JavaScriptPrimitiveType("null");
+public class JavaScriptPrimitiveType implements JavaScriptType {
+    public static final JavaScriptPrimitiveType BOOL = new JavaScriptPrimitiveType("Boolean");
+    public static final JavaScriptPrimitiveType STRING = new JavaScriptPrimitiveType("String");
+    public static final JavaScriptPrimitiveType NUMBER = new JavaScriptPrimitiveType("Number");
+    public static final JavaScriptPrimitiveType REGEXP = new JavaScriptPrimitiveType("Regexp");
+    public static final JavaScriptPrimitiveType NULL = new JavaScriptPrimitiveType("null");
 
-	private String myName;
+    private String myName;
 
-	public JavaScriptPrimitiveType(String name)
-	{
-		myName = name;
-	}
+    public JavaScriptPrimitiveType(String name) {
+        myName = name;
+    }
 
-	@RequiredReadAction
-	@Nonnull
-	@Override
-	public String getPresentableText()
-	{
-		return myName;
-	}
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public String getPresentableText() {
+        return myName;
+    }
 
-	@Nullable
-	@Override
-	public PsiElement getTargetElement()
-	{
-		return null;
-	}
+    @Nullable
+    @Override
+    public PsiElement getTargetElement() {
+        return null;
+    }
 
-	@Override
-	public String toString()
-	{
-		return "JavaScriptPrimitiveType: " + myName;
-	}
+    @Override
+    public String toString() {
+        return "JavaScriptPrimitiveType: " + myName;
+    }
 }

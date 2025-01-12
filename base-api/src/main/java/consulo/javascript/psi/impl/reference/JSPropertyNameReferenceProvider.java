@@ -29,14 +29,13 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 02.12.2015
+ * @since 2015-12-02
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public interface JSPropertyNameReferenceProvider
-{
-	ExtensionPointName<JSPropertyNameReferenceProvider> EP_NAME = ExtensionPointName.create(JSPropertyNameReferenceProvider.class);
+public interface JSPropertyNameReferenceProvider {
+    ExtensionPointName<JSPropertyNameReferenceProvider> EP_NAME = ExtensionPointName.create(JSPropertyNameReferenceProvider.class);
 
-	@Nullable
-	@RequiredReadAction
-	PsiReference getReference(@Nonnull JSProperty property);
+    @Nullable
+    @RequiredReadAction
+    PsiReference getReference(@Nonnull JSProperty property);
 }

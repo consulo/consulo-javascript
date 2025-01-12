@@ -21,9 +21,9 @@ import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSNamedElement;
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.component.util.Iconable;
 import consulo.language.icon.IconDescriptorUpdaters;
-import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.navigation.ItemPresentation;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -32,7 +32,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author Maxim.Mossienko
- * @since 9:55:49 PM Apr 7, 2006
+ * @since 2006-04-07
  */
 public class JSItemPresentation implements ItemPresentation {
     private JSNamedElement myElement;
@@ -46,27 +46,26 @@ public class JSItemPresentation implements ItemPresentation {
         return myElement.getName();
     }
 
-    @Override
     @Nullable
+    @Override
+    @RequiredReadAction
     public String getLocationString() {
         final PsiFile psiFile = myElement.getContainingFile();
         if (myElement instanceof JSVariable || myElement instanceof JSFunction) {
-            PsiElement possibleClazz = JSResolveUtil.findParent(myElement);
+            if (JSResolveUtil.findParent(myElement) instanceof JSClass possibleJsClass) {
+                StringBuilder presentation = new StringBuilder();
 
-            if (possibleClazz instanceof JSClass) {
-                final StringBuilder presentation = new StringBuilder();
-
-                presentation.append(((JSClass)possibleClazz).getQualifiedName());
+                presentation.append(possibleJsClass.getQualifiedName());
                 presentation.append('(').append(getFileName(psiFile)).append(')');
                 return presentation.toString();
             }
         }
-        else if (myElement instanceof JSClass) {
-            final String s = ((JSClass)myElement).getQualifiedName();
-            final int i = s.lastIndexOf('.');
+        else if (myElement instanceof JSClass jsClass) {
+            String s = jsClass.getQualifiedName();
+            int i = s.lastIndexOf('.');
 
             if (i != -1) {
-                final StringBuilder presentation = new StringBuilder();
+                StringBuilder presentation = new StringBuilder();
 
                 presentation.append(s.substring(0, i));
                 presentation.append('(').append(getFileName(psiFile)).append(')');
@@ -76,8 +75,9 @@ public class JSItemPresentation implements ItemPresentation {
         return getFileName(psiFile);
     }
 
-    private static String getFileName(final PsiFile psiFile) {
-        final String s = psiFile.getName();
+    @RequiredReadAction
+    private static String getFileName(PsiFile psiFile) {
+        String s = psiFile.getName();
         if (JSResolveUtil.isPredefinedFile(psiFile)) {
             return s.substring(s.lastIndexOf('/') + 1);
         }

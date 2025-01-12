@@ -41,14 +41,14 @@ public interface JSResolveHelper {
 
     // TODO: drop module
     @Nullable
-    PsiElement findClassByQName(final String link, final Project project, final String className, GlobalSearchScope scope);
+    PsiElement findClassByQName(String link, Project project, String className, GlobalSearchScope scope);
 
-    void importClass(final PsiScopeProcessor processor, final PsiNamedElement file, final String packageQualifierText);
+    void importClass(PsiScopeProcessor processor, PsiNamedElement file, String packageQualifierText);
 
     boolean processPackage(
-        final String packageQualifierText,
+        String packageQualifierText,
         String resolvedName,
-        final Processor<VirtualFile> processor,
+        Processor<VirtualFile> processor,
         GlobalSearchScope globalSearchScope,
         Project project
     );

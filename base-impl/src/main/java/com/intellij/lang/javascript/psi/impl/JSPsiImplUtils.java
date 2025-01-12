@@ -99,7 +99,7 @@ public class JSPsiImplUtils {
         ASTNode myNode = element.getNode();
         ASTNode node = myNode != null ? myNode.findChildByType(JSTokenTypes.COLON) : null;
 
-        return node != null ? myNode.findChildByType(JSDocumentationUtils.ourTypeFilter, node) : null;
+        return node != null ? myNode.findChildByType(JSDocumentationUtils.TYPE_FILTER, node) : null;
     }
 
     @Deprecated

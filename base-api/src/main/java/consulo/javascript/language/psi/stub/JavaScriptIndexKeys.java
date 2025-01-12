@@ -23,14 +23,13 @@ import consulo.language.psi.stub.StubIndexKey;
 
 /**
  * @author VISTALL
- * @since 05.12.2015
+ * @since 2015-12-05
  */
-public interface JavaScriptIndexKeys
-{
-	StubIndexKey<String, JSClass> CLASSES_BY_NAME = StubIndexKey.createIndexKey("js.class.shortName");
-	StubIndexKey<String, JSQualifiedNamedElement> ELEMENTS_BY_NAME = StubIndexKey.createIndexKey("js.qualified.shortName");
-	StubIndexKey<String, JSQualifiedNamedElement> ELEMENTS_BY_QNAME = StubIndexKey.createIndexKey("js.element.qualifiedName");
+public interface JavaScriptIndexKeys {
+    StubIndexKey<String, JSClass> CLASSES_BY_NAME = StubIndexKey.createIndexKey("js.class.shortName");
+    StubIndexKey<String, JSQualifiedNamedElement> ELEMENTS_BY_NAME = StubIndexKey.createIndexKey("js.qualified.shortName");
+    StubIndexKey<String, JSQualifiedNamedElement> ELEMENTS_BY_QNAME = StubIndexKey.createIndexKey("js.element.qualifiedName");
 
-	StubIndexKey<String, JSReferenceList> EXTENDS_INDEX = StubIndexKey.createIndexKey("JS.class.super");
-	StubIndexKey<String, JSReferenceList> IMPLEMENTED_INDEX = StubIndexKey.createIndexKey("JS.class.implements");
+    StubIndexKey<String, JSReferenceList> EXTENDS_INDEX = StubIndexKey.createIndexKey("JS.class.super");
+    StubIndexKey<String, JSReferenceList> IMPLEMENTED_INDEX = StubIndexKey.createIndexKey("JS.class.implements");
 }

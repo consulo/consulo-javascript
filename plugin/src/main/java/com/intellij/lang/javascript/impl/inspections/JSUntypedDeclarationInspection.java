@@ -20,8 +20,9 @@ import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.inspections.qucikFixes.BaseCreateFix;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSPsiImplUtils;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.javascript.language.JavaScriptFeature;
@@ -42,169 +43,159 @@ import consulo.localize.LocalizeValue;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.Collections;
 
 /**
  * @author Maxim.Mossienko
  */
 @ExtensionImpl
-public class JSUntypedDeclarationInspection extends JSInspection
-{
-	@NonNls
-	public static final String SHORT_NAME = "JSUntypedDeclaration";
+public class JSUntypedDeclarationInspection extends JSInspection {
+    public static final String SHORT_NAME = "JSUntypedDeclaration";
 
-	@Override
-	@Nonnull
-	public String getGroupDisplayName()
-	{
-		return "General";
-	}
+    @Nonnull
+    @Override
+    public String getGroupDisplayName() {
+        return "General";
+    }
 
-	@Override
-	@Nonnull
-	public String getDisplayName()
-	{
-		return JavaScriptLocalize.jsUntypedDeclarationInspectionName().get();
-	}
+    @Nonnull
+    @Override
+    public String getDisplayName() {
+        return JavaScriptLocalize.jsUntypedDeclarationInspectionName().get();
+    }
 
-	@Nonnull
-	@Override
-	public HighlightDisplayLevel getDefaultLevel()
-	{
-		return HighlightDisplayLevel.WARNING;
-	}
+    @Nonnull
+    @Override
+    public HighlightDisplayLevel getDefaultLevel() {
+        return HighlightDisplayLevel.WARNING;
+    }
 
-	@Override
-	@Nonnull
-	@NonNls
-	public String getShortName()
-	{
-		return SHORT_NAME;
-	}
+    @Override
+    @Nonnull
+    public String getShortName() {
+        return SHORT_NAME;
+    }
 
-	@Override
-	protected JSElementVisitor createVisitor(final ProblemsHolder holder)
-	{
-		return new JSElementVisitor()
-		{
-			@Override
-			public void visitJSVariable(final JSVariable node)
-			{
-				process(node, holder);
-			}
+    @Override
+    protected JSElementVisitor createVisitor(final ProblemsHolder holder) {
+        return new JSElementVisitor() {
+            @Override
+            @RequiredReadAction
+            public void visitJSVariable(@Nonnull JSVariable node) {
+                process(node, holder);
+            }
 
-			@Override
-			public void visitJSFunctionExpression(final JSFunctionExpression node)
-			{
-				process(node.getFunction(), holder);
-			}
+            @Override
+            @RequiredReadAction
+            public void visitJSFunctionExpression(@Nonnull JSFunctionExpression node) {
+                process(node.getFunction(), holder);
+            }
 
-			@Override
-			public void visitJSFunctionDeclaration(final JSFunction node)
-			{
-				if(node.isConstructor() || node.isSetProperty())
-				{
-					return;
-				}
-				process(node, holder);
-			}
-		};
-	}
+            @Override
+            @RequiredReadAction
+            public void visitJSFunctionDeclaration(@Nonnull JSFunction node) {
+                if (node.isConstructor() || node.isSetProperty()) {
+                    return;
+                }
+                process(node, holder);
+            }
+        };
+    }
 
-	private static void process(final JSNamedElement node, final ProblemsHolder holder)
-	{
-		if(node.getContainingFile().getLanguage() != JavaScriptSupportLoader.ECMA_SCRIPT_L4)
-		{
-			return;
-		}
-		PsiElement nameIdentifier = node.getNameIdentifier();
+    @RequiredReadAction
+    private static void process(JSNamedElement node, ProblemsHolder holder) {
+        if (node.getContainingFile().getLanguage() != JavaScriptSupportLoader.ECMA_SCRIPT_L4) {
+            return;
+        }
+        PsiElement nameIdentifier = node.getNameIdentifier();
 
-		if(nameIdentifier != null &&
-				JSPsiImplUtils.getTypeFromDeclaration(node) == null &&
-				(!(node instanceof JSParameter) || !((JSParameter) node).isRest()))
-		{
-			LocalizeValue description = node instanceof JSFunction
-				? JavaScriptLocalize.jsUntypedFunctionProblem(nameIdentifier.getText())
-				: JavaScriptLocalize.jsUntypedVariableProblem(nameIdentifier.getText());
-			holder.registerProblem(
-				nameIdentifier, 
-				description.get(),
-				ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
-				new AddTypeToDclFix()
-			);
-		}
-	}
+        if (nameIdentifier != null &&
+            JSPsiImplUtils.getTypeFromDeclaration(node) == null &&
+            !(node instanceof JSParameter parameter && parameter.isRest())) {
+            LocalizeValue description = node instanceof JSFunction
+                ? JavaScriptLocalize.jsUntypedFunctionProblem(nameIdentifier.getText())
+                : JavaScriptLocalize.jsUntypedVariableProblem(nameIdentifier.getText());
 
-	private static class AddTypeToDclFix implements LocalQuickFix
-	{
+            holder.newProblem(description)
+                .range(nameIdentifier)
+                .highlightType(ProblemHighlightType.GENERIC_ERROR_OR_WARNING)
+                .withFix(new AddTypeToDclFix())
+                .create();
+        }
+    }
 
-		@Override
-		@Nonnull
-		public String getName()
-		{
-			return JavaScriptLocalize.jsUntypedDeclarationProblemAddtypeFix().get();
-		}
+    private static class AddTypeToDclFix implements LocalQuickFix {
+        @Nonnull
+        @Override
+        public String getName() {
+            return JavaScriptLocalize.jsUntypedDeclarationProblemAddtypeFix().get();
+        }
 
-		@Override
-		@Nonnull
-		public String getFamilyName()
-		{
-			return getName();
-		}
+        @Nonnull
+        @Override
+        public String getFamilyName() {
+            return getName();
+        }
 
-		@Override
-		public void applyFix(@Nonnull final Project project, @Nonnull final ProblemDescriptor descriptor)
-		{
-			PsiElement anchor = descriptor.getPsiElement();
-			PsiFile containingFile = anchor.getContainingFile();
-			if(!FileModificationService.getInstance().prepareFileForWrite(containingFile))
-			{
-				return;
-			}
+        @Override
+        @RequiredReadAction
+        public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+            PsiElement anchor = descriptor.getPsiElement();
+            PsiFile containingFile = anchor.getContainingFile();
+            if (!FileModificationService.getInstance().prepareFileForWrite(containingFile)) {
+                return;
+            }
 
-			if(anchor.getParent() instanceof JSFunction)
-			{
-				anchor = ((JSFunction) anchor.getParent()).getParameterList();
-			}
+            if (anchor.getParent() instanceof JSFunction function) {
+                anchor = function.getParameterList();
+            }
 
-			OpenFileDescriptor openDescriptor = OpenFileDescriptorFactory.getInstance(project).builder(containingFile.getVirtualFile()).offset(anchor.getTextRange().getEndOffset()).build();
-			openDescriptor.navigate(true);
-			Editor textEditor = FileEditorManager.getInstance(project).getSelectedTextEditor();
-			TemplateManager templateManager = TemplateManager.getInstance(project);
+            OpenFileDescriptor openDescriptor = OpenFileDescriptorFactory.getInstance(project)
+                .builder(containingFile.getVirtualFile())
+                .offset(anchor.getTextRange().getEndOffset())
+                .build();
+            openDescriptor.navigate(true);
+            Editor textEditor = FileEditorManager.getInstance(project).getSelectedTextEditor();
+            TemplateManager templateManager = TemplateManager.getInstance(project);
 
-			Template t = templateManager.createTemplate("", "");
-			t.addTextSegment(":");
-			boolean hasDetectedTypeFromUsage = false;
-			final PsiElement anchorParent = anchor.getParent();
+            Template t = templateManager.createTemplate("", "");
+            t.addTextSegment(":");
+            boolean hasDetectedTypeFromUsage = false;
+            PsiElement anchorParent = anchor.getParent();
 
-			if(anchorParent instanceof JSVariable)
-			{
-				final JSExpression expression = ((JSVariable) anchorParent).getInitializer();
+            if (anchorParent instanceof JSVariable variable) {
+                JSExpression expression = variable.getInitializer();
 
-				if(expression != null)
-				{
-					BaseCreateFix.guessExprTypeAndAddSuchVariable(expression, t, "a", containingFile, Collections.singleton(JavaScriptFeature.CLASS));
-					hasDetectedTypeFromUsage = true;
-				}
-			}
+                if (expression != null) {
+                    BaseCreateFix.guessExprTypeAndAddSuchVariable(
+                        expression,
+                        t,
+                        "a",
+                        containingFile,
+                        Collections.singleton(JavaScriptFeature.CLASS)
+                    );
+                    hasDetectedTypeFromUsage = true;
+                }
+            }
 
-			if(!hasDetectedTypeFromUsage)
-			{
-				String defaultValue = "uint";
-				if(ApplicationManager.getApplication().isUnitTestMode())
-				{
-					t.addTextSegment(defaultValue);
-				}
-				else
-				{
-					t.addVariable("a", new MacroCallNode(MacroFactory.createMacro("complete")), new BaseCreateFix.MyExpression(defaultValue), true);
-				}
-			}
+            if (!hasDetectedTypeFromUsage) {
+                String defaultValue = "uint";
+                if (Application.get().isUnitTestMode()) {
+                    t.addTextSegment(defaultValue);
+                }
+                else {
+                    t.addVariable(
+                        "a",
+                        new MacroCallNode(MacroFactory.createMacro("complete")),
+                        new BaseCreateFix.MyExpression(defaultValue),
+                        true
+                    );
+                }
+            }
 
-			templateManager.startTemplate(textEditor, t);
-		}
-	}
+            templateManager.startTemplate(textEditor, t);
+        }
+    }
 }
