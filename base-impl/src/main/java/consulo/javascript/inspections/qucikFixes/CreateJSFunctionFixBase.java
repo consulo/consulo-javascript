@@ -34,7 +34,7 @@ import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 24.02.2016
+ * @since 2016-02-24
  */
 public abstract class CreateJSFunctionFixBase extends BaseCreateFix {
     private final LocalizeValue myMessage;
@@ -97,8 +97,10 @@ public abstract class CreateJSFunctionFixBase extends BaseCreateFix {
         template.addTextSegment(referencedName);
     }
 
+    @RequiredReadAction
     protected abstract void addParameters(Template template, JSReferenceExpression refExpr, PsiFile file, Set<JavaScriptFeature> features);
 
+    @RequiredReadAction
     protected abstract void addReturnType(Template template, JSReferenceExpression referenceExpression, PsiFile psifile);
 
     protected abstract void addBody(Template template, JSReferenceExpression refExpr, PsiFile file);
