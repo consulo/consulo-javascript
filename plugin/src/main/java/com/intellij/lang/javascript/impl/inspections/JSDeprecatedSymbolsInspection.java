@@ -35,59 +35,49 @@ import jakarta.annotation.Nonnull;
  * @by Maxim.Mossienko
  */
 @ExtensionImpl
-public class JSDeprecatedSymbolsInspection extends JSInspection
-{
-	@NonNls
-	private static final String SHORT_NAME = "JSDeprecatedSymbols";
+public class JSDeprecatedSymbolsInspection extends JSInspection {
+    @NonNls
+    private static final String SHORT_NAME = "JSDeprecatedSymbols";
 
-	@Override
-	@Nonnull
-	public String getGroupDisplayName()
-	{
-		return "General";
-	}
+    @Override
+    @Nonnull
+    public String getGroupDisplayName() {
+        return "General";
+    }
 
-	@Override
-	@Nonnull
-	public String getDisplayName()
-	{
-		return JavaScriptLocalize.jsDeprecatedSymbolsInspectionName().get();
-	}
+    @Override
+    @Nonnull
+    public String getDisplayName() {
+        return JavaScriptLocalize.jsDeprecatedSymbolsInspectionName().get();
+    }
 
-	@Override
-	@Nonnull
-	@NonNls
-	public String getShortName()
-	{
-		return SHORT_NAME;
-	}
+    @Override
+    @Nonnull
+    @NonNls
+    public String getShortName() {
+        return SHORT_NAME;
+    }
 
-	@Override
-	protected JSElementVisitor createVisitor(final ProblemsHolder holder)
-	{
-		return new JSElementVisitor()
-		{
-			@Override
-			public void visitJSReferenceExpression(final JSReferenceExpression node)
-			{
-				for(ResolveResult r : node.multiResolve(false))
-				{
-					final PsiElement element = r.getElement();
-					if((element instanceof JSDefinitionExpression && element.getParent() instanceof JSAssignmentExpression) || element == node.getParent())
-					{
-						continue;
-					}
-					if(JSDocumentationUtils.isDeprecated(element))
-					{
-						holder.registerProblem(
-							node.getReferenceNameElement(),
-							JavaScriptLocalize.javascriptDeprecatedSymbolUsedNameMessage().get(),
-							ProblemHighlightType.LIKE_DEPRECATED
-						);
-						break;
-					}
-				}
-			}
-		};
-	}
+    @Override
+    protected JSElementVisitor createVisitor(final ProblemsHolder holder) {
+        return new JSElementVisitor() {
+            @Override
+            public void visitJSReferenceExpression(final JSReferenceExpression node) {
+                for (ResolveResult r : node.multiResolve(false)) {
+                    final PsiElement element = r.getElement();
+                    if ((element instanceof JSDefinitionExpression && element.getParent() instanceof JSAssignmentExpression) || element == node.getParent()) {
+                        continue;
+                    }
+                    if (JSDocumentationUtils.isDeprecated(element)) {
+                        holder.registerProblem(
+                            node.getReferenceNameElement(),
+                            JavaScriptLocalize.javascriptDeprecatedSymbolUsedNameMessage().get(),
+                            ProblemHighlightType.LIKE_DEPRECATED
+                        );
+                        break;
+                    }
+                }
+            }
+        };
+    }
 }

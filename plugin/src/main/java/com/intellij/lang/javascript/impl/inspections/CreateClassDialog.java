@@ -31,67 +31,58 @@ import javax.swing.event.DocumentEvent;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jun 9, 2008
- *         Time: 7:36:22 PM
+ * Date: Jun 9, 2008
+ * Time: 7:36:22 PM
  */
-class CreateClassDialog extends DialogWrapper
-{
-	private JPanel myPanel;
-	private JTextField myPackageName;
-	private JLabel myClassName;
+class CreateClassDialog extends DialogWrapper {
+    private JPanel myPanel;
+    private JTextField myPackageName;
+    private JLabel myClassName;
 
-	protected CreateClassDialog(final Project project, String className, String packageName, boolean isInterface)
-	{
-		super(project, false);
+    protected CreateClassDialog(final Project project, String className, String packageName, boolean isInterface) {
+        super(project, false);
 
-		setTitle(isInterface ? JavaScriptLocalize.createInterfaceDialogTitle() : JavaScriptLocalize.createClassDialogTitle());
-		setModal(true);
+        setTitle(isInterface ? JavaScriptLocalize.createInterfaceDialogTitle() : JavaScriptLocalize.createClassDialogTitle());
+        setModal(true);
 
-		myPackageName.getDocument().addDocumentListener(new DocumentAdapter()
-		{
-			@Override
-			protected void textChanged(final DocumentEvent e)
-			{
-				String text = getPackageName();
-				boolean enabled;
-				if(text.length() == 0)
-				{
-					enabled = true;
-				}
-				else
-				{
-					ASTNode node = JSChangeUtil.createJSTreeFromText(project, text);
-					PsiElement elt;
-					enabled = node != null &&
-							(elt = node.getPsi()) instanceof JSExpressionStatement &&
-							(elt = ((JSExpressionStatement) elt).getExpression()) instanceof JSReferenceExpression &&
-							((JSReferenceExpression) elt).getReferencedName() != null &&
-							elt.textMatches(text);
-				}
-				getOKAction().setEnabled(enabled);
-			}
-		});
+        myPackageName.getDocument().addDocumentListener(new DocumentAdapter() {
+            @Override
+            protected void textChanged(final DocumentEvent e) {
+                String text = getPackageName();
+                boolean enabled;
+                if (text.length() == 0) {
+                    enabled = true;
+                }
+                else {
+                    ASTNode node = JSChangeUtil.createJSTreeFromText(project, text);
+                    PsiElement elt;
+                    enabled = node != null &&
+                        (elt = node.getPsi()) instanceof JSExpressionStatement &&
+                        (elt = ((JSExpressionStatement)elt).getExpression()) instanceof JSReferenceExpression &&
+                        ((JSReferenceExpression)elt).getReferencedName() != null &&
+                        elt.textMatches(text);
+                }
+                getOKAction().setEnabled(enabled);
+            }
+        });
 
-		myClassName.setText(className);
-		myPackageName.setText(packageName);
+        myClassName.setText(className);
+        myPackageName.setText(packageName);
 
-		init();
-	}
+        init();
+    }
 
-	@Override
-	protected JComponent createCenterPanel()
-	{
-		return myPanel;
-	}
+    @Override
+    protected JComponent createCenterPanel() {
+        return myPanel;
+    }
 
-	@Override
-	public JComponent getPreferredFocusedComponent()
-	{
-		return myPackageName;
-	}
+    @Override
+    public JComponent getPreferredFocusedComponent() {
+        return myPackageName;
+    }
 
-	String getPackageName()
-	{
-		return myPackageName.getText();
-	}
+    String getPackageName() {
+        return myPackageName.getText();
+    }
 }

@@ -50,451 +50,400 @@ import java.util.Set;
  * @author Maxim.Mossienko
  */
 @ExtensionImpl
-public class JSUnresolvedVariableInspection extends JSInspection
-{
-	@NonNls
-	private static final String SHORT_NAME = "JSUnresolvedVariable";
+public class JSUnresolvedVariableInspection extends JSInspection {
+    @NonNls
+    private static final String SHORT_NAME = "JSUnresolvedVariable";
 
-	@Override
-	@Nonnull
-	public String getGroupDisplayName()
-	{
-		return "General";
-	}
+    @Override
+    @Nonnull
+    public String getGroupDisplayName() {
+        return "General";
+    }
 
-	@Override
-	@Nonnull
-	public String getDisplayName()
-	{
-		return JavaScriptLocalize.jsUnresolvedVariableInspectionName().get();
-	}
+    @Override
+    @Nonnull
+    public String getDisplayName() {
+        return JavaScriptLocalize.jsUnresolvedVariableInspectionName().get();
+    }
 
-	@Override
-	@Nonnull
-	@NonNls
-	public String getShortName()
-	{
-		return SHORT_NAME;
-	}
+    @Override
+    @Nonnull
+    @NonNls
+    public String getShortName() {
+        return SHORT_NAME;
+    }
 
-	@Override
-	protected JSElementVisitor createVisitor(final ProblemsHolder holder)
-	{
-		return new JSElementVisitor()
-		{
-			@Override
-			public void visitJSReferenceExpression(final JSReferenceExpression node)
-			{
-				final PsiElement parentElement = node.getParent();
+    @Override
+    protected JSElementVisitor createVisitor(final ProblemsHolder holder) {
+        return new JSElementVisitor() {
+            @Override
+            public void visitJSReferenceExpression(final JSReferenceExpression node) {
+                final PsiElement parentElement = node.getParent();
 
-				if(node.shouldCheckReferences() && !(parentElement instanceof JSCallExpression))
-				{
-					final ResolveResult[] resolveResults = node.multiResolve(false);
-					boolean emptyResolve = resolveResults.length == 0;
-					boolean noCompleteResolve = true;
+                if (node.shouldCheckReferences() && !(parentElement instanceof JSCallExpression)) {
+                    final ResolveResult[] resolveResults = node.multiResolve(false);
+                    boolean emptyResolve = resolveResults.length == 0;
+                    boolean noCompleteResolve = true;
 
-					for(ResolveResult r : resolveResults)
-					{
-						if(r.isValidResult())
-						{
-							noCompleteResolve = false;
-							break;
-						}
-					}
+                    for (ResolveResult r : resolveResults) {
+                        if (r.isValidResult()) {
+                            noCompleteResolve = false;
+                            break;
+                        }
+                    }
 
-					if(emptyResolve || noCompleteResolve)
-					{
-						final PsiElement nameIdentifier = node.getReferenceNameElement();
+                    if (emptyResolve || noCompleteResolve) {
+                        final PsiElement nameIdentifier = node.getReferenceNameElement();
 
-						if(nameIdentifier != null)
-						{
-							final List<LocalQuickFix> fixes = new LinkedList<LocalQuickFix>();
-							final JSExpression qualifier = node.getQualifier();
+                        if (nameIdentifier != null) {
+                            final List<LocalQuickFix> fixes = new LinkedList<LocalQuickFix>();
+                            final JSExpression qualifier = node.getQualifier();
 
-							if(myOnTheFly)
-							{
-								final PsiFile containingFile = node.getContainingFile();
-								final boolean ecma = containingFile.getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
+                            if (myOnTheFly) {
+                                final PsiFile containingFile = node.getContainingFile();
+                                final boolean ecma = containingFile.getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
 
-								if((qualifier == null ||
-										JSUtils.isLHSExpression(qualifier) ||
-										qualifier instanceof JSThisExpression) && (!(parentElement instanceof JSDefinitionExpression) || ecma))
-								{
-									final String referencedName = node.getReferencedName();
-									boolean isField = qualifier != null;
-									JSClass contextClass = null;
+                                if ((qualifier == null ||
+                                    JSUtils.isLHSExpression(qualifier) ||
+                                    qualifier instanceof JSThisExpression) && (!(parentElement instanceof JSDefinitionExpression) || ecma)) {
+                                    final String referencedName = node.getReferencedName();
+                                    boolean isField = qualifier != null;
+                                    JSClass contextClass = null;
 
-									if(!isField && ecma)
-									{
-										contextClass = JSResolveUtil.getClassOfContext(node);
-										if(contextClass != null)
-										{
-											isField = true;
-										}
-									}
+                                    if (!isField && ecma) {
+                                        contextClass = JSResolveUtil.getClassOfContext(node);
+                                        if (contextClass != null) {
+                                            isField = true;
+                                        }
+                                    }
 
-									if(!JSResolveUtil.isExprInTypeContext(node))
-									{
-										if(node.getParent() instanceof JSArgumentList)
-										{
-											fixes.add(new CreateJSFunctionOrMethodFix(referencedName, !(qualifier == null || (qualifier instanceof
-													JSThisExpression && ecma)))
-											{
-												@Override
-												protected void addParameters(Template template, JSReferenceExpression referenceExpression, PsiFile file, Set<JavaScriptFeature> features)
-												{
-													JSExpression method = ((JSCallExpression) referenceExpression.getParent().getParent()).getMethodExpression();
-													if(method instanceof JSReferenceExpression && "bindSetter".equals(((JSReferenceExpression) method).getReferencedName()))
-													{
-														MyExpression expression = new MyExpression("value");
-														template.addVariable("value", expression, expression, false);
-														if(ecma)
-														{
-															template.addTextSegment(":int");
-														}
-													}
-												}
+                                    if (!JSResolveUtil.isExprInTypeContext(node)) {
+                                        if (node.getParent() instanceof JSArgumentList) {
+                                            fixes.add(new CreateJSFunctionOrMethodFix(
+                                                referencedName,
+                                                !(qualifier == null || (qualifier instanceof
+                                                    JSThisExpression && ecma))
+                                            ) {
+                                                @Override
+                                                protected void addParameters(
+                                                    Template template,
+                                                    JSReferenceExpression referenceExpression,
+                                                    PsiFile file,
+                                                    Set<JavaScriptFeature> features
+                                                ) {
+                                                    JSExpression method = ((JSCallExpression)referenceExpression.getParent()
+                                                        .getParent()).getMethodExpression();
+                                                    if (method instanceof JSReferenceExpression && "bindSetter".equals(((JSReferenceExpression)method).getReferencedName())) {
+                                                        MyExpression expression = new MyExpression("value");
+                                                        template.addVariable("value", expression, expression, false);
+                                                        if (ecma) {
+                                                            template.addTextSegment(":int");
+                                                        }
+                                                    }
+                                                }
 
-												@Override
-												protected void addReturnType(Template template, JSReferenceExpression referenceExpression, PsiFile file)
-												{
-													template.addTextSegment("void");
-												}
-											});
-										}
+                                                @Override
+                                                protected void addReturnType(
+                                                    Template template,
+                                                    JSReferenceExpression referenceExpression,
+                                                    PsiFile file
+                                                ) {
+                                                    template.addTextSegment("void");
+                                                }
+                                            });
+                                        }
 
-										boolean suggestCreateVar = true;
+                                        boolean suggestCreateVar = true;
 
-										JSClass targetClass = contextClass;
+                                        JSClass targetClass = contextClass;
 
-										if(qualifier instanceof JSReferenceExpression)
-										{
-											final JSClass clazz = JSResolveUtil.findClassOfQualifier(qualifier, containingFile);
-											if(clazz != null)
-											{
-												targetClass = clazz;
-											}
-										}
+                                        if (qualifier instanceof JSReferenceExpression) {
+                                            final JSClass clazz = JSResolveUtil.findClassOfQualifier(qualifier, containingFile);
+                                            if (clazz != null) {
+                                                targetClass = clazz;
+                                            }
+                                        }
 
-										if(targetClass != null)
-										{
-											suggestCreateVar = !targetClass.isInterface();
-										}
+                                        if (targetClass != null) {
+                                            suggestCreateVar = !targetClass.isInterface();
+                                        }
 
-										if(suggestCreateVar)
-										{
-											fixes.add(new CreateJSVariableIntentionAction(referencedName, isField, false));
+                                        if (suggestCreateVar) {
+                                            fixes.add(new CreateJSVariableIntentionAction(referencedName, isField, false));
 
-											if(ecma)
-											{
-												fixes.add(new CreateJSVariableIntentionAction(referencedName, isField, true));
-											}
-										}
+                                            if (ecma) {
+                                                fixes.add(new CreateJSVariableIntentionAction(referencedName, isField, true));
+                                            }
+                                        }
 
-										if(ecma)
-										{
-											boolean getter = !(node.getParent() instanceof JSDefinitionExpression);
-											String invokedName = nameIdentifier.getText();
-											fixes.add(new CreateJSPropertyAccessorIntentionAction(invokedName, getter));
-											JSCallExpression expression = PsiTreeUtil.getParentOfType(node, JSCallExpression.class);
+                                        if (ecma) {
+                                            boolean getter = !(node.getParent() instanceof JSDefinitionExpression);
+                                            String invokedName = nameIdentifier.getText();
+                                            fixes.add(new CreateJSPropertyAccessorIntentionAction(invokedName, getter));
+                                            JSCallExpression expression = PsiTreeUtil.getParentOfType(node, JSCallExpression.class);
 
-											if(expression != null)
-											{
-												final JSExpression methodExpression = expression.getMethodExpression();
+                                            if (expression != null) {
+                                                final JSExpression methodExpression = expression.getMethodExpression();
 
-												if(methodExpression instanceof JSReferenceExpression)
-												{
-													final String methodName = ((JSReferenceExpression) methodExpression).getReferencedName();
+                                                if (methodExpression instanceof JSReferenceExpression) {
+                                                    final String methodName = ((JSReferenceExpression)methodExpression).getReferencedName();
 
-													if("addEventListener".equals(methodName) || "removeEventListener".equals(methodName))
-													{
-														final JSArgumentList argumentList = expression.getArgumentList();
-														final JSExpression[] params = argumentList != null ? argumentList.getArguments() : JSExpression.EMPTY_ARRAY;
+                                                    if ("addEventListener".equals(methodName) || "removeEventListener".equals(methodName)) {
+                                                        final JSArgumentList argumentList = expression.getArgumentList();
+                                                        final JSExpression[] params =
+                                                            argumentList != null ? argumentList.getArguments() : JSExpression.EMPTY_ARRAY;
 
-														if(params.length >= 2 && params[0] instanceof JSReferenceExpression)
-														{
-															final JSExpression eventNameQualifier = ((JSReferenceExpression) params[0]).getQualifier();
-															if(eventNameQualifier != null)
-															{
-																fixes.add(new CreateJSEventMethod(invokedName, eventNameQualifier));
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-									if(qualifier != null && !ecma)
-									{
-										fixes.add(new CreateJSNamespaceIntentionAction(referencedName));
-									}
+                                                        if (params.length >= 2 && params[0] instanceof JSReferenceExpression) {
+                                                            final JSExpression eventNameQualifier =
+                                                                ((JSReferenceExpression)params[0]).getQualifier();
+                                                            if (eventNameQualifier != null) {
+                                                                fixes.add(new CreateJSEventMethod(invokedName, eventNameQualifier));
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if (qualifier != null && !ecma) {
+                                        fixes.add(new CreateJSNamespaceIntentionAction(referencedName));
+                                    }
 
-									if(ecma)
-									{
-										if(qualifier == null)
-										{
-											fixes.add(new AddImportECMAScriptClassOrFunctionAction(null, node));
-											fixes.add(new CreateClassOrInterfaceAction(node, false));
-											fixes.add(new CreateClassOrInterfaceAction(node, true));
-										}
-										else
-										{
-											fixes.add(new AddImportECMAScriptClassOrFunctionAction(null, node));
-										}
-									}
-								}
-							}
+                                    if (ecma) {
+                                        if (qualifier == null) {
+                                            fixes.add(new AddImportECMAScriptClassOrFunctionAction(null, node));
+                                            fixes.add(new CreateClassOrInterfaceAction(node, false));
+                                            fixes.add(new CreateClassOrInterfaceAction(node, true));
+                                        }
+                                        else {
+                                            fixes.add(new AddImportECMAScriptClassOrFunctionAction(null, node));
+                                        }
+                                    }
+                                }
+                            }
 
-							final LocalizeValue message = node.getQualifier() == null
-								? JSResolveUtil.isExprInTypeContext(node)
-								? JavaScriptLocalize.javascriptUnresolvedTypeNameMessage(node.getReferencedName())
-								: JavaScriptLocalize.javascriptUnresolvedVariableOrTypeNameMessage(node.getReferencedName())
-								: JavaScriptLocalize.javascriptUnresolvedVariableNameMessage(node.getReferencedName());
+                            final LocalizeValue message = node.getQualifier() == null
+                                ? JSResolveUtil.isExprInTypeContext(node)
+                                ? JavaScriptLocalize.javascriptUnresolvedTypeNameMessage(node.getReferencedName())
+                                : JavaScriptLocalize.javascriptUnresolvedVariableOrTypeNameMessage(node.getReferencedName())
+                                : JavaScriptLocalize.javascriptUnresolvedVariableNameMessage(node.getReferencedName());
 
-							holder.registerProblem(
-								nameIdentifier,
-								message.get(),
-								JSUnresolvedFunctionInspection.getUnresolveReferenceHighlightType(qualifier, node),
-								fixes.size() > 0 ? fixes.toArray(new LocalQuickFix[fixes.size()]) : null
-							);
-						}
-					}
-				}
-				super.visitJSReferenceExpression(node);
-			}
-		};
-	}
+                            holder.registerProblem(
+                                nameIdentifier,
+                                message.get(),
+                                JSUnresolvedFunctionInspection.getUnresolveReferenceHighlightType(qualifier, node),
+                                fixes.size() > 0 ? fixes.toArray(new LocalQuickFix[fixes.size()]) : null
+                            );
+                        }
+                    }
+                }
+                super.visitJSReferenceExpression(node);
+            }
+        };
+    }
 
-	private abstract static class BaseCreateJSVariableIntentionAction extends BaseCreateFix
-	{
-		protected final String myReferencedName;
+    private abstract static class BaseCreateJSVariableIntentionAction extends BaseCreateFix {
+        protected final String myReferencedName;
 
-		BaseCreateJSVariableIntentionAction(String referencedName)
-		{
-			myReferencedName = referencedName;
-		}
+        BaseCreateJSVariableIntentionAction(String referencedName) {
+            myReferencedName = referencedName;
+        }
 
-		@Override
-		@Nonnull
-		public String getFamilyName()
-		{
-			return JavaScriptLocalize.javascriptCreateVariableIntentionFamily().get();
-		}
-	}
+        @Override
+        @Nonnull
+        public String getFamilyName() {
+            return JavaScriptLocalize.javascriptCreateVariableIntentionFamily().get();
+        }
+    }
 
-	private static class CreateJSNamespaceIntentionAction extends BaseCreateJSVariableIntentionAction
-	{
-		CreateJSNamespaceIntentionAction(String referencedName)
-		{
-			super(referencedName);
-		}
+    private static class CreateJSNamespaceIntentionAction extends BaseCreateJSVariableIntentionAction {
+        CreateJSNamespaceIntentionAction(String referencedName) {
+            super(referencedName);
+        }
 
-		@Override
-		@Nonnull
-		public String getName()
-		{
-			return JavaScriptLocalize.javascriptCreateNamespaceIntentionName(myReferencedName).get();
-		}
+        @Override
+        @Nonnull
+        public String getName() {
+            return JavaScriptLocalize.javascriptCreateNamespaceIntentionName(myReferencedName).get();
+        }
 
-		@RequiredReadAction
-		@Override
-		protected void buildTemplate(final Template template, final JSReferenceExpression referenceExpression, final Set<JavaScriptFeature> features, boolean staticContext,
-									 final PsiFile file, final PsiElement anchorParent)
-		{
-			template.addTextSegment("/** @namespace ");
-			template.addTextSegment(referenceExpression.getText() + " */");
-			template.addEndVariable();
-		}
-	}
+        @RequiredReadAction
+        @Override
+        protected void buildTemplate(
+            final Template template,
+            final JSReferenceExpression referenceExpression,
+            final Set<JavaScriptFeature> features,
+            boolean staticContext,
+            final PsiFile file,
+            final PsiElement anchorParent
+        ) {
+            template.addTextSegment("/** @namespace ");
+            template.addTextSegment(referenceExpression.getText() + " */");
+            template.addEndVariable();
+        }
+    }
 
-	private static class CreateJSVariableIntentionAction extends BaseCreateJSVariableIntentionAction
-	{
-		@NonNls
-		private static final String VAR_STATEMENT_START = "var ";
-		@NonNls
-		private static final String CONSTANT_STATEMENT_START = "const ";
-		private boolean isField;
-		private boolean isConstant;
+    private static class CreateJSVariableIntentionAction extends BaseCreateJSVariableIntentionAction {
+        @NonNls
+        private static final String VAR_STATEMENT_START = "var ";
+        @NonNls
+        private static final String CONSTANT_STATEMENT_START = "const ";
+        private boolean isField;
+        private boolean isConstant;
 
-		CreateJSVariableIntentionAction(String referencedName, boolean isField, boolean isConstant)
-		{
-			super(referencedName);
-			this.isField = isField;
-			this.isConstant = isConstant;
-		}
+        CreateJSVariableIntentionAction(String referencedName, boolean isField, boolean isConstant) {
+            super(referencedName);
+            this.isField = isField;
+            this.isConstant = isConstant;
+        }
 
-		@Override
-		@Nonnull
-		public String getName()
-		{
-			return isField
-				? isConstant
-				? JavaScriptLocalize.javascriptCreateConstantFieldIntentionName(myReferencedName).get()
-				: JavaScriptLocalize.javascriptCreatePropertyIntentionName(myReferencedName).get()
-				: isConstant
-				? JavaScriptLocalize.javascriptCreateConstantIntentionName(myReferencedName).get()
-				: JavaScriptLocalize.javascriptCreateVariableIntentionName(myReferencedName).get();
-		}
+        @Override
+        @Nonnull
+        public String getName() {
+            return isField
+                ? isConstant
+                ? JavaScriptLocalize.javascriptCreateConstantFieldIntentionName(myReferencedName).get()
+                : JavaScriptLocalize.javascriptCreatePropertyIntentionName(myReferencedName).get()
+                : isConstant
+                ? JavaScriptLocalize.javascriptCreateConstantIntentionName(myReferencedName).get()
+                : JavaScriptLocalize.javascriptCreateVariableIntentionName(myReferencedName).get();
+        }
 
-		@RequiredReadAction
-		@Override
-    protected void buildTemplate(
-			final Template template,
-			final JSReferenceExpression referenceExpression,
-			final Set<JavaScriptFeature> features,
-			boolean staticContext,
-			final PsiFile file,
-			final PsiElement anchorParent
-		)
-		{
-			boolean classFeature = features.contains(JavaScriptFeature.CLASS);
+        @RequiredReadAction
+        @Override
+        protected void buildTemplate(
+            final Template template,
+            final JSReferenceExpression referenceExpression,
+            final Set<JavaScriptFeature> features,
+            boolean staticContext,
+            final PsiFile file,
+            final PsiElement anchorParent
+        ) {
+            boolean classFeature = features.contains(JavaScriptFeature.CLASS);
 
-			final JSExpression qualifier = addAccessModifier(template, referenceExpression, classFeature, staticContext);
-			if(qualifier == null || classFeature)
-			{
-				template.addTextSegment(isConstant ? CONSTANT_STATEMENT_START : VAR_STATEMENT_START);
-			}
+            final JSExpression qualifier = addAccessModifier(template, referenceExpression, classFeature, staticContext);
+            if (qualifier == null || classFeature) {
+                template.addTextSegment(isConstant ? CONSTANT_STATEMENT_START : VAR_STATEMENT_START);
+            }
 
-			template.addTextSegment(classFeature ? referenceExpression.getReferencedName() : referenceExpression.getText());
-			template.addEndVariable();
-			if(classFeature)
-			{
-				template.addTextSegment(":");
-			}
-			else
-			{
-				template.addTextSegment(" = ");
-			}
+            template.addTextSegment(classFeature ? referenceExpression.getReferencedName() : referenceExpression.getText());
+            template.addEndVariable();
+            if (classFeature) {
+                template.addTextSegment(":");
+            }
+            else {
+                template.addTextSegment(" = ");
+            }
 
-			if(classFeature)
-			{
-				guessTypeAndAddTemplateVariable(template, referenceExpression, file);
-				if(isConstant)
-				{
-					template.addTextSegment(" = ");
-					addCompletionVar(template);
-				}
-			}
-			else
-			{
-				addCompletionVar(template);
-			}
-			addSemicolonSegment(template, file);
-		}
+            if (classFeature) {
+                guessTypeAndAddTemplateVariable(template, referenceExpression, file);
+                if (isConstant) {
+                    template.addTextSegment(" = ");
+                    addCompletionVar(template);
+                }
+            }
+            else {
+                addCompletionVar(template);
+            }
+            addSemicolonSegment(template, file);
+        }
 
-	}
+    }
 
-	private static class CreateJSPropertyAccessorIntentionAction extends CreateJSFunctionFixBase
-	{
-		private final boolean myIsGetter;
+    private static class CreateJSPropertyAccessorIntentionAction extends CreateJSFunctionFixBase {
+        private final boolean myIsGetter;
 
-		public CreateJSPropertyAccessorIntentionAction(String name, boolean getter)
-		{
-			super(
-				getter
-					? JavaScriptLocalize.javascriptCreateGetPropertyIntentionName(name)
-					: JavaScriptLocalize.javascriptCreateSetPropertyIntentionName(name)
-			);
-			myIsGetter = getter;
-		}
+        public CreateJSPropertyAccessorIntentionAction(String name, boolean getter) {
+            super(
+                getter
+                    ? JavaScriptLocalize.javascriptCreateGetPropertyIntentionName(name)
+                    : JavaScriptLocalize.javascriptCreateSetPropertyIntentionName(name)
+            );
+            myIsGetter = getter;
+        }
 
-		@Override
-		protected void writeFunctionAndName(Template template, String referencedName, Set<JavaScriptFeature> features)
-		{
-			template.addTextSegment("function ");
-			template.addTextSegment(myIsGetter ? "get " : "set ");
-			template.addTextSegment(referencedName);
-		}
+        @Override
+        protected void writeFunctionAndName(Template template, String referencedName, Set<JavaScriptFeature> features) {
+            template.addTextSegment("function ");
+            template.addTextSegment(myIsGetter ? "get " : "set ");
+            template.addTextSegment(referencedName);
+        }
 
-		@Override
-		protected void addParameters(Template template, JSReferenceExpression refExpr, PsiFile file, Set<JavaScriptFeature> features)
-		{
-			if(!myIsGetter)
-			{
-				template.addTextSegment(refExpr.getReferencedName() + ":");
-				guessTypeAndAddTemplateVariable(template, refExpr, file);
-			}
-		}
+        @Override
+        protected void addParameters(Template template, JSReferenceExpression refExpr, PsiFile file, Set<JavaScriptFeature> features) {
+            if (!myIsGetter) {
+                template.addTextSegment(refExpr.getReferencedName() + ":");
+                guessTypeAndAddTemplateVariable(template, refExpr, file);
+            }
+        }
 
-		@Override
-		protected void addReturnType(Template template, JSReferenceExpression referenceExpression, PsiFile file)
-		{
-			if(myIsGetter)
-			{
-				guessTypeAndAddTemplateVariable(template, referenceExpression, file);
-			}
-			else
-			{
-				template.addTextSegment("void");
-			}
-		}
+        @Override
+        protected void addReturnType(Template template, JSReferenceExpression referenceExpression, PsiFile file) {
+            if (myIsGetter) {
+                guessTypeAndAddTemplateVariable(template, referenceExpression, file);
+            }
+            else {
+                template.addTextSegment("void");
+            }
+        }
 
-		@Override
-		protected void addBody(Template template, JSReferenceExpression refExpr, PsiFile file)
-		{
-			String varName = refExpr.getReferencedName();
-			String paramName = varName;
-			JSCodeStyleSettings settings = CodeStyleSettingsManager.getInstance(file.getProject()).getCurrentSettings().getCustomSettings(JSCodeStyleSettings
-					.class);
-			varName = settings.FIELD_PREFIX + varName;
+        @Override
+        protected void addBody(Template template, JSReferenceExpression refExpr, PsiFile file) {
+            String varName = refExpr.getReferencedName();
+            String paramName = varName;
+            JSCodeStyleSettings settings =
+                CodeStyleSettingsManager.getInstance(file.getProject()).getCurrentSettings().getCustomSettings(JSCodeStyleSettings
+                    .class);
+            varName = settings.FIELD_PREFIX + varName;
 
-			if(varName.equals(paramName))
-			{
-				varName = StringUtil.fixVariableNameDerivedFromPropertyName(varName);
-			}
+            if (varName.equals(paramName)) {
+                varName = StringUtil.fixVariableNameDerivedFromPropertyName(varName);
+            }
 
-			if(myIsGetter)
-			{
-				template.addTextSegment("return ");
+            if (myIsGetter) {
+                template.addTextSegment("return ");
 
-				addVarName(template, varName);
-				template.addEndVariable();
-			}
-			else
-			{
-				addVarName(template, varName);
-				template.addEndVariable();
-				template.addTextSegment(" = " + paramName);
-			}
-			addSemicolonSegment(template, file);
-		}
+                addVarName(template, varName);
+                template.addEndVariable();
+            }
+            else {
+                addVarName(template, varName);
+                template.addEndVariable();
+                template.addTextSegment(" = " + paramName);
+            }
+            addSemicolonSegment(template, file);
+        }
 
-		private static void addVarName(Template template, String varName)
-		{
-			MyExpression expression = new MyExpression(varName);
-			template.addVariable("name", expression, expression, true);
-		}
+        private static void addVarName(Template template, String varName) {
+            MyExpression expression = new MyExpression(varName);
+            template.addVariable("name", expression, expression, true);
+        }
 
-	}
+    }
 
-	private static class CreateJSEventMethod extends CreateJSFunctionFixBase
-	{
-		private JSExpression myEventQualifier;
+    private static class CreateJSEventMethod extends CreateJSFunctionFixBase {
+        private JSExpression myEventQualifier;
 
-		public CreateJSEventMethod(String invokedName, JSExpression eventNameQualifier)
-		{
-			super(JavaScriptLocalize.javascriptCreateEventHandlerIntentionName(invokedName));
-			myEventQualifier = eventNameQualifier;
-		}
+        public CreateJSEventMethod(String invokedName, JSExpression eventNameQualifier) {
+            super(JavaScriptLocalize.javascriptCreateEventHandlerIntentionName(invokedName));
+            myEventQualifier = eventNameQualifier;
+        }
 
 
-		@Override
-		protected void addParameters(Template template, JSReferenceExpression refExpr, PsiFile file, Set<JavaScriptFeature> features)
-		{
-			template.addTextSegment("event:");
-			template.addTextSegment(myEventQualifier.getText());
-		}
+        @Override
+        protected void addParameters(Template template, JSReferenceExpression refExpr, PsiFile file, Set<JavaScriptFeature> features) {
+            template.addTextSegment("event:");
+            template.addTextSegment(myEventQualifier.getText());
+        }
 
-		@Override
-		protected void addReturnType(Template template, JSReferenceExpression referenceExpression, PsiFile psifile)
-		{
-			template.addTextSegment("void");
-		}
+        @Override
+        protected void addReturnType(Template template, JSReferenceExpression referenceExpression, PsiFile psifile) {
+            template.addTextSegment("void");
+        }
 
-		@Override
-		protected void addBody(Template template, JSReferenceExpression refExpr, PsiFile file)
-		{
-			template.addEndVariable();
-		}
-	}
+        @Override
+        protected void addBody(Template template, JSReferenceExpression refExpr, PsiFile file) {
+            template.addEndVariable();
+        }
+    }
 }
