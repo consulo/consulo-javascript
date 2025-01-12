@@ -26,12 +26,10 @@ import consulo.language.psi.stub.StubIndexKey;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-public class JSQualifiedElementIndex extends StringStubIndexExtension<JSQualifiedNamedElement>
-{
-	@Nonnull
-	@Override
-	public StubIndexKey<String, JSQualifiedNamedElement> getKey()
-	{
-		return JavaScriptIndexKeys.ELEMENTS_BY_QNAME;
-	}
+public class JSQualifiedElementIndex extends StringStubIndexExtension<JSQualifiedNamedElement> {
+    @Nonnull
+    @Override
+    public StubIndexKey<String, JSQualifiedNamedElement> getKey() {
+        return JavaScriptIndexKeys.ELEMENTS_BY_QNAME;
+    }
 }

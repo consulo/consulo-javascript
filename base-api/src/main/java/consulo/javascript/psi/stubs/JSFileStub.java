@@ -9,8 +9,7 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 19.07.2015
  */
-public interface JSFileStub extends PsiFileStub<JSFile>
-{
-	@Nonnull
-	String getName();
+public interface JSFileStub extends PsiFileStub<JSFile> {
+    @Nonnull
+    String getName();
 }

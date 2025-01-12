@@ -23,12 +23,10 @@ import consulo.language.psi.stub.StubIndexKey;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-public class JSSuperClassIndex extends StringStubIndexExtension<JSReferenceList>
-{
-	@Nonnull
-	@Override
-	public StubIndexKey<String, JSReferenceList> getKey()
-	{
-		return JavaScriptIndexKeys.EXTENDS_INDEX;
-	}
+public class JSSuperClassIndex extends StringStubIndexExtension<JSReferenceList> {
+    @Nonnull
+    @Override
+    public StubIndexKey<String, JSReferenceList> getKey() {
+        return JavaScriptIndexKeys.EXTENDS_INDEX;
+    }
 }

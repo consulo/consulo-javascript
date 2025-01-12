@@ -12,16 +12,13 @@ import jakarta.annotation.Nonnull;
  * @since 19.07.2015
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class JavaScriptIndexer
-{
-	public static final ExtensionPointName<JavaScriptIndexer> EP_NAME = ExtensionPointName.create(JavaScriptIndexer.class);
+public abstract class JavaScriptIndexer {
+    public static final ExtensionPointName<JavaScriptIndexer> EP_NAME = ExtensionPointName.create(JavaScriptIndexer.class);
 
-	public void indexFile(@Nonnull JSFileStub fileStub, @Nonnull final IndexSink sink)
-	{
-	}
+    public void indexFile(@Nonnull JSFileStub fileStub, @Nonnull final IndexSink sink) {
+    }
 
-	public int getVersion()
-	{
-		return 0;
-	}
+    public int getVersion() {
+        return 0;
+    }
 }

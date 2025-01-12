@@ -23,8 +23,7 @@ import com.intellij.lang.javascript.psi.JSElement;
  * @author VISTALL
  * @since 29.02.2016
  */
-public interface JavaScriptTypeElement extends JSElement
-{
-	@Nonnull
-	JavaScriptType getType();
+public interface JavaScriptTypeElement extends JSElement {
+    @Nonnull
+    JavaScriptType getType();
 }

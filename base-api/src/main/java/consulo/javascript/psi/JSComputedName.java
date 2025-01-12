@@ -25,8 +25,7 @@ import com.intellij.lang.javascript.psi.JSExpression;
  * @author VISTALL
  * @since 03.03.2016
  */
-public interface JSComputedName extends JSElement
-{
-	@Nullable
-	JSExpression getExpression();
+public interface JSComputedName extends JSElement {
+    @Nullable
+    JSExpression getExpression();
 }

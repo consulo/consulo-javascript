@@ -8,6 +8,5 @@ import com.intellij.lang.javascript.psi.JSStatement;
  *
  * Base interface for all imports in at js implementation. Affect folding
  */
-public interface JavaScriptImportStatementBase extends JSStatement
-{
+public interface JavaScriptImportStatementBase extends JSStatement {
 }
