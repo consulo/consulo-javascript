@@ -21,39 +21,36 @@ import com.intellij.lang.javascript.psi.JSAssignmentExpression;
 import com.intellij.lang.javascript.psi.JSDefinitionExpression;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.inspection.ProblemsHolder;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.ResolveResult;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
 @ExtensionImpl
 public class JSDeprecatedSymbolsInspection extends JSInspection {
-    @NonNls
     private static final String SHORT_NAME = "JSDeprecatedSymbols";
 
-    @Override
     @Nonnull
+    @Override
     public String getGroupDisplayName() {
         return "General";
     }
 
-    @Override
     @Nonnull
+    @Override
     public String getDisplayName() {
         return JavaScriptLocalize.jsDeprecatedSymbolsInspectionName().get();
     }
 
-    @Override
     @Nonnull
-    @NonNls
+    @Override
     public String getShortName() {
         return SHORT_NAME;
     }
@@ -62,18 +59,19 @@ public class JSDeprecatedSymbolsInspection extends JSInspection {
     protected JSElementVisitor createVisitor(final ProblemsHolder holder) {
         return new JSElementVisitor() {
             @Override
-            public void visitJSReferenceExpression(final JSReferenceExpression node) {
+            @RequiredReadAction
+            public void visitJSReferenceExpression(@Nonnull JSReferenceExpression node) {
                 for (ResolveResult r : node.multiResolve(false)) {
-                    final PsiElement element = r.getElement();
-                    if ((element instanceof JSDefinitionExpression && element.getParent() instanceof JSAssignmentExpression) || element == node.getParent()) {
+                    PsiElement element = r.getElement();
+                    if (element instanceof JSDefinitionExpression definition && definition.getParent() instanceof JSAssignmentExpression
+                        || element == node.getParent()) {
                         continue;
                     }
                     if (JSDocumentationUtils.isDeprecated(element)) {
-                        holder.registerProblem(
-                            node.getReferenceNameElement(),
-                            JavaScriptLocalize.javascriptDeprecatedSymbolUsedNameMessage().get(),
-                            ProblemHighlightType.LIKE_DEPRECATED
-                        );
+                        holder.newProblem(JavaScriptLocalize.javascriptDeprecatedSymbolUsedNameMessage())
+                            .range(node.getReferenceNameElement())
+                            .highlightType(ProblemHighlightType.LIKE_DEPRECATED)
+                            .create();
                         break;
                     }
                 }

@@ -19,10 +19,11 @@ package com.intellij.lang.javascript.impl.inspections;
 import com.intellij.lang.javascript.psi.JSExpressionStatement;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.ASTNode;
-import consulo.language.psi.PsiElement;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 
@@ -31,8 +32,7 @@ import javax.swing.event.DocumentEvent;
 
 /**
  * @author Maxim.Mossienko
- * Date: Jun 9, 2008
- * Time: 7:36:22 PM
+ * @since 2008-06-09
  */
 class CreateClassDialog extends DialogWrapper {
     private JPanel myPanel;
@@ -47,7 +47,8 @@ class CreateClassDialog extends DialogWrapper {
 
         myPackageName.getDocument().addDocumentListener(new DocumentAdapter() {
             @Override
-            protected void textChanged(final DocumentEvent e) {
+            @RequiredReadAction
+            protected void textChanged(DocumentEvent e) {
                 String text = getPackageName();
                 boolean enabled;
                 if (text.length() == 0) {
@@ -55,12 +56,11 @@ class CreateClassDialog extends DialogWrapper {
                 }
                 else {
                     ASTNode node = JSChangeUtil.createJSTreeFromText(project, text);
-                    PsiElement elt;
-                    enabled = node != null &&
-                        (elt = node.getPsi()) instanceof JSExpressionStatement &&
-                        (elt = ((JSExpressionStatement)elt).getExpression()) instanceof JSReferenceExpression &&
-                        ((JSReferenceExpression)elt).getReferencedName() != null &&
-                        elt.textMatches(text);
+                    enabled = node != null
+                        && node.getPsi() instanceof JSExpressionStatement expressionStatement
+                        && expressionStatement.getExpression() instanceof JSReferenceExpression refExpr
+                        && refExpr.getReferencedName() != null
+                        && refExpr.textMatches(text);
                 }
                 getOKAction().setEnabled(enabled);
             }
@@ -78,6 +78,7 @@ class CreateClassDialog extends DialogWrapper {
     }
 
     @Override
+    @RequiredUIAccess
     public JComponent getPreferredFocusedComponent() {
         return myPackageName;
     }

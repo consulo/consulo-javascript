@@ -37,10 +37,8 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.ResolveResult;
 import consulo.language.psi.util.PsiTreeUtil;
-import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -51,24 +49,22 @@ import java.util.Set;
  */
 @ExtensionImpl
 public class JSUnresolvedVariableInspection extends JSInspection {
-    @NonNls
     private static final String SHORT_NAME = "JSUnresolvedVariable";
 
-    @Override
     @Nonnull
+    @Override
     public String getGroupDisplayName() {
         return "General";
     }
 
-    @Override
     @Nonnull
+    @Override
     public String getDisplayName() {
         return JavaScriptLocalize.jsUnresolvedVariableInspectionName().get();
     }
 
-    @Override
     @Nonnull
-    @NonNls
+    @Override
     public String getShortName() {
         return SHORT_NAME;
     }
@@ -77,11 +73,12 @@ public class JSUnresolvedVariableInspection extends JSInspection {
     protected JSElementVisitor createVisitor(final ProblemsHolder holder) {
         return new JSElementVisitor() {
             @Override
-            public void visitJSReferenceExpression(final JSReferenceExpression node) {
-                final PsiElement parentElement = node.getParent();
+            @RequiredReadAction
+            public void visitJSReferenceExpression(@Nonnull JSReferenceExpression node) {
+                PsiElement parentElement = node.getParent();
 
                 if (node.shouldCheckReferences() && !(parentElement instanceof JSCallExpression)) {
-                    final ResolveResult[] resolveResults = node.multiResolve(false);
+                    ResolveResult[] resolveResults = node.multiResolve(false);
                     boolean emptyResolve = resolveResults.length == 0;
                     boolean noCompleteResolve = true;
 
@@ -93,20 +90,19 @@ public class JSUnresolvedVariableInspection extends JSInspection {
                     }
 
                     if (emptyResolve || noCompleteResolve) {
-                        final PsiElement nameIdentifier = node.getReferenceNameElement();
+                        PsiElement nameIdentifier = node.getReferenceNameElement();
 
                         if (nameIdentifier != null) {
-                            final List<LocalQuickFix> fixes = new LinkedList<LocalQuickFix>();
-                            final JSExpression qualifier = node.getQualifier();
+                            List<LocalQuickFix> fixes = new LinkedList<>();
+                            JSExpression qualifier = node.getQualifier();
 
                             if (myOnTheFly) {
-                                final PsiFile containingFile = node.getContainingFile();
-                                final boolean ecma = containingFile.getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
+                                PsiFile containingFile = node.getContainingFile();
+                                boolean ecma = containingFile.getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
 
-                                if ((qualifier == null ||
-                                    JSUtils.isLHSExpression(qualifier) ||
-                                    qualifier instanceof JSThisExpression) && (!(parentElement instanceof JSDefinitionExpression) || ecma)) {
-                                    final String referencedName = node.getReferencedName();
+                                if ((qualifier == null || JSUtils.isLHSExpression(qualifier) || qualifier instanceof JSThisExpression)
+                                    && (!(parentElement instanceof JSDefinitionExpression) || ecma)) {
+                                    String referencedName = node.getReferencedName();
                                     boolean isField = qualifier != null;
                                     JSClass contextClass = null;
 
@@ -121,19 +117,20 @@ public class JSUnresolvedVariableInspection extends JSInspection {
                                         if (node.getParent() instanceof JSArgumentList) {
                                             fixes.add(new CreateJSFunctionOrMethodFix(
                                                 referencedName,
-                                                !(qualifier == null || (qualifier instanceof
-                                                    JSThisExpression && ecma))
+                                                !(qualifier == null || (qualifier instanceof JSThisExpression && ecma))
                                             ) {
                                                 @Override
+                                                @RequiredReadAction
                                                 protected void addParameters(
                                                     Template template,
                                                     JSReferenceExpression referenceExpression,
                                                     PsiFile file,
                                                     Set<JavaScriptFeature> features
                                                 ) {
-                                                    JSExpression method = ((JSCallExpression)referenceExpression.getParent()
-                                                        .getParent()).getMethodExpression();
-                                                    if (method instanceof JSReferenceExpression && "bindSetter".equals(((JSReferenceExpression)method).getReferencedName())) {
+                                                    JSCallExpression call = (JSCallExpression)referenceExpression.getParent().getParent();
+                                                    JSExpression method = call.getMethodExpression();
+                                                    if (method instanceof JSReferenceExpression methodRefExpr
+                                                        && "bindSetter".equals(methodRefExpr.getReferencedName())) {
                                                         MyExpression expression = new MyExpression("value");
                                                         template.addVariable("value", expression, expression, false);
                                                         if (ecma) {
@@ -143,6 +140,7 @@ public class JSUnresolvedVariableInspection extends JSInspection {
                                                 }
 
                                                 @Override
+                                                @RequiredReadAction
                                                 protected void addReturnType(
                                                     Template template,
                                                     JSReferenceExpression referenceExpression,
@@ -158,7 +156,7 @@ public class JSUnresolvedVariableInspection extends JSInspection {
                                         JSClass targetClass = contextClass;
 
                                         if (qualifier instanceof JSReferenceExpression) {
-                                            final JSClass clazz = JSResolveUtil.findClassOfQualifier(qualifier, containingFile);
+                                            JSClass clazz = JSResolveUtil.findClassOfQualifier(qualifier, containingFile);
                                             if (clazz != null) {
                                                 targetClass = clazz;
                                             }
@@ -183,19 +181,18 @@ public class JSUnresolvedVariableInspection extends JSInspection {
                                             JSCallExpression expression = PsiTreeUtil.getParentOfType(node, JSCallExpression.class);
 
                                             if (expression != null) {
-                                                final JSExpression methodExpression = expression.getMethodExpression();
+                                                JSExpression methodExpression = expression.getMethodExpression();
 
-                                                if (methodExpression instanceof JSReferenceExpression) {
-                                                    final String methodName = ((JSReferenceExpression)methodExpression).getReferencedName();
+                                                if (methodExpression instanceof JSReferenceExpression methodRefExpr) {
+                                                    String methodName = methodRefExpr.getReferencedName();
 
                                                     if ("addEventListener".equals(methodName) || "removeEventListener".equals(methodName)) {
-                                                        final JSArgumentList argumentList = expression.getArgumentList();
-                                                        final JSExpression[] params =
+                                                        JSArgumentList argumentList = expression.getArgumentList();
+                                                        JSExpression[] params =
                                                             argumentList != null ? argumentList.getArguments() : JSExpression.EMPTY_ARRAY;
 
-                                                        if (params.length >= 2 && params[0] instanceof JSReferenceExpression) {
-                                                            final JSExpression eventNameQualifier =
-                                                                ((JSReferenceExpression)params[0]).getQualifier();
+                                                        if (params.length >= 2 && params[0] instanceof JSReferenceExpression paramRefExpr) {
+                                                            JSExpression eventNameQualifier = paramRefExpr.getQualifier();
                                                             if (eventNameQualifier != null) {
                                                                 fixes.add(new CreateJSEventMethod(invokedName, eventNameQualifier));
                                                             }
@@ -222,18 +219,17 @@ public class JSUnresolvedVariableInspection extends JSInspection {
                                 }
                             }
 
-                            final LocalizeValue message = node.getQualifier() == null
-                                ? JSResolveUtil.isExprInTypeContext(node)
-                                ? JavaScriptLocalize.javascriptUnresolvedTypeNameMessage(node.getReferencedName())
-                                : JavaScriptLocalize.javascriptUnresolvedVariableOrTypeNameMessage(node.getReferencedName())
-                                : JavaScriptLocalize.javascriptUnresolvedVariableNameMessage(node.getReferencedName());
-
-                            holder.registerProblem(
-                                nameIdentifier,
-                                message.get(),
-                                JSUnresolvedFunctionInspection.getUnresolveReferenceHighlightType(qualifier, node),
-                                fixes.size() > 0 ? fixes.toArray(new LocalQuickFix[fixes.size()]) : null
-                            );
+                            holder.newProblem(
+                                    node.getQualifier() == null
+                                        ? JSResolveUtil.isExprInTypeContext(node)
+                                        ? JavaScriptLocalize.javascriptUnresolvedTypeNameMessage(node.getReferencedName())
+                                        : JavaScriptLocalize.javascriptUnresolvedVariableOrTypeNameMessage(node.getReferencedName())
+                                        : JavaScriptLocalize.javascriptUnresolvedVariableNameMessage(node.getReferencedName())
+                                )
+                                .range(nameIdentifier)
+                                .highlightType(JSUnresolvedFunctionInspection.getUnresolveReferenceHighlightType(qualifier, node))
+                                .withFixes(fixes.size() > 0 ? fixes.toArray(new LocalQuickFix[fixes.size()]) : null)
+                                .create();
                         }
                     }
                 }
@@ -270,12 +266,12 @@ public class JSUnresolvedVariableInspection extends JSInspection {
         @RequiredReadAction
         @Override
         protected void buildTemplate(
-            final Template template,
-            final JSReferenceExpression referenceExpression,
-            final Set<JavaScriptFeature> features,
+            Template template,
+            JSReferenceExpression referenceExpression,
+            Set<JavaScriptFeature> features,
             boolean staticContext,
-            final PsiFile file,
-            final PsiElement anchorParent
+            PsiFile file,
+            PsiElement anchorParent
         ) {
             template.addTextSegment("/** @namespace ");
             template.addTextSegment(referenceExpression.getText() + " */");
@@ -284,9 +280,7 @@ public class JSUnresolvedVariableInspection extends JSInspection {
     }
 
     private static class CreateJSVariableIntentionAction extends BaseCreateJSVariableIntentionAction {
-        @NonNls
         private static final String VAR_STATEMENT_START = "var ";
-        @NonNls
         private static final String CONSTANT_STATEMENT_START = "const ";
         private boolean isField;
         private boolean isConstant;
@@ -312,16 +306,16 @@ public class JSUnresolvedVariableInspection extends JSInspection {
         @RequiredReadAction
         @Override
         protected void buildTemplate(
-            final Template template,
-            final JSReferenceExpression referenceExpression,
-            final Set<JavaScriptFeature> features,
+            Template template,
+            JSReferenceExpression referenceExpression,
+            Set<JavaScriptFeature> features,
             boolean staticContext,
-            final PsiFile file,
-            final PsiElement anchorParent
+            PsiFile file,
+            PsiElement anchorParent
         ) {
             boolean classFeature = features.contains(JavaScriptFeature.CLASS);
 
-            final JSExpression qualifier = addAccessModifier(template, referenceExpression, classFeature, staticContext);
+            JSExpression qualifier = addAccessModifier(template, referenceExpression, classFeature, staticContext);
             if (qualifier == null || classFeature) {
                 template.addTextSegment(isConstant ? CONSTANT_STATEMENT_START : VAR_STATEMENT_START);
             }
@@ -370,6 +364,7 @@ public class JSUnresolvedVariableInspection extends JSInspection {
         }
 
         @Override
+        @RequiredReadAction
         protected void addParameters(Template template, JSReferenceExpression refExpr, PsiFile file, Set<JavaScriptFeature> features) {
             if (!myIsGetter) {
                 template.addTextSegment(refExpr.getReferencedName() + ":");
@@ -378,6 +373,7 @@ public class JSUnresolvedVariableInspection extends JSInspection {
         }
 
         @Override
+        @RequiredReadAction
         protected void addReturnType(Template template, JSReferenceExpression referenceExpression, PsiFile file) {
             if (myIsGetter) {
                 guessTypeAndAddTemplateVariable(template, referenceExpression, file);
@@ -431,12 +427,14 @@ public class JSUnresolvedVariableInspection extends JSInspection {
 
 
         @Override
+        @RequiredReadAction
         protected void addParameters(Template template, JSReferenceExpression refExpr, PsiFile file, Set<JavaScriptFeature> features) {
             template.addTextSegment("event:");
             template.addTextSegment(myEventQualifier.getText());
         }
 
         @Override
+        @RequiredReadAction
         protected void addReturnType(Template template, JSReferenceExpression referenceExpression, PsiFile psifile) {
             template.addTextSegment("void");
         }

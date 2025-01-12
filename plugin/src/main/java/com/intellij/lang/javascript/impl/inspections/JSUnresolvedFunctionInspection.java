@@ -26,6 +26,7 @@ import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.util.JSUtils;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.javascript.ide.codeInsight.JavaScriptQuickFixFactory;
@@ -46,12 +47,10 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.xml.ide.highlighter.XmlFileType;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 
@@ -60,24 +59,22 @@ import java.util.function.BiFunction;
  */
 @ExtensionImpl
 public class JSUnresolvedFunctionInspection extends JSInspection {
-    @NonNls
     private static final String SHORT_NAME = "JSUnresolvedFunction";
 
-    @Override
     @Nonnull
+    @Override
     public String getGroupDisplayName() {
         return "General";
     }
 
-    @Override
     @Nonnull
+    @Override
     public String getDisplayName() {
         return JavaScriptLocalize.jsUnresolvedFunctionInspectionName().get();
     }
 
-    @Override
     @Nonnull
-    @NonNls
+    @Override
     public String getShortName() {
         return SHORT_NAME;
     }
@@ -86,11 +83,10 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
     protected JSElementVisitor createVisitor(final ProblemsHolder holder) {
         return new JSElementVisitor() {
             @Override
-            public void visitJSCallExpression(final JSCallExpression node) {
-                final JSExpression methodExpression = node.getMethodExpression();
-
-                if (methodExpression instanceof JSReferenceExpression referenceExpression) {
-                    final ResolveResult[] resolveResults = referenceExpression.multiResolve(false);
+            @RequiredReadAction
+            public void visitJSCallExpression(@Nonnull JSCallExpression node) {
+                if (node.getMethodExpression() instanceof JSReferenceExpression methodRefExpr) {
+                    ResolveResult[] resolveResults = methodRefExpr.multiResolve(false);
 
                     boolean noCompleteResolve = true;
 
@@ -104,14 +100,11 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
                             if (element instanceof JSVariable variable) {
                                 String typeText = variable.getTypeString();
 
-                                if (typeText != null && !"*".equals(typeText)) {
-                                    if (!allowMemberReference(inNewExpression, typeText)) {
-                                        holder.registerProblem(
-                                            referenceExpression.getReferenceNameElement(),
-                                            JavaScriptLocalize.javascriptTermDoesNotEvaluateToFunction().get(),
-                                            getHighlightTypeForTypeOrSignatureProblem(node)
-                                        );
-                                    }
+                                if (typeText != null && !"*".equals(typeText) && !allowMemberReference(inNewExpression, typeText)) {
+                                    holder.newProblem(JavaScriptLocalize.javascriptTermDoesNotEvaluateToFunction())
+                                        .range(methodRefExpr.getReferenceNameElement())
+                                        .highlightType(getHighlightTypeForTypeOrSignatureProblem(node))
+                                        .create();
                                 }
                             }
                             else if (element instanceof JSFunction function && function.isGetProperty()) {
@@ -130,27 +123,27 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
                                         };
                                     }
 
-                                    holder.registerProblem(
-                                        ((JSReferenceExpression)methodExpression).getReferenceNameElement(),
-                                        JavaScriptLocalize.javascriptTermDoesNotEvaluateToFunction2().get(),
-                                        getHighlightTypeForTypeOrSignatureProblem(node),
-                                        fixes
-                                    );
+                                    holder.newProblem(JavaScriptLocalize.javascriptTermDoesNotEvaluateToFunction2())
+                                        .range(methodRefExpr.getReferenceNameElement())
+                                        .highlightType(getHighlightTypeForTypeOrSignatureProblem(node))
+                                        .withFixes(fixes)
+                                        .create();
                                 }
                             }
                             break;
                         }
                     }
-                    JavaScriptQuickFixFactory javaScriptQuickFixFactory = JavaScriptQuickFixFactory.byElement(referenceExpression);
+                    JavaScriptQuickFixFactory javaScriptQuickFixFactory = JavaScriptQuickFixFactory.byElement(methodRefExpr);
 
                     if (resolveResults.length == 0 || noCompleteResolve) {
-                        final JSExpression qualifier = referenceExpression.getQualifier();
-                        final List<LocalQuickFix> quickFixes = new LinkedList<LocalQuickFix>();
-                        final String refName = referenceExpression.getReferencedName();
+                        JSExpression qualifier = methodRefExpr.getQualifier();
+                        List<LocalQuickFix> quickFixes = new ArrayList<>();
+                        String refName = methodRefExpr.getReferencedName();
 
-                        if (myOnTheFly && ((qualifier == null || qualifier instanceof JSThisExpression) || JSUtils.isLHSExpression(qualifier))) {
-                            if (methodExpression.getParent() instanceof JSCallExpression) {
-                                boolean simpleJs = !JavaScriptVersionUtil.containsFeature(referenceExpression, JavaScriptFeature.CLASS);
+                        if (myOnTheFly && ((qualifier == null || qualifier instanceof JSThisExpression)
+                            || JSUtils.isLHSExpression(qualifier))) {
+                            if (node.getMethodExpression().getParent() instanceof JSCallExpression) {
+                                boolean simpleJs = !JavaScriptVersionUtil.containsFeature(methodRefExpr, JavaScriptFeature.CLASS);
 
                                 if (!inNewExpression || simpleJs) {
                                     quickFixes.add(javaScriptQuickFixFactory.createFunctionOrMethodFix(refName, true));
@@ -161,67 +154,61 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
                                         quickFixes.add(javaScriptQuickFixFactory.createFunctionOrMethodFix(refName, false));
                                     }
                                     else {
-                                        quickFixes.add(new AddImportECMAScriptClassOrFunctionAction(null, referenceExpression));
+                                        quickFixes.add(new AddImportECMAScriptClassOrFunctionAction(null, methodRefExpr));
                                         if (inNewExpression) {
-                                            quickFixes.add(new CreateClassOrInterfaceAction(referenceExpression, false));
+                                            quickFixes.add(new CreateClassOrInterfaceAction(methodRefExpr, false));
                                         }
                                     }
                                 }
                             }
                         }
 
-                        final PsiElement referenceNameElement = referenceExpression.getReferenceNameElement();
+                        PsiElement referenceNameElement = methodRefExpr.getReferenceNameElement();
 
                         if (referenceNameElement != null) {
-                            holder.registerProblem(
-                                referenceNameElement,
-                                inNewExpression
-                                    ? JavaScriptLocalize.javascriptUnresolvedTypeNameMessage(refName).get()
-                                    : JavaScriptLocalize.javascriptUnresolvedFunctionNameMessage(refName).get(),
-                                getUnresolveReferenceHighlightType(qualifier, node),
-                                quickFixes.size() > 0 ? quickFixes.toArray(new LocalQuickFix[quickFixes.size()]) : null
-                            );
+                            holder.newProblem(
+                                    inNewExpression
+                                        ? JavaScriptLocalize.javascriptUnresolvedTypeNameMessage(refName)
+                                        : JavaScriptLocalize.javascriptUnresolvedFunctionNameMessage(refName)
+                                )
+                                .range(referenceNameElement)
+                                .highlightType(getUnresolveReferenceHighlightType(qualifier, node))
+                                .withFixes(quickFixes.size() > 0 ? quickFixes.toArray(new LocalQuickFix[quickFixes.size()]) : null)
+                                .create();
                         }
                     }
                     else {
                         PsiElement element = resolveResults[0].getElement();
 
                         if (inNewExpression && element instanceof JSClass jsClass && jsClass.isInterface()) {
-                            final PsiElement referenceNameElement = referenceExpression.getReferenceNameElement();
-
-                            holder.registerProblem(
-                                referenceNameElement,
-                                JavaScriptLocalize.javascriptInterfaceCanNotBeInstantiatedMessage().get(),
-                                getUnresolveReferenceHighlightType(referenceExpression.getQualifier(), node)
-                            );
+                            holder.newProblem(JavaScriptLocalize.javascriptInterfaceCanNotBeInstantiatedMessage())
+                                .range(methodRefExpr.getReferenceNameElement())
+                                .highlightType(getUnresolveReferenceHighlightType(methodRefExpr.getQualifier(), node))
+                                .create();
                         }
                         else {
                             checkFunction(node, element, holder);
                         }
                     }
                 }
-                else if (methodExpression instanceof JSSuperExpression) {
-                    final PsiElement element = (methodExpression.getReference()).resolve();
+                else if (node.getMethodExpression() instanceof JSSuperExpression superExpression) {
+                    PsiElement element = superExpression.getReference().resolve();
 
                     if (element != null) {
                         checkFunction(node, element, holder);
                     }
                 }
-                else if (methodExpression instanceof JSNewExpression newExpression) {
-                    JSExpression methodExpr = newExpression.getMethodExpression();
+                else if (node.getMethodExpression() instanceof JSNewExpression newExpression) {
+                    if (newExpression.getMethodExpression() instanceof JSReferenceExpression methodRefExpr) {
+                        ResolveResult[] results = methodRefExpr.multiResolve(false);
+                        PsiElement element = results.length > 0 ? results[0].getElement() : null;
+                        if (element instanceof JSFunction function && function.isConstructor()
+                            || element instanceof JSClass) {
 
-                    if (methodExpr instanceof JSReferenceExpression referenceExpression) {
-                        ResolveResult[] results = referenceExpression.multiResolve(false);
-                        PsiElement elt;
-
-                        if (results.length > 0 && ((elt =
-                            results[0].getElement()) instanceof JSFunction && ((JSFunction)elt).isConstructor() || elt instanceof
-                            JSClass)) {
-                            holder.registerProblem(
-                                methodExpression,
-                                JavaScriptLocalize.javascriptTermDoesNotEvaluateToFunction().get(),
-                                getUnresolveReferenceHighlightType(null, node)
-                            );
+                            holder.newProblem(JavaScriptLocalize.javascriptTermDoesNotEvaluateToFunction())
+                                .range(node.getMethodExpression())
+                                .highlightType(getUnresolveReferenceHighlightType(null, node))
+                                .create();
                         }
                     }
                 }
@@ -230,33 +217,31 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
             }
 
             @Override
-            public void visitJSAssignmentExpression(final JSAssignmentExpression node) {
-                final JSExpression lOperand = node.getLOperand();
+            @RequiredReadAction
+            public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression node) {
+                JSExpression lOperand = node.getLOperand();
                 if (lOperand == null) {
                     return;
                 }
-                final JSExpression rOperand = node.getROperand();
+
+                JSExpression rOperand = node.getROperand();
                 if (rOperand == null) {
                     return;
                 }
 
-                final PsiFile containingFile = node.getContainingFile();
+                PsiFile containingFile = node.getContainingFile();
                 if (containingFile.getLanguage() != JavaScriptSupportLoader.ECMA_SCRIPT_L4) {
                     return;
                 }
                 String expressionType = null;
 
-                if (lOperand instanceof JSDefinitionExpression) {
-                    JSExpression expression = ((JSDefinitionExpression)lOperand).getExpression();
-                    if (expression instanceof JSReferenceExpression) {
-                        PsiElement resolve = JSResolveUtil.unwrapProxy(((JSReferenceExpression)expression).resolve());
+                if (lOperand instanceof JSDefinitionExpression definition
+                    && definition.getExpression() instanceof JSReferenceExpression refExpr
+                    && JSResolveUtil.unwrapProxy(refExpr.resolve()) instanceof JSNamedElement namedElement) {
 
-                        if (resolve instanceof JSNamedElement) {
-                            expressionType = JSResolveUtil.getTypeFromSetAccessor((JSNamedElement)resolve);
-                            if (expressionType != null) {
-                                expressionType = JSImportHandlingUtil.resolveTypeName(expressionType, resolve);
-                            }
-                        }
+                    expressionType = JSResolveUtil.getTypeFromSetAccessor(namedElement);
+                    if (expressionType != null) {
+                        expressionType = JSImportHandlingUtil.resolveTypeName(expressionType, namedElement);
                     }
                 }
 
@@ -273,21 +258,22 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
             }
 
             @Override
-            public void visitJSReturnStatement(final JSReturnStatement node) {
-                final JSExpression expression = node.getExpression();
+            @RequiredReadAction
+            public void visitJSReturnStatement(@Nonnull JSReturnStatement node) {
+                JSExpression expression = node.getExpression();
                 if (expression == null) {
                     return;
                 }
 
-                final JSFunction fun = PsiTreeUtil.getParentOfType(node, JSFunction.class);
+                JSFunction fun = PsiTreeUtil.getParentOfType(node, JSFunction.class);
                 if (fun == null) {
                     return; // TODO: complain about it
                 }
-                final String typeString = fun.getReturnTypeString();
+                String typeString = fun.getReturnTypeString();
                 if (typeString == null) {
                     return;
                 }
-                final PsiFile containingFile = fun.getContainingFile();
+                PsiFile containingFile = fun.getContainingFile();
                 if (containingFile.getLanguage() != JavaScriptSupportLoader.ECMA_SCRIPT_L4) {
                     return;
                 }
@@ -302,8 +288,9 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
             }
 
             @Override
-            public void visitJSVariable(final JSVariable node) {
-                final JSExpression initializer = node.getInitializer();
+            @RequiredReadAction
+            public void visitJSVariable(@Nonnull JSVariable node) {
+                JSExpression initializer = node.getInitializer();
                 if (initializer == null) {
                     return;
                 }
@@ -317,24 +304,24 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
             }
 
             @Override
-            public void visitJSBinaryExpression(JSBinaryExpression node) {
+            @RequiredReadAction
+            public void visitJSBinaryExpression(@Nonnull JSBinaryExpression node) {
                 IElementType sign = node.getOperationSign();
 
                 if (sign == JSTokenTypes.AS_KEYWORD || sign == JSTokenTypes.IS_KEYWORD) {
-                    JSExpression rOperand = node.getROperand();
-
-                    if (rOperand instanceof JSReferenceExpression) {
-                        ResolveResult[] results = ((JSReferenceExpression)rOperand).multiResolve(false);
+                    if (node.getROperand() instanceof JSReferenceExpression refExpr) {
+                        ResolveResult[] results = refExpr.multiResolve(false);
 
                         if (results.length > 0 && results[0].getElement() instanceof JSVariable) {
-                            checkTypeIs(rOperand, rOperand, holder, "Class");
+                            checkTypeIs(refExpr, refExpr, holder, "Class");
                         }
                     }
                 }
             }
 
             @Override
-            public void visitJSForInStatement(JSForInStatement node) {
+            @RequiredReadAction
+            public void visitJSForInStatement(@Nonnull JSForInStatement node) {
                 if (!node.isForEach()) {
                     JSVarStatement statement = node.getDeclarationStatement();
 
@@ -347,14 +334,13 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
                             PsiElement typeElement = var.getTypeElement();
                             String typeElementText;
 
-                            if (typeElement != null &&
-                                "Array".equals(expressionType) &&
-                                ("Object".equals(typeElementText = typeElement.getText()) || "*".equals(typeElementText))) {
-                                holder.registerProblem(
-                                    typeElement,
-                                    JavaScriptLocalize.javascriptIncorrectArrayTypeInForin().get(),
-                                    ProblemHighlightType.GENERIC_ERROR_OR_WARNING
-                                );
+                            if (typeElement != null
+                                && "Array".equals(expressionType)
+                                && ("Object".equals(typeElementText = typeElement.getText()) || "*".equals(typeElementText))) {
+                                holder.newProblem(JavaScriptLocalize.javascriptIncorrectArrayTypeInForin())
+                                    .range(typeElement)
+                                    .highlightType(ProblemHighlightType.GENERIC_ERROR_OR_WARNING)
+                                    .create();
                                 continue;
                             }
 
@@ -373,26 +359,26 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
         return ("Class".equals(typeText) && inNewExpression) || "Function".equals(typeText);
     }
 
+    @RequiredReadAction
     private static void checkTypeIs(PsiElement type, PsiElement node, ProblemsHolder holder, String typeName) {
-        if (type instanceof JSReferenceExpression referenceExpression) {
-            String expressionType = JSResolveUtil.getQualifiedExpressionType(referenceExpression, referenceExpression.getContainingFile());
+        if (type instanceof JSReferenceExpression refExpr) {
+            String expressionType = JSResolveUtil.getQualifiedExpressionType(refExpr, refExpr.getContainingFile());
             if (!typeName.equals(expressionType)) {
-                holder.registerProblem(
-                    node,
-                    JavaScriptLocalize.javascriptIncorrectVariableTypeMismatch(typeName, expressionType).get(),
-                    getHighlightTypeForTypeOrSignatureProblem(node)
-                );
+                holder.newProblem(JavaScriptLocalize.javascriptIncorrectVariableTypeMismatch(typeName, expressionType))
+                    .range(node)
+                    .highlightType(getHighlightTypeForTypeOrSignatureProblem(node))
+                    .create();
             }
         }
         else if (type != null) {
-            holder.registerProblem(
-                node,
-                JavaScriptLocalize.javascriptIncorrectVariableTypeMismatch(typeName, type.getText()).get(),
-                getHighlightTypeForTypeOrSignatureProblem(node)
-            );
+            holder.newProblem(JavaScriptLocalize.javascriptIncorrectVariableTypeMismatch(typeName, type.getText()))
+                .range(node)
+                .highlightType(getHighlightTypeForTypeOrSignatureProblem(node))
+                .create();
         }
     }
 
+    @RequiredReadAction
     private static void checkTypeIs(JSExpression rOperand, PsiElement node, ProblemsHolder holder, String typeName) {
         String expressionType = JSResolveUtil.getQualifiedExpressionType(rOperand, rOperand.getContainingFile());
         if (!typeName.equals(expressionType)) {
@@ -404,10 +390,11 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
         }
     }
 
-    static ProblemHighlightType getUnresolveReferenceHighlightType(final @Nullable JSExpression qualifier, @Nonnull JSExpression node) {
+    @RequiredReadAction
+    static ProblemHighlightType getUnresolveReferenceHighlightType(@Nullable JSExpression qualifier, @Nonnull JSExpression node) {
         JSClass jsClass;
 
-        final PsiFile containingFile = node.getContainingFile();
+        PsiFile containingFile = node.getContainingFile();
         if (qualifier != null) {
             jsClass = JSResolveUtil.findClassOfQualifier(qualifier, containingFile);
 
@@ -436,11 +423,11 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
             jsClass = JSResolveUtil.getClassOfContext(node);
         }
 
-        final boolean ecmaL4File = containingFile.getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
+        boolean ecmaL4File = containingFile.getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
 
-        if (jsClass != null && ecmaL4File &&
-            (!(jsClass instanceof XmlBackedJSClassImpl) || jsClass.getContainingFile().getFileType() == XmlFileType.INSTANCE)) {
-            final JSAttributeList attributeList = jsClass.getAttributeList();
+        if (jsClass != null && ecmaL4File
+            && (!(jsClass instanceof XmlBackedJSClassImpl) || jsClass.getContainingFile().getFileType() == XmlFileType.INSTANCE)) {
+            JSAttributeList attributeList = jsClass.getAttributeList();
             if (attributeList == null || !attributeList.hasModifier(JSAttributeList.ModifierType.DYNAMIC)) {
                 return ProblemHighlightType.ERROR;
             }
@@ -452,10 +439,11 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
         return ProblemHighlightType.LIKE_UNKNOWN_SYMBOL;
     }
 
-    private static void checkFunction(final JSCallExpression node, final PsiElement element, final ProblemsHolder holder) {
+    @RequiredReadAction
+    private static void checkFunction(JSCallExpression node, PsiElement element, ProblemsHolder holder) {
         if (element instanceof JSFunction function) {
             if (!function.isGetProperty() || !"Function".equals(function.getReturnTypeString())) {
-                final JSParameterList parameterList = function.getParameterList();
+                JSParameterList parameterList = function.getParameterList();
 
                 if (parameterList != null) {
                     checkCallParameters(node, parameterList.getParameters(), function.isReferencesArguments(), holder);
@@ -469,29 +457,31 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
             else {
                 JSArgumentList argumentList = node.getArgumentList();
                 if (argumentList == null || argumentList.getArguments().length != 1) {
-                    holder.registerProblem(
-                        argumentList != null ? argumentList : node,
-                        JavaScriptLocalize.javascriptInvalidNumberOfParameters("one").get(),
-                        getHighlightTypeForTypeOrSignatureProblem(node)
-                    );
+                    holder.newProblem(JavaScriptLocalize.javascriptInvalidNumberOfParameters("one"))
+                        .range(argumentList != null ? argumentList : node)
+                        .highlightType(getHighlightTypeForTypeOrSignatureProblem(node))
+                        .create();
                 }
             }
         }
     }
 
+    @RequiredReadAction
     private static void checkCallParameters(
-        final JSCallExpression node, final JSParameter[] parameters, boolean functionReferencesArguments,
-        final ProblemsHolder holder
+        JSCallExpression node,
+        JSParameter[] parameters,
+        boolean functionReferencesArguments,
+        ProblemsHolder holder
     ) {
-        final JSArgumentList argumentList = node.getArgumentList();
-        final JSExpression[] expressions = argumentList != null ? argumentList.getArguments() : JSExpression.EMPTY_ARRAY;
+        JSArgumentList argumentList = node.getArgumentList();
+        JSExpression[] expressions = argumentList != null ? argumentList.getArguments() : JSExpression.EMPTY_ARRAY;
 
         boolean lastIsRest = false;
         int minParameterLength = 0;
         int maxParameterLength = parameters.length;
 
         for (int i = 0; i < parameters.length; ++i) {
-            final JSParameter parameter = parameters[i];
+            JSParameter parameter = parameters[i];
             if (parameter.isOptional()) {
                 break;
             }
@@ -510,7 +500,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
         }
 
         if ((expressions.length < minParameterLength || expressions.length > maxParameterLength) && !functionReferencesArguments) {
-            final String s = (lastIsRest ? minParameterLength + " or more " : String.valueOf(minParameterLength) +
+            String s = (lastIsRest ? minParameterLength + " or more " : String.valueOf(minParameterLength) +
                 (minParameterLength != maxParameterLength ? ".." + maxParameterLength : ""));
             holder.registerProblem(
                 argumentList != null ? argumentList : node,
@@ -520,7 +510,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
         }
         else {
             int i = 0;
-            final PsiFile containingFile = node.getContainingFile();
+            PsiFile containingFile = node.getContainingFile();
 
             for (JSParameter p : parameters) {
                 if (i == expressions.length) {
@@ -541,14 +531,15 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
         }
     }
 
+    @RequiredReadAction
     private static void checkExpressionIsAssignableToVariable(
-        final JSVariable p,
+        JSVariable p,
         JSExpression expr,
-        final ProblemsHolder holder,
-        final PsiFile containingFile,
-        final BiFunction<Object, Object, LocalizeValue> messageGenerator
+        ProblemsHolder holder,
+        PsiFile containingFile,
+        BiFunction<Object, Object, LocalizeValue> messageGenerator
     ) {
-        final String parameterTypeResolved = JSImportHandlingUtil.resolveTypeName(p.getTypeString(), p);
+        String parameterTypeResolved = JSImportHandlingUtil.resolveTypeName(p.getTypeString(), p);
         checkExpressionIsAssignableToType(
             expr,
             parameterTypeResolved,
@@ -558,28 +549,29 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
         );
     }
 
+    @RequiredReadAction
     private static void checkExpressionIsAssignableToType(
-        final JSExpression expr,
-        final String type,
-        final ProblemsHolder holder,
-        final PsiFile containingFile,
-        final BiFunction<Object, Object, LocalizeValue> messageGenerator
+        JSExpression expr,
+        String type,
+        ProblemsHolder holder,
+        PsiFile containingFile,
+        BiFunction<Object, Object, LocalizeValue> messageGenerator
     ) {
         if ("*".equals(type) || type == null) {
             return; // optimization
         }
-        final String expressionType = JSResolveUtil.getQualifiedExpressionType(expr, containingFile);
+        String expressionType = JSResolveUtil.getQualifiedExpressionType(expr, containingFile);
 
         if (!JSResolveUtil.isAssignableType(type, expressionType, containingFile)) {
-            holder.registerProblem(
-                expr,
-                messageGenerator.apply(type, expressionType).get(),
-                getHighlightTypeForTypeOrSignatureProblem(expr),
-                new JSInsertCastFix(type)
-            );
+            holder.newProblem(messageGenerator.apply(type, expressionType))
+                .range(expr)
+                .highlightType(getHighlightTypeForTypeOrSignatureProblem(expr))
+                .withFix(new JSInsertCastFix(type))
+                .create();
         }
     }
 
+    @RequiredReadAction
     private static ProblemHighlightType getHighlightTypeForTypeOrSignatureProblem(@Nonnull PsiElement node) {
         if (node.getContainingFile().getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4) {
             return ProblemHighlightType.GENERIC_ERROR;
@@ -590,7 +582,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
     private static class JSInsertCastFix implements LocalQuickFix {
         private final String type;
 
-        public JSInsertCastFix(final String type) {
+        public JSInsertCastFix(String type) {
             this.type = type;
         }
 
@@ -607,19 +599,20 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
         }
 
         @Override
-        public void applyFix(@Nonnull final Project project, @Nonnull final ProblemDescriptor descriptor) {
-            final PsiElement element = descriptor.getPsiElement();
-            final Editor editor = BaseCreateFix.getEditor(project, element.getContainingFile());
+        @RequiredReadAction
+        public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+            PsiElement element = descriptor.getPsiElement();
+            Editor editor = BaseCreateFix.getEditor(project, element.getContainingFile());
             if (editor == null) {
                 return;
             }
 
-            final String shortenedType = JSResolveUtil.getShortenedType(this.type, element);
-            final TemplateManager templateManager = TemplateManager.getInstance(project);
+            String shortenedType = JSResolveUtil.getShortenedType(this.type, element);
+            TemplateManager templateManager = TemplateManager.getInstance(project);
             Template template = templateManager.createTemplate("", "", shortenedType + "($SELECTION$)");
             template.setToReformat(true);
 
-            final int offset = element.getTextOffset();
+            int offset = element.getTextOffset();
             editor.getSelectionModel().setSelection(offset, offset + element.getTextLength());
             editor.getCaretModel().moveToOffset(offset);
             templateManager.startTemplate(editor, element.getText(), template);

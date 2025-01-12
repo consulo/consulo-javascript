@@ -42,10 +42,10 @@ import jakarta.annotation.Nullable;
 public abstract class JSInspection extends LocalInspectionTool implements CustomSuppressableInspectionTool {
     protected boolean myOnTheFly;
 
-    protected abstract JSElementVisitor createVisitor(final ProblemsHolder holder);
+    protected abstract JSElementVisitor createVisitor(ProblemsHolder holder);
 
-    @Override
     @Nonnull
+    @Override
     public PsiElementVisitor buildVisitor(@Nonnull ProblemsHolder holder, boolean isOnTheFly) {
         myOnTheFly = isOnTheFly;
         return createVisitor(holder);
@@ -62,27 +62,27 @@ public abstract class JSInspection extends LocalInspectionTool implements Custom
         return JavaScriptLanguage.INSTANCE;
     }
 
-    @Override
     @Nonnull
+    @Override
     public HighlightDisplayLevel getDefaultLevel() {
         return HighlightDisplayLevel.WEAK_WARNING;
     }
 
     @Override
-    public PsiNamedElement getProblemElement(final PsiElement psiElement) {
+    public PsiNamedElement getProblemElement(PsiElement psiElement) {
         return PsiTreeUtil.getNonStrictParentOfType(psiElement, JSNamedElement.class);
     }
 
+    @Nonnull
     @Override
-    @Nullable
-    public SuppressIntentionAction[] getSuppressActions(final PsiElement element) {
+    public SuppressIntentionAction[] getSuppressActions(PsiElement element) {
         return new SuppressIntentionAction[]{
             /*  new AddNoInspectionCommentFix(HighlightDisplayKey.find(getShortName()), JSSuppressionHolder.class),*/
         };
     }
 
     @Override
-    public boolean isSuppressedFor(final PsiElement element) {
+    public boolean isSuppressedFor(@Nonnull PsiElement element) {
         return SuppressionUtil.isSuppressedInStatement(element, getID(), JSSuppressionHolder.class);
     }
 }

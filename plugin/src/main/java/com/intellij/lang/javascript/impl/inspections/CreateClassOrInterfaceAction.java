@@ -20,7 +20,7 @@ import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.impl.flex.ImportUtils;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateManager;
 import consulo.fileTemplate.FileTemplateUtil;
@@ -36,22 +36,18 @@ import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.util.lang.text.StringTokenizer;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.Properties;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Maxim.Mossienko
- * Date: 11.02.2009
- * Time: 14:01:34
- * To change this template use File | Settings | File Templates.
+ * @author Maxim.Mossienko
+ * @since 2009-02-11
  */
 class CreateClassOrInterfaceAction implements LocalQuickFix {
     private final String classNameToCreate;
@@ -80,17 +76,18 @@ class CreateClassOrInterfaceAction implements LocalQuickFix {
     }
 
     @Override
-    public void applyFix(@Nonnull final Project project, @Nonnull final ProblemDescriptor descriptor) {
+    @RequiredUIAccess
+    public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
         PsiFile contextFile = myContext.getContainingFile();
-        final PsiElement context = contextFile.getContext();
+        PsiElement context = contextFile.getContext();
         if (context != null) {
             contextFile = context.getContainingFile();
         }
 
         packageName = JSResolveUtil.getExpectedPackageNameFromFile(contextFile.getVirtualFile(), project, false);
 
-        if (!ApplicationManager.getApplication().isUnitTestMode()) {
-            final CreateClassDialog dialog = new CreateClassDialog(project, classNameToCreate, packageName, myIsInterface);
+        if (!Application.get().isUnitTestMode()) {
+            CreateClassDialog dialog = new CreateClassDialog(project, classNameToCreate, packageName, myIsInterface);
             dialog.show();
             if (dialog.getExitCode() != DialogWrapper.OK_EXIT_CODE) {
                 return;
@@ -102,19 +99,19 @@ class CreateClassOrInterfaceAction implements LocalQuickFix {
         }
 
         final PsiFile contextFile1 = contextFile;
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
+        Application.get().runWriteAction(new Runnable() {
             @Override
             public void run() {
                 try {
-                    final FileTemplate template = FileTemplateManager.getInstance().getTemplate(
+                    FileTemplate template = FileTemplateManager.getInstance().getTemplate(
                         myIsInterface
                             ? JavaScriptSupportLoader.ACTION_SCRIPT_INTERFACE_TEMPLATE_NAME
                             : JavaScriptSupportLoader.ACTION_SCRIPT_CLASS_TEMPLATE_NAME
                     );
-                    @NonNls final String fileName = classNameToCreate + ".as";
-                    final Properties props = new Properties();
+                    String fileName = classNameToCreate + ".as";
+                    Properties props = new Properties();
                     props.setProperty(FileTemplate.ATTRIBUTE_NAME, classNameToCreate);
-                    final Module element = ModuleUtilCore.findModuleForPsiElement(contextFile1);
+                    Module element = ModuleUtilCore.findModuleForPsiElement(contextFile1);
                     VirtualFile base = ModuleRootManager.getInstance(element).getSourceRoots()[0];
                     VirtualFile relativeFile = VirtualFileUtil.findRelativeFile(packageName, base);
 
@@ -133,7 +130,7 @@ class CreateClassOrInterfaceAction implements LocalQuickFix {
 
                     assert relativeFile != null;
                     props.setProperty(FileTemplate.ATTRIBUTE_PACKAGE_NAME, packageName);
-                    final PsiDirectory psiDirectory = PsiManager.getInstance(project).findDirectory(relativeFile);
+                    PsiDirectory psiDirectory = PsiManager.getInstance(project).findDirectory(relativeFile);
                     assert psiDirectory != null;
                     FileTemplateUtil.createFromTemplate(template, fileName, props, psiDirectory);
 

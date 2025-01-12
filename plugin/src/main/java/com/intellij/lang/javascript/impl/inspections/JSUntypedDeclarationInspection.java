@@ -20,8 +20,9 @@ import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.inspections.qucikFixes.BaseCreateFix;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSPsiImplUtils;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.javascript.language.JavaScriptFeature;
@@ -42,8 +43,6 @@ import consulo.localize.LocalizeValue;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
@@ -53,17 +52,16 @@ import java.util.Collections;
  */
 @ExtensionImpl
 public class JSUntypedDeclarationInspection extends JSInspection {
-    @NonNls
     public static final String SHORT_NAME = "JSUntypedDeclaration";
 
-    @Override
     @Nonnull
+    @Override
     public String getGroupDisplayName() {
         return "General";
     }
 
-    @Override
     @Nonnull
+    @Override
     public String getDisplayName() {
         return JavaScriptLocalize.jsUntypedDeclarationInspectionName().get();
     }
@@ -76,7 +74,6 @@ public class JSUntypedDeclarationInspection extends JSInspection {
 
     @Override
     @Nonnull
-    @NonNls
     public String getShortName() {
         return SHORT_NAME;
     }
@@ -85,17 +82,20 @@ public class JSUntypedDeclarationInspection extends JSInspection {
     protected JSElementVisitor createVisitor(final ProblemsHolder holder) {
         return new JSElementVisitor() {
             @Override
-            public void visitJSVariable(final JSVariable node) {
+            @RequiredReadAction
+            public void visitJSVariable(@Nonnull JSVariable node) {
                 process(node, holder);
             }
 
             @Override
-            public void visitJSFunctionExpression(final JSFunctionExpression node) {
+            @RequiredReadAction
+            public void visitJSFunctionExpression(@Nonnull JSFunctionExpression node) {
                 process(node.getFunction(), holder);
             }
 
             @Override
-            public void visitJSFunctionDeclaration(final JSFunction node) {
+            @RequiredReadAction
+            public void visitJSFunctionDeclaration(@Nonnull JSFunction node) {
                 if (node.isConstructor() || node.isSetProperty()) {
                     return;
                 }
@@ -104,7 +104,8 @@ public class JSUntypedDeclarationInspection extends JSInspection {
         };
     }
 
-    private static void process(final JSNamedElement node, final ProblemsHolder holder) {
+    @RequiredReadAction
+    private static void process(JSNamedElement node, ProblemsHolder holder) {
         if (node.getContainingFile().getLanguage() != JavaScriptSupportLoader.ECMA_SCRIPT_L4) {
             return;
         }
@@ -112,43 +113,43 @@ public class JSUntypedDeclarationInspection extends JSInspection {
 
         if (nameIdentifier != null &&
             JSPsiImplUtils.getTypeFromDeclaration(node) == null &&
-            (!(node instanceof JSParameter) || !((JSParameter)node).isRest())) {
+            !(node instanceof JSParameter parameter && parameter.isRest())) {
             LocalizeValue description = node instanceof JSFunction
                 ? JavaScriptLocalize.jsUntypedFunctionProblem(nameIdentifier.getText())
                 : JavaScriptLocalize.jsUntypedVariableProblem(nameIdentifier.getText());
-            holder.registerProblem(
-                nameIdentifier,
-                description.get(),
-                ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
-                new AddTypeToDclFix()
-            );
+
+            holder.newProblem(description)
+                .range(nameIdentifier)
+                .highlightType(ProblemHighlightType.GENERIC_ERROR_OR_WARNING)
+                .withFix(new AddTypeToDclFix())
+                .create();
         }
     }
 
     private static class AddTypeToDclFix implements LocalQuickFix {
-
-        @Override
         @Nonnull
+        @Override
         public String getName() {
             return JavaScriptLocalize.jsUntypedDeclarationProblemAddtypeFix().get();
         }
 
-        @Override
         @Nonnull
+        @Override
         public String getFamilyName() {
             return getName();
         }
 
         @Override
-        public void applyFix(@Nonnull final Project project, @Nonnull final ProblemDescriptor descriptor) {
+        @RequiredReadAction
+        public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
             PsiElement anchor = descriptor.getPsiElement();
             PsiFile containingFile = anchor.getContainingFile();
             if (!FileModificationService.getInstance().prepareFileForWrite(containingFile)) {
                 return;
             }
 
-            if (anchor.getParent() instanceof JSFunction) {
-                anchor = ((JSFunction)anchor.getParent()).getParameterList();
+            if (anchor.getParent() instanceof JSFunction function) {
+                anchor = function.getParameterList();
             }
 
             OpenFileDescriptor openDescriptor = OpenFileDescriptorFactory.getInstance(project)
@@ -162,10 +163,10 @@ public class JSUntypedDeclarationInspection extends JSInspection {
             Template t = templateManager.createTemplate("", "");
             t.addTextSegment(":");
             boolean hasDetectedTypeFromUsage = false;
-            final PsiElement anchorParent = anchor.getParent();
+            PsiElement anchorParent = anchor.getParent();
 
-            if (anchorParent instanceof JSVariable) {
-                final JSExpression expression = ((JSVariable)anchorParent).getInitializer();
+            if (anchorParent instanceof JSVariable variable) {
+                JSExpression expression = variable.getInitializer();
 
                 if (expression != null) {
                     BaseCreateFix.guessExprTypeAndAddSuchVariable(
@@ -181,7 +182,7 @@ public class JSUntypedDeclarationInspection extends JSInspection {
 
             if (!hasDetectedTypeFromUsage) {
                 String defaultValue = "uint";
-                if (ApplicationManager.getApplication().isUnitTestMode()) {
+                if (Application.get().isUnitTestMode()) {
                     t.addTextSegment(defaultValue);
                 }
                 else {

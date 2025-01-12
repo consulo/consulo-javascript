@@ -23,12 +23,10 @@ import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSClassImpl;
 import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.localize.JavaScriptLocalize;
-import consulo.language.editor.inspection.LocalQuickFix;
-import consulo.language.editor.inspection.ProblemDescriptor;
-import consulo.language.editor.inspection.ProblemHighlightType;
-import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.editor.inspection.*;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -42,8 +40,6 @@ import consulo.project.Project;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.BitSet;
@@ -57,46 +53,44 @@ import java.util.Set;
 @ExtensionImpl
 public class JSUnusedLocalSymbolsInspection extends JSInspection {
     private static final Logger LOG = Logger.getInstance("JSUnusedLocalSymbols");
-    @NonNls
     public static final String SHORT_NAME = "JSUnusedLocalSymbols";
 
-    @Override
     @Nonnull
+    @Override
     public String getGroupDisplayName() {
         return "General";
     }
 
-    @Override
     @Nonnull
+    @Override
     public String getDisplayName() {
         return JavaScriptLocalize.jsUnusedLocalSymbolInspectionName().get();
     }
 
-    @Override
     @Nonnull
-    @NonNls
+    @Override
     public String getShortName() {
         return SHORT_NAME;
     }
 
-    private static final Key<Set<PsiElement>> ourUnusedLocalDeclarationsSetKey = Key.create("js unused local dcls key");
-    private static final Key<Set<PsiElement>> ourUsedLocalDeclarationsSetKey = Key.create("js used local functions key");
+    private static final Key<Set<PsiElement>> UNUSED_LOCAL_DECLARATIONS_SET_KEY = Key.create("js unused local dcls key");
+    private static final Key<Set<PsiElement>> USED_LOCAL_DECLARATIONS_SET_KEY = Key.create("js used local functions key");
 
     @Override
     protected JSElementVisitor createVisitor(final ProblemsHolder holder) {
         return new JSElementVisitor() {
             @Override
-            public void visitJSVariable(final JSVariable node) {
+            public void visitJSVariable(@Nonnull JSVariable node) {
                 handleLocalDeclaration(node);
             }
 
             @Override
-            public void visitJSParameterList(final JSParameterList node) {
+            public void visitJSParameterList(@Nonnull JSParameterList node) {
                 PsiElement parent = node.getParent();
-                final Set<PsiElement> set = parent.getUserData(ourUnusedLocalDeclarationsSetKey);
+                Set<PsiElement> set = parent.getUserData(UNUSED_LOCAL_DECLARATIONS_SET_KEY);
 
                 if (set == null) {
-                    parent.putUserData(ourUnusedLocalDeclarationsSetKey, Collections.synchronizedSet(new HashSet<PsiElement>(3)));
+                    parent.putUserData(UNUSED_LOCAL_DECLARATIONS_SET_KEY, Collections.synchronizedSet(new HashSet<>(3)));
                 }
                 else if (node.getParameters().length == 0) {
                     set.clear();
@@ -104,16 +98,17 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection {
             }
 
             @Override
-            public void visitFile(final PsiFile file) {
-                final Set<PsiElement> set = file.getUserData(ourUnusedLocalDeclarationsSetKey);
+            public void visitFile(PsiFile file) {
+                Set<PsiElement> set = file.getUserData(UNUSED_LOCAL_DECLARATIONS_SET_KEY);
                 if (set != null) {
                     set.clear();
                 }
             }
 
             @Override
-            public void visitJSParameter(final JSParameter node) {
-                final PsiElement scopeNode = PsiTreeUtil.getParentOfType(node, JSFunction.class, JSCatchBlock.class);
+            @RequiredReadAction
+            public void visitJSParameter(@Nonnull JSParameter node) {
+                PsiElement scopeNode = PsiTreeUtil.getParentOfType(node, JSFunction.class, JSCatchBlock.class);
 
                 if (scopeNode == null || scopeNode instanceof JSCatchBlock) {
                     return;
@@ -122,22 +117,23 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection {
                 if (scopeNode.getUserData(JavaScriptLineMarkerProvider.ourParticipatesInHierarchyKey) != null) {
                     return;
                 }
-                if (scopeNode instanceof JSFunction) {
-                    JSAttributeList attributeList = ((JSFunction)scopeNode).getAttributeList();
+
+                if (scopeNode instanceof JSFunction function) {
+                    JSAttributeList attributeList = function.getAttributeList();
                     if (attributeList != null && attributeList.hasModifier(JSAttributeList.ModifierType.OVERRIDE)) {
                         return;
                     }
                 }
 
-                final Set<PsiElement> unusedParametersSet;
-                final PsiElement parameterList = node.getParent();
+                Set<PsiElement> unusedParametersSet;
+                PsiElement parameterList = node.getParent();
 
                 if (parameterList.getNode().findChildByType(JSElementTypes.FORMAL_PARAMETER) == node.getNode()) {
                     unusedParametersSet = Collections.synchronizedSet(new HashSet<PsiElement>(3));
-                    scopeNode.putUserData(ourUnusedLocalDeclarationsSetKey, unusedParametersSet);
+                    scopeNode.putUserData(UNUSED_LOCAL_DECLARATIONS_SET_KEY, unusedParametersSet);
                 }
                 else {
-                    unusedParametersSet = scopeNode.getUserData(ourUnusedLocalDeclarationsSetKey);
+                    unusedParametersSet = scopeNode.getUserData(UNUSED_LOCAL_DECLARATIONS_SET_KEY);
                     if (unusedParametersSet == null) {
                         return;
                     }
@@ -146,7 +142,8 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection {
             }
 
             @Override
-            public void visitJSReferenceExpression(final JSReferenceExpression node) {
+            @RequiredReadAction
+            public void visitJSReferenceExpression(@Nonnull JSReferenceExpression node) {
                 if (node.getParent() instanceof JSFunction) {
                     return;
                 }
@@ -156,7 +153,7 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection {
                         if (function == null) {
                             return;
                         }
-                        Set<PsiElement> unusedParametersSet = function.getUserData(ourUnusedLocalDeclarationsSetKey);
+                        Set<PsiElement> unusedParametersSet = function.getUserData(UNUSED_LOCAL_DECLARATIONS_SET_KEY);
                         if (unusedParametersSet == null) {
                             return;
                         }
@@ -169,23 +166,23 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection {
                     ResolveResult[] results = node.multiResolve(false);
 
                     for (ResolveResult r : results) {
-                        final PsiElement element = r.getElement();
+                        PsiElement element = r.getElement();
 
-                        if (element instanceof JSVariable || (element instanceof JSFunction && isSupportedFunction((JSFunction)element))) {
+                        if (element instanceof JSVariable || (element instanceof JSFunction function && isSupportedFunction(function))) {
                             assert !(element instanceof JSFunctionExpression);
                             PsiElement scopeHandler = PsiTreeUtil.getParentOfType(element, JSFunction.class);
 
                             if (scopeHandler != null) {
-                                Set<PsiElement> unusedParametersSet = scopeHandler.getUserData(ourUnusedLocalDeclarationsSetKey);
+                                Set<PsiElement> unusedParametersSet = scopeHandler.getUserData(UNUSED_LOCAL_DECLARATIONS_SET_KEY);
 
                                 if (unusedParametersSet != null) {
-                                    final boolean removed = unusedParametersSet.remove(element);
+                                    boolean removed = unusedParametersSet.remove(element);
 
                                     if (!removed) {
-                                        Set<PsiElement> set = scopeHandler.getUserData(ourUsedLocalDeclarationsSetKey);
+                                        Set<PsiElement> set = scopeHandler.getUserData(USED_LOCAL_DECLARATIONS_SET_KEY);
                                         if (set == null) {
-                                            set = new HashSet<PsiElement>(3);
-                                            scopeHandler.putUserData(ourUsedLocalDeclarationsSetKey, set);
+                                            set = new HashSet<>(3);
+                                            scopeHandler.putUserData(USED_LOCAL_DECLARATIONS_SET_KEY, set);
                                         }
                                         set.add(element);
                                     }
@@ -197,53 +194,56 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection {
             }
 
             @Override
-            public void visitJSFunctionExpression(final JSFunctionExpression node) {
-                visitJSFunctionDeclaration((JSFunction)node);
+            @RequiredReadAction
+            public void visitJSFunctionExpression(@Nonnull JSFunctionExpression node) {
+                visitJSFunctionDeclaration(node);
             }
 
             @Override
-            public void visitJSFunctionDeclaration(final JSFunction node) {
+            @RequiredReadAction
+            public void visitJSFunctionDeclaration(@Nonnull JSFunction node) {
                 processDeclarationHost(node, holder);
                 handleLocalDeclaration(node);
             }
         };
     }
 
-    private static boolean isSupportedFunction(final JSFunction element) {
+    private static boolean isSupportedFunction(JSFunction element) {
         return !(element instanceof JSFunctionExpression || element.getParent() instanceof JSProperty);
     }
 
-    private static void processDeclarationHost(final PsiElement node, final ProblemsHolder holder) {
-        Set<PsiElement> unusedDeclarationsSet = node.getUserData(ourUnusedLocalDeclarationsSetKey);
-        if (unusedDeclarationsSet == null || node instanceof JSFunction && ((JSFunction)node).getBody().length == 0) {
+    @RequiredReadAction
+    private static void processDeclarationHost(PsiElement node, ProblemsHolder holder) {
+        Set<PsiElement> unusedDeclarationsSet = node.getUserData(UNUSED_LOCAL_DECLARATIONS_SET_KEY);
+        if (unusedDeclarationsSet == null || node instanceof JSFunction function && function.getBody().length == 0) {
             return;
         }
 
         try {
-            unusedDeclarationsSet = new HashSet<PsiElement>(unusedDeclarationsSet);
+            unusedDeclarationsSet = new HashSet<>(unusedDeclarationsSet);
 
-            final int nonCounted = -2;
+            int nonCounted = -2;
             int lastUsedParameterIndex = nonCounted;
             ObjectIntMap<JSParameter> parameterIndexMap = null;
 
-            for (final PsiElement p : unusedDeclarationsSet) {
+            for (PsiElement p : unusedDeclarationsSet) {
                 if (!p.isValid()) {
                     continue;
                 }
-                final LocalizeValue message;
-                final @Nonnull PsiElement highlightedElement;
+                LocalizeValue message;
+                @Nonnull PsiElement highlightedElement;
 
                 if (p instanceof JSParameter parameter) {
                     // There are cases of predefined sinatures for which we are not interested in reported unused parameters
-                    final boolean ecma = node.getContainingFile().getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
+                    boolean ecma = node.getContainingFile().getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
                     if (ecma && node instanceof JSFunctionExpression) {
                         continue; // do not report unused parameters
                     }
                     else if (ecma && node instanceof JSFunction function) {
-                        final JSParameter[] params = function.getParameterList().getParameters();
+                        JSParameter[] params = function.getParameterList().getParameters();
 
                         if (params.length == 1) {
-                            @NonNls String type = parameter.getTypeString();
+                            String type = parameter.getTypeString();
                             if (type != null) {
                                 type = JSImportHandlingUtil.resolveTypeName(type, p);
                             }
@@ -253,10 +253,9 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection {
                                 if (eventType.equals(type)) {
                                     continue;
                                 }
-                                final PsiElement clazz = JSClassImpl.findClassFromNamespace(type, node);
 
-                                if (clazz instanceof JSClass) {
-                                    final ResolveProcessor processor = new ResolveProcessor(eventType) {
+                                if (JSClassImpl.findClassFromNamespace(type, node) instanceof JSClass jsClass) {
+                                    ResolveProcessor processor = new ResolveProcessor(eventType) {
                                         {
                                             setTypeContext(true);
                                             setToProcessMembers(false);
@@ -264,12 +263,13 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection {
                                         }
 
                                         @Override
-                                        public boolean execute(final PsiElement element, final ResolveState state) {
+                                        @RequiredReadAction
+                                        public boolean execute(@Nonnull PsiElement element, ResolveState state) {
                                             return !(element instanceof JSClass jsClass && myName.equals(jsClass.getQualifiedName()));
                                         }
                                     };
                                     processor.setLocalResolve(true);
-                                    final boolean b = clazz.processDeclarations(processor, ResolveState.initial(), clazz, clazz);
+                                    boolean b = jsClass.processDeclarations(processor, ResolveState.initial(), jsClass, jsClass);
                                     if (!b) {
                                         continue;
                                     }
@@ -278,7 +278,7 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection {
                         }
                     }
 
-                    final JSParameter[] params = ((JSFunction)node).getParameterList().getParameters();
+                    JSParameter[] params = ((JSFunction)node).getParameterList().getParameters();
 
                     if (lastUsedParameterIndex == nonCounted) {
                         BitSet unusedSet = new BitSet(params.length);
@@ -312,7 +312,7 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection {
                     highlightedElement = parameter.getNameIdentifier();
                 }
                 else if (p instanceof JSFunction function) {
-                    final PsiElement nameIdentifier = function.getNameIdentifier();
+                    PsiElement nameIdentifier = function.getNameIdentifier();
                     if (nameIdentifier == null) {
                         continue;
                     }
@@ -324,38 +324,30 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection {
                     message = JavaScriptLocalize.jsUnusedLocalVariable();
                 }
 
-                if (p.getParent() instanceof JSCatchBlock) {
-                    holder.registerProblem(
-                        highlightedElement,
-                        message.get(),
-                        ProblemHighlightType.LIKE_UNUSED_SYMBOL
-                    );
+                ProblemBuilder problemBuilder = holder.newProblem(message)
+                    .range(highlightedElement)
+                    .highlightType(ProblemHighlightType.LIKE_UNUSED_SYMBOL);
+                if (!(p.getParent() instanceof JSCatchBlock)) {
+                    problemBuilder.withFix(new RemoveElementLocalQuickFix());
                 }
-                else {
-                    holder.registerProblem(
-                        highlightedElement,
-                        message.get(),
-                        ProblemHighlightType.LIKE_UNUSED_SYMBOL,
-                        new RemoveElementLocalQuickFix()
-                    );
-                }
+                problemBuilder.create();
             }
         }
         finally {
-            node.putUserData(ourUnusedLocalDeclarationsSetKey, null);
+            node.putUserData(UNUSED_LOCAL_DECLARATIONS_SET_KEY, null);
         }
     }
 
-    private static void handleLocalDeclaration(final JSNamedElement node) {
+    private static void handleLocalDeclaration(JSNamedElement node) {
         if (node instanceof JSFunction function && !isSupportedFunction(function)) {
             return;
         }
-        final PsiElement scopeNode = PsiTreeUtil.getParentOfType(node, JSFunction.class, JSCatchBlock.class);
+        PsiElement scopeNode = PsiTreeUtil.getParentOfType(node, JSFunction.class, JSCatchBlock.class);
         if (scopeNode == null) {
             return;
         }
-        final Set<PsiElement> unusedParametersSet = scopeNode.getUserData(ourUnusedLocalDeclarationsSetKey);
-        final Set<PsiElement> usedSet = scopeNode.getUserData(ourUsedLocalDeclarationsSetKey);
+        Set<PsiElement> unusedParametersSet = scopeNode.getUserData(UNUSED_LOCAL_DECLARATIONS_SET_KEY);
+        Set<PsiElement> usedSet = scopeNode.getUserData(USED_LOCAL_DECLARATIONS_SET_KEY);
         if (usedSet != null && usedSet.contains(node)) {
             return;
         }
@@ -372,20 +364,21 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection {
     }
 
     private static class RemoveElementLocalQuickFix implements LocalQuickFix {
-        @Override
         @Nonnull
+        @Override
         public String getName() {
             return JavaScriptLocalize.jsUnusedSymbolRemove().get();
         }
 
-        @Override
         @Nonnull
+        @Override
         public String getFamilyName() {
             return getName();
         }
 
         @Override
-        public void applyFix(@Nonnull final Project project, @Nonnull final ProblemDescriptor descriptor) {
+        @RequiredReadAction
+        public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
             try {
                 PsiElement element = descriptor.getPsiElement();
                 if (!(element instanceof JSNamedElement)) {
