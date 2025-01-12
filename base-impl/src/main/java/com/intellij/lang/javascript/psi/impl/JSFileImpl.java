@@ -18,6 +18,7 @@ package com.intellij.lang.javascript.psi.impl;
 
 import java.util.List;
 
+import consulo.annotation.access.RequiredReadAction;
 import jakarta.annotation.Nonnull;
 
 import com.intellij.lang.javascript.JSElementTypes;
@@ -40,11 +41,8 @@ import consulo.language.impl.psi.PsiFileBase;
 import jakarta.annotation.Nullable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 28, 2005
- * Time: 12:25:04 AM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-28
  */
 public class JSFileImpl extends PsiFileBase implements JSFile {
     public JSFileImpl(FileViewProvider fileViewProvider) {
@@ -52,14 +50,16 @@ public class JSFileImpl extends PsiFileBase implements JSFile {
     }
 
     @Override
+    @RequiredReadAction
     public String toString() {
         return "JSFile:" + getName();
     }
 
     @Override
+    @RequiredReadAction
     public boolean processDeclarations(
-        @Nonnull final PsiScopeProcessor processor,
-        @Nonnull final ResolveState state,
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
         @Nullable PsiElement lastParent,
         @Nonnull PsiElement place
     ) {
@@ -74,9 +74,9 @@ public class JSFileImpl extends PsiFileBase implements JSFile {
                     result = JSImportHandlingUtil.tryResolveImports(processor, this, place);
                 }
 
-                if (result &&
-                    JSResolveUtil.isNewResolveAndCompletion(this) &&
-                    (JSResolveUtil.shouldProcessImports(place, processor))) {
+                if (result
+                    && JSResolveUtil.isNewResolveAndCompletion(this)
+                    && JSResolveUtil.shouldProcessImports(place, processor)) {
                     result = JSResolveUtil.processGlobalThings(processor, state, place, this);
                 }
             }
@@ -143,14 +143,15 @@ public class JSFileImpl extends PsiFileBase implements JSFile {
     }
 
     @Override
-    public StubBasedPsiElement findStubbedElementAtOffset(final int offset, final Class<? extends StubBasedPsiElement> clazz) {
-        final StubElement stub = getStub();
+    @RequiredReadAction
+    public StubBasedPsiElement findStubbedElementAtOffset(int offset, Class<? extends StubBasedPsiElement> clazz) {
+        StubElement stub = getStub();
 
         if (stub != null) {
-            final List<StubElement> children = stub.getChildrenStubs();
+            List<StubElement> children = stub.getChildrenStubs();
 
             for (StubElement child : children) {
-                final PsiElement psi = child.getPsi();
+                PsiElement psi = child.getPsi();
 
                 if (psi.getTextRange().getStartOffset() == offset && clazz.isInstance(psi)) {
                     return (StubBasedPsiElement)psi;
@@ -162,7 +163,7 @@ public class JSFileImpl extends PsiFileBase implements JSFile {
 
     @Override
     public JSSourceElement[] getStatements() {
-        final StubElement stub = getStub();
+        StubElement stub = getStub();
         if (stub != null) {
             return (JSSourceElement[])stub.getChildrenByType(JSElementTypes.SOURCE_ELEMENTS, JSSourceElement.EMPTY_ARRAY);
         }

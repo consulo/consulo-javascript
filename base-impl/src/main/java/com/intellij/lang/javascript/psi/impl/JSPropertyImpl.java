@@ -21,6 +21,7 @@ import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSProperty;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.util.CachedValueProvider;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.javascript.language.psi.JavaScriptType;
@@ -45,7 +46,7 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty {
     private static TokenSet IDENTIFIER_TOKENS_SET =
         TokenSet.orSet(TokenSet.create(JSTokenTypes.NUMERIC_LITERAL, JSTokenTypes.IDENTIFIER), JavaScriptTokenSets.STRING_LITERALS);
 
-    public JSPropertyImpl(final ASTNode node) {
+    public JSPropertyImpl(ASTNode node) {
         super(node);
     }
 
@@ -83,18 +84,16 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty {
     @Override
     @RequiredReadAction
     public String getName() {
-        final PsiElement nameIdentifier = getNameIdentifier();
-        if (nameIdentifier != null) {
-            return StringUtil.stripQuotesAroundValue(nameIdentifier.getText());
-        }
-        return null;
+        PsiElement nameIdentifier = getNameIdentifier();
+        return nameIdentifier != null ? StringUtil.stripQuotesAroundValue(nameIdentifier.getText()) : null;
     }
 
     @Override
+    @RequiredWriteAction
     public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
-        final PsiElement nameNode = getNameIdentifier();
+        PsiElement nameNode = getNameIdentifier();
         assert nameNode != null;
-        final ASTNode nameElement = JSChangeUtil.createNameIdentifier(getProject(), name, nameNode.getNode().getElementType());
+        ASTNode nameElement = JSChangeUtil.createNameIdentifier(getProject(), name, nameNode.getNode().getElementType());
         getNode().replaceChild(nameNode.getNode(), nameElement);
         return this;
     }
@@ -138,14 +137,14 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty {
     @RequiredReadAction
     @Override
     public int getTextOffset() {
-        final PsiElement name = getNameIdentifier();
+        PsiElement name = getNameIdentifier();
         return name != null ? name.getTextOffset() : super.getTextOffset();
     }
 
     @Override
-    @RequiredReadAction
+    @RequiredWriteAction
     public void delete() throws IncorrectOperationException {
-        final ASTNode myNode = getNode();
+        ASTNode myNode = getNode();
         JSChangeUtil.removeRangeWithRemovalOfCommas(myNode, myNode.getTreeParent());
     }
 

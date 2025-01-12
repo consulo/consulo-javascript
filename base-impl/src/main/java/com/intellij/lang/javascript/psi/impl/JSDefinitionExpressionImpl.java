@@ -17,6 +17,8 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import com.intellij.lang.javascript.psi.*;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.resolve.PsiScopeProcessor;
@@ -26,14 +28,11 @@ import consulo.language.ast.ASTNode;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: maxim.mossienko
- * Date: Dec 14, 2005
- * Time: 6:40:04 PM
- * To change this template use File | Settings | File Templates.
+ * @author maxim.mossienko
+ * @since 2005-12-14
  */
 public class JSDefinitionExpressionImpl extends JSExpressionImpl implements JSDefinitionExpression {
-    public JSDefinitionExpressionImpl(final ASTNode node) {
+    public JSDefinitionExpressionImpl(ASTNode node) {
         super(node);
     }
 
@@ -43,6 +42,7 @@ public class JSDefinitionExpressionImpl extends JSExpressionImpl implements JSDe
     }
 
     @Override
+    @RequiredReadAction
     public String getName() {
         return getExpression() instanceof JSReferenceExpression referenceExpression
             ? referenceExpression.getReferencedName()
@@ -50,6 +50,7 @@ public class JSDefinitionExpressionImpl extends JSExpressionImpl implements JSDe
     }
 
     @Override
+    @RequiredWriteAction
     public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
         return getExpression() instanceof JSReferenceExpressionImpl referenceExpression
             ? referenceExpression.handleElementRenameInternal(name)
@@ -68,27 +69,26 @@ public class JSDefinitionExpressionImpl extends JSExpressionImpl implements JSDe
         PsiElement lastParent,
         @Nonnull PsiElement place
     ) {
-        return lastParent == null ? processor.execute(this, state) : true;
+        return lastParent != null || processor.execute(this, state);
     }
 
     @Override
+    @RequiredWriteAction
     public void delete() throws IncorrectOperationException {
-        final PsiElement parent = getParent();
+        if (getParent() instanceof JSAssignmentExpression assignment) {
+            PsiElement assignmentParent = assignment.getParent();
 
-        if (parent instanceof JSAssignmentExpression assignment) {
-            final PsiElement grandParent = parent.getParent();
-
-            if (grandParent instanceof JSStatement) {
-                grandParent.delete();
+            if (assignmentParent instanceof JSStatement statement) {
+                statement.delete();
                 return;
             }
-            else if (grandParent instanceof JSBinaryExpression binaryExpression) {
+            else if (assignmentParent instanceof JSBinaryExpression binaryExpression) {
                 binaryExpression.getROperand().replace(assignment.getROperand());
                 return;
             }
-            else if (grandParent instanceof JSVariable variable) {
-                final JSExpression initializerExpression = variable.getInitializer();
-                initializerExpression.replace(assignment.getROperand());
+            else if (assignmentParent instanceof JSVariable variable) {
+                JSExpression initializer = variable.getInitializer();
+                initializer.replace(assignment.getROperand());
                 return;
             }
         }
@@ -96,6 +96,7 @@ public class JSDefinitionExpressionImpl extends JSExpressionImpl implements JSDe
     }
 
     @Override
+    @RequiredReadAction
     public PsiElement getNameIdentifier() {
         return null;
     }

@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -26,14 +27,11 @@ import com.intellij.lang.javascript.psi.JSStatement;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:49:01 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSIfStatementImpl extends JSStatementImpl implements JSIfStatement {
-    public JSIfStatementImpl(final ASTNode node) {
+    public JSIfStatementImpl(ASTNode node) {
         super(node);
     }
 
@@ -48,10 +46,11 @@ public class JSIfStatementImpl extends JSStatementImpl implements JSIfStatement 
     }
 
     @Override
+    @RequiredReadAction
     public JSStatement getElse() {
-        final ASTNode myNode = getNode();
-        final ASTNode elseNode = myNode.findChildByType(JSTokenTypes.ELSE_KEYWORD);
-        final ASTNode node = elseNode != null ? myNode.findChildByType(JSElementTypes.STATEMENTS, elseNode) : null;
+        ASTNode myNode = getNode();
+        ASTNode elseNode = myNode.findChildByType(JSTokenTypes.ELSE_KEYWORD);
+        ASTNode node = elseNode != null ? myNode.findChildByType(JSElementTypes.STATEMENTS, elseNode) : null;
         return node != null ? (JSStatement)node.getPsi() : null;
     }
 

@@ -16,7 +16,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 19/12/2021
+ * @since 2021-12-19
  */
 public class JSFunctionPropertyImpl extends JSPropertyImpl implements JSFunctionProperty {
     public JSFunctionPropertyImpl(ASTNode node) {
@@ -43,8 +43,9 @@ public class JSFunctionPropertyImpl extends JSPropertyImpl implements JSFunction
     }
 
     @Override
+    @RequiredReadAction
     public JSSourceElement[] getBody() {
-        final ASTNode[] children = getNode().getChildren(JSElementTypes.SOURCE_ELEMENTS);
+        ASTNode[] children = getNode().getChildren(JSElementTypes.SOURCE_ELEMENTS);
         if (children.length == 0) {
             return JSSourceElement.EMPTY_ARRAY;
         }
@@ -84,6 +85,7 @@ public class JSFunctionPropertyImpl extends JSPropertyImpl implements JSFunction
     }
 
     @Override
+    @RequiredReadAction
     public String getQualifiedName() {
         return null;
     }

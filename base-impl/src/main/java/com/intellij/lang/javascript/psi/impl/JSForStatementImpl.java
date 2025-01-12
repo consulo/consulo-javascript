@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -30,17 +31,19 @@ import jakarta.annotation.Nonnull;
  * @author max
  */
 public class JSForStatementImpl extends JSStatementImpl implements JSForStatement {
-    public JSForStatementImpl(final ASTNode node) {
+    public JSForStatementImpl(ASTNode node) {
         super(node);
     }
 
     @Override
+    @RequiredReadAction
     public JSVarStatement getVarDeclaration() {
-        final ASTNode node = getNode().findChildByType(JSElementTypes.VAR_STATEMENT);
+        ASTNode node = getNode().findChildByType(JSElementTypes.VAR_STATEMENT);
         return (JSVarStatement)(node != null ? node.getPsi() : null);
     }
 
     @Override
+    @RequiredReadAction
     public JSExpression getInitialization() {
         ASTNode child = getNode().getFirstChildNode();
         while (child != null) {
@@ -56,6 +59,7 @@ public class JSForStatementImpl extends JSStatementImpl implements JSForStatemen
     }
 
     @Override
+    @RequiredReadAction
     public JSExpression getCondition() {
         ASTNode child = getNode().getFirstChildNode();
         int semicolonCount = 0;
@@ -75,6 +79,7 @@ public class JSForStatementImpl extends JSStatementImpl implements JSForStatemen
     }
 
     @Override
+    @RequiredReadAction
     public JSExpression getUpdate() {
         ASTNode child = getNode().getFirstChildNode();
         int semicolonCount = 0;
@@ -91,6 +96,7 @@ public class JSForStatementImpl extends JSStatementImpl implements JSForStatemen
     }
 
     @Override
+    @RequiredReadAction
     public JSStatement getBody() {
         ASTNode child = getNode().getFirstChildNode();
         boolean passedRParen = false;
@@ -108,6 +114,7 @@ public class JSForStatementImpl extends JSStatementImpl implements JSForStatemen
     }
 
     @Override
+    @RequiredReadAction
     public boolean processDeclarations(
         @Nonnull PsiScopeProcessor processor,
         @Nonnull ResolveState state,
@@ -115,12 +122,12 @@ public class JSForStatementImpl extends JSStatementImpl implements JSForStatemen
         @Nonnull PsiElement place
     ) {
         if (lastParent != null) {
-            final JSVarStatement statement = getVarDeclaration();
+            JSVarStatement statement = getVarDeclaration();
             if (statement != null) {
                 return statement.processDeclarations(processor, state, lastParent, place);
             }
             else {
-                final JSExpression initialization = getInitialization();
+                JSExpression initialization = getInitialization();
                 if (initialization != null) {
                     return initialization.processDeclarations(processor, state, null, place);
                 }

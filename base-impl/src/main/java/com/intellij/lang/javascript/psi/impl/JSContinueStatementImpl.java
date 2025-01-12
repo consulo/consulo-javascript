@@ -17,24 +17,23 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import com.intellij.lang.javascript.psi.*;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.util.PsiTreeUtil;
 
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:52:04 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSContinueStatementImpl extends JSStatementWithLabelReferenceImpl implements JSContinueStatement {
-    public JSContinueStatementImpl(final ASTNode node) {
+    public JSContinueStatementImpl(ASTNode node) {
         super(node);
     }
 
     @Override
+    @RequiredReadAction
     public JSStatement getStatementToContinue() {
         String label = getLabel();
         if (label == null) {

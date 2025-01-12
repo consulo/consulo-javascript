@@ -16,31 +16,31 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSAttributeList;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSNamespaceDeclaration;
 import com.intellij.lang.javascript.psi.stubs.JSNamespaceDeclarationStub;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.javascript.lang.JavaScriptTokenSets;
+import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.util.IncorrectOperationException;
-import consulo.javascript.lang.JavaScriptTokenSets;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
 public class JSNamespaceDeclarationImpl extends JSStubbedStatementImpl<JSNamespaceDeclarationStub> implements JSNamespaceDeclaration {
-    public JSNamespaceDeclarationImpl(final ASTNode node) {
+    public JSNamespaceDeclarationImpl(ASTNode node) {
         super(node);
     }
 
-    public JSNamespaceDeclarationImpl(final JSNamespaceDeclarationStub node) {
+    public JSNamespaceDeclarationImpl(JSNamespaceDeclarationStub node) {
         super(node, JSElementTypes.NAMESPACE_DECLARATION);
     }
 
@@ -55,8 +55,9 @@ public class JSNamespaceDeclarationImpl extends JSStubbedStatementImpl<JSNamespa
     }
 
     @Override
-    public PsiElement setName(@NonNls @Nonnull String newName) throws IncorrectOperationException {
-        final String oldName = getName();
+    @RequiredWriteAction
+    public PsiElement setName(@Nonnull String newName) throws IncorrectOperationException {
+        String oldName = getName();
         if (newName.equals(oldName)) {
             return this;
         }
@@ -68,24 +69,27 @@ public class JSNamespaceDeclarationImpl extends JSStubbedStatementImpl<JSNamespa
     }
 
     @Override
+    @RequiredReadAction
     public String getName() {
-        final JSNamespaceDeclarationStub stub = getStub();
+        JSNamespaceDeclarationStub stub = getStub();
         if (stub != null) {
             return stub.getName();
         }
-        final PsiElement node = getNameIdentifier();
+        PsiElement node = getNameIdentifier();
         return node != null ? node.getText() : null;
     }
 
     @Override
+    @RequiredReadAction
     public int getTextOffset() {
-        final PsiElement node = getNameIdentifier();
+        PsiElement node = getNameIdentifier();
         return node == null ? super.getTextOffset() : node.getTextOffset();
     }
 
     @Override
+    @RequiredReadAction
     public String getQualifiedName() {
-        final JSNamespaceDeclarationStub stub = getStub();
+        JSNamespaceDeclarationStub stub = getStub();
         if (stub != null) {
             return stub.getQualifiedName();
         }
@@ -93,17 +97,19 @@ public class JSNamespaceDeclarationImpl extends JSStubbedStatementImpl<JSNamespa
     }
 
     @Override
+    @RequiredReadAction
     public PsiElement getNameIdentifier() {
         return findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
     }
 
     @Override
+    @RequiredReadAction
     public String getInitialValueString() {
-        final JSNamespaceDeclarationStub stub = getStub();
+        JSNamespaceDeclarationStub stub = getStub();
         if (stub != null) {
             return stub.getInitialValueString();
         }
-        final ASTNode anchor = getNode().findChildByType(JSTokenTypes.EQ);
+        ASTNode anchor = getNode().findChildByType(JSTokenTypes.EQ);
 
         if (anchor != null) {
             ASTNode node = anchor.getTreeNext();
@@ -126,10 +132,10 @@ public class JSNamespaceDeclarationImpl extends JSStubbedStatementImpl<JSNamespa
 
     @Override
     public boolean processDeclarations(
-        @Nonnull final PsiScopeProcessor processor,
-        @Nonnull final ResolveState state,
-        final PsiElement lastParent,
-        @Nonnull final PsiElement place
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        PsiElement lastParent,
+        @Nonnull PsiElement place
     ) {
         return processor.execute(lastParent, state);
     }

@@ -20,18 +20,16 @@ import com.intellij.lang.javascript.psi.JSDoWhileStatement;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSStatement;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 10:15:13 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSDoWhileStatementImpl extends JSStatementImpl implements JSDoWhileStatement {
-    public JSDoWhileStatementImpl(final ASTNode node) {
+    public JSDoWhileStatementImpl(ASTNode node) {
         super(node);
     }
 
@@ -41,6 +39,7 @@ public class JSDoWhileStatementImpl extends JSStatementImpl implements JSDoWhile
     }
 
     @Override
+    @RequiredReadAction
     public JSStatement getBody() {
         return findChildByClass(JSStatement.class);
     }

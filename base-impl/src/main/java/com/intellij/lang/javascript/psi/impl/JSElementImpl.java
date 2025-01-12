@@ -21,10 +21,10 @@ import consulo.language.psi.stub.StubElement;
 
 /**
  * @author max
- * @since Jan 30, 2005 8:23:10 PM
+ * @since 2005-01-30
  */
 public abstract class JSElementImpl extends JSStubElementImpl<StubElement> {
-    public JSElementImpl(final ASTNode node) {
+    public JSElementImpl(ASTNode node) {
         super(node);
     }
 }

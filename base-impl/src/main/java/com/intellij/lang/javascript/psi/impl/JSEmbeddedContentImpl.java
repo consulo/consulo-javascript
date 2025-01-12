@@ -19,6 +19,8 @@ package com.intellij.lang.javascript.psi.impl;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
@@ -32,14 +34,11 @@ import consulo.xml.psi.xml.XmlTagChild;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 31, 2005
- * Time: 12:02:38 AM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-31
  */
 public class JSEmbeddedContentImpl extends JSElementImpl implements XmlTagChild {
-    public JSEmbeddedContentImpl(final ASTNode node) {
+    public JSEmbeddedContentImpl(ASTNode node) {
         super(node);
     }
 
@@ -50,19 +49,21 @@ public class JSEmbeddedContentImpl extends JSElementImpl implements XmlTagChild 
 
     @Override
     public XmlTag getParentTag() {
-        final PsiElement parent = getParent();
+        PsiElement parent = getParent();
         return parent instanceof XmlTag parentTag ? parentTag : null;
     }
 
     @Override
+    @RequiredReadAction
     public XmlTagChild getNextSiblingInTag() {
         PsiElement nextSibling = getNextSibling();
         return nextSibling instanceof XmlTagChild tagChild ? tagChild : null;
     }
 
     @Override
+    @RequiredReadAction
     public XmlTagChild getPrevSiblingInTag() {
-        final PsiElement prevSibling = getPrevSibling();
+        PsiElement prevSibling = getPrevSibling();
         return prevSibling instanceof XmlTagChild tagChild ? tagChild : null;
     }
 
@@ -83,9 +84,10 @@ public class JSEmbeddedContentImpl extends JSElementImpl implements XmlTagChild 
     }
 
     @Override
+    @RequiredReadAction
     public String toString() {
         String s = super.toString();
-        final IElementType type = getNode().getElementType();
+        IElementType type = getNode().getElementType();
         if (type != JSElementTypes.EMBEDDED_CONTENT) {
             s += ":" + type;
         }
@@ -93,8 +95,9 @@ public class JSEmbeddedContentImpl extends JSElementImpl implements XmlTagChild 
     }
 
     @Override
+    @RequiredWriteAction
     public void delete() throws IncorrectOperationException {
-        final ASTNode astNode = getNode();
+        ASTNode astNode = getNode();
         astNode.getTreeParent().removeChild(astNode);
     }
 }

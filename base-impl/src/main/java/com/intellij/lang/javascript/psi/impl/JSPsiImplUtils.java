@@ -22,9 +22,10 @@ import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.content.base.SourcesOrderRootType;
-import consulo.javascript.language.psi.JavaScriptTypeElement;
 import consulo.javascript.lang.psi.impl.elementType.BaseJavaScriptElementType;
+import consulo.javascript.language.psi.JavaScriptTypeElement;
 import consulo.javascript.language.psi.stub.JavaScriptIndexKeys;
 import consulo.javascript.psi.JavaScriptImportStatementBase;
 import consulo.language.ast.ASTNode;
@@ -41,30 +42,25 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.collection.HashingStrategy;
-import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.xml.psi.xml.XmlFile;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
  * @author Maxim.Mossienko
- * Date: Jun 8, 2008
- * Time: 3:23:37 PM
+ * @since 2008-06-08
  */
 public class JSPsiImplUtils {
-    @NonNls
     private static final String ARRAY_TYPE_NAME = "Array";
-    @NonNls
     private static final String ARRAY_ELEMENT_TYPE_ANNOTATION_NAME = "ArrayElementType";
 
     @Nullable
@@ -100,18 +96,14 @@ public class JSPsiImplUtils {
 
     @Deprecated
     public static ASTNode getTypeExpressionFromDeclaration(JSNamedElement element) {
-        final ASTNode myNode = element.getNode();
-        final ASTNode node = myNode != null ? myNode.findChildByType(JSTokenTypes.COLON) : null;
-        String s = null;
+        ASTNode myNode = element.getNode();
+        ASTNode node = myNode != null ? myNode.findChildByType(JSTokenTypes.COLON) : null;
 
-        if (node != null) {
-            return myNode.findChildByType(JSDocumentationUtils.ourTypeFilter, node);
-        }
-
-        return null;
+        return node != null ? myNode.findChildByType(JSDocumentationUtils.ourTypeFilter, node) : null;
     }
 
     @Deprecated
+    @RequiredReadAction
     public static String getTypeFromDeclaration(JSNamedElement element) {
         ASTNode typeExpr = getTypeExpressionFromDeclaration(element);
 
@@ -119,15 +111,15 @@ public class JSPsiImplUtils {
         if (typeExpr != null) {
             s = typeExpr.getText();
         }
-        else if (element instanceof JSParameter && ((JSParameter)element).isRest()) {
+        else if (element instanceof JSParameter parameter && parameter.isRest()) {
             s = ARRAY_TYPE_NAME;
         }
 
         if (ARRAY_TYPE_NAME.equals(s)) {
-            final PsiComment psiComment = typeExpr != null ? PsiTreeUtil.getPrevSiblingOfType(typeExpr.getPsi(), PsiComment.class) : null;
+            PsiComment psiComment = typeExpr != null ? PsiTreeUtil.getPrevSiblingOfType(typeExpr.getPsi(), PsiComment.class) : null;
 
             if (psiComment != null) {
-                final String elementType = JSDocumentationUtils.unwrapCommentDelimiters(psiComment.getText()).trim();
+                String elementType = JSDocumentationUtils.unwrapCommentDelimiters(psiComment.getText()).trim();
 
                 if (elementType.length() > 0) {
                     return s + "[" + elementType;
@@ -135,7 +127,7 @@ public class JSPsiImplUtils {
             }
 
             if (element instanceof JSAttributeListOwner attributeListOwner) {
-                final JSAttributeList attributeList = attributeListOwner.getAttributeList();
+                JSAttributeList attributeList = attributeListOwner.getAttributeList();
 
                 if (attributeList != null) {
                     String type = getArrayElementTypeFromAnnotation(attributeList);
@@ -151,12 +143,14 @@ public class JSPsiImplUtils {
     }
 
     @Nullable
+    @RequiredReadAction
     public static String getArrayElementTypeFromAnnotation(JSAttributeList attributeList) {
         return getTypeFromAnnotationParameter(attributeList, ARRAY_ELEMENT_TYPE_ANNOTATION_NAME, null);
     }
 
+    @RequiredReadAction
     public static String getType(JSNamedElement element) {
-        final String typeFromDeclaration = getTypeFromDeclaration(element);
+        String typeFromDeclaration = getTypeFromDeclaration(element);
         if (typeFromDeclaration != null) {
             return typeFromDeclaration;
         }
@@ -164,24 +158,24 @@ public class JSPsiImplUtils {
         return JSDocumentationUtils.findTypeFromComments(element);
     }
 
-    public static void updateFileName(
-        JSQualifiedNamedElement jsClassBase,
-        final String newName,
-        final String oldName
-    ) throws IncorrectOperationException {
-        final PsiFile containingFile = jsClassBase.getContainingFile();
+    @RequiredWriteAction
+    public static void updateFileName(JSQualifiedNamedElement jsClassBase, String newName, String oldName)
+        throws IncorrectOperationException {
+
+        PsiFile containingFile = jsClassBase.getContainingFile();
 
         if (containingFile.getContext() == null) {
-            final VirtualFile virtualFile = containingFile.getVirtualFile();
+            VirtualFile virtualFile = containingFile.getVirtualFile();
 
             if (virtualFile != null && virtualFile.getNameWithoutExtension().equals(oldName)) {
-                final String s = containingFile.getName();
+                String s = containingFile.getName();
                 containingFile.setName(newName + "." + s.substring(s.lastIndexOf('.') + 1));
             }
         }
     }
 
     @Nullable
+    @RequiredReadAction
     public static JSPackageStatement findPackageStatement(JSFile file) {
         JSPackageStatement packageStatement = null;
 
@@ -195,6 +189,7 @@ public class JSPsiImplUtils {
     }
 
     @Nonnull
+    @RequiredReadAction
     static PsiElement findTopLevelNavigatableElement(@Nonnull JSQualifiedNamedElement jsClass) {
         PsiElement sourceElement = findTopLevelNavigatableElementWithSource(jsClass, null);
         if (sourceElement != null) {
@@ -204,6 +199,7 @@ public class JSPsiImplUtils {
     }
 
     @Nullable
+    @RequiredReadAction
     public static PsiElement findTopLevelNavigatableElementWithSource(
         @Nonnull JSQualifiedNamedElement jsClass,
         @Nullable Consumer<JSQualifiedNamedElement> candidatesConsumer
@@ -222,8 +218,8 @@ public class JSPsiImplUtils {
         }
 
         GlobalSearchScope searchScope = jsClass.getResolveScope();
-        final String qName = jsClass.getQualifiedName();
-        final Collection<JSQualifiedNamedElement> candidates = StubIndex.getElements(
+        String qName = jsClass.getQualifiedName();
+        Collection<JSQualifiedNamedElement> candidates = StubIndex.getElements(
             JavaScriptIndexKeys.ELEMENTS_BY_QNAME,
             qName,
             jsClass.getProject(),
@@ -254,6 +250,7 @@ public class JSPsiImplUtils {
     }
 
     @Nullable
+    @RequiredReadAction
     private static PsiElement findSourceElement(JSQualifiedNamedElement jsClass) {
         PsiFile containingFile = jsClass.getContainingFile();
         if (containingFile == null) {
@@ -266,7 +263,7 @@ public class JSPsiImplUtils {
             return null;
         }
 
-        final List<OrderEntry> orderEntries = projectFileIndex.getOrderEntriesForFile(vFile);
+        List<OrderEntry> orderEntries = projectFileIndex.getOrderEntriesForFile(vFile);
 
         String qName = jsClass.getQualifiedName();
         String baseSourceName = jsClass.getName();
@@ -286,8 +283,8 @@ public class JSPsiImplUtils {
                 if (source != null) {
                     PsiFile psiSource = jsClass.getManager().findFile(source);
 
-                    if (psiSource instanceof JSFile) {
-                        JSPackageStatement statement = findPackageStatement((JSFile)psiSource);
+                    if (psiSource instanceof JSFile jsFile) {
+                        JSPackageStatement statement = findPackageStatement(jsFile);
 
                         if (statement != null) {
                             for (JSSourceElement el : statement.getStatements()) {
@@ -306,8 +303,8 @@ public class JSPsiImplUtils {
                     }
                     if (source != null) {
                         PsiFile psiSource = jsClass.getManager().findFile(source);
-                        if (psiSource instanceof XmlFile) {
-                            return XmlBackedJSClassImpl.getXmlBackedClass((XmlFile)psiSource);
+                        if (psiSource instanceof XmlFile xmlFile) {
+                            return XmlBackedJSClassImpl.getXmlBackedClass(xmlFile);
                         }
                     }
                 }
@@ -316,17 +313,18 @@ public class JSPsiImplUtils {
         return null;
     }
 
-    static String getQName(final JSNamedElement element) {
-        final PsiElement node = element.getNameIdentifier();
-        final String name = node != null ? node.getText() : null;
+    @RequiredReadAction
+    static String getQName(JSNamedElement element) {
+        PsiElement node = element.getNameIdentifier();
+        String name = node != null ? node.getText() : null;
         PsiElement responsibleParent = element.getParent();
 
-        if (responsibleParent instanceof JSVarStatement) {
-            responsibleParent = responsibleParent.getParent();
+        if (responsibleParent instanceof JSVarStatement varStatement) {
+            responsibleParent = varStatement.getParent();
         }
 
         if (responsibleParent instanceof JSPackageStatement packageStatement && name != null) {
-            final String packageName = packageStatement.getQualifiedName();
+            String packageName = packageStatement.getQualifiedName();
             if (!StringUtil.isEmpty(packageName)) {
                 return packageName.concat(".").concat(name);
             }
@@ -335,15 +333,16 @@ public class JSPsiImplUtils {
     }
 
     @Nullable
+    @RequiredReadAction
     public static String getTypeFromAnnotationParameter(
         @Nonnull JSAttributeList attributeList,
         @Nonnull String annotationName,
         @Nullable String annotationParameter
     ) {
         String arrayType = null;
-        final JSAttribute[] byName = attributeList.getAttributesByName(annotationName);
+        JSAttribute[] byName = attributeList.getAttributesByName(annotationName);
         if (byName.length > 0) {
-            final JSAttributeNameValuePair jsAttributeNameValuePair = byName[0].getValueByName(annotationParameter);
+            JSAttributeNameValuePair jsAttributeNameValuePair = byName[0].getValueByName(annotationParameter);
             arrayType = jsAttributeNameValuePair != null ? jsAttributeNameValuePair.getSimpleValue() : null;
         }
         return arrayType;
@@ -352,12 +351,13 @@ public class JSPsiImplUtils {
     /**
      * @see <code>QUALIFIED_NAME_HASHING_STRATEGY</code>
      */
-    static boolean isTheSameClass(final PsiElement typeSource, final JSClass jsClass) {
+    @RequiredReadAction
+    static boolean isTheSameClass(PsiElement typeSource, JSClass jsClass) {
         if (typeSource == jsClass) {
             return true;
         }
-        if (typeSource instanceof JSClass && jsClass != null) {
-            final String qName = ((JSClass)typeSource).getQualifiedName();
+        if (typeSource instanceof JSClass typeSourceClass && jsClass != null) {
+            String qName = typeSourceClass.getQualifiedName();
             return qName != null && qName.equals(jsClass.getQualifiedName());
         }
         return false;
@@ -365,13 +365,15 @@ public class JSPsiImplUtils {
 
     public static final HashingStrategy<JSQualifiedNamedElement> QUALIFIED_NAME_HASHING_STRATEGY = new HashingStrategy<>() {
         @Override
-        public int hashCode(final JSQualifiedNamedElement object) {
+        @RequiredReadAction
+        public int hashCode(JSQualifiedNamedElement object) {
             return object == null || object.getQualifiedName() == null ? 0 : object.getQualifiedName().hashCode();
         }
 
         @Override
-        public boolean equals(final JSQualifiedNamedElement o1, final JSQualifiedNamedElement o2) {
-            return Comparing.equal(o1.getQualifiedName(), o2.getQualifiedName());
+        @RequiredReadAction
+        public boolean equals(JSQualifiedNamedElement o1, JSQualifiedNamedElement o2) {
+            return Objects.equals(o1.getQualifiedName(), o2.getQualifiedName());
         }
     };
 
@@ -383,6 +385,7 @@ public class JSPsiImplUtils {
     }
 
     @Nullable
+    @RequiredReadAction
     static String getQNameForMove(@Nonnull PsiElement targetElement, PsiElement elementToBind) {
         String qName = null;
         Project project = targetElement.getProject();
@@ -397,18 +400,16 @@ public class JSPsiImplUtils {
 
             String packageName = JSResolveUtil.getExpectedPackageNameFromFile(elementToBindFile, project, false);
 
-            if (targetElement instanceof JSReferenceExpression) {
-                JSExpression qualifier = ((JSReferenceExpression)targetElement).getQualifier();
+            if (targetElement instanceof JSReferenceExpression targetRefExpr) {
+                JSExpression qualifier = targetRefExpr.getQualifier();
                 String targetElementPackageName = qualifier != null
                     ? qualifier.getText()
-                    : JSResolveUtil.getExpectedPackageNameFromFile(targetElement.getContainingFile().getVirtualFile(), project, false);
+                    : JSResolveUtil.getExpectedPackageNameFromFile(targetRefExpr.getContainingFile().getVirtualFile(), project, false);
                 if (!differentPackageName(targetElementPackageName, packageName)) {
                     return null;
                 }
-                if (qualifier == null) {
-                    if (!(targetElement.getParent() instanceof JavaScriptImportStatementBase)) {
-                        return null;
-                    }
+                if (qualifier == null && !(targetRefExpr.getParent() instanceof JavaScriptImportStatementBase)) {
+                    return null;
                 }
             }
 
@@ -423,14 +424,14 @@ public class JSPsiImplUtils {
         return qName;
     }
 
-    public static boolean differentPackageName(final String s, final String expectedPackageNameFromFile) {
-        final boolean sIsEmpty = isEmpty(s);
-        final boolean expectedIsEmpty = isEmpty(expectedPackageNameFromFile);
+    public static boolean differentPackageName(String s, String expectedPackageNameFromFile) {
+        boolean sIsEmpty = isEmpty(s);
+        boolean expectedIsEmpty = isEmpty(expectedPackageNameFromFile);
 
         return (sIsEmpty && !expectedIsEmpty) || (!sIsEmpty && (expectedIsEmpty || !s.equals(expectedPackageNameFromFile)));
     }
 
-    public static boolean isEmpty(final String expectedPackageNameFromFile) {
+    public static boolean isEmpty(String expectedPackageNameFromFile) {
         return expectedPackageNameFromFile == null || expectedPackageNameFromFile.isEmpty();
     }
 }

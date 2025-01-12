@@ -28,18 +28,17 @@ import consulo.language.ast.IElementType;
 import jakarta.annotation.Nonnull;
 
 /**
- * User: max
- * Date: Jan 30, 2005
- * Time: 11:52:13 PM
+ * @author max
+ * @since 2005-01-30
  */
 public class JSPostfixExpressionImpl extends JSExpressionImpl implements JSPostfixExpression {
-    public JSPostfixExpressionImpl(final ASTNode node) {
+    public JSPostfixExpressionImpl(ASTNode node) {
         super(node);
     }
 
-    @RequiredReadAction
     @Nonnull
     @Override
+    @RequiredReadAction
     public JavaScriptType getType() {
         JSExpression expression = getExpression();
         return expression == null ? JavaScriptType.UNKNOWN : expression.getType();
@@ -51,8 +50,9 @@ public class JSPostfixExpressionImpl extends JSExpressionImpl implements JSPostf
     }
 
     @Override
+    @RequiredReadAction
     public IElementType getOperationSign() {
-        final ASTNode[] nodes = getNode().getChildren(JSTokenTypes.OPERATIONS);
+        ASTNode[] nodes = getNode().getChildren(JSTokenTypes.OPERATIONS);
         return nodes.length == 1 ? nodes[0].getElementType() : null;
     }
 

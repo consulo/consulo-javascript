@@ -19,6 +19,8 @@ package com.intellij.lang.javascript.psi.impl;
 import com.intellij.lang.javascript.JSDocTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.util.JSLookupUtil;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.util.TextRange;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.ASTNode;
@@ -29,24 +31,25 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.util.collection.ArrayUtil;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 public class JSDocTagImpl extends JSElementImpl implements JSDocTag {
     private volatile PsiReference[] myRefs;
     private volatile long myModificationCount = -1;
 
-    public JSDocTagImpl(final ASTNode node) {
+    public JSDocTagImpl(ASTNode node) {
         super(node);
     }
 
     @Override
+    @RequiredReadAction
     public String getName() {
-        final PsiElement element = findChildByType(JSDocTokenTypes.DOC_TAG_NAME);
+        PsiElement element = findChildByType(JSDocTokenTypes.DOC_TAG_NAME);
         return element != null ? element.getText().substring(1) : null;
     }
 
     @Override
-    public PsiElement setName(@NonNls @Nonnull final String name) throws IncorrectOperationException {
+    @RequiredWriteAction
+    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
         throw new IncorrectOperationException();
     }
 
@@ -62,15 +65,16 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag {
 
     @Nonnull
     @Override
+    @RequiredReadAction
     public PsiReference[] getReferences() {
-        final long count = getManager().getModificationTracker().getModificationCount();
+        long count = getManager().getModificationTracker().getModificationCount();
 
         if (count != myModificationCount) {
-            final @NonNls String name = getName();
+            String name = getName();
             PsiReference[] result = PsiReference.EMPTY_ARRAY;
 
             if ("param".equals(name)) {
-                final PsiElement data = findChildByType(JSDocTokenTypes.DOC_COMMENT_DATA);
+                PsiElement data = findChildByType(JSDocTokenTypes.DOC_COMMENT_DATA);
                 if (data != null) {
                     result = new PsiReference[]{new ParamReference(this)};
                 }
@@ -87,18 +91,18 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag {
         private PsiElement myJsDocTagValue;
         private TextRange myRange;
 
-        public ParamReference(final JSDocTagImpl elt) {
+        public ParamReference(JSDocTagImpl elt) {
             reset(elt);
         }
 
-        private void reset(final JSDocTagImpl elt) {
+        private void reset(JSDocTagImpl elt) {
             myJsDocTagValue = elt.findChildByType(JSDocTokenTypes.DOC_COMMENT_DATA);
             int offsetInParent = myJsDocTagValue.getStartOffsetInParent();
             int textLength;
 
             if (myJsDocTagValue.textContains('[')) {
-                final String text = myJsDocTagValue.getText();
-                final int at = text.indexOf('[');
+                String text = myJsDocTagValue.getText();
+                int at = text.indexOf('[');
                 offsetInParent += at + 1;
 
                 // @param [name] | //@param[name="something"] | [obj.prop2(='somestring')?]
@@ -122,52 +126,59 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag {
             else if (myJsDocTagValue.textContains('=')) {
                 textLength = myJsDocTagValue.getText().indexOf('='); // @param name=""
             }
+            else if (myJsDocTagValue.textContains('.')) { //@param userInfo.email
+                textLength = myJsDocTagValue.getText().indexOf('.');
+            }
             else {
-                if (myJsDocTagValue.textContains('.')) { //@param userInfo.email
-                    textLength = myJsDocTagValue.getText().indexOf('.');
-                }
-                else {
-                    textLength = myJsDocTagValue.getTextLength();
-                }
+                textLength = myJsDocTagValue.getTextLength();
             }
             myRange = new TextRange(offsetInParent, offsetInParent + textLength);
         }
 
         @Override
+        @RequiredReadAction
         public PsiElement getElement() {
             return myJsDocTagValue.getParent();
         }
 
+        @Nonnull
         @Override
+        @RequiredReadAction
         public TextRange getRangeInElement() {
             return myRange;
         }
 
+        @Nonnull
         @Override
+        @RequiredReadAction
         public String getCanonicalText() {
-            final int offsetInText = myRange.getStartOffset() - myJsDocTagValue.getStartOffsetInParent();
+            int offsetInText = myRange.getStartOffset() - myJsDocTagValue.getStartOffsetInParent();
             return myJsDocTagValue.getText().substring(offsetInText, offsetInText + myRange.getLength());
         }
 
         @Override
-        public PsiElement handleElementRename(final String newElementName) throws IncorrectOperationException {
+        @RequiredWriteAction
+        public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
             JSDocTag jsDocTag = (JSDocTag)myJsDocTagValue.getParent();
-            final ElementManipulator<JSDocTag> manipulator = ElementManipulators.getManipulator(jsDocTag);
+            ElementManipulator<JSDocTag> manipulator = ElementManipulators.getManipulator(jsDocTag);
             jsDocTag = manipulator.handleContentChange(jsDocTag, myRange, newElementName);
             reset((JSDocTagImpl)jsDocTag);
             return myJsDocTagValue;
         }
 
         @Override
-        public PsiElement bindToElement(@Nonnull final PsiElement element) throws IncorrectOperationException {
+        @RequiredWriteAction
+        public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
             return null;
         }
 
         @Override
-        public boolean isReferenceTo(final PsiElement element) {
+        @RequiredReadAction
+        public boolean isReferenceTo(PsiElement element) {
             return element.isEquivalentTo(resolve());
         }
 
+        @RequiredReadAction
         private static JSParameterList findParameterList(PsiElement elt) {
             if (elt == null) {
                 return null;
@@ -176,33 +187,31 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag {
             if (psiComment == null) {
                 return null;
             }
-            final PsiElement parent = psiComment.getParent();
-            if (parent instanceof PsiComment) {
-                psiComment = (PsiComment)parent;
+            PsiElement parent = psiComment.getParent();
+            if (parent instanceof PsiComment comment) {
+                psiComment = comment;
             }
 
             PsiElement next = psiComment.getNextSibling();
-            if (next instanceof PsiWhiteSpace) {
-                next = next.getNextSibling();
+            if (next instanceof PsiWhiteSpace whiteSpace) {
+                next = whiteSpace.getNextSibling();
             }
-            if (next instanceof PsiComment) {
-                next = next.getNextSibling();
-                if (next instanceof PsiWhiteSpace) {
-                    next = next.getNextSibling();
+            if (next instanceof PsiComment comment) {
+                next = comment.getNextSibling();
+                if (next instanceof PsiWhiteSpace whiteSpace) {
+                    next = whiteSpace.getNextSibling();
                 }
             }
 
             if (next instanceof JSExpressionStatement expressionStatement) {
-                final JSExpression expression = expressionStatement.getExpression();
-
-                if (expression instanceof JSAssignmentExpression assignment) {
+                if (expressionStatement.getExpression() instanceof JSAssignmentExpression assignment) {
                     JSExpression roperand = assignment.getROperand();
                     if (roperand instanceof JSNewExpression newExpression) {
                         roperand = newExpression.getMethodExpression();
                     }
 
-                    if (roperand instanceof JSFunctionExpression) {
-                        next = roperand;
+                    if (roperand instanceof JSFunctionExpression functionExpr) {
+                        next = functionExpr;
                     }
                 }
             }
@@ -211,23 +220,16 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag {
             }
             else if (next instanceof JSVarStatement varStatement) {
                 JSVariable[] variables = varStatement.getVariables();
-                if (variables.length > 0) {
-                    JSExpression initializer = variables[0].getInitializer();
-                    if (initializer instanceof JSFunctionExpression) {
-                        next = initializer;
-                    }
+                if (variables.length > 0 && variables[0].getInitializer() instanceof JSFunctionExpression functionExpr) {
+                    next = functionExpr;
                 }
             }
             else if (next != null) {
-                if (next instanceof JSVariable variable) {
-                    JSExpression expression = variable.getInitializer();
-                    if (expression instanceof JSFunctionExpression) {
-                        next = expression;
-                    }
+                if (next instanceof JSVariable variable && variable.getInitializer() instanceof JSFunctionExpression functionExpr) {
+                    next = functionExpr;
                 }
-                PsiElement nextParent = next.getParent();
-                if (nextParent instanceof JSFunction) {
-                    next = nextParent;
+                if (next.getParent() instanceof JSFunction function) {
+                    next = function;
                 }
             }
             if (next instanceof JSFunction function) {
@@ -238,11 +240,12 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag {
         }
 
         @Override
+        @RequiredReadAction
         public PsiElement resolve() {
-            final JSParameterList parameterList = findParameterList(getElement());
+            JSParameterList parameterList = findParameterList(getElement());
 
             if (parameterList != null) {
-                final String name = getCanonicalText();
+                String name = getCanonicalText();
                 for (JSParameter param : parameterList.getParameters()) {
                     if (name.equals(param.getName())) {
                         return param;
@@ -253,14 +256,16 @@ public class JSDocTagImpl extends JSElementImpl implements JSDocTag {
             return null;
         }
 
+        @Nonnull
         @Override
+        @RequiredReadAction
         public Object[] getVariants() {
-            final PsiElement elt = getElement();
-            final JSParameterList parameterList = findParameterList(PsiUtilBase.getOriginalElement(elt, elt.getClass()));
+            PsiElement elt = getElement();
+            JSParameterList parameterList = findParameterList(PsiUtilBase.getOriginalElement(elt, elt.getClass()));
 
             if (parameterList != null) {
-                final JSParameter[] parameters = parameterList.getParameters();
-                final Object[] result = new Object[parameters.length];
+                JSParameter[] parameters = parameterList.getParameters();
+                Object[] result = new Object[parameters.length];
 
                 for (int i = 0; i < parameters.length; ++i) {
                     result[i] = JSLookupUtil.createLookupItem(parameters[i], parameters[i].getName(), JSLookupUtil.LookupPriority.HIGHEST);

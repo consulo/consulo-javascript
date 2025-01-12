@@ -31,14 +31,11 @@ import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:26:39 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSExpressionStatementImpl extends JSStatementImpl implements JSExpressionStatement {
-    public JSExpressionStatementImpl(final ASTNode node) {
+    public JSExpressionStatementImpl(ASTNode node) {
         super(node);
     }
 
@@ -54,14 +51,15 @@ public class JSExpressionStatementImpl extends JSStatementImpl implements JSExpr
     }
 
     @Override
+    @RequiredReadAction
     public boolean processDeclarations(
         @Nonnull PsiScopeProcessor processor,
-		@Nonnull ResolveState state,
-		PsiElement lastParent,
+        @Nonnull ResolveState state,
+        PsiElement lastParent,
         @Nonnull PsiElement place
     ) {
         if (lastParent == null) {
-            final JSExpression expression = getExpression();
+            JSExpression expression = getExpression();
             if (expression != null) {
                 return expression.processDeclarations(processor, state, lastParent, place);
             }
@@ -74,6 +72,7 @@ public class JSExpressionStatementImpl extends JSStatementImpl implements JSExpr
     public ItemPresentation getPresentation() {
         return new ItemPresentation() {
             @Override
+            @RequiredReadAction
             public String getPresentableText() {
                 return getText();
             }
@@ -84,6 +83,7 @@ public class JSExpressionStatementImpl extends JSStatementImpl implements JSExpr
             }
 
             @Override
+            @RequiredReadAction
             public Image getIcon() {
                 return IconDescriptorUpdaters.getIcon(JSExpressionStatementImpl.this, 0);
             }

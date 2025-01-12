@@ -19,34 +19,34 @@ package com.intellij.lang.javascript.psi.impl;
 import com.intellij.lang.javascript.psi.JSDocTagValue;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.PsiReference;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.text.StringTokenizer;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 
 public class JSDocTagValueImpl extends JSElementImpl implements JSDocTagValue {
     private volatile PsiReference[] myRefs;
     private volatile long myModificationCount = -1;
 
-    public JSDocTagValueImpl(final ASTNode node) {
+    public JSDocTagValueImpl(ASTNode node) {
         super(node);
     }
 
     @Nonnull
     @Override
+    @RequiredReadAction
     public PsiReference[] getReferences() {
-        final long count = getManager().getModificationTracker().getModificationCount();
+        long count = getManager().getModificationTracker().getModificationCount();
 
         if (count != myModificationCount) {
-            final @NonNls String name = ((PsiNamedElement)getParent()).getName();
+            String name = ((PsiNamedElement)getParent()).getName();
             PsiReference[] result = PsiReference.EMPTY_ARRAY;
 
             if (name != null) {
-                @NonNls String text = getText();
+                String text = getText();
 
                 boolean soft = false;
 
@@ -81,9 +81,9 @@ public class JSDocTagValueImpl extends JSElementImpl implements JSDocTagValue {
                     text = text.substring(0, text.length() - 1);
                 }
 
-                final StringTokenizer tokenizer = new StringTokenizer(text, JSResolveUtil.COMMENT_DELIMITERS);
+                StringTokenizer tokenizer = new StringTokenizer(text, JSResolveUtil.COMMENT_DELIMITERS);
                 while (tokenizer.hasMoreElements()) {
-                    @NonNls String textFragment = tokenizer.nextElement();
+                    String textFragment = tokenizer.nextElement();
                     int localOffset = offset + tokenizer.getCurrentPosition() - textFragment.length();
                     if (textFragment.endsWith("[]")) {
                         textFragment = textFragment.substring(0, textFragment.length() - 2);
@@ -94,7 +94,7 @@ public class JSDocTagValueImpl extends JSElementImpl implements JSDocTagValue {
                     }
 
                     if (!"void".equals(textFragment)) {
-                        final JSReferenceSet set =
+                        JSReferenceSet set =
                             new JSReferenceSet(this, textFragment, localOffset, soft, false, false);
                         result = ArrayUtil.mergeArrays(result, set.getReferences(), PsiReference.ARRAY_FACTORY);
                     }

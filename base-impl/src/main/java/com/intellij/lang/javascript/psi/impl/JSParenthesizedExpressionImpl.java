@@ -23,12 +23,11 @@ import consulo.language.ast.ASTNode;
 import jakarta.annotation.Nonnull;
 
 /**
- * User: max
- * Date: Jan 30, 2005
- * Time: 11:30:44 PM
+ * @author max
+ * @since 2005-01-30
  */
 public class JSParenthesizedExpressionImpl extends JSExpressionImpl implements JSParenthesizedExpression {
-    public JSParenthesizedExpressionImpl(final ASTNode node) {
+    public JSParenthesizedExpressionImpl(ASTNode node) {
         super(node);
     }
 

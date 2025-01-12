@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -27,22 +28,20 @@ import consulo.language.ast.IElementType;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 11:47:35 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSConditionalExpressionImpl extends JSExpressionImpl implements JSConditionalExpression {
-    public JSConditionalExpressionImpl(final ASTNode node) {
+    public JSConditionalExpressionImpl(ASTNode node) {
         super(node);
     }
 
     @Override
+    @RequiredReadAction
     public JSExpression getCondition() {
         ASTNode child = getNode().getFirstChildNode();
         while (child != null) {
-            final IElementType type = child.getElementType();
+            IElementType type = child.getElementType();
             if (type == JSTokenTypes.QUEST) {
                 return null;
             }
@@ -55,11 +54,12 @@ public class JSConditionalExpressionImpl extends JSExpressionImpl implements JSC
     }
 
     @Override
+    @RequiredReadAction
     public JSExpression getThen() {
         boolean questPassed = false;
         ASTNode child = getNode().getFirstChildNode();
         while (child != null) {
-            final IElementType type = child.getElementType();
+            IElementType type = child.getElementType();
             if (type == JSTokenTypes.QUEST) {
                 questPassed = true;
             }
@@ -76,12 +76,13 @@ public class JSConditionalExpressionImpl extends JSExpressionImpl implements JSC
     }
 
     @Override
+    @RequiredReadAction
     public JSExpression getElse() {
         boolean questPassed = false;
         boolean colonPassed = false;
         ASTNode child = getNode().getFirstChildNode();
         while (child != null) {
-            final IElementType type = child.getElementType();
+            IElementType type = child.getElementType();
             if (type == JSTokenTypes.QUEST) {
                 questPassed = true;
             }

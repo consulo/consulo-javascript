@@ -26,18 +26,15 @@ import consulo.language.ast.ASTNode;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 8:41:53 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSParameterListImpl extends JSStubElementImpl<JSParameterListStub> implements JSParameterList {
-    public JSParameterListImpl(final ASTNode node) {
+    public JSParameterListImpl(ASTNode node) {
         super(node);
     }
 
-    public JSParameterListImpl(final JSParameterListStub stub) {
+    public JSParameterListImpl(JSParameterListStub stub) {
         super(stub, JSElementTypes.PARAMETER_LIST);
     }
 

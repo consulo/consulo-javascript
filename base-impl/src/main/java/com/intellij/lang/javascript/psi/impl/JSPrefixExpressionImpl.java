@@ -30,14 +30,11 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 11:52:13 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSPrefixExpressionImpl extends JSExpressionImpl implements JSPrefixExpression {
-    public JSPrefixExpressionImpl(final ASTNode node) {
+    public JSPrefixExpressionImpl(ASTNode node) {
         super(node);
     }
 

@@ -12,7 +12,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 11/12/2021
+ * @since 2021-12-11
  */
 public class JSClassExpressionImpl extends JSExpressionImpl implements JSClassExpression {
     public JSClassExpressionImpl(ASTNode node) {
@@ -24,16 +24,16 @@ public class JSClassExpressionImpl extends JSExpressionImpl implements JSClassEx
         visitor.visitJSExpression(this);
     }
 
-    @RequiredReadAction
     @Nonnull
     @Override
+    @RequiredReadAction
     public JSClass getClassElement() {
         return findNotNullChildByClass(JSClass.class);
     }
 
-    @RequiredReadAction
     @Nonnull
     @Override
+    @RequiredReadAction
     public JavaScriptType getType() {
         return new JavaScriptClassType(getClassElement());
     }

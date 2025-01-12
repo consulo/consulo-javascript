@@ -21,6 +21,7 @@ import com.intellij.lang.javascript.psi.JSCatchBlock;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSParameter;
 import com.intellij.lang.javascript.psi.JSStatement;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.PsiScopeProcessor;
@@ -30,20 +31,18 @@ import consulo.language.util.IncorrectOperationException;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 10:06:09 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSCatchBlockImpl extends JSElementImpl implements JSCatchBlock {
-    public JSCatchBlockImpl(final ASTNode node) {
+    public JSCatchBlockImpl(ASTNode node) {
         super(node);
     }
 
     @Override
+    @RequiredReadAction
     public JSParameter getParameter() {
-        final ASTNode node = getNode().findChildByType(JSElementTypes.FORMAL_PARAMETER);
+        ASTNode node = getNode().findChildByType(JSElementTypes.FORMAL_PARAMETER);
         return node != null ? (JSParameter)node.getPsi() : null;
     }
 
@@ -58,6 +57,7 @@ public class JSCatchBlockImpl extends JSElementImpl implements JSCatchBlock {
     }
 
     @Override
+    @RequiredReadAction
     public boolean processDeclarations(
         @Nonnull PsiScopeProcessor processor,
         @Nonnull ResolveState state,
@@ -65,7 +65,7 @@ public class JSCatchBlockImpl extends JSElementImpl implements JSCatchBlock {
         @Nonnull PsiElement place
     ) {
         if (lastParent != null) {
-            final JSParameter param = getParameter();
+            JSParameter param = getParameter();
             if (param != null) {
                 return processor.execute(param, state);
             }
@@ -76,7 +76,7 @@ public class JSCatchBlockImpl extends JSElementImpl implements JSCatchBlock {
 
     @Override
     public void delete() throws IncorrectOperationException {
-        final ASTNode astNode = getNode();
+        ASTNode astNode = getNode();
         astNode.getTreeParent().removeChild(astNode);
     }
 }

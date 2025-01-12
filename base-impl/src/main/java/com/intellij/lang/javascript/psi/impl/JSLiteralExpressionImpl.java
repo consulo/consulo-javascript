@@ -20,6 +20,7 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.javascript.language.psi.JavaScriptPrimitiveType;
 import consulo.javascript.language.psi.JavaScriptType;
@@ -34,13 +35,13 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author max
- * @since 11:24:42 PM Jan 30, 2005
+ * @since 2005-01-30
  */
 public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSSimpleLiteralExpression, PsiLanguageInjectionHost {
     private volatile JSReferenceSet myReferenceSet;
     private volatile long myModCount;
 
-    public JSLiteralExpressionImpl(final ASTNode node) {
+    public JSLiteralExpressionImpl(ASTNode node) {
         super(node);
     }
 
@@ -76,8 +77,9 @@ public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSSimpl
         return super.getType();
     }
 
-    @Override
     @Nonnull
+    @Override
+    @RequiredReadAction
     public PsiReference[] getReferences() {
         JSReferenceSet referenceSet = myReferenceSet;
 
@@ -92,7 +94,7 @@ public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSSimpl
             }
         }
         else {
-            final long count = getManager().getModificationTracker().getModificationCount();
+            long count = getManager().getModificationTracker().getModificationCount();
 
             if (count != myModCount) {
                 synchronized (this) {
@@ -118,6 +120,7 @@ public class JSLiteralExpressionImpl extends JSExpressionImpl implements JSSimpl
     }
 
     @Override
+    @RequiredWriteAction
     public PsiLanguageInjectionHost updateText(@Nonnull String text) {
         JSExpression expressionFromText = JSChangeUtil.createExpressionFromText(getProject(), text);
         return (PsiLanguageInjectionHost)replace(expressionFromText);

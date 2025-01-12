@@ -20,6 +20,8 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.formatter.JSCodeStyleSettings;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.util.JSUtils;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.language.ast.ASTNode;
@@ -38,16 +40,14 @@ import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 31, 2005
- * Time: 7:56:28 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-31
  */
 public class JSChangeUtil {
     private JSChangeUtil() {
     }
 
+    @RequiredReadAction
     public static ASTNode createNameIdentifier(Project project, String name, IElementType type) {
         if (JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(type)) {
             return createNameIdentifier(project, name);
@@ -60,73 +60,78 @@ public class JSChangeUtil {
         }
     }
 
+    @RequiredReadAction
     public static ASTNode createNameIdentifier(Project project, String name) {
-        final JSExpressionStatement expressionStatement = (JSExpressionStatement)createJSTreeFromTextImpl(project, name + ";");
-        final JSReferenceExpressionImpl refExpression = (JSReferenceExpressionImpl)expressionStatement.getFirstChild();
+        JSExpressionStatement expression = (JSExpressionStatement)createJSTreeFromTextImpl(project, name + ";");
+        JSReferenceExpressionImpl refExpr = (JSReferenceExpressionImpl)expression.getFirstChild();
 
-        return refExpression.getNode().getFirstChildNode();
+        return refExpr.getNode().getFirstChildNode();
     }
 
     @Nonnull
+    @RequiredReadAction
     public static JSExpression createExpressionFromText(Project project, @NonNls String text) {
         text = "{\n" + text + "\n}";
         PsiElement element = createJSTreeFromTextImpl(project, text);
         assert element instanceof JSBlockStatement : "\"" + text + "\" was not parsed as BlockStatement";
         element = ((JSBlockStatement)element).getStatements()[0];
-        final JSExpressionStatement expressionStatement = (JSExpressionStatement)element;
+        JSExpressionStatement expressionStatement = (JSExpressionStatement)element;
         return (JSExpression)expressionStatement.getFirstChild();
     }
 
-
-    public static ASTNode createStatementFromText(Project project, @NonNls String text) {
-        final PsiElement element = createJSTreeFromTextImpl(project, text);
-        final JSSourceElement stmt = element instanceof JSSourceElement ? (JSSourceElement)element : null;
+    @RequiredReadAction
+    public static ASTNode createStatementFromText(Project project, String text) {
+        PsiElement element = createJSTreeFromTextImpl(project, text);
+        JSSourceElement stmt = element instanceof JSSourceElement sourceElement ? sourceElement : null;
         return stmt != null ? stmt.getNode() : null;
     }
 
     @Nullable
-    private static PsiElement createJSTreeFromTextImpl(Project project, @NonNls String text) {
-        final PsiFile dummyFile;
-        dummyFile = PsiFileFactory.getInstance(project).createFileFromText("dummy.js", JavaScriptLanguage.INSTANCE, text);
+    @RequiredReadAction
+    private static PsiElement createJSTreeFromTextImpl(Project project, String text) {
+        PsiFile dummyFile =
+            PsiFileFactory.getInstance(project).createFileFromText("dummy.js", JavaScriptLanguage.INSTANCE, text);
 
         return dummyFile.getFirstChild();
     }
 
-    public static ASTNode createJSTreeFromText(Project project, @NonNls String text) {
-        final PsiElement element = createJSTreeFromTextImpl(project, text);
-        if (element != null) {
-            return element.getNode();
-        }
-        return null;
+    @RequiredReadAction
+    public static ASTNode createJSTreeFromText(Project project, String text) {
+        PsiElement element = createJSTreeFromTextImpl(project, text);
+        return element != null ? element.getNode() : null;
     }
 
+    @RequiredWriteAction
     public static JSExpression replaceExpression(JSExpression oldExpr, JSExpression newExpr) {
         if (JSUtils.isNeedParenthesis(oldExpr, newExpr)) {
             ASTNode parenthesized = createExpressionFromText(oldExpr.getProject(), "(a)").getNode();
-            final JSParenthesizedExpression parenthPsi = (JSParenthesizedExpression)parenthesized.getPsi();
+            JSParenthesizedExpression parenthPsi = (JSParenthesizedExpression)parenthesized.getPsi();
             parenthesized.replaceChild(parenthPsi.getInnerExpression().getNode(), newExpr.getNode().copyElement());
             oldExpr.getParent().getNode().replaceChild(oldExpr.getNode(), parenthesized);
             return parenthPsi;
         }
         else {
-            final ASTNode newNode = newExpr.getNode().copyElement();
+            ASTNode newNode = newExpr.getNode().copyElement();
             oldExpr.getParent().getNode().replaceChild(oldExpr.getNode(), newNode);
             return (JSExpression)newNode.getPsi();
         }
     }
 
+    @RequiredWriteAction
     public static JSStatement replaceStatement(JSStatement oldStatement, JSStatement newStatement) {
-        final ASTNode newNode = newStatement.getNode().copyElement();
+        ASTNode newNode = newStatement.getNode().copyElement();
         oldStatement.getParent().getNode().replaceChild(oldStatement.getNode(), newNode);
         return (JSStatement)newNode.getPsi();
     }
 
+    @RequiredWriteAction
     public static void doIdentifierReplacement(PsiElement parent, PsiElement identifier, String name) {
-        final ASTNode nameElement = JSChangeUtil.createNameIdentifier(parent.getProject(), name);
+        ASTNode nameElement = JSChangeUtil.createNameIdentifier(parent.getProject(), name);
         parent.getNode().replaceChild(identifier.getNode(), nameElement);
     }
 
-    public static PsiElement doAddBefore(final PsiElement jsElement, final PsiElement element, final PsiElement anchor)
+    @RequiredWriteAction
+    public static PsiElement doAddBefore(PsiElement jsElement, PsiElement element, PsiElement anchor)
         throws IncorrectOperationException {
         if (!JSChangeUtil.isStatementOrComment(element) && !(element instanceof PsiWhiteSpace)) {
             throw new UnsupportedOperationException("js statement or whitespace expected");
@@ -135,35 +140,36 @@ public class JSChangeUtil {
         return doDoAddBefore(jsElement, element, anchor);
     }
 
-    public static PsiElement doDoAddBefore(final PsiElement jsElement, final PsiElement element, final PsiElement anchor)
-        throws IncorrectOperationException {
-        final ASTNode elementNode = element.getNode();
+    @RequiredWriteAction
+    public static PsiElement doDoAddBefore(PsiElement jsElement, PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+        ASTNode elementNode = element.getNode();
         if (elementNode == null) {
             throw new IncorrectOperationException("node should not be null");
         }
         ASTNode copiedElementNode = elementNode.copyElement();
-        final ASTNode parentNode = jsElement.getNode();
+        ASTNode parentNode = jsElement.getNode();
         ASTNode anchorNode = anchor != null ? anchor.getNode() : null;
 
         anchorNode = insertWhitespaceIfNeeded(anchorNode, elementNode, parentNode, anchorNode);
 
         parentNode.addChild(copiedElementNode, anchorNode != null ? anchorNode : null);
-        if (copiedElementNode.getPsi() instanceof PsiComment && parentNode.getPsi().isPhysical()) { // HACK !
+        if (copiedElementNode.getPsi() instanceof PsiComment comment && parentNode.getPsi().isPhysical()) { // HACK !
             CodeStyleManager.getInstance(element.getProject()).reformatNewlyAddedElement(parentNode, copiedElementNode);
         }
 
         return copiedElementNode.getPsi();
     }
 
+    @RequiredWriteAction
     private static ASTNode insertWhitespaceIfNeeded(
         ASTNode anchorNode,
-        final ASTNode elementNode,
-        final ASTNode parentNode,
-        final ASTNode insertionPlaceNode
+        ASTNode elementNode,
+        ASTNode parentNode,
+        ASTNode insertionPlaceNode
     ) throws IncorrectOperationException {
         ParserDefinition parserDef = ParserDefinition.forLanguage(parentNode.getPsi().getLanguage());
-        final TokenSet comments = parserDef.getCommentTokens(parentNode.getPsi().getLanguage().getVersions()[0]);
-        final TokenSet whitespaces = parserDef.getWhitespaceTokens(parentNode.getPsi().getLanguage().getVersions()[0]);
+        TokenSet comments = parserDef.getCommentTokens(parentNode.getPsi().getLanguage().getVersions()[0]);
+        TokenSet whitespaces = parserDef.getWhitespaceTokens(parentNode.getPsi().getLanguage().getVersions()[0]);
 
         if (anchorNode != null
             && (!whitespaces.contains(anchorNode.getElementType()) && !whitespaces.contains(elementNode.getElementType())
@@ -177,7 +183,7 @@ public class JSChangeUtil {
                 commentString = "\n";
             }
 
-            final ASTNode wsNode =
+            ASTNode wsNode =
                 PsiParserFacade.SERVICE.getInstance(parentNode.getPsi().getProject()).createWhiteSpaceFromText(commentString).getNode();
             parentNode.addChild(wsNode, insertionPlaceNode);
             anchorNode = wsNode;
@@ -185,16 +191,19 @@ public class JSChangeUtil {
         return anchorNode;
     }
 
-    public static boolean isStatementContainer(final PsiElement jsElement) {
-        return jsElement instanceof JSBlockStatement || jsElement instanceof JSEmbeddedContentImpl
-            || jsElement instanceof JSClass || jsElement instanceof JSPackageStatement;
+    public static boolean isStatementContainer(PsiElement jsElement) {
+        return jsElement instanceof JSBlockStatement
+            || jsElement instanceof JSEmbeddedContentImpl
+            || jsElement instanceof JSClass
+            || jsElement instanceof JSPackageStatement;
     }
 
-    public static boolean isStatementOrComment(final PsiElement jsElement) {
+    public static boolean isStatementOrComment(PsiElement jsElement) {
         return jsElement instanceof JSSourceElement || jsElement instanceof PsiComment;
     }
 
-    public static PsiElement doAddAfter(final PsiElement jsElement, final PsiElement element, final PsiElement anchor)
+    @RequiredWriteAction
+    public static PsiElement doAddAfter(PsiElement jsElement, PsiElement element, PsiElement anchor)
         throws IncorrectOperationException {
         if (!JSChangeUtil.isStatementOrComment(element) && !(element instanceof PsiWhiteSpace)) {
             throw new UnsupportedOperationException("js statement or whitespace expected");
@@ -203,14 +212,14 @@ public class JSChangeUtil {
         return doDoAddAfter(jsElement, element, anchor);
     }
 
-    public static PsiElement doDoAddAfter(final PsiElement jsElement, final PsiElement element, final PsiElement anchor)
-        throws IncorrectOperationException {
-        final ASTNode parentNode = jsElement.getNode();
-        final ASTNode node = element.getNode();
+    @RequiredWriteAction
+    public static PsiElement doDoAddAfter(PsiElement jsElement, PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+        ASTNode parentNode = jsElement.getNode();
+        ASTNode node = element.getNode();
         ASTNode anchorNode = anchor != null ? anchor.getNode() : parentNode.getLastChildNode();
         anchorNode = insertWhitespaceIfNeeded(anchorNode, node, parentNode, anchorNode != null ? anchorNode.getTreeNext() : null);
 
-        final ASTNode nodeCopy = node.copyElement();
+        ASTNode nodeCopy = node.copyElement();
 
         if (anchor == null) {
             parentNode.addChild(nodeCopy);
@@ -219,15 +228,16 @@ public class JSChangeUtil {
             parentNode.addChild(nodeCopy, anchorNode.getTreeNext());
         }
 
-        final ASTNode nextAfter = nodeCopy.getTreeNext();
+        ASTNode nextAfter = nodeCopy.getTreeNext();
         insertWhitespaceIfNeeded(nextAfter, node, parentNode, nextAfter);
 
         return nodeCopy.getPsi();
     }
 
-    public static PsiElement doAddRangeBefore(PsiElement parent, PsiElement first, final PsiElement last, final PsiElement anchor)
+    @RequiredWriteAction
+    public static PsiElement doAddRangeBefore(PsiElement parent, PsiElement first, PsiElement last, PsiElement anchor)
         throws IncorrectOperationException {
-        final PsiElement resultElement;
+        PsiElement resultElement;
         PsiElement psiElement = resultElement = doAddBefore(parent, first, anchor);
 
         while (first != last) {
@@ -241,9 +251,10 @@ public class JSChangeUtil {
         return resultElement;
     }
 
-    public static PsiElement doAddRangeAfter(final PsiElement jsElement, PsiElement first, final PsiElement last, final PsiElement anchor)
+    @RequiredWriteAction
+    public static PsiElement doAddRangeAfter(PsiElement jsElement, PsiElement first, PsiElement last, PsiElement anchor)
         throws IncorrectOperationException {
-        final PsiElement resultElement;
+        PsiElement resultElement;
         PsiElement psiElement = resultElement = doAddAfter(jsElement, first, anchor);
 
         while (first != last) {
@@ -257,11 +268,12 @@ public class JSChangeUtil {
         return resultElement;
     }
 
-    public static boolean isBlockStatementContainer(final JSElement jsElement) {
+    public static boolean isBlockStatementContainer(JSElement jsElement) {
         return jsElement instanceof JSIfStatement || jsElement instanceof JSLoopStatement;
     }
 
-    public static PsiElement blockDoAddRangeBefore(final PsiElement first, final PsiElement last, final @Nonnull PsiElement anchor)
+    @RequiredWriteAction
+    public static PsiElement blockDoAddRangeBefore(PsiElement first, PsiElement last, @Nonnull PsiElement anchor)
         throws IncorrectOperationException {
         BlockAddContext addContext = new BlockAddContext(anchor) {
             @Override
@@ -273,7 +285,8 @@ public class JSChangeUtil {
         return addContext.doAddElement(first, last);
     }
 
-    public static PsiElement blockDoAddRangeAfter(final PsiElement first, final PsiElement last, final @Nonnull PsiElement anchor)
+    @RequiredWriteAction
+    public static PsiElement blockDoAddRangeAfter(PsiElement first, PsiElement last, @Nonnull PsiElement anchor)
         throws IncorrectOperationException {
         BlockAddContext addContext = new BlockAddContext(anchor) {
             @Override
@@ -285,8 +298,8 @@ public class JSChangeUtil {
         return addContext.doAddElement(first, last);
     }
 
-    public static PsiElement blockDoAddAfter(final PsiElement element, final @Nonnull PsiElement anchor)
-        throws IncorrectOperationException {
+    @RequiredWriteAction
+    public static PsiElement blockDoAddAfter(PsiElement element, @Nonnull PsiElement anchor) throws IncorrectOperationException {
         BlockAddContext addContext = new BlockAddContext(anchor) {
             @Override
             PsiElement doAddElement(PsiElement... element) throws IncorrectOperationException {
@@ -297,8 +310,8 @@ public class JSChangeUtil {
         return addContext.doAddElement(element);
     }
 
-    public static PsiElement blockDoAddBefore(final PsiElement element, final @Nonnull PsiElement anchor)
-        throws IncorrectOperationException {
+    @RequiredWriteAction
+    public static PsiElement blockDoAddBefore(PsiElement element, @Nonnull PsiElement anchor) throws IncorrectOperationException {
         BlockAddContext addContext = new BlockAddContext(anchor) {
             @Override
             PsiElement doAddElement(PsiElement... element) throws IncorrectOperationException {
@@ -309,7 +322,7 @@ public class JSChangeUtil {
         return addContext.doAddElement(element);
     }
 
-    public static String getSemicolon(final Project project) {
+    public static String getSemicolon(Project project) {
         return CodeStyleSettingsManager.getInstance(project).getCurrentSettings().getCustomSettings(JSCodeStyleSettings.class)
             .USE_SEMICOLON_AFTER_STATEMENT ? ";" : "";
     }
@@ -318,12 +331,13 @@ public class JSChangeUtil {
         final JSBlockStatement newlyAddedBlock;
         final PsiElement codeBlockAnchor;
 
-        BlockAddContext(final @Nonnull PsiElement _anchor) throws IncorrectOperationException {
-            final ASTNode codeBlockNode = JSChangeUtil.createStatementFromText(_anchor.getProject(), "{ a }");
+        @RequiredWriteAction
+        BlockAddContext(@Nonnull PsiElement _anchor) throws IncorrectOperationException {
+            ASTNode codeBlockNode = JSChangeUtil.createStatementFromText(_anchor.getProject(), "{ a }");
 
-            newlyAddedBlock = (JSBlockStatement)_anchor.replace((JSBlockStatement)codeBlockNode.getPsi());
+            newlyAddedBlock = (JSBlockStatement)_anchor.replace(codeBlockNode.getPsi());
 
-            final JSStatement artificiallyAddedBlockAnchor = newlyAddedBlock.getStatements()[0];
+            JSStatement artificiallyAddedBlockAnchor = newlyAddedBlock.getStatements()[0];
             codeBlockAnchor = newlyAddedBlock.addBefore(_anchor, artificiallyAddedBlockAnchor);
             artificiallyAddedBlockAnchor.delete();
         }
@@ -331,7 +345,8 @@ public class JSChangeUtil {
         abstract PsiElement doAddElement(PsiElement... element) throws IncorrectOperationException;
     }
 
-    static void removeRangeWithRemovalOfCommas(final ASTNode myNode, final ASTNode parent) {
+    @RequiredWriteAction
+    static void removeRangeWithRemovalOfCommas(ASTNode myNode, ASTNode parent) {
         ASTNode from = myNode, to = myNode.getTreeNext();
         boolean seenComma = false;
 

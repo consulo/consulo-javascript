@@ -21,6 +21,8 @@ import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSLabeledStatement;
 import com.intellij.lang.javascript.psi.JSNamedElement;
 import com.intellij.lang.javascript.psi.JSStatement;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.util.IncorrectOperationException;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
@@ -28,23 +30,22 @@ import consulo.language.psi.PsiElement;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:20:04 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSLabeledStatementImpl extends JSStatementImpl implements JSLabeledStatement, JSNamedElement {
-    public JSLabeledStatementImpl(final ASTNode node) {
+    public JSLabeledStatementImpl(ASTNode node) {
         super(node);
     }
 
     @Override
+    @RequiredReadAction
     public String getLabel() {
         return getNameIdentifier().getText();
     }
 
     @Override
+    @RequiredReadAction
     public PsiElement getLabelIdentifier() {
         return getNameIdentifier();
     }
@@ -69,17 +70,20 @@ public class JSLabeledStatementImpl extends JSStatementImpl implements JSLabeled
     }
 
     @Override
+    @RequiredReadAction
     public String getName() {
         return getLabel();
     }
 
     @Override
+    @RequiredWriteAction
     public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
         JSChangeUtil.doIdentifierReplacement(this, getLabelIdentifier(), name);
         return this;
     }
 
     @Override
+    @RequiredReadAction
     public PsiElement getNameIdentifier() {
         return findChildByType(JSTokenTypes.IDENTIFIER);
     }
