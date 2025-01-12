@@ -21,8 +21,6 @@ import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -31,16 +29,12 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @by maxim.mossienko, yole
+ * @author maxim.mossienko, yole
  */
 public class JSSymbolUtil {
-    @NonNls
     private static final String PROTOTYPE_FIELD_NAME = "prototype";
-    @NonNls
     private static final String J_QUERY_VAR_NAME = "jQuery";
-    @NonNls
     private static final String FN_FUN_NAME = "fn";
-
 
     private static JSElement findNameComponent(JSElement expr) {
         if (expr instanceof JSReferenceExpression) {
@@ -52,28 +46,27 @@ public class JSSymbolUtil {
             if (expr instanceof JSReferenceExpression) {
                 return expr;
             }
-            else if (expr instanceof JSAssignmentExpression) {
-                final JSExpression _lOperand = ((JSAssignmentExpression)expr).getLOperand();
+            else if (expr instanceof JSAssignmentExpression assignment) {
+                JSExpression _lOperand = assignment.getLOperand();
                 if (!(_lOperand instanceof JSDefinitionExpression)) {
                     break;
                 }
-                final JSExpression lOperand = ((JSDefinitionExpression)_lOperand).getExpression();
+                JSExpression lOperand = ((JSDefinitionExpression)_lOperand).getExpression();
 
-                if (lOperand instanceof JSReferenceExpression) {
-                    expr = lOperand;
+                if (lOperand instanceof JSReferenceExpression refExpr) {
+                    expr = refExpr;
                     continue;
                 }
                 else {
                     break;
                 }
             }
-            else if (expr instanceof JSVariable) {
-                return expr;
+            else if (expr instanceof JSVariable variable) {
+                return variable;
             }
-            else if (expr instanceof JSCallExpression) {
-                final JSExpression method = ((JSCallExpression)expr).getMethodExpression();
-                if (method instanceof JSReferenceExpression) {
-                    return method;
+            else if (expr instanceof JSCallExpression call) {
+                if (call.getMethodExpression() instanceof JSReferenceExpression methodRefExpr) {
+                    return methodRefExpr;
                 }
             }
             else {
@@ -81,7 +74,7 @@ public class JSSymbolUtil {
             }
 
             if (current != null) {
-                final PsiElement parent = current.getParent();
+                PsiElement parent = current.getParent();
                 if (!(parent instanceof JSElement)) {
                     break;
                 }
@@ -95,41 +88,43 @@ public class JSSymbolUtil {
         return null;
     }
 
-    public static String[] buildNameIndexArray(final JSElement _expr) {
+    public static String[] buildNameIndexArray(JSElement _expr) {
         final List<String> nameComponents = new ArrayList<>();
 
         JSElement nameComponent = findNameComponent(_expr);
         JSReferenceExpression expr = null;
 
-        if (nameComponent instanceof JSVariable) {
-            String varName = nameComponent.getName();
+        if (nameComponent instanceof JSVariable variable) {
+            String varName = variable.getName();
             if (varName != null) {
                 nameComponents.add(varName);
             }
         }
-        else if (nameComponent instanceof JSReferenceExpression) {
-            expr = (JSReferenceExpression)nameComponent;
+        else if (nameComponent instanceof JSReferenceExpression nameRefExpr) {
+            expr = nameRefExpr;
         }
 
         if (expr != null) {
             final JSReferenceExpression expr1 = expr;
-            visitReferenceExpressionComponentsInRootFirstOrder(expr, new ReferenceExpressionProcessor() {
+            visitReferenceExpressionComponentsInRootFirstOrder(
+                expr,
+                new ReferenceExpressionProcessor() {
+                    @Override
+                    public void processExpression(JSReferenceExpression expr) {
+                        nameComponents.add(expr.getReferencedName());
+                    }
 
-                @Override
-                public void processExpression(JSReferenceExpression expr) {
-                    nameComponents.add(expr.getReferencedName());
-                }
+                    @Override
+                    public void processUnresolvedThis() {
+                        nameComponents.add("");
+                    }
 
-                @Override
-                public void processUnresolvedThis() {
-                    nameComponents.add("");
+                    @Override
+                    public boolean isTopLevel(final JSReferenceExpression expression) {
+                        return expr1 == expression;
+                    }
                 }
-
-                @Override
-                public boolean isTopLevel(final JSReferenceExpression expression) {
-                    return expr1 == expression;
-                }
-            });
+            );
         }
 
         return nameComponents.toArray(new String[nameComponents.size()]);
@@ -140,9 +135,8 @@ public class JSSymbolUtil {
 
         void processUnresolvedThis();
 
-        boolean isTopLevel(final JSReferenceExpression expression);
+        boolean isTopLevel(JSReferenceExpression expression);
     }
-
 
     private static void visitReferenceExpressionComponentsInRootFirstOrder(
         JSReferenceExpression expr,
@@ -166,14 +160,14 @@ public class JSSymbolUtil {
             processor.processUnresolvedThis();
         }
 
-        final String refName = expr.getReferencedName();
+        String refName = expr.getReferencedName();
 
         if (refName != null && (!refName.equals(PROTOTYPE_FIELD_NAME) || processor.isTopLevel(expr))) {
             processor.processExpression(expr);
         }
     }
 
-    private static JSReferenceExpression evaluateInitializedPrototype(final JSExpression initializer) {
+    private static JSReferenceExpression evaluateInitializedPrototype(JSExpression initializer) {
         JSReferenceExpression initializedPrototype = null;
 
         if (initializer instanceof JSReferenceExpression initializerRefExpr
@@ -197,9 +191,9 @@ public class JSSymbolUtil {
         @Nullable Set<String> visited
     ) {
         JSReferenceExpression originalExpr = lOperand;
-        final ResolveProcessor processor = new ResolveProcessor(lOperand.getText(), true);
+        ResolveProcessor processor = new ResolveProcessor(lOperand.getText(), true);
         processor.setLocalResolve(true);
-        final PsiElement parent = lOperand.getParent();
+        PsiElement parent = lOperand.getParent();
         JSResolveUtil.treeWalkUp(processor, lOperand, parent, lOperand);
 
         PsiElement jsElement = processor.getResult();
@@ -208,8 +202,8 @@ public class JSSymbolUtil {
         }
 
         if (jsElement instanceof JSVariable variable) {
-            final JSExpression initialization = variable.getInitializer();
-            final JSReferenceExpression expression = initialization != null ? evaluateInitializedPrototype(initialization) : null;
+            JSExpression initialization = variable.getInitializer();
+            JSReferenceExpression expression = initialization != null ? evaluateInitializedPrototype(initialization) : null;
 
             if (expression != null) {
                 lOperand = expression;
@@ -219,7 +213,7 @@ public class JSSymbolUtil {
             }
         }
         else {
-            final PsiElement parentJsElement = jsElement != null ? jsElement.getParent() : null;
+            PsiElement parentJsElement = jsElement != null ? jsElement.getParent() : null;
 
             // new expression also could mean something extension !
             if (jsElement instanceof JSDefinitionExpression
@@ -227,10 +221,10 @@ public class JSSymbolUtil {
                 JSExpression rOperand = parentAssignExpr.getROperand();
 
                 if (rOperand instanceof JSCallExpression callExpression && !(rOperand instanceof JSNewExpression)) {
-                    final JSArgumentList list = callExpression.getArgumentList();
+                    JSArgumentList list = callExpression.getArgumentList();
 
                     if (list != null) {
-                        final JSExpression[] jsExpressions = list.getArguments();
+                        JSExpression[] jsExpressions = list.getArguments();
 
                         if (jsExpressions.length >= 2
                             && jsExpressions[0] instanceof JSReferenceExpression
@@ -240,7 +234,7 @@ public class JSSymbolUtil {
                     }
                 }
                 else if (rOperand instanceof JSReferenceExpression rOperandRefExpr) {
-                    final JSReferenceExpression expression = evaluateInitializedPrototype(rOperand);
+                    JSReferenceExpression expression = evaluateInitializedPrototype(rOperand);
                     lOperand = expression != null ? expression : rOperandRefExpr;
                 }
             }
@@ -248,7 +242,7 @@ public class JSSymbolUtil {
         return lOperand != originalExpr ? replaceLocalVars(lOperand, visited) : lOperand;
     }
 
-    private static JSReferenceExpression replaceLocalVars(final JSReferenceExpression expression, @Nullable Set<String> visited) {
+    private static JSReferenceExpression replaceLocalVars(JSReferenceExpression expression, @Nullable Set<String> visited) {
         JSReferenceExpression expr = expression;
         JSExpression qualifier = expr.getQualifier();
 
@@ -263,10 +257,10 @@ public class JSSymbolUtil {
         }
 
         if (qualifier == null) {
-            final PsiElement ref = JSResolveUtil.getLocalVariableRef(func, expr);
+            PsiElement ref = JSResolveUtil.getLocalVariableRef(func, expr);
 
             if (ref instanceof JSVariable variable && !(ref instanceof JSParameter)) {
-                final JSExpression initializer = variable.getInitializer();
+                JSExpression initializer = variable.getInitializer();
 
                 if (initializer instanceof JSReferenceExpression initializerRefExpr) {
                     return replaceExpression(expression, expr, initializerRefExpr);
@@ -275,7 +269,7 @@ public class JSSymbolUtil {
                     if (visited == null) {
                         visited = new HashSet<>();
                     }
-                    final String replaced = expr.getText();
+                    String replaced = expr.getText();
 
                     if (!visited.contains(replaced)) {
                         visited.add(replaced);
@@ -291,16 +285,16 @@ public class JSSymbolUtil {
     }
 
     private static JSReferenceExpression replaceExpression(
-        final JSReferenceExpression expression,
-        final JSReferenceExpression what,
-        final JSReferenceExpression by
+        JSReferenceExpression expression,
+        JSReferenceExpression what,
+        JSReferenceExpression by
     ) {
         if (expression == what) {
             return by;
         }
         int offsetOfExprInExpression = what.getTextOffset() - expression.getTextOffset();
-        final JSReferenceExpression copyOfExpr = (JSReferenceExpression)expression.copy();
-        final JSReferenceExpression expressionToReplace = PsiTreeUtil.getParentOfType(
+        JSReferenceExpression copyOfExpr = (JSReferenceExpression)expression.copy();
+        JSReferenceExpression expressionToReplace = PsiTreeUtil.getParentOfType(
             copyOfExpr.findElementAt(offsetOfExprInExpression),
             JSReferenceExpression.class
         );
@@ -308,9 +302,9 @@ public class JSSymbolUtil {
         return copyOfExpr;
     }
 
-    public static JSElement findQualifyingExpressionFromArgumentList(final JSArgumentList parent) {
+    public static JSElement findQualifyingExpressionFromArgumentList(JSArgumentList parent) {
         PsiElement firstParent = parent.getParent();
-        final PsiElement grandParent = firstParent.getParent();
+        PsiElement grandParent = firstParent.getParent();
 
         if (grandParent instanceof JSVariable variable) {
             return variable;
@@ -323,40 +317,41 @@ public class JSSymbolUtil {
                 return assignedTo;
             }
         }
-        if (grandParent instanceof JSExpressionStatement && firstParent instanceof JSCallExpression call) {
-            JSExpression methodExpression = call.getMethodExpression();
-            String methodName = methodExpression instanceof JSReferenceExpression methodRefExpr ? methodRefExpr.getReferencedName() : null;
+        if (grandParent instanceof JSExpressionStatement
+            && firstParent instanceof JSCallExpression call
+            && call.getMethodExpression() instanceof JSReferenceExpression methodRefExpr) {
+
+            String methodName = methodRefExpr.getReferencedName();
 
             if ("each".equals(methodName) || "extend".equals(methodName)) {
-                JSExpression expression = ((JSReferenceExpression)methodExpression).getQualifier();
+                JSExpression expression = methodRefExpr.getQualifier();
 
-                if (expression instanceof JSReferenceExpression qualifierExpr) {
-                    if (FN_FUN_NAME.equals(qualifierExpr.getReferencedName())) {
-                        expression = qualifierExpr.getQualifier();
-                    }
+                if (expression instanceof JSReferenceExpression qualifierRefExpr
+                    && FN_FUN_NAME.equals(qualifierRefExpr.getReferencedName())) {
+                    expression = qualifierRefExpr.getQualifier();
                 }
+
                 if (expression != null && J_QUERY_VAR_NAME.equals(expression.getText())) {
                     return expression;
                 }
             }
             else if ("implement".equals(methodName)) {
-                JSExpression qualifier = ((JSReferenceExpression)methodExpression).getQualifier();
-                if (qualifier instanceof JSReferenceExpression && parent.getArguments().length == 1) {
-                    return qualifier;
+                if (methodRefExpr.getQualifier() instanceof JSReferenceExpression qualifierRefExpr && parent.getArguments().length == 1) {
+                    return qualifierRefExpr;
                 }
             }
         }
 
         JSExpression[] jsExpressions = parent.getArguments();
         for (int i = 0; i < jsExpressions.length; ++i) {
-            final JSExpression expr = jsExpressions[i];
+            JSExpression expr = jsExpressions[i];
 
             if (expr instanceof JSReferenceExpression
                 || (expr instanceof JSLiteralExpression && !expr.textContains(' ') && expr.getTextLength() < 100)) {
                 return expr;
             }
             else if (expr instanceof JSCallExpression call) {
-                final JSArgumentList argumentList = call.getArgumentList();
+                JSArgumentList argumentList = call.getArgumentList();
                 if (argumentList != null) {
                     jsExpressions = argumentList.getArguments();
                     i = -1;

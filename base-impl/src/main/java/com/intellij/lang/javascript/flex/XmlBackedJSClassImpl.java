@@ -254,13 +254,13 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
             }
 
             if (adequatePlace && processor instanceof ResolveProcessor resolveProcessor && !processComponentNames(resolveProcessor)) {
-                return false;
+                    return false;
+                }
             }
-        }
 
         return !(processor instanceof ResolveProcessor) || !JSResolveUtil.shouldProcessTopLevelGlobalContext(place, processor)
             || !notResolvingTypeViaImport || JSResolveUtil.processGlobalThings(processor, ResolveState.initial(), place, this);
-    }
+            }
 
     @RequiredReadAction
     public boolean processComponentNames(ResolveProcessor processor) {
@@ -294,32 +294,32 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
     private static final String SCRIPT_TAG_NAME = "Script";
 
     private static final UserDataCache<CachedValue<JSFile[]>, XmlTag, Object> CACHED_SCRIPTS = new UserDataCache<>() {
-        @Override
-        protected CachedValue<JSFile[]> compute(XmlTag tag, Object p) {
-            return CachedValuesManager.getManager(tag.getProject()).createCachedValue(
-                () -> {
-                    List<JSFile> injectedFiles = new ArrayList<>(2);
-                    List<PsiElement> dependencies = new ArrayList<>();
-                    dependencies.add(tag);
-                    new InjectedScriptsVisitor(
-                        tag,
-                        doProcessAllTags(tag),
-                        false,
-                        false,
-                        (rootTag, file) -> {
-                            injectedFiles.add(file);
-                            dependencies.add(file);
-                        }
-                    ).go();
-                    return new CachedValueProvider.Result<>(
-                        injectedFiles.toArray(new JSFile[injectedFiles.size()]),
-                        dependencies.toArray()
-                    );
-                },
-                false
-            );
-        }
-    };
+            @Override
+            protected CachedValue<JSFile[]> compute(XmlTag tag, Object p) {
+                return CachedValuesManager.getManager(tag.getProject()).createCachedValue(
+                    () -> {
+                        List<JSFile> injectedFiles = new ArrayList<>(2);
+                        List<PsiElement> dependencies = new ArrayList<>();
+                        dependencies.add(tag);
+                        new InjectedScriptsVisitor(
+                            tag,
+                            doProcessAllTags(tag),
+                            false,
+                            false,
+                            (rootTag, file) -> {
+                                injectedFiles.add(file);
+                                dependencies.add(file);
+                            }
+                        ).go();
+                        return new CachedValueProvider.Result<>(
+                            injectedFiles.toArray(new JSFile[injectedFiles.size()]),
+                            dependencies.toArray()
+                        );
+                    },
+                    false
+                );
+            }
+        };
 
     private static final UserDataCache<CachedValue<Map<String, String>>, XmlFile, Object> CACHED_COMPONENT_IMPORTS_CACHE =
         new UserDataCache<>() {
@@ -420,7 +420,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
     private static final UserDataCache<ParameterizedCachedValue<XmlBackedJSClassImpl, XmlTag>, XmlTag, Object> myCachedClassCache =
         new UserDataCache<>() {
             @Override
-            protected ParameterizedCachedValue<XmlBackedJSClassImpl, XmlTag> compute(final XmlTag tag, final Object p) {
+            protected ParameterizedCachedValue<XmlBackedJSClassImpl, XmlTag> compute(XmlTag tag, Object p) {
                 return CachedValuesManager.getManager(tag.getProject()).createParameterizedCachedValue(
                     (ParameterizedCachedValueProvider<XmlBackedJSClassImpl, XmlTag>)tag1 ->
                         new CachedValueProvider.Result<>(new XmlBackedJSClassImpl(tag1), tag1),

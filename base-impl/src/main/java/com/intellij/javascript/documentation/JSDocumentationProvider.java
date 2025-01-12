@@ -39,12 +39,10 @@ import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.xml.psi.xml.XmlToken;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -65,7 +63,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
 
     protected static final String PACKAGE = "package";
     protected static final String HTML_EXTENSION = ".html";
-    protected static final String PACKAGE_FILE = PACKAGE + HTML_EXTENSION;
+    protected static String PACKAGE_FILE = PACKAGE + HTML_EXTENSION;
 
     protected static final Map<String, String> DOCUMENTED_ATTRIBUTES;
 
@@ -78,7 +76,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
 
     private DocumentationProvider getCssProvider(Project project) throws Exception {
         if (cssProvider == null) {
-            final Class<?> aClass = Class.forName("com.intellij.psi.css.impl.util.CssDocumentationProvider");
+            Class<?> aClass = Class.forName("com.intellij.psi.css.impl.util.CssDocumentationProvider");
             cssProvider = (DocumentationProvider)aClass.getConstructor(new Class[]{}).newInstance(new Object[]{});
         }
 
@@ -89,11 +87,8 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
     @Nullable
     @RequiredReadAction
     public String getQuickNavigateInfo(PsiElement element, PsiElement element2) {
-        if (element instanceof JSFunction) {
-            final JSFunction function = (JSFunction)element;
-            final PsiElement parent = element.getParent();
-
-            if (function.isConstructor() && parent instanceof JSClass jsClass) {
+        if (element instanceof JSFunction function) {
+            if (function.isConstructor() && function.getParent() instanceof JSClass jsClass) {
                 return createQuickNavigateForClazz(jsClass);
             }
             return createQuickNavigateForFunction(function);
@@ -104,12 +99,12 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
         else if (element instanceof JSVariable variable) {
             return createQuickNavigateForVariable(variable);
         }
-        else if (element instanceof JSAttributeNameValuePair) {
-            return createQuickNavigateForAnnotationDerived(element);
+        else if (element instanceof JSAttributeNameValuePair attributeNameValuePair) {
+            return createQuickNavigateForAnnotationDerived(attributeNameValuePair);
         }
-        else if (element instanceof XmlToken) {
-            BaseJSSymbolProcessor.TagContextBuilder builder = new BaseJSSymbolProcessor.TagContextBuilder(element, "XmlTag");
-            return StringUtil.stripQuotesAroundValue(element.getText()) + ":" + builder.typeName;
+        else if (element instanceof XmlToken xmlToken) {
+            BaseJSSymbolProcessor.TagContextBuilder builder = new BaseJSSymbolProcessor.TagContextBuilder(xmlToken, "XmlTag");
+            return StringUtil.stripQuotesAroundValue(xmlToken.getText()) + ":" + builder.typeName;
         }
         else if (element instanceof JSNamespaceDeclaration namespaceDeclaration) {
             return createQuickNavigateForNamespace(namespaceDeclaration);
@@ -119,11 +114,11 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
     }
 
     @RequiredReadAction
-    private static String createQuickNavigateForAnnotationDerived(final PsiElement element) {
-        final JSAttributeNameValuePair valuePair = (JSAttributeNameValuePair)element;
-        final JSAttribute parent = (JSAttribute)valuePair.getParent();
-        final StringBuilder builder = new StringBuilder();
-        final JSClass clazz = PsiTreeUtil.getParentOfType(valuePair, JSClass.class);
+    private static String createQuickNavigateForAnnotationDerived(PsiElement element) {
+        JSAttributeNameValuePair valuePair = (JSAttributeNameValuePair)element;
+        JSAttribute parent = (JSAttribute)valuePair.getParent();
+        StringBuilder builder = new StringBuilder();
+        JSClass clazz = PsiTreeUtil.getParentOfType(valuePair, JSClass.class);
         appendParentInfo(clazz != null ? clazz : parent.getContainingFile(), builder, parent);
         builder.append(parent.getName()).append(" ").append(valuePair.getSimpleValue());
         return builder.toString();
@@ -131,25 +126,25 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
 
     @Nullable
     @RequiredReadAction
-    private static String createQuickNavigateForFunction(final JSFunction function) {
-        final PsiElement parent = JSResolveUtil.findParent(function);
-        final StringBuilder result = new StringBuilder();
+    private static String createQuickNavigateForFunction(JSFunction function) {
+        PsiElement parent = JSResolveUtil.findParent(function);
+        StringBuilder result = new StringBuilder();
 
         appendParentInfo(parent, result, function);
 
         appendAttrList(function, result);
-        final boolean get = function.isGetProperty();
-        final boolean set = function.isSetProperty();
+        boolean get = function.isGetProperty();
+        boolean set = function.isSetProperty();
 
         result.append(get || set ? "property " : "function ");
         result.append(function.getName());
 
         if (!get && !set) {
             result.append('(');
-            final JSParameterList jsParameterList = function.getParameterList();
+            JSParameterList jsParameterList = function.getParameterList();
 
             if (jsParameterList != null) {
-                final int start = result.length();
+                int start = result.length();
 
                 for (JSParameter p : jsParameterList.getParameters()) {
                     if (start != result.length()) {
@@ -169,10 +164,10 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
             varType = JSImportHandlingUtil.resolveTypeName(function.getReturnTypeString(), function);
         }
         else {
-            final JSParameterList jsParameterList = function.getParameterList();
+            JSParameterList jsParameterList = function.getParameterList();
 
             if (jsParameterList != null) {
-                final JSParameter[] jsParameters = jsParameterList.getParameters();
+                JSParameter[] jsParameters = jsParameterList.getParameters();
                 if (jsParameters != null && jsParameters.length > 0) {
                     varType = JSImportHandlingUtil.resolveTypeName(jsParameters[0].getTypeString(), function);
                 }
@@ -186,7 +181,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
     }
 
     @RequiredReadAction
-    private static void appendParentInfo(final PsiElement parent, final StringBuilder builder, PsiNamedElement element) {
+    private static void appendParentInfo(PsiElement parent, StringBuilder builder, PsiNamedElement element) {
         if (parent instanceof JSClass jsClass) {
             builder.append(jsClass.getQualifiedName()).append("\n");
         }
@@ -195,7 +190,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
         }
         else if (parent instanceof JSFile) {
             if (parent.getContext() != null) {
-                final String mxmlPackage = JSResolveUtil.findPackageForMxml(parent);
+                String mxmlPackage = JSResolveUtil.findPackageForMxml(parent);
                 if (mxmlPackage != null) {
                     builder.append(mxmlPackage)
                         .append(mxmlPackage.length() > 0 ? "." : "")
@@ -209,7 +204,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
                 if (element instanceof JSNamedElement namedElement) {
                     PsiElement node = namedElement.getNameIdentifier();
                     if (node != null) {
-                        final String s = node.getText();
+                        String s = node.getText();
                         int i = s.lastIndexOf('.');
                         if (i != -1) {
                             builder.append(s.substring(0, i)).append("\n");
@@ -226,9 +221,9 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
 
     @Nullable
     @RequiredReadAction
-    private static String createQuickNavigateForVariable(final JSVariable variable) {
-        final PsiElement parent = JSResolveUtil.findParent(variable);
-        final StringBuilder result = new StringBuilder();
+    private static String createQuickNavigateForVariable(JSVariable variable) {
+        PsiElement parent = JSResolveUtil.findParent(variable);
+        StringBuilder result = new StringBuilder();
 
         appendParentInfo(parent, result, variable);
 
@@ -253,8 +248,8 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
         return result.toString();
     }
 
-    private static void appendVarType(final JSVariable variable, final StringBuilder builder) {
-        final String varType = variable.getTypeString();
+    private static void appendVarType(JSVariable variable, StringBuilder builder) {
+        String varType = variable.getTypeString();
         if (varType != null) {
             builder.append(':').append(varType);
         }
@@ -262,8 +257,8 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
 
     @Nullable
     @RequiredReadAction
-    private static String createQuickNavigateForClazz(final JSClass jsClass) {
-        final String qName = jsClass.getQualifiedName();
+    private static String createQuickNavigateForClazz(JSClass jsClass) {
+        String qName = jsClass.getQualifiedName();
         if (qName == null) {
             return null;
         }
@@ -276,7 +271,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
         appendAttrList(jsClass, result);
         result.append(jsClass.isInterface() ? "interface" : "class");
 
-        final String name = jsClass.getName();
+        String name = jsClass.getName();
         result.append(" ").append(name);
 
         String s = generateReferenceTargetList(jsClass.getExtendsList(), packageName);
@@ -296,8 +291,9 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
     }
 
     @Nullable
+    @RequiredReadAction
     private static String createQuickNavigateForNamespace(JSNamespaceDeclaration ns) {
-        final String qName = ns.getQualifiedName();
+        String qName = ns.getQualifiedName();
         if (qName == null) {
             return null;
         }
@@ -309,8 +305,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
 
         result.append("namespace");
 
-        final String name = ns.getName();
-        result.append(" ").append(name);
+        result.append(" ").append(ns.getName());
 
         String s = ns.getInitialValueString();
         if (s != null) {
@@ -320,8 +315,8 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
     }
 
     @RequiredReadAction
-    private static void appendAttrList(final JSAttributeListOwner jsClass, final StringBuilder result) {
-        final JSAttributeList attributeList = jsClass.getAttributeList();
+    private static void appendAttrList(JSAttributeListOwner jsClass, StringBuilder result) {
+        JSAttributeList attributeList = jsClass.getAttributeList();
         if (attributeList != null) {
             if (attributeList.hasModifier(JSAttributeList.ModifierType.OVERRIDE)) {
                 result.append("override ");
@@ -354,13 +349,13 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
 
     @Nullable
     @RequiredReadAction
-    private static String generateReferenceTargetList(final @Nullable JSReferenceList implementsList, @Nonnull String packageName) {
+    private static String generateReferenceTargetList(@Nullable JSReferenceList implementsList, @Nonnull String packageName) {
         if (implementsList == null) {
             return null;
         }
         StringBuilder result = null;
 
-        final String[] referenceExpressionTexts = implementsList.getReferenceTexts();
+        String[] referenceExpressionTexts = implementsList.getReferenceTexts();
 
         for (String refExprText : referenceExpressionTexts) {
             refExprText = JSImportHandlingUtil.resolveTypeName(refExprText, implementsList);
@@ -371,7 +366,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
                 result.append(",");
             }
 
-            final String referencedPackageName = StringUtil.getPackageName(refExprText);
+            String referencedPackageName = StringUtil.getPackageName(refExprText);
             result.append(referencedPackageName.equals(packageName)
                 ? refExprText.substring(refExprText.lastIndexOf('.') + 1)
                 : refExprText);
@@ -385,9 +380,9 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
 
         if (possibleCssName != null) {
             try {
-                final DocumentationProvider documentationProvider = getCssProvider(element.getProject());
-                final Method method = documentationProvider.getClass().getMethod("getUrlFor", new Class[]{String.class});
-                final Object o = method.invoke(null, new Object[]{possibleCssName});
+                DocumentationProvider documentationProvider = getCssProvider(element.getProject());
+                Method method = documentationProvider.getClass().getMethod("getUrlFor", new Class[]{String.class});
+                Object o = method.invoke(null, new Object[]{possibleCssName});
 
                 if (o instanceof String) {
                     return Collections.singletonList((String)o);
@@ -428,7 +423,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
         _element = _element.getNavigationElement();
         PsiElement element = findElementForWhichPreviousCommentWillBeSearched(_element);
 
-        final boolean parameterDoc = element instanceof JSParameter;
+        boolean parameterDoc = element instanceof JSParameter;
         if (parameterDoc) {
             element = findElementForWhichPreviousCommentWillBeSearched(PsiTreeUtil.getParentOfType(element, JSFunction.class));
         }
@@ -440,7 +435,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
             if (docComment != null) {
                 docComment = findFirstDocComment(docComment);
                 element = findTargetElement(_element, element);
-                final JSDocumentationBuilder builder = new JSDocumentationBuilder(element, originalElement);
+                JSDocumentationBuilder builder = new JSDocumentationBuilder(element, originalElement);
                 JSDocumentationUtils.processDocumentationTextFromComment(docComment.getNode(), builder);
 
                 return parameterDoc ? builder.getParameterDoc(((JSParameter)_element).getName()) : builder.getDoc();
@@ -452,7 +447,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
                 ASTNode initialComment = JSDocumentationUtils.findLeadingCommentInFunctionBody(element);
 
                 if (initialComment != null) {
-                    final JSDocumentationBuilder builder = new JSDocumentationBuilder(element, originalElement);
+                    JSDocumentationBuilder builder = new JSDocumentationBuilder(element, originalElement);
                     JSDocumentationUtils.processDocumentationTextFromComment(initialComment, builder);
                     return builder.getDoc();
                 }
@@ -462,10 +457,10 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
         String possibleCssName = findPossibleCssName(_element);
         if (possibleCssName != null) {
             try {
-                final DocumentationProvider documentationProvider = getCssProvider(_element.getProject());
-                final Method declaredMethod =
+                DocumentationProvider documentationProvider = getCssProvider(_element.getProject());
+                Method declaredMethod =
                     documentationProvider.getClass().getDeclaredMethod("generateDoc", String.class, PsiElement.class);
-                final Object o = declaredMethod.invoke(null, possibleCssName, null);
+                Object o = declaredMethod.invoke(null, possibleCssName, null);
 
                 if (o instanceof String) {
                     return (String)o;
@@ -479,7 +474,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
     }
 
     @RequiredReadAction
-    private static PsiElement findTargetElement(final PsiElement _element, PsiElement element) {
+    private static PsiElement findTargetElement(PsiElement _element, PsiElement element) {
         if (_element instanceof JSDefinitionExpression definition) {
             if (definition.getParent() instanceof JSAssignmentExpression assignment) {
                 JSExpression rOperand = assignment.getROperand();
@@ -528,7 +523,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
 
     private static String findPossibleCssName(PsiElement _element) {
         if (_element instanceof JSDefinitionExpression definition) {
-            final JSExpression expression = definition.getExpression();
+            JSExpression expression = definition.getExpression();
 
             if (expression instanceof JSReferenceExpression reference) {
                 String text = reference.getReferencedName();
@@ -538,7 +533,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
                 StringBuilder sb = new StringBuilder(text.length());
 
                 for (int i = 0; i < text.length(); ++i) {
-                    final char ch = text.charAt(i);
+                    char ch = text.charAt(i);
 
                     if (Character.isUpperCase(ch)) {
                         sb.append('-').append(Character.toLowerCase(ch));
@@ -607,15 +602,15 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
             return (PsiElement)object;
         }
         else if (object instanceof PsiElement psiElement) {
-            final PsiElement parent = psiElement.getParent();
-            if (parent instanceof JSAssignmentExpression) {
-                return parent.getParent();
+            PsiElement parent = psiElement.getParent();
+            if (parent instanceof JSAssignmentExpression assignment) {
+                return assignment.getParent();
             }
-            else if (parent instanceof JSVarStatement) {
-                if (parent.getFirstChild() instanceof JSAttributeList && JSDocumentationUtils.findDocComment(psiElement) != null) {
+            else if (parent instanceof JSVarStatement varStatement) {
+                if (varStatement.getFirstChild() instanceof JSAttributeList && JSDocumentationUtils.findDocComment(psiElement) != null) {
                     return psiElement;
                 }
-                return parent;
+                return varStatement;
             }
             else if (parent instanceof JSAttribute attribute) {
                 PsiElement attrParent = attribute.getParent();
@@ -628,8 +623,8 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
                 }
                 return attribute;
             }
-            else if (parent instanceof JSSuppressionHolder) {
-                return parent;
+            else if (parent instanceof JSSuppressionHolder suppressionHolder) {
+                return suppressionHolder;
             }
             else {
                 return psiElement;
@@ -641,18 +636,18 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
 
     @Nullable
     @Override
-    public PsiElement getDocumentationElementForLink(final PsiManager psiManager, String link, final PsiElement context) {
+    public PsiElement getDocumentationElementForLink(PsiManager psiManager, String link, PsiElement context) {
         return getDocumentationElementForLinkStatic(psiManager, link, context);
     }
 
     @Nullable
-    private static PsiElement getDocumentationElementForLinkStatic(final PsiManager psiManager, String link, @Nonnull PsiElement context) {
-        final int delimiterIndex = link.lastIndexOf(':');
+    private static PsiElement getDocumentationElementForLinkStatic(PsiManager psiManager, String link, @Nonnull PsiElement context) {
+        int delimiterIndex = link.lastIndexOf(':');
 
         String attributeType = null;
         String attributeName = null;
         for (Map.Entry<String, String> e : DOCUMENTED_ATTRIBUTES.entrySet()) {
-            final String pattern = "." + e.getValue();
+            String pattern = "." + e.getValue();
             if (link.contains(pattern)) {
                 attributeType = e.getKey();
                 attributeName = link.substring(link.indexOf(pattern) + pattern.length());
@@ -661,7 +656,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
             }
         }
         if (delimiterIndex != -1 && attributeType == null) {
-            final int delimiterIndex2 = link.lastIndexOf(':', delimiterIndex - 1);
+            int delimiterIndex2 = link.lastIndexOf(':', delimiterIndex - 1);
             String fileName = link.substring(0, delimiterIndex2).replace(File.separatorChar, '/');
             String name = link.substring(delimiterIndex2 + 1, delimiterIndex);
             int offset = Integer.parseInt(link.substring(delimiterIndex + 1));
@@ -721,14 +716,14 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
 
     @Nullable
     @RequiredReadAction
-    protected static JSAttributeNameValuePair findNamedAttribute(JSClass clazz, final String type, final String name) {
+    protected static JSAttributeNameValuePair findNamedAttribute(JSClass clazz, String type, String name) {
         SimpleReference<JSAttributeNameValuePair> attribute = new SimpleReference<>();
         JSResolveUtil.processMetaAttributesForClass(clazz, new JSResolveUtil.MetaDataProcessor() {
             @Override
             @RequiredReadAction
             public boolean process(@Nonnull JSAttribute jsAttribute) {
                 if (type.equals(jsAttribute.getName())) {
-                    final JSAttributeNameValuePair jsAttributeNameValuePair = jsAttribute.getValueByName("name");
+                    JSAttributeNameValuePair jsAttributeNameValuePair = jsAttribute.getValueByName("name");
                     if (jsAttributeNameValuePair != null && name.equals(jsAttributeNameValuePair.getSimpleValue())) {
                         attribute.set(jsAttributeNameValuePair);
                         return false;
@@ -804,11 +799,11 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
     }
 
     @RequiredReadAction
-    private static String doGenerateDoc(final JSFunction function) {
+    private static String doGenerateDoc(JSFunction function) {
         StringBuilder builder = new StringBuilder();
-        final JSParameterList parameterList = function.getParameterList();
-        final PsiFile containingFile = function.getContainingFile();
-        final boolean ecma = containingFile.getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
+        JSParameterList parameterList = function.getParameterList();
+        PsiFile containingFile = function.getContainingFile();
+        boolean ecma = containingFile.getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
 
         if (parameterList != null) {
             for (JSParameter parameter : parameterList.getParameters()) {
@@ -841,7 +836,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
             return null;
         }
         String linkToResolve = getLinkToResolve(qualifiedElement, link);
-        final PsiElement resolvedElement = getDocumentationElementForLinkStatic(originElement.getManager(), linkToResolve, originElement);
+        PsiElement resolvedElement = getDocumentationElementForLinkStatic(originElement.getManager(), linkToResolve, originElement);
         if (resolvedElement != null) {
             return linkToResolve;
         }
@@ -866,7 +861,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
             String linkFile = link.contains("#") ? link.substring(0, link.lastIndexOf('#')) : link;
             String linkAnchor = link.contains("#") ? link.substring(link.lastIndexOf('#') + 1) : null;
 
-            final String qname;
+            String qname;
             if (StringUtil.endsWithIgnoreCase(linkFile, HTML_EXTENSION)) {
                 String prefix = StringUtil.getPackageName(originQname);
                 while (linkFile.startsWith("../")) {
@@ -922,7 +917,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
         }
 
         if (attribute != null && DOCUMENTED_ATTRIBUTES.containsKey(attribute.getName())) {
-            final JSClass jsClass = PsiTreeUtil.getParentOfType(element, JSClass.class);
+            JSClass jsClass = PsiTreeUtil.getParentOfType(element, JSClass.class);
             if (jsClass != null) {
                 return jsClass;
             }

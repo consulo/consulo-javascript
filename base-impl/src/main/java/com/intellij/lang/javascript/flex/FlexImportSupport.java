@@ -20,10 +20,10 @@ import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.JSImportStatement;
 import com.intellij.lang.javascript.psi.resolve.JSImportedElementResolveResult;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 import consulo.util.collection.ArrayUtil;
-import org.jetbrains.annotations.NonNls;
 
 import jakarta.annotation.Nonnull;
 
@@ -35,9 +35,7 @@ import java.util.Map;
  */
 public class FlexImportSupport {
     // flex2.compiler.mxml.lang.StandardDefs
-    private static
-    @NonNls
-    String[] standardMxmlImports = new String[]{
+    private static final String[] STANDARD_MXML_IMPORTS = new String[]{
         "mx.styles.*",
         "mx.binding.*",
         "mx.core.mx_internal",
@@ -49,9 +47,7 @@ public class FlexImportSupport {
         "mx.core.DeferredInstanceFromFunction",
     };
 
-    private static
-    @NonNls
-    String[] airOnlyImplicitImports = new String[]{
+    private static final String[] AIR_ONLY_IMPLICIT_IMPORTS = new String[]{
         "flash.data.*",
         "flash.desktop.*",
         "flash.filesystem.*",
@@ -59,9 +55,7 @@ public class FlexImportSupport {
         "flash.html.script.*"
     };
 
-    private static
-    @NonNls
-    String[] implicitImports = new String[]{
+    private static final String[] IMPLICIT_IMPORTS = new String[]{
         "flash.accessibility.*",
         "flash.debugger.*",
         "flash.display.*",
@@ -81,57 +75,57 @@ public class FlexImportSupport {
         "flash.xml.*"
     };
 
-    private static final Map<String, Object> implicitImportListMap = new HashMap<String, Object>();
-    private static final Map<String, Object> mxmlImportListMap = new HashMap<String, Object>();
+    private static final Map<String, Object> IMPLICIT_IMPORT_LIST_MAP = new HashMap<>();
+    private static final Map<String, Object> MXML_IMPORT_LIST_MAP = new HashMap<>();
 
     static {
-        fillMapFromImportsArray(implicitImports, implicitImportListMap);
-        fillMapFromImportsArray(standardMxmlImports, mxmlImportListMap);
+        fillMapFromImportsArray(IMPLICIT_IMPORTS, IMPLICIT_IMPORT_LIST_MAP);
+        fillMapFromImportsArray(STANDARD_MXML_IMPORTS, MXML_IMPORT_LIST_MAP);
     }
 
-    private static void fillMapFromImportsArray(final String[] strings, final Map<String, Object> map) {
+    @RequiredReadAction
+    private static void fillMapFromImportsArray(String[] strings, Map<String, Object> map) {
         for (String s : strings) {
             doAppendToMap(map, s);
         }
     }
 
-    public static void appendToMap(final Map<String, Object> map, final JSImportStatement importStatement) {
+    @RequiredReadAction
+    public static void appendToMap(Map<String, Object> map, JSImportStatement importStatement) {
         doAppendToMap(map, importStatement);
     }
 
-    private static void doAppendToMap(final Map<String, Object> map, final Object stringOrStatement) {
+    @RequiredReadAction
+    private static void doAppendToMap(Map<String, Object> map, Object stringOrStatement) {
         String s = stringOrStatement instanceof String string ? string : ((JSImportStatement)stringOrStatement).getImportText();
 
-        final int index = s.lastIndexOf('.');
+        int index = s.lastIndexOf('.');
         if (index == -1) {
             return; // nothing to import, global symbol
         }
-        final String key = s.substring(index + 1);
-        final Object o = map.get(key);
+        String key = s.substring(index + 1);
+        Object o = map.get(key);
 
         if (o == null) {
             map.put(key, stringOrStatement);
         }
-        else if (o instanceof Object[]) {
-            map.put(key, ArrayUtil.append((Object[])o, stringOrStatement));
+        else if (o instanceof Object[] objects) {
+            map.put(key, ArrayUtil.append(objects, stringOrStatement));
         }
         else {
-            map.put(key, new Object[]{
-                stringOrStatement,
-                o
-            });
+            map.put(key, new Object[]{stringOrStatement, o});
         }
     }
 
     public static JSImportedElementResolveResult resolveTypeNameUsingImplicitImports(@Nonnull String referenceName, @Nonnull JSFile file) {
-        final PsiElement context = file.getContext();
+        PsiElement context = file.getContext();
 
         if (context != null) {
-            JSImportedElementResolveResult expression = tryFindInMap(referenceName, file, implicitImportListMap, null);
+            JSImportedElementResolveResult expression = tryFindInMap(referenceName, file, IMPLICIT_IMPORT_LIST_MAP, null);
             if (expression != null) {
                 return expression;
             }
-            expression = tryFindInMap(referenceName, file, mxmlImportListMap, null);
+            expression = tryFindInMap(referenceName, file, MXML_IMPORT_LIST_MAP, null);
             if (expression != null) {
                 return expression;
             }
@@ -139,11 +133,10 @@ public class FlexImportSupport {
         return null;
     }
 
-
     public static JSImportedElementResolveResult tryFindInMap(
-        final String referenceName,
-        final PsiNamedElement file,
-        final Map<String, Object> map,
+        String referenceName,
+        PsiNamedElement file,
+        Map<String, Object> map,
         String qName
     ) {
         JSImportedElementResolveResult resolveResult = tryEntry(map.get(referenceName), referenceName, file, qName);
@@ -154,9 +147,9 @@ public class FlexImportSupport {
     }
 
     public static JSImportedElementResolveResult tryFindInMap(
-        final String referenceName,
-        final PsiNamedElement file,
-        final Map<String, Object> map
+        String referenceName,
+        PsiNamedElement file,
+        Map<String, Object> map
     ) {
         return tryFindInMap(referenceName, file, map, null);
     }
@@ -165,8 +158,8 @@ public class FlexImportSupport {
         if (entry == null) {
             return null;
         }
-        else if (entry instanceof Object[]) {
-            for (Object entryItem : (Object[])entry) {
+        else if (entry instanceof Object[] entryItems) {
+            for (Object entryItem : entryItems) {
                 JSImportedElementResolveResult expression = tryFindClass(referenceName, file, entryItem, qName);
                 if (expression != null) {
                     return expression;
@@ -179,10 +172,11 @@ public class FlexImportSupport {
         }
     }
 
+    @RequiredReadAction
     private static JSImportedElementResolveResult tryFindClass(
-        final String referenceName,
-        final PsiNamedElement file,
-        final Object entry,
+        String referenceName,
+        PsiNamedElement file,
+        Object entry,
         String qName
     ) {
         String importString = entry instanceof String string ? string : ((JSImportStatement)entry).getImportText();

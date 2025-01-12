@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 
 /**
  * @author max
- * @since 12:13:05 AM Feb 15, 2005
+ * @since 2005-02-15
  */
 public class JavaScriptHighlightingLexer extends LayeredLexer {
     public JavaScriptHighlightingLexer(Supplier<Lexer> baseLexerFactory) {
@@ -120,7 +120,7 @@ public class JavaScriptHighlightingLexer extends LayeredLexer {
     }
 
     public static IElementType getTagContentTokenType() {
-        final Lexer highlightingLexer = getHtmlHighlightingLexer();
+        Lexer highlightingLexer = getHtmlHighlightingLexer();
         highlightingLexer.start("a", 0, 1, 0);
         return highlightingLexer.getTokenType();
     }
