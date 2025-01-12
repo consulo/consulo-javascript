@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -30,26 +31,24 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:59:44 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSTryStatementImpl extends JSStatementImpl implements JSTryStatement {
-    private static TokenSet ourCatchesTypeSet = TokenSet.create(JSElementTypes.CATCH_BLOCK);
+    private static final TokenSet CATCHES_TYPE_SET = TokenSet.create(JSElementTypes.CATCH_BLOCK);
 
-    public JSTryStatementImpl(final ASTNode node) {
+    public JSTryStatementImpl(ASTNode node) {
         super(node);
     }
 
     @Override
+    @RequiredReadAction
     public JSStatement getStatement() {
         ASTNode child = getNode().getFirstChildNode();
         while (child != null) {
-            final IElementType type = child.getElementType();
-            if (child.getPsi() instanceof JSStatement) {
-                return (JSStatement)child.getPsi();
+            IElementType type = child.getElementType();
+            if (child.getPsi() instanceof JSStatement statement) {
+                return statement;
             }
             if (type == JSTokenTypes.FINALLY_KEYWORD) {
                 break;
@@ -61,27 +60,31 @@ public class JSTryStatementImpl extends JSStatementImpl implements JSTryStatemen
 
     @Override
     @Nullable
+    @RequiredReadAction
     public JSCatchBlock getCatchBlock() {
-        final ASTNode catchChild = getNode().findChildByType(JSElementTypes.CATCH_BLOCK);
+        ASTNode catchChild = getNode().findChildByType(JSElementTypes.CATCH_BLOCK);
         if (catchChild == null) {
             return null;
         }
         return (JSCatchBlock)catchChild.getPsi();
     }
 
+    @Nonnull
     @Override
+    @RequiredReadAction
     public JSCatchBlock[] getAllCatchBlocks() {
         return findChildrenByClass(JSCatchBlock.class);
     }
 
     @Override
+    @RequiredReadAction
     public JSStatement getFinallyStatement() {
         ASTNode child = getNode().getFirstChildNode();
         boolean foundFinally = false;
         while (child != null) {
-            final IElementType type = child.getElementType();
-            if (foundFinally && child.getPsi() instanceof JSStatement) {
-                return (JSStatement)child.getPsi();
+            IElementType type = child.getElementType();
+            if (foundFinally && child.getPsi() instanceof JSStatement statement) {
+                return statement;
             }
             if (type == JSTokenTypes.FINALLY_KEYWORD) {
                 foundFinally = true;

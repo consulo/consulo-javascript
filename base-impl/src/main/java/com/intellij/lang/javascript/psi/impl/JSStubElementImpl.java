@@ -20,6 +20,8 @@ import com.intellij.lang.javascript.index.JSItemPresentation;
 import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSNamedElement;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.content.scope.SearchScope;
 import consulo.language.ast.ASTNode;
 import consulo.language.impl.psi.stub.StubBasedPsiElementBase;
@@ -34,18 +36,17 @@ import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
 /**
- * User: max
- * Date: Jan 30, 2005
- * Time: 8:23:10 PM
+ * @author max
+ * @since 2005-01-30
  */
 public abstract class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElementBase<T> implements JSElement {
     public static Key<NavigationItem> ORIGINAL_ELEMENT = Key.create("ORIGINAL_NAMED_ELEMENT");
 
-    public JSStubElementImpl(final ASTNode node) {
+    public JSStubElementImpl(ASTNode node) {
         super(node);
     }
 
-    public JSStubElementImpl(final T t, IStubElementType type) {
+    public JSStubElementImpl(T t, IStubElementType type) {
         super(t, type);
     }
 
@@ -68,16 +69,14 @@ public abstract class JSStubElementImpl<T extends StubElement> extends StubBased
     @Override
     public ItemPresentation getPresentation() {
         if (this instanceof JSNamedElement namedThis) {
-            final NavigationItem element = getUserData(ORIGINAL_ELEMENT);
-            if (element == null) {
-                return new JSItemPresentation(namedThis);
-            }
-            return element.getPresentation();
+            NavigationItem element = getUserData(ORIGINAL_ELEMENT);
+            return element == null ? new JSItemPresentation(namedThis) : element.getPresentation();
         }
         return null;
     }
 
     @Override
+    @RequiredWriteAction
     public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         if (JSChangeUtil.isStatementOrComment(element)) {
             if (JSChangeUtil.isStatementContainer(this)) {
@@ -92,6 +91,7 @@ public abstract class JSStubElementImpl<T extends StubElement> extends StubBased
     }
 
     @Override
+    @RequiredWriteAction
     public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         if (JSChangeUtil.isStatementOrComment(element)) {
             if (JSChangeUtil.isStatementContainer(this)) {
@@ -105,6 +105,7 @@ public abstract class JSStubElementImpl<T extends StubElement> extends StubBased
     }
 
     @Override
+    @RequiredWriteAction
     public PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor)
         throws IncorrectOperationException {
         if (JSChangeUtil.isStatementOrComment(first)) {
@@ -119,6 +120,7 @@ public abstract class JSStubElementImpl<T extends StubElement> extends StubBased
     }
 
     @Override
+    @RequiredWriteAction
     public PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor) throws IncorrectOperationException {
         if (JSChangeUtil.isStatementOrComment(first)) {
             if (JSChangeUtil.isStatementContainer(this)) {
@@ -133,19 +135,22 @@ public abstract class JSStubElementImpl<T extends StubElement> extends StubBased
     }
 
     @Override
+    @RequiredWriteAction
     public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
         return addAfter(element, null);
     }
 
     @Override
+    @RequiredWriteAction
     public PsiElement addRange(PsiElement first, PsiElement last) throws IncorrectOperationException {
         return addRangeAfter(first, last, null);
     }
 
     @Override
+    @RequiredReadAction
     public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
-        final ASTNode myNode = getNode();
-        final ASTNode result = newElement.getNode().copyElement();
+        ASTNode myNode = getNode();
+        ASTNode result = newElement.getNode().copyElement();
         myNode.getTreeParent().replaceChild(myNode, result);
         return result.getPsi();
     }

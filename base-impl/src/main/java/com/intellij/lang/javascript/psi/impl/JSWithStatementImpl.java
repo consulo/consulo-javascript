@@ -24,14 +24,11 @@ import com.intellij.lang.javascript.psi.JSWithStatement;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:54:56 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSWithStatementImpl extends JSStatementImpl implements JSWithStatement {
-    public JSWithStatementImpl(final ASTNode node) {
+    public JSWithStatementImpl(ASTNode node) {
         super(node);
     }
 

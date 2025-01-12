@@ -23,6 +23,7 @@ import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.stubs.JSVariableStubBase;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.util.RecursionManager;
 import consulo.content.scope.SearchScope;
 import consulo.javascript.impl.language.psi.JSStubElementType;
@@ -40,11 +41,8 @@ import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 8:47:58 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSVariable>
     extends JSStubElementImpl<T> implements JSVariable {
@@ -52,17 +50,18 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
         super(node);
     }
 
-    protected JSVariableBaseImpl(final T stub, final JSStubElementType<T, T2> elementType) {
+    protected JSVariableBaseImpl(T stub, JSStubElementType<T, T2> elementType) {
         super(stub, elementType);
     }
 
     @Override
+    @RequiredReadAction
     public boolean hasInitializer() {
         return getInitializerText() != null;
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public JSExpression getInitializer() {
         PsiElement element = findChildByType(JSTokenTypes.EQ);
         if (element == null) {
@@ -78,43 +77,45 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
     }
 
     @Override
+    @RequiredReadAction
     public String getInitializerText() {
-        final T stub = getStub();
+        T stub = getStub();
         if (stub != null) {
             return stub.getInitializerText();
         }
 
-        final JSExpression expression = getInitializer();
+        JSExpression expression = getInitializer();
         return expression != null ? expression.getText() : null;
     }
 
-    @Override
     @Nonnull
+    @Override
+    @RequiredReadAction
     public SearchScope getUseScope() {
         return JSResolveUtil.findUseScope(this);
     }
 
     @Override
+    @RequiredReadAction
     public String getName() {
-        final T stub = getStub();
+        T stub = getStub();
         if (stub != null) {
             return stub.getName();
         }
-        final PsiElement name = getNameIdentifier();
+        PsiElement name = getNameIdentifier();
 
-        if (name instanceof JSReferenceExpression referenceExpression) {
-            return referenceExpression.getReferencedName();
+        if (name instanceof JSReferenceExpression refExpr) {
+            return refExpr.getReferencedName();
         }
         return name != null ? name.getText() : "";
     }
 
     @Override
     public JSAttributeList getAttributeList() {
-        PsiElement parent = getParent();
-        if (!(parent instanceof JSVarStatement)) {
-            return null;
+        if (getParent() instanceof JSVarStatement varStatement) {
+            return ((JSVarStatementImpl)varStatement).getStubOrPsiChild(JSElementTypes.ATTRIBUTE_LIST);
         }
-        return ((JSVarStatementImpl)getParent()).getStubOrPsiChild(JSElementTypes.ATTRIBUTE_LIST);
+        return null;
     }
 
     @Override
@@ -124,32 +125,35 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 
     @Nonnull
     @Override
+    @RequiredReadAction
     public JavaScriptType getType() {
-        final JSExpression initializer = getInitializer();
+        JSExpression initializer = getInitializer();
         if (initializer != null) {
             if (initializer instanceof JSObjectLiteralExpression lit) {
                 return new JavaScriptSimpleType(getName(), lit);
             }
             
-            JavaScriptType javaScriptType = RecursionManager.doPreventingRecursion(this, false, new Supplier<JavaScriptType>() {
-                @Override
-                @RequiredReadAction
-                public JavaScriptType get() {
-                    return initializer.getType();
+            JavaScriptType javaScriptType = RecursionManager.doPreventingRecursion(
+                this,
+                false,
+                new Supplier<JavaScriptType>() {
+                    @Override
+                    @RequiredReadAction
+                    public JavaScriptType get() {
+                        return initializer.getType();
+                    }
                 }
-            });
+            );
             return javaScriptType == null ? JavaScriptType.UNKNOWN : javaScriptType;
         }
         return JavaScriptType.UNKNOWN;
     }
 
     @Override
+    @RequiredReadAction
     public String getTypeString() {
-        final T stub = getStub();
-        if (stub != null) {
-            return stub.getTypeString();
-        }
-        return doGetType();
+        T stub = getStub();
+        return stub != null ? stub.getTypeString() : doGetType();
     }
 
     @RequiredReadAction
@@ -158,17 +162,19 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
         return JSPsiImplUtils.findTypeElement(this);
     }
 
+    @RequiredReadAction
     protected String doGetType() {
         return JSPsiImplUtils.getType(this);
     }
 
     @Override
+    @RequiredWriteAction
     public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
-        final PsiElement nameNode = getNameIdentifier();
+        PsiElement nameNode = getNameIdentifier();
         if (nameNode == null) {
             return this;
         }
-        final ASTNode nameElement = JSChangeUtil.createNameIdentifier(getProject(), name);
+        ASTNode nameElement = JSChangeUtil.createNameIdentifier(getProject(), name);
         getNode().replaceChild(nameNode.getNode(), nameElement);
         return this;
     }
@@ -181,17 +187,18 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
     @RequiredReadAction
     @Override
     public int getTextOffset() {
-        final PsiElement name = getNameIdentifier();
+        PsiElement name = getNameIdentifier();
         return name != null ? name.getTextOffset() : super.getTextOffset();
     }
 
     @Override
+    @RequiredReadAction
     public boolean isConst() {
-        final T stub = getStub();
+        T stub = getStub();
         if (stub != null) {
             return stub.isConst();
         }
-        final ASTNode parent = getNode().getTreeParent();
+        ASTNode parent = getNode().getTreeParent();
 
         if (parent.getElementType() == JSElementTypes.VAR_STATEMENT) {
             ASTNode node = parent.getFirstChildNode();
@@ -211,19 +218,20 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
     }
 
     @Override
+    @RequiredReadAction
     public boolean isLocal() {
-        final T stub = getStub();
+        T stub = getStub();
         if (stub != null) {
             return stub.isLocal();
         }
-        final ASTNode parent = getNode().getTreeParent();
+        ASTNode parent = getNode().getTreeParent();
         return parent.getElementType() == JSElementTypes.VAR_STATEMENT
             && parent.getFirstChildNode().getElementType() == JSTokenTypes.LET_KEYWORD;
     }
 
     @Override
     public boolean isDeprecated() {
-        final T stub = getStub();
+        T stub = getStub();
         if (stub != null) {
             return stub.isDeprecated();
         }
@@ -231,12 +239,13 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
     }
 
     @Override
+    @RequiredWriteAction
     public void delete() throws IncorrectOperationException {
-        final ASTNode myNode = getNode();
-        final ASTNode parent = myNode.getTreeParent();
+        ASTNode myNode = getNode();
+        ASTNode parent = myNode.getTreeParent();
 
         if (parent.getElementType() == JSElementTypes.VAR_STATEMENT) {
-            final JSVariable[] jsVariables = ((JSVarStatement)parent.getPsi()).getVariables();
+            JSVariable[] jsVariables = ((JSVarStatement)parent.getPsi()).getVariables();
 
             if (jsVariables.length == 1) {
                 parent.getPsi().delete();
@@ -252,10 +261,10 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
 
     @Override
     public boolean processDeclarations(
-        @Nonnull final PsiScopeProcessor processor,
-        @Nonnull final ResolveState state,
-        final PsiElement lastParent,
-        @Nonnull final PsiElement place
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        PsiElement lastParent,
+        @Nonnull PsiElement place
     ) {
         if (lastParent != null && lastParent.getParent() == this) {
             processor.handleEvent(PsiScopeProcessor.Event.SET_DECLARATION_HOLDER, this);
@@ -264,12 +273,10 @@ public class JSVariableBaseImpl<T extends JSVariableStubBase<T2>, T2 extends JSV
     }
 
     @Override
+    @RequiredReadAction
     public String getQualifiedName() {
-        final T stub = getStub();
-        if (stub != null) {
-            return stub.getQualifiedName();
-        }
-        return JSPsiImplUtils.getQName(this);
+        T stub = getStub();
+        return stub != null ? stub.getQualifiedName() : JSPsiImplUtils.getQName(this);
     }
 
     @Override

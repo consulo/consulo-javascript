@@ -32,7 +32,6 @@ import consulo.language.psi.resolve.ResolveState;
 import consulo.language.util.IncorrectOperationException;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author VISTALL
@@ -52,7 +51,7 @@ public class JavaScriptLambdaExpressionImpl extends JSExpressionImpl implements 
         @Nonnull PsiElement place
     ) {
         if (lastParent != null && lastParent.getParent() == this) {
-            final JSParameter[] params = getParameterList().getParameters();
+            JSParameter[] params = getParameterList().getParameters();
             for (JSParameter param : params) {
                 if (!processor.execute(param, state)) {
                     return false;
@@ -82,8 +81,9 @@ public class JavaScriptLambdaExpressionImpl extends JSExpressionImpl implements 
     }
 
     @Override
+    @RequiredReadAction
     public JSSourceElement[] getBody() {
-        final ASTNode[] children = getNode().getChildren(JSElementTypes.SOURCE_ELEMENTS);
+        ASTNode[] children = getNode().getChildren(JSElementTypes.SOURCE_ELEMENTS);
         if (children.length == 0) {
             return JSSourceElement.EMPTY_ARRAY;
         }
@@ -123,6 +123,7 @@ public class JavaScriptLambdaExpressionImpl extends JSExpressionImpl implements 
     }
 
     @Override
+    @RequiredReadAction
     public String getQualifiedName() {
         return null;
     }
@@ -136,7 +137,7 @@ public class JavaScriptLambdaExpressionImpl extends JSExpressionImpl implements 
 
     @RequiredWriteAction
     @Override
-    public PsiElement setName(@Nonnull @NonNls String name) throws IncorrectOperationException {
+    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
         return null;
     }
 }

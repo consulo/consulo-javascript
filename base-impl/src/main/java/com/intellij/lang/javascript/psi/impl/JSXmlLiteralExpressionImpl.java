@@ -32,8 +32,6 @@ import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.language.util.IncorrectOperationException;
 import consulo.xml.psi.xml.*;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -51,13 +49,16 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
             super(manager, language);
         }
 
+        @Nonnull
         @Override
+        @RequiredReadAction
         public TextRange getTextRange() {
             return TextRange.EMPTY_RANGE;
         }
 
         @Nonnull
         @Override
+        @RequiredReadAction
         public XmlTagChild[] getChildren() {
             return XmlTagChild.EMPTY_ARRAY;
         }
@@ -100,7 +101,7 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
         }
     }
 
-    public JSXmlLiteralExpressionImpl(final ASTNode node) {
+    public JSXmlLiteralExpressionImpl(ASTNode node) {
         super(node);
     }
 
@@ -133,6 +134,7 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
         visitor.visitJSElement(this);
     }
 
+    @Nonnull
     @Override
     @RequiredReadAction
     public String getName() {
@@ -142,7 +144,7 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
 
     @RequiredWriteAction
     @Override
-    public PsiElement setName(@Nonnull @NonNls String s) throws IncorrectOperationException {
+    public PsiElement setName(@Nonnull String s) throws IncorrectOperationException {
         return null;
     }
 
@@ -154,6 +156,7 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
 
     @Nonnull
     @Override
+    @RequiredReadAction
     public String getLocalName() {
         return getName();
     }
@@ -172,46 +175,41 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
 
     @Nullable
     @Override
-    public XmlAttribute getAttribute(@NonNls String name, @NonNls String namespace) {
+    public XmlAttribute getAttribute(String name, String namespace) {
         return null;
     }
 
     @Nullable
     @Override
-    public XmlAttribute getAttribute(@NonNls String qname) {
+    public XmlAttribute getAttribute(String qname) {
         return null;
     }
 
     @Nullable
     @Override
-    public String getAttributeValue(@NonNls String name, @NonNls String namespace) {
+    public String getAttributeValue(String name, String namespace) {
         return null;
     }
 
     @Nullable
     @Override
-    public String getAttributeValue(@NonNls String qname) {
+    public String getAttributeValue(String qname) {
         return null;
     }
 
     @Override
-    public XmlAttribute setAttribute(@NonNls String name, @NonNls String namespace, @NonNls String value)
+    public XmlAttribute setAttribute(String name, String namespace, String value)
         throws IncorrectOperationException {
         return null;
     }
 
     @Override
-    public XmlAttribute setAttribute(@NonNls String qname, @NonNls String value) throws IncorrectOperationException {
+    public XmlAttribute setAttribute(String qname, String value) throws IncorrectOperationException {
         return null;
     }
 
     @Override
-    public XmlTag createChildTag(
-        @NonNls String localName,
-        @NonNls String namespace,
-        @Nullable @NonNls String bodyText,
-        boolean enforceNamespacesDeep
-    ) {
+    public XmlTag createChildTag(String localName, String namespace, @Nullable String bodyText, boolean enforceNamespacesDeep) {
         return null;
     }
 
@@ -228,19 +226,19 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
 
     @Nonnull
     @Override
-    public XmlTag[] findSubTags(@NonNls String qname) {
+    public XmlTag[] findSubTags(String qname) {
         return new XmlTag[0];
     }
 
     @Nonnull
     @Override
-    public XmlTag[] findSubTags(@NonNls String localName, @Nullable String namespace) {
+    public XmlTag[] findSubTags(String localName, @Nullable String namespace) {
         return new XmlTag[0];
     }
 
     @Nullable
     @Override
-    public XmlTag findFirstSubTag(@NonNls String qname) {
+    public XmlTag findFirstSubTag(String qname) {
         return null;
     }
 
@@ -252,13 +250,13 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
 
     @Nonnull
     @Override
-    public String getNamespaceByPrefix(@NonNls String prefix) {
+    public String getNamespaceByPrefix(String prefix) {
         return "";
     }
 
     @Nullable
     @Override
-    public String getPrefixByNamespace(@NonNls String namespace) {
+    public String getPrefixByNamespace(String namespace) {
         return null;
     }
 
@@ -292,7 +290,7 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
 
     @Nullable
     @Override
-    public XmlNSDescriptor getNSDescriptor(@NonNls String namespace, boolean strict) {
+    public XmlNSDescriptor getNSDescriptor(String namespace, boolean strict) {
         return null;
     }
 
@@ -308,7 +306,7 @@ public class JSXmlLiteralExpressionImpl extends JSExpressionImpl implements JSLi
 
     @Nullable
     @Override
-    public String getSubTagText(@NonNls String qname) {
+    public String getSubTagText(String qname) {
         return null;
     }
 

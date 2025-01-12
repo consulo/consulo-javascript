@@ -19,6 +19,8 @@ package com.intellij.lang.javascript.psi.impl;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSLabeledStatement;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
@@ -34,32 +36,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:52:04 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 abstract class JSStatementWithLabelReferenceImpl extends JSStatementImpl {
     private PsiReference[] myReferences;
     private String myReferencesText;
 
-    protected JSStatementWithLabelReferenceImpl(final ASTNode node) {
+    protected JSStatementWithLabelReferenceImpl(ASTNode node) {
         super(node);
     }
 
+    @RequiredReadAction
     public String getLabel() {
-        final ASTNode label = getNode().findChildByType(JSTokenTypes.IDENTIFIER);
+        ASTNode label = getNode().findChildByType(JSTokenTypes.IDENTIFIER);
         return label != null ? label.getText() : null;
     }
 
-    @Override
     @Nonnull
+    @Override
+    @RequiredReadAction
     public PsiReference[] getReferences() {
-        final String text = getText();
+        String text = getText();
 
         if (!text.equals(myReferencesText) || myReferences == null) {
-            final ASTNode label = getNode().findChildByType(JSTokenTypes.IDENTIFIER);
+            ASTNode label = getNode().findChildByType(JSTokenTypes.IDENTIFIER);
             if (label != null) {
                 myReferences = new PsiReference[]{new JSStatementWithLabelReferenceImpl.LabelReference(label.getPsi())};
             }
@@ -79,26 +80,31 @@ abstract class JSStatementWithLabelReferenceImpl extends JSStatementImpl {
         }
 
         @Override
+        @RequiredReadAction
         public PsiElement getElement() {
             return JSStatementWithLabelReferenceImpl.this;
         }
 
+        @Nonnull
         @Override
+        @RequiredReadAction
         public TextRange getRangeInElement() {
-            final int startOffsetInParent = labelNode.getStartOffsetInParent();
+            int startOffsetInParent = labelNode.getStartOffsetInParent();
             return new TextRange(startOffsetInParent, startOffsetInParent + labelNode.getTextLength());
         }
 
         @Override
         @Nullable
+        @RequiredReadAction
         public PsiElement resolve() {
-            final PsiElement[] result = new PsiElement[1];
+            PsiElement[] result = new PsiElement[1];
 
             processElements(new PsiElementProcessor<>() {
                 private final String label = getCanonicalText();
 
                 @Override
-                public boolean execute(final JSLabeledStatement element) {
+                @RequiredReadAction
+                public boolean execute(@Nonnull JSLabeledStatement element) {
                     if (label.equals(element.getLabel())) {
                         result[0] = element;
                         return false;
@@ -110,28 +116,35 @@ abstract class JSStatementWithLabelReferenceImpl extends JSStatementImpl {
             return result[0];
         }
 
+        @Nonnull
         @Override
+        @RequiredReadAction
         public String getCanonicalText() {
             return labelNode.getText();
         }
 
         @Override
+        @RequiredWriteAction
         public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
             JSChangeUtil.doIdentifierReplacement(getElement(), labelNode, newElementName);
             return getElement();
         }
 
         @Override
+        @RequiredWriteAction
         public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
             return null;
         }
 
         @Override
+        @RequiredReadAction
         public boolean isReferenceTo(PsiElement element) {
             return getManager().areElementsEquivalent(resolve(), element);
         }
 
+        @Nonnull
         @Override
+        @RequiredReadAction
         public Object[] getVariants() {
             final List<String> labels = new ArrayList<>(1);
             processElements(element -> {
@@ -144,10 +157,8 @@ abstract class JSStatementWithLabelReferenceImpl extends JSStatementImpl {
         private void processElements(PsiElementProcessor<JSLabeledStatement> processor) {
             PsiElement run = getParent();
             while (run != null) {
-                if (run instanceof JSLabeledStatement) {
-                    if (!processor.execute((JSLabeledStatement)run)) {
-                        return;
-                    }
+                if (run instanceof JSLabeledStatement labeledStatement && !processor.execute(labeledStatement)) {
+                    return;
                 }
 
                 if (run instanceof JSFunction) {
@@ -158,6 +169,7 @@ abstract class JSStatementWithLabelReferenceImpl extends JSStatementImpl {
         }
 
         @Override
+        @RequiredReadAction
         public boolean isSoft() {
             return false;
         }

@@ -21,8 +21,7 @@ import consulo.language.psi.PsiElement;
 
 /**
  * @author Maxim.Mossienko
- * Date: Jul 29, 2008
- * Time: 8:04:55 PM
+ * @since 2008-07-29
  */
 public class JSImportedElementResolveResult {
     public final String qualifiedName;

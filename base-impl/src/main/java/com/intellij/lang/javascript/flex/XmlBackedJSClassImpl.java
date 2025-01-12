@@ -188,13 +188,14 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
     }
 
     @Override
+    @RequiredReadAction
     protected boolean processMembers(
         PsiScopeProcessor processor,
         ResolveState substitutor,
         PsiElement lastParent,
         PsiElement place
     ) {
-        for (JSFile file : ourCachedScripts.get(CACHED_SCRIPTS_KEY, getParent(), null).getValue()) {
+        for (JSFile file : CACHED_SCRIPTS.get(CACHED_SCRIPTS_KEY, getParent(), null).getValue()) {
             if (!file.processDeclarations(processor, ResolveState.initial(), null, place)) {
                 return false;
             }
@@ -223,6 +224,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
         return b;
     }
 
+    @RequiredReadAction
     public boolean doImportFromScripts(PsiScopeProcessor processor, PsiElement place) {
         PsiElement context = place.getContainingFile().getContext();
         if (context instanceof XmlText xmlText) {
@@ -241,7 +243,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
             boolean adequatePlace = false;
 
             XmlTag parent = getParent();
-            JSFile[] files = ourCachedScripts.get(CACHED_SCRIPTS_KEY, parent, null).getValue();
+            JSFile[] files = CACHED_SCRIPTS.get(CACHED_SCRIPTS_KEY, parent, null).getValue();
             for (JSFile file : files) {
                 if (JSImportHandlingUtil.isAdequatePlaceForImport(file, place)) {
                     if (useImports && JSImportHandlingUtil.importClass(processor, file)) {
@@ -251,26 +253,20 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
                 }
             }
 
-            if (adequatePlace && processor instanceof ResolveProcessor resolveProcessor) {
-                if (!processComponentNames(resolveProcessor)) {
-                    return false;
-                }
-            }
-        }
-
-        if (processor instanceof ResolveProcessor && JSResolveUtil.shouldProcessTopLevelGlobalContext(place, processor)
-            && notResolvingTypeViaImport) {
-            if (!JSResolveUtil.processGlobalThings(processor, ResolveState.initial(), place, this)) {
+            if (adequatePlace && processor instanceof ResolveProcessor resolveProcessor && !processComponentNames(resolveProcessor)) {
                 return false;
             }
         }
-        return true;
+
+        return !(processor instanceof ResolveProcessor) || !JSResolveUtil.shouldProcessTopLevelGlobalContext(place, processor)
+            || !notResolvingTypeViaImport || JSResolveUtil.processGlobalThings(processor, ResolveState.initial(), place, this);
     }
 
+    @RequiredReadAction
     public boolean processComponentNames(ResolveProcessor processor) {
         String s = processor.getName();
         Map<String, String> value =
-            myCachedComponentImportsCache.get(OUR_CACHED_SHORT_COMPONENTS_REF_KEY, (XmlFile)getContainingFile(), null).getValue();
+            CACHED_COMPONENT_IMPORTS_CACHE.get(CACHED_SHORT_COMPONENTS_REF_KEY, (XmlFile)getContainingFile(), null).getValue();
 
         if (s != null) {
             String qName = value.get(s);
@@ -293,41 +289,40 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
     }
 
     private static final Key<CachedValue<JSFile[]>> CACHED_SCRIPTS_KEY = Key.create("cached.scripts");
-    private static final Key<CachedValue<Map<String, String>>> OUR_CACHED_SHORT_COMPONENTS_REF_KEY = Key.create("cached.component.refs");
+    private static final Key<CachedValue<Map<String, String>>> CACHED_SHORT_COMPONENTS_REF_KEY = Key.create("cached.component.refs");
 
     private static final String SCRIPT_TAG_NAME = "Script";
 
-    private static final UserDataCache<CachedValue<JSFile[]>, XmlTag, Object> ourCachedScripts =
-        new UserDataCache<>() {
-            @Override
-            protected CachedValue<JSFile[]> compute(XmlTag tag, Object p) {
-                return CachedValuesManager.getManager(tag.getProject()).createCachedValue(
-                    () -> {
-                        List<JSFile> injectedFiles = new ArrayList<>(2);
-                        List<PsiElement> dependencies = new ArrayList<>();
-                        dependencies.add(tag);
-                        new InjectedScriptsVisitor(
-                            tag,
-                            doProcessAllTags(tag),
-                            false,
-                            false,
-                            (rootTag, file) -> {
-                                injectedFiles.add(file);
-                                dependencies.add(file);
-                            }
-                        ).go();
-                        return new CachedValueProvider.Result<>(
-                            injectedFiles.toArray(new JSFile[injectedFiles.size()]),
-                            dependencies.toArray()
-                        );
-                    },
-                    false
-                );
-            }
-        };
+    private static final UserDataCache<CachedValue<JSFile[]>, XmlTag, Object> CACHED_SCRIPTS = new UserDataCache<>() {
+        @Override
+        protected CachedValue<JSFile[]> compute(XmlTag tag, Object p) {
+            return CachedValuesManager.getManager(tag.getProject()).createCachedValue(
+                () -> {
+                    List<JSFile> injectedFiles = new ArrayList<>(2);
+                    List<PsiElement> dependencies = new ArrayList<>();
+                    dependencies.add(tag);
+                    new InjectedScriptsVisitor(
+                        tag,
+                        doProcessAllTags(tag),
+                        false,
+                        false,
+                        (rootTag, file) -> {
+                            injectedFiles.add(file);
+                            dependencies.add(file);
+                        }
+                    ).go();
+                    return new CachedValueProvider.Result<>(
+                        injectedFiles.toArray(new JSFile[injectedFiles.size()]),
+                        dependencies.toArray()
+                    );
+                },
+                false
+            );
+        }
+    };
 
-    private static final UserDataCache<CachedValue<Map<String, String>>, XmlFile, Object> myCachedComponentImportsCache = new
-        UserDataCache<>() {
+    private static final UserDataCache<CachedValue<Map<String, String>>, XmlFile, Object> CACHED_COMPONENT_IMPORTS_CACHE =
+        new UserDataCache<>() {
             @Override
             protected CachedValue<Map<String, String>> compute(final XmlFile file, final Object p) {
                 return CachedValuesManager.getManager(file.getProject()).createCachedValue(
@@ -363,7 +358,6 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
                 );
             }
         };
-
 
     public static boolean doProcessAllTags(XmlTag rootTag) {
         return JSLanguageInjector.isMozillaXulOrXblNs(rootTag != null ? rootTag.getNamespace() : null);
@@ -526,7 +520,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
     @Nullable
     @RequiredReadAction
     public JSFile findFirstScriptTag() {
-        JSFile[] value = ourCachedScripts.get(CACHED_SCRIPTS_KEY, getParent(), null).getValue();
+        JSFile[] value = CACHED_SCRIPTS.get(CACHED_SCRIPTS_KEY, getParent(), null).getValue();
         if (value.length > 0) {
             return value[0];
         }

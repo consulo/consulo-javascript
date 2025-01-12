@@ -29,22 +29,20 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:35:47 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSVarStatementImpl extends JSStubbedStatementImpl<JSVarStatementStub> implements JSVarStatement {
-    public JSVarStatementImpl(final ASTNode node) {
+    public JSVarStatementImpl(ASTNode node) {
         super(node);
     }
 
-    public JSVarStatementImpl(final JSVarStatementStub node) {
+    public JSVarStatementImpl(JSVarStatementStub node) {
         super(node, JSElementTypes.VAR_STATEMENT);
     }
 
     @Override
+    @RequiredReadAction
     public JSVariable[] getVariables() {
         JSDestructuringElement destructuringElement = getDestructuringElement();
         if (destructuringElement != null) {
@@ -53,9 +51,9 @@ public class JSVarStatementImpl extends JSStubbedStatementImpl<JSVarStatementStu
         return getStubOrPsiChildren(JSElementTypes.VARIABLE, JSVariable.EMPTY_ARRAY);
     }
 
-    @RequiredReadAction
     @Nullable
     @Override
+    @RequiredReadAction
     public JSDestructuringElement getDestructuringElement() {
         return findChildByClass(JSDestructuringElement.class);
     }
@@ -71,13 +69,14 @@ public class JSVarStatementImpl extends JSStubbedStatementImpl<JSVarStatementStu
     }
 
     @Override
+    @RequiredReadAction
     public boolean processDeclarations(
         @Nonnull PsiScopeProcessor processor,
         @Nonnull ResolveState state,
         PsiElement lastParent,
         @Nonnull PsiElement place
     ) {
-        final JSVariable[] vars = getVariables();
+        JSVariable[] vars = getVariables();
 
         for (JSVariable var : vars) {
             if (lastParent != null && lastParent.getParent() == var) {
