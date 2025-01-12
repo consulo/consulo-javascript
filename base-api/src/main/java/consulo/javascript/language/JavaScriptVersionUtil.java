@@ -16,6 +16,7 @@
 
 package consulo.javascript.language;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.version.LanguageVersion;
 
@@ -26,13 +27,15 @@ import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 23.02.2016
+ * @since 2016-02-23
  */
 public class JavaScriptVersionUtil {
+    @RequiredReadAction
     public static boolean containsFeature(@Nonnull PsiElement element, @Nonnull JavaScriptFeature feature) {
         return getFeatures(element).contains(feature);
     }
 
+    @RequiredReadAction
     public static Set<JavaScriptFeature> getFeatures(@Nonnull PsiElement element) {
         LanguageVersion languageVersion = element.getLanguageVersion();
         return languageVersion instanceof JavaScriptLanguageVersion ? ((JavaScriptLanguageVersion)languageVersion).getFeatures() : Collections.<JavaScriptFeature>emptySet();

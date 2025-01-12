@@ -26,7 +26,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 11.12.2015
+ * @since 2015-12-11
  */
 public interface JavaScriptFileTypeWithVersion {
     @Nonnull

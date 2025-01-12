@@ -21,8 +21,7 @@ import consulo.language.codeStyle.CustomCodeStyleSettings;
 
 /**
  * @author Maxim.Mossienko
- * Date: Mar 12, 2008
- * Time: 10:25:17 PM
+ * @since 2008-03-12
  */
 public class JSCodeStyleSettings extends CustomCodeStyleSettings {
     public int INDENT_PACKAGE_CHILDREN = DO_NOT_INDENT;

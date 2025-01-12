@@ -23,7 +23,7 @@ import consulo.language.psi.stub.StubIndexKey;
 
 /**
  * @author VISTALL
- * @since 05.12.2015
+ * @since 2015-12-05
  */
 public interface JavaScriptIndexKeys {
     StubIndexKey<String, JSClass> CLASSES_BY_NAME = StubIndexKey.createIndexKey("js.class.shortName");

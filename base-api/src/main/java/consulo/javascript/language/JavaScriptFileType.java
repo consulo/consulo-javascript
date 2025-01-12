@@ -32,9 +32,8 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
- * User: max
- * Date: Jan 27, 2005
- * Time: 6:02:59 PM
+ * @author max
+ * @since 2005-01-27
  */
 public class JavaScriptFileType extends LanguageFileType implements JavaScriptFileTypeWithVersion {
     public static final JavaScriptFileType INSTANCE = new JavaScriptFileType();
@@ -61,14 +60,15 @@ public class JavaScriptFileType extends LanguageFileType implements JavaScriptFi
         return "js";
     }
 
+    @Nonnull
     @Override
     public Image getIcon() {
         return JavaScriptIconGroup.javascript();
     }
 
-    @RequiredReadAction
     @Nonnull
     @Override
+    @RequiredReadAction
     public LanguageVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile) {
         if (module == null) {
             return StandardJavaScriptVersions.getInstance().getDefaultVersion();

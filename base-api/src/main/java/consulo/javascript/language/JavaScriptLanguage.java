@@ -28,7 +28,7 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 05.12.2015
+ * @since 2015-12-05
  */
 public class JavaScriptLanguage extends Language {
     public static final JavaScriptLanguage INSTANCE = new JavaScriptLanguage();

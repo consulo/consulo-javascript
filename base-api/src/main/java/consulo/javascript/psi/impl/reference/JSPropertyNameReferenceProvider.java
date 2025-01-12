@@ -29,7 +29,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 02.12.2015
+ * @since 2015-12-02
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface JSPropertyNameReferenceProvider {

@@ -10,7 +10,7 @@ import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 23-Dec-17
+ * @since 2017-12-23
  */
 public abstract class JavaScriptLanguageVersion extends LanguageVersion implements LanguageVersionWithParsing {
     public JavaScriptLanguageVersion(@Nonnull String id, @Nonnull String name, @Nonnull Language language, String... mimeTypes) {

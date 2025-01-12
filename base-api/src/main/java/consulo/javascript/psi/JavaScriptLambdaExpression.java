@@ -20,7 +20,7 @@ import com.intellij.lang.javascript.psi.JSFunctionExpression;
 
 /**
  * @author VISTALL
- * @since 03.03.2016
+ * @since 2016-03-03
  */
 public interface JavaScriptLambdaExpression extends JSFunctionExpression {
 }

@@ -23,7 +23,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 13.12.2015
+ * @since 2015-12-13
  */
 public class JavaScriptPrimitiveType implements JavaScriptType {
     public static final JavaScriptPrimitiveType BOOL = new JavaScriptPrimitiveType("Boolean");
@@ -38,9 +38,9 @@ public class JavaScriptPrimitiveType implements JavaScriptType {
         myName = name;
     }
 
-    @RequiredReadAction
     @Nonnull
     @Override
+    @RequiredReadAction
     public String getPresentableText() {
         return myName;
     }

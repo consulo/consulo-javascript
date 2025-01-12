@@ -7,7 +7,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 19.07.2015
+ * @since 2015-07-19
  */
 public interface JSFileStub extends PsiFileStub<JSFile> {
     @Nonnull

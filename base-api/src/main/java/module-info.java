@@ -1,6 +1,6 @@
 /**
  * @author VISTALL
- * @since 23-Aug-22
+ * @since 2022-08-23
  */
 open module consulo.javascript.base.api
 {
@@ -15,12 +15,14 @@ open module consulo.javascript.base.api
     exports consulo.javascript.index;
     exports consulo.javascript.language;
     exports consulo.javascript.language.psi;
+    exports consulo.javascript.language.psi.stub;
     exports consulo.javascript.localize;
     exports consulo.javascript.module.extension;
     exports consulo.javascript.psi;
     exports consulo.javascript.psi.impl.reference;
-    exports consulo.javascript.language.psi.stub;
     exports consulo.javascript.psi.stubs;
 
-    exports consulo.javascript.internal to consulo.javascript.ecmascript.impl, consulo.javascript.base.impl;
+    exports consulo.javascript.internal to
+        consulo.javascript.base.impl,
+        consulo.javascript.ecmascript.impl;
 }

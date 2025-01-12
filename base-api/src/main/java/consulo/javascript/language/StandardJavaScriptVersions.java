@@ -27,7 +27,7 @@ import java.util.List;
 
 /**
  * @author VISTALL
- * @since 11.12.2015
+ * @since 2015-12-11
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class StandardJavaScriptVersions {

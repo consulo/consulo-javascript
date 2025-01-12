@@ -23,13 +23,13 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 13.12.2015
+ * @since 2015-12-13
  */
 public interface JavaScriptType {
     JavaScriptType UNKNOWN = new JavaScriptType() {
-        @RequiredReadAction
         @Nonnull
         @Override
+        @RequiredReadAction
         public String getPresentableText() {
             return "?";
         }

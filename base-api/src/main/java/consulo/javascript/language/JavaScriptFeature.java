@@ -20,7 +20,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 23.02.2016
+ * @since 2016-02-23
  */
 public enum JavaScriptFeature {
     CLASS("Classes"),

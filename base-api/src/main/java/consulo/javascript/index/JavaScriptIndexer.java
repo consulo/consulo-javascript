@@ -9,7 +9,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 19.07.2015
+ * @since 2015-07-19
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class JavaScriptIndexer {
