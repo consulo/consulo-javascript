@@ -16,9 +16,6 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import consulo.annotation.access.RequiredReadAction;
-import consulo.annotation.access.RequiredWriteAction;
-import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSAttribute;
@@ -26,12 +23,14 @@ import com.intellij.lang.javascript.psi.JSAttributeList;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeListStub;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.psi.PsiElement;
-import consulo.language.ast.IElementType;
 import consulo.language.util.IncorrectOperationException;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -118,7 +117,10 @@ public class JSAttributeListImpl extends JSStubElementImpl<JSAttributeListStub> 
         }
 
         ASTNode node = getNode().findChildByType(MODIFIERS_TYPE_SET);
-        return ACCESS_TYPE_MAP.getOrDefault(node != null ? node.getElementType() : null, AccessType.PACKAGE_LOCAL);
+        if (node == null) {
+            return AccessType.PACKAGE_LOCAL;
+        }
+        return ACCESS_TYPE_MAP.getOrDefault(node.getElementType(), AccessType.PACKAGE_LOCAL);
     }
 
     @Override
