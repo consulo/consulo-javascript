@@ -150,6 +150,7 @@ public class JavaScriptDestructuringParameterImpl extends JSElementImpl implemen
     }
 
     @Override
+    @RequiredReadAction
     public String getQualifiedName() {
         return null;
     }

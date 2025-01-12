@@ -22,6 +22,7 @@ import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import com.intellij.lang.javascript.psi.util.JSLookupUtil;
 import com.intellij.lang.javascript.search.JSClassSearch;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.query.Query;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.ResolveResult;
@@ -30,10 +31,9 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.xml.psi.xml.XmlFile;
 import consulo.xml.psi.xml.XmlTag;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -43,23 +43,23 @@ import java.util.Map;
 
 /**
  * @author Maxim.Mossienko
- * Date: Jan 25, 2008
- * Time: 12:40:48 AM
+ * @since 2008-01-25
  */
 public class JSSmartCompletionVariantsHandler {
-    static Object[] getSmartVariants(final @Nonnull PsiElement expr, final boolean ecma) {
-        final PsiElement parent = expr.getParent();
+    @RequiredReadAction
+    static Object[] getSmartVariants(@Nonnull PsiElement expr, boolean ecma) {
+        PsiElement parent = expr.getParent();
 
         if (parent instanceof JSArgumentList argumentList && argumentList.getArguments()[0] == expr && ecma
             && ((JSReferenceExpression)expr).getQualifier() == null) {
-            final JSExpression calledExpr = ((JSCallExpression)parent.getParent()).getMethodExpression();
+            JSExpression calledExpr = ((JSCallExpression)parent.getParent()).getMethodExpression();
 
             if (calledExpr instanceof JSReferenceExpression expression) {
-                final @NonNls String s = expression.getReferencedName();
+                String s = expression.getReferencedName();
 
                 if ("addEventListener".equals(s) || "removeEventListener".equals(s)) {
-                    final List<Object> variants = new ArrayList<Object>();
-                    final MyEventSubclassesProcessor subclassesProcessor = new MyEventSubclassesProcessor(expr, variants);
+                    List<Object> variants = new ArrayList<>();
+                    MyEventSubclassesProcessor subclassesProcessor = new MyEventSubclassesProcessor(expr, variants);
                     subclassesProcessor.findAcceptableVariants(expression, parent.getProject());
                     if (variants.size() > 0) {
                         return variants.toArray(new Object[variants.size()]);
@@ -78,7 +78,7 @@ public class JSSmartCompletionVariantsHandler {
         private final Map<String, JSVariable> myCandidatesMap = new HashMap<>();
         private boolean findAcceptableEvents;
 
-        public MyEventSubclassesProcessor(final PsiElement expr, final List<Object> variants) {
+        public MyEventSubclassesProcessor(PsiElement expr, List<Object> variants) {
             super(null);
             myExpr = expr;
             myVariants = variants;
@@ -86,48 +86,50 @@ public class JSSmartCompletionVariantsHandler {
             setToProcessHierarchy(true);
         }
 
-        public boolean process(final JSClass clazz) {
+        public boolean process(JSClass clazz) {
             clazz.processDeclarations(this, state, clazz, clazz);
 
             return true;
         }
 
         @Override
-        public boolean execute(final PsiElement element, final ResolveState state) {
+        @RequiredReadAction
+        public boolean execute(@Nonnull PsiElement element, ResolveState state) {
             if (element instanceof JSVariable variable) {
-                final JSAttributeList attributeList = variable.getAttributeList();
+                JSAttributeList attributeList = variable.getAttributeList();
 
                 if (attributeList != null
                     && attributeList.getAccessType() == JSAttributeList.AccessType.PUBLIC
                     && attributeList.hasModifier(JSAttributeList.ModifierType.STATIC)
                     && "String".equals(variable.getTypeString())) {
-                    final String s = variable.getInitializerText();
+                    String s = variable.getInitializerText();
                     if (s != null && StringUtil.startsWith(s, "\"") && StringUtil.endsWith(s, "\"")) {
                         myCandidatesMap.put(StringUtil.stripQuotesAroundValue(s), variable);
                     }
                 }
             }
 
-            if (findAcceptableEvents && element instanceof JSClass) {
-                JSResolveUtil.processMetaAttributesForClass(element, this);
+            if (findAcceptableEvents && element instanceof JSClass jsClass) {
+                JSResolveUtil.processMetaAttributesForClass(jsClass, this);
             }
 
             return true;
         }
 
-        public void findAcceptableVariants(JSReferenceExpression expression, final Project project) {
+        @RequiredReadAction
+        public void findAcceptableVariants(JSReferenceExpression expression, Project project) {
             PsiElement clazz = JSResolveUtil.findClassByQName("flash.events.Event", expression.getResolveScope(), project);
             clazz = JSResolveUtil.unwrapProxy(clazz);
             if (!(clazz instanceof JSClass)) {
                 return;
             }
-            final Query<JSClass> query = JSClassSearch.searchClassInheritors((JSClass)clazz, true);
+            Query<JSClass> query = JSClassSearch.searchClassInheritors((JSClass)clazz, true);
 
             for (JSClass extendedClass : query.findAll()) {
                 process(extendedClass);
             }
 
-            final JSExpression qualifier = expression.getQualifier();
+            JSExpression qualifier = expression.getQualifier();
 
             JSClass clazzToProcess = null;
 
@@ -135,23 +137,23 @@ public class JSSmartCompletionVariantsHandler {
                 clazzToProcess = PsiTreeUtil.getParentOfType(qualifier, JSClass.class);
             }
             else if (qualifier instanceof JSReferenceExpression referenceExpression) {
-                final ResolveResult[] results = referenceExpression.multiResolve(false);
+                ResolveResult[] results = referenceExpression.multiResolve(false);
                 if (results.length > 0 && results[0].getElement() instanceof JSClass jsClass) {
                     clazzToProcess = jsClass;
                 }
             }
 
             if (clazzToProcess == null) {
-                final PsiElement context = expression.getContainingFile().getContext();
+                PsiElement context = expression.getContainingFile().getContext();
                 clazzToProcess = JSResolveUtil.getClassFromTagNameInMxml(context);
                 if (clazzToProcess == null && context != null) {
                     XmlFile file = PsiTreeUtil.getParentOfType(context, XmlFile.class);
                     if (file != null) {
-                        final XmlTag rootTag = file.getDocument().getRootTag();
-                        final XmlTag[] tags = rootTag != null
+                        XmlTag rootTag = file.getDocument().getRootTag();
+                        XmlTag[] tags = rootTag != null
                             ? XmlBackedJSClassImpl.findMxmlSubTags(rootTag, "Metadata")
                             : XmlTag.EMPTY;
-                        final MyJSInjectedFilesVisitor injectedFilesVisitor = new MyJSInjectedFilesVisitor();
+                        MyJSInjectedFilesVisitor injectedFilesVisitor = new MyJSInjectedFilesVisitor();
 
                         for (XmlTag tag : tags) {
                             JSResolveUtil.processInjectedFileForTag(tag, injectedFilesVisitor);
@@ -170,13 +172,14 @@ public class JSSmartCompletionVariantsHandler {
         }
 
         @Override
-        public boolean process(final @Nonnull JSAttribute jsAttribute) {
+        @RequiredReadAction
+        public boolean process(@Nonnull JSAttribute jsAttribute) {
             if ("Event".equals(jsAttribute.getName())) {
-                final JSAttributeNameValuePair eventName = jsAttribute.getValueByName("name");
+                JSAttributeNameValuePair eventName = jsAttribute.getValueByName("name");
 
                 if (eventName != null) {
-                    final String value = eventName.getSimpleValue();
-                    final JSVariable variable = myCandidatesMap.get(value);
+                    String value = eventName.getSimpleValue();
+                    JSVariable variable = myCandidatesMap.get(value);
 
                     if (variable != null) {
                         myCandidatesMap.remove(value);
@@ -193,13 +196,14 @@ public class JSSmartCompletionVariantsHandler {
         }
 
         @Override
-        public boolean handleOtherElement(final PsiElement el, final PsiElement context, final Ref<PsiElement> continuePassElement) {
+        public boolean handleOtherElement(PsiElement el, PsiElement context, SimpleReference<PsiElement> continuePassElement) {
             return true;
         }
 
         private class MyJSInjectedFilesVisitor extends JSResolveUtil.JSInjectedFilesVisitor {
             @Override
-            protected void process(final JSFile file) {
+            @RequiredReadAction
+            protected void process(JSFile file) {
                 for (PsiElement element : file.getChildren()) {
                     if (element instanceof JSAttributeList attributeList) {
                         JSResolveUtil.processAttributeList(MyEventSubclassesProcessor.this, null, attributeList, true);

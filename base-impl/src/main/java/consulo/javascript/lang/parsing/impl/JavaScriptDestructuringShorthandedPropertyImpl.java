@@ -24,9 +24,9 @@ public class JavaScriptDestructuringShorthandedPropertyImpl extends JSElementImp
     }
 
     @Nonnull
-    @RequiredReadAction
     @Override
-    public JSVariable getVarialbe() {
+    @RequiredReadAction
+    public JSVariable getVariable() {
         return findNotNullChildByClass(JSVariable.class);
     }
 }
