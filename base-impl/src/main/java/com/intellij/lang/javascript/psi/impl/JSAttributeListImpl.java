@@ -42,7 +42,7 @@ import java.util.Map;
  * @author Maxim.Mossienko
  */
 public class JSAttributeListImpl extends JSStubElementImpl<JSAttributeListStub> implements JSAttributeList {
-    private static final TokenSet OUR_MODIFIERS_TYPE_SET = TokenSet.create(
+    private static final TokenSet MODIFIERS_TYPE_SET = TokenSet.create(
         JSTokenTypes.PUBLIC_KEYWORD,
         JSTokenTypes.PRIVATE_KEYWORD,
         JSTokenTypes.PROTECTED_KEYWORD,
@@ -117,14 +117,14 @@ public class JSAttributeListImpl extends JSStubElementImpl<JSAttributeListStub> 
             return stub.getAccessType();
         }
 
-        ASTNode node = getNode().findChildByType(OUR_MODIFIERS_TYPE_SET);
+        ASTNode node = getNode().findChildByType(MODIFIERS_TYPE_SET);
         return ACCESS_TYPE_MAP.getOrDefault(node != null ? node.getElementType() : null, AccessType.PACKAGE_LOCAL);
     }
 
     @Override
     @RequiredReadAction
     public PsiElement findAccessTypeElement() {
-        ASTNode modifier = getNode().findChildByType(OUR_MODIFIERS_TYPE_SET);
+        ASTNode modifier = getNode().findChildByType(MODIFIERS_TYPE_SET);
         return modifier != null ? modifier.getPsi() : null;
     }
 

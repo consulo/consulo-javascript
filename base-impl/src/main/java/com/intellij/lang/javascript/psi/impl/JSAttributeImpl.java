@@ -39,8 +39,7 @@ import jakarta.annotation.Nonnull;
  */
 public class JSAttributeImpl extends JSStubElementImpl<JSAttributeStub> implements JSAttribute {
     private PsiReference[] myReferences;
-    private static
-    String[] myPossibleMetaData = new String[]{
+    private static final String[] POSSIBLE_META_DATA = new String[]{
         "AccessibilityClass",
         "ArrayElementType",
         "Bindable",
@@ -155,7 +154,7 @@ public class JSAttributeImpl extends JSStubElementImpl<JSAttributeStub> implemen
         @RequiredReadAction
         public PsiElement resolve() {
             String s = getCanonicalText();
-            return ArrayUtil.indexOf(myPossibleMetaData, s) >= 0 ? JSAttributeImpl.this : null;
+            return ArrayUtil.indexOf(POSSIBLE_META_DATA, s) >= 0 ? JSAttributeImpl.this : null;
         }
 
         @Nonnull
@@ -191,7 +190,7 @@ public class JSAttributeImpl extends JSStubElementImpl<JSAttributeStub> implemen
         @Override
         @RequiredReadAction
         public Object[] getVariants() {
-            return myPossibleMetaData;
+            return POSSIBLE_META_DATA;
         }
 
         @Override

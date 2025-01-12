@@ -91,8 +91,8 @@ import java.util.*;
  * @author max, maxim.mossienko
  */
 public class JSResolveUtil {
-    private static final Key<CachedValue<IntObjectMap<Object>>> MY_CACHED_STATEMENTS = Key.create("JS.RelevantStatements");
-    private static final UserDataCache<CachedValue<IntObjectMap<Object>>, JSElement, Object> OUR_CACHED_DEFS_CACHE =
+    private static final Key<CachedValue<IntObjectMap<Object>>> CACHED_STATEMENTS = Key.create("JS.RelevantStatements");
+    private static final UserDataCache<CachedValue<IntObjectMap<Object>>, JSElement, Object> CACHED_DEFS_CACHE =
         new RelevantDefsUserDataCache();
     public static final String PROTOTYPE_FIELD_NAME = "prototype";
 
@@ -1810,7 +1810,7 @@ public class JSResolveUtil {
         }
 
         boolean result = true;
-        IntObjectMap<Object> defsMap = OUR_CACHED_DEFS_CACHE.get(MY_CACHED_STATEMENTS, scope, null).getValue();
+        IntObjectMap<Object> defsMap = CACHED_DEFS_CACHE.get(CACHED_STATEMENTS, scope, null).getValue();
 
         if (requiredName == null) {
             for (Object value : defsMap.values()) {
