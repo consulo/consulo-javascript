@@ -16,9 +16,12 @@
 
 package com.intellij.lang.javascript.psi;
 
+import consulo.annotation.access.RequiredReadAction;
+
 /**
  * @author ven
  */
 public interface JSQualifiedNamedElement extends JSNamedElement {
+    @RequiredReadAction
     String getQualifiedName();
 }

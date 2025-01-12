@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.psi;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNameIdentifierOwner;
 import consulo.annotation.DeprecationInfo;
@@ -25,10 +26,12 @@ import consulo.annotation.DeprecationInfo;
  * @since 2005-01-30
  */
 public interface JSLabeledStatement extends JSStatement, PsiNameIdentifierOwner {
+    @RequiredReadAction
     String getLabel();
 
     @Deprecated
     @DeprecationInfo("Use #getNameIdentifier()")
+    @RequiredReadAction
     PsiElement getLabelIdentifier();
 
     JSStatement getStatement();

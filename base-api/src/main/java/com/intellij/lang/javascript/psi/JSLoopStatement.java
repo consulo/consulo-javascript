@@ -16,10 +16,13 @@
 
 package com.intellij.lang.javascript.psi;
 
+import consulo.annotation.access.RequiredReadAction;
+
 /**
  * @author max
  * @since 2005-01-30
  */
 public interface JSLoopStatement extends JSStatement {
+    @RequiredReadAction
     JSStatement getBody();
 }

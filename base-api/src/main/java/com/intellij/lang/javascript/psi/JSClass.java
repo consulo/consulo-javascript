@@ -41,11 +41,11 @@ public interface JSClass extends JSQualifiedNamedElement, JSSourceElement, JSAtt
 
     JSVariable[] getFields();
 
-    JSFunction findFunctionByName(final String name);
+    JSFunction findFunctionByName(String name);
 
-    JSFunction findFunctionByNameAndKind(final String name, JSFunction.FunctionKind kind);
+    JSFunction findFunctionByNameAndKind(String name, JSFunction.FunctionKind kind);
 
-    JSVariable findFieldByName(final String name);
+    JSVariable findFieldByName(String name);
 
     JSClass[] getSupers();
 

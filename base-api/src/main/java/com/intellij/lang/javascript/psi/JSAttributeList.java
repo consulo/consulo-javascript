@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.psi;
 
+import consulo.annotation.access.RequiredReadAction;
 import jakarta.annotation.Nullable;
 
 import com.intellij.lang.javascript.psi.stubs.JSAttributeListStub;
@@ -28,14 +29,17 @@ import jakarta.annotation.Nonnull;
  */
 public interface JSAttributeList extends JSElement, StubBasedPsiElement<JSAttributeListStub> {
     @Nullable
+    @RequiredReadAction
     String getNamespace();
 
     @Nullable
+    @RequiredReadAction
     JSReferenceExpression getNamespaceElement();
 
     JSAttribute[] getAttributes();
 
     @Nonnull
+    @RequiredReadAction
     JSAttribute[] getAttributesByName(@Nonnull String name);
 
     enum AccessType {
@@ -45,9 +49,11 @@ public interface JSAttributeList extends JSElement, StubBasedPsiElement<JSAttrib
         PROTECTED
     }
 
+    @RequiredReadAction
     AccessType getAccessType();
 
     @Nullable
+    @RequiredReadAction
     PsiElement findAccessTypeElement();
 
     enum ModifierType {
@@ -59,5 +65,6 @@ public interface JSAttributeList extends JSElement, StubBasedPsiElement<JSAttrib
         VIRTUAL
     }
 
+    @RequiredReadAction
     boolean hasModifier(ModifierType modifier);
 }

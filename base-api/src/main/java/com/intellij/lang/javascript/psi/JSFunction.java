@@ -28,14 +28,15 @@ import jakarta.annotation.Nullable;
  * @author max
  */
 public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JSAttributeListOwner {
-    public static final JSFunction[] EMPTY_ARRAY = new JSFunction[0];
+    JSFunction[] EMPTY_ARRAY = new JSFunction[0];
 
-    public static ArrayFactory<JSFunction> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new JSFunction[count];
+    ArrayFactory<JSFunction> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new JSFunction[count];
 
     @Nullable
     @RequiredReadAction
     JSParameterList getParameterList();
 
+    @RequiredReadAction
     JSSourceElement[] getBody();
 
     @RequiredReadAction

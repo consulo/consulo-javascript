@@ -16,6 +16,8 @@
 
 package com.intellij.lang.javascript.psi;
 
+import consulo.annotation.access.RequiredReadAction;
+
 /**
  * @author max
  * @since 2005-01-30
@@ -23,6 +25,7 @@ package com.intellij.lang.javascript.psi;
 public interface JSCatchBlock extends JSElement {
     JSCatchBlock[] EMPTY_ARRAY = new JSCatchBlock[0];
 
+    @RequiredReadAction
     JSParameter getParameter();
 
     JSStatement getStatement();

@@ -27,12 +27,11 @@ import consulo.language.ast.ASTNode;
 import jakarta.annotation.Nonnull;
 
 /**
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:15:02 PM
+ * @author max
+ * @since 2005-01-30
  */
 public class JSArgumentListImpl extends JSElementImpl implements JSArgumentList {
-    public JSArgumentListImpl(final ASTNode node) {
+    public JSArgumentListImpl(ASTNode node) {
         super(node);
     }
 

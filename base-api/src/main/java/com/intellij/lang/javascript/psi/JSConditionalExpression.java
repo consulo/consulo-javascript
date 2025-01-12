@@ -16,14 +16,19 @@
 
 package com.intellij.lang.javascript.psi;
 
+import consulo.annotation.access.RequiredReadAction;
+
 /**
  * @author max
  * @since 2005-01-30
  */
 public interface JSConditionalExpression extends JSExpression {
+    @RequiredReadAction
     JSExpression getCondition();
 
+    @RequiredReadAction
     JSExpression getThen();
 
+    @RequiredReadAction
     JSExpression getElse();
 }

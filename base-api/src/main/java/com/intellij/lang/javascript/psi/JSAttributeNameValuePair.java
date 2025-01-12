@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.psi;
 
+import consulo.annotation.access.RequiredReadAction;
 import jakarta.annotation.Nullable;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeNameValuePairStub;
 import consulo.language.psi.PsiNamedElement;
@@ -27,8 +28,10 @@ import consulo.language.psi.StubBasedPsiElement;
 public interface JSAttributeNameValuePair extends JSElement, PsiNamedElement, StubBasedPsiElement<JSAttributeNameValuePairStub> {
     JSAttributeNameValuePair[] EMPTY_ARRAY = new JSAttributeNameValuePair[0];
 
+    @RequiredReadAction
     JSExpression getValue();
 
     @Nullable
+    @RequiredReadAction
     String getSimpleValue();
 }

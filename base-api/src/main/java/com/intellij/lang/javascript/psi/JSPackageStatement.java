@@ -17,6 +17,7 @@
 package com.intellij.lang.javascript.psi;
 
 import com.intellij.lang.javascript.psi.stubs.JSPackageStatementStub;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.psi.StubBasedPsiElement;
 
 /**
@@ -25,5 +26,6 @@ import consulo.language.psi.StubBasedPsiElement;
 public interface JSPackageStatement extends JSStatement, JSQualifiedNamedElement, StubBasedPsiElement<JSPackageStatementStub> {
     JSSourceElement[] getStatements();
 
-    void setQualifiedName(final String expectedPackageNameFromFile);
+    @RequiredWriteAction
+    void setQualifiedName(String expectedPackageNameFromFile);
 }

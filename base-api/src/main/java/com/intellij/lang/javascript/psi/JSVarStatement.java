@@ -26,6 +26,7 @@ import jakarta.annotation.Nullable;
  * @since 2005-01-30
  */
 public interface JSVarStatement extends JSStatement, StubBasedPsiElement<JSVarStatementStub> {
+    @RequiredReadAction
     JSVariable[] getVariables();
 
     @Nullable

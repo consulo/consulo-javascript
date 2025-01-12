@@ -52,7 +52,7 @@ public class JSPropertyNameReference implements PsiReference {
     @RequiredReadAction
     public TextRange getRangeInElement() {
         int quotesDelta = myNameIdentifier.getNode().getElementType() == JSTokenTypes.STRING_LITERAL ? 1 : 0;
-        final int startOffsetInParent = myNameIdentifier.getStartOffsetInParent();
+        int startOffsetInParent = myNameIdentifier.getStartOffsetInParent();
         int startOffset = startOffsetInParent + quotesDelta;
         int endOffset = startOffsetInParent + myNameIdentifier.getTextLength() - quotesDelta;
         if (endOffset <= startOffset) {
@@ -88,7 +88,7 @@ public class JSPropertyNameReference implements PsiReference {
     @Override
     @RequiredReadAction
     public boolean isReferenceTo(PsiElement element) {
-        final PsiElement element2 = resolve();
+        PsiElement element2 = resolve();
         boolean proxyExpanded = false;
 
         if (element instanceof JSDefinitionExpression definition
@@ -106,7 +106,7 @@ public class JSPropertyNameReference implements PsiReference {
     @Override
     @RequiredReadAction
     public Object[] getVariants() {
-        final VariantsProcessor processor =
+        VariantsProcessor processor =
             new VariantsProcessor(null, myProperty.getContainingFile(), false, myProperty);
 
         JSResolveUtil.processGlobalSymbols(myProperty, processor);

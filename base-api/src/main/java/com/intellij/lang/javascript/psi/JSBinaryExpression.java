@@ -26,8 +26,10 @@ import jakarta.annotation.Nullable;
  * @since 2005-01-30
  */
 public interface JSBinaryExpression extends JSExpression {
+    @RequiredReadAction
     JSExpression getLOperand();
 
+    @RequiredReadAction
     JSExpression getROperand();
 
     @Nullable

@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.psi;
 
+import consulo.annotation.access.RequiredReadAction;
 import jakarta.annotation.Nullable;
 import consulo.language.ast.IElementType;
 
@@ -27,5 +28,6 @@ public interface JSPostfixExpression extends JSExpression {
     @Nullable
     JSExpression getExpression();
 
+    @RequiredReadAction
     IElementType getOperationSign();
 }

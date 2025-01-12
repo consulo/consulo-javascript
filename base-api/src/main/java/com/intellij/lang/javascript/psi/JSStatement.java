@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.psi;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.util.IncorrectOperationException;
 
 /**
@@ -25,9 +26,12 @@ import consulo.language.util.IncorrectOperationException;
 public interface JSStatement extends JSSourceElement {
     JSStatement[] EMPTY = new JSStatement[0];
 
+    @RequiredWriteAction
     JSStatement addStatementBefore(JSStatement toAdd) throws IncorrectOperationException;
 
+    @RequiredWriteAction
     JSStatement addStatementAfter(JSStatement toAdd) throws IncorrectOperationException;
 
+    @RequiredWriteAction
     JSStatement replace(JSStatement with);
 }

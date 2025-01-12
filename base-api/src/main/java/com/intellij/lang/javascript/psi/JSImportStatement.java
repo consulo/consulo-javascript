@@ -18,6 +18,7 @@ package com.intellij.lang.javascript.psi;
 
 import com.intellij.lang.javascript.psi.stubs.JSImportStatementStub;
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.psi.JavaScriptImportStatementBase;
 import consulo.language.psi.StubBasedPsiElement;
 
@@ -27,7 +28,8 @@ import consulo.language.psi.StubBasedPsiElement;
  * @author Maxim.Mossienko
  */
 @Deprecated
-@DeprecationInfo("We need rename it")
+@DeprecationInfo("We need to rename it")
 public interface JSImportStatement extends JSStatement, StubBasedPsiElement<JSImportStatementStub>, JavaScriptImportStatementBase {
+    @RequiredReadAction
     String getImportText();
 }

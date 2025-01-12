@@ -26,7 +26,7 @@ import consulo.language.psi.stub.StubElement;
 public interface JSAttributeListStub extends StubElement<JSAttributeList>, JSStubElement<JSAttributeList> {
     JSAttributeList.AccessType getAccessType();
 
-    boolean hasModifier(final JSAttributeList.ModifierType modifier);
+    boolean hasModifier(JSAttributeList.ModifierType modifier);
 
     String getNamespace();
 

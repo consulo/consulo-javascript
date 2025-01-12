@@ -16,6 +16,8 @@
 
 package com.intellij.lang.javascript.psi;
 
+import consulo.annotation.access.RequiredReadAction;
+
 /**
  * @author max
  * @since 2005-01-30
@@ -23,5 +25,6 @@ package com.intellij.lang.javascript.psi;
 public interface JSCallExpression extends JSExpression {
     JSExpression getMethodExpression();
 
+    @RequiredReadAction
     JSArgumentList getArgumentList();
 }

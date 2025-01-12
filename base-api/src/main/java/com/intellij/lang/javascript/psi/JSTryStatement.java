@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.psi;
 
+import consulo.annotation.access.RequiredReadAction;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -24,15 +25,19 @@ import jakarta.annotation.Nullable;
  * @since 2005-01-30
  */
 public interface JSTryStatement extends JSStatement {
+    @RequiredReadAction
     JSStatement getStatement();
 
     @Nonnull
+    @RequiredReadAction
     JSCatchBlock[] getAllCatchBlocks();
 
     @Deprecated
     @Nullable
+    @RequiredReadAction
     JSCatchBlock getCatchBlock();
 
     @Nullable
+    @RequiredReadAction
     JSStatement getFinallyStatement();
 }

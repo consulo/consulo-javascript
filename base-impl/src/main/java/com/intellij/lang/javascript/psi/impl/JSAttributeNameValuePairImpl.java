@@ -16,7 +16,6 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSAttribute;
@@ -24,28 +23,27 @@ import com.intellij.lang.javascript.psi.JSAttributeNameValuePair;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeNameValuePairStub;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.javascript.lang.JavaScriptTokenSets;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.util.IncorrectOperationException;
-import consulo.javascript.lang.JavaScriptTokenSets;
-import consulo.language.psi.PsiElement;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
 public class JSAttributeNameValuePairImpl extends JSStubElementImpl<JSAttributeNameValuePairStub> implements JSAttributeNameValuePair {
     private JSReferenceSet myReferenceSet;
-    @NonNls
     private static final String EMBED_ANNOTATION_NAME = "Embed";
 
-    public JSAttributeNameValuePairImpl(final ASTNode node) {
+    public JSAttributeNameValuePairImpl(ASTNode node) {
         super(node);
     }
 
-    public JSAttributeNameValuePairImpl(final JSAttributeNameValuePairStub node) {
+    public JSAttributeNameValuePairImpl(JSAttributeNameValuePairStub node) {
         super(node, JSElementTypes.ATTRIBUTE_NAME_VALUE_PAIR);
     }
 
@@ -55,44 +53,50 @@ public class JSAttributeNameValuePairImpl extends JSStubElementImpl<JSAttributeN
     }
 
     @Override
+    @RequiredReadAction
     public String getName() {
-        final JSAttributeNameValuePairStub stub = getStub();
+        JSAttributeNameValuePairStub stub = getStub();
         if (stub != null) {
             return stub.getName();
         }
-        final ASTNode node = getNode().findChildByType(JSTokenTypes.IDENTIFIER);
+        ASTNode node = getNode().findChildByType(JSTokenTypes.IDENTIFIER);
         return node != null ? node.getText() : null;
     }
 
     @Override
-    public PsiElement setName(@NonNls @Nonnull final String name) throws IncorrectOperationException {
+    @RequiredReadAction
+    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
         throw new IncorrectOperationException();
     }
 
     @Override
+    @RequiredReadAction
     public JSExpression getValue() {
-        final ASTNode astNode = findValueNode();
+        ASTNode astNode = findValueNode();
         return astNode != null ? (JSExpression)astNode.getPsi() : null;
     }
 
     @Override
+    @RequiredReadAction
     public String getSimpleValue() {
-        final JSAttributeNameValuePairStub stub = getStub();
+        JSAttributeNameValuePairStub stub = getStub();
         if (stub != null) {
             return stub.getValue();
         }
-        final ASTNode expression = findValueNode();
+        ASTNode expression = findValueNode();
         return expression != null ? StringUtil.stripQuotesAroundValue(expression.getText()) : null;
     }
 
+    @RequiredReadAction
     private ASTNode findValueNode() {
         return getNode().findChildByType(JavaScriptTokenSets.STRING_LITERALS);
     }
 
     @Override
     @Nonnull
+    @RequiredReadAction
     public PsiReference[] getReferences() {
-        final @NonNls String name = getName();
+        String name = getName();
 
         if ("source".equals(name)) {
             return getPathRefsCheckingParent();
@@ -106,8 +110,9 @@ public class JSAttributeNameValuePairImpl extends JSStubElementImpl<JSAttributeN
         return PsiReference.EMPTY_ARRAY;
     }
 
+    @RequiredReadAction
     private PsiReference[] getClassRefs() {
-        final ASTNode valueNode = findValueNode();
+        ASTNode valueNode = findValueNode();
 
         if (valueNode != null) {
             if (myReferenceSet == null) {
@@ -119,8 +124,9 @@ public class JSAttributeNameValuePairImpl extends JSStubElementImpl<JSAttributeN
         return PsiReference.EMPTY_ARRAY;
     }
 
+    @RequiredReadAction
     private PsiReference[] getDefaultPropertyRefs() {
-        final @NonNls String parentName = ((JSAttribute)getParent()).getName();
+        String parentName = ((JSAttribute)getParent()).getName();
 
         if ("HostComponent".equals(parentName) || "ArrayElementType".equals(parentName)) {
             return getClassRefs();
@@ -130,7 +136,7 @@ public class JSAttributeNameValuePairImpl extends JSStubElementImpl<JSAttributeN
             return getPathRefs();
         }
         if ("DefaultProperty".equals(parentName)) {
-            final ASTNode valueNode = findValueNode();
+            ASTNode valueNode = findValueNode();
             if (valueNode != null) {
                 if (myReferenceSet == null) {
                     myReferenceSet = new JSReferenceSet(this, false);
@@ -143,8 +149,9 @@ public class JSAttributeNameValuePairImpl extends JSStubElementImpl<JSAttributeN
         return PsiReference.EMPTY_ARRAY;
     }
 
+    @RequiredReadAction
     private PsiReference[] getPathRefsCheckingParent() {
-        final @NonNls String parentName = ((JSAttribute)getParent()).getName();
+        String parentName = ((JSAttribute)getParent()).getName();
 
         if (!EMBED_ANNOTATION_NAME.equals(parentName)) {
             return PsiReference.EMPTY_ARRAY;
@@ -152,11 +159,15 @@ public class JSAttributeNameValuePairImpl extends JSStubElementImpl<JSAttributeN
         return getPathRefs();
     }
 
+    @RequiredReadAction
     private PsiReference[] getPathRefs() {
-        final ASTNode valueNode = findValueNode();
+        ASTNode valueNode = findValueNode();
 
         if (valueNode != null) {
-            return ReferenceSupport.getFileRefs(this, valueNode.getPsi(), valueNode.getPsi().getStartOffsetInParent() + 1,
+            return ReferenceSupport.getFileRefs(
+                this,
+                valueNode.getPsi(),
+                valueNode.getPsi().getStartOffsetInParent() + 1,
                 ReferenceSupport.LookupOptions.EMBEDDED_ASSET
             );
         }

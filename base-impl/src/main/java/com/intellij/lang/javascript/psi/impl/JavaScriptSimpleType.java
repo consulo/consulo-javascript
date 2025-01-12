@@ -24,7 +24,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 13.12.2015
+ * @since 2015-12-13
  */
 public class JavaScriptSimpleType implements JavaScriptType {
     private String myReferenceName;

@@ -16,8 +16,10 @@
 
 package com.intellij.lang.javascript.psi;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiComment;
 
 public interface JSDocComment extends PsiComment, JSElement {
+    @RequiredReadAction
     JSDocTag[] getTags();
 }

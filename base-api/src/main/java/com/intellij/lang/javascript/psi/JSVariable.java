@@ -37,6 +37,7 @@ public interface JSVariable extends JSQualifiedNamedElement, JSAttributeListOwne
     @Nullable
     JSExpression getInitializer();
 
+    @RequiredReadAction
     String getInitializerText();
 
     void setInitializer(JSExpression expr) throws IncorrectOperationException;

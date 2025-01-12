@@ -16,6 +16,8 @@
 
 package com.intellij.lang.javascript.psi;
 
+import consulo.annotation.access.RequiredReadAction;
+
 /**
  * @author max
  * @since 2005-01-30
@@ -25,5 +27,6 @@ public interface JSArrayLiteralExpression extends JSExpression {
      * @return nulls stand in the returned array for skipped values. This for [,1,] array of 3 elements to be returned with first and last
      * elements nulled
      */
+    @RequiredReadAction
     JSExpression[] getExpressions();
 }
