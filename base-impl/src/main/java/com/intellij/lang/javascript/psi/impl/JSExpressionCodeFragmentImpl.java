@@ -17,6 +17,7 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import com.intellij.lang.javascript.psi.JSExpressionCodeFragment;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.file.FileTypeManager;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.light.LightVirtualFile;
@@ -49,8 +50,9 @@ public class JSExpressionCodeFragmentImpl extends JSFileImpl implements JSExpres
 
     //todo[nik] extract these methods from PsiCodeFragmentImpl?
     @Override
+    @RequiredReadAction
     protected JSExpressionCodeFragmentImpl clone() {
-        final JSExpressionCodeFragmentImpl clone = (JSExpressionCodeFragmentImpl)cloneImpl((FileElement)calcTreeElement().clone());
+        JSExpressionCodeFragmentImpl clone = (JSExpressionCodeFragmentImpl)cloneImpl((FileElement)calcTreeElement().clone());
         clone.myPhysical = false;
         clone.myOriginalFile = this;
         SingleRootFileViewProvider cloneViewProvider =
@@ -73,10 +75,7 @@ public class JSExpressionCodeFragmentImpl extends JSFileImpl implements JSExpres
 
     @Override
     public boolean isValid() {
-		if (!super.isValid() || myContext != null && !myContext.isValid()) {
-            return false;
-		}
-        return true;
+        return super.isValid() && myContext == null || myContext.isValid();
     }
 
     @Override

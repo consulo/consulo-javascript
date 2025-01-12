@@ -28,15 +28,13 @@ import consulo.annotation.access.RequiredReadAction;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 11:20:30 PM
+ * @author max
+ * @since 2005-01-30
  */
 public class JSForInStatementImpl extends JSStatementImpl implements JSForInStatement {
-    private static final TokenSet ourSeparatorElementType = TokenSet.create(JSTokenTypes.IN_KEYWORD, JSTokenTypes.OF_KEYWORD);
+    private static final TokenSet SEPARATOR_ELEMENT_TYPE = TokenSet.create(JSTokenTypes.IN_KEYWORD, JSTokenTypes.OF_KEYWORD);
 
-    public JSForInStatementImpl(final ASTNode node) {
+    public JSForInStatementImpl(ASTNode node) {
         super(node);
     }
 
@@ -46,14 +44,15 @@ public class JSForInStatementImpl extends JSStatementImpl implements JSForInStat
     }
 
     @Override
+    @RequiredReadAction
     public JSExpression getVariableExpression() {
         ASTNode child = getNode().getFirstChildNode();
         while (child != null) {
-            if (ourSeparatorElementType.contains(child.getElementType())) {
+            if (SEPARATOR_ELEMENT_TYPE.contains(child.getElementType())) {
                 return null;
             }
-            if (child.getPsi() instanceof JSExpression) {
-                return (JSExpression)child.getPsi();
+            if (child.getPsi() instanceof JSExpression expression) {
+                return expression;
             }
             child = child.getTreeNext();
         }
@@ -61,15 +60,16 @@ public class JSForInStatementImpl extends JSStatementImpl implements JSForInStat
     }
 
     @Override
+    @RequiredReadAction
     public JSExpression getCollectionExpression() {
         ASTNode child = getNode().getFirstChildNode();
         boolean inPassed = false;
         while (child != null) {
-            if (ourSeparatorElementType.contains(child.getElementType())) {
+            if (SEPARATOR_ELEMENT_TYPE.contains(child.getElementType())) {
                 inPassed = true;
             }
-            if (inPassed && child.getPsi() instanceof JSExpression) {
-                return (JSExpression)child.getPsi();
+            if (inPassed && child.getPsi() instanceof JSExpression expression) {
+                return expression;
             }
             child = child.getTreeNext();
         }
@@ -84,6 +84,7 @@ public class JSForInStatementImpl extends JSStatementImpl implements JSForInStat
     }
 
     @Override
+    @RequiredReadAction
     public JSStatement getBody() {
         ASTNode child = getNode().getFirstChildNode();
         boolean passedRParen = false;
@@ -108,12 +109,12 @@ public class JSForInStatementImpl extends JSStatementImpl implements JSForInStat
         @Nonnull PsiElement place
     ) {
         if (lastParent != null) {
-            final JSVarStatement statement = getDeclarationStatement();
+            JSVarStatement statement = getDeclarationStatement();
             if (statement != null) {
                 return statement.processDeclarations(processor, state, lastParent, place);
             }
             else {
-                final JSExpression expression = getVariableExpression();
+                JSExpression expression = getVariableExpression();
                 if (expression != null && !processor.execute(expression, null)) {
                     return false;
                 }

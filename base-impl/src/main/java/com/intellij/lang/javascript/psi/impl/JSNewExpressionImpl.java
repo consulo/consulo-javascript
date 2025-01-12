@@ -26,20 +26,17 @@ import consulo.language.psi.PsiElement;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 11:57:36 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSNewExpressionImpl extends JSExpressionImpl implements JSNewExpression {
-    public JSNewExpressionImpl(final ASTNode node) {
+    public JSNewExpressionImpl(ASTNode node) {
         super(node);
     }
 
-    @RequiredReadAction
     @Nonnull
     @Override
+    @RequiredReadAction
     public JavaScriptType getType() {
         JSExpression methodExpression = getMethodExpression();
 
@@ -62,8 +59,9 @@ public class JSNewExpressionImpl extends JSExpressionImpl implements JSNewExpres
     }
 
     @Override
+    @RequiredReadAction
     public JSArgumentList getArgumentList() {
-        final ASTNode node = getNode().findChildByType(JSElementTypes.ARGUMENT_LIST);
+        ASTNode node = getNode().findChildByType(JSElementTypes.ARGUMENT_LIST);
         return node != null ? (JSArgumentList)node.getPsi() : null;
     }
 

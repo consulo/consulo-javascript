@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.content.scope.SearchScope;
 import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
@@ -32,48 +33,46 @@ import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 8:25:27 PM
+ * @author max
+ * @since 2005-01-30
  */
 public class JSFunctionImpl extends JSFunctionBaseImpl<JSFunctionStub, JSFunction> implements JSSuppressionHolder {
-    public JSFunctionImpl(final ASTNode node) {
+    public JSFunctionImpl(ASTNode node) {
         super(node);
     }
 
-    public JSFunctionImpl(final JSFunctionStub stub, IStubElementType type) {
+    public JSFunctionImpl(JSFunctionStub stub, IStubElementType type) {
         super(stub, type);
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public boolean isGetProperty() {
-        final JSFunctionStub stub = getStub();
+        JSFunctionStub stub = getStub();
         if (stub != null) {
             return stub.isGetProperty();
         }
         return findChildByType(JSTokenTypes.GET_KEYWORD) != null;
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public boolean isSetProperty() {
-        final JSFunctionStub stub = getStub();
+        JSFunctionStub stub = getStub();
         if (stub != null) {
             return stub.isGetProperty();
         }
         return findChildByType(JSTokenTypes.SET_KEYWORD) != null;
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public boolean isConstructor() {
-        final JSFunctionStub stub = getStub();
+        JSFunctionStub stub = getStub();
         if (stub != null) {
             return stub.isConstructor();
         }
-        final PsiElement parent = JSResolveUtil.findParent(this);
+        PsiElement parent = JSResolveUtil.findParent(this);
         return parent instanceof JSClass && Comparing.equal("constructor", getName(), true);
     }
 
@@ -88,17 +87,19 @@ public class JSFunctionImpl extends JSFunctionBaseImpl<JSFunctionStub, JSFunctio
     }
 
     @Override
+    @RequiredWriteAction
     public void delete() throws IncorrectOperationException {
         getNode().getTreeParent().removeChild(getNode());
     }
 
     @Override
+    @RequiredReadAction
     public String getQualifiedName() {
-        final JSFunctionStub jsFunctionStub = getStub();
+        JSFunctionStub jsFunctionStub = getStub();
         if (jsFunctionStub != null) {
             return jsFunctionStub.getQualifiedName();
         }
-        final PsiElement parent = JSResolveUtil.findParent(this);
+        PsiElement parent = JSResolveUtil.findParent(this);
 
         if (parent instanceof JSFile || parent instanceof JSPackageStatement) {
             return JSPsiImplUtils.getQName(this);
@@ -108,8 +109,9 @@ public class JSFunctionImpl extends JSFunctionBaseImpl<JSFunctionStub, JSFunctio
         }
     }
 
-    @Override
     @Nonnull
+    @Override
+    @RequiredReadAction
     public SearchScope getUseScope() {
         if (isConstructor()) {
             return super.getUseScope();
@@ -117,13 +119,14 @@ public class JSFunctionImpl extends JSFunctionBaseImpl<JSFunctionStub, JSFunctio
         return JSResolveUtil.findUseScope(this);
     }
 
+    @Nonnull
     @Override
+    @RequiredReadAction
     public PsiElement getNavigationElement() {
-        PsiElement parent = getParent();
-        if (parent instanceof JSClass) {
-            PsiElement parentOriginalElement = parent.getNavigationElement();
+        if (getParent() instanceof JSClass jsClass) {
+            PsiElement parentOriginalElement = jsClass.getNavigationElement();
 
-            if (parentOriginalElement != parent) {
+            if (parentOriginalElement != jsClass) {
                 JSFunction functionByNameAndKind = ((JSClass)parentOriginalElement).findFunctionByNameAndKind(getName(), getKind());
                 return functionByNameAndKind != null ? functionByNameAndKind : this;
             }
@@ -132,6 +135,7 @@ public class JSFunctionImpl extends JSFunctionBaseImpl<JSFunctionStub, JSFunctio
     }
 
     @Override
+    @RequiredWriteAction
     public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
         String oldName = getName();
         PsiElement element = super.setName(name);

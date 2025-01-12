@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
@@ -29,18 +30,15 @@ import consulo.javascript.language.psi.JavaScriptType;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 11:55:33 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionStub, JSFunctionExpression> implements JSFunctionExpression {
-    public JSFunctionExpressionImpl(final ASTNode node) {
+    public JSFunctionExpressionImpl(ASTNode node) {
         super(node);
     }
 
-    public JSFunctionExpressionImpl(final JSFunctionStub stub, IStubElementType type) {
+    public JSFunctionExpressionImpl(JSFunctionStub stub, IStubElementType type) {
         super(stub, type);
     }
 
@@ -50,18 +48,21 @@ public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionStub,
     }
 
     @Override
-    protected ASTNode createNameIdentifier(final String name) {
+    @RequiredReadAction
+    protected ASTNode createNameIdentifier(String name) {
         return JSChangeUtil.createNameIdentifier(getProject(), name);
     }
 
+    @Nonnull
     @Override
+    @RequiredWriteAction
     public JSExpression replace(JSExpression newExpr) {
         return JSChangeUtil.replaceExpression(this, newExpr);
     }
 
-    @RequiredReadAction
     @Nonnull
     @Override
+    @RequiredReadAction
     public JavaScriptType getType() {
         return JavaScriptType.UNKNOWN;
     }
@@ -71,16 +72,16 @@ public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionStub,
         return null;
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public int getTextOffset() {
-        final PsiElement name = getNameIdentifier();
+        PsiElement name = getNameIdentifier();
         return name != null ? name.getTextOffset() : super.getTextOffset();
     }
 
     @Override
     public void delete() throws IncorrectOperationException {
-        final PsiElement parent = getParent();
+        PsiElement parent = getParent();
         if (parent instanceof JSAssignmentExpression assignment) {
             assignment.getLOperand().delete();
             return;
@@ -88,25 +89,26 @@ public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionStub,
         super.delete();
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public boolean isGetProperty() {
         return false;
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public boolean isSetProperty() {
         return false;
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public boolean isConstructor() {
         return false;
     }
 
     @Override
+    @RequiredReadAction
     public String getQualifiedName() {
         return getName();
     }
@@ -114,33 +116,33 @@ public class JSFunctionExpressionImpl extends JSFunctionBaseImpl<JSFunctionStub,
     @RequiredReadAction
     @Override
     public PsiElement getNameIdentifier() {
-        final ASTNode treeParent = getNode().getTreeParent();
+        ASTNode treeParent = getNode().getTreeParent();
         PsiElement psi = treeParent != null ? treeParent.getPsi() : null;
-        if (psi instanceof JSCallExpression) {
-            psi = psi.getParent();
+        if (psi instanceof JSCallExpression call) {
+            psi = call.getParent();
         }
         if (psi instanceof JSAssignmentExpression assignment) {
-            final JSExpression jsExpression = assignment.getLOperand();
-            final JSExpression lOperand = jsExpression instanceof JSDefinitionExpression definition ? definition.getExpression() : null;
+            JSExpression jsExpression = assignment.getLOperand();
+            JSExpression lOperand = jsExpression instanceof JSDefinitionExpression definition ? definition.getExpression() : null;
 
-            if (lOperand instanceof JSReferenceExpression) {
-                ASTNode childByType = lOperand.getNode().findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET);
+            if (lOperand instanceof JSReferenceExpression refExpr) {
+                ASTNode childByType = refExpr.getNode().findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET);
                 return childByType != null ? childByType.getPsi() : null;
             }
         }
-        else if (psi instanceof JSProperty) {
-            ASTNode childByType = psi.getNode().findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET);
+        else if (psi instanceof JSProperty property) {
+            ASTNode childByType = property.getNode().findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET);
             return childByType != null ? childByType.getPsi() : null;
         }
         else {
-            final PsiElement node = super.getNameIdentifier();
+            PsiElement node = super.getNameIdentifier();
 
             if (node != null) {
                 return node;
             }
 
-            if (psi instanceof JSVariable) {
-                ASTNode childByType = psi.getNode().findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET);
+            if (psi instanceof JSVariable variable) {
+                ASTNode childByType = variable.getNode().findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET);
                 return childByType != null ? childByType.getPsi() : null;
             }
         }

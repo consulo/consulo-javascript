@@ -22,14 +22,11 @@ import com.intellij.lang.javascript.psi.JSEmptyStatement;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:48:05 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSEmptyStatementImpl extends JSStatementImpl implements JSEmptyStatement {
-    public JSEmptyStatementImpl(final ASTNode node) {
+    public JSEmptyStatementImpl(ASTNode node) {
         super(node);
     }
 

@@ -17,6 +17,7 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import com.intellij.javascript.documentation.JSDocumentationUtils;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -35,22 +36,20 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:12:51 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSParameterImpl extends JSVariableBaseImpl<JSParameterStub, JSParameter> implements JSParameter {
-    public JSParameterImpl(final ASTNode node) {
+    public JSParameterImpl(ASTNode node) {
         super(node);
     }
 
-    public JSParameterImpl(final JSParameterStub stub) {
+    public JSParameterImpl(JSParameterStub stub) {
         super(stub, JSElementTypes.FORMAL_PARAMETER);
     }
 
     @Override
+    @RequiredReadAction
     public JSFunction getDeclaringFunction() {
         return (JSFunction)getNode().getTreeParent().getTreeParent().getPsi();
     }
@@ -58,11 +57,8 @@ public class JSParameterImpl extends JSVariableBaseImpl<JSParameterStub, JSParam
     @Override
     @RequiredReadAction
     public boolean isRest() {
-        final JSParameterStub parameterStub = getStub();
-        if (parameterStub != null) {
-            return parameterStub.isRest();
-        }
-        return getRestElement() != null;
+        JSParameterStub parameterStub = getStub();
+        return parameterStub != null ? parameterStub.isRest() : getRestElement() != null;
     }
 
     @Nullable
@@ -73,16 +69,13 @@ public class JSParameterImpl extends JSVariableBaseImpl<JSParameterStub, JSParam
     }
 
     @Override
+    @RequiredReadAction
     public boolean isOptional() {
-        final JSParameterStub parameterStub = getStub();
+        JSParameterStub parameterStub = getStub();
         if (parameterStub != null) {
             return parameterStub.isOptional();
         }
-        if (getInitializer() != null) {
-            return true;
-        }
-
-        return JSDocumentationUtils.findOptionalStatusFromComments(this);
+        return getInitializer() != null || JSDocumentationUtils.findOptionalStatusFromComments(this);
     }
 
     @Override
@@ -96,9 +89,10 @@ public class JSParameterImpl extends JSVariableBaseImpl<JSParameterStub, JSParam
     }
 
     @Override
+    @RequiredWriteAction
     public void delete() throws IncorrectOperationException {
-        final ASTNode myNode = getNode();
-        final ASTNode parent = myNode.getTreeParent();
+        ASTNode myNode = getNode();
+        ASTNode parent = myNode.getTreeParent();
 
         if (parent.getElementType() == JSElementTypes.PARAMETER_LIST) {
             JSChangeUtil.removeRangeWithRemovalOfCommas(myNode, parent);
@@ -109,12 +103,13 @@ public class JSParameterImpl extends JSVariableBaseImpl<JSParameterStub, JSParam
     }
 
     @Override
+    @RequiredReadAction
     protected String doGetType() {
         String s = super.doGetType();
 
         if (s == null) {
-            final ASTNode astNode = getNode();
-            final ASTNode anchor = astNode.findChildByType(JSTokenTypes.INSTANCEOF_KEYWORD);
+            ASTNode astNode = getNode();
+            ASTNode anchor = astNode.findChildByType(JSTokenTypes.INSTANCEOF_KEYWORD);
 
             if (anchor != null) {
                 ASTNode type = astNode.findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET, anchor);

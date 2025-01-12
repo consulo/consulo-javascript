@@ -16,41 +16,34 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import jakarta.annotation.Nonnull;
-
-import consulo.language.psi.PsiElement;
-import org.jetbrains.annotations.NonNls;
 import com.intellij.javascript.documentation.JSDocumentationUtils;
-import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.psi.JSAttributeList;
-import com.intellij.lang.javascript.psi.JSClass;
-import com.intellij.lang.javascript.psi.JSFile;
-import com.intellij.lang.javascript.psi.JSFunction;
-import com.intellij.lang.javascript.psi.JSReferenceExpression;
-import com.intellij.lang.javascript.psi.JSReferenceList;
-import consulo.javascript.impl.language.psi.JSStubElementType;
-import com.intellij.lang.javascript.psi.JSSuppressionHolder;
+import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.stubs.JSClassStub;
-import consulo.language.psi.resolve.ResolveState;
-import consulo.language.codeStyle.CodeStyleManager;
-import consulo.language.psi.resolve.PsiScopeProcessor;
-import consulo.language.util.IncorrectOperationException;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.javascript.impl.language.psi.JSStubElementType;
 import consulo.javascript.lang.JavaScriptTokenSets;
+import consulo.language.ast.ASTNode;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.language.util.IncorrectOperationException;
+import jakarta.annotation.Nonnull;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
 public class JSClassImpl extends JSClassBase implements JSSuppressionHolder {
-    public JSClassImpl(final ASTNode node) {
+    public JSClassImpl(ASTNode node) {
         super(node);
     }
 
-    public JSClassImpl(final JSClassStub stub, JSStubElementType<JSClassStub, JSClass> elementType) {
+    public JSClassImpl(JSClassStub stub, JSStubElementType<JSClassStub, JSClass> elementType) {
         super(stub, elementType);
     }
 
@@ -69,7 +62,7 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder {
     @Override
     @RequiredReadAction
     public String getName() {
-        final JSClassStub classStub = getStub();
+        JSClassStub classStub = getStub();
         if (classStub != null) {
             return classStub.getName();
         }
@@ -85,14 +78,14 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder {
     }
 
     @Override
-    @RequiredReadAction
-    public PsiElement setName(@NonNls @Nonnull String newName) throws IncorrectOperationException {
+    @RequiredWriteAction
+    public PsiElement setName(@Nonnull String newName) throws IncorrectOperationException {
         newName = newName.substring(newName.lastIndexOf('.') + 1);
-        final String oldName = getName();
+        String oldName = getName();
         if (newName.equals(oldName)) {
             return this;
         }
-        final JSFunction constructor = findFunctionByName(oldName);
+        JSFunction constructor = findFunctionByName(oldName);
 
         PsiElement nameIdentifier = getNameIdentifier();
         assert nameIdentifier != null;
@@ -124,55 +117,43 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder {
     }
 
     @Override
-    public
-    @NonNls
-    String getQualifiedName() {
-        final JSClassStub classStub = getStub();
-        if (classStub != null) {
-            return classStub.getQualifiedName();
-        }
-        return JSPsiImplUtils.getQName(this);
+    @RequiredReadAction
+    public String getQualifiedName() {
+        JSClassStub classStub = getStub();
+        return classStub != null ? classStub.getQualifiedName() : JSPsiImplUtils.getQName(this);
     }
 
     @Override
+    @RequiredReadAction
     public boolean isInterface() {
-        final JSClassStub classStub = getStub();
-        if (classStub != null) {
-            return classStub.isInterface();
-        }
-        return getNode().findChildByType(JSTokenTypes.INTERFACE_KEYWORD) != null;
+        JSClassStub classStub = getStub();
+        return classStub != null ? classStub.isInterface() : getNode().findChildByType(JSTokenTypes.INTERFACE_KEYWORD) != null;
     }
 
     @Override
+    @RequiredWriteAction
     public void delete() throws IncorrectOperationException {
         getNode().getTreeParent().removeChild(getNode());
     }
 
     @Override
     public boolean isDeprecated() {
-        final JSClassStub stub = getStub();
-        if (stub != null) {
-            return stub.isDeprecated();
-        }
-        return JSDocumentationUtils.calculateDeprecated(this);
+        JSClassStub stub = getStub();
+        return stub != null ? stub.isDeprecated() : JSDocumentationUtils.calculateDeprecated(this);
     }
 
     @Override
-    protected boolean processMembers(
-        final PsiScopeProcessor processor,
-        final ResolveState substitutor,
-        final PsiElement lastParent,
-        final PsiElement place
-    ) {
+    protected boolean processMembers(PsiScopeProcessor processor, ResolveState substitutor, PsiElement lastParent, PsiElement place) {
         return JSResolveUtil.processDeclarationsInScope(this, processor, substitutor, lastParent, place);
     }
 
     @Override
+    @RequiredReadAction
     public boolean processDeclarations(
-        @Nonnull final PsiScopeProcessor processor,
-        @Nonnull final ResolveState substitutor,
-        final PsiElement lastParent,
-        @Nonnull final PsiElement place
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState substitutor,
+        PsiElement lastParent,
+        @Nonnull PsiElement place
     ) {
         boolean b = super.processDeclarations(processor, substitutor, lastParent, place);
 
@@ -183,7 +164,8 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder {
     }
 
     @Override
-    public PsiElement addAfter(@Nonnull final PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+    @RequiredWriteAction
+    public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         if (anchor == null) {
             ASTNode node = getNode().findChildByType(JSTokenTypes.RBRACE);
             if (node != null) {
@@ -193,19 +175,21 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder {
             }
         }
 
-        final PsiElement psiElement = super.addAfter(element, anchor);
+        PsiElement psiElement = super.addAfter(element, anchor);
         CodeStyleManager.getInstance(getProject()).reformatNewlyAddedElement(getNode(), psiElement.getNode());
         return psiElement;
     }
 
     @Override
-    public PsiElement addBefore(@Nonnull final PsiElement element, final PsiElement anchor) throws IncorrectOperationException {
-        final PsiElement superElement = super.addBefore(element, anchor);
+    @RequiredWriteAction
+    public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+        PsiElement superElement = super.addBefore(element, anchor);
         CodeStyleManager.getInstance(getProject()).reformatNewlyAddedElement(getNode(), superElement.getNode());
         return superElement;
     }
 
     @Override
+    @RequiredReadAction
     public boolean isEquivalentTo(PsiElement another) {
         return super.isEquivalentTo(another)
             || (another instanceof JSFile file
@@ -214,7 +198,9 @@ public class JSClassImpl extends JSClassBase implements JSSuppressionHolder {
             || JSPsiImplUtils.isTheSameClass(another, this);
     }
 
+    @Nonnull
     @Override
+    @RequiredReadAction
     public PsiElement getNavigationElement() {
         return JSPsiImplUtils.findTopLevelNavigatableElement(this);
     }

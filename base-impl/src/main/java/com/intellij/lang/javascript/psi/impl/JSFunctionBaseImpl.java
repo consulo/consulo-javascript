@@ -23,6 +23,7 @@ import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.stubs.JSFunctionStub;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.resolve.PsiScopeProcessor;
@@ -38,20 +39,18 @@ import consulo.language.ast.ASTNode;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 8:25:27 PM
+ * @author max
+ * @since 2005-01-30
  */
 abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunction> extends JSStubElementImpl<T> implements JSFunction {
     private boolean referencesArgumentsCalculated;
     private boolean referencesArguments;
 
-    public JSFunctionBaseImpl(final ASTNode node) {
+    public JSFunctionBaseImpl(ASTNode node) {
         super(node);
     }
 
-    public JSFunctionBaseImpl(final T stub, IStubElementType type) {
+    public JSFunctionBaseImpl(T stub, IStubElementType type) {
         super(stub, type);
     }
 
@@ -69,8 +68,9 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
     }
 
     @Override
+    @RequiredReadAction
     public JSSourceElement[] getBody() {
-        final ASTNode[] children = getNode().getChildren(JSElementTypes.SOURCE_ELEMENTS);
+        ASTNode[] children = getNode().getChildren(JSElementTypes.SOURCE_ELEMENTS);
         if (children.length == 0) {
             return JSSourceElement.EMPTY_ARRAY;
         }
@@ -88,8 +88,9 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
     }
 
     @Override
+    @RequiredReadAction
     public String getReturnTypeString() {
-        final T stub = getStub();
+        T stub = getStub();
         if (stub != null) {
             return stub.getReturnTypeString();
         }
@@ -97,38 +98,36 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
     }
 
     @Override
+    @RequiredReadAction
     public JavaScriptTypeElement getReturnTypeElement() {
         return JSPsiImplUtils.findTypeElement(this);
     }
 
     @Override
+    @RequiredWriteAction
     public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
-        final ASTNode newNameElement = createNameIdentifier(name);
-        final ASTNode nameIdentifier = getNameIdentifier().getNode();
+        ASTNode newNameElement = createNameIdentifier(name);
+        ASTNode nameIdentifier = getNameIdentifier().getNode();
         nameIdentifier.getTreeParent().replaceChild(nameIdentifier, newNameElement);
         return this;
     }
 
-    protected ASTNode createNameIdentifier(final String name) {
+    @RequiredReadAction
+    protected ASTNode createNameIdentifier(String name) {
         return JSChangeUtil.createExpressionFromText(getProject(), name).getNode();
     }
 
     @Override
     @RequiredReadAction
     public String getName() {
-        final JSFunctionStub stub = getStub();
+        JSFunctionStub stub = getStub();
         if (stub != null) {
             return stub.getName();
         }
-        final PsiElement name = getNameIdentifier();
+        PsiElement name = getNameIdentifier();
 
         if (name != null) {
-            if (name instanceof JSReferenceExpression) {
-                return ((JSReferenceExpression)name).getReferencedName();
-            }
-            else {
-                return name.getText();
-            }
+            return name instanceof JSReferenceExpression nameRefExpr ? nameRefExpr.getReferencedName() : name.getText();
         }
         return null;
     }
@@ -145,11 +144,12 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
     @RequiredReadAction
     @Override
     public int getTextOffset() {
-        final PsiElement name = getNameIdentifier();
+        PsiElement name = getNameIdentifier();
         return name != null ? name.getTextOffset() : super.getTextOffset();
     }
 
     @Override
+    @RequiredReadAction
     public boolean processDeclarations(
         @Nonnull PsiScopeProcessor processor,
         @Nonnull ResolveState state,
@@ -164,7 +164,7 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
                 }
             }
 
-            final JSParameter[] params = getParameterList().getParameters();
+            JSParameter[] params = getParameterList().getParameters();
             for (JSParameter param : params) {
                 if (!param.processDeclarations(processor, state, lastParent, place)) {
                     return false;
@@ -182,26 +182,25 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
     }
 
     @Override
-    public PsiElement addBefore(@Nonnull final PsiElement element, final PsiElement anchor) throws IncorrectOperationException {
-        if (anchor == getFirstChild() && element instanceof JSAttributeList
+    @RequiredWriteAction
+    public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+        if (anchor == getFirstChild() && element instanceof JSAttributeList attributeList
             && anchor.getNode().getElementType() == JSTokenTypes.FUNCTION_KEYWORD) {
-            return JSChangeUtil.doDoAddBefore(this, element, anchor);
+            return JSChangeUtil.doDoAddBefore(this, attributeList, anchor);
         }
         return super.addBefore(element, anchor);
     }
 
     @Override
     public boolean isDeprecated() {
-        final T stub = getStub();
-        if (stub != null) {
-            return stub.isDeprecated();
-        }
-        return JSDocumentationUtils.calculateDeprecated(this);
+        T stub = getStub();
+        return stub != null ? stub.isDeprecated() : JSDocumentationUtils.calculateDeprecated(this);
     }
 
     @Override
+    @RequiredReadAction
     public boolean isReferencesArguments() {
-        final T stub = getStub();
+        T stub = getStub();
         if (stub != null) {
             return stub.isReferencesArguments();
         }
@@ -211,7 +210,8 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
                 boolean continueVisiting = true;
 
                 @Override
-                public void visitJSReferenceExpression(final JSReferenceExpression node) {
+                @RequiredReadAction
+                public void visitJSReferenceExpression(JSReferenceExpression node) {
                     if (isInJS(node) && node.getQualifier() == null && "arguments".equals(node.getText())) {
                         referencesArguments = true;
                         continueVisiting = false;
@@ -221,7 +221,7 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
                 }
 
                 @Override
-                public void visitJSElement(final JSElement node) {
+                public void visitJSElement(JSElement node) {
                     if (continueVisiting) {
                         node.acceptChildren(this);
                     }
@@ -234,8 +234,9 @@ abstract class JSFunctionBaseImpl<T extends JSFunctionStub, T2 extends JSFunctio
         return referencesArguments;
     }
 
-    private static boolean isInJS(final JSReferenceExpression node) {
-        final PsiElement parent = node.getParent();
+    @RequiredReadAction
+    private static boolean isInJS(JSReferenceExpression node) {
+        PsiElement parent = node.getParent();
         return parent == null || parent.getLanguage() instanceof JavaScriptLanguage;
     }
 

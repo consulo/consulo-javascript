@@ -22,7 +22,11 @@ import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import com.intellij.lang.javascript.psi.stubs.JSClassStub;
-import consulo.application.util.*;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.util.CachedValueProvider;
+import consulo.application.util.CachedValuesManager;
+import consulo.application.util.ParameterizedCachedValue;
+import consulo.application.util.UserDataCache;
 import consulo.javascript.impl.language.psi.JSStubElementType;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
@@ -35,7 +39,6 @@ import consulo.language.psi.resolve.ResolveState;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -45,20 +48,21 @@ import java.util.*;
  * @author Maxim.Mossienko
  */
 public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> implements JSClass {
-    private volatile Map<String, Object> myName2FunctionMap;
-    private volatile Map<String, JSVariable> myName2FieldsMap;
-    private static Key<ParameterizedCachedValue<List<JSClass>, Object>> ourImplementsListCacheKey = Key.create("implements.list.cache");
-    private static Key<ParameterizedCachedValue<List<JSClass>, Object>> ourExtendsListCacheKey = Key.create("implements.list.cache");
-    private static UserDataCache<ParameterizedCachedValue<List<JSClass>, Object>, JSClassBase, Object> ourImplementsListCache =
+    private static final Key<ParameterizedCachedValue<List<JSClass>, Object>> IMPLEMENTS_LIST_CACHE_KEY = Key.create("implements.list.cache");
+    private static final Key<ParameterizedCachedValue<List<JSClass>, Object>> EXTENDS_LIST_CACHE_KEY = Key.create("implements.list.cache");
+    private static final UserDataCache<ParameterizedCachedValue<List<JSClass>, Object>, JSClassBase, Object> IMPLEMENTS_LIST_CACHE =
         new ClassesUserDataCache();
-    private static UserDataCache<ParameterizedCachedValue<List<JSClass>, Object>, JSClassBase, Object> ourExtendsListCache =
+    private static final UserDataCache<ParameterizedCachedValue<List<JSClass>, Object>, JSClassBase, Object> EXTENDS_LIST_CACHE =
         new ExtendsClassesUserDataCache();
 
-    protected JSClassBase(final ASTNode node) {
+    private volatile Map<String, Object> myName2FunctionMap;
+    private volatile Map<String, JSVariable> myName2FieldsMap;
+
+    protected JSClassBase(ASTNode node) {
         super(node);
     }
 
-    public JSClassBase(final JSClassStub stub, final JSStubElementType<JSClassStub, JSClass> aClass) {
+    public JSClassBase(JSClassStub stub, JSStubElementType<JSClassStub, JSClass> aClass) {
         super(stub, aClass);
     }
 
@@ -76,7 +80,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 
     @Override
     protected Object clone() {
-        final JSClassBase o = (JSClassBase)super.clone();
+        JSClassBase o = (JSClassBase)super.clone();
         o.dropCaches();
         return o;
     }
@@ -89,8 +93,9 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
     }
 
     @Override
+    @RequiredReadAction
     public JSFunction[] getFunctions() {
-        final JSClassStub classStub = getStub();
+        JSClassStub classStub = getStub();
         if (classStub != null) {
             return getStubChildrenByType(classStub, JSElementTypes.FUNCTION_DECLARATION, JSFunction.ARRAY_FACTORY);
         }
@@ -99,7 +104,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
             processDeclarations(
                 new PsiScopeProcessor() {
                     @Override
-                    public boolean execute(final PsiElement element, final ResolveState state) {
+                    public boolean execute(@Nonnull PsiElement element, ResolveState state) {
                         if (element instanceof JSFunction function) {
                             functions.add(function);
                         }
@@ -107,12 +112,12 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
                     }
 
                     @Override
-                    public <T> T getHint(final Key<T> hintClass) {
+                    public <T> T getHint(@Nonnull Key<T> hintClass) {
                         return null;
                     }
 
                     @Override
-                    public void handleEvent(final Event event, final Object associated) {
+                    public void handleEvent(Event event, Object associated) {
                     }
                 },
                 ResolveState.initial(),
@@ -124,12 +129,13 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
     }
 
     @Override
+    @RequiredReadAction
     public JSFunction findFunctionByName(String functionName) {
         if (functionName == null) {
             return null;
         }
-        final Map<String, Object> name2FunctionMap = initFunctions();
-        final Object o = name2FunctionMap.get(functionName);
+        Map<String, Object> name2FunctionMap = initFunctions();
+        Object o = name2FunctionMap.get(functionName);
         if (o instanceof JSFunction function) {
             return function;
         }
@@ -140,12 +146,13 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
     }
 
     @Override
+    @RequiredReadAction
     public JSVariable[] getFields() {
-        final JSClassStub classStub = getStub();
+        JSClassStub classStub = getStub();
         final List<JSVariable> vars = new ArrayList<>(3);
 
         if (classStub != null) {
-            for (JSVarStatement var : getStubChildrenByType(classStub, JSElementTypes.VAR_STATEMENT, count -> new JSVarStatement[count])) {
+            for (JSVarStatement var : getStubChildrenByType(classStub, JSElementTypes.VAR_STATEMENT, JSVarStatement[]::new)) {
                 vars.addAll(Arrays.asList(var.getVariables()));
             }
         }
@@ -153,7 +160,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
             processDeclarations(
                 new PsiScopeProcessor() {
                     @Override
-                    public boolean execute(final PsiElement element, final ResolveState state) {
+                    public boolean execute(@Nonnull PsiElement element, ResolveState state) {
                         if (element instanceof JSVariable variable) {
                             vars.add(variable);
                         }
@@ -161,12 +168,12 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
                     }
 
                     @Override
-                    public <T> T getHint(final Key<T> hintClass) {
+                    public <T> T getHint(@Nonnull Key<T> hintClass) {
                         return null;
                     }
 
                     @Override
-                    public void handleEvent(final Event event, final Object associated) {
+                    public void handleEvent(Event event, Object associated) {
                     }
                 },
                 ResolveState.initial(),
@@ -178,13 +185,14 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
     }
 
     @Override
+    @RequiredReadAction
     public JSVariable findFieldByName(String name) {
         return initFields().get(name);
     }
 
-    private
     @Nonnull
-    Map<String, JSVariable> initFields() {
+    @RequiredReadAction
+    private Map<String, JSVariable> initFields() {
         Map<String, JSVariable> name2FieldsMap = myName2FieldsMap;
 
         if (name2FieldsMap == null) {
@@ -195,7 +203,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
                     name2FieldsMap = new HashMap<>();
 
                     for (JSVariable variable : getFields()) {
-                        final String name = variable.getName();
+                        String name = variable.getName();
 
                         if (name != null) {
                             name2FieldsMap.put(name, variable);
@@ -208,9 +216,9 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
         return name2FieldsMap;
     }
 
-    private
     @Nonnull
-    Map<String, Object> initFunctions() {
+    @RequiredReadAction
+    private Map<String, Object> initFunctions() {
         Map<String, Object> name2FunctionMap = myName2FunctionMap;
 
         if (name2FunctionMap == null) {
@@ -221,10 +229,10 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
                     name2FunctionMap = new HashMap<>();
 
                     for (JSFunction function : getFunctions()) {
-                        final String name = function.getName();
+                        String name = function.getName();
 
                         if (name != null) {
-                            final Object o = name2FunctionMap.get(name);
+                            Object o = name2FunctionMap.get(name);
                             if (o == null) {
                                 name2FunctionMap.put(name, function);
                             }
@@ -244,19 +252,19 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
     }
 
     @Override
-    public JSFunction findFunctionByNameAndKind(final String name, JSFunction.FunctionKind kind) {
+    @RequiredReadAction
+    public JSFunction findFunctionByNameAndKind(String name, JSFunction.FunctionKind kind) {
         if (name == null) {
             return null;
         }
         Map<String, Object> name2FunctionMap = initFunctions();
-        final Object o = name2FunctionMap.get(name);
+        Object o = name2FunctionMap.get(name);
 
-        if (o instanceof JSFunction) {
-            final JSFunction function = (JSFunction)o;
+        if (o instanceof JSFunction function) {
             return function.getKind() == kind ? function : null;
         }
-        else if (o instanceof JSFunction[]) {
-            for (JSFunction fun : (JSFunction[])o) {
+        else if (o instanceof JSFunction[] functions) {
+            for (JSFunction fun : functions) {
                 if (fun.getKind() == kind) {
                     return fun;
                 }
@@ -272,26 +280,27 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
         return superClasses.toArray(new JSClass[superClasses.size()]);
     }
 
-    private List<JSClass> getClassesFromReferenceList(final @Nullable JSReferenceList extendsList, @Nonnull IElementType type) {
-        final PsiElement element = extendsList != null ? extendsList : this;
+    private List<JSClass> getClassesFromReferenceList(@Nullable JSReferenceList extendsList, @Nonnull IElementType type) {
+        PsiElement element = extendsList != null ? extendsList : this;
 
         if (type == JSElementTypes.EXTENDS_LIST) {
-            return ourExtendsListCache.get(ourExtendsListCacheKey, this, extendsList).getValue(element);
+            return EXTENDS_LIST_CACHE.get(EXTENDS_LIST_CACHE_KEY, this, extendsList).getValue(element);
         }
         else {
-            return ourImplementsListCache.get(ourImplementsListCacheKey, this, extendsList).getValue(element);
+            return IMPLEMENTS_LIST_CACHE.get(IMPLEMENTS_LIST_CACHE_KEY, this, extendsList).getValue(element);
         }
     }
 
     @Override
+    @RequiredReadAction
     public boolean processDeclarations(
-        @Nonnull final PsiScopeProcessor processor,
-        @Nonnull final ResolveState substitutor,
-        final PsiElement lastParent,
-        @Nonnull final PsiElement place
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState substitutor,
+        PsiElement lastParent,
+        @Nonnull PsiElement place
     ) {
-        final ResolveProcessor resolveProcessor = processor instanceof ResolveProcessor rProcessor ? rProcessor : null;
-        final boolean toProcessClass = resolveProcessor != null && resolveProcessor.isTypeContext();
+        ResolveProcessor resolveProcessor = processor instanceof ResolveProcessor rProcessor ? rProcessor : null;
+        boolean toProcessClass = resolveProcessor != null && resolveProcessor.isTypeContext();
 
         if (toProcessClass) {
             if (!processor.execute(this, null)) {
@@ -304,7 +313,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
         }
 
         processor.handleEvent(PsiScopeProcessor.Event.SET_DECLARATION_HOLDER, this);
-        final boolean toProcessMembers = resolveProcessor == null
+        boolean toProcessMembers = resolveProcessor == null
             || !resolveProcessor.isToSkipClassDeclarationOnce() && resolveProcessor.isToProcessMembers();
         if (toProcessMembers) {
             if (!processMembers(processor, substitutor, lastParent, place)) {
@@ -315,9 +324,9 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
             resolveProcessor.setToSkipClassDeclarationsOnce(false);
         }
 
-        final boolean toProcessInHierarchy = processor instanceof ResolveProcessor rProcessor && rProcessor.isToProcessHierarchy();
+        boolean toProcessInHierarchy = resolveProcessor != null && resolveProcessor.isToProcessHierarchy();
 
-        if (!toProcessInHierarchy || ((ResolveProcessor)processor).checkVisited(getQualifiedName())) {
+        if (!toProcessInHierarchy || resolveProcessor.checkVisited(getQualifiedName())) {
             return true;
         }
 
@@ -331,46 +340,44 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
     }
 
     protected abstract boolean processMembers(
-        final PsiScopeProcessor processor,
-        final ResolveState substitutor,
-        final PsiElement lastParent,
-        final PsiElement place
+        PsiScopeProcessor processor,
+        ResolveState substitutor,
+        PsiElement lastParent,
+        PsiElement place
     );
 
     @Override
     public JSClass[] getSuperClasses() {
-        final JSReferenceList extendsList = getExtendsList();
-        final List<JSClass> supers = getClassesFromReferenceList(extendsList, JSElementTypes.EXTENDS_LIST);
+        JSReferenceList extendsList = getExtendsList();
+        List<JSClass> supers = getClassesFromReferenceList(extendsList, JSElementTypes.EXTENDS_LIST);
         return supers.toArray(new JSClass[supers.size()]);
     }
 
-    public static PsiElement findClassFromNamespace(final String qname, PsiElement context) {
-        PsiElement realClazz = null;
-        final PsiElement clazz = JSResolveUtil.findClassByQName(qname, context);
-
-        realClazz = clazz;
-        return realClazz;
+    @RequiredReadAction
+    public static PsiElement findClassFromNamespace(String qName, PsiElement context) {
+        return JSResolveUtil.findClassByQName(qName, context);
     }
 
     @Override
     public JSClass[] getImplementedInterfaces() {
-        final JSReferenceList implementsList = getImplementsList();
+        JSReferenceList implementsList = getImplementsList();
         if (implementsList == null) {
             return JSClass.EMPTY_ARRAY;
         }
-        final List<JSClass> classes = getClassesFromReferenceList(implementsList, JSElementTypes.IMPLEMENTS_LIST);
+        List<JSClass> classes = getClassesFromReferenceList(implementsList, JSElementTypes.IMPLEMENTS_LIST);
         return classes.toArray(new JSClass[classes.size()]);
     }
 
     private static class ExtendsClassesUserDataCache extends ClassesUserDataCache {
         @Override
-        protected List<JSClass> doCompute(final Object extendsList) {
+        @RequiredReadAction
+        protected List<JSClass> doCompute(Object extendsList) {
             if (extendsList instanceof JSClass jsClass) {
-                final ArrayList<JSClass> supers = new ArrayList<>(1);
+                ArrayList<JSClass> supers = new ArrayList<>(1);
                 if (!"Object".equals(jsClass.getQualifiedName())) {
-                    final PsiElement element = findClassFromNamespace("Object", jsClass);
-                    if (element instanceof JSClass) {
-                        supers.add((JSClass)element);
+                    PsiElement element = findClassFromNamespace("Object", jsClass);
+                    if (element instanceof JSClass elementClass) {
+                        supers.add(elementClass);
                     }
                 }
 
@@ -382,24 +389,25 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
 
     private static class ClassesUserDataCache extends UserDataCache<ParameterizedCachedValue<List<JSClass>, Object>, JSClassBase, Object> {
         @Override
-        protected ParameterizedCachedValue<List<JSClass>, Object> compute(final JSClassBase jsClassBase, final Object p) {
+        protected ParameterizedCachedValue<List<JSClass>, Object> compute(JSClassBase jsClassBase, Object p) {
             return CachedValuesManager.getManager(jsClassBase.getProject()).createParameterizedCachedValue(
                 list -> new CachedValueProvider.Result<>(doCompute(list), PsiModificationTracker.MODIFICATION_COUNT),
                 false
             );
         }
 
-        protected List<JSClass> doCompute(final Object object) {
+        @RequiredReadAction
+        protected List<JSClass> doCompute(Object object) {
             if (object instanceof JSClass) {
                 return Collections.emptyList();
             }
 
-            final ArrayList<JSClass> supers = new ArrayList<>(1);
-            final JSReferenceList extendsList = (JSReferenceList)object;
+            ArrayList<JSClass> supers = new ArrayList<>(1);
+            JSReferenceList extendsList = (JSReferenceList)object;
 
             for (String refText : extendsList.getReferenceTexts()) {
                 refText = JSImportHandlingUtil.resolveTypeName(refText, extendsList.getParent());
-                final PsiElement element = findClassFromNamespace(refText, extendsList.getParent());
+                PsiElement element = findClassFromNamespace(refText, extendsList.getParent());
                 if (element instanceof JSClass jsClass) {
                     supers.add(jsClass);
                 }
@@ -408,7 +416,7 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
         }
     }
 
-    private static <E extends PsiElement> E[] getStubChildrenByType(JSClassStub stub, final IElementType elementType, ArrayFactory<E> f) {
+    private static <E extends PsiElement> E[] getStubChildrenByType(JSClassStub stub, IElementType elementType, ArrayFactory<E> f) {
         assert JSElementTypes.INCLUDE_DIRECTIVE != elementType;
 
         ArrayList<E> result = new ArrayList<>(Arrays.asList(stub.getChildrenByType(elementType, f)));
@@ -417,18 +425,19 @@ public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> impleme
         TokenSet filter = TokenSet.create(JSElementTypes.INCLUDE_DIRECTIVE, elementType);
         for (JSIncludeDirective include : includes) {
             PsiFile file = include.resolveFile();
-            if (file instanceof JSFile) {
-                process(filter, (JSFile)file, result, visited);
+            if (file instanceof JSFile jsFile) {
+                process(filter, jsFile, result, visited);
             }
         }
         return result.toArray(f.create(result.size()));
     }
 
+    @SuppressWarnings("unchecked")
     private static <E extends PsiElement> void process(
         TokenSet filter,
-        final JSFile file,
-        final ArrayList<E> result,
-        final Collection<JSFile> visited
+        JSFile file,
+        ArrayList<E> result,
+        Collection<JSFile> visited
     ) {
         if (visited.contains(file)) {
             return;

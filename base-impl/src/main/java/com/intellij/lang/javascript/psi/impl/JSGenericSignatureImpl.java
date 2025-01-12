@@ -23,7 +23,7 @@ import consulo.language.ast.ASTNode;
 import jakarta.annotation.Nonnull;
 
 public class JSGenericSignatureImpl extends JSElementImpl implements JSGenericSignature {
-    public JSGenericSignatureImpl(final ASTNode node) {
+    public JSGenericSignatureImpl(ASTNode node) {
         super(node);
     }
 

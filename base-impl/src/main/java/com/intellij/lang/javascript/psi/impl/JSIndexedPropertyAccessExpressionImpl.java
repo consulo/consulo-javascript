@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -25,22 +26,20 @@ import consulo.language.ast.IElementType;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 11:59:36 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSIndexedPropertyAccessExpressionImpl extends JSExpressionImpl implements JSIndexedPropertyAccessExpression {
-    public JSIndexedPropertyAccessExpressionImpl(final ASTNode node) {
+    public JSIndexedPropertyAccessExpressionImpl(ASTNode node) {
         super(node);
     }
 
     @Override
+    @RequiredReadAction
     public JSExpression getQualifier() {
         ASTNode child = getNode().getFirstChildNode();
         while (child != null) {
-            final IElementType type = child.getElementType();
+            IElementType type = child.getElementType();
             if (type == JSTokenTypes.LBRACKET) {
                 return null;
             }
@@ -53,11 +52,12 @@ public class JSIndexedPropertyAccessExpressionImpl extends JSExpressionImpl impl
     }
 
     @Override
+    @RequiredReadAction
     public JSExpression getIndexExpression() {
         ASTNode child = getNode().getFirstChildNode();
         boolean bracketPassed = false;
         while (child != null) {
-            final IElementType type = child.getElementType();
+            IElementType type = child.getElementType();
             if (type == JSTokenTypes.LBRACKET) {
                 bracketPassed = true;
             }

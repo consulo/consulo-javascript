@@ -24,13 +24,11 @@ import jakarta.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
- * User: maxim.mossienko
- * Date: Dec 14, 2005
- * Time: 6:40:04 PM
- * To change this template use File | Settings | File Templates.
+ * @author maxim.mossienko
+ * @since 2005-12-14
  */
 public class JSLetExpressionImpl extends JSExpressionImpl implements JSLetExpression {
-    public JSLetExpressionImpl(final ASTNode node) {
+    public JSLetExpressionImpl(ASTNode node) {
         super(node);
     }
 

@@ -21,12 +21,13 @@ import com.intellij.lang.javascript.index.JSTypeEvaluateManager;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.*;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.util.TextRange;
+import consulo.javascript.lang.psi.impl.resolve.ResolveHelper;
 import consulo.javascript.language.JavaScriptFeature;
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.javascript.language.JavaScriptVersionUtil;
 import consulo.javascript.language.psi.JavaScriptType;
-import consulo.javascript.lang.psi.impl.resolve.ResolveHelper;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.TokenSet;
 import consulo.language.editor.refactoring.NamesValidator;
@@ -39,7 +40,6 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.util.collection.ArrayUtil;
 import consulo.xml.psi.xml.XmlFile;
 import consulo.xml.psi.xml.XmlToken;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -49,7 +49,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
     private static final TokenSet IDENTIFIER_TOKENS_SET =
         TokenSet.orSet(JSTokenTypes.IDENTIFIER_TOKENS_SET, TokenSet.create(JSTokenTypes.ANY_IDENTIFIER));
 
-    public JSReferenceExpressionImpl(final ASTNode node) {
+    public JSReferenceExpressionImpl(ASTNode node) {
         super(node);
     }
 
@@ -71,15 +71,14 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
     @Nullable
     @RequiredReadAction
     public JSExpression getQualifier() {
-        PsiElement firstChild = getFirstChild();
-        return firstChild instanceof JSExpression ? (JSExpression)firstChild : null;
+        return getFirstChild() instanceof JSExpression expression ? expression : null;
     }
 
     @Override
     @Nullable
     @RequiredReadAction
     public String getReferencedName() {
-        final PsiElement nameElement = getNameElement();
+        PsiElement nameElement = getNameElement();
         return nameElement != null ? nameElement.getText() : null;
     }
 
@@ -87,7 +86,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
     @Nullable
     @RequiredReadAction
     public PsiElement getReferenceNameElement() {
-        final PsiElement element = getNameElement();
+        PsiElement element = getNameElement();
         return element != null ? element : null;
     }
 
@@ -124,8 +123,9 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
     }
 
     @Override
+    @RequiredReadAction
     public PsiElement resolve() {
-        final ResolveResult[] resolveResults = multiResolve(true);
+        ResolveResult[] resolveResults = multiResolve(true);
 
         return resolveResults.length == 0 || resolveResults.length > 1 ? null : resolveResults[0].getElement();
     }
@@ -138,22 +138,23 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
     }
 
     @Override
+    @RequiredWriteAction
     public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
         return this;
     }
 
-    @RequiredReadAction
+    @RequiredWriteAction
     PsiElement handleElementRenameInternal(String newElementName) throws IncorrectOperationException {
-        final int i = newElementName.lastIndexOf('.');
+        int i = newElementName.lastIndexOf('.');
         if (i != -1) {
             newElementName = newElementName.substring(0, i);
         }
         if (!NamesValidator.forLanguage(JavaScriptLanguage.INSTANCE).isIdentifier(newElementName, null)) {
             throw new IncorrectOperationException("Invalid javascript element name:" + newElementName);
         }
-        final PsiElement parent = getParent();
+        PsiElement parent = getParent();
         if (parent instanceof JSClass || parent instanceof JSFunction) {
-            final PsiElement node = ((JSNamedElement)parent).getNameIdentifier();
+            PsiElement node = ((JSNamedElement)parent).getNameIdentifier();
             if (node != null && node == this) {
                 return this; // JSNamedElement.setName will care of things
             }
@@ -165,15 +166,13 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
     @Override
     @RequiredReadAction
     public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final PsiElement parent = getParent();
+        PsiElement parent = getParent();
 
         if (parent instanceof JSClass || parent instanceof JSNamespaceDeclaration || parent instanceof JSFunction) {
-            final PsiElement node = ((JSNamedElement)parent).getNameIdentifier();
+            PsiElement node = ((JSNamedElement)parent).getNameIdentifier();
 
-            if (node != null && node == this) {
-                if (parent == element || element instanceof PsiFile) {
-                    return this; // JSNamedElement.setName will care of things
-                }
+            if (node != null && node == this && (parent == element || element instanceof PsiFile)) {
+                return this; // JSNamedElement.setName will care of things
             }
         }
 
@@ -193,13 +192,13 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
             }
         }
 
-        final ASTNode nameElement = JSChangeUtil.createNameIdentifier(getProject(), newName);
+        ASTNode nameElement = JSChangeUtil.createNameIdentifier(getProject(), newName);
         getNode().replaceChild(getNameElement().getNode(), nameElement);
         return this;
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public boolean isReferenceTo(PsiElement element) {
         ResolveHelper helper = ResolveHelper.find(this);
         if (helper.isResolveTo(this, element)) {
@@ -211,58 +210,50 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
             return true;
         }
 
-//		if(element instanceof PsiNamedElement || element instanceof XmlAttributeValue)
-//		{
-//			final String referencedName = getReferencedName();
+//        if (element instanceof PsiNamedElement || element instanceof XmlAttributeValue) {
+//            String referencedName = getReferencedName();
 //
-//			if(referencedName != null)
-//			{
-//				if(element instanceof JSDefinitionExpression && referencedName.equals(((JSDefinitionExpression) element).getName()))
-//				{
-//					final JSExpression expression = ((JSDefinitionExpression) element).getExpression();
-//					if(expression instanceof JSReferenceExpression)
-//					{
-//						final JSReferenceExpression jsReferenceExpression = (JSReferenceExpression) expression;
-//						final JSExpression qualifier = jsReferenceExpression.getQualifier();
-//						final JSExpression myQualifier = getQualifier();
+//            if (referencedName != null) {
+//                if (element instanceof JSDefinitionExpression definition && referencedName.equals(definition.getName())) {
+//                    if (definition.getExpression() instanceof JSReferenceExpression jsReferenceExpression) {
+//                        JSExpression qualifier = jsReferenceExpression.getQualifier();
+//                        JSExpression myQualifier = getQualifier();
 //
-//						return (myQualifier != null || (qualifier == myQualifier || "window".equals(qualifier.getText())));
-//					}
-//					else
-//					{
-//						return true;
-//					}
-//				}
-//				else if(element instanceof JSProperty && referencedName.equals(((JSProperty) element).getName()))
-//				{
-//					if(getQualifier() != null)
-//					{
-//						return true; // TODO: check for type of element to be the same
-//					}
-//					//return false;
-//				}
-//			}
-//			return JSResolveUtil.isReferenceTo(this, referencedName, element);
-//		}
+//                        return (myQualifier != null || (qualifier == myQualifier || "window".equals(qualifier.getText())));
+//                    }
+//                    else {
+//                        return true;
+//                    }
+//                }
+//                else if (element instanceof JSProperty property && referencedName.equals(property.getName())) {
+//                    if (getQualifier() != null) {
+//                        return true; // TODO: check for type of element to be the same
+//                    }
+//                    //return false;
+//                }
+//            }
+//            return JSResolveUtil.isReferenceTo(this, referencedName, element);
+//        }
         return false;
     }
 
+    @RequiredReadAction
     private void doProcessLocalDeclarations(
-        final JSExpression qualifier,
-        final ResolveProcessor processor,
+        JSExpression qualifier,
+        ResolveProcessor processor,
         Set<JavaScriptFeature> features,
         boolean completion
     ) {
-        final JSClass jsClass = findEnclosingClass(this);
+        JSClass jsClass = findEnclosingClass(this);
         processor.configureClassScope(jsClass);
 
-        final boolean inTypeContext = JSResolveUtil.isExprInTypeContext(this);
-        final boolean whereTypeCanBe = inTypeContext
+        boolean inTypeContext = JSResolveUtil.isExprInTypeContext(this);
+        boolean whereTypeCanBe = inTypeContext
             || (completion && features.contains(JavaScriptFeature.CLASS) && JSResolveUtil.isInPlaceWhereTypeCanBeDuringCompletion(this));
         PsiElement elToProcess = this;
         PsiElement scopeToStopAt = null;
 
-        final PsiElement parent = getParent();
+        PsiElement parent = getParent();
         boolean strictClassOffset = JSResolveUtil.getTopReferenceParent(parent) instanceof JSImportStatement;
         boolean toProcessMembers = !strictClassOffset;
 
@@ -272,7 +263,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
             if (jsClass == null) {
                 if (qualifier instanceof JSThisExpression) {
                     if (features.contains(JavaScriptFeature.CLASS)) {
-                        final JSFunction nearestFunction = PsiTreeUtil.getParentOfType(this, JSFunction.class);
+                        JSFunction nearestFunction = PsiTreeUtil.getParentOfType(this, JSFunction.class);
                         elToProcess = nearestFunction != null ? nearestFunction : this;
                     }
                     else {
@@ -292,11 +283,11 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
                 if (!(parent instanceof JSNewExpression || parent instanceof JSAttributeList || parent instanceof JSBinaryExpression)) {
                     toProcessMembers = false;
                     // get function since it can have imports
-                    final JSFunction nearestFunction = PsiTreeUtil.getParentOfType(this, JSFunction.class);
+                    JSFunction nearestFunction = PsiTreeUtil.getParentOfType(this, JSFunction.class);
                     elToProcess = nearestFunction != null ? nearestFunction.getFirstChild() : jsClass;
                 }
             }
-            else if (parent instanceof JSExpressionStatement && JSResolveUtil.isPlaceWhereNsCanBe(parent)) {
+            else if (parent instanceof JSExpressionStatement expression && JSResolveUtil.isPlaceWhereNsCanBe(expression)) {
                 toProcessMembers = false;
                 elToProcess = null;
             }
@@ -335,14 +326,13 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
         }
     }
 
-    private static
     @Nullable
-    JSClass findEnclosingClass(PsiElement elt) {
+    private static JSClass findEnclosingClass(PsiElement elt) {
         JSClass jsClass = PsiTreeUtil.getParentOfType(elt, JSClass.class);
         if (jsClass == null && elt != null) {
-            final PsiElement element = JSResolveUtil.getClassReferenceForXmlFromContext(elt.getContainingFile());
-            if (element instanceof JSClass) {
-                jsClass = (JSClass)element;
+            PsiElement element = JSResolveUtil.getClassReferenceForXmlFromContext(elt.getContainingFile());
+            if (element instanceof JSClass jsClassClass) {
+                jsClass = jsClassClass;
             }
         }
         return jsClass;
@@ -352,14 +342,14 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
     @Override
     @RequiredReadAction
     public Object[] getVariants() {
-        final PsiFile containingFile = getContainingFile();
+        PsiFile containingFile = getContainingFile();
         Set<JavaScriptFeature> features = JavaScriptVersionUtil.getFeatures(this);
-        final boolean classFeature = features.contains(JavaScriptFeature.CLASS);
+        boolean classFeature = features.contains(JavaScriptFeature.CLASS);
         Object[] smartVariants = JSSmartCompletionVariantsHandler.getSmartVariants(this, classFeature);
         if (smartVariants != null) {
             return smartVariants;
         }
-        final JSExpression qualifier = getResolveQualifier();
+        JSExpression qualifier = getResolveQualifier();
 
         if (qualifier == null) {
             if (JSResolveUtil.isSelfReference(getParent(), this)) { // Prevent Rulezz to appear
@@ -369,7 +359,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
             ResolveProcessor localProcessor = new ResolveProcessor(null, this);
 
             doProcessLocalDeclarations(qualifier, localProcessor, features, true);
-            final VariantsProcessor processor = new VariantsProcessor(null, containingFile, false, this);
+            VariantsProcessor processor = new VariantsProcessor(null, containingFile, false, this);
 
             processor.addLocalResults(localProcessor.getResults());
 
@@ -378,7 +368,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
             return processor.getResult();
         }
         else {
-            final MyTypeProcessor processor = new MyTypeProcessor(null, features, this);
+            MyTypeProcessor processor = new MyTypeProcessor(null, features, this);
             BaseJSSymbolProcessor.doEvalForExpr(BaseJSSymbolProcessor.getOriginalQualifier(qualifier), containingFile, processor);
 
             if (processor.resolved == MyTypeProcessor.TypeResolveState.Resolved ||
@@ -387,8 +377,8 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
                 String qualifiedNameToSkip = null;
                 if (JSResolveUtil.isSelfReference(getParent(), this)) {
                     PsiElement originalParent = PsiUtilBase.getOriginalElement(getParent(), JSQualifiedNamedElement.class);
-                    if (originalParent instanceof JSQualifiedNamedElement) {
-                        qualifiedNameToSkip = ((JSQualifiedNamedElement)originalParent).getQualifiedName();
+                    if (originalParent instanceof JSQualifiedNamedElement qualifiedNamedElement) {
+                        qualifiedNameToSkip = qualifiedNamedElement.getQualifiedName();
                     }
                 }
                 return processor.getResultsAsObjects(qualifiedNameToSkip);
@@ -403,9 +393,10 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
         visitor.visitJSReferenceExpression(this);
     }
 
-    @Override
     @Nonnull
-    public ResolveResult[] multiResolve(final boolean incompleteCode) {
+    @Override
+    @RequiredReadAction
+    public ResolveResult[] multiResolve(boolean incompleteCode) {
         return ResolveCache.getInstance(getContainingFile().getProject())
             .resolveWithCaching(this, MyResolver.INSTANCE, true, incompleteCode);
     }
@@ -424,25 +415,24 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
     @RequiredReadAction
     private ResolveResult[] doResolve() {
         PsiFile containingFile = getContainingFile();
-        final String referencedName = getReferencedName();
+        String referencedName = getReferencedName();
         if (referencedName == null) {
             return ResolveResult.EMPTY_ARRAY;
         }
 
-        final PsiElement parent = getParent();
-        final JSExpression qualifier = getResolveQualifier();
+        PsiElement parent = getParent();
+        JSExpression qualifier = getResolveQualifier();
         Set<JavaScriptFeature> features = JavaScriptVersionUtil.getFeatures(this);
-        final boolean classFeature = features.contains(JavaScriptFeature.CLASS);
+        boolean classFeature = features.contains(JavaScriptFeature.CLASS);
 
-        final boolean localResolve = qualifier == null;
-        final boolean parentIsDefinition = parent instanceof JSDefinitionExpression;
+        boolean localResolve = qualifier == null;
+        boolean parentIsDefinition = parent instanceof JSDefinitionExpression;
 
         // Handle self references
         PsiElement currentParent = JSResolveUtil.getTopReferenceParent(parent);
-        if (JSResolveUtil.isSelfReference(currentParent, this)) {
-            if (!(currentParent instanceof JSPackageStatement) || parent == currentParent) {
-                return new ResolveResult[]{new JSResolveUtil.MyResolveResult(currentParent)};
-            }
+        if (JSResolveUtil.isSelfReference(currentParent, this)
+            && (!(currentParent instanceof JSPackageStatement) || parent == currentParent)) {
+            return new ResolveResult[]{new JSResolveUtil.MyResolveResult(currentParent)};
         }
 
         JSExpression realQualifier = getQualifier();
@@ -460,11 +450,11 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
         if (qualifier == null) {
             localProcessor = new ResolveProcessor(referencedName, this);
 
-            final boolean canResolveAllLocally = !parentIsDefinition || !classFeature;
+            boolean canResolveAllLocally = !parentIsDefinition || !classFeature;
             doProcessLocalDeclarations(realQualifier, localProcessor, features, false);
 
             if (canResolveAllLocally) {
-                final PsiElement jsElement = localProcessor.getResult();
+                PsiElement jsElement = localProcessor.getResult();
 
                 if (jsElement != null || (qualifier != null && classFeature && localProcessor.foundAllValidResults())) {
                     return localProcessor.getResultsAsResolveResults();
@@ -482,7 +472,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
             );
         }
         else {
-            final MyTypeProcessor processor = new MyTypeProcessor(referencedName, features, this);
+            MyTypeProcessor processor = new MyTypeProcessor(referencedName, features, this);
             BaseJSSymbolProcessor.doEvalForExpr(qualifier, containingFile, processor);
 
             if (processor.resolved == MyTypeProcessor.TypeResolveState.PrefixUnknown && classFeature) {
@@ -500,53 +490,53 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
         }
     }
 
+    @RequiredReadAction
     private boolean isE4XAttributeReference(JSExpression realQualifier) {
         return getNode().findChildByType(JSTokenTypes.AT) != null
             || (realQualifier != null && realQualifier.getNode().findChildByType(JSTokenTypes.AT) != null);
     }
 
     @Nullable
+    @RequiredReadAction
     public JSExpression getResolveQualifier() {
-        final JSExpression qualifier = getQualifier();
+        JSExpression qualifier = getQualifier();
 
         if (qualifier instanceof JSReferenceExpression) {
-            final ASTNode astNode = getNode();
+            ASTNode astNode = getNode();
             ASTNode selection = astNode.getTreeNext();
             // TODO:this is not accurate
             if (selection != null && selection.getElementType() == JSTokenTypes.COLON_COLON) {
                 return null;
             }
 
-            final ASTNode nsSelection = astNode.findChildByType(JSTokenTypes.COLON_COLON);
+            ASTNode nsSelection = astNode.findChildByType(JSTokenTypes.COLON_COLON);
             if (nsSelection != null) {
                 return ((JSReferenceExpressionImpl)qualifier).getResolveQualifier();
             }
         }
         else if (qualifier == null) {
-            final ASTNode node = getNode().getFirstChildNode();
+            ASTNode node = getNode().getFirstChildNode();
 
             if (node.getElementType() == JSTokenTypes.AT) {
                 PsiElement parent = getParent();
-                if (parent instanceof JSBinaryExpression && parent.getParent().getParent() instanceof JSCallExpression call) {
+                if (parent instanceof JSBinaryExpression binary && binary.getParent().getParent() instanceof JSCallExpression call) {
                     parent = call.getMethodExpression();
                 }
-                if (parent instanceof JSExpression expression) {
-                    return expression;
-                }
-                return null;
+                return parent instanceof JSExpression expression ? expression : null;
             }
         }
         return qualifier;
     }
 
+    @RequiredReadAction
     private ResolveResult[] doOldResolve(
-        final PsiFile containingFile,
-        final String referencedName,
-        final PsiElement parent,
-        final JSExpression qualifier,
-        final boolean ecma,
-        final boolean localResolve,
-        final boolean parentIsDefinition,
+        PsiFile containingFile,
+        String referencedName,
+        PsiElement parent,
+        JSExpression qualifier,
+        boolean ecma,
+        boolean localResolve,
+        boolean parentIsDefinition,
         ResolveProcessor localProcessor
     ) {
         if (parentIsDefinition && ((ecma && !localResolve) || (!ecma && qualifier != null))) {
@@ -561,7 +551,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
             // Fallback for finding some assignment in global scope
         }
 
-        final WalkUpResolveProcessor processor =
+        WalkUpResolveProcessor processor =
             new WalkUpResolveProcessor(referencedName, null, containingFile, false, this);
 
         if (localProcessor != null) {
@@ -580,7 +570,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
     private static class MyTypeProcessor extends ResolveProcessor implements BaseJSSymbolProcessor.TypeProcessor {
         private final Set<JavaScriptFeature> myFeatures;
 
-        public MyTypeProcessor(String referenceName, final Set<JavaScriptFeature> features, PsiElement _place) {
+        public MyTypeProcessor(String referenceName, Set<JavaScriptFeature> features, PsiElement _place) {
             super(referenceName, _place);
             myFeatures = features;
             setToProcessHierarchy(true);
@@ -603,7 +593,8 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
         }
 
         @Override
-        public void process(String type, @Nonnull final BaseJSSymbolProcessor.EvaluateContext evaluateContext, PsiElement source) {
+        @RequiredReadAction
+        public void process(@Nonnull String type, @Nonnull BaseJSSymbolProcessor.EvaluateContext evaluateContext, PsiElement source) {
             if (evaluateContext.visitedTypes.contains(type)) {
                 return;
             }
@@ -624,22 +615,22 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
 
             setProcessStatics(false);
 
-            final PsiElement placeParent = place.getParent();
+            PsiElement placeParent = place.getParent();
             boolean setTypeContext = placeParent instanceof JSReferenceList;
-            final PsiElement clazz = source != null && (source instanceof JSClass || source instanceof XmlFile)
+            PsiElement clazz = source != null && (source instanceof JSClass || source instanceof XmlFile)
                 ? source
                 : JSClassImpl.findClassFromNamespace(type, place);
 
             if (clazz instanceof JSClass jsClass) {
-                final boolean statics = ecma() && JSPsiImplUtils.isTheSameClass(typeSource, jsClass)
+                boolean statics = ecma() && JSPsiImplUtils.isTheSameClass(typeSource, jsClass)
                     && !(((JSReferenceExpression)place).getQualifier() instanceof JSCallExpression);
                 setProcessStatics(statics);
                 if (statics) {
                     setTypeName(jsClass.getQualifiedName());
                 }
 
-                final boolean saveSetTypeContext = isTypeContext();
-                final boolean saveToProcessMembers = isToProcessMembers();
+                boolean saveSetTypeContext = isTypeContext();
+                boolean saveToProcessMembers = isToProcessMembers();
 
                 if (setTypeContext) {
                     setTypeContext(setTypeContext);
@@ -647,12 +638,12 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
                 }
 
                 try {
-                    final boolean b = clazz.processDeclarations(this, ResolveState.initial(), clazz, place);
+                    boolean b = clazz.processDeclarations(this, ResolveState.initial(), clazz, place);
                     if (!b) {
                         resolved = TypeResolveState.Resolved;
                     }
                     else if (ecma()) {
-                        final JSAttributeList attrList = jsClass.getAttributeList();
+                        JSAttributeList attrList = jsClass.getAttributeList();
                         if (attrList == null || !attrList.hasModifier(JSAttributeList.ModifierType.DYNAMIC)) {
                             resolved = TypeResolveState.Resolved;
                         }
@@ -671,7 +662,8 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
         }
 
         @Override
-        public boolean execute(PsiElement element, ResolveState state) {
+        @RequiredReadAction
+        public boolean execute(@Nonnull PsiElement element, ResolveState state) {
             boolean b = super.execute(element, state);
             if (ecma() && getResult() != null) {
                 resolved = MyTypeProcessor.TypeResolveState.Resolved;
@@ -685,7 +677,7 @@ public class JSReferenceExpressionImpl extends JSExpressionImpl implements JSRef
         }
 
         @Override
-        public void setUnknownElement(@Nonnull final PsiElement element) {
+        public void setUnknownElement(@Nonnull PsiElement element) {
             if (!(element instanceof XmlToken)) {
                 boolean currentIsNotResolved =
                     element == BaseJSSymbolProcessor.getOriginalQualifier(((JSReferenceExpression)place).getQualifier());

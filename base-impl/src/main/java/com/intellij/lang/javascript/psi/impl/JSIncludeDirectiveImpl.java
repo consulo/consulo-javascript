@@ -20,6 +20,7 @@ import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSIncludeDirective;
 import com.intellij.lang.javascript.psi.stubs.JSIncludeDirectiveStub;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.SystemInfo;
 import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.language.ast.ASTNode;
@@ -31,14 +32,14 @@ import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
 public class JSIncludeDirectiveImpl extends JSStubbedStatementImpl<JSIncludeDirectiveStub> implements JSIncludeDirective {
-    public JSIncludeDirectiveImpl(final ASTNode node) {
+    public JSIncludeDirectiveImpl(ASTNode node) {
         super(node);
     }
 
-    public JSIncludeDirectiveImpl(final JSIncludeDirectiveStub stub) {
+    public JSIncludeDirectiveImpl(JSIncludeDirectiveStub stub) {
         super(stub, JSElementTypes.INCLUDE_DIRECTIVE);
     }
 
@@ -47,8 +48,9 @@ public class JSIncludeDirectiveImpl extends JSStubbedStatementImpl<JSIncludeDire
         visitor.visitJSIncludeDirective(this);
     }
 
-    @Override
     @Nonnull
+    @Override
+    @RequiredReadAction
     public PsiReference[] getReferences() {
         ASTNode node = getIncludedFileNode();
 
@@ -64,28 +66,31 @@ public class JSIncludeDirectiveImpl extends JSStubbedStatementImpl<JSIncludeDire
         return PsiReference.EMPTY_ARRAY;
     }
 
+    @RequiredReadAction
     private ASTNode getIncludedFileNode() {
         return getNode().findChildByType(JavaScriptTokenSets.STRING_LITERALS);
     }
 
     @Override
+    @RequiredReadAction
     public String getIncludeText() {
-        final JSIncludeDirectiveStub stub = getStub();
+        JSIncludeDirectiveStub stub = getStub();
         if (stub != null) {
             return stub.getIncludeText();
         }
-        final ASTNode astNode = getIncludedFileNode();
+        ASTNode astNode = getIncludedFileNode();
 
         return astNode != null ? StringUtil.stripQuotesAroundValue(astNode.getText()) : null;
     }
 
     @Override
+    @RequiredReadAction
     public PsiFile resolveFile() {
-        final String includeText = getIncludeText();
+        String includeText = getIncludeText();
         if (includeText == null) {
             return null;
         }
-        final FileReference[] references = new FileReferenceSet(
+        FileReference[] references = new FileReferenceSet(
             includeText,
             this,
             0,
@@ -94,6 +99,7 @@ public class JSIncludeDirectiveImpl extends JSStubbedStatementImpl<JSIncludeDire
         ).getAllReferences();
 
         return references != null && references.length > 0 && references[references.length - 1].resolve() instanceof PsiFile file
-            ? file : null;
+            ? file
+            : null;
     }
 }

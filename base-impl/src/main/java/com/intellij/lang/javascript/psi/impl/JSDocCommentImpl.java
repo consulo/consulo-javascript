@@ -20,17 +20,18 @@ import com.intellij.lang.javascript.JSDocTokenTypes;
 import com.intellij.lang.javascript.psi.JSDocComment;
 import com.intellij.lang.javascript.psi.JSDocTag;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.IElementType;
-import consulo.language.psi.PsiElement;
 import consulo.language.ast.ASTNode;
 import jakarta.annotation.Nonnull;
 
 public class JSDocCommentImpl extends JSElementImpl implements JSDocComment {
-    public JSDocCommentImpl(final ASTNode node) {
+    public JSDocCommentImpl(ASTNode node) {
         super(node);
     }
 
     @Override
+    @RequiredReadAction
     public IElementType getTokenType() {
         return getNode().getElementType();
     }
@@ -41,11 +42,10 @@ public class JSDocCommentImpl extends JSElementImpl implements JSDocComment {
     }
 
     @Override
+    @RequiredReadAction
     public JSDocTag[] getTags() {
-        final PsiElement firstChild = getFirstChild();
-        if (firstChild instanceof JSDocComment docComment) {
-            return docComment.getTags();
-        }
-        return findChildrenByType(JSDocTokenTypes.DOC_TAG, JSDocTag.class);
+        return getFirstChild() instanceof JSDocComment docComment
+            ? docComment.getTags()
+            : findChildrenByType(JSDocTokenTypes.DOC_TAG, JSDocTag.class);
     }
 }

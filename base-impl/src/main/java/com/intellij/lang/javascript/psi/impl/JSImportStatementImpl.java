@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
@@ -28,14 +29,14 @@ import consulo.language.psi.resolve.ResolveState;
 import jakarta.annotation.Nonnull;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
 public class JSImportStatementImpl extends JSStubbedStatementImpl<JSImportStatementStub> implements JSImportStatement {
-    public JSImportStatementImpl(final ASTNode node) {
+    public JSImportStatementImpl(ASTNode node) {
         super(node);
     }
 
-    public JSImportStatementImpl(final JSImportStatementStub stub) {
+    public JSImportStatementImpl(JSImportStatementStub stub) {
         super(stub, JSElementTypes.ES4_IMPORT_STATEMENT);
     }
 
@@ -46,21 +47,22 @@ public class JSImportStatementImpl extends JSStubbedStatementImpl<JSImportStatem
 
     @Override
     public boolean processDeclarations(
-        @Nonnull final PsiScopeProcessor processor,
-        @Nonnull final ResolveState state,
-        final PsiElement lastParent,
-        @Nonnull final PsiElement place
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        PsiElement lastParent,
+        @Nonnull PsiElement place
     ) {
         return true;
     }
 
     @Override
+    @RequiredReadAction
     public String getImportText() {
-        final JSImportStatementStub stub = getStub();
+        JSImportStatementStub stub = getStub();
         if (stub != null) {
             return stub.getImportText();
         }
-        final ASTNode node = getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
+        ASTNode node = getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
         return node != null ? node.getText() : null;
     }
 }

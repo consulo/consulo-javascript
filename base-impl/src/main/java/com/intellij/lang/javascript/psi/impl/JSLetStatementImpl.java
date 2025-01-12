@@ -28,7 +28,7 @@ import jakarta.annotation.Nonnull;
  * @author maxim
  */
 public class JSLetStatementImpl extends JSStatementImpl implements JSLetStatement {
-    public JSLetStatementImpl(final ASTNode node) {
+    public JSLetStatementImpl(ASTNode node) {
         super(node);
     }
 

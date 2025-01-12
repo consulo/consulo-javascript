@@ -25,30 +25,30 @@ import com.intellij.lang.javascript.psi.JSSourceElement;
 import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.stubs.JSPackageStatementStub;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.resolve.PsiScopeProcessor;
-import consulo.language.util.IncorrectOperationException;
-import consulo.language.ast.ASTNode;
 import consulo.language.psi.resolve.ResolveState;
+import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
 public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStatementStub> implements JSPackageStatement {
-    public JSPackageStatementImpl(final ASTNode node) {
+    public JSPackageStatementImpl(ASTNode node) {
         super(node);
     }
 
-    public JSPackageStatementImpl(final JSPackageStatementStub stub) {
+    public JSPackageStatementImpl(JSPackageStatementStub stub) {
         super(stub, JSElementTypes.PACKAGE_STATEMENT);
     }
 
@@ -58,12 +58,13 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
     }
 
     @Override
+    @RequiredReadAction
     public String getName() {
-        final JSPackageStatementStub stub = getStub();
+        JSPackageStatementStub stub = getStub();
         if (stub != null) {
             return stub.getName();
         }
-        final PsiElement node = getNameIdentifier();
+        PsiElement node = getNameIdentifier();
         if (node != null) {
             return ((JSReferenceExpression)node).getReferencedName();
         }
@@ -71,17 +72,15 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
     }
 
     @Override
+    @RequiredReadAction
     public String getQualifiedName() {
-        final JSPackageStatementStub stub = getStub();
+        JSPackageStatementStub stub = getStub();
         if (stub != null) {
             return stub.getQualifiedName();
         }
 
-        final PsiElement node = getNameIdentifier();
-        if (node != null) {
-            return node.getText();
-        }
-        return null;
+        PsiElement node = getNameIdentifier();
+        return node != null ? node.getText() : null;
     }
 
     @Override
@@ -90,12 +89,14 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
     }
 
     @Override
-    public void setQualifiedName(final String expectedPackageNameFromFile) {
+    @RequiredWriteAction
+    public void setQualifiedName(String expectedPackageNameFromFile) {
         doChangeName(getProject(), this, expectedPackageNameFromFile);
     }
 
     @Override
-    public PsiElement setName(@NonNls @Nonnull String name) throws IncorrectOperationException {
+    @RequiredWriteAction
+    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
         VirtualFile virtualFile = getContainingFile().getVirtualFile();
         String expectedPackageNameFromFile =
             JSResolveUtil.getExpectedPackageNameFromFile(virtualFile, getProject(), false);
@@ -121,24 +122,26 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
 
     @Override
     public boolean processDeclarations(
-        @Nonnull final PsiScopeProcessor processor,
-        @Nonnull final ResolveState substitutor,
-        final PsiElement lastParent,
-        @Nonnull final PsiElement place
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState substitutor,
+        PsiElement lastParent,
+        @Nonnull PsiElement place
     ) {
         return !(lastParent != null && lastParent.getParent() == this)
             || JSImportHandlingUtil.tryResolveImports(processor, this, place);
     }
 
     @Override
+    @RequiredReadAction
     public PsiElement getNameIdentifier() {
         return findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
     }
 
     @Override
+    @RequiredWriteAction
     public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         if (JSChangeUtil.isStatementOrComment(element)) {
-            final PsiElement insertedElement = JSChangeUtil.doAddBefore(this, element, anchor);
+            PsiElement insertedElement = JSChangeUtil.doAddBefore(this, element, anchor);
             CodeStyleManager.getInstance(getProject()).reformatNewlyAddedElement(getNode(), insertedElement.getNode());
             return insertedElement;
         }
@@ -146,25 +149,27 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
     }
 
     @Override
+    @RequiredWriteAction
     public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         if (JSChangeUtil.isStatementOrComment(element)) {
-            final PsiElement insertedElement = JSChangeUtil.doAddAfter(this, element, anchor);
+            PsiElement insertedElement = JSChangeUtil.doAddAfter(this, element, anchor);
             CodeStyleManager.getInstance(getProject()).reformatNewlyAddedElement(getNode(), insertedElement.getNode());
             return insertedElement;
         }
         return super.addAfter(element, anchor);
     }
 
-    public static void doChangeName(final Project project, final JSPackageStatement packageStatement, final String expected) {
+    @RequiredWriteAction
+    public static void doChangeName(Project project, JSPackageStatement packageStatement, String expected) {
         if (expected == null) {
             return;
         }
-        final PsiElement node = packageStatement.getNameIdentifier();
-        final ASTNode parent = packageStatement.getNode();
+        PsiElement node = packageStatement.getNameIdentifier();
+        ASTNode parent = packageStatement.getNode();
 
         if (expected.length() == 0) {
             if (node != null) {
-                final ASTNode treeNext = node.getNode().getTreeNext();
+                ASTNode treeNext = node.getNode().getTreeNext();
                 parent.removeChild(node.getNode());
                 if (treeNext.getPsi() instanceof PsiWhiteSpace) {
                     parent.removeChild(treeNext);
@@ -172,7 +177,7 @@ public class JSPackageStatementImpl extends JSStubbedStatementImpl<JSPackageStat
             }
         }
         else {
-            final ASTNode child = JSChangeUtil.createExpressionFromText(project, expected).getNode();
+            ASTNode child = JSChangeUtil.createExpressionFromText(project, expected).getNode();
             if (node != null) {
                 parent.replaceChild(node.getNode(), child);
             }
