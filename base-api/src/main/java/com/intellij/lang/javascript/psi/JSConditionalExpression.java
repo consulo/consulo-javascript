@@ -16,18 +16,19 @@
 
 package com.intellij.lang.javascript.psi;
 
+import consulo.annotation.access.RequiredReadAction;
+
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 7:40:54 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public interface JSConditionalExpression extends JSExpression
-{
-	JSExpression getCondition();
+public interface JSConditionalExpression extends JSExpression {
+    @RequiredReadAction
+    JSExpression getCondition();
 
-	JSExpression getThen();
+    @RequiredReadAction
+    JSExpression getThen();
 
-	JSExpression getElse();
+    @RequiredReadAction
+    JSExpression getElse();
 }

@@ -26,15 +26,15 @@ public class JavaSciptDestructuringObjectImpl extends JSElementImpl implements J
         visitor.visitJSElement(this);
     }
 
-    @RequiredReadAction
     @Nonnull
     @Override
+    @RequiredReadAction
     public JSVariable[] getVariables() {
         JSDestructuringShorthandedProperty[] properties = getProperties();
         if (properties.length == 0) {
             return JSVariable.EMPTY_ARRAY;
         }
-        return Arrays.stream(properties).map(JSDestructuringShorthandedProperty::getVarialbe).toArray(JSVariable[]::new);
+        return Arrays.stream(properties).map(JSDestructuringShorthandedProperty::getVariable).toArray(JSVariable[]::new);
     }
 
     @Override

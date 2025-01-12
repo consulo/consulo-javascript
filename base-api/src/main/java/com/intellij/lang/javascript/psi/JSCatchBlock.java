@@ -16,18 +16,17 @@
 
 package com.intellij.lang.javascript.psi;
 
+import consulo.annotation.access.RequiredReadAction;
+
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 7:04:04 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public interface JSCatchBlock extends JSElement
-{
-	JSCatchBlock[] EMPTY_ARRAY = new JSCatchBlock[0];
+public interface JSCatchBlock extends JSElement {
+    JSCatchBlock[] EMPTY_ARRAY = new JSCatchBlock[0];
 
-	JSParameter getParameter();
+    @RequiredReadAction
+    JSParameter getParameter();
 
-	JSStatement getStatement();
+    JSStatement getStatement();
 }

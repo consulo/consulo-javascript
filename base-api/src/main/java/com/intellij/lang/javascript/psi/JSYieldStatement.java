@@ -19,12 +19,10 @@ package com.intellij.lang.javascript.psi;
 import jakarta.annotation.Nullable;
 
 /**
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:27:17 PM
+ * @author Maxim.Mossienko
+ * @since 2005-01-30
  */
-public interface JSYieldStatement extends JSStatement
-{
-	@Nullable
-	JSExpression getExpression();
+public interface JSYieldStatement extends JSStatement {
+    @Nullable
+    JSExpression getExpression();
 }

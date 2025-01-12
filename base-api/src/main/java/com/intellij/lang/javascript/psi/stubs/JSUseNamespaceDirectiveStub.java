@@ -21,10 +21,8 @@ import consulo.language.psi.stub.StubElement;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jun 6, 2008
- *         Time: 7:52:51 PM
+ * @since 2008-06-06
  */
-public interface JSUseNamespaceDirectiveStub extends JSStubElement<JSUseNamespaceDirective>, StubElement<JSUseNamespaceDirective>
-{
-	String getNamespaceToUse();
+public interface JSUseNamespaceDirectiveStub extends JSStubElement<JSUseNamespaceDirective>, StubElement<JSUseNamespaceDirective> {
+    String getNamespaceToUse();
 }

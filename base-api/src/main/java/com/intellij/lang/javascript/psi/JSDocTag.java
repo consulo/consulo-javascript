@@ -19,10 +19,9 @@ package com.intellij.lang.javascript.psi;
 import jakarta.annotation.Nullable;
 import consulo.language.psi.PsiNamedElement;
 
-public interface JSDocTag extends PsiNamedElement, JSElement
-{
-	JSDocTag[] EMPTY_ARRAY = new JSDocTag[0];
+public interface JSDocTag extends PsiNamedElement, JSElement {
+    JSDocTag[] EMPTY_ARRAY = new JSDocTag[0];
 
-	@Nullable
-	JSDocTagValue getValue();
+    @Nullable
+    JSDocTagValue getValue();
 }

@@ -22,9 +22,8 @@ import consulo.language.psi.StubBasedPsiElement;
 /**
  * @author nik
  */
-public interface JSFile extends PsiFile, JSElement
-{
-	StubBasedPsiElement findStubbedElementAtOffset(final int offset, final Class<? extends StubBasedPsiElement> clazz);
+public interface JSFile extends PsiFile, JSElement {
+    StubBasedPsiElement findStubbedElementAtOffset(int offset, Class<? extends StubBasedPsiElement> clazz);
 
-	JSSourceElement[] getStatements();
+    JSSourceElement[] getStatements();
 }

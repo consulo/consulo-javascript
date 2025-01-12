@@ -21,10 +21,8 @@ import consulo.language.psi.stub.StubElement;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jun 6, 2008
- *         Time: 7:52:57 PM
+ * @since 2008-06-06
  */
-public interface JSIncludeDirectiveStub extends JSStubElement<JSIncludeDirective>, StubElement<JSIncludeDirective>
-{
-	String getIncludeText();
+public interface JSIncludeDirectiveStub extends JSStubElement<JSIncludeDirective>, StubElement<JSIncludeDirective> {
+    String getIncludeText();
 }

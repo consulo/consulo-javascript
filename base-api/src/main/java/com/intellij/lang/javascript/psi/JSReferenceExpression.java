@@ -23,18 +23,17 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author max
- * @since 7:26:32 PM Jan 30, 2005
+ * @since 2005-01-30
  */
-public interface JSReferenceExpression extends JSExpression, PsiPolyVariantReference
-{
-	@Nullable
-	JSExpression getQualifier();
+public interface JSReferenceExpression extends JSExpression, PsiPolyVariantReference {
+    @Nullable
+    JSExpression getQualifier();
 
-	@Nullable
-	String getReferencedName();
+    @Nullable
+    String getReferencedName();
 
-	@Nullable
-	PsiElement getReferenceNameElement();
+    @Nullable
+    PsiElement getReferenceNameElement();
 
-	boolean shouldCheckReferences();
+    boolean shouldCheckReferences();
 }

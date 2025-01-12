@@ -16,20 +16,18 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:52:04 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSBreakStatementImpl extends JSStatementWithLabelReferenceImpl implements JSBreakStatement {
-    public JSBreakStatementImpl(final ASTNode node) {
+    public JSBreakStatementImpl(ASTNode node) {
         super(node);
     }
 
@@ -39,6 +37,7 @@ public class JSBreakStatementImpl extends JSStatementWithLabelReferenceImpl impl
     }
 
     @Override
+    @RequiredReadAction
     public JSStatement getStatementToBreak() {
         String label = getLabel();
         if (label == null) {

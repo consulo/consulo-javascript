@@ -17,15 +17,17 @@
 package com.intellij.lang.javascript.psi;
 
 import com.intellij.lang.javascript.psi.stubs.JSIncludeDirectiveStub;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.StubBasedPsiElement;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
-public interface JSIncludeDirective extends JSStatement, StubBasedPsiElement<JSIncludeDirectiveStub>
-{
-	String getIncludeText();
+public interface JSIncludeDirective extends JSStatement, StubBasedPsiElement<JSIncludeDirectiveStub> {
+    @RequiredReadAction
+    String getIncludeText();
 
-	PsiFile resolveFile();
+    @RequiredReadAction
+    PsiFile resolveFile();
 }

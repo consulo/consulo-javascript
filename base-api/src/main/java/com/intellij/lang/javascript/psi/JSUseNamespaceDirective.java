@@ -17,12 +17,13 @@
 package com.intellij.lang.javascript.psi;
 
 import com.intellij.lang.javascript.psi.stubs.JSUseNamespaceDirectiveStub;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.StubBasedPsiElement;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
-public interface JSUseNamespaceDirective extends JSStatement, StubBasedPsiElement<JSUseNamespaceDirectiveStub>
-{
-	String getNamespaceToBeUsed();
+public interface JSUseNamespaceDirective extends JSStatement, StubBasedPsiElement<JSUseNamespaceDirectiveStub> {
+    @RequiredReadAction
+    String getNamespaceToBeUsed();
 }

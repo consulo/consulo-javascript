@@ -7,9 +7,8 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 2019-12-17
  */
-public interface JSDestructuringParameter extends JSParameter
-{
-	@RequiredReadAction
-	@Nullable
-	JSDestructuringObject getDestructuringObject();
+public interface JSDestructuringParameter extends JSParameter {
+    @Nullable
+    @RequiredReadAction
+    JSDestructuringObject getDestructuringObject();
 }

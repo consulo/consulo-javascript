@@ -16,26 +16,25 @@
 
 package com.intellij.lang.javascript.psi;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNameIdentifierOwner;
 import consulo.annotation.DeprecationInfo;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 6:52:43 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public interface JSLabeledStatement extends JSStatement, PsiNameIdentifierOwner
-{
-	String getLabel();
+public interface JSLabeledStatement extends JSStatement, PsiNameIdentifierOwner {
+    @RequiredReadAction
+    String getLabel();
 
-	@Deprecated
-	@DeprecationInfo("Use #getNameIdentifier()")
-	PsiElement getLabelIdentifier();
+    @Deprecated
+    @DeprecationInfo("Use #getNameIdentifier()")
+    @RequiredReadAction
+    PsiElement getLabelIdentifier();
 
-	JSStatement getStatement();
+    JSStatement getStatement();
 
-	JSStatement unlabel();
+    JSStatement unlabel();
 }

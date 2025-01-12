@@ -16,22 +16,22 @@
 
 package com.intellij.lang.javascript.psi;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.util.IncorrectOperationException;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 6:48:51 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public interface JSStatement extends JSSourceElement
-{
-	JSStatement[] EMPTY = new JSStatement[0];
+public interface JSStatement extends JSSourceElement {
+    JSStatement[] EMPTY = new JSStatement[0];
 
-	JSStatement addStatementBefore(JSStatement toAdd) throws IncorrectOperationException;
+    @RequiredWriteAction
+    JSStatement addStatementBefore(JSStatement toAdd) throws IncorrectOperationException;
 
-	JSStatement addStatementAfter(JSStatement toAdd) throws IncorrectOperationException;
+    @RequiredWriteAction
+    JSStatement addStatementAfter(JSStatement toAdd) throws IncorrectOperationException;
 
-	JSStatement replace(JSStatement with);
+    @RequiredWriteAction
+    JSStatement replace(JSStatement with);
 }

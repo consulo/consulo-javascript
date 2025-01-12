@@ -18,8 +18,7 @@ package com.intellij.lang.javascript.psi;
 
 /**
  * @author max
- * @since 7:29:31 PM Jan 30, 2005
+ * @since 2005-01-30
  */
-public interface JSLiteralExpression extends JSExpression
-{
+public interface JSLiteralExpression extends JSExpression {
 }

@@ -17,8 +17,7 @@
 package com.intellij.lang.javascript.psi;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
-public interface JSGenericSignature extends JSElement
-{
+public interface JSGenericSignature extends JSElement {
 }

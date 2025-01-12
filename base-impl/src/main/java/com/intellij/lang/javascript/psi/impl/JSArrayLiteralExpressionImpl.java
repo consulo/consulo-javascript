@@ -20,6 +20,7 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSArrayLiteralExpression;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 
@@ -29,24 +30,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 11:32:23 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSArrayLiteralExpressionImpl extends JSExpressionImpl implements JSArrayLiteralExpression {
-    public JSArrayLiteralExpressionImpl(final ASTNode node) {
+    public JSArrayLiteralExpressionImpl(ASTNode node) {
         super(node);
     }
 
     @Override
+    @RequiredReadAction
     public JSExpression[] getExpressions() {
         List<JSExpression> result = new ArrayList<>();
         ASTNode child = getNode().getFirstChildNode();
         boolean wasExpression = false;
         while (child != null) {
-            final IElementType type = child.getElementType();
+            IElementType type = child.getElementType();
             if (child.getPsi() instanceof JSExpression jsExpression) {
                 result.add(jsExpression);
                 wasExpression = true;

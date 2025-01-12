@@ -34,24 +34,22 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 11:41:42 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSBinaryExpressionImpl extends JSExpressionImpl implements JSBinaryExpression {
     private static final TokenSet BINARY_OPERATIONS = TokenSet.orSet(JSTokenTypes.OPERATIONS, JSTokenTypes.RELATIONAL_OPERATIONS);
     private static final TokenSet BINARY_OPERATIONS_WITH_DEFS = TokenSet.create(JSTokenTypes.COMMA, JSTokenTypes.EQ);
 
-    public JSBinaryExpressionImpl(final ASTNode node) {
+    public JSBinaryExpressionImpl(ASTNode node) {
         super(node);
     }
 
     @Override
+    @RequiredReadAction
     public JSExpression getLOperand() {
-        final ASTNode astNode = getNode();
-        final JSExpression firstExpression = PsiTreeUtil.findChildOfType(astNode.getPsi(), JSExpression.class);
+        ASTNode astNode = getNode();
+        JSExpression firstExpression = PsiTreeUtil.findChildOfType(astNode.getPsi(), JSExpression.class);
         if (firstExpression != null && astNode.findChildByType(BINARY_OPERATIONS, firstExpression.getNode()) == null) {
             return null; // =a
         }
@@ -59,17 +57,18 @@ public class JSBinaryExpressionImpl extends JSExpressionImpl implements JSBinary
     }
 
     @Override
+    @RequiredReadAction
     public JSExpression getROperand() {
-        final ASTNode myNode = getNode();
-        final ASTNode secondExpression = myNode.findChildByType(JSElementTypes.EXPRESSIONS, myNode.findChildByType(BINARY_OPERATIONS));
+        ASTNode myNode = getNode();
+        ASTNode secondExpression = myNode.findChildByType(JSElementTypes.EXPRESSIONS, myNode.findChildByType(BINARY_OPERATIONS));
         return secondExpression != null ? (JSExpression)secondExpression.getPsi() : null;
     }
 
-    @RequiredReadAction
     @Nullable
     @Override
+    @RequiredReadAction
     public PsiElement getOperationElement() {
-        final ASTNode operationASTNode = getNode().findChildByType(BINARY_OPERATIONS);
+        ASTNode operationASTNode = getNode().findChildByType(BINARY_OPERATIONS);
         return operationASTNode != null ? operationASTNode.getPsi() : null;
     }
 
@@ -79,21 +78,22 @@ public class JSBinaryExpressionImpl extends JSExpressionImpl implements JSBinary
     }
 
     @Override
+    @RequiredReadAction
     public boolean processDeclarations(
         @Nonnull PsiScopeProcessor processor,
         @Nonnull ResolveState state,
         PsiElement lastParent,
         @Nonnull PsiElement place
     ) {
-        final IElementType operationType = getOperationSign();
+        IElementType operationType = getOperationSign();
 
         if (BINARY_OPERATIONS_WITH_DEFS.contains(operationType)) {
-            final JSExpression loperand = getLOperand();
-            final JSExpression roperand = getROperand();
+            JSExpression loperand = getLOperand();
+            JSExpression roperand = getROperand();
 
             if (loperand != null) {
                 return loperand.processDeclarations(processor, state, lastParent, place)
-                    && (roperand != null ? roperand.processDeclarations(processor, state, lastParent, place) : true);
+                    && (roperand == null || roperand.processDeclarations(processor, state, lastParent, place));
             }
         }
 

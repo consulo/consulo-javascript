@@ -6,11 +6,10 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 11/12/2021
+ * @since 2021-12-11
  */
-public interface JSClassExpression extends JSExpression
-{
-	@Nonnull
-	@RequiredReadAction
-	JSClass getClassElement();
+public interface JSClassExpression extends JSExpression {
+    @Nonnull
+    @RequiredReadAction
+    JSClass getClassElement();
 }

@@ -21,22 +21,19 @@ import com.intellij.lang.javascript.psi.JSBlockStatement;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSLabeledStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
-
 import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:17:15 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
 public class JSBlockStatementImpl extends JSStatementImpl implements JSBlockStatement {
-    public JSBlockStatementImpl(final ASTNode node) {
+    public JSBlockStatementImpl(ASTNode node) {
         super(node);
     }
 
@@ -55,11 +52,12 @@ public class JSBlockStatementImpl extends JSStatementImpl implements JSBlockStat
     }
 
     @Override
-    public PsiElement add(@Nonnull final PsiElement element) throws IncorrectOperationException {
-        if (element instanceof JSStatement) {
+    @RequiredWriteAction
+    public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
+        if (element instanceof JSStatement statement) {
             ASTNode node = getNode().findChildByType(JSTokenTypes.RBRACE);
             if (node != null) {
-                PsiElement psiElement = super.addAfter(element, node.getTreePrev().getPsi());
+                PsiElement psiElement = super.addAfter(statement, node.getTreePrev().getPsi());
                 CodeStyleManager.getInstance(getProject()).reformatNewlyAddedElement(getNode(), psiElement.getNode());
                 return psiElement;
             }

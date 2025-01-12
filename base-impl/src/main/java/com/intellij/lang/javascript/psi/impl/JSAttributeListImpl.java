@@ -16,6 +16,8 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -34,23 +36,31 @@ import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Maxim.Mossienko
  */
 public class JSAttributeListImpl extends JSStubElementImpl<JSAttributeListStub> implements JSAttributeList {
-    private static final TokenSet ourModifiersTypeSet = TokenSet.create(
+    private static final TokenSet MODIFIERS_TYPE_SET = TokenSet.create(
         JSTokenTypes.PUBLIC_KEYWORD,
         JSTokenTypes.PRIVATE_KEYWORD,
         JSTokenTypes.PROTECTED_KEYWORD,
         JSTokenTypes.INTERNAL_KEYWORD
     );
 
-    public JSAttributeListImpl(final ASTNode node) {
+    private static final Map<IElementType, AccessType> ACCESS_TYPE_MAP = Map.of(
+        JSTokenTypes.PUBLIC_KEYWORD, AccessType.PUBLIC,
+        JSTokenTypes.PROTECTED_KEYWORD, AccessType.PROTECTED,
+        JSTokenTypes.PRIVATE_KEYWORD, AccessType.PRIVATE,
+        JSTokenTypes.INTERNAL_KEYWORD, AccessType.PACKAGE_LOCAL
+    );
+
+    public JSAttributeListImpl(ASTNode node) {
         super(node);
     }
 
-    public JSAttributeListImpl(final JSAttributeListStub stub) {
+    public JSAttributeListImpl(JSAttributeListStub stub) {
         super(stub, JSElementTypes.ATTRIBUTE_LIST);
     }
 
@@ -59,20 +69,22 @@ public class JSAttributeListImpl extends JSStubElementImpl<JSAttributeListStub> 
         visitor.visitJSAttributeList(this);
     }
 
-    @Override
     @Nullable
+    @Override
+    @RequiredReadAction
     public String getNamespace() {
-        final JSAttributeListStub attributeListStub = getStub();
+        JSAttributeListStub attributeListStub = getStub();
         if (attributeListStub != null) {
             return attributeListStub.getNamespace();
         }
-        final JSReferenceExpression namespaceElement = getNamespaceElement();
+        JSReferenceExpression namespaceElement = getNamespaceElement();
         return namespaceElement != null ? namespaceElement.getText() : null;
     }
 
     @Override
+    @RequiredReadAction
     public JSReferenceExpression getNamespaceElement() {
-        final ASTNode node = getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
+        ASTNode node = getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
         return node != null ? (JSReferenceExpression)node.getPsi() : null;
     }
 
@@ -83,7 +95,8 @@ public class JSAttributeListImpl extends JSStubElementImpl<JSAttributeListStub> 
 
     @Nonnull
     @Override
-    public JSAttribute[] getAttributesByName(final @Nonnull String name) {
+    @RequiredReadAction
+    public JSAttribute[] getAttributesByName(@Nonnull String name) {
         List<JSAttribute> attributes = null;
         for (JSAttribute attr : getAttributes()) {
             if (name.equals(attr.getName())) {
@@ -97,70 +110,47 @@ public class JSAttributeListImpl extends JSStubElementImpl<JSAttributeListStub> 
     }
 
     @Override
+    @RequiredReadAction
     public AccessType getAccessType() {
-        final JSAttributeListStub stub = getStub();
+        JSAttributeListStub stub = getStub();
         if (stub != null) {
             return stub.getAccessType();
         }
 
-        final ASTNode node = getNode().findChildByType(ourModifiersTypeSet);
-        if (node != null) {
-            final IElementType nodeType = node.getElementType();
-            if (nodeType == JSTokenTypes.PUBLIC_KEYWORD) {
-                return AccessType.PUBLIC;
-            }
-            if (nodeType == JSTokenTypes.PROTECTED_KEYWORD) {
-                return AccessType.PROTECTED;
-            }
-            if (nodeType == JSTokenTypes.PRIVATE_KEYWORD) {
-                return AccessType.PRIVATE;
-            }
-            if (nodeType == JSTokenTypes.INTERNAL_KEYWORD) {
-                return AccessType.PACKAGE_LOCAL;
-            }
-        }
-        return AccessType.PACKAGE_LOCAL;
+        ASTNode node = getNode().findChildByType(MODIFIERS_TYPE_SET);
+        return ACCESS_TYPE_MAP.getOrDefault(node != null ? node.getElementType() : null, AccessType.PACKAGE_LOCAL);
     }
 
     @Override
+    @RequiredReadAction
     public PsiElement findAccessTypeElement() {
-        final ASTNode modifier = getNode().findChildByType(ourModifiersTypeSet);
+        ASTNode modifier = getNode().findChildByType(MODIFIERS_TYPE_SET);
         return modifier != null ? modifier.getPsi() : null;
     }
 
     @Override
-    public boolean hasModifier(final ModifierType modifier) {
-        final JSAttributeListStub stub = getStub();
+    @RequiredReadAction
+    public boolean hasModifier(ModifierType modifier) {
+        JSAttributeListStub stub = getStub();
         if (stub != null) {
             return stub.hasModifier(modifier);
         }
 
-        IElementType type = null;
-        switch (modifier) {
-            case DYNAMIC:
-                type = JSTokenTypes.DYNAMIC_KEYWORD;
-                break;
-            case OVERRIDE:
-                type = JSTokenTypes.OVERRIDE_KEYWORD;
-                break;
-            case NATIVE:
-                type = JSTokenTypes.NATIVE_KEYWORD;
-                break;
-            case STATIC:
-                type = JSTokenTypes.STATIC_KEYWORD;
-                break;
-            case FINAL:
-                type = JSTokenTypes.FINAL_KEYWORD;
-                break;
-            case VIRTUAL:
-                type = JSTokenTypes.VIRTUAL_KEYWORD;
-                break;
-        }
+        IElementType type = switch (modifier) {
+            case DYNAMIC -> JSTokenTypes.DYNAMIC_KEYWORD;
+            case OVERRIDE -> JSTokenTypes.OVERRIDE_KEYWORD;
+            case NATIVE -> JSTokenTypes.NATIVE_KEYWORD;
+            case STATIC -> JSTokenTypes.STATIC_KEYWORD;
+            case FINAL -> JSTokenTypes.FINAL_KEYWORD;
+            case VIRTUAL -> JSTokenTypes.VIRTUAL_KEYWORD;
+            default -> null;
+        };
         return type != null && getNode().findChildByType(type) != null;
     }
 
     @Override
-    public PsiElement add(@Nonnull final PsiElement element) throws IncorrectOperationException {
+    @RequiredWriteAction
+    public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
         if (element.getNode().getElementType() == JSTokenTypes.OVERRIDE_KEYWORD) {
             return JSChangeUtil.doDoAddBefore(this, element, getFirstChild());
         }

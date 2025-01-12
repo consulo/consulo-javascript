@@ -20,13 +20,11 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author max
- * @since 7:42:48 PM Jan 30, 2005
+ * @since 2005-01-30
  */
-public interface JSFunctionExpression extends JSFunction, JSExpression
-{
-	@Nonnull
-	default JSFunction getFunction()
-	{
-		return this;
-	}
+public interface JSFunctionExpression extends JSFunction, JSExpression {
+    @Nonnull
+    default JSFunction getFunction() {
+        return this;
+    }
 }

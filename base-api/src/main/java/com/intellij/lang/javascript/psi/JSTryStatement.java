@@ -16,27 +16,28 @@
 
 package com.intellij.lang.javascript.psi;
 
+import consulo.annotation.access.RequiredReadAction;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 7:03:06 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public interface JSTryStatement extends JSStatement
-{
-	JSStatement getStatement();
+public interface JSTryStatement extends JSStatement {
+    @RequiredReadAction
+    JSStatement getStatement();
 
-	@Nonnull
-	JSCatchBlock[] getAllCatchBlocks();
+    @Nonnull
+    @RequiredReadAction
+    JSCatchBlock[] getAllCatchBlocks();
 
-	@Deprecated
-	@Nullable
-	JSCatchBlock getCatchBlock();
+    @Deprecated
+    @Nullable
+    @RequiredReadAction
+    JSCatchBlock getCatchBlock();
 
-	@Nullable
-	JSStatement getFinallyStatement();
+    @Nullable
+    @RequiredReadAction
+    JSStatement getFinallyStatement();
 }

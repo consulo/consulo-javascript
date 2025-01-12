@@ -40,6 +40,7 @@ import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.xml.psi.xml.XmlToken;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -53,28 +54,23 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * User: Maxim.Mossienko
- * Date: Nov 4, 2005
- * Time: 5:04:28 PM
+ * @author Maxim.Mossienko
+ * @since 2005-11-04
  */
 @ExtensionImpl
 public class JSDocumentationProvider implements CodeDocumentationProvider, LanguageDocumentationProvider {
     private DocumentationProvider cssProvider;
-    @NonNls
     private static final String OBJECT_NAME = "Object";
     protected static final String SEE_PLAIN_TEXT_CHARS = "\t \"-\\/<>*";
 
-    @NonNls
     protected static final String PACKAGE = "package";
-    @NonNls
     protected static final String HTML_EXTENSION = ".html";
-    @NonNls
     protected static final String PACKAGE_FILE = PACKAGE + HTML_EXTENSION;
 
     protected static final Map<String, String> DOCUMENTED_ATTRIBUTES;
 
     static {
-        DOCUMENTED_ATTRIBUTES = new HashMap<String, String>();
+        DOCUMENTED_ATTRIBUTES = new HashMap<>();
         DOCUMENTED_ATTRIBUTES.put("Event", "event:");
         DOCUMENTED_ATTRIBUTES.put("Style", "style:");
         DOCUMENTED_ATTRIBUTES.put("Effect", "effect:");
@@ -89,7 +85,9 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
         return cssProvider;
     }
 
+    @Override
     @Nullable
+    @RequiredReadAction
     public String getQuickNavigateInfo(PsiElement element, PsiElement element2) {
         if (element instanceof JSFunction) {
             final JSFunction function = (JSFunction)element;
@@ -120,6 +118,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
         return null;
     }
 
+    @RequiredReadAction
     private static String createQuickNavigateForAnnotationDerived(final PsiElement element) {
         final JSAttributeNameValuePair valuePair = (JSAttributeNameValuePair)element;
         final JSAttribute parent = (JSAttribute)valuePair.getParent();
@@ -131,6 +130,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
     }
 
     @Nullable
+    @RequiredReadAction
     private static String createQuickNavigateForFunction(final JSFunction function) {
         final PsiElement parent = JSResolveUtil.findParent(function);
         final StringBuilder result = new StringBuilder();
@@ -185,12 +185,13 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
         return result.toString();
     }
 
+    @RequiredReadAction
     private static void appendParentInfo(final PsiElement parent, final StringBuilder builder, PsiNamedElement element) {
-        if (parent instanceof JSClass) {
-            builder.append(((JSClass)parent).getQualifiedName()).append("\n");
+        if (parent instanceof JSClass jsClass) {
+            builder.append(jsClass.getQualifiedName()).append("\n");
         }
-        else if (parent instanceof JSPackageStatement) {
-            builder.append(((JSPackageStatement)parent).getQualifiedName()).append("\n");
+        else if (parent instanceof JSPackageStatement packageStatement) {
+            builder.append(packageStatement.getQualifiedName()).append("\n");
         }
         else if (parent instanceof JSFile) {
             if (parent.getContext() != null) {
@@ -259,9 +260,9 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
         }
     }
 
-    private static
     @Nullable
-    String createQuickNavigateForClazz(final JSClass jsClass) {
+    @RequiredReadAction
+    private static String createQuickNavigateForClazz(final JSClass jsClass) {
         final String qName = jsClass.getQualifiedName();
         if (qName == null) {
             return null;
@@ -273,12 +274,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
         }
 
         appendAttrList(jsClass, result);
-        if (jsClass.isInterface()) {
-            result.append("interface");
-        }
-        else {
-            result.append("class");
-        }
+        result.append(jsClass.isInterface() ? "interface" : "class");
 
         final String name = jsClass.getName();
         result.append(" ").append(name);
@@ -299,9 +295,8 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
         return result.toString();
     }
 
-    private static
     @Nullable
-    String createQuickNavigateForNamespace(final JSNamespaceDeclaration ns) {
+    private static String createQuickNavigateForNamespace(JSNamespaceDeclaration ns) {
         final String qName = ns.getQualifiedName();
         if (qName == null) {
             return null;
@@ -324,7 +319,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
         return result.toString();
     }
 
-
+    @RequiredReadAction
     private static void appendAttrList(final JSAttributeListOwner jsClass, final StringBuilder result) {
         final JSAttributeList attributeList = jsClass.getAttributeList();
         if (attributeList != null) {
@@ -357,9 +352,9 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
         }
     }
 
-    private static
     @Nullable
-    String generateReferenceTargetList(final @Nullable JSReferenceList implementsList, @Nonnull String packageName) {
+    @RequiredReadAction
+    private static String generateReferenceTargetList(final @Nullable JSReferenceList implementsList, @Nonnull String packageName) {
         if (implementsList == null) {
             return null;
         }
@@ -398,25 +393,25 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
                     return Collections.singletonList((String)o);
                 }
             }
-            catch (Exception e) {
+            catch (Exception ignored) {
             }
         }
         return null;
     }
 
     @Override
+    @RequiredReadAction
     public String generateDoc(PsiElement _element, PsiElement originalElement) {
-        if (_element instanceof JSReferenceExpression) {
+        if (_element instanceof JSReferenceExpression expression) {
             StringBuilder buffer = null;
 
             // ambigious reference
-            final JSReferenceExpression expression = (JSReferenceExpression)_element;
             for (ResolveResult r : expression.multiResolve(false)) {
                 if (buffer == null) {
                     buffer = new StringBuilder();
                 }
-                final PsiElement element = r.getElement();
-                final ItemPresentation presentation = ((NavigationItem)element).getPresentation();
+                PsiElement element = r.getElement();
+                ItemPresentation presentation = ((NavigationItem)element).getPresentation();
 
                 JSDocumentationUtils.appendHyperLinkToElement(
                     element,
@@ -476,50 +471,48 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
                     return (String)o;
                 }
             }
-            catch (Exception e) {
+            catch (Exception ignored) {
             }
         }
 
         return null;
     }
 
+    @RequiredReadAction
     private static PsiElement findTargetElement(final PsiElement _element, PsiElement element) {
-        if (_element instanceof JSDefinitionExpression) {
-            final PsiElement parentElement = _element.getParent();
-
-            if (parentElement instanceof JSAssignmentExpression assignment) {
-                final JSExpression rOperand = assignment.getROperand();
-                element = rOperand instanceof JSFunctionExpression ? rOperand : _element;
+        if (_element instanceof JSDefinitionExpression definition) {
+            if (definition.getParent() instanceof JSAssignmentExpression assignment) {
+                JSExpression rOperand = assignment.getROperand();
+                element = rOperand instanceof JSFunctionExpression ? rOperand : definition;
             }
         }
-        else if (_element instanceof JSFunctionExpression) {
-            element = _element;
+        else if (_element instanceof JSFunctionExpression function) {
+            element = function;
         }
         else if (_element instanceof JSProperty property) {
-            final JSExpression expression = property.getValue();
-
-            if (expression instanceof JSFunction) {
-                element = expression;
+            if (property.getValue() instanceof JSFunction function) {
+                element = function;
             }
         }
-        else if (_element instanceof JSVariable) {
-            if (_element instanceof JSParameter) {
-                return PsiTreeUtil.getParentOfType(_element, JSFunction.class);
+        else if (_element instanceof JSVariable variable) {
+            if (variable instanceof JSParameter parameter) {
+                return PsiTreeUtil.getParentOfType(parameter, JSFunction.class);
             }
-            element = _element;
+            element = variable;
         }
-        else if (_element instanceof JSAttributeNameValuePair) {
-            return _element;
+        else if (_element instanceof JSAttributeNameValuePair nameValuePair) {
+            return nameValuePair;
         }
         return element;
     }
 
+    @RequiredReadAction
     private static PsiElement findFirstDocComment(PsiElement docComment) {
         if (docComment.getNode().getElementType() == JSTokenTypes.END_OF_LINE_COMMENT) {
             while (true) {
                 PsiElement prev = docComment.getPrevSibling();
-                if (prev instanceof PsiWhiteSpace) {
-                    prev = prev.getPrevSibling();
+                if (prev instanceof PsiWhiteSpace whiteSpace) {
+                    prev = whiteSpace.getPrevSibling();
                 }
                 if (prev == null) {
                     break;
@@ -534,28 +527,28 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
     }
 
     private static String findPossibleCssName(PsiElement _element) {
-        if (_element instanceof JSDefinitionExpression definitionExpression) {
-            final JSExpression expression = definitionExpression.getExpression();
+        if (_element instanceof JSDefinitionExpression definition) {
+            final JSExpression expression = definition.getExpression();
 
-            if (expression instanceof JSReferenceExpression referenceExpression) {
-                final String text = referenceExpression.getReferencedName();
+            if (expression instanceof JSReferenceExpression reference) {
+                String text = reference.getReferencedName();
                 if (text == null) {
                     return null;
                 }
-                final StringBuffer buf = new StringBuffer(text.length());
+                StringBuilder sb = new StringBuilder(text.length());
 
                 for (int i = 0; i < text.length(); ++i) {
                     final char ch = text.charAt(i);
 
                     if (Character.isUpperCase(ch)) {
-                        buf.append('-').append(Character.toLowerCase(ch));
+                        sb.append('-').append(Character.toLowerCase(ch));
                     }
                     else {
-                        buf.append(ch);
+                        sb.append(ch);
                     }
                 }
 
-                return buf.toString();
+                return sb.toString();
             }
         }
         return null;
@@ -563,28 +556,29 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
 
     @Override
     public PsiElement getDocumentationElementForLookupItem(PsiManager psiManager, Object object, PsiElement element) {
-        final PsiElement psiElement = findElementForWhichPreviousCommentWillBeSearched(object);
+        PsiElement psiElement = findElementForWhichPreviousCommentWillBeSearched(object);
         if (psiElement != null && JSDocumentationUtils.findDocComment(psiElement) != null) {
             return psiElement;
         }
-        if (object instanceof PsiElement) {
-            return (PsiElement)object;
+        if (object instanceof PsiElement objPsiElement) {
+            return objPsiElement;
         }
         return null;
     }
 
+    @RequiredReadAction
     public static PsiElement findElementForWhichPreviousCommentWillBeSearched(Object object) {
         if (object instanceof JSFunction function) {
             PsiElement psiElement = function;
             PsiElement parent = psiElement.getParent();
-            if (parent instanceof JSNewExpression) {
-                parent = parent.getParent();
+            if (parent instanceof JSNewExpression newExpr) {
+                parent = newExpr.getParent();
             }
-            if (parent instanceof JSProperty) {
-                psiElement = parent;
+            if (parent instanceof JSProperty property) {
+                psiElement = property;
             }
-            else if (parent instanceof JSAssignmentExpression) {
-                psiElement = parent.getParent();
+            else if (parent instanceof JSAssignmentExpression assignment) {
+                psiElement = assignment.getParent();
             }
 
             if (function.isSetProperty() || function.isGetProperty()) {
@@ -594,7 +588,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
                             String name = prevFunction.getName();
 
                             if (name != null && name.equals(function.getName()) && (
-                                (prevFunction.isGetProperty() && function.isSetProperty())
+                                prevFunction.isGetProperty() && function.isSetProperty()
                                     || prevFunction.isSetProperty() && function.isGetProperty()
                             )) {
                                 PsiElement doc = JSDocumentationUtils.findDocComment(prevFunction);
@@ -618,38 +612,35 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
                 return parent.getParent();
             }
             else if (parent instanceof JSVarStatement) {
-                final PsiElement firstChild = parent.getFirstChild();
-                if (firstChild instanceof JSAttributeList) {
-                    if (JSDocumentationUtils.findDocComment((PsiElement)object) != null) {
-                        return (PsiElement)object;
-                    }
+                if (parent.getFirstChild() instanceof JSAttributeList && JSDocumentationUtils.findDocComment(psiElement) != null) {
+                    return psiElement;
                 }
                 return parent;
             }
-            else if (parent instanceof JSAttribute) {
-                final PsiElement grandParent = parent.getParent();
-                if (grandParent.getFirstChild() == parent) {
-                    final PsiElement element = grandParent.getParent();
-                    if (element instanceof JSFile) {
-                        return grandParent;
+            else if (parent instanceof JSAttribute attribute) {
+                PsiElement attrParent = attribute.getParent();
+                if (attrParent.getFirstChild() == attribute) {
+                    PsiElement attrGrandParent = attrParent.getParent();
+                    if (attrGrandParent instanceof JSFile) {
+                        return attrParent;
                     }
-                    return element;
+                    return attrGrandParent;
                 }
-                return parent;
+                return attribute;
             }
             else if (parent instanceof JSSuppressionHolder) {
                 return parent;
             }
             else {
-                return (PsiElement)object;
+                return psiElement;
             }
         }
 
         return null;
     }
 
-    @Override
     @Nullable
+    @Override
     public PsiElement getDocumentationElementForLink(final PsiManager psiManager, String link, final PsiElement context) {
         return getDocumentationElementForLinkStatic(psiManager, link, context);
     }
@@ -729,10 +720,12 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
     }
 
     @Nullable
+    @RequiredReadAction
     protected static JSAttributeNameValuePair findNamedAttribute(JSClass clazz, final String type, final String name) {
-        final Ref<JSAttributeNameValuePair> attribute = new Ref<JSAttributeNameValuePair>();
+        SimpleReference<JSAttributeNameValuePair> attribute = new SimpleReference<>();
         JSResolveUtil.processMetaAttributesForClass(clazz, new JSResolveUtil.MetaDataProcessor() {
             @Override
+            @RequiredReadAction
             public boolean process(@Nonnull JSAttribute jsAttribute) {
                 if (type.equals(jsAttribute.getName())) {
                     final JSAttributeNameValuePair jsAttributeNameValuePair = jsAttribute.getValueByName("name");
@@ -745,7 +738,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
             }
 
             @Override
-            public boolean handleOtherElement(PsiElement el, PsiElement context, @Nullable Ref<PsiElement> continuePassElement) {
+            public boolean handleOtherElement(PsiElement el, PsiElement context, @Nullable SimpleReference<PsiElement> continuePassElement) {
                 return true;
             }
         });
@@ -768,8 +761,8 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
         return result;
     }
 
-    @Override
     @Nullable
+    @Override
     public PsiComment findExistingDocComment(PsiComment contextElement) {
         return contextElement;
     }
@@ -780,8 +773,9 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
         return null;
     }
 
-    @Override
     @Nullable
+    @Override
+    @RequiredReadAction
     public String generateDocumentationContentStub(PsiComment contextComment) {
         for (PsiElement el = contextComment.getParent(); el != null; el = el.getNextSibling()) {
             if (el instanceof JSProperty property) {
@@ -792,16 +786,16 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
             else if (el instanceof JSFunction function) {
                 return doGenerateDoc(function);
             }
-            else if (el instanceof JSExpressionStatement expressionStatement) {
-                if (expressionStatement.getExpression() instanceof JSAssignmentExpression assignmentExpression
-                    && assignmentExpression.getROperand() instanceof JSFunctionExpression functionExpression) {
-                    return doGenerateDoc(functionExpression.getFunction());
+            else if (el instanceof JSExpressionStatement expression) {
+                if (expression.getExpression() instanceof JSAssignmentExpression assignment
+                    && assignment.getROperand() instanceof JSFunctionExpression functionExpr) {
+                    return doGenerateDoc(functionExpr.getFunction());
                 }
             }
             else if (el instanceof JSVarStatement varStatement) {
                 JSVariable[] variables = varStatement.getVariables();
-                if (variables.length > 0 && variables[0].getInitializer() instanceof JSFunctionExpression functionExpression) {
-                    return doGenerateDoc(functionExpression.getFunction());
+                if (variables.length > 0 && variables[0].getInitializer() instanceof JSFunctionExpression functionExpr) {
+                    return doGenerateDoc(functionExpr.getFunction());
                 }
                 break;
             }
@@ -809,6 +803,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
         return null;
     }
 
+    @RequiredReadAction
     private static String doGenerateDoc(final JSFunction function) {
         StringBuilder builder = new StringBuilder();
         final JSParameterList parameterList = function.getParameterList();
@@ -839,6 +834,7 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
     }
 
     @Nullable
+    @RequiredReadAction
     protected static String getSeeAlsoLinkResolved(PsiElement originElement, String link) {
         JSQualifiedNamedElement qualifiedElement = findParentQualifiedElement(originElement);
         if (qualifiedElement == null) {
@@ -902,12 +898,13 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
     }
 
     @Nullable
+    @RequiredReadAction
     protected static JSQualifiedNamedElement findParentQualifiedElement(PsiElement element) {
         if (element instanceof JSClass jsClass) {
             return jsClass;
         }
         if (element instanceof JSFunction || element instanceof JSVariable) {
-            final PsiElement parent = JSResolveUtil.findParent(element);
+            PsiElement parent = JSResolveUtil.findParent(element);
             if (parent instanceof JSClass jsClass) {
                 return jsClass;
             }
@@ -920,8 +917,8 @@ public class JSDocumentationProvider implements CodeDocumentationProvider, Langu
         if (element instanceof JSAttribute jsAttribute) {
             attribute = jsAttribute;
         }
-        else if (element instanceof JSAttributeNameValuePair) {
-            attribute = (JSAttribute)element.getParent();
+        else if (element instanceof JSAttributeNameValuePair nameValuePair) {
+            attribute = (JSAttribute)nameValuePair.getParent();
         }
 
         if (attribute != null && DOCUMENTED_ATTRIBUTES.containsKey(attribute.getName())) {

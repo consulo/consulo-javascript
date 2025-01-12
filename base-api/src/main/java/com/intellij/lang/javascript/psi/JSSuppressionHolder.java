@@ -23,6 +23,5 @@ import consulo.language.psi.PsiElement;
  *
  * @author yole
  */
-public interface JSSuppressionHolder extends PsiElement
-{
+public interface JSSuppressionHolder extends PsiElement {
 }

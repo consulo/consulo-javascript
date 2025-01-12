@@ -21,9 +21,7 @@ import consulo.language.psi.stub.NamedStub;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Mar 25, 2008
- *         Time: 4:00:16 PM
+ * @since 2008-03-25
  */
-public interface JSAttributeStub extends JSStubElement<JSAttribute>, NamedStub<JSAttribute>
-{
+public interface JSAttributeStub extends JSStubElement<JSAttribute>, NamedStub<JSAttribute> {
 }

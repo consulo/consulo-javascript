@@ -26,11 +26,16 @@ import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import com.intellij.xml.XmlElementDescriptor;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.util.*;
 import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.language.psi.*;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.resolve.ResolveState;
@@ -40,10 +45,8 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.xml.psi.XmlRecursiveElementVisitor;
 import consulo.xml.psi.xml.*;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.*;
 
@@ -51,9 +54,7 @@ import java.util.*;
  * @author Maxim.Mossienko
  */
 public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
-    @NonNls
     public static final String COMPONENT_TAG_NAME = "Component";
-    @NonNls
     public static final String CLASS_NAME_ATTRIBUTE_NAME = "className";
 
     private volatile JSReferenceList myExtendsList;
@@ -63,12 +64,13 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
         super(tag.getNode());
     }
 
-    @Override
     @Nullable
+    @Override
+    @RequiredReadAction
     public JSReferenceList getExtendsList() {
         JSReferenceList refList = myExtendsList;
         if (refList == null) {
-            final XmlTag rootTag = getParent();
+            XmlTag rootTag = getParent();
             refList = createReferenceList(rootTag.getLocalName());
             refList.getParent().putUserData(JSResolveUtil.contextKey, this);
             myExtendsList = refList;
@@ -76,34 +78,40 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
         return refList;
     }
 
-    private JSReferenceList createReferenceList(final String s) {
-        final JSClass element = (JSClass)JSChangeUtil.createJSTreeFromText(getProject(), "class C extends " + s + " {}").getPsi();
+    @RequiredReadAction
+    private JSReferenceList createReferenceList(String s) {
+        JSClass element = (JSClass)JSChangeUtil.createJSTreeFromText(getProject(), "class C extends " + s + " {}").getPsi();
         return element.getExtendsList();
     }
 
     @Override
+    @RequiredReadAction
     public int getTextOffset() {
         return 0;
     }
 
-    @Override
     @Nullable
+    @Override
+    @RequiredReadAction
     public JSReferenceList getImplementsList() {
         JSReferenceList refList = myImplementsList;
 
         if (refList == null) {
-            final XmlTag rootTag = getParent();
+            XmlTag rootTag = getParent();
             myImplementsList = refList = createReferenceList(rootTag != null ? rootTag.getAttributeValue("implements") : null);
         }
         return refList;
     }
 
+    @Nonnull
     @Override
+    @RequiredReadAction
     public PsiElement getNavigationElement() {
         return getParent();
     }
 
     @Override
+    @RequiredReadAction
     public String getName() {
         XmlTag parent = getParent();
         if (isInlineComponentTag(parent)) {
@@ -112,7 +120,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
                 return explicitName;
             }
         }
-        final PsiFile psi = parent.getContainingFile();
+        PsiFile psi = parent.getContainingFile();
         VirtualFile file = psi.getVirtualFile();
         if (file == null && psi.getOriginalFile() != null) {
             file = psi.getOriginalFile().getVirtualFile();
@@ -121,19 +129,21 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
     }
 
     @Nullable
+    @RequiredReadAction
     public String getExplicitName() {
         XmlTag parent = getParent();
         return parent.getAttributeValue(CLASS_NAME_ATTRIBUTE_NAME, parent.getNamespace());
     }
 
     @Override
+    @RequiredReadAction
     public String getQualifiedName() {
-        final String name = getName();
+        String name = getName();
         if (name == null) {
             return null;
         }
-        final PsiFile containingFile = getNode().getPsi().getContainingFile();
-        final String expectedPackageNameFromFile = JSResolveUtil.getExpectedPackageNameFromFile(containingFile.getVirtualFile(),
+        PsiFile containingFile = getNode().getPsi().getContainingFile();
+        String expectedPackageNameFromFile = JSResolveUtil.getExpectedPackageNameFromFile(containingFile.getVirtualFile(),
             containingFile.getProject(), true
         );
         if (expectedPackageNameFromFile != null && expectedPackageNameFromFile.length() > 0) {
@@ -155,13 +165,15 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
 
     @Nullable
     @Override
+    @RequiredReadAction
     public PsiElement getNameIdentifier() {
         return getParent();
     }
 
     @Override
-    public PsiElement setName(@NonNls @Nonnull String name) throws IncorrectOperationException {
-        final int i = name.lastIndexOf('.');
+    @RequiredWriteAction
+    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+        int i = name.lastIndexOf('.');
         if (i != -1) {
             name = name.substring(0, i);
         }
@@ -177,10 +189,10 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
 
     @Override
     protected boolean processMembers(
-        final PsiScopeProcessor processor,
-        final ResolveState substitutor,
-        final PsiElement lastParent,
-        final PsiElement place
+        PsiScopeProcessor processor,
+        ResolveState substitutor,
+        PsiElement lastParent,
+        PsiElement place
     ) {
         for (JSFile file : ourCachedScripts.get(CACHED_SCRIPTS_KEY, getParent(), null).getValue()) {
             if (!file.processDeclarations(processor, ResolveState.initial(), null, place)) {
@@ -191,11 +203,12 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
     }
 
     @Override
+    @RequiredReadAction
     public boolean processDeclarations(
-        @Nonnull final PsiScopeProcessor processor,
-        @Nonnull final ResolveState substitutor,
-        final PsiElement lastParent,
-        @Nonnull final PsiElement place
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState substitutor,
+        PsiElement lastParent,
+        @Nonnull PsiElement place
     ) {
         boolean b = super.processDeclarations(processor, substitutor, lastParent, place);
 
@@ -210,10 +223,10 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
         return b;
     }
 
-    public boolean doImportFromScripts(final PsiScopeProcessor processor, final PsiElement place) {
+    public boolean doImportFromScripts(PsiScopeProcessor processor, PsiElement place) {
         PsiElement context = place.getContainingFile().getContext();
-        if (context instanceof XmlText) {
-            context = context.getParent();
+        if (context instanceof XmlText xmlText) {
+            context = xmlText.getParent();
         }
 
         boolean notResolvingTypeViaImport = !(place instanceof JSFile);
@@ -282,17 +295,16 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
     private static final Key<CachedValue<JSFile[]>> CACHED_SCRIPTS_KEY = Key.create("cached.scripts");
     private static final Key<CachedValue<Map<String, String>>> OUR_CACHED_SHORT_COMPONENTS_REF_KEY = Key.create("cached.component.refs");
 
-    @NonNls
     private static final String SCRIPT_TAG_NAME = "Script";
 
     private static final UserDataCache<CachedValue<JSFile[]>, XmlTag, Object> ourCachedScripts =
         new UserDataCache<>() {
             @Override
-            protected CachedValue<JSFile[]> compute(final XmlTag tag, final Object p) {
+            protected CachedValue<JSFile[]> compute(XmlTag tag, Object p) {
                 return CachedValuesManager.getManager(tag.getProject()).createCachedValue(
                     () -> {
-                        final List<JSFile> injectedFiles = new ArrayList<JSFile>(2);
-                        final List<PsiElement> dependencies = new ArrayList<PsiElement>();
+                        List<JSFile> injectedFiles = new ArrayList<>(2);
+                        List<PsiElement> dependencies = new ArrayList<>();
                         dependencies.add(tag);
                         new InjectedScriptsVisitor(
                             tag,
@@ -322,22 +334,21 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
                     new CachedValueProvider<Map<String, String>>() {
                         @Override
                         public Result<Map<String, String>> compute() {
-                            final Map<String, String> cachedComponentImports = new HashMap<>();
-                            final List<PsiFile> dependencies = new ArrayList<>();
+                            Map<String, String> cachedComponentImports = new HashMap<>();
+                            List<PsiFile> dependencies = new ArrayList<>();
                             dependencies.add(file);
 
                             file.acceptChildren(new XmlRecursiveElementVisitor() {
                                 @Override
+                                @RequiredReadAction
                                 public void visitXmlTag(XmlTag tag) {
                                     XmlElementDescriptor descriptor = tag.getDescriptor();
                                     if (descriptor != null) {
                                         PsiElement declaration = descriptor.getDeclaration();
-                                        if (declaration instanceof XmlFile) {
-                                            declaration = XmlBackedJSClassImpl.getXmlBackedClass((XmlFile)declaration);
+                                        if (declaration instanceof XmlFile xmlFile) {
+                                            declaration = XmlBackedJSClassImpl.getXmlBackedClass(xmlFile);
                                         }
-                                        if (declaration instanceof JSClass) {
-                                            JSClass jsClass = (JSClass)declaration;
-
+                                        if (declaration instanceof JSClass jsClass) {
                                             cachedComponentImports.put(jsClass.getName(), jsClass.getQualifiedName());
                                             dependencies.add(declaration.getContainingFile());
                                         }
@@ -354,15 +365,16 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
         };
 
 
-    public static boolean doProcessAllTags(final XmlTag rootTag) {
+    public static boolean doProcessAllTags(XmlTag rootTag) {
         return JSLanguageInjector.isMozillaXulOrXblNs(rootTag != null ? rootTag.getNamespace() : null);
     }
 
-    public static boolean doProcessAllTags(final XmlFile file) {
+    public static boolean doProcessAllTags(XmlFile file) {
         return doProcessAllTags(getRootTag(file));
     }
 
     @Override
+    @RequiredReadAction
     public boolean isValid() {
         return getNode().getPsi().isValid();
     }
@@ -370,18 +382,18 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
     private static Key<ParameterizedCachedValue<XmlBackedJSClassImpl, XmlTag>> ourArtificialPsiKey = Key.create("xml.backed.class");
 
     @Nullable
-    public static JSClass getXmlBackedClass(final XmlFile xmlFile) {
-        final XmlTag rootTag = getRootTag(xmlFile);
+    public static JSClass getXmlBackedClass(XmlFile xmlFile) {
+        XmlTag rootTag = getRootTag(xmlFile);
         return rootTag != null ? getXmlBackedClass(rootTag) : null;
     }
 
     @Nullable
     private static XmlTag getRootTag(XmlFile xmlFile) {
-        final XmlDocument document = xmlFile.getDocument();
+        XmlDocument document = xmlFile.getDocument();
         return document != null ? document.getRootTag() : null;
     }
 
-    public static XmlBackedJSClassImpl getXmlBackedClass(final XmlTag tag) {
+    public static XmlBackedJSClassImpl getXmlBackedClass(XmlTag tag) {
         return myCachedClassCache.get(ourArtificialPsiKey, tag, null).getValue(tag);
     }
 
@@ -390,7 +402,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
         if (rootTag == null) {
             return Collections.emptyList();
         }
-        final Collection<JSClass> result = new ArrayList<>();
+        Collection<JSClass> result = new ArrayList<>();
         result.add(getXmlBackedClass(rootTag));
         result.addAll(getChildInlineComponents(rootTag, true));
         return result;
@@ -411,41 +423,43 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
         return getXmlBackedClass((XmlTag)element);
     }
 
-    private static final UserDataCache<ParameterizedCachedValue<XmlBackedJSClassImpl, XmlTag>, XmlTag,
-        Object> myCachedClassCache = new UserDataCache<>() {
-        @Override
-        protected ParameterizedCachedValue<XmlBackedJSClassImpl, XmlTag> compute(final XmlTag tag, final Object p) {
-            return CachedValuesManager.getManager(tag.getProject()).createParameterizedCachedValue(
-                (ParameterizedCachedValueProvider<XmlBackedJSClassImpl, XmlTag>)tag1 ->
-                    new CachedValueProvider.Result<>(new XmlBackedJSClassImpl(tag1), tag1),
-                false
-            );
-        }
-    };
+    private static final UserDataCache<ParameterizedCachedValue<XmlBackedJSClassImpl, XmlTag>, XmlTag, Object> myCachedClassCache =
+        new UserDataCache<>() {
+            @Override
+            protected ParameterizedCachedValue<XmlBackedJSClassImpl, XmlTag> compute(final XmlTag tag, final Object p) {
+                return CachedValuesManager.getManager(tag.getProject()).createParameterizedCachedValue(
+                    (ParameterizedCachedValueProvider<XmlBackedJSClassImpl, XmlTag>)tag1 ->
+                        new CachedValueProvider.Result<>(new XmlBackedJSClassImpl(tag1), tag1),
+                    false
+                );
+            }
+        };
 
     @Override
+    @RequiredReadAction
     public XmlTag getParent() {
         return (XmlTag)getNode().getPsi();
     }
 
     @Override
-    public boolean isEquivalentTo(final PsiElement element2) {
+    public boolean isEquivalentTo(PsiElement element2) {
         return this == element2
             || element2 == getContainingFile()
             || (element2 instanceof XmlBackedJSClassImpl && getContainingFile() == element2.getContainingFile());
     }
 
     @Override
+    @RequiredWriteAction
     public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
         if (element instanceof JSFunction || element instanceof JSVarStatement) {
-            final JSFile jsFile = createOrGetFirstScriptTag();
+            JSFile jsFile = createOrGetFirstScriptTag();
 
             if (jsFile != null) {
-                final PsiElement child = jsFile.getLastChild();
+                PsiElement child = jsFile.getLastChild();
 
                 String text;
-                if (child instanceof PsiWhiteSpace && (text = child.getText()).indexOf("]]>") != -1) {
-                    int cdataAt = 0;
+                if (child instanceof PsiWhiteSpace whiteSpace && (text = whiteSpace.getText()).indexOf("]]>") != -1) {
+                    int cdataAt;
                     String marker = "<![CDATA[";
 
                     if ((cdataAt = text.indexOf(marker)) == -1) {
@@ -473,8 +487,9 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
         return super.add(element);
     }
 
+    @RequiredReadAction
     public JSFile createScriptTag() throws IncorrectOperationException {
-        final XmlTag rootTag = getParent();
+        XmlTag rootTag = getParent();
 
         if (rootTag != null) {
             String ns = findScriptNs(rootTag);
@@ -500,7 +515,8 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
     }
 
     @Override
-    public PsiElement addBefore(@Nonnull final PsiElement element, final PsiElement anchor) throws IncorrectOperationException {
+    @RequiredWriteAction
+    public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         if (anchor == null) {
             return add(element);
         }
@@ -508,6 +524,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
     }
 
     @Nullable
+    @RequiredReadAction
     public JSFile findFirstScriptTag() {
         JSFile[] value = ourCachedScripts.get(CACHED_SCRIPTS_KEY, getParent(), null).getValue();
         if (value.length > 0) {
@@ -516,6 +533,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
         return null;
     }
 
+    @RequiredReadAction
     public JSFile createOrGetFirstScriptTag() throws IncorrectOperationException {
         JSFile jsFile = findFirstScriptTag();
 
@@ -531,22 +549,22 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
         return tag.findSubTags(scriptTagName, ns);
     }
 
-    public static void visitInjectedFiles(XmlFile file, final InjectedFileVisitor visitor) {
+    public static void visitInjectedFiles(XmlFile file, InjectedFileVisitor visitor) {
         new InjectedScriptsVisitor(getRootTag(file), true, true, true, visitor).go();
     }
 
     public static boolean isInlineComponentTag(XmlTag tag) {
-        return COMPONENT_TAG_NAME.equals(tag.getLocalName()) &&
-            JavaScriptSupportLoader.isMxmlNs(tag.getNamespace()) &&
-            !(tag.getParent() instanceof XmlDocument);
+        return COMPONENT_TAG_NAME.equals(tag.getLocalName())
+            && JavaScriptSupportLoader.isMxmlNs(tag.getNamespace())
+            && !(tag.getParent() instanceof XmlDocument);
     }
 
-    public static Collection<XmlBackedJSClassImpl> getChildInlineComponents(XmlTag rootTag, final boolean recursive) {
-        final Collection<XmlBackedJSClassImpl> result = new ArrayList<>();
+    public static Collection<XmlBackedJSClassImpl> getChildInlineComponents(XmlTag rootTag, boolean recursive) {
+        Collection<XmlBackedJSClassImpl> result = new ArrayList<>();
         rootTag.processElements(
             new PsiElementProcessor() {
                 @Override
-                public boolean execute(PsiElement element) {
+                public boolean execute(@Nonnull PsiElement element) {
                     if (element instanceof XmlTag tag) {
                         if (isInlineComponentTag(tag)) {
                             result.add(getXmlBackedClass(tag));
@@ -596,29 +614,28 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
         }
 
         @Override
-        public boolean execute(final PsiElement element) {
-            if (element instanceof XmlTag) {
-                final XmlTag tag = (XmlTag)element;
-
+        @RequiredReadAction
+        public boolean execute(@Nonnull PsiElement element) {
+            if (element instanceof XmlTag tag) {
                 if (myVisitAllTags || SCRIPT_TAG_NAME.equals(tag.getLocalName())) {
-                    final String srcLocation = tag.getAttributeValue("source");
+                    String srcLocation = tag.getAttributeValue("source");
                     if (srcLocation != null) {
                         PsiReference ref = findFileReference(tag.getAttribute("source").getValueElement());
-                        if (ref != null) {
-                            final PsiElement psiElement = ref.resolve();
-                            if (psiElement instanceof JSFile) {
-                                psiElement.putUserData(JSResolveUtil.contextKey, tag);
-                                myVisitor.visit(myRootTag, (JSFile)psiElement);
-                            }
+                        if (ref != null && ref.resolve() instanceof JSFile jsFile) {
+                            jsFile.putUserData(JSResolveUtil.contextKey, tag);
+                            myVisitor.visit(myRootTag, jsFile);
                         }
                     }
                     else {
-                        JSResolveUtil.processInjectedFileForTag(tag, new JSResolveUtil.JSInjectedFilesVisitor() {
-                            @Override
-                            protected void process(final JSFile file) {
-                                myVisitor.visit(myRootTag, file);
+                        JSResolveUtil.processInjectedFileForTag(
+                            tag,
+                            new JSResolveUtil.JSInjectedFilesVisitor() {
+                                @Override
+                                protected void process(JSFile file) {
+                                    myVisitor.visit(myRootTag, file);
+                                }
                             }
-                        });
+                        );
                     }
                 }
                 if (isInlineComponentTag(tag)) {
