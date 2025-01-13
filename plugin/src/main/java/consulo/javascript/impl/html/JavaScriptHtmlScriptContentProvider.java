@@ -17,25 +17,21 @@ import jakarta.annotation.Nullable;
  * @since 2024-04-19
  */
 @ExtensionImpl
-public class JavaScriptHtmlScriptContentProvider implements HtmlScriptContentProvider
-{
-	@Override
-	public IElementType getScriptElementType()
-	{
-		return JSElementTypes.EMBEDDED_CONTENT;
-	}
+public class JavaScriptHtmlScriptContentProvider implements HtmlScriptContentProvider {
+    @Override
+    public IElementType getScriptElementType() {
+        return JSElementTypes.EMBEDDED_CONTENT;
+    }
 
-	@Nullable
-	@Override
-	public Lexer getHighlightingLexer()
-	{
-		return new JavaScript15Lexer();
-	}
+    @Nullable
+    @Override
+    public Lexer getHighlightingLexer() {
+        return new JavaScript15Lexer();
+    }
 
-	@Nonnull
-	@Override
-	public Language getLanguage()
-	{
-		return JavaScriptLanguage.INSTANCE;
-	}
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return JavaScriptLanguage.INSTANCE;
+    }
 }

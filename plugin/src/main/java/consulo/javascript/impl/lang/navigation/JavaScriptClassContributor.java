@@ -38,27 +38,32 @@ import java.util.Collection;
  * @author VISTALL
  */
 @ExtensionImpl
-public class JavaScriptClassContributor implements GotoClassOrTypeContributor
-{
-	@Override
-	public void processNames(@Nonnull Processor<String> processor, @Nonnull SearchScope searchScope, @Nullable IdFilter idFilter)
-	{
-		StubIndex.getInstance().processAllKeys(JavaScriptIndexKeys.CLASSES_BY_NAME, processor, (GlobalSearchScope) searchScope, idFilter);
-	}
+public class JavaScriptClassContributor implements GotoClassOrTypeContributor {
+    @Override
+    public void processNames(@Nonnull Processor<String> processor, @Nonnull SearchScope searchScope, @Nullable IdFilter idFilter) {
+        StubIndex.getInstance().processAllKeys(JavaScriptIndexKeys.CLASSES_BY_NAME, processor, (GlobalSearchScope)searchScope, idFilter);
+    }
 
-	@Override
-	public void processElementsWithName(@Nonnull String name, @Nonnull Processor<NavigationItem> processor, @Nonnull FindSymbolParameters findSymbolParameters)
-	{
-		Project project = findSymbolParameters.getProject();
-		Collection<JSClass> elements = StubIndex.getElements(JavaScriptIndexKeys.CLASSES_BY_NAME, name, project, GlobalSearchScope.allScope(project), findSymbolParameters.getIdFilter(), JSClass
-				.class);
+    @Override
+    public void processElementsWithName(
+        @Nonnull String name,
+        @Nonnull Processor<NavigationItem> processor,
+        @Nonnull FindSymbolParameters findSymbolParameters
+    ) {
+        Project project = findSymbolParameters.getProject();
+        Collection<JSClass> elements = StubIndex.getElements(
+            JavaScriptIndexKeys.CLASSES_BY_NAME,
+            name,
+            project,
+            GlobalSearchScope.allScope(project),
+            findSymbolParameters.getIdFilter(),
+            JSClass.class
+        );
 
-		for(JSClass element : elements)
-		{
-			if(!processor.process(element))
-			{
-				break;
-			}
-		}
-	}
+        for (JSClass element : elements) {
+            if (!processor.process(element)) {
+                break;
+            }
+        }
+    }
 }

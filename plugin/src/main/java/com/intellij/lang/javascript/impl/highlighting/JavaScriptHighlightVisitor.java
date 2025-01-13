@@ -41,348 +41,317 @@ import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-public class JavaScriptHighlightVisitor extends JSElementVisitor implements HighlightVisitor
-{
-	private HighlightInfoHolder myHighlightInfoHolder;
+public class JavaScriptHighlightVisitor extends JSElementVisitor implements HighlightVisitor {
+    private HighlightInfoHolder myHighlightInfoHolder;
 
-	@Override
-	@RequiredReadAction
-	public void visitJSBinaryExpression(JSBinaryExpression node)
-	{
-		super.visitJSBinaryExpression(node);
+    @Override
+    @RequiredReadAction
+    public void visitJSBinaryExpression(JSBinaryExpression node) {
+        super.visitJSBinaryExpression(node);
 
-		IElementType operationSign = node.getOperationSign();
-		if(operationSign == JSTokenTypes.MULTMULT)
-		{
-			reportFeatureUsage(node.getOperationElement(), JavaScriptFeature.EXPONENTIATION_OPERATOR);
-		}
-	}
+        IElementType operationSign = node.getOperationSign();
+        if (operationSign == JSTokenTypes.MULTMULT) {
+            reportFeatureUsage(node.getOperationElement(), JavaScriptFeature.EXPONENTIATION_OPERATOR);
+        }
+    }
 
-	@Override
-	@RequiredReadAction
-	public void visitJSAssignmentExpression(JSAssignmentExpression node)
-	{
-		super.visitJSAssignmentExpression(node);
+    @Override
+    @RequiredReadAction
+    public void visitJSAssignmentExpression(JSAssignmentExpression node) {
+        super.visitJSAssignmentExpression(node);
 
-		IElementType operationSign = node.getOperationSign();
-		if(operationSign == JSTokenTypes.MULT_MULT_EQ)
-		{
-			reportFeatureUsage(node.getOperationElement(), JavaScriptFeature.EXPONENTIATION_OPERATOR);
-		}
-	}
+        IElementType operationSign = node.getOperationSign();
+        if (operationSign == JSTokenTypes.MULT_MULT_EQ) {
+            reportFeatureUsage(node.getOperationElement(), JavaScriptFeature.EXPONENTIATION_OPERATOR);
+        }
+    }
 
-	@Override
-	@RequiredReadAction
-	public void visitElement(PsiElement element)
-	{
-		super.visitElement(element);
+    @Override
+    @RequiredReadAction
+    public void visitElement(PsiElement element) {
+        super.visitElement(element);
 
-		PsiElement parent = element.getParent();
-		IElementType elementType = PsiUtilCore.getElementType(element);
-		if((JavaScriptTokenSets.STRING_LITERALS.contains(elementType) || elementType == JSTokenTypes.IDENTIFIER) && parent instanceof JSProperty && ((JSProperty) parent).getNameIdentifier() ==
-				element)
-		{
-			highlightPropertyName((JSProperty) parent, element);
-		}
-		else if(elementType == JSTokenTypes.IDENTIFIER)
-		{
-			addElementHighlight(parent, element);
-		}
-		else if(JavaScriptContextKeywordElementType.containsKeyword(elementType))
-		{
-			myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).textAttributes(JavaScriptSyntaxHighlightKeys.JS_KEYWORD).range(element).create());
-		}
-	}
+        PsiElement parent = element.getParent();
+        IElementType elementType = PsiUtilCore.getElementType(element);
+        if ((JavaScriptTokenSets.STRING_LITERALS.contains(elementType) || elementType == JSTokenTypes.IDENTIFIER)
+            && parent instanceof JSProperty && ((JSProperty)parent).getNameIdentifier() == element) {
+            highlightPropertyName((JSProperty)parent, element);
+        }
+        else if (elementType == JSTokenTypes.IDENTIFIER) {
+            addElementHighlight(parent, element);
+        }
+        else if (JavaScriptContextKeywordElementType.containsKeyword(elementType)) {
+            myHighlightInfoHolder.add(
+                HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION)
+                    .textAttributes(JavaScriptSyntaxHighlightKeys.JS_KEYWORD)
+                    .range(element)
+                    .create()
+            );
+        }
+    }
 
-	@Override
-	public void visitJSProperty(JSProperty node)
-	{
-		super.visitJSProperty(node);
+    @Override
+    public void visitJSProperty(JSProperty node) {
+        super.visitJSProperty(node);
 
-		if(node instanceof JSFunction)
-		{
-			reportFeatureUsage(node.getNameIdentifier(), JavaScriptFeature.FUNCTION_PROPERTY);
-		}
-	}
+        if (node instanceof JSFunction) {
+            reportFeatureUsage(node.getNameIdentifier(), JavaScriptFeature.FUNCTION_PROPERTY);
+        }
+    }
 
-	@Override
-	@RequiredReadAction
-	public void visitJSLiteralExpression(JSSimpleLiteralExpression node)
-	{
-		super.visitJSLiteralExpression(node);
-		if(node.getLiteralElementType() == JSTokenTypes.NUMERIC_LITERAL)
-		{
-			String text = node.getText();
-			if(StringUtil.startsWithIgnoreCase(text, "0o"))
-			{
-				reportFeatureUsage(node, JavaScriptFeature.OCTAL_LITERAL);
-			}
-			else if(StringUtil.startsWithIgnoreCase(text, "0b"))
-			{
-				reportFeatureUsage(node, JavaScriptFeature.BINARY_LITERAL);
-			}
-		}
-	}
+    @Override
+    @RequiredReadAction
+    public void visitJSLiteralExpression(JSSimpleLiteralExpression node) {
+        super.visitJSLiteralExpression(node);
+        if (node.getLiteralElementType() == JSTokenTypes.NUMERIC_LITERAL) {
+            String text = node.getText();
+            if (StringUtil.startsWithIgnoreCase(text, "0o")) {
+                reportFeatureUsage(node, JavaScriptFeature.OCTAL_LITERAL);
+            }
+            else if (StringUtil.startsWithIgnoreCase(text, "0b")) {
+                reportFeatureUsage(node, JavaScriptFeature.BINARY_LITERAL);
+            }
+        }
+    }
 
-	@RequiredReadAction
-	private void highlightPropertyName(@Nonnull JSProperty property, @Nonnull PsiElement nameIdentifier)
-	{
-		final JSExpression expression = property.getValue();
-		TextAttributesKey type;
+    @RequiredReadAction
+    private void highlightPropertyName(@Nonnull JSProperty property, @Nonnull PsiElement nameIdentifier) {
+        final JSExpression expression = property.getValue();
+        TextAttributesKey type;
 
-		if(expression instanceof JSFunctionExpression)
-		{
-			type = JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_FUNCTION;
-		}
-		else
-		{
-			type = JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_VARIABLE;
-		}
-		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).needsUpdateOnTyping(false).range(nameIdentifier).textAttributes(type).create());
-	}
+        if (expression instanceof JSFunctionExpression) {
+            type = JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_FUNCTION;
+        }
+        else {
+            type = JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_VARIABLE;
+        }
+        myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION)
+            .needsUpdateOnTyping(false)
+            .range(nameIdentifier)
+            .textAttributes(type)
+            .create());
+    }
 
-	@Override
-	@RequiredReadAction
-	public void visitJSAttribute(JSAttribute jsAttribute)
-	{
-		super.visitJSAttribute(jsAttribute);
+    @Override
+    @RequiredReadAction
+    public void visitJSAttribute(JSAttribute jsAttribute) {
+        super.visitJSAttribute(jsAttribute);
 
-		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).needsUpdateOnTyping(false).range(jsAttribute).textAttributes(JavaScriptSyntaxHighlightKeys
-				.JS_METADATA).create());
-	}
+        myHighlightInfoHolder.add(
+            HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION)
+                .needsUpdateOnTyping(false)
+                .range(jsAttribute)
+                .textAttributes(JavaScriptSyntaxHighlightKeys.JS_METADATA)
+                .create()
+        );
+    }
 
-	@Override
-	@RequiredReadAction
-	public void visitJSParameter(JSParameter parameter)
-	{
-		super.visitJSParameter(parameter);
+    @Override
+    @RequiredReadAction
+    public void visitJSParameter(JSParameter parameter) {
+        super.visitJSParameter(parameter);
 
-		JSExpression initializer = parameter.getInitializer();
-		if(initializer != null)
-		{
-			reportFeatureUsage(initializer, JavaScriptFeature.PARAMETER_DEFAULT_VALUE);
-		}
+        JSExpression initializer = parameter.getInitializer();
+        if (initializer != null) {
+            reportFeatureUsage(initializer, JavaScriptFeature.PARAMETER_DEFAULT_VALUE);
+        }
 
-		PsiElement restElement = parameter.getRestElement();
-		if(restElement != null)
-		{
-			reportFeatureUsage(restElement, JavaScriptFeature.REST_PARAMETER);
-		}
-	}
+        PsiElement restElement = parameter.getRestElement();
+        if (restElement != null) {
+            reportFeatureUsage(restElement, JavaScriptFeature.REST_PARAMETER);
+        }
+    }
 
-	@Override
-	@RequiredReadAction
-	public void visitJSReferenceExpression(JSReferenceExpression element)
-	{
-		super.visitJSReferenceExpression(element);
+    @Override
+    @RequiredReadAction
+    public void visitJSReferenceExpression(JSReferenceExpression element) {
+        super.visitJSReferenceExpression(element);
 
-		PsiElement parent = element.getParent();
+        PsiElement parent = element.getParent();
 
-		if(parent instanceof PsiNameIdentifierOwner && ((PsiNameIdentifierOwner) parent).getNameIdentifier() == element)
-		{
-			return;
-		}
+        if (parent instanceof PsiNameIdentifierOwner && ((PsiNameIdentifierOwner)parent).getNameIdentifier() == element) {
+            return;
+        }
 
-		final ResolveResult[] results = element.multiResolve(false);
+        final ResolveResult[] results = element.multiResolve(false);
 
-		PsiElement validResult = null;
-		for(ResolveResult result : results)
-		{
-			if(result.isValidResult())
-			{
-				validResult = result.getElement();
-				break;
-			}
-		}
+        PsiElement validResult = null;
+        for (ResolveResult result : results) {
+            if (result.isValidResult()) {
+                validResult = result.getElement();
+                break;
+            }
+        }
 
-		if(validResult == null)
-		{
-			return;
-		}
+        if (validResult == null) {
+            return;
+        }
 
-		PsiElement referenceNameElement = element.getReferenceNameElement();
-		if(referenceNameElement == null)
-		{
-			return;
-		}
-		addElementHighlight(validResult, referenceNameElement);
-	}
+        PsiElement referenceNameElement = element.getReferenceNameElement();
+        if (referenceNameElement == null) {
+            return;
+        }
+        addElementHighlight(validResult, referenceNameElement);
+    }
 
-	@Override
-	@RequiredReadAction
-	public void visitJSPrefixExpression(JSPrefixExpression expression)
-	{
-		super.visitJSPrefixExpression(expression);
+    @Override
+    @RequiredReadAction
+    public void visitJSPrefixExpression(JSPrefixExpression expression) {
+        super.visitJSPrefixExpression(expression);
 
-		if(expression.getOperationSign() == JSTokenTypes.DOT_DOT_DOT)
-		{
-			PsiElement operatorElement = expression.getOperatorElement();
-			assert operatorElement != null;
-			reportFeatureUsage(operatorElement, JavaScriptFeature.SPREAD_OPERATOR);
-		}
-	}
+        if (expression.getOperationSign() == JSTokenTypes.DOT_DOT_DOT) {
+            PsiElement operatorElement = expression.getOperatorElement();
+            assert operatorElement != null;
+            reportFeatureUsage(operatorElement, JavaScriptFeature.SPREAD_OPERATOR);
+        }
+    }
 
-	@RequiredReadAction
-	private void addElementHighlight(@Nonnull PsiElement resolvedElement, @Nonnull PsiElement targetForHighlight)
-	{
-		boolean isStatic = false;
-		boolean isMethod = false;
-		boolean isFunction = false;
-		boolean isField = false;
-		TextAttributesKey type = null;
+    @RequiredReadAction
+    private void addElementHighlight(@Nonnull PsiElement resolvedElement, @Nonnull PsiElement targetForHighlight) {
+        boolean isStatic = false;
+        boolean isMethod = false;
+        boolean isFunction = false;
+        boolean isField = false;
+        TextAttributesKey type = null;
 
-		if(resolvedElement instanceof JSAttributeListOwner)
-		{
-			if(resolvedElement instanceof JSClass)
-			{
-				type = DefaultLanguageHighlighterColors.CLASS_NAME;
-			}
-			else
-			{
-				final JSAttributeList attributeList = ((JSAttributeListOwner) resolvedElement).getAttributeList();
+        if (resolvedElement instanceof JSAttributeListOwner) {
+            if (resolvedElement instanceof JSClass) {
+                type = DefaultLanguageHighlighterColors.CLASS_NAME;
+            }
+            else {
+                final JSAttributeList attributeList = ((JSAttributeListOwner)resolvedElement).getAttributeList();
 
-				if(attributeList != null)
-				{
-					isStatic = attributeList.hasModifier(JSAttributeList.ModifierType.STATIC);
-				}
+                if (attributeList != null) {
+                    isStatic = attributeList.hasModifier(JSAttributeList.ModifierType.STATIC);
+                }
 
-				isMethod = resolvedElement instanceof JSFunction;
-				if(isMethod && !isClass(resolvedElement.getParent()))
-				{
-					isMethod = false;
-					isFunction = true;
-				}
-			}
-		}
-		else if(resolvedElement instanceof JSDefinitionExpression)
-		{
-			final PsiElement parent = resolvedElement.getParent();
-			if(parent instanceof JSAssignmentExpression)
-			{
-				final JSExpression jsExpression = ((JSAssignmentExpression) parent).getROperand();
-				if(jsExpression instanceof JSFunctionExpression)
-				{
-					isMethod = true;
-				}
-				else
-				{
-					isField = true;
-				}
-			}
-		}
-		else if(resolvedElement instanceof JSProperty)
-		{
-			final JSExpression expression = ((JSProperty) resolvedElement).getValue();
+                isMethod = resolvedElement instanceof JSFunction;
+                if (isMethod && !isClass(resolvedElement.getParent())) {
+                    isMethod = false;
+                    isFunction = true;
+                }
+            }
+        }
+        else if (resolvedElement instanceof JSDefinitionExpression) {
+            final PsiElement parent = resolvedElement.getParent();
+            if (parent instanceof JSAssignmentExpression) {
+                final JSExpression jsExpression = ((JSAssignmentExpression)parent).getROperand();
+                if (jsExpression instanceof JSFunctionExpression) {
+                    isMethod = true;
+                }
+                else {
+                    isField = true;
+                }
+            }
+        }
+        else if (resolvedElement instanceof JSProperty) {
+            final JSExpression expression = ((JSProperty)resolvedElement).getValue();
 
-			if(expression instanceof JSFunctionExpression)
-			{
-				isMethod = true;
-			}
-			else
-			{
-				isField = true;
-			}
-		}
+            if (expression instanceof JSFunctionExpression) {
+                isMethod = true;
+            }
+            else {
+                isField = true;
+            }
+        }
 
-		if(isMethod)
-		{
-			if(isStatic)
-			{
-				type = JavaScriptSyntaxHighlightKeys.JS_STATIC_MEMBER_FUNCTION;
-			}
-			else
-			{
-				type = JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_FUNCTION;
-			}
-		}
-		else if(isFunction)
-		{
-			type = JavaScriptSyntaxHighlightKeys.JS_GLOBAL_FUNCTION;
-		}
-		else if(isField)
-		{
-			type = JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_VARIABLE;
-		}
+        if (isMethod) {
+            if (isStatic) {
+                type = JavaScriptSyntaxHighlightKeys.JS_STATIC_MEMBER_FUNCTION;
+            }
+            else {
+                type = JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_FUNCTION;
+            }
+        }
+        else if (isFunction) {
+            type = JavaScriptSyntaxHighlightKeys.JS_GLOBAL_FUNCTION;
+        }
+        else if (isField) {
+            type = JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_VARIABLE;
+        }
 
-		if(type == null)
-		{
-			if(resolvedElement instanceof JSVariable)
-			{
-				myHighlightInfoHolder.add(buildHighlightForVariable(resolvedElement, targetForHighlight));
-			}
-			return;
-		}
+        if (type == null) {
+            if (resolvedElement instanceof JSVariable) {
+                myHighlightInfoHolder.add(buildHighlightForVariable(resolvedElement, targetForHighlight));
+            }
+            return;
+        }
 
-		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).needsUpdateOnTyping(false).range(targetForHighlight).textAttributes(type).create());
-	}
+        myHighlightInfoHolder.add(
+            HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION)
+                .needsUpdateOnTyping(false)
+                .range(targetForHighlight)
+                .textAttributes(type)
+                .create()
+        );
+    }
 
-	@Nullable
-	@RequiredReadAction
-	private static HighlightInfo buildHighlightForVariable(@Nonnull final PsiElement element, @Nonnull final PsiElement markerAddTo)
-	{
-		TextAttributesKey type;
+    @Nullable
+    @RequiredReadAction
+    private static HighlightInfo buildHighlightForVariable(@Nonnull final PsiElement element, @Nonnull final PsiElement markerAddTo) {
+        TextAttributesKey type;
 
-		if(element instanceof JSParameter)
-		{
-			type = JavaScriptSyntaxHighlightKeys.JS_PARAMETER;
-		}
-		else
-		{
-			if(isClass(element.getParent().getParent()))
-			{
-				final JSAttributeList attributeList = ((JSAttributeListOwner) element).getAttributeList();
-				final boolean isStatic = attributeList != null && attributeList.hasModifier(JSAttributeList.ModifierType.STATIC);
-				type = isStatic ? JavaScriptSyntaxHighlightKeys.JS_STATIC_MEMBER_VARIABLE : JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_VARIABLE;
-			}
-			else
-			{
-				if(PsiTreeUtil.getParentOfType(element, JSFunction.class) != null)
-				{
-					type = JavaScriptSyntaxHighlightKeys.JS_LOCAL_VARIABLE;
-				}
-				else
-				{
-					type = JavaScriptSyntaxHighlightKeys.JS_GLOBAL_VARIABLE;
-				}
-			}
-		}
+        if (element instanceof JSParameter) {
+            type = JavaScriptSyntaxHighlightKeys.JS_PARAMETER;
+        }
+        else if (isClass(element.getParent().getParent())) {
+            final JSAttributeList attributeList = ((JSAttributeListOwner)element).getAttributeList();
+            final boolean isStatic = attributeList != null && attributeList.hasModifier(JSAttributeList.ModifierType.STATIC);
+            type = isStatic
+                ? JavaScriptSyntaxHighlightKeys.JS_STATIC_MEMBER_VARIABLE
+                : JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_VARIABLE;
+        }
+        else if (PsiTreeUtil.getParentOfType(element, JSFunction.class) != null) {
+            type = JavaScriptSyntaxHighlightKeys.JS_LOCAL_VARIABLE;
+        }
+        else {
+            type = JavaScriptSyntaxHighlightKeys.JS_GLOBAL_VARIABLE;
+        }
 
-		if(type == null)
-		{
-			return null;
-		}
+        if (type == null) {
+            return null;
+        }
 
-		return HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(markerAddTo).needsUpdateOnTyping(false).textAttributes(type).create();
-	}
+        return HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION)
+            .range(markerAddTo)
+            .needsUpdateOnTyping(false)
+            .textAttributes(type)
+            .create();
+    }
 
-	private void reportFeatureUsage(@Nonnull PsiElement element, @Nonnull JavaScriptFeature javaScriptFeature)
-	{
-		if(JavaScriptVersionUtil.containsFeature(element, javaScriptFeature))
-		{
-			return;
-		}
+    private void reportFeatureUsage(@Nonnull PsiElement element, @Nonnull JavaScriptFeature javaScriptFeature) {
+        if (JavaScriptVersionUtil.containsFeature(element, javaScriptFeature)) {
+            return;
+        }
 
-		LocalizeValue message = JavaScriptLocalize.thisFeatureIsNotSupportedByCurrentLanguage(javaScriptFeature.getName());
+        LocalizeValue message = JavaScriptLocalize.thisFeatureIsNotSupportedByCurrentLanguage(javaScriptFeature.getName());
 
-		myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR).range(element).descriptionAndTooltip(message).create());
-	}
+        myHighlightInfoHolder.add(
+            HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR)
+                .range(element)
+                .descriptionAndTooltip(message)
+                .create()
+        );
+    }
 
-	@Override
-	public void visit(@Nonnull PsiElement element)
-	{
-		element.acceptChildren(this);
-	}
+    @Override
+    public void visit(@Nonnull PsiElement element) {
+        element.acceptChildren(this);
+    }
 
-	@Override
-	public boolean analyze(@Nonnull PsiFile psiFile, boolean b, @Nonnull HighlightInfoHolder highlightInfoHolder, @Nonnull Runnable runnable)
-	{
-		myHighlightInfoHolder = highlightInfoHolder;
-		runnable.run();
-		return true;
-	}
+    @Override
+    public boolean analyze(
+        @Nonnull PsiFile psiFile,
+        boolean b,
+        @Nonnull HighlightInfoHolder highlightInfoHolder,
+        @Nonnull Runnable runnable
+    ) {
+        myHighlightInfoHolder = highlightInfoHolder;
+        runnable.run();
+        return true;
+    }
 
-	private static boolean isClass(final PsiElement element)
-	{
-		return element instanceof JSClass || element instanceof JSFile && element.getContext() != null;
-	}
+    private static boolean isClass(final PsiElement element) {
+        return element instanceof JSClass || element instanceof JSFile && element.getContext() != null;
+    }
 }

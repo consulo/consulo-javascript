@@ -24,17 +24,14 @@ import consulo.project.Project;
  * @author yole
  * @since 2005-07-12
  */
-public class JSWithIfElseSurrounder extends JSWithIfSurrounder
-{
-	@Override
-	public String getTemplateDescription()
-	{
-		return JavaScriptLocalize.javascriptSurroundWithIfElse().get();
-	}
+public class JSWithIfElseSurrounder extends JSWithIfSurrounder {
+    @Override
+    public String getTemplateDescription() {
+        return JavaScriptLocalize.javascriptSurroundWithIfElse().get();
+    }
 
-	@Override
-	protected String getStatementTemplate(final Project project, PsiElement context)
-	{
-		return "if (a) { } else { }";
-	}
+    @Override
+    protected String getStatementTemplate(final Project project, PsiElement context) {
+        return "if (a) { } else { }";
+    }
 }

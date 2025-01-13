@@ -41,56 +41,47 @@ import jakarta.annotation.Nonnull;
  * @since 24.08.14
  */
 @ExtensionImpl
-public class JavaScriptParsingDefinition extends LanguageVersionableParserDefinition
-{
-	@Nonnull
-	@Override
-	public Language getLanguage()
-	{
-		return JavaScriptLanguage.INSTANCE;
-	}
+public class JavaScriptParsingDefinition extends LanguageVersionableParserDefinition {
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return JavaScriptLanguage.INSTANCE;
+    }
 
-	@Nonnull
-	@Override
-	public IFileElementType getFileNodeType()
-	{
-		return JSElementTypes.FILE;
-	}
+    @Nonnull
+    @Override
+    public IFileElementType getFileNodeType() {
+        return JSElementTypes.FILE;
+    }
 
-	@Nonnull
-	@Override
-	public PsiElement createElement(ASTNode node)
-	{
-		final IElementType type = node.getElementType();
+    @Nonnull
+    @Override
+    public PsiElement createElement(ASTNode node) {
+        final IElementType type = node.getElementType();
 
-		if(type == JSElementTypes.EMBEDDED_CONTENT)
-		{
-			return new JSEmbeddedContentImpl(node);
-		}
-		else if(type == JSTokenTypes.XML_JS_SCRIPT)
-		{
-			return new JSEmbeddedContentImpl(node);
-		}
-		else if(type == JSTokenTypes.DOC_COMMENT)
-		{
-			return new JSDocCommentImpl(node);
-		}
+        if (type == JSElementTypes.EMBEDDED_CONTENT) {
+            return new JSEmbeddedContentImpl(node);
+        }
+        else if (type == JSTokenTypes.XML_JS_SCRIPT) {
+            return new JSEmbeddedContentImpl(node);
+        }
+        else if (type == JSTokenTypes.DOC_COMMENT) {
+            return new JSDocCommentImpl(node);
+        }
 
-		return new ASTWrapperPsiElement(node);
-	}
+        return new ASTWrapperPsiElement(node);
+    }
 
-	@Override
-	public PsiFile createFile(FileViewProvider fileViewProvider)
-	{
-		return new JSFileImpl(fileViewProvider);
-	}
+    @Override
+    public PsiFile createFile(FileViewProvider fileViewProvider) {
+        return new JSFileImpl(fileViewProvider);
+    }
 
-	@Nonnull
-	@Override
-	public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right)
-	{
-		PsiElement leftPsi = left.getPsi();
-		final Lexer lexer = createLexer(leftPsi.getLanguageVersion());
-		return LanguageUtil.canStickTokensTogetherByLexer(left, right, lexer);
-	}
+    @Nonnull
+    @Override
+    public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
+        PsiElement leftPsi = left.getPsi();
+        final Lexer lexer = createLexer(leftPsi.getLanguageVersion());
+        return LanguageUtil.canStickTokensTogetherByLexer(left, right, lexer);
+    }
 }

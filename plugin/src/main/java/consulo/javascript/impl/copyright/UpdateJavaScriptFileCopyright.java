@@ -25,46 +25,36 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
 import jakarta.annotation.Nonnull;
 
-public class UpdateJavaScriptFileCopyright extends UpdatePsiFileCopyright<CopyrightFileConfig>
-{
-	public UpdateJavaScriptFileCopyright(@Nonnull PsiFile psiFile, @Nonnull CopyrightProfile copyrightProfile)
-	{
-		super(psiFile, copyrightProfile);
-	}
+public class UpdateJavaScriptFileCopyright extends UpdatePsiFileCopyright<CopyrightFileConfig> {
+    public UpdateJavaScriptFileCopyright(@Nonnull PsiFile psiFile, @Nonnull CopyrightProfile copyrightProfile) {
+        super(psiFile, copyrightProfile);
+    }
 
-	protected void scanFile()
-	{
-		PsiElement first = getFile().getFirstChild();
-		if(first != null)
-		{
-			final PsiElement child = first.getFirstChild();
-			if(child instanceof PsiComment)
-			{
-				first = child;
-			}
-		}
-		PsiElement last = first;
-		PsiElement next = first;
-		while(next != null)
-		{
-			if(next instanceof PsiComment || next instanceof PsiWhiteSpace)
-			{
-				next = getNextSibling(next);
-			}
-			else
-			{
-				break;
-			}
-			last = next;
-		}
+    protected void scanFile() {
+        PsiElement first = getFile().getFirstChild();
+        if (first != null) {
+            final PsiElement child = first.getFirstChild();
+            if (child instanceof PsiComment) {
+                first = child;
+            }
+        }
+        PsiElement last = first;
+        PsiElement next = first;
+        while (next != null) {
+            if (next instanceof PsiComment || next instanceof PsiWhiteSpace) {
+                next = getNextSibling(next);
+            }
+            else {
+                break;
+            }
+            last = next;
+        }
 
-		if(first != null)
-		{
-			checkComments(first, last, true);
-		}
-		else
-		{
-			checkComments(null, null, true);
-		}
-	}
+        if (first != null) {
+            checkComments(first, last, true);
+        }
+        else {
+            checkComments(null, null, true);
+        }
+    }
 }

@@ -33,80 +33,69 @@ import jakarta.annotation.Nullable;
 /**
  * @author yole
  */
-public class JSDocCommentBlock implements Block
-{
-	private ASTNode myNode;
-	private int myStartOffset;
-	private int myEndOffset;
-	private Indent myIndent;
-	private static final List<Block> EMPTY_BLOCK_LIST = new ArrayList<Block>();
+public class JSDocCommentBlock implements Block {
+    private ASTNode myNode;
+    private int myStartOffset;
+    private int myEndOffset;
+    private Indent myIndent;
+    private static final List<Block> EMPTY_BLOCK_LIST = new ArrayList<Block>();
 
-	public JSDocCommentBlock(final ASTNode node, final int startOffset, final int endOffset, final Indent indent)
-	{
-		myNode = node;
-		myStartOffset = startOffset;
-		myEndOffset = endOffset;
-		myIndent = indent;
-	}
+    public JSDocCommentBlock(final ASTNode node, final int startOffset, final int endOffset, final Indent indent) {
+        myNode = node;
+        myStartOffset = startOffset;
+        myEndOffset = endOffset;
+        myIndent = indent;
+    }
 
-	@Override
-	@Nonnull
-	public TextRange getTextRange()
-	{
-		return new TextRange(myNode.getStartOffset() + myStartOffset, myNode.getStartOffset() + myEndOffset);
-	}
+    @Override
+    @Nonnull
+    public TextRange getTextRange() {
+        return new TextRange(myNode.getStartOffset() + myStartOffset, myNode.getStartOffset() + myEndOffset);
+    }
 
-	@Override
-	@Nonnull
-	public List<Block> getSubBlocks()
-	{
-		return EMPTY_BLOCK_LIST;
-	}
+    @Override
+    @Nonnull
+    public List<Block> getSubBlocks() {
+        return EMPTY_BLOCK_LIST;
+    }
 
-	@Override
-	@Nullable
-	public Wrap getWrap()
-	{
-		return null;
-	}
+    @Override
+    @Nullable
+    public Wrap getWrap() {
+        return null;
+    }
 
-	@Override
-	@Nullable
-	public Indent getIndent()
-	{
-		return myIndent;
-	}
+    @Override
+    @Nullable
+    public Indent getIndent() {
+        return myIndent;
+    }
 
-	@Override
-	@Nullable
-	public Alignment getAlignment()
-	{
-		return null;
-	}
+    @Override
+    @Nullable
+    public Alignment getAlignment() {
+        return null;
+    }
 
-	@Override
-	@Nullable
-	public Spacing getSpacing(Block child1, Block child2)
-	{
-		return null;
-	}
+    @Override
+    @Nullable
+    public Spacing getSpacing(Block child1, Block child2) {
+        return null;
+    }
 
-	@Override
-	@Nonnull
-	public ChildAttributes getChildAttributes(final int newChildIndex)
-	{
-		return null;
-	}
+    @Override
+    @Nonnull
+    public ChildAttributes getChildAttributes(final int newChildIndex) {
+        return null;
+    }
 
-	@Override
-	public boolean isIncomplete()
-	{
-		return false;
-	}
+    @Override
+    public boolean isIncomplete() {
+        return false;
+    }
 
-	@Override
-	public boolean isLeaf()
-	{
-		return true;
-	}
+    @Override
+    public boolean isLeaf() {
+        return true;
+    }
 }

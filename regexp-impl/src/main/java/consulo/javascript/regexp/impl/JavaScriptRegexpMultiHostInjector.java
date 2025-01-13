@@ -33,32 +33,29 @@ import jakarta.annotation.Nonnull;
  * @since 11.12.2015
  */
 @ExtensionImpl
-public class JavaScriptRegexpMultiHostInjector implements MultiHostInjector
-{
-	@Nonnull
-	@Override
-	public Class<? extends PsiElement> getElementClass()
-	{
-		return JSRegExpLiteralExpressionImpl.class;
-	}
+public class JavaScriptRegexpMultiHostInjector implements MultiHostInjector {
+    @Nonnull
+    @Override
+    public Class<? extends PsiElement> getElementClass() {
+        return JSRegExpLiteralExpressionImpl.class;
+    }
 
-	@Override
-	@RequiredReadAction
-	public void injectLanguages(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement context)
-	{
-		if(context instanceof JSRegExpLiteralExpressionImpl)
-		{
-			String text = context.getText();
+    @Override
+    @RequiredReadAction
+    public void injectLanguages(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement context) {
+        if (context instanceof JSRegExpLiteralExpressionImpl) {
+            String text = context.getText();
 
-			// ignore flags for regexp
-			int lastIndex = text.lastIndexOf('/');
-			// empty regexp
-			if(lastIndex == 0)
-			{
-				return;
-			}
+            // ignore flags for regexp
+            int lastIndex = text.lastIndexOf('/');
+            // empty regexp
+            if (lastIndex == 0) {
+                return;
+            }
 
-			registrar.startInjecting(RegExpLanguage.INSTANCE).addPlace(null, null, (PsiLanguageInjectionHost) context, new TextRange(1, lastIndex)).doneInjecting();
-		}
-	}
+            registrar.startInjecting(RegExpLanguage.INSTANCE)
+                .addPlace(null, null, (PsiLanguageInjectionHost)context, new TextRange(1, lastIndex))
+                .doneInjecting();
+        }
+    }
 }

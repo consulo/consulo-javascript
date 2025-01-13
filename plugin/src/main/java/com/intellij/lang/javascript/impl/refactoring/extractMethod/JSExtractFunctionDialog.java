@@ -23,31 +23,27 @@ import javax.swing.*;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Aug 9, 2008
- *         Time: 9:22:10 AM
+ * Date: Aug 9, 2008
+ * Time: 9:22:10 AM
  */
-public class JSExtractFunctionDialog extends DialogWrapper implements JSExtractFunctionSettings
-{
-	private JPanel myPanel;
-	private JTextField myFunctionName;
+public class JSExtractFunctionDialog extends DialogWrapper implements JSExtractFunctionSettings {
+    private JPanel myPanel;
+    private JTextField myFunctionName;
 
-	JSExtractFunctionDialog()
-	{
-		super(false);
+    JSExtractFunctionDialog() {
+        super(false);
 
-		setTitle(JavaScriptLocalize.javascriptExtractMethodTitle());
-		init();
-	}
+        setTitle(JavaScriptLocalize.javascriptExtractMethodTitle());
+        init();
+    }
 
-	@Override
-	protected JComponent createCenterPanel()
-	{
-		return myPanel;
-	}
+    @Override
+    protected JComponent createCenterPanel() {
+        return myPanel;
+    }
 
-	@Override
-	public String getMethodName()
-	{
-		return myFunctionName.getText();
-	}
+    @Override
+    public String getMethodName() {
+        return myFunctionName.getText();
+    }
 }

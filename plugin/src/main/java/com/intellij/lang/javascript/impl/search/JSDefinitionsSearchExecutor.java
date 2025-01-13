@@ -37,77 +37,66 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Apr 28, 2008
- *         Time: 8:34:30 PM
+ * Date: Apr 28, 2008
+ * Time: 8:34:30 PM
  */
 @ExtensionImpl
-public class JSDefinitionsSearchExecutor implements DefinitionsScopedSearchExecutor
-{
-	@Override
-	public boolean execute(@Nonnull final DefinitionsScopedSearch.SearchParameters parameters, @Nonnull final Processor<? super PsiElement> consumer)
-	{
-		final PsiElement sourceElement = parameters.getElement();
-		if(sourceElement instanceof PsiNamedElement && sourceElement.getLanguage().isKindOf(JavaScriptLanguage.INSTANCE))
-		{
-			ReferencesSearch.search(sourceElement, GlobalSearchScope.projectScope(sourceElement.getProject())).forEach(t -> {
-				if (t instanceof JSReferenceExpression referenceExpression)
-				{
-					final PsiElement parent = referenceExpression.getParent();
-					final ResolveResult[] resolveResults = referenceExpression.multiResolve(true);
+public class JSDefinitionsSearchExecutor implements DefinitionsScopedSearchExecutor {
+    @Override
+    public boolean execute(
+        @Nonnull final DefinitionsScopedSearch.SearchParameters parameters,
+        @Nonnull final Processor<? super PsiElement> consumer
+    ) {
+        final PsiElement sourceElement = parameters.getElement();
+        if (sourceElement instanceof PsiNamedElement && sourceElement.getLanguage().isKindOf(JavaScriptLanguage.INSTANCE)) {
+            ReferencesSearch.search(sourceElement, GlobalSearchScope.projectScope(sourceElement.getProject())).forEach(t -> {
+                if (t instanceof JSReferenceExpression referenceExpression) {
+                    final PsiElement parent = referenceExpression.getParent();
+                    final ResolveResult[] resolveResults = referenceExpression.multiResolve(true);
 
-					for (ResolveResult r : resolveResults)
-					{
-						PsiElement psiElement = r.getElement();
+                    for (ResolveResult r : resolveResults) {
+                        PsiElement psiElement = r.getElement();
 
-						if (psiElement != null &&
-								!JavaScriptIndex.isFromPredefinedFile(psiElement.getContainingFile()) &&
-								sourceElement != psiElement)
-						{
-							if (psiElement instanceof JSFunction fun && sourceElement instanceof JSFunction sourceFun)
-							{
-								if ((sourceFun.isGetProperty() && fun.isSetProperty()) || (sourceFun.isSetProperty() && fun.isGetProperty()))
-								{
-									return true;
-								}
-							}
+                        if (psiElement != null &&
+                            !JavaScriptIndex.isFromPredefinedFile(psiElement.getContainingFile()) &&
+                            sourceElement != psiElement) {
+                            if (psiElement instanceof JSFunction fun && sourceElement instanceof JSFunction sourceFun) {
+                                if ((sourceFun.isGetProperty() && fun.isSetProperty()) || (sourceFun.isSetProperty() && fun.isGetProperty())) {
+                                    return true;
+                                }
+                            }
 
-							if ((psiElement != sourceElement || !(psiElement instanceof JSClass)) && !consumer.process(psiElement))
-							{
-								return false;
-							}
-						}
-					}
+                            if ((psiElement != sourceElement || !(psiElement instanceof JSClass)) && !consumer.process(psiElement)) {
+                                return false;
+                            }
+                        }
+                    }
 
-					if (!(parent instanceof JSDefinitionExpression))
-					{
-						return false;
-					}
-				}
-				return true;
-			});
+                    if (!(parent instanceof JSDefinitionExpression)) {
+                        return false;
+                    }
+                }
+                return true;
+            });
 
-			if (sourceElement instanceof JSClass clazz)
-			{
-				final Processor<JSClass> delegatingProcessor = jsClass -> consumer.process(jsClass);
-				JSClassSearch.searchClassInheritors(clazz, true).forEach(delegatingProcessor);
+            if (sourceElement instanceof JSClass clazz) {
+                final Processor<JSClass> delegatingProcessor = jsClass -> consumer.process(jsClass);
+                JSClassSearch.searchClassInheritors(clazz, true).forEach(delegatingProcessor);
 
-				if (clazz.isInterface())
-				{
-					JSClassSearch.searchInterfaceImplementations(clazz, true).forEach(delegatingProcessor);
-				}
-			}
-			else if (sourceElement instanceof JSFunction baseFunction)
-			{
-				final Processor<JSFunction> delegatingProcessor = jsFunction -> consumer.process(jsFunction);
-				JSFunctionsSearch.searchOverridingFunctions(baseFunction, true).forEach(delegatingProcessor);
+                if (clazz.isInterface()) {
+                    JSClassSearch.searchInterfaceImplementations(clazz, true).forEach(delegatingProcessor);
+                }
+            }
+            else if (sourceElement instanceof JSFunction baseFunction) {
+                final Processor<JSFunction> delegatingProcessor = jsFunction -> consumer.process(jsFunction);
+                JSFunctionsSearch.searchOverridingFunctions(baseFunction, true).forEach(delegatingProcessor);
 
-				final PsiElement parent = baseFunction.getParent();
-				if (parent instanceof JSClass jsClass && jsClass.isInterface())
-				{
-					JSFunctionsSearch.searchImplementingFunctions(baseFunction, true).forEach(delegatingProcessor);
-				}
-			}
-		}
-		return true;
-	}
+                final PsiElement parent = baseFunction.getParent();
+                if (parent instanceof JSClass jsClass && jsClass.isInterface()) {
+                    JSFunctionsSearch.searchImplementingFunctions(baseFunction, true).forEach(delegatingProcessor);
+                }
+            }
+        }
+        return true;
+    }
 }

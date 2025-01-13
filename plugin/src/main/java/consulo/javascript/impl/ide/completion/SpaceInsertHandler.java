@@ -25,18 +25,15 @@ import consulo.language.editor.completion.lookup.TailType;
  * @author VISTALL
  * @since 20.12.2015
  */
-public class SpaceInsertHandler implements InsertHandler<LookupElement>
-{
-	public static final SpaceInsertHandler INSTANCE = new SpaceInsertHandler();
+public class SpaceInsertHandler implements InsertHandler<LookupElement> {
+    public static final SpaceInsertHandler INSTANCE = new SpaceInsertHandler();
 
-	@Override
-	public void handleInsert(InsertionContext context, LookupElement item)
-	{
-		if(context.getCompletionChar() != ' ')
-		{
-			int tailOffset = context.getTailOffset();
-			TailType.insertChar(context.getEditor(), tailOffset, ' ');
-			context.getEditor().getCaretModel().moveToOffset(tailOffset + 1);
-		}
-	}
+    @Override
+    public void handleInsert(InsertionContext context, LookupElement item) {
+        if (context.getCompletionChar() != ' ') {
+            int tailOffset = context.getTailOffset();
+            TailType.insertChar(context.getEditor(), tailOffset, ' ');
+            context.getEditor().getCaretModel().moveToOffset(tailOffset + 1);
+        }
+    }
 }

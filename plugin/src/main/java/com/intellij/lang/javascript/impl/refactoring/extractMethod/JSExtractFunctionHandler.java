@@ -31,58 +31,49 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
- *         Date: May 29, 2008
- *         Time: 8:19:48 PM
+ * Date: May 29, 2008
+ * Time: 8:19:48 PM
  */
-public class JSExtractFunctionHandler implements RefactoringActionHandler
-{
-	@Override
-	public void invoke(@Nonnull final Project project, final Editor editor, PsiFile file, DataContext dataContext)
-	{
-		if(!editor.getSelectionModel().hasSelection())
-		{
-			editor.getSelectionModel().selectLineAtCaret();
-		}
-		int start = editor.getSelectionModel().getSelectionStart();
-		int end = editor.getSelectionModel().getSelectionEnd();
+public class JSExtractFunctionHandler implements RefactoringActionHandler {
+    @Override
+    public void invoke(@Nonnull final Project project, final Editor editor, PsiFile file, DataContext dataContext) {
+        if (!editor.getSelectionModel().hasSelection()) {
+            editor.getSelectionModel().selectLineAtCaret();
+        }
+        int start = editor.getSelectionModel().getSelectionStart();
+        int end = editor.getSelectionModel().getSelectionEnd();
 
-		if(!CommonRefactoringUtil.checkReadOnlyStatus(project, file))
-		{
-			return;
-		}
+        if (!CommonRefactoringUtil.checkReadOnlyStatus(project, file)) {
+            return;
+        }
 
-		final JSExtractFunctionSettings settings = getSettings(project, editor);
-		if(settings == null)
-		{
-			return;
-		}
+        final JSExtractFunctionSettings settings = getSettings(project, editor);
+        if (settings == null) {
+            return;
+        }
 
-		CommandProcessor.getInstance().executeCommand(
-			project,
-			() -> project.getApplication().runWriteAction(() -> doRefactoring(project, editor, settings)),
-			JavaScriptLocalize.javascriptExtractMethodTitle().get(),
-			null
-		);
-	}
+        CommandProcessor.getInstance().executeCommand(
+            project,
+            () -> project.getApplication().runWriteAction(() -> doRefactoring(project, editor, settings)),
+            JavaScriptLocalize.javascriptExtractMethodTitle().get(),
+            null
+        );
+    }
 
-	protected JSExtractFunctionSettings getSettings(final Project project, final Editor editor)
-	{
-		final JSExtractFunctionDialog dialog = new JSExtractFunctionDialog();
-		dialog.show();
-		if(dialog.getExitCode() != DialogWrapper.OK_EXIT_CODE)
-		{
-			return null;
-		}
-		return dialog;
-	}
+    protected JSExtractFunctionSettings getSettings(final Project project, final Editor editor) {
+        final JSExtractFunctionDialog dialog = new JSExtractFunctionDialog();
+        dialog.show();
+        if (dialog.getExitCode() != DialogWrapper.OK_EXIT_CODE) {
+            return null;
+        }
+        return dialog;
+    }
 
-	private void doRefactoring(final Project project, final Editor editor, final JSExtractFunctionSettings settings)
-	{
-	}
+    private void doRefactoring(final Project project, final Editor editor, final JSExtractFunctionSettings settings) {
+    }
 
-	@Override
-	public void invoke(@Nonnull final Project project, @Nonnull final PsiElement[] elements, final DataContext dataContext)
-	{
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public void invoke(@Nonnull final Project project, @Nonnull final PsiElement[] elements, final DataContext dataContext) {
+        throw new UnsupportedOperationException();
+    }
 }

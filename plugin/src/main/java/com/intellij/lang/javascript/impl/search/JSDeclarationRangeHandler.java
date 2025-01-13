@@ -29,25 +29,22 @@ import jakarta.annotation.Nonnull;
  * @since 2008-04-28
  */
 @ExtensionImpl
-public class JSDeclarationRangeHandler implements DeclarationRangeHandler<JSNamedElement>
-{
-	@Nonnull
-	@Override
-	public Class<JSNamedElement> getElementClass()
-	{
-		return JSNamedElement.class;
-	}
+public class JSDeclarationRangeHandler implements DeclarationRangeHandler<JSNamedElement> {
+    @Nonnull
+    @Override
+    public Class<JSNamedElement> getElementClass() {
+        return JSNamedElement.class;
+    }
 
-	@Override
-	@Nonnull
-	public TextRange getDeclarationRange(@Nonnull JSNamedElement namedElement)
-	{
-		final TextRange textRange = namedElement.getTextRange();
-		final PsiElement nameIdentifier = namedElement.getNameIdentifier();
-		final TextRange nameIdentifierRange = nameIdentifier != null ? nameIdentifier.getTextRange() : null;
-		int startOffset = nameIdentifierRange != null ? nameIdentifierRange.getStartOffset() : textRange.getStartOffset();
-		int endOffset = nameIdentifierRange != null ? nameIdentifierRange.getEndOffset() : textRange.getEndOffset();
+    @Override
+    @Nonnull
+    public TextRange getDeclarationRange(@Nonnull JSNamedElement namedElement) {
+        final TextRange textRange = namedElement.getTextRange();
+        final PsiElement nameIdentifier = namedElement.getNameIdentifier();
+        final TextRange nameIdentifierRange = nameIdentifier != null ? nameIdentifier.getTextRange() : null;
+        int startOffset = nameIdentifierRange != null ? nameIdentifierRange.getStartOffset() : textRange.getStartOffset();
+        int endOffset = nameIdentifierRange != null ? nameIdentifierRange.getEndOffset() : textRange.getEndOffset();
 
-		return new TextRange(startOffset, endOffset);
-	}
+        return new TextRange(startOffset, endOffset);
+    }
 }

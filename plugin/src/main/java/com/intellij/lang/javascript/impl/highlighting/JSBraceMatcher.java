@@ -33,32 +33,28 @@ import jakarta.annotation.Nullable;
  * Time: 12:10:44 PM
  */
 @ExtensionImpl
-public class JSBraceMatcher implements PairedBraceMatcher
-{
-	private static final BracePair[] PAIRS = new BracePair[]{
-			new BracePair(JSTokenTypes.LPAR, JSTokenTypes.RPAR, false),
-			new BracePair(JSTokenTypes.LBRACKET, JSTokenTypes.RBRACKET, false),
-			new BracePair(JSTokenTypes.LBRACE, JSTokenTypes.RBRACE, true)
-	};
+public class JSBraceMatcher implements PairedBraceMatcher {
+    private static final BracePair[] PAIRS = new BracePair[]{
+        new BracePair(JSTokenTypes.LPAR, JSTokenTypes.RPAR, false),
+        new BracePair(JSTokenTypes.LBRACKET, JSTokenTypes.RBRACKET, false),
+        new BracePair(JSTokenTypes.LBRACE, JSTokenTypes.RBRACE, true)
+    };
 
-	@Override
-	public BracePair[] getPairs()
-	{
-		return PAIRS;
-	}
+    @Override
+    public BracePair[] getPairs() {
+        return PAIRS;
+    }
 
-	@Override
-	public boolean isPairedBracesAllowedBeforeType(@Nonnull final IElementType lbraceType, @Nullable final IElementType tokenType)
-	{
-		return JSTokenTypes.WHITE_SPACE == tokenType || JSTokenTypes.COMMENTS.contains(tokenType) || tokenType == JSTokenTypes.SEMICOLON || tokenType ==
-				JSTokenTypes.COMMA || tokenType == JSTokenTypes.RPAR || tokenType == JSTokenTypes.RBRACKET || tokenType == JSTokenTypes.RBRACE || null ==
-				tokenType;
-	}
+    @Override
+    public boolean isPairedBracesAllowedBeforeType(@Nonnull final IElementType lbraceType, @Nullable final IElementType tokenType) {
+        return JSTokenTypes.WHITE_SPACE == tokenType || JSTokenTypes.COMMENTS.contains(tokenType) || tokenType == JSTokenTypes.SEMICOLON || tokenType ==
+            JSTokenTypes.COMMA || tokenType == JSTokenTypes.RPAR || tokenType == JSTokenTypes.RBRACKET || tokenType == JSTokenTypes.RBRACE || null ==
+            tokenType;
+    }
 
-	@Nonnull
-	@Override
-	public Language getLanguage()
-	{
-		return JavaScriptLanguage.INSTANCE;
-	}
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return JavaScriptLanguage.INSTANCE;
+    }
 }

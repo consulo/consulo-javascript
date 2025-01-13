@@ -30,31 +30,26 @@ import consulo.language.editor.refactoring.NamesValidator;
  * Time: 8:28:35 PM
  * To change this template use File | Settings | File Templates.
  */
-abstract class JSNamesValidator implements NamesValidator
-{
-	protected final Lexer myLexer;
+abstract class JSNamesValidator implements NamesValidator {
+    protected final Lexer myLexer;
 
-	JSNamesValidator(DialectOptionHolder optionHolder)
-	{
-		myLexer = createLexer(optionHolder);
-	}
+    JSNamesValidator(DialectOptionHolder optionHolder) {
+        myLexer = createLexer(optionHolder);
+    }
 
-	protected Lexer createLexer(final DialectOptionHolder optionHolder)
-	{
-		return new JSFlexAdapter(false, optionHolder);
-	}
+    protected Lexer createLexer(final DialectOptionHolder optionHolder) {
+        return new JSFlexAdapter(false, optionHolder);
+    }
 
-	@Override
-	public synchronized boolean isKeyword(String name, Project project)
-	{
-		myLexer.start(name, 0, name.length(), 0);
-		return JSTokenTypes.KEYWORDS.contains(myLexer.getTokenType()) && myLexer.getTokenEnd() == name.length();
-	}
+    @Override
+    public synchronized boolean isKeyword(String name, Project project) {
+        myLexer.start(name, 0, name.length(), 0);
+        return JSTokenTypes.KEYWORDS.contains(myLexer.getTokenType()) && myLexer.getTokenEnd() == name.length();
+    }
 
-	@Override
-	public synchronized boolean isIdentifier(String name, Project project)
-	{
-		myLexer.start(name, 0, name.length(), 0);
-		return JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(myLexer.getTokenType()) && myLexer.getTokenEnd() == name.length();
-	}
+    @Override
+    public synchronized boolean isIdentifier(String name, Project project) {
+        myLexer.start(name, 0, name.length(), 0);
+        return JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(myLexer.getTokenType()) && myLexer.getTokenEnd() == name.length();
+    }
 }

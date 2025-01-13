@@ -27,43 +27,36 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Apr 28, 2008
- *         Time: 8:14:14 PM
+ * Date: Apr 28, 2008
+ * Time: 8:14:14 PM
  */
 @ExtensionImpl
-public class JSGotoTargetRendererProvider implements GotoTargetRendererProvider
-{
-	static class JSClassListCellRenderer extends PsiElementListCellRenderer<JSNamedElement>
-	{
-		@Override
-		public String getElementText(final JSNamedElement element)
-		{
-			return element.getName();
-		}
+public class JSGotoTargetRendererProvider implements GotoTargetRendererProvider {
+    static class JSClassListCellRenderer extends PsiElementListCellRenderer<JSNamedElement> {
+        @Override
+        public String getElementText(final JSNamedElement element) {
+            return element.getName();
+        }
 
-		@Override
-		protected String getContainerText(final JSNamedElement element, final String name)
-		{
-			final ItemPresentation presentation = ((NavigationItem) element).getPresentation();
-			return presentation != null ? presentation.getLocationString() : null;
-		}
+        @Override
+        protected String getContainerText(final JSNamedElement element, final String name) {
+            final ItemPresentation presentation = ((NavigationItem)element).getPresentation();
+            return presentation != null ? presentation.getLocationString() : null;
+        }
 
-		@Override
-		protected int getIconFlags()
-		{
-			return 0;
-		}
-	}
+        @Override
+        protected int getIconFlags() {
+            return 0;
+        }
+    }
 
-	@Nullable
-	@Override
-	public PsiElementListCellRenderer getRenderer(PsiElement element)
-	{
-		if(!(element instanceof JSNamedElement))
-		{
-			return null;
-		}
+    @Nullable
+    @Override
+    public PsiElementListCellRenderer getRenderer(PsiElement element) {
+        if (!(element instanceof JSNamedElement)) {
+            return null;
+        }
 
-		return new JSClassListCellRenderer();
-	}
+        return new JSClassListCellRenderer();
+    }
 }

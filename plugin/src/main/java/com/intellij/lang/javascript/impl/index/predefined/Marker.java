@@ -23,6 +23,5 @@ package com.intellij.lang.javascript.impl.index.predefined;
  * Time: 8:09:53 PM
  * To change this template use File | Settings | File Templates.
  */
-public class Marker
-{
+public class Marker {
 }

@@ -30,35 +30,30 @@ import consulo.project.Project;
  * Time: 19:34:54
  * To change this template use File | Settings | File Templates.
  */
-public class JSWithWithSurrounder extends JSStatementSurrounder
-{
-	@Override
-	public String getTemplateDescription()
-	{
-		return JavaScriptLocalize.javascriptSurroundWithWith().get();
-	}
+public class JSWithWithSurrounder extends JSStatementSurrounder {
+    @Override
+    public String getTemplateDescription() {
+        return JavaScriptLocalize.javascriptSurroundWithWith().get();
+    }
 
-	@Override
-	protected String getStatementTemplate(final Project project, PsiElement context)
-	{
-		return "with(a) { }";
-	}
+    @Override
+    protected String getStatementTemplate(final Project project, PsiElement context) {
+        return "with(a) { }";
+    }
 
-	@Override
-	protected ASTNode getInsertBeforeNode(final ASTNode statementNode)
-	{
-		JSWithStatement stmt = (JSWithStatement) statementNode.getPsi();
-		return stmt.getStatement().getLastChild().getNode();
-	}
+    @Override
+    protected ASTNode getInsertBeforeNode(final ASTNode statementNode) {
+        JSWithStatement stmt = (JSWithStatement)statementNode.getPsi();
+        return stmt.getStatement().getLastChild().getNode();
+    }
 
-	@Override
-	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
-	{
-		JSWithStatement stmt = (JSWithStatement) statementNode.getPsi();
-		ASTNode conditionNode = stmt.getExpression().getNode();
-		int offset = conditionNode.getStartOffset();
-		stmt.getNode().removeChild(conditionNode);
+    @Override
+    protected TextRange getSurroundSelectionRange(final ASTNode statementNode) {
+        JSWithStatement stmt = (JSWithStatement)statementNode.getPsi();
+        ASTNode conditionNode = stmt.getExpression().getNode();
+        int offset = conditionNode.getStartOffset();
+        stmt.getNode().removeChild(conditionNode);
 
-		return new TextRange(offset, offset);
-	}
+        return new TextRange(offset, offset);
+    }
 }

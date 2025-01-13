@@ -24,17 +24,14 @@ import consulo.project.Project;
  * @author yole
  * @since 2005-07-12
  */
-public class JSWithTryCatchSurrounder extends JSWithTryCatchFinallySurrounder
-{
-	@Override
-	public String getTemplateDescription()
-	{
-		return JavaScriptLocalize.javascriptSurroundWithTryCatch().get();
-	}
+public class JSWithTryCatchSurrounder extends JSWithTryCatchFinallySurrounder {
+    @Override
+    public String getTemplateDescription() {
+        return JavaScriptLocalize.javascriptSurroundWithTryCatch().get();
+    }
 
-	@Override
-	protected String getStatementTemplate(final Project project, PsiElement context)
-	{
-		return "try { } catch(e" + getExceptionVarTypeBasedOnContext(context) + ") { }";
-	}
+    @Override
+    protected String getStatementTemplate(final Project project, PsiElement context) {
+        return "try { } catch(e" + getExceptionVarTypeBasedOnContext(context) + ") { }";
+    }
 }

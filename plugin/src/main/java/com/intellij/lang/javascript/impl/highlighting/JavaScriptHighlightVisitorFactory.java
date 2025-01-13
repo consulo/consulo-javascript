@@ -13,18 +13,15 @@ import jakarta.annotation.Nonnull;
  * @since 25/03/2023
  */
 @ExtensionImpl
-public class JavaScriptHighlightVisitorFactory implements HighlightVisitorFactory
-{
-	@Override
-	public boolean suitableForFile(@Nonnull PsiFile psiFile)
-	{
-		return psiFile instanceof JSFile;
-	}
+public class JavaScriptHighlightVisitorFactory implements HighlightVisitorFactory {
+    @Override
+    public boolean suitableForFile(@Nonnull PsiFile psiFile) {
+        return psiFile instanceof JSFile;
+    }
 
-	@Nonnull
-	@Override
-	public HighlightVisitor createVisitor()
-	{
-		return new JavaScriptHighlightVisitor();
-	}
+    @Nonnull
+    @Override
+    public HighlightVisitor createVisitor() {
+        return new JavaScriptHighlightVisitor();
+    }
 }

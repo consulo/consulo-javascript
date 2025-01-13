@@ -39,9 +39,11 @@ public class JavaScriptLanguageVersionPusher implements FilePropertyPusher<Langu
 
     @Override
     public void initExtra(@Nonnull Project project) {
-        project.getMessageBus().connect().subscribe(ModuleExtensionChangeListener.class, (oldExtension, newExtension) -> {
-            if (oldExtension instanceof JavaScriptModuleExtension && newExtension instanceof JavaScriptModuleExtension) {
-                if (((JavaScriptModuleExtension) oldExtension).getLanguageVersion() != ((JavaScriptModuleExtension) newExtension).getLanguageVersion()) {
+        project.getMessageBus().connect().subscribe(
+            ModuleExtensionChangeListener.class,
+            (oldExtension, newExtension) -> {
+            if (oldExtension instanceof JavaScriptModuleExtension oldJsExtension && newExtension instanceof JavaScriptModuleExtension newJsExtension) {
+                if (((JavaScriptModuleExtension)oldExtension).getLanguageVersion() != ((JavaScriptModuleExtension)newExtension).getLanguageVersion()) {
                     addChanged(project, newExtension);
                 }
             }
@@ -110,7 +112,11 @@ public class JavaScriptLanguageVersionPusher implements FilePropertyPusher<Langu
     }
 
     @Override
-    public void persistAttribute(@Nonnull Project project, @Nonnull VirtualFile virtualFile, @Nonnull LanguageVersion newAttribute) throws IOException {
+    public void persistAttribute(
+        @Nonnull Project project,
+        @Nonnull VirtualFile virtualFile,
+        @Nonnull LanguageVersion newAttribute
+    ) throws IOException {
         DataInputStream inputStream = ourFileAttribute.readAttribute(virtualFile);
         if (inputStream != null) {
             try {
