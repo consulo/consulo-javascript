@@ -28,132 +28,107 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jul 23, 2008
- *         Time: 6:54:27 PM
+ * Date: Jul 23, 2008
+ * Time: 6:54:27 PM
  */
-public class JSStructureItemPresentation extends JSStructureViewElement.JSStructureItemPresentationBase
-{
-	public JSStructureItemPresentation(final JSStructureViewElement jsStructureViewElement)
-	{
-		super(jsStructureViewElement);
-	}
+public class JSStructureItemPresentation extends JSStructureViewElement.JSStructureItemPresentationBase {
+    public JSStructureItemPresentation(final JSStructureViewElement jsStructureViewElement) {
+        super(jsStructureViewElement);
+    }
 
-	@Override
-	@RequiredReadAction
-	public String getPresentableText()
-	{
-		PsiElement psiElement = element.getUpToDateElement();
-		if(psiElement == null || !psiElement.isValid())
-		{
-			return "*invalid*";
-		}
+    @Override
+    @RequiredReadAction
+    public String getPresentableText() {
+        PsiElement psiElement = element.getUpToDateElement();
+        if (psiElement == null || !psiElement.isValid()) {
+            return "*invalid*";
+        }
 
-		return getName(psiElement);
-	}
+        return getName(psiElement);
+    }
 
-	@RequiredReadAction
-	public static String getName(@Nonnull PsiElement psiElement)
-	{
-		if(psiElement instanceof JSObjectLiteralExpression)
-		{
-			if (psiElement.getParent() instanceof JSAssignmentExpression assignmentExpression)
-			{
-				final JSExpression expression = ((JSDefinitionExpression) assignmentExpression.getLOperand()).getExpression();
-				return JSResolveUtil.findClassIdentifier(expression).getText();
-			}
-			else
-			{
-				return JavaScriptLocalize.javascriptLanguageTermPrototype().get();
-			}
-		}
+    @RequiredReadAction
+    public static String getName(@Nonnull PsiElement psiElement) {
+        if (psiElement instanceof JSObjectLiteralExpression) {
+            if (psiElement.getParent() instanceof JSAssignmentExpression assignmentExpression) {
+                final JSExpression expression = ((JSDefinitionExpression)assignmentExpression.getLOperand()).getExpression();
+                return JSResolveUtil.findClassIdentifier(expression).getText();
+            }
+            else {
+                return JavaScriptLocalize.javascriptLanguageTermPrototype().get();
+            }
+        }
 
-		if (psiElement instanceof JSDefinitionExpression definitionExpression)
-		{
-			psiElement = definitionExpression.getExpression();
-		}
+        if (psiElement instanceof JSDefinitionExpression definitionExpression) {
+            psiElement = definitionExpression.getExpression();
+        }
 
-		if (psiElement instanceof JSReferenceExpression expression)
-		{
-			String s = expression.getReferencedName();
+        if (psiElement instanceof JSReferenceExpression expression) {
+            String s = expression.getReferencedName();
 
-			if(JSResolveUtil.PROTOTYPE_FIELD_NAME.equals(s))
-			{
-				final JSExpression jsExpression = expression.getQualifier();
-				if (jsExpression instanceof JSReferenceExpression referenceExpression)
-				{
-					s = referenceExpression.getReferencedName();
-				}
-			}
-			return s;
-		}
+            if (JSResolveUtil.PROTOTYPE_FIELD_NAME.equals(s)) {
+                final JSExpression jsExpression = expression.getQualifier();
+                if (jsExpression instanceof JSReferenceExpression referenceExpression) {
+                    s = referenceExpression.getReferencedName();
+                }
+            }
+            return s;
+        }
 
-		if(!(psiElement instanceof PsiNamedElement))
-		{
-			return psiElement.getText();
-		}
+        if (!(psiElement instanceof PsiNamedElement)) {
+            return psiElement.getText();
+        }
 
-		String name = ((PsiNamedElement) psiElement).getName();
+        String name = ((PsiNamedElement)psiElement).getName();
 
-		if (psiElement instanceof JSProperty property)
-		{
-			psiElement = property.getValue();
-		}
+        if (psiElement instanceof JSProperty property) {
+            psiElement = property.getValue();
+        }
 
-		if(psiElement instanceof JSFunction)
-		{
-			if(name == null)
-			{
-				name = "<anonymous>";
-			}
-			name += "(";
-			JSParameterList parameterList = ((JSFunction) psiElement).getParameterList();
-			if(parameterList != null)
-			{
-				for(JSParameter p : parameterList.getParameters())
-				{
-					if(!name.endsWith("("))
-					{
-						name += ", ";
-					}
-					name += p.getName();
-					final String variableType = p.getTypeString();
-					if(variableType != null)
-					{
-						name += ":" + variableType;
-					}
-				}
-			}
-			name += ")";
+        if (psiElement instanceof JSFunction) {
+            if (name == null) {
+                name = "<anonymous>";
+            }
+            name += "(";
+            JSParameterList parameterList = ((JSFunction)psiElement).getParameterList();
+            if (parameterList != null) {
+                for (JSParameter p : parameterList.getParameters()) {
+                    if (!name.endsWith("(")) {
+                        name += ", ";
+                    }
+                    name += p.getName();
+                    final String variableType = p.getTypeString();
+                    if (variableType != null) {
+                        name += ":" + variableType;
+                    }
+                }
+            }
+            name += ")";
 
-			final String type = ((JSFunction) psiElement).getReturnTypeString();
-			if(type != null)
-			{
-				name += ":" + type;
-			}
-		}
+            final String type = ((JSFunction)psiElement).getReturnTypeString();
+            if (type != null) {
+                name += ":" + type;
+            }
+        }
 
-		if (name == null && psiElement.getParent() instanceof JSAssignmentExpression assignmentExpression)
-		{
-			JSExpression lOperand = ((JSDefinitionExpression) assignmentExpression.getLOperand()).getExpression();
-			lOperand = JSResolveUtil.findClassIdentifier(lOperand);
-			if (lOperand instanceof JSReferenceExpression referenceExpression)
-			{
-				return referenceExpression.getReferencedName();
-			}
-			return lOperand.getText();
-		}
-		return name;
-	}
+        if (name == null && psiElement.getParent() instanceof JSAssignmentExpression assignmentExpression) {
+            JSExpression lOperand = ((JSDefinitionExpression)assignmentExpression.getLOperand()).getExpression();
+            lOperand = JSResolveUtil.findClassIdentifier(lOperand);
+            if (lOperand instanceof JSReferenceExpression referenceExpression) {
+                return referenceExpression.getReferencedName();
+            }
+            return lOperand.getText();
+        }
+        return name;
+    }
 
-	@Override
-	@RequiredReadAction
-	public Image getIcon()
-	{
-		final PsiElement psiElement = this.element.getRealElement();
-		if(!psiElement.isValid())
-		{
-			return null;
-		}
-		return IconDescriptorUpdaters.getIcon(psiElement, 0);
-	}
+    @Override
+    @RequiredReadAction
+    public Image getIcon() {
+        final PsiElement psiElement = this.element.getRealElement();
+        if (!psiElement.isValid()) {
+            return null;
+        }
+        return IconDescriptorUpdaters.getIcon(psiElement, 0);
+    }
 }

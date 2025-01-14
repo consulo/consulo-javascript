@@ -40,52 +40,44 @@ import jakarta.annotation.Nullable;
  * @since 11.12.2015
  */
 @ExtensionImpl
-public class JavaScriptLanguageVersionResolver implements LanguageVersionResolver
-{
-	@RequiredReadAction
-	@Nonnull
-	@Override
-	public LanguageVersion getLanguageVersion(@Nonnull Language language, @Nullable PsiElement element)
-	{
-		PsiFile containingFile = element == null ? null : element.getContainingFile();
-		if(containingFile == null)
-		{
-			return StandardJavaScriptVersions.getInstance().getDefaultVersion();
-		}
-		FileType fileType = containingFile.getFileType();
-		if(fileType instanceof JavaScriptFileTypeWithVersion)
-		{
-			Module module = element.getModule();
-			return ((JavaScriptFileTypeWithVersion) fileType).getLanguageVersion(module, element.getContainingFile().getVirtualFile());
-		}
+public class JavaScriptLanguageVersionResolver implements LanguageVersionResolver {
+    @RequiredReadAction
+    @Nonnull
+    @Override
+    public LanguageVersion getLanguageVersion(@Nonnull Language language, @Nullable PsiElement element) {
+        PsiFile containingFile = element == null ? null : element.getContainingFile();
+        if (containingFile == null) {
+            return StandardJavaScriptVersions.getInstance().getDefaultVersion();
+        }
+        FileType fileType = containingFile.getFileType();
+        if (fileType instanceof JavaScriptFileTypeWithVersion) {
+            Module module = element.getModule();
+            return ((JavaScriptFileTypeWithVersion)fileType).getLanguageVersion(module, element.getContainingFile().getVirtualFile());
+        }
 
-		return StandardJavaScriptVersions.getInstance().getDefaultVersion();
-	}
+        return StandardJavaScriptVersions.getInstance().getDefaultVersion();
+    }
 
-	@Nonnull
-	@RequiredReadAction
-	@Override
-	public LanguageVersion getLanguageVersion(@Nonnull Language language, @Nullable Project project, @Nullable VirtualFile virtualFile)
-	{
-		if(project == null || virtualFile == null)
-		{
-			return StandardJavaScriptVersions.getInstance().getDefaultVersion();
-		}
+    @Nonnull
+    @RequiredReadAction
+    @Override
+    public LanguageVersion getLanguageVersion(@Nonnull Language language, @Nullable Project project, @Nullable VirtualFile virtualFile) {
+        if (project == null || virtualFile == null) {
+            return StandardJavaScriptVersions.getInstance().getDefaultVersion();
+        }
 
-		FileType fileType = virtualFile.getFileType();
-		if(fileType instanceof JavaScriptFileTypeWithVersion)
-		{
-			Module module = ModuleUtilCore.findModuleForFile(virtualFile, project);
-			return ((JavaScriptFileTypeWithVersion) fileType).getLanguageVersion(module, virtualFile);
-		}
+        FileType fileType = virtualFile.getFileType();
+        if (fileType instanceof JavaScriptFileTypeWithVersion) {
+            Module module = ModuleUtilCore.findModuleForFile(virtualFile, project);
+            return ((JavaScriptFileTypeWithVersion)fileType).getLanguageVersion(module, virtualFile);
+        }
 
-		return StandardJavaScriptVersions.getInstance().getDefaultVersion();
-	}
+        return StandardJavaScriptVersions.getInstance().getDefaultVersion();
+    }
 
-	@Nonnull
-	@Override
-	public Language getLanguage()
-	{
-		return JavaScriptLanguage.INSTANCE;
-	}
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return JavaScriptLanguage.INSTANCE;
+    }
 }

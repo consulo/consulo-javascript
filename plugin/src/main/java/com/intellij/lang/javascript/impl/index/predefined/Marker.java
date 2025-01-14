@@ -17,12 +17,8 @@
 package com.intellij.lang.javascript.impl.index.predefined;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Maxim.Mossienko
- * Date: Apr 22, 2006
- * Time: 8:09:53 PM
- * To change this template use File | Settings | File Templates.
+ * @author Maxim.Mossienko
+ * @since 2006-04-22
  */
-public class Marker
-{
+public class Marker {
 }

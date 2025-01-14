@@ -31,32 +31,26 @@ import consulo.language.psi.PsiFile;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-public class JSStructureViewBuilderFactory implements PsiStructureViewFactory
-{
-	@Override
-	public StructureViewBuilder getStructureViewBuilder(final PsiFile psiFile)
-	{
-		return new TreeBasedStructureViewBuilder()
-		{
-			@Override
-			@Nonnull
-			public StructureViewModel createStructureViewModel(Editor editor)
-			{
-				return new JSStructureViewModel(psiFile);
-			}
+public class JSStructureViewBuilderFactory implements PsiStructureViewFactory {
+    @Override
+    public StructureViewBuilder getStructureViewBuilder(final PsiFile psiFile) {
+        return new TreeBasedStructureViewBuilder() {
+            @Override
+            @Nonnull
+            public StructureViewModel createStructureViewModel(Editor editor) {
+                return new JSStructureViewModel(psiFile);
+            }
 
-			@Override
-			public boolean isRootNodeShown()
-			{
-				return false;
-			}
-		};
-	}
+            @Override
+            public boolean isRootNodeShown() {
+                return false;
+            }
+        };
+    }
 
-	@Nonnull
-	@Override
-	public Language getLanguage()
-	{
-		return JavaScriptLanguage.INSTANCE;
-	}
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return JavaScriptLanguage.INSTANCE;
+    }
 }

@@ -34,29 +34,25 @@ import jakarta.annotation.Nullable;
  * @author yole
  * @since 2005-07-12
  */
-public class JSWithParenthesesSurrounder implements Surrounder
-{
-	@Override
-	public String getTemplateDescription()
-	{
-		return JavaScriptLocalize.javascriptSurroundWithParenthesis().get();
-	}
+public class JSWithParenthesesSurrounder implements Surrounder {
+    @Override
+    public String getTemplateDescription() {
+        return JavaScriptLocalize.javascriptSurroundWithParenthesis().get();
+    }
 
-	@Override
-	public boolean isApplicable(@Nonnull PsiElement[] elements)
-	{
-		return true;
-	}
+    @Override
+    public boolean isApplicable(@Nonnull PsiElement[] elements) {
+        return true;
+    }
 
-	@Override
-	@Nullable
-	public TextRange surroundElements(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiElement[] elements) throws
-			IncorrectOperationException
-	{
-		JSExpression expr = (JSExpression) elements[0];
-		ASTNode parenthExprNode = JSChangeUtil.createExpressionFromText(project, "(" + expr.getText() + ")").getNode();
-		expr.getNode().getTreeParent().replaceChild(expr.getNode(), parenthExprNode);
-		int offset = parenthExprNode.getTextRange().getEndOffset();
-		return new TextRange(offset, offset);
-	}
+    @Override
+    @Nullable
+    public TextRange surroundElements(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiElement[] elements)
+        throws IncorrectOperationException {
+        JSExpression expr = (JSExpression)elements[0];
+        ASTNode parenthExprNode = JSChangeUtil.createExpressionFromText(project, "(" + expr.getText() + ")").getNode();
+        expr.getNode().getTreeParent().replaceChild(expr.getNode(), parenthExprNode);
+        int offset = parenthExprNode.getTextRange().getEndOffset();
+        return new TextRange(offset, offset);
+    }
 }

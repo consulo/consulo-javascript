@@ -27,31 +27,26 @@ import consulo.project.Project;
  * @author yole
  * @since 2005-07-12
  */
-public class JSWithDoWhileSurrounder extends JSStatementSurrounder
-{
-	@Override
-	public String getTemplateDescription()
-	{
-		return JavaScriptLocalize.javascriptSurroundWithDoWhile().get();
-	}
+public class JSWithDoWhileSurrounder extends JSStatementSurrounder {
+    @Override
+    public String getTemplateDescription() {
+        return JavaScriptLocalize.javascriptSurroundWithDoWhile().get();
+    }
 
-	@Override
-	protected String getStatementTemplate(final Project project, PsiElement context)
-	{
-		return "do { } while (true);";
-	}
+    @Override
+    protected String getStatementTemplate(final Project project, PsiElement context) {
+        return "do { } while (true);";
+    }
 
-	@Override
-	protected ASTNode getInsertBeforeNode(final ASTNode statementNode)
-	{
-		JSDoWhileStatement stmt = (JSDoWhileStatement) statementNode.getPsi();
-		return stmt.getBody().getLastChild().getNode();
-	}
+    @Override
+    protected ASTNode getInsertBeforeNode(final ASTNode statementNode) {
+        JSDoWhileStatement stmt = (JSDoWhileStatement)statementNode.getPsi();
+        return stmt.getBody().getLastChild().getNode();
+    }
 
-	@Override
-	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
-	{
-		JSDoWhileStatement stmt = (JSDoWhileStatement) statementNode.getPsi();
-		return stmt.getCondition().getTextRange();
-	}
+    @Override
+    protected TextRange getSurroundSelectionRange(final ASTNode statementNode) {
+        JSDoWhileStatement stmt = (JSDoWhileStatement)statementNode.getPsi();
+        return stmt.getCondition().getTextRange();
+    }
 }

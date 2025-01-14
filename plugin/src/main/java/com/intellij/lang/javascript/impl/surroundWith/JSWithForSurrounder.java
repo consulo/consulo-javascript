@@ -30,44 +30,36 @@ import consulo.project.Project;
  * @author yole
  * @since 2005-07-12
  */
-public class JSWithForSurrounder extends JSStatementSurrounder
-{
-	@Override
-	public String getTemplateDescription()
-	{
-		return JavaScriptLocalize.javascriptSurroundWithFor().get();
-	}
+public class JSWithForSurrounder extends JSStatementSurrounder {
+    @Override
+    public String getTemplateDescription() {
+        return JavaScriptLocalize.javascriptSurroundWithFor().get();
+    }
 
-	@Override
-	protected String getStatementTemplate(final Project project, PsiElement context)
-	{
-		return "for(i=0; i<1; i++) { }";
-	}
+    @Override
+    protected String getStatementTemplate(final Project project, PsiElement context) {
+        return "for(i=0; i<1; i++) { }";
+    }
 
-	@Override
-	protected ASTNode getInsertBeforeNode(final ASTNode statementNode)
-	{
-		JSForStatement forStatement = (JSForStatement) statementNode.getPsi();
-		return forStatement.getBody().getLastChild().getNode();
-	}
+    @Override
+    protected ASTNode getInsertBeforeNode(final ASTNode statementNode) {
+        JSForStatement forStatement = (JSForStatement)statementNode.getPsi();
+        return forStatement.getBody().getLastChild().getNode();
+    }
 
-	@Override
-	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
-	{
-		for(ASTNode childNode : statementNode.getChildren(null))
-		{
-			if(childNode.getElementType() == JSTokenTypes.SEMICOLON ||
-					childNode.getPsi() instanceof PsiWhiteSpace ||
-					childNode.getPsi() instanceof JSExpression)
-			{
-				statementNode.removeChild(childNode);
-			}
-			else if(childNode.getElementType() == JSTokenTypes.RPAR)
-			{
-				int offset = childNode.getStartOffset();
-				return new TextRange(offset, offset);
-			}
-		}
-		return null;
-	}
+    @Override
+    protected TextRange getSurroundSelectionRange(final ASTNode statementNode) {
+        for (ASTNode childNode : statementNode.getChildren(null)) {
+            if (childNode.getElementType() == JSTokenTypes.SEMICOLON ||
+                childNode.getPsi() instanceof PsiWhiteSpace ||
+                childNode.getPsi() instanceof JSExpression) {
+                statementNode.removeChild(childNode);
+            }
+            else if (childNode.getElementType() == JSTokenTypes.RPAR) {
+                int offset = childNode.getStartOffset();
+                return new TextRange(offset, offset);
+            }
+        }
+        return null;
+    }
 }

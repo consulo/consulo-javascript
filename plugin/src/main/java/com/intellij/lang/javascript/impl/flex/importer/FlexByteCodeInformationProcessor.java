@@ -16,29 +16,27 @@
 
 package com.intellij.lang.javascript.impl.flex.importer;
 
-import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
  * @author Maxim.Mossienko
- * Date: Oct 20, 2008
- * Time: 7:02:07 PM
+ * @since 2008-10-20
  */
 interface FlexByteCodeInformationProcessor {
-    void dumpStat(@Nonnull @NonNls String stat);
+    void dumpStat(@Nonnull String stat);
 
     void hasError(@Nonnull String error);
 
-    void append(@Nonnull @NonNls String str);
+    void append(@Nonnull String str);
 
     void processMultinameAsPackageName(@Nonnull Multiname name, @Nullable String parentName, boolean referenceNameRequested);
 
-    void dumpToplevelAnonymousMethod(final @Nonnull Abc abc, final @Nonnull MethodInfo m);
+    void dumpToplevelAnonymousMethod(@Nonnull Abc abc, @Nonnull MethodInfo m);
 
-    void dumpTopLevelTraits(final @Nonnull Abc abc, final @Nonnull Traits t, final String indent);
+    void dumpTopLevelTraits(@Nonnull Abc abc, @Nonnull Traits t, String indent);
 
-    boolean doDumpMember(final @Nonnull MemberInfo memberInfo);
+    boolean doDumpMember(@Nonnull MemberInfo memberInfo);
 
     void appendMethodSeparator();
 
@@ -46,19 +44,19 @@ interface FlexByteCodeInformationProcessor {
 
     String getAbcInSwfIndent();
 
-    boolean doDumpMetaData(final @Nonnull MetaData md);
+    boolean doDumpMetaData(@Nonnull MetaData md);
 
     String REST_PARAMETER_TYPE = "...";
 
-    void processParameter(final @Nonnull String name, @Nullable Multiname type, String parentName, @Nullable Multiname value, boolean rest);
+    void processParameter(@Nonnull String name, @Nullable Multiname type, String parentName, @Nullable Multiname value, boolean rest);
 
     boolean doStarTypeDumpInExtends();
 
     boolean doStarMetaAttrNameDump();
 
-    void setProcessingInterface(final boolean anInterface);
+    void setProcessingInterface(boolean anInterface);
 
-    String getParentName(final MemberInfo member);
+    String getParentName(MemberInfo member);
 
     void processVariable(SlotInfo info, String indent, String attr);
 

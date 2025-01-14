@@ -12,12 +12,10 @@ import jakarta.annotation.Nonnull;
  * @since 29-Aug-22
  */
 @ExtensionImpl
-public class JavaScriptSkipAutopopupInStrings extends SkipAutopopupInStrings
-{
-	@Nonnull
-	@Override
-	public Language getLanguage()
-	{
-		return JavaScriptLanguage.INSTANCE;
-	}
+public class JavaScriptSkipAutopopupInStrings extends SkipAutopopupInStrings {
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return JavaScriptLanguage.INSTANCE;
+    }
 }

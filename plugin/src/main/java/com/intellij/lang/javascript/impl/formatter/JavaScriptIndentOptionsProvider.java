@@ -24,41 +24,37 @@ import consulo.language.codeStyle.setting.IndentOptionsEditor;
 import consulo.language.codeStyle.ui.setting.SmartIndentOptionsEditor;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
  */
 @ExtensionImpl
-public class JavaScriptIndentOptionsProvider implements FileTypeIndentOptionsProvider
-{
-	@Override
-	public CodeStyleSettings.IndentOptions createIndentOptions()
-	{
-		return new CodeStyleSettings.IndentOptions();
-	}
+public class JavaScriptIndentOptionsProvider implements FileTypeIndentOptionsProvider {
+    @Override
+    public CodeStyleSettings.IndentOptions createIndentOptions() {
+        return new CodeStyleSettings.IndentOptions();
+    }
 
-	@Override
-	public FileType getFileType()
-	{
-		return JavaScriptFileType.INSTANCE;
-	}
+    @Override
+    public FileType getFileType() {
+        return JavaScriptFileType.INSTANCE;
+    }
 
-	@Override
-	public IndentOptionsEditor createOptionsEditor()
-	{
-		return new SmartIndentOptionsEditor();
-	}
+    @Override
+    public IndentOptionsEditor createOptionsEditor() {
+        return new SmartIndentOptionsEditor();
+    }
 
-	@Override
-	public String getPreviewText()
-	{
-		return "function a() {\n" +
-				"    alert(\"test\");\n" +
-				"}";
-	}
+    @Nonnull
+    @Override
+    public String getPreviewText() {
+        return "function a() {\n" +
+            "    alert(\"test\");\n" +
+            "}";
+    }
 
-	@Override
-	public void prepareForReformat(final PsiFile psiFile)
-	{
-	}
+    @Override
+    public void prepareForReformat(PsiFile psiFile) {
+    }
 }

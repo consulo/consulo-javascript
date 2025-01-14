@@ -9,17 +9,14 @@ import consulo.javascript.language.JavaScriptLanguage;
  * @author VISTALL
  * @since 16.02.2015
  */
-public class JavaScriptCodeStylePanel extends TabbedLanguageCodeStylePanel
-{
-	public JavaScriptCodeStylePanel(CodeStyleSettings currentSettings, CodeStyleSettings cloneSettings)
-	{
-		super(JavaScriptLanguage.INSTANCE, currentSettings, cloneSettings);
-	}
+public class JavaScriptCodeStylePanel extends TabbedLanguageCodeStylePanel {
+    public JavaScriptCodeStylePanel(CodeStyleSettings currentSettings, CodeStyleSettings cloneSettings) {
+        super(JavaScriptLanguage.INSTANCE, currentSettings, cloneSettings);
+    }
 
-	@Override
-	protected void initTabs(CodeStyleSettings settings)
-	{
-		super.initTabs(settings);
-		addTab(new JSCodeStylePanel(settings));
-	}
+    @Override
+    protected void initTabs(CodeStyleSettings settings) {
+        super.initTabs(settings);
+        addTab(new JSCodeStylePanel(settings));
+    }
 }

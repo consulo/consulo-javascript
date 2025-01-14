@@ -33,15 +33,13 @@ import jakarta.annotation.Nullable;
  * @since 02.12.2015
  */
 @ExtensionImpl(id = "default", order = "last")
-public class DefaultJSPropertyNameReferenceProvider implements JSPropertyNameReferenceProvider
-{
-	@RequiredReadAction
-	@Nullable
-	@Override
-	public PsiReference getReference(@Nonnull JSProperty property)
-	{
-		PsiElement nameIdentifier = property.getNameIdentifier();
-		assert nameIdentifier != null;
-		return new JSPropertyNameReference(property, nameIdentifier);
-	}
+public class DefaultJSPropertyNameReferenceProvider implements JSPropertyNameReferenceProvider {
+    @RequiredReadAction
+    @Nullable
+    @Override
+    public PsiReference getReference(@Nonnull JSProperty property) {
+        PsiElement nameIdentifier = property.getNameIdentifier();
+        assert nameIdentifier != null;
+        return new JSPropertyNameReference(property, nameIdentifier);
+    }
 }

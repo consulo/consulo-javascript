@@ -19,7 +19,6 @@ package com.intellij.lang.javascript.impl.refactoring.extractMethod;
 /**
  * @author ven
  */
-public interface JSExtractFunctionSettings
-{
-	String getMethodName();
+public interface JSExtractFunctionSettings {
+    String getMethodName();
 }

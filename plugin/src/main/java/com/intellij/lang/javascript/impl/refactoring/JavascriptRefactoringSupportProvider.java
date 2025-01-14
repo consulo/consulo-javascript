@@ -35,53 +35,48 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 @ExtensionImpl
-public class JavascriptRefactoringSupportProvider extends RefactoringSupportProvider
-{
-	@Override
-	public boolean isSafeDeleteAvailable(PsiElement element)
-	{
-		boolean simpleElement = element instanceof JSFunction || element instanceof JSVariable || element instanceof JSDefinitionExpression ||
-				element instanceof JSProperty || element instanceof JSClass;
+public class JavascriptRefactoringSupportProvider extends RefactoringSupportProvider {
+    @Override
+    public boolean isSafeDeleteAvailable(PsiElement element) {
+        boolean simpleElement = element instanceof JSFunction
+            || element instanceof JSVariable
+            || element instanceof JSDefinitionExpression
+            || element instanceof JSProperty
+            || element instanceof JSClass;
 
-		return simpleElement && ((JSNamedElement) element).getName() != null;
-	}
+        return simpleElement && ((JSNamedElement)element).getName() != null;
+    }
 
-	@Override
-	@Nullable
-	public RefactoringActionHandler getIntroduceVariableHandler()
-	{
-		return new JSIntroduceVariableHandler();
-	}
+    @Override
+    @Nullable
+    public RefactoringActionHandler getIntroduceVariableHandler() {
+        return new JSIntroduceVariableHandler();
+    }
 
-	@Override                                                                                
-	@Nullable
-	public RefactoringActionHandler getExtractMethodHandler()
-	{
-		return new JSExtractFunctionHandler();
-	}
+    @Override
+    @Nullable
+    public RefactoringActionHandler getExtractMethodHandler() {
+        return new JSExtractFunctionHandler();
+    }
 
-	@Override
-	public RefactoringActionHandler getIntroduceConstantHandler()
-	{
-		return new JSIntroduceConstantHandler();
-	}
+    @Override
+    public RefactoringActionHandler getIntroduceConstantHandler() {
+        return new JSIntroduceConstantHandler();
+    }
 
-	@Override
-	public RefactoringActionHandler getIntroduceFieldHandler()
-	{
-		return new JSIntroduceFieldHandler();
-	}
+    @Override
+    public RefactoringActionHandler getIntroduceFieldHandler() {
+        return new JSIntroduceFieldHandler();
+    }
 
-	@Override
-	public boolean isInplaceRenameAvailable(PsiElement element, PsiElement context)
-	{
-		return element instanceof JSNamedElement && element.getUseScope() instanceof LocalSearchScope;
-	}
+    @Override
+    public boolean isInplaceRenameAvailable(PsiElement element, PsiElement context) {
+        return element instanceof JSNamedElement && element.getUseScope() instanceof LocalSearchScope;
+    }
 
-	@Nonnull
-	@Override
-	public Language getLanguage()
-	{
-		return JavaScriptLanguage.INSTANCE;
-	}
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return JavaScriptLanguage.INSTANCE;
+    }
 }

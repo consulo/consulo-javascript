@@ -36,48 +36,50 @@ import consulo.util.io.FileUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 
 /**
  * @author maxim
  */
 @ExtensionImpl
-public class JavaScriptSymbolContributor implements GotoSymbolContributor
-{
-	@Override
-	public void processNames(@Nonnull Processor<String> processor, @Nonnull SearchScope searchScope, @Nullable IdFilter idFilter)
-	{
-		StubIndex.getInstance().processAllKeys(JavaScriptIndexKeys.ELEMENTS_BY_NAME, processor, (GlobalSearchScope) searchScope, idFilter);
+public class JavaScriptSymbolContributor implements GotoSymbolContributor {
+    @Override
+    public void processNames(@Nonnull Processor<String> processor, @Nonnull SearchScope searchScope, @Nullable IdFilter idFilter) {
+        StubIndex.getInstance().processAllKeys(JavaScriptIndexKeys.ELEMENTS_BY_NAME, processor, (GlobalSearchScope)searchScope, idFilter);
 
-		FileBasedIndex.getInstance().processAllKeys(FilenameIndex.NAME, new Processor<String>()
-		{
-			@Override
-			public boolean process(String s)
-			{
-				if(JavaScriptSupportLoader.isFlexMxmFile(s))
-				{
-					return processor.process(FileUtil.getNameWithoutExtension(s));
-				}
-				return true;
-			}
-		}, searchScope, idFilter);
-	}
+        FileBasedIndex.getInstance().processAllKeys(
+            FilenameIndex.NAME,
+            new Processor<String>() {
+                @Override
+                public boolean process(String s) {
+                    if (JavaScriptSupportLoader.isFlexMxmFile(s)) {
+                        return processor.process(FileUtil.getNameWithoutExtension(s));
+                    }
+                    return true;
+                }
+            },
+            searchScope,
+            idFilter
+        );
+    }
 
-	@Override
-	public void processElementsWithName(@Nonnull String name, @Nonnull Processor<NavigationItem> processor, @Nonnull FindSymbolParameters findSymbolParameters)
-	{
-		Project project = findSymbolParameters.getProject();
+    @Override
+    public void processElementsWithName(
+        @Nonnull String name,
+        @Nonnull Processor<NavigationItem> processor,
+        @Nonnull FindSymbolParameters findSymbolParameters
+    ) {
+        Project project = findSymbolParameters.getProject();
 
-		GlobalSearchScope scope = (GlobalSearchScope) findSymbolParameters.getSearchScope();
+        GlobalSearchScope scope = (GlobalSearchScope)findSymbolParameters.getSearchScope();
 
-		Collection<JSQualifiedNamedElement> result = JSResolveUtil.findElementsByName(name, project, scope);
+        Collection<JSQualifiedNamedElement> result = JSResolveUtil.findElementsByName(name, project, scope);
 
-		for(JSQualifiedNamedElement element : result)
-		{
-			if(!processor.process(element))
-			{
-				break;
-			}
-		}
-	}
+        for (JSQualifiedNamedElement element : result) {
+            if (!processor.process(element)) {
+                break;
+            }
+        }
+    }
 }

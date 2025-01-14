@@ -23,11 +23,8 @@ import consulo.javascript.lang.JavaScriptTokenSets;
 import consulo.language.cacheBuilder.DefaultWordsScanner;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 31, 2005
- * Time: 9:34:58 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-31
  */
 public class JSWordsScanner extends DefaultWordsScanner {
     public JSWordsScanner() {

@@ -10,11 +10,9 @@ import jakarta.annotation.Nonnull;
  * @since 29-Aug-22
  */
 @ExtensionImpl
-public class JavaScriptFileTemplateContributor implements FileTemplateContributor
-{
-	@Override
-	public void register(@Nonnull FileTemplateRegistrator fileTemplateRegistrator)
-	{
-		fileTemplateRegistrator.registerInternalTemplate("JavaScriptFile");
-	}
+public class JavaScriptFileTemplateContributor implements FileTemplateContributor {
+    @Override
+    public void register(@Nonnull FileTemplateRegistrator fileTemplateRegistrator) {
+        fileTemplateRegistrator.registerInternalTemplate("JavaScriptFile");
+    }
 }

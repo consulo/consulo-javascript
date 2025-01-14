@@ -23,35 +23,30 @@ import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
-public class JSWithFunctionSurrounder extends JSStatementSurrounder
-{
-	@Override
-	public String getTemplateDescription()
-	{
-		return JavaScriptLocalize.javascriptSurroundWithFunction().get();
-	}
+public class JSWithFunctionSurrounder extends JSStatementSurrounder {
+    @Override
+    public String getTemplateDescription() {
+        return JavaScriptLocalize.javascriptSurroundWithFunction().get();
+    }
 
-	@Override
-	protected String getStatementTemplate(final Project project, PsiElement context)
-	{
-		return "function $name$() { }";
-	}
+    @Override
+    protected String getStatementTemplate(final Project project, PsiElement context) {
+        return "function $name$() { }";
+    }
 
-	@Override
-	protected ASTNode getInsertBeforeNode(final ASTNode statementNode)
-	{
-		JSFunction stmt = (JSFunction) statementNode.getPsi();
-		return stmt.getBody()[0].getLastChild().getNode();
-	}
+    @Override
+    protected ASTNode getInsertBeforeNode(final ASTNode statementNode) {
+        JSFunction stmt = (JSFunction)statementNode.getPsi();
+        return stmt.getBody()[0].getLastChild().getNode();
+    }
 
-	@Override
-	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
-	{
-		JSFunction stmt = (JSFunction) statementNode.getPsi();
-		ASTNode conditionNode = stmt.getNameIdentifier().getNode();
-		int offset = conditionNode.getStartOffset();
-		stmt.getNode().removeChild(conditionNode);
+    @Override
+    protected TextRange getSurroundSelectionRange(final ASTNode statementNode) {
+        JSFunction stmt = (JSFunction)statementNode.getPsi();
+        ASTNode conditionNode = stmt.getNameIdentifier().getNode();
+        int offset = conditionNode.getStartOffset();
+        stmt.getNode().removeChild(conditionNode);
 
-		return new TextRange(offset, offset);
-	}
+        return new TextRange(offset, offset);
+    }
 }

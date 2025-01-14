@@ -29,44 +29,37 @@ import jakarta.annotation.Nonnull;
 /**
  * @author ven
  */
-public class JSFormattingModel implements FormattingModel
-{
-	private FormattingModel myModel;
+public class JSFormattingModel implements FormattingModel {
+    private FormattingModel myModel;
 
-	public JSFormattingModel(final PsiFile file, CodeStyleSettings settings, final Block rootBlock)
-	{
-		myModel = FormattingModelProvider.createFormattingModelForPsiFile(file, rootBlock, settings);
-	}
+    public JSFormattingModel(PsiFile file, CodeStyleSettings settings, Block rootBlock) {
+        myModel = FormattingModelProvider.createFormattingModelForPsiFile(file, rootBlock, settings);
+    }
 
-	@Override
-	@Nonnull
-	public Block getRootBlock()
-	{
-		return myModel.getRootBlock();
-	}
+    @Override
+    @Nonnull
+    public Block getRootBlock() {
+        return myModel.getRootBlock();
+    }
 
-	@Override
-	@Nonnull
-	public FormattingDocumentModel getDocumentModel()
-	{
-		return myModel.getDocumentModel();
-	}
+    @Override
+    @Nonnull
+    public FormattingDocumentModel getDocumentModel() {
+        return myModel.getDocumentModel();
+    }
 
-	@Override
-	public TextRange replaceWhiteSpace(TextRange textRange, String whiteSpace)
-	{
-		return myModel.replaceWhiteSpace(textRange, whiteSpace);
-	}
+    @Override
+    public TextRange replaceWhiteSpace(TextRange textRange, String whiteSpace) {
+        return myModel.replaceWhiteSpace(textRange, whiteSpace);
+    }
 
-	@Override
-	public TextRange shiftIndentInsideRange(ASTNode node, TextRange range, int indent)
-	{
-		return myModel.shiftIndentInsideRange(node, range, indent);
-	}
+    @Override
+    public TextRange shiftIndentInsideRange(ASTNode node, TextRange range, int indent) {
+        return myModel.shiftIndentInsideRange(node, range, indent);
+    }
 
-	@Override
-	public void commitChanges()
-	{
-		myModel.commitChanges();
-	}
+    @Override
+    public void commitChanges() {
+        myModel.commitChanges();
+    }
 }

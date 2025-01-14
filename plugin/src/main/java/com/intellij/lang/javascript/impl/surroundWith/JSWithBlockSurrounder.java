@@ -25,30 +25,25 @@ import consulo.language.psi.PsiElement;
  * @author yole
  * @since 2005-07-12
  */
-public class JSWithBlockSurrounder extends JSStatementSurrounder
-{
-	@Override
-	public String getTemplateDescription()
-	{
-		return "{ }";
-	}
+public class JSWithBlockSurrounder extends JSStatementSurrounder {
+    @Override
+    public String getTemplateDescription() {
+        return "{ }";
+    }
 
-	@Override
-	protected String getStatementTemplate(final Project project, PsiElement context)
-	{
-		return "{ }";
-	}
+    @Override
+    protected String getStatementTemplate(final Project project, PsiElement context) {
+        return "{ }";
+    }
 
-	@Override
-	protected ASTNode getInsertBeforeNode(final ASTNode statementNode)
-	{
-		return statementNode.getLastChildNode();
-	}
+    @Override
+    protected ASTNode getInsertBeforeNode(final ASTNode statementNode) {
+        return statementNode.getLastChildNode();
+    }
 
-	@Override
-	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
-	{
-		int endOffset = statementNode.getTextRange().getEndOffset();
-		return new TextRange(endOffset, endOffset);
-	}
+    @Override
+    protected TextRange getSurroundSelectionRange(final ASTNode statementNode) {
+        int endOffset = statementNode.getTextRange().getEndOffset();
+        return new TextRange(endOffset, endOffset);
+    }
 }

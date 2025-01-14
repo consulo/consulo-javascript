@@ -21,9 +21,8 @@ import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import com.intellij.lang.javascript.search.JSClassSearch;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Processor;
 import consulo.application.util.query.CollectionQuery;
@@ -40,466 +39,420 @@ import consulo.language.editor.ui.PsiElementListNavigator;
 import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.navigation.NavigationItem;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.ref.Ref;
-
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.function.Function;
 
 /**
  * @author Maxim.Mossienko
- * Date: Apr 14, 2008
- * Time: 11:43:47 PM
+ * @since 2008-04-14
  */
 @ExtensionImpl
-public class JavaScriptLineMarkerProvider implements LineMarkerProvider
-{
-	private static final String OVERRIDES_METHOD_IN = "overrides method in ";
+public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
+    private static final String OVERRIDES_METHOD_IN = "overrides method in ";
 
-	private static final Function<JSClass, String> ourClassInheritorsTooltipProvider = clazz -> "Has subclasses";
+    private static final Function<JSClass, String> CLASS_INHERITORS_TOOLTIP_PROVIDER = clazz -> "Has subclasses";
 
-	private static final Function<JSClass, String> ourImplementedInterfacesTooltipProvider = clazz -> "Has implementations";
+    private static final Function<JSClass, String> IMPLEMENTED_INTERFACES_TOOLTIP_PROVIDER = clazz -> "Has implementations";
 
-	private static final Function<JSFunction, String> ourOverriddenFunctionsTooltipProvider = psiElement -> "Is overridden";
+    private static final Function<JSFunction, String> OVERRIDDEN_FUNCTIONS_TOOLTIP_PROVIDER = psiElement -> "Is overridden";
 
-	private static final Function<JSFunction, String> ourImplementingFunctionsTooltipProvider = psiElement -> "Is implemented";
+    private static final Function<JSFunction, String> IMPLEMENTING_FUNCTIONS_TOOLTIP_PROVIDER = psiElement -> "Is implemented";
 
-	private static final BasicGutterIconNavigationHandler<JSClass> ourClassInheritorsNavHandler = new BasicGutterIconNavigationHandler<JSClass>()
-	{
-		@Override
-		protected String getTitle(final JSClass elt)
-		{
-			return "Choose Subclass of " + elt.getName();
-		}
+    private static final BasicGutterIconNavigationHandler<JSClass> CLASS_INHERITORS_NAV_HANDLER =
+        new BasicGutterIconNavigationHandler<>() {
+            @Override
+            @RequiredReadAction
+            protected String getTitle(JSClass elt) {
+                return "Choose Subclass of " + elt.getName();
+            }
 
-		@Override
-		protected Query<JSClass> search(final JSClass elt)
-		{
-			return JSClassSearch.searchClassInheritors(elt, true);
-		}
-	};
+            @Override
+            protected Query<JSClass> search(JSClass elt) {
+                return JSClassSearch.searchClassInheritors(elt, true);
+            }
+        };
 
-	private static final BasicGutterIconNavigationHandler<JSClass> ourInterfaceImplementationsNavHandler = new
-			BasicGutterIconNavigationHandler<JSClass>()
-			{
-				@Override
-				protected String getTitle(final JSClass elt)
-				{
-					return "Choose Implementation of " + elt.getName();
-				}
+    private static final BasicGutterIconNavigationHandler<JSClass> INTERFACE_IMPLEMENTATIONS_NAV_HANDLER =
+        new BasicGutterIconNavigationHandler<>() {
+            @Override
+            @RequiredReadAction
+            protected String getTitle(JSClass elt) {
+                return "Choose Implementation of " + elt.getName();
+            }
 
-				@Override
-				protected Query<JSClass> search(final JSClass elt)
-				{
-					return JSClassSearch.searchInterfaceImplementations(elt, true);
-				}
-			};
+            @Override
+            protected Query<JSClass> search(JSClass elt) {
+                return JSClassSearch.searchInterfaceImplementations(elt, true);
+            }
+        };
 
-	private static final BasicGutterIconNavigationHandler<JSFunction> ourOverriddenFunctionsNavHandler = new
-			BasicGutterIconNavigationHandler<JSFunction>()
-			{
-				@Override
-				protected String getTitle(final JSFunction elt)
-				{
-					return "Choose Overriden Function of " + elt.getName();
-				}
+    private static final BasicGutterIconNavigationHandler<JSFunction> OVERRIDDEN_FUNCTIONS_NAV_HANDLER =
+        new BasicGutterIconNavigationHandler<>() {
+            @Override
+            @RequiredReadAction
+            protected String getTitle(JSFunction elt) {
+                return "Choose Overriden Function of " + elt.getName();
+            }
 
-				@Override
-				protected Query<JSFunction> search(final JSFunction elt)
-				{
-					return doFindOverridenFunctionStatic(elt);
-				}
-			};
-	private final boolean myUnitTestMode = ApplicationManager.getApplication().isUnitTestMode();
+            @Override
+            @RequiredReadAction
+            protected Query<JSFunction> search(JSFunction elt) {
+                return doFindOverridenFunctionStatic(elt);
+            }
+        };
 
+    @RequiredReadAction
+    public static Query<JSFunction> doFindOverridenFunctionStatic(JSFunction elt) {
+        PsiElement parent = JSResolveUtil.findParent(elt);
+        if (parent instanceof JSClass) {
+            return JSFunctionsSearch.searchOverridingFunctions(elt, true);
+        }
+        String qName = JSResolveUtil.getQNameToStartHierarchySearch(elt);
+        if (qName != null) {
+            ArrayList<JSFunction> result = new ArrayList<>();
 
-	public static Query<JSFunction> doFindOverridenFunctionStatic(final JSFunction elt)
-	{
-		PsiElement parent = JSResolveUtil.findParent(elt);
-		if(parent instanceof JSClass)
-		{
-			return JSFunctionsSearch.searchOverridingFunctions(elt, true);
-		}
-		final String qName = JSResolveUtil.getQNameToStartHierarchySearch(elt);
-		if(qName != null)
-		{
-			final ArrayList<JSFunction> result = new ArrayList<>();
+            return new CollectionQuery<>(result);
+        }
 
-			return new CollectionQuery<>(result);
-		}
+        return new CollectionQuery<>(Collections.<JSFunction>emptyList());
+    }
 
-		return new CollectionQuery<>(Collections.<JSFunction>emptyList());
-	}
+    private static final BasicGutterIconNavigationHandler<JSFunction> IMPLEMENTING_FUNCTIONS_NAV_HANDLER =
+        new BasicGutterIconNavigationHandler<>() {
+            @Override
+            @RequiredReadAction
+            protected String getTitle(JSFunction elt) {
+                return "Choose Implementation of " + elt.getName();
+            }
 
-	private static final BasicGutterIconNavigationHandler<JSFunction> ourImplementingFunctionsNavHandler = new
-			BasicGutterIconNavigationHandler<JSFunction>()
-			{
-				@Override
-				protected String getTitle(final JSFunction elt)
-				{
-					return "Choose Implementation of " + elt.getName();
-				}
+            @Override
+            protected Query<JSFunction> search(JSFunction elt) {
+                return JSFunctionsSearch.searchImplementingFunctions(elt, true);
+            }
+        };
 
-				@Override
-				protected Query<JSFunction> search(final JSFunction elt)
-				{
-					return JSFunctionsSearch.searchImplementingFunctions(elt, true);
-				}
-			};
+    public static Key<Boolean> ourParticipatesInHierarchyKey = Key.create("js.named.item.participates.in.hierarchy");
 
-	public static Key<Boolean> ourParticipatesInHierarchyKey = Key.create("js.named.item.participates.in.hierarchy");
+    @Override
+    @RequiredReadAction
+    public LineMarkerInfo getLineMarkerInfo(@Nonnull final PsiElement element) {
+        if (element instanceof JSFunction function) {
+            function.putUserData(ourParticipatesInHierarchyKey, null);
+            if (function.getNameIdentifier() == null) {
+                return null;
+            }
+            final String qName = JSResolveUtil.getQNameToStartHierarchySearch(function);
 
-	@Override
-	public LineMarkerInfo getLineMarkerInfo(@Nonnull final PsiElement element)
-	{
-		if(element instanceof JSFunction)
-		{
-			final JSFunction function = (JSFunction) element;
-			function.putUserData(ourParticipatesInHierarchyKey, null);
-			if(function.getNameIdentifier() == null)
-			{
-				return null;
-			}
-			final String qName = JSResolveUtil.getQNameToStartHierarchySearch(function);
+            if (qName != null) {
+                PsiElement parentNode = element.getParent();
+                if (parentNode instanceof JSFile jsFile) {
+                    JSClass xmlBackedClass = JSResolveUtil.getXmlBackedClass(jsFile);
+                    if (xmlBackedClass != null) {
+                        parentNode = xmlBackedClass;
+                    }
+                }
 
-			if(qName != null)
-			{
-				PsiElement parentNode = element.getParent();
-				if(parentNode instanceof JSFile)
-				{
-					JSClass xmlBackedClass = JSResolveUtil.getXmlBackedClass((JSFile) parentNode);
-					if(xmlBackedClass != null)
-					{
-						parentNode = xmlBackedClass;
-					}
-				}
+                if (element instanceof JSFunctionExpression functionExpr) {
+                    parentNode = functionExpr.getContainingFile();
+                }
 
-				if(element instanceof JSFunctionExpression)
-				{
-					parentNode = element.getContainingFile();
-				}
+                final MyOverrideHandler overrideHandler = new MyOverrideHandler();
+                final String typeName = parentNode instanceof JSClass jsClass ? jsClass.getQualifiedName() : qName;
+                JSResolveUtil.iterateType(function, parentNode, typeName, overrideHandler);
 
-				final MyOverrideHandler overrideHandler = new MyOverrideHandler();
-				final String typeName = parentNode instanceof JSClass ? ((JSClass) parentNode).getQualifiedName() : qName;
-				JSResolveUtil.iterateType(function, parentNode, typeName, overrideHandler);
+                if (overrideHandler.className != null) {
+                    final PsiElement parentNode1 = parentNode;
+                    function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
 
-				if(overrideHandler.className != null)
-				{
-					final PsiElement parentNode1 = parentNode;
-					function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
+                    return new LineMarkerInfo<>(
+                        function,
+                        function.getNameIdentifier().getTextRange().getStartOffset(),
+                        PlatformIconGroup.gutterOverridingmethod(),
+                        Pass.UPDATE_ALL,
+                        psiElement -> OVERRIDES_METHOD_IN + overrideHandler.className,
+                        (e, elt) -> {
+                            final Set<NavigationItem> results = new HashSet<>();
+                            JSResolveUtil.iterateType(
+                                function,
+                                parentNode1,
+                                typeName,
+                                (processor, scope, className) -> {
+                                    for (PsiElement e1 : processor.getResults()) {
+                                        results.add((NavigationItem)e1);
+                                    }
+                                    return true;
+                                }
+                            );
 
-					return new LineMarkerInfo<>(function, function.getNameIdentifier().getTextRange().getStartOffset(), AllIcons.Gutter.OverridingMethod,
-							Pass.UPDATE_ALL, psiElement -> OVERRIDES_METHOD_IN + overrideHandler.className, new GutterIconNavigationHandler<JSFunction>()
-					{
-						@Override
-						public void navigate(final MouseEvent e, final JSFunction elt)
-						{
-							final Set<NavigationItem> results = new HashSet<>();
-							JSResolveUtil.iterateType(function, parentNode1, typeName, new JSResolveUtil.OverrideHandler()
-							{
-								@Override
-								public boolean process(final ResolveProcessor processor, final PsiElement scope, final String className)
-								{
-									for(PsiElement e : processor.getResults())
-									{
-										results.add((NavigationItem) e);
-									}
-									return true;
-								}
-							});
+                            if (results.size() == 1) {
+                                results.iterator().next().navigate(true);
+                            }
+                            else if (results.size() > 1) {
+                                PopupNavigationUtil.getPsiElementPopup(
+                                    results.toArray(new PsiElement[results.size()]),
+                                    "Choose super class or interface"
+                                ).show(new RelativePoint(e));
+                            }
+                        }
+                    );
+                }
+            }
+        }
 
-							if(results.size() == 1)
-							{
-								results.iterator().next().navigate(true);
-							}
-							else if(results.size() > 1)
-							{
-								PopupNavigationUtil.getPsiElementPopup(results.toArray(new PsiElement[results.size()]), "Choose super class or interface").show(new RelativePoint
-										(e));
-							}
-						}
-					}
-					);
-				}
-			}
-		}
+        return null;
+    }
 
-		return null;
-	}
+    @Override
+    @RequiredReadAction
+    public void collectSlowLineMarkers(@Nonnull final List<PsiElement> elements, @Nonnull final Collection<LineMarkerInfo> result) {
+        final Map<String, Set<JSFunction>> jsFunctionsToProcess = new HashMap<>();
+        final Map<JSClass, Set<JSFunction>> jsMethodsToProcess = new HashMap<>();
 
-	@Override
-	public void collectSlowLineMarkers(@Nonnull final List<PsiElement> elements, @Nonnull final Collection<LineMarkerInfo> result)
-	{
-		final Map<String, Set<JSFunction>> jsFunctionsToProcess = new HashMap<>();
-		final Map<JSClass, Set<JSFunction>> jsMethodsToProcess = new HashMap<>();
+        for (final PsiElement el : elements) {
+            ProgressManager.getInstance().checkCanceled();
 
-		for(final PsiElement el : elements)
-		{
-			ProgressManager.getInstance().checkCanceled();
+            if (el instanceof JSFunction function) {
+                if (isNotApplicableForOverride(function)) {
+                    continue;
+                }
 
-			if(el instanceof JSFunction)
-			{
-				final JSFunction function = (JSFunction) el;
-				if(isNotApplicableForOverride(function))
-				{
-					continue;
-				}
+                PsiElement parent = function.getParent();
+                if (parent instanceof JSFile jsFile) {
+                    parent = JSResolveUtil.getClassReferenceForXmlFromContext(jsFile);
+                }
 
-				PsiElement parent = function.getParent();
-				if(parent instanceof JSFile)
-				{
-					parent = JSResolveUtil.getClassReferenceForXmlFromContext(parent);
-				}
+                if (parent instanceof JSClass jsClass) {
+                    Set<JSFunction> functions = jsMethodsToProcess.get(jsClass);
+                    if (functions == null) {
+                        functions = new HashSet<>();
+                        jsMethodsToProcess.put(jsClass, functions);
+                    }
 
-				if(parent instanceof JSClass)
-				{
-					final JSClass clazz = (JSClass) parent;
+                    functions.add(function);
+                }
+                else if (parent instanceof JSFile || function instanceof JSFunctionExpression) {
+                    String qName = JSResolveUtil.getQNameToStartHierarchySearch(function);
+                    if (qName != null) {
+                        Set<JSFunction> functions = jsFunctionsToProcess.get(qName);
 
-					Set<JSFunction> functions = jsMethodsToProcess.get(clazz);
-					if(functions == null)
-					{
-						functions = new HashSet<>();
-						jsMethodsToProcess.put(clazz, functions);
-					}
+                        if (functions == null) {
+                            functions = new HashSet<>();
+                            jsFunctionsToProcess.put(qName, functions);
+                        }
 
-					functions.add(function);
-				}
-				else if(parent instanceof JSFile || function instanceof JSFunctionExpression)
-				{
-					final String qName = JSResolveUtil.getQNameToStartHierarchySearch(function);
-					if(qName != null)
-					{
-						Set<JSFunction> functions = jsFunctionsToProcess.get(qName);
+                        functions.add(function);
+                    }
+                }
+            }
+            else if (el instanceof JSClass jsClass) {
+                if (!jsMethodsToProcess.containsKey(jsClass)) {
+                    jsMethodsToProcess.put(jsClass, null);
+                }
+            }
+        }
 
-						if(functions == null)
-						{
-							functions = new HashSet<>();
-							jsFunctionsToProcess.put(qName, functions);
-						}
+        for (Map.Entry<JSClass, Set<JSFunction>> entry : jsMethodsToProcess.entrySet()) {
+            ProgressManager.getInstance().checkCanceled();
+            final JSClass clazz = entry.getKey();
+            final Set<JSFunction> methods = entry.getValue();
 
-						functions.add(function);
-					}
-				}
-			}
-			else if(el instanceof JSClass)
-			{
-				final JSClass clazz = (JSClass) el;
-				if(!jsMethodsToProcess.containsKey(clazz))
-				{
-					jsMethodsToProcess.put(clazz, null);
-				}
-			}
-		}
+            Query<JSClass> classQuery = JSClassSearch.searchClassInheritors(clazz, methods != null);
 
-		for(Map.Entry<JSClass, Set<JSFunction>> entry : jsMethodsToProcess.entrySet())
-		{
-			ProgressManager.getInstance().checkCanceled();
-			final JSClass clazz = entry.getKey();
-			final Set<JSFunction> methods = entry.getValue();
+            classQuery.forEach(new Processor<>() {
+                boolean addedClassMarker;
+                final Set<JSFunction> methodsClone = methods == null || clazz.isInterface() ? null : new HashSet<>(methods);
 
-			Query<JSClass> classQuery = JSClassSearch.searchClassInheritors(clazz, methods != null);
+                @Override
+                public boolean process(JSClass jsClass) {
+                    if (!addedClassMarker) {
+                        result.add(new LineMarkerInfo<>(
+                            clazz,
+                            clazz.getTextOffset(),
+                            PlatformIconGroup.gutterOverridenmethod(),
+                            Pass.LINE_MARKERS,
+                            CLASS_INHERITORS_TOOLTIP_PROVIDER,
+                            CLASS_INHERITORS_NAV_HANDLER
+                        ));
+                        addedClassMarker = true;
+                    }
 
-			classQuery.forEach(new Processor<JSClass>()
-			{
-				boolean addedClassMarker;
-				final Set<JSFunction> methodsClone = methods == null || clazz.isInterface() ? null : new HashSet<>(methods);
+                    if (methodsClone != null) {
+                        for (final Iterator<JSFunction> functionIterator = methodsClone.iterator(); functionIterator.hasNext(); ) {
+                            JSFunction function = functionIterator.next();
 
-				@Override
-				public boolean process(final JSClass jsClass)
-				{
-					if(!addedClassMarker)
-					{
-						result.add(new LineMarkerInfo<>(clazz, clazz.getTextOffset(), AllIcons.Gutter.OverridenMethod, Pass.LINE_MARKERS,
-								ourClassInheritorsTooltipProvider, ourClassInheritorsNavHandler));
-						addedClassMarker = true;
-					}
-
-					if(methodsClone != null)
-					{
-						for(final Iterator<JSFunction> functionIterator = methodsClone.iterator(); functionIterator.hasNext(); )
-						{
-							final JSFunction function = functionIterator.next();
-
-							final JSFunction byName = jsClass.findFunctionByNameAndKind(function.getName(), function.getKind());
-							if(byName != null && !isNotApplicableForOverride(byName))
-							{
-								// TODO: more correct check for override
-								function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
-								result.add(new LineMarkerInfo<>(function, function.getTextOffset(), AllIcons.Gutter.OverridenMethod, Pass.LINE_MARKERS,
-										ourOverriddenFunctionsTooltipProvider, ourOverriddenFunctionsNavHandler));
-								functionIterator.remove();
-							}
-						}
-					}
-					return methodsClone != null && !methodsClone.isEmpty();
-				}
-			});
+                            JSFunction byName = jsClass.findFunctionByNameAndKind(function.getName(), function.getKind());
+                            if (byName != null && !isNotApplicableForOverride(byName)) {
+                                // TODO: more correct check for override
+                                function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
+                                result.add(new LineMarkerInfo<>(
+                                    function,
+                                    function.getTextOffset(),
+                                    PlatformIconGroup.gutterOverridenmethod(),
+                                    Pass.LINE_MARKERS,
+                                    OVERRIDDEN_FUNCTIONS_TOOLTIP_PROVIDER,
+                                    OVERRIDDEN_FUNCTIONS_NAV_HANDLER
+                                ));
+                                functionIterator.remove();
+                            }
+                        }
+                    }
+                    return methodsClone != null && !methodsClone.isEmpty();
+                }
+            });
 
 
-			if(clazz.isInterface())
-			{
-				classQuery = JSClassSearch.searchInterfaceImplementations(clazz, false);
+            if (clazz.isInterface()) {
+                classQuery = JSClassSearch.searchInterfaceImplementations(clazz, false);
 
-				if(classQuery.findFirst() != null)
-				{
-					result.add(new LineMarkerInfo<>(clazz, clazz.getTextOffset(), AllIcons.Gutter.ImplementedMethod, Pass.LINE_MARKERS,
-							ourImplementedInterfacesTooltipProvider, ourInterfaceImplementationsNavHandler));
-				}
-			}
+                if (classQuery.findFirst() != null) {
+                    result.add(new LineMarkerInfo<>(
+                        clazz,
+                        clazz.getTextOffset(),
+                        PlatformIconGroup.gutterImplementedmethod(),
+                        Pass.LINE_MARKERS,
+                        IMPLEMENTED_INTERFACES_TOOLTIP_PROVIDER,
+                        INTERFACE_IMPLEMENTATIONS_NAV_HANDLER
+                    ));
+                }
+            }
 
-			if(methods == null)
-			{
-				continue;
-			}
+            if (methods == null) {
+                continue;
+            }
 
-			for(final JSFunction function : methods)
-			{
+            for (JSFunction function : methods) {
+                if (clazz.isInterface()) {
+                    Query<JSFunction> query = JSFunctionsSearch.searchImplementingFunctions(function, false);
+                    if (query.findFirst() != null) {
+                        function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
+                        result.add(new LineMarkerInfo<>(
+                            function,
+                            function.getTextOffset(),
+                            PlatformIconGroup.gutterImplementedmethod(),
+                            Pass.LINE_MARKERS,
+                            IMPLEMENTING_FUNCTIONS_TOOLTIP_PROVIDER,
+                            IMPLEMENTING_FUNCTIONS_NAV_HANDLER
+                        ));
+                    }
+                }
+                else {
+                    JSAttributeList attributeList = function.getAttributeList();
+                    if (attributeList != null && attributeList.hasModifier(JSAttributeList.ModifierType.OVERRIDE)) {
+                        continue;
+                    }
 
-				if(clazz.isInterface())
-				{
-					final Query<JSFunction> query = JSFunctionsSearch.searchImplementingFunctions(function, false);
-					if(query.findFirst() != null)
-					{
-						function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
-						result.add(new LineMarkerInfo<>(function, function.getTextOffset(), AllIcons.Gutter.ImplementedMethod, Pass.LINE_MARKERS,
-								ourImplementingFunctionsTooltipProvider, ourImplementingFunctionsNavHandler));
-					}
-				}
-				else
-				{
-					final JSAttributeList attributeList = function.getAttributeList();
-					if(attributeList != null && attributeList.hasModifier(JSAttributeList.ModifierType.OVERRIDE))
-					{
-						continue;
-					}
+                    JSFunction implementedFunction = findImplementedFunction(function);
+                    if (implementedFunction != null) {
+                        function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
 
-					final JSFunction implementedFunction = findImplementedFunction(function);
-					if(implementedFunction != null)
-					{
-						function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
+                        result.add(new LineMarkerInfo<>(
+                            function,
+                            function.getTextOffset(),
+                            PlatformIconGroup.gutterImplementingmethod(),
+                            Pass.LINE_MARKERS,
+                            jsFunction -> "Implementation of " + jsFunction.getName() + " in " +
+                                ((NavigationItem)implementedFunction.getParent()).getName(),
+                            (e, elt) -> {
+                                JSFunction implementedFunction1 = findImplementedFunction(elt);
+                                if (implementedFunction1 != null) {
+                                    implementedFunction1.navigate(true);
+                                }
+                            }
+                        ));
+                    }
+                }
+            }
+        }
+    }
 
-						result.add(new LineMarkerInfo<>(function, function.getTextOffset(), AllIcons.Gutter.ImplementingMethod, Pass.LINE_MARKERS,
-								jsFunction -> "Implementation of " + jsFunction.getName() + " in " + ((NavigationItem) implementedFunction.getParent()).getName(), new
-								GutterIconNavigationHandler<JSFunction>()
-						{
-							@Override
-							public void navigate(final MouseEvent e, final JSFunction elt)
-							{
-								final JSFunction implementedFunction = findImplementedFunction(elt);
-								if(implementedFunction != null)
-								{
-									implementedFunction.navigate(true);
-								}
-							}
-						}
-						));
-					}
-				}
-			}
-		}
-	}
+    private static boolean isClass(PsiElement element) {
+        return element instanceof JSClass || element instanceof JSFile jsFile && jsFile.getContext() != null;
+    }
 
-	private static boolean isClass(final PsiElement element)
-	{
-		if(element instanceof JSClass)
-		{
-			return true;
-		}
-		if(element instanceof JSFile && element.getContext() != null)
-		{
-			return true;
-		}
-		return false;
-	}
+    @Nullable
+    @RequiredReadAction
+    private static JSFunction findImplementedFunction(JSFunction implementingFunction) {
+        PsiElement clazz = implementingFunction.getParent();
+        if (!(clazz instanceof JSClass)) {
+            clazz = JSResolveUtil.getClassReferenceForXmlFromContext(clazz);
+        }
+        if (!(clazz instanceof JSClass)) {
+            return null;
+        }
+        final SimpleReference<JSFunction> result = new SimpleReference<>();
+        JSResolveUtil.processInterfaceMethods(
+            (JSClass)clazz,
+            new JSResolveUtil.CollectMethodsToImplementProcessor(
+                implementingFunction.getName(),
+                implementingFunction
+            ) {
+                @Override
+                protected boolean process(ResolveProcessor processor) {
+                    result.set((JSFunction)processor.getResult());
+                    return false;
+                }
+            }
+        );
+        return result.get();
+    }
 
-	@Nullable
-	private static JSFunction findImplementedFunction(JSFunction implementingFunction)
-	{
-		PsiElement clazz = implementingFunction.getParent();
-		if(!(clazz instanceof JSClass))
-		{
-			clazz = JSResolveUtil.getClassReferenceForXmlFromContext(clazz);
-		}
-		if(!(clazz instanceof JSClass))
-		{
-			return null;
-		}
-		final Ref<JSFunction> result = new Ref<>();
-		JSResolveUtil.processInterfaceMethods((JSClass) clazz, new JSResolveUtil.CollectMethodsToImplementProcessor(implementingFunction.getName(),
-				implementingFunction)
-		{
-			@Override
-			protected boolean process(final ResolveProcessor processor)
-			{
-				result.set((JSFunction) processor.getResult());
-				return false;
-			}
-		});
-		return result.get();
-	}
+    @RequiredReadAction
+    private static boolean isNotApplicableForOverride(JSFunction function) {
+        JSAttributeList attributeList = function.getAttributeList();
 
-	private static boolean isNotApplicableForOverride(final JSFunction function)
-	{
-		final JSAttributeList attributeList = function.getAttributeList();
+        return function.isConstructor() || (attributeList != null
+            && (attributeList.getAccessType() == JSAttributeList.AccessType.PRIVATE
+            || attributeList.hasModifier(JSAttributeList.ModifierType.STATIC)
+            || attributeList.hasModifier(JSAttributeList.ModifierType.NATIVE)));
+    }
 
-		return function.isConstructor() || (attributeList != null && (attributeList.getAccessType() == JSAttributeList.AccessType.PRIVATE ||
-				attributeList.hasModifier(JSAttributeList.ModifierType.STATIC) ||
-				attributeList.hasModifier(JSAttributeList.ModifierType.NATIVE)));
-	}
+    static class MyOverrideHandler implements JSResolveUtil.OverrideHandler {
+        String className;
 
-	static class MyOverrideHandler implements JSResolveUtil.OverrideHandler
-	{
-		String className;
+        @Override
+        public boolean process(ResolveProcessor processor, PsiElement scope, String className) {
+            this.className = className;
+            return true;
+        }
+    }
 
-		@Override
-		public boolean process(final ResolveProcessor processor, final PsiElement scope, final String className)
-		{
-			this.className = className;
-			return true;
-		}
-	}
+    private abstract static class BasicGutterIconNavigationHandler<T extends PsiElement> implements GutterIconNavigationHandler<T> {
+        @Override
+        @RequiredUIAccess
+        public void navigate(MouseEvent e, T elt) {
+            final List<NavigatablePsiElement> navElements = new ArrayList<>();
+            Query<T> elementQuery = search(elt);
+            if (elementQuery == null) {
+                return;
+            }
+            elementQuery.forEach(psiElement -> {
+                if (psiElement instanceof NavigatablePsiElement navigatablePsiElement) {
+                    navElements.add(navigatablePsiElement);
+                }
+                return true;
+            });
+            NavigatablePsiElement[] methods = navElements.toArray(new NavigatablePsiElement[navElements.size()]);
+            PsiElementListNavigator.openTargets(e, methods, getTitle(elt), "", new DefaultPsiElementCellRenderer());
+        }
 
-	private abstract static class BasicGutterIconNavigationHandler<T extends PsiElement> implements GutterIconNavigationHandler<T>
-	{
-		@Override
-		public void navigate(final MouseEvent e, final T elt)
-		{
-			final List<NavigatablePsiElement> navElements = new ArrayList<>();
-			Query<T> elementQuery = search(elt);
-			if(elementQuery == null)
-			{
-				return;
-			}
-			elementQuery.forEach(new Processor<T>()
-			{
-				@Override
-				public boolean process(final T psiElement)
-				{
-					if(psiElement instanceof NavigatablePsiElement)
-					{
-						navElements.add((NavigatablePsiElement) psiElement);
-					}
-					return true;
-				}
-			});
-			final NavigatablePsiElement[] methods = navElements.toArray(new NavigatablePsiElement[navElements.size()]);
-			PsiElementListNavigator.openTargets(e, methods, getTitle(elt), "", new DefaultPsiElementCellRenderer());
-		}
+        protected abstract String getTitle(T elt);
 
-		protected abstract String getTitle(T elt);
+        @Nullable
+        protected abstract Query<T> search(T elt);
+    }
 
-		@Nullable
-		protected abstract Query<T> search(T elt);
-	}
-
-	@Nonnull
-	@Override
-	public Language getLanguage()
-	{
-		return JavaScriptLanguage.INSTANCE;
-	}
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return JavaScriptLanguage.INSTANCE;
+    }
 }

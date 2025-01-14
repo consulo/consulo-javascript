@@ -44,6 +44,16 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
     private static final TokenSet DOT_SET = TokenSet.create(JSTokenTypes.DOT);
     private static final TokenSet MEMBER_OPERATOR_SET =
         TokenSet.create(JSTokenTypes.DOT, JSTokenTypes.COLON_COLON, JSTokenTypes.DOT_DOT, JSTokenTypes.QUEST_DOT);
+    private static final TokenSet LITERAL_SET = TokenSet.create(
+        JSTokenTypes.NUMERIC_LITERAL,
+        JSTokenTypes.STRING_LITERAL,
+        JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL,
+        JSTokenTypes.INTERPOLATION_STRING_LITERAL,
+        JSTokenTypes.NULL_KEYWORD,
+        JSTokenTypes.UNDEFINED_KEYWORD,
+        JSTokenTypes.FALSE_KEYWORD,
+        JSTokenTypes.TRUE_KEYWORD
+    );
 
     private final JSXParser myJSXParser = new JSXParser();
 
@@ -52,7 +62,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
     }
 
     protected boolean parsePrimaryExpression(PsiBuilder builder) {
-        final IElementType firstToken = builder.getTokenType();
+        IElementType firstToken = builder.getTokenType();
         if (firstToken == JSTokenTypes.THIS_KEYWORD) {
             Parsing.buildTokenElement(JSElementTypes.THIS_EXPRESSION, builder);
             return true;
@@ -73,14 +83,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
             }
             return true;
         }
-        else if (firstToken == JSTokenTypes.NUMERIC_LITERAL
-            || firstToken == JSTokenTypes.STRING_LITERAL
-            || firstToken == JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL
-            || firstToken == JSTokenTypes.INTERPOLATION_STRING_LITERAL
-            || firstToken == JSTokenTypes.NULL_KEYWORD
-            || firstToken == JSTokenTypes.UNDEFINED_KEYWORD
-            || firstToken == JSTokenTypes.FALSE_KEYWORD
-            || firstToken == JSTokenTypes.TRUE_KEYWORD) {
+        else if (LITERAL_SET.contains(firstToken)) {
             LocalizeValue errorMessage = validateLiteral(builder);
             Parsing.buildTokenElement(JSElementTypes.LITERAL_EXPRESSION, builder);
             if (errorMessage != null) {
@@ -295,9 +298,9 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         }
     }
 
-    private void parseParenthesizedExpression(final PsiBuilder builder) {
+    private void parseParenthesizedExpression(PsiBuilder builder) {
         ExpressionParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.LPAR);
-        final PsiBuilder.Marker expr = builder.mark();
+        PsiBuilder.Marker expr = builder.mark();
         builder.advanceLexer();
         parseExpression(builder);
         Parsing.checkMatches(builder, JSTokenTypes.RPAR, JavaScriptLocalize.javascriptParserMessageExpectedRparen());
@@ -312,11 +315,11 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         PsiBuilder.Marker expr = builder.mark();
         boolean isNew;
 
-        final IElementType type = builder.getTokenType();
+        IElementType type = builder.getTokenType();
 
         if (type == JSTokenTypes.NEW_KEYWORD) {
             isNew = true;
-            final boolean isfunction = parseNewExpression(builder);
+            boolean isfunction = parseNewExpression(builder);
 
             if (isfunction) {
                 expr.done(JSElementTypes.NEW_EXPRESSION);
@@ -399,7 +402,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
     }
 
     public boolean parseQualifiedTypeName(PsiBuilder builder, boolean allowStar, TokenSet separatorsSet) {
-        if (!JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(builder.getTokenType())) {
+        if (JSTokenTypes.IDENTIFIER != builder.getTokenType()) {
             return false;
         }
         PsiBuilder.Marker expr = builder.mark();
@@ -414,8 +417,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
                 builder.advanceLexer();
                 stop = true;
             }
-            else if (tokenType == JSTokenTypes.DEFAULT_KEYWORD
-                || (tokenType != JSTokenTypes.IDENTIFIER && JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(tokenType))) {
+            else if (tokenType == JSTokenTypes.DEFAULT_KEYWORD) {
                 builder.advanceLexer(); // TODO: allow any keyword
             }
             else {

@@ -56,432 +56,373 @@ import java.util.List;
 /**
  * @author ven
  */
-public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends BaseIntroduceSettings, D extends JSBaseIntroduceDialog> implements
-		RefactoringActionHandler
-{
-	protected static final Logger LOG = Logger.getInstance("#com.intellij.lang.javascript.refactoring.JSBaseIntroduceHandler");
+public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends BaseIntroduceSettings, D extends JSBaseIntroduceDialog>
+    implements RefactoringActionHandler {
 
-	protected static JSExpression findExpressionInRange(PsiFile file, int startOffset, int endOffset)
-	{
-		PsiElement element1 = file.findElementAt(startOffset);
-		PsiElement element2 = file.findElementAt(endOffset - 1);
-		if(element1 instanceof PsiWhiteSpace)
-		{
-			startOffset = element1.getTextRange().getEndOffset();
-		}
-		if(element2 instanceof PsiWhiteSpace)
-		{
-			endOffset = element2.getTextRange().getStartOffset();
-		}
+    protected static final Logger LOG = Logger.getInstance("#com.intellij.lang.javascript.refactoring.JSBaseIntroduceHandler");
 
-		JSExpression expression = PsiTreeUtil.findElementOfClassAtRange(file, startOffset, endOffset, JSExpression.class);
-		int expressionEnd;
-		PsiElement sibling;
+    protected static JSExpression findExpressionInRange(PsiFile file, int startOffset, int endOffset) {
+        PsiElement element1 = file.findElementAt(startOffset);
+        PsiElement element2 = file.findElementAt(endOffset - 1);
+        if (element1 instanceof PsiWhiteSpace) {
+            startOffset = element1.getTextRange().getEndOffset();
+        }
+        if (element2 instanceof PsiWhiteSpace) {
+            endOffset = element2.getTextRange().getStartOffset();
+        }
 
-		if(expression == null || (expressionEnd = expression.getTextRange().getEndOffset()) != endOffset && (expressionEnd != endOffset - 1 ||
-				(sibling = expression.getNextSibling()) == null ||
-				sibling.getNode().getElementType() != JSTokenTypes.SEMICOLON))
-		{
-			return null;
-		}
+        JSExpression expression = PsiTreeUtil.findElementOfClassAtRange(file, startOffset, endOffset, JSExpression.class);
+        int expressionEnd;
+        PsiElement sibling;
 
-		if(expression instanceof JSReferenceExpression && expression.getParent() instanceof JSCallExpression)
-		{
-			return null;
-		}
-		/*if(file.getLanguage() == JavaScriptSupportLoader.JSON)
-		{
-			expression = null; // there is no vars in json
-		}*/
-		return expression;
-	}
+        if (expression == null || (expressionEnd =
+            expression.getTextRange().getEndOffset()) != endOffset && (expressionEnd != endOffset - 1 ||
+            (sibling = expression.getNextSibling()) == null ||
+            sibling.getNode().getElementType() != JSTokenTypes.SEMICOLON)) {
+            return null;
+        }
 
-	protected static JSExpression unparenthesize(JSExpression expression)
-	{
-		while(expression instanceof JSParenthesizedExpression)
-		{
-			expression = ((JSParenthesizedExpression) expression).getInnerExpression();
-		}
+        if (expression instanceof JSReferenceExpression && expression.getParent() instanceof JSCallExpression) {
+            return null;
+        }
+        /*if (file.getLanguage() == JavaScriptSupportLoader.JSON) {
+            expression = null; // there is no vars in json
+        }*/
+        return expression;
+    }
 
-		return expression;
-	}
+    protected static JSExpression unparenthesize(JSExpression expression) {
+        while (expression instanceof JSParenthesizedExpression) {
+            expression = ((JSParenthesizedExpression)expression).getInnerExpression();
+        }
 
-	public static JSExpression[] findExpressionOccurrences(JSElement scope, JSExpression expr)
-	{
-		List<JSExpression> array = new ArrayList<JSExpression>();
-		addExpressionOccurrences(unparenthesize(expr), array, scope);
-		return array.toArray(new JSExpression[array.size()]);
-	}
+        return expression;
+    }
 
-	protected static void addExpressionOccurrences(JSExpression expr, List<JSExpression> array, PsiElement scope)
-	{
-		PsiElement[] children = scope.getChildren();
+    public static JSExpression[] findExpressionOccurrences(JSElement scope, JSExpression expr) {
+        List<JSExpression> array = new ArrayList<JSExpression>();
+        addExpressionOccurrences(unparenthesize(expr), array, scope);
+        return array.toArray(new JSExpression[array.size()]);
+    }
 
-		for(PsiElement child : children)
-		{
-			if(child instanceof JSExpression)
-			{
-				final JSExpression childExpression = unparenthesize((JSExpression) child);
+    protected static void addExpressionOccurrences(JSExpression expr, List<JSExpression> array, PsiElement scope) {
+        PsiElement[] children = scope.getChildren();
 
-				if(childExpression != null &&
-						PsiEquivalenceUtil.areElementsEquivalent(childExpression, expr) &&
-						!JSResolveUtil.isSelfReference(scope, child))
-				{
-					array.add((JSExpression) child);
-					continue;
-				}
-			}
-			if(!(child instanceof JSFunction))
-			{
-				addExpressionOccurrences(expr, array, child);
-			}
-		}
-	}
+        for (PsiElement child : children) {
+            if (child instanceof JSExpression) {
+                final JSExpression childExpression = unparenthesize((JSExpression)child);
 
-	@Override
-	public void invoke(@Nonnull final Project project, final Editor editor, PsiFile file, DataContext dataContext)
-	{
-		if(!editor.getSelectionModel().hasSelection())
-		{
-			editor.getSelectionModel().selectLineAtCaret();
-		}
-		int start = editor.getSelectionModel().getSelectionStart();
-		int end = editor.getSelectionModel().getSelectionEnd();
+                if (childExpression != null
+                    && PsiEquivalenceUtil.areElementsEquivalent(childExpression, expr)
+                    && !JSResolveUtil.isSelfReference(scope, child)) {
+                    array.add((JSExpression)child);
+                    continue;
+                }
+            }
 
-		final JSExpression expression = findIntroducedExpression(file, start, end, editor);
-		if(expression == null)
-		{
-			return;
-		}
+            if (!(child instanceof JSFunction)) {
+                addExpressionOccurrences(expr, array, child);
+            }
+        }
+    }
 
-		if(!CommonRefactoringUtil.checkReadOnlyStatus(project, file))
-		{
-			return;
-		}
+    @Override
+    public void invoke(@Nonnull final Project project, final Editor editor, PsiFile file, DataContext dataContext) {
+        if (!editor.getSelectionModel().hasSelection()) {
+            editor.getSelectionModel().selectLineAtCaret();
+        }
+        int start = editor.getSelectionModel().getSelectionStart();
+        int end = editor.getSelectionModel().getSelectionEnd();
 
-		editor.getSelectionModel().removeSelection();
-		JSElement scope = findIntroducedScope(expression);
-		LOG.assertTrue(scope != null);
-		final JSExpression[] occurrences = findExpressionOccurrences(scope, expression);
-		final S settings = getSettings(project, editor, expression, occurrences);
-		if(settings == null)
-		{
-			return;
-		}
+        final JSExpression expression = findIntroducedExpression(file, start, end, editor);
+        if (expression == null) {
+            return;
+        }
 
-		CommandProcessor.getInstance().executeCommand(
-			project,
-			() -> ApplicationManager.getApplication().runWriteAction(
-				() -> doRefactoring(project, editor, new BaseIntroduceContext<>(expression, occurrences, settings))
-			),
-			getRefactoringName(),
-			null
-		);
-	}
+        if (!CommonRefactoringUtil.checkReadOnlyStatus(project, file)) {
+            return;
+        }
 
-	protected static final class BaseIntroduceContext<S>
-	{
-		public final S settings;
-		final JSExpression[] occurences;
-		public final JSExpression expression;
+        editor.getSelectionModel().removeSelection();
+        JSElement scope = findIntroducedScope(expression);
+        LOG.assertTrue(scope != null);
+        final JSExpression[] occurrences = findExpressionOccurrences(scope, expression);
+        final S settings = getSettings(project, editor, expression, occurrences);
+        if (settings == null) {
+            return;
+        }
 
-		public BaseIntroduceContext(JSExpression _mainoccurence, final JSExpression[] _occurences, S _settings)
-		{
-			occurences = _occurences;
-			expression = _mainoccurence;
-			settings = _settings;
-		}
-	}
+        CommandProcessor.getInstance().executeCommand(
+            project,
+            () -> ApplicationManager.getApplication().runWriteAction(
+                () -> doRefactoring(project, editor, new BaseIntroduceContext<>(expression, occurrences, settings))
+            ),
+            getRefactoringName(),
+            null
+        );
+    }
 
-	protected JSElement findIntroducedScope(final JSExpression expression)
-	{
-		return PsiTreeUtil.getParentOfType(expression, JSFunction.class, JSFile.class, JSEmbeddedContentImpl.class);
-	}
+    protected static final class BaseIntroduceContext<S> {
+        public final S settings;
+        final JSExpression[] occurences;
+        public final JSExpression expression;
 
-	protected abstract String getRefactoringName();
+        public BaseIntroduceContext(JSExpression _mainoccurence, final JSExpression[] _occurences, S _settings) {
+            occurences = _occurences;
+            expression = _mainoccurence;
+            settings = _settings;
+        }
+    }
 
-	protected abstract LocalizeValue getCannotIntroduceMessage();
+    protected JSElement findIntroducedScope(final JSExpression expression) {
+        return PsiTreeUtil.getParentOfType(expression, JSFunction.class, JSFile.class, JSEmbeddedContentImpl.class);
+    }
 
-	@Nullable
-	protected JSExpression findIntroducedExpression(final PsiFile file, final int start, final int end, Editor editor)
-	{
-		final JSExpression expression = findExpressionInRange(file, start, end);
-		if(expression == null)
-		{
-			CommonRefactoringUtil.showErrorHint(
-				file.getProject(),
-				editor,
-				getCannotIntroduceMessage().get(),
-				getRefactoringName(),
-				null
-			);
-		}
-		return expression;
-	}
+    protected abstract String getRefactoringName();
 
-	@Nullable
-	protected S getSettings(Project project, Editor editor, JSExpression expression, final JSExpression[] occurrences)
-	{
-		ArrayList<RangeHighlighter> highlighters = null;
-		if(occurrences.length > 1)
-		{
-			highlighters = highlightOccurences(project, editor, occurrences);
-		}
+    protected abstract LocalizeValue getCannotIntroduceMessage();
 
-		final D dialog = createDialog(project, expression, occurrences);
-		dialog.show();
-		if(highlighters != null)
-		{
-			for(RangeHighlighter highlighter : highlighters)
-			{
-				HighlightManager.getInstance(project).removeSegmentHighlighter(editor, highlighter);
-			}
-		}
+    @Nullable
+    protected JSExpression findIntroducedExpression(final PsiFile file, final int start, final int end, Editor editor) {
+        final JSExpression expression = findExpressionInRange(file, start, end);
+        if (expression == null) {
+            CommonRefactoringUtil.showErrorHint(
+                file.getProject(),
+                editor,
+                getCannotIntroduceMessage().get(),
+                getRefactoringName(),
+                null
+            );
+        }
+        return expression;
+    }
 
-		if(dialog.getExitCode() != DialogWrapper.OK_EXIT_CODE)
-		{
-			return null;
-		}
+    @Nullable
+    protected S getSettings(Project project, Editor editor, JSExpression expression, final JSExpression[] occurrences) {
+        ArrayList<RangeHighlighter> highlighters = null;
+        if (occurrences.length > 1) {
+            highlighters = highlightOccurences(project, editor, occurrences);
+        }
 
-		return createSettings(dialog);
-	}
+        final D dialog = createDialog(project, expression, occurrences);
+        dialog.show();
+        if (highlighters != null) {
+            for (RangeHighlighter highlighter : highlighters) {
+                HighlightManager.getInstance(project).removeSegmentHighlighter(editor, highlighter);
+            }
+        }
 
-	protected S createSettings(final D dialog)
-	{
-		return (S) dialog;
-	}
+        if (dialog.getExitCode() != DialogWrapper.OK_EXIT_CODE) {
+            return null;
+        }
 
-	protected abstract D createDialog(final Project project, final JSExpression expression, final JSExpression[] occurrences);
+        return createSettings(dialog);
+    }
 
-	private void doRefactoring(final Project project, final Editor editor, BaseIntroduceContext<S> introduceContext)
-	{
-		final S settings = introduceContext.settings;
-		JSExpression expression = introduceContext.expression;
-		final JSExpression[] occurrences = introduceContext.occurences;
+    protected S createSettings(final D dialog) {
+        return (S)dialog;
+    }
 
-		final boolean replaceAllOccurences = settings.isReplaceAllOccurences();
-		@NonNls String varDeclText = getDeclText(settings);
-		final PsiFile containingFile = expression.getContainingFile();
-		final boolean ecma = false;
-		if(ecma)
-		{
-			String type = settings.getVariableType();
-			if(type == null)
-			{
-				type = JSResolveUtil.getExpressionType(expression, containingFile);
-			}
-			varDeclText += ":" + type;
-		}
+    protected abstract D createDialog(final Project project, final JSExpression expression, final JSExpression[] occurrences);
 
-		try
-		{
-			T anchorStatement = findAnchor(introduceContext, replaceAllOccurences);
-			JSVarStatement declaration = prepareDeclaration(varDeclText, introduceContext, project);
+    private void doRefactoring(final Project project, final Editor editor, BaseIntroduceContext<S> introduceContext) {
+        final S settings = introduceContext.settings;
+        JSExpression expression = introduceContext.expression;
+        final JSExpression[] occurrences = introduceContext.occurences;
 
-			LOG.assertTrue(anchorStatement != null);
+        final boolean replaceAllOccurences = settings.isReplaceAllOccurences();
+        @NonNls String varDeclText = getDeclText(settings);
+        final PsiFile containingFile = expression.getContainingFile();
+        final boolean ecma = false;
+        if (ecma) {
+            String type = settings.getVariableType();
+            if (type == null) {
+                type = JSResolveUtil.getExpressionType(expression, containingFile);
+            }
+            varDeclText += ":" + type;
+        }
 
-			boolean replacedOriginal = false;
+        try {
+            T anchorStatement = findAnchor(introduceContext, replaceAllOccurences);
+            JSVarStatement declaration = prepareDeclaration(varDeclText, introduceContext, project);
 
-			if(anchorStatement == expression.getParent() && anchorStatement instanceof JSExpressionStatement)
-			{
-				declaration = (JSVarStatement) anchorStatement.replace(declaration);
-				editor.getCaretModel().moveToOffset(declaration.getTextRange().getEndOffset());
-				replacedOriginal = true;
-			}
-			else
-			{
-				JSExpression oldExpression = expression;
-				final TextRange expressionTextRange = expression.getTextRange();
-				final TextRange statementTextRange = anchorStatement.getTextRange();
+            LOG.assertTrue(anchorStatement != null);
 
-				RangeMarker marker = editor.getDocument().createRangeMarker(expressionTextRange);
+            boolean replacedOriginal = false;
 
-				// Adding declaration to anchorStatement may invalidate original expression so we need to find it in new tree
-				final T jsStatement = addStatementBefore(anchorStatement, declaration);
+            if (anchorStatement == expression.getParent() && anchorStatement instanceof JSExpressionStatement) {
+                declaration = (JSVarStatement)anchorStatement.replace(declaration);
+                editor.getCaretModel().moveToOffset(declaration.getTextRange().getEndOffset());
+                replacedOriginal = true;
+            }
+            else {
+                JSExpression oldExpression = expression;
+                final TextRange expressionTextRange = expression.getTextRange();
+                final TextRange statementTextRange = anchorStatement.getTextRange();
 
-				if(!expression.isValid())
-				{
-					final T newAnchorStatement = (T) PsiTreeUtil.getNextSiblingOfType(jsStatement, anchorStatement.getClass());
-					final int relativeOffset = marker.getStartOffset() - statementTextRange.getStartOffset();
-					JSExpression newExpression = PsiTreeUtil.getParentOfType(newAnchorStatement.findElementAt(relativeOffset), oldExpression.getClass());
+                RangeMarker marker = editor.getDocument().createRangeMarker(expressionTextRange);
 
-					if(newExpression == null)
-					{
-						assert false : "Could not find " + oldExpression.getClass() + " in " + newAnchorStatement.getText() + " with offset " + marker
-								.getStartOffset();
-					}
+                // Adding declaration to anchorStatement may invalidate original expression so we need to find it in new tree
+                final T jsStatement = addStatementBefore(anchorStatement, declaration);
 
-					while(newExpression.getTextRange().getLength() != expressionTextRange.getLength())
-					{
-						JSExpression candidateExpression = PsiTreeUtil.getParentOfType(newExpression, oldExpression.getClass());
-						if(candidateExpression == null)
-						{
-							break;
-						}
-						if(candidateExpression.getTextRange().getStartOffset() - newAnchorStatement.getTextRange().getStartOffset() != marker.getStartOffset())
-						{
-							break;
-						}
-						newExpression = candidateExpression;
-					}
+                if (!expression.isValid()) {
+                    final T newAnchorStatement = (T)PsiTreeUtil.getNextSiblingOfType(jsStatement, anchorStatement.getClass());
+                    final int relativeOffset = marker.getStartOffset() - statementTextRange.getStartOffset();
+                    JSExpression newExpression =
+                        PsiTreeUtil.getParentOfType(newAnchorStatement.findElementAt(relativeOffset), oldExpression.getClass());
 
-					for(int i = 0; i < occurrences.length; ++i)
-					{
-						if(occurrences[i] == oldExpression)
-						{
-							occurrences[i] = newExpression;
-							break;
-						}
-					}
+                    if (newExpression == null) {
+                        assert false : "Could not find " + oldExpression.getClass() + " in " + newAnchorStatement.getText() + " with offset " + marker
+                            .getStartOffset();
+                    }
 
-					expression = newExpression;
-				}
-			}
+                    while (newExpression.getTextRange().getLength() != expressionTextRange.getLength()) {
+                        JSExpression candidateExpression = PsiTreeUtil.getParentOfType(newExpression, oldExpression.getClass());
+                        if (candidateExpression == null) {
+                            break;
+                        }
+                        if (candidateExpression.getTextRange().getStartOffset() - newAnchorStatement.getTextRange()
+                            .getStartOffset() != marker.getStartOffset()) {
+                            break;
+                        }
+                        newExpression = candidateExpression;
+                    }
 
-			final JSExpression refExpr = JSChangeUtil.createExpressionFromText(project, settings.getVariableName());
-			if(replaceAllOccurences)
-			{
-				List<JSExpression> toHighight = new ArrayList<>();
-				for(JSExpression occurence : occurrences)
-				{
-					if(occurence != expression || !replacedOriginal)
-					{
-						toHighight.add(occurence.replace(refExpr));
-					}
-					else
-					{
-						toHighight.add(declaration.getVariables()[0].getInitializer());
-					}
-				}
+                    for (int i = 0; i < occurrences.length; ++i) {
+                        if (occurrences[i] == oldExpression) {
+                            occurrences[i] = newExpression;
+                            break;
+                        }
+                    }
 
-				highlightOccurences(project, editor, toHighight.toArray(new JSExpression[toHighight.size()]));
-			}
-			else if(!replacedOriginal)
-			{
-				expression.replace(refExpr);
-			}
-		}
-		catch(IncorrectOperationException e)
-		{
-			LOG.error(e);
-		}
-	}
+                    expression = newExpression;
+                }
+            }
 
-	protected JSVarStatement prepareDeclaration(final String varDeclText, BaseIntroduceContext<S> context, final Project project)
-		throws IncorrectOperationException
-	{
-		JSVarStatement declaration = (JSVarStatement) JSChangeUtil.createStatementFromText(
-			project,
-			varDeclText + " = 0" + JSChangeUtil.getSemicolon(project)
-		).getPsi();
-		declaration.getVariables()[0].getInitializer().replace(context.expression);
-		return declaration;
-	}
+            final JSExpression refExpr = JSChangeUtil.createExpressionFromText(project, settings.getVariableName());
+            if (replaceAllOccurences) {
+                List<JSExpression> toHighight = new ArrayList<>();
+                for (JSExpression occurence : occurrences) {
+                    if (occurence != expression || !replacedOriginal) {
+                        toHighight.add(occurence.replace(refExpr));
+                    }
+                    else {
+                        toHighight.add(declaration.getVariables()[0].getInitializer());
+                    }
+                }
 
-	@NonNls
-	protected String getDeclText(S settings)
-	{
-		return "var " + settings.getVariableName();
-	}
+                highlightOccurences(project, editor, toHighight.toArray(new JSExpression[toHighight.size()]));
+            }
+            else if (!replacedOriginal) {
+                expression.replace(refExpr);
+            }
+        }
+        catch (IncorrectOperationException e) {
+            LOG.error(e);
+        }
+    }
 
-	protected T addStatementBefore(final T anchorStatement, final JSVarStatement declaration) throws IncorrectOperationException
-	{
-		return (T) ((JSStatement) anchorStatement).addStatementBefore(declaration);
-	}
+    protected JSVarStatement prepareDeclaration(final String varDeclText, BaseIntroduceContext<S> context, final Project project)
+        throws IncorrectOperationException {
+        JSVarStatement declaration = (JSVarStatement)JSChangeUtil.createStatementFromText(
+            project,
+            varDeclText + " = 0" + JSChangeUtil.getSemicolon(project)
+        ).getPsi();
+        declaration.getVariables()[0].getInitializer().replace(context.expression);
+        return declaration;
+    }
 
-	protected T findAnchor(final BaseIntroduceContext<S> context, final boolean replaceAllOccurences)
-	{
-		JSStatement anchorStatement = replaceAllOccurences ? getAnchorToInsert(context.occurences) : PsiTreeUtil.getParentOfType(context.expression,
-				JSStatement.class);
-		if(anchorStatement instanceof JSVarStatement &&
-				anchorStatement.getParent() instanceof JSStatement &&
-				!(anchorStatement.getParent() instanceof JSBlockStatement))
-		{
-			anchorStatement = (JSStatement) anchorStatement.getParent();
-		}
-		return (T) anchorStatement;
-	}
+    @NonNls
+    protected String getDeclText(S settings) {
+        return "var " + settings.getVariableName();
+    }
 
-	private static ArrayList<RangeHighlighter> highlightOccurences(Project project, Editor editor, JSExpression[] occurences)
-	{
-		HighlightManager highlightManager = HighlightManager.getInstance(project);
-		EditorColorsManager colorsManager = EditorColorsManager.getInstance();
-		TextAttributes attributes = colorsManager.getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
-		ArrayList<RangeHighlighter> result = new ArrayList<>();
-		highlightManager.addOccurrenceHighlights(editor, occurences, attributes, true, result);
-		WindowManager.getInstance().getStatusBar(project).setInfo(RefactoringLocalize.pressEscapeToRemoveTheHighlighting().get());
-		return result;
-	}
+    protected T addStatementBefore(final T anchorStatement, final JSVarStatement declaration) throws IncorrectOperationException {
+        return (T)((JSStatement)anchorStatement).addStatementBefore(declaration);
+    }
 
-	private static JSStatement getAnchorToInsert(final JSExpression[] expressions)
-	{
-		JSElement place = expressions[0];
-		next:
-		do
-		{
-			JSStatement statement = PsiTreeUtil.getParentOfType(place, JSStatement.class); //this is the first expression textually
-			LOG.assertTrue(statement != null);
+    protected T findAnchor(final BaseIntroduceContext<S> context, final boolean replaceAllOccurences) {
+        JSStatement anchorStatement = replaceAllOccurences ? getAnchorToInsert(context.occurences) : PsiTreeUtil.getParentOfType(
+            context.expression,
+            JSStatement.class
+        );
+        if (anchorStatement instanceof JSVarStatement &&
+            anchorStatement.getParent() instanceof JSStatement &&
+            !(anchorStatement.getParent() instanceof JSBlockStatement)) {
+            anchorStatement = (JSStatement)anchorStatement.getParent();
+        }
+        return (T)anchorStatement;
+    }
 
-			final PsiElement parent = statement.getParent();
-			for(JSExpression expression : expressions)
-			{
-				if(!PsiTreeUtil.isAncestor(parent, expression, true))
-				{
-					place = statement;
-					continue next;
-				}
-			}
+    private static ArrayList<RangeHighlighter> highlightOccurences(Project project, Editor editor, JSExpression[] occurences) {
+        HighlightManager highlightManager = HighlightManager.getInstance(project);
+        EditorColorsManager colorsManager = EditorColorsManager.getInstance();
+        TextAttributes attributes = colorsManager.getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
+        ArrayList<RangeHighlighter> result = new ArrayList<>();
+        highlightManager.addOccurrenceHighlights(editor, occurences, attributes, true, result);
+        WindowManager.getInstance().getStatusBar(project).setInfo(RefactoringLocalize.pressEscapeToRemoveTheHighlighting().get());
+        return result;
+    }
 
-			return statement;
-		}
-		while(true);
-	}
+    private static JSStatement getAnchorToInsert(final JSExpression[] expressions) {
+        JSElement place = expressions[0];
+        next:
+        do {
+            JSStatement statement = PsiTreeUtil.getParentOfType(place, JSStatement.class); //this is the first expression textually
+            LOG.assertTrue(statement != null);
 
-	protected static JSElement findClassAnchor(final PsiElement expression)
-	{
-		PsiElement nearestParent = PsiTreeUtil.getParentOfType(expression, JSVarStatement.class, JSFunction.class);
-		while(nearestParent != null)
-		{
-			final PsiElement nextParent = PsiTreeUtil.getParentOfType(nearestParent, JSVarStatement.class, JSFunction.class);
-			if(nextParent == null)
-			{
-				break;
-			}
-			nearestParent = nextParent;
-		}
+            final PsiElement parent = statement.getParent();
+            for (JSExpression expression : expressions) {
+                if (!PsiTreeUtil.isAncestor(parent, expression, true)) {
+                    place = statement;
+                    continue next;
+                }
+            }
 
-		if(nearestParent != null)
-		{
-			return (JSElement) nearestParent;
-		}
+            return statement;
+        }
+        while (true);
+    }
 
-		JSElement parent = PsiTreeUtil.getParentOfType(expression, JSFile.class, JSClass.class);
+    protected static JSElement findClassAnchor(final PsiElement expression) {
+        PsiElement nearestParent = PsiTreeUtil.getParentOfType(expression, JSVarStatement.class, JSFunction.class);
+        while (nearestParent != null) {
+            final PsiElement nextParent = PsiTreeUtil.getParentOfType(nearestParent, JSVarStatement.class, JSFunction.class);
+            if (nextParent == null) {
+                break;
+            }
+            nearestParent = nextParent;
+        }
 
-		if (parent instanceof JSFile)
-		{
-			final PsiElement classRef = JSResolveUtil.getClassReferenceForXmlFromContext(parent);
-			if (classRef instanceof JSClass jsClass)
-			{
-				parent = jsClass;
-			}
-		}
+        if (nearestParent != null) {
+            return (JSElement)nearestParent;
+        }
 
-		return parent;
-	}
+        JSElement parent = PsiTreeUtil.getParentOfType(expression, JSFile.class, JSClass.class);
 
-	protected static JSElement addToClassAnchor(final JSElement anchorStatement, final JSVarStatement declaration) throws IncorrectOperationException
-	{
-		if(!(anchorStatement instanceof JSClass))
-		{
-			final JSElement element = findClassAnchor(anchorStatement);
-			return (JSElement) element.addBefore(declaration, anchorStatement);
-		}
-		return (JSElement) anchorStatement.add(declaration);
-	}
+        if (parent instanceof JSFile) {
+            final PsiElement classRef = JSResolveUtil.getClassReferenceForXmlFromContext(parent);
+            if (classRef instanceof JSClass jsClass) {
+                parent = jsClass;
+            }
+        }
 
-	@Override
-	public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext)
-	{
-		throw new RuntimeException("Not implemented");
-	}
+        return parent;
+    }
+
+    protected static JSElement addToClassAnchor(
+        final JSElement anchorStatement,
+        final JSVarStatement declaration
+    ) throws IncorrectOperationException {
+        if (!(anchorStatement instanceof JSClass)) {
+            final JSElement element = findClassAnchor(anchorStatement);
+            return (JSElement)element.addBefore(declaration, anchorStatement);
+        }
+        return (JSElement)anchorStatement.add(declaration);
+    }
+
+    @Override
+    public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
+        throw new RuntimeException("Not implemented");
+    }
 }

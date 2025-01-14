@@ -36,65 +36,54 @@ import jakarta.annotation.Nonnull;
  * Time: 12:46:24
  */
 @ExtensionImpl
-public class JSExpressionSurroundDescriptor implements SurroundDescriptor
-{
-	private static final Surrounder[] SURROUNDERS = {
-			new JSWithParenthesesSurrounder()
-	};
+public class JSExpressionSurroundDescriptor implements SurroundDescriptor {
+    private static final Surrounder[] SURROUNDERS = {
+        new JSWithParenthesesSurrounder()
+    };
 
-	@Override
-	@Nonnull
-	public PsiElement[] getElementsToSurround(PsiFile file, int startOffset, int endOffset)
-	{
-		final JSExpression expr = findExpressionInRange(file, startOffset, endOffset);
-		if(expr == null)
-		{
-			return PsiElement.EMPTY_ARRAY;
-		}
-		return new PsiElement[]{expr};
-	}
+    @Override
+    @Nonnull
+    public PsiElement[] getElementsToSurround(PsiFile file, int startOffset, int endOffset) {
+        final JSExpression expr = findExpressionInRange(file, startOffset, endOffset);
+        if (expr == null) {
+            return PsiElement.EMPTY_ARRAY;
+        }
+        return new PsiElement[]{expr};
+    }
 
-	@Override
-	@Nonnull
-	public Surrounder[] getSurrounders()
-	{
-		return SURROUNDERS;
-	}
+    @Override
+    @Nonnull
+    public Surrounder[] getSurrounders() {
+        return SURROUNDERS;
+    }
 
-	@Override
-	public boolean isExclusive()
-	{
-		return false;
-	}
+    @Override
+    public boolean isExclusive() {
+        return false;
+    }
 
-	private static JSExpression findExpressionInRange(PsiFile file, int startOffset, int endOffset)
-	{
-		PsiElement element1 = file.findElementAt(startOffset);
-		PsiElement element2 = file.findElementAt(endOffset - 1);
-		if(element1 instanceof PsiWhiteSpace)
-		{
-			startOffset = element1.getTextRange().getEndOffset();
-		}
-		if(element2 instanceof PsiWhiteSpace)
-		{
-			endOffset = element2.getTextRange().getStartOffset();
-		}
-		JSExpression expression = PsiTreeUtil.findElementOfClassAtRange(file, startOffset, endOffset, JSExpression.class);
-		if(expression == null || expression.getTextRange().getEndOffset() != endOffset)
-		{
-			return null;
-		}
-		if(expression instanceof JSReferenceExpression && expression.getParent() instanceof JSCallExpression)
-		{
-			return null;
-		}
-		return expression;
-	}
+    private static JSExpression findExpressionInRange(PsiFile file, int startOffset, int endOffset) {
+        PsiElement element1 = file.findElementAt(startOffset);
+        PsiElement element2 = file.findElementAt(endOffset - 1);
+        if (element1 instanceof PsiWhiteSpace) {
+            startOffset = element1.getTextRange().getEndOffset();
+        }
+        if (element2 instanceof PsiWhiteSpace) {
+            endOffset = element2.getTextRange().getStartOffset();
+        }
+        JSExpression expression = PsiTreeUtil.findElementOfClassAtRange(file, startOffset, endOffset, JSExpression.class);
+        if (expression == null || expression.getTextRange().getEndOffset() != endOffset) {
+            return null;
+        }
+        if (expression instanceof JSReferenceExpression && expression.getParent() instanceof JSCallExpression) {
+            return null;
+        }
+        return expression;
+    }
 
-	@Nonnull
-	@Override
-	public Language getLanguage()
-	{
-		return JavaScriptLanguage.INSTANCE;
-	}
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return JavaScriptLanguage.INSTANCE;
+    }
 }

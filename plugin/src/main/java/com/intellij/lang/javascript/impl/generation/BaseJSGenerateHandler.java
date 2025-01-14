@@ -54,14 +54,14 @@ abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile file) {
+    public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
         JSClass clazz = findClass(file, editor);
 
         if (clazz == null) {
             return;
         }
 
-        final Collection<JSNamedElementNode> candidates = new ArrayList<>();
+        Collection<JSNamedElementNode> candidates = new ArrayList<>();
         collectCandidates(clazz, candidates);
 
         MemberChooserBuilder<JSNamedElementNode> builder =
@@ -70,20 +70,20 @@ abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler
             builder.withEmptySelection();
         }
 
-        builder.withTitle(getTitle());
-        builder.showAsync(
-            project,
-            dataHolder -> {
-                List data = dataHolder.getUserData(ClassMember.KEY_OF_LIST);
+        builder.withTitle(getTitle())
+            .showAsync(
+                project,
+                dataHolder -> {
+                    List data = dataHolder.getUserData(ClassMember.KEY_OF_LIST);
 
-                run(clazz, data, project, editor, file);
-            }
-        );
+                    run(clazz, data, project, editor, file);
+                }
+            );
     }
 
-    private void run(JSClass clazz, Collection<JSNamedElementNode> selectedElements, Project project, Editor editor, PsiFile file) {
-        final JSClass jsClass = clazz;
-        final Collection<JSNamedElementNode> selectedElements1 = selectedElements;
+    @RequiredUIAccess
+    private void run(JSClass clazz, final Collection<JSNamedElementNode> selectedElements, Project project, Editor editor, PsiFile file) {
+        JSClass jsClass = clazz;
         Runnable runnable = new Runnable() {
             @Override
             @RequiredUIAccess
@@ -93,7 +93,7 @@ abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler
                     public void run() {
                         try {
                             final BaseCreateMethodsFix createMethodsFix = createFix(jsClass);
-                            createMethodsFix.addElementsToProcessFrom(selectedElements1);
+                            createMethodsFix.addElementsToProcessFrom(selectedElements);
                             createMethodsFix.invoke(project, editor, file);
                         }
                         catch (IncorrectOperationException ex) {
@@ -106,7 +106,10 @@ abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler
 
         CommandProcessor processor = CommandProcessor.getInstance();
         if (processor.hasCurrentCommand()) {
-            processor.executeCommand(project, runnable, getClass().getName(), null);
+            processor.newCommand()
+                .project(project)
+                .name(LocalizeValue.of(getClass().getName()))
+                .run(runnable);
         }
         else {
             runnable.run();
@@ -122,15 +125,15 @@ abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler
 
     @RequiredReadAction
     static JSClass findClass(PsiFile file, Editor editor) {
-        final PsiElement at = file.findElementAt(editor.getCaretModel().getOffset());
+        PsiElement at = file.findElementAt(editor.getCaretModel().getOffset());
         if (at == null) {
             return null;
         }
 
         JSClass clazz = PsiTreeUtil.getParentOfType(at, JSClass.class);
         if (clazz == null) {
-            final PsiFile containingFile = at.getContainingFile();
-            final PsiElement element = JSResolveUtil.getClassReferenceForXmlFromContext(containingFile);
+            PsiFile containingFile = at.getContainingFile();
+            PsiElement element = JSResolveUtil.getClassReferenceForXmlFromContext(containingFile);
             if (element instanceof JSClass jsClass) {
                 clazz = jsClass;
             }
@@ -146,7 +149,7 @@ abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler
 
     protected abstract BaseCreateMethodsFix createFix(JSClass clazz);
 
-    protected abstract void collectCandidates(final JSClass clazz, final Collection<JSNamedElementNode> candidates);
+    protected abstract void collectCandidates(JSClass clazz, final Collection<JSNamedElementNode> candidates);
 
     @Override
     public boolean startInWriteAction() {
@@ -154,7 +157,7 @@ abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler
     }
 
     @Override
-    public boolean isValidFor(final Editor editor, final PsiFile file) {
+    public boolean isValidFor(Editor editor, PsiFile file) {
         return true;
     }
 }

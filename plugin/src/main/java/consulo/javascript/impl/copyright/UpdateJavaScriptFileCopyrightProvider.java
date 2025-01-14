@@ -18,33 +18,32 @@ import jakarta.annotation.Nonnull;
  * @since 16.02.2015
  */
 @ExtensionImpl
-public class UpdateJavaScriptFileCopyrightProvider extends UpdateCopyrightsProvider<CopyrightFileConfig>
-{
-	@Nonnull
-	@Override
-	public FileType getFileType()
-	{
-		return JavaScriptFileType.INSTANCE;
-	}
+public class UpdateJavaScriptFileCopyrightProvider extends UpdateCopyrightsProvider<CopyrightFileConfig> {
+    @Nonnull
+    @Override
+    public FileType getFileType() {
+        return JavaScriptFileType.INSTANCE;
+    }
 
-	@Nonnull
-	@Override
-	public UpdatePsiFileCopyright<CopyrightFileConfig> createInstance(@Nonnull PsiFile file, @Nonnull CopyrightProfile copyrightProfile)
-	{
-		return new UpdateJavaScriptFileCopyright(file, copyrightProfile);
-	}
+    @Nonnull
+    @Override
+    public UpdatePsiFileCopyright<CopyrightFileConfig> createInstance(@Nonnull PsiFile file, @Nonnull CopyrightProfile copyrightProfile) {
+        return new UpdateJavaScriptFileCopyright(file, copyrightProfile);
+    }
 
-	@Nonnull
-	@Override
-	public CopyrightFileConfig createDefaultOptions()
-	{
-		return new CopyrightFileConfig();
-	}
+    @Nonnull
+    @Override
+    public CopyrightFileConfig createDefaultOptions() {
+        return new CopyrightFileConfig();
+    }
 
-	@Nonnull
-	@Override
-	public TemplateCommentPanel createConfigurable(@Nonnull Project project, @Nonnull TemplateCommentPanel parentPane, @Nonnull FileType fileType)
-	{
-		return new TemplateCommentPanel(fileType, parentPane, project);
-	}
+    @Nonnull
+    @Override
+    public TemplateCommentPanel createConfigurable(
+        @Nonnull Project project,
+        @Nonnull TemplateCommentPanel parentPane,
+        @Nonnull FileType fileType
+    ) {
+        return new TemplateCommentPanel(fileType, parentPane, project);
+    }
 }

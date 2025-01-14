@@ -37,106 +37,91 @@ import java.util.Map;
 /**
  * @author Maxim.Mossienko
  */
-class JSSuperGrouper implements Grouper
-{
-	@NonNls
-	private static final String SHOW_CLASSES = "SHOW_CLASSES";
+class JSSuperGrouper implements Grouper {
+    @NonNls
+    private static final String SHOW_CLASSES = "SHOW_CLASSES";
 
-	@Override
-	@Nonnull
-	public Collection<Group> group(final Object parent, final Collection<TreeElement> children)
-	{
-		if (isParentGrouped((AbstractTreeNode) parent))
-		{
-			return Collections.emptyList();
-		}
-		final Map<String, Group> groups = new HashMap<>();
+    @Override
+    @Nonnull
+    public Collection<Group> group(final Object parent, final Collection<TreeElement> children) {
+        if (isParentGrouped((AbstractTreeNode)parent)) {
+            return Collections.emptyList();
+        }
+        final Map<String, Group> groups = new HashMap<>();
 
-		for (TreeElement _child : children)
-		{
-			if (!(_child instanceof JSStructureViewElement))
-			{
-				continue;
-			}
-			JSStructureViewElement child = (JSStructureViewElement) _child;
-			final PsiElement value = child.getValue();
+        for (TreeElement _child : children) {
+            if (!(_child instanceof JSStructureViewElement)) {
+                continue;
+            }
+            JSStructureViewElement child = (JSStructureViewElement)_child;
+            final PsiElement value = child.getValue();
 
-			if (value instanceof JSVariable)
-			{
-				if (!child.isInherited())
-				{
-					continue;
-				}
-				PsiElement parentElement = value.getParent();
-				if (parentElement instanceof JSVarStatement)
-				{
-					parentElement = parentElement.getParent();
-				}
-				if (parentElement instanceof JSClass jsClass)
-				{
-					addGroup(groups, _child, jsClass.getQualifiedName());
-				}
-			}
-			else if (value instanceof JSFunction)
-			{
-				processFunction((JSStructureViewElement) ((AbstractTreeNode) parent).getValue(), groups, _child, value);
-			}
-		}
-		return groups.values();
-	}
+            if (value instanceof JSVariable) {
+                if (!child.isInherited()) {
+                    continue;
+                }
+                PsiElement parentElement = value.getParent();
+                if (parentElement instanceof JSVarStatement) {
+                    parentElement = parentElement.getParent();
+                }
+                if (parentElement instanceof JSClass jsClass) {
+                    addGroup(groups, _child, jsClass.getQualifiedName());
+                }
+            }
+            else if (value instanceof JSFunction) {
+                processFunction((JSStructureViewElement)((AbstractTreeNode)parent).getValue(), groups, _child, value);
+            }
+        }
+        return groups.values();
+    }
 
-	private static void processFunction(JSStructureViewElement parentElement, Map<String, Group> groups, TreeElement _child, PsiElement value)
-	{
-		final PsiElement element = JSStructureViewElement.getPsiElementResolveProxy(parentElement);
-		if (element instanceof JSClass parentClass)
-		{
-			JSClass declaringClass = JSResolveUtil.findDeclaringClass((JSFunction) value);
-			if (parentClass != declaringClass)
-			{
-				addGroup(groups, _child, declaringClass.getQualifiedName());
-			}
-		}
-	}
+    private static void processFunction(
+        JSStructureViewElement parentElement,
+        Map<String, Group> groups,
+        TreeElement _child,
+        PsiElement value
+    ) {
+        final PsiElement element = JSStructureViewElement.getPsiElementResolveProxy(parentElement);
+        if (element instanceof JSClass parentClass) {
+            JSClass declaringClass = JSResolveUtil.findDeclaringClass((JSFunction)value);
+            if (parentClass != declaringClass) {
+                addGroup(groups, _child, declaringClass.getQualifiedName());
+            }
+        }
+    }
 
-	private static void addGroup(final Map<String, Group> groups, final TreeElement _child, final String qName)
-	{
-		JSSuperGroup group = (JSSuperGroup) groups.get(qName);
-		if (group == null)
-		{
-			groups.put(qName, group = new JSSuperGroup(qName));
-		}
+    private static void addGroup(final Map<String, Group> groups, final TreeElement _child, final String qName) {
+        JSSuperGroup group = (JSSuperGroup)groups.get(qName);
+        if (group == null) {
+            groups.put(qName, group = new JSSuperGroup(qName));
+        }
 
-		group.addChild(_child);
-	}
+        group.addChild(_child);
+    }
 
-	@Override
-	@Nonnull
-	public ActionPresentation getPresentation()
-	{
-    return new ActionPresentationData(
-			IdeLocalize.actionStructureviewGroupMethodsByDefiningType().get(),
-			null,
-			PlatformIconGroup.gutterImplementingmethod()
-		);
-	}
+    @Override
+    @Nonnull
+    public ActionPresentation getPresentation() {
+        return new ActionPresentationData(
+            IdeLocalize.actionStructureviewGroupMethodsByDefiningType().get(),
+            null,
+            PlatformIconGroup.gutterImplementingmethod()
+        );
+    }
 
-	@Override
-	@Nonnull
-	public String getName()
-	{
-		return SHOW_CLASSES;
-	}
+    @Override
+    @Nonnull
+    public String getName() {
+        return SHOW_CLASSES;
+    }
 
-	private static boolean isParentGrouped(AbstractTreeNode parent)
-	{
-		while (parent != null)
-		{
-			if (parent.getValue() instanceof JSSuperGroup)
-			{
-				return true;
-			}
-			parent = (AbstractTreeNode) parent.getParent();
-		}
-		return false;
-	}
+    private static boolean isParentGrouped(AbstractTreeNode parent) {
+        while (parent != null) {
+            if (parent.getValue() instanceof JSSuperGroup) {
+                return true;
+            }
+            parent = (AbstractTreeNode)parent.getParent();
+        }
+        return false;
+    }
 }

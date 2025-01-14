@@ -26,40 +26,34 @@ import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
-public class JSWithFunctionExpressionSurrounder extends JSStatementSurrounder
-{
-	@Override
-	public String getTemplateDescription()
-	{
-		return JavaScriptLocalize.javascriptSurroundWithFunctionExpression().get();
-	}
+public class JSWithFunctionExpressionSurrounder extends JSStatementSurrounder {
+    @Override
+    public String getTemplateDescription() {
+        return JavaScriptLocalize.javascriptSurroundWithFunctionExpression().get();
+    }
 
-	@Override
-	protected String getStatementTemplate(final Project project, PsiElement context)
-	{
-		return "aaa = function () { }" + JSChangeUtil.getSemicolon(project);
-	}
+    @Override
+    protected String getStatementTemplate(final Project project, PsiElement context) {
+        return "aaa = function () { }" + JSChangeUtil.getSemicolon(project);
+    }
 
-	@Override
-	protected ASTNode getInsertBeforeNode(final ASTNode statementNode)
-	{
-		JSFunctionExpression stmt = getFunctionExpr(statementNode);
-		return stmt.getBody()[0].getLastChild().getNode();
-	}
+    @Override
+    protected ASTNode getInsertBeforeNode(final ASTNode statementNode) {
+        JSFunctionExpression stmt = getFunctionExpr(statementNode);
+        return stmt.getBody()[0].getLastChild().getNode();
+    }
 
-	private static JSFunctionExpression getFunctionExpr(final ASTNode statementNode)
-	{
-		return (JSFunctionExpression) ((JSAssignmentExpression) ((JSExpressionStatement) statementNode.getPsi()).getExpression()).getROperand();
-	}
+    private static JSFunctionExpression getFunctionExpr(final ASTNode statementNode) {
+        return (JSFunctionExpression)((JSAssignmentExpression)((JSExpressionStatement)statementNode.getPsi()).getExpression()).getROperand();
+    }
 
-	@Override
-	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
-	{
-		JSFunctionExpression stmt = getFunctionExpr(statementNode);
-		ASTNode conditionNode = stmt.getNameIdentifier().getNode();
-		int offset = conditionNode.getStartOffset();
-		stmt.getParent().getNode().removeChild(conditionNode);
+    @Override
+    protected TextRange getSurroundSelectionRange(final ASTNode statementNode) {
+        JSFunctionExpression stmt = getFunctionExpr(statementNode);
+        ASTNode conditionNode = stmt.getNameIdentifier().getNode();
+        int offset = conditionNode.getStartOffset();
+        stmt.getParent().getNode().removeChild(conditionNode);
 
-		return new TextRange(offset, offset);
-	}
+        return new TextRange(offset, offset);
+    }
 }

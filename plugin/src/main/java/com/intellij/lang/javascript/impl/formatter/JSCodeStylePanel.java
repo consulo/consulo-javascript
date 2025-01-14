@@ -25,156 +25,137 @@ import consulo.language.codeStyle.ui.setting.CodeStyleAbstractPanel;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.psi.PsiFile;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.virtualFileSystem.fileType.FileType;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Mar 12, 2008
- *         Time: 10:39:21 PM
+ * @since 2008-03-12
  */
-public class JSCodeStylePanel extends CodeStyleAbstractPanel
-{
-	private JPanel myPanel;
-	private JCheckBox myIndentPackageChildren;
-	private JPanel myPreviewPanel;
-	private JTextField myFieldPrefixTextField;
-	private JTextField myPropertyPrefixTextField;
-	private JCheckBox myUseSemicolon;
-	private boolean myInsideUpdate = false;
+public class JSCodeStylePanel extends CodeStyleAbstractPanel {
+    private JPanel myPanel;
+    private JCheckBox myIndentPackageChildren;
+    private JPanel myPreviewPanel;
+    private JTextField myFieldPrefixTextField;
+    private JTextField myPropertyPrefixTextField;
+    private JCheckBox myUseSemicolon;
+    private boolean myInsideUpdate = false;
 
-	public JSCodeStylePanel(final CodeStyleSettings settings)
-	{
-		super(settings);
+    @RequiredUIAccess
+    public JSCodeStylePanel(final CodeStyleSettings settings) {
+        super(settings);
 
-		installPreviewPanel(myPreviewPanel);
-		addPanelToWatch(myPanel);
+        installPreviewPanel(myPreviewPanel);
+        addPanelToWatch(myPanel);
 
-		myUseSemicolon.addItemListener(new ItemListener()
-		{
-			@Override
-			public void itemStateChanged(final ItemEvent e)
-			{
-				if(!myInsideUpdate)
-				{
-					//updatePreviewEditor();
-					somethingChanged();
-				}
-			}
-		});
+        myUseSemicolon.addItemListener(e -> {
+            if (!myInsideUpdate) {
+                //updatePreviewEditor();
+                somethingChanged();
+            }
+        });
 
-		final DocumentAdapter adapter = new DocumentAdapter()
-		{
-			@Override
-			protected void textChanged(final DocumentEvent e)
-			{
-				if(!myInsideUpdate)
-				{
-					//updatePreviewEditor();
-					somethingChanged();
-				}
-			}
-		};
+        final DocumentAdapter adapter = new DocumentAdapter() {
+            @Override
+            protected void textChanged(DocumentEvent e) {
+                if (!myInsideUpdate) {
+                    //updatePreviewEditor();
+                    somethingChanged();
+                }
+            }
+        };
 
-		myFieldPrefixTextField.getDocument().addDocumentListener(adapter);
-		myPropertyPrefixTextField.getDocument().addDocumentListener(adapter);
-	}
+        myFieldPrefixTextField.getDocument().addDocumentListener(adapter);
+        myPropertyPrefixTextField.getDocument().addDocumentListener(adapter);
+    }
 
-	@Override
-	protected EditorHighlighter createHighlighter(final EditorColorsScheme scheme)
-	{
-		return EditorHighlighterFactory.getInstance().createEditorHighlighter(new LightVirtualFile("a.as"), scheme, null);
-	}
+    @Override
+    protected EditorHighlighter createHighlighter(EditorColorsScheme scheme) {
+        return EditorHighlighterFactory.getInstance().createEditorHighlighter(new LightVirtualFile("a.as"), scheme, null);
+    }
 
-	@Override
-	protected int getRightMargin()
-	{
-		return 60;
-	}
+    @Override
+    protected int getRightMargin() {
+        return 60;
+    }
 
-	@Override
-	protected void prepareForReformat(final PsiFile psiFile)
-	{
-	}
+    @Override
+    protected void prepareForReformat(PsiFile psiFile) {
+    }
 
-	@Override
-	@Nonnull
-	protected FileType getFileType()
-	{
-		return JavaScriptFileType.INSTANCE;
-	}
+    @Override
+    @Nonnull
+    protected FileType getFileType() {
+        return JavaScriptFileType.INSTANCE;
+    }
 
-	@Override
-	protected String getPreviewText()
-	{
-		final JSCodeStyleSettings jsCodeStyleSettings = getSettings().getCustomSettings(JSCodeStyleSettings.class);
-		@NonNls String baseName = "field";
-		@NonNls String propertyName = (myPropertyPrefixTextField != null ? myPropertyPrefixTextField.getText() : jsCodeStyleSettings.PROPERTY_PREFIX) +
-				baseName;
-		@NonNls String varName = (myFieldPrefixTextField != null ? myFieldPrefixTextField.getText() : jsCodeStyleSettings.FIELD_PREFIX) + baseName;
-		@NonNls String semiColon = (myUseSemicolon != null ? myUseSemicolon.isSelected() : jsCodeStyleSettings.USE_SEMICOLON_AFTER_STATEMENT) ? ";" : "";
+    @Override
+    protected String getPreviewText() {
+        JSCodeStyleSettings jsCodeStyleSettings = getSettings().getCustomSettings(JSCodeStyleSettings.class);
+        String baseName = "field";
+        String propertyName =
+            (myPropertyPrefixTextField != null ? myPropertyPrefixTextField.getText() : jsCodeStyleSettings.PROPERTY_PREFIX) +
+                baseName;
+        String varName =
+            (myFieldPrefixTextField != null ? myFieldPrefixTextField.getText() : jsCodeStyleSettings.FIELD_PREFIX) + baseName;
+        String semiColon =
+            (myUseSemicolon != null ? myUseSemicolon.isSelected() : jsCodeStyleSettings.USE_SEMICOLON_AFTER_STATEMENT) ? ";" : "";
 
-		return "package aaa {\nclass XXX {\n" +
-				"private var " + varName + semiColon + "\n" +
-				"function get " + propertyName + "() {\nreturn " + varName + semiColon + "\n" +
-				"}\n}\n}";
-	}
+        return "package aaa {\n" +
+            "class XXX {\n" +
+            "private var " + varName + semiColon + "\n" +
+            "function get " + propertyName + "() {\n" +
+            "return " + varName + semiColon + "\n" +
+            "}\n}\n}";
+    }
 
-	@Override
-	public void apply(final CodeStyleSettings settings)
-	{
-		final JSCodeStyleSettings jsCodeStyleSettings = settings.getCustomSettings(JSCodeStyleSettings.class);
-		jsCodeStyleSettings.INDENT_PACKAGE_CHILDREN = myIndentPackageChildren.isSelected() ? JSCodeStyleSettings.INDENT : JSCodeStyleSettings
-				.DO_NOT_INDENT;
-		jsCodeStyleSettings.FIELD_PREFIX = myFieldPrefixTextField.getText();
-		jsCodeStyleSettings.PROPERTY_PREFIX = myPropertyPrefixTextField.getText();
-		jsCodeStyleSettings.USE_SEMICOLON_AFTER_STATEMENT = myUseSemicolon.isSelected();
-	}
+    @Override
+    public void apply(CodeStyleSettings settings) {
+        JSCodeStyleSettings jsCodeStyleSettings = settings.getCustomSettings(JSCodeStyleSettings.class);
+        jsCodeStyleSettings.INDENT_PACKAGE_CHILDREN = myIndentPackageChildren.isSelected()
+            ? JSCodeStyleSettings.INDENT
+            : JSCodeStyleSettings.DO_NOT_INDENT;
+        jsCodeStyleSettings.FIELD_PREFIX = myFieldPrefixTextField.getText();
+        jsCodeStyleSettings.PROPERTY_PREFIX = myPropertyPrefixTextField.getText();
+        jsCodeStyleSettings.USE_SEMICOLON_AFTER_STATEMENT = myUseSemicolon.isSelected();
+    }
 
-	@Override
-	public boolean isModified(final CodeStyleSettings settings)
-	{
-		final JSCodeStyleSettings jsCodeStyleSettings = settings.getCustomSettings(JSCodeStyleSettings.class);
-		return (jsCodeStyleSettings.INDENT_PACKAGE_CHILDREN == JSCodeStyleSettings.INDENT) != myIndentPackageChildren.isSelected() ||
-				!jsCodeStyleSettings.FIELD_PREFIX.equals(myFieldPrefixTextField.getText()) ||
-				!jsCodeStyleSettings.PROPERTY_PREFIX.equals(myPropertyPrefixTextField.getText()) ||
-				jsCodeStyleSettings.USE_SEMICOLON_AFTER_STATEMENT != (myUseSemicolon.isSelected());
-	}
+    @Override
+    public boolean isModified(CodeStyleSettings settings) {
+        JSCodeStyleSettings jsCodeStyleSettings = settings.getCustomSettings(JSCodeStyleSettings.class);
+        return (jsCodeStyleSettings.INDENT_PACKAGE_CHILDREN == JSCodeStyleSettings.INDENT) != myIndentPackageChildren.isSelected()
+            || !jsCodeStyleSettings.FIELD_PREFIX.equals(myFieldPrefixTextField.getText())
+            || !jsCodeStyleSettings.PROPERTY_PREFIX.equals(myPropertyPrefixTextField.getText())
+            || jsCodeStyleSettings.USE_SEMICOLON_AFTER_STATEMENT != (myUseSemicolon.isSelected());
+    }
 
-	@Override
-	public JComponent getPanel()
-	{
-		return myPanel;
-	}
+    @Override
+    public JComponent getPanel() {
+        return myPanel;
+    }
 
-	@Override
-	protected void resetImpl(final CodeStyleSettings settings)
-	{
-		try
-		{
-			myInsideUpdate = true;
-			final JSCodeStyleSettings jsCodeStyleSettings = settings.getCustomSettings(JSCodeStyleSettings.class);
-			myIndentPackageChildren.setSelected(jsCodeStyleSettings.INDENT_PACKAGE_CHILDREN == JSCodeStyleSettings.INDENT);
-			myFieldPrefixTextField.setText(jsCodeStyleSettings.FIELD_PREFIX);
-			myPropertyPrefixTextField.setText(jsCodeStyleSettings.PROPERTY_PREFIX);
-			myUseSemicolon.setSelected(jsCodeStyleSettings.USE_SEMICOLON_AFTER_STATEMENT);
-		}
-		finally
-		{
-			myInsideUpdate = false;
-		}
-	}
+    @Override
+    protected void resetImpl(CodeStyleSettings settings) {
+        try {
+            myInsideUpdate = true;
+            JSCodeStyleSettings jsCodeStyleSettings = settings.getCustomSettings(JSCodeStyleSettings.class);
+            myIndentPackageChildren.setSelected(jsCodeStyleSettings.INDENT_PACKAGE_CHILDREN == JSCodeStyleSettings.INDENT);
+            myFieldPrefixTextField.setText(jsCodeStyleSettings.FIELD_PREFIX);
+            myPropertyPrefixTextField.setText(jsCodeStyleSettings.PROPERTY_PREFIX);
+            myUseSemicolon.setSelected(jsCodeStyleSettings.USE_SEMICOLON_AFTER_STATEMENT);
+        }
+        finally {
+            myInsideUpdate = false;
+        }
+    }
 
-	@Override
-	protected String getFileTypeExtension(final FileType fileType)
-	{
-		return "js2";
-	}
+    @Override
+    protected String getFileTypeExtension(FileType fileType) {
+        return "js2";
+    }
 }
