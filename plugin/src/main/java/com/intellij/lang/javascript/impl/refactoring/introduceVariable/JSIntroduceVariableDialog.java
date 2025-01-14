@@ -18,8 +18,10 @@ package com.intellij.lang.javascript.impl.refactoring.introduceVariable;
 
 import com.intellij.lang.javascript.impl.refactoring.JSBaseIntroduceDialog;
 import com.intellij.lang.javascript.psi.JSExpression;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
 
 import javax.swing.*;
@@ -41,7 +43,8 @@ public class JSIntroduceVariableDialog extends JSBaseIntroduceDialog implements 
     private static IntroducedVarType ourLastIntroduceType = IntroducedVarType.VAR;
     private IntroducedVarType myIntroducedVarType;
 
-    protected JSIntroduceVariableDialog(final Project project, final JSExpression[] occurences, final JSExpression mainOccurence) {
+    @RequiredUIAccess
+    protected JSIntroduceVariableDialog(Project project, JSExpression[] occurences, JSExpression mainOccurence) {
         super(project, occurences, mainOccurence, JavaScriptLocalize.javascriptIntroduceVariableTitle());
 
         if (ourLastIntroduceType == Settings.IntroducedVarType.CONST) {
@@ -73,6 +76,7 @@ public class JSIntroduceVariableDialog extends JSBaseIntroduceDialog implements 
     }
 
     @Override
+    @RequiredUIAccess
     protected void doOKAction() {
         super.doOKAction();
 
@@ -100,7 +104,8 @@ public class JSIntroduceVariableDialog extends JSBaseIntroduceDialog implements 
     }
 
     @Override
-    protected String suggestCandidateName(final JSExpression mainOccurence) {
+    @RequiredReadAction
+    protected String suggestCandidateName(JSExpression mainOccurence) {
         return StringUtil.decapitalize(super.suggestCandidateName(mainOccurence));
     }
 }

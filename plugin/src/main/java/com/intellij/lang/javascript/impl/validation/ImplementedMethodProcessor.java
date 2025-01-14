@@ -25,6 +25,7 @@ import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.ResolveState;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.LinkedHashMap;
@@ -38,27 +39,27 @@ import java.util.function.Function;
 public abstract class ImplementedMethodProcessor extends JSResolveUtil.CollectMethodsToImplementProcessor {
     protected final JSClass myJsClass;
 
-    public ImplementedMethodProcessor(final JSClass jsClass) {
+    public ImplementedMethodProcessor(JSClass jsClass) {
         super(null, null);
         myJsClass = jsClass;
     }
 
     @Override
-    protected boolean process(final ResolveProcessor processor) {
+    protected boolean process(ResolveProcessor processor) {
         Map<String, Object> functions = null;
 
         for (PsiElement _function : processor.getResults()) {
             if (!(_function instanceof JSFunction function)) {
                 continue;
             }
-            final String name = function.getName();
+            String name = function.getName();
 
             if (functions == null) {
                 functions = collectAllVisibleClassFunctions(
                     myJsClass,
                     null,
                     jsFunction -> {
-                        final JSAttributeList attributeList = jsFunction.getAttributeList();
+                        JSAttributeList attributeList = jsFunction.getAttributeList();
                         PsiElement parentClass = JSResolveUtil.findParent(jsFunction);
                         if ((attributeList == null || attributeList.getAccessType() != JSAttributeList.AccessType.PUBLIC)
                             && myJsClass != parentClass) {
@@ -90,15 +91,11 @@ public abstract class ImplementedMethodProcessor extends JSResolveUtil.CollectMe
         return true;
     }
 
-    protected void addImplementedFunction(final JSFunction interfaceFunction, final JSFunction implementationFunction) {
+    protected void addImplementedFunction(JSFunction interfaceFunction, JSFunction implementationFunction) {
     }
 
     @RequiredReadAction
-    public static JSFunction findFunctionWithTheSameKind(
-        final Map<String, Object> functions,
-        final JSFunction function,
-        final String name
-    ) {
+    public static JSFunction findFunctionWithTheSameKind(Map<String, Object> functions, JSFunction function, String name) {
         Object o = functions.get(name);
         if (o instanceof JSFunction fun) {
             return fun.getKind() == function.getKind() ? fun : null;
@@ -128,13 +125,13 @@ public abstract class ImplementedMethodProcessor extends JSResolveUtil.CollectMe
 
                 @Override
                 @RequiredReadAction
-                public boolean execute(final PsiElement element, final ResolveState state) {
+                public boolean execute(@Nonnull PsiElement element, ResolveState state) {
                     if (element instanceof JSFunction function) {
                         if (function.isConstructor()) {
                             return true; // SWC stubs have constructor methods :(
                         }
 
-                        final JSAttributeList attributeList = function.getAttributeList();
+                        JSAttributeList attributeList = function.getAttributeList();
                         if (attributeList != null && attributeList.getAccessType() == JSAttributeList.AccessType.PRIVATE) {
                             return true;
                         }
@@ -143,16 +140,15 @@ public abstract class ImplementedMethodProcessor extends JSResolveUtil.CollectMe
                         if (filterValue != null && !filterValue) {
                             return true;
                         }
-                        final String s = function.getName();
-                        final Object function1 = functions.get(s);
+                        String s = function.getName();
+                        Object function1 = functions.get(s);
 
                         if (function1 == null) {
                             functions.put(s, function);
                         }
-                        else if (function1 instanceof JSFunction function2) {
-                            if (findFunctionWithTheSameKind(functions, function, s) == null) {
-                                functions.put(s, new JSFunction[]{function2, function});
-                            }
+                        else if (function1 instanceof JSFunction function2
+                            && findFunctionWithTheSameKind(functions, function, s) == null) {
+                            functions.put(s, new JSFunction[]{function2, function});
                         }
                     }
                     return true;
@@ -165,5 +161,5 @@ public abstract class ImplementedMethodProcessor extends JSResolveUtil.CollectMe
         return functions;
     }
 
-    protected abstract void addNonimplementedFunction(final JSFunction function);
+    protected abstract void addNonimplementedFunction(JSFunction function);
 }

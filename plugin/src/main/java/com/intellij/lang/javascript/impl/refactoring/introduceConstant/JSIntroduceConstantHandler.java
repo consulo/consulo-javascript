@@ -19,6 +19,8 @@ package com.intellij.lang.javascript.impl.refactoring.introduceConstant;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.impl.refactoring.JSBaseIntroduceHandler;
 import com.intellij.lang.javascript.psi.*;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.codeEditor.Editor;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
@@ -27,13 +29,13 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.util.lang.ref.Ref;
-import org.jetbrains.annotations.NonNls;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.ref.SimpleReference;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
- * Date: May 29, 2008
- * Time: 8:20:03 PM
+ * @since 2008-05-29
  */
 public class JSIntroduceConstantHandler extends JSBaseIntroduceHandler<JSElement, JSIntroduceConstantSettings, JSIntroduceConstantDialog> {
     @Override
@@ -47,17 +49,13 @@ public class JSIntroduceConstantHandler extends JSBaseIntroduceHandler<JSElement
     }
 
     @Override
-    protected JSIntroduceConstantDialog createDialog(
-        final Project project,
-        final JSExpression expression,
-        final JSExpression[] occurrences
-    ) {
+    protected JSIntroduceConstantDialog createDialog(Project project, JSExpression expression, JSExpression[] occurrences) {
         return new JSIntroduceConstantDialog(project, occurrences, expression);
     }
 
     @Override
-    protected String getDeclText(final JSIntroduceConstantSettings settings) {
-        @NonNls String baseDeclText = "static const " + settings.getVariableName();
+    protected String getDeclText(JSIntroduceConstantSettings settings) {
+        String baseDeclText = "static const " + settings.getVariableName();
         final JSAttributeList.AccessType type = settings.getAccessType();
         if (type != JSAttributeList.AccessType.PACKAGE_LOCAL) {
             baseDeclText = type.toString().toLowerCase() + " " + baseDeclText;
@@ -67,20 +65,19 @@ public class JSIntroduceConstantHandler extends JSBaseIntroduceHandler<JSElement
     }
 
     @Override
-    protected JSElement findAnchor(final BaseIntroduceContext<JSIntroduceConstantSettings> context, final boolean replaceAllOccurences) {
+    protected JSElement findAnchor(BaseIntroduceContext<JSIntroduceConstantSettings> context, boolean replaceAllOccurences) {
         return findClassAnchor(context.expression);
     }
 
     @Override
-    protected JSElement addStatementBefore(
-        final JSElement anchorStatement,
-        final JSVarStatement declaration
-    ) throws IncorrectOperationException {
+    @RequiredWriteAction
+    protected JSElement addStatementBefore(JSElement anchorStatement, JSVarStatement declaration) throws IncorrectOperationException {
         return addToClassAnchor(anchorStatement, declaration);
     }
 
     @Override
-    protected JSExpression findIntroducedExpression(final PsiFile file, final int start, final int end, Editor editor) {
+    @RequiredUIAccess
+    protected JSExpression findIntroducedExpression(PsiFile file, int start, int end, Editor editor) {
         if (file.getLanguage() != JavaScriptSupportLoader.ECMA_SCRIPT_L4) {
             CommonRefactoringUtil.showErrorHint(
                 file.getProject(),
@@ -92,20 +89,21 @@ public class JSIntroduceConstantHandler extends JSBaseIntroduceHandler<JSElement
             return null;
         }
 
-        final JSExpression expression = super.findIntroducedExpression(file, start, end, editor);
+        JSExpression expression = super.findIntroducedExpression(file, start, end, editor);
         if (expression == null) {
             return null;
         }
 
-        final Ref<Boolean> hasAccesibilityProblem = new Ref<Boolean>();
+        final SimpleReference<Boolean> hasAccesibilityProblem = new SimpleReference<>();
         expression.accept(new JSElementVisitor() {
             @Override
-            public void visitJSReferenceExpression(final JSReferenceExpression node) {
+            @RequiredReadAction
+            public void visitJSReferenceExpression(@Nonnull JSReferenceExpression node) {
                 if (node.getQualifier() == null) {
-                    final PsiElement element = node.resolve();
+                    PsiElement element = node.resolve();
 
-                    if (element instanceof JSAttributeListOwner && !(element instanceof JSClass)) {
-                        final JSAttributeList attributeList = ((JSAttributeListOwner)element).getAttributeList();
+                    if (element instanceof JSAttributeListOwner attributeListOwner && !(element instanceof JSClass)) {
+                        JSAttributeList attributeList = attributeListOwner.getAttributeList();
                         if (attributeList == null || !attributeList.hasModifier(JSAttributeList.ModifierType.STATIC)) {
                             hasAccesibilityProblem.set(Boolean.TRUE);
                         }
@@ -118,7 +116,7 @@ public class JSIntroduceConstantHandler extends JSBaseIntroduceHandler<JSElement
             }
 
             @Override
-            public void visitJSElement(final JSElement node) {
+            public void visitJSElement(@Nonnull JSElement node) {
                 node.acceptChildren(this);
             }
         });

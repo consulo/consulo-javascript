@@ -22,6 +22,7 @@ import com.intellij.lang.javascript.psi.JSStatement;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author ven
@@ -43,11 +44,8 @@ public class JSIntroduceVariableHandler extends JSBaseIntroduceHandler<JSStateme
     }
 
     @Override
-    protected JSIntroduceVariableDialog createDialog(
-        final Project project,
-        final JSExpression expression,
-        final JSExpression[] occurrences
-    ) {
+    @RequiredUIAccess
+    protected JSIntroduceVariableDialog createDialog(Project project, JSExpression expression, JSExpression[] occurrences) {
         return new JSIntroduceVariableDialog(project, occurrences, expression);
     }
 }

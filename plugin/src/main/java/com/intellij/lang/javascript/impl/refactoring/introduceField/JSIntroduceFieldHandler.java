@@ -21,6 +21,7 @@ import com.intellij.lang.javascript.flex.XmlBackedJSClassImpl;
 import com.intellij.lang.javascript.impl.refactoring.JSBaseIntroduceHandler;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.codeEditor.Editor;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.codeStyle.CodeStyleManager;
@@ -31,13 +32,12 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.xml.psi.xml.XmlFile;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author Maxim.Mossienko
- * Date: May 29, 2008
- * Time: 8:20:03 PM
+ * @since 2008-05-29
  */
 public class JSIntroduceFieldHandler extends JSBaseIntroduceHandler<JSElement, JSIntroduceFieldSettings, JSIntroduceFieldDialog> {
     @Override
@@ -51,27 +51,26 @@ public class JSIntroduceFieldHandler extends JSBaseIntroduceHandler<JSElement, J
     }
 
     @Override
-    protected JSIntroduceFieldDialog createDialog(final Project project, final JSExpression expression, final JSExpression[] occurrences) {
+    @RequiredUIAccess
+    protected JSIntroduceFieldDialog createDialog(Project project, JSExpression expression, JSExpression[] occurrences) {
         return new JSIntroduceFieldDialog(project, occurrences, expression);
     }
 
     @Override
-    protected JSElement findAnchor(final BaseIntroduceContext<JSIntroduceFieldSettings> context, final boolean replaceAllOccurences) {
+    protected JSElement findAnchor(BaseIntroduceContext<JSIntroduceFieldSettings> context, boolean replaceAllOccurences) {
         return findClassAnchor(context.expression);
     }
 
     @Override
-    protected JSElement addStatementBefore(
-        final JSElement anchorStatement,
-        final JSVarStatement declaration
-    ) throws IncorrectOperationException {
+    @RequiredWriteAction
+    protected JSElement addStatementBefore(JSElement anchorStatement, JSVarStatement declaration) throws IncorrectOperationException {
         return addToClassAnchor(anchorStatement, declaration);
     }
 
     @Override
     protected String getDeclText(final JSIntroduceFieldSettings settings) {
-        @NonNls String baseDeclText = super.getDeclText(settings);
-        final JSAttributeList.AccessType type = settings.getAccessType();
+        String baseDeclText = super.getDeclText(settings);
+        JSAttributeList.AccessType type = settings.getAccessType();
         if (type != JSAttributeList.AccessType.PACKAGE_LOCAL) {
             baseDeclText = type.toString().toLowerCase() + " " + baseDeclText;
         }
@@ -80,7 +79,8 @@ public class JSIntroduceFieldHandler extends JSBaseIntroduceHandler<JSElement, J
     }
 
     @Override
-    protected JSExpression findIntroducedExpression(final PsiFile file, final int start, final int end, Editor editor) {
+    @RequiredUIAccess
+    protected JSExpression findIntroducedExpression(PsiFile file, int start, int end, Editor editor) {
         if (file.getLanguage() != JavaScriptSupportLoader.ECMA_SCRIPT_L4) {
             CommonRefactoringUtil.showErrorHint(
                 file.getProject(),
@@ -96,41 +96,42 @@ public class JSIntroduceFieldHandler extends JSBaseIntroduceHandler<JSElement, J
     }
 
     @Override
+    @RequiredWriteAction
     protected JSVarStatement prepareDeclaration(
-        final String varDeclText,
+        String varDeclText,
         BaseIntroduceContext<JSIntroduceFieldSettings> context,
-        final Project project
+        Project project
     ) throws IncorrectOperationException {
-        final JSIntroduceFieldSettings.InitializationPlace place = context.settings.getInitializationPlace();
+        JSIntroduceFieldSettings.InitializationPlace place = context.settings.getInitializationPlace();
 
         if (place == JSIntroduceFieldSettings.InitializationPlace.FieldDeclaration) {
             return super.prepareDeclaration(varDeclText, context, project);
         }
         else {
-            final String assignmentText =
+            String assignmentText =
                 context.settings.getVariableName() + "=" + context.expression.getText() + JSChangeUtil.getSemicolon(project);
-            final PsiElement psiToInsert = JSChangeUtil.createStatementFromText(project, assignmentText).getPsi();
+            PsiElement psiToInsert = JSChangeUtil.createStatementFromText(project, assignmentText).getPsi();
 
             if (place == JSIntroduceFieldSettings.InitializationPlace.CurrentMethod) {
-                final JSElement element = super.findAnchor(context, context.settings.isReplaceAllOccurences());
-                final PsiElement parent = element.getParent();
-                final PsiElement addedElement = parent.addBefore(psiToInsert, element);
+                JSElement element = super.findAnchor(context, context.settings.isReplaceAllOccurences());
+                PsiElement parent = element.getParent();
+                PsiElement addedElement = parent.addBefore(psiToInsert, element);
                 CodeStyleManager.getInstance(project).reformatNewlyAddedElement(parent.getNode(), addedElement.getNode());
             }
             else {
                 PsiElement parent = PsiTreeUtil.getParentOfType(context.expression, JSClass.class, JSFile.class);
-                if (parent instanceof JSFile) {
-                    final PsiFile containingFile = parent.getContext().getContainingFile();
+                if (parent instanceof JSFile jsFile) {
+                    PsiFile containingFile = jsFile.getContext().getContainingFile();
                     assert containingFile instanceof XmlFile;
                     parent = XmlBackedJSClassImpl.getXmlBackedClass((XmlFile)containingFile);
                 }
 
                 assert parent instanceof JSClass;
-                final JSClass clazz = (JSClass)parent;
+                JSClass clazz = (JSClass)parent;
                 JSFunction fun = clazz.findFunctionByName(clazz.getName());
 
                 if (fun == null) {
-                    @NonNls String constr = "function " + clazz.getName() + "() {}";
+                    String constr = "function " + clazz.getName() + "() {}";
                     if (clazz.getAttributeList() != null && clazz.getAttributeList().getAccessType() == JSAttributeList.AccessType.PUBLIC) {
                         constr = "public " + constr;
                     }

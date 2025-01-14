@@ -33,7 +33,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class JSStructureViewBuilderFactory implements PsiStructureViewFactory {
     @Override
-    public StructureViewBuilder getStructureViewBuilder(final PsiFile psiFile) {
+    public StructureViewBuilder getStructureViewBuilder(PsiFile psiFile) {
         return new TreeBasedStructureViewBuilder() {
             @Override
             @Nonnull

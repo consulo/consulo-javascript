@@ -19,6 +19,7 @@ package com.intellij.lang.javascript.impl.surroundWith;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSForStatement;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.ASTNode;
@@ -37,22 +38,24 @@ public class JSWithForSurrounder extends JSStatementSurrounder {
     }
 
     @Override
-    protected String getStatementTemplate(final Project project, PsiElement context) {
+    protected String getStatementTemplate(Project project, PsiElement context) {
         return "for(i=0; i<1; i++) { }";
     }
 
     @Override
-    protected ASTNode getInsertBeforeNode(final ASTNode statementNode) {
+    @RequiredReadAction
+    protected ASTNode getInsertBeforeNode(ASTNode statementNode) {
         JSForStatement forStatement = (JSForStatement)statementNode.getPsi();
         return forStatement.getBody().getLastChild().getNode();
     }
 
     @Override
-    protected TextRange getSurroundSelectionRange(final ASTNode statementNode) {
+    @RequiredReadAction
+    protected TextRange getSurroundSelectionRange(ASTNode statementNode) {
         for (ASTNode childNode : statementNode.getChildren(null)) {
-            if (childNode.getElementType() == JSTokenTypes.SEMICOLON ||
-                childNode.getPsi() instanceof PsiWhiteSpace ||
-                childNode.getPsi() instanceof JSExpression) {
+            if (childNode.getElementType() == JSTokenTypes.SEMICOLON
+                || childNode.getPsi() instanceof PsiWhiteSpace
+                || childNode.getPsi() instanceof JSExpression) {
                 statementNode.removeChild(childNode);
             }
             else if (childNode.getElementType() == JSTokenTypes.RPAR) {

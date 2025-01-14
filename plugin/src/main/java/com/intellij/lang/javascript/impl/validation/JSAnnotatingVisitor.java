@@ -25,6 +25,7 @@ import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.util.JSUtils;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
 import consulo.javascript.localize.JavaScriptLocalize;
@@ -51,7 +52,7 @@ import consulo.localize.LocalizeValue;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.xml.psi.xml.XmlAttributeValue;
 import consulo.xml.psi.xml.XmlTagChild;
@@ -60,7 +61,8 @@ import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
- * @by max, maxim.mossienko
+ * @author max
+ * @author maxim.mossienko
  */
 public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
     private AnnotationHolder myHolder;
@@ -74,13 +76,13 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
     @Override
     @RequiredReadAction
-    public void visitJSAttributeNameValuePair(final JSAttributeNameValuePair attributeNameValuePair) {
+    public void visitJSAttributeNameValuePair(JSAttributeNameValuePair attributeNameValuePair) {
         checkReferences(attributeNameValuePair, HighlightSeverity.ERROR);
     }
 
     @Override
     @RequiredReadAction
-    public void visitJSIncludeDirective(final JSIncludeDirective includeDirective) {
+    public void visitJSIncludeDirective(JSIncludeDirective includeDirective) {
         checkReferences(includeDirective, HighlightSeverity.ERROR);
     }
 
@@ -91,19 +93,18 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
     }
 
     @RequiredReadAction
-    private void checkReferences(final PsiElement includeDirective, HighlightSeverity kind) {
+    private void checkReferences(PsiElement includeDirective, HighlightSeverity kind) {
         for (PsiReference ref : includeDirective.getReferences()) {
             if (!ref.isSoft() && hasBadResolve(ref)) {
-                final TextRange elementRange = ref.getElement().getTextRange();
-                final TextRange textRange = ref.getRangeInElement();
+                TextRange elementRange = ref.getElement().getTextRange();
+                TextRange textRange = ref.getRangeInElement();
 
-                final TextRange range = new TextRange(
+                TextRange range = new TextRange(
                     elementRange.getStartOffset() + textRange.getStartOffset(),
                     elementRange.getStartOffset() + textRange.getEndOffset()
                 );
-                final LocalizeValue value = ((EmptyResolveMessageProvider)ref).buildUnresolvedMessage(ref.getCanonicalText());
-                AnnotationBuilder builder = myHolder.newAnnotation(kind, value)
-                    .range(range);
+                LocalizeValue value = ((EmptyResolveMessageProvider)ref).buildUnresolvedMessage(ref.getCanonicalText());
+                AnnotationBuilder builder = myHolder.newAnnotation(kind, value).range(range);
 
                 if (ref instanceof LocalQuickFixProvider localQuickFixProvider) {
                     for (LocalQuickFix fix : localQuickFixProvider.getQuickFixes()) {
@@ -118,7 +119,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
     }
 
     @RequiredReadAction
-    private boolean hasBadResolve(final PsiReference ref) {
+    private boolean hasBadResolve(PsiReference ref) {
         return ref instanceof PsiPolyVariantReference psiPolyVariantReference
             ? psiPolyVariantReference.multiResolve(false).length == 0
             : ref.resolve() == null;
@@ -126,38 +127,38 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
     @Override
     @RequiredReadAction
-    public void visitJSCallExpression(final JSCallExpression node) {
-        final JSExpression methodExpression = node.getMethodExpression();
+    public void visitJSCallExpression(JSCallExpression node) {
+        JSExpression methodExpression = node.getMethodExpression();
 
-        if (methodExpression instanceof JSLiteralExpression) {
+        if (methodExpression instanceof JSLiteralExpression literal) {
             myHolder.newAnnotation(HighlightSeverity.ERROR, JavaScriptLocalize.javascriptParserMessageExpectedFunctionName())
-                .range(methodExpression)
+                .range(literal)
                 .create();
         }
     }
 
     @Override
     @RequiredReadAction
-    public void visitJSDocTagValue(final JSDocTagValue tagValue) {
+    public void visitJSDocTagValue(@Nonnull JSDocTagValue tagValue) {
         checkReferences(tagValue, HighlightSeverity.WARNING);
     }
 
     @Override
     @RequiredReadAction
-    public void visitJSDocTag(final JSDocTag tagValue) {
+    public void visitJSDocTag(@Nonnull JSDocTag tagValue) {
         checkReferences(tagValue, HighlightSeverity.WARNING);
     }
 
     @Override
     @RequiredReadAction
-    public void visitJSReferenceList(final JSReferenceList referenceList) {
-        final JSClass jsClass = (JSClass)referenceList.getParent();
+    public void visitJSReferenceList(JSReferenceList referenceList) {
+        JSClass jsClass = (JSClass)referenceList.getParent();
         if (JSResolveUtil.isArtificialClassUsedForReferenceList(jsClass)) {
             return; // implements="MyInterface" in mxml has artificial class created
         }
 
-        final boolean withinExtends = jsClass.getExtendsList() == referenceList;
-        final boolean withinImplements = jsClass.getImplementsList() == referenceList;
+        boolean withinExtends = jsClass.getExtendsList() == referenceList;
+        boolean withinImplements = jsClass.getImplementsList() == referenceList;
 
         if (withinImplements && jsClass.isInterface()) {
             myHolder.newAnnotation(
@@ -169,12 +170,12 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
             return;
         }
 
-        final Map<String, JSReferenceExpression> nameToExprMap = new HashMap<>();
+        Map<String, JSReferenceExpression> nameToExprMap = new HashMap<>();
 
-        final JSReferenceExpression[] referenceExpressions = referenceList.getExpressions();
+        JSReferenceExpression[] referenceExpressions = referenceList.getExpressions();
         if (referenceExpressions != null) {
             for (JSReferenceExpression expr : referenceExpressions) {
-                final String s = expr.getReferencedName();
+                String s = expr.getReferencedName();
                 if (s != null) {
                     nameToExprMap.put(s, expr);
                 }
@@ -182,8 +183,8 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
         }
 
         for (JSClass clazz : referenceList.getReferencedClasses()) {
-            final boolean isInterface = clazz.isInterface();
-            final JSReferenceExpression expr = nameToExprMap.get(clazz.getName());
+            boolean isInterface = clazz.isInterface();
+            JSReferenceExpression expr = nameToExprMap.get(clazz.getName());
 
             if (!isInterface && withinImplements) {
                 myHolder.newAnnotation(HighlightSeverity.ERROR, JavaScriptLocalize.javascriptValidationMessageInterfaceNameExpectedHere())
@@ -214,13 +215,13 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
     }
 
     public static void checkImplementedMethods(final JSClass jsClass, final AnnotationHolder holder) {
-        final JSResolveUtil.CollectMethodsToImplementProcessor implementedMethodProcessor = new ImplementedMethodProcessor(jsClass) {
+        JSResolveUtil.CollectMethodsToImplementProcessor implementedMethodProcessor = new ImplementedMethodProcessor(jsClass) {
             ImplementMethodsFix implementMethodsFix = null;
 
             @Override
             @RequiredReadAction
-            protected void addNonimplementedFunction(final JSFunction function) {
-                final PsiElement node = myJsClass.getNameIdentifier();
+            protected void addNonimplementedFunction(JSFunction function) {
+                PsiElement node = myJsClass.getNameIdentifier();
                 if (node == null) {
                     return;
                 }
@@ -242,10 +243,10 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
             @Override
             @RequiredReadAction
-            protected void addImplementedFunction(final JSFunction interfaceFunction, final JSFunction implementationFunction) {
+            protected void addImplementedFunction(JSFunction interfaceFunction, JSFunction implementationFunction) {
                 final JSAttributeList attributeList = implementationFunction.getAttributeList();
                 if (attributeList == null || attributeList.getAccessType() != JSAttributeList.AccessType.PUBLIC) {
-                    final ASTNode node = findElementForAccessModifierError(implementationFunction, attributeList);
+                    ASTNode node = findElementForAccessModifierError(implementationFunction, attributeList);
                     holder.newAnnotation(
                             HighlightSeverity.ERROR,
                             JavaScriptLocalize.javascriptValidationMessageInterfaceMethodInvalidAccessModifier()
@@ -254,12 +255,12 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
                         .create(); // TODO: quickfix
                 }
 
-                final SignatureMatchResult incompatibleSignature = checkCompatibleSignature(implementationFunction, interfaceFunction);
+                SignatureMatchResult incompatibleSignature = checkCompatibleSignature(implementationFunction, interfaceFunction);
 
                 if (incompatibleSignature != SignatureMatchResult.COMPATIBLE_SIGNATURE) {
                     PsiElement parent = JSResolveUtil.findParent(implementationFunction);
-                    if (parent instanceof JSFile) {
-                        parent = JSResolveUtil.getClassReferenceForXmlFromContext(parent);
+                    if (parent instanceof JSFile jsFile) {
+                        parent = JSResolveUtil.getClassReferenceForXmlFromContext(jsFile);
                     }
 
                     if (parent != myJsClass) {
@@ -269,8 +270,8 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
                     }
 
                     if (incompatibleSignature == SignatureMatchResult.PARAMETERS_DIFFERS) {
-                        final JSParameterList parameterList = implementationFunction.getParameterList();
-                        final JSParameterList expectedParameterList = interfaceFunction.getParameterList();
+                        JSParameterList parameterList = implementationFunction.getParameterList();
+                        JSParameterList expectedParameterList = interfaceFunction.getParameterList();
                         holder.newAnnotation(
                                 HighlightSeverity.ERROR,
                                 JavaScriptLocalize.javascriptValidationMessageInterfaceMethodInvalidSignature(
@@ -302,9 +303,10 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
         JSResolveUtil.processInterfaceMethods(jsClass, implementedMethodProcessor);
     }
 
-    private static ASTNode findElementForAccessModifierError(final @Nonnull JSFunction o, final JSAttributeList attributeList) {
+    @RequiredReadAction
+    private static ASTNode findElementForAccessModifierError(@Nonnull JSFunction o, JSAttributeList attributeList) {
         if (attributeList != null) {
-            final PsiElement accessTypeElement = attributeList.findAccessTypeElement();
+            PsiElement accessTypeElement = attributeList.findAccessTypeElement();
             if (accessTypeElement != null) {
                 return accessTypeElement.getNode();
             }
@@ -380,7 +382,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
                 if (attributeList.getAccessType() != JSAttributeList.AccessType.PACKAGE_LOCAL
                     || attributeList.getNode().findChildByType(JSTokenTypes.INTERNAL_KEYWORD) != null
                 ) {
-                    final ASTNode astNode = attributeList.getNode().findChildByType(JSTokenTypes.ACCESS_MODIFIERS);
+                    ASTNode astNode = attributeList.getNode().findChildByType(JSTokenTypes.ACCESS_MODIFIERS);
                     myHolder.newAnnotation(
                             HighlightSeverity.ERROR,
                             JavaScriptLocalize.javascriptValidationMessageInterfaceMembersCannotHaveAccessModifiers()
@@ -395,11 +397,11 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
     @Override
     @RequiredReadAction
-    public void visitJSReferenceExpression(final JSReferenceExpression node) {
-        final PsiElement parent = node.getParent();
+    public void visitJSReferenceExpression(JSReferenceExpression node) {
+        PsiElement parent = node.getParent();
 
         if (parent instanceof JSNamedElement namedElement) {
-            final PsiElement nameIdentifier = namedElement.getNameIdentifier();
+            PsiElement nameIdentifier = namedElement.getNameIdentifier();
 
             if (nameIdentifier != null && nameIdentifier == node) {
                 if (parent instanceof JSPackageStatement packageStatement) {
@@ -410,7 +412,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
                 }
                 else if (parent instanceof JSFunction function) {
                     if (function.isConstructor()) {
-                        final JSClass clazz;
+                        JSClass clazz;
                         if (parent.getParent() instanceof JSClass jsClass) {
                             clazz = jsClass;
                         }
@@ -475,7 +477,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
                 }
 
                 if (parent instanceof JSClass jsClass) {
-                    final JSFunction constructor = jsClass.findFunctionByName(jsClass.getName());
+                    JSFunction constructor = jsClass.findFunctionByName(jsClass.getName());
                     if (constructor == null) {
                         checkMissedSuperCall(node, constructor, jsClass);
                     }
@@ -544,13 +546,13 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
         if (jsFunction == null) {
             return false;
         }
-        final JSSourceElement[] body = (jsFunction).getBody();
-        final JSStatement[] statements = body.length > 0 ? ((JSBlockStatement)body[0]).getStatements() : JSStatement.EMPTY;
+        JSSourceElement[] body = jsFunction.getBody();
+        JSStatement[] statements = body.length > 0 ? ((JSBlockStatement)body[0]).getStatements() : JSStatement.EMPTY;
 
         for (JSStatement st : statements) {
-            if (st instanceof JSExpressionStatement expressionStatement
-                && expressionStatement.getExpression() instanceof JSCallExpression callExpression
-                && callExpression.getMethodExpression() instanceof JSSuperExpression) {
+            if (st instanceof JSExpressionStatement expression
+                && expression.getExpression() instanceof JSCallExpression call
+                && call.getMethodExpression() instanceof JSSuperExpression) {
                 return true;
             }
         }
@@ -560,13 +562,13 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
     @RequiredReadAction
     public static JSFunction getNontrivialSuperClassConstructor(JSClass clazz) {
-        final JSClass[] classes = clazz.getSuperClasses();
+        JSClass[] classes = clazz.getSuperClasses();
 
         if (classes.length > 0) {
-            final JSFunction constructor = classes[0].findFunctionByName(classes[0].getName());
+            JSFunction constructor = classes[0].findFunctionByName(classes[0].getName());
 
             if (constructor != null) {
-                final JSParameter[] jsParameters = constructor.getParameterList().getParameters();
+                JSParameter[] jsParameters = constructor.getParameterList().getParameters();
                 boolean hasRequiredParameters = false;
                 for (JSParameter p : jsParameters) {
                     if (!p.isRest() && !p.hasInitializer()) {
@@ -650,9 +652,9 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
         PsiElement element = initializer.getPrevSibling();
         PsiElement lastElement = element;
 
-        if (element instanceof PsiWhiteSpace) {
-            nodes.add(element.getNode());
-            lastElement = element.getPrevSibling();
+        if (element instanceof PsiWhiteSpace whiteSpace) {
+            nodes.add(whiteSpace.getNode());
+            lastElement = whiteSpace.getPrevSibling();
         }
 
         if (lastElement != null && lastElement.getNode().getElementType() == eq) {
@@ -665,7 +667,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
     @Override
     @RequiredReadAction
-    public void visitJSPackageStatement(final JSPackageStatement packageStatement) {
+    public void visitJSPackageStatement(JSPackageStatement packageStatement) {
         for (PsiElement el = packageStatement.getPrevSibling(); el != null; el = el.getPrevSibling()) {
             if (!(el instanceof PsiWhiteSpace || el instanceof PsiComment)) {
                 myHolder.newAnnotation(
@@ -677,7 +679,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
                 break;
             }
         }
-        final PsiElement node = packageStatement.getNameIdentifier();
+        PsiElement node = packageStatement.getNameIdentifier();
         if (node == null) {
             checkPackageStatement(packageStatement);
         }
@@ -685,7 +687,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
     @Override
     @RequiredReadAction
-    public void visitJSAssignmentExpression(final JSAssignmentExpression expression) {
+    public void visitJSAssignmentExpression(JSAssignmentExpression expression) {
         JSExpression lExpr = expression.getLOperand();
         if (lExpr == null) {
             return;
@@ -712,11 +714,11 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
     @Override
     @RequiredReadAction
-    public void visitJSArrayLiteralExpression(final JSArrayLiteralExpression node) {
-        final PsiElement lastChild = node.getLastChild();
+    public void visitJSArrayLiteralExpression(JSArrayLiteralExpression node) {
+        PsiElement lastChild = node.getLastChild();
         PsiElement child = lastChild != null ? lastChild.getPrevSibling() : null;
-        if (child instanceof PsiWhiteSpace) {
-            child = child.getPrevSibling();
+        if (child instanceof PsiWhiteSpace whiteSpace) {
+            child = whiteSpace.getPrevSibling();
         }
         ASTNode childNode;
 
@@ -730,14 +732,14 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
     @Override
     @RequiredReadAction
-    public void visitJSTryStatement(final JSTryStatement node) {
-        final JSCatchBlock[] blocks = node.getAllCatchBlocks();
+    public void visitJSTryStatement(JSTryStatement node) {
+        JSCatchBlock[] blocks = node.getAllCatchBlocks();
 
         if (blocks.length > 1) {
-            final Set<String> typeToCatch = new HashSet<>();
+            Set<String> typeToCatch = new HashSet<>();
 
             for (JSCatchBlock block : blocks) {
-                final JSParameter p = block.getParameter();
+                JSParameter p = block.getParameter();
                 if (p == null) {
                     continue;
                 }
@@ -765,7 +767,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
     @Override
     @RequiredReadAction
-    public void visitJSVariable(final JSVariable var) {
+    public void visitJSVariable(JSVariable var) {
         if (var.isConst() && var.getInitializer() == null) {
             if (var.getParent() instanceof JSVarStatement varStatement && varStatement.getParent() instanceof JSForInStatement) {
                 return;
@@ -789,7 +791,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
     @Override
     @RequiredReadAction
-    public void visitJSContinueStatement(final JSContinueStatement node) {
+    public void visitJSContinueStatement(JSContinueStatement node) {
         if (node.getStatementToContinue() == null) {
             myHolder.newAnnotation(HighlightSeverity.ERROR, JavaScriptLocalize.javascriptValidationMessageContinueWithoutTarget())
                 .range(node)
@@ -799,7 +801,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
     @Override
     @RequiredReadAction
-    public void visitJSBreakStatement(final JSBreakStatement node) {
+    public void visitJSBreakStatement(JSBreakStatement node) {
         if (node.getStatementToBreak() == null) {
             myHolder.newAnnotation(HighlightSeverity.ERROR, JavaScriptLocalize.javascriptValidationMessageBreakWithoutTarget())
                 .range(node)
@@ -809,13 +811,13 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
     @Override
     @RequiredReadAction
-    public void visitJSThisExpression(final JSThisExpression node) {
+    public void visitJSThisExpression(@Nonnull JSThisExpression node) {
         checkClassReferenceInStaticContext(node, JavaScriptLocalize.javascriptValidationMessageThisReferencedFromStaticContext());
     }
 
     @RequiredReadAction
     @SuppressWarnings("unchecked")
-    private void checkClassReferenceInStaticContext(final JSExpression node, LocalizeValue message) {
+    private void checkClassReferenceInStaticContext(JSExpression node, LocalizeValue message) {
         PsiElement element = PsiTreeUtil.getParentOfType(
             node,
             JSFunction.class,
@@ -826,7 +828,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
         );
 
         if (element instanceof JSFunction function) {
-            final JSAttributeList attributeList = function.getAttributeList();
+            JSAttributeList attributeList = function.getAttributeList();
             if (attributeList != null && attributeList.hasModifier(JSAttributeList.ModifierType.STATIC)) {
                 myHolder.newAnnotation(HighlightSeverity.ERROR, message)
                     .range(node)
@@ -841,7 +843,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
         PsiElement elementParent = element != null ? element.getParent() : null;
         if (element == null
-            || !(elementParent instanceof JSClass || elementParent instanceof JSFile && elementParent.getContext() != null)) {
+            || !(elementParent instanceof JSClass || elementParent instanceof JSFile jsFile && jsFile.getContext() != null)) {
             myHolder.newAnnotation(
                     HighlightSeverity.ERROR,
                     JavaScriptLocalize.javascriptValidationMessageSuperReferencedWithoutClassInstanceContext()
@@ -853,7 +855,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
     @Override
     @RequiredReadAction
-    public void visitJSSuperExpression(final JSSuperExpression node) {
+    public void visitJSSuperExpression(@Nonnull JSSuperExpression node) {
         checkClassReferenceInStaticContext(node, JavaScriptLocalize.javascriptValidationMessageSuperReferencedFromStaticContext());
     }
 
@@ -894,7 +896,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
                 final String qName = clazz.getQualifiedName();
                 final boolean hasOverride = attributeList != null && attributeList.hasModifier(JSAttributeList.ModifierType.OVERRIDE);
 
-                final Ref<JSFunction> set = new Ref<>();
+                final SimpleReference<JSFunction> set = new SimpleReference<>();
                 boolean b = JSResolveUtil.iterateType(
                     node,
                     parent,
@@ -907,7 +909,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
                         if ("Object".equals(className)) {
                             /*native modifier is written always*/
                             if (hasOverride && !attributeList.hasModifier(JSAttributeList.ModifierType.NATIVE)) {
-                                final ASTNode astNode = attributeList.getNode().findChildByType(JSTokenTypes.OVERRIDE_KEYWORD);
+                                ASTNode astNode = attributeList.getNode().findChildByType(JSTokenTypes.OVERRIDE_KEYWORD);
                                 //noinspection RequiredXAction
                                 myHolder.newAnnotation(
                                         HighlightSeverity.ERROR,
@@ -934,7 +936,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
                 );
 
                 if (b && hasOverride) {
-                    final ASTNode astNode = attributeList.getNode().findChildByType(JSTokenTypes.OVERRIDE_KEYWORD);
+                    ASTNode astNode = attributeList.getNode().findChildByType(JSTokenTypes.OVERRIDE_KEYWORD);
                     myHolder.newAnnotation(
                             HighlightSeverity.ERROR,
                             JavaScriptLocalize.javascriptValidationMessageFunctionOverrideWithoutParentMethod()
@@ -945,8 +947,8 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
                 }
 
                 if (!b && hasOverride) {
-                    final JSFunction override = set.get();
-                    final JSAttributeList overrideAttrList = override.getAttributeList();
+                    JSFunction override = set.get();
+                    JSAttributeList overrideAttrList = override.getAttributeList();
                     String overrideNs = null;
 
                     if ((overrideAttrList == null && (attributeList.getAccessType() != JSAttributeList.AccessType.PACKAGE_LOCAL))
@@ -971,11 +973,11 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
                         //);
                     }
 
-                    final SignatureMatchResult incompatibleSignature = checkCompatibleSignature(node, override);
+                    SignatureMatchResult incompatibleSignature = checkCompatibleSignature(node, override);
 
                     if (incompatibleSignature == SignatureMatchResult.PARAMETERS_DIFFERS) {
-                        final JSParameterList nodeParameterList = node.getParameterList();
-                        final JSParameterList overrideParameterList = override.getParameterList();
+                        JSParameterList nodeParameterList = node.getParameterList();
+                        JSParameterList overrideParameterList = override.getParameterList();
 
                         String params = overrideParameterList != null ? overrideParameterList.getText() : "()";
                         myHolder.newAnnotation(
@@ -1018,11 +1020,11 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
     }
 
     @RequiredReadAction
-    private static SignatureMatchResult checkCompatibleSignature(final JSFunction fun, final JSFunction override) {
+    private static SignatureMatchResult checkCompatibleSignature(JSFunction fun, JSFunction override) {
         JSParameterList nodeParameterList = fun.getParameterList();
         JSParameterList overrideParameterList = override.getParameterList();
-        final JSParameter[] parameters = nodeParameterList != null ? nodeParameterList.getParameters() : JSParameter.EMPTY_ARRAY;
-        final JSParameter[] overrideParameters = overrideParameterList != null
+        JSParameter[] parameters = nodeParameterList != null ? nodeParameterList.getParameters() : JSParameter.EMPTY_ARRAY;
+        JSParameter[] overrideParameters = overrideParameterList != null
             ? overrideParameterList.getParameters()
             : JSParameter.EMPTY_ARRAY;
 
@@ -1074,8 +1076,8 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
     @Override
     @RequiredReadAction
     @SuppressWarnings("unchecked")
-    public void visitJSReturnStatement(final JSReturnStatement node) {
-        final PsiElement element = PsiTreeUtil.getParentOfType(
+    public void visitJSReturnStatement(@Nonnull JSReturnStatement node) {
+        PsiElement element = PsiTreeUtil.getParentOfType(
             node,
             JSFunction.class,
             XmlTagChild.class,
@@ -1083,15 +1085,15 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
             JSFile.class,
             JavaScriptLambdaExpression.class
         );
-        if ((element instanceof JSFile && !(element.getContext() instanceof PsiLanguageInjectionHost))
-            || (element instanceof XmlTagChild && !(element.getParent() instanceof XmlAttributeValue))) {
+        if ((element instanceof JSFile jsFile && !(jsFile.getContext() instanceof PsiLanguageInjectionHost))
+            || (element instanceof XmlTagChild xmlTagChild && !(xmlTagChild.getParent() instanceof XmlAttributeValue))) {
             myHolder.newAnnotation(HighlightSeverity.ERROR, JavaScriptLocalize.javascriptValidationMessageReturnOutsideFunctionDefinition())
                 .range(node)
                 .create();
         }
 
         if (element instanceof JSFunction function) {
-            final String typeString = function.getReturnTypeString();
+            String typeString = function.getReturnTypeString();
             if (typeString != null && !"void".equals(typeString) && node.getExpression() == null) {
                 myHolder.newAnnotation(
                         HighlightSeverity.ERROR,
@@ -1105,18 +1107,16 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
     @Override
     @RequiredReadAction
-    public void visitJSLabeledStatement(final JSLabeledStatement node) {
-        final String label = node.getLabel();
+    public void visitJSLabeledStatement(JSLabeledStatement node) {
+        String label = node.getLabel();
         if (label != null) {
             PsiElement run = node.getParent();
             while (run != null) {
-                if (run instanceof JSLabeledStatement labeledStatement) {
-                    if (label.equals(labeledStatement.getLabel())) {
-                        myHolder.newAnnotation(HighlightSeverity.ERROR, JavaScriptLocalize.javascriptValidationMessageDuplicateLabel())
-                            .range(node.getNameIdentifier())
-                            .create();
-                        break;
-                    }
+                if (run instanceof JSLabeledStatement labeledStatement && label.equals(labeledStatement.getLabel())) {
+                    myHolder.newAnnotation(HighlightSeverity.ERROR, JavaScriptLocalize.javascriptValidationMessageDuplicateLabel())
+                        .range(node.getNameIdentifier())
+                        .create();
+                    break;
                 }
 
                 if (run instanceof JSFunction) {
@@ -1128,21 +1128,21 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
     }
 
     @RequiredReadAction
-    private void checkNamedObjectIsInCorrespondingFile(final JSNamedElement aClass) {
-        final PsiFile containingFile = aClass.getContainingFile();
+    private void checkNamedObjectIsInCorrespondingFile(JSNamedElement aClass) {
+        PsiFile containingFile = aClass.getContainingFile();
 
         if (containingFile.getContext() != null) {
             return;
         }
-        final VirtualFile file = containingFile.getVirtualFile();
+        VirtualFile file = containingFile.getVirtualFile();
 
         if (file != null && !file.getNameWithoutExtension().equals(aClass.getName())) {
-            final PsiElement node = aClass.getNameIdentifier();
+            PsiElement node = aClass.getNameIdentifier();
 
             if (node != null) {
-                final String name = aClass.getName();
+                String name = aClass.getName();
                 String nameWithExtension = name + "." + file.getExtension();
-                final LocalizeValue message = aClass instanceof JSClass
+                LocalizeValue message = aClass instanceof JSClass
                     ? JavaScriptLocalize.javascriptValidationMessageClassShouldBeInFile(name, nameWithExtension)
                     : aClass instanceof JSNamespaceDeclaration
                     ? JavaScriptLocalize.javascriptValidationMessageNamespaceShouldBeInFile(name, nameWithExtension)
@@ -1153,27 +1153,28 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
                     .range(node)
                     .withFix(new RenameFileFix(nameWithExtension))
                     .create();
-    /*annotation.registerFix(new RenamePublicClassFix(aClass) {
-          final String text;
-          final String familyName;
+                /*annotation.registerFix(new RenamePublicClassFix(aClass) {
+                      String text;
+                      String familyName;
 
-          {
-            String term = getTerm(message);
-            text = super.getText().replace("class", StringUtil.decapitalize(term));
-            familyName = super.getFamilyName().replace("Class", term);
-          }
-          @NotNull
-          @Override
-          public String getText() {
-            return text;
-          }
+                      {
+                          String term = getTerm(message);
+                          text = super.getText().replace("class", StringUtil.decapitalize(term));
+                          familyName = super.getFamilyName().replace("Class", term);
+                      }
 
-          @NotNull
-          @Override
-          public String getFamilyName() {
-            return familyName;
-          }
-        }); */
+                      @NotNull
+                      @Override
+                      public String getText() {
+                          return text;
+                      }
+
+                      @NotNull
+                      @Override
+                      public String getFamilyName() {
+                          return familyName;
+                      }
+                    });*/
             }
         }
 
@@ -1186,19 +1187,18 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
     }
 
     @RequiredReadAction
-    public static void checkFileUnderSourceRoot(final JSNamedElement aClass, AnnotationHolder holder) {
+    public static void checkFileUnderSourceRoot(JSNamedElement aClass, AnnotationHolder holder) {
         PsiElement nameIdentifier = aClass.getNameIdentifier();
         if (nameIdentifier == null) {
             nameIdentifier = aClass.getFirstChild();
         }
 
-        final PsiFile containingFile = aClass.getContainingFile();
-        final VirtualFile file = containingFile.getVirtualFile();
+        PsiFile containingFile = aClass.getContainingFile();
+        VirtualFile file = containingFile.getVirtualFile();
         if (file == null) {
             return;
         }
-        final VirtualFile rootForFile =
-            ProjectRootManager.getInstance(containingFile.getProject()).getFileIndex().getSourceRootForFile(file);
+        VirtualFile rootForFile = ProjectRootManager.getInstance(containingFile.getProject()).getFileIndex().getSourceRootForFile(file);
 
         if (rootForFile == null) {
             holder.newAnnotation(HighlightSeverity.WARNING, JavaScriptLocalize.javascriptValidationMessageFileShouldBeUnderSourceRoot())
@@ -1208,18 +1208,18 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
     }
 
     @RequiredReadAction
-    private void checkPackageStatement(final JSPackageStatement packageStatement) {
-        final String s = packageStatement.getQualifiedName();
+    private void checkPackageStatement(JSPackageStatement packageStatement) {
+        String s = packageStatement.getQualifiedName();
 
-        final PsiFile containingFile = packageStatement.getContainingFile();
-        final String expected = JSResolveUtil.getExpectedPackageNameFromFile(
+        PsiFile containingFile = packageStatement.getContainingFile();
+        String expected = JSResolveUtil.getExpectedPackageNameFromFile(
             containingFile.getVirtualFile(),
             containingFile.getProject(),
             true
         );
 
         if (expected != null && ((s == null && expected.length() != 0) || (s != null && !expected.equals(s)))) {
-            final PsiElement nameIdentifier = packageStatement.getNameIdentifier();
+            PsiElement nameIdentifier = packageStatement.getNameIdentifier();
             myHolder.newAnnotation(HighlightSeverity.ERROR, JavaScriptLocalize.javascriptValidationMessageIncorrectPackageName(s, expected))
                 .range(nameIdentifier != null ? nameIdentifier : packageStatement.getFirstChild())
                 .withFix(new SyntheticIntentionAction() {
@@ -1230,13 +1230,13 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
                     }
 
                     @Override
-                    public boolean isAvailable(@Nonnull final Project project, final Editor editor, final PsiFile file) {
+                    public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
                         return packageStatement.isValid();
                     }
 
                     @Override
-                    public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file)
-                        throws IncorrectOperationException {
+                    @RequiredWriteAction
+                    public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
                         JSPackageStatementImpl.doChangeName(project, packageStatement, expected);
                     }
 
@@ -1248,7 +1248,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
                 .create();
         }
 
-        final Set<JSNamedElement> elements = new HashSet<>();
+        Set<JSNamedElement> elements = new HashSet<>();
 
         for (JSSourceElement statement : packageStatement.getStatements()) {
             if (statement instanceof JSNamedElement namedElement && !(statement instanceof JSImportStatement)) {
@@ -1258,7 +1258,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
         if (elements.size() > 1) {
             for (JSNamedElement el : elements) {
-                final PsiElement nameIdentifier = el.getNameIdentifier();
+                PsiElement nameIdentifier = el.getNameIdentifier();
                 myHolder.newAnnotation(
                         HighlightSeverity.ERROR,
                         JavaScriptLocalize.javascriptValidationMessageMoreThanOneExternallyVisibleSymbol()
@@ -1273,14 +1273,14 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
     }
 
     public static class RemoveASTNodeFix implements SyntheticIntentionAction, LocalQuickFix {
-        private final ASTNode[] myAstNodes;
-        private final LocalizeValue myProp;
+        private ASTNode[] myAstNodes;
+        private LocalizeValue myProp;
 
-        public RemoveASTNodeFix(final ASTNode astNode, LocalizeValue prop) {
+        public RemoveASTNodeFix(ASTNode astNode, LocalizeValue prop) {
             this(prop, astNode);
         }
 
-        public RemoveASTNodeFix(LocalizeValue prop, final ASTNode... astNodes) {
+        public RemoveASTNodeFix(LocalizeValue prop, ASTNode... astNodes) {
             myProp = prop;
             myAstNodes = astNodes;
         }
@@ -1310,7 +1310,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
         }
 
         @Override
-        public boolean isAvailable(@Nonnull final Project project, final Editor editor, final PsiFile file) {
+        public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
             for (ASTNode astNode : myAstNodes) {
                 if (!astNode.getPsi().isValid()) {
                     return false;
@@ -1322,7 +1322,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
         @Override
         @RequiredUIAccess
-        public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
+        public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
             if (!FileModificationService.getInstance().prepareFileForWrite(file)) {
                 return;
             }
@@ -1342,7 +1342,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
     private static class AddOverrideIntentionAction implements SyntheticIntentionAction {
         private final JSFunction myNode;
 
-        public AddOverrideIntentionAction(final JSFunction node) {
+        public AddOverrideIntentionAction(JSFunction node) {
             myNode = node;
         }
 
@@ -1353,19 +1353,19 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
         }
 
         @Override
-        public boolean isAvailable(@Nonnull final Project project, final Editor editor, final PsiFile file) {
+        public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
             return myNode.isValid();
         }
 
         @Override
         @RequiredUIAccess
-        public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
+        public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
             if (!FileModificationService.getInstance().prepareFileForWrite(file)) {
                 return;
             }
-            final ASTNode fromText = JSChangeUtil.createJSTreeFromText(project, "override class A {}");
-            final JSAttributeList jsAttributeList = myNode.getAttributeList();
-            final JSAttributeList createdAttrList = ((JSClass)fromText.getPsi()).getAttributeList();
+            ASTNode fromText = JSChangeUtil.createJSTreeFromText(project, "override class A {}");
+            JSAttributeList jsAttributeList = myNode.getAttributeList();
+            JSAttributeList createdAttrList = ((JSClass)fromText.getPsi()).getAttributeList();
 
             if (jsAttributeList != null) {
                 jsAttributeList.add(createdAttrList.getFirstChild());
@@ -1471,11 +1471,11 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
             if (!FileModificationService.getInstance().prepareFileForWrite(file)) {
                 return;
             }
-            final JSClass jsClass = PsiTreeUtil.getParentOfType(node, JSClass.class);
+            JSClass jsClass = PsiTreeUtil.getParentOfType(node, JSClass.class);
             if (jsClass == null) {
                 return;
             }
-            final JSAttributeList attributeList = jsClass.getAttributeList();
+            JSAttributeList attributeList = jsClass.getAttributeList();
             StringBuilder fun = new StringBuilder();
 
             if (attributeList != null && attributeList.getAccessType() == JSAttributeList.AccessType.PUBLIC) {
@@ -1484,7 +1484,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
             fun.append("function ");
 
-            final JSParameterList parameterList = superConstructor.getParameterList();
+            JSParameterList parameterList = superConstructor.getParameterList();
             fun.append(jsClass.getName()).append(parameterList.getText()).append("{\n");
             fun.append("super(");
             int i = 0;

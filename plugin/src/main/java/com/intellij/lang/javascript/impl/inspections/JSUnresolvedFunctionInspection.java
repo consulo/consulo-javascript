@@ -46,6 +46,7 @@ import consulo.language.psi.ResolveResult;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.xml.ide.highlighter.XmlFileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -140,8 +141,8 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
                         List<LocalQuickFix> quickFixes = new ArrayList<>();
                         String refName = methodRefExpr.getReferencedName();
 
-                        if (myOnTheFly && ((qualifier == null || qualifier instanceof JSThisExpression)
-                            || JSUtils.isLHSExpression(qualifier))) {
+                        if (myOnTheFly
+                            && (qualifier == null || qualifier instanceof JSThisExpression || JSUtils.isLHSExpression(qualifier))) {
                             if (node.getMethodExpression().getParent() instanceof JSCallExpression) {
                                 boolean simpleJs = !JavaScriptVersionUtil.containsFeature(methodRefExpr, JavaScriptFeature.CLASS);
 
@@ -599,7 +600,7 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
         }
 
         @Override
-        @RequiredReadAction
+        @RequiredUIAccess
         public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
             PsiElement element = descriptor.getPsiElement();
             Editor editor = BaseCreateFix.getEditor(project, element.getContainingFile());

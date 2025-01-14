@@ -17,12 +17,12 @@
 package com.intellij.lang.javascript.impl.surroundWith;
 
 import com.intellij.lang.javascript.psi.JSIfStatement;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author yole
@@ -35,19 +35,20 @@ public class JSWithIfSurrounder extends JSStatementSurrounder {
     }
 
     @Override
-    @NonNls
-    protected String getStatementTemplate(final Project project, PsiElement context) {
+    protected String getStatementTemplate(Project project, PsiElement context) {
         return "if(a) { }";
     }
 
     @Override
-    protected ASTNode getInsertBeforeNode(final ASTNode statementNode) {
+    @RequiredReadAction
+    protected ASTNode getInsertBeforeNode(ASTNode statementNode) {
         JSIfStatement stmt = (JSIfStatement)statementNode.getPsi();
         return stmt.getThen().getNode().getLastChildNode();
     }
 
     @Override
-    protected TextRange getSurroundSelectionRange(final ASTNode statementNode) {
+    @RequiredReadAction
+    protected TextRange getSurroundSelectionRange(ASTNode statementNode) {
         JSIfStatement stmt = (JSIfStatement)statementNode.getPsi();
         ASTNode conditionNode = stmt.getCondition().getNode();
         int offset = conditionNode.getStartOffset();

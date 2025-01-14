@@ -31,10 +31,9 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class JavaScriptTargetElementUtilEx implements TargetElementUtilExtender {
     @Override
-    public boolean includeSelfInGotoImplementation(@Nonnull final PsiElement element) {
-        if (element instanceof JSFunction) {
-            final PsiElement parent = JSResolveUtil.findParent(element);
-            if (parent instanceof JSClass jsClass && jsClass.isInterface()) {
+    public boolean includeSelfInGotoImplementation(@Nonnull PsiElement element) {
+        if (element instanceof JSFunction function) {
+            if (JSResolveUtil.findParent(function) instanceof JSClass jsClass && jsClass.isInterface()) {
                 return false;
             }
         }

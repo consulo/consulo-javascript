@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.impl.surroundWith;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
@@ -31,7 +32,8 @@ public class JSWithTryCatchSurrounder extends JSWithTryCatchFinallySurrounder {
     }
 
     @Override
-    protected String getStatementTemplate(final Project project, PsiElement context) {
+    @RequiredReadAction
+    protected String getStatementTemplate(Project project, PsiElement context) {
         return "try { } catch(e" + getExceptionVarTypeBasedOnContext(context) + ") { }";
     }
 }

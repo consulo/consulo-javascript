@@ -87,7 +87,7 @@ public class JavascriptCommenter implements CodeDocumentationAwareCommenter {
     }
 
     @Override
-    public boolean isDocumentationComment(final PsiComment element) {
+    public boolean isDocumentationComment(PsiComment element) {
         return element.getTokenType() == JSTokenTypes.DOC_COMMENT;
     }
 

@@ -28,11 +28,10 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
- * Date: Jul 23, 2008
- * Time: 6:54:27 PM
+ * @since 2008-07-23
  */
 public class JSStructureItemPresentation extends JSStructureViewElement.JSStructureItemPresentationBase {
-    public JSStructureItemPresentation(final JSStructureViewElement jsStructureViewElement) {
+    public JSStructureItemPresentation(JSStructureViewElement jsStructureViewElement) {
         super(jsStructureViewElement);
     }
 
@@ -49,28 +48,26 @@ public class JSStructureItemPresentation extends JSStructureViewElement.JSStruct
 
     @RequiredReadAction
     public static String getName(@Nonnull PsiElement psiElement) {
-        if (psiElement instanceof JSObjectLiteralExpression) {
-            if (psiElement.getParent() instanceof JSAssignmentExpression assignmentExpression) {
-                final JSExpression expression = ((JSDefinitionExpression)assignmentExpression.getLOperand()).getExpression();
-                return JSResolveUtil.findClassIdentifier(expression).getText();
+        if (psiElement instanceof JSObjectLiteralExpression objectLiteral) {
+            if (objectLiteral.getParent() instanceof JSAssignmentExpression assignment) {
+                JSDefinitionExpression lOperand = (JSDefinitionExpression)assignment.getLOperand();
+                return JSResolveUtil.findClassIdentifier(lOperand.getExpression()).getText();
             }
             else {
                 return JavaScriptLocalize.javascriptLanguageTermPrototype().get();
             }
         }
 
-        if (psiElement instanceof JSDefinitionExpression definitionExpression) {
-            psiElement = definitionExpression.getExpression();
+        if (psiElement instanceof JSDefinitionExpression definition) {
+            psiElement = definition.getExpression();
         }
 
-        if (psiElement instanceof JSReferenceExpression expression) {
-            String s = expression.getReferencedName();
+        if (psiElement instanceof JSReferenceExpression refExpr) {
+            String s = refExpr.getReferencedName();
 
-            if (JSResolveUtil.PROTOTYPE_FIELD_NAME.equals(s)) {
-                final JSExpression jsExpression = expression.getQualifier();
-                if (jsExpression instanceof JSReferenceExpression referenceExpression) {
-                    s = referenceExpression.getReferencedName();
-                }
+            if (JSResolveUtil.PROTOTYPE_FIELD_NAME.equals(s)
+                && refExpr.getQualifier() instanceof JSReferenceExpression qualifierRefExpr) {
+                s = qualifierRefExpr.getReferencedName();
             }
             return s;
         }
@@ -85,12 +82,12 @@ public class JSStructureItemPresentation extends JSStructureViewElement.JSStruct
             psiElement = property.getValue();
         }
 
-        if (psiElement instanceof JSFunction) {
+        if (psiElement instanceof JSFunction function) {
             if (name == null) {
                 name = "<anonymous>";
             }
             name += "(";
-            JSParameterList parameterList = ((JSFunction)psiElement).getParameterList();
+            JSParameterList parameterList = function.getParameterList();
             if (parameterList != null) {
                 for (JSParameter p : parameterList.getParameters()) {
                     if (!name.endsWith("(")) {
@@ -105,17 +102,17 @@ public class JSStructureItemPresentation extends JSStructureViewElement.JSStruct
             }
             name += ")";
 
-            final String type = ((JSFunction)psiElement).getReturnTypeString();
+            String type = function.getReturnTypeString();
             if (type != null) {
                 name += ":" + type;
             }
         }
 
-        if (name == null && psiElement.getParent() instanceof JSAssignmentExpression assignmentExpression) {
-            JSExpression lOperand = ((JSDefinitionExpression)assignmentExpression.getLOperand()).getExpression();
+        if (name == null && psiElement.getParent() instanceof JSAssignmentExpression assignment) {
+            JSExpression lOperand = ((JSDefinitionExpression)assignment.getLOperand()).getExpression();
             lOperand = JSResolveUtil.findClassIdentifier(lOperand);
-            if (lOperand instanceof JSReferenceExpression referenceExpression) {
-                return referenceExpression.getReferencedName();
+            if (lOperand instanceof JSReferenceExpression lOperandRefExpr) {
+                return lOperandRefExpr.getReferencedName();
             }
             return lOperand.getText();
         }
@@ -125,7 +122,7 @@ public class JSStructureItemPresentation extends JSStructureViewElement.JSStruct
     @Override
     @RequiredReadAction
     public Image getIcon() {
-        final PsiElement psiElement = this.element.getRealElement();
+        PsiElement psiElement = this.element.getRealElement();
         if (!psiElement.isValid()) {
             return null;
         }

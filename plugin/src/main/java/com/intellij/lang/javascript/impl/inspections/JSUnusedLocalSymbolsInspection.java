@@ -24,6 +24,7 @@ import com.intellij.lang.javascript.psi.impl.JSClassImpl;
 import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.inspection.*;
@@ -377,7 +378,7 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection {
         }
 
         @Override
-        @RequiredReadAction
+        @RequiredWriteAction
         public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
             try {
                 PsiElement element = descriptor.getPsiElement();

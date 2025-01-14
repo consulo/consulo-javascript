@@ -20,6 +20,7 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.javascript.language.JavaScriptLanguage;
@@ -41,8 +42,8 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class JSSmartEnterProcessor extends SmartEnterProcessor {
     @Override
-    @RequiredReadAction
-    public boolean process(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile psiFile) {
+    @RequiredWriteAction
+    public boolean process(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile psiFile) {
         int offset = editor.getCaretModel().getOffset();
         PsiElement at = psiFile.findElementAt(offset);
         if (at == null && offset > 0) {
@@ -52,13 +53,13 @@ public class JSSmartEnterProcessor extends SmartEnterProcessor {
             return false;
         }
 
-        PsiElement element = at instanceof PsiWhiteSpace ? PsiTreeUtil.prevLeaf(at) : at;
+        PsiElement element = at instanceof PsiWhiteSpace whiteSpace ? PsiTreeUtil.prevLeaf(whiteSpace) : at;
 
         if (element != null && !(element instanceof PsiErrorElement)) {
-            final PsiElement nextMeaningfulElement = evalMeaningfulElement(at, true);
-            if (nextMeaningfulElement instanceof PsiErrorElement) {
-                element = nextMeaningfulElement;
-                offset = element.getTextOffset();
+            PsiElement nextMeaningfulElement = evalMeaningfulElement(at, true);
+            if (nextMeaningfulElement instanceof PsiErrorElement errorElement) {
+                element = errorElement;
+                offset = errorElement.getTextOffset();
             }
         }
 
@@ -89,7 +90,7 @@ public class JSSmartEnterProcessor extends SmartEnterProcessor {
             }
         }
 
-        final PsiElement prevMeaningfulElement = evalMeaningfulElement(element, false);
+        PsiElement prevMeaningfulElement = evalMeaningfulElement(element, false);
         if (element != null && !(element instanceof PsiErrorElement) && prevMeaningfulElement != null) {
             element = prevMeaningfulElement;
         }
@@ -101,9 +102,10 @@ public class JSSmartEnterProcessor extends SmartEnterProcessor {
 
             if (element.getParent() instanceof JSFunctionExpression) {
                 @SuppressWarnings("unchecked")
-                final JSElement base =
+                JSElement base =
                     PsiTreeUtil.getParentOfType(element, JSArgumentList.class, JSIndexedPropertyAccessExpression.class, JSStatement.class);
-                if (base instanceof JSStatement && base.getLastChild().getNode().getElementType() != JSTokenTypes.SEMICOLON) {
+                if (base instanceof JSStatement baseStatement
+                    && baseStatement.getLastChild().getNode().getElementType() != JSTokenTypes.SEMICOLON) {
                     semicolon = JSChangeUtil.getSemicolon(project);
                 }
             }
@@ -118,14 +120,14 @@ public class JSSmartEnterProcessor extends SmartEnterProcessor {
         return false;
     }
 
-    @RequiredReadAction
+    @RequiredWriteAction
     private void insertCommitReformat(
-        final Project project,
-        final Editor editor,
-        final PsiFile psiFile,
-        final int offset,
-        final String str,
-        final int shiftOffset,
+        Project project,
+        Editor editor,
+        PsiFile psiFile,
+        int offset,
+        String str,
+        int shiftOffset,
         boolean adjustLineIndent
     ) {
         editor.getDocument().insertString(offset, str);
@@ -134,7 +136,7 @@ public class JSSmartEnterProcessor extends SmartEnterProcessor {
 
         PsiElement at = psiFile.findElementAt(offset + shiftOffset - 1);
         @SuppressWarnings("unchecked")
-        final PsiElement parentOfType = PsiTreeUtil.getParentOfType(at, JSStatement.class, JSFunction.class, JSClass.class, JSFile.class);
+        PsiElement parentOfType = PsiTreeUtil.getParentOfType(at, JSStatement.class, JSFunction.class, JSClass.class, JSFile.class);
 
         reformat(parentOfType);
         if (adjustLineIndent) {
@@ -142,7 +144,8 @@ public class JSSmartEnterProcessor extends SmartEnterProcessor {
         }
     }
 
-    private static PsiElement evalMeaningfulElement(final PsiElement element, boolean forward) {
+    @RequiredReadAction
+    private static PsiElement evalMeaningfulElement(PsiElement element, boolean forward) {
         if (element == null) {
             return null;
         }

@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.impl.structureView;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.language.inject.InjectedLanguageManager;
@@ -31,6 +32,7 @@ import consulo.navigation.ItemPresentation;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.*;
@@ -42,7 +44,7 @@ public class JSStructureViewElement implements StructureViewTreeElement {
     protected PsiElement myElement;
     private boolean myInherited;
 
-    public JSStructureViewElement(final PsiElement element) {
+    public JSStructureViewElement(PsiElement element) {
         myElement = element;
     }
 
@@ -70,27 +72,28 @@ public class JSStructureViewElement implements StructureViewTreeElement {
         return canNavigate();
     }
 
+    @Nonnull
     @Override
+    @RequiredReadAction
     public StructureViewTreeElement[] getChildren() {
-        final PsiElement element = getUpToDateElement();
+        PsiElement element = getUpToDateElement();
         // since we use proxies for StructureViewElement then real element may invalidate due to structural change
         if (element == null) {
             return EMPTY_ARRAY;
         }
 
-        final Set<String> referencedNamedIds = new HashSet<String>();
-
+        Set<String> referencedNamedIds = new HashSet<>();
 
         List<StructureViewTreeElement> children = collectMyElements(referencedNamedIds);
 
         ArrayList<StructureViewTreeElement> elementsFromSupers = null;
 
-        if (element instanceof JSClass) {
-            for (JSClass clazz : ((JSClass)element).getSuperClasses()) {
-                final StructureViewTreeElement[] structureViewTreeElements = createStructureViewElement(clazz).getChildren();
+        if (element instanceof JSClass jsClass) {
+            for (JSClass superClass : jsClass.getSuperClasses()) {
+                StructureViewTreeElement[] structureViewTreeElements = createStructureViewElement(superClass).getChildren();
 
                 if (elementsFromSupers == null) {
-                    elementsFromSupers = new ArrayList<StructureViewTreeElement>(structureViewTreeElements.length);
+                    elementsFromSupers = new ArrayList<>(structureViewTreeElements.length);
                 }
                 else {
                     elementsFromSupers.ensureCapacity(elementsFromSupers.size() + structureViewTreeElements.length);
@@ -111,10 +114,9 @@ public class JSStructureViewElement implements StructureViewTreeElement {
             }
         }
 
-
-        Collections.sort(children, new Comparator<StructureViewTreeElement>() {
-            @Override
-            public int compare(final StructureViewTreeElement _o1, final StructureViewTreeElement _o2) {
+        Collections.sort(
+            children,
+            (_o1, _o2) -> {
                 PsiElement e = getPsiElement(_o1);
                 PsiElement e2 = getPsiElement(_o2);
 
@@ -125,14 +127,13 @@ public class JSStructureViewElement implements StructureViewTreeElement {
 
                 return offset - offset2;
             }
-        });
+        );
 
         if (elementsFromSupers != null) {
-            Map<String, JSFunction> functionsByNames = new HashMap<String, JSFunction>();
+            Map<String, JSFunction> functionsByNames = new HashMap<>();
             for (StructureViewTreeElement child : children) {
                 PsiElement el = getPsiElementResolveProxy(child);
-                if (el instanceof JSFunction) {
-                    JSFunction function = (JSFunction)el;
+                if (el instanceof JSFunction function) {
                     functionsByNames.put(function.getName(), function);
                 }
             }
@@ -140,8 +141,7 @@ public class JSStructureViewElement implements StructureViewTreeElement {
             for (StructureViewTreeElement superTreeElement : elementsFromSupers) {
                 PsiElement superElement = getPsiElementResolveProxy(superTreeElement);
                 boolean addSuperElement = true;
-                if (superElement instanceof JSFunction) {
-                    JSFunction superFunction = (JSFunction)superElement;
+                if (superElement instanceof JSFunction superFunction) {
                     JSFunction function = functionsByNames.get(superFunction.getName());
                     if (function != null) {
                         // TODO check signature
@@ -162,49 +162,40 @@ public class JSStructureViewElement implements StructureViewTreeElement {
     }
 
     private static PsiElement getPsiElement(StructureViewTreeElement element) {
-        PsiElement e;
-        if (element instanceof JSStructureViewElement) {
-            final JSStructureViewElement o1 = (JSStructureViewElement)element;
-            e = o1.myElement;
-        }
-        else {
-            e = (PsiElement)element.getValue();
-        }
-        return e;
+        return element instanceof JSStructureViewElement structureViewElement
+            ? structureViewElement.myElement
+            : (PsiElement)element.getValue();
     }
 
     public static PsiElement getPsiElementResolveProxy(StructureViewTreeElement element) {
         return getPsiElement(element);
     }
 
-
-    protected List<StructureViewTreeElement> collectMyElements(final Set<String> referencedNamedIds) {
-        final IntObjectMap<PsiElement> offset2Element = IntMaps.newIntObjectHashMap();
+    protected List<StructureViewTreeElement> collectMyElements(Set<String> referencedNamedIds) {
+        IntObjectMap<PsiElement> offset2Element = IntMaps.newIntObjectHashMap();
 
         collectChildrenFromElement(myElement, referencedNamedIds, offset2Element);
 
-        final List<StructureViewTreeElement> children = new ArrayList<StructureViewTreeElement>(offset2Element.size());
+        List<StructureViewTreeElement> children = new ArrayList<>(offset2Element.size());
         offset2Element.forEach((textOffset, element) -> children.add(createStructureViewElement(element)));
         return children;
     }
 
-    private static boolean isVisible(PsiElement namedElement, final PsiElement element) {
-        if (namedElement instanceof JSAttributeListOwner) {
-            final JSAttributeListOwner attributeListOwner = (JSAttributeListOwner)namedElement;
-            final JSAttributeList attributeList = attributeListOwner.getAttributeList();
+    @RequiredReadAction
+    private static boolean isVisible(PsiElement namedElement, PsiElement element) {
+        if (namedElement instanceof JSAttributeListOwner attributeListOwner) {
+            JSAttributeList attributeList = attributeListOwner.getAttributeList();
 
             if (attributeList != null) {
-                final JSAttributeList.AccessType type = attributeList.getAccessType();
+                JSAttributeList.AccessType type = attributeList.getAccessType();
 
                 if (type == JSAttributeList.AccessType.PACKAGE_LOCAL) {
-                    final JSPackageStatement packageStatement = PsiTreeUtil.getParentOfType(namedElement, JSPackageStatement.class);
-                    final JSPackageStatement packageStatement2 = PsiTreeUtil.getParentOfType(element, JSPackageStatement.class);
-                    String packageQName;
+                    JSPackageStatement packageStatement = PsiTreeUtil.getParentOfType(namedElement, JSPackageStatement.class);
+                    JSPackageStatement packageStatement2 = PsiTreeUtil.getParentOfType(element, JSPackageStatement.class);
 
-                    return packageStatement == packageStatement2 || (packageStatement != null &&
-                        packageStatement2 != null &&
-                        (packageQName = packageStatement.getQualifiedName()) != null &&
-                        packageQName.equals(packageStatement2.getQualifiedName()));
+                    return packageStatement == packageStatement2
+                        || (packageStatement != null && packageStatement2 != null
+                        && Objects.equals(packageStatement.getQualifiedName(), packageStatement2.getQualifiedName()));
                 }
                 return type != JSAttributeList.AccessType.PRIVATE;
             }
@@ -213,18 +204,19 @@ public class JSStructureViewElement implements StructureViewTreeElement {
     }
 
     private static void collectChildrenFromElement(
-        final PsiElement element,
-        final Set<String> referencedNamedIds,
-        final IntObjectMap<PsiElement> offset2Element
+        PsiElement element,
+        Set<String> referencedNamedIds,
+        IntObjectMap<PsiElement> offset2Element
     ) {
         element.acceptChildren(new JSElementVisitor() {
             Set<PsiFile> visited;
             PsiElement context = element;
 
             @Override
+            @RequiredReadAction
             public void visitElement(PsiElement element) {
-                if (element instanceof JSNamedElement
-                    && ((JSNamedElement)element).getName() != null
+                if (element instanceof JSNamedElement namedElement
+                    && namedElement.getName() != null
                     && !(element instanceof JSDefinitionExpression)
                     && !(element instanceof JSLabeledStatement)
                     && !(element instanceof JSPackageStatement)
@@ -242,33 +234,33 @@ public class JSStructureViewElement implements StructureViewTreeElement {
             }
 
             @Override
-            public void visitJSParameter(final JSParameter node) {
+            public void visitJSParameter(@Nonnull JSParameter node) {
                 // Do not add parameters to structure view
             }
 
             @Override
-            public void visitJSIncludeDirective(final JSIncludeDirective includeDirective) {
-                final PsiFile file = includeDirective.resolveFile();
-                if (file instanceof JSFile) {
-                    if (visited != null && visited.contains(file)) {
+            @RequiredReadAction
+            public void visitJSIncludeDirective(@Nonnull JSIncludeDirective includeDirective) {
+                if (includeDirective.resolveFile() instanceof JSFile jsFile) {
+                    if (visited != null && visited.contains(jsFile)) {
                         return;
                     }
                     if (visited == null) {
-                        visited = new HashSet<PsiFile>();
+                        visited = new HashSet<>();
                     }
-                    visited.add(file);
+                    visited.add(jsFile);
 
-                    final PsiElement prevContext = context;
-                    context = file;
+                    PsiElement prevContext = context;
+                    context = jsFile;
                     context.putUserData(JSResolveUtil.contextKey, element);
-                    file.acceptChildren(this);
+                    jsFile.acceptChildren(this);
                     context = prevContext;
                 }
             }
 
             @Override
-            public void visitJSObjectLiteralExpression(final JSObjectLiteralExpression node) {
-                final PsiElement parent = node.getParent();
+            public void visitJSObjectLiteralExpression(@Nonnull JSObjectLiteralExpression node) {
+                PsiElement parent = node.getParent();
                 if (parent instanceof JSVariable
                     || parent instanceof JSProperty
                     || parent instanceof JSFile
@@ -277,8 +269,8 @@ public class JSStructureViewElement implements StructureViewTreeElement {
                     node.acceptChildren(this);
                     return;
                 }
-                if (parent instanceof JSArgumentList) {
-                    final JSElement expression = JSSymbolUtil.findQualifyingExpressionFromArgumentList((JSArgumentList)parent);
+                if (parent instanceof JSArgumentList argumentList) {
+                    JSElement expression = JSSymbolUtil.findQualifyingExpressionFromArgumentList(argumentList);
                     if (expression != null) {
                         return;
                     }
@@ -290,7 +282,7 @@ public class JSStructureViewElement implements StructureViewTreeElement {
             }
 
             @Override
-            public void visitJSVariable(final JSVariable node) {
+            public void visitJSVariable(@Nonnull JSVariable node) {
                 if (element instanceof JSFunction) {
                     return;
                 }
@@ -298,35 +290,37 @@ public class JSStructureViewElement implements StructureViewTreeElement {
             }
 
             @Override
-            public void visitJSAssignmentExpression(final JSAssignmentExpression node) {
+            @RequiredReadAction
+            public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression node) {
                 JSExpression rOperand = node.getROperand();
-                final JSExpression lOperand = node.getLOperand();
+                JSExpression lOperand = node.getLOperand();
 
-                final boolean outsideFunction = PsiTreeUtil.getParentOfType(node, JSFunction.class) == null;
+                boolean outsideFunction = PsiTreeUtil.getParentOfType(node, JSFunction.class) == null;
                 if (!outsideFunction) {
                     return;
                 }
 
-                if (rOperand instanceof JSCallExpression) {
-                    rOperand = ((JSCallExpression)rOperand).getMethodExpression();
+                if (rOperand instanceof JSCallExpression call) {
+                    rOperand = call.getMethodExpression();
                 }
 
-                if (rOperand instanceof JSFunction) {
+                if (rOperand instanceof JSFunction function) {
                     JSExpression qualifier = null;
-                    final JSExpression operand = ((JSDefinitionExpression)lOperand).getExpression();
+                    JSExpression operand = ((JSDefinitionExpression)lOperand).getExpression();
 
-                    if (operand instanceof JSReferenceExpression) {
-                        qualifier = ((JSReferenceExpression)operand).getQualifier();
+                    if (operand instanceof JSReferenceExpression operandRefExpr) {
+                        qualifier = operandRefExpr.getQualifier();
                     }
 
-                    if ((qualifier == null || qualifier instanceof JSThisExpression)) {
-                        addElement(rOperand);
+                    if (qualifier == null || qualifier instanceof JSThisExpression) {
+                        addElement(function);
                     }
                 }
                 else if (lOperand != null) {
-                    final JSExpression operand = ((JSDefinitionExpression)lOperand).getExpression();
-                    if (operand instanceof JSReferenceExpression && ((JSReferenceExpression)operand).getQualifier() instanceof JSThisExpression) {
-                        final PsiElement resolved = ((JSReferenceExpression)operand).resolve();
+                    JSExpression operand = ((JSDefinitionExpression)lOperand).getExpression();
+                    if (operand instanceof JSReferenceExpression operandRefExpr
+                        && operandRefExpr.getQualifier() instanceof JSThisExpression) {
+                        PsiElement resolved = operandRefExpr.resolve();
                         if (resolved == lOperand) {
                             addElement(lOperand);
                         }
@@ -335,9 +329,10 @@ public class JSStructureViewElement implements StructureViewTreeElement {
                 }
             }
 
-            private void addElement(final PsiElement lOperand) {
-                if (lOperand instanceof JSNamedElement) {
-                    final String namedId = ((JSNamedElement)lOperand).getName();
+            @RequiredReadAction
+            private void addElement(PsiElement lOperand) {
+                if (lOperand instanceof JSNamedElement namedElement) {
+                    String namedId = namedElement.getName();
                     if (referencedNamedIds.contains(namedId)) {
                         return;
                     }

@@ -17,6 +17,7 @@
 package com.intellij.lang.javascript.impl.search;
 
 import com.intellij.lang.javascript.psi.JSNamedElement;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.document.util.TextRange;
 import consulo.language.editor.hint.DeclarationRangeHandler;
@@ -36,12 +37,13 @@ public class JSDeclarationRangeHandler implements DeclarationRangeHandler<JSName
         return JSNamedElement.class;
     }
 
-    @Override
     @Nonnull
+    @Override
+    @RequiredReadAction
     public TextRange getDeclarationRange(@Nonnull JSNamedElement namedElement) {
-        final TextRange textRange = namedElement.getTextRange();
-        final PsiElement nameIdentifier = namedElement.getNameIdentifier();
-        final TextRange nameIdentifierRange = nameIdentifier != null ? nameIdentifier.getTextRange() : null;
+        TextRange textRange = namedElement.getTextRange();
+        PsiElement nameIdentifier = namedElement.getNameIdentifier();
+        TextRange nameIdentifierRange = nameIdentifier != null ? nameIdentifier.getTextRange() : null;
         int startOffset = nameIdentifierRange != null ? nameIdentifierRange.getStartOffset() : textRange.getStartOffset();
         int endOffset = nameIdentifierRange != null ? nameIdentifierRange.getEndOffset() : textRange.getEndOffset();
 

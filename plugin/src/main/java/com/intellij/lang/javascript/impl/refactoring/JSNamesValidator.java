@@ -24,11 +24,8 @@ import consulo.project.Project;
 import consulo.language.editor.refactoring.NamesValidator;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Maxim.Mossienko
- * Date: Jun 27, 2006
- * Time: 8:28:35 PM
- * To change this template use File | Settings | File Templates.
+ * @author Maxim.Mossienko
+ * @since 2006-06-27
  */
 abstract class JSNamesValidator implements NamesValidator {
     protected final Lexer myLexer;
@@ -37,7 +34,7 @@ abstract class JSNamesValidator implements NamesValidator {
         myLexer = createLexer(optionHolder);
     }
 
-    protected Lexer createLexer(final DialectOptionHolder optionHolder) {
+    protected Lexer createLexer(DialectOptionHolder optionHolder) {
         return new JSFlexAdapter(false, optionHolder);
     }
 
