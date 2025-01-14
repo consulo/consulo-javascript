@@ -23,8 +23,7 @@ import javax.swing.*;
 
 /**
  * @author Maxim.Mossienko
- * Date: Aug 9, 2008
- * Time: 9:22:10 AM
+ * @since 2008-08-09
  */
 public class JSExtractFunctionDialog extends DialogWrapper implements JSExtractFunctionSettings {
     private JPanel myPanel;

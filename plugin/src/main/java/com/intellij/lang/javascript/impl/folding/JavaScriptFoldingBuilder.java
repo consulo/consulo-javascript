@@ -46,9 +46,9 @@ import java.util.List;
  */
 @ExtensionImpl
 public class JavaScriptFoldingBuilder implements FoldingBuilder {
-    @RequiredReadAction
     @Nonnull
     @Override
+    @RequiredReadAction
     public FoldingDescriptor[] buildFoldRegions(@Nonnull ASTNode node, @Nonnull Document document) {
         List<FoldingDescriptor> descriptors = new ArrayList<>();
         appendDescriptors(node, document, descriptors);
@@ -56,8 +56,8 @@ public class JavaScriptFoldingBuilder implements FoldingBuilder {
     }
 
     @RequiredReadAction
-    private static ASTNode appendDescriptors(final ASTNode node, final Document document, final List<FoldingDescriptor> descriptors) {
-        final IElementType type = node.getElementType();
+    private static ASTNode appendDescriptors(ASTNode node, Document document, List<FoldingDescriptor> descriptors) {
+        IElementType type = node.getElementType();
         if (type == JSElementTypes.BLOCK_STATEMENT
             || type == JSElementTypes.OBJECT_LITERAL_EXPRESSION
             || type == JSElementTypes.ARRAY_LITERAL_EXPRESSION
@@ -114,9 +114,9 @@ public class JavaScriptFoldingBuilder implements FoldingBuilder {
 
     @RequiredReadAction
     private static ASTNode collapseConsequentNodesOfSpecifiedType(
-        final ASTNode node,
-        final List<FoldingDescriptor> descriptors,
-        final IElementType endOfLineComment
+        ASTNode node,
+        List<FoldingDescriptor> descriptors,
+        IElementType endOfLineComment
     ) {
         PsiElement lastEoLComment = node.getPsi();
         PsiElement current = lastEoLComment.getNextSibling();
@@ -148,7 +148,7 @@ public class JavaScriptFoldingBuilder implements FoldingBuilder {
     @RequiredReadAction
     @Override
     public String getPlaceholderText(ASTNode node) {
-        final IElementType type = node.getElementType();
+        IElementType type = node.getElementType();
         if (type == JSTokenTypes.DOC_COMMENT) {
             return "/**...*/";
         }

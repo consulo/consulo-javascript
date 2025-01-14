@@ -25,24 +25,20 @@ import consulo.javascript.lang.JavaScript15LanguageVersion;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.highlight.SyntaxHighlighter;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * User: Maxim.Mossienko
- * Date: Nov 2, 2005
- * Time: 10:12:13 PM
+ * @author Maxim.Mossienko
+ * @since 2005-11-02
  */
 @ExtensionImpl
 public class JavaScriptColorsAndFontsPage implements ColorSettingsPage {
     private static final AttributesDescriptor[] ATTRS;
 
-    @NonNls
-    private static Map<String, TextAttributesKey> ADDITIONAL_HIGHLIGHT_DESCRIPTORS = new HashMap<String, TextAttributesKey>();
+    private static Map<String, TextAttributesKey> ADDITIONAL_HIGHLIGHT_DESCRIPTORS = new HashMap<>();
 
     static {
         ATTRS = new AttributesDescriptor[]{

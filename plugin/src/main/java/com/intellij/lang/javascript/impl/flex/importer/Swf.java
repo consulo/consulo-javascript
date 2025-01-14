@@ -16,12 +16,9 @@
 
 package com.intellij.lang.javascript.impl.flex.importer;
 
-import org.jetbrains.annotations.NonNls;
-
 /**
  * @author Maxim.Mossienko
- * Date: Oct 20, 2008
- * Time: 7:01:59 PM
+ * @since 2008-10-20
  */
 class Swf {
     private static class Rect {
@@ -30,9 +27,7 @@ class Swf {
         int yMin, yMax;
 
         @Override
-        public
-        @NonNls
-        String toString() {
+        public String toString() {
             return "[Rect " + xMin + " " + yMin + " " + xMax + " " + yMax + "]";
         }
     }
@@ -43,12 +38,10 @@ class Swf {
 
     private ByteBuffer data;
 
-    private static final int stagDoABC = 72;   // embedded .abc (AVM+) bytecode
-    private static final int stagDoABC2 = 82;   // revised ABC version with a name
+    private static final int STAG_DO_ABC = 72;   // embedded .abc (AVM+) bytecode
+    private static final int STAG_DO_ABC_2 = 82; // revised ABC version with a name
 
-    private static final
-    @NonNls
-    String[] tagNames = {
+    private static final String[] TAG_NAMES = {
         "End",
         // 00
         "ShowFrame",
@@ -261,14 +254,13 @@ class Swf {
         // end
     };
 
-
-    public Swf(final ByteBuffer _data, final FlexByteCodeInformationProcessor _processor) {
+    public Swf(ByteBuffer _data, FlexByteCodeInformationProcessor _processor) {
         data = _data;
         processor = _processor;
 
-        final Rect rect = decodeRect();
-        final int rate = data.readUnsignedByte() << 8 | data.readUnsignedByte();
-        final int count = data.readUnsignedShort();
+        Rect rect = decodeRect();
+        int rate = data.readUnsignedByte() << 8 | data.readUnsignedByte();
+        int count = data.readUnsignedShort();
 
         processor.dumpStat("size " + rect + "\n");
         processor.dumpStat("frame rate " + rate + "\n");
@@ -287,20 +279,20 @@ class Swf {
                 length = data.readInt();
             }
 
-            processor.dumpStat((type < tagNames.length ? tagNames[type] : "undefined") + " " + length + "b " + ((int)100f * length / data.bytesSize()) +
+            processor.dumpStat((type < TAG_NAMES.length ? TAG_NAMES[type] : "undefined") + " " + length + "b " + ((int)100f * length / data.bytesSize()) +
                 "%\n");
 
             switch (type) {
                 case 0:
                     return;
-                case stagDoABC2:
+                case STAG_DO_ABC_2:
                     int pos1 = data.getPosition();
                     data.readInt();
-                    final String abcName = readString();
+                    String abcName = readString();
                     processor.dumpStat("\nabc name " + abcName + "\n");
                     length -= (data.getPosition() - pos1);
                     // fall through
-                case stagDoABC:
+                case STAG_DO_ABC:
                     ByteBuffer data2 = new ByteBuffer();
                     data2.setLittleEndian();
                     data.readBytes(data2, length);

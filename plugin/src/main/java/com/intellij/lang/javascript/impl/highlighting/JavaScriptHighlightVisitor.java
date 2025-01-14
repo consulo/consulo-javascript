@@ -35,9 +35,7 @@ import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.editor.rawHighlight.HighlightVisitor;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
-import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -46,7 +44,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
     @Override
     @RequiredReadAction
-    public void visitJSBinaryExpression(JSBinaryExpression node) {
+    public void visitJSBinaryExpression(@Nonnull JSBinaryExpression node) {
         super.visitJSBinaryExpression(node);
 
         IElementType operationSign = node.getOperationSign();
@@ -57,7 +55,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
     @Override
     @RequiredReadAction
-    public void visitJSAssignmentExpression(JSAssignmentExpression node) {
+    public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression node) {
         super.visitJSAssignmentExpression(node);
 
         IElementType operationSign = node.getOperationSign();
@@ -74,8 +72,8 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
         PsiElement parent = element.getParent();
         IElementType elementType = PsiUtilCore.getElementType(element);
         if ((JavaScriptTokenSets.STRING_LITERALS.contains(elementType) || elementType == JSTokenTypes.IDENTIFIER)
-            && parent instanceof JSProperty && ((JSProperty)parent).getNameIdentifier() == element) {
-            highlightPropertyName((JSProperty)parent, element);
+            && parent instanceof JSProperty property && property.getNameIdentifier() == element) {
+            highlightPropertyName(property, element);
         }
         else if (elementType == JSTokenTypes.IDENTIFIER) {
             addElementHighlight(parent, element);
@@ -91,17 +89,18 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
     }
 
     @Override
-    public void visitJSProperty(JSProperty node) {
+    @RequiredReadAction
+    public void visitJSProperty(@Nonnull JSProperty node) {
         super.visitJSProperty(node);
 
-        if (node instanceof JSFunction) {
-            reportFeatureUsage(node.getNameIdentifier(), JavaScriptFeature.FUNCTION_PROPERTY);
+        if (node instanceof JSFunction function) {
+            reportFeatureUsage(function.getNameIdentifier(), JavaScriptFeature.FUNCTION_PROPERTY);
         }
     }
 
     @Override
     @RequiredReadAction
-    public void visitJSLiteralExpression(JSSimpleLiteralExpression node) {
+    public void visitJSLiteralExpression(@Nonnull JSSimpleLiteralExpression node) {
         super.visitJSLiteralExpression(node);
         if (node.getLiteralElementType() == JSTokenTypes.NUMERIC_LITERAL) {
             String text = node.getText();
@@ -116,15 +115,11 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
     @RequiredReadAction
     private void highlightPropertyName(@Nonnull JSProperty property, @Nonnull PsiElement nameIdentifier) {
-        final JSExpression expression = property.getValue();
-        TextAttributesKey type;
+        JSExpression expression = property.getValue();
+        TextAttributesKey type = expression instanceof JSFunctionExpression
+            ? JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_FUNCTION
+            : JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_VARIABLE;
 
-        if (expression instanceof JSFunctionExpression) {
-            type = JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_FUNCTION;
-        }
-        else {
-            type = JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_VARIABLE;
-        }
         myHighlightInfoHolder.add(HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION)
             .needsUpdateOnTyping(false)
             .range(nameIdentifier)
@@ -134,7 +129,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
     @Override
     @RequiredReadAction
-    public void visitJSAttribute(JSAttribute jsAttribute) {
+    public void visitJSAttribute(@Nonnull JSAttribute jsAttribute) {
         super.visitJSAttribute(jsAttribute);
 
         myHighlightInfoHolder.add(
@@ -148,7 +143,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
     @Override
     @RequiredReadAction
-    public void visitJSParameter(JSParameter parameter) {
+    public void visitJSParameter(@Nonnull JSParameter parameter) {
         super.visitJSParameter(parameter);
 
         JSExpression initializer = parameter.getInitializer();
@@ -164,16 +159,16 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
     @Override
     @RequiredReadAction
-    public void visitJSReferenceExpression(JSReferenceExpression element) {
+    public void visitJSReferenceExpression(@Nonnull JSReferenceExpression element) {
         super.visitJSReferenceExpression(element);
 
         PsiElement parent = element.getParent();
 
-        if (parent instanceof PsiNameIdentifierOwner && ((PsiNameIdentifierOwner)parent).getNameIdentifier() == element) {
+        if (parent instanceof PsiNameIdentifierOwner nameIdentifierOwner && nameIdentifierOwner.getNameIdentifier() == element) {
             return;
         }
 
-        final ResolveResult[] results = element.multiResolve(false);
+        ResolveResult[] results = element.multiResolve(false);
 
         PsiElement validResult = null;
         for (ResolveResult result : results) {
@@ -196,7 +191,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
     @Override
     @RequiredReadAction
-    public void visitJSPrefixExpression(JSPrefixExpression expression) {
+    public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
         super.visitJSPrefixExpression(expression);
 
         if (expression.getOperationSign() == JSTokenTypes.DOT_DOT_DOT) {
@@ -214,29 +209,27 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
         boolean isField = false;
         TextAttributesKey type = null;
 
-        if (resolvedElement instanceof JSAttributeListOwner) {
-            if (resolvedElement instanceof JSClass) {
+        if (resolvedElement instanceof JSAttributeListOwner attributeListOwner) {
+            if (attributeListOwner instanceof JSClass) {
                 type = DefaultLanguageHighlighterColors.CLASS_NAME;
             }
             else {
-                final JSAttributeList attributeList = ((JSAttributeListOwner)resolvedElement).getAttributeList();
+                JSAttributeList attributeList = attributeListOwner.getAttributeList();
 
                 if (attributeList != null) {
                     isStatic = attributeList.hasModifier(JSAttributeList.ModifierType.STATIC);
                 }
 
-                isMethod = resolvedElement instanceof JSFunction;
-                if (isMethod && !isClass(resolvedElement.getParent())) {
+                isMethod = attributeListOwner instanceof JSFunction;
+                if (isMethod && !isClass(attributeListOwner.getParent())) {
                     isMethod = false;
                     isFunction = true;
                 }
             }
         }
-        else if (resolvedElement instanceof JSDefinitionExpression) {
-            final PsiElement parent = resolvedElement.getParent();
-            if (parent instanceof JSAssignmentExpression) {
-                final JSExpression jsExpression = ((JSAssignmentExpression)parent).getROperand();
-                if (jsExpression instanceof JSFunctionExpression) {
+        else if (resolvedElement instanceof JSDefinitionExpression definition) {
+            if (definition.getParent() instanceof JSAssignmentExpression assignment) {
+                if (assignment.getROperand() instanceof JSFunctionExpression) {
                     isMethod = true;
                 }
                 else {
@@ -244,10 +237,8 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
                 }
             }
         }
-        else if (resolvedElement instanceof JSProperty) {
-            final JSExpression expression = ((JSProperty)resolvedElement).getValue();
-
-            if (expression instanceof JSFunctionExpression) {
+        else if (resolvedElement instanceof JSProperty property) {
+            if (property.getValue() instanceof JSFunctionExpression) {
                 isMethod = true;
             }
             else {
@@ -256,12 +247,9 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
         }
 
         if (isMethod) {
-            if (isStatic) {
-                type = JavaScriptSyntaxHighlightKeys.JS_STATIC_MEMBER_FUNCTION;
-            }
-            else {
-                type = JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_FUNCTION;
-            }
+            type = isStatic
+                ? JavaScriptSyntaxHighlightKeys.JS_STATIC_MEMBER_FUNCTION
+                : JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_FUNCTION;
         }
         else if (isFunction) {
             type = JavaScriptSyntaxHighlightKeys.JS_GLOBAL_FUNCTION;
@@ -271,8 +259,8 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
         }
 
         if (type == null) {
-            if (resolvedElement instanceof JSVariable) {
-                myHighlightInfoHolder.add(buildHighlightForVariable(resolvedElement, targetForHighlight));
+            if (resolvedElement instanceof JSVariable variable) {
+                myHighlightInfoHolder.add(buildHighlightForVariable(variable, targetForHighlight));
             }
             return;
         }
@@ -288,15 +276,15 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
 
     @Nullable
     @RequiredReadAction
-    private static HighlightInfo buildHighlightForVariable(@Nonnull final PsiElement element, @Nonnull final PsiElement markerAddTo) {
+    private static HighlightInfo buildHighlightForVariable(@Nonnull PsiElement element, @Nonnull PsiElement markerAddTo) {
         TextAttributesKey type;
 
         if (element instanceof JSParameter) {
             type = JavaScriptSyntaxHighlightKeys.JS_PARAMETER;
         }
         else if (isClass(element.getParent().getParent())) {
-            final JSAttributeList attributeList = ((JSAttributeListOwner)element).getAttributeList();
-            final boolean isStatic = attributeList != null && attributeList.hasModifier(JSAttributeList.ModifierType.STATIC);
+            JSAttributeList attributeList = ((JSAttributeListOwner)element).getAttributeList();
+            boolean isStatic = attributeList != null && attributeList.hasModifier(JSAttributeList.ModifierType.STATIC);
             type = isStatic
                 ? JavaScriptSyntaxHighlightKeys.JS_STATIC_MEMBER_VARIABLE
                 : JavaScriptSyntaxHighlightKeys.JS_INSTANCE_MEMBER_VARIABLE;
@@ -308,10 +296,6 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
             type = JavaScriptSyntaxHighlightKeys.JS_GLOBAL_VARIABLE;
         }
 
-        if (type == null) {
-            return null;
-        }
-
         return HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION)
             .range(markerAddTo)
             .needsUpdateOnTyping(false)
@@ -319,17 +303,16 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
             .create();
     }
 
+    @RequiredReadAction
     private void reportFeatureUsage(@Nonnull PsiElement element, @Nonnull JavaScriptFeature javaScriptFeature) {
         if (JavaScriptVersionUtil.containsFeature(element, javaScriptFeature)) {
             return;
         }
 
-        LocalizeValue message = JavaScriptLocalize.thisFeatureIsNotSupportedByCurrentLanguage(javaScriptFeature.getName());
-
         myHighlightInfoHolder.add(
             HighlightInfo.newHighlightInfo(HighlightInfoType.ERROR)
                 .range(element)
-                .descriptionAndTooltip(message)
+                .descriptionAndTooltip(JavaScriptLocalize.thisFeatureIsNotSupportedByCurrentLanguage(javaScriptFeature.getName()))
                 .create()
         );
     }
@@ -351,7 +334,7 @@ public class JavaScriptHighlightVisitor extends JSElementVisitor implements High
         return true;
     }
 
-    private static boolean isClass(final PsiElement element) {
+    private static boolean isClass(PsiElement element) {
         return element instanceof JSClass || element instanceof JSFile && element.getContext() != null;
     }
 }

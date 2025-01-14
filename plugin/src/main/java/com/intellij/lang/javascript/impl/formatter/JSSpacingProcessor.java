@@ -22,6 +22,7 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSImportStatement;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
@@ -46,7 +47,7 @@ public class JSSpacingProcessor extends JSNodeVisitor {
     private final IElementType type1;
     private final IElementType type2;
 
-    public JSSpacingProcessor(final ASTNode parent, final ASTNode child1, final ASTNode child2, final CommonCodeStyleSettings settings) {
+    public JSSpacingProcessor(ASTNode parent, ASTNode child1, ASTNode child2, CommonCodeStyleSettings settings) {
         myParent = parent;
         myChild1 = child1;
         myChild2 = child2;
@@ -61,34 +62,44 @@ public class JSSpacingProcessor extends JSNodeVisitor {
     }
 
     @Override
-    public void visitObjectLiteralExpression(final ASTNode node) {
+    public void visitObjectLiteralExpression(ASTNode node) {
         if (((type1 == JSTokenTypes.LBRACE && type2 != JSTokenTypes.RBRACE)
             || type1 == JSTokenTypes.COMMA
             || (type1 != JSTokenTypes.LBRACE && type2 == JSTokenTypes.RBRACE))
             && shouldFormatObjectLiteralExpression()) {
-            myResult = Spacing.createSpacing(0, 0, 1, mySettings.KEEP_LINE_BREAKS, mySettings.KEEP_BLANK_LINES_IN_CODE);
+            myResult = Spacing.createSpacing(
+                0,
+                0,
+                1,
+                mySettings.KEEP_LINE_BREAKS,
+                mySettings.KEEP_BLANK_LINES_IN_CODE
+            );
         }
     }
 
     private boolean shouldFormatObjectLiteralExpression() {
         IElementType grandParentType = myParent.getTreeParent().getElementType();
-        if (grandParentType == JSElementTypes.ARRAY_LITERAL_EXPRESSION) {
-            return true;
-        }
-
-        return false;
+        return grandParentType == JSElementTypes.ARRAY_LITERAL_EXPRESSION;
     }
 
     @Override
-    public void visitArrayLiteralExpression(final ASTNode node) {
+    @RequiredReadAction
+    public void visitArrayLiteralExpression(ASTNode node) {
         if (((type1 == JSTokenTypes.LBRACKET && type2 != JSTokenTypes.RBRACKET)
             || type1 == JSTokenTypes.COMMA
             || (type1 != JSTokenTypes.LBRACKET && type2 == JSTokenTypes.RBRACKET))
             && shouldFormatArrayLiteralExpression()) {
-            myResult = Spacing.createSpacing(0, 0, 1, mySettings.KEEP_LINE_BREAKS, mySettings.KEEP_BLANK_LINES_IN_CODE);
+            myResult = Spacing.createSpacing(
+                0,
+                0,
+                1,
+                mySettings.KEEP_LINE_BREAKS,
+                mySettings.KEEP_BLANK_LINES_IN_CODE
+            );
         }
     }
 
+    @RequiredReadAction
     private boolean shouldFormatArrayLiteralExpression() {
         JSExpression jsExpression = PsiTreeUtil.findChildOfType(myParent.getPsi(), JSExpression.class);
         if (jsExpression != null) {
@@ -115,27 +126,51 @@ public class JSSpacingProcessor extends JSNodeVisitor {
     @Override
     public void visitAttributeList(final ASTNode node) {
         if (type1 == JSElementTypes.ATTRIBUTE || type2 == JSElementTypes.ATTRIBUTE) {
-            myResult = Spacing.createSpacing(0, 0, 1, mySettings.KEEP_LINE_BREAKS, mySettings.KEEP_BLANK_LINES_IN_CODE);
+            myResult = Spacing.createSpacing(
+                0,
+                0,
+                1,
+                mySettings.KEEP_LINE_BREAKS,
+                mySettings.KEEP_BLANK_LINES_IN_CODE
+            );
         }
         else {
-            myResult = Spacing.createSpacing(1, 1, 0, mySettings.KEEP_LINE_BREAKS, mySettings.KEEP_BLANK_LINES_IN_CODE);
+            myResult = Spacing.createSpacing(
+                1,
+                1,
+                0,
+                mySettings.KEEP_LINE_BREAKS,
+                mySettings.KEEP_BLANK_LINES_IN_CODE
+            );
         }
     }
 
     @Override
     public void visitEmbeddedContent(final ASTNode node) {
         if (type2 == JSTokenTypes.END_OF_LINE_COMMENT) {
-            myResult = Spacing.createSpacing(0, Integer.MAX_VALUE, 0, mySettings.KEEP_LINE_BREAKS, mySettings.KEEP_BLANK_LINES_IN_CODE);
+            myResult = Spacing.createSpacing(
+                0,
+                Integer.MAX_VALUE,
+                0,
+                mySettings.KEEP_LINE_BREAKS,
+                mySettings.KEEP_BLANK_LINES_IN_CODE
+            );
         }
         else if (JSElementTypes.SOURCE_ELEMENTS.contains(type1)
             || JSElementTypes.SOURCE_ELEMENTS.contains(type2) && type1 != JSTokenTypes.DOT
             || type2 == JSTokenTypes.RBRACE) {
-            myResult = Spacing.createSpacing(0, 0, 1, mySettings.KEEP_LINE_BREAKS, mySettings.KEEP_BLANK_LINES_IN_CODE);
+            myResult = Spacing.createSpacing(
+                0,
+                0,
+                1,
+                mySettings.KEEP_LINE_BREAKS,
+                mySettings.KEEP_BLANK_LINES_IN_CODE
+            );
         }
     }
 
     @Override
-    public void visitParameterList(final ASTNode node) {
+    public void visitParameterList(ASTNode node) {
         if (type1 == JSTokenTypes.LPAR && type2 == JSTokenTypes.RPAR) {
             setSingleSpace(false);
         }
@@ -151,7 +186,8 @@ public class JSSpacingProcessor extends JSNodeVisitor {
     }
 
     @Override
-    public void visitPackageStatement(final ASTNode node) {
+    @RequiredReadAction
+    public void visitPackageStatement(ASTNode node) {
         if (shouldMakeLBraceOnNextLine()) {
             myResult = Spacing.createSpacing(
                 0,
@@ -166,7 +202,8 @@ public class JSSpacingProcessor extends JSNodeVisitor {
     }
 
     @Override
-    public void visitClass(final ASTNode node) {
+    @RequiredReadAction
+    public void visitClass(ASTNode node) {
         if (shouldMakeLBraceOnNextLine()) {
             myResult = Spacing.createSpacing(
                 0,
@@ -185,11 +222,13 @@ public class JSSpacingProcessor extends JSNodeVisitor {
     }
 
     @Override
-    public void visitBlock(final ASTNode node) {
+    @RequiredReadAction
+    public void visitBlock(ASTNode node) {
         processBlock(node);
     }
 
-    private void processBlock(final ASTNode node) {
+    @RequiredReadAction
+    private void processBlock(ASTNode node) {
         if (JSElementTypes.SOURCE_ELEMENTS.contains(type1) || JSElementTypes.SOURCE_ELEMENTS.contains(type2) ||
             type2 == JSTokenTypes.RBRACE) {
             if (isInjectedJSHack(type1, type2) || isInjectedJSHack(type2, type1)
@@ -198,7 +237,7 @@ public class JSSpacingProcessor extends JSNodeVisitor {
                 myResult = Spacing.getReadOnlySpacing();
             }
             else {
-                final boolean keepOneLine = myParent.getPsi() instanceof JSFunction
+                boolean keepOneLine = myParent.getPsi() instanceof JSFunction
                     ? mySettings.KEEP_SIMPLE_METHODS_IN_ONE_LINE
                     : mySettings.KEEP_SIMPLE_BLOCKS_IN_ONE_LINE;
 
@@ -252,6 +291,7 @@ public class JSSpacingProcessor extends JSNodeVisitor {
             || (type1 == JSElementTypes.VAR_STATEMENT && type2 == JSElementTypes.FUNCTION_DECLARATION);
     }
 
+    @RequiredReadAction
     private Spacing getSpacingBetweenImports() {
         String fqn1 = ((JSImportStatement)myChild1.getPsi()).getImportText();
         String fqn2 = ((JSImportStatement)myChild2.getPsi()).getImportText();
@@ -267,13 +307,14 @@ public class JSSpacingProcessor extends JSNodeVisitor {
         );
     }
 
-    private static boolean isInjectedJSHack(final IElementType type1, final IElementType type2) {
+    private static boolean isInjectedJSHack(IElementType type1, IElementType type2) {
         // Following code attempts NOT to reformat '@xxx:bbb.ccc' in var initializers
         return type1 == JSTokenTypes.BAD_CHARACTER && JSElementTypes.SOURCE_ELEMENTS.contains(type2);
     }
 
     @Override
-    public void visitFile(final ASTNode node) {
+    @RequiredReadAction
+    public void visitFile(ASTNode node) {
         if (JSElementTypes.SOURCE_ELEMENTS.contains(type1) || JSElementTypes.SOURCE_ELEMENTS.contains(type2)) {
             if (type2 == JSTokenTypes.END_OF_LINE_COMMENT
                 && isInlineEndOfLineCommentOnLeft()
@@ -315,18 +356,13 @@ public class JSSpacingProcessor extends JSNodeVisitor {
     }
 
     private boolean isInlineEndOfLineCommentOnLeft() {
-        final ASTNode prev = myChild2.getTreePrev();
-        if (prev == myChild1) {
-            return true;
-        }
-        if (prev != null && prev.getPsi() instanceof PsiWhiteSpace) {
-            return !prev.textContains('\n');
-        }
-        return false;
+        ASTNode prev = myChild2.getTreePrev();
+        return prev == myChild1
+            || prev != null && prev.getPsi() instanceof PsiWhiteSpace && !prev.textContains('\n');
     }
 
     @Override
-    public void visitFunctionDeclaration(final ASTNode node) {
+    public void visitFunctionDeclaration(ASTNode node) {
         if (type1 == JSTokenTypes.FUNCTION_KEYWORD && type2 == JSElementTypes.REFERENCE_EXPRESSION) {
             setSingleSpace(true);
         }
@@ -342,12 +378,12 @@ public class JSSpacingProcessor extends JSNodeVisitor {
     }
 
     @Override
-    public void visitFunctionExpression(final ASTNode node) {
+    public void visitFunctionExpression(ASTNode node) {
         visitFunctionDeclaration(node);
     }
 
     @Override
-    public void visitReferenceExpression(final ASTNode node) {
+    public void visitReferenceExpression(ASTNode node) {
         if (type1 == JSTokenTypes.NEW_KEYWORD) {
             setSingleSpace(true);
         }
@@ -357,7 +393,7 @@ public class JSSpacingProcessor extends JSNodeVisitor {
     }
 
     @Override
-    public void visitDocComment(final ASTNode node) {
+    public void visitDocComment(ASTNode node) {
         //myResult = Spacing.createKeepingFirstColumnSpacing(
         //    0,
         //    Integer.MAX_VALUE,
@@ -367,7 +403,7 @@ public class JSSpacingProcessor extends JSNodeVisitor {
     }
 
     @Override
-    public void visitIfStatement(final ASTNode node) {
+    public void visitIfStatement(ASTNode node) {
         if (type1 == JSTokenTypes.IF_KEYWORD && type2 == JSTokenTypes.LPAR) {
             setSingleSpace(mySettings.SPACE_BEFORE_IF_PARENTHESES);
         }
@@ -387,14 +423,14 @@ public class JSSpacingProcessor extends JSNodeVisitor {
     }
 
     @Override
-    public void visitCallExpression(final ASTNode node) {
+    public void visitCallExpression(ASTNode node) {
         if (type2 == JSElementTypes.ARGUMENT_LIST) {
             setSingleSpace(mySettings.SPACE_BEFORE_METHOD_CALL_PARENTHESES);
         }
     }
 
     @Override
-    public void visitNewExpression(final ASTNode node) {
+    public void visitNewExpression(ASTNode node) {
         if (type1 == JSTokenTypes.NEW_KEYWORD) {
             setSingleSpace(true);
         }
@@ -404,7 +440,7 @@ public class JSSpacingProcessor extends JSNodeVisitor {
     }
 
     @Override
-    public void visitForStatement(final ASTNode node) {
+    public void visitForStatement(ASTNode node) {
         if (type1 == JSTokenTypes.SEMICOLON) {
             setSingleSpace(true);
         }
@@ -425,7 +461,7 @@ public class JSSpacingProcessor extends JSNodeVisitor {
     }
 
     @Override
-    public void visitDoWhileStatement(final ASTNode node) {
+    public void visitDoWhileStatement(ASTNode node) {
         if (type2 == JSTokenTypes.WHILE_KEYWORD) {
             if (mySettings.WHILE_ON_NEW_LINE) {
                 myResult = Spacing.createSpacing(
@@ -459,7 +495,7 @@ public class JSSpacingProcessor extends JSNodeVisitor {
     }
 
     @Override
-    public void visitForInStatement(final ASTNode node) {
+    public void visitForInStatement(ASTNode node) {
         if (type1 == JSTokenTypes.VAR_KEYWORD || type2 == JSTokenTypes.VAR_KEYWORD) {
             setSingleSpace(true);
         }
@@ -476,7 +512,7 @@ public class JSSpacingProcessor extends JSNodeVisitor {
     }
 
     @Override
-    public void visitWhileStatement(final ASTNode node) {
+    public void visitWhileStatement(ASTNode node) {
         if (type1 == JSTokenTypes.WHILE_KEYWORD && type2 == JSTokenTypes.LPAR) {
             setSingleSpace(mySettings.SPACE_BEFORE_WHILE_PARENTHESES);
         }
@@ -490,7 +526,7 @@ public class JSSpacingProcessor extends JSNodeVisitor {
     }
 
     @Override
-    public void visitWithStatement(final ASTNode node) {
+    public void visitWithStatement(ASTNode node) {
         if (type1 == JSTokenTypes.WITH_KEYWORD && type2 == JSTokenTypes.LPAR) {
             setSingleSpace(mySettings.SPACE_BEFORE_WHILE_PARENTHESES);
         }
@@ -508,7 +544,7 @@ public class JSSpacingProcessor extends JSNodeVisitor {
     );
 
     @Override
-    public void visitTryStatement(final ASTNode node) {
+    public void visitTryStatement(ASTNode node) {
         if (type1 == JSTokenTypes.TRY_KEYWORD && type2 == JSElementTypes.BLOCK_STATEMENT) {
             setBraceSpace(mySettings.SPACE_BEFORE_TRY_LBRACE, mySettings.BRACE_STYLE, null);
         }
@@ -524,7 +560,7 @@ public class JSSpacingProcessor extends JSNodeVisitor {
     }
 
     @Override
-    public void visitCatchBlock(final ASTNode node) {
+    public void visitCatchBlock(ASTNode node) {
         if (type1 == JSTokenTypes.LPAR || type2 == JSTokenTypes.RPAR) {
             setSingleSpace(mySettings.SPACE_WITHIN_CATCH_PARENTHESES);
         }
@@ -540,7 +576,7 @@ public class JSSpacingProcessor extends JSNodeVisitor {
     }
 
     @Override
-    public void visitSwitchStatement(final ASTNode node) {
+    public void visitSwitchStatement(ASTNode node) {
         if (type1 == JSTokenTypes.SWITCH_KEYWORD && type2 == JSTokenTypes.LPAR) {
             setSingleSpace(mySettings.SPACE_BEFORE_SWITCH_PARENTHESES);
         }
@@ -554,7 +590,7 @@ public class JSSpacingProcessor extends JSNodeVisitor {
     }
 
     @Override
-    public void visitArgumentList(final ASTNode node) {
+    public void visitArgumentList(ASTNode node) {
         if (type1 == JSTokenTypes.LPAR || type2 == JSTokenTypes.RPAR) {
             setSingleSpace(false);
         }
@@ -567,28 +603,28 @@ public class JSSpacingProcessor extends JSNodeVisitor {
     }
 
     @Override
-    public void visitStatement(final ASTNode node) {
+    public void visitStatement(ASTNode node) {
         if (type2 == JSTokenTypes.SEMICOLON) {
             setSingleSpace(false);
         }
     }
 
     @Override
-    public void visitVarStatement(final ASTNode node) {
+    public void visitVarStatement(ASTNode node) {
         if (type1 == JSTokenTypes.VAR_KEYWORD) {
             setSingleSpace(true);
         }
     }
 
     @Override
-    public void visitVariable(final ASTNode node) {
+    public void visitVariable(ASTNode node) {
         if (type1 == JSTokenTypes.EQ || type2 == JSTokenTypes.EQ) { // Initializer
             setSingleSpace(mySettings.SPACE_AROUND_ASSIGNMENT_OPERATORS);
         }
     }
 
     @Override
-    public void visitBinaryExpression(final ASTNode node) {
+    public void visitBinaryExpression(ASTNode node) {
         IElementType opSign = null;
         if (JSTokenTypes.OPERATIONS.contains(type1)) {
             opSign = type1;
@@ -603,7 +639,7 @@ public class JSSpacingProcessor extends JSNodeVisitor {
     }
 
     @Override
-    public void visitConditionalExpression(final ASTNode node) {
+    public void visitConditionalExpression(ASTNode node) {
         if (type1 == JSTokenTypes.QUEST) {
             setSingleSpace(mySettings.SPACE_AFTER_QUEST);
         }
@@ -618,7 +654,7 @@ public class JSSpacingProcessor extends JSNodeVisitor {
         }
     }
 
-    private boolean getSpaceAroundOption(final IElementType opSign) {
+    private boolean getSpaceAroundOption(IElementType opSign) {
         boolean option = false;
         if (JSTokenTypes.ADDITIVE_OPERATIONS.contains(opSign)) {
             option = mySettings.SPACE_AROUND_ADDITIVE_OPERATORS;
@@ -651,7 +687,7 @@ public class JSSpacingProcessor extends JSNodeVisitor {
     }
 
     private void setSingleSpace(boolean needSpace) {
-        final int spaces = needSpace ? 1 : 0;
+        int spaces = needSpace ? 1 : 0;
         myResult = Spacing.createSpacing(spaces, spaces, 0, mySettings.KEEP_LINE_BREAKS, mySettings.KEEP_BLANK_LINES_IN_CODE);
     }
 
@@ -672,8 +708,8 @@ public class JSSpacingProcessor extends JSNodeVisitor {
         }
     }
 
-    private void setLineBreakSpace(final boolean needLineBreak) {
-        final int breaks = needLineBreak || myChild1.getElementType() == JSTokenTypes.END_OF_LINE_COMMENT ? 1 : 0;
+    private void setLineBreakSpace(boolean needLineBreak) {
+        int breaks = needLineBreak || myChild1.getElementType() == JSTokenTypes.END_OF_LINE_COMMENT ? 1 : 0;
         myResult = Spacing.createSpacing(1, 1, breaks, mySettings.KEEP_LINE_BREAKS, mySettings.KEEP_BLANK_LINES_IN_CODE);
     }
 }

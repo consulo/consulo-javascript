@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.impl.formatter.blocks;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
@@ -47,11 +48,11 @@ public class JSBlock implements Block {
     private List<Block> mySubBlocks = null;
 
     public JSBlock(
-        final ASTNode node,
-        final Alignment alignment,
-        final Indent indent,
-        final Wrap wrap,
-        final CommonCodeStyleSettings settings
+        ASTNode node,
+        Alignment alignment,
+        Indent indent,
+        Wrap wrap,
+        CommonCodeStyleSettings settings
     ) {
         myAlignment = alignment;
         myIndent = indent;
@@ -110,16 +111,16 @@ public class JSBlock implements Block {
 
     @Override
     @Nonnull
-    public ChildAttributes getChildAttributes(final int newChildIndex) {
+    public ChildAttributes getChildAttributes(int newChildIndex) {
         Indent indent = null;
-        final IElementType blockElementType = myNode.getElementType();
+        IElementType blockElementType = myNode.getElementType();
 
         if (blockElementType == JSTokenTypes.DOC_COMMENT) {
             return new ChildAttributes(Indent.getSpaceIndent(1), null);
         }
 
         if (blockElementType == JSElementTypes.PACKAGE_STATEMENT) {
-            final JSCodeStyleSettings customSettings =
+            JSCodeStyleSettings customSettings =
                 CodeStyleSettingsManager.getSettings(myNode.getPsi().getProject()).getCustomSettings(JSCodeStyleSettings.class);
             if (customSettings.INDENT_PACKAGE_CHILDREN == JSCodeStyleSettings.INDENT) {
                 indent = Indent.getNormalIndent();
@@ -143,12 +144,12 @@ public class JSBlock implements Block {
         }
 
         Alignment alignment = null;
-        final List<Block> subBlocks = getSubBlocks();
+        List<Block> subBlocks = getSubBlocks();
         for (int i = 0; i < newChildIndex; i++) {
             if (i == subBlocks.size()) {
                 break;
             }
-            final Alignment childAlignment = subBlocks.get(i).getAlignment();
+            Alignment childAlignment = subBlocks.get(i).getAlignment();
             if (childAlignment != null) {
                 alignment = childAlignment;
                 break;
@@ -169,10 +170,12 @@ public class JSBlock implements Block {
     }
 
     @Override
+    @RequiredReadAction
     public boolean isIncomplete() {
         return isIncomplete(myNode);
     }
 
+    @RequiredReadAction
     private boolean isIncomplete(ASTNode node) {
         node.getPsi().getFirstChild(); // expand chameleon
         ASTNode lastChild = node.getLastChildNode();
@@ -184,10 +187,7 @@ public class JSBlock implements Block {
             return false;
         }
 
-        if (lastChild.getPsi() instanceof PsiErrorElement) {
-            return true;
-        }
-        return isIncomplete(lastChild);
+        return lastChild.getPsi() instanceof PsiErrorElement || isIncomplete(lastChild);
     }
 
     public CommonCodeStyleSettings getSettings() {
@@ -196,9 +196,6 @@ public class JSBlock implements Block {
 
     @Override
     public boolean isLeaf() {
-        if (myNode.getElementType() == JSTokenTypes.DOC_COMMENT) {
-            return false;
-        }
-        return myNode.getFirstChildNode() == null;
+        return myNode.getElementType() != JSTokenTypes.DOC_COMMENT && myNode.getFirstChildNode() == null;
     }
 }

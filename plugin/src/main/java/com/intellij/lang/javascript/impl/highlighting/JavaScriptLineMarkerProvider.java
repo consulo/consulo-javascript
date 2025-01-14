@@ -21,9 +21,8 @@ import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import com.intellij.lang.javascript.search.JSClassSearch;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Processor;
 import consulo.application.util.query.CollectionQuery;
@@ -40,10 +39,11 @@ import consulo.language.editor.ui.PsiElementListNavigator;
 import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.navigation.NavigationItem;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.ref.Ref;
-
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -53,70 +53,72 @@ import java.util.function.Function;
 
 /**
  * @author Maxim.Mossienko
- * Date: Apr 14, 2008
- * Time: 11:43:47 PM
+ * @since 2008-04-14
  */
 @ExtensionImpl
 public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
     private static final String OVERRIDES_METHOD_IN = "overrides method in ";
 
-    private static final Function<JSClass, String> ourClassInheritorsTooltipProvider = clazz -> "Has subclasses";
+    private static final Function<JSClass, String> CLASS_INHERITORS_TOOLTIP_PROVIDER = clazz -> "Has subclasses";
 
-    private static final Function<JSClass, String> ourImplementedInterfacesTooltipProvider = clazz -> "Has implementations";
+    private static final Function<JSClass, String> IMPLEMENTED_INTERFACES_TOOLTIP_PROVIDER = clazz -> "Has implementations";
 
-    private static final Function<JSFunction, String> ourOverriddenFunctionsTooltipProvider = psiElement -> "Is overridden";
+    private static final Function<JSFunction, String> OVERRIDDEN_FUNCTIONS_TOOLTIP_PROVIDER = psiElement -> "Is overridden";
 
-    private static final Function<JSFunction, String> ourImplementingFunctionsTooltipProvider = psiElement -> "Is implemented";
+    private static final Function<JSFunction, String> IMPLEMENTING_FUNCTIONS_TOOLTIP_PROVIDER = psiElement -> "Is implemented";
 
-    private static final BasicGutterIconNavigationHandler<JSClass> ourClassInheritorsNavHandler =
-        new BasicGutterIconNavigationHandler<JSClass>() {
+    private static final BasicGutterIconNavigationHandler<JSClass> CLASS_INHERITORS_NAV_HANDLER =
+        new BasicGutterIconNavigationHandler<>() {
             @Override
-            protected String getTitle(final JSClass elt) {
+            @RequiredReadAction
+            protected String getTitle(JSClass elt) {
                 return "Choose Subclass of " + elt.getName();
             }
 
             @Override
-            protected Query<JSClass> search(final JSClass elt) {
+            protected Query<JSClass> search(JSClass elt) {
                 return JSClassSearch.searchClassInheritors(elt, true);
             }
         };
 
-    private static final BasicGutterIconNavigationHandler<JSClass> ourInterfaceImplementationsNavHandler = new
-        BasicGutterIconNavigationHandler<JSClass>() {
+    private static final BasicGutterIconNavigationHandler<JSClass> INTERFACE_IMPLEMENTATIONS_NAV_HANDLER =
+        new BasicGutterIconNavigationHandler<>() {
             @Override
-            protected String getTitle(final JSClass elt) {
+            @RequiredReadAction
+            protected String getTitle(JSClass elt) {
                 return "Choose Implementation of " + elt.getName();
             }
 
             @Override
-            protected Query<JSClass> search(final JSClass elt) {
+            protected Query<JSClass> search(JSClass elt) {
                 return JSClassSearch.searchInterfaceImplementations(elt, true);
             }
         };
 
-    private static final BasicGutterIconNavigationHandler<JSFunction> ourOverriddenFunctionsNavHandler = new
-        BasicGutterIconNavigationHandler<JSFunction>() {
+    private static final BasicGutterIconNavigationHandler<JSFunction> OVERRIDDEN_FUNCTIONS_NAV_HANDLER =
+        new BasicGutterIconNavigationHandler<>() {
             @Override
-            protected String getTitle(final JSFunction elt) {
+            @RequiredReadAction
+            protected String getTitle(JSFunction elt) {
                 return "Choose Overriden Function of " + elt.getName();
             }
 
             @Override
-            protected Query<JSFunction> search(final JSFunction elt) {
+            @RequiredReadAction
+            protected Query<JSFunction> search(JSFunction elt) {
                 return doFindOverridenFunctionStatic(elt);
             }
         };
-    private final boolean myUnitTestMode = ApplicationManager.getApplication().isUnitTestMode();
 
-
-    public static Query<JSFunction> doFindOverridenFunctionStatic(final JSFunction elt) {
+    @RequiredReadAction
+    public static Query<JSFunction> doFindOverridenFunctionStatic(JSFunction elt) {
         PsiElement parent = JSResolveUtil.findParent(elt);
         if (parent instanceof JSClass) {
             return JSFunctionsSearch.searchOverridingFunctions(elt, true);
         }
-        final String qName = JSResolveUtil.getQNameToStartHierarchySearch(elt);
+        String qName = JSResolveUtil.getQNameToStartHierarchySearch(elt);
         if (qName != null) {
-            final ArrayList<JSFunction> result = new ArrayList<>();
+            ArrayList<JSFunction> result = new ArrayList<>();
 
             return new CollectionQuery<>(result);
         }
@@ -124,15 +126,16 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
         return new CollectionQuery<>(Collections.<JSFunction>emptyList());
     }
 
-    private static final BasicGutterIconNavigationHandler<JSFunction> ourImplementingFunctionsNavHandler = new
-        BasicGutterIconNavigationHandler<JSFunction>() {
+    private static final BasicGutterIconNavigationHandler<JSFunction> IMPLEMENTING_FUNCTIONS_NAV_HANDLER =
+        new BasicGutterIconNavigationHandler<>() {
             @Override
-            protected String getTitle(final JSFunction elt) {
+            @RequiredReadAction
+            protected String getTitle(JSFunction elt) {
                 return "Choose Implementation of " + elt.getName();
             }
 
             @Override
-            protected Query<JSFunction> search(final JSFunction elt) {
+            protected Query<JSFunction> search(JSFunction elt) {
                 return JSFunctionsSearch.searchImplementingFunctions(elt, true);
             }
         };
@@ -140,9 +143,9 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
     public static Key<Boolean> ourParticipatesInHierarchyKey = Key.create("js.named.item.participates.in.hierarchy");
 
     @Override
+    @RequiredReadAction
     public LineMarkerInfo getLineMarkerInfo(@Nonnull final PsiElement element) {
-        if (element instanceof JSFunction) {
-            final JSFunction function = (JSFunction)element;
+        if (element instanceof JSFunction function) {
             function.putUserData(ourParticipatesInHierarchyKey, null);
             if (function.getNameIdentifier() == null) {
                 return null;
@@ -151,19 +154,19 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
 
             if (qName != null) {
                 PsiElement parentNode = element.getParent();
-                if (parentNode instanceof JSFile) {
-                    JSClass xmlBackedClass = JSResolveUtil.getXmlBackedClass((JSFile)parentNode);
+                if (parentNode instanceof JSFile jsFile) {
+                    JSClass xmlBackedClass = JSResolveUtil.getXmlBackedClass(jsFile);
                     if (xmlBackedClass != null) {
                         parentNode = xmlBackedClass;
                     }
                 }
 
-                if (element instanceof JSFunctionExpression) {
-                    parentNode = element.getContainingFile();
+                if (element instanceof JSFunctionExpression functionExpr) {
+                    parentNode = functionExpr.getContainingFile();
                 }
 
                 final MyOverrideHandler overrideHandler = new MyOverrideHandler();
-                final String typeName = parentNode instanceof JSClass ? ((JSClass)parentNode).getQualifiedName() : qName;
+                final String typeName = parentNode instanceof JSClass jsClass ? jsClass.getQualifiedName() : qName;
                 JSResolveUtil.iterateType(function, parentNode, typeName, overrideHandler);
 
                 if (overrideHandler.className != null) {
@@ -173,41 +176,31 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
                     return new LineMarkerInfo<>(
                         function,
                         function.getNameIdentifier().getTextRange().getStartOffset(),
-                        AllIcons.Gutter.OverridingMethod,
+                        PlatformIconGroup.gutterOverridingmethod(),
                         Pass.UPDATE_ALL,
                         psiElement -> OVERRIDES_METHOD_IN + overrideHandler.className,
-                        new GutterIconNavigationHandler<JSFunction>() {
-                            @Override
-                            public void navigate(final MouseEvent e, final JSFunction elt) {
-                                final Set<NavigationItem> results = new HashSet<>();
-                                JSResolveUtil.iterateType(
-                                    function,
-                                    parentNode1,
-                                    typeName,
-                                    new JSResolveUtil.OverrideHandler() {
-                                        @Override
-                                        public boolean process(
-                                            final ResolveProcessor processor,
-                                            final PsiElement scope,
-                                            final String className
-                                        ) {
-                                            for (PsiElement e : processor.getResults()) {
-                                                results.add((NavigationItem)e);
-                                            }
-                                            return true;
-                                        }
+                        (e, elt) -> {
+                            final Set<NavigationItem> results = new HashSet<>();
+                            JSResolveUtil.iterateType(
+                                function,
+                                parentNode1,
+                                typeName,
+                                (processor, scope, className) -> {
+                                    for (PsiElement e1 : processor.getResults()) {
+                                        results.add((NavigationItem)e1);
                                     }
-                                );
+                                    return true;
+                                }
+                            );
 
-                                if (results.size() == 1) {
-                                    results.iterator().next().navigate(true);
-                                }
-                                else if (results.size() > 1) {
-                                    PopupNavigationUtil.getPsiElementPopup(
-                                        results.toArray(new PsiElement[results.size()]),
-                                        "Choose super class or interface"
-                                    ).show(new RelativePoint(e));
-                                }
+                            if (results.size() == 1) {
+                                results.iterator().next().navigate(true);
+                            }
+                            else if (results.size() > 1) {
+                                PopupNavigationUtil.getPsiElementPopup(
+                                    results.toArray(new PsiElement[results.size()]),
+                                    "Choose super class or interface"
+                                ).show(new RelativePoint(e));
                             }
                         }
                     );
@@ -219,6 +212,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
     }
 
     @Override
+    @RequiredReadAction
     public void collectSlowLineMarkers(@Nonnull final List<PsiElement> elements, @Nonnull final Collection<LineMarkerInfo> result) {
         final Map<String, Set<JSFunction>> jsFunctionsToProcess = new HashMap<>();
         final Map<JSClass, Set<JSFunction>> jsMethodsToProcess = new HashMap<>();
@@ -226,30 +220,27 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
         for (final PsiElement el : elements) {
             ProgressManager.getInstance().checkCanceled();
 
-            if (el instanceof JSFunction) {
-                final JSFunction function = (JSFunction)el;
+            if (el instanceof JSFunction function) {
                 if (isNotApplicableForOverride(function)) {
                     continue;
                 }
 
                 PsiElement parent = function.getParent();
-                if (parent instanceof JSFile) {
-                    parent = JSResolveUtil.getClassReferenceForXmlFromContext(parent);
+                if (parent instanceof JSFile jsFile) {
+                    parent = JSResolveUtil.getClassReferenceForXmlFromContext(jsFile);
                 }
 
-                if (parent instanceof JSClass) {
-                    final JSClass clazz = (JSClass)parent;
-
-                    Set<JSFunction> functions = jsMethodsToProcess.get(clazz);
+                if (parent instanceof JSClass jsClass) {
+                    Set<JSFunction> functions = jsMethodsToProcess.get(jsClass);
                     if (functions == null) {
                         functions = new HashSet<>();
-                        jsMethodsToProcess.put(clazz, functions);
+                        jsMethodsToProcess.put(jsClass, functions);
                     }
 
                     functions.add(function);
                 }
                 else if (parent instanceof JSFile || function instanceof JSFunctionExpression) {
-                    final String qName = JSResolveUtil.getQNameToStartHierarchySearch(function);
+                    String qName = JSResolveUtil.getQNameToStartHierarchySearch(function);
                     if (qName != null) {
                         Set<JSFunction> functions = jsFunctionsToProcess.get(qName);
 
@@ -262,10 +253,9 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
                     }
                 }
             }
-            else if (el instanceof JSClass) {
-                final JSClass clazz = (JSClass)el;
-                if (!jsMethodsToProcess.containsKey(clazz)) {
-                    jsMethodsToProcess.put(clazz, null);
+            else if (el instanceof JSClass jsClass) {
+                if (!jsMethodsToProcess.containsKey(jsClass)) {
+                    jsMethodsToProcess.put(jsClass, null);
                 }
             }
         }
@@ -277,39 +267,39 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
 
             Query<JSClass> classQuery = JSClassSearch.searchClassInheritors(clazz, methods != null);
 
-            classQuery.forEach(new Processor<JSClass>() {
+            classQuery.forEach(new Processor<>() {
                 boolean addedClassMarker;
                 final Set<JSFunction> methodsClone = methods == null || clazz.isInterface() ? null : new HashSet<>(methods);
 
                 @Override
-                public boolean process(final JSClass jsClass) {
+                public boolean process(JSClass jsClass) {
                     if (!addedClassMarker) {
                         result.add(new LineMarkerInfo<>(
                             clazz,
                             clazz.getTextOffset(),
-                            AllIcons.Gutter.OverridenMethod,
+                            PlatformIconGroup.gutterOverridenmethod(),
                             Pass.LINE_MARKERS,
-                            ourClassInheritorsTooltipProvider,
-                            ourClassInheritorsNavHandler
+                            CLASS_INHERITORS_TOOLTIP_PROVIDER,
+                            CLASS_INHERITORS_NAV_HANDLER
                         ));
                         addedClassMarker = true;
                     }
 
                     if (methodsClone != null) {
                         for (final Iterator<JSFunction> functionIterator = methodsClone.iterator(); functionIterator.hasNext(); ) {
-                            final JSFunction function = functionIterator.next();
+                            JSFunction function = functionIterator.next();
 
-                            final JSFunction byName = jsClass.findFunctionByNameAndKind(function.getName(), function.getKind());
+                            JSFunction byName = jsClass.findFunctionByNameAndKind(function.getName(), function.getKind());
                             if (byName != null && !isNotApplicableForOverride(byName)) {
                                 // TODO: more correct check for override
                                 function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
                                 result.add(new LineMarkerInfo<>(
                                     function,
                                     function.getTextOffset(),
-                                    AllIcons.Gutter.OverridenMethod,
+                                    PlatformIconGroup.gutterOverridenmethod(),
                                     Pass.LINE_MARKERS,
-                                    ourOverriddenFunctionsTooltipProvider,
-                                    ourOverriddenFunctionsNavHandler
+                                    OVERRIDDEN_FUNCTIONS_TOOLTIP_PROVIDER,
+                                    OVERRIDDEN_FUNCTIONS_NAV_HANDLER
                                 ));
                                 functionIterator.remove();
                             }
@@ -327,10 +317,10 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
                     result.add(new LineMarkerInfo<>(
                         clazz,
                         clazz.getTextOffset(),
-                        AllIcons.Gutter.ImplementedMethod,
+                        PlatformIconGroup.gutterImplementedmethod(),
                         Pass.LINE_MARKERS,
-                        ourImplementedInterfacesTooltipProvider,
-                        ourInterfaceImplementationsNavHandler
+                        IMPLEMENTED_INTERFACES_TOOLTIP_PROVIDER,
+                        INTERFACE_IMPLEMENTATIONS_NAV_HANDLER
                     ));
                 }
             }
@@ -339,45 +329,42 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
                 continue;
             }
 
-            for (final JSFunction function : methods) {
+            for (JSFunction function : methods) {
                 if (clazz.isInterface()) {
-                    final Query<JSFunction> query = JSFunctionsSearch.searchImplementingFunctions(function, false);
+                    Query<JSFunction> query = JSFunctionsSearch.searchImplementingFunctions(function, false);
                     if (query.findFirst() != null) {
                         function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
                         result.add(new LineMarkerInfo<>(
                             function,
                             function.getTextOffset(),
-                            AllIcons.Gutter.ImplementedMethod,
+                            PlatformIconGroup.gutterImplementedmethod(),
                             Pass.LINE_MARKERS,
-                            ourImplementingFunctionsTooltipProvider,
-                            ourImplementingFunctionsNavHandler
+                            IMPLEMENTING_FUNCTIONS_TOOLTIP_PROVIDER,
+                            IMPLEMENTING_FUNCTIONS_NAV_HANDLER
                         ));
                     }
                 }
                 else {
-                    final JSAttributeList attributeList = function.getAttributeList();
+                    JSAttributeList attributeList = function.getAttributeList();
                     if (attributeList != null && attributeList.hasModifier(JSAttributeList.ModifierType.OVERRIDE)) {
                         continue;
                     }
 
-                    final JSFunction implementedFunction = findImplementedFunction(function);
+                    JSFunction implementedFunction = findImplementedFunction(function);
                     if (implementedFunction != null) {
                         function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
 
                         result.add(new LineMarkerInfo<>(
                             function,
                             function.getTextOffset(),
-                            AllIcons.Gutter.ImplementingMethod,
+                            PlatformIconGroup.gutterImplementingmethod(),
                             Pass.LINE_MARKERS,
                             jsFunction -> "Implementation of " + jsFunction.getName() + " in " +
                                 ((NavigationItem)implementedFunction.getParent()).getName(),
-                            new GutterIconNavigationHandler<JSFunction>() {
-                                @Override
-                                public void navigate(final MouseEvent e, final JSFunction elt) {
-                                    final JSFunction implementedFunction = findImplementedFunction(elt);
-                                    if (implementedFunction != null) {
-                                        implementedFunction.navigate(true);
-                                    }
+                            (e, elt) -> {
+                                JSFunction implementedFunction1 = findImplementedFunction(elt);
+                                if (implementedFunction1 != null) {
+                                    implementedFunction1.navigate(true);
                                 }
                             }
                         ));
@@ -387,17 +374,12 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
         }
     }
 
-    private static boolean isClass(final PsiElement element) {
-        if (element instanceof JSClass) {
-            return true;
-        }
-        if (element instanceof JSFile && element.getContext() != null) {
-            return true;
-        }
-        return false;
+    private static boolean isClass(PsiElement element) {
+        return element instanceof JSClass || element instanceof JSFile jsFile && jsFile.getContext() != null;
     }
 
     @Nullable
+    @RequiredReadAction
     private static JSFunction findImplementedFunction(JSFunction implementingFunction) {
         PsiElement clazz = implementingFunction.getParent();
         if (!(clazz instanceof JSClass)) {
@@ -406,22 +388,26 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
         if (!(clazz instanceof JSClass)) {
             return null;
         }
-        final Ref<JSFunction> result = new Ref<>();
-        JSResolveUtil.processInterfaceMethods((JSClass)clazz, new JSResolveUtil.CollectMethodsToImplementProcessor(
-            implementingFunction.getName(),
-            implementingFunction
-        ) {
-            @Override
-            protected boolean process(final ResolveProcessor processor) {
-                result.set((JSFunction)processor.getResult());
-                return false;
+        final SimpleReference<JSFunction> result = new SimpleReference<>();
+        JSResolveUtil.processInterfaceMethods(
+            (JSClass)clazz,
+            new JSResolveUtil.CollectMethodsToImplementProcessor(
+                implementingFunction.getName(),
+                implementingFunction
+            ) {
+                @Override
+                protected boolean process(ResolveProcessor processor) {
+                    result.set((JSFunction)processor.getResult());
+                    return false;
+                }
             }
-        });
+        );
         return result.get();
     }
 
-    private static boolean isNotApplicableForOverride(final JSFunction function) {
-        final JSAttributeList attributeList = function.getAttributeList();
+    @RequiredReadAction
+    private static boolean isNotApplicableForOverride(JSFunction function) {
+        JSAttributeList attributeList = function.getAttributeList();
 
         return function.isConstructor() || (attributeList != null
             && (attributeList.getAccessType() == JSAttributeList.AccessType.PRIVATE
@@ -433,7 +419,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
         String className;
 
         @Override
-        public boolean process(final ResolveProcessor processor, final PsiElement scope, final String className) {
+        public boolean process(ResolveProcessor processor, PsiElement scope, String className) {
             this.className = className;
             return true;
         }
@@ -441,22 +427,20 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
 
     private abstract static class BasicGutterIconNavigationHandler<T extends PsiElement> implements GutterIconNavigationHandler<T> {
         @Override
-        public void navigate(final MouseEvent e, final T elt) {
+        @RequiredUIAccess
+        public void navigate(MouseEvent e, T elt) {
             final List<NavigatablePsiElement> navElements = new ArrayList<>();
             Query<T> elementQuery = search(elt);
             if (elementQuery == null) {
                 return;
             }
-            elementQuery.forEach(new Processor<T>() {
-                @Override
-                public boolean process(final T psiElement) {
-                    if (psiElement instanceof NavigatablePsiElement) {
-                        navElements.add((NavigatablePsiElement)psiElement);
-                    }
-                    return true;
+            elementQuery.forEach(psiElement -> {
+                if (psiElement instanceof NavigatablePsiElement navigatablePsiElement) {
+                    navElements.add(navigatablePsiElement);
                 }
+                return true;
             });
-            final NavigatablePsiElement[] methods = navElements.toArray(new NavigatablePsiElement[navElements.size()]);
+            NavigatablePsiElement[] methods = navElements.toArray(new NavigatablePsiElement[navElements.size()]);
             PsiElementListNavigator.openTargets(e, methods, getTitle(elt), "", new DefaultPsiElementCellRenderer());
         }
 

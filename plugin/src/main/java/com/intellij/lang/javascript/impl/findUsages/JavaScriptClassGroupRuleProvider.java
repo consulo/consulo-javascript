@@ -35,7 +35,7 @@ public class JavaScriptClassGroupRuleProvider extends JavaScriptGroupRuleProvide
     }
 
     @Override
-    protected UsageGroup createUsageGroup(final JSClass clazz) {
+    protected UsageGroup createUsageGroup(JSClass clazz) {
         return new ClassUsageGroup(clazz);
     }
 

@@ -20,8 +20,7 @@ import static com.intellij.lang.javascript.impl.flex.importer.Abc.*;
 
 /**
  * @author Maxim.Mossienko
- * Date: Oct 20, 2008
- * Time: 7:00:56 PM
+ * @since 2008-10-20
  */
 class MethodInfo extends MemberInfo {
     int flags;
@@ -39,7 +38,7 @@ class MethodInfo extends MemberInfo {
     boolean anon;
 
     @Override
-    void dump(Abc abc, String indent, String attr, final FlexByteCodeInformationProcessor processor) {
+    void dump(Abc abc, String indent, String attr, FlexByteCodeInformationProcessor processor) {
         if (!processor.doDumpMember(this)) {
             return;
         }
@@ -244,10 +243,10 @@ class MethodInfo extends MemberInfo {
     }
 
     boolean isGetMethod() {
-        return traitKinds[kind].indexOf(" get") != -1;
+        return traitKinds[kind].contains(" get");
     }
 
     boolean isSetMethod() {
-        return traitKinds[kind].indexOf(" set") != -1;
+        return traitKinds[kind].contains(" set");
     }
 }

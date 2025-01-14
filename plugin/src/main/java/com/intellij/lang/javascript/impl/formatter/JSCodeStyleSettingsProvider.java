@@ -30,13 +30,12 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author Maxim.Mossienko
- * Date: Mar 12, 2008
- * Time: 10:32:33 PM
+ * @since 2008-03-12
  */
 @ExtensionImpl
 public class JSCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
     @Override
-    public CustomCodeStyleSettings createCustomSettings(final CodeStyleSettings settings) {
+    public CustomCodeStyleSettings createCustomSettings(CodeStyleSettings settings) {
         return new JSCodeStyleSettings(settings);
     }
 
@@ -48,7 +47,7 @@ public class JSCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
 
     @Override
     @Nonnull
-    public Configurable createSettingsPage(final CodeStyleSettings settings, final CodeStyleSettings originalSettings) {
+    public Configurable createSettingsPage(CodeStyleSettings settings, CodeStyleSettings originalSettings) {
         return new JavaScriptCodeStyleConfigurable(settings, originalSettings);
     }
 }

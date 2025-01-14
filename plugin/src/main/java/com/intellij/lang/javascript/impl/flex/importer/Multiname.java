@@ -18,8 +18,7 @@ package com.intellij.lang.javascript.impl.flex.importer;
 
 /**
  * @author Maxim.Mossienko
- * Date: Oct 20, 2008
- * Time: 7:03:18 PM
+ * @since 2008-10-20
  */
 class Multiname {
     String[] nsset;
@@ -47,7 +46,7 @@ class Multiname {
 
     public boolean hasNamespace() {
         return hasNotEmptyNs() && (nsset[0].startsWith("http://") || nsset[0].equals("private") || nsset[0].equals("__AS3__.vec") ||
-            nsset[0].indexOf('$') != -1 || nsset[0].indexOf("/private:") != -1);
+            nsset[0].indexOf('$') != -1 || nsset[0].contains("/private:"));
     }
 
     public String getNsName() {

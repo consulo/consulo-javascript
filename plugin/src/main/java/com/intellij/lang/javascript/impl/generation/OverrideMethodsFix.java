@@ -28,13 +28,13 @@ import consulo.language.psi.PsiElement;
  * @since 2008-07-17
  */
 public class OverrideMethodsFix extends BaseCreateMethodsFix<JSFunction> {
-    public OverrideMethodsFix(final JSClass jsClass) {
+    public OverrideMethodsFix(JSClass jsClass) {
         super(jsClass);
     }
 
     @Override
     @RequiredReadAction
-    protected String buildFunctionBodyText(final String retType, final JSParameterList parameterList, final JSFunction func) {
+    protected String buildFunctionBodyText(String retType, JSParameterList parameterList, JSFunction func) {
         StringBuilder functionText = new StringBuilder();
         functionText.append("{\n");
 
@@ -71,17 +71,17 @@ public class OverrideMethodsFix extends BaseCreateMethodsFix<JSFunction> {
 
     @Override
     @RequiredReadAction
-    protected String buildFunctionAttrText(String attrText, final JSAttributeList attributeList, final JSFunction function) {
+    protected String buildFunctionAttrText(String attrText, JSAttributeList attributeList, JSFunction function) {
         attrText = super.buildFunctionAttrText(attrText, attributeList, function);
-        final PsiElement element = JSResolveUtil.findParent(function);
+        PsiElement element = JSResolveUtil.findParent(function);
         if (attributeList == null || !attributeList.hasModifier(JSAttributeList.ModifierType.OVERRIDE)) {
             if (element instanceof JSClass jsClass && !"Object".equals(jsClass.getQualifiedName())) {
-                final PsiElement typeElement = attributeList != null ? attributeList.findAccessTypeElement() : null;
+                PsiElement typeElement = attributeList != null ? attributeList.findAccessTypeElement() : null;
                 if (typeElement == null) {
                     attrText += " override";
                 }
                 else {
-                    final int index = attrText.indexOf(typeElement.getText());
+                    int index = attrText.indexOf(typeElement.getText());
                     attrText = attrText.substring(0, index) + ((index > 0) ? " " : "") + "override " + attrText.substring(index);
                 }
             }

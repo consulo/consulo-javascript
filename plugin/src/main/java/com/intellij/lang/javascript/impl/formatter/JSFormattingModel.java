@@ -32,7 +32,7 @@ import jakarta.annotation.Nonnull;
 public class JSFormattingModel implements FormattingModel {
     private FormattingModel myModel;
 
-    public JSFormattingModel(final PsiFile file, CodeStyleSettings settings, final Block rootBlock) {
+    public JSFormattingModel(PsiFile file, CodeStyleSettings settings, Block rootBlock) {
         myModel = FormattingModelProvider.createFormattingModelForPsiFile(file, rootBlock, settings);
     }
 

@@ -34,7 +34,7 @@ public class JavaScriptFunctionGroupRuleProvider extends JavaScriptGroupRuleProv
     }
 
     @Override
-    protected UsageGroup createUsageGroup(final JSFunction jsFunction) {
+    protected UsageGroup createUsageGroup(JSFunction jsFunction) {
         return new FunctionUsageGroup(jsFunction);
     }
 

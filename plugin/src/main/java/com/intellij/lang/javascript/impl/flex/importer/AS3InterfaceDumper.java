@@ -16,8 +16,6 @@
 
 package com.intellij.lang.javascript.impl.flex.importer;
 
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -25,35 +23,28 @@ import java.util.Set;
 
 /**
  * @author Maxim.Mossienko
- * Date: Oct 20, 2008
- * Time: 7:02:29 PM
+ * @since 2008-10-20
  */
 class AS3InterfaceDumper extends AbstractDumpProcessor {
     private int memberCount;
     private boolean isInterface;
 
     @Override
-    public void dumpStat(@Nonnull final String stat) {
+    public void dumpStat(@Nonnull String stat) {
     }
 
     @Override
-    public void dumpToplevelAnonymousMethod(final @Nonnull Abc abc, final @Nonnull MethodInfo m) {
+    public void dumpToplevelAnonymousMethod(@Nonnull Abc abc, @Nonnull MethodInfo m) {
     }
 
     @Override
-    public void dumpTopLevelTraits(final Abc abc, final @Nonnull Traits t, final String indent) {
+    public void dumpTopLevelTraits(@Nonnull Abc abc, @Nonnull Traits t, String indent) {
         t.dump(abc, indent, "", this);
     }
 
     @Override
-    public boolean doDumpMember(final @Nonnull MemberInfo memberInfo) {
-        if (memberInfo.name == null) {
-            return false;
-        }
-        if (memberInfo.name.name != null && memberInfo.name.name.indexOf(Abc.$CINIT) >= 0) {
-            return false;
-        }
-        return true;
+    public boolean doDumpMember(@Nonnull MemberInfo memberInfo) {
+        return memberInfo.name != null && (memberInfo.name.name == null || !memberInfo.name.name.contains(Abc.$CINIT));
     }
 
     @Override
@@ -72,7 +63,7 @@ class AS3InterfaceDumper extends AbstractDumpProcessor {
     }
 
     @Override
-    public void processValue(final Multiname typeName, final Object valueObject) {
+    public void processValue(Multiname typeName, Object valueObject) {
         append(" = ");
         append(getValueRepr(valueObject));
     }
@@ -81,7 +72,7 @@ class AS3InterfaceDumper extends AbstractDumpProcessor {
         if (valueObject == null) {
             return null;
         }
-        @NonNls String value = valueObject.toString();
+        String value = valueObject.toString();
         char ch;
 
         if (needsQuoting(value)) {
@@ -92,7 +83,7 @@ class AS3InterfaceDumper extends AbstractDumpProcessor {
                     Double.parseDouble(value);
                     doQoute = false;
                 }
-                catch (NumberFormatException ex) {
+                catch (NumberFormatException ignored) {
                 }
             }
             else if (value.length() > 0 && (Character.isDigit(
@@ -102,7 +93,7 @@ class AS3InterfaceDumper extends AbstractDumpProcessor {
                     Integer.parseInt(value);
                     doQoute = false;
                 }
-                catch (NumberFormatException ex) {
+                catch (NumberFormatException ignored) {
                 }
             }
 
@@ -113,17 +104,16 @@ class AS3InterfaceDumper extends AbstractDumpProcessor {
         return value;
     }
 
-    private static
-    @NonNls
-    Set<String> doNotNeedQoting = Set.of("null", "NaN", "undefined", "true", "false", "Infinity", "-Infinity");
+    private static final Set<String> DO_NOT_NEED_QOTING =
+        Set.of("null", "NaN", "undefined", "true", "false", "Infinity", "-Infinity");
 
-    private static boolean needsQuoting(final String value) {
-        return !doNotNeedQoting.contains(value);
+    private static boolean needsQuoting(String value) {
+        return !DO_NOT_NEED_QOTING.contains(value);
     }
 
     @Override
-    public boolean doDumpMetaData(final @Nonnull MetaData md) {
-        return md.name.indexOf("__") == -1;
+    public boolean doDumpMetaData(@Nonnull MetaData md) {
+        return !md.name.contains("__");
     }
 
     @Override
@@ -159,17 +149,17 @@ class AS3InterfaceDumper extends AbstractDumpProcessor {
     }
 
     @Override
-    public void setProcessingInterface(final boolean anInterface) {
+    public void setProcessingInterface(boolean anInterface) {
         isInterface = anInterface;
     }
 
     @Override
-    public void hasError(@Nonnull final String error) {
-        sb.append("/*" + error + "*/");
+    public void hasError(@Nonnull String error) {
+        sb.append("/*").append(error).append("*/");
     }
 
     @Override
-    public void processMultinameAsPackageName(Multiname name, String parentName, boolean verbose) {
+    public void processMultinameAsPackageName(@Nonnull Multiname name, String parentName, boolean verbose) {
         append(getMultinameAsPackageName(name, parentName, verbose));
     }
 
@@ -188,7 +178,7 @@ class AS3InterfaceDumper extends AbstractDumpProcessor {
 
     @Override
     protected String appendModifiers(MemberInfo member, String attr) {
-        @NonNls String s = attr;
+        String s = attr;
 
         s += "native ";
         boolean hasNs = false;
@@ -197,8 +187,8 @@ class AS3InterfaceDumper extends AbstractDumpProcessor {
             s += member.name.getNsName() + " ";
         }
 
-        if (s.indexOf("private") == -1 && !hasNs && !isInterface) {
-            @NonNls String parentName;
+        if (!s.contains("private") && !hasNs && !isInterface) {
+            String parentName;
 
             if (member.isPublic ||
                 member.name.nsset[0].length() == 0 ||

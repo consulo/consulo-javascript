@@ -18,15 +18,14 @@ package com.intellij.lang.javascript.impl.flex.importer;
 
 /**
  * @author Maxim.Mossienko
- * Date: Oct 20, 2008
- * Time: 7:01:03 PM
+ * @since 2008-10-20
  */
 class SlotInfo extends MemberInfo {
     Multiname type;
     Object value;
 
     @Override
-    void dump(Abc abc, String indent, String attr, final FlexByteCodeInformationProcessor processor) {
+    void dump(Abc abc, String indent, String attr, FlexByteCodeInformationProcessor processor) {
         if (!processor.doDumpMember(this)) {
             return;
         }
@@ -40,13 +39,10 @@ class SlotInfo extends MemberInfo {
     }
 
     boolean isInterfaceClass() {
-        if (!(value instanceof Traits)) {
-            return false;
-        }
-        return (((Traits)value).itraits.flags & Abc.CLASS_FLAG_interface) != 0;
+        return value instanceof Traits traits && (traits.itraits.flags & Abc.CLASS_FLAG_interface) != 0;
     }
 
     public boolean isConst() {
-        return Abc.traitKinds[kind].indexOf("const") != -1;
+        return Abc.traitKinds[kind].contains("const");
     }
 }

@@ -16,26 +16,20 @@
 
 package com.intellij.lang.javascript.impl.flex.importer;
 
+import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
+
 import java.util.HashSet;
 import java.util.Set;
 
-import consulo.util.collection.ArrayUtil;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
-import consulo.util.lang.StringUtil;
-
 /**
  * @author Maxim.Mossienko
- * Date: Oct 20, 2008
- * Time: 7:01:16 PM
+ * @since 2008-10-20
  */
 class Abc {
-    static final
-    @NonNls
-    String TAB = "  ";
-    @NonNls
+    static final String TAB = "  ";
     static final String $CINIT = "$cinit";
-    @NonNls
     static final String $ = "$";
 
     private static final int ATTR_final = 0x01; // 1=final, 0=virtual
@@ -47,7 +41,6 @@ class Abc {
     static final int CLASS_FLAG_final = 0x02;
     static final int CLASS_FLAG_interface = 0x04;
     static final int CLASS_FLAG_protected = 0x08;
-
 
     // method flags
     private static final int NEED_ARGUMENTS = 0x01;
@@ -87,9 +80,7 @@ class Abc {
     private static final int CONSTANT_MultinameLA = 0x1C;
     private static final int CONSTANT_TypeName = 0x1D;
 
-    static final
-    @NonNls
-    String[] constantKinds = {
+    static final String[] constantKinds = {
         "0",
         "utf8",
         "2",
@@ -122,9 +113,7 @@ class Abc {
     private static final int TRAIT_Function = 0x05;
     static final int TRAIT_Const = 0x06;
 
-    static final
-    @NonNls
-    String[] traitKinds = {
+    static final String[] traitKinds = {
         "var",
         "function",
         "function get",
@@ -294,9 +283,7 @@ class Abc {
     static final int OP_debugfile = 0xF1;
     private static final int OP_bkptline = 0xF2;
 
-    static final
-    @NonNls
-    String[] opNames = {
+    static final String[] opNames = {
         "OP_0x00       ",
         "bkpt          ",
         "nop           ",
@@ -559,7 +546,7 @@ class Abc {
     int totalSize;
     final int opSizes[] = new int[256];
 
-    public Abc(final @Nonnull ByteBuffer _data, @Nonnull FlexByteCodeInformationProcessor _processor) {
+    public Abc(@Nonnull ByteBuffer _data, @Nonnull FlexByteCodeInformationProcessor _processor) {
         data = _data;
         processor = _processor;
 
@@ -598,8 +585,8 @@ class Abc {
         parseMethodBodies();
     }
 
-    private static Object[] buildSparseArray(int index, @NonNls String s1) {
-        final Object[] result = new Object[index + 1];
+    private static Object[] buildSparseArray(int index, String s1) {
+        Object[] result = new Object[index + 1];
         result[index] = s1;
         return result;
     }
@@ -616,7 +603,7 @@ class Abc {
         }
 
         processor.dumpStat("OPCODE\tSIZE\t% OF " + totalSize + "\n");
-        final Set<Integer> done = new HashSet<Integer>();
+        Set<Integer> done = new HashSet<>();
         while (true) {
             int max = -1;
             int maxsize = 0;
@@ -641,11 +628,8 @@ class Abc {
     Integer[] ints;
     Integer[] uints;
     Double[] doubles;
-    @NonNls
     String[] strings;
-    @NonNls
     String[] namespaces;
-    @NonNls
     String[][] nssets;
     Multiname[] names;
 
@@ -657,9 +641,7 @@ class Abc {
     Traits[] scripts;
     MetaData metadata[];
 
-    @NonNls
     String publicNs = "";
-    @NonNls
     String anyNs = "*";
 
     final int magic;
@@ -803,11 +785,11 @@ class Abc {
                                 nsName += ",";
                             }
                             nameId = readU32();
-                            final Multiname typeArgName = names[nameId];
+                            Multiname typeArgName = names[nameId];
                             String typeArgNameString;
 
                             if (processor instanceof AS3InterfaceDumper) {
-                                final boolean vector = typeArgName.hasNotEmptyNs() && typeArgName.nsset[0].equals("__AS3__.vec");
+                                boolean vector = typeArgName.hasNotEmptyNs() && typeArgName.nsset[0].equals("__AS3__.vec");
                                 typeArgNameString = vector ? typeArgName.name : typeArgName.toString();
                                 typeArgNameString = typeArgNameString.replaceAll("::", ".") + (vector ? " " : "");
                             }
@@ -820,7 +802,7 @@ class Abc {
                         nsName += ">";
                     }
 
-                    final int index = nsName.indexOf("::");
+                    int index = nsName.indexOf("::");
 
                     names[i] = new Multiname(
                         new String[]{index != -1 ? nsName.substring(0, index) : ""},
@@ -867,8 +849,8 @@ class Abc {
 
                     if (index == 0) {
                         // kind is ignored, default value is based on type
-                        @NonNls String value;
-                        final @NonNls String type = m.paramTypes[k].toString();
+                        String value;
+                        String type = m.paramTypes[k].toString();
 
                         if ("Number".equals(type) || "decimal".equals(type)) {
                             value = "0";
@@ -884,21 +866,19 @@ class Abc {
                         }
                         m.optionalValues[k] = new Multiname(null, value);
                     }
+                    else if (defaults[kind] == null) {
+                        processor.hasError("ERROR kind=" + kind + " method_id " + i + "\n");
+                    }
                     else {
-                        if (defaults[kind] == null) {
-                            processor.hasError("ERROR kind=" + kind + " method_id " + i + "\n");
-                        }
-                        else {
-                            m.optionalValues[k] = new Multiname(null, defaults[kind][index].toString());
-                        }
+                        m.optionalValues[k] = new Multiname(null, defaults[kind][index].toString());
                     }
                 }
             }
             if ((m.flags & HAS_ParamNames) != 0) {
                 m.paramNames = new String[param_count];
                 for (int k = 0; k < param_count; ++k) {
-                    final int index = readU32();
-                    final String name = strings[index];
+                    int index = readU32();
+                    String name = strings[index];
                     m.paramNames[k] = StringUtil.isJavaIdentifier(name) ? name : "_" + index;
                 }
             }
@@ -1012,7 +992,7 @@ class Abc {
             t.names.put(name.toString(), member);
             member.parentTraits = t;
 
-            final int val = tag >> 4;
+            int val = tag >> 4;
             if ((val & ATTR_metadata) != 0) {
                 int mdCount = readU32();
                 member.metadata = new MetaData[mdCount];
@@ -1111,5 +1091,4 @@ class Abc {
     private static void reportAboutPercentage(String s, ByteBuffer data, int start, @Nonnull FlexByteCodeInformationProcessor processor) {
         processor.dumpStat(s + (data.getPosition() - start) + " " + (int)100f * (data.getPosition() - start) / data.bytesSize() + " %\n");
     }
-
 }

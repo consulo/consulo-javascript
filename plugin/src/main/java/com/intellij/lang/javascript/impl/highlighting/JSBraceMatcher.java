@@ -28,9 +28,8 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
- * User: max
- * Date: Feb 2, 2005
- * Time: 12:10:44 PM
+ * @author max
+ * @since 2005-02-02
  */
 @ExtensionImpl
 public class JSBraceMatcher implements PairedBraceMatcher {
@@ -46,10 +45,15 @@ public class JSBraceMatcher implements PairedBraceMatcher {
     }
 
     @Override
-    public boolean isPairedBracesAllowedBeforeType(@Nonnull final IElementType lbraceType, @Nullable final IElementType tokenType) {
-        return JSTokenTypes.WHITE_SPACE == tokenType || JSTokenTypes.COMMENTS.contains(tokenType) || tokenType == JSTokenTypes.SEMICOLON || tokenType ==
-            JSTokenTypes.COMMA || tokenType == JSTokenTypes.RPAR || tokenType == JSTokenTypes.RBRACKET || tokenType == JSTokenTypes.RBRACE || null ==
-            tokenType;
+    public boolean isPairedBracesAllowedBeforeType(@Nonnull IElementType lbraceType, @Nullable IElementType tokenType) {
+        return tokenType == JSTokenTypes.WHITE_SPACE
+            || JSTokenTypes.COMMENTS.contains(tokenType)
+            || tokenType == JSTokenTypes.SEMICOLON
+            || tokenType == JSTokenTypes.COMMA
+            || tokenType == JSTokenTypes.RPAR
+            || tokenType == JSTokenTypes.RBRACKET
+            || tokenType == JSTokenTypes.RBRACE
+            || tokenType == null;
     }
 
     @Nonnull

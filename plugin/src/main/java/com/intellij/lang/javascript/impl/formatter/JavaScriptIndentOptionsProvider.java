@@ -24,6 +24,7 @@ import consulo.language.codeStyle.setting.IndentOptionsEditor;
 import consulo.language.codeStyle.ui.setting.SmartIndentOptionsEditor;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -45,6 +46,7 @@ public class JavaScriptIndentOptionsProvider implements FileTypeIndentOptionsPro
         return new SmartIndentOptionsEditor();
     }
 
+    @Nonnull
     @Override
     public String getPreviewText() {
         return "function a() {\n" +
@@ -53,6 +55,6 @@ public class JavaScriptIndentOptionsProvider implements FileTypeIndentOptionsPro
     }
 
     @Override
-    public void prepareForReformat(final PsiFile psiFile) {
+    public void prepareForReformat(PsiFile psiFile) {
     }
 }

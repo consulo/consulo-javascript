@@ -16,19 +16,13 @@
 
 package com.intellij.lang.javascript.impl.formatter.blocks;
 
+import consulo.document.util.TextRange;
+import consulo.language.ast.ASTNode;
+import consulo.language.codeStyle.*;
+import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import jakarta.annotation.Nonnull;
-import consulo.language.codeStyle.Alignment;
-import consulo.language.codeStyle.Block;
-import consulo.language.codeStyle.Indent;
-import consulo.language.codeStyle.Spacing;
-import consulo.language.codeStyle.Wrap;
-import consulo.language.ast.ASTNode;
-import consulo.document.util.TextRange;
-import consulo.language.codeStyle.ChildAttributes;
-import jakarta.annotation.Nullable;
 
 /**
  * @author yole
@@ -38,54 +32,54 @@ public class JSDocCommentBlock implements Block {
     private int myStartOffset;
     private int myEndOffset;
     private Indent myIndent;
-    private static final List<Block> EMPTY_BLOCK_LIST = new ArrayList<Block>();
+    private static final List<Block> EMPTY_BLOCK_LIST = new ArrayList<>();
 
-    public JSDocCommentBlock(final ASTNode node, final int startOffset, final int endOffset, final Indent indent) {
+    public JSDocCommentBlock(ASTNode node, int startOffset, int endOffset, Indent indent) {
         myNode = node;
         myStartOffset = startOffset;
         myEndOffset = endOffset;
         myIndent = indent;
     }
 
-    @Override
     @Nonnull
+    @Override
     public TextRange getTextRange() {
         return new TextRange(myNode.getStartOffset() + myStartOffset, myNode.getStartOffset() + myEndOffset);
     }
 
-    @Override
     @Nonnull
+    @Override
     public List<Block> getSubBlocks() {
         return EMPTY_BLOCK_LIST;
     }
 
+    @Nonnull
     @Override
-    @Nullable
     public Wrap getWrap() {
         return null;
     }
 
+    @Nonnull
     @Override
-    @Nullable
     public Indent getIndent() {
         return myIndent;
     }
 
+    @Nonnull
     @Override
-    @Nullable
     public Alignment getAlignment() {
         return null;
     }
 
+    @Nonnull
     @Override
-    @Nullable
-    public Spacing getSpacing(Block child1, Block child2) {
+    public Spacing getSpacing(Block child1, @Nonnull Block child2) {
         return null;
     }
 
-    @Override
     @Nonnull
-    public ChildAttributes getChildAttributes(final int newChildIndex) {
+    @Override
+    public ChildAttributes getChildAttributes(int newChildIndex) {
         return null;
     }
 

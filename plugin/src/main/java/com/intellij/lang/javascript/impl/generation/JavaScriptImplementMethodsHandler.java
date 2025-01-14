@@ -36,11 +36,11 @@ import java.util.Collection;
 @ExtensionImpl
 public class JavaScriptImplementMethodsHandler extends BaseJSGenerateHandler implements ImplementMethodHandler {
     @Override
-    protected void collectCandidates(final JSClass clazz, final Collection<JSNamedElementNode> candidates) {
+    protected void collectCandidates(JSClass clazz, final Collection<JSNamedElementNode> candidates) {
         ImplementedMethodProcessor processor = new ImplementedMethodProcessor(clazz) {
             @Override
             @RequiredReadAction
-            protected void addNonimplementedFunction(final JSFunction function) {
+            protected void addNonimplementedFunction(JSFunction function) {
                 candidates.add(new JSNamedElementNode(function));
             }
         };
@@ -54,7 +54,7 @@ public class JavaScriptImplementMethodsHandler extends BaseJSGenerateHandler imp
     }
 
     @Override
-    protected BaseCreateMethodsFix createFix(final JSClass clazz) {
+    protected BaseCreateMethodsFix createFix(JSClass clazz) {
         return new ImplementMethodsFix(clazz);
     }
 }

@@ -46,16 +46,16 @@ public class JavaScriptOverrideMethodsHandler extends BaseJSGenerateHandler impl
     }
 
     @Override
-    protected BaseCreateMethodsFix createFix(final JSClass clazz) {
+    protected BaseCreateMethodsFix createFix(JSClass clazz) {
         return new OverrideMethodsFix(clazz);
     }
 
     @Override
     @RequiredReadAction
-    protected void collectCandidates(final JSClass clazz, final Collection<JSNamedElementNode> candidates) {
+    protected void collectCandidates(JSClass clazz, final Collection<JSNamedElementNode> candidates) {
         Map<String, Object> _functionsToOverride = null;
-        final Function<JSFunction, Boolean> functionFilter = function -> {
-            final JSAttributeList attributeList = function.getAttributeList();
+        Function<JSFunction, Boolean> functionFilter = function -> {
+            JSAttributeList attributeList = function.getAttributeList();
 
             if (attributeList != null && (attributeList.hasModifier(JSAttributeList.ModifierType.STATIC)
                 || attributeList.hasModifier(JSAttributeList.ModifierType.FINAL))) {
@@ -70,7 +70,7 @@ public class JavaScriptOverrideMethodsHandler extends BaseJSGenerateHandler impl
         }
 
         final Map<String, Object> functionsToOverride = _functionsToOverride;
-        final ResolveProcessor collectOwnFunctions = new ResolveProcessor(null, clazz) {
+        ResolveProcessor collectOwnFunctions = new ResolveProcessor(null, clazz) {
             {
                 setToProcessMembers(true);
                 setToProcessHierarchy(false);
@@ -78,13 +78,13 @@ public class JavaScriptOverrideMethodsHandler extends BaseJSGenerateHandler impl
 
             @Override
             @RequiredReadAction
-            public boolean execute(@Nonnull final PsiElement element, final ResolveState state) {
+            public boolean execute(@Nonnull PsiElement element, ResolveState state) {
                 if (element instanceof JSFunction function) {
                     if (function.isConstructor() || functionsToOverride == null) {
                         return true;
                     }
-                    final String funName = function.getName();
-                    final Object o = functionsToOverride.get(funName);
+                    String funName = function.getName();
+                    Object o = functionsToOverride.get(funName);
                     if (o instanceof JSFunction oFun && oFun.getKind() == function.getKind()) {
                         functionsToOverride.remove(funName);
                     }
@@ -100,7 +100,7 @@ public class JavaScriptOverrideMethodsHandler extends BaseJSGenerateHandler impl
 
         if (functionsToOverride != null) {
             for (Map.Entry<String, Object> entry : functionsToOverride.entrySet()) {
-                final Object value = entry.getValue();
+                Object value = entry.getValue();
                 if (value instanceof JSFunction[] functions) {
                     for (JSFunction function : functions) {
                         candidates.add(new JSNamedElementNode(function));

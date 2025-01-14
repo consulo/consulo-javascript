@@ -51,13 +51,13 @@ public class SubBlockVisitor extends JSNodeVisitor {
 
     @Override
     @RequiredReadAction
-    public void visitElement(final ASTNode node) {
+    public void visitElement(ASTNode node) {
         Alignment alignment = getDefaultAlignment(node);
 
         PsiElement elt = node.getPsi().getFirstChild(); // expand chameleon
 
         while (elt != null) {
-            final ASTNode child = elt.getNode();
+            ASTNode child = elt.getNode();
             assert child != null;
 
             if (child.getElementType() != JSTokenTypes.WHITE_SPACE && child.getTextRange().getLength() > 0) {
@@ -73,8 +73,8 @@ public class SubBlockVisitor extends JSNodeVisitor {
 
 
     @Override
-    public void visitDocComment(final ASTNode node) {
-        final ASTNode child = node.getFirstChildNode();
+    public void visitDocComment(ASTNode node) {
+        ASTNode child = node.getFirstChildNode();
         if (child != null && child.getElementType() == JSTokenTypes.DOC_COMMENT) {
             visit(child);
         }
@@ -84,11 +84,11 @@ public class SubBlockVisitor extends JSNodeVisitor {
     }
 
     @Override
-    public void visitComment(final ASTNode node) {
+    public void visitComment(ASTNode node) {
         buildCommentBlocks(node);
     }
 
-    private void buildCommentBlocks(final ASTNode node) {
+    private void buildCommentBlocks(ASTNode node) {
         String commentText = node.getText();
         int pos = 0;
         while (pos < commentText.length()) {
@@ -98,7 +98,7 @@ public class SubBlockVisitor extends JSNodeVisitor {
             }
 
             if (pos != nextPos) {
-                final Indent childIndent = (pos == 0) ? Indent.getNoneIndent() : Indent.getSpaceIndent(1);
+                Indent childIndent = (pos == 0) ? Indent.getNoneIndent() : Indent.getSpaceIndent(1);
                 myBlocks.add(new JSDocCommentBlock(node, pos, nextPos, childIndent));
             }
             pos = nextPos + 1;
@@ -111,12 +111,13 @@ public class SubBlockVisitor extends JSNodeVisitor {
     }
 
     @Nullable
-    static Alignment getDefaultAlignment(final ASTNode node) {
-        if (node.getElementType() == JSElementTypes.FOR_STATEMENT
-            || node.getElementType() == JSElementTypes.PARAMETER_LIST
-            || node.getElementType() == JSElementTypes.BINARY_EXPRESSION
-            || node.getElementType() == JSElementTypes.ASSIGNMENT_EXPRESSION
-            || node.getElementType() == JSElementTypes.CONDITIONAL_EXPRESSION) {
+    static Alignment getDefaultAlignment(ASTNode node) {
+        IElementType elementType = node.getElementType();
+        if (elementType == JSElementTypes.FOR_STATEMENT
+            || elementType == JSElementTypes.PARAMETER_LIST
+            || elementType == JSElementTypes.BINARY_EXPRESSION
+            || elementType == JSElementTypes.ASSIGNMENT_EXPRESSION
+            || elementType == JSElementTypes.CONDITIONAL_EXPRESSION) {
             return Alignment.createAlignment();
         }
 
@@ -124,25 +125,26 @@ public class SubBlockVisitor extends JSNodeVisitor {
     }
 
     @Nullable
-    private Indent getIndent(final ASTNode node, final ASTNode child) {
-        final IElementType nodeElementType = node.getElementType();
+    @RequiredReadAction
+    private Indent getIndent(ASTNode node, ASTNode child) {
+        IElementType nodeElementType = node.getElementType();
 
         if (nodeElementType instanceof JSFileElementType || nodeElementType == JSElementTypes.EMBEDDED_CONTENT) {
             return Indent.getNoneIndent();
         }
 
         if (nodeElementType == JSTokenTypes.DOC_COMMENT) {
-            final ASTNode treePrev = child.getTreePrev();
-            if (treePrev != null && treePrev.getPsi() instanceof PsiWhiteSpace && treePrev.getText().indexOf("\n") != -1) {
+            ASTNode treePrev = child.getTreePrev();
+            if (treePrev != null && treePrev.getPsi() instanceof PsiWhiteSpace && treePrev.getText().contains("\n")) {
                 return Indent.getSpaceIndent(1);
             }
             return Indent.getNoneIndent();
         }
 
-        final IElementType childElementType = child.getElementType();
+        IElementType childElementType = child.getElementType();
 
         if (nodeElementType == JSElementTypes.PACKAGE_STATEMENT && !JSSpacingProcessor.NOT_A_PACKAGE_CONTENT.contains(childElementType)) {
-            final JSCodeStyleSettings customSettings =
+            JSCodeStyleSettings customSettings =
                 CodeStyleSettingsManager.getSettings(node.getPsi().getProject()).getCustomSettings(JSCodeStyleSettings.class);
             if (customSettings.INDENT_PACKAGE_CHILDREN == JSCodeStyleSettings.INDENT) {
                 return Indent.getNormalIndent();
@@ -203,12 +205,12 @@ public class SubBlockVisitor extends JSNodeVisitor {
             return Indent.getNoneIndent();
         }
 
-        if (nodeElementType == JSElementTypes.BLOCK_STATEMENT ||
-            nodeElementType == JSElementTypes.CLASS ||
-            nodeElementType == JSElementTypes.PACKAGE_STATEMENT) {
-            final ASTNode parent = node.getTreeParent();
-            if (parent != null && parent.getElementType() == JSElementTypes.FUNCTION_DECLARATION &&
-                mySettings.METHOD_BRACE_STYLE == CodeStyleSettings.NEXT_LINE_SHIFTED) {
+        if (nodeElementType == JSElementTypes.BLOCK_STATEMENT
+            || nodeElementType == JSElementTypes.CLASS
+            || nodeElementType == JSElementTypes.PACKAGE_STATEMENT) {
+            ASTNode parent = node.getTreeParent();
+            if (parent != null && parent.getElementType() == JSElementTypes.FUNCTION_DECLARATION
+                && mySettings.METHOD_BRACE_STYLE == CodeStyleSettings.NEXT_LINE_SHIFTED) {
                 return Indent.getNoneIndent();
             }
             if (mySettings.BRACE_STYLE == CodeStyleSettings.NEXT_LINE_SHIFTED) {
@@ -219,14 +221,9 @@ public class SubBlockVisitor extends JSNodeVisitor {
             }
             return Indent.getNoneIndent();
         }
-        else if (node.getPsi() instanceof JSLoopStatement) {
-            if (child.getPsi() == ((JSLoopStatement)node.getPsi()).getBody()) {
-                if (childElementType == JSElementTypes.BLOCK_STATEMENT) {
-                    return Indent.getNoneIndent();
-                }
-                else {
-                    return Indent.getNormalIndent();
-                }
+        else if (node.getPsi() instanceof JSLoopStatement loop) {
+            if (child.getPsi() == loop.getBody()) {
+                return childElementType == JSElementTypes.BLOCK_STATEMENT ? Indent.getNoneIndent() : Indent.getNormalIndent();
             }
         }
 
@@ -265,7 +262,7 @@ public class SubBlockVisitor extends JSNodeVisitor {
     }
 
     @Nullable
-    private static Alignment alignmentProjection(final Alignment defaultAlignment, final ASTNode parent, final ASTNode child) {
+    private static Alignment alignmentProjection(Alignment defaultAlignment, ASTNode parent, ASTNode child) {
         if (parent.getElementType() == JSElementTypes.FOR_STATEMENT
             && (JSElementTypes.EXPRESSIONS.contains(child.getElementType())
             || child.getElementType() == JSElementTypes.VAR_STATEMENT)) {
@@ -286,17 +283,18 @@ public class SubBlockVisitor extends JSNodeVisitor {
     }
 
     @Nullable
-    private Wrap getWrap(final ASTNode node, final ASTNode child) {
+    @RequiredReadAction
+    private Wrap getWrap(ASTNode node, ASTNode child) {
         WrapType wrapType = null;
         if (node.getElementType() == JSElementTypes.ASSIGNMENT_EXPRESSION) {
-            final JSAssignmentExpression assignment = (JSAssignmentExpression)node.getPsi();
+            JSAssignmentExpression assignment = (JSAssignmentExpression)node.getPsi();
             if (child.getElementType() == assignment.getOperationSign() && mySettings.PLACE_ASSIGNMENT_SIGN_ON_NEXT_LINE
                 || child.getPsi() == assignment.getROperand() && !mySettings.PLACE_ASSIGNMENT_SIGN_ON_NEXT_LINE) {
                 wrapType = WrapType.byLegacyRepresentation(mySettings.ASSIGNMENT_WRAP);
             }
         }
         else if (node.getElementType() == JSElementTypes.BINARY_EXPRESSION) {
-            final JSBinaryExpression binary = (JSBinaryExpression)node.getPsi();
+            JSBinaryExpression binary = (JSBinaryExpression)node.getPsi();
             if (child.getElementType() == binary.getOperationSign() && mySettings.BINARY_OPERATION_SIGN_ON_NEXT_LINE
                 || child.getPsi() == binary.getROperand() && !mySettings.BINARY_OPERATION_SIGN_ON_NEXT_LINE) {
                 wrapType = WrapType.byLegacyRepresentation(mySettings.BINARY_OPERATION_WRAP);
@@ -319,7 +317,7 @@ public class SubBlockVisitor extends JSNodeVisitor {
             }
         }
         else if (node.getElementType() == JSElementTypes.CONDITIONAL_EXPRESSION) {
-            final IElementType elementType = child.getElementType();
+            IElementType elementType = child.getElementType();
             if ((mySettings.TERNARY_OPERATION_SIGNS_ON_NEXT_LINE
                 && (elementType == JSTokenTypes.QUEST || elementType == JSTokenTypes.COLON))
                 || (!mySettings.TERNARY_OPERATION_SIGNS_ON_NEXT_LINE && child.getPsi() instanceof JSExpression)) {

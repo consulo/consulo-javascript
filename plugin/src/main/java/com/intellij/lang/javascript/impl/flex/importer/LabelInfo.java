@@ -20,8 +20,7 @@ import java.util.LinkedHashMap;
 
 /**
  * @author Maxim.Mossienko
- * Date: Oct 20, 2008
- * Time: 7:00:45 PM
+ * @since 2008-10-20
  */
 class LabelInfo extends LinkedHashMap<Integer, String> {
     int count;
@@ -30,7 +29,7 @@ class LabelInfo extends LinkedHashMap<Integer, String> {
         if (containsKey(target)) {
             return get(target);
         }
-        final String s = "L" + (++count);
+        String s = "L" + (++count);
         put(target, s);
         return s;
     }
