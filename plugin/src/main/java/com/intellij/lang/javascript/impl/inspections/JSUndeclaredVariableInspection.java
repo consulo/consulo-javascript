@@ -63,7 +63,7 @@ public class JSUndeclaredVariableInspection extends JSInspection {
     }
 
     @Override
-    protected JSElementVisitor createVisitor(final ProblemsHolder holder) {
+    protected JSElementVisitor createVisitor(ProblemsHolder holder) {
         return new JSElementVisitor() {
             @Override
             public void visitJSReferenceExpression(@Nonnull JSReferenceExpression node) {

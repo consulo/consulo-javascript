@@ -16,20 +16,18 @@
 
 package com.intellij.lang.javascript.impl.surroundWith;
 
-import jakarta.annotation.Nonnull;
-
+import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
+import consulo.document.util.TextRange;
+import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.editor.surroundWith.Surrounder;
-import consulo.project.Project;
-import consulo.language.util.IncorrectOperationException;
-import org.jetbrains.annotations.NonNls;
-
-import jakarta.annotation.Nullable;
-import consulo.language.ast.ASTNode;
-import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
-import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author yole
@@ -43,32 +41,34 @@ public abstract class JSStatementSurrounder implements Surrounder {
 
     @Override
     @Nullable
+    @RequiredReadAction
     public TextRange surroundElements(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiElement[] elements)
         throws IncorrectOperationException {
         ASTNode node = JSChangeUtil.createStatementFromText(project, getStatementTemplate(project, elements[0]));
 
         PsiElement container = elements[0].getParent();
         container.getNode().addChild(node, elements[0].getNode());
-        final ASTNode insertBeforeNode = getInsertBeforeNode(node);
+        ASTNode insertBeforeNode = getInsertBeforeNode(node);
 
-        for (int i = 0; i < elements.length; i++) {
-            final ASTNode childNode = elements[i].getNode();
+        for (PsiElement element : elements) {
+            final ASTNode childNode = element.getNode();
             final ASTNode childNodeCopy = childNode.copyElement();
 
             container.getNode().removeChild(childNode);
             insertBeforeNode.getTreeParent().addChild(childNodeCopy, insertBeforeNode);
         }
 
-        final CodeStyleManager csManager = CodeStyleManager.getInstance(project);
+        CodeStyleManager csManager = CodeStyleManager.getInstance(project);
         csManager.reformat(node.getPsi());
 
         return getSurroundSelectionRange(node);
     }
 
-    @NonNls
-    protected abstract String getStatementTemplate(final Project project, PsiElement context);
+    protected abstract String getStatementTemplate(Project project, PsiElement context);
 
-    protected abstract ASTNode getInsertBeforeNode(final ASTNode statementNode);
+    @RequiredReadAction
+    protected abstract ASTNode getInsertBeforeNode(ASTNode statementNode);
 
-    protected abstract TextRange getSurroundSelectionRange(final ASTNode statementNode);
+    @RequiredReadAction
+    protected abstract TextRange getSurroundSelectionRange(ASTNode statementNode);
 }

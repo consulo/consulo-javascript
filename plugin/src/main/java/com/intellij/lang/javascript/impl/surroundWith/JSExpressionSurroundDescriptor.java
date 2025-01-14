@@ -19,6 +19,7 @@ package com.intellij.lang.javascript.impl.surroundWith;
 import com.intellij.lang.javascript.psi.JSCallExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.language.Language;
@@ -31,9 +32,8 @@ import consulo.language.psi.util.PsiTreeUtil;
 import jakarta.annotation.Nonnull;
 
 /**
- * User: yole
- * Date: 12.07.2005
- * Time: 12:46:24
+ * @author yole
+ * @since 2005-07-12
  */
 @ExtensionImpl
 public class JSExpressionSurroundDescriptor implements SurroundDescriptor {
@@ -43,6 +43,7 @@ public class JSExpressionSurroundDescriptor implements SurroundDescriptor {
 
     @Override
     @Nonnull
+    @RequiredReadAction
     public PsiElement[] getElementsToSurround(PsiFile file, int startOffset, int endOffset) {
         final JSExpression expr = findExpressionInRange(file, startOffset, endOffset);
         if (expr == null) {
@@ -62,14 +63,15 @@ public class JSExpressionSurroundDescriptor implements SurroundDescriptor {
         return false;
     }
 
+    @RequiredReadAction
     private static JSExpression findExpressionInRange(PsiFile file, int startOffset, int endOffset) {
         PsiElement element1 = file.findElementAt(startOffset);
         PsiElement element2 = file.findElementAt(endOffset - 1);
-        if (element1 instanceof PsiWhiteSpace) {
-            startOffset = element1.getTextRange().getEndOffset();
+        if (element1 instanceof PsiWhiteSpace whiteSpace) {
+            startOffset = whiteSpace.getTextRange().getEndOffset();
         }
-        if (element2 instanceof PsiWhiteSpace) {
-            endOffset = element2.getTextRange().getStartOffset();
+        if (element2 instanceof PsiWhiteSpace whiteSpace) {
+            endOffset = whiteSpace.getTextRange().getStartOffset();
         }
         JSExpression expression = PsiTreeUtil.findElementOfClassAtRange(file, startOffset, endOffset, JSExpression.class);
         if (expression == null || expression.getTextRange().getEndOffset() != endOffset) {

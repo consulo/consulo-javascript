@@ -155,8 +155,8 @@ public class JSUnresolvedVariableInspection extends JSInspection {
 
                                         JSClass targetClass = contextClass;
 
-                                        if (qualifier instanceof JSReferenceExpression) {
-                                            JSClass clazz = JSResolveUtil.findClassOfQualifier(qualifier, containingFile);
+                                        if (qualifier instanceof JSReferenceExpression qualifierRefExpr) {
+                                            JSClass clazz = JSResolveUtil.findClassOfQualifier(qualifierRefExpr, containingFile);
                                             if (clazz != null) {
                                                 targetClass = clazz;
                                             }

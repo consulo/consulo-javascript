@@ -19,20 +19,22 @@ package com.intellij.lang.javascript.impl.refactoring.introduceField;
 import com.intellij.lang.javascript.formatter.JSCodeStyleSettings;
 import com.intellij.lang.javascript.impl.refactoring.JSBaseClassBasedIntroduceDialog;
 import com.intellij.lang.javascript.psi.*;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.ResolveResult;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
 /**
  * @author Maxim.Mossienko
- * Date: Jul 24, 2008
- * Time: 8:46:13 PM
+ * @author 2008-07-24
  */
 class JSIntroduceFieldDialog extends JSBaseClassBasedIntroduceDialog implements JSIntroduceFieldSettings {
     private JCheckBox myReplaceAllCheckBox;
@@ -50,27 +52,30 @@ class JSIntroduceFieldDialog extends JSBaseClassBasedIntroduceDialog implements 
 
     private static InitializationPlace lastInitializationPlace = InitializationPlace.FieldDeclaration;
 
-    public JSIntroduceFieldDialog(final Project project, final JSExpression[] occurrences, final JSExpression expression) {
+    @RequiredUIAccess
+    public JSIntroduceFieldDialog(Project project, JSExpression[] occurrences, JSExpression expression) {
         super(project, occurrences, expression, JavaScriptLocalize.javascriptIntroduceFieldTitle());
         doInit();
     }
 
     @Override
+    @RequiredReadAction
     protected void doInit() {
         super.doInit();
 
-        final Ref<Boolean> localContextDependent = new Ref<Boolean>();
+        final SimpleReference<Boolean> localContextDependent = new SimpleReference<>();
         myMainOccurence.accept(new JSElementVisitor() {
             @Override
-            public void visitJSReferenceExpression(final JSReferenceExpression node) {
+            @RequiredReadAction
+            public void visitJSReferenceExpression(@Nonnull JSReferenceExpression node) {
                 if (node.getQualifier() == null) {
-                    final ResolveResult[] results = node.multiResolve(true);
+                    ResolveResult[] results = node.multiResolve(true);
                     if (results.length == 0) {
                         localContextDependent.set(Boolean.TRUE);
                     }
                     else {
-                        final PsiElement element = results[0].getElement();
-                        if (element instanceof JSVariable && !(element.getParent().getParent() instanceof JSClass)) {
+                        PsiElement element = results[0].getElement();
+                        if (element instanceof JSVariable variable && !(variable.getParent().getParent() instanceof JSClass)) {
                             localContextDependent.set(Boolean.TRUE);
                         }
                     }
@@ -79,7 +84,7 @@ class JSIntroduceFieldDialog extends JSBaseClassBasedIntroduceDialog implements 
             }
 
             @Override
-            public void visitJSElement(final JSElement node) {
+            public void visitJSElement(@Nonnull JSElement node) {
                 node.acceptChildren(this);
             }
         });
@@ -147,16 +152,18 @@ class JSIntroduceFieldDialog extends JSBaseClassBasedIntroduceDialog implements 
     }
 
     @Override
+    @RequiredUIAccess
     protected void doOKAction() {
         super.doOKAction();
         lastInitializationPlace = getInitializationPlace();
     }
 
     @Override
-    protected String suggestCandidateName(final JSExpression mainOccurence) {
-        final String s = super.suggestCandidateName(mainOccurence);
-        final JSCodeStyleSettings jsCodeStyleSettings = CodeStyleSettingsManager.getSettings(mainOccurence.getProject()).getCustomSettings
-            (JSCodeStyleSettings.class);
+    @RequiredReadAction
+    protected String suggestCandidateName(JSExpression mainOccurence) {
+        String s = super.suggestCandidateName(mainOccurence);
+        JSCodeStyleSettings jsCodeStyleSettings = CodeStyleSettingsManager.getSettings(mainOccurence.getProject())
+            .getCustomSettings(JSCodeStyleSettings.class);
         if (jsCodeStyleSettings.FIELD_PREFIX.length() > 0) {
             return jsCodeStyleSettings.FIELD_PREFIX + s;
         }

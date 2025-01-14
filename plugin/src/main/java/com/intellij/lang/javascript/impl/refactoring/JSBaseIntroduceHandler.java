@@ -21,7 +21,8 @@ import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
 import com.intellij.lang.javascript.psi.impl.JSEmbeddedContentImpl;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.markup.RangeHighlighter;
@@ -44,11 +45,11 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,14 +62,15 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
 
     protected static final Logger LOG = Logger.getInstance("#com.intellij.lang.javascript.refactoring.JSBaseIntroduceHandler");
 
+    @RequiredReadAction
     protected static JSExpression findExpressionInRange(PsiFile file, int startOffset, int endOffset) {
         PsiElement element1 = file.findElementAt(startOffset);
         PsiElement element2 = file.findElementAt(endOffset - 1);
-        if (element1 instanceof PsiWhiteSpace) {
-            startOffset = element1.getTextRange().getEndOffset();
+        if (element1 instanceof PsiWhiteSpace whiteSpace) {
+            startOffset = whiteSpace.getTextRange().getEndOffset();
         }
-        if (element2 instanceof PsiWhiteSpace) {
-            endOffset = element2.getTextRange().getStartOffset();
+        if (element2 instanceof PsiWhiteSpace whiteSpace) {
+            endOffset = whiteSpace.getTextRange().getStartOffset();
         }
 
         JSExpression expression = PsiTreeUtil.findElementOfClassAtRange(file, startOffset, endOffset, JSExpression.class);
@@ -82,7 +84,7 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
             return null;
         }
 
-        if (expression instanceof JSReferenceExpression && expression.getParent() instanceof JSCallExpression) {
+        if (expression instanceof JSReferenceExpression refExpr && refExpr.getParent() instanceof JSCallExpression) {
             return null;
         }
         /*if (file.getLanguage() == JavaScriptSupportLoader.JSON) {
@@ -92,30 +94,32 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
     }
 
     protected static JSExpression unparenthesize(JSExpression expression) {
-        while (expression instanceof JSParenthesizedExpression) {
-            expression = ((JSParenthesizedExpression)expression).getInnerExpression();
+        while (expression instanceof JSParenthesizedExpression parenthesized) {
+            expression = parenthesized.getInnerExpression();
         }
 
         return expression;
     }
 
+    @RequiredReadAction
     public static JSExpression[] findExpressionOccurrences(JSElement scope, JSExpression expr) {
-        List<JSExpression> array = new ArrayList<JSExpression>();
+        List<JSExpression> array = new ArrayList<>();
         addExpressionOccurrences(unparenthesize(expr), array, scope);
         return array.toArray(new JSExpression[array.size()]);
     }
 
+    @RequiredReadAction
     protected static void addExpressionOccurrences(JSExpression expr, List<JSExpression> array, PsiElement scope) {
         PsiElement[] children = scope.getChildren();
 
         for (PsiElement child : children) {
-            if (child instanceof JSExpression) {
-                final JSExpression childExpression = unparenthesize((JSExpression)child);
+            if (child instanceof JSExpression childExpr) {
+                JSExpression childUnparenExpr = unparenthesize(childExpr);
 
-                if (childExpression != null
-                    && PsiEquivalenceUtil.areElementsEquivalent(childExpression, expr)
-                    && !JSResolveUtil.isSelfReference(scope, child)) {
-                    array.add((JSExpression)child);
+                if (childUnparenExpr != null
+                    && PsiEquivalenceUtil.areElementsEquivalent(childUnparenExpr, expr)
+                    && !JSResolveUtil.isSelfReference(scope, childExpr)) {
+                    array.add(childExpr);
                     continue;
                 }
             }
@@ -127,14 +131,15 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
     }
 
     @Override
-    public void invoke(@Nonnull final Project project, final Editor editor, PsiFile file, DataContext dataContext) {
+    @RequiredWriteAction
+    public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
         if (!editor.getSelectionModel().hasSelection()) {
             editor.getSelectionModel().selectLineAtCaret();
         }
         int start = editor.getSelectionModel().getSelectionStart();
         int end = editor.getSelectionModel().getSelectionEnd();
 
-        final JSExpression expression = findIntroducedExpression(file, start, end, editor);
+        JSExpression expression = findIntroducedExpression(file, start, end, editor);
         if (expression == null) {
             return;
         }
@@ -146,20 +151,17 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
         editor.getSelectionModel().removeSelection();
         JSElement scope = findIntroducedScope(expression);
         LOG.assertTrue(scope != null);
-        final JSExpression[] occurrences = findExpressionOccurrences(scope, expression);
-        final S settings = getSettings(project, editor, expression, occurrences);
+        JSExpression[] occurrences = findExpressionOccurrences(scope, expression);
+        S settings = getSettings(project, editor, expression, occurrences);
         if (settings == null) {
             return;
         }
 
-        CommandProcessor.getInstance().executeCommand(
-            project,
-            () -> ApplicationManager.getApplication().runWriteAction(
-                () -> doRefactoring(project, editor, new BaseIntroduceContext<>(expression, occurrences, settings))
-            ),
-            getRefactoringName(),
-            null
-        );
+        CommandProcessor.getInstance().newCommand()
+            .project(project)
+            .name(LocalizeValue.ofNullable(getRefactoringName()))
+            .inWriteAction()
+            .run(() -> doRefactoring(project, editor, new BaseIntroduceContext<>(expression, occurrences, settings)));
     }
 
     protected static final class BaseIntroduceContext<S> {
@@ -167,14 +169,14 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
         final JSExpression[] occurences;
         public final JSExpression expression;
 
-        public BaseIntroduceContext(JSExpression _mainoccurence, final JSExpression[] _occurences, S _settings) {
+        public BaseIntroduceContext(JSExpression _mainoccurence, JSExpression[] _occurences, S _settings) {
             occurences = _occurences;
             expression = _mainoccurence;
             settings = _settings;
         }
     }
 
-    protected JSElement findIntroducedScope(final JSExpression expression) {
+    protected JSElement findIntroducedScope(JSExpression expression) {
         return PsiTreeUtil.getParentOfType(expression, JSFunction.class, JSFile.class, JSEmbeddedContentImpl.class);
     }
 
@@ -183,8 +185,9 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
     protected abstract LocalizeValue getCannotIntroduceMessage();
 
     @Nullable
-    protected JSExpression findIntroducedExpression(final PsiFile file, final int start, final int end, Editor editor) {
-        final JSExpression expression = findExpressionInRange(file, start, end);
+    @RequiredUIAccess
+    protected JSExpression findIntroducedExpression(PsiFile file, int start, int end, Editor editor) {
+        JSExpression expression = findExpressionInRange(file, start, end);
         if (expression == null) {
             CommonRefactoringUtil.showErrorHint(
                 file.getProject(),
@@ -198,13 +201,14 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
     }
 
     @Nullable
-    protected S getSettings(Project project, Editor editor, JSExpression expression, final JSExpression[] occurrences) {
+    @RequiredUIAccess
+    protected S getSettings(Project project, Editor editor, JSExpression expression, JSExpression[] occurrences) {
         ArrayList<RangeHighlighter> highlighters = null;
         if (occurrences.length > 1) {
             highlighters = highlightOccurences(project, editor, occurrences);
         }
 
-        final D dialog = createDialog(project, expression, occurrences);
+        D dialog = createDialog(project, expression, occurrences);
         dialog.show();
         if (highlighters != null) {
             for (RangeHighlighter highlighter : highlighters) {
@@ -219,21 +223,24 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
         return createSettings(dialog);
     }
 
-    protected S createSettings(final D dialog) {
+    @SuppressWarnings("unchecked")
+    protected S createSettings(D dialog) {
         return (S)dialog;
     }
 
-    protected abstract D createDialog(final Project project, final JSExpression expression, final JSExpression[] occurrences);
+    protected abstract D createDialog(Project project, JSExpression expression, JSExpression[] occurrences);
 
-    private void doRefactoring(final Project project, final Editor editor, BaseIntroduceContext<S> introduceContext) {
-        final S settings = introduceContext.settings;
+    @RequiredWriteAction
+    @SuppressWarnings("unchecked")
+    private void doRefactoring(Project project, Editor editor, BaseIntroduceContext<S> introduceContext) {
+        S settings = introduceContext.settings;
         JSExpression expression = introduceContext.expression;
-        final JSExpression[] occurrences = introduceContext.occurences;
+        JSExpression[] occurrences = introduceContext.occurences;
 
-        final boolean replaceAllOccurences = settings.isReplaceAllOccurences();
-        @NonNls String varDeclText = getDeclText(settings);
-        final PsiFile containingFile = expression.getContainingFile();
-        final boolean ecma = false;
+        boolean replaceAllOccurences = settings.isReplaceAllOccurences();
+        String varDeclText = getDeclText(settings);
+        PsiFile containingFile = expression.getContainingFile();
+        boolean ecma = false;
         if (ecma) {
             String type = settings.getVariableType();
             if (type == null) {
@@ -250,24 +257,24 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
 
             boolean replacedOriginal = false;
 
-            if (anchorStatement == expression.getParent() && anchorStatement instanceof JSExpressionStatement) {
-                declaration = (JSVarStatement)anchorStatement.replace(declaration);
+            if (anchorStatement == expression.getParent() && anchorStatement instanceof JSExpressionStatement anchorExpression) {
+                declaration = (JSVarStatement)anchorExpression.replace(declaration);
                 editor.getCaretModel().moveToOffset(declaration.getTextRange().getEndOffset());
                 replacedOriginal = true;
             }
             else {
                 JSExpression oldExpression = expression;
-                final TextRange expressionTextRange = expression.getTextRange();
-                final TextRange statementTextRange = anchorStatement.getTextRange();
+                TextRange expressionTextRange = expression.getTextRange();
+                TextRange statementTextRange = anchorStatement.getTextRange();
 
                 RangeMarker marker = editor.getDocument().createRangeMarker(expressionTextRange);
 
                 // Adding declaration to anchorStatement may invalidate original expression so we need to find it in new tree
-                final T jsStatement = addStatementBefore(anchorStatement, declaration);
+                T jsStatement = addStatementBefore(anchorStatement, declaration);
 
                 if (!expression.isValid()) {
-                    final T newAnchorStatement = (T)PsiTreeUtil.getNextSiblingOfType(jsStatement, anchorStatement.getClass());
-                    final int relativeOffset = marker.getStartOffset() - statementTextRange.getStartOffset();
+                    T newAnchorStatement = (T)PsiTreeUtil.getNextSiblingOfType(jsStatement, anchorStatement.getClass());
+                    int relativeOffset = marker.getStartOffset() - statementTextRange.getStartOffset();
                     JSExpression newExpression =
                         PsiTreeUtil.getParentOfType(newAnchorStatement.findElementAt(relativeOffset), oldExpression.getClass());
 
@@ -299,7 +306,7 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
                 }
             }
 
-            final JSExpression refExpr = JSChangeUtil.createExpressionFromText(project, settings.getVariableName());
+            JSExpression refExpr = JSChangeUtil.createExpressionFromText(project, settings.getVariableName());
             if (replaceAllOccurences) {
                 List<JSExpression> toHighight = new ArrayList<>();
                 for (JSExpression occurence : occurrences) {
@@ -322,7 +329,8 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
         }
     }
 
-    protected JSVarStatement prepareDeclaration(final String varDeclText, BaseIntroduceContext<S> context, final Project project)
+    @RequiredWriteAction
+    protected JSVarStatement prepareDeclaration(String varDeclText, BaseIntroduceContext<S> context, Project project)
         throws IncorrectOperationException {
         JSVarStatement declaration = (JSVarStatement)JSChangeUtil.createStatementFromText(
             project,
@@ -332,24 +340,25 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
         return declaration;
     }
 
-    @NonNls
     protected String getDeclText(S settings) {
         return "var " + settings.getVariableName();
     }
 
-    protected T addStatementBefore(final T anchorStatement, final JSVarStatement declaration) throws IncorrectOperationException {
+    @RequiredWriteAction
+    @SuppressWarnings("unchecked")
+    protected T addStatementBefore(T anchorStatement, JSVarStatement declaration) throws IncorrectOperationException {
         return (T)((JSStatement)anchorStatement).addStatementBefore(declaration);
     }
 
-    protected T findAnchor(final BaseIntroduceContext<S> context, final boolean replaceAllOccurences) {
-        JSStatement anchorStatement = replaceAllOccurences ? getAnchorToInsert(context.occurences) : PsiTreeUtil.getParentOfType(
-            context.expression,
-            JSStatement.class
-        );
-        if (anchorStatement instanceof JSVarStatement &&
-            anchorStatement.getParent() instanceof JSStatement &&
-            !(anchorStatement.getParent() instanceof JSBlockStatement)) {
-            anchorStatement = (JSStatement)anchorStatement.getParent();
+    @SuppressWarnings("unchecked")
+    protected T findAnchor(BaseIntroduceContext<S> context, boolean replaceAllOccurences) {
+        JSStatement anchorStatement = replaceAllOccurences
+            ? getAnchorToInsert(context.occurences)
+            : PsiTreeUtil.getParentOfType(context.expression, JSStatement.class);
+        if (anchorStatement instanceof JSVarStatement varStatement
+            && varStatement.getParent() instanceof JSStatement statement
+            && !(statement instanceof JSBlockStatement)) {
+            anchorStatement = statement;
         }
         return (T)anchorStatement;
     }
@@ -364,14 +373,14 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
         return result;
     }
 
-    private static JSStatement getAnchorToInsert(final JSExpression[] expressions) {
+    private static JSStatement getAnchorToInsert(JSExpression[] expressions) {
         JSElement place = expressions[0];
         next:
         do {
             JSStatement statement = PsiTreeUtil.getParentOfType(place, JSStatement.class); //this is the first expression textually
             LOG.assertTrue(statement != null);
 
-            final PsiElement parent = statement.getParent();
+            PsiElement parent = statement.getParent();
             for (JSExpression expression : expressions) {
                 if (!PsiTreeUtil.isAncestor(parent, expression, true)) {
                     place = statement;
@@ -384,10 +393,10 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
         while (true);
     }
 
-    protected static JSElement findClassAnchor(final PsiElement expression) {
+    protected static JSElement findClassAnchor(PsiElement expression) {
         PsiElement nearestParent = PsiTreeUtil.getParentOfType(expression, JSVarStatement.class, JSFunction.class);
         while (nearestParent != null) {
-            final PsiElement nextParent = PsiTreeUtil.getParentOfType(nearestParent, JSVarStatement.class, JSFunction.class);
+            PsiElement nextParent = PsiTreeUtil.getParentOfType(nearestParent, JSVarStatement.class, JSFunction.class);
             if (nextParent == null) {
                 break;
             }
@@ -400,28 +409,24 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
 
         JSElement parent = PsiTreeUtil.getParentOfType(expression, JSFile.class, JSClass.class);
 
-        if (parent instanceof JSFile) {
-            final PsiElement classRef = JSResolveUtil.getClassReferenceForXmlFromContext(parent);
-            if (classRef instanceof JSClass jsClass) {
-                parent = jsClass;
-            }
+        if (parent instanceof JSFile jsFile && JSResolveUtil.getClassReferenceForXmlFromContext(jsFile) instanceof JSClass jsClass) {
+            parent = jsClass;
         }
 
         return parent;
     }
 
-    protected static JSElement addToClassAnchor(
-        final JSElement anchorStatement,
-        final JSVarStatement declaration
-    ) throws IncorrectOperationException {
+    @RequiredWriteAction
+    protected static JSElement addToClassAnchor(JSElement anchorStatement, JSVarStatement declaration) throws IncorrectOperationException {
         if (!(anchorStatement instanceof JSClass)) {
-            final JSElement element = findClassAnchor(anchorStatement);
+            JSElement element = findClassAnchor(anchorStatement);
             return (JSElement)element.addBefore(declaration, anchorStatement);
         }
         return (JSElement)anchorStatement.add(declaration);
     }
 
     @Override
+    @RequiredUIAccess
     public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
         throw new RuntimeException("Not implemented");
     }

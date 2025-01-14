@@ -31,7 +31,7 @@ public class JSWithIfElseSurrounder extends JSWithIfSurrounder {
     }
 
     @Override
-    protected String getStatementTemplate(final Project project, PsiElement context) {
+    protected String getStatementTemplate(Project project, PsiElement context) {
         return "if (a) { } else { }";
     }
 }

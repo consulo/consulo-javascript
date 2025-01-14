@@ -34,7 +34,7 @@ import org.jetbrains.annotations.NonNls;
  * @since 2008-07-17
  */
 public class ImplementMethodsFix extends BaseCreateMethodsFix<JSFunction> implements SyntheticIntentionAction {
-    public ImplementMethodsFix(final JSClass jsClass) {
+    public ImplementMethodsFix(JSClass jsClass) {
         super(jsClass);
     }
 
@@ -45,19 +45,19 @@ public class ImplementMethodsFix extends BaseCreateMethodsFix<JSFunction> implem
     }
 
     @Override
-    public boolean isAvailable(@Nonnull final Project project, final Editor editor, final PsiFile file) {
+    public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
         return myJsClass.isValid();
     }
 
     @Override
-    protected String buildFunctionAttrText(String attrText, final JSAttributeList attributeList, final JSFunction function) {
+    protected String buildFunctionAttrText(String attrText, JSAttributeList attributeList, JSFunction function) {
         return attributeList == null || attributeList.getAccessType() != JSAttributeList.AccessType.PUBLIC
             ? "public"
             : super.buildFunctionAttrText(attrText, attributeList, function);
     }
 
     @Override
-    protected String buildFunctionBodyText(final String retType, final JSParameterList parameterList, final JSFunction func) {
+    protected String buildFunctionBodyText(String retType, JSParameterList parameterList, JSFunction func) {
         StringBuilder s = new StringBuilder("{\n");
         if (retType != null && !"void".equals(retType)) {
             s.append("return ").append(defaultValueOfType(retType)).append(JSChangeUtil.getSemicolon(func.getProject())).append("\n");
@@ -65,7 +65,7 @@ public class ImplementMethodsFix extends BaseCreateMethodsFix<JSFunction> implem
         return s.append("}").toString();
     }
 
-    private static String defaultValueOfType(final String retType) {
+    private static String defaultValueOfType(String retType) {
         return switch (retType) {
             case "int", "uint", "Number" -> "0";
             case "Boolean" -> "false";

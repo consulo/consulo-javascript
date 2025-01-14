@@ -20,6 +20,7 @@ import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSEmbeddedContentImpl;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.Language;
@@ -32,10 +33,12 @@ import consulo.language.psi.ResolveResult;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
@@ -53,10 +56,11 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
 
     private Alarm myAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
 
+    @RequiredUIAccess
     protected JSBaseIntroduceDialog(
-        final Project project,
-        final JSExpression[] occurences,
-        final JSExpression mainOccurence,
+        Project project,
+        JSExpression[] occurences,
+        JSExpression mainOccurence,
         LocalizeValue title
     ) {
         super(project, false);
@@ -67,6 +71,7 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
         setTitle(title);
     }
 
+    @RequiredReadAction
     protected void doInit() {
         JCheckBox replaceAllCheckBox = getReplaceAllCheckBox();
         if (myOccurences.length > 1) {
@@ -76,7 +81,7 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
             replaceAllCheckBox.setVisible(false);
         }
 
-        final JTextField nameField = getNameField();
+        JTextField nameField = getNameField();
         nameField.setText(suggestCandidateName(myMainOccurence));
         nameField.selectAll();
 
@@ -89,49 +94,46 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
 
         replaceAllCheckBox.setFocusable(false);
 
-        final JComboBox typeField = getVarTypeField();
+        JComboBox typeField = getVarTypeField();
 
-        final List<String> possibleTypes = new ArrayList<String>();
-        final String type = JSResolveUtil.getExpressionType(myMainOccurence, myMainOccurence.getContainingFile());
+        List<String> possibleTypes = new ArrayList<>();
+        String type = JSResolveUtil.getExpressionType(myMainOccurence, myMainOccurence.getContainingFile());
         possibleTypes.add(type);
 
         typeField.setModel(new DefaultComboBoxModel(possibleTypes.toArray(new Object[possibleTypes.size()])));
 
         init();
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                initiateValidation();
-            }
-        });
+        SwingUtilities.invokeLater(this::initiateValidation);
     }
 
+    @RequiredReadAction
     protected String suggestCandidateName(JSExpression mainOccurence) {
-        final String s = evaluateCandidate(mainOccurence);
+        String s = evaluateCandidate(mainOccurence);
         return s != null ? s.replace('.', '_') : null;
     }
 
+    @RequiredReadAction
     private static String evaluateCandidate(JSExpression mainOccurence) {
-        if (mainOccurence instanceof JSCallExpression) {
-            mainOccurence = ((JSCallExpression)mainOccurence).getMethodExpression();
+        if (mainOccurence instanceof JSCallExpression call) {
+            mainOccurence = call.getMethodExpression();
         }
 
-        if (mainOccurence instanceof JSReferenceExpression) {
-            final ResolveResult[] results = ((JSReferenceExpression)mainOccurence).multiResolve(false);
+        if (mainOccurence instanceof JSReferenceExpression refExpr) {
+            ResolveResult[] results = refExpr.multiResolve(false);
 
             if (results.length > 0) {
-                final PsiElement element = results[0].getElement();
+                PsiElement element = results[0].getElement();
 
-                if (element instanceof JSFunction) {
-                    String typeString = ((JSFunction)element).getReturnTypeString();
+                if (element instanceof JSFunction function) {
+                    String typeString = function.getReturnTypeString();
                     if (isValidIdentifier(typeString, mainOccurence)) {
                         return typeString;
                     }
-                    return ((JSFunction)element).getName();
+                    return function.getName();
                 }
-                else if (element instanceof JSVariable) {
-                    String typeString = ((JSVariable)element).getTypeString();
+                else if (element instanceof JSVariable variable) {
+                    String typeString = variable.getTypeString();
                     if (isValidIdentifier(typeString, mainOccurence)) {
                         return typeString;
                     }
@@ -151,6 +153,7 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
         return JSResolveUtil.getExpressionType(mainOccurence, mainOccurence.getContainingFile());
     }
 
+    @RequiredReadAction
     private static boolean isValidIdentifier(String typeString, PsiElement context) {
         if (typeString == null) {
             return false;
@@ -167,16 +170,18 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
 
     private void initiateValidation() {
         myAlarm.cancelAllRequests();
-        myAlarm.addRequest(new Runnable() {
-            @Override
-            public void run() {
+        myAlarm.addRequest(
+            () -> {
                 final String nameCandidate = getNameField().getText();
                 setOKActionEnabled(nameCandidate.length() != 0 && isValidName(nameCandidate));
-            }
-        }, 100, Application.get().getCurrentModalityState());
+            },
+            100,
+            Application.get().getCurrentModalityState()
+        );
     }
 
     @Override
+    @RequiredUIAccess
     public JComponent getPreferredFocusedComponent() {
         return getNameField();
     }
@@ -187,8 +192,9 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
     }
 
     @Override
+    @RequiredUIAccess
     protected void doOKAction() {
-        final String name = getVariableName();
+        String name = getVariableName();
         if (name.length() == 0 || !isValidName(name)) {
             Messages.showErrorDialog(
                 myProject,
@@ -206,23 +212,25 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
         super.doOKAction();
     }
 
-    private boolean checkConflicts(final String name) {
+    @RequiredUIAccess
+    private boolean checkConflicts(String name) {
         PsiElement tmp = isReplaceAllOccurences() ? PsiTreeUtil.findCommonParent(myOccurences) : myMainOccurence;
         assert tmp != null;
         JSElement scope = PsiTreeUtil.getNonStrictParentOfType(tmp, JSBlockStatement.class, JSFile.class, JSEmbeddedContentImpl.class);
         assert scope != null;
 
-        final Ref<JSNamedElement> existing = new Ref<JSNamedElement>();
+        final SimpleReference<JSNamedElement> existing = new SimpleReference<>();
         scope.accept(new JSElementVisitor() {
             @Override
-            public void visitJSElement(final JSElement node) {
+            public void visitJSElement(@Nonnull JSElement node) {
                 if (existing.isNull()) {
                     node.acceptChildren(this);
                 }
             }
 
             @Override
-            public void visitJSVariable(final JSVariable node) {
+            @RequiredReadAction
+            public void visitJSVariable(@Nonnull JSVariable node) {
                 if (name.equals(node.getName())) {
                     existing.set(node);
                 }
@@ -230,7 +238,8 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
             }
 
             @Override
-            public void visitJSFunctionDeclaration(final JSFunction node) {
+            @RequiredReadAction
+            public void visitJSFunctionDeclaration(@Nonnull JSFunction node) {
                 if (name.equals(node.getName())) {
                     existing.set(node);
                 }
@@ -239,26 +248,23 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
         });
 
         if (existing.isNull()) {
-            final ResolveProcessor processor = new ResolveProcessor(name);
+            ResolveProcessor processor = new ResolveProcessor(name);
             JSResolveUtil.treeWalkUp(processor, scope, null, scope);
-            final PsiElement resolved = processor.getResult();
-            if (resolved instanceof JSNamedElement) {
-                existing.set((JSNamedElement)resolved);
+            PsiElement resolved = processor.getResult();
+            if (resolved instanceof JSNamedElement namedElement) {
+                existing.set(namedElement);
             }
         }
 
-        if (!existing.isNull()) {
-            return showConflictsDialog(existing.get(), name);
-        }
-
-        return true;
+        return existing.isNull() || showConflictsDialog(existing.get(), name);
     }
 
-    private boolean showConflictsDialog(final JSNamedElement existing, final String name) {
-        final LocalizeValue message = existing instanceof JSFunction
+    @RequiredUIAccess
+    private boolean showConflictsDialog(JSNamedElement existing, String name) {
+        LocalizeValue message = existing instanceof JSFunction
             ? JavaScriptLocalize.javascriptIntroduceVariableFunctionAlreadyExists(CommonRefactoringUtil.htmlEmphasize(name))
             : JavaScriptLocalize.javascriptIntroduceVariableVariableAlreadyExists(CommonRefactoringUtil.htmlEmphasize(name));
-        final ConflictsDialog conflictsDialog = new ConflictsDialog(myProject, message.get());
+        ConflictsDialog conflictsDialog = new ConflictsDialog(myProject, message.get());
         conflictsDialog.show();
         return conflictsDialog.isOK();
     }
@@ -278,8 +284,8 @@ public abstract class JSBaseIntroduceDialog extends DialogWrapper implements Bas
         return (String)getVarTypeField().getSelectedItem();
     }
 
-    private boolean isValidName(final String name) {
-        final PsiFile containingFile = myMainOccurence.getContainingFile();
+    private boolean isValidName(String name) {
+        PsiFile containingFile = myMainOccurence.getContainingFile();
         return NamesValidator.forLanguage(containingFile.getLanguage()).isIdentifier(name, myProject);
     }
 

@@ -18,6 +18,7 @@ package com.intellij.lang.javascript.impl.refactoring.introduceConstant;
 
 import com.intellij.lang.javascript.impl.refactoring.JSBaseClassBasedIntroduceDialog;
 import com.intellij.lang.javascript.psi.JSExpression;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.project.Project;
 
@@ -25,8 +26,7 @@ import javax.swing.*;
 
 /**
  * @author Maxim.Mossienko
- * Date: Jul 24, 2008
- * Time: 8:48:34 PM
+ * @since 2008-07-24
  */
 class JSIntroduceConstantDialog extends JSBaseClassBasedIntroduceDialog implements JSIntroduceConstantSettings {
     private JTextField myNameField;
@@ -38,7 +38,7 @@ class JSIntroduceConstantDialog extends JSBaseClassBasedIntroduceDialog implemen
     private JRadioButton myPublic;
     private JComboBox myVarType;
 
-    protected JSIntroduceConstantDialog(final Project project, final JSExpression[] occurences, final JSExpression mainOccurence) {
+    protected JSIntroduceConstantDialog(Project project, JSExpression[] occurences, JSExpression mainOccurence) {
         super(project, occurences, mainOccurence, JavaScriptLocalize.javascriptIntroduceConstantTitle());
 
         doInit();
@@ -85,7 +85,8 @@ class JSIntroduceConstantDialog extends JSBaseClassBasedIntroduceDialog implemen
     }
 
     @Override
-    protected String suggestCandidateName(final JSExpression mainOccurence) {
+    @RequiredReadAction
+    protected String suggestCandidateName(JSExpression mainOccurence) {
         return super.suggestCandidateName(mainOccurence).toUpperCase();
     }
 }

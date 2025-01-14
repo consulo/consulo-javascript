@@ -34,48 +34,48 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.JBPopup;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class JavaScriptGotoSuperHandler implements GotoSuperActionHander {
     @Override
-    public void invoke(final Project project, final Editor editor, final PsiFile file) {
-        final PsiElement at = file.findElementAt(editor.getCaretModel().getOffset());
+    @RequiredUIAccess
+    public void invoke(Project project, Editor editor, PsiFile file) {
+        PsiElement at = file.findElementAt(editor.getCaretModel().getOffset());
         if (at == null) {
             return;
         }
         JSNamedElement namedElement = PsiTreeUtil.getParentOfType(at, JSNamedElement.class);
-        PsiElement parent = namedElement != null ? namedElement.getParent() : null;
 
-        if (namedElement instanceof JSDefinitionExpression && parent instanceof JSAssignmentExpression) {
-            PsiElement rOperand = ((JSAssignmentExpression)parent).getROperand();
-            if (rOperand instanceof JSFunctionExpression) {
-                namedElement = (JSNamedElement)rOperand;
+        if (namedElement instanceof JSDefinitionExpression definition
+            && definition.getParent() instanceof JSAssignmentExpression assignment) {
+            PsiElement rOperand = assignment.getROperand();
+            if (rOperand instanceof JSFunctionExpression functionExpr) {
+                namedElement = functionExpr;
             }
         }
 
-        if (namedElement instanceof JSFunction) {
-            final JSFunction function = (JSFunction)namedElement;
-            final String qName = JSResolveUtil.getQNameToStartHierarchySearch(function);
+        if (namedElement instanceof JSFunction function) {
+            String qName = JSResolveUtil.getQNameToStartHierarchySearch(function);
+
+            PsiElement parent = function.getParent();
 
             if (qName != null) {
-                if (parent instanceof JSFile) {
-                    JSClass xmlBackedClass = JSResolveUtil.getXmlBackedClass((JSFile)parent);
+                if (parent instanceof JSFile jsFile) {
+                    JSClass xmlBackedClass = JSResolveUtil.getXmlBackedClass(jsFile);
                     if (xmlBackedClass != null) {
                         parent = xmlBackedClass;
                     }
                 }
                 boolean result = JSResolveUtil.iterateType(
                     function,
-                    parent instanceof JSClass ? parent : parent.getContainingFile(),
+                    parent instanceof JSClass jsClass ? jsClass : parent.getContainingFile(),
                     qName,
-                    new JSResolveUtil.OverrideHandler() {
-                        @Override
-                        public boolean process(final ResolveProcessor processor, final PsiElement scope, final String className) {
-                            ((NavigationItem)processor.getResult()).navigate(true);
-                            return false;
-                        }
+                    (processor, scope, className) -> {
+                        ((NavigationItem)processor.getResult()).navigate(true);
+                        return false;
                     }
                 );
 
@@ -84,12 +84,12 @@ public class JavaScriptGotoSuperHandler implements GotoSuperActionHander {
                 }
             }
 
-            if (parent instanceof JSClass) {
+            if (parent instanceof JSClass jsClass) {
                 JSResolveUtil.processInterfaceMethods(
-                    (JSClass)parent,
+                    jsClass,
                     new JSResolveUtil.CollectMethodsToImplementProcessor(function.getName(), function) {
                         @Override
-                        protected boolean process(final ResolveProcessor processor) {
+                        protected boolean process(ResolveProcessor processor) {
                             ((NavigationItem)processor.getResult()).navigate(true);
                             return true;
                         }
@@ -97,9 +97,8 @@ public class JavaScriptGotoSuperHandler implements GotoSuperActionHander {
                 );
             }
         }
-        else if (namedElement instanceof JSClass) {
-            final JSClass clazz = (JSClass)namedElement;
-            final JSClass[] classes = clazz.getSupers();
+        else if (namedElement instanceof JSClass jsClass) {
+            JSClass[] classes = jsClass.getSupers();
 
             if (classes.length == 0) {
                 return;
@@ -121,7 +120,7 @@ public class JavaScriptGotoSuperHandler implements GotoSuperActionHander {
     }
 
     @Override
-    public boolean isValidFor(final Editor editor, final PsiFile file) {
+    public boolean isValidFor(Editor editor, PsiFile file) {
         return true;
     }
 

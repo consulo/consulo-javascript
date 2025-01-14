@@ -17,6 +17,7 @@
 package com.intellij.lang.javascript.impl.surroundWith;
 
 import com.intellij.lang.javascript.psi.JSWhileStatement;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.ASTNode;
@@ -34,18 +35,20 @@ public class JSWithWhileSurrounder extends JSStatementSurrounder {
     }
 
     @Override
-    protected String getStatementTemplate(final Project project, PsiElement context) {
+    protected String getStatementTemplate(Project project, PsiElement context) {
         return "while(true) { }";
     }
 
     @Override
+    @RequiredReadAction
     protected ASTNode getInsertBeforeNode(ASTNode statementNode) {
         JSWhileStatement stmt = (JSWhileStatement)statementNode.getPsi();
         return stmt.getBody().getLastChild().getNode();
     }
 
     @Override
-    protected TextRange getSurroundSelectionRange(final ASTNode statementNode) {
+    @RequiredReadAction
+    protected TextRange getSurroundSelectionRange(ASTNode statementNode) {
         JSWhileStatement stmt = (JSWhileStatement)statementNode.getPsi();
         return stmt.getCondition().getTextRange();
     }

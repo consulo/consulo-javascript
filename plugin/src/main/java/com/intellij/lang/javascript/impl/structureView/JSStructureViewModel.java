@@ -18,6 +18,7 @@ package com.intellij.lang.javascript.impl.structureView;
 
 import com.intellij.lang.javascript.index.JavaScriptIndex;
 import com.intellij.lang.javascript.psi.*;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
@@ -32,44 +33,40 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.keymap.KeymapManager;
-import consulo.util.lang.ref.Ref;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 
 import java.util.Comparator;
-import java.util.List;
 
 /**
- * @by max, maxim
+ * @author max
+ * @author maxim
  */
 public class JSStructureViewModel extends TextEditorBasedStructureViewModel {
     private PsiElement myRoot;
     private Filter[] myFilters = new Filter[]{
         ourFieldsFilter,
-        ourInheritedFilter
+        INHERITED_FILTER
     };
 
-    @NonNls
     private static final String ID = "KIND";
     private static Sorter ourKindSorter = new Sorter() {
         private Comparator myComparator = new Comparator() {
             @Override
-            public int compare(final Object o, final Object o2) {
+            @RequiredReadAction
+            public int compare(Object o, Object o2) {
                 return getWeight(o) - getWeight(o2);
             }
 
-            private int getWeight(final Object s) {
+            @RequiredReadAction
+            private int getWeight(Object s) {
                 if (s instanceof JSSuperGroup) {
                     return 5;
                 }
                 Object o = ((StructureViewTreeElement)s).getValue();
 
-                if (o instanceof JSProperty) {
-                    JSElement propertyValue = ((JSProperty)o).getValue();
-                    if (propertyValue instanceof JSFunction) {
-                        o = propertyValue;
-                    }
+                if (o instanceof JSProperty property && property.getValue() instanceof JSFunction function) {
+                    o = function;
                 }
 
                 if (o instanceof JSClass) {
@@ -108,23 +105,18 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel {
     };
 
     private static Filter ourFieldsFilter = new Filter() {
-        @NonNls
         public static final String ID = "SHOW_FIELDS";
 
         @Override
+        @RequiredReadAction
         public boolean isVisible(TreeElement treeNode) {
-            if (!(treeNode instanceof JSStructureViewElement)) {
-                return true;
+            if (treeNode instanceof JSStructureViewElement structureViewElement) {
+                PsiElement element = structureViewElement.getRealElement();
+                return element instanceof JSClass || element instanceof JSFunction
+                    || (element instanceof JSProperty property && property.getValue() instanceof JSFunction)
+                    || element instanceof JSObjectLiteralExpression;
             }
-            final PsiElement element = ((JSStructureViewElement)treeNode).getRealElement();
-
-            if (element instanceof JSClass) {
-                return true;
-            }
-
-            return element instanceof JSFunction ||
-                (element instanceof JSProperty && ((JSProperty)element).getValue() instanceof JSFunction) ||
-                element instanceof JSObjectLiteralExpression;
+            return true;
         }
 
         @Override
@@ -145,18 +137,12 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel {
         }
     };
 
-    private static final Filter ourInheritedFilter = new FileStructureFilter() {
-        @NonNls
+    private static final Filter INHERITED_FILTER = new FileStructureFilter() {
         public static final String ID = "SHOW_INHERITED";
 
         @Override
         public boolean isVisible(TreeElement treeNode) {
-            if (treeNode instanceof JSStructureViewElement) {
-                return !((JSStructureViewElement)treeNode).isInherited();
-            }
-            else {
-                return true;
-            }
+            return !(treeNode instanceof JSStructureViewElement structureViewElement && structureViewElement.isInherited());
         }
 
         @Override
@@ -191,12 +177,9 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel {
         }
     };
 
-    private static Grouper myInheritedGrouper = new JSSuperGrouper();
+    private static final Grouper INHERITED_GROUPER = new JSSuperGrouper();
 
-    private Grouper[] myGroupers = new Grouper[]{
-        myInheritedGrouper
-    };
-    private final Class[] myClasses = new Class[]{
+    private static final Class[] SUITABLE_CLASSES = new Class[]{
         JSFunction.class,
         JSVariable.class,
         JSDefinitionExpression.class,
@@ -204,12 +187,15 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel {
         JSProperty.class
     };
 
-    public JSStructureViewModel(final PsiElement root) {
+    private Grouper[] myGroupers = new Grouper[]{INHERITED_GROUPER};
+
+
+    public JSStructureViewModel(PsiElement root) {
         super(root.getContainingFile());
         myRoot = root;
     }
 
-    public JSStructureViewModel(PsiElement root, final Editor editor) {
+    public JSStructureViewModel(PsiElement root, Editor editor) {
         super(editor);
         myRoot = root;
     }
@@ -239,38 +225,36 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel {
     }
 
     @Override
-    protected boolean isSuitable(final PsiElement element) {
+    protected boolean isSuitable(PsiElement element) {
         return super.isSuitable(element)
-            && (!(element instanceof JSVariable) || PsiTreeUtil.getParentOfType(element, JSFunction.class) == null);
+            && !(element instanceof JSVariable variable && PsiTreeUtil.getParentOfType(variable, JSFunction.class) != null);
     }
 
     @Override
+    @RequiredReadAction
     public Object getCurrentEditorElement() {
         Object editorElement = super.getCurrentEditorElement();
 
-        final PsiFile file = getPsiFile();
+        PsiFile file = getPsiFile();
         if (editorElement == null && !(file instanceof JSFile)) {
             final int offset = getEditor().getCaretModel().getOffset();
-            final PsiElement at = file.findElementAt(offset);
-            final PsiLanguageInjectionHost injectionHost = PsiTreeUtil.getParentOfType(at, PsiLanguageInjectionHost.class);
+            PsiElement at = file.findElementAt(offset);
+            PsiLanguageInjectionHost injectionHost = PsiTreeUtil.getParentOfType(at, PsiLanguageInjectionHost.class);
 
             if (injectionHost != null) {
-                final Ref<PsiElement> ref = new Ref<PsiElement>();
+                final SimpleReference<PsiElement> ref = new SimpleReference<>();
                 InjectedLanguageManager.getInstance(file.getProject()).enumerate(
                     injectionHost,
-                    new PsiLanguageInjectionHost.InjectedPsiVisitor() {
-                        @Override
-                        public void visit(@Nonnull final PsiFile injectedPsi, @Nonnull final List<PsiLanguageInjectionHost.Shred> places) {
-                            final PsiLanguageInjectionHost.Shred shred = places.get(0);
-                            final int injectedStart = shred.getRangeInsideHost().getStartOffset() + shred.getHost().getTextOffset();
-                            final int offsetInInjected = offset - injectedStart;
+                    (injectedPsi, places) -> {
+                        PsiLanguageInjectionHost.Shred shred = places.get(0);
+                        int injectedStart = shred.getRangeInsideHost().getStartOffset() + shred.getHost().getTextOffset();
+                        int offsetInInjected = offset - injectedStart;
 
-                            ref.set(injectedPsi.findElementAt(offsetInInjected));
-                        }
+                        ref.set(injectedPsi.findElementAt(offsetInInjected));
                     }
                 );
 
-                final PsiElement element = ref.get();
+                PsiElement element = ref.get();
                 if (element != null) {
                     editorElement = findAcceptableElement(element);
                     return editorElement;
@@ -278,30 +262,25 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel {
             }
         }
 
-        if (editorElement instanceof JSDefinitionExpression) {
-            final PsiElement element = ((PsiElement)editorElement).getParent();
-
-            if (element instanceof JSAssignmentExpression) {
-                final JSExpression roperand = ((JSAssignmentExpression)element).getROperand();
-                if (roperand instanceof JSFunctionExpression) {
-                    editorElement = roperand;
-                }
-            }
+        if (editorElement instanceof JSDefinitionExpression definition
+            && definition.getParent() instanceof JSAssignmentExpression assignment
+            && assignment.getROperand() instanceof JSFunctionExpression functionExpr) {
+            editorElement = functionExpr;
         }
 
-        if (editorElement instanceof JSNamedElement) {
-            final PsiFile containingFile = ((PsiElement)editorElement).getContainingFile();
-            final PsiElement context = containingFile.getContext();
-            final int offset = ((PsiElement)editorElement).getTextOffset();
-            final PsiElement element;
+        if (editorElement instanceof JSNamedElement namedElement) {
+            PsiFile containingFile = namedElement.getContainingFile();
+            PsiElement context = containingFile.getContext();
+            int offset = namedElement.getTextOffset();
+            PsiElement element;
 
             if (context != null) {
-                element = JavaScriptIndex.findSymbolWithNameAndOffsetInEntry(((JSNamedElement)editorElement).getName(), offset);
+                element = JavaScriptIndex.findSymbolWithNameAndOffsetInEntry(namedElement.getName(), offset);
             }
             else {
                 element = JavaScriptIndex.findSymbolByFileAndNameAndOffset(
                     containingFile.getVirtualFile().getPath(),
-                    ((JSNamedElement)editorElement).getName(),
+                    namedElement.getName(),
                     offset
                 );
             }
@@ -318,30 +297,30 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel {
         return myRoot.getContainingFile();
     }
 
-    @Override
     @Nonnull
+    @Override
     protected Class[] getSuitableClasses() {
-        return myClasses;
+        return SUITABLE_CLASSES;
     }
 
-    public void setFilters(final Filter[] filters) {
+    public void setFilters(Filter[] filters) {
         myFilters = filters;
     }
 
-    public void setGroupers(final Grouper[] groupers) {
+    public void setGroupers(Grouper[] groupers) {
         myGroupers = groupers;
     }
 
-    public void setSorters(final Sorter[] sorters) {
+    public void setSorters(Sorter[] sorters) {
         mySorters = sorters;
     }
 
     @Override
-    public boolean shouldEnterElement(final Object element) {
+    public boolean shouldEnterElement(Object element) {
         return shouldEnterElementStatic(element);
     }
 
-    public static boolean shouldEnterElementStatic(final Object element) {
+    public static boolean shouldEnterElementStatic(Object element) {
         return element instanceof JSClass;
     }
 }

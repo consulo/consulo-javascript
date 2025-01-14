@@ -24,6 +24,7 @@ import com.intellij.lang.javascript.impl.refactoring.introduceConstant.JSIntrodu
 import com.intellij.lang.javascript.impl.refactoring.introduceField.JSIntroduceFieldHandler;
 import com.intellij.lang.javascript.impl.refactoring.introduceVariable.JSIntroduceVariableHandler;
 import com.intellij.lang.javascript.psi.*;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.language.Language;
@@ -37,6 +38,7 @@ import jakarta.annotation.Nullable;
 @ExtensionImpl
 public class JavascriptRefactoringSupportProvider extends RefactoringSupportProvider {
     @Override
+    @RequiredReadAction
     public boolean isSafeDeleteAvailable(PsiElement element) {
         boolean simpleElement = element instanceof JSFunction
             || element instanceof JSVariable
@@ -71,7 +73,7 @@ public class JavascriptRefactoringSupportProvider extends RefactoringSupportProv
 
     @Override
     public boolean isInplaceRenameAvailable(PsiElement element, PsiElement context) {
-        return element instanceof JSNamedElement && element.getUseScope() instanceof LocalSearchScope;
+        return element instanceof JSNamedElement namedElement && namedElement.getUseScope() instanceof LocalSearchScope;
     }
 
     @Nonnull

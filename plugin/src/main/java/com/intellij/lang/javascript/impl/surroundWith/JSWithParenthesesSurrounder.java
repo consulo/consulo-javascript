@@ -18,6 +18,7 @@ package com.intellij.lang.javascript.impl.surroundWith;
 
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
 import consulo.javascript.localize.JavaScriptLocalize;
@@ -45,8 +46,9 @@ public class JSWithParenthesesSurrounder implements Surrounder {
         return true;
     }
 
-    @Override
     @Nullable
+    @Override
+    @RequiredReadAction
     public TextRange surroundElements(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiElement[] elements)
         throws IncorrectOperationException {
         JSExpression expr = (JSExpression)elements[0];
