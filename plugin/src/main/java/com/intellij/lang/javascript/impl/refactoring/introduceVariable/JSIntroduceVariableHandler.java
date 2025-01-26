@@ -22,33 +22,30 @@ import com.intellij.lang.javascript.psi.JSStatement;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author ven
  */
-public class JSIntroduceVariableHandler extends JSBaseIntroduceHandler<JSStatement, Settings, JSIntroduceVariableDialog>
-{
-	@Override
-	protected String getRefactoringName()
-	{
-		return JavaScriptLocalize.javascriptIntroduceVariableTitle().get();
-	}
+public class JSIntroduceVariableHandler extends JSBaseIntroduceHandler<JSStatement, Settings, JSIntroduceVariableDialog> {
+    @Override
+    protected String getRefactoringName() {
+        return JavaScriptLocalize.javascriptIntroduceVariableTitle().get();
+    }
 
-	@Override
-	protected LocalizeValue getCannotIntroduceMessage()
-	{
-		return JavaScriptLocalize.javascriptIntroduceVariableErrorNoExpressionSelected();
-	}
+    @Override
+    protected LocalizeValue getCannotIntroduceMessage() {
+        return JavaScriptLocalize.javascriptIntroduceVariableErrorNoExpressionSelected();
+    }
 
-	@Override
-	protected String getDeclText(Settings settings)
-	{
-		return settings.getIntroducedVarType().toString().toLowerCase() + " " + settings.getVariableName();
-	}
+    @Override
+    protected String getDeclText(Settings settings) {
+        return settings.getIntroducedVarType().toString().toLowerCase() + " " + settings.getVariableName();
+    }
 
-	@Override
-	protected JSIntroduceVariableDialog createDialog(final Project project, final JSExpression expression, final JSExpression[] occurrences)
-	{
-		return new JSIntroduceVariableDialog(project, occurrences, expression);
-	}
+    @Override
+    @RequiredUIAccess
+    protected JSIntroduceVariableDialog createDialog(Project project, JSExpression expression, JSExpression[] occurrences) {
+        return new JSIntroduceVariableDialog(project, occurrences, expression);
+    }
 }

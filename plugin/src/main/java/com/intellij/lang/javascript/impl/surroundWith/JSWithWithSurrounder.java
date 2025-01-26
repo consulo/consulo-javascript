@@ -17,6 +17,7 @@
 package com.intellij.lang.javascript.impl.surroundWith;
 
 import com.intellij.lang.javascript.psi.JSWithStatement;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.ASTNode;
@@ -24,41 +25,35 @@ import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
 /**
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 12.07.2005
- * Time: 19:34:54
- * To change this template use File | Settings | File Templates.
+ * @author yole
+ * @since 2005-07-12
  */
-public class JSWithWithSurrounder extends JSStatementSurrounder
-{
-	@Override
-	public String getTemplateDescription()
-	{
-		return JavaScriptLocalize.javascriptSurroundWithWith().get();
-	}
+public class JSWithWithSurrounder extends JSStatementSurrounder {
+    @Override
+    public String getTemplateDescription() {
+        return JavaScriptLocalize.javascriptSurroundWithWith().get();
+    }
 
-	@Override
-	protected String getStatementTemplate(final Project project, PsiElement context)
-	{
-		return "with(a) { }";
-	}
+    @Override
+    protected String getStatementTemplate(Project project, PsiElement context) {
+        return "with(a) { }";
+    }
 
-	@Override
-	protected ASTNode getInsertBeforeNode(final ASTNode statementNode)
-	{
-		JSWithStatement stmt = (JSWithStatement) statementNode.getPsi();
-		return stmt.getStatement().getLastChild().getNode();
-	}
+    @Override
+    @RequiredReadAction
+    protected ASTNode getInsertBeforeNode(ASTNode statementNode) {
+        JSWithStatement stmt = (JSWithStatement)statementNode.getPsi();
+        return stmt.getStatement().getLastChild().getNode();
+    }
 
-	@Override
-	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
-	{
-		JSWithStatement stmt = (JSWithStatement) statementNode.getPsi();
-		ASTNode conditionNode = stmt.getExpression().getNode();
-		int offset = conditionNode.getStartOffset();
-		stmt.getNode().removeChild(conditionNode);
+    @Override
+    @RequiredReadAction
+    protected TextRange getSurroundSelectionRange(ASTNode statementNode) {
+        JSWithStatement stmt = (JSWithStatement)statementNode.getPsi();
+        ASTNode conditionNode = stmt.getExpression().getNode();
+        int offset = conditionNode.getStartOffset();
+        stmt.getNode().removeChild(conditionNode);
 
-		return new TextRange(offset, offset);
-	}
+        return new TextRange(offset, offset);
+    }
 }

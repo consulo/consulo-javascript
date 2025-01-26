@@ -28,37 +28,37 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
- * User: max
- * Date: Feb 2, 2005
- * Time: 12:10:44 PM
+ * @author max
+ * @since 2005-02-02
  */
 @ExtensionImpl
-public class JSBraceMatcher implements PairedBraceMatcher
-{
-	private static final BracePair[] PAIRS = new BracePair[]{
-			new BracePair(JSTokenTypes.LPAR, JSTokenTypes.RPAR, false),
-			new BracePair(JSTokenTypes.LBRACKET, JSTokenTypes.RBRACKET, false),
-			new BracePair(JSTokenTypes.LBRACE, JSTokenTypes.RBRACE, true)
-	};
+public class JSBraceMatcher implements PairedBraceMatcher {
+    private static final BracePair[] PAIRS = new BracePair[]{
+        new BracePair(JSTokenTypes.LPAR, JSTokenTypes.RPAR, false),
+        new BracePair(JSTokenTypes.LBRACKET, JSTokenTypes.RBRACKET, false),
+        new BracePair(JSTokenTypes.LBRACE, JSTokenTypes.RBRACE, true)
+    };
 
-	@Override
-	public BracePair[] getPairs()
-	{
-		return PAIRS;
-	}
+    @Override
+    public BracePair[] getPairs() {
+        return PAIRS;
+    }
 
-	@Override
-	public boolean isPairedBracesAllowedBeforeType(@Nonnull final IElementType lbraceType, @Nullable final IElementType tokenType)
-	{
-		return JSTokenTypes.WHITE_SPACE == tokenType || JSTokenTypes.COMMENTS.contains(tokenType) || tokenType == JSTokenTypes.SEMICOLON || tokenType ==
-				JSTokenTypes.COMMA || tokenType == JSTokenTypes.RPAR || tokenType == JSTokenTypes.RBRACKET || tokenType == JSTokenTypes.RBRACE || null ==
-				tokenType;
-	}
+    @Override
+    public boolean isPairedBracesAllowedBeforeType(@Nonnull IElementType lbraceType, @Nullable IElementType tokenType) {
+        return tokenType == JSTokenTypes.WHITE_SPACE
+            || JSTokenTypes.COMMENTS.contains(tokenType)
+            || tokenType == JSTokenTypes.SEMICOLON
+            || tokenType == JSTokenTypes.COMMA
+            || tokenType == JSTokenTypes.RPAR
+            || tokenType == JSTokenTypes.RBRACKET
+            || tokenType == JSTokenTypes.RBRACE
+            || tokenType == null;
+    }
 
-	@Nonnull
-	@Override
-	public Language getLanguage()
-	{
-		return JavaScriptLanguage.INSTANCE;
-	}
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return JavaScriptLanguage.INSTANCE;
+    }
 }

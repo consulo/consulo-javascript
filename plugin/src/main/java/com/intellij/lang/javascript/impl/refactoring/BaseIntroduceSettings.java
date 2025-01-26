@@ -19,11 +19,10 @@ package com.intellij.lang.javascript.impl.refactoring;
 /**
  * @author ven
  */
-public interface BaseIntroduceSettings
-{
-	boolean isReplaceAllOccurences();
+public interface BaseIntroduceSettings {
+    boolean isReplaceAllOccurences();
 
-	String getVariableName();
+    String getVariableName();
 
-	String getVariableType();
+    String getVariableType();
 }

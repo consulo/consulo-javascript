@@ -17,6 +17,7 @@
 package com.intellij.lang.javascript.impl.findUsages;
 
 import com.intellij.lang.javascript.psi.JSNamedElement;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.language.editor.LangDataKeys;
@@ -46,20 +47,22 @@ import jakarta.annotation.Nullable;
  * @author Maxim.Mossienko
  */
 abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> implements FileStructureGroupRuleProvider {
-    @Override
     @Nullable
-    public UsageGroupingRule getUsageGroupingRule(final Project project) {
+    @Override
+    public UsageGroupingRule getUsageGroupingRule(Project project) {
         return new UsageGroupingRule() {
-            @Override
             @Nullable
-            public UsageGroup groupUsage(final Usage usage) {
-                if (usage instanceof PsiElementUsage) {
-                    PsiElement psiElement = ((PsiElementUsage)usage).getElement();
+            @Override
+            @RequiredReadAction
+            @SuppressWarnings("unchecked")
+            public UsageGroup groupUsage(@Nonnull Usage usage) {
+                if (usage instanceof PsiElementUsage elementUsage) {
+                    PsiElement psiElement = elementUsage.getElement();
 
                     if (!psiElement.getLanguage().isKindOf(JavaScriptLanguage.INSTANCE)) {
                         return null;
                     }
-                    final JSNamedElement element = PsiTreeUtil.getParentOfType(psiElement, getUsageClass());
+                    JSNamedElement element = PsiTreeUtil.getParentOfType(psiElement, getUsageClass());
 
                     if (isAcceptableElement(element)) {
                         return createUsageGroup((T)element);
@@ -76,12 +79,14 @@ abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> impleme
 
     protected abstract Class<? extends JSNamedElement> getUsageClass();
 
-    protected abstract UsageGroup createUsageGroup(final T t);
+    protected abstract UsageGroup createUsageGroup(T t);
 
     /**
      * @author Maxim.Mossienko
      */
-    abstract static class PsiNamedElementUsageGroupBase<T extends PsiNamedElement & NavigationItem> implements UsageGroup, TypeSafeDataProvider {
+    abstract static class PsiNamedElementUsageGroupBase<T extends PsiNamedElement & NavigationItem>
+        implements UsageGroup, TypeSafeDataProvider {
+
         private SmartPsiElementPointer myElementPointer;
         private String myName;
         private Image myIcon;
@@ -119,7 +124,7 @@ abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> impleme
 
         @Override
         public boolean isValid() {
-            final T element = getElement();
+            T element = getElement();
             return element != null && element.isValid();
         }
 
@@ -145,20 +150,19 @@ abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> impleme
         }
 
         @Override
-        public int compareTo(final UsageGroup o) {
+        public int compareTo(UsageGroup o) {
             return myName.compareTo(((PsiNamedElementUsageGroupBase)o).myName);
         }
 
         @Override
-        public boolean equals(final Object obj) {
-            if (!(obj instanceof PsiNamedElementUsageGroupBase)) {
-                return false;
+        public boolean equals(Object obj) {
+            if (obj instanceof PsiNamedElementUsageGroupBase group) {
+                if (isValid() && group.isValid()) {
+                    return getElement().getManager().areElementsEquivalent(getElement(), group.getElement());
+                }
+                return Comparing.equal(myName, group.myName);
             }
-            PsiNamedElementUsageGroupBase group = (PsiNamedElementUsageGroupBase)obj;
-            if (isValid() && group.isValid()) {
-                return getElement().getManager().areElementsEquivalent(getElement(), group.getElement());
-            }
-            return Comparing.equal(myName, ((PsiNamedElementUsageGroupBase)obj).myName);
+            return false;
         }
 
         @Override
@@ -167,7 +171,7 @@ abstract class JavaScriptGroupRuleProviderBase<T extends JSNamedElement> impleme
         }
 
         @Override
-        public void calcData(final Key<?> key, final DataSink sink) {
+        public void calcData(Key<?> key, DataSink sink) {
             if (!isValid()) {
                 return;
             }

@@ -26,17 +26,14 @@ import consulo.language.Language;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-public class BasicJavascriptNamesValidator extends JSNamesValidator
-{
-	public BasicJavascriptNamesValidator()
-	{
-		super(DialectOptionHolder.dummy());
-	}
+public class BasicJavascriptNamesValidator extends JSNamesValidator {
+    public BasicJavascriptNamesValidator() {
+        super(DialectOptionHolder.dummy());
+    }
 
-	@Nonnull
-	@Override
-	public Language getLanguage()
-	{
-		return JavaScriptLanguage.INSTANCE;
-	}
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return JavaScriptLanguage.INSTANCE;
+    }
 }

@@ -14,14 +14,12 @@ import jakarta.annotation.Nonnull;
  * @since 2024-04-19
  */
 @ExtensionImpl
-public class JavaScriptEmbeddedTokenHighlighter implements EmbeddedTokenHighlighter
-{
-	@Nonnull
-	@Override
-	public MultiMap<IElementType, TextAttributesKey> getEmbeddedTokenAttributes(@Nonnull XMLLanguage language)
-	{
-		MultiMap<IElementType, TextAttributesKey> keys = MultiMap.createLinked();
-		JavaScriptHighlighter.storeDefaults(keys);
-		return keys;
-	}
+public class JavaScriptEmbeddedTokenHighlighter implements EmbeddedTokenHighlighter {
+    @Nonnull
+    @Override
+    public MultiMap<IElementType, TextAttributesKey> getEmbeddedTokenAttributes(@Nonnull XMLLanguage language) {
+        MultiMap<IElementType, TextAttributesKey> keys = MultiMap.createLinked();
+        JavaScriptHighlighter.storeDefaults(keys);
+        return keys;
+    }
 }

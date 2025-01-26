@@ -16,20 +16,17 @@ import jakarta.annotation.Nullable;
  * @since 17/01/2021
  */
 @ExtensionImpl
-public class JavaScriptNavBarModelExtension extends StructureAwareNavBarModelExtension
-{
-	@Nonnull
-	@Override
-	protected Language getLanguage()
-	{
-		return JavaScriptLanguage.INSTANCE;
-	}
+public class JavaScriptNavBarModelExtension extends StructureAwareNavBarModelExtension {
+    @Nonnull
+    @Override
+    protected Language getLanguage() {
+        return JavaScriptLanguage.INSTANCE;
+    }
 
-	@Nullable
-	@Override
-	@RequiredReadAction
-	public String getPresentableText(Object object)
-	{
-		return object instanceof PsiElement ? JSStructureItemPresentation.getName((PsiElement) object) : null;
-	}
+    @Nullable
+    @Override
+    @RequiredReadAction
+    public String getPresentableText(Object object) {
+        return object instanceof PsiElement ? JSStructureItemPresentation.getName((PsiElement)object) : null;
+    }
 }

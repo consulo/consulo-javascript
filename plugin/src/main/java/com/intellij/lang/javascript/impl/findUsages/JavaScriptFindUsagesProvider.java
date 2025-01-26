@@ -31,9 +31,8 @@ import consulo.xml.psi.xml.XmlToken;
 import jakarta.annotation.Nonnull;
 
 /**
- * User: max
- * Date: Feb 14, 2005
- * Time: 6:44:02 PM
+ * @author max
+ * @since 2005-02-14
  */
 @ExtensionImpl
 public class JavaScriptFindUsagesProvider implements FindUsagesProvider {

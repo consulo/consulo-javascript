@@ -18,6 +18,7 @@ package com.intellij.lang.javascript.impl.surroundWith;
 
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
 import consulo.javascript.localize.JavaScriptLocalize;
@@ -34,29 +35,26 @@ import jakarta.annotation.Nullable;
  * @author yole
  * @since 2005-07-12
  */
-public class JSWithParenthesesSurrounder implements Surrounder
-{
-	@Override
-	public String getTemplateDescription()
-	{
-		return JavaScriptLocalize.javascriptSurroundWithParenthesis().get();
-	}
+public class JSWithParenthesesSurrounder implements Surrounder {
+    @Override
+    public String getTemplateDescription() {
+        return JavaScriptLocalize.javascriptSurroundWithParenthesis().get();
+    }
 
-	@Override
-	public boolean isApplicable(@Nonnull PsiElement[] elements)
-	{
-		return true;
-	}
+    @Override
+    public boolean isApplicable(@Nonnull PsiElement[] elements) {
+        return true;
+    }
 
-	@Override
-	@Nullable
-	public TextRange surroundElements(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiElement[] elements) throws
-			IncorrectOperationException
-	{
-		JSExpression expr = (JSExpression) elements[0];
-		ASTNode parenthExprNode = JSChangeUtil.createExpressionFromText(project, "(" + expr.getText() + ")").getNode();
-		expr.getNode().getTreeParent().replaceChild(expr.getNode(), parenthExprNode);
-		int offset = parenthExprNode.getTextRange().getEndOffset();
-		return new TextRange(offset, offset);
-	}
+    @Nullable
+    @Override
+    @RequiredReadAction
+    public TextRange surroundElements(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiElement[] elements)
+        throws IncorrectOperationException {
+        JSExpression expr = (JSExpression)elements[0];
+        ASTNode parenthExprNode = JSChangeUtil.createExpressionFromText(project, "(" + expr.getText() + ")").getNode();
+        expr.getNode().getTreeParent().replaceChild(expr.getNode(), parenthExprNode);
+        int offset = parenthExprNode.getTextRange().getEndOffset();
+        return new TextRange(offset, offset);
+    }
 }

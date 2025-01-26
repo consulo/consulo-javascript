@@ -26,8 +26,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
- * Date: Oct 20, 2008
- * Time: 7:02:53 PM
+ * @since 2008-10-20
  */
 class ByteBuffer {
     private byte[] bytes;
@@ -69,7 +68,7 @@ class ByteBuffer {
         return readInt();
     }
 
-    public void setPosition(final int i) {
+    public void setPosition(int i) {
         position = i;
     }
 
@@ -78,15 +77,15 @@ class ByteBuffer {
     }
 
     public void uncompress() throws IOException {
-        final InflaterInputStream zipInputStream = new InflaterInputStream(new ByteArrayInputStream(bytes));
+        InflaterInputStream zipInputStream = new InflaterInputStream(new ByteArrayInputStream(bytes));
 
         bytes = readStream(zipInputStream);
 
         zipInputStream.close();
     }
 
-    private static byte[] readStream(final InputStream zipInputStream) throws IOException {
-        final byte[] buf = new byte[8192];
+    private static byte[] readStream(InputStream zipInputStream) throws IOException {
+        byte[] buf = new byte[8192];
         byte[] result = new byte[8192];
         int total = 0;
 
@@ -105,7 +104,7 @@ class ByteBuffer {
             total += read;
         }
 
-        final byte[] realResult = new byte[total];
+        byte[] realResult = new byte[total];
         System.arraycopy(result, 0, realResult, 0, total);
         return realResult;
     }
@@ -142,7 +141,7 @@ class ByteBuffer {
 
     public String readUTFBytes(int i) {
         try {
-            final byte[] buf = new byte[i];
+            byte[] buf = new byte[i];
             while (i > 0) {
                 buf[buf.length - i] = (byte)readByte();
                 --i;
@@ -188,7 +187,7 @@ class ByteBuffer {
         return position;
     }
 
-    public void incPosition(final int length) {
+    public void incPosition(int length) {
         position += length;
     }
 }

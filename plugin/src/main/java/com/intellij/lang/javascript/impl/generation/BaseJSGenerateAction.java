@@ -43,7 +43,7 @@ abstract class BaseJSGenerateAction extends AnAction {
         PsiFile psifile = e.getData(LangDataKeys.PSI_FILE);
         Project project = e.getData(PlatformDataKeys.PROJECT);
 
-        final VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
+        VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
         if (JavaScriptSupportLoader.isFlexMxmFile(file)) {
             editor = BaseCodeInsightAction.getInjectedEditor(project, editor);
             psifile = PsiUtilBase.getPsiFileInEditor(editor, project);
@@ -57,15 +57,15 @@ abstract class BaseJSGenerateAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void update(final AnActionEvent e) {
-        final VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
+    public void update(AnActionEvent e) {
+        VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
 
         boolean status = false;
 
         if (file != null) {
             if (file.getFileType() == JavaScriptFileType.INSTANCE) {
-                final Editor editor = e.getData(PlatformDataKeys.EDITOR);
-                final PsiFile psifile = e.getData(LangDataKeys.PSI_FILE);
+                Editor editor = e.getData(PlatformDataKeys.EDITOR);
+                PsiFile psifile = e.getData(LangDataKeys.PSI_FILE);
 
                 if (editor != null && psifile != null) {
                     status = psifile.getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;

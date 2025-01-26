@@ -22,14 +22,14 @@ import com.intellij.lang.javascript.impl.refactoring.BaseIntroduceSettings;
 /**
  * @author ven
  */
-public interface JSIntroduceFieldSettings extends BaseIntroduceSettings
-{
-	JSAttributeList.AccessType getAccessType();
+public interface JSIntroduceFieldSettings extends BaseIntroduceSettings {
+    JSAttributeList.AccessType getAccessType();
 
-	enum InitializationPlace
-	{
-		CurrentMethod, FieldDeclaration, Constructor
-	}
+    enum InitializationPlace {
+        CurrentMethod,
+        FieldDeclaration,
+        Constructor
+    }
 
-	InitializationPlace getInitializationPlace();
+    InitializationPlace getInitializationPlace();
 }

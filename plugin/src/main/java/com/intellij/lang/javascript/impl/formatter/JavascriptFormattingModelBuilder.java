@@ -31,27 +31,34 @@ import consulo.language.psi.PsiFile;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-public class JavascriptFormattingModelBuilder implements FormattingModelBuilder
-{
-	@Nonnull
-	public FormattingModel createModel(@Nonnull FormattingContext formattingContext)
-	{
-		PsiElement element = formattingContext.getPsiElement();
+public class JavascriptFormattingModelBuilder implements FormattingModelBuilder {
+    @Nonnull
+    @Override
+    public FormattingModel createModel(@Nonnull FormattingContext formattingContext) {
+        PsiElement element = formattingContext.getPsiElement();
 
-		CodeStyleSettings settings = formattingContext.getCodeStyleSettings();
+        CodeStyleSettings settings = formattingContext.getCodeStyleSettings();
 
-		final PsiFile psiFile = element.getContainingFile();
+        PsiFile psiFile = element.getContainingFile();
 
-		CommonCodeStyleSettings commonSettings = settings.getCommonSettings(JavaScriptLanguage.INSTANCE);
+        CommonCodeStyleSettings commonSettings = settings.getCommonSettings(JavaScriptLanguage.INSTANCE);
 
-		return new JSFormattingModel(psiFile, settings, new JSBlock(psiFile instanceof JSFile ? psiFile.getNode() : element.getNode(), null, null, null, commonSettings));
+        return new JSFormattingModel(
+            psiFile,
+            settings,
+            new JSBlock(
+                psiFile instanceof JSFile jsFile ? jsFile.getNode() : element.getNode(),
+                null,
+                null,
+                null,
+                commonSettings
+            )
+        );
+    }
 
-	}
-
-	@Nonnull
-	@Override
-	public Language getLanguage()
-	{
-		return JavaScriptLanguage.INSTANCE;
-	}
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return JavaScriptLanguage.INSTANCE;
+    }
 }

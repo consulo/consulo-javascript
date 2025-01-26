@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.impl.surroundWith;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
 import consulo.project.Project;
@@ -25,30 +26,27 @@ import consulo.language.psi.PsiElement;
  * @author yole
  * @since 2005-07-12
  */
-public class JSWithBlockSurrounder extends JSStatementSurrounder
-{
-	@Override
-	public String getTemplateDescription()
-	{
-		return "{ }";
-	}
+public class JSWithBlockSurrounder extends JSStatementSurrounder {
+    @Override
+    public String getTemplateDescription() {
+        return "{ }";
+    }
 
-	@Override
-	protected String getStatementTemplate(final Project project, PsiElement context)
-	{
-		return "{ }";
-	}
+    @Override
+    protected String getStatementTemplate(Project project, PsiElement context) {
+        return "{ }";
+    }
 
-	@Override
-	protected ASTNode getInsertBeforeNode(final ASTNode statementNode)
-	{
-		return statementNode.getLastChildNode();
-	}
+    @Override
+    @RequiredReadAction
+    protected ASTNode getInsertBeforeNode(ASTNode statementNode) {
+        return statementNode.getLastChildNode();
+    }
 
-	@Override
-	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
-	{
-		int endOffset = statementNode.getTextRange().getEndOffset();
-		return new TextRange(endOffset, endOffset);
-	}
+    @Override
+    @RequiredReadAction
+    protected TextRange getSurroundSelectionRange(ASTNode statementNode) {
+        int endOffset = statementNode.getTextRange().getEndOffset();
+        return new TextRange(endOffset, endOffset);
+    }
 }

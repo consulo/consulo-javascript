@@ -63,7 +63,7 @@ public class JSDuplicatedDeclarationInspection extends JSInspection {
     }
 
     @Override
-    protected JSElementVisitor createVisitor(final ProblemsHolder holder) {
+    protected JSElementVisitor createVisitor(ProblemsHolder holder) {
         return new JSElementVisitor() {
             @Override
             @RequiredReadAction

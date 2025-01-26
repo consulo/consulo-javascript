@@ -20,65 +20,59 @@ import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.JSCatchBlock;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.JSTryStatement;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author yole
  * @since 2005-07-12
  */
-public class JSWithTryCatchFinallySurrounder extends JSStatementSurrounder
-{
-	@Override
-	public String getTemplateDescription()
-	{
-		return JavaScriptLocalize.javascriptSurroundWithTryCatchFinally().get();
-	}
+public class JSWithTryCatchFinallySurrounder extends JSStatementSurrounder {
+    @Override
+    public String getTemplateDescription() {
+        return JavaScriptLocalize.javascriptSurroundWithTryCatchFinally().get();
+    }
 
-	@Override
-	@NonNls
-	protected String getStatementTemplate(final Project project, PsiElement context)
-	{
-		return "try { } catch(e" + getExceptionVarTypeBasedOnContext(context) + ") { } finally { }";
-	}
+    @Override
+    @RequiredReadAction
+    protected String getStatementTemplate(Project project, PsiElement context) {
+        return "try { } catch(e" + getExceptionVarTypeBasedOnContext(context) + ") { } finally { }";
+    }
 
-	protected static String getExceptionVarTypeBasedOnContext(@Nonnull PsiElement context)
-	{
-		if(context.getContainingFile().getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4)
-		{
-			return ":Error";
-		}
-		return "";
-	}
+    @RequiredReadAction
+    protected static String getExceptionVarTypeBasedOnContext(@Nonnull PsiElement context) {
+        if (context.getContainingFile().getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4) {
+            return ":Error";
+        }
+        return "";
+    }
 
-	@Override
-	protected ASTNode getInsertBeforeNode(final ASTNode statementNode)
-	{
-		JSTryStatement stmt = (JSTryStatement) statementNode.getPsi();
-		return stmt.getStatement().getLastChild().getNode();
-	}
+    @Override
+    @RequiredReadAction
+    protected ASTNode getInsertBeforeNode(ASTNode statementNode) {
+        JSTryStatement stmt = (JSTryStatement)statementNode.getPsi();
+        return stmt.getStatement().getLastChild().getNode();
+    }
 
-	@Override
-	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
-	{
-		JSTryStatement stmt = (JSTryStatement) statementNode.getPsi();
-		final JSCatchBlock catchBlock = stmt.getCatchBlock();
-		if(catchBlock != null)
-		{
-			int offset = catchBlock.getStatement().getFirstChild().getNode().getStartOffset() + 1;
-			return new TextRange(offset, offset);
-		}
-		final JSStatement finallyStmt = stmt.getFinallyStatement();
-		if(finallyStmt != null)
-		{
-			int offset = finallyStmt.getFirstChild().getNode().getStartOffset() + 1;
-			return new TextRange(offset, offset);
-		}
-		return null;
-	}
+    @Override
+    @RequiredReadAction
+    protected TextRange getSurroundSelectionRange(ASTNode statementNode) {
+        JSTryStatement stmt = (JSTryStatement)statementNode.getPsi();
+        final JSCatchBlock catchBlock = stmt.getCatchBlock();
+        if (catchBlock != null) {
+            int offset = catchBlock.getStatement().getFirstChild().getNode().getStartOffset() + 1;
+            return new TextRange(offset, offset);
+        }
+        final JSStatement finallyStmt = stmt.getFinallyStatement();
+        if (finallyStmt != null) {
+            int offset = finallyStmt.getFirstChild().getNode().getStartOffset() + 1;
+            return new TextRange(offset, offset);
+        }
+        return null;
+    }
 }

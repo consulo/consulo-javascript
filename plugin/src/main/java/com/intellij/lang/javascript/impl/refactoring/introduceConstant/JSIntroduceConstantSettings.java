@@ -22,7 +22,6 @@ import com.intellij.lang.javascript.impl.refactoring.BaseIntroduceSettings;
 /**
  * @author ven
  */
-public interface JSIntroduceConstantSettings extends BaseIntroduceSettings
-{
-	JSAttributeList.AccessType getAccessType();
+public interface JSIntroduceConstantSettings extends BaseIntroduceSettings {
+    JSAttributeList.AccessType getAccessType();
 }

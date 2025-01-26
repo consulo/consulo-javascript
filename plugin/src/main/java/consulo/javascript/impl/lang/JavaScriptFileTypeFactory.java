@@ -28,11 +28,9 @@ import jakarta.annotation.Nonnull;
  * @since 11.12.2015
  */
 @ExtensionImpl
-public class JavaScriptFileTypeFactory extends FileTypeFactory
-{
-	@Override
-	public void createFileTypes(@Nonnull FileTypeConsumer consumer)
-	{
-		consumer.consume(JavaScriptFileType.INSTANCE);
-	}
+public class JavaScriptFileTypeFactory extends FileTypeFactory {
+    @Override
+    public void createFileTypes(@Nonnull FileTypeConsumer consumer) {
+        consumer.consume(JavaScriptFileType.INSTANCE);
+    }
 }

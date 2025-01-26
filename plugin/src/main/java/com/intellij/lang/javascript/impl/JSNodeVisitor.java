@@ -28,7 +28,7 @@ import consulo.language.ast.IElementType;
  */
 public abstract class JSNodeVisitor {
     public final void visit(ASTNode node) {
-        final IElementType type = node.getElementType();
+        IElementType type = node.getElementType();
         if (type instanceof JSFileElementType) {
             visitFile(node);
         }
@@ -188,210 +188,210 @@ public abstract class JSNodeVisitor {
         visitExpression(node);
     }
 
-    public void visitAttributeList(final ASTNode node) {
+    public void visitAttributeList(ASTNode node) {
         visitElement(node);
     }
 
-    public void visitPackageStatement(final ASTNode node) {
+    public void visitPackageStatement(ASTNode node) {
         visitElement(node);
     }
 
-    public void visitClass(final ASTNode node) {
+    public void visitClass(ASTNode node) {
         visitElement(node);
     }
 
-    public void visitFile(final ASTNode node) {
+    public void visitFile(ASTNode node) {
         visitElement(node);
     }
 
-    public void visitCallExpression(final ASTNode node) {
+    public void visitCallExpression(ASTNode node) {
         visitExpression(node);
     }
 
-    public void visitIndexedPropertyAccessExpression(final ASTNode node) {
+    public void visitIndexedPropertyAccessExpression(ASTNode node) {
         visitExpression(node);
     }
 
-    public void visitNewExpression(final ASTNode node) {
+    public void visitNewExpression(ASTNode node) {
         visitExpression(node);
     }
 
-    public void visitFunctionExpression(final ASTNode node) {
+    public void visitFunctionExpression(ASTNode node) {
         visitExpression(node);
     }
 
-    public void visitPrefixExpression(final ASTNode node) {
+    public void visitPrefixExpression(ASTNode node) {
         visitExpression(node);
     }
 
-    public void visitPostfixExpression(final ASTNode node) {
+    public void visitPostfixExpression(ASTNode node) {
         visitExpression(node);
     }
 
-    public void visitConditionalExpression(final ASTNode node) {
+    public void visitConditionalExpression(ASTNode node) {
         visitExpression(node);
     }
 
-    public void visitCommaExpression(final ASTNode node) {
+    public void visitCommaExpression(ASTNode node) {
         visitBinaryExpression(node);
     }
 
-    public void visitAssignmentExpression(final ASTNode node) {
+    public void visitAssignmentExpression(ASTNode node) {
         visitBinaryExpression(node);
     }
 
-    public void visitBinaryExpression(final ASTNode node) {
+    public void visitBinaryExpression(ASTNode node) {
         visitExpression(node);
     }
 
-    public void visitProperty(final ASTNode node) {
+    public void visitProperty(ASTNode node) {
         visitElement(node);
     }
 
-    public void visitObjectLiteralExpression(final ASTNode node) {
+    public void visitObjectLiteralExpression(ASTNode node) {
         visitExpression(node);
     }
 
-    public void visitArrayLiteralExpression(final ASTNode node) {
+    public void visitArrayLiteralExpression(ASTNode node) {
         visitExpression(node);
     }
 
-    public void visitParenthesizedExpression(final ASTNode node) {
+    public void visitParenthesizedExpression(ASTNode node) {
         visitExpression(node);
     }
 
-    public void visitReferenceExpression(final ASTNode node) {
+    public void visitReferenceExpression(ASTNode node) {
         visitExpression(node);
     }
 
-    public void visitLiteralExpression(final ASTNode node) {
+    public void visitLiteralExpression(ASTNode node) {
         visitExpression(node);
     }
 
-    public void visitThisExpression(final ASTNode node) {
+    public void visitThisExpression(ASTNode node) {
         visitExpression(node);
     }
 
-    public void visitForInStatement(final ASTNode node) {
+    public void visitForInStatement(ASTNode node) {
         visitStatement(node);
     }
 
-    public void visitForStatement(final ASTNode node) {
+    public void visitForStatement(ASTNode node) {
         visitStatement(node);
     }
 
-    public void visitDoWhileStatement(final ASTNode node) {
+    public void visitDoWhileStatement(ASTNode node) {
         visitStatement(node);
     }
 
-    public void visitWhileStatement(final ASTNode node) {
+    public void visitWhileStatement(ASTNode node) {
         visitStatement(node);
     }
 
-    public void visitCaseClause(final ASTNode node) {
+    public void visitCaseClause(ASTNode node) {
         visitElement(node);
     }
 
-    public void visitSwitchStatement(final ASTNode node) {
+    public void visitSwitchStatement(ASTNode node) {
         visitStatement(node);
     }
 
-    public void visitCatchBlock(final ASTNode node) {
+    public void visitCatchBlock(ASTNode node) {
         visitElement(node);
     }
 
-    public void visitTryStatement(final ASTNode node) {
+    public void visitTryStatement(ASTNode node) {
         visitStatement(node);
     }
 
-    public void visitThrowStatement(final ASTNode node) {
+    public void visitThrowStatement(ASTNode node) {
         visitStatement(node);
     }
 
-    public void visitReturnStatement(final ASTNode node) {
+    public void visitReturnStatement(ASTNode node) {
         visitStatement(node);
     }
 
-    public void visitWithStatement(final ASTNode node) {
+    public void visitWithStatement(ASTNode node) {
         visitStatement(node);
     }
 
-    public void visitBreakStatement(final ASTNode node) {
+    public void visitBreakStatement(ASTNode node) {
         visitStatement(node);
     }
 
-    public void visitContinueStatement(final ASTNode node) {
+    public void visitContinueStatement(ASTNode node) {
         visitStatement(node);
     }
 
-    public void visitIfStatement(final ASTNode node) {
+    public void visitIfStatement(ASTNode node) {
         visitStatement(node);
     }
 
-    public void visitEmptyStatement(final ASTNode node) {
+    public void visitEmptyStatement(ASTNode node) {
         visitStatement(node);
     }
 
-    public void visitVarStatement(final ASTNode node) {
+    public void visitVarStatement(ASTNode node) {
         visitStatement(node);
     }
 
-    public void visitExpressionStatement(final ASTNode node) {
+    public void visitExpressionStatement(ASTNode node) {
         visitStatement(node);
     }
 
-    public void visitLabeledStatement(final ASTNode node) {
+    public void visitLabeledStatement(ASTNode node) {
         visitStatement(node);
     }
 
-    public void visitBlock(final ASTNode node) {
+    public void visitBlock(ASTNode node) {
         visitStatement(node);
     }
 
-    public void visitArgumentList(final ASTNode node) {
+    public void visitArgumentList(ASTNode node) {
         visitElement(node);
     }
 
-    public void visitParameter(final ASTNode node) {
+    public void visitParameter(ASTNode node) {
         visitVariable(node);
     }
 
-    public void visitVariable(final ASTNode node) {
+    public void visitVariable(ASTNode node) {
         visitElement(node);
     }
 
-    public void visitParameterList(final ASTNode node) {
+    public void visitParameterList(ASTNode node) {
         visitElement(node);
     }
 
-    public void visitEmbeddedContent(final ASTNode node) {
+    public void visitEmbeddedContent(ASTNode node) {
         visitElement(node);
     }
 
-    public void visitElement(final ASTNode node) {
+    public void visitElement(ASTNode node) {
     }
 
-    public void visitSourceElement(final ASTNode node) {
+    public void visitSourceElement(ASTNode node) {
         visitElement(node);
     }
 
-    public void visitFunctionDeclaration(final ASTNode node) {
+    public void visitFunctionDeclaration(ASTNode node) {
         visitSourceElement(node);
     }
 
-    public void visitStatement(final ASTNode node) {
+    public void visitStatement(ASTNode node) {
         visitSourceElement(node);
     }
 
-    public void visitExpression(final ASTNode node) {
+    public void visitExpression(ASTNode node) {
         visitElement(node);
     }
 
-    public void visitDocComment(final ASTNode node) {
+    public void visitDocComment(ASTNode node) {
         visitElement(node);
     }
 
-    public void visitComment(final ASTNode node) {
+    public void visitComment(ASTNode node) {
         visitElement(node);
     }
 }

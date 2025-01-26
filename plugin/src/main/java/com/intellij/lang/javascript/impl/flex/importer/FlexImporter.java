@@ -16,15 +16,10 @@
 
 package com.intellij.lang.javascript.impl.flex.importer;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 import consulo.language.psi.stub.StubElement;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
+
+import java.io.*;
 
 /**
  * Produced from abcdump.as
@@ -51,28 +46,23 @@ public class FlexImporter {
         }
     }
 
-    private static void saveStringAsFile(final String result, final String fileName) throws IOException {
-        final FileOutputStream fileOutputStream = new FileOutputStream(fileName);
-        try {
+    private static void saveStringAsFile(String result, String fileName) throws IOException {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(fileName)) {
             fileOutputStream.write(result.getBytes());
-        }
-        finally {
-            fileOutputStream.close();
         }
     }
 
-    public static String dumpContentsFromStream(final InputStream in, boolean _dumpCode) throws IOException {
-        final AbstractDumpProcessor abcDumper = new AbcDumper(_dumpCode);
+    public static String dumpContentsFromStream(InputStream in, boolean _dumpCode) throws IOException {
+        AbstractDumpProcessor abcDumper = new AbcDumper(_dumpCode);
         processFlexByteCode(in, abcDumper);
         return abcDumper.getResult();
     }
 
-    @NonNls
-    public static String buildInterfaceFromStream(final InputStream in) {
+    public static String buildInterfaceFromStream(InputStream in) {
         try {
-            final AbstractDumpProcessor abcDumper = new AS3InterfaceDumper();
+            AbstractDumpProcessor abcDumper = new AS3InterfaceDumper();
             processFlexByteCode(in, abcDumper);
-            final String s = abcDumper.getResult();
+            String s = abcDumper.getResult();
             //saveStringAsFile(s, File.createTempFile("fleximport", ".as").getPath());
             return s;
         }
@@ -84,13 +74,12 @@ public class FlexImporter {
         }
     }
 
-    @NonNls
-    public static void buildStubsInterfaceFromStream(final InputStream in, final StubElement parent) throws Exception {
+    public static void buildStubsInterfaceFromStream(InputStream in, StubElement parent) throws Exception {
         processFlexByteCode(in, new AS3InterfaceStubDumper(parent));
     }
 
     private static void processFlexByteCode(
-        @Nonnull final InputStream in,
+        @Nonnull InputStream in,
         @Nonnull FlexByteCodeInformationProcessor processor
     ) throws IOException {
         ByteBuffer data = new ByteBuffer();
@@ -110,7 +99,7 @@ public class FlexImporter {
             case 67 | 87 << 8 | 83 << 16 | 8 << 24: // SWC8
             case 67 | 87 << 8 | 83 << 16 | 7 << 24: // SWC7
             case 67 | 87 << 8 | 83 << 16 | 6 << 24: // SWC6
-                final int delta = 8;
+                int delta = 8;
                 data.setPosition(delta);
                 ByteBuffer udata = new ByteBuffer();
                 udata.setLittleEndian();

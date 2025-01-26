@@ -20,6 +20,7 @@ import com.intellij.lang.javascript.psi.JSBlockStatement;
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.impl.JSEmbeddedContentImpl;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.language.JavaScriptLanguage;
 import consulo.language.Language;
@@ -33,6 +34,7 @@ import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.util.PsiTreeUtil;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,149 +43,129 @@ import java.util.List;
  * @since 2005-07-12
  */
 @ExtensionImpl
-public class JSStatementsSurroundDescriptor implements SurroundDescriptor
-{
-	private static final Surrounder[] SURROUNDERS = {
-			new JSWithBlockSurrounder(),
-			new JSWithIfSurrounder(),
-			new JSWithIfElseSurrounder(),
-			new JSWithWhileSurrounder(),
-			new JSWithDoWhileSurrounder(),
-			new JSWithForSurrounder(),
-			new JSWithTryCatchSurrounder(),
-			new JSWithTryFinallySurrounder(),
-			new JSWithTryCatchFinallySurrounder(),
-			new JSWithWithSurrounder(),
-			new JSWithFunctionSurrounder(),
-			new JSWithFunctionExpressionSurrounder(),
-	};
+public class JSStatementsSurroundDescriptor implements SurroundDescriptor {
+    private static final Surrounder[] SURROUNDERS = {
+        new JSWithBlockSurrounder(),
+        new JSWithIfSurrounder(),
+        new JSWithIfElseSurrounder(),
+        new JSWithWhileSurrounder(),
+        new JSWithDoWhileSurrounder(),
+        new JSWithForSurrounder(),
+        new JSWithTryCatchSurrounder(),
+        new JSWithTryFinallySurrounder(),
+        new JSWithTryCatchFinallySurrounder(),
+        new JSWithWithSurrounder(),
+        new JSWithFunctionSurrounder(),
+        new JSWithFunctionExpressionSurrounder(),
+    };
 
-	@Override
-	@Nonnull
-	public PsiElement[] getElementsToSurround(PsiFile file, int startOffset, int endOffset)
-	{
-		final PsiElement[] statements = findStatementsInRange(file, startOffset, endOffset);
-		if(statements == null)
-		{
-			return PsiElement.EMPTY_ARRAY;
-		}
-		return statements;
-	}
+    @Override
+    @Nonnull
+    @RequiredReadAction
+    public PsiElement[] getElementsToSurround(PsiFile file, int startOffset, int endOffset) {
+        final PsiElement[] statements = findStatementsInRange(file, startOffset, endOffset);
+        if (statements == null) {
+            return PsiElement.EMPTY_ARRAY;
+        }
+        return statements;
+    }
 
-	@Override
-	@Nonnull
-	public Surrounder[] getSurrounders()
-	{
-		return SURROUNDERS;
-	}
+    @Override
+    @Nonnull
+    public Surrounder[] getSurrounders() {
+        return SURROUNDERS;
+    }
 
-	@Override
-	public boolean isExclusive()
-	{
-		return false;
-	}
+    @Override
+    public boolean isExclusive() {
+        return false;
+    }
 
-	private PsiElement[] findStatementsInRange(PsiFile file, int startOffset, int endOffset)
-	{
-		PsiElement element1 = file.findElementAt(startOffset);
-		PsiElement element2 = file.findElementAt(endOffset - 1);
-		if(element1 instanceof PsiWhiteSpace)
-		{
-			startOffset = element1.getTextRange().getEndOffset();
-			element1 = file.findElementAt(startOffset);
-		}
-		if(element2 instanceof PsiWhiteSpace)
-		{
-			endOffset = element2.getTextRange().getStartOffset();
-			element2 = file.findElementAt(endOffset - 1);
-		}
-		if(element1 == null || element2 == null)
-		{
-			return null;
-		}
+    @RequiredReadAction
+    private PsiElement[] findStatementsInRange(PsiFile file, int startOffset, int endOffset) {
+        PsiElement element1 = file.findElementAt(startOffset);
+        PsiElement element2 = file.findElementAt(endOffset - 1);
+        if (element1 instanceof PsiWhiteSpace whiteSpace) {
+            startOffset = whiteSpace.getTextRange().getEndOffset();
+            element1 = file.findElementAt(startOffset);
+        }
 
-		final JSStatement statement = PsiTreeUtil.getParentOfType(element1, JSStatement.class);
-		final JSStatement statement2 = PsiTreeUtil.getParentOfType(element2, JSStatement.class);
+        if (element2 instanceof PsiWhiteSpace whiteSpace) {
+            endOffset = whiteSpace.getTextRange().getStartOffset();
+            element2 = file.findElementAt(endOffset - 1);
+        }
 
-		PsiElement parent = PsiTreeUtil.findCommonParent(element1, element2);
-		while(true)
-		{
-			if(parent instanceof JSBlockStatement || ((parent instanceof JSEmbeddedContentImpl || parent instanceof JSFile) && (statement != null &&
-					statement2 != null && PsiTreeUtil.isAncestor(parent, statement, false) && PsiTreeUtil.isAncestor(parent, statement2, false))))
-			{
-				break;
-			}
-			if(parent instanceof JSStatement)
-			{
-				parent = parent.getParent();
-				break;
-			}
-			if(parent instanceof PsiFile)
-			{
-				return null;
-			}
-			parent = parent.getParent();
-		}
+        if (element1 == null || element2 == null) {
+            return null;
+        }
 
+        JSStatement statement = PsiTreeUtil.getParentOfType(element1, JSStatement.class);
+        JSStatement statement2 = PsiTreeUtil.getParentOfType(element2, JSStatement.class);
 
-		while(!element1.getParent().equals(parent))
-		{
-			element1 = element1.getParent();
-		}
-		if(startOffset != element1.getTextRange().getStartOffset())
-		{
-			return null;
-		}
+        PsiElement parent = PsiTreeUtil.findCommonParent(element1, element2);
+        while (true) {
+            if (parent instanceof JSBlockStatement || ((parent instanceof JSEmbeddedContentImpl || parent instanceof JSFile)
+                && (statement != null && statement2 != null && PsiTreeUtil.isAncestor(parent, statement, false)
+                && PsiTreeUtil.isAncestor(parent, statement2, false)))) {
+                break;
+            }
+            if (parent instanceof JSStatement parentStatement) {
+                parent = parentStatement.getParent();
+                break;
+            }
+            if (parent instanceof PsiFile) {
+                return null;
+            }
+            parent = parent.getParent();
+        }
 
-		while(!element2.getParent().equals(parent))
-		{
-			element2 = element2.getParent();
-		}
-		if(endOffset != element2.getTextRange().getEndOffset())
-		{
-			return null;
-		}
+        while (!element1.getParent().equals(parent)) {
+            element1 = element1.getParent();
+        }
 
-		final ASTNode[] astNodes = parent.getNode().getChildren(null);
-		List<PsiElement> children = new ArrayList<PsiElement>(astNodes.length);
-		for(ASTNode node : astNodes)
-		{
-			children.add(node.getPsi());
-		}
+        if (startOffset != element1.getTextRange().getStartOffset()) {
+            return null;
+        }
 
-		ArrayList<PsiElement> array = new ArrayList<PsiElement>();
-		boolean flag = false;
-		for(PsiElement child : children)
-		{
-			if(child.equals(element1))
-			{
-				flag = true;
-			}
-			if(flag /*&& !(child instanceof PsiWhiteSpace)*/)
-			{
-				array.add(child);
-			}
-			if(child.equals(element2))
-			{
-				break;
-			}
-		}
+        while (!element2.getParent().equals(parent)) {
+            element2 = element2.getParent();
+        }
+        if (endOffset != element2.getTextRange().getEndOffset()) {
+            return null;
+        }
 
-		for(PsiElement element : array)
-		{
-			if(!(element instanceof JSStatement || element instanceof PsiWhiteSpace || element instanceof PsiComment))
-			{
-				return null;
-			}
-		}
+        ASTNode[] astNodes = parent.getNode().getChildren(null);
+        List<PsiElement> children = new ArrayList<>(astNodes.length);
+        for (ASTNode node : astNodes) {
+            children.add(node.getPsi());
+        }
 
-		return array.toArray(new PsiElement[array.size()]);
-	}
+        ArrayList<PsiElement> array = new ArrayList<>();
+        boolean flag = false;
+        for (PsiElement child : children) {
+            if (child.equals(element1)) {
+                flag = true;
+            }
+            if (flag /*&& !(child instanceof PsiWhiteSpace)*/) {
+                array.add(child);
+            }
+            if (child.equals(element2)) {
+                break;
+            }
+        }
 
-	@Nonnull
-	@Override
-	public Language getLanguage()
-	{
-		return JavaScriptLanguage.INSTANCE;
-	}
+        for (PsiElement element : array) {
+            if (!(element instanceof JSStatement || element instanceof PsiWhiteSpace || element instanceof PsiComment)) {
+                return null;
+            }
+        }
+
+        return array.toArray(new PsiElement[array.size()]);
+    }
+
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return JavaScriptLanguage.INSTANCE;
+    }
 }

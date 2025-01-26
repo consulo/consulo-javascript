@@ -21,8 +21,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author Maxim.Mossienko
- * Date: Oct 20, 2008
- * Time: 7:02:22 PM
+ * @since 2008-10-20
  */
 class AbcDumper extends AbstractDumpProcessor {
     private boolean dumpCode;
@@ -32,44 +31,44 @@ class AbcDumper extends AbstractDumpProcessor {
     }
 
     @Override
-    public void dumpStat(@Nonnull final String stat) {
+    public void dumpStat(@Nonnull String stat) {
         sb.append(stat);
     }
 
     @Override
-    public void hasError(@Nonnull final String error) {
+    public void hasError(@Nonnull String error) {
         sb.append(error);
     }
 
     @Override
     protected String appendModifiers(MemberInfo member, String attr) {
-        attr += (member instanceof MethodInfo && (((MethodInfo)member).flags & Abc.NATIVE) != 0 ? "native " : "");
+        attr += member instanceof MethodInfo methodInfo && (methodInfo.flags & Abc.NATIVE) != 0 ? "native " : "";
         return attr;
     }
 
     @Override
     public void processMultinameAsPackageName(
-        @Nonnull final Multiname name,
-        @Nullable final String parentName,
-        final boolean referenceNameRequested
+        @Nonnull Multiname name,
+        @Nullable String parentName,
+        boolean referenceNameRequested
     ) {
         append(name.toString());
     }
 
     @Override
-    public void dumpToplevelAnonymousMethod(final @Nonnull Abc abc, final @Nonnull MethodInfo m) {
+    public void dumpToplevelAnonymousMethod(@Nonnull Abc abc, @Nonnull MethodInfo m) {
         m.dump(abc, "", "", this);
     }
 
     @Override
-    public void dumpTopLevelTraits(final Abc abc, final @Nonnull Traits t, final String indent) {
-        sb.append(indent + t.name + "\n");
+    public void dumpTopLevelTraits(@Nonnull Abc abc, @Nonnull Traits t, String indent) {
+        sb.append(indent).append(t.name).append("\n");
         t.dump(abc, indent, "", this);
         t.init.dump(abc, indent, "", this);
     }
 
     @Override
-    public boolean doDumpMember(final @Nonnull MemberInfo memberInfo) {
+    public boolean doDumpMember(@Nonnull MemberInfo memberInfo) {
         return true;
     }
 
@@ -89,12 +88,12 @@ class AbcDumper extends AbstractDumpProcessor {
     }
 
     @Override
-    public void processValue(final Multiname type, final Object value) {
+    public void processValue(Multiname type, Object value) {
         append(" = " + String.valueOf(value instanceof String ? ('"' + value.toString() + '"') : value));
     }
 
     @Override
-    public boolean doDumpMetaData(final @Nonnull MetaData md) {
+    public boolean doDumpMetaData(@Nonnull MetaData md) {
         return true;
     }
 
@@ -120,7 +119,7 @@ class AbcDumper extends AbstractDumpProcessor {
     }
 
     @Override
-    public void setProcessingInterface(final boolean anInterface) {
+    public void setProcessingInterface(boolean anInterface) {
     }
 
     @Override

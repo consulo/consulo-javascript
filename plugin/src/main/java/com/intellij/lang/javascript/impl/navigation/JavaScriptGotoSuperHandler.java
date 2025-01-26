@@ -34,118 +34,99 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.JBPopup;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
-public class JavaScriptGotoSuperHandler implements GotoSuperActionHander
-{
-	@Override
-	public void invoke(final Project project, final Editor editor, final PsiFile file)
-	{
-		final PsiElement at = file.findElementAt(editor.getCaretModel().getOffset());
-		if(at == null)
-		{
-			return;
-		}
-		JSNamedElement namedElement = PsiTreeUtil.getParentOfType(at, JSNamedElement.class);
-		PsiElement parent = namedElement != null ? namedElement.getParent() : null;
+public class JavaScriptGotoSuperHandler implements GotoSuperActionHander {
+    @Override
+    @RequiredUIAccess
+    public void invoke(Project project, Editor editor, PsiFile file) {
+        PsiElement at = file.findElementAt(editor.getCaretModel().getOffset());
+        if (at == null) {
+            return;
+        }
+        JSNamedElement namedElement = PsiTreeUtil.getParentOfType(at, JSNamedElement.class);
 
-		if(namedElement instanceof JSDefinitionExpression)
-		{
-			if(parent instanceof JSAssignmentExpression)
-			{
-				PsiElement rOperand = ((JSAssignmentExpression) parent).getROperand();
-				if(rOperand instanceof JSFunctionExpression)
-				{
-					namedElement = (JSNamedElement) rOperand;
-				}
-			}
-		}
+        if (namedElement instanceof JSDefinitionExpression definition
+            && definition.getParent() instanceof JSAssignmentExpression assignment) {
+            PsiElement rOperand = assignment.getROperand();
+            if (rOperand instanceof JSFunctionExpression functionExpr) {
+                namedElement = functionExpr;
+            }
+        }
 
-		if(namedElement instanceof JSFunction)
-		{
-			final JSFunction function = (JSFunction) namedElement;
-			final String qName = JSResolveUtil.getQNameToStartHierarchySearch(function);
+        if (namedElement instanceof JSFunction function) {
+            String qName = JSResolveUtil.getQNameToStartHierarchySearch(function);
 
-			if(qName != null)
-			{
-				if(parent instanceof JSFile)
-				{
-					JSClass xmlBackedClass = JSResolveUtil.getXmlBackedClass((JSFile) parent);
-					if(xmlBackedClass != null)
-					{
-						parent = xmlBackedClass;
-					}
-				}
-				boolean result = JSResolveUtil.iterateType(function, parent instanceof JSClass ? parent : parent.getContainingFile(), qName,
-						new JSResolveUtil.OverrideHandler()
-				{
-					@Override
-					public boolean process(final ResolveProcessor processor, final PsiElement scope, final String className)
-					{
-						((NavigationItem) processor.getResult()).navigate(true);
-						return false;
-					}
-				});
+            PsiElement parent = function.getParent();
 
-				if(!result)
-				{
-					return;
-				}
-			}
+            if (qName != null) {
+                if (parent instanceof JSFile jsFile) {
+                    JSClass xmlBackedClass = JSResolveUtil.getXmlBackedClass(jsFile);
+                    if (xmlBackedClass != null) {
+                        parent = xmlBackedClass;
+                    }
+                }
+                boolean result = JSResolveUtil.iterateType(
+                    function,
+                    parent instanceof JSClass jsClass ? jsClass : parent.getContainingFile(),
+                    qName,
+                    (processor, scope, className) -> {
+                        ((NavigationItem)processor.getResult()).navigate(true);
+                        return false;
+                    }
+                );
 
-			if(parent instanceof JSClass)
-			{
-				JSResolveUtil.processInterfaceMethods((JSClass) parent, new JSResolveUtil.CollectMethodsToImplementProcessor(function.getName(), function)
-				{
-					@Override
-					protected boolean process(final ResolveProcessor processor)
-					{
-						((NavigationItem) processor.getResult()).navigate(true);
-						return true;
-					}
-				});
-			}
-		}
-		else if(namedElement instanceof JSClass)
-		{
-			final JSClass clazz = (JSClass) namedElement;
-			final JSClass[] classes = clazz.getSupers();
+                if (!result) {
+                    return;
+                }
+            }
 
-			if(classes.length == 0)
-			{
-				return;
-			}
-			if(classes.length == 1)
-			{
-				classes[0].navigate(true);
-			}
-			else
-			{
-				JBPopup psiElementPopup = PopupNavigationUtil.getPsiElementPopup(classes, "Choose super class or interface");
+            if (parent instanceof JSClass jsClass) {
+                JSResolveUtil.processInterfaceMethods(
+                    jsClass,
+                    new JSResolveUtil.CollectMethodsToImplementProcessor(function.getName(), function) {
+                        @Override
+                        protected boolean process(ResolveProcessor processor) {
+                            ((NavigationItem)processor.getResult()).navigate(true);
+                            return true;
+                        }
+                    }
+                );
+            }
+        }
+        else if (namedElement instanceof JSClass jsClass) {
+            JSClass[] classes = jsClass.getSupers();
 
-				EditorPopupHelper.getInstance().showPopupInBestPositionFor(editor, psiElementPopup);
-			}
-		}
-	}
+            if (classes.length == 0) {
+                return;
+            }
+            if (classes.length == 1) {
+                classes[0].navigate(true);
+            }
+            else {
+                JBPopup psiElementPopup = PopupNavigationUtil.getPsiElementPopup(classes, "Choose super class or interface");
 
-	@Override
-	public boolean startInWriteAction()
-	{
-		return false;
-	}
+                EditorPopupHelper.getInstance().showPopupInBestPositionFor(editor, psiElementPopup);
+            }
+        }
+    }
 
-	@Override
-	public boolean isValidFor(final Editor editor, final PsiFile file)
-	{
-		return true;
-	}
+    @Override
+    public boolean startInWriteAction() {
+        return false;
+    }
 
-	@Nonnull
-	@Override
-	public Language getLanguage()
-	{
-		return JavaScriptLanguage.INSTANCE;
-	}
+    @Override
+    public boolean isValidFor(Editor editor, PsiFile file) {
+        return true;
+    }
+
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return JavaScriptLanguage.INSTANCE;
+    }
 }

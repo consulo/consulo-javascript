@@ -111,9 +111,9 @@ public class JSUntypedDeclarationInspection extends JSInspection {
         }
         PsiElement nameIdentifier = node.getNameIdentifier();
 
-        if (nameIdentifier != null &&
-            JSPsiImplUtils.getTypeFromDeclaration(node) == null &&
-            !(node instanceof JSParameter parameter && parameter.isRest())) {
+        if (nameIdentifier != null
+            && JSPsiImplUtils.getTypeFromDeclaration(node) == null
+            && !(node instanceof JSParameter parameter && parameter.isRest())) {
             LocalizeValue description = node instanceof JSFunction
                 ? JavaScriptLocalize.jsUntypedFunctionProblem(nameIdentifier.getText())
                 : JavaScriptLocalize.jsUntypedVariableProblem(nameIdentifier.getText());

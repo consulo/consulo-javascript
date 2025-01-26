@@ -17,17 +17,13 @@
 package com.intellij.lang.javascript.impl.flex.importer;
 
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author Maxim.Mossienko
- * Date: Oct 20, 2008
- * Time: 7:02:13 PM
+ * @since 2008-10-20
  */
 abstract class AbstractDumpProcessor implements FlexByteCodeInformationProcessor {
-    protected
-    @NonNls
-    StringBuilder sb = new StringBuilder();
+    protected StringBuilder sb = new StringBuilder();
     private boolean firstMetaDataMember;
 
     String getResult() {
@@ -35,21 +31,17 @@ abstract class AbstractDumpProcessor implements FlexByteCodeInformationProcessor
     }
 
     @Override
-    public void append(@Nonnull @NonNls String str) {
+    public void append(@Nonnull String str) {
         sb.append(str);
     }
 
     @Override
-    public String getParentName(final MemberInfo member) {
+    public String getParentName(MemberInfo member) {
         String parentName = null;
 
         if (member.parentTraits != null) {
-            if (member.parentTraits.name instanceof Multiname) {
-                final Multiname multiname = (Multiname)member.parentTraits.name;
-
-                if (multiname.hasNamespace()) {
-                    parentName = multiname.name;
-                }
+            if (member.parentTraits.name instanceof Multiname multiname && multiname.hasNamespace()) {
+                parentName = multiname.name;
             }
             if (parentName == null) {
                 parentName = member.parentTraits.name.toString().replaceAll("::", ".");
@@ -96,13 +88,13 @@ abstract class AbstractDumpProcessor implements FlexByteCodeInformationProcessor
         append(indent + attr);
 
         processMemberKindAndName(methodInfo);
-        final String parentName = methodInfo.getParentName();
+        String parentName = methodInfo.getParentName();
         processArgumentList(methodInfo, parentName);
         append(":");
         processMultinameAsPackageName(methodInfo.returnType, parentName, referenceNameRequested);
     }
 
-    protected void processMemberKindAndName(@Nonnull final MemberInfo member) {
+    protected void processMemberKindAndName(@Nonnull MemberInfo member) {
         append(Abc.traitKinds[member.kind]);
         append(" ");
 
@@ -122,8 +114,8 @@ abstract class AbstractDumpProcessor implements FlexByteCodeInformationProcessor
         append("(");
 
         for (int i = 0; i < methodInfo.paramTypes.length; ++i) {
-            final Multiname paramType = methodInfo.paramTypes[i];
-            final boolean restParameter = FlexByteCodeInformationProcessor.REST_PARAMETER_TYPE.equals(paramType.name);
+            Multiname paramType = methodInfo.paramTypes[i];
+            boolean restParameter = FlexByteCodeInformationProcessor.REST_PARAMETER_TYPE.equals(paramType.name);
             if (restParameter && !dumpRestParameter()) {
                 break; // original one do not dump
             }
@@ -131,7 +123,8 @@ abstract class AbstractDumpProcessor implements FlexByteCodeInformationProcessor
                 append(",");
             }
 
-            processParameter(methodInfo.paramNames != null ? methodInfo.paramNames[i] : "a" + (i > 0 ? "" + (i + 1) : ""),
+            processParameter(
+                methodInfo.paramNames != null ? methodInfo.paramNames[i] : "a" + (i > 0 ? "" + (i + 1) : ""),
                 methodInfo.paramTypes[i],
                 parentName,
                 methodInfo.optionalValues != null && i < methodInfo.optionalValues.length ? methodInfo.optionalValues[i] : null,
@@ -164,8 +157,8 @@ abstract class AbstractDumpProcessor implements FlexByteCodeInformationProcessor
     public void processClass(SlotInfo slotInfo, Abc abc, String attr, String indent) {
         append("\n");
 
-        @NonNls String def;
-        final boolean isInterface = slotInfo.isInterfaceClass();
+        String def;
+        boolean isInterface = slotInfo.isInterfaceClass();
         if (isInterface) {
             def = "interface";
         }
@@ -174,7 +167,7 @@ abstract class AbstractDumpProcessor implements FlexByteCodeInformationProcessor
         }
 
         if (!doStarTypeDumpInExtends()) {
-            final String ns = slotInfo.name.hasNamespace() ? slotInfo.name.getNsName() : null;
+            String ns = slotInfo.name.hasNamespace() ? slotInfo.name.getNsName() : null;
 
             if (ns != null && ns.length() > 0) {
                 attr += ns;
@@ -245,14 +238,14 @@ abstract class AbstractDumpProcessor implements FlexByteCodeInformationProcessor
         }
     }
 
-    protected static String quote(final String s) {
+    protected static String quote(String s) {
         if (s.length() == 0) {
             return s;
         }
-        final StringBuilder b = new StringBuilder(s.length());
+        StringBuilder b = new StringBuilder(s.length());
 
         for (int i = 0; i < s.length(); ++i) {
-            final char ch = s.charAt(i);
+            char ch = s.charAt(i);
 
             if (ch == '\\' || ch == '"') {
                 b.append('\\');

@@ -20,46 +20,46 @@ import com.intellij.lang.javascript.psi.JSAssignmentExpression;
 import com.intellij.lang.javascript.psi.JSExpressionStatement;
 import com.intellij.lang.javascript.psi.JSFunctionExpression;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
-public class JSWithFunctionExpressionSurrounder extends JSStatementSurrounder
-{
-	@Override
-	public String getTemplateDescription()
-	{
-		return JavaScriptLocalize.javascriptSurroundWithFunctionExpression().get();
-	}
+public class JSWithFunctionExpressionSurrounder extends JSStatementSurrounder {
+    @Override
+    public String getTemplateDescription() {
+        return JavaScriptLocalize.javascriptSurroundWithFunctionExpression().get();
+    }
 
-	@Override
-	protected String getStatementTemplate(final Project project, PsiElement context)
-	{
-		return "aaa = function () { }" + JSChangeUtil.getSemicolon(project);
-	}
+    @Override
+    protected String getStatementTemplate(Project project, PsiElement context) {
+        return "aaa = function () { }" + JSChangeUtil.getSemicolon(project);
+    }
 
-	@Override
-	protected ASTNode getInsertBeforeNode(final ASTNode statementNode)
-	{
-		JSFunctionExpression stmt = getFunctionExpr(statementNode);
-		return stmt.getBody()[0].getLastChild().getNode();
-	}
+    @Override
+    @RequiredReadAction
+    protected ASTNode getInsertBeforeNode(ASTNode statementNode) {
+        JSFunctionExpression stmt = getFunctionExpr(statementNode);
+        return stmt.getBody()[0].getLastChild().getNode();
+    }
 
-	private static JSFunctionExpression getFunctionExpr(final ASTNode statementNode)
-	{
-		return (JSFunctionExpression) ((JSAssignmentExpression) ((JSExpressionStatement) statementNode.getPsi()).getExpression()).getROperand();
-	}
+    @RequiredReadAction
+    private static JSFunctionExpression getFunctionExpr(ASTNode statementNode) {
+        JSExpressionStatement expression = (JSExpressionStatement)statementNode.getPsi();
+        JSAssignmentExpression assignment = (JSAssignmentExpression)expression.getExpression();
+        return (JSFunctionExpression)assignment.getROperand();
+    }
 
-	@Override
-	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
-	{
-		JSFunctionExpression stmt = getFunctionExpr(statementNode);
-		ASTNode conditionNode = stmt.getNameIdentifier().getNode();
-		int offset = conditionNode.getStartOffset();
-		stmt.getParent().getNode().removeChild(conditionNode);
+    @Override
+    @RequiredReadAction
+    protected TextRange getSurroundSelectionRange(ASTNode statementNode) {
+        JSFunctionExpression stmt = getFunctionExpr(statementNode);
+        ASTNode conditionNode = stmt.getNameIdentifier().getNode();
+        int offset = conditionNode.getStartOffset();
+        stmt.getParent().getNode().removeChild(conditionNode);
 
-		return new TextRange(offset, offset);
-	}
+        return new TextRange(offset, offset);
+    }
 }

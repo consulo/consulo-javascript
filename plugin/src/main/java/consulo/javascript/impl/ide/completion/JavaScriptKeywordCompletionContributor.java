@@ -37,58 +37,57 @@ import jakarta.annotation.Nonnull;
  * @since 20.12.2015
  */
 @ExtensionImpl
-public class JavaScriptKeywordCompletionContributor extends CompletionContributor
-{
-	public JavaScriptKeywordCompletionContributor()
-	{
-		extend(CompletionType.BASIC, StandardPatterns.psiElement().withParent(JSReferenceExpression.class), new CompletionProvider()
-		{
-			@RequiredReadAction
-			@Override
-			public void addCompletions(@Nonnull CompletionParameters parameters, ProcessingContext context, @Nonnull CompletionResultSet result)
-			{
-				PsiElement position = parameters.getPosition();
-				JSReferenceExpression parent = (JSReferenceExpression) position.getParent();
-				if(parent.getQualifier() != null)
-				{
-					return;
-				}
+public class JavaScriptKeywordCompletionContributor extends CompletionContributor {
+    public JavaScriptKeywordCompletionContributor() {
+        extend(
+            CompletionType.BASIC,
+            StandardPatterns.psiElement().withParent(JSReferenceExpression.class),
+            new CompletionProvider() {
+                @RequiredReadAction
+                @Override
+                public void addCompletions(
+                    @Nonnull CompletionParameters parameters,
+                    ProcessingContext context,
+                    @Nonnull CompletionResultSet result
+                ) {
+                    PsiElement position = parameters.getPosition();
+                    JSReferenceExpression parent = (JSReferenceExpression)position.getParent();
+                    if (parent.getQualifier() != null) {
+                        return;
+                    }
 
-				boolean parentIsStatement = parent.getParent() instanceof JSExpressionStatement;
+                    boolean parentIsStatement = parent.getParent() instanceof JSExpressionStatement;
 
-				LookupElementBuilder functionKeyword = LookupElementBuilder.create("function");
-				functionKeyword = functionKeyword.bold();
-				if(parentIsStatement)
-				{
-					functionKeyword = functionKeyword.withInsertHandler(SpaceInsertHandler.INSTANCE);
-				}
-				else
-				{
-					functionKeyword = functionKeyword.withInsertHandler(ParenthesesInsertHandler.getInstance(false));
-					functionKeyword = functionKeyword.withPresentableText("function()");
-				}
+                    LookupElementBuilder functionKeyword = LookupElementBuilder.create("function");
+                    functionKeyword = functionKeyword.bold();
+                    if (parentIsStatement) {
+                        functionKeyword = functionKeyword.withInsertHandler(SpaceInsertHandler.INSTANCE);
+                    }
+                    else {
+                        functionKeyword = functionKeyword.withInsertHandler(ParenthesesInsertHandler.getInstance(false));
+                        functionKeyword = functionKeyword.withPresentableText("function()");
+                    }
 
-				result.addElement(functionKeyword);
+                    result.addElement(functionKeyword);
 
-				result.addElement(LookupElementBuilder.create("var").withInsertHandler(SpaceInsertHandler.INSTANCE).bold());
-				result.addElement(LookupElementBuilder.create("const").withInsertHandler(SpaceInsertHandler.INSTANCE).bold());
+                    result.addElement(LookupElementBuilder.create("var").withInsertHandler(SpaceInsertHandler.INSTANCE).bold());
+                    result.addElement(LookupElementBuilder.create("const").withInsertHandler(SpaceInsertHandler.INSTANCE).bold());
 
-				result.addElement(LookupElementBuilder.create("if").bold());
-				result.addElement(LookupElementBuilder.create("for").bold());
-				result.addElement(LookupElementBuilder.create("return").bold());
+                    result.addElement(LookupElementBuilder.create("if").bold());
+                    result.addElement(LookupElementBuilder.create("for").bold());
+                    result.addElement(LookupElementBuilder.create("return").bold());
 
-				for(JavaScriptKeywordCompletionExtender extender : JavaScriptKeywordCompletionExtender.EP_NAME.getExtensionList())
-				{
-					extender.fillCompletion(parameters, context, result);
-				}
-			}
-		});
-	}
+                    for (JavaScriptKeywordCompletionExtender extender : JavaScriptKeywordCompletionExtender.EP_NAME.getExtensionList()) {
+                        extender.fillCompletion(parameters, context, result);
+                    }
+                }
+            }
+        );
+    }
 
-	@Nonnull
-	@Override
-	public Language getLanguage()
-	{
-		return JavaScriptLanguage.INSTANCE;
-	}
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return JavaScriptLanguage.INSTANCE;
+    }
 }

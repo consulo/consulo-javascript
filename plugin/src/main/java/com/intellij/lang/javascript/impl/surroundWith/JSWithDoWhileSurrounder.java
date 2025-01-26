@@ -17,6 +17,7 @@
 package com.intellij.lang.javascript.impl.surroundWith;
 
 import com.intellij.lang.javascript.psi.JSDoWhileStatement;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.ASTNode;
@@ -27,31 +28,28 @@ import consulo.project.Project;
  * @author yole
  * @since 2005-07-12
  */
-public class JSWithDoWhileSurrounder extends JSStatementSurrounder
-{
-	@Override
-	public String getTemplateDescription()
-	{
-		return JavaScriptLocalize.javascriptSurroundWithDoWhile().get();
-	}
+public class JSWithDoWhileSurrounder extends JSStatementSurrounder {
+    @Override
+    public String getTemplateDescription() {
+        return JavaScriptLocalize.javascriptSurroundWithDoWhile().get();
+    }
 
-	@Override
-	protected String getStatementTemplate(final Project project, PsiElement context)
-	{
-		return "do { } while (true);";
-	}
+    @Override
+    protected String getStatementTemplate(Project project, PsiElement context) {
+        return "do { } while (true);";
+    }
 
-	@Override
-	protected ASTNode getInsertBeforeNode(final ASTNode statementNode)
-	{
-		JSDoWhileStatement stmt = (JSDoWhileStatement) statementNode.getPsi();
-		return stmt.getBody().getLastChild().getNode();
-	}
+    @Override
+    @RequiredReadAction
+    protected ASTNode getInsertBeforeNode(ASTNode statementNode) {
+        JSDoWhileStatement stmt = (JSDoWhileStatement)statementNode.getPsi();
+        return stmt.getBody().getLastChild().getNode();
+    }
 
-	@Override
-	protected TextRange getSurroundSelectionRange(final ASTNode statementNode)
-	{
-		JSDoWhileStatement stmt = (JSDoWhileStatement) statementNode.getPsi();
-		return stmt.getCondition().getTextRange();
-	}
+    @Override
+    @RequiredReadAction
+    protected TextRange getSurroundSelectionRange(ASTNode statementNode) {
+        JSDoWhileStatement stmt = (JSDoWhileStatement)statementNode.getPsi();
+        return stmt.getCondition().getTextRange();
+    }
 }

@@ -14,21 +14,17 @@ import jakarta.annotation.Nullable;
  * @since 2019-12-16
  */
 @ExtensionImpl
-public class JavaScriptFindUsagesHandlerFactory extends FindUsagesHandlerFactory
-{
-	@Override
-	public boolean canFindUsages(@Nonnull PsiElement element)
-	{
-		return element instanceof JSDefinitionExpression;
-	}
+public class JavaScriptFindUsagesHandlerFactory extends FindUsagesHandlerFactory {
+    @Override
+    public boolean canFindUsages(@Nonnull PsiElement element) {
+        return element instanceof JSDefinitionExpression;
+    }
 
-	@Nullable
-	@Override
-	public FindUsagesHandler createFindUsagesHandler(@Nonnull PsiElement element, boolean forHighlightUsages)
-	{
-		return new FindUsagesHandler(element)
-		{
+    @Nullable
+    @Override
+    public FindUsagesHandler createFindUsagesHandler(@Nonnull PsiElement element, boolean forHighlightUsages) {
+        return new FindUsagesHandler(element) {
 
-		};
-	}
+        };
+    }
 }

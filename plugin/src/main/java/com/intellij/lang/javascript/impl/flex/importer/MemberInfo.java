@@ -20,40 +20,33 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Oct 20, 2008
- *         Time: 7:00:39 PM
+ * @since 2008-10-20
  */
-abstract class MemberInfo
-{
-	Traits parentTraits;
-	int id;
-	int kind;
-	Multiname name;
-	MetaData[] metadata;
-	boolean isOverride;
-	boolean isPublic;
-	boolean isFinal;
+abstract class MemberInfo {
+    Traits parentTraits;
+    int id;
+    int kind;
+    Multiname name;
+    MetaData[] metadata;
+    boolean isOverride;
+    boolean isPublic;
+    boolean isFinal;
 
-	abstract void dump(Abc abc, String indent, String attr, final @Nonnull FlexByteCodeInformationProcessor processor);
+    abstract void dump(Abc abc, String indent, String attr, @Nonnull FlexByteCodeInformationProcessor processor);
 
-	protected void dumpMetaData(String indent, final @Nonnull FlexByteCodeInformationProcessor processor)
-	{
-		if(metadata != null)
-		{
-			for(MetaData md : metadata)
-			{
-				if(processor.doDumpMetaData(md))
-				{
-					processor.append(indent);
-					processor.processMetadata(md);
-					processor.append("\n");
-				}
-			}
-		}
-	}
+    protected void dumpMetaData(String indent, @Nonnull FlexByteCodeInformationProcessor processor) {
+        if (metadata != null) {
+            for (MetaData md : metadata) {
+                if (processor.doDumpMetaData(md)) {
+                    processor.append(indent);
+                    processor.processMetadata(md);
+                    processor.append("\n");
+                }
+            }
+        }
+    }
 
-	String getParentName()
-	{
-		return parentTraits != null ? parentTraits.getClassName() : null;
-	}
+    String getParentName() {
+        return parentTraits != null ? parentTraits.getClassName() : null;
+    }
 }

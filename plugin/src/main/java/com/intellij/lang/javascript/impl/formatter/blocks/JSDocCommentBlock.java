@@ -16,97 +16,80 @@
 
 package com.intellij.lang.javascript.impl.formatter.blocks;
 
+import consulo.document.util.TextRange;
+import consulo.language.ast.ASTNode;
+import consulo.language.codeStyle.*;
+import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import jakarta.annotation.Nonnull;
-import consulo.language.codeStyle.Alignment;
-import consulo.language.codeStyle.Block;
-import consulo.language.codeStyle.Indent;
-import consulo.language.codeStyle.Spacing;
-import consulo.language.codeStyle.Wrap;
-import consulo.language.ast.ASTNode;
-import consulo.document.util.TextRange;
-import consulo.language.codeStyle.ChildAttributes;
-import jakarta.annotation.Nullable;
 
 /**
  * @author yole
  */
-public class JSDocCommentBlock implements Block
-{
-	private ASTNode myNode;
-	private int myStartOffset;
-	private int myEndOffset;
-	private Indent myIndent;
-	private static final List<Block> EMPTY_BLOCK_LIST = new ArrayList<Block>();
+public class JSDocCommentBlock implements Block {
+    private ASTNode myNode;
+    private int myStartOffset;
+    private int myEndOffset;
+    private Indent myIndent;
+    private static final List<Block> EMPTY_BLOCK_LIST = new ArrayList<>();
 
-	public JSDocCommentBlock(final ASTNode node, final int startOffset, final int endOffset, final Indent indent)
-	{
-		myNode = node;
-		myStartOffset = startOffset;
-		myEndOffset = endOffset;
-		myIndent = indent;
-	}
+    public JSDocCommentBlock(ASTNode node, int startOffset, int endOffset, Indent indent) {
+        myNode = node;
+        myStartOffset = startOffset;
+        myEndOffset = endOffset;
+        myIndent = indent;
+    }
 
-	@Override
-	@Nonnull
-	public TextRange getTextRange()
-	{
-		return new TextRange(myNode.getStartOffset() + myStartOffset, myNode.getStartOffset() + myEndOffset);
-	}
+    @Nonnull
+    @Override
+    public TextRange getTextRange() {
+        return new TextRange(myNode.getStartOffset() + myStartOffset, myNode.getStartOffset() + myEndOffset);
+    }
 
-	@Override
-	@Nonnull
-	public List<Block> getSubBlocks()
-	{
-		return EMPTY_BLOCK_LIST;
-	}
+    @Nonnull
+    @Override
+    public List<Block> getSubBlocks() {
+        return EMPTY_BLOCK_LIST;
+    }
 
-	@Override
-	@Nullable
-	public Wrap getWrap()
-	{
-		return null;
-	}
+    @Nonnull
+    @Override
+    public Wrap getWrap() {
+        return null;
+    }
 
-	@Override
-	@Nullable
-	public Indent getIndent()
-	{
-		return myIndent;
-	}
+    @Nonnull
+    @Override
+    public Indent getIndent() {
+        return myIndent;
+    }
 
-	@Override
-	@Nullable
-	public Alignment getAlignment()
-	{
-		return null;
-	}
+    @Nonnull
+    @Override
+    public Alignment getAlignment() {
+        return null;
+    }
 
-	@Override
-	@Nullable
-	public Spacing getSpacing(Block child1, Block child2)
-	{
-		return null;
-	}
+    @Nonnull
+    @Override
+    public Spacing getSpacing(Block child1, @Nonnull Block child2) {
+        return null;
+    }
 
-	@Override
-	@Nonnull
-	public ChildAttributes getChildAttributes(final int newChildIndex)
-	{
-		return null;
-	}
+    @Nonnull
+    @Override
+    public ChildAttributes getChildAttributes(int newChildIndex) {
+        return null;
+    }
 
-	@Override
-	public boolean isIncomplete()
-	{
-		return false;
-	}
+    @Override
+    public boolean isIncomplete() {
+        return false;
+    }
 
-	@Override
-	public boolean isLeaf()
-	{
-		return true;
-	}
+    @Override
+    public boolean isLeaf() {
+        return true;
+    }
 }
