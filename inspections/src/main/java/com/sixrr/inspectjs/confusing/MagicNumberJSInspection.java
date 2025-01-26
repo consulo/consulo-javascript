@@ -13,28 +13,22 @@ import consulo.language.psi.util.PsiTreeUtil;
 import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 @ExtensionImpl
 public class MagicNumberJSInspection extends JavaScriptInspection {
     @NonNls
-    private static final String[] s_specialCaseLiteralArray = new String[]{
+    private static final Set<String> s_specialCaseLiterals = Set.of(
         "0", "1", "2", "3", "4",
         "5", "6", "7", "8", "9",
         "10", "0L", "1L", "2L", "0l",
         "1l", "2l", "0.0", "1.0", "0.0F",
         "1.0F", "0.0f", "1.0f"
-    };
+    );
 
-    /**
-     * @noinspection StaticCollection
-     */
-    private static final Set<String> s_specialCaseLiterals = new HashSet<>(23);
-
-    static {
-        Collections.addAll(s_specialCaseLiterals, s_specialCaseLiteralArray);
+    @Override
+    public boolean isEnabledByDefault() {
+        return false;
     }
 
     @Override
@@ -67,6 +61,7 @@ public class MagicNumberJSInspection extends JavaScriptInspection {
 
     private static class MagicNumberVisitor extends BaseInspectionVisitor {
         @Override
+        @RequiredReadAction
         public void visitJSLiteralExpression(@Nonnull JSSimpleLiteralExpression expression) {
             super.visitJSLiteralExpression(expression);
 
@@ -92,6 +87,7 @@ public class MagicNumberJSInspection extends JavaScriptInspection {
         return Character.isDigit(firstChar) || firstChar == '.';
     }
 
+    @RequiredReadAction
     private static boolean isDeclaredConstant(JSLiteralExpression expression) {
         final JSFunction containingFunction = PsiTreeUtil.getParentOfType(expression, JSFunction.class);
         if (containingFunction != null) {
