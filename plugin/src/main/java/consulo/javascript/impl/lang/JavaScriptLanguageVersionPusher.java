@@ -11,8 +11,6 @@ import consulo.language.version.LanguageVersion;
 import consulo.module.Module;
 import consulo.module.content.FilePropertyPusher;
 import consulo.module.content.PushedFilePropertiesUpdater;
-import consulo.module.extension.ModuleExtension;
-import consulo.module.extension.event.ModuleExtensionChangeListener;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
@@ -24,8 +22,6 @@ import jakarta.annotation.Nullable;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author VISTALL
@@ -34,32 +30,6 @@ import java.util.Set;
 @ExtensionImpl
 public class JavaScriptLanguageVersionPusher implements FilePropertyPusher<LanguageVersion> {
     private static final FileAttribute ourFileAttribute = new FileAttribute("javascript-version", 2, false);
-
-    private static final Key<Set<String>> ourChangedModulesKey = Key.create("javascript-change-marker");
-
-    @Override
-    public void initExtra(@Nonnull Project project) {
-        project.getMessageBus().connect().subscribe(
-            ModuleExtensionChangeListener.class,
-            (oldExtension, newExtension) -> {
-            if (oldExtension instanceof JavaScriptModuleExtension oldJsExtension && newExtension instanceof JavaScriptModuleExtension newJsExtension) {
-                if (((JavaScriptModuleExtension)oldExtension).getLanguageVersion() != ((JavaScriptModuleExtension)newExtension).getLanguageVersion()) {
-                    addChanged(project, newExtension);
-                }
-            }
-        });
-    }
-
-    private void addChanged(Project project, ModuleExtension<?> newExtension) {
-        Set<String> changedModules = project.getUserData(ourChangedModulesKey);
-        if (changedModules == null) {
-            changedModules = new HashSet<>();
-        }
-
-        project.putUserData(ourChangedModulesKey, changedModules);
-
-        changedModules.add(newExtension.getModule().getName());
-    }
 
     @Nonnull
     @Override
@@ -141,16 +111,7 @@ public class JavaScriptLanguageVersionPusher implements FilePropertyPusher<Langu
 
     @Override
     public void afterRootsChanged(@Nonnull Project project) {
-        Set<String> changedModules = project.getUserData(ourChangedModulesKey);
-        if (changedModules == null) {
-            return;
-        }
-
-        project.putUserData(ourChangedModulesKey, null);
-
-        if (!changedModules.isEmpty()) {
-            PushedFilePropertiesUpdater.getInstance(project).pushAll(this);
-        }
+        PushedFilePropertiesUpdater.getInstance(project).pushAll(this);
     }
 
     @Nonnull
