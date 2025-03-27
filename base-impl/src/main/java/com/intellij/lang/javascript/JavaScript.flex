@@ -412,4 +412,4 @@ FIELD_OR_METHOD={IDENTIFIER} ("(" [^ \\)]* ")"? )?
 
 <YYINITIAL,DIV_OR_GT> "]]>" { yybegin(YYINITIAL); return JSTokenTypes.CDATA_END; }
 <YYINITIAL,DIV_OR_GT> "<![CDATA[" { yybegin(YYINITIAL); return JSTokenTypes.CDATA_START; }
-.                     { yybegin(YYINITIAL); return JSTokenTypes.BAD_CHARACTER; }
+[^]                     { yybegin(YYINITIAL); return JSTokenTypes.BAD_CHARACTER; }
