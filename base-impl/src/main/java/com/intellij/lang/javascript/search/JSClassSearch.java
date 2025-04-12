@@ -20,23 +20,21 @@ import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSReferenceList;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.function.CommonProcessors;
-import consulo.application.util.function.Processor;
 import consulo.application.util.query.Query;
 import consulo.application.util.query.QueryExecutor;
 import consulo.application.util.query.QueryFactory;
-import consulo.component.extension.Extensions;
 import consulo.content.scope.SearchScope;
 import consulo.javascript.language.psi.stub.JavaScriptIndexKeys;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.stub.StubIndex;
 import consulo.language.psi.stub.StubIndexKey;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Predicate;
 
 public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSearch.SearchParameters> {
     public static class SearchParameters {
@@ -97,16 +95,16 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 
             @Override
             @RequiredReadAction
-            public boolean execute(@Nonnull SearchParameters queryParameters, @Nonnull Processor<? super JSClass> consumer) {
-                final Set<JSClass> visited = new HashSet<>();         // no abstract classes in ActionScript !
+            public boolean execute(@Nonnull SearchParameters queryParameters, @Nonnull Predicate<? super JSClass> consumer) {
+                Set<JSClass> visited = new HashSet<>();         // no abstract classes in ActionScript !
 
                 if (queryParameters.isCheckDeepInheritance()) {
-                    Processor<? super JSClass> consumerCopy = consumer;
-                    consumer = new Processor<>() {
+                    Predicate<? super JSClass> consumerCopy = consumer;
+                    consumer = new Predicate<>() {
                         @Override
                         @RequiredReadAction
-                        public boolean process(JSClass jsClass) {
-                            return consumerCopy.process(jsClass) && CLASS_SEARCH_EXECUTOR.processDirectInheritors(
+                        public boolean test(JSClass jsClass) {
+                            return consumerCopy.test(jsClass) && CLASS_SEARCH_EXECUTOR.processDirectInheritors(
                                 jsClass,
                                 this,
                                 false,
@@ -117,7 +115,7 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
                     };
                 }
 
-                Processor<? super JSClass> consumerToUse = consumer;
+                Predicate<? super JSClass> consumerToUse = consumer;
                 boolean b = processDirectInheritors(
                     queryParameters.getTargetClass(),
                     consumerToUse,
@@ -129,15 +127,13 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
                     return searchClassInheritors(
                         queryParameters.getTargetClass(),
                         queryParameters.isCheckDeepInheritance()
-                    ).forEach(jsClass -> {
-                        return processDirectInheritors(
-                            jsClass,
-                            consumerToUse,
-                            queryParameters.isCheckDeepInheritance(),
-                            visited,
-                            queryParameters.getScope()
-                        );
-                    });
+                    ).forEach((Predicate<? super JSClass>)jsClass -> processDirectInheritors(
+                        jsClass,
+                        consumerToUse,
+                        queryParameters.isCheckDeepInheritance(),
+                        visited,
+                        queryParameters.getScope()
+                    ));
                 }
                 return b;
             }
@@ -179,7 +175,7 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 
     @Override
     @RequiredReadAction
-    public boolean execute(@Nonnull SearchParameters queryParameters, @Nonnull Processor<? super JSClass> consumer) {
+    public boolean execute(@Nonnull SearchParameters queryParameters, @Nonnull Predicate<? super JSClass> consumer) {
         return processDirectInheritors(
             queryParameters.getTargetClass(),
             consumer,
@@ -191,11 +187,11 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 
     @RequiredReadAction
     protected boolean processDirectInheritors(
-        final JSClass superClass,
-        final Processor<? super JSClass> consumer,
-        final boolean checkDeep,
+        JSClass superClass,
+        Predicate<? super JSClass> consumer,
+        boolean checkDeep,
         Set<JSClass> processed,
-        final GlobalSearchScope scope
+        GlobalSearchScope scope
     ) {
         if (processed != null) {
             if (processed.contains(superClass)) {
@@ -214,15 +210,13 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
         }
 
         Set<JSClass> temp = processed;
-        Processor<JSClass> processor = candidate -> {
+        Predicate<JSClass> processor = candidate -> {
             JSClass[] classes = getSupers(candidate);
             if (classes != null) {
                 for (JSClass superClassCandidate : classes) {
                     if (superClassCandidate.isEquivalentTo(superClass)) {
-                        if (!consumer.process(candidate)) {
-                            return false;
-                        }
-                        if (checkDeep && !processDirectInheritors(candidate, consumer, checkDeep, temp, scope)) {
+                        if (!consumer.test(candidate)
+                            || checkDeep && !processDirectInheritors(candidate, consumer, checkDeep, temp, scope)) {
                             return false;
                         }
                     }
@@ -238,15 +232,15 @@ public abstract class JSClassSearch implements QueryExecutor<JSClass, JSClassSea
 
         for (JSReferenceList referenceList : collectProcessor.getResults()) {
             JSClass parent = (JSClass)referenceList.getParent();
-            if (!processor.process(parent)) {
+            if (!processor.test(parent)) {
                 return false;
             }
         }
 
-        for (JSClassInheritorsProvider provider : Extensions.getExtensions(JSClassInheritorsProvider.EP_NAME)) {
+        for (JSClassInheritorsProvider provider : JSClassInheritorsProvider.EP_NAME.getExtensionList()) {
             Collection<JSClass> inheritors = getInheritors(provider, name, project, scope);
             for (JSClass inheritor : inheritors) {
-                if (!processor.process(inheritor)) {
+                if (!processor.test(inheritor)) {
                     return false;
                 }
             }
