@@ -36,6 +36,8 @@ import consulo.language.psi.search.ReferencesSearch;
 
 import jakarta.annotation.Nonnull;
 
+import java.util.function.Predicate;
+
 /**
  * @author Maxim.Mossienko
  * @since 2008-04-28
@@ -45,10 +47,10 @@ public class JSDefinitionsSearchExecutor implements DefinitionsScopedSearchExecu
     @Override
     @RequiredReadAction
     public boolean execute(
-        @Nonnull final DefinitionsScopedSearch.SearchParameters parameters,
-        @Nonnull final Processor<? super PsiElement> consumer
+        @Nonnull DefinitionsScopedSearch.SearchParameters parameters,
+        @Nonnull Predicate<? super PsiElement> consumer
     ) {
-        final PsiElement sourceElement = parameters.getElement();
+        PsiElement sourceElement = parameters.getElement();
         if (sourceElement instanceof PsiNamedElement namedElement && namedElement.getLanguage().isKindOf(JavaScriptLanguage.INSTANCE)) {
             ReferencesSearch.search(sourceElement, GlobalSearchScope.projectScope(sourceElement.getProject())).forEach(t -> {
                 if (t instanceof JSReferenceExpression refExpr) {
@@ -62,12 +64,13 @@ public class JSDefinitionsSearchExecutor implements DefinitionsScopedSearchExecu
                             && !JavaScriptIndex.isFromPredefinedFile(psiElement.getContainingFile())
                             && sourceElement != psiElement) {
                             if (psiElement instanceof JSFunction fun && sourceElement instanceof JSFunction sourceFun) {
-                                if ((sourceFun.isGetProperty() && fun.isSetProperty()) || (sourceFun.isSetProperty() && fun.isGetProperty())) {
+                                if ((sourceFun.isGetProperty() && fun.isSetProperty())
+                                    || (sourceFun.isSetProperty() && fun.isGetProperty())) {
                                     return true;
                                 }
                             }
 
-                            if ((psiElement != sourceElement || !(psiElement instanceof JSClass)) && !consumer.process(psiElement)) {
+                            if ((psiElement != sourceElement || !(psiElement instanceof JSClass)) && !consumer.test(psiElement)) {
                                 return false;
                             }
                         }
@@ -81,7 +84,7 @@ public class JSDefinitionsSearchExecutor implements DefinitionsScopedSearchExecu
             });
 
             if (sourceElement instanceof JSClass clazz) {
-                Processor<JSClass> delegatingProcessor = consumer::process;
+                Predicate<JSClass> delegatingProcessor = consumer::test;
                 JSClassSearch.searchClassInheritors(clazz, true).forEach(delegatingProcessor);
 
                 if (clazz.isInterface()) {
@@ -89,7 +92,7 @@ public class JSDefinitionsSearchExecutor implements DefinitionsScopedSearchExecu
                 }
             }
             else if (sourceElement instanceof JSFunction baseFunction) {
-                Processor<JSFunction> delegatingProcessor = consumer::process;
+                Predicate<JSFunction> delegatingProcessor = consumer::test;
                 JSFunctionsSearch.searchOverridingFunctions(baseFunction, true).forEach(delegatingProcessor);
 
                 PsiElement parent = baseFunction.getParent();

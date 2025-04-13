@@ -21,12 +21,13 @@ import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.search.JSClassSearch;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.util.function.Processor;
 import consulo.application.util.query.Query;
 import consulo.application.util.query.QueryExecutor;
 import consulo.application.util.query.QueryFactory;
 import consulo.language.psi.PsiElement;
 import jakarta.annotation.Nonnull;
+
+import java.util.function.Predicate;
 
 public abstract class JSFunctionsSearch implements QueryExecutor<JSFunction, JSFunctionsSearch.SearchParameters> {
     public static class SearchParameters {
@@ -72,20 +73,21 @@ public abstract class JSFunctionsSearch implements QueryExecutor<JSFunction, JSF
     }
 
     @Override
-    public boolean execute(SearchParameters queryParameters, final @Nonnull Processor<? super JSFunction> consumer) {
+    public boolean execute(SearchParameters queryParameters, final @Nonnull Predicate<? super JSFunction> consumer) {
         final JSFunction baseFunction = queryParameters.getBaseFunction();
         PsiElement clazz = JSResolveUtil.findParent(baseFunction);
 
+        //noinspection SimplifiableIfStatement
         if (!(clazz instanceof JSClass)) {
             return true;
         }
 
-        return makeQuery(queryParameters, clazz).forEach(new Processor<>() {
+        return makeQuery(queryParameters, clazz).forEach(new Predicate<>() {
             @Override
             @RequiredReadAction
-            public boolean process(final JSClass jsClass) {
+            public boolean test(final JSClass jsClass) {
                 JSFunction function = jsClass.findFunctionByNameAndKind(baseFunction.getName(), baseFunction.getKind());
-                return function == null || consumer.process(function);
+                return function == null || consumer.test(function);
             }
         });
     }
