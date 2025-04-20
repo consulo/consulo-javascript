@@ -21,7 +21,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 29.06.14
+ * @since 2014-06-29
  */
 public class ClientJavaScriptModuleExtension extends ModuleExtensionBase<ClientJavaScriptModuleExtension> implements JavaScriptModuleExtension<ClientJavaScriptModuleExtension> {
     private SdkModuleInheritableNamedPointerImpl myPointer;

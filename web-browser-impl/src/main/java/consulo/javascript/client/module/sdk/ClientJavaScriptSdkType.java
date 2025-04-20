@@ -1,6 +1,7 @@
 package consulo.javascript.client.module.sdk;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
@@ -13,13 +14,13 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 29.06.14
+ * @since 2014-06-29
  */
 @ExtensionImpl
 public class ClientJavaScriptSdkType extends SdkType {
     @Nonnull
     public static ClientJavaScriptSdkType getInstance() {
-        return EP_NAME.findExtensionOrFail(ClientJavaScriptSdkType.class);
+        return Application.get().getExtensionPoint(SdkType.class).findExtensionOrFail(ClientJavaScriptSdkType.class);
     }
 
     public ClientJavaScriptSdkType() {

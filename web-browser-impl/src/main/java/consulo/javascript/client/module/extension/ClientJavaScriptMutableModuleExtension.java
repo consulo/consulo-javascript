@@ -19,7 +19,7 @@ import javax.swing.*;
 
 /**
  * @author VISTALL
- * @since 29.06.14
+ * @since 2014-06-29
  */
 public class ClientJavaScriptMutableModuleExtension extends ClientJavaScriptModuleExtension implements JavaScriptMutableModuleExtension<ClientJavaScriptModuleExtension>, SwingMutableModuleExtension {
     public ClientJavaScriptMutableModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer rootModel) {

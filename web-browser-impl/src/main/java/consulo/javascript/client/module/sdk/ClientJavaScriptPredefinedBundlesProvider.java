@@ -16,7 +16,7 @@ import java.util.Map;
 
 /**
  * @author VISTALL
- * @since 29.06.14
+ * @since 2014-06-29
  */
 @ExtensionImpl
 public class ClientJavaScriptPredefinedBundlesProvider extends PredefinedBundlesProvider {
