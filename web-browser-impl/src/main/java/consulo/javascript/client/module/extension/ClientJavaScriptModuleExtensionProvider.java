@@ -13,49 +13,42 @@ import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 29-Aug-22
+ * @since 2022-08-29
  */
 @ExtensionImpl
-public class ClientJavaScriptModuleExtensionProvider implements ModuleExtensionProvider<ClientJavaScriptModuleExtension>
-{
-	@Nonnull
-	@Override
-	public String getId()
-	{
-		return "client-javascript";
-	}
+public class ClientJavaScriptModuleExtensionProvider implements ModuleExtensionProvider<ClientJavaScriptModuleExtension> {
+    @Nonnull
+    @Override
+    public String getId() {
+        return "client-javascript";
+    }
 
-	@Override
-	public boolean isAllowMixin()
-	{
-		return true;
-	}
+    @Override
+    public boolean isAllowMixin() {
+        return true;
+    }
 
-	@Nonnull
-	@Override
-	public LocalizeValue getName()
-	{
-		return LocalizeValue.localizeTODO("JavaScript (Client)");
-	}
+    @Nonnull
+    @Override
+    public LocalizeValue getName() {
+        return LocalizeValue.localizeTODO("JavaScript (Client)");
+    }
 
-	@Nonnull
-	@Override
-	public Image getIcon()
-	{
-		return JavaScriptIconGroup.javascriptmodule();
-	}
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return JavaScriptIconGroup.javascriptmodule();
+    }
 
-	@Nonnull
-	@Override
-	public ModuleExtension<ClientJavaScriptModuleExtension> createImmutableExtension(@Nonnull ModuleRootLayer moduleRootLayer)
-	{
-		return new ClientJavaScriptModuleExtension(getId(), moduleRootLayer);
-	}
+    @Nonnull
+    @Override
+    public ModuleExtension<ClientJavaScriptModuleExtension> createImmutableExtension(@Nonnull ModuleRootLayer moduleRootLayer) {
+        return new ClientJavaScriptModuleExtension(getId(), moduleRootLayer);
+    }
 
-	@Nonnull
-	@Override
-	public MutableModuleExtension<ClientJavaScriptModuleExtension> createMutableExtension(@Nonnull ModuleRootLayer moduleRootLayer)
-	{
-		return new ClientJavaScriptMutableModuleExtension(getId(), moduleRootLayer);
-	}
+    @Nonnull
+    @Override
+    public MutableModuleExtension<ClientJavaScriptModuleExtension> createMutableExtension(@Nonnull ModuleRootLayer moduleRootLayer) {
+        return new ClientJavaScriptMutableModuleExtension(getId(), moduleRootLayer);
+    }
 }

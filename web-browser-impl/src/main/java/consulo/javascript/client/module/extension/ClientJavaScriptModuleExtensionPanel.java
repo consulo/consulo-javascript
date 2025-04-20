@@ -25,43 +25,39 @@ import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.List;
 
 /**
  * @author VISTALL
- * @since 12.12.2015
+ * @since 2015-12-12
  */
-public class ClientJavaScriptModuleExtensionPanel extends JPanel
-{
-	public ClientJavaScriptModuleExtensionPanel(final JavaScriptMutableModuleExtension<?> extension)
-	{
-		super(new VerticalFlowLayout(true, false));
+public class ClientJavaScriptModuleExtensionPanel extends JPanel {
+    public ClientJavaScriptModuleExtensionPanel(JavaScriptMutableModuleExtension<?> extension) {
+        super(new VerticalFlowLayout(true, false));
 
-		List<JavaScriptLanguageVersion> validLanguageVersions = StandardJavaScriptVersions.getInstance().getValidLanguageVersions();
+        List<JavaScriptLanguageVersion> validLanguageVersions = StandardJavaScriptVersions.getInstance().getValidLanguageVersions();
 
-		ComboBox<JavaScriptLanguageVersion> languageVersionComboBox = new ComboBox(new CollectionComboBoxModel(validLanguageVersions, extension.getLanguageVersion()));
-		languageVersionComboBox.addItemListener(new ItemListener()
-		{
-			@Override
-			public void itemStateChanged(ItemEvent e)
-			{
-				if(e.getStateChange() == ItemEvent.SELECTED)
-				{
-					//noinspection unchecked
-					extension.setLanguageVersion((LanguageVersion) e.getItem());
-				}
-			}
-		});
-		languageVersionComboBox.setRenderer(new ColoredListCellRenderer<>()
-		{
-			@Override
-			protected void customizeCellRenderer(@Nonnull JList list, JavaScriptLanguageVersion value, int index, boolean selected, boolean hasFocus)
-			{
-				append(value.getPresentableName());
-			}
-		});
+        ComboBox<JavaScriptLanguageVersion> languageVersionComboBox =
+            new ComboBox<>(new CollectionComboBoxModel<>(validLanguageVersions, (JavaScriptLanguageVersion)extension.getLanguageVersion()));
+        languageVersionComboBox.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                //noinspection unchecked
+                extension.setLanguageVersion((LanguageVersion)e.getItem());
+            }
+        });
+        languageVersionComboBox.setRenderer(new ColoredListCellRenderer<>() {
+            @Override
+            protected void customizeCellRenderer(
+                @Nonnull JList list,
+                JavaScriptLanguageVersion value,
+                int index,
+                boolean selected,
+                boolean hasFocus
+            ) {
+                append(value.getPresentableName());
+            }
+        });
 
-		add(LabeledComponent.create(languageVersionComboBox, "Default Version"));
-	}
+        add(LabeledComponent.create(languageVersionComboBox, "Default Version"));
+    }
 }
