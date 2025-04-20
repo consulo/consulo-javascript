@@ -14,57 +14,50 @@ import consulo.ui.layout.VerticalLayout;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
  * @author VISTALL
  * @since 29.06.14
  */
-public class ClientJavaScriptMutableModuleExtension extends ClientJavaScriptModuleExtension implements JavaScriptMutableModuleExtension<ClientJavaScriptModuleExtension>, SwingMutableModuleExtension
-{
-	public ClientJavaScriptMutableModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer rootModel)
-	{
-		super(id, rootModel);
-	}
+public class ClientJavaScriptMutableModuleExtension extends ClientJavaScriptModuleExtension implements JavaScriptMutableModuleExtension<ClientJavaScriptModuleExtension>, SwingMutableModuleExtension {
+    public ClientJavaScriptMutableModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer rootModel) {
+        super(id, rootModel);
+    }
 
-	@Nonnull
-	@Override
-	public MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk()
-	{
-		return (MutableModuleInheritableNamedPointer<Sdk>) super.getInheritableSdk();
-	}
+    @Nonnull
+    @Override
+    public MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk() {
+        return (MutableModuleInheritableNamedPointer<Sdk>)super.getInheritableSdk();
+    }
 
-	@RequiredUIAccess
-	@Nullable
-	@Override
-	public Component createConfigurationComponent(@Nonnull Disposable disposable, @Nonnull Runnable runnable)
-	{
-		return VerticalLayout.create().add(Label.create("Unsupported UI"));
-	}
+    @RequiredUIAccess
+    @Nullable
+    @Override
+    public Component createConfigurationComponent(@Nonnull Disposable disposable, @Nonnull Runnable runnable) {
+        return VerticalLayout.create().add(Label.create("Unsupported UI"));
+    }
 
-	@RequiredUIAccess
-	@Nullable
-	@Override
-	public JComponent createConfigurablePanel(@Nonnull Disposable disposable, @Nonnull Runnable runnable)
-	{
-		return new ClientJavaScriptModuleExtensionPanel(this);
-	}
+    @RequiredUIAccess
+    @Nullable
+    @Override
+    public JComponent createConfigurablePanel(@Nonnull Disposable disposable, @Nonnull Runnable runnable) {
+        return new ClientJavaScriptModuleExtensionPanel(this);
+    }
 
-	@Override
-	public void setEnabled(boolean val)
-	{
-		myIsEnabled = val;
-	}
+    @Override
+    public void setEnabled(boolean val) {
+        myIsEnabled = val;
+    }
 
-	@Override
-	public boolean isModified(@Nonnull ClientJavaScriptModuleExtension originalExtension)
-	{
-		return myIsEnabled != originalExtension.isEnabled() || myLanguageVersion != originalExtension.getLanguageVersion();
-	}
+    @Override
+    public boolean isModified(@Nonnull ClientJavaScriptModuleExtension originalExtension) {
+        return myIsEnabled != originalExtension.isEnabled() || myLanguageVersion != originalExtension.getLanguageVersion();
+    }
 
-	@Override
-	public void setLanguageVersion(@Nonnull LanguageVersion languageVersion)
-	{
-		myLanguageVersion = languageVersion;
-	}
+    @Override
+    public void setLanguageVersion(@Nonnull LanguageVersion languageVersion) {
+        myLanguageVersion = languageVersion;
+    }
 }

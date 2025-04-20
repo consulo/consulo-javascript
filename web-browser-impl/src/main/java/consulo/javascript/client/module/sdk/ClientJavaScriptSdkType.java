@@ -16,61 +16,51 @@ import jakarta.annotation.Nullable;
  * @since 29.06.14
  */
 @ExtensionImpl
-public class ClientJavaScriptSdkType extends SdkType
-{
-	@Nonnull
-	public static ClientJavaScriptSdkType getInstance()
-	{
-		return EP_NAME.findExtensionOrFail(ClientJavaScriptSdkType.class);
-	}
+public class ClientJavaScriptSdkType extends SdkType {
+    @Nonnull
+    public static ClientJavaScriptSdkType getInstance() {
+        return EP_NAME.findExtensionOrFail(ClientJavaScriptSdkType.class);
+    }
 
-	public ClientJavaScriptSdkType()
-	{
-		super("CLIENT_JAVASCRIPT_SDK_TYPE");
-	}
+    public ClientJavaScriptSdkType() {
+        super("CLIENT_JAVASCRIPT_SDK_TYPE");
+    }
 
-	@Override
-	public boolean supportsUserAdd()
-	{
-		return false;
-	}
+    @Override
+    public boolean supportsUserAdd() {
+        return false;
+    }
 
-	@Override
-	public boolean isRootTypeApplicable(OrderRootType type)
-	{
-		return type == BinariesOrderRootType.getInstance() || type == SourcesOrderRootType.getInstance();
-	}
+    @Override
+    public boolean isRootTypeApplicable(OrderRootType type) {
+        return type == BinariesOrderRootType.getInstance() || type == SourcesOrderRootType.getInstance();
+    }
 
-	@Nonnull
-	@Override
-	public Image getIcon()
-	{
-		return JavaScriptIconGroup.javascriptmodule();
-	}
+    @Nonnull
+    @Override
+    public Image getIcon() {
+        return JavaScriptIconGroup.javascriptmodule();
+    }
 
-	@Override
-	public boolean isValidSdkHome(String path)
-	{
-		return false;
-	}
+    @Override
+    public boolean isValidSdkHome(String path) {
+        return false;
+    }
 
-	@Nullable
-	@Override
-	public String getVersionString(String sdkHome)
-	{
-		return "1";
-	}
+    @Nullable
+    @Override
+    public String getVersionString(String sdkHome) {
+        return "1";
+    }
 
-	@Override
-	public String suggestSdkName(String currentSdkName, String sdkHome)
-	{
-		return currentSdkName;
-	}
+    @Override
+    public String suggestSdkName(String currentSdkName, String sdkHome) {
+        return currentSdkName;
+    }
 
-	@Nonnull
-	@Override
-	public String getPresentableName()
-	{
-		return "Client JavaScript";
-	}
+    @Nonnull
+    @Override
+    public String getPresentableName() {
+        return "Client JavaScript";
+    }
 }
