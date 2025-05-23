@@ -365,10 +365,8 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
 
     private static ArrayList<RangeHighlighter> highlightOccurences(Project project, Editor editor, JSExpression[] occurences) {
         HighlightManager highlightManager = HighlightManager.getInstance(project);
-        EditorColorsManager colorsManager = EditorColorsManager.getInstance();
-        TextAttributes attributes = colorsManager.getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
         ArrayList<RangeHighlighter> result = new ArrayList<>();
-        highlightManager.addOccurrenceHighlights(editor, occurences, attributes, true, result);
+        highlightManager.addOccurrenceHighlights(editor, occurences, EditorColors.SEARCH_RESULT_ATTRIBUTES, true, result);
         WindowManager.getInstance().getStatusBar(project).setInfo(RefactoringLocalize.pressEscapeToRemoveTheHighlighting().get());
         return result;
     }
