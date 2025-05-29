@@ -38,7 +38,7 @@ public class JSStructureViewBuilderFactory implements PsiStructureViewFactory {
             @Override
             @Nonnull
             public StructureViewModel createStructureViewModel(Editor editor) {
-                return new JSStructureViewModel(psiFile);
+                return new JSStructureViewModel(psiFile, editor);
             }
 
             @Override

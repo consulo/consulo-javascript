@@ -189,12 +189,6 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel {
 
     private Grouper[] myGroupers = new Grouper[]{INHERITED_GROUPER};
 
-
-    public JSStructureViewModel(PsiElement root) {
-        super(root.getContainingFile());
-        myRoot = root;
-    }
-
     public JSStructureViewModel(PsiElement root, Editor editor) {
         super(editor);
         myRoot = root;
