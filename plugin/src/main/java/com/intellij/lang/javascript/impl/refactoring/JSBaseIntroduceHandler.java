@@ -367,7 +367,6 @@ public abstract class JSBaseIntroduceHandler<T extends JSElement, S extends Base
         HighlightManager highlightManager = HighlightManager.getInstance(project);
         ArrayList<RangeHighlighter> result = new ArrayList<>();
         highlightManager.addOccurrenceHighlights(editor, occurences, EditorColors.SEARCH_RESULT_ATTRIBUTES, true, result);
-        WindowManager.getInstance().getStatusBar(project).setInfo(RefactoringLocalize.pressEscapeToRemoveTheHighlighting().get());
         return result;
     }
 
