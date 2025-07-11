@@ -20,6 +20,7 @@ import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.*;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,7 @@ public class JSDocCommentBlock implements Block {
         return EMPTY_BLOCK_LIST;
     }
 
-    @Nonnull
+    @Nullable
     @Override
     public Wrap getWrap() {
         return null;
@@ -65,13 +66,13 @@ public class JSDocCommentBlock implements Block {
         return myIndent;
     }
 
-    @Nonnull
+    @Nullable
     @Override
     public Alignment getAlignment() {
         return null;
     }
 
-    @Nonnull
+    @Nullable
     @Override
     public Spacing getSpacing(Block child1, @Nonnull Block child2) {
         return null;
@@ -80,7 +81,7 @@ public class JSDocCommentBlock implements Block {
     @Nonnull
     @Override
     public ChildAttributes getChildAttributes(int newChildIndex) {
-        return null;
+        return new ChildAttributes(null, null);
     }
 
     @Override
