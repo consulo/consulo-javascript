@@ -5,11 +5,10 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.javascript.jsx.language.JSXJavaScriptVersion;
 import consulo.language.editor.Pass;
-import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
-import consulo.language.editor.impl.highlight.TextEditorHighlightingPassFactory;
+import consulo.language.editor.highlight.TextEditorHighlightingPass;
+import consulo.language.editor.highlight.TextEditorHighlightingPassFactory;
 import consulo.language.psi.PsiFile;
 import consulo.xml.codeInsight.daemon.impl.tagTreeHighlighting.XmlTagTreeHighlightingPass;
-
 import jakarta.annotation.Nonnull;
 
 /**
