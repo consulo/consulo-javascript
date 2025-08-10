@@ -16,10 +16,11 @@
 
 package consulo.javascript.language;
 
+import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.Language;
 import consulo.language.file.LanguageFileType;
 import consulo.language.version.LanguageVersion;
-
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -54,6 +55,12 @@ public class JavaScriptLanguage extends Language {
         }
 
         return oldMap.get(id);
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getDisplayName() {
+        return JavaScriptLocalize.javascriptName();
     }
 
     @Nullable

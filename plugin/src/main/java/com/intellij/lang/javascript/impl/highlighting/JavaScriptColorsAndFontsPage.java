@@ -19,12 +19,12 @@ package com.intellij.lang.javascript.impl.highlighting;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.setting.AttributesDescriptor;
-import consulo.colorScheme.setting.ColorDescriptor;
 import consulo.javascript.ide.hightlight.JavaScriptSyntaxHighlightKeys;
 import consulo.javascript.lang.JavaScript15LanguageVersion;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
@@ -100,20 +100,14 @@ public class JavaScriptColorsAndFontsPage implements ColorSettingsPage {
 
     @Override
     @Nonnull
-    public String getDisplayName() {
-        return "JavaScript";
+    public LocalizeValue getDisplayName() {
+        return JavaScriptLocalize.javascriptName();
     }
 
     @Override
     @Nonnull
     public AttributesDescriptor[] getAttributeDescriptors() {
         return ATTRS;
-    }
-
-    @Override
-    @Nonnull
-    public ColorDescriptor[] getColorDescriptors() {
-        return ColorDescriptor.EMPTY_ARRAY;
     }
 
     @Override
