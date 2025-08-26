@@ -1,5 +1,9 @@
+action.JavaScript.File.empty.file.kind:
+    text: Empty File
 action.JavaScript.File.text:
     text: JavaScript File
+action.JavaScript.File.title.text:
+    text: Create JavaScript File
 building.index.message:
     text: Building JavaScript indices
 choose.class.title:

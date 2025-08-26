@@ -17,6 +17,7 @@ import consulo.module.content.NewFileModuleResolver;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
@@ -72,13 +73,14 @@ public class JavaScriptCreateFileAction extends CreateFileFromTemplateAction {
 
     @Override
     protected void buildDialog(Project project, PsiDirectory directory, CreateFileFromTemplateDialog.Builder builder) {
-        builder.setTitle("Create JavaScript File");
+        builder.setTitle(JavaScriptLocalize.actionJavascriptFileTitleText());
 
-        builder.addKind("Empty File", JavaScriptFileType.INSTANCE.getIcon(), "JavaScriptFile");
+        builder.addKind(JavaScriptLocalize.actionJavascriptFileEmptyFileKind(), JavaScriptFileType.INSTANCE.getIcon(), "JavaScriptFile");
     }
 
+    @Nonnull
     @Override
-    protected String getActionName(PsiDirectory directory, String newName, String templateName) {
-        return "Create JavaScript File";
+    protected LocalizeValue getActionName(PsiDirectory directory, String newName, String templateName) {
+        return JavaScriptLocalize.actionJavascriptFileTitleText();
     }
 }
