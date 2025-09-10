@@ -1,21 +1,20 @@
 package consulo.javascript.impl.ide.actions;
 
-import consulo.javascript.language.JavaScriptFileType;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.ReadAction;
 import consulo.dataContext.DataContext;
 import consulo.ide.IdeView;
 import consulo.ide.action.CreateFileFromTemplateAction;
 import consulo.ide.action.CreateFileFromTemplateDialog;
+import consulo.javascript.language.JavaScriptFileType;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.javascript.module.extension.JavaScriptModuleExtension;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.util.ModuleUtilCore;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.content.NewFileModuleResolver;
 import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -34,12 +33,11 @@ public class JavaScriptCreateFileAction extends CreateFileFromTemplateAction {
     }
 
     @Override
-    @RequiredUIAccess
     protected boolean isAvailable(DataContext dataContext) {
         if (!super.isAvailable(dataContext)) {
             return false;
         }
-        Module module = findModule(dataContext);
+        Module module = ReadAction.compute(() -> findModule(dataContext));
         return module != null && ModuleUtilCore.getExtension(module, JavaScriptModuleExtension.class) != null;
     }
 
@@ -51,7 +49,7 @@ public class JavaScriptCreateFileAction extends CreateFileFromTemplateAction {
 
     @RequiredReadAction
     private static Module findModule(DataContext dataContext) {
-        Project project = dataContext.getData(CommonDataKeys.PROJECT);
+        Project project = dataContext.getData(Project.KEY);
         assert project != null;
         final IdeView view = dataContext.getData(IdeView.KEY);
         if (view == null) {
