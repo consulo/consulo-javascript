@@ -18,6 +18,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -30,16 +31,16 @@ import java.util.Set;
 public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection {
     private final BooleanLiteralComparisonFix fix = new BooleanLiteralComparisonFix();
 
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.pointlessBooleanExpressionDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.pointlessBooleanExpressionDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.CONTROL_FLOW_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
     @Override
@@ -52,8 +53,8 @@ public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection
         return new PointlessBooleanExpressionVisitor();
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public String buildErrorString(Object state, Object... args) {
         return args[0] instanceof JSBinaryExpression binaryExpression
             ? InspectionJSLocalize.pointlessBooleanErrorString(calculateSimplifiedBinaryExpression(binaryExpression)).get()
@@ -131,10 +132,10 @@ public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection
     }
 
     private class BooleanLiteralComparisonFix extends InspectionJSFix {
-        @Override
         @Nonnull
-        public String getName() {
-            return InspectionJSLocalize.simplifyFix().get();
+        @Override
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.simplifyFix();
         }
 
         @Override

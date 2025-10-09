@@ -14,33 +14,36 @@ import consulo.language.ast.IElementType;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
+import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NonNls;
 
 @ExtensionImpl
 public class EqualityComparisonWithCoercionJSInspection extends JavaScriptInspection {
-    @Override
     @Nonnull
+    @Override
+    @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "EqualityComparisonWithCoercionJS";
     }
 
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.equalityComparisonWithCoercionDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.equalityComparisonWithCoercionDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.BUGS_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.BUGS_GROUP_NAME;
     }
 
+    @Nonnull
+    @Override
     @RequiredReadAction
-    @Override
-    @Nonnull
     protected String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.equalityComparisonWithCoercionErrorString().get();
     }
@@ -67,8 +70,8 @@ public class EqualityComparisonWithCoercionJSInspection extends JavaScriptInspec
 
         @Override
         @Nonnull
-        public String getName() {
-            return InspectionJSLocalize.equalityComparisonWithCoercionFix(sign).get();
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.equalityComparisonWithCoercionFix(sign);
         }
 
         @Override

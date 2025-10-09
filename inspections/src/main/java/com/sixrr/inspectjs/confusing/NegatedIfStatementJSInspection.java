@@ -19,6 +19,7 @@ import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -28,21 +29,21 @@ import org.jetbrains.annotations.NonNls;
 public class NegatedIfStatementJSInspection extends JavaScriptInspection {
     private final NegatedIfElseFix fix = new NegatedIfElseFix();
 
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.negatedIfStatementDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.negatedIfStatementDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.CONFUSING_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
-    @RequiredReadAction
-    @Override
     @Nullable
+    @Override
+    @RequiredReadAction
     protected String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.negatedRefStatementErrorString().get();
     }
@@ -58,10 +59,10 @@ public class NegatedIfStatementJSInspection extends JavaScriptInspection {
     }
 
     private static class NegatedIfElseFix extends InspectionJSFix {
-        @Override
         @Nonnull
-        public String getName() {
-            return InspectionJSLocalize.invertIfConditionFix().get();
+        @Override
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.invertIfConditionFix();
         }
 
         @Override

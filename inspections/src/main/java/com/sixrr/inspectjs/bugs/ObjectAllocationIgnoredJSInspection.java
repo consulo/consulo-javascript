@@ -9,31 +9,34 @@ import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
+import org.intellij.lang.annotations.Pattern;
 
 @ExtensionImpl
 public class ObjectAllocationIgnoredJSInspection extends JavaScriptInspection {
-    @Override
     @Nonnull
+    @Override
+    @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "ObjectAllocationIgnored";
     }
 
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.resultOfObjectAllocationIgnoredDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.resultOfObjectAllocationIgnoredDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.BUGS_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.BUGS_GROUP_NAME;
     }
 
+    @Nonnull
+    @Override
     @RequiredReadAction
-    @Override
-    @Nonnull
     protected String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.resultOfObjectAllocationIgnoredErrorString().get();
     }

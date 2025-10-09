@@ -14,31 +14,27 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class ConstantIfStatementJSInspection extends JavaScriptInspection {
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.constantIfStatementDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.constantIfStatementDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.CONTROL_FLOW_GROUP_NAME.get();
-    }
-
     @Override
-    public boolean isEnabledByDefault() {
-        return true;
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
+    @Nonnull
+    @Override
     @RequiredReadAction
-    @Override
-    @Nonnull
     protected String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.constantIfStatementProblemDescriptor().get();
     }
@@ -54,10 +50,10 @@ public class ConstantIfStatementJSInspection extends JavaScriptInspection {
     }
 
     private static class ConstantIfStatementFix extends InspectionJSFix {
-        @Override
         @Nonnull
-        public String getName() {
-            return InspectionJSLocalize.constantConditionalExpressionSimplifyQuickfix().get();
+        @Override
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.constantConditionalExpressionSimplifyQuickfix();
         }
 
         @Override

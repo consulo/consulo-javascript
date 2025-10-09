@@ -13,33 +13,32 @@ import consulo.javascript.psi.JSSimpleLiteralExpression;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @ExtensionImpl
 public class ConfusingFloatingPointLiteralJSInspection extends JavaScriptInspection {
-    @NonNls
     private static final Pattern PICKY_FLOATING_POINT_PATTERN = Pattern.compile("[0-9]+\\.[0-9]+((e|E)(-)?[0-9]+)?(f|F|d|D)?");
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.CONFUSING_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.confusingFloatingPointLiteralDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.confusingFloatingPointLiteralDisplayName();
     }
 
+    @Nonnull
+    @Override
     @RequiredReadAction
-    @Override
-    @Nonnull
     protected String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.confusingFloatingPointLiteralProblemDescriptor().get();
     }
@@ -50,10 +49,10 @@ public class ConfusingFloatingPointLiteralJSInspection extends JavaScriptInspect
     }
 
     private static class ConfusingFloatingPointLiteralFix extends InspectionJSFix {
-        @Override
         @Nonnull
-        public String getName() {
-            return InspectionJSLocalize.confusingFloatingPointLiteralChangeQuickfix().get();
+        @Override
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.confusingFloatingPointLiteralChangeQuickfix();
         }
 
         @Override

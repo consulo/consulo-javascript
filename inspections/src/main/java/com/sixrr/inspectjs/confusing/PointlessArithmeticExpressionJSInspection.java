@@ -15,6 +15,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
@@ -28,14 +29,14 @@ public class PointlessArithmeticExpressionJSInspection extends JavaScriptInspect
 
     @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.pointlessArithmeticExpressionDisplayName().get();
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.pointlessArithmeticExpressionDisplayName();
     }
 
     @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.CONFUSING_GROUP_NAME.get();
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
     @Override
@@ -89,10 +90,10 @@ public class PointlessArithmeticExpressionJSInspection extends JavaScriptInspect
     }
 
     private class PointlessArithmeticFix extends InspectionJSFix {
-        @Override
         @Nonnull
-        public String getName() {
-            return InspectionJSLocalize.simplifyFix().get();
+        @Override
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.simplifyFix();
         }
 
         @Override
