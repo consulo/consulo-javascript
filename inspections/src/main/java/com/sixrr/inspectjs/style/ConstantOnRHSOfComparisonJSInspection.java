@@ -15,33 +15,36 @@ import consulo.language.ast.IElementType;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
+import org.intellij.lang.annotations.Pattern;
 
 @ExtensionImpl
 public class ConstantOnRHSOfComparisonJSInspection extends JavaScriptInspection {
     private final SwapComparisonFix fix = new SwapComparisonFix();
 
-    @Override
     @Nonnull
+    @Override
+    @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "ConstantOnRightSideOfComparisonJS";
     }
 
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.constantOnRightSideOfComparisonDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.constantOnRightSideOfComparisonDisplayName();
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.STYLE_GROUP_NAME;
     }
 
     @Override
-    @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.STYLE_GROUP_NAME.get();
-    }
-
     @RequiredReadAction
-    @Override
     public String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.constantOnRightSideOfComparisonErrorString().get();
     }
@@ -57,10 +60,10 @@ public class ConstantOnRHSOfComparisonJSInspection extends JavaScriptInspection 
     }
 
     private static class SwapComparisonFix extends InspectionJSFix {
-        @Override
         @Nonnull
-        public String getName() {
-            return InspectionJSLocalize.flipComparisonFix().get();
+        @Override
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.flipComparisonFix();
         }
 
         @Override

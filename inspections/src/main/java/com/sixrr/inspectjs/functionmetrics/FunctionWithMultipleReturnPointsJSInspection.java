@@ -10,6 +10,7 @@ import com.sixrr.inspectjs.utils.ControlFlowUtils;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
@@ -19,20 +20,20 @@ public class FunctionWithMultipleReturnPointsJSInspection extends JavaScriptInsp
         return false;
     }
 
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.functionWithMultipleReturnPointsDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.functionWithMultipleReturnPointsDisplayName();
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
     }
 
     @Override
-    @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME.get();
-    }
-
     @RequiredReadAction
-    @Override
     public String buildErrorString(Object state, Object... args) {
         final JSFunction function = (JSFunction)((PsiElement)args[0]).getParent();
         assert function != null;

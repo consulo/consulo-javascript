@@ -11,26 +11,29 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
+import org.intellij.lang.annotations.Pattern;
 
 @ExtensionImpl
 public class ParametersPerFunctionJSInspection extends JavaScriptInspection {
-    @Override
     @Nonnull
+    @Override
+    @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "OverlyComplexFunctionJS";
     }
 
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.functionWithTooManyParametersDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.functionWithTooManyParametersDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
     }
 
     @Nonnull
@@ -39,8 +42,8 @@ public class ParametersPerFunctionJSInspection extends JavaScriptInspection {
         return new ParametersPerFunctionJSInspectionState();
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public String buildErrorString(Object state, Object... args) {
         final JSFunction function = (JSFunction)((PsiElement)args[0]).getParent();
         assert function != null;

@@ -12,20 +12,21 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.util.PsiTreeUtil;
 
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection {
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.redundantLocalVariableDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.redundantLocalVariableDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.DATA_FLOW_ISSUES.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.DATA_FLOW_ISSUES;
     }
 
     @Nonnull
@@ -34,14 +35,9 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection {
         return new UnnecessaryLocalVariableJSInspectionState();
     }
 
-    @Override
-    public boolean isEnabledByDefault() {
-        return true;
-    }
-
-    @RequiredReadAction
-    @Override
     @Nonnull
+    @Override
+    @RequiredReadAction
     public String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.unnecessaryLocalVariableProblemDescriptor().get();
     }
@@ -89,7 +85,7 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection {
                 return false;
             }
             final JSReferenceExpression reference =
-                (JSReferenceExpression)initializer;
+                (JSReferenceExpression) initializer;
             final PsiElement referent = reference.resolve();
             if (referent == null) {
                 return false;
@@ -107,7 +103,7 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection {
             if (visitor.isAssigned()) {
                 return false;
             }
-            final JSVariable initialization = (JSVariable)referent;
+            final JSVariable initialization = (JSVariable) referent;
             final VariableAssignedVisitor visitor2 = new VariableAssignedVisitor(initialization);
             containingScope.accept(visitor2);
             if (visitor2.isAssigned()) {
@@ -148,7 +144,7 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection {
             if (!(nextStatement instanceof JSReturnStatement)) {
                 return false;
             }
-            final JSReturnStatement returnStatement = (JSReturnStatement)nextStatement;
+            final JSReturnStatement returnStatement = (JSReturnStatement) nextStatement;
             final JSExpression returnValue = returnStatement.getExpression();
             if (returnValue == null) {
                 return false;
@@ -156,7 +152,7 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection {
             if (!(returnValue instanceof JSReferenceExpression)) {
                 return false;
             }
-            final PsiElement referent = ((PsiReference)returnValue).resolve();
+            final PsiElement referent = ((PsiReference) returnValue).resolve();
             return !(referent == null || !referent.equals(variable));
         }
 
@@ -182,7 +178,7 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection {
             if (!(nextStatement instanceof JSThrowStatement)) {
                 return false;
             }
-            final JSThrowStatement throwStatement = (JSThrowStatement)nextStatement;
+            final JSThrowStatement throwStatement = (JSThrowStatement) nextStatement;
             final JSExpression returnValue = throwStatement.getExpression();
             if (returnValue == null) {
                 return false;
@@ -190,7 +186,7 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection {
             if (!(returnValue instanceof JSReferenceExpression)) {
                 return false;
             }
-            final PsiElement referent = ((PsiReference)returnValue).resolve();
+            final PsiElement referent = ((PsiReference) returnValue).resolve();
             return !(referent == null || !referent.equals(variable));
         }
 
@@ -218,12 +214,12 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection {
             if (!(nextStatement instanceof JSExpressionStatement)) {
                 return false;
             }
-            final JSExpressionStatement expressionStatement = (JSExpressionStatement)nextStatement;
+            final JSExpressionStatement expressionStatement = (JSExpressionStatement) nextStatement;
             final JSExpression expression = expressionStatement.getExpression();
             if (!(expression instanceof JSAssignmentExpression)) {
                 return false;
             }
-            final JSAssignmentExpression assignmentExpression = (JSAssignmentExpression)expression;
+            final JSAssignmentExpression assignmentExpression = (JSAssignmentExpression) expression;
             final JSExpression rhs = assignmentExpression.getROperand();
             if (rhs == null) {
                 return false;
@@ -231,7 +227,7 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection {
             if (!(rhs instanceof JSReferenceExpression)) {
                 return false;
             }
-            final JSReferenceExpression reference = (JSReferenceExpression)rhs;
+            final JSReferenceExpression reference = (JSReferenceExpression) rhs;
             final PsiElement referent = reference.resolve();
             if (referent == null || !referent.equals(variable)) {
                 return false;
@@ -272,7 +268,7 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection {
             if (!(nextStatement instanceof JSVarStatement)) {
                 return false;
             }
-            final JSVarStatement declaration = (JSVarStatement)nextStatement;
+            final JSVarStatement declaration = (JSVarStatement) nextStatement;
             final JSVariable[] declarations = declaration.getVariables();
             if (declarations.length != 1) {
                 return false;
@@ -284,7 +280,7 @@ public class UnnecessaryLocalVariableJSInspection extends JavaScriptInspection {
             if (!(rhs instanceof JSReferenceExpression)) {
                 return false;
             }
-            final PsiElement referent = ((PsiReference)rhs).resolve();
+            final PsiElement referent = ((PsiReference) rhs).resolve();
             if (referent == null || !referent.equals(variable)) {
                 return false;
             }

@@ -15,22 +15,23 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.ResolveResult;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 
 @ExtensionImpl
 public class BadExpressionStatementJSInspection extends JavaScriptInspection {
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.expressionStatementWhichIsNotAssignmentOrCallDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.expressionStatementWhichIsNotAssignmentOrCallDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.VALIDITY_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.VALIDITY_GROUP_NAME;
     }
 
     @Override
@@ -38,9 +39,9 @@ public class BadExpressionStatementJSInspection extends JavaScriptInspection {
         return true;
     }
 
-    @RequiredReadAction
-    @Override
     @Nullable
+    @Override
+    @RequiredReadAction
     protected String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.expressionStatementIsNotAssignmentOrCallErrorString().get();
     }

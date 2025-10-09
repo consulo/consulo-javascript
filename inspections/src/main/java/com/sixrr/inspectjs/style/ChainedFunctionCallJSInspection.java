@@ -10,30 +10,26 @@ import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class ChainedFunctionCallJSInspection extends JavaScriptInspection {
-    @Override
-    public boolean isEnabledByDefault() {
-        return true;
-    }
-
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.STYLE_GROUP_NAME.get();
-    }
-
     @Override
-    @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.chainedFunctionCallDisplayName().get();
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.STYLE_GROUP_NAME;
     }
 
+    @Nonnull
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.chainedFunctionCallDisplayName();
+    }
+
+    @Nonnull
+    @Override
     @RequiredReadAction
-    @Override
-    @Nonnull
     protected String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.chainedFunctionCallProblemDescriptor().get();
     }

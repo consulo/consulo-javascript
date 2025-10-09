@@ -10,7 +10,7 @@ import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
+import consulo.localize.LocalizeValue;import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class NestedFunctionCallJSInspection extends JavaScriptInspection {
@@ -21,14 +21,14 @@ public class NestedFunctionCallJSInspection extends JavaScriptInspection {
 
     @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.STYLE_GROUP_NAME.get();
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.STYLE_GROUP_NAME;
     }
 
     @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.nestedFunctionCallDisplayName().get();
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.nestedFunctionCallDisplayName();
     }
 
     @RequiredReadAction

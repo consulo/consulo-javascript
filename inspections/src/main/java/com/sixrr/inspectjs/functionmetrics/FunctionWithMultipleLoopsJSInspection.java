@@ -9,20 +9,21 @@ import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class FunctionWithMultipleLoopsJSInspection extends JavaScriptInspection {
     @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.functionWithMultipleLoopsDisplayName().get();
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.functionWithMultipleLoopsDisplayName();
     }
 
     @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME.get();
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.FUNCTIONMETRICS_GROUP_NAME;
     }
 
     @RequiredReadAction

@@ -11,27 +11,28 @@ import com.sixrr.inspectjs.utils.ExpressionUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class ShiftOutOfRangeJSInspection extends JavaScriptInspection {
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.shiftOperationByInappropriateConstantDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.shiftOperationByInappropriateConstantDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.BITWISE_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.BITWISE_GROUP_NAME;
     }
 
+    @Nonnull
+    @Override
     @RequiredReadAction
-    @Override
-    @Nonnull
     public String buildErrorString(Object state, Object... args) {
-        final Integer value = (Integer)args[0];
+        Integer value = (Integer)args[0];
         return value > 0
             ? InspectionJSLocalize.shiftOperationByInappropriateConstantProblemDescriptorTooLarge().get()
             : InspectionJSLocalize.shiftOperationByInappropriateConstantProblemDescriptorNegative().get();

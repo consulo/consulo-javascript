@@ -13,6 +13,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
@@ -24,22 +25,22 @@ public class ParameterNamingConventionJSInspection extends ConventionInspection 
         return false;
     }
 
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.functionParameterNamingConventionDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.functionParameterNamingConventionDisplayName();
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.NAMING_CONVENTIONS_GROUP_NAME;
     }
 
     @Nonnull
     @Override
     public InspectionToolState<?> createStateProvider() {
         return new ParameterNamingConventionJSInspectionState();
-    }
-
-    @Override
-    @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.NAMING_CONVENTIONS_GROUP_NAME.get();
     }
 
     @Override
@@ -52,12 +53,12 @@ public class ParameterNamingConventionJSInspection extends ConventionInspection 
         return true;
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public String buildErrorString(Object state, Object... args) {
-        ParameterNamingConventionJSInspectionState inspectionState = (ParameterNamingConventionJSInspectionState)state;
+        ParameterNamingConventionJSInspectionState inspectionState = (ParameterNamingConventionJSInspectionState) state;
 
-        final JSParameter parameter = (JSParameter)((PsiElement)args[0]).getParent();
+        final JSParameter parameter = (JSParameter) ((PsiElement) args[0]).getParent();
         assert parameter != null;
         final String parameterName = parameter.getName();
         if (parameterName.length() < inspectionState.m_minLength) {

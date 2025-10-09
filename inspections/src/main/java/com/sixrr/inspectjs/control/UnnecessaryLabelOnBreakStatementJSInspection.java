@@ -15,6 +15,7 @@ import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -23,21 +24,16 @@ import jakarta.annotation.Nullable;
 public class UnnecessaryLabelOnBreakStatementJSInspection extends JavaScriptInspection {
     private final UnnecessaryLabelOnBreakStatementFix fix = new UnnecessaryLabelOnBreakStatementFix();
 
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.unnecessaryLabelOnBreakStatementDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.unnecessaryLabelOnBreakStatementDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.CONTROL_FLOW_GROUP_NAME.get();
-    }
-
     @Override
-    public boolean isEnabledByDefault() {
-        return true;
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
     @Override
@@ -46,10 +42,10 @@ public class UnnecessaryLabelOnBreakStatementJSInspection extends JavaScriptInsp
     }
 
     private static class UnnecessaryLabelOnBreakStatementFix extends InspectionJSFix {
-        @Override
         @Nonnull
-        public String getName() {
-            return InspectionJSLocalize.removeLabelFix().get();
+        @Override
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.removeLabelFix();
         }
 
         @Override

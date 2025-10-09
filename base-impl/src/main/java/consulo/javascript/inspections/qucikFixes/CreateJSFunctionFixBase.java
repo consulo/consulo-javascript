@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.javascript.inspections.qucikFixes;
 
 import com.intellij.lang.javascript.inspections.qucikFixes.BaseCreateFix;
@@ -22,7 +21,6 @@ import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.language.JavaScriptFeature;
-import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.template.Template;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -37,22 +35,17 @@ import java.util.Set;
  * @since 2016-02-24
  */
 public abstract class CreateJSFunctionFixBase extends BaseCreateFix {
+    @Nonnull
     private final LocalizeValue myMessage;
 
-    public CreateJSFunctionFixBase(LocalizeValue message) {
+    public CreateJSFunctionFixBase(@Nonnull LocalizeValue message) {
         myMessage = message;
     }
 
     @Override
     @Nonnull
-    public String getName() {
-        return myMessage.get();
-    }
-
-    @Override
-    @Nonnull
-    public String getFamilyName() {
-        return JavaScriptLocalize.javascriptCreateFunctionIntentionFamily().get();
+    public LocalizeValue getName() {
+        return myMessage;
     }
 
     @RequiredReadAction

@@ -12,26 +12,27 @@ import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class ReuseOfLocalVariableJSInspection extends JavaScriptInspection {
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.reuseOfLocalVariableDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.reuseOfLocalVariableDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.DATA_FLOW_ISSUES.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.DATA_FLOW_ISSUES;
     }
 
+    @Nonnull
+    @Override
     @RequiredReadAction
-    @Override
-    @Nonnull
     public String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.reuseOfLocalVariableProblemDescriptor().get();
     }

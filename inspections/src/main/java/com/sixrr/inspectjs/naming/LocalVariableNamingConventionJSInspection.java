@@ -11,6 +11,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
@@ -22,16 +23,16 @@ public class LocalVariableNamingConventionJSInspection extends ConventionInspect
         return false;
     }
 
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.localVariableNamingConventionDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.localVariableNamingConventionDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.NAMING_CONVENTIONS_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.NAMING_CONVENTIONS_GROUP_NAME;
     }
 
     @Override
@@ -44,12 +45,12 @@ public class LocalVariableNamingConventionJSInspection extends ConventionInspect
         return true;
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public String buildErrorString(Object state, Object... args) {
-        LocalVariableNamingConventionJSInspectionState inspectionState = (LocalVariableNamingConventionJSInspectionState)state;
+        LocalVariableNamingConventionJSInspectionState inspectionState = (LocalVariableNamingConventionJSInspectionState) state;
 
-        final JSVariable variable = (JSVariable)((PsiElement)args[0]).getParent();
+        final JSVariable variable = (JSVariable) ((PsiElement) args[0]).getParent();
         assert variable != null;
         final String variableName = variable.getName();
         if (variableName.length() < inspectionState.m_minLength) {

@@ -13,21 +13,22 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class FunctionWithInconsistentReturnsJSInspection extends JavaScriptInspection {
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.functionWithInconsistentReturnsDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.functionWithInconsistentReturnsDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.VALIDITY_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.VALIDITY_GROUP_NAME;
     }
 
     @Override
@@ -35,9 +36,9 @@ public class FunctionWithInconsistentReturnsJSInspection extends JavaScriptInspe
         return true;
     }
 
-    @RequiredReadAction
-    @Override
     @Nullable
+    @Override
+    @RequiredReadAction
     protected String buildErrorString(Object state, Object... args) {
         final JSFunction function = (JSFunction)((PsiElement)args[0]).getParent();
         assert function != null;

@@ -11,6 +11,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
@@ -28,16 +29,16 @@ public class FunctionNamingConventionJSInspection extends ConventionInspection {
         return new FunctionNamingConventionJSInspectionState();
     }
 
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.functionNamingConventionDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.functionNamingConventionDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.NAMING_CONVENTIONS_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.NAMING_CONVENTIONS_GROUP_NAME;
     }
 
     @Override
@@ -50,11 +51,11 @@ public class FunctionNamingConventionJSInspection extends ConventionInspection {
         return true;
     }
 
-    @RequiredReadAction
     @Override
+    @RequiredReadAction
     public String buildErrorString(Object state, Object... args) {
-        ConventionInspectionState inspectionState = (ConventionInspectionState)state;
-        final String functionName = ((PsiElement)args[0]).getText();
+        ConventionInspectionState inspectionState = (ConventionInspectionState) state;
+        final String functionName = ((PsiElement) args[0]).getText();
 
         assert functionName != null;
         if (functionName.length() < inspectionState.m_minLength) {
