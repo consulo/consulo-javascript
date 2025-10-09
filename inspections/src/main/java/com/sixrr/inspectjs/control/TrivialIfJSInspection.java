@@ -18,30 +18,33 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
+import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NonNls;
 
 @ExtensionImpl
 public class TrivialIfJSInspection extends JavaScriptInspection {
     private final TrivialIfFix fix = new TrivialIfFix();
 
+    @Nonnull
     @Override
-	@Nonnull
+    @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "RedundantIfStatementJS";
     }
 
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.redundantIfStatementDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.redundantIfStatementDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.CONTROL_FLOW_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
     @Override
@@ -66,10 +69,10 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
     }
 
     private static class TrivialIfFix extends InspectionJSFix {
-        @Override
         @Nonnull
-        public String getName() {
-            return InspectionJSLocalize.simplifyFix().get();
+        @Override
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.simplifyFix();
         }
 
         @Override
@@ -78,19 +81,26 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
             final JSIfStatement statement = (JSIfStatement) ifKeywordElement.getParent();
             if (isSimplifiableAssignment(statement)) {
                 replaceSimplifiableAssignment(statement);
-            } else if (isSimplifiableReturn(statement)) {
+            }
+            else if (isSimplifiableReturn(statement)) {
                 repaceSimplifiableReturn(statement);
-            } else if (isSimplifiableImplicitReturn(statement)) {
+            }
+            else if (isSimplifiableImplicitReturn(statement)) {
                 replaceSimplifiableImplicitReturn(statement);
-            } else if (isSimplifiableAssignmentNegated(statement)) {
+            }
+            else if (isSimplifiableAssignmentNegated(statement)) {
                 replaceSimplifiableAssignmentNegated(statement);
-            } else if (isSimplifiableReturnNegated(statement)) {
+            }
+            else if (isSimplifiableReturnNegated(statement)) {
                 repaceSimplifiableReturnNegated(statement);
-            } else if (isSimplifiableImplicitReturnNegated(statement)) {
+            }
+            else if (isSimplifiableImplicitReturnNegated(statement)) {
                 replaceSimplifiableImplicitReturnNegated(statement);
-            } else if (isSimplifiableImplicitAssignment(statement)) {
+            }
+            else if (isSimplifiableImplicitAssignment(statement)) {
                 replaceSimplifiableImplicitAssignment(statement);
-            } else if (isSimplifiableImplicitAssignmentNegated(statement)) {
+            }
+            else if (isSimplifiableImplicitAssignmentNegated(statement)) {
                 replaceSimplifiableImplicitAssignmentNegated(statement);
             }
         }
@@ -302,7 +312,8 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
             final JSExpression thenLhs = thenExpression.getLOperand();
             final JSExpression elseLhs = elseExpression.getLOperand();
             return EquivalenceChecker.expressionsAreEquivalent(thenLhs, elseLhs);
-        } else {
+        }
+        else {
             return false;
         }
     }
@@ -323,7 +334,8 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
             final JSExpression thenLhs = thenExpression.getLOperand();
             final JSExpression elseLhs = elseExpression.getLOperand();
             return EquivalenceChecker.expressionsAreEquivalent(thenLhs, elseLhs);
-        } else {
+        }
+        else {
             return false;
         }
     }
@@ -352,7 +364,8 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
             final JSExpression thenLhs = thenExpression.getLOperand();
             final JSExpression elseLhs = elseExpression.getLOperand();
             return EquivalenceChecker.expressionsAreEquivalent(thenLhs, elseLhs);
-        } else {
+        }
+        else {
             return false;
         }
     }
@@ -381,80 +394,81 @@ public class TrivialIfJSInspection extends JavaScriptInspection {
             final JSExpression thenLhs = thenExpression.getLOperand();
             final JSExpression elseLhs = elseExpression.getLOperand();
             return EquivalenceChecker.expressionsAreEquivalent(thenLhs, elseLhs);
-        } else {
+        }
+        else {
             return false;
         }
     }
 
     @NonNls
     private static String getTextForOperator(IElementType operator) {
-        if(JSTokenTypes.EQ.equals(operator)) {
+        if (JSTokenTypes.EQ.equals(operator)) {
             return "=";
         }
-        if(JSTokenTypes.NE.equals(operator)) {
+        if (JSTokenTypes.NE.equals(operator)) {
             return "!=";
         }
-        if(JSTokenTypes.LE.equals(operator)) {
+        if (JSTokenTypes.LE.equals(operator)) {
             return "<=";
         }
-        if(JSTokenTypes.GE.equals(operator)) {
+        if (JSTokenTypes.GE.equals(operator)) {
             return ">=";
         }
-        if(JSTokenTypes.LT.equals(operator)) {
+        if (JSTokenTypes.LT.equals(operator)) {
             return "<=";
         }
-        if(JSTokenTypes.GT.equals(operator)) {
+        if (JSTokenTypes.GT.equals(operator)) {
             return ">=";
         }
-        if(JSTokenTypes.EQEQ.equals(operator)) {
+        if (JSTokenTypes.EQEQ.equals(operator)) {
             return "==";
         }
-        if(JSTokenTypes.EQEQEQ.equals(operator)) {
+        if (JSTokenTypes.EQEQEQ.equals(operator)) {
             return "===";
         }
-        if(JSTokenTypes.NEQEQ.equals(operator)) {
+        if (JSTokenTypes.NEQEQ.equals(operator)) {
             return "!==";
         }
-        if(JSTokenTypes.PLUSEQ.equals(operator)) {
+        if (JSTokenTypes.PLUSEQ.equals(operator)) {
             return "+=";
         }
-        if(JSTokenTypes.MINUSEQ.equals(operator)) {
+        if (JSTokenTypes.MINUSEQ.equals(operator)) {
             return "-=";
         }
-        if(JSTokenTypes.MULTEQ.equals(operator)) {
+        if (JSTokenTypes.MULTEQ.equals(operator)) {
             return "*=";
         }
-        if(JSTokenTypes.DIVEQ.equals(operator)) {
+        if (JSTokenTypes.DIVEQ.equals(operator)) {
             return "/=";
         }
-        if(JSTokenTypes.PERCEQ.equals(operator)) {
+        if (JSTokenTypes.PERCEQ.equals(operator)) {
             return "%=";
         }
-        if(JSTokenTypes.XOREQ.equals(operator)) {
+        if (JSTokenTypes.XOREQ.equals(operator)) {
             return "^=";
         }
-        if(JSTokenTypes.ANDEQ.equals(operator)) {
+        if (JSTokenTypes.ANDEQ.equals(operator)) {
             return "&=";
         }
-        if(JSTokenTypes.OREQ.equals(operator)) {
+        if (JSTokenTypes.OREQ.equals(operator)) {
             return "|=";
         }
-        if(JSTokenTypes.LTLT.equals(operator)) {
+        if (JSTokenTypes.LTLT.equals(operator)) {
             return "<<";
         }
-        if(JSTokenTypes.LTLTEQ.equals(operator)) {
+        if (JSTokenTypes.LTLTEQ.equals(operator)) {
             return "<<=";
         }
-        if(JSTokenTypes.GTGT.equals(operator)) {
+        if (JSTokenTypes.GTGT.equals(operator)) {
             return ">>";
         }
-        if(JSTokenTypes.GTGTEQ.equals(operator)) {
+        if (JSTokenTypes.GTGTEQ.equals(operator)) {
             return ">>=";
         }
-        if(JSTokenTypes.GTGTGT.equals(operator)) {
+        if (JSTokenTypes.GTGTGT.equals(operator)) {
             return ">>>";
         }
-        if(JSTokenTypes.GTGTGTEQ.equals(operator)) {
+        if (JSTokenTypes.GTGTGTEQ.equals(operator)) {
             return ">>>=";
         }
         return "unknown";

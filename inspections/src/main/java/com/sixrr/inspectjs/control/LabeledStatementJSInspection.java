@@ -7,27 +7,28 @@ import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 
 @ExtensionImpl
 public class LabeledStatementJSInspection extends JavaScriptInspection {
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.labeledStatementDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.labeledStatementDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.CONTROL_FLOW_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
-    @RequiredReadAction
-    @Override
     @Nullable
+    @Override
+    @RequiredReadAction
     protected String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.statementLabelErrorString().get();
     }
@@ -42,8 +43,7 @@ public class LabeledStatementJSInspection extends JavaScriptInspection {
         public void visitJSLabeledStatement(@Nonnull JSLabeledStatement statement) {
             super.visitJSLabeledStatement(statement);
             @NonNls final String label = statement.getLabel();
-            if("javascript".equals(label))
-            {
+            if ("javascript".equals(label)) {
                 return;
             }
             registerStatementError(statement);

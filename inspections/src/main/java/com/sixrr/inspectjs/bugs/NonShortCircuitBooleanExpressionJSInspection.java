@@ -14,27 +14,28 @@ import consulo.language.ast.IElementType;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class NonShortCircuitBooleanExpressionJSInspection extends JavaScriptInspection {
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.nonShortCircuitBooleanExpressionDisplayName().get();
+    @Override
+        public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.nonShortCircuitBooleanExpressionDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.BUGS_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.BUGS_GROUP_NAME;
     }
 
-    @RequiredReadAction
-    @Override
     @Nullable
+    @Override
+    @RequiredReadAction
     protected String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.nonShortCircuitBooleanExpressionErrorString().get();
     }
@@ -45,10 +46,10 @@ public class NonShortCircuitBooleanExpressionJSInspection extends JavaScriptInsp
     }
 
     private static class NonShortCircuitBooleanFix extends InspectionJSFix {
-        @Override
         @Nonnull
-        public String getName() {
-            return InspectionJSLocalize.replaceWithShortCircuitExpressionFixString().get();
+        @Override
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.replaceWithShortCircuitExpressionFixString();
         }
 
         @Override

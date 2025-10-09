@@ -13,6 +13,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
@@ -20,16 +21,16 @@ import jakarta.annotation.Nonnull;
 public class ConditionalExpressionWithIdenticalBranchesJSInspection extends JavaScriptInspection {
     private InspectionJSFix fix = new CollapseConditional();
 
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.conditionalExpressionWithIdenticalBranchesDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.conditionalExpressionWithIdenticalBranchesDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.CONTROL_FLOW_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
     @RequiredReadAction
@@ -44,10 +45,10 @@ public class ConditionalExpressionWithIdenticalBranchesJSInspection extends Java
     }
 
     private static class CollapseConditional extends InspectionJSFix {
-        @Override
         @Nonnull
-        public String getName() {
-            return InspectionJSLocalize.collapseConditionalExpressionFix().get();
+        @Override
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.collapseConditionalExpressionFix();
         }
 
         @Override

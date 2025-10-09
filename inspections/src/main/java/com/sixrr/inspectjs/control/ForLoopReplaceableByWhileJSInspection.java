@@ -15,128 +15,109 @@ import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
+import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NonNls;
 
 @ExtensionImpl
-public class ForLoopReplaceableByWhileJSInspection extends JavaScriptInspection
-{
-	@Override
-	@Nonnull
-	public String getDisplayName()
-	{
-		return InspectionJSLocalize.forLoopReplaceableByWhileDisplayName().get();
-	}
+public class ForLoopReplaceableByWhileJSInspection extends JavaScriptInspection {
+    @Nonnull
+    @Override
+    @Pattern(value = "[a-zA-Z_0-9.-]+")
+    public String getID() {
+        return "ForLoopReplaceableByWhile";
+    }
 
-	@Override
-	@Nonnull
-	public String getID()
-	{
-		return "ForLoopReplaceableByWhile";
-	}
+    @Nonnull
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.forLoopReplaceableByWhileDisplayName();
+    }
 
-	@Override
-	@Nonnull
-	public String getGroupDisplayName()
-	{
-		return JSGroupNames.CONTROL_FLOW_GROUP_NAME.get();
-	}
+    @Override
+    @Nonnull
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
+    }
 
-	@RequiredReadAction
-	@Override
-	@Nonnull
-	protected String buildErrorString(Object state, Object... args)
-	{
-		return InspectionJSLocalize.forLoopReplaceableByWhileProblemDescriptor().get();
-	}
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    protected String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.forLoopReplaceableByWhileProblemDescriptor().get();
+    }
 
-	@Nonnull
-	@Override
-	public InspectionToolState<?> createStateProvider()
-	{
-		return new ForLoopReplaceableByWhileJSInspectionState();
-	}
+    @Nonnull
+    @Override
+    public InspectionToolState<?> createStateProvider() {
+        return new ForLoopReplaceableByWhileJSInspectionState();
+    }
 
-	@Override
-	public InspectionJSFix buildFix(PsiElement location, Object state)
-	{
-		return new ReplaceForByWhileFix();
-	}
+    @Override
+    public InspectionJSFix buildFix(PsiElement location, Object state) {
+        return new ReplaceForByWhileFix();
+    }
 
-	private static class ReplaceForByWhileFix extends InspectionJSFix
-	{
+    private static class ReplaceForByWhileFix extends InspectionJSFix {
+        @Nonnull
+        @Override
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.forLoopReplaceableByWhileReplaceQuickfix();
+        }
 
-		@Override
-		@Nonnull
-		public String getName()
-		{
-			return InspectionJSLocalize.forLoopReplaceableByWhileReplaceQuickfix().get();
-		}
+        @Override
+        public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
+            final PsiElement forKeywordElement = descriptor.getPsiElement();
+            final JSForStatement forStatement = (JSForStatement) forKeywordElement.getParent();
+            assert forStatement != null;
+            final JSExpression condition = forStatement.getCondition();
+            final JSStatement body = forStatement.getBody();
+            final String bodyText = body == null ? "" : body.getText();
+            @NonNls final String whileStatement;
+            if (condition == null) {
+                whileStatement = "while(true)" + bodyText;
+            }
+            else {
+                whileStatement = "while(" + condition.getText() + ')' + bodyText;
+            }
+            replaceStatement(forStatement, whileStatement);
+        }
+    }
 
-		@Override
-		public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException
-		{
-			final PsiElement forKeywordElement = descriptor.getPsiElement();
-			final JSForStatement forStatement = (JSForStatement) forKeywordElement.getParent();
-			assert forStatement != null;
-			final JSExpression condition = forStatement.getCondition();
-			final JSStatement body = forStatement.getBody();
-			final String bodyText = body == null ? "" : body.getText();
-			@NonNls final String whileStatement;
-			if(condition == null)
-			{
-				whileStatement = "while(true)" + bodyText;
-			}
-			else
-			{
-				whileStatement = "while(" + condition.getText() + ')' + bodyText;
-			}
-			replaceStatement(forStatement, whileStatement);
-		}
-	}
+    @Override
+    public BaseInspectionVisitor buildVisitor() {
+        return new ForLoopReplaceableByWhileVisitor();
+    }
 
-	@Override
-	public BaseInspectionVisitor buildVisitor()
-	{
-		return new ForLoopReplaceableByWhileVisitor();
-	}
-
-	private class ForLoopReplaceableByWhileVisitor extends BaseInspectionVisitor<ForLoopReplaceableByWhileJSInspectionState>
-	{
-		@Override
-		public void visitJSForStatement(@Nonnull JSForStatement statement)
-		{
-			super.visitJSForStatement(statement);
-			final JSVarStatement varStatement = statement.getVarDeclaration();
-			if(varStatement != null)
-			{
-				return;
-			}
-			final JSExpression initialization = statement.getInitialization();
-			if(initialization != null)
-			{
-				return;
-			}
-			final JSExpression update = statement.getUpdate();
-			if(update != null)
-			{
-				return;
-			}
-			if(myState.m_ignoreLoopsWithoutConditions)
-			{
-				final JSExpression condition = statement.getCondition();
-				if(condition == null)
-				{
-					return;
-				}
-				final String conditionText = condition.getText();
-				if("true".equals(conditionText))
-				{
-					return;
-				}
-			}
-			registerStatementError(statement);
-		}
-	}
+    private class ForLoopReplaceableByWhileVisitor extends BaseInspectionVisitor<ForLoopReplaceableByWhileJSInspectionState> {
+        @Override
+        public void visitJSForStatement(@Nonnull JSForStatement statement) {
+            super.visitJSForStatement(statement);
+            final JSVarStatement varStatement = statement.getVarDeclaration();
+            if (varStatement != null) {
+                return;
+            }
+            final JSExpression initialization = statement.getInitialization();
+            if (initialization != null) {
+                return;
+            }
+            final JSExpression update = statement.getUpdate();
+            if (update != null) {
+                return;
+            }
+            if (myState.m_ignoreLoopsWithoutConditions) {
+                final JSExpression condition = statement.getCondition();
+                if (condition == null) {
+                    return;
+                }
+                final String conditionText = condition.getText();
+                if ("true".equals(conditionText)) {
+                    return;
+                }
+            }
+            registerStatementError(statement);
+        }
+    }
 }

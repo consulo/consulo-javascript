@@ -9,25 +9,26 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class TailRecursionJSInspection extends JavaScriptInspection {
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.CONTROL_FLOW_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.tailRecursionDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.tailRecursionDisplayName();
     }
 
+    @Nonnull
+    @Override
     @RequiredReadAction
-    @Override
-    @Nonnull
     protected String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.tailRecursionProblemDescriptor().get();
     }
@@ -171,37 +172,39 @@ public class TailRecursionJSInspection extends JavaScriptInspection {
     */
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new TailRecursionVisitor();
     }
 
     private static class TailRecursionVisitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSReturnStatement(
-                @Nonnull JSReturnStatement statement) {
+        @Override
+        public void visitJSReturnStatement(
+            @Nonnull JSReturnStatement statement
+        ) {
             super.visitJSReturnStatement(statement);
             final JSExpression returnValue = statement.getExpression();
             if (!(returnValue instanceof JSCallExpression)) {
                 return;
             }
             final JSFunction containingMethod =
-                    PsiTreeUtil.getParentOfType(statement,
-                            JSFunction.class);
+                PsiTreeUtil.getParentOfType(
+                    statement,
+                    JSFunction.class
+                );
             if (containingMethod == null) {
                 return;
             }
             final JSCallExpression returnCall =
-                    (JSCallExpression) returnValue;
+                (JSCallExpression) returnValue;
             final JSExpression methodExpression = returnCall.getMethodExpression();
-            if(!(methodExpression  instanceof JSReferenceExpression))
-            {
+            if (!(methodExpression instanceof JSReferenceExpression)) {
                 return;
             }
-            final JSReferenceExpression reference =(JSReferenceExpression) methodExpression;
+            final JSReferenceExpression reference = (JSReferenceExpression) methodExpression;
 
             final PsiElement referent = reference.resolve();
-            if(!(referent instanceof JSFunction))
-            {
+            if (!(referent instanceof JSFunction)) {
                 return;
             }
             final JSFunction method = (JSFunction) referent;

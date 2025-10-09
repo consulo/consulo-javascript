@@ -11,26 +11,22 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class UnnecessaryLabelJSInspection extends JavaScriptInspection {
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.unnecessaryLabelDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.unnecessaryLabelDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.CONTROL_FLOW_GROUP_NAME.get();
-    }
-
     @Override
-    public boolean isEnabledByDefault() {
-        return true;
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
     @Override
@@ -38,9 +34,9 @@ public class UnnecessaryLabelJSInspection extends JavaScriptInspection {
         return new UnusedLabelVisitor();
     }
 
-    @RequiredReadAction
-    @Override
     @Nonnull
+    @Override
+    @RequiredReadAction
     protected String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.unnecessaryLabelErrorString().get();
     }
@@ -51,10 +47,10 @@ public class UnnecessaryLabelJSInspection extends JavaScriptInspection {
     }
 
     private static class UnusedLabelFix extends InspectionJSFix {
-        @Override
         @Nonnull
-        public String getName() {
-            return InspectionJSLocalize.removeLabelFix().get();
+        @Override
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.removeLabelFix();
         }
 
         @Override
