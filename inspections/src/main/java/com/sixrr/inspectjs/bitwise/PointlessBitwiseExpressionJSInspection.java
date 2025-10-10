@@ -17,42 +17,40 @@ import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @ExtensionImpl
 public class PointlessBitwiseExpressionJSInspection extends JavaScriptInspection {
-    static final Set<IElementType> bitwiseTokens = new HashSet<>(6);
+    static final Set<IElementType> OUR_BITWISE_TOKENS = Set.of(
+        JSTokenTypes.AND,
+        JSTokenTypes.OR,
+        JSTokenTypes.XOR,
+        JSTokenTypes.LTLT,
+        JSTokenTypes.GTGT,
+        JSTokenTypes.GTGTGT
+    );
 
-    static {
-        bitwiseTokens.add(JSTokenTypes.AND);
-        bitwiseTokens.add(JSTokenTypes.OR);
-        bitwiseTokens.add(JSTokenTypes.XOR);
-        bitwiseTokens.add(JSTokenTypes.LTLT);
-        bitwiseTokens.add(JSTokenTypes.GTGT);
-        bitwiseTokens.add(JSTokenTypes.GTGTGT);
-    }
-
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.pointlessBitwiseExpressionDisplayName().get();
-    }
-
     @Override
-    @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.BITWISE_GROUP_NAME.get();
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.pointlessBitwiseExpressionDisplayName();
     }
 
+    @Nonnull
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.BITWISE_GROUP_NAME;
+    }
+
+    @Nonnull
+    @Override
     @RequiredReadAction
-    @Override
-    @Nonnull
     public String buildErrorString(Object state, Object... args) {
-        final String replacementExpression =
+        String replacementExpression =
             calculateReplacementExpression((JSExpression)args[0], (PointlessBitwiseExpressionJSInspectionState)state);
         return InspectionJSLocalize.pointlessBitwiseExpressionProblemDescriptor(replacementExpression).get();
     }
@@ -132,10 +130,10 @@ public class PointlessBitwiseExpressionJSInspection extends JavaScriptInspection
             myState = (PointlessBitwiseExpressionJSInspectionState)state;
         }
 
-        @Override
         @Nonnull
-        public String getName() {
-            return InspectionJSLocalize.pointlessBitwiseExpressionSimplifyQuickfix().get();
+        @Override
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.pointlessBitwiseExpressionSimplifyQuickfix();
         }
 
         @Override
@@ -153,7 +151,7 @@ public class PointlessBitwiseExpressionJSInspection extends JavaScriptInspection
         public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             final IElementType sign = expression.getOperationSign();
-            if (!bitwiseTokens.contains(sign)) {
+            if (!OUR_BITWISE_TOKENS.contains(sign)) {
                 return;
             }
 

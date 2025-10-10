@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.lang.javascript.impl.inspections;
 
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
@@ -37,6 +36,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.ResolveResult;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
@@ -53,14 +53,14 @@ public class JSUnresolvedVariableInspection extends JSInspection {
 
     @Nonnull
     @Override
-    public String getGroupDisplayName() {
-        return "General";
+    public LocalizeValue getGroupDisplayName() {
+        return LocalizeValue.localizeTODO("General");
     }
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return JavaScriptLocalize.jsUnresolvedVariableInspectionName().get();
+    public LocalizeValue getDisplayName() {
+        return JavaScriptLocalize.jsUnresolvedVariableInspectionName();
     }
 
     @Nonnull
@@ -244,12 +244,6 @@ public class JSUnresolvedVariableInspection extends JSInspection {
         BaseCreateJSVariableIntentionAction(String referencedName) {
             myReferencedName = referencedName;
         }
-
-        @Override
-        @Nonnull
-        public String getFamilyName() {
-            return JavaScriptLocalize.javascriptCreateVariableIntentionFamily().get();
-        }
     }
 
     private static class CreateJSNamespaceIntentionAction extends BaseCreateJSVariableIntentionAction {
@@ -257,14 +251,14 @@ public class JSUnresolvedVariableInspection extends JSInspection {
             super(referencedName);
         }
 
-        @Override
         @Nonnull
-        public String getName() {
-            return JavaScriptLocalize.javascriptCreateNamespaceIntentionName(myReferencedName).get();
+        @Override
+        public LocalizeValue getName() {
+            return JavaScriptLocalize.javascriptCreateNamespaceIntentionName(myReferencedName);
         }
 
-        @RequiredReadAction
         @Override
+        @RequiredReadAction
         protected void buildTemplate(
             Template template,
             JSReferenceExpression referenceExpression,
@@ -291,20 +285,20 @@ public class JSUnresolvedVariableInspection extends JSInspection {
             this.isConstant = isConstant;
         }
 
-        @Override
         @Nonnull
-        public String getName() {
+        @Override
+        public LocalizeValue getName() {
             return isField
                 ? isConstant
-                ? JavaScriptLocalize.javascriptCreateConstantFieldIntentionName(myReferencedName).get()
-                : JavaScriptLocalize.javascriptCreatePropertyIntentionName(myReferencedName).get()
+                ? JavaScriptLocalize.javascriptCreateConstantFieldIntentionName(myReferencedName)
+                : JavaScriptLocalize.javascriptCreatePropertyIntentionName(myReferencedName)
                 : isConstant
-                ? JavaScriptLocalize.javascriptCreateConstantIntentionName(myReferencedName).get()
-                : JavaScriptLocalize.javascriptCreateVariableIntentionName(myReferencedName).get();
+                ? JavaScriptLocalize.javascriptCreateConstantIntentionName(myReferencedName)
+                : JavaScriptLocalize.javascriptCreateVariableIntentionName(myReferencedName);
         }
 
-        @RequiredReadAction
         @Override
+        @RequiredReadAction
         protected void buildTemplate(
             Template template,
             JSReferenceExpression referenceExpression,
@@ -322,12 +316,7 @@ public class JSUnresolvedVariableInspection extends JSInspection {
 
             template.addTextSegment(classFeature ? referenceExpression.getReferencedName() : referenceExpression.getText());
             template.addEndVariable();
-            if (classFeature) {
-                template.addTextSegment(":");
-            }
-            else {
-                template.addTextSegment(" = ");
-            }
+            template.addTextSegment(classFeature ? ":" : " = ");
 
             if (classFeature) {
                 guessTypeAndAddTemplateVariable(template, referenceExpression, file);

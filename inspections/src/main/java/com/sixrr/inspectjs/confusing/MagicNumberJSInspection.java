@@ -10,15 +10,14 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.psi.JSSimpleLiteralExpression;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.Set;
 
 @ExtensionImpl
 public class MagicNumberJSInspection extends JavaScriptInspection {
-    @NonNls
-    private static final Set<String> s_specialCaseLiterals = Set.of(
+    private static final Set<String> OUR_SPECIAL_CASE_LITERALS = Set.of(
         "0", "1", "2", "3", "4",
         "5", "6", "7", "8", "9",
         "10", "0L", "1L", "2L", "0l",
@@ -31,27 +30,27 @@ public class MagicNumberJSInspection extends JavaScriptInspection {
         return false;
     }
 
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.magicNumberDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.magicNumberDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.CONFUSING_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
+    @Nonnull
+    @Override
     @RequiredReadAction
-    @Override
-    @Nonnull
     public String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.magicNumberProblemDescriptor().get();
     }
 
     static boolean isSpecialCaseLiteral(String text) {
-        return s_specialCaseLiterals.contains(text);
+        return OUR_SPECIAL_CASE_LITERALS.contains(text);
     }
 
     @Override

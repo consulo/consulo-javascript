@@ -13,48 +13,54 @@ import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import com.sixrr.inspectjs.utils.EquivalenceChecker;
 import com.sixrr.inspectjs.utils.SideEffectChecker;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
+import org.intellij.lang.annotations.Pattern;
+
+import java.util.Map;
 
 @ExtensionImpl
 public class ReplaceAssignmentWithOperatorAssignmentJSInspection extends JavaScriptInspection {
-    @Override
     @Nonnull
+    @Override
+    @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "AssignmentReplaceableWithOperatorAssignmentJS";
     }
 
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.assignmentReplaceableWithOperatorAssignmentDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.assignmentReplaceableWithOperatorAssignmentDisplayName();
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.ASSIGNMENT_GROUP_NAME;
     }
 
     @Override
-    @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.ASSIGNMENT_GROUP_NAME.get();
-    }
-
     @RequiredReadAction
-    @Override
     public String buildErrorString(Object state, Object... args) {
-        String expression = calculateReplacementExpression((JSAssignmentExpression)args[0]);
+        String expression = calculateReplacementExpression((JSAssignmentExpression) args[0]);
         return InspectionJSLocalize.assignmentReplaceableWithOperatorAssignmentErrorString(expression).get();
     }
 
+    @RequiredReadAction
     private static String calculateReplacementExpression(JSAssignmentExpression expression) {
-        final JSBinaryExpression rhs = (JSBinaryExpression) expression.getROperand();
-        final JSExpression lhs = expression.getLOperand();
+        JSBinaryExpression rhs = (JSBinaryExpression) expression.getROperand();
+        JSExpression lhs = expression.getLOperand();
         assert rhs != null;
-        final IElementType sign = rhs.getOperationSign();
-        final JSExpression rhsRhs = rhs.getROperand();
+        IElementType sign = rhs.getOperationSign();
+        JSExpression rhsRhs = rhs.getROperand();
         assert rhsRhs != null;
         String signText = getTextForOperator(sign);
         return lhs.getText() + ' ' + signText + "= " + rhsRhs.getText();
@@ -66,69 +72,67 @@ public class ReplaceAssignmentWithOperatorAssignmentJSInspection extends JavaScr
     }
 
     @Override
+    @RequiredReadAction
     public InspectionJSFix buildFix(PsiElement location, Object state) {
         return new ReplaceAssignmentWithOperatorAssignmentFix((JSAssignmentExpression) location);
     }
 
     private static class ReplaceAssignmentWithOperatorAssignmentFix extends InspectionJSFix {
-        private final String m_name;
+        @Nonnull
+        private final LocalizeValue myName;
 
+        @RequiredReadAction
         private ReplaceAssignmentWithOperatorAssignmentFix(JSAssignmentExpression expression) {
             super();
-            final JSBinaryExpression rhs = (JSBinaryExpression) expression.getROperand();
+            JSBinaryExpression rhs = (JSBinaryExpression) expression.getROperand();
             assert rhs != null;
-            final IElementType sign = rhs.getOperationSign();
+            IElementType sign = rhs.getOperationSign();
             String signText = getTextForOperator(sign);
-            m_name = InspectionJSLocalize.replaceWithOperatorAssignFix(signText).get();
+            myName = InspectionJSLocalize.replaceWithOperatorAssignFix(signText);
         }
 
-        @Override
         @Nonnull
-        public String getName() {
-            return m_name;
+        @Override
+        public LocalizeValue getName() {
+            return myName;
         }
 
         @Override
+        @RequiredWriteAction
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final JSAssignmentExpression expression = (JSAssignmentExpression) descriptor.getPsiElement();
-            final String newExpression = calculateReplacementExpression(expression);
+            JSAssignmentExpression expression = (JSAssignmentExpression) descriptor.getPsiElement();
+            String newExpression = calculateReplacementExpression(expression);
             replaceExpression(expression, newExpression);
         }
     }
 
     private static class ReplaceAssignmentWithOperatorAssignmentVisitor extends BaseInspectionVisitor {
         @Override
+        @RequiredReadAction
         public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression assignment) {
             super.visitJSAssignmentExpression(assignment);
 
-            final IElementType sign = assignment.getOperationSign();
+            IElementType sign = assignment.getOperationSign();
             if (!JSTokenTypes.EQ.equals(sign)) {
                 return;
             }
             JSExpression lhs = assignment.getLOperand();
-            final JSExpression rhs = assignment.getROperand();
-            if (rhs == null || lhs == null) {
+            if (lhs == null) {
                 return;
             }
-            if (!(rhs instanceof JSBinaryExpression)) {
-                return;
-            }
-            final JSBinaryExpression binaryRhs = (JSBinaryExpression) rhs;
-            if (!(binaryRhs.getROperand() != null)) {
+            if (!(assignment.getROperand() instanceof JSBinaryExpression binaryRhs && binaryRhs.getROperand() != null)) {
                 return;
             }
             IElementType operationSign = binaryRhs.getOperationSign();
-            if (operationSign == JSTokenTypes.ANDAND ||
-                operationSign == JSTokenTypes.OROR) {
+            if (operationSign == JSTokenTypes.ANDAND || operationSign == JSTokenTypes.OROR) {
                 return;
             }
-            final JSExpression lOperand = binaryRhs.getLOperand();
+            JSExpression lOperand = binaryRhs.getLOperand();
             if (SideEffectChecker.mayHaveSideEffects(lhs)) {
                 return;
             }
-            if(lhs instanceof JSDefinitionExpression)
-            {
-                lhs = ((JSDefinitionExpression)lhs).getExpression();
+            if (lhs instanceof JSDefinitionExpression defExpr) {
+                lhs = defExpr.getExpression();
             }
             if (!EquivalenceChecker.expressionsAreEquivalent(lhs, lOperand)) {
                 return;
@@ -137,50 +141,24 @@ public class ReplaceAssignmentWithOperatorAssignmentJSInspection extends JavaScr
         }
     }
 
-    @NonNls
+    private static final Map<IElementType, String> TEXT_FOR_OPERATOR = Map.ofEntries(
+        Map.entry(JSTokenTypes.PLUS, "+"),
+        Map.entry(JSTokenTypes.MINUS, "-"),
+        Map.entry(JSTokenTypes.MULT, "*"),
+        Map.entry(JSTokenTypes.DIV, "/"),
+        Map.entry(JSTokenTypes.PERC, "%"),
+        Map.entry(JSTokenTypes.XOR, "^"),
+        Map.entry(JSTokenTypes.ANDAND, "&&"),
+        Map.entry(JSTokenTypes.OROR, "||"),
+        Map.entry(JSTokenTypes.AND, "&"),
+        Map.entry(JSTokenTypes.OR, "|"),
+        Map.entry(JSTokenTypes.LTLT, "<<"),
+        Map.entry(JSTokenTypes.LTLTEQ, "<<="),
+        Map.entry(JSTokenTypes.GTGT, ">>"),
+        Map.entry(JSTokenTypes.GTGTGT, ">>>")
+    );
+
     private static String getTextForOperator(IElementType operator) {
-        if (JSTokenTypes.PLUS.equals(operator)) {
-            return "+";
-        }
-        if (JSTokenTypes.MINUS.equals(operator)) {
-            return "-";
-        }
-        if (JSTokenTypes.MULT.equals(operator)) {
-            return "*";
-        }
-        if (JSTokenTypes.DIV.equals(operator)) {
-            return "/";
-        }
-        if (JSTokenTypes.PERC.equals(operator)) {
-            return "%";
-        }
-        if (JSTokenTypes.XOR.equals(operator)) {
-            return "^";
-        }
-        if (JSTokenTypes.ANDAND.equals(operator)) {
-            return "&&";
-        }
-        if (JSTokenTypes.OROR.equals(operator)) {
-            return "||";
-        }
-        if (JSTokenTypes.AND.equals(operator)) {
-            return "&";
-        }
-        if (JSTokenTypes.OR.equals(operator)) {
-            return "|";
-        }
-        if (JSTokenTypes.LTLT.equals(operator)) {
-            return "<<";
-        }
-        if (JSTokenTypes.LTLTEQ.equals(operator)) {
-            return "<<=";
-        }
-        if (JSTokenTypes.GTGT.equals(operator)) {
-            return ">>";
-        }
-        if (JSTokenTypes.GTGTGT.equals(operator)) {
-            return ">>>";
-        }
-        return "unknown";
+        return TEXT_FOR_OPERATOR.getOrDefault(operator, "unknown");
     }
 }

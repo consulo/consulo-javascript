@@ -13,34 +13,37 @@ import com.sixrr.inspectjs.utils.ParenthesesUtils;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
+import org.intellij.lang.annotations.Pattern;
 
 @ExtensionImpl
 public class IncompatibleMaskJSInspection extends JavaScriptInspection {
-    @Override
     @Nonnull
+    @Override
+    @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "IncompatibleBitwiseMaskOperation";
     }
 
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.incompatibleMaskOperationDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.incompatibleMaskOperationDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.BITWISE_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.BITWISE_GROUP_NAME;
     }
 
+    @Nonnull
+    @Override
     @RequiredReadAction
-    @Override
-    @Nonnull
     public String buildErrorString(Object state, Object... args) {
-        final JSBinaryExpression binaryExpression = (JSBinaryExpression)args[0];
-        final IElementType tokenType = binaryExpression.getOperationSign();
+        JSBinaryExpression binaryExpression = (JSBinaryExpression) args[0];
+        IElementType tokenType = binaryExpression.getOperationSign();
         if (JSTokenTypes.EQEQ.equals(tokenType)) {
             return InspectionJSLocalize.incompatibleMaskOperationProblemDescriptorAlwaysFalse().get();
         }
@@ -61,59 +64,59 @@ public class IncompatibleMaskJSInspection extends JavaScriptInspection {
 
     private static class IncompatibleMaskVisitor extends BaseInspectionVisitor {
         @Override
+        @RequiredReadAction
         public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
-            final JSExpression rhs = expression.getROperand();
+            JSExpression rhs = expression.getROperand();
             if (!ComparisonUtils.isEqualityComparison(expression)) {
                 return;
             }
-            final JSExpression strippedRhs = ParenthesesUtils.stripParentheses(rhs);
+            JSExpression strippedRhs = ParenthesesUtils.stripParentheses(rhs);
             if (strippedRhs == null) {
                 return;
             }
-            final JSExpression lhs = expression.getLOperand();
-            final JSExpression strippedLhs = ParenthesesUtils.stripParentheses(lhs);
+            JSExpression lhs = expression.getLOperand();
+            JSExpression strippedLhs = ParenthesesUtils.stripParentheses(lhs);
             if (strippedLhs == null) {
                 return;
             }
             if (isConstantMask(strippedLhs) && ExpressionUtil.isConstantExpression(strippedRhs)) {
-                if (isIncompatibleMask((JSBinaryExpression)strippedLhs, strippedRhs)) {
+                if (isIncompatibleMask((JSBinaryExpression) strippedLhs, strippedRhs)) {
                     registerError(expression, expression);
                 }
             }
             else if (isConstantMask(strippedRhs) && ExpressionUtil.isConstantExpression(strippedLhs)) {
-                if (isIncompatibleMask((JSBinaryExpression)strippedRhs, strippedLhs)) {
+                if (isIncompatibleMask((JSBinaryExpression) strippedRhs, strippedLhs)) {
                     registerError(expression, expression);
                 }
             }
         }
 
+        @RequiredReadAction
         private static boolean isIncompatibleMask(JSBinaryExpression maskExpression, JSExpression constantExpression) {
-            final IElementType tokenType = maskExpression.getOperationSign();
-            final Object constantValue = ExpressionUtil.computeConstantExpression(constantExpression);
+            IElementType tokenType = maskExpression.getOperationSign();
+            Object constantValue = ExpressionUtil.computeConstantExpression(constantExpression);
             if (!(constantValue instanceof Integer)) {
                 return false;
             }
-            final int constantLongValue = (Integer)constantValue;
-            final JSExpression maskRhs = maskExpression.getROperand();
-            final JSExpression maskLhs = maskExpression.getLOperand();
-            final int constantMaskValue;
+            int constantLongValue = (Integer) constantValue;
+            JSExpression maskRhs = maskExpression.getROperand();
+            JSExpression maskLhs = maskExpression.getLOperand();
+            int constantMaskValue;
             if (ExpressionUtil.isConstantExpression(maskRhs)) {
-                final Object rhsValue =
-                    ExpressionUtil.computeConstantExpression(maskRhs);
+                Object rhsValue = ExpressionUtil.computeConstantExpression(maskRhs);
                 if (!(rhsValue instanceof Integer)) {
                     return false; // Might indeed be the case with "null" literal
                     // whoes constant value evaluates to null. Check out (a|null) case.
                 }
-                constantMaskValue = (Integer)rhsValue;
+                constantMaskValue = (Integer) rhsValue;
             }
             else {
-                final Object lhsValue =
-                    ExpressionUtil.computeConstantExpression(maskLhs);
+                Object lhsValue = ExpressionUtil.computeConstantExpression(maskLhs);
                 if (!(lhsValue instanceof Integer)) {
                     return false;
                 }
-                constantMaskValue = (Integer)lhsValue;
+                constantMaskValue = (Integer) lhsValue;
             }
 
             if (JSTokenTypes.OR.equals(tokenType)) {
@@ -129,23 +132,23 @@ public class IncompatibleMaskJSInspection extends JavaScriptInspection {
             return false;
         }
 
+        @RequiredReadAction
         private static boolean isConstantMask(JSExpression expression) {
             if (expression == null) {
                 return false;
             }
-            if (!(expression instanceof JSBinaryExpression)) {
+            if (!(expression instanceof JSBinaryExpression binaryExpression)) {
                 return false;
             }
-            final JSBinaryExpression binaryExpression = (JSBinaryExpression)expression;
-            final IElementType tokenType = binaryExpression.getOperationSign();
+            IElementType tokenType = binaryExpression.getOperationSign();
             if (!JSTokenTypes.OR.equals(tokenType) && !JSTokenTypes.AND.equals(tokenType)) {
                 return false;
             }
-            final JSExpression rhs = binaryExpression.getROperand();
+            JSExpression rhs = binaryExpression.getROperand();
             if (ExpressionUtil.isConstantExpression(rhs)) {
                 return true;
             }
-            final JSExpression lhs = binaryExpression.getLOperand();
+            JSExpression lhs = binaryExpression.getLOperand();
             return ExpressionUtil.isConstantExpression(lhs);
         }
     }
