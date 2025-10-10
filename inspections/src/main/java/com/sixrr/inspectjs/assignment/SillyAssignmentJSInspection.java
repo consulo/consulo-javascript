@@ -14,24 +14,25 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class SillyAssignmentJSInspection extends JavaScriptInspection {
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.sillyAssignmentDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.sillyAssignmentDisplayName();
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.ASSIGNMENT_GROUP_NAME;
     }
 
     @Override
-    @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.ASSIGNMENT_GROUP_NAME.get();
-    }
-
     @RequiredReadAction
-    @Override
     public String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.sillyAssignmentErrorString().get();
     }
@@ -48,60 +49,49 @@ public class SillyAssignmentJSInspection extends JavaScriptInspection {
 
     private static class Visitor extends BaseInspectionVisitor {
         @Override
+        @RequiredReadAction
         public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression assignment) {
             super.visitJSAssignmentExpression(assignment);
 
-            final IElementType sign = assignment.getOperationSign();
+            IElementType sign = assignment.getOperationSign();
             if (!JSTokenTypes.EQ.equals(sign)) {
                 return;
             }
             JSExpression lhs = assignment.getLOperand();
-            if(lhs instanceof JSDefinitionExpression)
-            {
-                lhs = ((JSDefinitionExpression)lhs).getExpression();
+            if (lhs instanceof JSDefinitionExpression lhsDef) {
+                lhs = lhsDef.getExpression();
             }
-            final JSExpression rhs = assignment.getROperand();
-            if(rhs == null || lhs == null)
-            {
+            JSExpression rhs = assignment.getROperand();
+            if (rhs == null || lhs == null) {
                 return;
             }
-            if(!(rhs instanceof JSReferenceExpression) ||
-                    !(lhs instanceof JSReferenceExpression) )
-            {
+            if (!(rhs instanceof JSReferenceExpression rhsRef && lhs instanceof JSReferenceExpression lhsRef)) {
                 return;
             }
-            final JSReferenceExpression rhsReference = (JSReferenceExpression) rhs;
-            final JSReferenceExpression lhsReference = (JSReferenceExpression) lhs;
-            final JSExpression rhsQualifier = rhsReference.getQualifier();
-            final JSExpression lhsQualifier = lhsReference.getQualifier();
-            if(rhsQualifier !=null || lhsQualifier !=null)
-            {
-                if(!EquivalenceChecker.expressionsAreEquivalent(rhsQualifier, lhsQualifier))
-                {
+            JSExpression rhsQualifier = rhsRef.getQualifier();
+            JSExpression lhsQualifier = lhsRef.getQualifier();
+            if (rhsQualifier != null || lhsQualifier != null) {
+                if (!EquivalenceChecker.expressionsAreEquivalent(rhsQualifier, lhsQualifier)) {
                     return;
                 }
             }
-            final String rhsName = rhsReference.getReferencedName();
-            final String lhsName = lhsReference.getReferencedName();
-            if(rhsName == null || lhsName == null)
-            {
+            String rhsName = rhsRef.getReferencedName();
+            String lhsName = lhsRef.getReferencedName();
+            if (rhsName == null || lhsName == null) {
                 return;
             }
-            if(!rhsName.equals(lhsName))
-            {
+            if (!rhsName.equals(lhsName)) {
                 return;
             }
-            final PsiElement rhsReferent = rhsReference.resolve();
-            final PsiElement lhsReferent = lhsReference.resolve();
-            if(rhsReferent != null && lhsReferent != null &&
-                    !rhsReferent.equals(lhsReferent))
-            {
+            PsiElement rhsReferent = rhsRef.resolve();
+            PsiElement lhsReferent = lhsRef.resolve();
+            if (rhsReferent != null && lhsReferent != null && !rhsReferent.equals(lhsReferent)) {
                 return;
             }
 
             if (lhsName.equals("location") && lhsQualifier != null && lhsQualifier.getText().equals("document")) {
-              // document.location = document.location causes browser refresh
-              return;
+                // document.location = document.location causes browser refresh
+                return;
             }
             registerError(assignment);
         }
