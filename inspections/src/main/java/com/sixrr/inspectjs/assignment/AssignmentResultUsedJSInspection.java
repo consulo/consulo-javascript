@@ -8,26 +8,27 @@ import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class AssignmentResultUsedJSInspection extends JavaScriptInspection {
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.resultOfAssignmentUsedDisplayname().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.resultOfAssignmentUsedDisplayname();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.ASSIGNMENT_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.ASSIGNMENT_GROUP_NAME;
     }
 
-    @RequiredReadAction
-    @Override
     @Nullable
+    @Override
+    @RequiredReadAction
     protected String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.resultOfAssignmentExpressionUsedErrorString().get();
     }
@@ -39,9 +40,9 @@ public class AssignmentResultUsedJSInspection extends JavaScriptInspection {
 
     private static class Visitor extends BaseInspectionVisitor {
         @Override
-        public void visitJSAssignmentExpression(JSAssignmentExpression jsAssignmentExpression) {
+        public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression jsAssignmentExpression) {
             super.visitJSAssignmentExpression(jsAssignmentExpression);
-            final PsiElement parent = jsAssignmentExpression.getParent();
+            PsiElement parent = jsAssignmentExpression.getParent();
             if (parent == null) {
                 return;
             }

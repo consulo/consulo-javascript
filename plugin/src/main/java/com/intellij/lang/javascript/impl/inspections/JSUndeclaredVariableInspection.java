@@ -27,12 +27,14 @@ import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.inspection.*;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.ResolveResult;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
@@ -46,14 +48,14 @@ public class JSUndeclaredVariableInspection extends JSInspection {
 
     @Nonnull
     @Override
-    public String getGroupDisplayName() {
-        return "General";
+    public LocalizeValue getGroupDisplayName() {
+        return InspectionLocalize.inspectionGeneralToolsGroupName();
     }
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return JavaScriptLocalize.jsUndeclaredVariableInspectionName().get();
+    public LocalizeValue getDisplayName() {
+        return JavaScriptLocalize.jsUndeclaredVariableInspectionName();
     }
 
     @Nonnull
@@ -136,14 +138,8 @@ public class JSUndeclaredVariableInspection extends JSInspection {
 
         @Nonnull
         @Override
-        public String getName() {
-            return JavaScriptLocalize.javascriptDeclareVariableIntentionName(myReferenceExpression.getReferencedName()).get();
-        }
-
-        @Nonnull
-        @Override
-        public String getFamilyName() {
-            return JavaScriptLocalize.javascriptCreateVariableIntentionFamily().get();
+        public LocalizeValue getName() {
+            return JavaScriptLocalize.javascriptDeclareVariableIntentionName(myReferenceExpression.getReferencedName());
         }
 
         @Override

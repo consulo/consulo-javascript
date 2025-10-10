@@ -38,6 +38,7 @@ import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.template.Template;
 import consulo.language.editor.template.TemplateManager;
 import consulo.language.psi.PsiElement;
@@ -64,14 +65,14 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
 
     @Nonnull
     @Override
-    public String getGroupDisplayName() {
-        return "General";
+    public LocalizeValue getGroupDisplayName() {
+        return InspectionLocalize.inspectionGeneralToolsGroupName();
     }
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return JavaScriptLocalize.jsUnresolvedFunctionInspectionName().get();
+    public LocalizeValue getDisplayName() {
+        return JavaScriptLocalize.jsUnresolvedFunctionInspectionName();
     }
 
     @Nonnull
@@ -589,14 +590,8 @@ public class JSUnresolvedFunctionInspection extends JSInspection {
 
         @Override
         @Nonnull
-        public String getName() {
-            return JavaScriptLocalize.javascriptInsertCastFix().get();
-        }
-
-        @Override
-        @Nonnull
-        public String getFamilyName() {
-            return getName();
+        public LocalizeValue getName() {
+            return JavaScriptLocalize.javascriptInsertCastFix();
         }
 
         @Override

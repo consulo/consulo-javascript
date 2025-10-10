@@ -27,6 +27,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -35,6 +36,7 @@ import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.util.PsiTreeUtil;
 
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -46,14 +48,14 @@ public class JSDuplicatedDeclarationInspection extends JSInspection {
 
     @Nonnull
     @Override
-    public String getGroupDisplayName() {
-        return "General";
+    public LocalizeValue getGroupDisplayName() {
+        return InspectionLocalize.inspectionGeneralToolsGroupName();
     }
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return JavaScriptLocalize.jsDuplicatedDeclarationInspectionName().get();
+    public LocalizeValue getDisplayName() {
+        return JavaScriptLocalize.jsDuplicatedDeclarationInspectionName();
     }
 
     @Nonnull

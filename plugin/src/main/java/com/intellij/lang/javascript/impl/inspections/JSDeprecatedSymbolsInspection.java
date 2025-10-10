@@ -26,8 +26,10 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.ResolveResult;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -39,14 +41,14 @@ public class JSDeprecatedSymbolsInspection extends JSInspection {
 
     @Nonnull
     @Override
-    public String getGroupDisplayName() {
-        return "General";
+    public LocalizeValue getGroupDisplayName() {
+        return InspectionLocalize.inspectionGeneralToolsGroupName();
     }
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return JavaScriptLocalize.jsDeprecatedSymbolsInspectionName().get();
+    public LocalizeValue getDisplayName() {
+        return JavaScriptLocalize.jsDeprecatedSymbolsInspectionName();
     }
 
     @Nonnull

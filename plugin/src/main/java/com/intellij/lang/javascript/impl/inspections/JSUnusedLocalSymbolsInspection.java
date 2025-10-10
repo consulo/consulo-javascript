@@ -28,6 +28,7 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.inspection.*;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -58,14 +59,14 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection {
 
     @Nonnull
     @Override
-    public String getGroupDisplayName() {
-        return "General";
+    public LocalizeValue getGroupDisplayName() {
+        return InspectionLocalize.inspectionGeneralToolsGroupName();
     }
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return JavaScriptLocalize.jsUnusedLocalSymbolInspectionName().get();
+    public LocalizeValue getDisplayName() {
+        return JavaScriptLocalize.jsUnusedLocalSymbolInspectionName();
     }
 
     @Nonnull
@@ -367,14 +368,8 @@ public class JSUnusedLocalSymbolsInspection extends JSInspection {
     private static class RemoveElementLocalQuickFix implements LocalQuickFix {
         @Nonnull
         @Override
-        public String getName() {
-            return JavaScriptLocalize.jsUnusedSymbolRemove().get();
-        }
-
-        @Nonnull
-        @Override
-        public String getFamilyName() {
-            return getName();
+        public LocalizeValue getName() {
+            return JavaScriptLocalize.jsUnusedSymbolRemove();
         }
 
         @Override

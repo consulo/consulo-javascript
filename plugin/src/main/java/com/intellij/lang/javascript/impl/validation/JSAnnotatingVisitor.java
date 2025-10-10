@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.lang.javascript.impl.validation;
 
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -1225,8 +1224,8 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
                 .withFix(new SyntheticIntentionAction() {
                     @Nonnull
                     @Override
-                    public String getText() {
-                        return JavaScriptLocalize.javascriptFixPackageName(expected).get();
+                    public LocalizeValue getText() {
+                        return JavaScriptLocalize.javascriptFixPackageName(expected);
                     }
 
                     @Override
@@ -1287,19 +1286,13 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
         @Override
         @Nonnull
-        public String getText() {
-            return myProp.get();
+        public LocalizeValue getText() {
+            return myProp;
         }
 
         @Override
         @Nonnull
-        public String getName() {
-            return getText();
-        }
-
-        @Override
-        @Nonnull
-        public String getFamilyName() {
+        public LocalizeValue getName() {
             return getText();
         }
 
@@ -1348,8 +1341,8 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
         @Override
         @Nonnull
-        public String getText() {
-            return JavaScriptLocalize.javascriptFixAddOverrideModifier().get();
+        public LocalizeValue getText() {
+            return JavaScriptLocalize.javascriptFixAddOverrideModifier();
         }
 
         @Override
@@ -1392,8 +1385,8 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
         @Override
         @Nonnull
-        public String getText() {
-            return JavaScriptLocalize.javascriptFixCreateInvokeSuper().get();
+        public LocalizeValue getText() {
+            return JavaScriptLocalize.javascriptFixCreateInvokeSuper();
         }
 
         @Override
@@ -1456,8 +1449,8 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
         @Override
         @Nonnull
-        public String getText() {
-            return JavaScriptLocalize.javascriptFixCreateConstructorInvokeSuper().get();
+        public LocalizeValue getText() {
+            return JavaScriptLocalize.javascriptFixCreateConstructorInvokeSuper();
         }
 
         @Override

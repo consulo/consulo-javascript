@@ -32,6 +32,7 @@ import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.template.Template;
 import consulo.language.editor.template.TemplateManager;
@@ -56,14 +57,14 @@ public class JSUntypedDeclarationInspection extends JSInspection {
 
     @Nonnull
     @Override
-    public String getGroupDisplayName() {
-        return "General";
+    public LocalizeValue getGroupDisplayName() {
+        return InspectionLocalize.inspectionGeneralToolsGroupName();
     }
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return JavaScriptLocalize.jsUntypedDeclarationInspectionName().get();
+    public LocalizeValue getDisplayName() {
+        return JavaScriptLocalize.jsUntypedDeclarationInspectionName();
     }
 
     @Nonnull
@@ -129,14 +130,8 @@ public class JSUntypedDeclarationInspection extends JSInspection {
     private static class AddTypeToDclFix implements LocalQuickFix {
         @Nonnull
         @Override
-        public String getName() {
-            return JavaScriptLocalize.jsUntypedDeclarationProblemAddtypeFix().get();
-        }
-
-        @Nonnull
-        @Override
-        public String getFamilyName() {
-            return getName();
+        public LocalizeValue getName() {
+            return JavaScriptLocalize.jsUntypedDeclarationProblemAddtypeFix();
         }
 
         @Override
