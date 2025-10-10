@@ -26,6 +26,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
@@ -58,8 +59,8 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
 
     @Override
     @Nonnull
-    public String getText() {
-        return JSIntentionLocalize.switchtoifReplaceSwitchWithIf().get();
+    public LocalizeValue getText() {
+        return JSIntentionLocalize.switchtoifReplaceSwitchWithIf();
     }
 
     @Override

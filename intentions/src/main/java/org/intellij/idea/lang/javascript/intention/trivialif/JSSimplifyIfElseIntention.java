@@ -23,6 +23,7 @@ import consulo.javascript.intention.localize.JSIntentionLocalize;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
@@ -38,8 +39,8 @@ import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 public class JSSimplifyIfElseIntention extends JSIntention {
     @Nonnull
     @Override
-    public String getText() {
-        return JSIntentionLocalize.trivialifSimplifyIfElse().get();
+    public LocalizeValue getText() {
+        return JSIntentionLocalize.trivialifSimplifyIfElse();
     }
 
     @Override

@@ -24,6 +24,7 @@ import consulo.javascript.intention.localize.JSIntentionLocalize;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
@@ -41,8 +42,8 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 public class JSConstantExpressionIntention extends JSIntention {
     @Override
     @Nonnull
-    public String getText() {
-        return JSIntentionLocalize.constantComputeExpression().get();
+    public LocalizeValue getText() {
+        return JSIntentionLocalize.constantComputeExpression();
     }
 
     @Override

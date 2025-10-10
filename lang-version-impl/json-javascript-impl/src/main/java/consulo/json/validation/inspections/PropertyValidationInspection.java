@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.json.validation.inspections;
 
 import com.intellij.lang.javascript.JSTokenTypes;
@@ -38,6 +37,7 @@ import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.PairProcessor;
@@ -49,7 +49,7 @@ import java.util.*;
 
 /**
  * @author VISTALL
- * @since 10.11.2015
+ * @since 2015-11-10
  */
 @ExtensionImpl
 public class PropertyValidationInspection extends LocalInspectionTool {
@@ -338,20 +338,20 @@ public class PropertyValidationInspection extends LocalInspectionTool {
 
     @Nonnull
     @Override
-    public String[] getGroupPath() {
-        return new String[]{"JSON"};
+    public LocalizeValue[] getGroupPath() {
+        return new LocalizeValue[]{LocalizeValue.localizeTODO("JSON")};
     }
 
     @Nonnull
     @Override
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         throw new UnsupportedOperationException();
     }
 
     @Nonnull
     @Override
-    public String getDisplayName() {
-        return "Property validation";
+    public LocalizeValue getDisplayName() {
+        return LocalizeValue.localizeTODO("Property validation");
     }
 
     @Nonnull

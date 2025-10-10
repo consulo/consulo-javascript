@@ -23,14 +23,14 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public abstract class JSMutablyNamedIntention extends JSIntention {
-    private String myText;
+    private LocalizeValue myText;
 
     protected abstract LocalizeValue getTextForElement(PsiElement element);
 
     @Override
     @Nonnull
-    public String getText() {
-        return myText != null ? myText : getBasicText().get();
+    public LocalizeValue getText() {
+        return myText != null ? myText : getBasicText();
     }
 
     @Nonnull
@@ -40,7 +40,7 @@ public abstract class JSMutablyNamedIntention extends JSIntention {
     public boolean isAvailable(@Nonnull Project project, Editor editor, @Nullable PsiElement node) {
         final PsiElement element = findMatchingElement(node);
         if (element != null) {
-            myText = getTextForElement(element).get();
+            myText = getTextForElement(element);
             return true;
         }
         else {

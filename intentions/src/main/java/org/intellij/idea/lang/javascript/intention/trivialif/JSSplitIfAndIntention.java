@@ -26,6 +26,7 @@ import consulo.javascript.intention.localize.JSIntentionLocalize;
 import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
@@ -42,8 +43,8 @@ import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
 public class JSSplitIfAndIntention extends JSIntention {
     @Override
     @Nonnull
-    public String getText() {
-        return JSIntentionLocalize.trivialifSplitIfAnd().get();
+    public LocalizeValue getText() {
+        return JSIntentionLocalize.trivialifSplitIfAnd();
     }
 
     @Override

@@ -18,7 +18,7 @@ import jakarta.annotation.Nullable;
 public class IncrementDecrementResultUsedJSInspection extends JavaScriptInspection {
     @Nonnull
     @Override
-        public LocalizeValue getDisplayName() {
+    public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.resultOfIncrementOrDecrementUsedDisplayName();
     }
 
