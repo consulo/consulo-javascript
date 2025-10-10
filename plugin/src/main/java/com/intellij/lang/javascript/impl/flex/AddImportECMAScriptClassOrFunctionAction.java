@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.lang.javascript.impl.flex;
 
 import com.intellij.lang.javascript.psi.JSFunction;
@@ -89,22 +88,16 @@ public class AddImportECMAScriptClassOrFunctionAction implements HintAction, Que
 
     @Override
     @Nonnull
-    public String getText() {
+    public LocalizeValue getText() {
         String className = StringUtil.notNullize(calculatedClass);
         return isFunction
-            ? JavaScriptLocalize.flexImportFunction(className).get()
-            : JavaScriptLocalize.flexImportClass(className).get();
+            ? JavaScriptLocalize.flexImportFunction(className)
+            : JavaScriptLocalize.flexImportClass(className);
     }
 
     @Override
     @Nonnull
-    public String getName() {
-        return getText();
-    }
-
-    @Override
-    @Nonnull
-    public String getFamilyName() {
+    public LocalizeValue getName() {
         return getText();
     }
 

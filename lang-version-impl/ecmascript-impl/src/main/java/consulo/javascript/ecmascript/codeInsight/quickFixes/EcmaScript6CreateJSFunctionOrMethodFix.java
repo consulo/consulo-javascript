@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.javascript.ecmascript.codeInsight.quickFixes;
 
 import com.intellij.lang.javascript.inspections.qucikFixes.CreateJSFunctionOrMethodFix;
 
 /**
  * @author VISTALL
- * @since 24.02.2016
+ * @since 2016-02-24
  */
 public class EcmaScript6CreateJSFunctionOrMethodFix extends CreateJSFunctionOrMethodFix {
     public EcmaScript6CreateJSFunctionOrMethodFix(String name, boolean isMethod) {

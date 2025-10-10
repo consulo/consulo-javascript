@@ -32,6 +32,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.util.ModuleUtilCore;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
@@ -63,16 +64,10 @@ class CreateClassOrInterfaceAction implements LocalQuickFix {
 
     @Override
     @Nonnull
-    public String getName() {
+    public LocalizeValue getName() {
         return myIsInterface
-            ? JavaScriptLocalize.javascriptCreateInterfaceIntentionName(classNameToCreate).get()
-            : JavaScriptLocalize.javascriptCreateClassIntentionName(classNameToCreate).get();
-    }
-
-    @Override
-    @Nonnull
-    public String getFamilyName() {
-        return getName();
+            ? JavaScriptLocalize.javascriptCreateInterfaceIntentionName(classNameToCreate)
+            : JavaScriptLocalize.javascriptCreateClassIntentionName(classNameToCreate);
     }
 
     @Override

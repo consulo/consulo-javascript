@@ -8,33 +8,29 @@ import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 
 @ExtensionImpl
 public class DuplicatePropertyOnObjectJSInspection extends JavaScriptInspection {
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.duplicatePropertyOnObjectLiteralDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.duplicatePropertyOnObjectLiteralDisplayName();
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.VALIDITY_GROUP_NAME;
     }
 
     @Override
-    @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.VALIDITY_GROUP_NAME.get();
-    }
-
     @RequiredReadAction
-    @Override
     public String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.duplicateObjectPropertyErrorString().get();
-    }
-
-    @Override
-    public boolean isEnabledByDefault() {
-        return true;
     }
 
     @Override

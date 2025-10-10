@@ -8,25 +8,26 @@ import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class NestedAssignmentJSInspection extends JavaScriptInspection {
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.nestedAssignmentDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.nestedAssignmentDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.ASSIGNMENT_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.ASSIGNMENT_GROUP_NAME;
     }
 
+    @Nonnull
+    @Override
     @RequiredReadAction
-    @Override
-    @Nonnull
     public String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.nestedAssignmentErrorString().get();
     }
@@ -40,7 +41,7 @@ public class NestedAssignmentJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression expression) {
             super.visitJSAssignmentExpression(expression);
-            final PsiElement parent = expression.getParent();
+            PsiElement parent = expression.getParent();
             if (parent == null || !(parent instanceof JSAssignmentExpression)) {
                 return;
             }

@@ -8,26 +8,27 @@ import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class PlatformDetectionJSInspection extends JavaScriptInspection {
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.platformDetectionDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.platformDetectionDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.DOM_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.DOM_GROUP_NAME;
     }
 
-    @RequiredReadAction
-    @Override
     @Nullable
+    @Override
+    @RequiredReadAction
     protected String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.platformDetectionErrorString().get();
     }
@@ -38,8 +39,8 @@ public class PlatformDetectionJSInspection extends JavaScriptInspection {
     }
 
     private static class Visitor extends BaseInspectionVisitor {
-        @SuppressWarnings({"HardCodedStringLiteral"})
         @Override
+        @SuppressWarnings({"HardCodedStringLiteral"})
         public void visitJSReferenceExpression(JSReferenceExpression referenceExpression) {
             super.visitJSReferenceExpression(referenceExpression);
             final JSExpression qualifier = referenceExpression.getQualifier();

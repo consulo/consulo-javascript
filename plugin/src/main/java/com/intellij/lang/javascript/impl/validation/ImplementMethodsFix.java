@@ -25,9 +25,9 @@ import consulo.codeEditor.Editor;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author Maxim.Mossienko
@@ -40,8 +40,8 @@ public class ImplementMethodsFix extends BaseCreateMethodsFix<JSFunction> implem
 
     @Override
     @Nonnull
-    public String getText() {
-        return JavaScriptLocalize.javascriptFixImplementMethods().get();
+    public LocalizeValue getText() {
+        return JavaScriptLocalize.javascriptFixImplementMethods();
     }
 
     @Override
