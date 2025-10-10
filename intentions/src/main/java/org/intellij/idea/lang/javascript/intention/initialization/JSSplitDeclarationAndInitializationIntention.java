@@ -26,6 +26,7 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
@@ -48,8 +49,8 @@ public class JSSplitDeclarationAndInitializationIntention extends JSIntention {
 
     @Override
     @Nonnull
-    public String getText() {
-        return JSIntentionLocalize.initializationSplitDeclarationAndInitialization().get();
+    public LocalizeValue getText() {
+        return JSIntentionLocalize.initializationSplitDeclarationAndInitialization();
     }
 
     @Override

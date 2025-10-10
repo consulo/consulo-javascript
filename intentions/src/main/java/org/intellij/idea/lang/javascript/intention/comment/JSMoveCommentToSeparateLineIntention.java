@@ -25,6 +25,7 @@ import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
@@ -40,8 +41,8 @@ import org.intellij.idea.lang.javascript.psiutil.TreeUtil;
 public class JSMoveCommentToSeparateLineIntention extends JSIntention {
     @Override
     @Nonnull
-    public String getText() {
-        return JSIntentionLocalize.commentMoveCommentToSeparateLine().get();
+    public LocalizeValue getText() {
+        return JSIntentionLocalize.commentMoveCommentToSeparateLine();
     }
 
     @Override

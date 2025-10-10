@@ -22,6 +22,7 @@ import consulo.language.editor.intention.PsiElementBaseIntentionAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.xml.psi.xml.XmlElement;
 import jakarta.annotation.Nonnull;
@@ -83,5 +84,5 @@ public abstract class JSIntention extends PsiElementBaseIntentionAction {
 
     @Override
     @Nonnull
-    public abstract String getText();
+    public abstract LocalizeValue getText();
 }

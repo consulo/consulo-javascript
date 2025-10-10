@@ -23,6 +23,7 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
@@ -41,8 +42,8 @@ import java.util.List;
 public class JSChangeToCStyleCommentIntention extends JSIntention {
     @Override
     @Nonnull
-    public String getText() {
-        return JSIntentionLocalize.commentChangeToCstyleComment().get();
+    public LocalizeValue getText() {
+        return JSIntentionLocalize.commentChangeToCstyleComment();
     }
 
     @Override

@@ -18,7 +18,7 @@ import jakarta.annotation.Nonnull;
 public class TextLabelInSwitchStatementJSInspection extends JavaScriptInspection {
     @Nonnull
     @Override
-        public LocalizeValue getDisplayName() {
+    public LocalizeValue getDisplayName() {
         return InspectionJSLocalize.textLabelInSwitchStatementDisplayName();
     }
 
@@ -57,7 +57,7 @@ public class TextLabelInSwitchStatementJSInspection extends JavaScriptInspection
             if (!(statement instanceof JSLabeledStatement)) {
                 return;
             }
-            final JSLabeledStatement labeledStatement = (JSLabeledStatement)statement;
+            final JSLabeledStatement labeledStatement = (JSLabeledStatement) statement;
             final PsiElement label = labeledStatement.getLabelIdentifier();
             registerError(label);
         }

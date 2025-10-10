@@ -24,6 +24,7 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
@@ -38,8 +39,8 @@ import org.intellij.idea.lang.javascript.psiutil.*;
 public class JSReplaceIfWithConditionalIntention extends JSIntention {
     @Override
     @Nonnull
-    public String getText() {
-        return JSIntentionLocalize.trivialifReplaceIfWithConditional().get();
+    public LocalizeValue getText() {
+        return JSIntentionLocalize.trivialifReplaceIfWithConditional();
     }
 
     @Override
