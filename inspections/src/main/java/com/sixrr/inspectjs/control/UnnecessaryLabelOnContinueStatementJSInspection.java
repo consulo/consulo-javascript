@@ -14,6 +14,7 @@ import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -22,16 +23,16 @@ import jakarta.annotation.Nullable;
 public class UnnecessaryLabelOnContinueStatementJSInspection extends JavaScriptInspection {
     private final UnnecessaryLabelOnContinueStatementFix fix = new UnnecessaryLabelOnContinueStatementFix();
 
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.unnecessaryLabelOnContinueStatementDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.unnecessaryLabelOnContinueStatementDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.CONTROL_FLOW_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
     @Override
@@ -39,9 +40,9 @@ public class UnnecessaryLabelOnContinueStatementJSInspection extends JavaScriptI
         return true;
     }
 
-    @RequiredReadAction
-    @Override
     @Nullable
+    @Override
+    @RequiredReadAction
     protected String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.unnecessaryLabelOnContinueErrorString().get();
     }
@@ -57,10 +58,10 @@ public class UnnecessaryLabelOnContinueStatementJSInspection extends JavaScriptI
     }
 
     private static class UnnecessaryLabelOnContinueStatementFix extends InspectionJSFix {
-        @Override
         @Nonnull
-        public String getName() {
-            return InspectionJSLocalize.removeLabelFix().get();
+        @Override
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.removeLabelFix();
         }
 
         @Override

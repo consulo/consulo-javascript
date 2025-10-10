@@ -8,35 +8,33 @@ import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
+import org.intellij.lang.annotations.Pattern;
 
 @ExtensionImpl
 public class ThrowFromFinallyBlockJSInspection extends JavaScriptInspection {
-    @Override
     @Nonnull
+    @Override
+    @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "ThrowInsideFinallyBlockJS";
     }
 
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.throwInsideFinallyBlockDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.throwInsideFinallyBlockDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.ERRORHANDLING_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.ERRORHANDLING_GROUP_NAME;
     }
 
     @Override
-    public boolean isEnabledByDefault() {
-        return true;
-    }
-
     @RequiredReadAction
-    @Override
     public String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.throwInsideFinallyBlockErrorString().get();
     }

@@ -13,29 +13,32 @@ import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
+import org.intellij.lang.annotations.Pattern;
 
 @ExtensionImpl
 public class  UnnecessaryReturnJSInspection extends JavaScriptInspection {
     private final UnnecessaryReturnFix fix = new UnnecessaryReturnFix();
 
-    @Override
     @Nonnull
+    @Override
+    @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "UnnecessaryReturnStatementJS";
     }
 
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.unnecessaryReturnStatementDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.unnecessaryReturnStatementDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.CONTROL_FLOW_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
     @Override
@@ -60,10 +63,10 @@ public class  UnnecessaryReturnJSInspection extends JavaScriptInspection {
     }
 
     private static class UnnecessaryReturnFix extends InspectionJSFix {
-        @Override
         @Nonnull
-        public String getName() {
-            return InspectionJSLocalize.removeUnnecessaryReturnFix().get();
+        @Override
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.removeUnnecessaryReturnFix();
         }
 
         @Override

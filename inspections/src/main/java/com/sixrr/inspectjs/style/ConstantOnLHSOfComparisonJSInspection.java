@@ -12,34 +12,37 @@ import consulo.language.ast.IElementType;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
+import org.intellij.lang.annotations.Pattern;
 
 @ExtensionImpl
 public class ConstantOnLHSOfComparisonJSInspection extends JavaScriptInspection {
     private final SwapComparisonFix fix = new SwapComparisonFix();
 
-    @Override
     @Nonnull
+    @Override
+    @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "ConstantOnLefSideOfComparisonJS";
     }
 
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.constantOnLeftSideOfComparisonDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.constantOnLeftSideOfComparisonDisplayName();
+    }
+
+    @Nonnull
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.STYLE_GROUP_NAME;
     }
 
     @Override
-    @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.STYLE_GROUP_NAME.get();
-    }
-
     @RequiredReadAction
-    @Override
     public String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.constantOnLeftSideOfComparisonErrorString().get();
     }
@@ -55,15 +58,15 @@ public class ConstantOnLHSOfComparisonJSInspection extends JavaScriptInspection 
     }
 
     private static class SwapComparisonFix extends InspectionJSFix {
-        @Override
         @Nonnull
-        public String getName() {
-            return InspectionJSLocalize.flipComparisonFix().get();
+        @Override
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.flipComparisonFix();
         }
 
         @Override
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final JSBinaryExpression expression = (JSBinaryExpression)descriptor.getPsiElement();
+            final JSBinaryExpression expression = (JSBinaryExpression) descriptor.getPsiElement();
             final JSExpression rhs = expression.getROperand();
             final JSExpression lhs = expression.getLOperand();
             final IElementType sign = expression.getOperationSign();

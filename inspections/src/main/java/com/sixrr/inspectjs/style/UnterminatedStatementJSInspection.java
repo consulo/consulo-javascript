@@ -13,6 +13,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiErrorElement;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.xml.psi.xml.XmlAttributeValue;
 import consulo.xml.psi.xml.XmlTagChild;
@@ -30,14 +31,14 @@ public class UnterminatedStatementJSInspection extends JavaScriptInspection {
 
     @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.unterminatedStatementDisplayName().get();
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.unterminatedStatementDisplayName();
     }
 
     @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.STYLE_GROUP_NAME.get();
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.STYLE_GROUP_NAME;
     }
 
     @RequiredReadAction
@@ -60,8 +61,8 @@ public class UnterminatedStatementJSInspection extends JavaScriptInspection {
     private static class TerminateStatementFix extends InspectionJSFix {
         @Override
         @Nonnull
-        public String getName() {
-            return InspectionJSLocalize.terminateStatementFix().get();
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.terminateStatementFix();
         }
 
         @Override

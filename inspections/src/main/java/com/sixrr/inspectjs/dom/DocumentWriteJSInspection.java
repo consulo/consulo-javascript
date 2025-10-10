@@ -9,6 +9,7 @@ import com.sixrr.inspectjs.JavaScriptInspection;
 import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 
@@ -16,21 +17,21 @@ import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class DocumentWriteJSInspection extends JavaScriptInspection {
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.callToDocumentWriteDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.callToDocumentWriteDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.DOM_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.DOM_GROUP_NAME;
     }
 
-    @RequiredReadAction
-    @Override
     @Nullable
+    @Override
+    @RequiredReadAction
     protected String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.documentWriteErrorString().get();
     }

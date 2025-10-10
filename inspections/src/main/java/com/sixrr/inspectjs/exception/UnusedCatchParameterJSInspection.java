@@ -13,20 +13,21 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.InspectionToolState;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class UnusedCatchParameterJSInspection extends JavaScriptInspection {
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.unusedCatchParameterDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.unusedCatchParameterDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.ERRORHANDLING_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.ERRORHANDLING_GROUP_NAME;
     }
 
     @Nonnull
@@ -35,9 +36,9 @@ public class UnusedCatchParameterJSInspection extends JavaScriptInspection {
         return new UnusedCatchParameterJSInspectionState();
     }
 
-    @RequiredReadAction
-    @Override
     @Nonnull
+    @Override
+    @RequiredReadAction
     protected String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.unusedCatchParameterProblemDescriptor().get();
     }

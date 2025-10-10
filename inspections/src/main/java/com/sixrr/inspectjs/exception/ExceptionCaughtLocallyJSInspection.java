@@ -11,30 +11,25 @@ import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.util.PsiTreeUtil;
-
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class ExceptionCaughtLocallyJSInspection extends JavaScriptInspection {
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.exceptionUsedForLocalControlFlowDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.exceptionUsedForLocalControlFlowDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.ERRORHANDLING_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.ERRORHANDLING_GROUP_NAME;
     }
 
     @Override
-    public boolean isEnabledByDefault() {
-        return true;
-    }
-
     @RequiredReadAction
-    @Override
     public String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.exceptionCaughtLocallyErrorString().get();
     }

@@ -9,6 +9,7 @@ import consulo.language.editor.refactoring.RenameRefactoring;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.action.RefactoringActionHandlerFactory;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
@@ -27,10 +28,10 @@ public class RenameFix extends InspectionJSFix {
 
     @Override
     @Nonnull
-    public String getName() {
+    public LocalizeValue getName() {
         return m_targetName == null
-            ? InspectionJSLocalize.renameFix().get()
-            : InspectionJSLocalize.renameToFix(m_targetName).get();
+            ? InspectionJSLocalize.renameFix()
+            : InspectionJSLocalize.renameToFix(m_targetName);
     }
 
     @Override

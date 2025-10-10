@@ -7,21 +7,22 @@ import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.psi.JSSimpleLiteralExpression;
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class StringLiteralBreaksHTMLJSInspection extends JavaScriptInspection {
-    @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.stringLiteralBreaksHtmlDisplayName().get();
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.stringLiteralBreaksHtmlDisplayName();
     }
 
-    @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.VALIDITY_GROUP_NAME.get();
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.VALIDITY_GROUP_NAME;
     }
 
     @Override
@@ -29,9 +30,9 @@ public class StringLiteralBreaksHTMLJSInspection extends JavaScriptInspection {
         return false;
     }
 
-    @RequiredReadAction
-    @Override
     @Nullable
+    @Override
+    @RequiredReadAction
     protected String buildErrorString(Object state, Object... args) {
         return InspectionJSLocalize.stringLiteralBreaksHtmlErrorString().get();
     }

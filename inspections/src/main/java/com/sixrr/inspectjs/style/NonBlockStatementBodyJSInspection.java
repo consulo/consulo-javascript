@@ -11,6 +11,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
@@ -20,14 +21,14 @@ public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
 
     @Override
     @Nonnull
-    public String getDisplayName() {
-        return InspectionJSLocalize.nonBlockStatementBodyDisplayName().get();
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.nonBlockStatementBodyDisplayName();
     }
 
     @Override
     @Nonnull
-    public String getGroupDisplayName() {
-        return JSGroupNames.STYLE_GROUP_NAME.get();
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.STYLE_GROUP_NAME;
     }
 
     @Override
@@ -51,8 +52,8 @@ public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
     private static class WrapBodyFix extends InspectionJSFix {
         @Override
         @Nonnull
-        public String getName() {
-            return InspectionJSLocalize.wrapStatementBodyFix().get();
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.wrapStatementBodyFix();
         }
 
         @Override
