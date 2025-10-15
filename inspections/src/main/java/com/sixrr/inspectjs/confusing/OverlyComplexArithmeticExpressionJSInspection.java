@@ -10,7 +10,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.inspection.InspectionToolState;
-import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
@@ -57,23 +56,27 @@ public class OverlyComplexArithmeticExpressionJSInspection extends JavaScriptIns
 
     private class Visitor extends BaseInspectionVisitor<OverlyComplexArithmeticExpressionJSInspectionState> {
         @Override
+        @RequiredReadAction
         public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             checkExpression(expression);
         }
 
         @Override
+        @RequiredReadAction
         public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
             super.visitJSPrefixExpression(expression);
             checkExpression(expression);
         }
 
         @Override
-        public void visitJSParenthesizedExpression(JSParenthesizedExpression expression) {
+        @RequiredReadAction
+        public void visitJSParenthesizedExpression(@Nonnull JSParenthesizedExpression expression) {
             super.visitJSParenthesizedExpression(expression);
             checkExpression(expression);
         }
 
+        @RequiredReadAction
         private void checkExpression(JSExpression expression) {
             if (isParentArithmetic(expression)) {
                 return;
@@ -84,13 +87,14 @@ public class OverlyComplexArithmeticExpressionJSInspection extends JavaScriptIns
             if (containsStringConcatenation(expression)) {
                 return;
             }
-            final int numTerms = countTerms(expression);
-            if (numTerms <= myState.m_limit) {
+            int numTerms = countTerms(expression);
+            if (numTerms <= myState.myMLimit) {
                 return;
             }
             registerError(expression);
         }
 
+        @RequiredReadAction
         private int countTerms(JSExpression expression) {
             if (expression == null) {
                 return 0;
@@ -98,99 +102,71 @@ public class OverlyComplexArithmeticExpressionJSInspection extends JavaScriptIns
             if (!isArithmetic(expression)) {
                 return 1;
             }
-            if (expression instanceof JSBinaryExpression) {
-                final JSBinaryExpression binaryExpression = (JSBinaryExpression) expression;
-                final JSExpression lhs = binaryExpression.getLOperand();
-                final JSExpression rhs = binaryExpression.getROperand();
-                return countTerms(lhs) + countTerms(rhs);
+            if (expression instanceof JSBinaryExpression binaryExpr) {
+                return countTerms(binaryExpr.getLOperand()) + countTerms(binaryExpr.getROperand());
             }
-            else if (expression instanceof JSPrefixExpression) {
-                final JSPrefixExpression prefixExpression = (JSPrefixExpression) expression;
-                final JSExpression operand = prefixExpression.getExpression();
-                return countTerms(operand);
+            else if (expression instanceof JSPrefixExpression prefixExpr) {
+                return countTerms(prefixExpr.getExpression());
             }
-            else if (expression instanceof JSParenthesizedExpression) {
-                final JSParenthesizedExpression parenthesizedExpression = (JSParenthesizedExpression) expression;
-                final JSExpression contents = parenthesizedExpression.getInnerExpression();
-                return countTerms(contents);
+            else if (expression instanceof JSParenthesizedExpression parenthesized) {
+                return countTerms(parenthesized.getInnerExpression());
             }
             return 1;
         }
 
+        @RequiredReadAction
         private boolean isParentArithmetic(JSExpression expression) {
-            final PsiElement parent = expression.getParent();
-            if (!(parent instanceof JSExpression)) {
-                return false;
-            }
-            return isArithmetic((JSExpression) parent);
+            return expression.getParent() instanceof JSExpression parentExpr && isArithmetic(parentExpr);
         }
 
+        @RequiredReadAction
         private boolean isArithmetic(JSExpression expression) {
-            if (expression instanceof JSBinaryExpression) {
-
-                final JSBinaryExpression binaryExpression = (JSBinaryExpression) expression;
-                final IElementType sign = binaryExpression.getOperationSign();
-                return OUR_ARITHMETIC_TOKENS.contains(sign);
+            if (expression instanceof JSBinaryExpression binaryExpr) {
+                IElementType sign = binaryExpr.getOperationSign();
+                return sign != null && OUR_ARITHMETIC_TOKENS.contains(sign);
             }
-            else if (expression instanceof JSPrefixExpression) {
-                final JSPrefixExpression prefixExpression = (JSPrefixExpression) expression;
-                final IElementType sign = prefixExpression.getOperationSign();
-                return OUR_ARITHMETIC_TOKENS.contains(sign);
+            else if (expression instanceof JSPrefixExpression prefixExpr) {
+                IElementType sign = prefixExpr.getOperationSign();
+                return sign != null && OUR_ARITHMETIC_TOKENS.contains(sign);
             }
-            else if (expression instanceof JSParenthesizedExpression) {
-                final JSParenthesizedExpression parenthesizedExpression = (JSParenthesizedExpression) expression;
-                final JSExpression contents = parenthesizedExpression.getInnerExpression();
+            else if (expression instanceof JSParenthesizedExpression parenthesizedExpression) {
+                JSExpression contents = parenthesizedExpression.getInnerExpression();
                 return isArithmetic(contents);
             }
             return false;
         }
 
+        @RequiredReadAction
         private boolean containsStringConcatenation(JSExpression expression) {
             if (isStringLiteral(expression)) {
                 return true;
             }
-            if (expression instanceof JSBinaryExpression) {
-
-                final JSBinaryExpression binaryExpression = (JSBinaryExpression) expression;
-                final JSExpression lhs = binaryExpression.getLOperand();
-
-                if (containsStringConcatenation(lhs)) {
-                    return true;
-                }
-                final JSExpression rhs = binaryExpression.getROperand();
-                return containsStringConcatenation(rhs);
+            if (expression instanceof JSBinaryExpression binaryExpr) {
+                return containsStringConcatenation(binaryExpr.getLOperand())
+                    || containsStringConcatenation(binaryExpr.getROperand());
             }
-            else if (expression instanceof JSPrefixExpression) {
-                final JSPrefixExpression prefixExpression = (JSPrefixExpression) expression;
-                final IElementType sign = prefixExpression.getOperationSign();
-                return OUR_ARITHMETIC_TOKENS.contains(sign);
+            else if (expression instanceof JSPrefixExpression prefixExpr) {
+                IElementType sign = prefixExpr.getOperationSign();
+                return sign != null && OUR_ARITHMETIC_TOKENS.contains(sign);
             }
-            else if (expression instanceof JSParenthesizedExpression) {
-                final JSParenthesizedExpression parenthesizedExpression = (JSParenthesizedExpression) expression;
-                final JSExpression contents = parenthesizedExpression.getInnerExpression();
-                return containsStringConcatenation(contents);
+            else if (expression instanceof JSParenthesizedExpression parenthesized) {
+                return containsStringConcatenation(parenthesized.getInnerExpression());
             }
             return false;
         }
 
+        @RequiredReadAction
         private boolean isStringLiteral(JSExpression expression) {
-            if (expression instanceof JSLiteralExpression) {
-                final JSLiteralExpression literal = (JSLiteralExpression) expression;
-                final String text = literal.getText();
+            if (expression instanceof JSLiteralExpression literal) {
+                String text = literal.getText();
                 return text.startsWith("'") || text.startsWith("\"");
             }
-            if (expression instanceof JSReferenceExpression) {
-                final JSReferenceExpression reference = (JSReferenceExpression) expression;
-                final PsiElement referent = reference.resolve();
-                if (referent instanceof JSVariable) {
-                    final JSVariable variable = (JSVariable) referent;
-                    if (variable.isConst()) {
-                        final JSExpression initializer = variable.getInitializer();
-                        if (initializer != null) {
-                            final String text = initializer.getText();
-                            return text.startsWith("'") || text.startsWith("\"");
-                        }
-                    }
+            if (expression instanceof JSReferenceExpression reference
+                && reference.resolve() instanceof JSVariable variable && variable.isConst()) {
+                JSExpression initializer = variable.getInitializer();
+                if (initializer != null) {
+                    String text = initializer.getText();
+                    return text.startsWith("'") || text.startsWith("\"");
                 }
             }
             return false;

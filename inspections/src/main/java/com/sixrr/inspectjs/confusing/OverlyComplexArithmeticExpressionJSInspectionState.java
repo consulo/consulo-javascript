@@ -12,32 +12,28 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 18/03/2023
+ * @since 2023-03-18
  */
-public class OverlyComplexArithmeticExpressionJSInspectionState implements InspectionToolState<OverlyComplexArithmeticExpressionJSInspectionState>
-{
-	public int m_limit = 6;
+public class OverlyComplexArithmeticExpressionJSInspectionState implements InspectionToolState<OverlyComplexArithmeticExpressionJSInspectionState> {
+    public int myMLimit = 6;
 
-	@Nullable
-	@Override
-	public UnnamedConfigurable createConfigurable()
-	{
-		ConfigurableBuilder<ConfigurableBuilderState> builder = ConfigurableBuilder.newBuilder();
-		builder.component(() -> Label.create(InspectionJSLocalize.maximumNumberOfTermsParameter()));
-		builder.intBox(() -> m_limit, value -> m_limit = value);
-		return builder.buildUnnamed();
-	}
+    @Nullable
+    @Override
+    public UnnamedConfigurable createConfigurable() {
+        return ConfigurableBuilder.newBuilder()
+            .component(() -> Label.create(InspectionJSLocalize.maximumNumberOfTermsParameter()))
+            .intBox(() -> myMLimit, value -> myMLimit = value)
+            .buildUnnamed();
+    }
 
-	@Nullable
-	@Override
-	public OverlyComplexArithmeticExpressionJSInspectionState getState()
-	{
-		return this;
-	}
+    @Nullable
+    @Override
+    public OverlyComplexArithmeticExpressionJSInspectionState getState() {
+        return this;
+    }
 
-	@Override
-	public void loadState(OverlyComplexArithmeticExpressionJSInspectionState state)
-	{
-		XmlSerializerUtil.copyBean(state, this);
-	}
+    @Override
+    public void loadState(OverlyComplexArithmeticExpressionJSInspectionState state) {
+        XmlSerializerUtil.copyBean(state, this);
+    }
 }
