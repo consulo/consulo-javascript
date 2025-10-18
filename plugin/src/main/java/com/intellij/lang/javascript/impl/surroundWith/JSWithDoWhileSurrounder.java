@@ -22,6 +22,7 @@ import consulo.document.util.TextRange;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
 /**
@@ -30,8 +31,8 @@ import consulo.project.Project;
  */
 public class JSWithDoWhileSurrounder extends JSStatementSurrounder {
     @Override
-    public String getTemplateDescription() {
-        return JavaScriptLocalize.javascriptSurroundWithDoWhile().get();
+    public LocalizeValue getTemplateDescription() {
+        return JavaScriptLocalize.javascriptSurroundWithDoWhile();
     }
 
     @Override

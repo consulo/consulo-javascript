@@ -25,6 +25,7 @@ import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
 /**
@@ -33,8 +34,8 @@ import consulo.project.Project;
  */
 public class JSWithForSurrounder extends JSStatementSurrounder {
     @Override
-    public String getTemplateDescription() {
-        return JavaScriptLocalize.javascriptSurroundWithFor().get();
+    public LocalizeValue getTemplateDescription() {
+        return JavaScriptLocalize.javascriptSurroundWithFor();
     }
 
     @Override

@@ -18,6 +18,7 @@ package com.intellij.lang.javascript.impl.surroundWith;
 
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
 /**
@@ -26,8 +27,8 @@ import consulo.project.Project;
  */
 public class JSWithIfElseSurrounder extends JSWithIfSurrounder {
     @Override
-    public String getTemplateDescription() {
-        return JavaScriptLocalize.javascriptSurroundWithIfElse().get();
+    public LocalizeValue getTemplateDescription() {
+        return JavaScriptLocalize.javascriptSurroundWithIfElse();
     }
 
     @Override

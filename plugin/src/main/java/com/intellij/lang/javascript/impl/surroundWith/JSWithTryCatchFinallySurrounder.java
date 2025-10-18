@@ -25,6 +25,7 @@ import consulo.document.util.TextRange;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
@@ -34,8 +35,8 @@ import jakarta.annotation.Nonnull;
  */
 public class JSWithTryCatchFinallySurrounder extends JSStatementSurrounder {
     @Override
-    public String getTemplateDescription() {
-        return JavaScriptLocalize.javascriptSurroundWithTryCatchFinally().get();
+    public LocalizeValue getTemplateDescription() {
+        return JavaScriptLocalize.javascriptSurroundWithTryCatchFinally();
     }
 
     @Override

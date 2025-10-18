@@ -19,6 +19,7 @@ package com.intellij.lang.javascript.impl.surroundWith;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.localize.JavaScriptLocalize;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
 /**
@@ -27,8 +28,8 @@ import consulo.project.Project;
  */
 public class JSWithTryCatchSurrounder extends JSWithTryCatchFinallySurrounder {
     @Override
-    public String getTemplateDescription() {
-        return JavaScriptLocalize.javascriptSurroundWithTryCatch().get();
+    public LocalizeValue getTemplateDescription() {
+        return JavaScriptLocalize.javascriptSurroundWithTryCatch();
     }
 
     @Override

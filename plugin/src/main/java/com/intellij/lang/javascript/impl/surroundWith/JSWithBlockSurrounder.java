@@ -19,6 +19,7 @@ package com.intellij.lang.javascript.impl.surroundWith;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 
@@ -28,8 +29,8 @@ import consulo.language.psi.PsiElement;
  */
 public class JSWithBlockSurrounder extends JSStatementSurrounder {
     @Override
-    public String getTemplateDescription() {
-        return "{ }";
+    public LocalizeValue getTemplateDescription() {
+        return LocalizeValue.localizeTODO("{ }");
     }
 
     @Override

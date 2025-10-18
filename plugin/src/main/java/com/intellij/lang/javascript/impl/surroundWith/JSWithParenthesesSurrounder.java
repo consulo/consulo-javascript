@@ -26,6 +26,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.editor.surroundWith.Surrounder;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
@@ -37,8 +38,8 @@ import jakarta.annotation.Nullable;
  */
 public class JSWithParenthesesSurrounder implements Surrounder {
     @Override
-    public String getTemplateDescription() {
-        return JavaScriptLocalize.javascriptSurroundWithParenthesis().get();
+    public LocalizeValue getTemplateDescription() {
+        return JavaScriptLocalize.javascriptSurroundWithParenthesis();
     }
 
     @Override
