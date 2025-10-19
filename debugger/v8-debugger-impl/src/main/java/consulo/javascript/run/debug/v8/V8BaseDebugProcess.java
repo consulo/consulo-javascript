@@ -34,6 +34,7 @@ import consulo.javascript.debugger.JavaScriptEditorsProvider;
 import consulo.javascript.debugger.JavaScriptLineBreakpointType;
 import consulo.javascript.debugger.JavaScriptListPanel;
 import consulo.javascript.icon.JavaScriptIconGroup;
+import consulo.localize.LocalizeValue;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.ui.ex.awt.UIUtil;
@@ -221,17 +222,18 @@ public abstract class V8BaseDebugProcess<V extends JavascriptVm> extends XDebugP
         };
     }
 
+    @Nonnull
     @Override
-    public String getCurrentStateMessage() {
+    public LocalizeValue getCurrentStateMessage() {
         if (myVm == null) {
-            return XDebuggerLocalize.debuggerStateMessageDisconnected().get();
+            return XDebuggerLocalize.debuggerStateMessageDisconnected();
         }
         else {
             if (myVm.isAttached()) {
-                return "Attached";
+                return LocalizeValue.localizeTODO("Attached");
             }
             else {
-                return XDebuggerLocalize.debuggerStateMessageDisconnected().get();
+                return XDebuggerLocalize.debuggerStateMessageDisconnected();
             }
         }
     }

@@ -20,6 +20,7 @@ import consulo.annotation.UsedInPlugin;
 import consulo.execution.ExecutionResult;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.process.ExecutionException;
 import jakarta.annotation.Nonnull;
 import org.chromium.sdk.JavascriptVmFactory;
@@ -32,43 +33,35 @@ import java.net.InetSocketAddress;
  * @since 20.03.14
  */
 @UsedInPlugin
-public class V8DebugProcess extends V8BaseDebugProcess<StandaloneVm>
-{
-	public V8DebugProcess(@Nonnull XDebugSession session, ExecutionResult result, int port) throws ExecutionException
-	{
-		super(session, result);
+public class V8DebugProcess extends V8BaseDebugProcess<StandaloneVm> {
+    public V8DebugProcess(@Nonnull XDebugSession session, ExecutionResult result, int port) throws ExecutionException {
+        super(session, result);
 
-		myVm = JavascriptVmFactory.getInstance().createStandalone(new InetSocketAddress("localhost", port), null);
-	}
+        myVm = JavascriptVmFactory.getInstance().createStandalone(new InetSocketAddress("localhost", port), null);
+    }
 
-	@UsedInPlugin
-	public void attach() throws Exception
-	{
-		myVm.attach(new V8DebugEventListener(this));
-	}
+    @UsedInPlugin
+    public void attach() throws Exception {
+        myVm.attach(new V8DebugEventListener(this));
+    }
 
-	@Override
-	public String getCurrentStateMessage()
-	{
-		if(myVm == null)
-		{
-			return XDebuggerLocalize.debuggerStateMessageDisconnected().get();
-		}
-		else
-		{
-			if(myVm.isAttached())
-			{
-				return "Attached";
-			}
-			else
-			{
-				String disconnectReason = myVm.getDisconnectReason();
-				if(disconnectReason == null)
-				{
-					return XDebuggerLocalize.debuggerStateMessageDisconnected().get();
-				}
-				return "Disconnected: " + disconnectReason;
-			}
-		}
-	}
+    @Nonnull
+    @Override
+    public LocalizeValue getCurrentStateMessage() {
+        if (myVm == null) {
+            return XDebuggerLocalize.debuggerStateMessageDisconnected();
+        }
+        else {
+            if (myVm.isAttached()) {
+                return LocalizeValue.localizeTODO("Attached");
+            }
+            else {
+                String disconnectReason = myVm.getDisconnectReason();
+                if (disconnectReason == null) {
+                    return XDebuggerLocalize.debuggerStateMessageDisconnected();
+                }
+                return LocalizeValue.localizeTODO("Disconnected: " + disconnectReason);
+            }
+        }
+    }
 }
