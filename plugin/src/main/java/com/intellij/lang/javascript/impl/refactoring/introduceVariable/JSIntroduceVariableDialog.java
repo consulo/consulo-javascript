@@ -105,7 +105,7 @@ public class JSIntroduceVariableDialog extends JSBaseIntroduceDialog implements 
 
     @Override
     @RequiredReadAction
-    protected String suggestCandidateName(JSExpression mainOccurence) {
-        return StringUtil.decapitalize(super.suggestCandidateName(mainOccurence));
+    protected String suggestCandidateName(JSExpression mainOccurrence) {
+        return StringUtil.decapitalize(super.suggestCandidateName(mainOccurrence));
     }
 }

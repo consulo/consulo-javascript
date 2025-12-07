@@ -86,7 +86,7 @@ class JSIntroduceConstantDialog extends JSBaseClassBasedIntroduceDialog implemen
 
     @Override
     @RequiredReadAction
-    protected String suggestCandidateName(JSExpression mainOccurence) {
-        return super.suggestCandidateName(mainOccurence).toUpperCase();
+    protected String suggestCandidateName(JSExpression mainOccurrence) {
+        return super.suggestCandidateName(mainOccurrence).toUpperCase();
     }
 }
