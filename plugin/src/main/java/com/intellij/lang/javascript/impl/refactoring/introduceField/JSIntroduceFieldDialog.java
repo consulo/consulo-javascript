@@ -64,7 +64,7 @@ class JSIntroduceFieldDialog extends JSBaseClassBasedIntroduceDialog implements 
         super.doInit();
 
         final SimpleReference<Boolean> localContextDependent = new SimpleReference<>();
-        myMainOccurence.accept(new JSElementVisitor() {
+        myMainOccurrence.accept(new JSElementVisitor() {
             @Override
             @RequiredReadAction
             public void visitJSReferenceExpression(@Nonnull JSReferenceExpression node) {
@@ -160,9 +160,9 @@ class JSIntroduceFieldDialog extends JSBaseClassBasedIntroduceDialog implements 
 
     @Override
     @RequiredReadAction
-    protected String suggestCandidateName(JSExpression mainOccurence) {
-        String s = super.suggestCandidateName(mainOccurence);
-        JSCodeStyleSettings jsCodeStyleSettings = CodeStyleSettingsManager.getSettings(mainOccurence.getProject())
+    protected String suggestCandidateName(JSExpression mainOccurrence) {
+        String s = super.suggestCandidateName(mainOccurrence);
+        JSCodeStyleSettings jsCodeStyleSettings = CodeStyleSettingsManager.getSettings(mainOccurrence.getProject())
             .getCustomSettings(JSCodeStyleSettings.class);
         if (jsCodeStyleSettings.FIELD_PREFIX.length() > 0) {
             return jsCodeStyleSettings.FIELD_PREFIX + s;
