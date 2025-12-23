@@ -70,7 +70,7 @@ public class JSXParser {
         }
         else {
             tagName = myBuilder.getTokenText();
-            assert tagName != null;
+            assert tagName != null : "Empty tag name at " + myBuilder.getCurrentOffset();
             advance();
         }
         myTagNamesStack.push(tagName);
@@ -116,7 +116,7 @@ public class JSXParser {
     }
 
     private void parseAttribute() {
-        assert token() == XmlTokenType.XML_NAME;
+        assert token() == XmlTokenType.XML_NAME : "Tag attribute name expected at " + myBuilder.getCurrentOffset();
         final PsiBuilder.Marker att = mark();
         advance();
         if (token() == XmlTokenType.XML_EQ) {
@@ -211,7 +211,7 @@ public class JSXParser {
     }
 
     protected void parseTag(boolean multipleRootTagError) {
-        assert token() == JSTokenTypes.XML_START_TAG_START : "Tag start expected";
+        assert token() == JSTokenTypes.XML_START_TAG_START : "Tag start expected at " + myBuilder.getCurrentOffset();
         final PsiBuilder.Marker tag = mark();
 
         final String tagName = parseTagHeader(multipleRootTagError, tag);
