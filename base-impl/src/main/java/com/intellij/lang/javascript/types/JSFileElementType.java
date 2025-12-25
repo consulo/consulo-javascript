@@ -17,6 +17,7 @@
 package com.intellij.lang.javascript.types;
 
 import com.intellij.lang.javascript.psi.JSFile;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.index.io.StringRef;
 import consulo.language.psi.stub.*;
 import consulo.javascript.index.JavaScriptIndexer;
@@ -39,9 +40,7 @@ public class JSFileElementType extends IStubFileElementType<JSFileStub> {
 
     @Override
     public void indexStub(@Nonnull JSFileStub stub, @Nonnull IndexSink sink) {
-        for (JavaScriptIndexer javaScriptIndexer : JavaScriptIndexer.EP_NAME.getExtensionList()) {
-            javaScriptIndexer.indexFile(stub, sink);
-        }
+        JavaScriptIndexer.EP_NAME.forEachExtensionSafe(it -> it.indexFile(stub, sink));
     }
 
     @Override
@@ -49,6 +48,7 @@ public class JSFileElementType extends IStubFileElementType<JSFileStub> {
         return new DefaultStubBuilder() {
             @Nonnull
             @Override
+            @RequiredReadAction
             protected StubElement createStubForFile(@Nonnull PsiFile file) {
                 return file instanceof JSFile jsFile
                     ? new JSFileStubImpl(jsFile, file.getName())
@@ -77,7 +77,7 @@ public class JSFileElementType extends IStubFileElementType<JSFileStub> {
 
     @Override
     public int getStubVersion() {
-        int[] version = new int[]{47};
+        int[] version = new int[]{48};
         JavaScriptIndexer.EP_NAME.forEachExtensionSafe(javaScriptIndexer -> version[0]++);
         return version[0];
     }

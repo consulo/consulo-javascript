@@ -23,6 +23,8 @@ import java.util.Stack;
  * @since 2019-12-17
  */
 public class JSXParser {
+    public static final String FRAGMENT_TAG = "<<<FRAGMENT TAG>>>";
+
     private final Stack<String> myTagNamesStack = new Stack<>();
     private static final int BALANCING_DEPTH_THRESHOLD = 1000;
 
@@ -54,6 +56,12 @@ public class JSXParser {
 
     @Nullable
     private String parseTagHeader(boolean multipleRootTagError, PsiBuilder.Marker tag) {
+        if (token() == JSTokenTypes.XML_START_TAG_LIST) {
+            myTagNamesStack.push(FRAGMENT_TAG);
+            advance();
+            return FRAGMENT_TAG;
+        }
+
         if (multipleRootTagError) {
             PsiBuilder.Marker error = mark();
             advance();
@@ -70,7 +78,6 @@ public class JSXParser {
         }
         else {
             tagName = myBuilder.getTokenText();
-            assert tagName != null;
             advance();
         }
         myTagNamesStack.push(tagName);
@@ -116,7 +123,6 @@ public class JSXParser {
     }
 
     private void parseAttribute() {
-        assert token() == XmlTokenType.XML_NAME;
         PsiBuilder.Marker att = mark();
         advance();
         if (token() == XmlTokenType.XML_EQ) {
@@ -211,7 +217,6 @@ public class JSXParser {
     }
 
     protected void parseTag(boolean multipleRootTagError) {
-        assert token() == JSTokenTypes.XML_START_TAG_START : "Tag start expected";
         PsiBuilder.Marker tag = mark();
 
         String tagName = parseTagHeader(multipleRootTagError, tag);
