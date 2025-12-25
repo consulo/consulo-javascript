@@ -56,7 +56,7 @@ public class JSIntroduceConstantHandler extends JSBaseIntroduceHandler<JSElement
     @Override
     protected String getDeclText(JSIntroduceConstantSettings settings) {
         String baseDeclText = "static const " + settings.getVariableName();
-        final JSAttributeList.AccessType type = settings.getAccessType();
+        JSAttributeList.AccessType type = settings.getAccessType();
         if (type != JSAttributeList.AccessType.PACKAGE_LOCAL) {
             baseDeclText = type.toString().toLowerCase() + " " + baseDeclText;
         }

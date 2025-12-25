@@ -33,7 +33,7 @@ public class NestedFunctionJSInspection extends JavaScriptInspection {
     @Override
     @RequiredReadAction
     protected String buildErrorString(Object state, Object... args) {
-        final JSFunction function = (JSFunction)((PsiElement)args[0]).getParent();
+        JSFunction function = (JSFunction)((PsiElement)args[0]).getParent();
         if (functionHasIdentifier(function)) {
             return InspectionJSLocalize.nestedFunctionErrorString().get();
         }
@@ -58,7 +58,7 @@ public class NestedFunctionJSInspection extends JavaScriptInspection {
             if (!myState.m_includeAnonymousFunctions && function.getName() == null) {
                 return;
             }
-            final JSFunction containingFunction = PsiTreeUtil.getParentOfType(function, JSFunction.class, true);
+            JSFunction containingFunction = PsiTreeUtil.getParentOfType(function, JSFunction.class, true);
             if (containingFunction == null) {
                 return;
             }
@@ -66,7 +66,7 @@ public class NestedFunctionJSInspection extends JavaScriptInspection {
         }
 
         @Override
-        public void visitJSFunctionExpression(final JSFunctionExpression node) {
+        public void visitJSFunctionExpression(JSFunctionExpression node) {
             visitJSFunctionDeclaration(node.getFunction());
         }
     }

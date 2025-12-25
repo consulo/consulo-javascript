@@ -243,7 +243,7 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
             @Override
             @RequiredReadAction
             protected void addImplementedFunction(JSFunction interfaceFunction, JSFunction implementationFunction) {
-                final JSAttributeList attributeList = implementationFunction.getAttributeList();
+                JSAttributeList attributeList = implementationFunction.getAttributeList();
                 if (attributeList == null || attributeList.getAccessType() != JSAttributeList.AccessType.PUBLIC) {
                     ASTNode node = findElementForAccessModifierError(implementationFunction, attributeList);
                     holder.newAnnotation(
@@ -860,8 +860,8 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
 
     @Override
     @RequiredReadAction
-    public void visitJSFunctionDeclaration(final JSFunction node) {
-        final PsiElement nameIdentifier = node.getNameIdentifier();
+    public void visitJSFunctionDeclaration(JSFunction node) {
+        PsiElement nameIdentifier = node.getNameIdentifier();
         if (nameIdentifier == null) {
             return;
         }
@@ -887,15 +887,15 @@ public class JSAnnotatingVisitor extends JSElementVisitor implements Annotator {
         }
 
         if (parent instanceof JSClass clazz && !node.isConstructor()) {
-            final JSAttributeList attributeList = node.getAttributeList();
+            JSAttributeList attributeList = node.getAttributeList();
 
             if (attributeList == null || (!attributeList.hasModifier(JSAttributeList.ModifierType.STATIC)
                 && (attributeList.getAccessType() != JSAttributeList.AccessType.PRIVATE
                 || attributeList.hasModifier(JSAttributeList.ModifierType.OVERRIDE)))) {
-                final String qName = clazz.getQualifiedName();
-                final boolean hasOverride = attributeList != null && attributeList.hasModifier(JSAttributeList.ModifierType.OVERRIDE);
+                String qName = clazz.getQualifiedName();
+                boolean hasOverride = attributeList != null && attributeList.hasModifier(JSAttributeList.ModifierType.OVERRIDE);
 
-                final SimpleReference<JSFunction> set = new SimpleReference<>();
+                SimpleReference<JSFunction> set = new SimpleReference<>();
                 boolean b = JSResolveUtil.iterateType(
                     node,
                     parent,

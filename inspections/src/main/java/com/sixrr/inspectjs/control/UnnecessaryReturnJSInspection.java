@@ -71,8 +71,8 @@ public class  UnnecessaryReturnJSInspection extends JavaScriptInspection {
 
         @Override
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final PsiElement returnKeywordElement = descriptor.getPsiElement();
-            final PsiElement returnStatement = returnKeywordElement.getParent();
+            PsiElement returnKeywordElement = descriptor.getPsiElement();
+            PsiElement returnStatement = returnKeywordElement.getParent();
             assert returnStatement != null;
             deleteElement(returnStatement);
         }
@@ -83,16 +83,16 @@ public class  UnnecessaryReturnJSInspection extends JavaScriptInspection {
         public void visitJSReturnStatement(@Nonnull JSReturnStatement statement) {
             super.visitJSReturnStatement(statement);
 
-            final JSExpression returnValue = statement.getExpression();
+            JSExpression returnValue = statement.getExpression();
             if(returnValue!=null)
             {
                 return;
             }
-            final JSFunction function = PsiTreeUtil.getParentOfType(statement, JSFunction.class);
+            JSFunction function = PsiTreeUtil.getParentOfType(statement, JSFunction.class);
             if (function == null) {
                 return;
             }
-            final PsiElement body = function.getLastChild();
+            PsiElement body = function.getLastChild();
             if (body == null) {
                 return;
             }

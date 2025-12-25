@@ -49,7 +49,7 @@ public class JSVariableElementType extends JSQualifiedStubElementType<JSVariable
 
     @Override
     protected boolean doIndexName(JSVariableStub stub, String name, String fqn) {
-        final IStubElementType stubType = stub.getParentStub().getParentStub().getStubType();
+        IStubElementType stubType = stub.getParentStub().getParentStub().getStubType();
 
         return stubType instanceof JSPackageStatementElementType || stubType == null;
     }
@@ -60,8 +60,8 @@ public class JSVariableElementType extends JSQualifiedStubElementType<JSVariable
     }
 
     @Override
-    public boolean shouldCreateStub(final ASTNode node) {
-        final IElementType discriminatingParentType = node.getTreeParent().getTreeParent().getElementType();
+    public boolean shouldCreateStub(ASTNode node) {
+        IElementType discriminatingParentType = node.getTreeParent().getTreeParent().getElementType();
         return discriminatingParentType == JSElementTypes.PACKAGE_STATEMENT
             || discriminatingParentType == JSElementTypes.CLASS
             || discriminatingParentType instanceof JSFileElementType;

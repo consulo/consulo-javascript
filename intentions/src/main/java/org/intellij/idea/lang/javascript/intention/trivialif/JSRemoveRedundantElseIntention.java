@@ -54,16 +54,16 @@ public class JSRemoveRedundantElseIntention extends JSIntention {
     @Override
     @RequiredReadAction
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSIfStatement ifStatement = (JSIfStatement)element;
-        final JSStatement thenBranch = ifStatement.getThen();
-        final JSStatement elseBranch = ifStatement.getElse();
+        JSIfStatement ifStatement = (JSIfStatement)element;
+        JSStatement thenBranch = ifStatement.getThen();
+        JSStatement elseBranch = ifStatement.getElse();
 
         assert (thenBranch != null);
         assert (elseBranch != null);
 
-        final String newIfText = "if (" + ifStatement.getCondition().getText() + ')' + thenBranch.getText();
-        final String elseText = elseBranch.getText();
-        final String newStatement = elseBranch instanceof JSBlockStatement
+        String newIfText = "if (" + ifStatement.getCondition().getText() + ')' + thenBranch.getText();
+        String elseText = elseBranch.getText();
+        String newStatement = elseBranch instanceof JSBlockStatement
             ? elseText.substring(elseText.indexOf('{') + 1, elseText.lastIndexOf('}') - 1).trim()
             : elseText;
 

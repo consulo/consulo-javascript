@@ -47,7 +47,7 @@ public class JSCodeStylePanel extends CodeStyleAbstractPanel {
     private boolean myInsideUpdate = false;
 
     @RequiredUIAccess
-    public JSCodeStylePanel(final CodeStyleSettings settings) {
+    public JSCodeStylePanel(CodeStyleSettings settings) {
         super(settings);
 
         installPreviewPanel(myPreviewPanel);
@@ -60,7 +60,7 @@ public class JSCodeStylePanel extends CodeStyleAbstractPanel {
             }
         });
 
-        final DocumentAdapter adapter = new DocumentAdapter() {
+        DocumentAdapter adapter = new DocumentAdapter() {
             @Override
             protected void textChanged(DocumentEvent e) {
                 if (!myInsideUpdate) {

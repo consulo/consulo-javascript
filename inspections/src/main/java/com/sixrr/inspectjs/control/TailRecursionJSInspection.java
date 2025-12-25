@@ -183,11 +183,11 @@ public class TailRecursionJSInspection extends JavaScriptInspection {
             @Nonnull JSReturnStatement statement
         ) {
             super.visitJSReturnStatement(statement);
-            final JSExpression returnValue = statement.getExpression();
+            JSExpression returnValue = statement.getExpression();
             if (!(returnValue instanceof JSCallExpression)) {
                 return;
             }
-            final JSFunction containingMethod =
+            JSFunction containingMethod =
                 PsiTreeUtil.getParentOfType(
                     statement,
                     JSFunction.class
@@ -195,19 +195,19 @@ public class TailRecursionJSInspection extends JavaScriptInspection {
             if (containingMethod == null) {
                 return;
             }
-            final JSCallExpression returnCall =
+            JSCallExpression returnCall =
                 (JSCallExpression) returnValue;
-            final JSExpression methodExpression = returnCall.getMethodExpression();
+            JSExpression methodExpression = returnCall.getMethodExpression();
             if (!(methodExpression instanceof JSReferenceExpression)) {
                 return;
             }
-            final JSReferenceExpression reference = (JSReferenceExpression) methodExpression;
+            JSReferenceExpression reference = (JSReferenceExpression) methodExpression;
 
-            final PsiElement referent = reference.resolve();
+            PsiElement referent = reference.resolve();
             if (!(referent instanceof JSFunction)) {
                 return;
             }
-            final JSFunction method = (JSFunction) referent;
+            JSFunction method = (JSFunction) referent;
 
             if (!method.equals(containingMethod)) {
                 return;

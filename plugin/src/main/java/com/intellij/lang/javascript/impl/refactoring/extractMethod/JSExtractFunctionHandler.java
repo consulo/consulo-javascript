@@ -36,7 +36,7 @@ import jakarta.annotation.Nonnull;
 public class JSExtractFunctionHandler implements RefactoringActionHandler {
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull final Project project, final Editor editor, PsiFile file, DataContext dataContext) {
+    public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
         if (!editor.getSelectionModel().hasSelection()) {
             editor.getSelectionModel().selectLineAtCaret();
         }

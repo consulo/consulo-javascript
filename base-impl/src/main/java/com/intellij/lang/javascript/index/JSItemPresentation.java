@@ -37,7 +37,7 @@ import jakarta.annotation.Nullable;
 public class JSItemPresentation implements ItemPresentation {
     private JSNamedElement myElement;
 
-    public JSItemPresentation(final JSNamedElement elementProxy) {
+    public JSItemPresentation(JSNamedElement elementProxy) {
         this.myElement = elementProxy;
     }
 
@@ -50,7 +50,7 @@ public class JSItemPresentation implements ItemPresentation {
     @Override
     @RequiredReadAction
     public String getLocationString() {
-        final PsiFile psiFile = myElement.getContainingFile();
+        PsiFile psiFile = myElement.getContainingFile();
         if (myElement instanceof JSVariable || myElement instanceof JSFunction) {
             if (JSResolveUtil.findParent(myElement) instanceof JSClass possibleJsClass) {
                 StringBuilder presentation = new StringBuilder();

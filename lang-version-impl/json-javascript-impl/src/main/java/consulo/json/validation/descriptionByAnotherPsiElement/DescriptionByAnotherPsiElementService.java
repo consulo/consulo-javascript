@@ -79,7 +79,7 @@ public class DescriptionByAnotherPsiElementService implements PersistentStateCom
             myElementPointer = SmartPointerManager.getInstance(element.getProject()).createSmartPsiElementPointer(element);
         }
 
-        public Info(@Nonnull Project project, @Nonnull String url, @Nonnull final String providerId, @Nonnull String psiElementId) {
+        public Info(@Nonnull Project project, @Nonnull String url, @Nonnull String providerId, @Nonnull String psiElementId) {
             myProject = project;
             myVirtualFilePointer = VirtualFilePointerManager.getInstance().create(url, this, null);
 
@@ -238,7 +238,7 @@ public class DescriptionByAnotherPsiElementService implements PersistentStateCom
     @Override
     public Element getState() {
         Element stateElement = new Element("state");
-        for (final Info registeredFile : myRegisteredFiles) {
+        for (Info registeredFile : myRegisteredFiles) {
             String psiElementId = registeredFile.getPsiElementId();
             if (psiElementId == null) {
                 continue;

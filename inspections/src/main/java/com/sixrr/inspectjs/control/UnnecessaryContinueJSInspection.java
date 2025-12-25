@@ -57,8 +57,8 @@ public class UnnecessaryContinueJSInspection extends JavaScriptInspection {
 
         @Override
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final PsiElement continueKeywordElement = descriptor.getPsiElement();
-            final PsiElement continueStatement = continueKeywordElement.getParent();
+            PsiElement continueKeywordElement = descriptor.getPsiElement();
+            PsiElement continueStatement = continueKeywordElement.getParent();
             assert continueStatement != null;
             deleteElement(continueStatement);
         }
@@ -78,7 +78,7 @@ public class UnnecessaryContinueJSInspection extends JavaScriptInspection {
             if (!(continuedStatement instanceof JSLoopStatement)) {
                 return;
             }
-            final JSStatement body = ((JSLoopStatement) continuedStatement).getBody();
+            JSStatement body = ((JSLoopStatement) continuedStatement).getBody();
             if (body == null) {
                 return;
             }

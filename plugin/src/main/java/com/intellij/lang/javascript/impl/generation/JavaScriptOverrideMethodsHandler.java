@@ -52,7 +52,7 @@ public class JavaScriptOverrideMethodsHandler extends BaseJSGenerateHandler impl
 
     @Override
     @RequiredReadAction
-    protected void collectCandidates(JSClass clazz, final Collection<JSNamedElementNode> candidates) {
+    protected void collectCandidates(JSClass clazz, Collection<JSNamedElementNode> candidates) {
         Map<String, Object> _functionsToOverride = null;
         Function<JSFunction, Boolean> functionFilter = function -> {
             JSAttributeList attributeList = function.getAttributeList();

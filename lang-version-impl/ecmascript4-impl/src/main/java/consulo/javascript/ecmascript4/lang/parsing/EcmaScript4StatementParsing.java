@@ -28,7 +28,7 @@ public class EcmaScript4StatementParsing extends StatementParsing {
 
     @Override
     public void parseSourceElement(PsiBuilder builder) {
-        final IElementType tokenType = builder.getTokenType();
+        IElementType tokenType = builder.getTokenType();
         if (tokenType == JSTokenTypes.FUNCTION_KEYWORD) {
             getFunctionParsing().parseFunctionDeclaration(builder);
         }
@@ -45,7 +45,7 @@ public class EcmaScript4StatementParsing extends StatementParsing {
     }
 
     @Override
-    protected void parseVarDeclaration(final PsiBuilder builder, boolean allowIn) {
+    protected void parseVarDeclaration(PsiBuilder builder, boolean allowIn) {
         if (!JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(builder.getTokenType())) {
             builder.error(JavaScriptLocalize.javascriptParserMessageExpectedVariableName());
             builder.advanceLexer();
@@ -75,8 +75,8 @@ public class EcmaScript4StatementParsing extends StatementParsing {
     }
 
     @Override
-    protected void doParseStatement(final PsiBuilder builder, boolean canHaveClasses) {
-        final IElementType firstToken = builder.getTokenType();
+    protected void doParseStatement(PsiBuilder builder, boolean canHaveClasses) {
+        IElementType firstToken = builder.getTokenType();
 
         if (firstToken == null) {
             builder.error(JavaScriptLocalize.javascriptParserMessageExpectedStatement());
@@ -203,7 +203,7 @@ public class EcmaScript4StatementParsing extends StatementParsing {
                     return;
                 }
 
-                final IElementType tokenType = builder.getTokenType();
+                IElementType tokenType = builder.getTokenType();
                 if (tokenType == JSTokenTypes.FUNCTION_KEYWORD) {
                     getFunctionParsing().parseFunctionNoMarker(builder, false, marker);
                     return;
@@ -242,7 +242,7 @@ public class EcmaScript4StatementParsing extends StatementParsing {
 
         if (firstToken == JSTokenTypes.IDENTIFIER) {
             // Try labeled statement:
-            final PsiBuilder.Marker labeledStatement = builder.mark();
+            PsiBuilder.Marker labeledStatement = builder.mark();
             builder.advanceLexer();
             if (builder.getTokenType() == JSTokenTypes.COLON) {
                 builder.advanceLexer();
@@ -265,9 +265,9 @@ public class EcmaScript4StatementParsing extends StatementParsing {
         builder.advanceLexer();
     }
 
-    private void parseDefaultNsStatement(final PsiBuilder builder) {
+    private void parseDefaultNsStatement(PsiBuilder builder) {
         EcmaScript4StatementParsing.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.DEFAULT_KEYWORD);
-        final PsiBuilder.Marker marker = builder.mark();
+        PsiBuilder.Marker marker = builder.mark();
         builder.advanceLexer();
 
         if (builder.getTokenType() == JSTokenTypes.IDENTIFIER && "xml".equals(builder.getTokenText())) {
@@ -285,12 +285,12 @@ public class EcmaScript4StatementParsing extends StatementParsing {
         marker.done(JSElementTypes.ASSIGNMENT_EXPRESSION);
     }
 
-    private void parseImportStatement(final PsiBuilder builder) {
-        final PsiBuilder.Marker importStatement = builder.mark();
+    private void parseImportStatement(PsiBuilder builder) {
+        PsiBuilder.Marker importStatement = builder.mark();
         try {
             builder.advanceLexer();
 
-            final PsiBuilder.Marker nsAssignment = builder.mark();
+            PsiBuilder.Marker nsAssignment = builder.mark();
             if (!getExpressionParsing().parseQualifiedTypeName(builder, true)) {
                 builder.error(JavaScriptLocalize.javascriptParserMessageExpectedTypename());
                 nsAssignment.drop();
@@ -316,7 +316,7 @@ public class EcmaScript4StatementParsing extends StatementParsing {
         }
     }
 
-    private boolean parseNamespaceNoMarker(final PsiBuilder builder, final @Nonnull PsiBuilder.Marker useNSStatement) {
+    private boolean parseNamespaceNoMarker(PsiBuilder builder, @Nonnull PsiBuilder.Marker useNSStatement) {
         EcmaScript4StatementParsing.LOGGER.assertTrue(builder.getTokenType() == JSTokenTypes.NAMESPACE_KEYWORD);
 
         builder.advanceLexer();
@@ -337,8 +337,8 @@ public class EcmaScript4StatementParsing extends StatementParsing {
         return true;
     }
 
-    private void parseUseNamespaceDirective(final PsiBuilder builder) {
-        final PsiBuilder.Marker useNSStatement = builder.mark();
+    private void parseUseNamespaceDirective(PsiBuilder builder) {
+        PsiBuilder.Marker useNSStatement = builder.mark();
         builder.advanceLexer();
 
         if (builder.getTokenType() != JSTokenTypes.NAMESPACE_KEYWORD) {
@@ -363,12 +363,12 @@ public class EcmaScript4StatementParsing extends StatementParsing {
         useNSStatement.done(JSElementTypes.USE_NAMESPACE_DIRECTIVE);
     }
 
-    private void parseClass(final PsiBuilder builder) {
+    private void parseClass(PsiBuilder builder) {
         parseClassNoMarker(builder, builder.mark());
     }
 
-    private void parseClassNoMarker(final PsiBuilder builder, final @Nonnull PsiBuilder.Marker clazz) {
-        final IElementType tokenType = builder.getTokenType();
+    private void parseClassNoMarker(PsiBuilder builder, @Nonnull PsiBuilder.Marker clazz) {
+        IElementType tokenType = builder.getTokenType();
         EcmaScript4StatementParsing.LOGGER.assertTrue(
             JSTokenTypes.CLASS_KEYWORD == tokenType || JSTokenTypes.INTERFACE_KEYWORD == tokenType
         );
@@ -390,12 +390,12 @@ public class EcmaScript4StatementParsing extends StatementParsing {
         clazz.done(JSElementTypes.CLASS);
     }
 
-    private void parseReferenceList(final PsiBuilder builder) {
-        final IElementType tokenType = builder.getTokenType();
+    private void parseReferenceList(PsiBuilder builder) {
+        IElementType tokenType = builder.getTokenType();
         EcmaScript4StatementParsing.LOGGER.assertTrue(
             tokenType == JSTokenTypes.EXTENDS_KEYWORD || tokenType == JSTokenTypes.IMPLEMENTS_KEYWORD
         );
-        final PsiBuilder.Marker referenceList = builder.mark();
+        PsiBuilder.Marker referenceList = builder.mark();
         builder.advanceLexer();
 
         if (getExpressionParsing().parseQualifiedTypeName(builder)) {
@@ -409,8 +409,8 @@ public class EcmaScript4StatementParsing extends StatementParsing {
         referenceList.done(tokenType == JSTokenTypes.EXTENDS_KEYWORD ? JSElementTypes.EXTENDS_LIST : JSElementTypes.IMPLEMENTS_LIST);
     }
 
-    private void parsePackage(final PsiBuilder builder) {
-        final PsiBuilder.Marker packageMarker = builder.mark();
+    private void parsePackage(PsiBuilder builder) {
+        PsiBuilder.Marker packageMarker = builder.mark();
         builder.advanceLexer();
         if (builder.getTokenType() == JSTokenTypes.IDENTIFIER) {
             getExpressionParsing().parseQualifiedTypeName(builder);

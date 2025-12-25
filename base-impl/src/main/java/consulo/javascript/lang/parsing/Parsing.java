@@ -100,12 +100,12 @@ public class Parsing<C extends JavaScriptParsingContext> {
     }
 
     public static void buildTokenElement(IElementType type, PsiBuilder builder) {
-        final PsiBuilder.Marker marker = builder.mark();
+        PsiBuilder.Marker marker = builder.mark();
         builder.advanceLexer();
         marker.done(type);
     }
 
-    public static boolean checkMatches(final PsiBuilder builder, final IElementType token, final LocalizeValue message) {
+    public static boolean checkMatches(PsiBuilder builder, IElementType token, LocalizeValue message) {
         if (builder.getTokenType() == token) {
             builder.advanceLexer();
             return true;

@@ -45,11 +45,11 @@ public class ParametersPerFunctionJSInspection extends JavaScriptInspection {
     @Override
     @RequiredReadAction
     public String buildErrorString(Object state, Object... args) {
-        final JSFunction function = (JSFunction)((PsiElement)args[0]).getParent();
+        JSFunction function = (JSFunction)((PsiElement)args[0]).getParent();
         assert function != null;
-        final JSParameterList parameterList = function.getParameterList();
-        final JSParameter[] parameters = parameterList.getParameters();
-        final int numParameters = parameters.length;
+        JSParameterList parameterList = function.getParameterList();
+        JSParameter[] parameters = parameterList.getParameters();
+        int numParameters = parameters.length;
         return functionHasIdentifier(function)
             ? InspectionJSLocalize.functionHasTooManyParametersErrorString(numParameters).get()
             : InspectionJSLocalize.anonymousFunctionHasTooManyParametersErrorString(numParameters).get();
@@ -63,15 +63,15 @@ public class ParametersPerFunctionJSInspection extends JavaScriptInspection {
     private class Visitor extends BaseInspectionVisitor<ParametersPerFunctionJSInspectionState> {
         @Override
         public void visitJSFunctionDeclaration(@Nonnull JSFunction function) {
-            final JSParameterList parameterList = function.getParameterList();
+            JSParameterList parameterList = function.getParameterList();
             if (parameterList == null) {
                 return;
             }
-            final JSParameter[] parameters = parameterList.getParameters();
+            JSParameter[] parameters = parameterList.getParameters();
             if (parameters == null) {
                 return;
             }
-            final int numParameters = parameters.length;
+            int numParameters = parameters.length;
             if (numParameters <= myState.getLimit()) {
                 return;
             }

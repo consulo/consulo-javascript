@@ -34,8 +34,8 @@ class ComparisonPredicate implements JSElementPredicate {
             return false;
         }
 
-        final JSBinaryExpression expression = (JSBinaryExpression)element;
-        final JSExpression rhs = expression.getROperand();
+        JSBinaryExpression expression = (JSBinaryExpression)element;
+        JSExpression rhs = expression.getROperand();
 
         return (rhs != null && ComparisonUtils.isComparisonOperator((JSExpression)element));
     }

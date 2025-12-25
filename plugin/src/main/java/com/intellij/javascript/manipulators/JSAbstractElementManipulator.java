@@ -27,7 +27,7 @@ import consulo.util.lang.StringUtil;
  */
 abstract class JSAbstractElementManipulator<T extends PsiElement> extends AbstractElementManipulator<T> {
     @Override
-    public T handleContentChange(final T element, final TextRange range, String newContent) throws IncorrectOperationException {
+    public T handleContentChange(T element, TextRange range, String newContent) throws IncorrectOperationException {
         String oldText = element.getText();
         newContent = StringUtil.escapeStringCharacters(newContent);
         String newText = oldText.substring(0, range.getStartOffset()) + newContent + oldText.substring(range.getEndOffset());
@@ -35,5 +35,5 @@ abstract class JSAbstractElementManipulator<T extends PsiElement> extends Abstra
         return (T)element.replace(createTree(newText, element.getProject()));
     }
 
-    protected abstract T createTree(final String newText, final Project project);
+    protected abstract T createTree(String newText, Project project);
 }

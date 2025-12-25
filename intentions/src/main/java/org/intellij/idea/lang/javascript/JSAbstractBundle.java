@@ -36,12 +36,12 @@ public abstract class JSAbstractBundle {
             name = name.substring(0, name.length() - alternateClassNameSuffix.length());
         }
 
-        final int length = name.length();
-        final StringBuilder buffer = new StringBuilder(length + 10);
+        int length = name.length();
+        StringBuilder buffer = new StringBuilder(length + 10);
         boolean addWordSeparator = false;
 
         for (int index = 0; index < length; index++) {
-            final char c = name.charAt(index);
+            char c = name.charAt(index);
 
             if (Character.isUpperCase(c)) {
                 if (addWordSeparator) {
@@ -56,7 +56,7 @@ public abstract class JSAbstractBundle {
             }
         }
 
-        for (final Object suffix : suffixes) {
+        for (Object suffix : suffixes) {
             buffer.append(suffix);
         }
 

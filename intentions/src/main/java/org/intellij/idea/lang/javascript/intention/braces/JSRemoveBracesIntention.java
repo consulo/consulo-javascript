@@ -51,18 +51,18 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention {
     @Override
     @RequiredReadAction
     protected LocalizeValue getTextForElement(PsiElement element) {
-        final JSElement parent = (JSElement)element.getParent();
-        final String keyword;
+        JSElement parent = (JSElement)element.getParent();
+        String keyword;
 
         assert (parent != null);
 
         if (parent instanceof JSIfStatement ifStatement) {
-            final JSStatement elseBranch = ifStatement.getElse();
+            JSStatement elseBranch = ifStatement.getElse();
 
             keyword = element.equals(elseBranch) ? "else" : "if";
         }
         else {
-            final PsiElement keywordChild = parent.getFirstChild();
+            PsiElement keywordChild = parent.getFirstChild();
 
             assert (keywordChild != null);
             keyword = keywordChild.getText();
@@ -74,16 +74,16 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention {
     @Override
     @RequiredReadAction
     protected void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSBlockStatement blockStatement = (JSBlockStatement)element;
-        final JSStatement[] statements = blockStatement.getStatements();
-        final JSStatement statement = statements[0];
+        JSBlockStatement blockStatement = (JSBlockStatement)element;
+        JSStatement[] statements = blockStatement.getStatements();
+        JSStatement statement = statements[0];
 
         // handle comments
-        final JSElement parent = (JSElement)blockStatement.getParent();
+        JSElement parent = (JSElement)blockStatement.getParent();
 
         assert (parent != null);
 
-        final JSElement grandParent = (JSElement)parent.getParent();
+        JSElement grandParent = (JSElement)parent.getParent();
 
         assert (grandParent != null);
 
@@ -99,10 +99,10 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention {
             sibling = sibling.getNextSibling();
         }
 
-        final PsiElement lastChild = blockStatement.getLastChild();
+        PsiElement lastChild = blockStatement.getLastChild();
 
         if (lastChild instanceof PsiComment) {
-            final JSElement nextSibling = (JSElement)parent.getNextSibling();
+            JSElement nextSibling = (JSElement)parent.getNextSibling();
 
             grandParent.addAfter(lastChild, nextSibling);
         }
@@ -118,7 +118,7 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention {
                 return false;
             }
 
-            final PsiElement parent = blockStatement.getParent();
+            PsiElement parent = blockStatement.getParent();
 
             return (parent instanceof JSIfStatement || parent instanceof JSWhileStatement || parent instanceof JSDoWhileStatement
                 || parent instanceof JSForStatement || parent instanceof JSForInStatement)

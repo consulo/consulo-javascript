@@ -32,7 +32,7 @@ public class JsonObjectDescriptor {
     private Map<String, JsonPropertyDescriptor> myProperties = new HashMap<>();
 
     @Nonnull
-    public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @Nonnull final Class<?> value) {
+    public JsonPropertyDescriptor addProperty(@Nullable String propertyName, @Nonnull Class<?> value) {
         if (value == Object.class) {
             throw new IllegalArgumentException("We cant add object type, use JsonObjectDescriptor as parameter");
         }
@@ -41,17 +41,17 @@ public class JsonObjectDescriptor {
     }
 
     @Nonnull
-    public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @Nonnull final JsonObjectDescriptor value) {
+    public JsonPropertyDescriptor addProperty(@Nullable String propertyName, @Nonnull JsonObjectDescriptor value) {
         return myProperties.computeIfAbsent(propertyName, p -> new JsonPropertyDescriptor(p, value));
     }
 
     @Nonnull
-    public JsonPropertyDescriptor addProperty(@Nullable final String propertyName, @Nonnull final NativeArray value) {
+    public JsonPropertyDescriptor addProperty(@Nullable String propertyName, @Nonnull NativeArray value) {
         return myProperties.computeIfAbsent(propertyName, p -> new JsonPropertyDescriptor(p, value));
     }
 
     @Nullable
-    public JsonPropertyDescriptor getProperty(@Nonnull final String propertyName) {
+    public JsonPropertyDescriptor getProperty(@Nonnull String propertyName) {
         JsonPropertyDescriptor propertyDescriptor = myProperties.get(propertyName);
         if (propertyDescriptor != null) {
             return propertyDescriptor;

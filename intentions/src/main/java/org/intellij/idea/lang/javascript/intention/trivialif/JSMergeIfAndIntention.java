@@ -59,14 +59,14 @@ public class JSMergeIfAndIntention extends JSIntention {
         assert (element.getParent() != null);
         assert (element.getParent() instanceof JSIfStatement || element instanceof JSIfStatement);
 
-        final JSIfStatement parentStatement = (JSIfStatement)(element.getParent() instanceof JSIfStatement ? element.getParent() : element);
-        final JSIfStatement childStatement = (JSIfStatement)ConditionalUtils.stripBraces(parentStatement.getThen());
-        final JSExpression childCondition = childStatement.getCondition();
-        final JSExpression parentCondition = parentStatement.getCondition();
-        final String childConditionText = ParenthesesUtils.getParenthesized(childCondition, ParenthesesUtils.AND_PRECENDENCE);
-        final String parentConditionText = ParenthesesUtils.getParenthesized(parentCondition, ParenthesesUtils.AND_PRECENDENCE);
-        final JSStatement childThenBranch = childStatement.getThen();
-        final String statement = "if (" + parentConditionText + " && " + childConditionText + ')' + childThenBranch.getText();
+        JSIfStatement parentStatement = (JSIfStatement)(element.getParent() instanceof JSIfStatement ? element.getParent() : element);
+        JSIfStatement childStatement = (JSIfStatement)ConditionalUtils.stripBraces(parentStatement.getThen());
+        JSExpression childCondition = childStatement.getCondition();
+        JSExpression parentCondition = parentStatement.getCondition();
+        String childConditionText = ParenthesesUtils.getParenthesized(childCondition, ParenthesesUtils.AND_PRECENDENCE);
+        String parentConditionText = ParenthesesUtils.getParenthesized(parentCondition, ParenthesesUtils.AND_PRECENDENCE);
+        JSStatement childThenBranch = childStatement.getThen();
+        String statement = "if (" + parentConditionText + " && " + childConditionText + ')' + childThenBranch.getText();
 
         JSElementFactory.replaceStatement(parentStatement, statement);
     }
@@ -90,14 +90,14 @@ public class JSMergeIfAndIntention extends JSIntention {
                 }
             }
 
-            final JSIfStatement ifStatement = (JSIfStatement)parent;
+            JSIfStatement ifStatement = (JSIfStatement)parent;
 
             if (ErrorUtil.containsError(ifStatement)) {
                 return false;
             }
 
-            final JSStatement thenBranch = ConditionalUtils.stripBraces(ifStatement.getThen());
-            final JSStatement elseBranch = ConditionalUtils.stripBraces(ifStatement.getElse());
+            JSStatement thenBranch = ConditionalUtils.stripBraces(ifStatement.getThen());
+            JSStatement elseBranch = ConditionalUtils.stripBraces(ifStatement.getElse());
 
             return elseBranch == null && thenBranch instanceof JSIfStatement childIfStatement && childIfStatement.getElse() == null;
         }

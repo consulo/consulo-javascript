@@ -55,13 +55,13 @@ public class JSClassNameMacro extends Macro {
     }
 
     @Override
-    public Result calculateResult(@Nonnull final Expression[] params, final ExpressionContext context) {
-        final PsiElement elementAtCaret = findElementAtCaret(context);
-        final JSResolveUtil.ContextResolver resolver = new JSResolveUtil.ContextResolver(elementAtCaret);
+    public Result calculateResult(@Nonnull Expression[] params, ExpressionContext context) {
+        PsiElement elementAtCaret = findElementAtCaret(context);
+        JSResolveUtil.ContextResolver resolver = new JSResolveUtil.ContextResolver(elementAtCaret);
 
         String text = resolver.getQualifierAsString();
         if (text == null) {
-            final JSFunction previousFunction = PsiTreeUtil.getPrevSiblingOfType(elementAtCaret, JSFunction.class);
+            JSFunction previousFunction = PsiTreeUtil.getPrevSiblingOfType(elementAtCaret, JSFunction.class);
 
             if (previousFunction != null) {
                 text = previousFunction.getName();
@@ -75,7 +75,7 @@ public class JSClassNameMacro extends Macro {
         return null;
     }
 
-    public static PsiElement findElementAtCaret(final ExpressionContext context) {
+    public static PsiElement findElementAtCaret(ExpressionContext context) {
         Project project = context.getProject();
         int templateStartOffset = context.getTemplateStartOffset();
         int offset = templateStartOffset > 0 ? context.getTemplateStartOffset() - 1 : context.getTemplateStartOffset();
@@ -87,12 +87,12 @@ public class JSClassNameMacro extends Macro {
     }
 
     @Override
-    public Result calculateQuickResult(@Nonnull final Expression[] params, final ExpressionContext context) {
+    public Result calculateQuickResult(@Nonnull Expression[] params, ExpressionContext context) {
         return null;
     }
 
     @Override
-    public LookupElement[] calculateLookupItems(@Nonnull final Expression[] params, final ExpressionContext context) {
+    public LookupElement[] calculateLookupItems(@Nonnull Expression[] params, ExpressionContext context) {
         return null;
     }
 }

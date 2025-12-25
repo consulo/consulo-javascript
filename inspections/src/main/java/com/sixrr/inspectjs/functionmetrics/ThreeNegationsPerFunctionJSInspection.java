@@ -35,13 +35,13 @@ public class ThreeNegationsPerFunctionJSInspection extends JavaScriptInspection 
     @RequiredReadAction
     @Override
     public String buildErrorString(Object state, Object... args) {
-        final JSFunction function = (JSFunction)((PsiElement)args[0]).getParent();
+        JSFunction function = (JSFunction)((PsiElement)args[0]).getParent();
         assert function != null;
-        final PsiElement lastChild = function.getLastChild();
-        final NegationCountVisitor visitor = new NegationCountVisitor();
+        PsiElement lastChild = function.getLastChild();
+        NegationCountVisitor visitor = new NegationCountVisitor();
         assert lastChild != null;
         lastChild.accept(visitor);
-        final int negationCount = visitor.getNegationCount();
+        int negationCount = visitor.getNegationCount();
         return functionHasIdentifier(function)
             ? InspectionJSLocalize.functionContainsTooManyNegationErrorString(negationCount).get()
             : InspectionJSLocalize.anonymousFunctionContainsTooManyNegationErrorString(negationCount).get();
@@ -55,13 +55,13 @@ public class ThreeNegationsPerFunctionJSInspection extends JavaScriptInspection 
     private static class Visitor extends BaseInspectionVisitor {
         @Override
         public void visitJSFunctionDeclaration(@Nonnull JSFunction function) {
-            final NegationCountVisitor visitor = new NegationCountVisitor();
-            final PsiElement lastChild = function.getLastChild();
+            NegationCountVisitor visitor = new NegationCountVisitor();
+            PsiElement lastChild = function.getLastChild();
             if (!(lastChild instanceof JSBlockStatement)) {
                 return;
             }
             lastChild.accept(visitor);
-            final int negationCount = visitor.getNegationCount();
+            int negationCount = visitor.getNegationCount();
             if (negationCount <= 3) {
                 return;
             }

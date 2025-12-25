@@ -66,7 +66,7 @@ public class JSImportHandlingUtil {
         IMPORT_RESOLVE_CACHE =
         new UserDataCache<>() {
             @Override
-            protected CachedValue<Map<String, JSImportedElementResolveResult>> compute(final PsiElement psiElement, final Object p) {
+            protected CachedValue<Map<String, JSImportedElementResolveResult>> compute(PsiElement psiElement, Object p) {
                 return CachedValuesManager.getManager(psiElement.getProject()).createCachedValue(
                     () -> new CachedValueProvider.Result<Map<String, JSImportedElementResolveResult>>(
                         new ConcurrentHashMap<>(),
@@ -77,8 +77,8 @@ public class JSImportHandlingUtil {
             }
         };
 
-    public static String resolveTypeName(final String _str, @Nonnull PsiElement context) {
-        final JSImportedElementResolveResult resolveResult = _resolveTypeName(_str, context);
+    public static String resolveTypeName(String _str, @Nonnull PsiElement context) {
+        JSImportedElementResolveResult resolveResult = _resolveTypeName(_str, context);
         if (resolveResult == null) {
             return _str;
         }
@@ -86,16 +86,16 @@ public class JSImportHandlingUtil {
     }
 
     // TODO _str should be JSReferenceExpression for caching!
-    private static JSImportedElementResolveResult _resolveTypeName(final String _name, @Nonnull PsiElement context) {
+    private static JSImportedElementResolveResult _resolveTypeName(String _name, @Nonnull PsiElement context) {
         String name = _name;
         if (name == null) {
             return null;
         }
-        final int i = name.indexOf('<');
+        int i = name.indexOf('<');
         String signature = null;
 
         if (i != -1) {
-            final int index = name.lastIndexOf('.', i);
+            int index = name.lastIndexOf('.', i);
             if (index == -1) {
                 return null;
             }
@@ -107,9 +107,9 @@ public class JSImportHandlingUtil {
             return null;
         }
 
-        final Ref<JSImportedElementResolveResult> resultRef = new Ref<JSImportedElementResolveResult>();
+        Ref<JSImportedElementResolveResult> resultRef = new Ref<JSImportedElementResolveResult>();
 
-        final String name1 = name;
+        String name1 = name;
         JSResolveUtil.walkOverStructure(
             context,
             context1 -> {
@@ -117,13 +117,13 @@ public class JSImportHandlingUtil {
 
                 if (context1 instanceof XmlBackedJSClassImpl xmlBackedJSClass) { // reference list in mxml
                     XmlTag rootTag = xmlBackedJSClass.getParent();
-                    final XmlElementDescriptor descriptor = rootTag != null ? rootTag.getDescriptor() : null;
+                    XmlElementDescriptor descriptor = rootTag != null ? rootTag.getDescriptor() : null;
                     PsiElement element = descriptor != null ? descriptor.getDeclaration() : null;
                     if (element instanceof XmlFile xmlFile) {
                         element = XmlBackedJSClassImpl.getXmlBackedClass(xmlFile);
                     }
 
-                    final String s = element instanceof JSClass jsClass ? jsClass.getQualifiedName() : rootTag.getLocalName();
+                    String s = element instanceof JSClass jsClass ? jsClass.getQualifiedName() : rootTag.getLocalName();
                     resolved = new JSImportedElementResolveResult(s);
                 }
                 else if (context1 instanceof JSQualifiedNamedElement qualifiedNamedElement) {
@@ -134,13 +134,13 @@ public class JSImportHandlingUtil {
                         resolved = resolveTypeNameUsingImports(name1, qualifiedNamedElement);
 
                         if (resolved == null) {
-                            final String qName = qualifiedNamedElement.getQualifiedName();
-                            final String packageName = qName != null ? context1 instanceof JSPackageStatement
+                            String qName = qualifiedNamedElement.getQualifiedName();
+                            String packageName = qName != null ? context1 instanceof JSPackageStatement
                                 ? qName + "."
                                 : qName.substring(0, qName.lastIndexOf('.') + 1) : "";
 
                             if (packageName.length() != 0) {
-                                final PsiElement byQName = JSClassBase.findClassFromNamespace(packageName + name1, context1);
+                                PsiElement byQName = JSClassBase.findClassFromNamespace(packageName + name1, context1);
 
                                 if (byQName instanceof JSQualifiedNamedElement byQNameNamed) {
                                     resolved = new JSImportedElementResolveResult(byQNameNamed.getQualifiedName());
@@ -189,9 +189,9 @@ public class JSImportHandlingUtil {
         return result;
     }
 
-    private static JSQualifiedNamedElement resolveTypeNameInTheSamePackage(final String str, final PsiElement context) {
-        final String packageQualifierText = JSResolveUtil.findPackageStatementQualifier(context);
-        final String candidateText = packageQualifierText != null ? packageQualifierText + "." + str : str;
+    private static JSQualifiedNamedElement resolveTypeNameInTheSamePackage(String str, PsiElement context) {
+        String packageQualifierText = JSResolveUtil.findPackageStatementQualifier(context);
+        String candidateText = packageQualifierText != null ? packageQualifierText + "." + str : str;
 
         PsiElement byQName = JSClassBase.findClassFromNamespace(candidateText, context);
         if (byQName instanceof JSQualifiedNamedElement) {
@@ -210,7 +210,7 @@ public class JSImportHandlingUtil {
 
     public static
     @Nullable
-    JSImportedElementResolveResult resolveTypeNameUsingImports(@Nonnull final JSReferenceExpression expr) {
+    JSImportedElementResolveResult resolveTypeNameUsingImports(@Nonnull JSReferenceExpression expr) {
         if (expr.getQualifier() != null) {
             return null;
         }
@@ -227,7 +227,7 @@ public class JSImportHandlingUtil {
 
     private static
     @Nullable
-    JSImportedElementResolveResult resolveTypeNameUsingImports(final @Nonnull String referencedName, PsiNamedElement parent) {
+    JSImportedElementResolveResult resolveTypeNameUsingImports(@Nonnull String referencedName, PsiNamedElement parent) {
         LanguageVersion languageVersion = parent.getLanguageVersion();
         if (languageVersion instanceof JavaScriptVersionWithHelper javaScriptVersionWithHelper) {
             ResolveHelper helper = javaScriptVersionWithHelper.getHelper();
@@ -238,7 +238,7 @@ public class JSImportHandlingUtil {
             }
         }
 
-        final Map<String, JSImportedElementResolveResult> map = IMPORT_RESOLVE_CACHE.get(IMPORT_RESOLVE_CACHE_KEY, parent, null).getValue();
+        Map<String, JSImportedElementResolveResult> map = IMPORT_RESOLVE_CACHE.get(IMPORT_RESOLVE_CACHE_KEY, parent, null).getValue();
         JSImportedElementResolveResult result = map.get(referencedName);
 
         if (result == null) {
@@ -250,10 +250,10 @@ public class JSImportHandlingUtil {
     }
 
     private static JSImportedElementResolveResult resolveTypeNameUsingImportsInner(
-        final String referencedName,
-        final PsiNamedElement parent
+        String referencedName,
+        PsiNamedElement parent
     ) {
-        final Map<String, Object> value = IMPORT_LIST_CACHE.get(IMPORT_LIST_CACHE_KEY, parent, null).getValue();
+        Map<String, Object> value = IMPORT_LIST_CACHE.get(IMPORT_LIST_CACHE_KEY, parent, null).getValue();
         JSImportedElementResolveResult expression = FlexImportSupport.tryFindInMap(referencedName, parent, value);
         if (expression != null) {
             return expression;
@@ -263,22 +263,22 @@ public class JSImportHandlingUtil {
             return checkTheSamePackageOrGlobal(referencedName, parent);
         }
         else if (parent instanceof JSFile && parent.getLanguage().isKindOf(JavaScriptSupportLoader.ECMA_SCRIPT_L4)) {
-            final PsiElement element = JSResolveUtil.getClassReferenceForXmlFromContext(parent);
+            PsiElement element = JSResolveUtil.getClassReferenceForXmlFromContext(parent);
 
             if (element instanceof XmlBackedJSClassImpl xmlBackedJSClass) {
-                final ResolveProcessor processor = new ResolveProcessor(referencedName);
-                final boolean b = xmlBackedJSClass.doImportFromScripts(processor, parent);
+                ResolveProcessor processor = new ResolveProcessor(referencedName);
+                boolean b = xmlBackedJSClass.doImportFromScripts(processor, parent);
 
                 if (!b) {
-                    final JSQualifiedNamedElement jsClass = (JSQualifiedNamedElement)processor.getResult();
+                    JSQualifiedNamedElement jsClass = (JSQualifiedNamedElement)processor.getResult();
                     return new JSImportedElementResolveResult(jsClass.getQualifiedName(), jsClass, processor.getImportUsed());
                 }
 
                 JSQualifiedNamedElement jsClass = resolveTypeNameInTheSamePackage(referencedName, element);
 
                 if (jsClass == null) {
-                    final JSClass parentClass = (JSClass)element;
-                    final JSClass[] classes = parentClass.getSuperClasses();
+                    JSClass parentClass = (JSClass)element;
+                    JSClass[] classes = parentClass.getSuperClasses();
 
                     if (classes != null && classes.length > 0 && referencedName.equals(classes[0].getName())) {
                         jsClass = classes[0];
@@ -290,7 +290,7 @@ public class JSImportHandlingUtil {
                 }
             }
             else {
-                final JSImportedElementResolveResult resolveResult = checkTheSamePackageOrGlobal(referencedName, parent);
+                JSImportedElementResolveResult resolveResult = checkTheSamePackageOrGlobal(referencedName, parent);
                 if (resolveResult != null) {
                     return resolveResult;
                 }
@@ -307,7 +307,7 @@ public class JSImportHandlingUtil {
                 return new JSImportedElementResolveResult(jsClass.getQualifiedName(), jsClass, null);
             }
 
-            final Ref<JSImportedElementResolveResult> result = new Ref<JSImportedElementResolveResult>();
+            Ref<JSImportedElementResolveResult> result = new Ref<JSImportedElementResolveResult>();
             processInlineComponentsInScope(
                 xmlBackedJSClass,
                 inlineComponent -> {
@@ -337,8 +337,8 @@ public class JSImportHandlingUtil {
         return true;
     }
 
-    private static JSImportedElementResolveResult checkTheSamePackageOrGlobal(final String referencedName, final PsiNamedElement parent) {
-        final JSQualifiedNamedElement jsClass = resolveTypeNameInTheSamePackage(referencedName, parent);
+    private static JSImportedElementResolveResult checkTheSamePackageOrGlobal(String referencedName, PsiNamedElement parent) {
+        JSQualifiedNamedElement jsClass = resolveTypeNameInTheSamePackage(referencedName, parent);
 
         if (jsClass != null) {
             return new JSImportedElementResolveResult(jsClass.getQualifiedName(), jsClass, null);
@@ -346,20 +346,20 @@ public class JSImportHandlingUtil {
         return null;
     }
 
-    public static boolean tryResolveImports(final PsiScopeProcessor processor, PsiNamedElement parent, @Nonnull PsiElement place) {
+    public static boolean tryResolveImports(PsiScopeProcessor processor, PsiNamedElement parent, @Nonnull PsiElement place) {
         return !isAdequatePlaceForImport(parent, place) || !importClass(processor, parent);
     }
 
-    public static boolean importClass(final PsiScopeProcessor processor, final PsiNamedElement parent) {
+    public static boolean importClass(PsiScopeProcessor processor, PsiNamedElement parent) {
         if (processor instanceof ResolveProcessor resolveProcessor && resolveProcessor.isLocalResolve()) {
             return false;
         }
         ResolveProcessor resolveProcessor = (ResolveProcessor)processor;
-        final String s = resolveProcessor.getName();
+        String s = resolveProcessor.getName();
 
         if (s != null) {
             if (resolveProcessor.specificallyAskingToResolveQualifiedNames()) {
-                final Map<String, Object> value = IMPORT_LIST_CACHE.get(IMPORT_LIST_CACHE_KEY, parent, null).getValue();
+                Map<String, Object> value = IMPORT_LIST_CACHE.get(IMPORT_LIST_CACHE_KEY, parent, null).getValue();
                 JSImportedElementResolveResult resolveResult =
                     FlexImportSupport.tryFindInMap(s, parent, value, resolveProcessor.getQualifiedNameToImport());
                 if (dispatchResult(resolveResult, processor)) {
@@ -367,7 +367,7 @@ public class JSImportHandlingUtil {
                 }
             }
 
-            final JSImportedElementResolveResult expression = resolveTypeNameUsingImports(s, parent);
+            JSImportedElementResolveResult expression = resolveTypeNameUsingImports(s, parent);
 
             if (dispatchResult(expression, processor)) {
                 return true;
@@ -380,7 +380,7 @@ public class JSImportHandlingUtil {
             )) {
                 return false;
             }
-            final String packageQualifierText = JSResolveUtil.findPackageStatementQualifier(parent);
+            String packageQualifierText = JSResolveUtil.findPackageStatementQualifier(parent);
             importClassViaHelper(processor, parent, packageQualifierText);
         }
 
@@ -389,7 +389,7 @@ public class JSImportHandlingUtil {
 
     private static boolean dispatchResult(JSImportedElementResolveResult expression, PsiScopeProcessor processor) {
         if (expression != null) {
-            final PsiElement element = expression.resolvedElement;
+            PsiElement element = expression.resolvedElement;
 
             if (element != null) {
                 ResolveState state = ResolveState.initial();
@@ -404,25 +404,25 @@ public class JSImportHandlingUtil {
     }
 
     public static void importClassViaHelper(
-        final PsiScopeProcessor processor,
-        final PsiNamedElement file,
-        final String packageQualifierText
+        PsiScopeProcessor processor,
+        PsiNamedElement file,
+        String packageQualifierText
     ) {
         for (JSResolveHelper helper : Extensions.getExtensions(JSResolveHelper.EP_NAME)) {
             helper.importClass(processor, file, packageQualifierText);
         }
     }
 
-    public static boolean isAdequatePlaceForImport(final PsiNamedElement parent, @Nonnull PsiElement place) {
+    public static boolean isAdequatePlaceForImport(PsiNamedElement parent, @Nonnull PsiElement place) {
         if (parent instanceof JSFile && !parent.getLanguage().isKindOf(JavaScriptSupportLoader.ECMA_SCRIPT_L4)) {
             return false;
         }
 
         if (place instanceof JSReferenceExpression) {
-            final PsiElement placeParent = place.getParent();
+            PsiElement placeParent = place.getParent();
 
             if (placeParent instanceof JSReferenceExpression) {
-                final PsiElement currentParent = JSResolveUtil.getTopReferenceParent(placeParent);
+                PsiElement currentParent = JSResolveUtil.getTopReferenceParent(placeParent);
 
                 if (JSResolveUtil.isSelfReference(currentParent, place) ||
                     //currentParent instanceof JSDefinitionExpression ||
@@ -443,10 +443,10 @@ public class JSImportHandlingUtil {
 
     private static class ImportListDataCache extends UserDataCache<CachedValue<Map<String, Object>>, PsiElement, Object> {
         @Override
-        protected final CachedValue<Map<String, Object>> compute(final PsiElement owner, Object o) {
+        protected final CachedValue<Map<String, Object>> compute(PsiElement owner, Object o) {
             return CachedValuesManager.getManager(owner.getProject()).createCachedValue(
                 () -> {
-                    final Map<String, Object> result = new HashMap<>();
+                    Map<String, Object> result = new HashMap<>();
                     collect(result, owner, null);
                     return new CachedValueProvider.Result<>(result, owner);
                 },
@@ -454,11 +454,11 @@ public class JSImportHandlingUtil {
             );
         }
 
-        private static void collect(final Map<String, Object> result, final PsiElement owner, Set<PsiFile> visitedIncludes) {
+        private static void collect(Map<String, Object> result, PsiElement owner, Set<PsiFile> visitedIncludes) {
             PsiElement[] children = PsiElement.EMPTY_ARRAY;
 
             if (owner instanceof JSIncludeDirective includeDirective) {
-                final PsiFile file = includeDirective.resolveFile();
+                PsiFile file = includeDirective.resolveFile();
                 if (file != null && (visitedIncludes == null || !visitedIncludes.contains(file))) {
                     if (visitedIncludes == null) {
                         visitedIncludes = new HashSet<>();
@@ -476,7 +476,7 @@ public class JSImportHandlingUtil {
 
             for (PsiElement c : children) {
                 if (c instanceof JSImportStatement) {
-                    final JSImportStatement s = ((JSImportStatement)c);
+                    JSImportStatement s = ((JSImportStatement)c);
 
                     if (s.getImportText() != null) {
                         FlexImportSupport.appendToMap(result, s);

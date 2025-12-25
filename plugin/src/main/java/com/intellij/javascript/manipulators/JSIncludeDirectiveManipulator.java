@@ -28,7 +28,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class JSIncludeDirectiveManipulator extends JSAbstractElementManipulator<JSIncludeDirectiveImpl> {
     @Override
-    protected JSIncludeDirectiveImpl createTree(final String newText, final Project project) {
+    protected JSIncludeDirectiveImpl createTree(String newText, Project project) {
         return (JSIncludeDirectiveImpl)JSChangeUtil.createStatementFromText(project, newText).getPsi();
     }
 

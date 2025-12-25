@@ -43,11 +43,11 @@ public class IncrementDecrementResultUsedJSInspection extends JavaScriptInspecti
     private static class Visitor extends BaseInspectionVisitor {
         @Override
         public void visitJSPrefixExpression(JSPrefixExpression expression) {
-            final IElementType sign = expression.getOperationSign();
+            IElementType sign = expression.getOperationSign();
             if (!JSTokenTypes.PLUSPLUS.equals(sign) && !JSTokenTypes.MINUSMINUS.equals(sign)) {
                 return;
             }
-            final PsiElement parent = expression.getParent();
+            PsiElement parent = expression.getParent();
             if (parent == null) {
                 return;
             }
@@ -63,11 +63,11 @@ public class IncrementDecrementResultUsedJSInspection extends JavaScriptInspecti
 
         @Override
         public void visitJSPostfixExpression(JSPostfixExpression jsPostfixExpression) {
-            final IElementType sign = jsPostfixExpression.getOperationSign();
+            IElementType sign = jsPostfixExpression.getOperationSign();
             if (!JSTokenTypes.PLUSPLUS.equals(sign) && !JSTokenTypes.MINUSMINUS.equals(sign)) {
                 return;
             }
-            final PsiElement parent = jsPostfixExpression.getParent();
+            PsiElement parent = jsPostfixExpression.getParent();
             if (parent == null) {
                 return;
             }

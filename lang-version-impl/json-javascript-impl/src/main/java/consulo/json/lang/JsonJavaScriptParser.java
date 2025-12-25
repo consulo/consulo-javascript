@@ -28,7 +28,7 @@ public class JsonJavaScriptParser implements PsiParser {
     @Nonnull
     @Override
     public ASTNode parse(@Nonnull IElementType root, @Nonnull PsiBuilder builder, @Nonnull LanguageVersion languageVersion) {
-        final PsiBuilder.Marker rootMarker = builder.mark();
+        PsiBuilder.Marker rootMarker = builder.mark();
         parseRoot(builder);
         rootMarker.done(root);
         return builder.getTreeBuilt();
@@ -56,7 +56,7 @@ public class JsonJavaScriptParser implements PsiParser {
         }
     }
 
-    private void parseProperty(final PsiBuilder builder) {
+    private void parseProperty(PsiBuilder builder) {
         if (myPropertyDepth > 1000) {
             builder.error("Too big depth for property");
             int braceCount = 0;
@@ -85,8 +85,8 @@ public class JsonJavaScriptParser implements PsiParser {
             }
         }
 
-        final IElementType nameToken = builder.getTokenType();
-        final PsiBuilder.Marker property = builder.mark();
+        IElementType nameToken = builder.getTokenType();
+        PsiBuilder.Marker property = builder.mark();
         myPropertyDepth++;
 
         if (isNotPropertyStart(nameToken)) {
@@ -103,9 +103,9 @@ public class JsonJavaScriptParser implements PsiParser {
         property.done(JSElementTypes.PROPERTY);
     }
 
-    public void parseObjectLiteralExpression(final PsiBuilder builder) {
+    public void parseObjectLiteralExpression(PsiBuilder builder) {
         LOG.assertTrue(builder.getTokenType() == JSTokenTypes.LBRACE);
-        final PsiBuilder.Marker expr = builder.mark();
+        PsiBuilder.Marker expr = builder.mark();
         builder.advanceLexer();
 
         IElementType elementType = builder.getTokenType();
@@ -141,21 +141,21 @@ public class JsonJavaScriptParser implements PsiParser {
         expr.done(JSElementTypes.OBJECT_LITERAL_EXPRESSION);
     }
 
-    public static boolean isNotPropertyStart(final IElementType elementType) {
+    public static boolean isNotPropertyStart(IElementType elementType) {
         return !JSTokenTypes.IDENTIFIER_TOKENS_SET.contains(elementType)
             && !JavaScriptTokenSets.STRING_LITERALS.contains(elementType)
             && elementType != JSTokenTypes.NUMERIC_LITERAL;
     }
 
-    public void parseArrayLiteralExpression(final PsiBuilder builder) {
+    public void parseArrayLiteralExpression(PsiBuilder builder) {
         JsonJavaScriptParser.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.LBRACKET);
-        final PsiBuilder.Marker expr = builder.mark();
+        PsiBuilder.Marker expr = builder.mark();
         builder.advanceLexer();
         boolean commaExpected = false;
 
         while (builder.getTokenType() != JSTokenTypes.RBRACKET) {
             if (commaExpected) {
-                final boolean b = Parsing.checkMatches(builder, JSTokenTypes.COMMA, JavaScriptLocalize.javascriptParserMessageExpectedComma());
+                boolean b = Parsing.checkMatches(builder, JSTokenTypes.COMMA, JavaScriptLocalize.javascriptParserMessageExpectedComma());
                 if (!b) {
                     break;
                 }
@@ -181,7 +181,7 @@ public class JsonJavaScriptParser implements PsiParser {
     }
 
     private boolean parseValue(PsiBuilder builder) {
-        final IElementType firstToken = builder.getTokenType();
+        IElementType firstToken = builder.getTokenType();
         if (firstToken == JSTokenTypes.NUMERIC_LITERAL ||
             firstToken == JSTokenTypes.STRING_LITERAL ||
             firstToken == JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL ||

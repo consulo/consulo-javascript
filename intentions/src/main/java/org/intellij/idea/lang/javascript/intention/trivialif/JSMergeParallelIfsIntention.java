@@ -55,13 +55,13 @@ public class JSMergeParallelIfsIntention extends JSIntention {
     @Override
     @RequiredReadAction
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final PsiElement nextElement = JSElementFactory.getNonWhiteSpaceSibling(element, true);
+        PsiElement nextElement = JSElementFactory.getNonWhiteSpaceSibling(element, true);
 
         assert (nextElement != null);
 
-        final JSIfStatement firstStatement = (JSIfStatement)element;
-        final JSIfStatement secondStatement = (JSIfStatement)nextElement;
-        final StringBuilder statementBuffer = new StringBuilder();
+        JSIfStatement firstStatement = (JSIfStatement)element;
+        JSIfStatement secondStatement = (JSIfStatement)nextElement;
+        StringBuilder statementBuffer = new StringBuilder();
 
         this.mergeIfStatements(statementBuffer, firstStatement, secondStatement);
         JSElementFactory.replaceStatement(firstStatement, statementBuffer.toString());
@@ -70,11 +70,11 @@ public class JSMergeParallelIfsIntention extends JSIntention {
 
     @RequiredReadAction
     private void mergeIfStatements(StringBuilder statementBuffer, JSIfStatement firstStatement, JSIfStatement secondStatement) {
-        final JSExpression condition = firstStatement.getCondition();
-        final JSStatement firstThenBranch = firstStatement.getThen();
-        final JSStatement secondThenBranch = secondStatement.getThen();
-        final JSStatement firstElseBranch = firstStatement.getElse();
-        final JSStatement secondElseBranch = secondStatement.getElse();
+        JSExpression condition = firstStatement.getCondition();
+        JSStatement firstThenBranch = firstStatement.getThen();
+        JSStatement secondThenBranch = secondStatement.getThen();
+        JSStatement firstElseBranch = firstStatement.getElse();
+        JSStatement secondElseBranch = secondStatement.getElse();
 
         statementBuffer.append("if (").append(condition.getText()).append(')');
         ControlFlowUtils.appendStatementsInSequence(statementBuffer, firstThenBranch, secondThenBranch);
@@ -103,23 +103,23 @@ public class JSMergeParallelIfsIntention extends JSIntention {
         }
 
         public static boolean ifStatementsCanBeMerged(JSIfStatement statement1, JSIfStatement statement2) {
-            final JSStatement thenBranch = statement1.getThen();
-            final JSStatement elseBranch = statement1.getElse();
+            JSStatement thenBranch = statement1.getThen();
+            JSStatement elseBranch = statement1.getElse();
             if (thenBranch == null) {
                 return false;
             }
-            final JSExpression firstCondition = statement1.getCondition();
-            final JSExpression secondCondition = statement2.getCondition();
+            JSExpression firstCondition = statement1.getCondition();
+            JSExpression secondCondition = statement2.getCondition();
             if (!EquivalenceChecker.expressionsAreEquivalent(firstCondition, secondCondition)) {
                 return false;
             }
 
-            final JSStatement nextThenBranch = statement2.getThen();
+            JSStatement nextThenBranch = statement2.getThen();
             if (!ControlFlowUtils.canBeMerged(thenBranch, nextThenBranch)) {
                 return false;
             }
 
-            final JSStatement nextElseBranch = statement2.getElse();
+            JSStatement nextElseBranch = statement2.getElse();
             return (elseBranch == null || nextElseBranch == null || ControlFlowUtils.canBeMerged(elseBranch, nextElseBranch));
         }
     }

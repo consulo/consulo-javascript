@@ -198,7 +198,7 @@ public class JSDocumentationUtils {
                         commentNode = null;
                     }
 
-                    final String text = resultCommentNode.getText();
+                    String text = resultCommentNode.getText();
                     if (text.startsWith("//")) {
                         return text.substring(2);
                     }
@@ -213,10 +213,10 @@ public class JSDocumentationUtils {
             commentLineIterator = new StringTokenizer(text, "\r\n");
         }
 
-        final boolean needPlainCharData = processor.needsPlainCommentData();
+        boolean needPlainCharData = processor.needsPlainCommentData();
 
         while (commentLineIterator.hasMoreElements()) {
-            final String s = (String)commentLineIterator.nextElement();
+            String s = (String)commentLineIterator.nextElement();
             if (s.indexOf('@') == -1 && s.indexOf(':') == -1 && !needPlainCharData) {
                 continue;
             }
@@ -224,7 +224,7 @@ public class JSDocumentationUtils {
             String commentText = s.replace('\t', ' ');
 
             for (Map.Entry<Pattern, String> entry : prefixToPatternToHintMap.entrySet()) {
-                final Matcher matcher = commentText.contains(entry.getValue()) ? entry.getKey().matcher(commentText) : null;
+                Matcher matcher = commentText.contains(entry.getValue()) ? entry.getKey().matcher(commentText) : null;
                 if (matcher == null) {
                     continue;
                 }
@@ -238,15 +238,15 @@ public class JSDocumentationUtils {
             boolean matchedSomething = false;
 
             for (Map.Entry<Pattern, String> entry : PATTERN_TO_HINT_MAP.entrySet()) {
-                final Matcher matcher = commentText.contains(entry.getValue()) ? entry.getKey().matcher(commentText) : null;
+                Matcher matcher = commentText.contains(entry.getValue()) ? entry.getKey().matcher(commentText) : null;
                 if (matcher == null) {
                     continue;
                 }
 
                 if (matcher.matches()) {
-                    final JSDocumentationProcessor.MetaDocType docType = PATTERN_TO_META_DOC_TYPE_MAP.get(entry.getKey());
+                    JSDocumentationProcessor.MetaDocType docType = PATTERN_TO_META_DOC_TYPE_MAP.get(entry.getKey());
                     if (docType != null) {
-                        final int groupCount = matcher.groupCount();
+                        int groupCount = matcher.groupCount();
                         String remainingLineContent = groupCount > 0 ? matcher.group(groupCount) : null;
                         String matchName = groupCount > 1 ? matcher.group(1) : null;
                         String matchValue = groupCount > 2 ? matcher.group(2) : null;
@@ -255,8 +255,8 @@ public class JSDocumentationUtils {
                         boolean reportAboutFieldInParameter = false;
                         boolean reportAboutDefaultValue = false;
 
-                        final int groupForInitialValue = 6;
-                        final int groupForFieldName = 5;
+                        int groupForInitialValue = 6;
+                        int groupForFieldName = 5;
                         String fieldName = null;
 
                         if (groupCount == 7 && entry.getKey() == JS_DOC_PARAMETERS_PATTERN) {
@@ -573,7 +573,7 @@ public class JSDocumentationUtils {
                         }
 
                         @Override
-                        public boolean onCommentLine(@Nonnull final String line) {
+                        public boolean onCommentLine(@Nonnull String line) {
                             return true;
                         }
 
@@ -590,7 +590,7 @@ public class JSDocumentationUtils {
                             for (MetaDocType expectedType : expectedTypes) {
                                 if (type == expectedType) {
                                     if (type == MetaDocType.TYPE && _anchor instanceof JSFunction function) {
-                                        final JSParameterList jsParameterList = function.getParameterList();
+                                        JSParameterList jsParameterList = function.getParameterList();
                                         if (jsParameterList != null && jsParameterList.getParameters().length > 0) {
                                             return true;
                                         }
@@ -618,7 +618,7 @@ public class JSDocumentationUtils {
     }
 
     @RequiredReadAction
-    public static String findType(final PsiElement def) {
+    public static String findType(PsiElement def) {
         return findDocForAnchor(def, JSDocumentationProcessor.MetaDocType.TYPE);
     }
 
@@ -646,7 +646,7 @@ public class JSDocumentationUtils {
             element = PsiTreeUtil.getParentOfType(element, JSStatement.class, JSProperty.class);
         }
 
-        final PsiElement docComment = element != null ? findDocComment(element) : null;
+        PsiElement docComment = element != null ? findDocComment(element) : null;
         if (docComment != null) {
             final boolean[] deprecatedStatus = new boolean[1];
 
@@ -659,7 +659,7 @@ public class JSDocumentationUtils {
                     }
 
                     @Override
-                    public boolean onCommentLine(@Nonnull final String line) {
+                    public boolean onCommentLine(@Nonnull String line) {
                         return true;
                     }
 
@@ -693,7 +693,7 @@ public class JSDocumentationUtils {
         String presentableName,
         @Nullable String presentableFileName
     ) {
-        final PsiFile containingFile = element != null ? element.getContainingFile() : null;
+        PsiFile containingFile = element != null ? element.getContainingFile() : null;
         String fileName = containingFile == null
             ? null
             : !JSResolveUtil.isPredefinedFile(containingFile)
@@ -710,7 +710,7 @@ public class JSDocumentationUtils {
     }
 
     @RequiredReadAction
-    private static String evaluateTypeFromParameter(final JSParameter parameter) {
+    private static String evaluateTypeFromParameter(JSParameter parameter) {
         String s = evaluateTypeFromVariable(parameter);
 
         if (s == null) {
@@ -735,8 +735,8 @@ public class JSDocumentationUtils {
     }
 
     @RequiredReadAction
-    private static String evaluateTypeFromFunction(final JSFunction function) {
-        final ASTNode lastCommentInFunctionBody = findTrailingCommentInFunctionBody(function);
+    private static String evaluateTypeFromFunction(JSFunction function) {
+        ASTNode lastCommentInFunctionBody = findTrailingCommentInFunctionBody(function);
 
         String typeString = null;
         if (lastCommentInFunctionBody != null) {
@@ -750,7 +750,7 @@ public class JSDocumentationUtils {
     }
 
     @RequiredReadAction
-    private static String evaluateTypeFromVariable(final JSVariable variable) {
+    private static String evaluateTypeFromVariable(JSVariable variable) {
         PsiElement prevSibling = variable.getFirstChild();
         if (prevSibling != null && prevSibling.getNode().getElementType() == JSTokenTypes.IDENTIFIER) {
             prevSibling = variable.getPrevSibling();
@@ -786,7 +786,7 @@ public class JSDocumentationUtils {
     }
 
     @RequiredReadAction
-    public static String findTypeFromComments(final JSNamedElement element) {
+    public static String findTypeFromComments(JSNamedElement element) {
         if (element instanceof JSParameter parameter) {
             return evaluateTypeFromParameter(parameter);
         }

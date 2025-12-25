@@ -42,7 +42,7 @@ public class BlockStatementJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSBlock(JSBlockStatement jsBlockStatement) {
             super.visitJSBlock(jsBlockStatement);
-            final PsiElement parent = jsBlockStatement.getParent();
+            PsiElement parent = jsBlockStatement.getParent();
             if (parent instanceof JSIfStatement
                 || parent instanceof JSLoopStatement
                 || parent instanceof JSWithStatement

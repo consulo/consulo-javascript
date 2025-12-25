@@ -55,7 +55,7 @@ public class NestedFunctionCallJSInspection extends JavaScriptInspection {
             if (outerExpression == null) {
                 return;
             }
-            final PsiElement parent = outerExpression.getParent();
+            PsiElement parent = outerExpression.getParent();
             if (!(parent instanceof JSArgumentList && parent.getParent() instanceof JSCallExpression)) {
                 return;
             }

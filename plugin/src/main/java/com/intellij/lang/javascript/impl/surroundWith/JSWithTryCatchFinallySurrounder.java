@@ -64,12 +64,12 @@ public class JSWithTryCatchFinallySurrounder extends JSStatementSurrounder {
     @RequiredReadAction
     protected TextRange getSurroundSelectionRange(ASTNode statementNode) {
         JSTryStatement stmt = (JSTryStatement)statementNode.getPsi();
-        final JSCatchBlock catchBlock = stmt.getCatchBlock();
+        JSCatchBlock catchBlock = stmt.getCatchBlock();
         if (catchBlock != null) {
             int offset = catchBlock.getStatement().getFirstChild().getNode().getStartOffset() + 1;
             return new TextRange(offset, offset);
         }
-        final JSStatement finallyStmt = stmt.getFinallyStatement();
+        JSStatement finallyStmt = stmt.getFinallyStatement();
         if (finallyStmt != null) {
             int offset = finallyStmt.getFirstChild().getNode().getStartOffset() + 1;
             return new TextRange(offset, offset);

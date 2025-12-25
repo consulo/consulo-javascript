@@ -39,7 +39,7 @@ public class JSImportedElementResolveResult {
         importStatement = _importString;
     }
 
-    public JSImportedElementResolveResult appendSignature(final String s) {
+    public JSImportedElementResolveResult appendSignature(String s) {
         return new JSImportedElementResolveResult(qualifiedName + s, resolvedElement, importStatement);
     }
 }

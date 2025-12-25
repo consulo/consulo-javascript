@@ -41,7 +41,7 @@ public class JSAttributeListStubImpl extends StubBase<JSAttributeList> implement
     private int myFlags;
     private String myNamespace;
 
-    public JSAttributeListStubImpl(String namespace, int flags, final StubElement parent, final IStubElementType elementType) {
+    public JSAttributeListStubImpl(String namespace, int flags, StubElement parent, IStubElementType elementType) {
         super(parent, elementType);
         myNamespace = namespace;
         myFlags = flags;
@@ -49,14 +49,14 @@ public class JSAttributeListStubImpl extends StubBase<JSAttributeList> implement
 
     @Override
     public JSAttributeList.AccessType getAccessType() {
-        final int i = (myFlags >> VISIBILITY_TAG_SHIFT) & VISIBILITY_TAG_MASK;
+        int i = (myFlags >> VISIBILITY_TAG_SHIFT) & VISIBILITY_TAG_MASK;
         return types[i];
     }
 
     private static final JSAttributeList.AccessType[] types = JSAttributeList.AccessType.values();
 
     @Override
-    public boolean hasModifier(final JSAttributeList.ModifierType modifier) {
+    public boolean hasModifier(JSAttributeList.ModifierType modifier) {
         return ((myFlags >> getFlagShift(modifier)) & 0x1) != 0;
     }
 
@@ -71,8 +71,8 @@ public class JSAttributeListStubImpl extends StubBase<JSAttributeList> implement
     }
 
     public static int getFlags(JSAttributeList attributeList) {
-        final JSAttributeList.AccessType accessType = attributeList.getAccessType();
-        final int ord = accessType.ordinal();
+        JSAttributeList.AccessType accessType = attributeList.getAccessType();
+        int ord = accessType.ordinal();
 
         int flags = (ord << VISIBILITY_TAG_SHIFT);
 
@@ -82,7 +82,7 @@ public class JSAttributeListStubImpl extends StubBase<JSAttributeList> implement
         return flags;
     }
 
-    private static int getFlagShift(final JSAttributeList.ModifierType modifier) {
+    private static int getFlagShift(JSAttributeList.ModifierType modifier) {
         int shift = -1;
         if (modifier == JSAttributeList.ModifierType.STATIC) {
             shift = STATIC_PROPERTY_SHIFT;
@@ -108,7 +108,7 @@ public class JSAttributeListStubImpl extends StubBase<JSAttributeList> implement
         return shift;
     }
 
-    private static int setFlag(int old, final JSAttributeList.ModifierType modifier, boolean value) {
+    private static int setFlag(int old, JSAttributeList.ModifierType modifier, boolean value) {
         if (value) {
             return old | (1 << getFlagShift(modifier));
         }

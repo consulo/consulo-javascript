@@ -231,12 +231,12 @@ public class JSStructureViewModel extends TextEditorBasedStructureViewModel {
 
         PsiFile file = getPsiFile();
         if (editorElement == null && !(file instanceof JSFile)) {
-            final int offset = getEditor().getCaretModel().getOffset();
+            int offset = getEditor().getCaretModel().getOffset();
             PsiElement at = file.findElementAt(offset);
             PsiLanguageInjectionHost injectionHost = PsiTreeUtil.getParentOfType(at, PsiLanguageInjectionHost.class);
 
             if (injectionHost != null) {
-                final SimpleReference<PsiElement> ref = new SimpleReference<>();
+                SimpleReference<PsiElement> ref = new SimpleReference<>();
                 InjectedLanguageManager.getInstance(file.getProject()).enumerate(
                     injectionHost,
                     (injectedPsi, places) -> {

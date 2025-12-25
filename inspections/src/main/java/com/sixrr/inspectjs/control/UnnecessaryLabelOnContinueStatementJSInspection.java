@@ -66,8 +66,8 @@ public class UnnecessaryLabelOnContinueStatementJSInspection extends JavaScriptI
 
         @Override
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final PsiElement continueKeywordElement = descriptor.getPsiElement();
-            final JSContinueStatement continueStatement = (JSContinueStatement) continueKeywordElement.getParent();
+            PsiElement continueKeywordElement = descriptor.getPsiElement();
+            JSContinueStatement continueStatement = (JSContinueStatement) continueKeywordElement.getParent();
             replaceStatement(continueStatement, "continue;");
         }
     }
@@ -79,15 +79,15 @@ public class UnnecessaryLabelOnContinueStatementJSInspection extends JavaScriptI
             if (statement.getLabel() == null) {
                 return;
             }
-            final JSStatement statementToContinue = statement.getStatementToContinue();
+            JSStatement statementToContinue = statement.getStatementToContinue();
             if (statementToContinue == null) {
                 return;
             }
-            final JSLoopStatement containingLoop = PsiTreeUtil.getParentOfType(statement, JSLoopStatement.class);
+            JSLoopStatement containingLoop = PsiTreeUtil.getParentOfType(statement, JSLoopStatement.class);
             if (containingLoop == null) {
                 return;
             }
-            final PsiElement parent = containingLoop.getParent();
+            PsiElement parent = containingLoop.getParent();
             if (!statementToContinue.equals(parent)) {
                 return;
             }

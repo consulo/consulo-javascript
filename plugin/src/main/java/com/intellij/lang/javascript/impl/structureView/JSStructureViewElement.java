@@ -122,8 +122,8 @@ public class JSStructureViewElement implements StructureViewTreeElement {
 
                 TextRange t1 = InjectedLanguageManager.getInstance(e.getProject()).injectedToHost(e, e.getTextRange());
                 TextRange t2 = InjectedLanguageManager.getInstance(e.getProject()).injectedToHost(e, e.getTextRange());
-                final int offset = e.getTextOffset() + t1.getStartOffset();
-                final int offset2 = e2.getTextOffset() + t2.getStartOffset();
+                int offset = e.getTextOffset() + t1.getStartOffset();
+                int offset2 = e2.getTextOffset() + t2.getStartOffset();
 
                 return offset - offset2;
             }

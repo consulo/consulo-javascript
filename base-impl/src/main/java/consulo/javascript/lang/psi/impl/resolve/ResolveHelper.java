@@ -28,7 +28,7 @@ public abstract class ResolveHelper {
     }
 
     @Nullable
-    public JSImportedElementResolveResult resolveTypeNameUsingImports(final @Nonnull String referencedName, PsiNamedElement parent) {
+    public JSImportedElementResolveResult resolveTypeNameUsingImports(@Nonnull String referencedName, PsiNamedElement parent) {
         return null;
     }
 

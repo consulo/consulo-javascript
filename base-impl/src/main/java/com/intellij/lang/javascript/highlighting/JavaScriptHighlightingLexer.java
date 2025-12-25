@@ -56,7 +56,7 @@ public class JavaScriptHighlightingLexer extends LayeredLexer {
                 new IElementType[]{JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL}, IElementType.EMPTY_ARRAY
             );
 
-            final LayeredLexer docLexer = new LayeredLexer(new FlexAdapter(new _JSDocLexer(true)));
+            LayeredLexer docLexer = new LayeredLexer(new FlexAdapter(new _JSDocLexer(true)));
             final Lexer lexer = getHtmlHighlightingLexer();
 
             // Force html highlighting lexer not to return tag content type
@@ -66,7 +66,7 @@ public class JavaScriptHighlightingLexer extends LayeredLexer {
                     final IElementType tagContentType = getTagContentTokenType();
 
                     @Override
-                    public void start(final CharSequence buffer, final int startOffset, final int endOffset, final int initialState) {
+                    public void start(CharSequence buffer, int startOffset, int endOffset, int initialState) {
                         lexer.start(buffer, startOffset, endOffset, initialState);
                     }
 
@@ -77,7 +77,7 @@ public class JavaScriptHighlightingLexer extends LayeredLexer {
 
                     @Override
                     public IElementType getTokenType() {
-                        final IElementType tokenType = lexer.getTokenType();
+                        IElementType tokenType = lexer.getTokenType();
                         if (tokenType == tagContentType) {
                             return JSTokenTypes.JSDOC_TAG_DATA;
                         }

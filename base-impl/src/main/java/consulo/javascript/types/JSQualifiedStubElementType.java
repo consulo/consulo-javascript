@@ -37,8 +37,8 @@ public abstract class JSQualifiedStubElementType<StubT extends JSQualifiedStub<P
 
     @Override
     public void indexStub(@Nonnull StubT stub, @Nonnull IndexSink sink) {
-        final String name = stub.getName();
-        final String fqn = stub.getQualifiedName();
+        String name = stub.getName();
+        String fqn = stub.getQualifiedName();
 
         if (name != null && doIndexName(stub, name, fqn)) {
             sink.occurrence(JavaScriptIndexKeys.ELEMENTS_BY_NAME, name);
@@ -49,11 +49,11 @@ public abstract class JSQualifiedStubElementType<StubT extends JSQualifiedStub<P
         }
     }
 
-    protected boolean doIndexQualifiedName(StubT stub, final String name, final String fqn) {
+    protected boolean doIndexQualifiedName(StubT stub, String name, String fqn) {
         return true;
     }
 
-    protected boolean doIndexName(StubT stub, final String name, final String fqn) {
+    protected boolean doIndexName(StubT stub, String name, String fqn) {
         return true;
     }
 }

@@ -49,7 +49,7 @@ public class JSDeMorgansLawIntention extends JSMutablyNamedIntention {
     @Override
     @RequiredReadAction
     protected LocalizeValue getTextForElement(PsiElement element) {
-        final IElementType tokenType = ((JSBinaryExpression)element).getOperationSign();
+        IElementType tokenType = ((JSBinaryExpression)element).getOperationSign();
 
         return JSTokenTypes.ANDAND.equals(tokenType)
             ? JSIntentionLocalize.boolDeMorgansLawAndToOr()
@@ -66,7 +66,7 @@ public class JSDeMorgansLawIntention extends JSMutablyNamedIntention {
     @RequiredReadAction
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         JSBinaryExpression exp = (JSBinaryExpression)element;
-        final IElementType tokenType = exp.getOperationSign();
+        IElementType tokenType = exp.getOperationSign();
         JSElement parent = (JSElement)exp.getParent();
 
         while (isConjunctionExpression(parent, tokenType)) {
@@ -75,16 +75,16 @@ public class JSDeMorgansLawIntention extends JSMutablyNamedIntention {
             parent = (JSElement)exp.getParent();
         }
 
-        final String newExpression = this.convertConjunctionExpression(exp, tokenType);
+        String newExpression = this.convertConjunctionExpression(exp, tokenType);
 
         JSElementFactory.replaceExpressionWithNegatedExpressionString(exp, newExpression);
     }
 
     @RequiredReadAction
     private String convertConjunctionExpression(JSBinaryExpression exp, IElementType tokenType) {
-        final String leftText = this.getOperandText(exp.getLOperand(), tokenType);
-        final String rightText = this.getOperandText(exp.getROperand(), tokenType);
-        final String flippedConjunction = tokenType.equals(JSTokenTypes.ANDAND) ? "||" : "&&";
+        String leftText = this.getOperandText(exp.getLOperand(), tokenType);
+        String rightText = this.getOperandText(exp.getROperand(), tokenType);
+        String flippedConjunction = tokenType.equals(JSTokenTypes.ANDAND) ? "||" : "&&";
 
         return leftText + flippedConjunction + rightText;
     }

@@ -50,8 +50,8 @@ public class EqualityComparisonWithCoercionJSInspection extends JavaScriptInspec
 
     @Override
     protected InspectionJSFix buildFix(PsiElement location, Object state) {
-        final JSBinaryExpression expression = (JSBinaryExpression)location;
-        final IElementType sign = expression.getOperationSign();
+        JSBinaryExpression expression = (JSBinaryExpression)location;
+        IElementType sign = expression.getOperationSign();
         if (JSTokenTypes.EQEQ == sign) {
             return new EqualityComparisonWithCoercionFix("===");
         }
@@ -76,9 +76,9 @@ public class EqualityComparisonWithCoercionJSInspection extends JavaScriptInspec
 
         @Override
         protected void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final JSBinaryExpression expression = (JSBinaryExpression)descriptor.getPsiElement();
-            final JSExpression lhs = expression.getLOperand();
-            final JSExpression rhs = expression.getROperand();
+            JSBinaryExpression expression = (JSBinaryExpression)descriptor.getPsiElement();
+            JSExpression lhs = expression.getLOperand();
+            JSExpression rhs = expression.getROperand();
             replaceExpression(expression, lhs.getText() + sign + rhs.getText());
         }
     }
@@ -92,15 +92,15 @@ public class EqualityComparisonWithCoercionJSInspection extends JavaScriptInspec
         @Override
         public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
-            final JSExpression lhs = expression.getLOperand();
+            JSExpression lhs = expression.getLOperand();
             if (lhs == null) {
                 return;
             }
-            final JSExpression rhs = expression.getROperand();
+            JSExpression rhs = expression.getROperand();
             if (rhs == null) {
                 return;
             }
-            final IElementType tokenType = expression.getOperationSign();
+            IElementType tokenType = expression.getOperationSign();
             if (!JSTokenTypes.EQEQ.equals(tokenType) && !JSTokenTypes.NE.equals(tokenType)) {
                 return;
             }
@@ -112,7 +112,7 @@ public class EqualityComparisonWithCoercionJSInspection extends JavaScriptInspec
     }
 
     private static boolean mayCauseCoercion(JSExpression expression) {
-        @NonNls final String text = expression.getText();
+        @NonNls String text = expression.getText();
         return "0".equals(text)
             || "0x0".equals(text)
             || "0X0".equals(text)

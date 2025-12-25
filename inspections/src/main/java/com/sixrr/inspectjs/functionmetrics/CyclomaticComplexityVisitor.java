@@ -53,9 +53,9 @@ class CyclomaticComplexityVisitor extends JSRecursiveElementVisitor {
     @Override
     public void visitJSSwitchStatement(@Nonnull JSSwitchStatement statement) {
         super.visitJSSwitchStatement(statement);
-        final JSCaseClause[] caseClauses = statement.getCaseClauses();
+        JSCaseClause[] caseClauses = statement.getCaseClauses();
         for (JSCaseClause clause : caseClauses) {
-            final JSStatement[] statements = clause.getStatements();
+            JSStatement[] statements = clause.getStatements();
             if (statements != null && statements.length != 0) {
                 complexity++;
             }

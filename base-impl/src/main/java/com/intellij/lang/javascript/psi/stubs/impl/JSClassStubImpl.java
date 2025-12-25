@@ -35,8 +35,8 @@ public class JSClassStubImpl extends JSQualifiedObjectStubBase<JSClass> implemen
         String name,
         int flags,
         String qName,
-        final StubElement parentStub,
-        final IStubElementType<JSClassStub, JSClass> elementType
+        StubElement parentStub,
+        IStubElementType<JSClassStub, JSClass> elementType
     ) {
         super(name, flags, qName, parentStub, elementType);
     }

@@ -49,12 +49,12 @@ public class DebuggerStatementJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSExpressionStatement(JSExpressionStatement jsExpressionStatement) {
             super.visitJSExpressionStatement(jsExpressionStatement);
-            final JSExpression expression = jsExpressionStatement.getExpression();
+            JSExpression expression = jsExpressionStatement.getExpression();
 
             if (!(expression instanceof JSReferenceExpression)) {
                 return;
             }
-            @NonNls final String text = expression.getText();
+            @NonNls String text = expression.getText();
             if (!"debugger".equals(text)) {
                 return;
             }

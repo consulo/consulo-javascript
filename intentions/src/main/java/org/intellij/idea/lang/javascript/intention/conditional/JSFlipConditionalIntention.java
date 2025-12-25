@@ -54,15 +54,15 @@ public class JSFlipConditionalIntention extends JSIntention {
     @Override
     @RequiredReadAction
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSConditionalExpression exp = (JSConditionalExpression)element;
-        final JSExpression condition = exp.getCondition();
-        final JSExpression elseExpression = exp.getElse();
-        final JSExpression thenExpression = exp.getThen();
+        JSConditionalExpression exp = (JSConditionalExpression)element;
+        JSExpression condition = exp.getCondition();
+        JSExpression elseExpression = exp.getElse();
+        JSExpression thenExpression = exp.getThen();
 
         assert (elseExpression != null);
         assert (thenExpression != null);
 
-        final String newExpression = BoolUtils.getNegatedExpressionText(condition) + '?' +
+        String newExpression = BoolUtils.getNegatedExpressionText(condition) + '?' +
             elseExpression.getText() + ':' + thenExpression.getText();
 
         JSElementFactory.replaceExpression(exp, newExpression);
@@ -75,7 +75,7 @@ public class JSFlipConditionalIntention extends JSIntention {
                 return false;
             }
 
-            final JSConditionalExpression condition = (JSConditionalExpression)element;
+            JSConditionalExpression condition = (JSConditionalExpression)element;
 
             return condition.getCondition() != null && condition.getThen() != null && condition.getElse() != null;
         }

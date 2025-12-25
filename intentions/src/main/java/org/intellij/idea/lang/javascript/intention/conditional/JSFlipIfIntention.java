@@ -55,17 +55,17 @@ public class JSFlipIfIntention extends JSIntention {
     @Override
     @RequiredReadAction
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSIfStatement exp = (JSIfStatement)element;
-        final JSExpression condition = exp.getCondition();
-        final JSStatement thenBranch = exp.getThen();
-        final JSStatement elseBranch = exp.getElse();
-        final String negatedText = BoolUtils.getNegatedExpressionText(condition);
-        final boolean emptyThenBranch =
+        JSIfStatement exp = (JSIfStatement)element;
+        JSExpression condition = exp.getCondition();
+        JSStatement thenBranch = exp.getThen();
+        JSStatement elseBranch = exp.getElse();
+        String negatedText = BoolUtils.getNegatedExpressionText(condition);
+        boolean emptyThenBranch =
             (thenBranch == null || (thenBranch instanceof JSBlockStatement blockStatement && blockStatement.getStatements().length == 0));
-        final String thenText = emptyThenBranch ? "" : "else " + thenBranch.getText();
-        final String elseText = elseBranch == null ? "{}" : elseBranch.getText();
+        String thenText = emptyThenBranch ? "" : "else " + thenBranch.getText();
+        String elseText = elseBranch == null ? "{}" : elseBranch.getText();
 
-        final String newStatement = "if (" + negatedText + ')' + elseText + thenText;
+        String newStatement = "if (" + negatedText + ')' + elseText + thenText;
 
         JSElementFactory.replaceStatement(exp, newStatement);
     }

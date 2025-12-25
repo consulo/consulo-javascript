@@ -299,7 +299,7 @@ public class ImportUtils {
         List<String> sorted = new ArrayList<>(fqns);
         Collections.sort(sorted, ImportUtils::compareImports);
 
-        final String semicolon = JSChangeUtil.getSemicolon(project);
+        String semicolon = JSChangeUtil.getSemicolon(project);
         StringBuilder s = new StringBuilder();
         for (String fqn : sorted) {
             s.append("import ").append(fqn).append(semicolon);

@@ -28,7 +28,7 @@ import consulo.language.psi.stub.StubElement;
  * Time: 11:29:19 PM
  */
 public class JSAttributeStubImpl extends JSNamedObjectStubBase<JSAttribute> implements JSAttributeStub {
-    public JSAttributeStubImpl(final String name, int flags, final StubElement parentStub) {
+    public JSAttributeStubImpl(String name, int flags, StubElement parentStub) {
         super(name, flags, parentStub, JSElementTypes.ATTRIBUTE);
     }
 }

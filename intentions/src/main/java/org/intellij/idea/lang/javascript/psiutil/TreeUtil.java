@@ -29,16 +29,16 @@ public class TreeUtil {
         if (element == null) {
             return null;
         }
-        final PsiElement sibling = element.getNextSibling();
+        PsiElement sibling = element.getNextSibling();
         if (sibling == null) {
-            final PsiElement parent = element.getParent();
+            PsiElement parent = element.getParent();
             return getNextLeaf(parent);
         }
         return getFirstLeaf(sibling);
     }
 
     private static PsiElement getFirstLeaf(PsiElement element) {
-        final PsiElement[] children = element.getChildren();
+        PsiElement[] children = element.getChildren();
         if (children.length == 0) {
             return element;
         }
@@ -49,16 +49,16 @@ public class TreeUtil {
         if (element == null) {
             return null;
         }
-        final PsiElement sibling = element.getPrevSibling();
+        PsiElement sibling = element.getPrevSibling();
         if (sibling == null) {
-            final PsiElement parent = element.getParent();
+            PsiElement parent = element.getParent();
             return getPrevLeaf(parent);
         }
         return getLastLeaf(sibling);
     }
 
     private static PsiElement getLastLeaf(PsiElement element) {
-        final PsiElement[] children = element.getChildren();
+        PsiElement[] children = element.getChildren();
         if (children.length == 0) {
             return element;
         }

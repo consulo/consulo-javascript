@@ -31,7 +31,7 @@ public abstract class JSNamedObjectStubBase<T extends PsiNamedElement> extends S
     protected final String myName;
     protected final int myFlags;
 
-    protected JSNamedObjectStubBase(String name, int flags, final StubElement parent, final IStubElementType elementType) {
+    protected JSNamedObjectStubBase(String name, int flags, StubElement parent, IStubElementType elementType) {
         super(parent, elementType);
 
         myName = name;

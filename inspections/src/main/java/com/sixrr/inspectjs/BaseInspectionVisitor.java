@@ -36,14 +36,14 @@ public abstract class BaseInspectionVisitor<T> extends JSElementVisitor {
 
     @RequiredReadAction
     protected void registerFunctionCallError(JSCallExpression expression) {
-        final JSExpression methodExpression = expression.getMethodExpression();
+        JSExpression methodExpression = expression.getMethodExpression();
         PsiElement errorLocation = null;
 
         if (methodExpression instanceof JSReferenceExpression referenceExpression) {
             errorLocation = referenceExpression.getReferenceNameElement();
         }
         else if (methodExpression instanceof JSFunction function) {
-            final PsiElement node = function.getNameIdentifier();
+            PsiElement node = function.getNameIdentifier();
             if (node != null) {
                 errorLocation = node;
             }
@@ -56,12 +56,12 @@ public abstract class BaseInspectionVisitor<T> extends JSElementVisitor {
     }
 
     protected void registerStatementError(JSStatement statement, Object... args) {
-        final PsiElement statementToken = statement.getFirstChild();
+        PsiElement statementToken = statement.getFirstChild();
         registerError(statementToken, args);
     }
 
     protected void registerFunctionError(JSFunction function) {
-        final PsiElement identifier = function.getNameIdentifier();
+        PsiElement identifier = function.getNameIdentifier();
         if (identifier == null ||
             !PsiTreeUtil.isAncestor(function, identifier, true)) {
             registerError(function.getFirstChild());
@@ -72,7 +72,7 @@ public abstract class BaseInspectionVisitor<T> extends JSElementVisitor {
     }
 
     protected void registerVariableError(JSVariable variable) {
-        final PsiElement nameIdentifier = variable.getFirstChild();
+        PsiElement nameIdentifier = variable.getFirstChild();
         registerError(nameIdentifier);
     }
 
@@ -80,8 +80,8 @@ public abstract class BaseInspectionVisitor<T> extends JSElementVisitor {
         if (location == null) {
             return;
         }
-        final LocalQuickFix[] fix = createFixes(location, myState);
-        final String description = inspection.buildErrorString(myState, location);
+        LocalQuickFix[] fix = createFixes(location, myState);
+        String description = inspection.buildErrorString(myState, location);
         registerError(location, description, fix);
     }
 
@@ -99,13 +99,13 @@ public abstract class BaseInspectionVisitor<T> extends JSElementVisitor {
         return ProblemHighlightType.GENERIC_ERROR_OR_WARNING;
     }
 
-    protected PsiElement getEditorErrorLocation(final @Nonnull PsiElement location) {
+    protected PsiElement getEditorErrorLocation(@Nonnull PsiElement location) {
         return location;
     }
 
     protected void registerError(PsiElement location, Object... args) {
-        final LocalQuickFix[] fix = createFixes(location, myState);
-        final String description = inspection.buildErrorString(myState, args);
+        LocalQuickFix[] fix = createFixes(location, myState);
+        String description = inspection.buildErrorString(myState, args);
         registerError(location, description, fix);
     }
 
@@ -114,11 +114,11 @@ public abstract class BaseInspectionVisitor<T> extends JSElementVisitor {
         if (!onTheFly && inspection.buildQuickFixesOnlyForOnTheFlyErrors()) {
             return null;
         }
-        final InspectionJSFix[] fixes = inspection.buildFixes(location);
+        InspectionJSFix[] fixes = inspection.buildFixes(location);
         if (fixes != null) {
             return fixes;
         }
-        final InspectionJSFix fix = inspection.buildFix(location, state);
+        InspectionJSFix fix = inspection.buildFix(location, state);
         if (fix == null) {
             return null;
         }
@@ -131,7 +131,7 @@ public abstract class BaseInspectionVisitor<T> extends JSElementVisitor {
             return null;
         }
         else {
-            final int numErrors = errors.size();
+            int numErrors = errors.size();
             return errors.toArray(new ProblemDescriptor[numErrors]);
         }
     }

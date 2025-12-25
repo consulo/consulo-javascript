@@ -51,8 +51,8 @@ public abstract class JSStatementSurrounder implements Surrounder {
         ASTNode insertBeforeNode = getInsertBeforeNode(node);
 
         for (PsiElement element : elements) {
-            final ASTNode childNode = element.getNode();
-            final ASTNode childNodeCopy = childNode.copyElement();
+            ASTNode childNode = element.getNode();
+            ASTNode childNodeCopy = childNode.copyElement();
 
             container.getNode().removeChild(childNode);
             insertBeforeNode.getTreeParent().addChild(childNodeCopy, insertBeforeNode);

@@ -38,7 +38,7 @@ public class JSFunctionVisitor extends JSElementVisitor {
         }
         else if (element instanceof JSReferenceExpression) {
             if (element == element.getParent().getChildren()[0]) {
-                final PsiElement firstChild = element.getParent().getFirstChild();
+                PsiElement firstChild = element.getParent().getFirstChild();
 
                 if (firstChild != null && firstChild.toString().indexOf(JSTokenTypes.NEW_KEYWORD.toString()) >= 0) {
                     this.visitJSNewExpression(new JSNewExpressionImpl(element.getParent().getNode()));
@@ -51,7 +51,7 @@ public class JSFunctionVisitor extends JSElementVisitor {
 
         super.visitElement(element);
 
-        for (final PsiElement childElement : element.getChildren()) {
+        for (PsiElement childElement : element.getChildren()) {
             childElement.accept(this);
         }
     }
@@ -66,7 +66,7 @@ public class JSFunctionVisitor extends JSElementVisitor {
         int count = 0;
         long start = System.currentTimeMillis();
 
-        for (final JSElement element : getEmbeddedJSElements(file)) {
+        for (JSElement element : getEmbeddedJSElements(file)) {
             this.visitElement(element);
             count++;
         }
@@ -76,7 +76,7 @@ public class JSFunctionVisitor extends JSElementVisitor {
         );
     }
 
-    static Iterable<JSElement> getEmbeddedJSElements(final XmlFile file) {
+    static Iterable<JSElement> getEmbeddedJSElements(XmlFile file) {
         return () -> new EmbeddedJSElementIterator(file);
     }
 

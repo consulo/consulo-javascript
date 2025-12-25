@@ -29,11 +29,11 @@ import org.jetbrains.annotations.NonNls;
  * Time: 3:55:54 PM
  */
 public class JSDocParsing {
-    public static void parseJSDoc(final PsiBuilder builder) {
-        final PsiBuilder.Marker root = builder.mark();
+    public static void parseJSDoc(PsiBuilder builder) {
+        PsiBuilder.Marker root = builder.mark();
 
         while (!builder.eof()) {
-            final IElementType tokenType = builder.getTokenType();
+            IElementType tokenType = builder.getTokenType();
 
             if (tokenType == JSDocTokenTypes.DOC_TAG_NAME) {
                 if (parseDocTag(builder)) {
@@ -47,12 +47,12 @@ public class JSDocParsing {
         root.done(JSTokenTypes.DOC_COMMENT);
     }
 
-    private static boolean parseDocTag(final PsiBuilder builder) {
+    private static boolean parseDocTag(PsiBuilder builder) {
         assert builder.getTokenType() == JSDocTokenTypes.DOC_TAG_NAME;
-        final PsiBuilder.Marker docTagMarker = builder.mark();
+        PsiBuilder.Marker docTagMarker = builder.mark();
 
         try {
-            final @NonNls String tagName = builder.getTokenText();
+            @NonNls String tagName = builder.getTokenText();
 
             builder.advanceLexer();
             if ("@param".equals(tagName)) {
@@ -83,7 +83,7 @@ public class JSDocParsing {
                 }
             }
             else {
-                final boolean hasDocTagValue = isToCreateDocTagValue(tagName);
+                boolean hasDocTagValue = isToCreateDocTagValue(tagName);
                 if (!hasDocTagValue) {
                     return true;
                 }
@@ -103,18 +103,18 @@ public class JSDocParsing {
         return true;
     }
 
-    private static void createDocTagValue(final PsiBuilder builder) {
+    private static void createDocTagValue(PsiBuilder builder) {
         PsiBuilder.Marker marker = builder.mark();
         builder.advanceLexer();
         marker.done(JSDocTokenTypes.DOC_TAG_VALUE);
     }
 
-    private static boolean isInvalidTokenType(final PsiBuilder builder) {
-        final IElementType tokenType = builder.getTokenType();
+    private static boolean isInvalidTokenType(PsiBuilder builder) {
+        IElementType tokenType = builder.getTokenType();
         return builder.eof() || tokenType == JSDocTokenTypes.DOC_COMMENT_LEADING_ASTERISK || tokenType == JSDocTokenTypes.DOC_COMMENT_END;
     }
 
-    private static boolean isToCreateDocTagValue(final @NonNls String tokenText) {
+    private static boolean isToCreateDocTagValue(@NonNls String tokenText) {
         return tokenText.equals("@see") ||
             tokenText.equals("@class") ||
             tokenText.equals("@member") ||

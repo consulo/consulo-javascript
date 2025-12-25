@@ -127,7 +127,7 @@ public class JsonCompletionContributor extends CompletionContributor {
         }
 
         PsiElement position = parameters.getPosition();
-        final PsiElement jsProperty = position.getParent();
+        PsiElement jsProperty = position.getParent();
         if (!(jsProperty instanceof JSProperty)) {
             return;
         }
@@ -189,7 +189,7 @@ public class JsonCompletionContributor extends CompletionContributor {
             }
         }
 
-        for (final Map.Entry<String, JsonPropertyDescriptor> entry : properties.entrySet()) {
+        for (Map.Entry<String, JsonPropertyDescriptor> entry : properties.entrySet()) {
             String key = entry.getKey();
             if (key == null || alreadyDefined.contains(key)) {
                 continue;

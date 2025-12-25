@@ -46,7 +46,7 @@ public class StringLiteralBreaksHTMLJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSLiteralExpression(JSSimpleLiteralExpression jsLiteralExpression) {
             super.visitJSLiteralExpression(jsLiteralExpression);
-            final String text = jsLiteralExpression.getText();
+            String text = jsLiteralExpression.getText();
             if (!text.startsWith("\"") && !text.startsWith("'")) {
                 return;
             }

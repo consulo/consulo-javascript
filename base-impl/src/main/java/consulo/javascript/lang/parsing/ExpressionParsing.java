@@ -143,23 +143,23 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         }
     }
 
-    private void parseLetExpression(final PsiBuilder builder) {
-        final PsiBuilder.Marker marker = getStatementParsing().parseLetExpressionStart(builder);
+    private void parseLetExpression(PsiBuilder builder) {
+        PsiBuilder.Marker marker = getStatementParsing().parseLetExpressionStart(builder);
         parseExpression(builder);
         marker.done(JSElementTypes.LET_EXPRESSION);
     }
 
-    private void parseTag(final PsiBuilder builder) {
+    private void parseTag(PsiBuilder builder) {
         myJSXParser.setBuilder(builder);
 
         myJSXParser.parseTag(false);
     }
 
     @Nullable
-    public static LocalizeValue validateLiteral(final PsiBuilder builder) {
-        final IElementType ttype = builder.getTokenType();
+    public static LocalizeValue validateLiteral(PsiBuilder builder) {
+        IElementType ttype = builder.getTokenType();
         if (ttype == JSTokenTypes.STRING_LITERAL || ttype == JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL) {
-            final String ttext = builder.getTokenText();
+            String ttext = builder.getTokenText();
             assert ttext != null;
 
             if (lastSymbolEscaped(ttext) ||
@@ -190,9 +190,9 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         return escapes || escaped;
     }
 
-    public void parseObjectLiteralExpression(final PsiBuilder builder) {
+    public void parseObjectLiteralExpression(PsiBuilder builder) {
         ExpressionParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.LBRACE);
-        final PsiBuilder.Marker expr = builder.mark();
+        PsiBuilder.Marker expr = builder.mark();
         builder.advanceLexer();
 
         IElementType elementType = builder.getTokenType();
@@ -234,9 +234,9 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
             && elementType != JSTokenTypes.NUMERIC_LITERAL;
     }
 
-    protected void parseProperty(final PsiBuilder builder) {
-        final IElementType nameToken = builder.getTokenType();
-        final PsiBuilder.Marker property = builder.mark();
+    protected void parseProperty(PsiBuilder builder) {
+        IElementType nameToken = builder.getTokenType();
+        PsiBuilder.Marker property = builder.mark();
 
         if (isNotPropertyStart(builder, nameToken)) {
             builder.error(JavaScriptLocalize.javascriptParserMessageExpectedIdentifierStringLiteralOrNumericLiteral());
@@ -254,9 +254,9 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         property.done(JSElementTypes.PROPERTY);
     }
 
-    public void parseArrayLiteralExpression(final PsiBuilder builder) {
+    public void parseArrayLiteralExpression(PsiBuilder builder) {
         ExpressionParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.LBRACKET);
-        final PsiBuilder.Marker expr = builder.mark();
+        PsiBuilder.Marker expr = builder.mark();
         builder.advanceLexer();
         boolean commaExpected = false;
 
@@ -268,7 +268,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
 
             while (builder.getTokenType() != JSTokenTypes.RBRACKET) {
                 if (commaExpected) {
-                    final boolean b =
+                    boolean b =
                         Parsing.checkMatches(builder, JSTokenTypes.COMMA, JavaScriptLocalize.javascriptParserMessageExpectedComma());
                     if (!b) {
                         break;
@@ -412,7 +412,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
             boolean stop = false;
             builder.advanceLexer();
 
-            final IElementType tokenType = builder.getTokenType();
+            IElementType tokenType = builder.getTokenType();
             if (tokenType == JSTokenTypes.ANY_IDENTIFIER && allowStar) {
                 builder.advanceLexer();
                 stop = true;
@@ -450,9 +450,9 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         return false;
     }
 
-    protected void parseArgumentList(final PsiBuilder builder) {
+    protected void parseArgumentList(PsiBuilder builder) {
         ExpressionParsing.LOG.assertTrue(builder.getTokenType() == JSTokenTypes.LPAR);
-        final PsiBuilder.Marker arglist = builder.mark();
+        PsiBuilder.Marker arglist = builder.mark();
         builder.advanceLexer();
         boolean first = true;
         while (builder.getTokenType() != JSTokenTypes.RPAR) {
@@ -481,16 +481,16 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         }
     }
 
-    public boolean parseAssignmentExpressionNoIn(final PsiBuilder builder) {
+    public boolean parseAssignmentExpressionNoIn(PsiBuilder builder) {
         return parseAssignmentExpression(builder, false);
     }
 
-    public boolean parseAssignmentExpression(final PsiBuilder builder) {
+    public boolean parseAssignmentExpression(PsiBuilder builder) {
         return parseAssignmentExpression(builder, true);
     }
 
-    private boolean parseAssignmentExpression(final PsiBuilder builder, boolean allowIn) {
-        final PsiBuilder.Marker expr = builder.mark();
+    private boolean parseAssignmentExpression(PsiBuilder builder, boolean allowIn) {
+        PsiBuilder.Marker expr = builder.mark();
 
         if (JSTokenTypes.ASSIGNMENT_OPERATIONS.contains(builder.getTokenType()) && builder.getUserData(WITHIN_OBJECT_LITERAL_EXPRESSION) == null) {
             builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
@@ -502,7 +502,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
             return true;
         }
 
-        final PsiBuilder.Marker definitionExpr = builder.mark();
+        PsiBuilder.Marker definitionExpr = builder.mark();
         if (!parseConditionalExpression(builder, allowIn)) {
             definitionExpr.drop();
             expr.drop();
@@ -524,14 +524,14 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         return true;
     }
 
-    private boolean parseConditionalExpression(final PsiBuilder builder, final boolean allowIn) {
-        final PsiBuilder.Marker expr = builder.mark();
+    private boolean parseConditionalExpression(PsiBuilder builder, boolean allowIn) {
+        PsiBuilder.Marker expr = builder.mark();
         if (!parseORExpression(builder, allowIn)) {
             expr.drop();
             return false;
         }
 
-        final IElementType nextTokenType = builder.getTokenType();
+        IElementType nextTokenType = builder.getTokenType();
 
         if (nextTokenType == JSTokenTypes.QUEST) {
             builder.advanceLexer();
@@ -554,7 +554,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         return true;
     }
 
-    private boolean parseORExpression(final PsiBuilder builder, final boolean allowIn) {
+    private boolean parseORExpression(PsiBuilder builder, boolean allowIn) {
         PsiBuilder.Marker expr = builder.mark();
         if (!parseANDExpression(builder, allowIn)) {
             expr.drop();
@@ -574,7 +574,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         return true;
     }
 
-    private boolean parseANDExpression(final PsiBuilder builder, final boolean allowIn) {
+    private boolean parseANDExpression(PsiBuilder builder, boolean allowIn) {
         PsiBuilder.Marker expr = builder.mark();
         if (!parseBitwiseORExpression(builder, allowIn)) {
             expr.drop();
@@ -594,7 +594,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         return true;
     }
 
-    private boolean parseBitwiseORExpression(final PsiBuilder builder, final boolean allowIn) {
+    private boolean parseBitwiseORExpression(PsiBuilder builder, boolean allowIn) {
         PsiBuilder.Marker expr = builder.mark();
         if (!parseBitwiseXORExpression(builder, allowIn)) {
             expr.drop();
@@ -614,7 +614,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         return true;
     }
 
-    private boolean parseBitwiseXORExpression(final PsiBuilder builder, final boolean allowIn) {
+    private boolean parseBitwiseXORExpression(PsiBuilder builder, boolean allowIn) {
         PsiBuilder.Marker expr = builder.mark();
         if (!parseBitwiseANDExpression(builder, allowIn)) {
             expr.drop();
@@ -634,7 +634,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         return true;
     }
 
-    private boolean parseBitwiseANDExpression(final PsiBuilder builder, final boolean allowIn) {
+    private boolean parseBitwiseANDExpression(PsiBuilder builder, boolean allowIn) {
         PsiBuilder.Marker expr = builder.mark();
         if (!parseEqualityExpression(builder, allowIn)) {
             expr.drop();
@@ -654,7 +654,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         return true;
     }
 
-    private boolean parseEqualityExpression(final PsiBuilder builder, final boolean allowIn) {
+    private boolean parseEqualityExpression(PsiBuilder builder, boolean allowIn) {
         PsiBuilder.Marker expr = builder.mark();
         if (!parseRelationalExpression(builder, allowIn)) {
             expr.drop();
@@ -674,7 +674,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         return true;
     }
 
-    private boolean parseRelationalExpression(final PsiBuilder builder, final boolean allowIn) {
+    private boolean parseRelationalExpression(PsiBuilder builder, boolean allowIn) {
         PsiBuilder.Marker expr = builder.mark();
         if (!parseShiftExpression(builder)) {
             expr.drop();
@@ -694,7 +694,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         return true;
     }
 
-    private boolean parseShiftExpression(final PsiBuilder builder) {
+    private boolean parseShiftExpression(PsiBuilder builder) {
         PsiBuilder.Marker expr = builder.mark();
         if (!parseAdditiveExpression(builder)) {
             expr.drop();
@@ -713,7 +713,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         return true;
     }
 
-    private boolean parseAdditiveExpression(final PsiBuilder builder) {
+    private boolean parseAdditiveExpression(PsiBuilder builder) {
         PsiBuilder.Marker expr = builder.mark();
         if (!parseMultiplicativeExpression(builder)) {
             expr.drop();
@@ -732,7 +732,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         return true;
     }
 
-    private boolean parseIsAsExpression(final PsiBuilder builder) {
+    private boolean parseIsAsExpression(PsiBuilder builder) {
         PsiBuilder.Marker expr = builder.mark();
         if (!parseUnaryExpression(builder)) {
             expr.drop();
@@ -752,11 +752,11 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         return true;
     }
 
-    protected boolean parseMultiplicativeExpression(final PsiBuilder builder) {
+    protected boolean parseMultiplicativeExpression(PsiBuilder builder) {
         return parseMultiplicativeExpression(builder, JSTokenTypes.MULTIPLICATIVE_OPERATIONS);
     }
 
-    protected boolean parseMultiplicativeExpression(final PsiBuilder builder, TokenSet operatorSet) {
+    protected boolean parseMultiplicativeExpression(PsiBuilder builder, TokenSet operatorSet) {
         PsiBuilder.Marker expr = builder.mark();
         if (!parseIsAsExpression(builder)) {
             expr.drop();
@@ -776,10 +776,10 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         return true;
     }
 
-    private boolean parseUnaryExpression(final PsiBuilder builder) {
-        final IElementType tokenType = builder.getTokenType();
+    private boolean parseUnaryExpression(PsiBuilder builder) {
+        IElementType tokenType = builder.getTokenType();
         if (JSTokenTypes.UNARY_OPERATIONS.contains(tokenType)) {
-            final PsiBuilder.Marker expr = builder.mark();
+            PsiBuilder.Marker expr = builder.mark();
             builder.advanceLexer();
             if (!parseUnaryExpression(builder)) {
                 builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
@@ -793,13 +793,13 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
     }
 
     private boolean parsePostfixExpression(PsiBuilder builder) {
-        final PsiBuilder.Marker expr = builder.mark();
+        PsiBuilder.Marker expr = builder.mark();
         if (!parseMemberExpression(builder, true)) {
             expr.drop();
             return false;
         }
 
-        final IElementType tokenType = builder.getTokenType();
+        IElementType tokenType = builder.getTokenType();
         if (tokenType == JSTokenTypes.PLUSPLUS || tokenType == JSTokenTypes.MINUSMINUS) {
             builder.advanceLexer();
             expr.done(JSElementTypes.POSTFIX_EXPRESSION);
@@ -810,15 +810,15 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         return true;
     }
 
-    public boolean parseExpressionOptional(final PsiBuilder builder) {
+    public boolean parseExpressionOptional(PsiBuilder builder) {
         return parseExpressionOptional(builder, true);
     }
 
-    public boolean parseExpressionOptionalNoIn(final PsiBuilder builder) {
+    public boolean parseExpressionOptionalNoIn(PsiBuilder builder) {
         return parseExpressionOptional(builder, false);
     }
 
-    public boolean parseExpressionOptional(final PsiBuilder builder, final boolean allowIn) {
+    public boolean parseExpressionOptional(PsiBuilder builder, boolean allowIn) {
         PsiBuilder.Marker expr = builder.mark();
         if (!parseAssignmentExpression(builder, allowIn)) {
             expr.drop();
@@ -845,12 +845,12 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         return true;
     }
 
-    public boolean tryParseType(final PsiBuilder builder) {
+    public boolean tryParseType(PsiBuilder builder) {
         return false;
     }
 
-    public boolean parseType(final PsiBuilder builder) {
-        final IElementType tokenType = builder.getTokenType();
+    public boolean parseType(PsiBuilder builder) {
+        IElementType tokenType = builder.getTokenType();
         if (JSDocumentationUtils.PRIMITIVE_TYPE_FILTER.contains(tokenType)) {
             builder.advanceLexer();
         }
@@ -860,7 +860,7 @@ public class ExpressionParsing<C extends JavaScriptParsingContext> extends Parsi
         return true;
     }
 
-    public boolean parseSimpleExpression(final PsiBuilder builder) {
+    public boolean parseSimpleExpression(PsiBuilder builder) {
         if (!parseUnaryExpression(builder)) {
             builder.error(JavaScriptLocalize.javascriptParserMessageExpectedExpression());
             return false;

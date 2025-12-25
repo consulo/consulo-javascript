@@ -196,7 +196,7 @@ public class ParenthesesUtils {
     }
 
     private static String removeParensFromReferenceExpression(JSReferenceExpression expression) {
-        final JSExpression qualifier = expression.getQualifier();
+        JSExpression qualifier = expression.getQualifier();
 
         if (qualifier != null) {
             return removeParentheses(qualifier) + '.' + expression.getReferencedName();
@@ -207,24 +207,24 @@ public class ParenthesesUtils {
     }
 
     private static String removeParensFromParenthesizedExpression(JSParenthesizedExpression parenthesizedExp) {
-        final JSExpression body = stripParentheses(parenthesizedExp.getInnerExpression());
+        JSExpression body = stripParentheses(parenthesizedExp.getInnerExpression());
 
         if (!(parenthesizedExp.getParent() instanceof JSExpression)) {
             return removeParentheses(body);
         }
 
-        final JSExpression parentExp = (JSExpression)parenthesizedExp.getParent();
-        final int parentPrecendence = getPrecendence(parentExp);
-        final int childPrecendence = getPrecendence(body);
+        JSExpression parentExp = (JSExpression)parenthesizedExp.getParent();
+        int parentPrecendence = getPrecendence(parentExp);
+        int childPrecendence = getPrecendence(body);
 
         if (parentPrecendence < childPrecendence) {
             return '(' + removeParentheses(body) + ')';
         }
         else if (parentPrecendence == childPrecendence) {
             if (parentExp instanceof JSBinaryExpression parentBiExp && body instanceof JSBinaryExpression bodyBiExp) {
-                final IElementType parentOperator = parentBiExp.getOperationSign();
-                final IElementType bodyOperator = bodyBiExp.getOperationSign();
-                final JSExpression lhs = parentBiExp.getLOperand();
+                IElementType parentOperator = parentBiExp.getOperationSign();
+                IElementType bodyOperator = bodyBiExp.getOperationSign();
+                JSExpression lhs = parentBiExp.getLOperand();
 
                 if (lhs.equals(parenthesizedExp) && parentOperator.equals(bodyOperator)) {
                     return removeParentheses(body);
@@ -243,9 +243,9 @@ public class ParenthesesUtils {
     }
 
     private static String removeParensFromConditionalExpression(JSConditionalExpression conditionalExp) {
-        final JSExpression condition = conditionalExp.getCondition();
-        final JSExpression thenBranch = conditionalExp.getThen();
-        final JSExpression elseBranch = conditionalExp.getElse();
+        JSExpression condition = conditionalExp.getCondition();
+        JSExpression thenBranch = conditionalExp.getThen();
+        JSExpression elseBranch = conditionalExp.getElse();
 
         return removeParentheses(condition) + " ? " +
             removeParentheses(thenBranch) + " : " +
@@ -253,25 +253,25 @@ public class ParenthesesUtils {
     }
 
     private static String removeParensFromBinaryExpression(JSBinaryExpression binaryExp) {
-        final JSExpression lhs = binaryExp.getLOperand();
-        final JSExpression rhs = binaryExp.getROperand();
-        final IElementType sign = binaryExp.getOperationSign();
+        JSExpression lhs = binaryExp.getLOperand();
+        JSExpression rhs = binaryExp.getROperand();
+        IElementType sign = binaryExp.getOperationSign();
 
         return removeParentheses(lhs) + ' ' + BinaryOperatorUtils.getOperatorText(sign) + ' ' + removeParentheses(rhs);
     }
 
     private static String removeParensFromPostfixExpression(JSPostfixExpression postfixExp) {
-        final JSExpression body = postfixExp.getExpression();
-        final IElementType sign = postfixExp.getOperationSign();
+        JSExpression body = postfixExp.getExpression();
+        IElementType sign = postfixExp.getOperationSign();
 
         return removeParentheses(body) + BinaryOperatorUtils.getOperatorText(sign);
     }
 
     private static String removeParensFromPrefixExpression(JSPrefixExpression prefixExp) {
-        final JSExpression body = prefixExp.getExpression();
+        JSExpression body = prefixExp.getExpression();
         IElementType sign = prefixExp.getOperationSign();
         if (sign == null) {
-            final ASTNode[] astNodes = prefixExp.getNode().getChildren(JSTokenTypes.UNARY_OPERATIONS); // hack for 8.1
+            ASTNode[] astNodes = prefixExp.getNode().getChildren(JSTokenTypes.UNARY_OPERATIONS); // hack for 8.1
             sign = astNodes.length == 1 ? astNodes[0].getElementType() : null;
         }
 
@@ -279,14 +279,14 @@ public class ParenthesesUtils {
     }
 
     private static String removeParensFromArrayLiteralExpression(JSArrayLiteralExpression init) {
-        final JSExpression[] contents = init.getExpressions();
-        final String text = init.getText();
-        final int textLength = text.length();
-        final StringBuilder out = new StringBuilder(textLength);
+        JSExpression[] contents = init.getExpressions();
+        String text = init.getText();
+        int textLength = text.length();
+        StringBuilder out = new StringBuilder(textLength);
 
         out.append('(');
         for (int index = 0; index < contents.length; index++) {
-            final JSExpression arg = contents[index];
+            JSExpression arg = contents[index];
 
             if (index != 0) {
                 out.append(',');
@@ -298,30 +298,30 @@ public class ParenthesesUtils {
     }
 
     private static String removeParensFromAssignmentExpression(JSAssignmentExpression assignment) {
-        final JSExpression lhs = assignment.getLOperand();
-        final JSExpression rhs = assignment.getROperand();
-        final IElementType sign = assignment.getOperationSign();
+        JSExpression lhs = assignment.getLOperand();
+        JSExpression rhs = assignment.getROperand();
+        IElementType sign = assignment.getOperationSign();
         return removeParentheses(lhs) + ' ' +
             BinaryOperatorUtils.getOperatorText(sign) + ' ' +
             removeParentheses(rhs);
     }
 
     private static String removeParensFromFunctionCallExpression(JSCallExpression functionCall) {
-        final JSExpression target = functionCall.getMethodExpression();
-        final JSArgumentList argumentList = functionCall.getArgumentList();
+        JSExpression target = functionCall.getMethodExpression();
+        JSArgumentList argumentList = functionCall.getArgumentList();
 
         assert (argumentList != null);
 
-        final JSExpression[] args = argumentList.getArguments();
-        final String methodCallText = functionCall.getText();
-        final int length = methodCallText.length();
-        final StringBuilder out = new StringBuilder(length);
-        final String strippedTarget = removeParentheses(target);
+        JSExpression[] args = argumentList.getArguments();
+        String methodCallText = functionCall.getText();
+        int length = methodCallText.length();
+        StringBuilder out = new StringBuilder(length);
+        String strippedTarget = removeParentheses(target);
 
         out.append(strippedTarget);
         out.append('(');
         for (int index = 0; index < args.length; index++) {
-            final JSExpression arg = args[index];
+            JSExpression arg = args[index];
             if (index != 0) {
                 out.append(',');
             }

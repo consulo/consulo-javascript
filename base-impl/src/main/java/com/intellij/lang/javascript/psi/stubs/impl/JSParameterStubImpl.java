@@ -43,8 +43,8 @@ public class JSParameterStubImpl extends JSVariableStubBaseImpl<JSParameter> imp
         super(name, flags, type, initial, qName, parentStub, elementType);
     }
 
-    public static int buildFlags(final JSParameter clazz) {
-        final int i = JSVariableStubBaseImpl.buildFlags(clazz);
+    public static int buildFlags(JSParameter clazz) {
+        int i = JSVariableStubBaseImpl.buildFlags(clazz);
         return i | (clazz.isRest() ? REST_MASK : 0) | (clazz.isOptional() ? OPTIONAL_MASK : 0);
     }
 

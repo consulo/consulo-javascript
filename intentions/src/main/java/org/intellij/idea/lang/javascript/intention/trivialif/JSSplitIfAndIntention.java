@@ -56,27 +56,27 @@ public class JSSplitIfAndIntention extends JSIntention {
     @Override
     @RequiredReadAction
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final PsiElement jsElement = (element.getParent() instanceof JSIfStatement ? element.getParent() : element);
+        PsiElement jsElement = (element.getParent() instanceof JSIfStatement ? element.getParent() : element);
 
         assert (jsElement != null);
         assert (jsElement instanceof JSIfStatement);
 
-        final JSIfStatement ifStatement = (JSIfStatement)jsElement;
+        JSIfStatement ifStatement = (JSIfStatement)jsElement;
 
         assert (ifStatement.getCondition() instanceof JSBinaryExpression);
 
-        final JSBinaryExpression condition = (JSBinaryExpression)ifStatement.getCondition();
-        final String lhsText = ParenthesesUtils.removeParentheses(condition.getLOperand());
-        final String rhsText = ParenthesesUtils.removeParentheses(condition.getROperand());
-        final JSStatement thenBranch = ifStatement.getThen();
-        final JSStatement elseBranch = ifStatement.getElse();
-        final String thenText = thenBranch.getText();
-        final String elseText = (elseBranch == null) ? null : elseBranch.getText();
-        final int elseLength = (elseBranch == null) ? 0 : elseText.length();
+        JSBinaryExpression condition = (JSBinaryExpression)ifStatement.getCondition();
+        String lhsText = ParenthesesUtils.removeParentheses(condition.getLOperand());
+        String rhsText = ParenthesesUtils.removeParentheses(condition.getROperand());
+        JSStatement thenBranch = ifStatement.getThen();
+        JSStatement elseBranch = ifStatement.getElse();
+        String thenText = thenBranch.getText();
+        String elseText = (elseBranch == null) ? null : elseBranch.getText();
+        int elseLength = (elseBranch == null) ? 0 : elseText.length();
 
         assert JSTokenTypes.ANDAND.equals(condition.getOperationSign());
 
-        final StringBuilder statement = new StringBuilder(ifStatement.getTextLength() + elseLength + 30);
+        StringBuilder statement = new StringBuilder(ifStatement.getTextLength() + elseLength + 30);
 
         statement.append("if (")
             .append(lhsText)
@@ -110,8 +110,8 @@ public class JSSplitIfAndIntention extends JSIntention {
                 }
             }
 
-            final JSIfStatement ifStatement = (JSIfStatement)parent;
-            final JSExpression condition = ifStatement.getCondition();
+            JSIfStatement ifStatement = (JSIfStatement)parent;
+            JSExpression condition = ifStatement.getCondition();
 
             return condition != null
                 && !ErrorUtil.containsError(condition)

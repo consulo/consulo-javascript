@@ -53,9 +53,9 @@ public class JSXParser {
     }
 
     @Nullable
-    private String parseTagHeader(final boolean multipleRootTagError, final PsiBuilder.Marker tag) {
+    private String parseTagHeader(boolean multipleRootTagError, PsiBuilder.Marker tag) {
         if (multipleRootTagError) {
-            final PsiBuilder.Marker error = mark();
+            PsiBuilder.Marker error = mark();
             advance();
             error.error(XmlErrorLocalize.xmlParsingMultipleRootTags());
         }
@@ -63,7 +63,7 @@ public class JSXParser {
             advance();
         }
 
-        final String tagName;
+        String tagName;
         if (token() != JSTokenTypes.XML_NAME || myBuilder.rawLookup(-1) == TokenType.WHITE_SPACE) {
             error(XmlErrorLocalize.xmlParsingTagNameExpected());
             tagName = "";
@@ -76,7 +76,7 @@ public class JSXParser {
         myTagNamesStack.push(tagName);
 
         do {
-            final IElementType tt = token();
+            IElementType tt = token();
             if (tt == JSTokenTypes.XML_NAME) {
                 parseAttribute();
             }
@@ -117,7 +117,7 @@ public class JSXParser {
 
     private void parseAttribute() {
         assert token() == XmlTokenType.XML_NAME;
-        final PsiBuilder.Marker att = mark();
+        PsiBuilder.Marker att = mark();
         advance();
         if (token() == XmlTokenType.XML_EQ) {
             advance();
@@ -127,17 +127,17 @@ public class JSXParser {
     }
 
     private void parseAttributeValue() {
-        final PsiBuilder.Marker attValue = mark();
+        PsiBuilder.Marker attValue = mark();
         if (token() == XmlTokenType.XML_ATTRIBUTE_VALUE_START_DELIMITER) {
             while (true) {
-                final IElementType tt = token();
+                IElementType tt = token();
                 if (tt == null || tt == XmlTokenType.XML_ATTRIBUTE_VALUE_END_DELIMITER || tt == XmlTokenType.XML_END_TAG_START
                     || tt == XmlTokenType.XML_EMPTY_ELEMENT_END || tt == JSTokenTypes.XML_START_TAG_START) {
                     break;
                 }
 
                 if (tt == JSTokenTypes.BAD_CHARACTER) {
-                    final PsiBuilder.Marker error = mark();
+                    PsiBuilder.Marker error = mark();
                     advance();
                     error.error(XmlErrorLocalize.unescapedAmpersandOrNonterminatedCharacterEntityReference());
                 }
@@ -166,7 +166,7 @@ public class JSXParser {
     public void parseTagContent() {
         PsiBuilder.Marker xmlText = null;
         while (true) {
-            final IElementType tt = token();
+            IElementType tt = token();
             if (tt == null || tt == XmlTokenType.XML_END_TAG_START) {
                 break;
             }
@@ -177,7 +177,7 @@ public class JSXParser {
             }
             else if (tt == JSTokenTypes.BAD_CHARACTER) {
                 xmlText = startText(xmlText);
-                final PsiBuilder.Marker error = mark();
+                PsiBuilder.Marker error = mark();
                 advance();
                 error.error(XmlErrorLocalize.unescapedAmpersandOrNonterminatedCharacterEntityReference());
             }
@@ -212,18 +212,18 @@ public class JSXParser {
 
     protected void parseTag(boolean multipleRootTagError) {
         assert token() == JSTokenTypes.XML_START_TAG_START : "Tag start expected";
-        final PsiBuilder.Marker tag = mark();
+        PsiBuilder.Marker tag = mark();
 
-        final String tagName = parseTagHeader(multipleRootTagError, tag);
+        String tagName = parseTagHeader(multipleRootTagError, tag);
         if (tagName == null) {
             return;
         }
 
-        final PsiBuilder.Marker content = mark();
+        PsiBuilder.Marker content = mark();
         parseTagContent();
 
         if (token() == JSTokenTypes.XML_END_TAG_START) {
-            final PsiBuilder.Marker footer = mark();
+            PsiBuilder.Marker footer = mark();
             advance();
 
             if (token() == JSTokenTypes.XML_NAME) {

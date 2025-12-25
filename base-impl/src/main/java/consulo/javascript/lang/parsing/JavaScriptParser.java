@@ -20,7 +20,7 @@ public class JavaScriptParser implements PsiParser {
 
         JavaScriptParserBuilder builder = createBuilder(originalBuilder);
 
-        final PsiBuilder.Marker rootMarker = builder.mark();
+        PsiBuilder.Marker rootMarker = builder.mark();
         while (!builder.eof()) {
             parsingContext.getStatementParsing().parseSourceElement(builder);
         }

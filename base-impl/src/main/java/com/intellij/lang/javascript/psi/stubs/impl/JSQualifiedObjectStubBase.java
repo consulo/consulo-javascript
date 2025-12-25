@@ -34,8 +34,8 @@ abstract class JSQualifiedObjectStubBase<T extends JSQualifiedNamedElement> exte
         String name,
         int flags,
         String qName,
-        final StubElement parent,
-        final IStubElementType elementType
+        StubElement parent,
+        IStubElementType elementType
     ) {
         super(name, flags, parent, elementType);
 

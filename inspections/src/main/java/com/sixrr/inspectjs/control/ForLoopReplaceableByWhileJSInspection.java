@@ -69,13 +69,13 @@ public class ForLoopReplaceableByWhileJSInspection extends JavaScriptInspection 
 
         @Override
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final PsiElement forKeywordElement = descriptor.getPsiElement();
-            final JSForStatement forStatement = (JSForStatement) forKeywordElement.getParent();
+            PsiElement forKeywordElement = descriptor.getPsiElement();
+            JSForStatement forStatement = (JSForStatement) forKeywordElement.getParent();
             assert forStatement != null;
-            final JSExpression condition = forStatement.getCondition();
-            final JSStatement body = forStatement.getBody();
-            final String bodyText = body == null ? "" : body.getText();
-            @NonNls final String whileStatement;
+            JSExpression condition = forStatement.getCondition();
+            JSStatement body = forStatement.getBody();
+            String bodyText = body == null ? "" : body.getText();
+            @NonNls String whileStatement;
             if (condition == null) {
                 whileStatement = "while(true)" + bodyText;
             }
@@ -95,24 +95,24 @@ public class ForLoopReplaceableByWhileJSInspection extends JavaScriptInspection 
         @Override
         public void visitJSForStatement(@Nonnull JSForStatement statement) {
             super.visitJSForStatement(statement);
-            final JSVarStatement varStatement = statement.getVarDeclaration();
+            JSVarStatement varStatement = statement.getVarDeclaration();
             if (varStatement != null) {
                 return;
             }
-            final JSExpression initialization = statement.getInitialization();
+            JSExpression initialization = statement.getInitialization();
             if (initialization != null) {
                 return;
             }
-            final JSExpression update = statement.getUpdate();
+            JSExpression update = statement.getUpdate();
             if (update != null) {
                 return;
             }
             if (myState.m_ignoreLoopsWithoutConditions) {
-                final JSExpression condition = statement.getCondition();
+                JSExpression condition = statement.getCondition();
                 if (condition == null) {
                     return;
                 }
-                final String conditionText = condition.getText();
+                String conditionText = condition.getText();
                 if ("true".equals(conditionText)) {
                     return;
                 }

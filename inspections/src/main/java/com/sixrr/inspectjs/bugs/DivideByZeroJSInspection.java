@@ -53,11 +53,11 @@ public class DivideByZeroJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
-            final JSExpression rhs = expression.getROperand();
+            JSExpression rhs = expression.getROperand();
             if (rhs == null) {
                 return;
             }
-            final IElementType tokenType = expression.getOperationSign();
+            IElementType tokenType = expression.getOperationSign();
             if (!JSTokenTypes.DIV.equals(tokenType) &&
                 !JSTokenTypes.PERC.equals(tokenType)) {
                 return;
@@ -71,11 +71,11 @@ public class DivideByZeroJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSAssignmentExpression(JSAssignmentExpression expression) {
             super.visitJSAssignmentExpression(expression);
-            final JSExpression rhs = expression.getROperand();
+            JSExpression rhs = expression.getROperand();
             if (rhs == null) {
                 return;
             }
-            final IElementType tokenType = expression.getOperationSign();
+            IElementType tokenType = expression.getOperationSign();
             if (!JSTokenTypes.DIVEQ.equals(tokenType)
                 && !JSTokenTypes.PERCEQ.equals(tokenType)) {
                 return;
@@ -88,7 +88,7 @@ public class DivideByZeroJSInspection extends JavaScriptInspection {
     }
 
     private static boolean isZero(JSExpression expression) {
-        @NonNls final String text = expression.getText();
+        @NonNls String text = expression.getText();
         return "0".equals(text)
             || "0x0".equals(text)
             || "0X0".equals(text)

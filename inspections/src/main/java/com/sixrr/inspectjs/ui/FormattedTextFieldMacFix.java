@@ -13,21 +13,21 @@ public class FormattedTextFieldMacFix {
 
     public static void apply(JFormattedTextField field) {
         if (isMacOs()) {
-            final Toolkit toolkit = Toolkit.getDefaultToolkit();
-            final int commandKeyMask = toolkit.getMenuShortcutKeyMask();
-            @NonNls final InputMap inputMap = field.getInputMap();
-            final KeyStroke copyKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_C, commandKeyMask);
+            Toolkit toolkit = Toolkit.getDefaultToolkit();
+            int commandKeyMask = toolkit.getMenuShortcutKeyMask();
+            @NonNls InputMap inputMap = field.getInputMap();
+            KeyStroke copyKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_C, commandKeyMask);
             inputMap.put(copyKeyStroke, "copy-to-clipboard");
-            final KeyStroke pasteKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_V, commandKeyMask);
+            KeyStroke pasteKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_V, commandKeyMask);
             inputMap.put(pasteKeyStroke, "paste-from-clipboard");
-            final KeyStroke cutKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_X, commandKeyMask);
+            KeyStroke cutKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_X, commandKeyMask);
             inputMap.put(cutKeyStroke, "cut-to-clipboard");
         }
     }
 
     @SuppressWarnings({"HardCodedStringLiteral"})
     private static boolean isMacOs() {
-        final String osName = System.getProperty("os.name").toLowerCase();
+        String osName = System.getProperty("os.name").toLowerCase();
         if (osName == null) {
             return false;
         }

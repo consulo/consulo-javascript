@@ -43,7 +43,7 @@ public class EmptyFinallyBlockJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSTryStatement(JSTryStatement jsTryStatement) {
             super.visitJSTryStatement(jsTryStatement);
-            final JSStatement finallyStatement = jsTryStatement.getFinallyStatement();
+            JSStatement finallyStatement = jsTryStatement.getFinallyStatement();
             if (finallyStatement == null) {
                 return;
             }

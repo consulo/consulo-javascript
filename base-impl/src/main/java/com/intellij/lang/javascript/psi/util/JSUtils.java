@@ -64,7 +64,7 @@ public class JSUtils {
 
     public static boolean isNeedParenthesis(JSExpression oldExpr, JSExpression newExpr) {
         int priority = getExpressionPrecedence(newExpr);
-        final PsiElement parent = oldExpr.getParent();
+        PsiElement parent = oldExpr.getParent();
         if (!(parent instanceof JSExpression)) {
             return false;
         }
@@ -73,7 +73,7 @@ public class JSUtils {
             return true;
         }
         if (priority == parentPriority && parent instanceof JSBinaryExpression binaryExpression) {
-            final IElementType operationSign = binaryExpression.getOperationSign();
+            IElementType operationSign = binaryExpression.getOperationSign();
             if (oldExpr != binaryExpression.getROperand()) {
                 return false;
             }
@@ -140,28 +140,28 @@ public class JSUtils {
         return 14;
     }
 
-    public static PsiElement findStatementAnchor(final JSReferenceExpression referenceExpression, final PsiFile file) {
+    public static PsiElement findStatementAnchor(JSReferenceExpression referenceExpression, PsiFile file) {
         PsiElement anchor = PsiTreeUtil.getParentOfType(referenceExpression, JSStatement.class);
 
         if (file instanceof XmlFile root) {
-            final XmlAttributeValue attributeValue = PsiTreeUtil.getParentOfType(referenceExpression, XmlAttributeValue.class);
+            XmlAttributeValue attributeValue = PsiTreeUtil.getParentOfType(referenceExpression, XmlAttributeValue.class);
 
             if (attributeValue != null) {
                 if (root.getViewProvider() instanceof TemplateLanguageFileViewProvider) {
-                    final TemplateLanguageFileViewProvider viewProvider = (TemplateLanguageFileViewProvider)root.getViewProvider();
-                    final PsiFile psi = viewProvider.getPsi(viewProvider.getTemplateDataLanguage());
+                    TemplateLanguageFileViewProvider viewProvider = (TemplateLanguageFileViewProvider)root.getViewProvider();
+                    PsiFile psi = viewProvider.getPsi(viewProvider.getTemplateDataLanguage());
                     if (psi instanceof XmlFile) {
                         root = (XmlFile)psi;
                     }
                 }
 
-                final XmlTag tag = root.getDocument().getRootTag();
+                XmlTag tag = root.getDocument().getRootTag();
 
                 if (tag != null) {
-                    final XmlTag headTag = tag.findFirstSubTag("head");
+                    XmlTag headTag = tag.findFirstSubTag("head");
 
                     if (headTag != null) {
-                        final XmlTag scriptTag = headTag.findFirstSubTag("script");
+                        XmlTag scriptTag = headTag.findFirstSubTag("script");
 
                         if (scriptTag != null) {
                             PsiElement statementInScript = PsiTreeUtil.getChildOfType(scriptTag, JSStatement.class);
@@ -169,7 +169,7 @@ public class JSUtils {
                                 anchor = statementInScript;
                             }
                             else {
-                                final XmlTagChild tagChild = PsiTreeUtil.getChildOfType(scriptTag, XmlTagChild.class);
+                                XmlTagChild tagChild = PsiTreeUtil.getChildOfType(scriptTag, XmlTagChild.class);
                                 if (tagChild != null) {
                                     anchor = tagChild;
                                 }

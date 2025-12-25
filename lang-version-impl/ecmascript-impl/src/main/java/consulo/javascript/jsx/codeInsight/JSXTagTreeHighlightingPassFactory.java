@@ -23,7 +23,7 @@ public class JSXTagTreeHighlightingPassFactory implements TextEditorHighlighting
     }
 
     @Override
-    public TextEditorHighlightingPass createHighlightingPass(@Nonnull final PsiFile file, @Nonnull final Editor editor) {
+    public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull Editor editor) {
         if (editor.isOneLineMode() || !(editor instanceof EditorEx) || !(file.getLanguageVersion() instanceof JSXJavaScriptVersion)) {
             return null;
         }

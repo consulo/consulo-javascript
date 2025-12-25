@@ -21,7 +21,7 @@ public class JomProxyInvocationHandler implements InvocationHandler {
     @Nonnull
     public static JomElement createProxy(
         @Nonnull Class<?> interfaceClass,
-        @Nullable final JSObjectLiteralExpression objectLiteralExpression
+        @Nullable JSObjectLiteralExpression objectLiteralExpression
     ) {
         return (JomElement)Proxy.newProxyInstance(
             interfaceClass.getClassLoader(),

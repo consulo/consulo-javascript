@@ -42,11 +42,11 @@ public class ExpressionUtil {
 
     public static boolean isIncrementDecrementExpression(@Nonnull PsiElement expression) {
         if (expression instanceof JSPostfixExpression postfixExpression) {
-            final IElementType operator = postfixExpression.getOperationSign();
+            IElementType operator = postfixExpression.getOperationSign();
             return JSTokenTypes.PLUSPLUS.equals(operator) || JSTokenTypes.MINUSMINUS.equals(operator);
         }
         else if (expression instanceof JSPrefixExpression prefixExpression) {
-            final IElementType operator = prefixExpression.getOperationSign();
+            IElementType operator = prefixExpression.getOperationSign();
             return JSTokenTypes.PLUSPLUS.equals(operator) || JSTokenTypes.MINUSMINUS.equals(operator);
         }
         else {
@@ -112,7 +112,7 @@ public class ExpressionUtil {
 
         @Override
         public void visitJSBinaryExpression(JSBinaryExpression expression) {
-            final JSExpression jsExpression = expression.getLOperand();
+            JSExpression jsExpression = expression.getLOperand();
             if (jsExpression == null) {
                 return;
             }

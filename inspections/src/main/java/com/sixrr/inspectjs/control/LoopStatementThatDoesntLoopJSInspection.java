@@ -45,7 +45,7 @@ public class LoopStatementThatDoesntLoopJSInspection extends JavaScriptInspectio
         @Override
         public void visitJSForStatement(@Nonnull JSForStatement statement) {
             super.visitJSForStatement(statement);
-            final JSStatement body = statement.getBody();
+            JSStatement body = statement.getBody();
             if (body == null) {
                 return;
             }
@@ -61,7 +61,7 @@ public class LoopStatementThatDoesntLoopJSInspection extends JavaScriptInspectio
         @Override
         public void visitJSForInStatement(@Nonnull JSForInStatement statement) {
             super.visitJSForInStatement(statement);
-            final JSStatement body = statement.getBody();
+            JSStatement body = statement.getBody();
             if (body == null) {
                 return;
             }
@@ -77,7 +77,7 @@ public class LoopStatementThatDoesntLoopJSInspection extends JavaScriptInspectio
         @Override
         public void visitJSWhileStatement(@Nonnull JSWhileStatement statement) {
             super.visitJSWhileStatement(statement);
-            final JSStatement body = statement.getBody();
+            JSStatement body = statement.getBody();
             if (body == null
                 || ControlFlowUtils.statementMayCompleteNormally(body)
                 || ControlFlowUtils.statementIsContinueTarget(statement)) {
@@ -88,7 +88,7 @@ public class LoopStatementThatDoesntLoopJSInspection extends JavaScriptInspectio
 
         @Override public void visitJSDoWhileStatement(@Nonnull JSDoWhileStatement statement) {
             super.visitJSDoWhileStatement(statement);
-            final JSStatement body = statement.getBody();
+            JSStatement body = statement.getBody();
             if (body == null
                 || ControlFlowUtils.statementMayCompleteNormally(body)
                 || ControlFlowUtils.statementIsContinueTarget(statement)) {

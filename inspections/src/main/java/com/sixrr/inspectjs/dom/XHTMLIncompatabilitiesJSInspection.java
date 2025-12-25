@@ -43,16 +43,16 @@ public class XHTMLIncompatabilitiesJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSReferenceExpression(JSReferenceExpression referenceExpression) {
             super.visitJSReferenceExpression(referenceExpression);
-            final JSExpression qualifier = referenceExpression.getQualifier();
+            JSExpression qualifier = referenceExpression.getQualifier();
             if (qualifier == null) {
                 return;
             }
-            final String qualifierText = qualifier.getText();
+            String qualifierText = qualifier.getText();
 
             if (!"document".equalsIgnoreCase(qualifierText)) {
                 return;
             }
-            final String methodName = referenceExpression.getReferencedName();
+            String methodName = referenceExpression.getReferencedName();
             if (!"images".equalsIgnoreCase(methodName) &&
                 !"body".equalsIgnoreCase(methodName) &&
                 !"applets".equalsIgnoreCase(methodName) &&

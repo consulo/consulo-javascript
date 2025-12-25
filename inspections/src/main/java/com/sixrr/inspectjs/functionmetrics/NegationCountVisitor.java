@@ -28,7 +28,7 @@ class NegationCountVisitor extends JSRecursiveElementVisitor {
     @Override
     public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
         super.visitJSBinaryExpression(expression);
-        final IElementType sign = expression.getOperationSign();
+        IElementType sign = expression.getOperationSign();
         if (JSTokenTypes.NE.equals(sign) || JSTokenTypes.NEQEQ.equals(sign)) {
             negationCount++;
         }
@@ -37,7 +37,7 @@ class NegationCountVisitor extends JSRecursiveElementVisitor {
     @Override
     public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
         super.visitJSPrefixExpression(expression);
-        final IElementType sign = expression.getOperationSign();
+        IElementType sign = expression.getOperationSign();
         if (JSTokenTypes.EXCL.equals(sign)) {
             negationCount++;
         }

@@ -85,9 +85,9 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
     protected String myIteratedTypeName;
 
     protected BaseJSSymbolProcessor(
-        final PsiFile targetFile,
-        final boolean skipDclsInTargetFile,
-        final PsiElement context,
+        PsiFile targetFile,
+        boolean skipDclsInTargetFile,
+        PsiElement context,
         String[] contextIds
     ) {
         myTargetFile = targetFile;
@@ -110,7 +110,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
 
         myContextNameIds = contextIds;
 
-        final boolean notWithinWithStatement = PsiTreeUtil.getParentOfType(myContext, JSWithStatement.class) == null;
+        boolean notWithinWithStatement = PsiTreeUtil.getParentOfType(myContext, JSWithStatement.class) == null;
 
         if (((contextIds == null || contextIds.length == 0)
             && myContext instanceof JSReferenceExpression referenceExpression
@@ -126,16 +126,16 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
         }
     }
 
-    protected abstract String[] calculateContextIds(final JSReferenceExpression jsReferenceExpression);
+    protected abstract String[] calculateContextIds(JSReferenceExpression jsReferenceExpression);
 
-    public void setAddOnlyCompleteMatches(final boolean addOnlyCompleteMatches) {
+    public void setAddOnlyCompleteMatches(boolean addOnlyCompleteMatches) {
         myAddOnlyCompleteMatches = addOnlyCompleteMatches;
         myAllowPartialResults = false;
     }
 
 
     protected boolean isFromRelevantFileOrDirectory() {
-        final PsiFile psiFile = myCurrentFile;
+        PsiFile psiFile = myCurrentFile;
 
         return myTargetFile == psiFile || false;
         //(myTargetFile != null &&
@@ -147,7 +147,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
     private static ThreadLocal<EvaluateContext> contextHolder = new ThreadLocal<>();
 
     @RequiredReadAction
-    public static void doEvalForExpr(JSExpression rawqualifier, final PsiFile myTargetFile, TypeProcessor typeProcessor) {
+    public static void doEvalForExpr(JSExpression rawqualifier, PsiFile myTargetFile, TypeProcessor typeProcessor) {
         EvaluateContext context = contextHolder.get();
         boolean contextHolderInitialized = false;
 
@@ -179,9 +179,9 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
     @RequiredReadAction
     public static JSExpression getOriginalQualifier(JSExpression rawQualifier) {
         if (rawQualifier instanceof JSReferenceExpression qualifier) {
-            final TextRange textRange = qualifier.getTextRange();
+            TextRange textRange = qualifier.getTextRange();
             PsiFile targetFile = rawQualifier.getContainingFile();
-            final PsiElement context = targetFile.getContext();
+            PsiElement context = targetFile.getContext();
             if (context != null) {
                 targetFile = context.getContainingFile();
             }
@@ -191,7 +191,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
             if (!targetFile.isPhysical() && originalFile != null) {
                 PsiElement startElement;
                 if (context != null) {
-                    final PsiElement at = PsiTreeUtil.getNonStrictParentOfType(
+                    PsiElement at = PsiTreeUtil.getNonStrictParentOfType(
                         originalFile.findElementAt(context.getTextOffset()),
                         PsiLanguageInjectionHost.class
                     );
@@ -223,18 +223,18 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
             rawQualifier = qualifier;
         }
         else if (rawQualifier instanceof JSIndexedPropertyAccessExpression indexedPropertyAccessExpression) {
-            final JSExpression qualifier = indexedPropertyAccessExpression.getQualifier();
+            JSExpression qualifier = indexedPropertyAccessExpression.getQualifier();
             if (qualifier != null) {
-                final JSExpression jsExpression = getOriginalQualifier(qualifier);
+                JSExpression jsExpression = getOriginalQualifier(qualifier);
                 if (jsExpression != null && jsExpression.getParent() instanceof JSIndexedPropertyAccessExpression) {
                     return (JSExpression)jsExpression.getParent();
                 }
             }
         }
         else if (rawQualifier instanceof JSCallExpression call) {
-            final JSExpression qualifier = call.getMethodExpression();
+            JSExpression qualifier = call.getMethodExpression();
             if (qualifier != null) {
-                final JSExpression jsExpression = getOriginalQualifier(qualifier);
+                JSExpression jsExpression = getOriginalQualifier(qualifier);
                 if (jsExpression != null && jsExpression.getParent() instanceof JSCallExpression parentCall) {
                     return parentCall;
                 }
@@ -274,7 +274,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
             boolean wasPrototype = false;
 
             if (qualifier != null && "prototype".equals(qualifier.getReferencedName())) {
-                final JSExpression expression = qualifier.getQualifier();
+                JSExpression expression = qualifier.getQualifier();
                 if (expression instanceof JSReferenceExpression refExpr) {
                     qualifier = refExpr;
                     wasPrototype = true;
@@ -284,7 +284,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
             boolean topLevelQualifier = qualifier.getQualifier() == null;
 
             if (topLevelQualifier) {
-                final JSReferenceExpression expression =
+                JSReferenceExpression expression =
                     typeProcessor.ecma() ? qualifier : JSSymbolUtil.findReferenceExpressionUsedForClassExtending(qualifier);
                 if (!typeProcessor.ecma() && expression != qualifier && expression.getQualifier() == null) {
                     addType(expression.getText(), typeProcessor, context, qualifier);
@@ -292,7 +292,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
                 }
             }
 
-            final ResolveResult[] resolveResults = qualifier != null ? qualifier.multiResolve(false) : ResolveResult.EMPTY_ARRAY;
+            ResolveResult[] resolveResults = qualifier != null ? qualifier.multiResolve(false) : ResolveResult.EMPTY_ARRAY;
 
             if (resolveResults.length > 0) {
                 for (ResolveResult r : resolveResults) {
@@ -328,7 +328,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
                             }
 
                             if (!typeProcessor.ecma() || parameterType == null) {
-                                final JSExpression expression = jsVariable.getInitializer();
+                                JSExpression expression = jsVariable.getInitializer();
                                 if (expression != null) {
                                     doEvalForExpr(expression, context.targetFile, typeProcessor);
                                 }
@@ -336,7 +336,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
                                     boolean hasSomeInfoAboutVar = false;
 
                                     if (topLevelQualifier) {
-                                        final ResolveProcessor processor = new ResolveProcessor(qualifier.getText(), true);
+                                        ResolveProcessor processor = new ResolveProcessor(qualifier.getText(), true);
                                         hasSomeInfoAboutVar = findDef(typeProcessor, context, qualifier, processor);
                                     }
 
@@ -390,9 +390,9 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
                             else if (psiElement instanceof XmlToken xmlToken) {
                                 hasSomeType = true;
 
-                                final TagContextBuilder builder = new TagContextBuilder(xmlToken, HTML_ELEMENT_TYPE_NAME);
-                                final PsiElement element = builder.element;
-                                final String typeName = builder.typeName;
+                                TagContextBuilder builder = new TagContextBuilder(xmlToken, HTML_ELEMENT_TYPE_NAME);
+                                PsiElement element = builder.element;
+                                String typeName = builder.typeName;
 
                                 if (HTML_ELEMENT_TYPE_NAME.equals(typeName)) {
                                     hasSomeType = false;
@@ -402,13 +402,13 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
                             }
                             else if (psiElement instanceof JSNamedElement namedElement) {
                                 if (namedElement instanceof JSFunction function) {
-                                    final boolean inCall = rawQualifier.getParent() instanceof JSCallExpression;
+                                    boolean inCall = rawQualifier.getParent() instanceof JSCallExpression;
 
                                     if (!inCall && (!function.isGetProperty() && !function.isSetProperty())) {
                                         addType(FUNCTION_TYPE_NAME, typeProcessor, context, function);
                                         hasSomeType = true;
                                         if (wasPrototype) {
-                                            final String name = function.getName();
+                                            String name = function.getName();
                                             if (name != null) {
                                                 addType(name, typeProcessor, context, null);
                                             }
@@ -424,8 +424,8 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
                                     else {
                                         String s = null;
                                         if (function.isSetProperty()) {
-                                            final JSParameterList parameterList = function.getParameterList();
-                                            final JSParameter[] parameters =
+                                            JSParameterList parameterList = function.getParameterList();
+                                            JSParameter[] parameters =
                                                 parameterList != null ? parameterList.getParameters() : JSParameter.EMPTY_ARRAY;
                                             s = parameters.length == 1 ? parameters[0].getTypeString() : null;
                                         }
@@ -523,8 +523,8 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
                     || JSTokenTypes.MULTIPLICATIVE_OPERATIONS.contains(sign)
                     || sign == JSTokenTypes.ANDAND || sign == JSTokenTypes.OROR) {
 
-                    final SimpleTypeProcessor lprocessor = new SimpleTypeProcessor(typeProcessor.getFeatures());
-                    final SimpleTypeProcessor rprocessor = new SimpleTypeProcessor(typeProcessor.getFeatures());
+                    SimpleTypeProcessor lprocessor = new SimpleTypeProcessor(typeProcessor.getFeatures());
+                    SimpleTypeProcessor rprocessor = new SimpleTypeProcessor(typeProcessor.getFeatures());
                     doEvalForExpr(lOperand, lprocessor, context);
                     doEvalForExpr(rOperand, rprocessor, context);
 
@@ -537,7 +537,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
                     }
                 }
                 else if (sign == JSTokenTypes.EQ) {
-                    final SimpleTypeProcessor rprocessor = new SimpleTypeProcessor(typeProcessor.getFeatures());
+                    SimpleTypeProcessor rprocessor = new SimpleTypeProcessor(typeProcessor.getFeatures());
                     doEvalForExpr(rOperand, rprocessor, context);
 
                     String evaluatedType = rprocessor.type;
@@ -560,7 +560,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
             }
         }
         else if (rawQualifier instanceof JSIndexedPropertyAccessExpression propertyAccess) {
-            final SimpleTypeProcessor lprocessor = new SimpleTypeProcessor(typeProcessor.getFeatures());
+            SimpleTypeProcessor lprocessor = new SimpleTypeProcessor(typeProcessor.getFeatures());
 
             doEvalForExpr(propertyAccess.getQualifier(), lprocessor, context);
 
@@ -592,7 +592,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
         else if (rawQualifier instanceof JSSuperExpression superExpr) {
             JSClass jsClass = JSResolveUtil.getClassOfContext(superExpr);
             if (jsClass != null) {
-                final JSClass[] classes = jsClass.getSuperClasses();
+                JSClass[] classes = jsClass.getSuperClasses();
                 if (classes.length > 0) {
                     addType(classes[0].getQualifiedName(), typeProcessor, context, classes[0]);
                 }
@@ -645,7 +645,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
                 return null;
             }
             context.addProcessingItem(rawqualifier);
-            final SimpleTypeProcessor lprocessor = new SimpleTypeProcessor(typeProcessor.getFeatures());
+            SimpleTypeProcessor lprocessor = new SimpleTypeProcessor(typeProcessor.getFeatures());
             doEvalForExpr(collectionExpression, lprocessor, context);
             return addComponentTypeFromProcessor(rawqualifier, typeProcessor, context, lprocessor);
         }
@@ -673,12 +673,12 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
     }
 
     private static boolean findDef(
-        final TypeProcessor typeProcessor,
-        final EvaluateContext context,
-        final JSReferenceExpression qualifier,
-        final ResolveProcessor processor
+        TypeProcessor typeProcessor,
+        EvaluateContext context,
+        JSReferenceExpression qualifier,
+        ResolveProcessor processor
     ) {
-        final PsiElement parent = qualifier.getParent();
+        PsiElement parent = qualifier.getParent();
         JSResolveUtil.treeWalkUp(processor, qualifier, parent, qualifier);
 
         PsiElement jsElement = processor.getResult();
@@ -708,7 +708,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
         PsiElement contextElement = qualifier.getContainingFile().getContext();
 
         if (contextElement != null) {
-            final PsiFile containingFile = contextElement.getContainingFile();
+            PsiFile containingFile = contextElement.getContainingFile();
 
             if (isBindowsXml(containingFile)) {
             }
@@ -716,7 +716,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
     }
 
     @RequiredReadAction
-    private static boolean isBindowsXml(final PsiFile containingFile) {
+    private static boolean isBindowsXml(PsiFile containingFile) {
         return containingFile.getName().endsWith(".xml") && containingFile instanceof XmlFile;
     }
 
@@ -740,7 +740,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
 
         if (!context.visitedTypes.contains(type)) {
             context.visitedTypes.add(type);
-            final PsiElement parentElement = psiElement.getParent();
+            PsiElement parentElement = psiElement.getParent();
             if (parentElement instanceof JSAssignmentExpression assignment) {
                 JSExpression expr = assignment.getROperand();
                 while (expr instanceof JSAssignmentExpression rOperandAssignment) {
@@ -756,8 +756,8 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
         }
     }
 
-    private static void getTypeFromConstant(final JSExpression rawqualifier, TypeProcessor typeProcessor, EvaluateContext context) {
-        final ASTNode childNode = rawqualifier.getNode().getFirstChildNode();
+    private static void getTypeFromConstant(JSExpression rawqualifier, TypeProcessor typeProcessor, EvaluateContext context) {
+        ASTNode childNode = rawqualifier.getNode().getFirstChildNode();
         IElementType constantType = childNode.getElementType();
 
         String type = JavaScriptTokenSets.STRING_LITERALS.contains(constantType)
@@ -775,7 +775,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
             : null;
 
         if (type == NUMBER_TYPE_NAME && typeProcessor.ecma()) {
-            final String text = childNode.getText();
+            String text = childNode.getText();
             if (text.indexOf('.') == -1) {
                 type = INT_TYPE;
             }
@@ -789,15 +789,15 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
         }
     }
 
-    protected void addPackageScope(final List<String[]> possibleNameIds, final JSClass jsClass, final PsiElement expression) {
-        final String packageQualifier = JSResolveUtil.findPackageStatementQualifier(expression);
+    protected void addPackageScope(List<String[]> possibleNameIds, JSClass jsClass, PsiElement expression) {
+        String packageQualifier = JSResolveUtil.findPackageStatementQualifier(expression);
         String qName;
 
         if (packageQualifier != null) {
             buildIndexListFromQNameAndCorrectQName(packageQualifier, jsClass, possibleNameIds);
         }
         else if (jsClass != null && (qName = jsClass.getQualifiedName()) != null && !qName.equals(jsClass.getName())) {
-            final int index = qName.lastIndexOf('.');
+            int index = qName.lastIndexOf('.');
             if (index > 0) {
                 buildIndexListFromQNameAndCorrectQName(qName.substring(0, index), jsClass, possibleNameIds);
             }
@@ -810,15 +810,15 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
         }
     }
 
-    protected String buildIndexListFromQNameAndCorrectQName(String type, final PsiElement source, List<String[]> possibleNameIds) {
-        final List<String> list = new ArrayList<>();
+    protected String buildIndexListFromQNameAndCorrectQName(String type, PsiElement source, List<String[]> possibleNameIds) {
+        List<String> list = new ArrayList<>();
         type = addIndexListFromQName(type, source, list);
 
         possibleNameIds.add(ArrayUtil.toStringArray(list));
         return type;
     }
 
-    public static String addIndexListFromQName(String type, final PsiElement source, final List<String> list) {
+    public static String addIndexListFromQName(String type, PsiElement source, List<String> list) {
         int i = type.indexOf('.');
         int lastI = 0;
 
@@ -841,7 +841,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
         return type;
     }
 
-    private static void addType(String type, TypeProcessor typeProcessor, EvaluateContext context, final PsiElement source) {
+    private static void addType(String type, TypeProcessor typeProcessor, EvaluateContext context, PsiElement source) {
         if (type == null) {
             return;
         }
@@ -851,7 +851,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
         }
 
         if (!(typeProcessor instanceof GenericTypeParametersClient)) {
-            final int gtPos = type.indexOf('<');
+            int gtPos = type.indexOf('<');
             if (gtPos > 0 && type.charAt(gtPos - 1) == '.') {
                 type = type.substring(0, gtPos - 1);
             }
@@ -864,7 +864,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
     }
 
     @Override
-    public <T> T getHint(final Key<T> hintClass) {
+    public <T> T getHint(Key<T> hintClass) {
         return null;
     }
 
@@ -884,7 +884,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
         boolean processClass(JSClass clazz);
     }
 
-    protected void doIterateTypeHierarchy(final String[] contextIds, final HierarchyProcessor processor) {
+    protected void doIterateTypeHierarchy(String[] contextIds, HierarchyProcessor processor) {
         StringBuilder builder = new StringBuilder();
         for (String cnameId : contextIds) {
             if (builder.length() > 0) {
@@ -893,7 +893,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
             builder.append(cnameId);
         }
 
-        final String typeName = builder.toString();
+        String typeName = builder.toString();
         if (typeName.length() == 0) {
             return;
         }
@@ -903,8 +903,8 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
         myIteratedTypeName = null;
     }
 
-    protected void doIterateHierarchy(final String typeName, final HierarchyProcessor processor) {
-        final PsiElement clazz = JSResolveUtil.findClassByQName(typeName, myContext);
+    protected void doIterateHierarchy(String typeName, final HierarchyProcessor processor) {
+        PsiElement clazz = JSResolveUtil.findClassByQName(typeName, myContext);
         if (clazz instanceof JSClass jsClass) {
             for (JSClass superClazz : jsClass.getSuperClasses()) {
                 superClazz.processDeclarations(
@@ -917,7 +917,7 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
 
                         @Override
                         @RequiredReadAction
-                        public boolean execute(@Nonnull PsiElement element, final ResolveState state) {
+                        public boolean execute(@Nonnull PsiElement element, ResolveState state) {
                             return !(element instanceof JSClass jsClass && !processor.processClass(jsClass));
                         }
                     },
@@ -935,22 +935,22 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
         private Set<JSExpression> processingItems;
         private PsiElement source;
 
-        public EvaluateContext(final PsiFile targetFile) {
+        public EvaluateContext(PsiFile targetFile) {
             this.targetFile = targetFile;
         }
 
-        public boolean isAlreadyProcessingItem(final JSExpression rawqualifier) {
+        public boolean isAlreadyProcessingItem(JSExpression rawqualifier) {
             return processingItems != null && processingItems.contains(rawqualifier);
         }
 
-        public void addProcessingItem(final JSExpression rawqualifier) {
+        public void addProcessingItem(JSExpression rawqualifier) {
             if (processingItems == null) {
                 processingItems = new HashSet<>();
             }
             processingItems.add(rawqualifier);
         }
 
-        public void removeProcessingItem(final JSExpression rawqualifier) {
+        public void removeProcessingItem(JSExpression rawqualifier) {
             processingItems.remove(rawqualifier);
         }
 
@@ -958,13 +958,13 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
             return source;
         }
 
-        public void setSource(final PsiElement source) {
+        public void setSource(PsiElement source) {
             this.source = source;
         }
     }
 
     public interface TypeProcessor {
-        void process(@Nonnull String type, @Nonnull EvaluateContext evaluateContext, final PsiElement source);
+        void process(@Nonnull String type, @Nonnull EvaluateContext evaluateContext, PsiElement source);
 
         @Deprecated
         boolean ecma();
@@ -989,11 +989,11 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
         }
 
         @Override
-        public void process(@Nonnull final String _type, @Nonnull final EvaluateContext evaluateContext, final PsiElement _source) {
+        public void process(@Nonnull String _type, @Nonnull EvaluateContext evaluateContext, PsiElement _source) {
             setType(type != null && !type.equals(_type) ? ANY_TYPE : _type, _source);
         }
 
-        private void setType(final String s, final PsiElement _source) {
+        private void setType(String s, PsiElement _source) {
             type = s;
             source = _source;
         }
@@ -1010,13 +1010,13 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
 
         @Override
         @RequiredReadAction
-        public boolean execute(@Nonnull PsiElement element, final ResolveState state) {
+        public boolean execute(@Nonnull PsiElement element, ResolveState state) {
             result = element;
             return true;
         }
 
         @Override
-        public void setUnknownElement(@Nonnull final PsiElement _element) {
+        public void setUnknownElement(@Nonnull PsiElement _element) {
             setType(ANY_TYPE, _element);
         }
 
@@ -1035,11 +1035,11 @@ abstract public class BaseJSSymbolProcessor implements PsiScopeProcessor {
 
         public TagContextBuilder(PsiElement psiElement, String defaultName) {
             String typeName = null;
-            final XmlTag tag = PsiTreeUtil.getParentOfType(psiElement, XmlTag.class);
+            XmlTag tag = PsiTreeUtil.getParentOfType(psiElement, XmlTag.class);
             JSClass element = null;
 
             if (tag != null) {
-                final PsiFile containingFile = tag.getContainingFile();
+                PsiFile containingFile = tag.getContainingFile();
 
                 if (isBindowsXml(containingFile)) {
                     typeName = "Bi" + tag.getLocalName();

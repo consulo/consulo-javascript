@@ -157,7 +157,7 @@ public interface JSTokenTypes {
             parseScriptExpression(context, builder);
         }
 
-        public void parseScriptExpression(JavaScriptParsingContext context, final PsiBuilder builder) {
+        public void parseScriptExpression(JavaScriptParsingContext context, PsiBuilder builder) {
             PsiBuilder.Marker root = builder.mark();
             Parsing.checkMatches(builder, JSTokenTypes.LBRACE, JavaScriptLocalize.javascriptParserMessageExpectedLbrace());
             if (builder.getTokenType() != JSTokenTypes.RBRACE) {
@@ -450,13 +450,13 @@ public interface JSTokenTypes {
         @Override
         @RequiredReadAction
         protected ASTNode doParseContents(@Nonnull ASTNode chameleon, @Nonnull PsiElement psi) {
-            final Project project = psi.getProject();
-            final Language languageForParser = getLanguageForParser(psi);
-            final LanguageVersion tempLanguageVersion = chameleon.getUserData(LanguageVersion.KEY);
-            final LanguageVersion languageVersion = tempLanguageVersion == null ? psi.getLanguageVersion() : tempLanguageVersion;
-            final PsiBuilder builder = PsiBuilderFactory.getInstance()
+            Project project = psi.getProject();
+            Language languageForParser = getLanguageForParser(psi);
+            LanguageVersion tempLanguageVersion = chameleon.getUserData(LanguageVersion.KEY);
+            LanguageVersion languageVersion = tempLanguageVersion == null ? psi.getLanguageVersion() : tempLanguageVersion;
+            PsiBuilder builder = PsiBuilderFactory.getInstance()
                 .createBuilder(project, chameleon, createLexer(), languageForParser, languageVersion, chameleon.getChars());
-            final JavaScriptParser parser = (JavaScriptParser)ParserDefinition.forLanguage(languageForParser).createParser(languageVersion);
+            JavaScriptParser parser = (JavaScriptParser)ParserDefinition.forLanguage(languageForParser).createParser(languageVersion);
 
             JavaScriptParsingContext parsingContext = parser.createParsingContext();
             doParse(parsingContext, builder);

@@ -44,13 +44,13 @@ public class CyclomaticComplexityJSInspection extends JavaScriptInspection {
     @Override
     @RequiredReadAction
     public String buildErrorString(Object state, Object... args) {
-        final JSFunction function = (JSFunction)((PsiElement)args[0]).getParent();
+        JSFunction function = (JSFunction)((PsiElement)args[0]).getParent();
         assert function != null;
-        final CyclomaticComplexityVisitor visitor = new CyclomaticComplexityVisitor();
-        final PsiElement lastChild = function.getLastChild();
+        CyclomaticComplexityVisitor visitor = new CyclomaticComplexityVisitor();
+        PsiElement lastChild = function.getLastChild();
         assert lastChild != null;
         lastChild.accept(visitor);
-        final int coupling = visitor.getComplexity();
+        int coupling = visitor.getComplexity();
         return functionHasIdentifier(function)
             ? InspectionJSLocalize.functionRefIsOverlyComplexCyclomaticComplexityErrorString(coupling).get()
             : InspectionJSLocalize.anonymousFunctionIsOverlyComplexCyclomaticComplexityErrorString(coupling).get();
@@ -64,13 +64,13 @@ public class CyclomaticComplexityJSInspection extends JavaScriptInspection {
     private class Visitor extends BaseInspectionVisitor<CyclomaticComplexityJSInspectionState> {
         @Override
         public void visitJSFunctionDeclaration(@Nonnull JSFunction function) {
-            final PsiElement lastChild = function.getLastChild();
+            PsiElement lastChild = function.getLastChild();
             if (!(lastChild instanceof JSBlockStatement)) {
                 return;
             }
-            final CyclomaticComplexityVisitor visitor = new CyclomaticComplexityVisitor();
+            CyclomaticComplexityVisitor visitor = new CyclomaticComplexityVisitor();
             lastChild.accept(visitor);
-            final int complexity = visitor.getComplexity();
+            int complexity = visitor.getComplexity();
 
             if (complexity <= myState.getLimit()) {
                 return;

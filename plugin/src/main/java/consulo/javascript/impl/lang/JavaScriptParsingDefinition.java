@@ -57,7 +57,7 @@ public class JavaScriptParsingDefinition extends LanguageVersionableParserDefini
     @Nonnull
     @Override
     public PsiElement createElement(ASTNode node) {
-        final IElementType type = node.getElementType();
+        IElementType type = node.getElementType();
 
         if (type == JSElementTypes.EMBEDDED_CONTENT) {
             return new JSEmbeddedContentImpl(node);
@@ -81,7 +81,7 @@ public class JavaScriptParsingDefinition extends LanguageVersionableParserDefini
     @Override
     public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
         PsiElement leftPsi = left.getPsi();
-        final Lexer lexer = createLexer(leftPsi.getLanguageVersion());
+        Lexer lexer = createLexer(leftPsi.getLanguageVersion());
         return LanguageUtil.canStickTokensTogetherByLexer(left, right, lexer);
     }
 }

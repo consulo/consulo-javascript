@@ -52,23 +52,23 @@ public class ShiftOutOfRangeJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
-            final IElementType tokenType = expression.getOperationSign();
+            IElementType tokenType = expression.getOperationSign();
             if (tokenType == null || (!JSTokenTypes.LTLT.equals(tokenType)
                 && !JSTokenTypes.GTGT.equals(tokenType) && !JSTokenTypes.GTGTGT.equals(tokenType))) {
                 return;
             }
-            final JSExpression rhs = expression.getROperand();
+            JSExpression rhs = expression.getROperand();
             if (rhs == null) {
                 return;
             }
             if (!ExpressionUtil.isConstantExpression(rhs)) {
                 return;
             }
-            final Object valueObject = ExpressionUtil.computeConstantExpression(rhs);
+            Object valueObject = ExpressionUtil.computeConstantExpression(rhs);
             if (!(valueObject instanceof Integer)) {
                 return;
             }
-            final int value = (Integer)valueObject;
+            int value = (Integer)valueObject;
             if (value < 0 || value > 31) {
                 registerError(expression, value);
             }

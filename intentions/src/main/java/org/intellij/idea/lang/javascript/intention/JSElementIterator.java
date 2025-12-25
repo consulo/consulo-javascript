@@ -82,8 +82,8 @@ public abstract class JSElementIterator implements Iterator<PsiElement> {
             do {
                 element = this.elementStack.pop();
 
-                final int elementTextOffset = element.getTextOffset();
-                final int elementTextEndOffset = elementTextOffset + element.getTextLength();
+                int elementTextOffset = element.getTextOffset();
+                int elementTextEndOffset = elementTextOffset + element.getTextLength();
 
                 if (elementTextEndOffset >= this.minTextOffset &&
                     elementTextOffset <= this.maxTextOffset) {
@@ -108,7 +108,7 @@ public abstract class JSElementIterator implements Iterator<PsiElement> {
             int index = 0;
 
             while (index < children.length && childTextOffset <= this.maxTextOffset) {
-                final PsiElement child = children[index];
+                PsiElement child = children[index];
 
                 childTextOffset = child.getTextOffset();
                 if (childTextOffset <= this.maxTextOffset) {
@@ -121,7 +121,7 @@ public abstract class JSElementIterator implements Iterator<PsiElement> {
             int index = children.length - 1;
 
             while (index >= 0 && childTextOffset >= this.minTextOffset) {
-                final PsiElement child = children[index];
+                PsiElement child = children[index];
 
                 childTextOffset = child.getTextOffset() + child.getTextLength();
                 if (childTextOffset >= this.minTextOffset) {

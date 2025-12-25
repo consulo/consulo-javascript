@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 
 public abstract class ConventionInspection extends JavaScriptInspection {
     boolean isValid(String name, ConventionInspectionState state) {
-        final int length = name.length();
+        int length = name.length();
         if (length < state.m_minLength) {
             return false;
         }
@@ -16,7 +16,7 @@ public abstract class ConventionInspection extends JavaScriptInspection {
         if ("serialVersionUID".equals(name)) {
             return true;
         }
-        final Matcher matcher = state.getPattern().matcher(name);
+        Matcher matcher = state.getPattern().matcher(name);
         return matcher.matches();
     }
 

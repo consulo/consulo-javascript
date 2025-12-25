@@ -33,7 +33,7 @@ public class UpdateJavaScriptFileCopyright extends UpdatePsiFileCopyright<Copyri
     protected void scanFile() {
         PsiElement first = getFile().getFirstChild();
         if (first != null) {
-            final PsiElement child = first.getFirstChild();
+            PsiElement child = first.getFirstChild();
             if (child instanceof PsiComment) {
                 first = child;
             }

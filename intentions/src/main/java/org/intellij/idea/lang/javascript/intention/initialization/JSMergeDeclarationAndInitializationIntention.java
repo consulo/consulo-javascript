@@ -56,23 +56,23 @@ public class JSMergeDeclarationAndInitializationIntention extends JSIntention {
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         assert (element instanceof JSVarStatement);
 
-        final JSVarStatement varStatement = (JSVarStatement)element;
+        JSVarStatement varStatement = (JSVarStatement)element;
         StringBuilder declarationBuffer = new StringBuilder();
 
-        for (final JSVariable variable : varStatement.getVariables()) {
+        for (JSVariable variable : varStatement.getVariables()) {
             if (variable.hasInitializer()) {
                 declarationBuffer.append(declarationBuffer.isEmpty() ? "var " : ", ")
                     .append(variable.getName()).append(" = ").append(variable.getInitializer().getText());
             }
             else {
-                final Iterator<PsiElement> referenceIterator =
+                Iterator<PsiElement> referenceIterator =
                     FindReferenceUtil.getReferencesAfter(variable, variable.getTextRange().getEndOffset()).iterator();
-                final JSReferenceExpression firstReference =
+                JSReferenceExpression firstReference =
                     (JSReferenceExpression)(referenceIterator.hasNext() ? referenceIterator.next() : null);
                 //final JSReferenceExpression firstReference = FindReferenceUtil.findFirstReference(variable);
 
                 if (firstReference != null && firstReference.getParent() instanceof JSDefinitionExpression definitionExpression) {
-                    final JSExpressionStatement assignmentStatement = (JSExpressionStatement)definitionExpression.getParent().getParent();
+                    JSExpressionStatement assignmentStatement = (JSExpressionStatement)definitionExpression.getParent().getParent();
 
                     // Replace assignment statement by var statement.
                     JSElementFactory.replaceStatement(assignmentStatement, "var " + assignmentStatement.getText());
@@ -104,9 +104,9 @@ public class JSMergeDeclarationAndInitializationIntention extends JSIntention {
                         continue;
                     }
 
-                    final Iterator<PsiElement> referenceIterator =
+                    Iterator<PsiElement> referenceIterator =
                         FindReferenceUtil.getReferencesAfter(variable, variable.getTextRange().getEndOffset()).iterator();
-                    final JSReferenceExpression firstReference =
+                    JSReferenceExpression firstReference =
                         (JSReferenceExpression)(referenceIterator.hasNext() ? referenceIterator.next() : null);
 
                     if (firstReference != null

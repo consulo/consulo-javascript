@@ -44,9 +44,9 @@ public class TextLabelInSwitchStatementJSInspection extends JavaScriptInspection
         @Override
         public void visitJSSwitchStatement(@Nonnull JSSwitchStatement statement) {
             super.visitJSSwitchStatement(statement);
-            final JSCaseClause[] caseClauses = statement.getCaseClauses();
+            JSCaseClause[] caseClauses = statement.getCaseClauses();
             for (JSCaseClause caseClause : caseClauses) {
-                final JSStatement[] statements = caseClause.getStatements();
+                JSStatement[] statements = caseClause.getStatements();
                 for (JSStatement statement1 : statements) {
                     checkForLabel(statement1);
                 }
@@ -57,8 +57,8 @@ public class TextLabelInSwitchStatementJSInspection extends JavaScriptInspection
             if (!(statement instanceof JSLabeledStatement)) {
                 return;
             }
-            final JSLabeledStatement labeledStatement = (JSLabeledStatement) statement;
-            final PsiElement label = labeledStatement.getLabelIdentifier();
+            JSLabeledStatement labeledStatement = (JSLabeledStatement) statement;
+            PsiElement label = labeledStatement.getLabelIdentifier();
             registerError(label);
         }
     }

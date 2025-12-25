@@ -33,12 +33,12 @@ import java.io.IOException;
  * @author peter
  */
 public class JSFileElementType extends IStubFileElementType<JSFileStub> {
-    public JSFileElementType(final Language language) {
+    public JSFileElementType(Language language) {
         super(language);
     }
 
     @Override
-    public void indexStub(@Nonnull final JSFileStub stub, @Nonnull final IndexSink sink) {
+    public void indexStub(@Nonnull JSFileStub stub, @Nonnull IndexSink sink) {
         for (JavaScriptIndexer javaScriptIndexer : JavaScriptIndexer.EP_NAME.getExtensionList()) {
             javaScriptIndexer.indexFile(stub, sink);
         }
@@ -64,7 +64,7 @@ public class JSFileElementType extends IStubFileElementType<JSFileStub> {
 
     @Nonnull
     @Override
-    public JSFileStub deserialize(@Nonnull final StubInputStream dataStream, final StubElement parentStub) throws IOException {
+    public JSFileStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef name = dataStream.readName();
         return new JSFileStubImpl(null, name);
     }

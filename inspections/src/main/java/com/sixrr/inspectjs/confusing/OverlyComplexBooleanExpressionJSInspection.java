@@ -80,7 +80,7 @@ public class OverlyComplexBooleanExpressionJSInspection extends JavaScriptInspec
             if (isParentBoolean(expression)) {
                 return;
             }
-            final int numTerms = countTerms(expression);
+            int numTerms = countTerms(expression);
             if (numTerms <= myState.m_limit) {
                 return;
             }
@@ -95,26 +95,26 @@ public class OverlyComplexBooleanExpressionJSInspection extends JavaScriptInspec
                 return 1;
             }
             if (expression instanceof JSBinaryExpression) {
-                final JSBinaryExpression binaryExpression = (JSBinaryExpression) expression;
-                final JSExpression lhs = binaryExpression.getLOperand();
-                final JSExpression rhs = binaryExpression.getROperand();
+                JSBinaryExpression binaryExpression = (JSBinaryExpression) expression;
+                JSExpression lhs = binaryExpression.getLOperand();
+                JSExpression rhs = binaryExpression.getROperand();
                 return countTerms(lhs) + countTerms(rhs);
             }
             else if (expression instanceof JSPrefixExpression) {
-                final JSPrefixExpression prefixExpression = (JSPrefixExpression) expression;
-                final JSExpression operand = prefixExpression.getExpression();
+                JSPrefixExpression prefixExpression = (JSPrefixExpression) expression;
+                JSExpression operand = prefixExpression.getExpression();
                 return countTerms(operand);
             }
             else if (expression instanceof JSParenthesizedExpression) {
-                final JSParenthesizedExpression parenthesizedExpression = (JSParenthesizedExpression) expression;
-                final JSExpression contents = parenthesizedExpression.getInnerExpression();
+                JSParenthesizedExpression parenthesizedExpression = (JSParenthesizedExpression) expression;
+                JSExpression contents = parenthesizedExpression.getInnerExpression();
                 return countTerms(contents);
             }
             return 1;
         }
 
         private boolean isParentBoolean(JSExpression expression) {
-            final PsiElement parent = expression.getParent();
+            PsiElement parent = expression.getParent();
             if (!(parent instanceof JSExpression)) {
                 return false;
             }
@@ -123,19 +123,19 @@ public class OverlyComplexBooleanExpressionJSInspection extends JavaScriptInspec
 
         private boolean isBoolean(JSExpression expression) {
             if (expression instanceof JSBinaryExpression) {
-                final JSBinaryExpression binaryExpression = (JSBinaryExpression) expression;
-                final IElementType sign = binaryExpression.getOperationSign();
+                JSBinaryExpression binaryExpression = (JSBinaryExpression) expression;
+                IElementType sign = binaryExpression.getOperationSign();
                 return JSTokenTypes.ANDAND.equals(sign) ||
                     JSTokenTypes.OROR.equals(sign);
             }
             else if (expression instanceof JSPrefixExpression) {
-                final JSPrefixExpression prefixExpression = (JSPrefixExpression) expression;
-                final IElementType sign = prefixExpression.getOperationSign();
+                JSPrefixExpression prefixExpression = (JSPrefixExpression) expression;
+                IElementType sign = prefixExpression.getOperationSign();
                 return JSTokenTypes.EXCL.equals(sign);
             }
             else if (expression instanceof JSParenthesizedExpression) {
-                final JSParenthesizedExpression parenthesizedExpression = (JSParenthesizedExpression) expression;
-                final JSExpression contents = parenthesizedExpression.getInnerExpression();
+                JSParenthesizedExpression parenthesizedExpression = (JSParenthesizedExpression) expression;
+                JSExpression contents = parenthesizedExpression.getInnerExpression();
                 return isBoolean(contents);
             }
             return false;

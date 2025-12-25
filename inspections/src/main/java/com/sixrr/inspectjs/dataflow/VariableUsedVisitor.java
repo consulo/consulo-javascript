@@ -32,7 +32,7 @@ public class VariableUsedVisitor extends JSRecursiveElementVisitor {
         }
         super.visitJSReferenceExpression(ref);
         PsiElement element = ref.resolve();
-        final JSElement referent = element instanceof JSElement jsElement ? jsElement : null;
+        JSElement referent = element instanceof JSElement jsElement ? jsElement : null;
         if (referent == null) {
             return;
         }

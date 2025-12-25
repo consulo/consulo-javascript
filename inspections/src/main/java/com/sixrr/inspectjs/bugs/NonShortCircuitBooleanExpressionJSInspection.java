@@ -54,12 +54,12 @@ public class NonShortCircuitBooleanExpressionJSInspection extends JavaScriptInsp
 
         @Override
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final JSBinaryExpression expression = (JSBinaryExpression)descriptor.getPsiElement();
-            final JSExpression lhs = expression.getLOperand();
-            final JSExpression rhs = expression.getROperand();
-            final IElementType operationSign = expression.getOperationSign();
+            JSBinaryExpression expression = (JSBinaryExpression)descriptor.getPsiElement();
+            JSExpression lhs = expression.getLOperand();
+            JSExpression rhs = expression.getROperand();
+            IElementType operationSign = expression.getOperationSign();
             assert rhs != null;
-            final String newExpression = lhs.getText() + getShortCircuitOperand(operationSign) + rhs.getText();
+            String newExpression = lhs.getText() + getShortCircuitOperand(operationSign) + rhs.getText();
             replaceExpression(expression, newExpression);
         }
 
@@ -80,7 +80,7 @@ public class NonShortCircuitBooleanExpressionJSInspection extends JavaScriptInsp
             if (!(expression.getROperand() != null)) {
                 return;
             }
-            final IElementType sign = expression.getOperationSign();
+            IElementType sign = expression.getOperationSign();
             if (!JSTokenTypes.AND.equals(sign) && !JSTokenTypes.OR.equals(sign)) {
                 return;
             }

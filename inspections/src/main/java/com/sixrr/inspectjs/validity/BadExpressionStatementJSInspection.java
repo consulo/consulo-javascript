@@ -56,7 +56,7 @@ public class BadExpressionStatementJSInspection extends JavaScriptInspection {
         @RequiredReadAction
         public void visitJSExpressionStatement(JSExpressionStatement jsExpressionStatement) {
             super.visitJSExpressionStatement(jsExpressionStatement);
-            final JSExpression expression = jsExpressionStatement.getExpression();
+            JSExpression expression = jsExpressionStatement.getExpression();
             if (isNotPointless(expression) || jsExpressionStatement.getParent() instanceof ES6ExportDefaultAssignment) {
                 return;
             }
@@ -73,7 +73,7 @@ public class BadExpressionStatementJSInspection extends JavaScriptInspection {
             registerError(jsExpressionStatement);
         }
 
-        private boolean isNotPointless(final JSExpression expression) {
+        private boolean isNotPointless(JSExpression expression) {
             if (expression instanceof JSCallExpression) {
                 return true;
             }
@@ -82,14 +82,14 @@ public class BadExpressionStatementJSInspection extends JavaScriptInspection {
             }
 
             if (expression instanceof JSPrefixExpression) {
-                final JSPrefixExpression prefix = (JSPrefixExpression)expression;
-                final IElementType sign = prefix.getOperationSign();
+                JSPrefixExpression prefix = (JSPrefixExpression)expression;
+                IElementType sign = prefix.getOperationSign();
                 if (JSTokenTypes.PLUSPLUS.equals(sign) || JSTokenTypes.MINUSMINUS.equals(sign)) {
                     return true;
                 }
-                final PsiElement signElement = expression.getFirstChild();
+                PsiElement signElement = expression.getFirstChild();
                 if (signElement != null) {
-                    @NonNls final String text = signElement.getText();
+                    @NonNls String text = signElement.getText();
                     if ("delete".equals(text)) {
                         return true;
                     }
@@ -103,19 +103,19 @@ public class BadExpressionStatementJSInspection extends JavaScriptInspection {
                 }
             }
             if (expression instanceof JSPostfixExpression) {
-                final JSPostfixExpression prefix = (JSPostfixExpression)expression;
-                final IElementType sign = prefix.getOperationSign();
+                JSPostfixExpression prefix = (JSPostfixExpression)expression;
+                IElementType sign = prefix.getOperationSign();
                 if (JSTokenTypes.PLUSPLUS.equals(sign) || JSTokenTypes.MINUSMINUS.equals(sign)) {
                     return true;
                 }
             }
 
             if (expression instanceof JSBinaryExpression) {
-                final JSBinaryExpression binary = (JSBinaryExpression)expression;
-                final IElementType sign = binary.getOperationSign();
+                JSBinaryExpression binary = (JSBinaryExpression)expression;
+                IElementType sign = binary.getOperationSign();
 
                 if (sign == JSTokenTypes.ANDAND || sign == JSTokenTypes.OROR) {
-                    final JSExpression leftOp = binary.getLOperand();
+                    JSExpression leftOp = binary.getLOperand();
 
                     if ((leftOp instanceof JSReferenceExpression || leftOp instanceof JSIndexedPropertyAccessExpression)
                         && isNotPointless(binary.getROperand())) {
@@ -134,9 +134,9 @@ public class BadExpressionStatementJSInspection extends JavaScriptInspection {
             if (expression instanceof JSReferenceExpression referenceExpression) {
                 if (expression.getParent().getParent() instanceof JSClass
                     || PsiTreeUtil.getParentOfType(expression, PsiFile.class).getContext() != null) {
-                    final ResolveResult[] results = referenceExpression.multiResolve(false);
+                    ResolveResult[] results = referenceExpression.multiResolve(false);
                     if (results.length > 0) {
-                        final PsiElement element = results[0].getElement();
+                        PsiElement element = results[0].getElement();
                         if (element instanceof JSClass || element instanceof JSFunction) {
                             return true; // class A { import B; B; } // x = "foo"
                         }

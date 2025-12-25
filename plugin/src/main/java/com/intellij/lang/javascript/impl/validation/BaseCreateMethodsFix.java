@@ -45,7 +45,7 @@ public abstract class BaseCreateMethodsFix<T extends JSNamedElement & JSAttribut
     protected final JSClass myJsClass;
     protected PsiElement anchor;
 
-    public BaseCreateMethodsFix(final JSClass jsClass) {
+    public BaseCreateMethodsFix(JSClass jsClass) {
         myJsClass = jsClass;
     }
 

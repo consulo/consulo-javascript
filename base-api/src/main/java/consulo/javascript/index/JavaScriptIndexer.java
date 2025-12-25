@@ -15,7 +15,7 @@ import jakarta.annotation.Nonnull;
 public abstract class JavaScriptIndexer {
     public static final ExtensionPointName<JavaScriptIndexer> EP_NAME = ExtensionPointName.create(JavaScriptIndexer.class);
 
-    public void indexFile(@Nonnull JSFileStub fileStub, @Nonnull final IndexSink sink) {
+    public void indexFile(@Nonnull JSFileStub fileStub, @Nonnull IndexSink sink) {
     }
 
     public int getVersion() {

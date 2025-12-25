@@ -36,7 +36,7 @@ public final class DialectOptionHolder {
         this(_ecma, _gwt, true);
     }
 
-    public DialectOptionHolder(boolean _ecma, boolean _gwt, final boolean _e4x) {
+    public DialectOptionHolder(boolean _ecma, boolean _gwt, boolean _e4x) {
         isECMAL4Level = _ecma;
         isGwt = _gwt;
         isJavaScript1_7_OrBetter = _e4x;

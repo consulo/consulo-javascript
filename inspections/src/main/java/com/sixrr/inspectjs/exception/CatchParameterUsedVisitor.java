@@ -29,7 +29,7 @@ class CatchParameterUsedVisitor extends JSRecursiveElementVisitor {
             return;
         }
         super.visitJSReferenceExpression(reference);
-        final PsiElement element = reference.resolve();
+        PsiElement element = reference.resolve();
         if (parameter.equals(element)) {
             used = true;
         }

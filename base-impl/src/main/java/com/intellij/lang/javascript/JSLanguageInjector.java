@@ -53,8 +53,8 @@ public abstract class JSLanguageInjector implements MultiHostInjector {
     @Override
     public void injectLanguages(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement host) {
         if (host instanceof XmlAttributeValue attributeValue) {
-            final PsiElement attribute = attributeValue.getParent();
-            final PsiElement tag = attribute.getParent();
+            PsiElement attribute = attributeValue.getParent();
+            PsiElement tag = attribute.getParent();
 
             if (attribute instanceof XmlAttribute xmlAttribute && tag instanceof XmlTag xmlTag) {
                 if (attributeValue.getTextLength() == 0) {
@@ -69,7 +69,7 @@ public abstract class JSLanguageInjector implements MultiHostInjector {
                     injectJSIntoAttributeValue(registrar, attributeValue, true);
                 }
                 else if (attrName.startsWith("on")) {
-                    final String ns = xmlTag.getNamespace();
+                    String ns = xmlTag.getNamespace();
                     if (JavaScriptSupportLoader.BINDOWS_URI.equals(ns)
                         || JavaScriptSupportLoader.isBindowsFile(attributeValue)
                         || isMozillaXulOrXblNs(ns)) {
@@ -116,10 +116,10 @@ public abstract class JSLanguageInjector implements MultiHostInjector {
             }
         }
         else if (host instanceof XmlText && host.getParent() instanceof XmlTag tag) {
-            final @NonNls String localName = tag.getLocalName();
+            @NonNls String localName = tag.getLocalName();
 
             if ("attribute".equals(localName) && JSP_URI.equals(tag.getNamespace())) {
-                @NonNls final String name = tag.getAttributeValue("name");
+                @NonNls String name = tag.getAttributeValue("name");
                 if (name != null && name.startsWith("on")) {
                     Language language = JavaScriptLanguage.INSTANCE;
                     injectToXmlText(registrar, host, language, null, null);
@@ -165,12 +165,12 @@ public abstract class JSLanguageInjector implements MultiHostInjector {
                     @NonNls String suffix = null;
 
                     if (getter || setter) {
-                        final String name = getNameFromTag(tag.getParentTag(), "property");
+                        String name = getNameFromTag(tag.getParentTag(), "property");
                         prefix = "function " + (getter ? "get " : "set ") + name + "(" + (setter ? "val" : "") + ") {";
                         suffix = "}";
                     }
                     else if (body) {
-                        final XmlTag parentTag = tag.getParentTag();
+                        XmlTag parentTag = tag.getParentTag();
                         String name = getNameFromTag(parentTag, "method");
                         String signature = "";
                         for (XmlTag ptag : parentTag.findSubTags("parameter")) {
@@ -190,8 +190,8 @@ public abstract class JSLanguageInjector implements MultiHostInjector {
                         suffix = "}";
                     }
                     else if (constructor) {
-                        final XmlTag parentTag = tag.getParentTag();
-                        final XmlTag grandParentTag = parentTag != null ? parentTag.getParentTag() : null;
+                        XmlTag parentTag = tag.getParentTag();
+                        XmlTag grandParentTag = parentTag != null ? parentTag.getParentTag() : null;
                         prefix = "function " + (grandParentTag != null ? grandParentTag.getAttributeValue("id") : null) + "() {";
                         suffix = "}";
                     }
@@ -202,51 +202,51 @@ public abstract class JSLanguageInjector implements MultiHostInjector {
         }
     }
 
-    private boolean doInjectTo(final XmlTag tag) {
-        final XmlTagValue value = tag.getValue();
-        final XmlTagChild[] tagChildren = value.getChildren();
+    private boolean doInjectTo(XmlTag tag) {
+        XmlTagValue value = tag.getValue();
+        XmlTagChild[] tagChildren = value.getChildren();
 
         return tagChildren.length == 1
             && (tagChildren[0].getNode().getElementType() == XmlElementType.XML_CDATA || !tagChildren[0].textContains('<'));
     }
 
     private static void checkMxmlInjection(
-        final MultiHostRegistrar registrar,
-        final PsiElement host,
-        final PsiElement attribute,
-        final PsiElement _tag
+        MultiHostRegistrar registrar,
+        PsiElement host,
+        PsiElement attribute,
+        PsiElement _tag
     ) {
-        final PsiFile containingFile = _tag.getContainingFile();
+        PsiFile containingFile = _tag.getContainingFile();
         if (JavaScriptSupportLoader.isFlexMxmFile(containingFile)) {
             injectInMxmlFile(registrar, host, ((XmlAttribute)attribute).getDescriptor(), (XmlTag)_tag);
         }
     }
 
     private static void injectToXmlText(
-        final MultiHostRegistrar registrar,
-        final PsiElement host,
-        final Language language,
-        final String prefix,
-        final String suffix
+        MultiHostRegistrar registrar,
+        PsiElement host,
+        Language language,
+        String prefix,
+        String suffix
     ) {
         TextRange range = new TextRange(0, host.getTextLength());
         registrar.startInjecting(language).addPlace(prefix, suffix, (PsiLanguageInjectionHost)host, range).doneInjecting();
     }
 
-    private static String getNameFromTag(final XmlTag parentTag, final @NonNls String s) {
+    private static String getNameFromTag(XmlTag parentTag, @NonNls String s) {
         return parentTag != null && s.equals(parentTag.getLocalName()) ? parentTag.getAttributeValue("name") : "";
     }
 
-    public static boolean isMozillaXulOrXblNs(final @NonNls String ns) {
+    public static boolean isMozillaXulOrXblNs(@NonNls String ns) {
         return "http://www.mozilla.org/xbl".equals(ns) || "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul".equals(ns);
     }
 
     public static void injectJSIntoAttributeValue(
-        final MultiHostRegistrar registrar,
-        final XmlAttributeValue host,
-        final boolean startsWithPrefix
+        MultiHostRegistrar registrar,
+        XmlAttributeValue host,
+        boolean startsWithPrefix
     ) {
-        final PsiElement[] myChildren = host.getChildren();
+        PsiElement[] myChildren = host.getChildren();
         int valueIndex = myChildren.length - 2;
         int valueTokenNumber = 1;
         if (valueIndex < 0) {
@@ -254,7 +254,7 @@ public abstract class JSLanguageInjector implements MultiHostInjector {
             valueTokenNumber = 0;
         }
 
-        final PsiElement valueChild = myChildren[valueIndex];
+        PsiElement valueChild = myChildren[valueIndex];
 
         if (valueChild instanceof XmlToken && ((XmlToken)valueChild).getTokenType() == XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN) {
             boolean injectFromTheBeginning = valueIndex == valueTokenNumber;
@@ -264,7 +264,7 @@ public abstract class JSLanguageInjector implements MultiHostInjector {
                 boolean badlyFormed = false;
 
                 for (int i = valueTokenNumber; i < valueIndex; ++i) {
-                    final PsiElement currentElement = myChildren[i];
+                    PsiElement currentElement = myChildren[i];
 
                     if (currentElement instanceof XmlToken && ((XmlToken)currentElement).getTokenType() == XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN) {
                         // ok child
@@ -272,8 +272,8 @@ public abstract class JSLanguageInjector implements MultiHostInjector {
                     }
                     else {
                         if (currentElement instanceof OuterLanguageElement) {
-                            final String prevText = myChildren[i - 1].getText();
-                            final String nextText = myChildren[i + 1].getText();
+                            String prevText = myChildren[i - 1].getText();
+                            String nextText = myChildren[i + 1].getText();
 
                             if ((StringUtil.endsWithChar(prevText, '\"') && StringUtil.startsWithChar(nextText, '\"'))
                                 || (StringUtil.endsWithChar(prevText, '\'') && StringUtil.startsWithChar(nextText, '\''))) {
@@ -285,7 +285,7 @@ public abstract class JSLanguageInjector implements MultiHostInjector {
                                 badlyFormed = true;
                             }
                             else if (currentElement.textContains('$')) {
-                                final String s = currentElement.getText();
+                                String s = currentElement.getText();
                                 if (s.startsWith("${") && s.endsWith("}") && s.length() > 2) {
                                     continue;
                                 }
@@ -319,16 +319,16 @@ public abstract class JSLanguageInjector implements MultiHostInjector {
     }
 
     private static void injectInMxmlFile(
-        final MultiHostRegistrar registrar,
-        final PsiElement host,
-        final PsiMetaData descriptor,
+        MultiHostRegistrar registrar,
+        PsiElement host,
+        PsiMetaData descriptor,
         XmlTag tag
     ) {
         int offset = host instanceof XmlText ? 0 : 1;
 
         if (descriptor instanceof AnnotationBackedDescriptor annotationBackedDescriptor
             && annotationBackedDescriptor.requiresCdataBracesInContext(tag)) {
-            final int length = host.getTextLength();
+            int length = host.getTextLength();
             if (length < 2 * offset) {
                 return;
             }
@@ -336,8 +336,8 @@ public abstract class JSLanguageInjector implements MultiHostInjector {
             if (type == null) {
                 type = "*";
             }
-            final @NonNls String prefix = "(function (event:" + type + ") {";
-            final @NonNls String suffix = "})();";
+            @NonNls String prefix = "(function (event:" + type + ") {";
+            @NonNls String suffix = "})();";
 
             if (host instanceof XmlText) {
                 injectToXmlText(registrar, host, JavaScriptSupportLoader.ECMA_SCRIPT_L4, prefix, suffix);
@@ -356,14 +356,14 @@ public abstract class JSLanguageInjector implements MultiHostInjector {
             }
         }
         else {
-            final String text = StringUtil.stripQuotesAroundValue(host.getText());
+            String text = StringUtil.stripQuotesAroundValue(host.getText());
             int openedBraces = 0;
             int start = -1;
             boolean addedSomething = false;
             boolean quoted = false;
 
             for (int i = 0; i < text.length(); ++i) {
-                final char ch = text.charAt(i);
+                char ch = text.charAt(i);
 
                 if (quoted) {
                     quoted = false;
@@ -396,7 +396,7 @@ public abstract class JSLanguageInjector implements MultiHostInjector {
             }
 
             if (!addedSomething) {
-                final String trimmedText = text.trim();
+                String trimmedText = text.trim();
                 start = trimmedText.indexOf("@Embed");
                 if (start == 0) {
                     offset += text.indexOf(trimmedText);

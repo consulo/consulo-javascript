@@ -23,11 +23,11 @@ public class EcmaScript4ExpressionParsing extends ExpressionParsing {
         PsiBuilder.Marker expr = builder.mark();
         boolean isNew;
 
-        final IElementType type = builder.getTokenType();
+        IElementType type = builder.getTokenType();
 
         if (type == JSTokenTypes.NEW_KEYWORD) {
             isNew = true;
-            final boolean isfunction = parseNewExpression(builder);
+            boolean isfunction = parseNewExpression(builder);
 
             if (isfunction) {
                 expr.done(JSElementTypes.NEW_EXPRESSION);
@@ -121,7 +121,7 @@ public class EcmaScript4ExpressionParsing extends ExpressionParsing {
             boolean stop = false;
             builder.advanceLexer();
 
-            final IElementType tokenType = builder.getTokenType();
+            IElementType tokenType = builder.getTokenType();
             if (tokenType == JSTokenTypes.ANY_IDENTIFIER && allowStar) {
                 builder.advanceLexer();
                 stop = true;
@@ -157,7 +157,7 @@ public class EcmaScript4ExpressionParsing extends ExpressionParsing {
     }
 
     @Override
-    public boolean tryParseType(final PsiBuilder builder) {
+    public boolean tryParseType(PsiBuilder builder) {
         if (builder.getTokenType() == JSTokenTypes.COLON) {
             builder.advanceLexer();
 
@@ -167,7 +167,7 @@ public class EcmaScript4ExpressionParsing extends ExpressionParsing {
         return false;
     }
 
-    private void parseGenericSignature(final PsiBuilder builder) {
+    private void parseGenericSignature(PsiBuilder builder) {
         assert builder.getTokenType() == JSTokenTypes.LT;
         PsiBuilder.Marker genericTypeSignature = builder.mark();
         builder.advanceLexer();

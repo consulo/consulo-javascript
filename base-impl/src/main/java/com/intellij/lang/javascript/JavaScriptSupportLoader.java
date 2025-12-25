@@ -70,15 +70,15 @@ public class JavaScriptSupportLoader {
     @NonNls
     public static final String MXML_COMPONENT_TEMPLATE_NAME = "Mxml Component";
 
-    public static boolean isFlexMxmFile(final PsiFile file) {
+    public static boolean isFlexMxmFile(PsiFile file) {
         return file.getFileType() == XmlFileType.INSTANCE && nameHasMxmlExtension(file.getName());
     }
 
-    public static boolean isFlexMxmFile(final VirtualFile file) {
+    public static boolean isFlexMxmFile(VirtualFile file) {
         return file.getFileType() == XmlFileType.INSTANCE && nameHasMxmlExtension(file.getName());
     }
 
-    private static boolean nameHasMxmlExtension(final String s) {
+    private static boolean nameHasMxmlExtension(String s) {
         return s.endsWith(MXML_FILE_EXTENSION_DOT) || s.endsWith(MXML_FILE_EXTENSION2_DOT);
     }
 
@@ -86,9 +86,9 @@ public class JavaScriptSupportLoader {
         return FileTypeManager.getInstance().getFileTypeByFileName(filename) == XmlFileType.INSTANCE && nameHasMxmlExtension(filename);
     }
 
-    public static boolean isBindowsFile(final PsiElement element) {
-        final PsiFile containingFile = element.getContainingFile();
-        final PsiElement tag = element.getParent().getParent();
+    public static boolean isBindowsFile(PsiElement element) {
+        PsiFile containingFile = element.getContainingFile();
+        PsiElement tag = element.getParent().getParent();
         if (!(tag instanceof XmlTag)) {
             return false;
         }
@@ -102,7 +102,7 @@ public class JavaScriptSupportLoader {
         return "Application".equals(((XmlFile)containingFile).getDocument().getRootTag().getName());
     }
 
-    public static boolean isMxmlNs(final String ns) {
+    public static boolean isMxmlNs(String ns) {
         return ArrayUtil.contains(ns, MXML_URIS);
     }
 }

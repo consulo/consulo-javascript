@@ -36,20 +36,20 @@ public abstract class JSVariableStubBaseImpl<T extends JSVariable> extends JSQua
     private String myInitializerText;
 
     public JSVariableStubBaseImpl(
-        final String name,
+        String name,
         int flags,
         String type,
         String initial,
         String qName,
-        final StubElement parentStub,
-        final IStubElementType elementType
+        StubElement parentStub,
+        IStubElementType elementType
     ) {
         super(name, flags, qName, parentStub, elementType);
         myTypeString = type;
         myInitializerText = initial;
     }
 
-    public static int buildFlags(final JSVariable clazz) {
+    public static int buildFlags(JSVariable clazz) {
         return (clazz.isDeprecated() ? DEPRECATED_MASK : 0) | (clazz.isConst() ? CONST_MASK : clazz.isLocal() ? LOCAL_MASK : 0);
     }
 

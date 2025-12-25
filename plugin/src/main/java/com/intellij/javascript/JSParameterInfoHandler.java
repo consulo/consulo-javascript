@@ -50,15 +50,15 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
     }
 
     @Override
-    public Object[] getParametersForLookup(final LookupElement item, final ParameterInfoContext context) {
+    public Object[] getParametersForLookup(LookupElement item, ParameterInfoContext context) {
         if (!(item instanceof MutableLookupElement)) {
             return null;
         }
 
         PsiElement element = item.getPsiElement();
         if (element instanceof JSFunction) {
-            final JSFunction originalFunction = (JSFunction)element;
-            final List<JSFunction> lookupItems = new ArrayList<>();
+            JSFunction originalFunction = (JSFunction)element;
+            List<JSFunction> lookupItems = new ArrayList<>();
             Set<String> availableSignatures = new HashSet<>();
 
             for (PsiElement el : DefinitionsScopedSearch.search(originalFunction)) {
@@ -75,13 +75,13 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
         return ArrayUtil.EMPTY_OBJECT_ARRAY;
     }
 
-    private static void doAddSignature(final List<JSFunction> lookupItems, final Set<String> availableSignatures, final PsiElement el) {
+    private static void doAddSignature(List<JSFunction> lookupItems, Set<String> availableSignatures, PsiElement el) {
         if (el instanceof JSFunction function) {
-            final JSParameterList parameterList = function.getParameterList();
+            JSParameterList parameterList = function.getParameterList();
 
             if (parameterList != null) {
-                final String typedSignature = buildSignature(parameterList.getParameters(), false, -1).text;
-                final String untypedSignature = buildSignature(parameterList.getParameters(), true, -1).text;
+                String typedSignature = buildSignature(parameterList.getParameters(), false, -1).text;
+                String untypedSignature = buildSignature(parameterList.getParameters(), true, -1).text;
 
                 if (!availableSignatures.contains(typedSignature) && !availableSignatures.contains(untypedSignature)) {
                     lookupItems.add(function);
@@ -93,7 +93,7 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
     }
 
     @Override
-    public JSArgumentList findElementForParameterInfo(final CreateParameterInfoContext context) {
+    public JSArgumentList findElementForParameterInfo(CreateParameterInfoContext context) {
         JSArgumentList argList = findArgumentList(context.getFile(), context.getOffset());
 
         if (argList != null) {
@@ -103,10 +103,10 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
     }
 
     @Nullable
-    public static JSArgumentList findArgumentList(final PsiFile file, final int offset) {
+    public static JSArgumentList findArgumentList(PsiFile file, int offset) {
         JSArgumentList argList = ParameterInfoUtils.findParentOfType(file, offset, JSArgumentList.class);
         if (argList == null) {
-            final JSCallExpression callExpression = ParameterInfoUtils.findParentOfType(file, offset, JSCallExpression.class);
+            JSCallExpression callExpression = ParameterInfoUtils.findParentOfType(file, offset, JSCallExpression.class);
             if (callExpression != null) {
                 argList = callExpression.getArgumentList();
             }
@@ -116,19 +116,19 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 
     @Nullable
     private static JSArgumentList fillSignaturesForArgumentList(
-        final CreateParameterInfoContext context,
-        final @Nonnull JSArgumentList argList
+        CreateParameterInfoContext context,
+        @Nonnull JSArgumentList argList
     ) {
-        final PsiElement psiElement = argList.getParent();
+        PsiElement psiElement = argList.getParent();
         if (!(psiElement instanceof JSCallExpression)) {
             return null;
         }
 
-        final JSCallExpression parent = (JSCallExpression)psiElement;
-        final JSExpression methodExpression = parent.getMethodExpression();
+        JSCallExpression parent = (JSCallExpression)psiElement;
+        JSExpression methodExpression = parent.getMethodExpression();
 
         if (methodExpression instanceof JSReferenceExpression referenceExpression) {
-            final ResolveResult[] resolveResults = referenceExpression.multiResolve(true);
+            ResolveResult[] resolveResults = referenceExpression.multiResolve(true);
 
             if (resolveResults.length > 0) {
                 List<JSFunction> items = new ArrayList<JSFunction>(resolveResults.length);
@@ -148,7 +148,7 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
             }
         }
         else if (methodExpression instanceof JSSuperExpression) {
-            final PsiElement clazz = methodExpression.getReference().resolve();
+            PsiElement clazz = methodExpression.getReference().resolve();
             if (clazz instanceof JSFunction) {
                 context.setItemsToShow(new Object[]{clazz});
                 return argList;
@@ -158,36 +158,36 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
     }
 
     @Override
-    public void showParameterInfo(@Nonnull final JSArgumentList element, final CreateParameterInfoContext context) {
+    public void showParameterInfo(@Nonnull JSArgumentList element, CreateParameterInfoContext context) {
         context.showHint(element, element.getTextOffset(), this);
     }
 
     @Override
-    public JSArgumentList findElementForUpdatingParameterInfo(final UpdateParameterInfoContext context) {
+    public JSArgumentList findElementForUpdatingParameterInfo(UpdateParameterInfoContext context) {
         return findArgumentList(context.getFile(), context.getOffset());
     }
 
     @Override
-    public void updateParameterInfo(@Nonnull final JSArgumentList o, final UpdateParameterInfoContext context) {
+    public void updateParameterInfo(@Nonnull JSArgumentList o, UpdateParameterInfoContext context) {
         if (context.getParameterOwner() != o) {
             context.removeHint();
             return;
         }
-        final int currentParameterIndex = ParameterInfoUtils.getCurrentParameterIndex(o.getNode(), context.getOffset(), JSTokenTypes.COMMA);
+        int currentParameterIndex = ParameterInfoUtils.getCurrentParameterIndex(o.getNode(), context.getOffset(), JSTokenTypes.COMMA);
         context.setCurrentParameter(currentParameterIndex);
     }
 
     @Override
-    public void updateUI(final JSFunction p, final ParameterInfoUIContext context) {
-        final JSParameterList parameterList = p.getParameterList();
-        final JSParameter[] params = parameterList != null ? parameterList.getParameters() : new JSParameter[0];
-        final int currentParameterIndex = context.getCurrentParameterIndex() >= 0 ? context.getCurrentParameterIndex() : params.length;
-        final JSParameter parameter = currentParameterIndex < params.length ? params[currentParameterIndex] : null;
+    public void updateUI(JSFunction p, ParameterInfoUIContext context) {
+        JSParameterList parameterList = p.getParameterList();
+        JSParameter[] params = parameterList != null ? parameterList.getParameters() : new JSParameter[0];
+        int currentParameterIndex = context.getCurrentParameterIndex() >= 0 ? context.getCurrentParameterIndex() : params.length;
+        JSParameter parameter = currentParameterIndex < params.length ? params[currentParameterIndex] : null;
 
-        final SignatureInfo signatureInfo = buildSignature(params, false, currentParameterIndex);
-        final String name = signatureInfo.text;
+        SignatureInfo signatureInfo = buildSignature(params, false, currentParameterIndex);
+        String name = signatureInfo.text;
 
-        final String currentParameterSignature = parameter != null ? getSignatureForParameter(parameter, false) : null;
+        String currentParameterSignature = parameter != null ? getSignatureForParameter(parameter, false) : null;
         int highlightStart = parameter != null ? signatureInfo.selectedParameterStart : 0;
         int highlightEnd = parameter != null ? highlightStart + currentParameterSignature.length() : 0;
         context.setupUIComponentPresentation(name, highlightStart, highlightEnd, false, false, false, context.getDefaultParameterColor());
@@ -200,7 +200,7 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 
     private static
     @Nonnull
-    SignatureInfo buildSignature(final JSParameter[] params, final boolean skipType, int selectedParameterIndex) {
+    SignatureInfo buildSignature(JSParameter[] params, boolean skipType, int selectedParameterIndex) {
         SignatureInfo info = new SignatureInfo();
         if (params.length > 0) {
             StringBuilder result = new StringBuilder();
@@ -222,11 +222,11 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
         return info;
     }
 
-    public static String getSignatureForParameter(final JSParameter p, boolean skipType) {
-        final String s = skipType ? null : p.getTypeString();
+    public static String getSignatureForParameter(JSParameter p, boolean skipType) {
+        String s = skipType ? null : p.getTypeString();
 
         if (s != null && s.length() > 0) {
-            final boolean ecmal4 = p.getContainingFile().getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
+            boolean ecmal4 = p.getContainingFile().getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4;
             String result;
 
             if (ecmal4) {
@@ -240,7 +240,7 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
             else {
                 result = "[" + s + "] " + p.getName();
             }
-            final String initializerText = p.getInitializerText();
+            String initializerText = p.getInitializerText();
             if (initializerText != null) {
                 result += " = " + initializerText;
             }
@@ -251,7 +251,7 @@ public class JSParameterInfoHandler implements ParameterInfoHandlerWithTabAction
 
     @Override
     @Nonnull
-    public JSExpression[] getActualParameters(@Nonnull final JSArgumentList jsArgumentList) {
+    public JSExpression[] getActualParameters(@Nonnull JSArgumentList jsArgumentList) {
         return jsArgumentList.getArguments();
     }
 

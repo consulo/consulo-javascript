@@ -17,7 +17,7 @@ public class ExpressionUtil {
         if (expression == null) {
             return false;
         }
-        final IsConstantExpressionVisitor visitor = new IsConstantExpressionVisitor();
+        IsConstantExpressionVisitor visitor = new IsConstantExpressionVisitor();
         expression.accept(visitor);
         return visitor.isConstant;
     }
@@ -42,7 +42,7 @@ public class ExpressionUtil {
 
         @Override
         public void visitJSParenthesizedExpression(JSParenthesizedExpression expression) {
-            final JSExpression expr = expression.getInnerExpression();
+            JSExpression expr = expression.getInnerExpression();
             if (expr != null) {
                 expr.accept(this);
             }
@@ -50,7 +50,7 @@ public class ExpressionUtil {
 
         @Override
         public void visitJSPrefixExpression(JSPrefixExpression expression) {
-            final JSExpression operand = expression.getExpression();
+            JSExpression operand = expression.getExpression();
             if (operand == null) {
                 isConstant = false;
                 return;
@@ -61,7 +61,7 @@ public class ExpressionUtil {
                 return;
             }
 
-            final IElementType opType = expression.getOperationSign();
+            IElementType opType = expression.getOperationSign();
 
             if (JSTokenTypes.PLUS.equals(opType)
                 || JSTokenTypes.MINUS.equals(opType)
@@ -78,7 +78,7 @@ public class ExpressionUtil {
             if (!isConstant) {
                 return;
             }
-            final JSExpression rOperand = expression.getROperand();
+            JSExpression rOperand = expression.getROperand();
             if (rOperand != null) {
                 rOperand.accept(this);
             }
@@ -86,8 +86,8 @@ public class ExpressionUtil {
 
         @Override
         public void visitJSConditionalExpression(JSConditionalExpression expression) {
-            final JSExpression thenExpr = expression.getThen();
-            final JSExpression elseExpr = expression.getElse();
+            JSExpression thenExpr = expression.getThen();
+            JSExpression elseExpr = expression.getElse();
             if (thenExpr == null || elseExpr == null) {
                 isConstant = false;
                 return;
@@ -106,15 +106,15 @@ public class ExpressionUtil {
 
         @Override
         public void visitJSReferenceExpression(JSReferenceExpression expression) {
-            final JSElement refElement = (JSElement)expression.resolve();
+            JSElement refElement = (JSElement)expression.resolve();
 
             if (!(refElement instanceof JSVariable)) {
                 isConstant = false;
                 return;
             }
 
-            final JSVariable variable = (JSVariable)refElement;
-            final Boolean isConst = isVariableConstant.get(variable);
+            JSVariable variable = (JSVariable)refElement;
+            Boolean isConst = isVariableConstant.get(variable);
 
             if (isConst != null) {
                 isConstant &= isConst;
@@ -127,7 +127,7 @@ public class ExpressionUtil {
                 return;
             }
 
-            final JSExpression initializer = variable.getInitializer();
+            JSExpression initializer = variable.getInitializer();
 
             initializer.accept(this);
             isVariableConstant.put(variable, isConstant);

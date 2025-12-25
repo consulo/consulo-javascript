@@ -146,7 +146,7 @@ abstract class JSStatementWithLabelReferenceImpl extends JSStatementImpl {
         @Override
         @RequiredReadAction
         public Object[] getVariants() {
-            final List<String> labels = new ArrayList<>(1);
+            List<String> labels = new ArrayList<>(1);
             processElements(element -> {
                 labels.add(element.getLabel());
                 return true;

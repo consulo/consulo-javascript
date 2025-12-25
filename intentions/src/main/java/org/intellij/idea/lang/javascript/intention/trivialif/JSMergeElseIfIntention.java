@@ -52,12 +52,12 @@ public class JSMergeElseIfIntention extends JSIntention {
 
     @Override
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSIfStatement parentStatement = (JSIfStatement)element.getParent();
+        JSIfStatement parentStatement = (JSIfStatement)element.getParent();
 
         assert (parentStatement != null);
 
-        final JSBlockStatement elseBranch = (JSBlockStatement)parentStatement.getElse();
-        final JSStatement elseBranchContents = elseBranch.getStatements()[0];
+        JSBlockStatement elseBranch = (JSBlockStatement)parentStatement.getElse();
+        JSStatement elseBranchContents = elseBranch.getStatements()[0];
 
         JSElementFactory.replaceStatement(elseBranch, elseBranchContents.getText());
     }

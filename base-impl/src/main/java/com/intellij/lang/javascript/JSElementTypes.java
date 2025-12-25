@@ -60,7 +60,7 @@ public interface JSElementTypes {
     IElementType EMBEDDED_CONTENT = new ILazyParseableElementType("EMBEDDED_CONTENT", JavaScriptLanguage.INSTANCE) {
         @Override
         @RequiredReadAction
-        protected ASTNode doParseContents(@Nonnull final ASTNode chameleon, @Nonnull final PsiElement psi) {
+        protected ASTNode doParseContents(@Nonnull ASTNode chameleon, @Nonnull PsiElement psi) {
             LanguageVersion languageVersion = LanguageVersionUtil.findLanguageVersion(getLanguage(), psi);
             Project project = psi.getProject();
             Language languageForParser = getLanguageForParser(psi);

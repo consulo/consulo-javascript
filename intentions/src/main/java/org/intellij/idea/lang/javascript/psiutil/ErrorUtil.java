@@ -30,7 +30,7 @@ public class ErrorUtil {
     public static boolean containsError(@Nonnull PsiElement element) {
         // check only immediate children, full tree traversal is too expensive
         if (fullTraversal) {
-            final ErrorElementVisitor visitor = new ErrorElementVisitor();
+            ErrorElementVisitor visitor = new ErrorElementVisitor();
 
             element.accept(visitor);
             return visitor.containsErrorElement();

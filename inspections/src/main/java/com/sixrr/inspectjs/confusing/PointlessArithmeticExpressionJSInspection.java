@@ -51,10 +51,10 @@ public class PointlessArithmeticExpressionJSInspection extends JavaScriptInspect
     }
 
     private String calculateReplacementExpression(JSExpression expression) {
-        final JSBinaryExpression exp = (JSBinaryExpression) expression;
-        final IElementType sign = exp.getOperationSign();
-        final JSExpression lhs = exp.getLOperand();
-        final JSExpression rhs = exp.getROperand();
+        JSBinaryExpression exp = (JSBinaryExpression) expression;
+        IElementType sign = exp.getOperationSign();
+        JSExpression lhs = exp.getLOperand();
+        JSExpression rhs = exp.getROperand();
         assert rhs != null;
         if (JSTokenTypes.PLUS.equals(sign)) {
             if (isZero(lhs)) {
@@ -98,8 +98,8 @@ public class PointlessArithmeticExpressionJSInspection extends JavaScriptInspect
 
         @Override
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final JSExpression expression = (JSExpression) descriptor.getPsiElement();
-            final String newExpression = calculateReplacementExpression(expression);
+            JSExpression expression = (JSExpression) descriptor.getPsiElement();
+            String newExpression = calculateReplacementExpression(expression);
             replaceExpression(expression, newExpression);
         }
     }
@@ -120,18 +120,18 @@ public class PointlessArithmeticExpressionJSInspection extends JavaScriptInspect
             if (!(expression.getROperand() != null)) {
                 return;
             }
-            final IElementType sign = expression.getOperationSign();
+            IElementType sign = expression.getOperationSign();
             if (!arithmeticTokens.contains(sign)) {
                 return;
             }
-            final JSExpression rhs = expression.getROperand();
-            final JSExpression lhs = expression.getLOperand();
+            JSExpression rhs = expression.getROperand();
+            JSExpression lhs = expression.getLOperand();
 
             if (rhs == null) {
                 return;
             }
 
-            final boolean isPointless;
+            boolean isPointless;
             if (sign.equals(JSTokenTypes.PLUS)) {
                 isPointless = additionExpressionIsPointless(lhs, rhs);
             } else if (sign.equals(JSTokenTypes.MINUS)) {
@@ -171,7 +171,7 @@ public class PointlessArithmeticExpressionJSInspection extends JavaScriptInspect
      * @noinspection FloatingPointEquality
      */
     private static boolean isZero(JSExpression expression) {
-        @NonNls final String text = expression.getText();
+        @NonNls String text = expression.getText();
         return text.equals("0")||
                 text.equals("0x0")||
                 text.equals("0X0")||
@@ -182,7 +182,7 @@ public class PointlessArithmeticExpressionJSInspection extends JavaScriptInspect
 
     private static boolean isString(JSExpression expression) {
         if (expression instanceof JSLiteralExpression) {
-            final String s = expression.getText();
+            String s = expression.getText();
             return s.startsWith("'") || s.startsWith("\"");
         }
         return false;
@@ -192,7 +192,7 @@ public class PointlessArithmeticExpressionJSInspection extends JavaScriptInspect
      * @noinspection FloatingPointEquality
      */
     private static boolean isOne(JSExpression expression) {
-        @NonNls final String text = expression.getText();
+        @NonNls String text = expression.getText();
         return text.equals("1") ||
                 text.equals("0x1") ||
                 text.equals("0X1") ||

@@ -30,7 +30,7 @@ import consulo.language.psi.stub.StubElement;
 public class JSAttributeNameValuePairStubImpl extends JSNamedObjectStubBase<JSAttributeNameValuePair> implements JSAttributeNameValuePairStub {
     private String myValue;
 
-    public JSAttributeNameValuePairStubImpl(String name, final String value, final StubElement parentStub) {
+    public JSAttributeNameValuePairStubImpl(String name, String value, StubElement parentStub) {
         super(name, 0, parentStub, JSElementTypes.ATTRIBUTE_NAME_VALUE_PAIR);
         myValue = value;
     }

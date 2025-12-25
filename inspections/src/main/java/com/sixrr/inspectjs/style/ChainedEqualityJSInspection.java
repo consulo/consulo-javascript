@@ -57,7 +57,7 @@ public class ChainedEqualityJSInspection extends JavaScriptInspection {
             if (!isEqualityComparison(expression)) {
                 return;
             }
-            final JSExpression lhs = expression.getLOperand();
+            JSExpression lhs = expression.getLOperand();
             if (!(lhs instanceof JSBinaryExpression)) {
                 return;
             }
@@ -68,7 +68,7 @@ public class ChainedEqualityJSInspection extends JavaScriptInspection {
         }
 
         private static boolean isEqualityComparison(@Nonnull JSBinaryExpression expression) {
-            final IElementType tokenType = expression.getOperationSign();
+            IElementType tokenType = expression.getOperationSign();
             return JSTokenTypes.EQEQ.equals(tokenType) || JSTokenTypes.NE.equals(tokenType);
         }
     }

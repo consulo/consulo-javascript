@@ -50,7 +50,7 @@ public class JSConvertIntegerToHexIntention extends JSIntention {
 
     @Override
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSLiteralExpression exp = (JSLiteralExpression)element;
+        JSLiteralExpression exp = (JSLiteralExpression)element;
 
         JSElementFactory.replaceExpression(exp, "0x" + NumberUtil.getLiteralNumber(exp).toString(16));
     }

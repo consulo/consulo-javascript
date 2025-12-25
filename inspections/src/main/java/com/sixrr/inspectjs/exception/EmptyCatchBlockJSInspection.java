@@ -45,13 +45,13 @@ public class EmptyCatchBlockJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSTryStatement(JSTryStatement jsTryStatement) {
             super.visitJSTryStatement(jsTryStatement);
-            final JSCatchBlock catchBlock = jsTryStatement.getCatchBlock();
+            JSCatchBlock catchBlock = jsTryStatement.getCatchBlock();
             if (catchBlock == null) {
                 return;
             }
-            final JSStatement body = catchBlock.getStatement();
+            JSStatement body = catchBlock.getStatement();
             if (StatementUtils.isEmpty(body)) {
-                final PsiElement catchToken = catchBlock.getFirstChild();
+                PsiElement catchToken = catchBlock.getFirstChild();
                 registerError(catchToken);
             }
         }

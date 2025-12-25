@@ -64,7 +64,7 @@ public class JSSplitDeclarationAndInitializationIntention extends JSIntention {
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         assert (element instanceof JSVarStatement);
 
-        final JSVarStatement varStatement = (JSVarStatement)element;
+        JSVarStatement varStatement = (JSVarStatement)element;
         StringBuilder declarationBuffer = new StringBuilder();
         List<String> initializations = new ArrayList<>();
 
@@ -73,7 +73,7 @@ public class JSSplitDeclarationAndInitializationIntention extends JSIntention {
                 .append(variable.getName());
 
             String s = JSPsiImplUtils.getTypeFromDeclaration(variable);
-            final PsiFile containingFile = element.getContainingFile();
+            PsiFile containingFile = element.getContainingFile();
 
             if (s == null && containingFile.getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4) {
                 s = JSResolveUtil.getExpressionType(variable.getInitializer(), containingFile);
@@ -91,7 +91,7 @@ public class JSSplitDeclarationAndInitializationIntention extends JSIntention {
         // Do replacement.
         JSStatement newStatement = JSElementFactory.replaceStatement(varStatement, declarationBuffer.toString());
 
-        for (final String initialization : initializations) {
+        for (String initialization : initializations) {
             newStatement = JSElementFactory.addStatementAfter(newStatement, initialization);
         }
     }
@@ -108,7 +108,7 @@ public class JSSplitDeclarationAndInitializationIntention extends JSIntention {
                 return false;
             }
 
-            final JSVarStatement varStatement = (JSVarStatement)element;
+            JSVarStatement varStatement = (JSVarStatement)element;
             if (ErrorUtil.containsError(varStatement)) {
                 return false;
             }

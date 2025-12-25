@@ -48,8 +48,8 @@ public class JSReplaceShiftWithMultiplyIntention extends JSMutablyNamedIntention
     @Override
     @RequiredReadAction
     protected LocalizeValue getTextForElement(PsiElement element) {
-        final IElementType tokenType = ((JSBinaryExpression)element).getOperationSign();
-        final String operatorString;
+        IElementType tokenType = ((JSBinaryExpression)element).getOperationSign();
+        String operatorString;
 
         if (element instanceof JSAssignmentExpression) {
             operatorString = JSTokenTypes.LTLTEQ.equals(tokenType) ? "*=" : "/=";
@@ -81,25 +81,25 @@ public class JSReplaceShiftWithMultiplyIntention extends JSMutablyNamedIntention
 
     @RequiredReadAction
     private void replaceShiftAssignWithMultiplyOrDivideAssign(JSAssignmentExpression exp) throws IncorrectOperationException {
-        final JSExpression lhs = exp.getLOperand();
-        final JSExpression rhs = exp.getROperand();
-        final IElementType tokenType = exp.getOperationSign();
-        final String assignString = JSTokenTypes.LTLTEQ.equals(tokenType) ? "*=" : "/=";
+        JSExpression lhs = exp.getLOperand();
+        JSExpression rhs = exp.getROperand();
+        IElementType tokenType = exp.getOperationSign();
+        String assignString = JSTokenTypes.LTLTEQ.equals(tokenType) ? "*=" : "/=";
 
-        final String expString = lhs.getText() + assignString + ShiftUtils.getExpBase2(rhs);
+        String expString = lhs.getText() + assignString + ShiftUtils.getExpBase2(rhs);
 
         JSElementFactory.replaceExpression(exp, expString);
     }
 
     @RequiredReadAction
     private void replaceShiftWithMultiplyOrDivide(JSBinaryExpression exp) throws IncorrectOperationException {
-        final JSExpression lhs = exp.getLOperand();
-        final JSExpression rhs = exp.getROperand();
-        final IElementType tokenType = exp.getOperationSign();
-        final String operatorString = JSTokenTypes.LTLT.equals(tokenType) ? "*" : "/";
-        final String lhsText = ParenthesesUtils.getParenthesized(lhs, ParenthesesUtils.MULTIPLICATIVE_PRECENDENCE);
+        JSExpression lhs = exp.getLOperand();
+        JSExpression rhs = exp.getROperand();
+        IElementType tokenType = exp.getOperationSign();
+        String operatorString = JSTokenTypes.LTLT.equals(tokenType) ? "*" : "/";
+        String lhsText = ParenthesesUtils.getParenthesized(lhs, ParenthesesUtils.MULTIPLICATIVE_PRECENDENCE);
         String expString = lhsText + operatorString + ShiftUtils.getExpBase2(rhs);
-        final JSElement parent = (JSElement)exp.getParent();
+        JSElement parent = (JSElement)exp.getParent();
 
         if (parent != null && parent instanceof JSExpression parentExpression && !(parent instanceof JSParenthesizedExpression)
             && ParenthesesUtils.getPrecendence(parentExpression) < ParenthesesUtils.MULTIPLICATIVE_PRECENDENCE) {
@@ -119,20 +119,20 @@ public class JSReplaceShiftWithMultiplyIntention extends JSMutablyNamedIntention
 
         @RequiredReadAction
         private boolean isAssignmentShiftByLiteral(JSAssignmentExpression expression) {
-            final IElementType tokenType = expression.getOperationSign();
+            IElementType tokenType = expression.getOperationSign();
 
             if (tokenType == null || !(JSTokenTypes.LTLTEQ.equals(tokenType) || JSTokenTypes.GTGTEQ.equals(tokenType))) {
                 return false;
             }
 
-            final JSExpression rhs = expression.getROperand();
+            JSExpression rhs = expression.getROperand();
 
             return rhs != null && ShiftUtils.isIntLiteral(rhs);
         }
 
         @RequiredReadAction
         private boolean isBinaryShiftByLiteral(JSBinaryExpression expression) {
-            final IElementType tokenType = expression.getOperationSign();
+            IElementType tokenType = expression.getOperationSign();
 
             return (JSTokenTypes.LTLT.equals(tokenType) || JSTokenTypes.GTGT.equals(tokenType))
                 && ShiftUtils.isIntLiteral(expression.getROperand());

@@ -57,17 +57,17 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
         nameIds = myContextNameIds;
 
         boolean hasSomeInfoAvailable = nameIds != null && nameIds.length > 0;
-        final List<String[]> possibleNameComponents = new ArrayList<>(1);
+        List<String[]> possibleNameComponents = new ArrayList<>(1);
         myCurrentFile = targetFile.getOriginalFile();
         //myTargetFiles = new HashSet<PsiFile>();
 
         boolean allTypesResolved = false;
         boolean doAddContextIds = true;
 
-        final JSClass jsClass = PsiTreeUtil.getParentOfType(context, JSClass.class);
+        JSClass jsClass = PsiTreeUtil.getParentOfType(context, JSClass.class);
 
         if (context instanceof JSReferenceExpression) {
-            final JSReferenceExpression refExpr = (JSReferenceExpression)context;
+            JSReferenceExpression refExpr = (JSReferenceExpression)context;
             JSExpression qualifier = refExpr.getQualifier();
 
             if (qualifier != null) {
@@ -82,12 +82,12 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
                     }
                 }
 
-                final CompletionTypeProcessor processor = new CompletionTypeProcessor(possibleNameComponents);
+                CompletionTypeProcessor processor = new CompletionTypeProcessor(possibleNameComponents);
                 doEvalForExpr(getOriginalQualifier(qualifier), myTargetFile, processor);
                 allTypesResolved = processor.getAllTypesResolved();
             }
             else {
-                final PsiElement parent = refExpr.getParent();
+                PsiElement parent = refExpr.getParent();
 
                 if (parent instanceof JavaScriptImportStatementBase) {
                     myProcessOnlyTypes = true;
@@ -130,8 +130,8 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
     }
 
     @RequiredReadAction
-    private void updateCanUseOnlyCompleteMatchesFromString(final String qName, Object source, PsiElement clazz) {
-        final boolean wasSet = myAddOnlyCompleteMatchesSet;
+    private void updateCanUseOnlyCompleteMatchesFromString(String qName, Object source, PsiElement clazz) {
+        boolean wasSet = myAddOnlyCompleteMatchesSet;
 
         if (myAddOnlyCompleteMatches || !wasSet) {
             myAddOnlyCompleteMatchesSet = true;
@@ -155,7 +155,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
                         myAddOnlyCompleteMatches = true;
                     }
 
-                    final JSAttributeList attributeList = jsClass.getAttributeList();
+                    JSAttributeList attributeList = jsClass.getAttributeList();
                     if (attributeList != null && attributeList.hasModifier(JSAttributeList.ModifierType.DYNAMIC)
                         && !OBJECT_CLASS_NAME.equals(qName)) {
                         myAddOnlyCompleteMatches = false;
@@ -165,25 +165,25 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
         }
     }
 
-    private static boolean isObjectSourceThatDoesNotGiveExactKnowledgeAboutFunctionType(final Object source) {
+    private static boolean isObjectSourceThatDoesNotGiveExactKnowledgeAboutFunctionType(Object source) {
         return source instanceof JSFunctionExpression;
     }
 
     @RequiredReadAction
-    private void updateCanUseOnlyCompleteMatches(final JSClass jsClass) {
-        final JSAttributeList attributeList = jsClass != null ? jsClass.getAttributeList() : null;
+    private void updateCanUseOnlyCompleteMatches(JSClass jsClass) {
+        JSAttributeList attributeList = jsClass != null ? jsClass.getAttributeList() : null;
         if (attributeList != null && attributeList.hasModifier(JSAttributeList.ModifierType.DYNAMIC)) {
             myAddOnlyCompleteMatches = false;
         }
     }
 
     @RequiredReadAction
-    public void addLocalResults(final List<PsiElement> results) {
+    public void addLocalResults(List<PsiElement> results) {
         if (results == null) {
             return;
         }
 
-        final Set<String> processedCandidateNames = new HashSet<>(results.size());
+        Set<String> processedCandidateNames = new HashSet<>(results.size());
 
         for (PsiElement e : results) {
             if (e instanceof PsiNamedElement namedElement) {
@@ -245,8 +245,8 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
         }
     }
 
-    private void addSupers(final String type, final List<String[]> possibleNameIds, final EvaluateContext context) {
-        final String iteratedType = myIteratedTypeName;
+    private void addSupers(String type, List<String[]> possibleNameIds, EvaluateContext context) {
+        String iteratedType = myIteratedTypeName;
         myIteratedTypeName = type;
         doIterateHierarchy(
             type,
@@ -291,8 +291,8 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
         return true;
     }
 
-    private void doAdd(final String nameId, final PsiElement element) {
-        final String name = nameId != null ? nameId : null;
+    private void doAdd(String nameId, PsiElement element) {
+        String name = nameId != null ? nameId : null;
 
         boolean seemsToBePrivateSymbol =
             name != null && name.length() > 0 && name.charAt(0) == '_' && name.length() > 1 && name.charAt(1) != '_';
@@ -328,13 +328,13 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
     }
 
     @RequiredReadAction
-    private LookupElement addLookupValue(PsiElement element, final String name, JSLookupUtil.LookupPriority priority) {
+    private LookupElement addLookupValue(PsiElement element, String name, JSLookupUtil.LookupPriority priority) {
         return JSLookupUtil.createLookupItem(element, name, priority);
     }
 
     @Override
     @RequiredReadAction
-    protected String[] calculateContextIds(final JSReferenceExpression jsReferenceExpression) {
+    protected String[] calculateContextIds(JSReferenceExpression jsReferenceExpression) {
         return JSResolveUtil.buildNameIdsForQualifier(JSResolveUtil.getRealRefExprQualifier(jsReferenceExpression));
     }
 
@@ -343,14 +343,14 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
         return super.isFromRelevantFileOrDirectory(); // || myTargetFiles.contains(myCurrentFile);
     }
 
-    private void addCompleteMatch(final PsiElement _element, String nameId) {
+    private void addCompleteMatch(PsiElement _element, String nameId) {
         addCompleteMatch(_element, nameId, true);
     }
 
-    private void addCompleteMatch(final PsiElement _element, String nameId, boolean doFilterting) {
+    private void addCompleteMatch(PsiElement _element, String nameId, boolean doFilterting) {
         if (!doAdd(_element, nameId, doFilterting)) {
             boolean removedFromPartialNames = false;
-            final Object el = myNames2CandidatesMap.get(nameId);
+            Object el = myNames2CandidatesMap.get(nameId);
 
             if (el != null) {
                 removedFromPartialNames =
@@ -364,7 +364,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
         PsiElement element = _element;
 
         if (isFromRelevantFileOrDirectory() && !myAddOnlyCompleteMatches) {
-            final Object o = addLookupValue(element, nameId, JSLookupUtil.LookupPriority.HIGHEST);
+            Object o = addLookupValue(element, nameId, JSLookupUtil.LookupPriority.HIGHEST);
             if (o != null) {
                 myNamesList.add(myThisFileNameListCount++, o);
             }
@@ -373,7 +373,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
             }
         }
         else {
-            final Object o = addLookupValue(element, nameId, JSLookupUtil.LookupPriority.HIGH);
+            Object o = addLookupValue(element, nameId, JSLookupUtil.LookupPriority.HIGH);
             if (o != null) {
                 myNamesList.add(o);
             }
@@ -391,7 +391,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
         return true;
     }
 
-    private void addPartialMatch(final PsiElement _element, String nameId) {
+    private void addPartialMatch(PsiElement _element, String nameId) {
         if (myAddOnlyCompleteMatches) {
             return;
         }
@@ -401,8 +401,8 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
 
         PsiElement element = _element;
 
-        final Map<String, Object> targetNamesMap;
-        final JSLookupUtil.LookupPriority priority;
+        Map<String, Object> targetNamesMap;
+        JSLookupUtil.LookupPriority priority;
 
         if (isFromRelevantFileOrDirectory()) {
             priority = hasSomeSmartnessAvailable ? JSLookupUtil.LookupPriority.HIGHER : JSLookupUtil.LookupPriority.HIGHEST;
@@ -414,7 +414,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
             targetNamesMap = myPartialMatchNamesMap;
         }
 
-        final Object o = addLookupValue(element, nameId, priority);
+        Object o = addLookupValue(element, nameId, priority);
 
         if (o != null) {
             targetNamesMap.put(nameId, o);

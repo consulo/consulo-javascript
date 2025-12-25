@@ -50,7 +50,7 @@ public class JSMethodNameMacro extends Macro {
 
     @Override
     public Result calculateResult(@Nonnull Expression[] params, ExpressionContext context) {
-        final PsiElement elementAtCaret = JSClassNameMacro.findElementAtCaret(context);
+        PsiElement elementAtCaret = JSClassNameMacro.findElementAtCaret(context);
         if (elementAtCaret != null) {
             JSFunction function = PsiTreeUtil.getParentOfType(elementAtCaret, JSFunction.class);
             if (function instanceof JSFunctionExpression functionExpression) {
@@ -58,7 +58,7 @@ public class JSMethodNameMacro extends Macro {
             }
 
             if (function != null) {
-                final String name = function.getName();
+                String name = function.getName();
                 if (name != null) {
                     return new TextResult(name);
                 }

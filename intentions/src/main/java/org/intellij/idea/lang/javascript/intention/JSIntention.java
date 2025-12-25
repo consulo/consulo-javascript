@@ -55,7 +55,7 @@ public abstract class JSIntention extends PsiElementBaseIntentionAction {
             return null;
         }
 
-        final Language language = element.getLanguage();
+        Language language = element.getLanguage();
         if (language != Language.ANY && language != JavaScriptLanguage.INSTANCE) {
             return null;
         }

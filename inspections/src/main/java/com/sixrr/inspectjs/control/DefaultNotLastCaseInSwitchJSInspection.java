@@ -41,12 +41,12 @@ public class DefaultNotLastCaseInSwitchJSInspection extends JavaScriptInspection
         @Override
         public void visitJSSwitchStatement(@Nonnull JSSwitchStatement statement) {
             super.visitJSSwitchStatement(statement);
-            final JSCaseClause[] caseClauses = statement.getCaseClauses();
+            JSCaseClause[] caseClauses = statement.getCaseClauses();
             if (caseClauses == null) {
                 return;
             }
             for (int i = 0; i < caseClauses.length - 1; i++) {
-                final JSCaseClause caseClause = caseClauses[i];
+                JSCaseClause caseClause = caseClauses[i];
                 if (caseClause.isDefault()) {
                     registerError(caseClause.getFirstChild());
                 }

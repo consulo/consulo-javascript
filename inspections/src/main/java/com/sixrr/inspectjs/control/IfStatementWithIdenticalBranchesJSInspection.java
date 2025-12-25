@@ -53,11 +53,11 @@ public class IfStatementWithIdenticalBranchesJSInspection extends JavaScriptInsp
 
         @Override
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final PsiElement identifier = descriptor.getPsiElement();
-            final JSIfStatement statement = (JSIfStatement) identifier.getParent();
+            PsiElement identifier = descriptor.getPsiElement();
+            JSIfStatement statement = (JSIfStatement) identifier.getParent();
             assert statement != null;
-            final JSStatement thenBranch = statement.getThen();
-            final String bodyText = thenBranch.getText();
+            JSStatement thenBranch = statement.getThen();
+            String bodyText = thenBranch.getText();
             replaceStatement(statement, bodyText);
         }
     }
@@ -71,8 +71,8 @@ public class IfStatementWithIdenticalBranchesJSInspection extends JavaScriptInsp
 
         @Override public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
             super.visitJSIfStatement(statement);
-            final JSStatement thenBranch = statement.getThen();
-            final JSStatement elseBranch = statement.getElse();
+            JSStatement thenBranch = statement.getThen();
+            JSStatement elseBranch = statement.getElse();
             if(thenBranch == null || elseBranch == null)
             {
                 return ;

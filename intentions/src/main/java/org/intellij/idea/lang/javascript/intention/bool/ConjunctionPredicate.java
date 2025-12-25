@@ -33,8 +33,8 @@ class ConjunctionPredicate implements JSElementPredicate {
             return false;
         }
 
-        final JSBinaryExpression expression = (JSBinaryExpression)element;
-        final IElementType sign = expression.getOperationSign();
+        JSBinaryExpression expression = (JSBinaryExpression)element;
+        IElementType sign = expression.getOperationSign();
 
         return (JSTokenTypes.ANDAND.equals(sign) || JSTokenTypes.OROR.equals(sign));
     }

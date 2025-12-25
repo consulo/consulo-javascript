@@ -49,7 +49,7 @@ public class SwitchStatementWithNoDefaultBranchJSInspection extends JavaScriptIn
         }
 
         private static boolean hasDefaultBranch(JSSwitchStatement jsSwitchStatement) {
-            final JSCaseClause[] caseClauses = jsSwitchStatement.getCaseClauses();
+            JSCaseClause[] caseClauses = jsSwitchStatement.getCaseClauses();
             for (JSCaseClause clause : caseClauses) {
                 if (clause.isDefault()) {
                     return true;

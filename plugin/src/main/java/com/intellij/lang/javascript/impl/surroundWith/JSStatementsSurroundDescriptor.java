@@ -63,7 +63,7 @@ public class JSStatementsSurroundDescriptor implements SurroundDescriptor {
     @Nonnull
     @RequiredReadAction
     public PsiElement[] getElementsToSurround(PsiFile file, int startOffset, int endOffset) {
-        final PsiElement[] statements = findStatementsInRange(file, startOffset, endOffset);
+        PsiElement[] statements = findStatementsInRange(file, startOffset, endOffset);
         if (statements == null) {
             return PsiElement.EMPTY_ARRAY;
         }

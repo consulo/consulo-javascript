@@ -36,19 +36,19 @@ public class JSFunctionStubImpl extends JSQualifiedObjectStubBase<JSFunction> im
     private static final int REFERENCES_ARGUMENTS_MASK = 16;
 
     public JSFunctionStubImpl(
-        final String name,
+        String name,
         int flags,
         String qName,
         String returnType,
-        final StubElement parentStub,
-        final JSStubElementType elementType
+        StubElement parentStub,
+        JSStubElementType elementType
     ) {
         super(name, flags, qName, parentStub, elementType);
         myReturnType = returnType;
     }
 
-    public static int buildFlags(final JSFunction clazz) {
-        final int val = clazz.isConstructor()
+    public static int buildFlags(JSFunction clazz) {
+        int val = clazz.isConstructor()
             ? CONSTRUCTOR_MASK
             : clazz.isGetProperty()
             ? GET_PROPERTY_MASK

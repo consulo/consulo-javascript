@@ -45,7 +45,7 @@ public class ContinueOrBreakFromFinallyBlockJSInspection extends JavaScriptInspe
             if (!ControlFlowUtils.isInFinallyBlock(statement)) {
                 return;
             }
-            final JSStatement continuedStatement = statement.getStatementToContinue();
+            JSStatement continuedStatement = statement.getStatementToContinue();
             if (continuedStatement == null) {
                 return;
             }
@@ -61,7 +61,7 @@ public class ContinueOrBreakFromFinallyBlockJSInspection extends JavaScriptInspe
             if (!ControlFlowUtils.isInFinallyBlock(statement)) {
                 return;
             }
-            final JSStatement exitedStatement = statement.getStatementToBreak();
+            JSStatement exitedStatement = statement.getStatementToBreak();
             if (exitedStatement == null) {
                 return;
             }

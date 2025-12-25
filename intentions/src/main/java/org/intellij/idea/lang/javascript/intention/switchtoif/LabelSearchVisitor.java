@@ -33,7 +33,7 @@ class LabelSearchVisitor extends JSRecursiveElementVisitor {
 
     @Override
     public void visitJSLabeledStatement(JSLabeledStatement statement) {
-        final String labelText = statement.getLabel();
+        String labelText = statement.getLabel();
 
         this.used = labelText != null && labelText.equals(this.labelName);
     }

@@ -32,9 +32,9 @@ public class JSIncludeDirectiveStubImpl extends StubBase<JSIncludeDirective> imp
     private final String myIncludeText;
 
     public JSIncludeDirectiveStubImpl(
-        final String includeText,
-        final StubElement parentStub,
-        final JSStubElementType<JSIncludeDirectiveStub, JSIncludeDirective> type
+        String includeText,
+        StubElement parentStub,
+        JSStubElementType<JSIncludeDirectiveStub, JSIncludeDirective> type
     ) {
         super(parentStub, type);
         myIncludeText = includeText;

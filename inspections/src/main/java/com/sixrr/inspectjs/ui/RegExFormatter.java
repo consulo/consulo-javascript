@@ -16,7 +16,7 @@ public class RegExFormatter extends DefaultFormatter {
         try {
             return Pattern.compile(text);
         }
-        catch (final PatternSyntaxException e) {
+        catch (PatternSyntaxException e) {
             throw new ParseException(e.getMessage(), e.getIndex());
         }
     }

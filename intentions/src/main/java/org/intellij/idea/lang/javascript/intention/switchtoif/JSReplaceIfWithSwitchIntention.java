@@ -93,38 +93,38 @@ public class JSReplaceIfWithSwitchIntention extends JSIntention {
                 breaksNeedRelabeled = true;
             }
         }
-        final JSIfStatement statementToReplace = ifStatement;
-        final JSExpression caseExpression = CaseUtil.getCaseExpression(ifStatement);
+        JSIfStatement statementToReplace = ifStatement;
+        JSExpression caseExpression = CaseUtil.getCaseExpression(ifStatement);
 
         assert (caseExpression != null);
 
-        final StringBuilder switchStatementBuffer = new StringBuilder(1024);
+        StringBuilder switchStatementBuffer = new StringBuilder(1024);
 
         switchStatementBuffer.append("switch(").append(caseExpression.getText()).append(')')
             .append('{');
 
-        final List<IfStatementBranch> branches = new ArrayList<>(20);
+        List<IfStatementBranch> branches = new ArrayList<>(20);
 
         while (true) {
-            final Set<String> topLevelVariables = new HashSet<>(5);
-            final Set<String> innerVariables = new HashSet<>(5);
-            final JSExpression condition = ifStatement.getCondition();
-            final JSExpression[] labels = getValuesFromCondition(condition, caseExpression);
-            final JSStatement thenBranch = ifStatement.getThen();
+            Set<String> topLevelVariables = new HashSet<>(5);
+            Set<String> innerVariables = new HashSet<>(5);
+            JSExpression condition = ifStatement.getCondition();
+            JSExpression[] labels = getValuesFromCondition(condition, caseExpression);
+            JSStatement thenBranch = ifStatement.getThen();
 
             DeclarationUtils.calculateVariablesDeclared(thenBranch, topLevelVariables, innerVariables, true);
 
-            final IfStatementBranch ifBranch = new IfStatementBranch();
+            IfStatementBranch ifBranch = new IfStatementBranch();
 
             ifBranch.setInnerVariables(innerVariables);
             ifBranch.setTopLevelVariables(topLevelVariables);
             ifBranch.setStatement(thenBranch);
-            for (final JSExpression label : labels) {
+            for (JSExpression label : labels) {
                 ifBranch.addCondition(label.getText());
             }
             branches.add(ifBranch);
 
-            final JSStatement elseBranch = ifStatement.getElse();
+            JSStatement elseBranch = ifStatement.getElse();
 
             if (elseBranch instanceof JSIfStatement elseIfStatement) {
                 ifStatement = elseIfStatement;
@@ -133,12 +133,12 @@ public class JSReplaceIfWithSwitchIntention extends JSIntention {
                 break;
             }
             else {
-                final Set<String> elseTopLevelVariables = new HashSet<>(5);
-                final Set<String> elseInnerVariables = new HashSet<>(5);
+                Set<String> elseTopLevelVariables = new HashSet<>(5);
+                Set<String> elseInnerVariables = new HashSet<>(5);
 
                 DeclarationUtils.calculateVariablesDeclared(elseBranch, elseTopLevelVariables, elseInnerVariables, true);
 
-                final IfStatementBranch elseIfBranch = new IfStatementBranch();
+                IfStatementBranch elseIfBranch = new IfStatementBranch();
 
                 elseIfBranch.setInnerVariables(elseInnerVariables);
                 elseIfBranch.setTopLevelVariables(elseTopLevelVariables);
@@ -157,13 +157,13 @@ public class JSReplaceIfWithSwitchIntention extends JSIntention {
                 }
             }
 
-            final JSStatement branchStatement = branch.getStatement();
+            JSStatement branchStatement = branch.getStatement();
 
             if (branch.isElse()) {
                 dumpDefaultBranch(switchStatementBuffer, branchStatement, hasConflicts, breaksNeedRelabeled, labelString);
             }
             else {
-                final List<String> conditions = branch.getConditions();
+                List<String> conditions = branch.getConditions();
 
                 dumpBranch(switchStatementBuffer, conditions, branchStatement, hasConflicts, breaksNeedRelabeled, labelString);
             }
@@ -171,11 +171,11 @@ public class JSReplaceIfWithSwitchIntention extends JSIntention {
 
         switchStatementBuffer.append('}');
 
-        final String switchStatementString = switchStatementBuffer.toString();
+        String switchStatementString = switchStatementBuffer.toString();
 
         if (breaksNeedRelabeled) {
-            final int length = switchStatementBuffer.length();
-            final StringBuilder out = new StringBuilder(length);
+            int length = switchStatementBuffer.length();
+            StringBuilder out = new StringBuilder(length);
 
             out.append(labelString).append(':');
             termReplace(out, breakTarget, statementToReplace, switchStatementString);
@@ -192,20 +192,20 @@ public class JSReplaceIfWithSwitchIntention extends JSIntention {
             out.append(stringToReplaceWith);
         }
         else if (target.getChildren().length != 0) {
-            final JSElement[] children = (JSElement[])target.getChildren();
-            for (final JSElement child : children) {
+            JSElement[] children = (JSElement[])target.getChildren();
+            for (JSElement child : children) {
                 termReplace(out, child, replace, stringToReplaceWith);
             }
         }
         else {
-            final String text = target.getText();
+            String text = target.getText();
             out.append(text);
         }
     }
 
     @RequiredReadAction
     private static JSExpression[] getValuesFromCondition(JSExpression condition, JSExpression caseExpression) {
-        final List<JSExpression> values = new ArrayList<>(10);
+        List<JSExpression> values = new ArrayList<>(10);
 
         getValuesFromExpression(condition, caseExpression, values);
         return values.toArray(new JSExpression[values.size()]);
@@ -214,9 +214,9 @@ public class JSReplaceIfWithSwitchIntention extends JSIntention {
     @RequiredReadAction
     private static void getValuesFromExpression(JSExpression expression, JSExpression caseExpression, List<JSExpression> values) {
         if (expression instanceof JSBinaryExpression binaryExpression) {
-            final JSExpression lhs = binaryExpression.getLOperand();
-            final JSExpression rhs = binaryExpression.getROperand();
-            final IElementType tokenType = binaryExpression.getOperationSign();
+            JSExpression lhs = binaryExpression.getLOperand();
+            JSExpression rhs = binaryExpression.getROperand();
+            IElementType tokenType = binaryExpression.getOperationSign();
 
             if (JSTokenTypes.OROR.equals(tokenType)) {
                 getValuesFromExpression(lhs, caseExpression, values);
@@ -230,7 +230,7 @@ public class JSReplaceIfWithSwitchIntention extends JSIntention {
             }
         }
         else if (expression instanceof JSParenthesizedExpression parenExpression) {
-            final JSExpression contents = parenExpression.getInnerExpression();
+            JSExpression contents = parenExpression.getInnerExpression();
 
             getValuesFromExpression(contents, caseExpression, values);
         }
@@ -281,7 +281,7 @@ public class JSReplaceIfWithSwitchIntention extends JSIntention {
             }
             else {
                 // Skip the first and last characters to unwrap the block
-                final String bodyText = bodyStatement.getText();
+                String bodyText = bodyStatement.getText();
                 switchStatementString.append(bodyText.substring(1, bodyText.length() - 1));
             }
         }
@@ -308,13 +308,13 @@ public class JSReplaceIfWithSwitchIntention extends JSIntention {
         boolean renameBreakElements,
         String breakLabelString
     ) {
-        final String text = element.getText();
+        String text = element.getText();
 
         if (!renameBreakElements) {
             switchStatementString.append(text);
         }
         else if (element instanceof JSBreakStatement breakStatement) {
-            final String identifier = breakStatement.getLabel();
+            String identifier = breakStatement.getLabel();
             if (identifier == null || identifier.isEmpty()) {
                 switchStatementString.append(LABELED_BREAK_STATEMENT_PREFIX);
                 switchStatementString.append(breakLabelString);
@@ -325,8 +325,8 @@ public class JSReplaceIfWithSwitchIntention extends JSIntention {
             }
         }
         else if (element instanceof JSBlockStatement || element instanceof JSIfStatement) {
-            final JSElement[] children = (JSElement[])element.getChildren();
-            for (final JSElement child : children) {
+            JSElement[] children = (JSElement[])element.getChildren();
+            for (JSElement child : children) {
                 appendElement(switchStatementString, child, renameBreakElements, breakLabelString);
             }
         }
@@ -394,15 +394,15 @@ public class JSReplaceIfWithSwitchIntention extends JSIntention {
         }
 
         public boolean topLevelDeclarationsConfictWith(IfStatementBranch testBranch) {
-            final Set<String> innerVariables = testBranch.getInnerVariables();
-            final Set<String> topLevel = testBranch.getTopLevelVariables();
+            Set<String> innerVariables = testBranch.getInnerVariables();
+            Set<String> topLevel = testBranch.getTopLevelVariables();
 
             return hasNonEmptyIntersection(this.topLevelVariables, topLevel)
                 || hasNonEmptyIntersection(this.topLevelVariables, innerVariables);
         }
 
         private static boolean hasNonEmptyIntersection(Set<String> set1, Set<String> set2) {
-            for (final String set1Element : set1) {
+            for (String set1Element : set1) {
                 if (set2.contains(set1Element)) {
                     return true;
                 }

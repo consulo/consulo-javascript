@@ -42,7 +42,7 @@ public class LabeledStatementJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSLabeledStatement(@Nonnull JSLabeledStatement statement) {
             super.visitJSLabeledStatement(statement);
-            @NonNls final String label = statement.getLabel();
+            @NonNls String label = statement.getLabel();
             if ("javascript".equals(label)) {
                 return;
             }

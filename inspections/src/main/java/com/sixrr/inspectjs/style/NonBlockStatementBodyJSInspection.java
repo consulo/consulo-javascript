@@ -58,18 +58,18 @@ public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
 
         @Override
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final PsiElement statementIdentifier = descriptor.getPsiElement();
-            final JSStatement statement = (JSStatement) statementIdentifier.getParent();
+            PsiElement statementIdentifier = descriptor.getPsiElement();
+            JSStatement statement = (JSStatement) statementIdentifier.getParent();
             if (statement instanceof JSLoopStatement loopStatement) {
-                final JSStatement body = loopStatement.getBody();
+                JSStatement body = loopStatement.getBody();
                 wrapStatement(body);
             } else {
-                final JSIfStatement ifStatement = (JSIfStatement) statement;
-                final JSStatement thenBranch = ifStatement.getThen();
+                JSIfStatement ifStatement = (JSIfStatement) statement;
+                JSStatement thenBranch = ifStatement.getThen();
                 if (thenBranch != null && !(thenBranch instanceof JSBlockStatement)) {
                     wrapStatement(thenBranch);
                 }
-                final JSStatement elseBranch = ifStatement.getElse();
+                JSStatement elseBranch = ifStatement.getElse();
                 if (elseBranch != null && !(elseBranch instanceof JSBlockStatement)) {
                     wrapStatement(elseBranch);
                 }
@@ -77,7 +77,7 @@ public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
         }
 
         private static void wrapStatement(JSStatement statement) throws IncorrectOperationException {
-            final String text = statement.getText();
+            String text = statement.getText();
             replaceStatement(statement, '{' + text + '}');
         }
     }
@@ -92,7 +92,7 @@ public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
         public void visitJSDoWhileStatement(@Nonnull JSDoWhileStatement statement) {
             super.visitJSDoWhileStatement(statement);
 
-            final JSStatement body = statement.getBody();
+            JSStatement body = statement.getBody();
             if (body == null) {
                 return;
             }
@@ -107,7 +107,7 @@ public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
         public void visitJSWhileStatement(@Nonnull JSWhileStatement statement) {
             super.visitJSWhileStatement(statement);
 
-            final JSStatement body = statement.getBody();
+            JSStatement body = statement.getBody();
             if (body == null) {
                 return;
             }
@@ -122,7 +122,7 @@ public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
         public void visitJSForStatement(@Nonnull JSForStatement statement) {
             super.visitJSForStatement(statement);
 
-            final JSStatement body = statement.getBody();
+            JSStatement body = statement.getBody();
             if (body == null) {
                 return;
             }
@@ -137,7 +137,7 @@ public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
         public void visitJSForInStatement(@Nonnull JSForInStatement statement) {
             super.visitJSForInStatement(statement);
 
-            final JSStatement body = statement.getBody();
+            JSStatement body = statement.getBody();
             if (body == null) {
                 return;
             }
@@ -152,14 +152,14 @@ public class NonBlockStatementBodyJSInspection extends JavaScriptInspection {
         public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
             super.visitJSIfStatement(statement);
 
-            final JSStatement thenBranch = statement.getThen();
+            JSStatement thenBranch = statement.getThen();
             if (thenBranch != null) {
                 if (!(thenBranch instanceof JSBlockStatement)) {
                     registerStatementError(statement, statement);
                     return;
                 }
             }
-            final JSStatement elseBranch = statement.getElse();
+            JSStatement elseBranch = statement.getElse();
 
             if (elseBranch != null && !(elseBranch instanceof JSBlockStatement || elseBranch instanceof JSIfStatement)) {
                 registerStatementError(statement, statement);

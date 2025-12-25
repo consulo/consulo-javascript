@@ -41,13 +41,13 @@ public class JSRecursionVisitor extends JSRecursiveElementVisitor {
         if (!this.recursive) {
             super.visitJSCallExpression(call);
 
-            final JSExpression methodExpression = call.getMethodExpression();
-            final String qualifiedMethodText = methodExpression.getText();
-            final String methodText = qualifiedMethodText.substring(qualifiedMethodText.lastIndexOf('.') + 1);
+            JSExpression methodExpression = call.getMethodExpression();
+            String qualifiedMethodText = methodExpression.getText();
+            String methodText = qualifiedMethodText.substring(qualifiedMethodText.lastIndexOf('.') + 1);
 
             if (methodText.equals(this.functionName)) {
-                final PsiReference methodReference = methodExpression.getReference();
-                final PsiElement referent = methodReference == null ? null : methodReference.resolve();
+                PsiReference methodReference = methodExpression.getReference();
+                PsiElement referent = methodReference == null ? null : methodReference.resolve();
 
                 if (referent != null) {
                     if (referent instanceof JSFunction) {

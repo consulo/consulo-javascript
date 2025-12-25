@@ -120,7 +120,7 @@ public class JSSymbolUtil {
                     }
 
                     @Override
-                    public boolean isTopLevel(final JSReferenceExpression expression) {
+                    public boolean isTopLevel(JSReferenceExpression expression) {
                         return expr1 == expression;
                     }
                 }

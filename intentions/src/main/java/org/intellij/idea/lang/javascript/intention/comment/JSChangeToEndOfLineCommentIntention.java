@@ -54,15 +54,15 @@ public class JSChangeToEndOfLineCommentIntention extends JSIntention {
     @Override
     @RequiredReadAction
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final PsiElement parent = element.getParent();
+        PsiElement parent = element.getParent();
 
         assert (parent != null);
 
-        final String commentText = element.getText();
-        final PsiElement whitespace = element.getNextSibling();
-        final String text = commentText.substring(2, commentText.length() - 2);
-        final String[] lines = text.split("\n");
-        final String[] newComments = buildCommentStrings(lines);
+        String commentText = element.getText();
+        PsiElement whitespace = element.getNextSibling();
+        String text = commentText.substring(2, commentText.length() - 2);
+        String[] lines = text.split("\n");
+        String[] newComments = buildCommentStrings(lines);
         PsiElement currentElement = element;
 
         for (int index = newComments.length; --index >= 0; ) {
@@ -81,7 +81,7 @@ public class JSChangeToEndOfLineCommentIntention extends JSIntention {
         int lastNonEmtpyLine = -1;
 
         for (int i = lines.length - 1; i >= 0 && lastNonEmtpyLine == -1; i--) {
-            final String line = lines[i].trim();
+            String line = lines[i].trim();
             if (!line.isEmpty()) {
                 lastNonEmtpyLine = i;
             }
@@ -90,11 +90,11 @@ public class JSChangeToEndOfLineCommentIntention extends JSIntention {
             return new String[]{"//"};
         }
 
-        final StringBuilder buffer = new StringBuilder();
-        final String[] commentStrings = new String[lastNonEmtpyLine + 1];
+        StringBuilder buffer = new StringBuilder();
+        String[] commentStrings = new String[lastNonEmtpyLine + 1];
 
         for (int i = 0; i <= lastNonEmtpyLine; i++) {
-            final String line = lines[i];
+            String line = lines[i];
 
             if (line.trim().length() != 0) {
                 buffer.replace(0, buffer.length(), "//");
@@ -123,17 +123,17 @@ public class JSChangeToEndOfLineCommentIntention extends JSIntention {
                 return false;
             }
 
-            final PsiComment comment = (PsiComment)element;
-            final IElementType type = comment.getTokenType();
+            PsiComment comment = (PsiComment)element;
+            IElementType type = comment.getTokenType();
 
             if (!(JSTokenTypes.C_STYLE_COMMENT.equals(type) || JSTokenTypes.C_STYLE_COMMENT.equals(type))) {
                 return false;
             }
-            final PsiElement sibling = TreeUtil.getNextLeaf(comment);
+            PsiElement sibling = TreeUtil.getNextLeaf(comment);
             if (!(sibling instanceof PsiWhiteSpace)) {
                 return false;
             }
-            final String whitespaceText = sibling.getText();
+            String whitespaceText = sibling.getText();
             return whitespaceText.indexOf((int)'\n') >= 0 || whitespaceText.indexOf((int)'\r') >= 0;
         }
     }

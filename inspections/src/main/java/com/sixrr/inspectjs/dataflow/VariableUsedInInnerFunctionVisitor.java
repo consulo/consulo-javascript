@@ -30,7 +30,7 @@ public class VariableUsedInInnerFunctionVisitor extends JSRecursiveElementVisito
         if (usedInInnerFunction) {
             return;
         }
-        final boolean wasInInnerFunction = inInnerFunction;
+        boolean wasInInnerFunction = inInnerFunction;
         inInnerFunction = true;
         super.visitJSFunctionExpression(funcExpr);
         inInnerFunction = wasInInnerFunction;
@@ -43,7 +43,7 @@ public class VariableUsedInInnerFunctionVisitor extends JSRecursiveElementVisito
         }
         super.visitJSReferenceExpression(reference);
         if (inInnerFunction) {
-            final PsiElement element = reference.resolve();
+            PsiElement element = reference.resolve();
             if (variable.equals(element)) {
                 usedInInnerFunction = true;
             }

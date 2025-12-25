@@ -49,38 +49,38 @@ public class ReuseOfLocalVariableJSInspection extends JavaScriptInspection {
             if (assignment.getROperand() == null) {
                 return;
             }
-            final PsiElement assignmentParent = assignment.getParent();
+            PsiElement assignmentParent = assignment.getParent();
             if (!(assignmentParent instanceof JSExpressionStatement)) {
                 return;
             }
-            final JSExpression lhs = assignment.getLOperand();
+            JSExpression lhs = assignment.getLOperand();
             if (!(lhs instanceof JSDefinitionExpression)) {
                 return;
             }
-            final JSDefinitionExpression def = (JSDefinitionExpression)lhs;
-            final JSExpression defExpression = def.getExpression();
+            JSDefinitionExpression def = (JSDefinitionExpression)lhs;
+            JSExpression defExpression = def.getExpression();
             if (!(defExpression instanceof JSReferenceExpression)) {
                 return;
             }
-            final PsiElement referent = ((PsiReference)defExpression).resolve();
+            PsiElement referent = ((PsiReference)defExpression).resolve();
             if (!(referent instanceof JSVariable)) {
                 return;
             }
-            final JSVariable variable = (JSVariable)referent;
+            JSVariable variable = (JSVariable)referent;
 
             if (variable.getInitializer() == null) {
                 return;
             }
-            final IElementType tokenType = assignment.getOperationSign();
+            IElementType tokenType = assignment.getOperationSign();
 
             if (!JSTokenTypes.EQ.equals(tokenType)) {
                 return;
             }
-            final JSExpression rhs = assignment.getROperand();
+            JSExpression rhs = assignment.getROperand();
             if (VariableAccessUtils.variableIsUsed(variable, rhs)) {
                 return;
             }
-            final JSBlockStatement variableBlock = PsiTreeUtil.getParentOfType(variable, JSBlockStatement.class);
+            JSBlockStatement variableBlock = PsiTreeUtil.getParentOfType(variable, JSBlockStatement.class);
             if (variableBlock == null) {
                 return;
             }
@@ -93,7 +93,7 @@ public class ReuseOfLocalVariableJSInspection extends JavaScriptInspection {
                 // that a variable is used in only one branch of a try statement
                 return;
             }
-            final PsiElement assignmentBlock = assignmentParent.getParent();
+            PsiElement assignmentBlock = assignmentParent.getParent();
             if (assignmentBlock == null) {
                 return;
             }
@@ -101,8 +101,8 @@ public class ReuseOfLocalVariableJSInspection extends JavaScriptInspection {
                 registerError(lhs);
                 return;
             }
-            final JSStatement[] statements = variableBlock.getStatements();
-            final PsiElement containingStatement = getChildWhichContainsElement(variableBlock, assignment);
+            JSStatement[] statements = variableBlock.getStatements();
+            PsiElement containingStatement = getChildWhichContainsElement(variableBlock, assignment);
             int statementPosition = -1;
             for (int i = 0; i < statements.length; i++) {
                 if (statements[i].equals(containingStatement)) {

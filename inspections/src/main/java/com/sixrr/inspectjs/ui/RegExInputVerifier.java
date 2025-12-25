@@ -15,12 +15,12 @@ public class RegExInputVerifier extends InputVerifier {
     @Override
     public boolean shouldYieldFocus(JComponent input) {
         if (input instanceof JFormattedTextField ftf) {
-            final JFormattedTextField.AbstractFormatter formatter = ftf.getFormatter();
+            JFormattedTextField.AbstractFormatter formatter = ftf.getFormatter();
             if (formatter != null) {
                 try {
                     formatter.stringToValue(ftf.getText());
                 }
-                catch (final ParseException e) {
+                catch (ParseException e) {
                     SwingUtilities.invokeLater(
                         () -> Messages.showErrorDialog(e.getMessage(), InspectionJSLocalize.malformedNamingPatternAlert().get())
                     );

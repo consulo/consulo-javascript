@@ -48,7 +48,7 @@ public class JSVarStatementElementType extends JSStubElementType<JSVarStatementS
 
     @Override
     public boolean shouldCreateStub(ASTNode node) {
-        final PsiElement element = node.getTreeParent().getPsi();
+        PsiElement element = node.getTreeParent().getPsi();
         return element instanceof JSClass || element instanceof JSPackageStatement || element instanceof JSFile;
     }
 

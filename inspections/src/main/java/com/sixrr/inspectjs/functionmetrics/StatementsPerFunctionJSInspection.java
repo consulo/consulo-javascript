@@ -42,13 +42,13 @@ public class StatementsPerFunctionJSInspection extends JavaScriptInspection {
     @RequiredReadAction
     @Override
     public String buildErrorString(Object state, Object... args) {
-        final JSFunction function = (JSFunction)((PsiElement)args[0]).getParent();
+        JSFunction function = (JSFunction)((PsiElement)args[0]).getParent();
         assert function != null;
-        final PsiElement lastChild = function.getLastChild();
-        final StatementCountVisitor visitor = new StatementCountVisitor();
+        PsiElement lastChild = function.getLastChild();
+        StatementCountVisitor visitor = new StatementCountVisitor();
         assert lastChild != null;
         lastChild.accept(visitor);
-        final int coupling = visitor.getStatementCount();
+        int coupling = visitor.getStatementCount();
         return functionHasIdentifier(function)
             ? InspectionJSLocalize.functionIsOverlyLongStatementErrorString(coupling).get()
             : InspectionJSLocalize.anonymousFunctionIsOverlyLongStatementErrorString(coupling).get();
@@ -63,13 +63,13 @@ public class StatementsPerFunctionJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSFunctionDeclaration(@Nonnull JSFunction function) {
 
-            final PsiElement lastChild = function.getLastChild();
+            PsiElement lastChild = function.getLastChild();
             if (!(lastChild instanceof JSBlockStatement)) {
                 return;
             }
-            final StatementCountVisitor visitor = new StatementCountVisitor();
+            StatementCountVisitor visitor = new StatementCountVisitor();
             lastChild.accept(visitor);
-            final int statementCount = visitor.getStatementCount();
+            int statementCount = visitor.getStatementCount();
 
             if (statementCount <= myState.getLimit()) {
                 return;

@@ -56,13 +56,13 @@ public class JSMergeParallelForLoopsIntention extends JSIntention {
     @Override
     @RequiredReadAction
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final PsiElement nextElement = JSElementFactory.getNonWhiteSpaceSibling(element, true);
+        PsiElement nextElement = JSElementFactory.getNonWhiteSpaceSibling(element, true);
 
         assert (nextElement != null);
 
-        final JSForStatement firstStatement = (JSForStatement)element;
-        final JSForStatement secondStatement = (JSForStatement)nextElement;
-        final StringBuilder statementBuffer = new StringBuilder();
+        JSForStatement firstStatement = (JSForStatement)element;
+        JSForStatement secondStatement = (JSForStatement)nextElement;
+        StringBuilder statementBuffer = new StringBuilder();
 
         this.mergeForStatements(statementBuffer, firstStatement, secondStatement);
         JSElementFactory.replaceStatement(firstStatement, statementBuffer.toString());
@@ -71,12 +71,12 @@ public class JSMergeParallelForLoopsIntention extends JSIntention {
 
     @RequiredReadAction
     private void mergeForStatements(StringBuilder statementBuffer, JSForStatement firstStatement, JSForStatement secondStatement) {
-        final JSExpression initialization = firstStatement.getInitialization();
-        final JSVarStatement varStatement = firstStatement.getVarDeclaration();
-        final JSExpression condition = firstStatement.getCondition();
-        final JSExpression update = firstStatement.getUpdate();
-        final JSStatement firstBody = firstStatement.getBody();
-        final JSStatement secondBody = secondStatement.getBody();
+        JSExpression initialization = firstStatement.getInitialization();
+        JSVarStatement varStatement = firstStatement.getVarDeclaration();
+        JSExpression condition = firstStatement.getCondition();
+        JSExpression update = firstStatement.getUpdate();
+        JSStatement firstBody = firstStatement.getBody();
+        JSStatement secondBody = secondStatement.getBody();
 
         statementBuffer.append("for (")
             .append((initialization == null) ? varStatement.getText() : initialization.getText())
@@ -99,32 +99,32 @@ public class JSMergeParallelForLoopsIntention extends JSIntention {
         }
 
         public static boolean forStatementsCanBeMerged(JSForStatement statement1, JSForStatement statement2) {
-            final JSExpression firstInitialization = statement1.getInitialization();
-            final JSExpression secondInitialization = statement2.getInitialization();
+            JSExpression firstInitialization = statement1.getInitialization();
+            JSExpression secondInitialization = statement2.getInitialization();
             if (!EquivalenceChecker.expressionsAreEquivalent(firstInitialization, secondInitialization)) {
                 return false;
             }
 
-            final JSVarStatement firstVarStatement = statement1.getVarDeclaration();
-            final JSVarStatement secondVarStatement = statement2.getVarDeclaration();
+            JSVarStatement firstVarStatement = statement1.getVarDeclaration();
+            JSVarStatement secondVarStatement = statement2.getVarDeclaration();
             if (!EquivalenceChecker.statementsAreEquivalent(firstVarStatement, secondVarStatement)) {
                 return false;
             }
 
-            final JSExpression firstCondition = statement1.getCondition();
-            final JSExpression secondCondition = statement2.getCondition();
+            JSExpression firstCondition = statement1.getCondition();
+            JSExpression secondCondition = statement2.getCondition();
             if (!EquivalenceChecker.expressionsAreEquivalent(firstCondition, secondCondition)) {
                 return false;
             }
 
-            final JSExpression firstUpdate = statement1.getUpdate();
-            final JSExpression secondUpdate = statement2.getUpdate();
+            JSExpression firstUpdate = statement1.getUpdate();
+            JSExpression secondUpdate = statement2.getUpdate();
             if (!EquivalenceChecker.expressionsAreEquivalent(firstUpdate, secondUpdate)) {
                 return false;
             }
 
-            final JSStatement firstBody = statement1.getBody();
-            final JSStatement secondBody = statement2.getBody();
+            JSStatement firstBody = statement1.getBody();
+            JSStatement secondBody = statement2.getBody();
             return (firstBody == null || secondBody == null || ControlFlowUtils.canBeMerged(firstBody, secondBody));
         }
     }

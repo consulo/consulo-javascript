@@ -45,10 +45,10 @@ public class JSElementFactory {
     }
 
     public static PsiElement addElementBefore(@Nonnull PsiElement element, @Nonnull PsiElement newElement) {
-        final ASTNode oldElementParentNode = element.getNode();
-        final PsiElement parentNode = element.getParent();
-        final ASTNode newElementParentNode = parentNode.getNode();
-        final ASTNode newElementNode = newElement.getNode();
+        ASTNode oldElementParentNode = element.getNode();
+        PsiElement parentNode = element.getParent();
+        ASTNode newElementParentNode = parentNode.getNode();
+        ASTNode newElementNode = newElement.getNode();
 
         if (newElementParentNode == null || newElementNode == null) {
             return null;
@@ -58,11 +58,11 @@ public class JSElementFactory {
     }
 
     public static PsiElement addElementAfter(@Nonnull PsiElement element, @Nonnull PsiElement newElement) {
-        final ASTNode elementNode = element.getNode();
-        final ASTNode oldElementParentNode = ((elementNode == null) ? null : elementNode.getTreeNext());
-        final PsiElement parentNode = element.getParent();
-        final ASTNode newElementParentNode = parentNode.getNode();
-        final ASTNode newElementNode = newElement.getNode();
+        ASTNode elementNode = element.getNode();
+        ASTNode oldElementParentNode = ((elementNode == null) ? null : elementNode.getTreeNext());
+        PsiElement parentNode = element.getParent();
+        ASTNode newElementParentNode = parentNode.getNode();
+        ASTNode newElementNode = newElement.getNode();
 
         if (newElementParentNode == null || newElementNode == null) {
             return null;
@@ -73,21 +73,21 @@ public class JSElementFactory {
     }
 
     public static PsiElement addElementBefore(@Nonnull PsiElement element, @NonNls @Nonnull String elementText) {
-        final PsiElement newElement = createDummyFile(element.getProject(), elementText).getFirstChild();
+        PsiElement newElement = createDummyFile(element.getProject(), elementText).getFirstChild();
 
         assert (newElement != null);
         return addElementBefore(element, newElement);
     }
 
     public static PsiElement addElementAfter(@Nonnull PsiElement element, @Nonnull String elementText) {
-        final PsiElement newElement = createDummyFile(element.getProject(), elementText).getFirstChild();
+        PsiElement newElement = createDummyFile(element.getProject(), elementText).getFirstChild();
 
         assert (newElement != null);
         return addElementAfter(element, newElement);
     }
 
     public static ASTNode createElementFromText(Project project, String text) {
-        final PsiElement element = createDummyFile(project, text).getFirstChild();
+        PsiElement element = createDummyFile(project, text).getFirstChild();
 
         assert (element != null);
         return element.getNode();
@@ -95,7 +95,7 @@ public class JSElementFactory {
 
     @Nonnull
     private static PsiFile createDummyFile(Project project, String text) {
-        final ParserDefinition def = ParserDefinition.forLanguage(JavaScriptLanguage.INSTANCE);
+        ParserDefinition def = ParserDefinition.forLanguage(JavaScriptLanguage.INSTANCE);
 
         assert (def != null);
         return PsiFileFactory.getInstance(project)
@@ -104,14 +104,14 @@ public class JSElementFactory {
 
     public static JSStatement replaceElementWithStatement(@Nonnull JSElement element, @NonNls @Nonnull String statementText)
         throws IncorrectOperationException {
-        final ASTNode newStatementNode = JSChangeUtil.createStatementFromText(
+        ASTNode newStatementNode = JSChangeUtil.createStatementFromText(
             element.getProject(),
             statementText
         );
 
-        final ASTNode oldStatementParentNode = element.getNode();
-        final PsiElement parentNode = element.getParent();
-        final ASTNode newStatementParentNode = parentNode.getNode();
+        ASTNode oldStatementParentNode = element.getNode();
+        PsiElement parentNode = element.getParent();
+        ASTNode newStatementParentNode = parentNode.getNode();
 
         if (newStatementParentNode == null || oldStatementParentNode == null || newStatementNode == null) {
             return null;
@@ -124,7 +124,7 @@ public class JSElementFactory {
 
     public static JSExpression replaceExpression(@Nonnull JSExpression expression, @NonNls @Nonnull String text)
         throws IncorrectOperationException {
-        final JSExpression newExpressionNode = JSChangeUtil.createExpressionFromText(
+        JSExpression newExpressionNode = JSChangeUtil.createExpressionFromText(
             expression.getProject(),
             text
         );
@@ -134,10 +134,10 @@ public class JSElementFactory {
 
     public static JSExpression replaceExpression(@Nonnull JSExpression expression, @Nonnull JSExpression newExpression)
         throws IncorrectOperationException {
-        final ASTNode newExpressionNode = newExpression.getNode();
-        final ASTNode oldExpressionNode = expression.getNode();
-        final PsiElement parentNode = expression.getParent();
-        final ASTNode grandParentNode = parentNode.getNode();
+        ASTNode newExpressionNode = newExpression.getNode();
+        ASTNode oldExpressionNode = expression.getNode();
+        PsiElement parentNode = expression.getParent();
+        ASTNode grandParentNode = parentNode.getNode();
 
         if (grandParentNode == null || oldExpressionNode == null || newExpressionNode == null) {
             return null;
@@ -151,14 +151,14 @@ public class JSElementFactory {
 
     public static JSStatement replaceStatement(@Nonnull JSStatement statement, @NonNls @Nonnull String text)
         throws IncorrectOperationException {
-        final ASTNode newStatementNode = JSChangeUtil.createStatementFromText(
+        ASTNode newStatementNode = JSChangeUtil.createStatementFromText(
             statement.getProject(),
             text
         );
 
-        final ASTNode oldStatementParentNode = statement.getNode();
-        final PsiElement parentNode = statement.getParent();
-        final ASTNode newStatementParentNode = parentNode.getNode();
+        ASTNode oldStatementParentNode = statement.getNode();
+        PsiElement parentNode = statement.getParent();
+        ASTNode newStatementParentNode = parentNode.getNode();
 
         if (newStatementParentNode == null || oldStatementParentNode == null || newStatementNode == null) {
             return null;
@@ -172,13 +172,13 @@ public class JSElementFactory {
 
     public static JSStatement addStatementBefore(@Nonnull JSStatement statement, @NonNls @Nonnull String previousStatementText)
         throws IncorrectOperationException {
-        final ASTNode newStatementNode = JSChangeUtil.createStatementFromText(
+        ASTNode newStatementNode = JSChangeUtil.createStatementFromText(
             statement.getProject(),
             previousStatementText
         );
-        final ASTNode oldStatementParentNode = statement.getNode();
-        final PsiElement parentNode = statement.getParent();
-        final ASTNode newStatementParentNode = parentNode.getNode();
+        ASTNode oldStatementParentNode = statement.getNode();
+        PsiElement parentNode = statement.getParent();
+        ASTNode newStatementParentNode = parentNode.getNode();
 
         if (newStatementParentNode == null || newStatementNode == null) {
             return null;
@@ -192,14 +192,14 @@ public class JSElementFactory {
 
     public static JSStatement addStatementAfter(@Nonnull JSStatement statement, @NonNls @Nonnull String nextStatementText)
         throws IncorrectOperationException {
-        final ASTNode newStatementNode = JSChangeUtil.createStatementFromText(
+        ASTNode newStatementNode = JSChangeUtil.createStatementFromText(
             statement.getProject(),
             nextStatementText
         );
-        final ASTNode statementNode = statement.getNode();
-        final ASTNode oldStatementParentNode = ((statementNode == null) ? null : statementNode.getTreeNext());
-        final PsiElement parentNode = statement.getParent();
-        final ASTNode newStatementParentNode = parentNode.getNode();
+        ASTNode statementNode = statement.getNode();
+        ASTNode oldStatementParentNode = ((statementNode == null) ? null : statementNode.getTreeNext());
+        PsiElement parentNode = statement.getParent();
+        ASTNode newStatementParentNode = parentNode.getNode();
 
         if (newStatementParentNode == null || newStatementNode == null) {
             return null;
@@ -238,17 +238,17 @@ public class JSElementFactory {
     public static void replaceExpressionWithNegatedExpression(@Nonnull JSExpression newExpression, @Nonnull JSExpression exp)
         throws IncorrectOperationException {
         JSExpression expressionToReplace = BoolUtils.findNegation(exp);
-        final String replacementString;
+        String replacementString;
 
         if (expressionToReplace == null) {
             expressionToReplace = exp;
 
             if (ComparisonUtils.isComparisonOperator(newExpression)) {
-                final JSBinaryExpression binaryExpression = (JSBinaryExpression)newExpression;
-                final IElementType operationSign = binaryExpression.getOperationSign();
-                final String negatedComparison = ComparisonUtils.getNegatedOperatorText(operationSign);
-                final JSExpression leftOperand = binaryExpression.getLOperand();
-                final JSExpression rightOperand = binaryExpression.getROperand();
+                JSBinaryExpression binaryExpression = (JSBinaryExpression)newExpression;
+                IElementType operationSign = binaryExpression.getOperationSign();
+                String negatedComparison = ComparisonUtils.getNegatedOperatorText(operationSign);
+                JSExpression leftOperand = binaryExpression.getLOperand();
+                JSExpression rightOperand = binaryExpression.getROperand();
 
                 assert (rightOperand != null);
 
@@ -285,21 +285,21 @@ public class JSElementFactory {
             return;
         }
 
-        final JSBlockStatement parentBlock = PsiTreeUtil.getParentOfType(newBranch, JSBlockStatement.class);
+        JSBlockStatement parentBlock = PsiTreeUtil.getParentOfType(newBranch, JSBlockStatement.class);
 
         if (parentBlock == null) {
             JSElementFactory.replaceStatement(statement, newBranch.getText());
             return;
         }
 
-        final JSBlockStatement block = (JSBlockStatement)newBranch;
+        JSBlockStatement block = (JSBlockStatement)newBranch;
 
         if (ControlFlowUtils.containsConflictingDeclarations(block, parentBlock)) {
             JSElementFactory.replaceStatement(statement, newBranch.getText());
             return;
         }
 
-        final PsiElement containingElement = statement.getParent();
+        PsiElement containingElement = statement.getParent();
 
         assert (containingElement instanceof JSStatement);
 
@@ -308,8 +308,8 @@ public class JSElementFactory {
     }
 
     public static void removeElement(PsiElement element) {
-        final ASTNode node = element.getNode();
-        final ASTNode parentNode = element.getParent().getNode();
+        ASTNode node = element.getNode();
+        ASTNode parentNode = element.getParent().getNode();
 
         if (node != null && parentNode != null) {
             parentNode.removeChild(node);
@@ -330,8 +330,8 @@ public class JSElementFactory {
     }
 
     public static boolean isFileReadOnly(Project project, PsiFile file) {
-        final ReadonlyStatusHandler instance = ReadonlyStatusHandler.getInstance(project);
-        final VirtualFile virtualFile = file.getVirtualFile();
+        ReadonlyStatusHandler instance = ReadonlyStatusHandler.getInstance(project);
+        VirtualFile virtualFile = file.getVirtualFile();
 
         return virtualFile != null && instance.ensureFilesWritable(virtualFile).hasReadonlyFiles();
     }

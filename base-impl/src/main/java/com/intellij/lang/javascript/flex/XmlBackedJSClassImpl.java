@@ -324,7 +324,7 @@ public class XmlBackedJSClassImpl extends JSClassBase implements JSClass {
     private static final UserDataCache<CachedValue<Map<String, String>>, XmlFile, Object> CACHED_COMPONENT_IMPORTS_CACHE =
         new UserDataCache<>() {
             @Override
-            protected CachedValue<Map<String, String>> compute(final XmlFile file, final Object p) {
+            protected CachedValue<Map<String, String>> compute(final XmlFile file, Object p) {
                 return CachedValuesManager.getManager(file.getProject()).createCachedValue(
                     new CachedValueProvider<Map<String, String>>() {
                         @Override

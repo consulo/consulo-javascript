@@ -64,11 +64,11 @@ public class MagicNumberJSInspection extends JavaScriptInspection {
         public void visitJSLiteralExpression(@Nonnull JSSimpleLiteralExpression expression) {
             super.visitJSLiteralExpression(expression);
 
-            final String text = expression.getText();
+            String text = expression.getText();
             if (text == null || !isNumeric(text) || isSpecialCaseLiteral(text) || isDeclaredConstant(expression)) {
                 return;
             }
-            final PsiElement parent = expression.getParent();
+            PsiElement parent = expression.getParent();
             if (parent instanceof JSPrefixExpression) {
                 registerError(parent);
             }
@@ -82,21 +82,21 @@ public class MagicNumberJSInspection extends JavaScriptInspection {
         if (text.isEmpty()) {
             return false;
         }
-        final char firstChar = text.charAt(0);
+        char firstChar = text.charAt(0);
         return Character.isDigit(firstChar) || firstChar == '.';
     }
 
     @RequiredReadAction
     private static boolean isDeclaredConstant(JSLiteralExpression expression) {
-        final JSFunction containingFunction = PsiTreeUtil.getParentOfType(expression, JSFunction.class);
+        JSFunction containingFunction = PsiTreeUtil.getParentOfType(expression, JSFunction.class);
         if (containingFunction != null) {
             return false;
         }
-        final JSVarStatement varStatement = PsiTreeUtil.getParentOfType(expression, JSVarStatement.class);
+        JSVarStatement varStatement = PsiTreeUtil.getParentOfType(expression, JSVarStatement.class);
         if (varStatement == null) {
             return false;
         }
-        final JSVariable[] variables = varStatement.getVariables();
+        JSVariable[] variables = varStatement.getVariables();
         for (JSVariable variable : variables) {
             if (expression.equals(variable.getInitializer())) {
                 return true;

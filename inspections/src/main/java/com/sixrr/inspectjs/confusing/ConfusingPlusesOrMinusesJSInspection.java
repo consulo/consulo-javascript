@@ -46,29 +46,29 @@ public class ConfusingPlusesOrMinusesJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSBinaryExpression(JSBinaryExpression jsBinaryExpression) {
             super.visitJSBinaryExpression(jsBinaryExpression);
-            final IElementType sign = jsBinaryExpression.getOperationSign();
+            IElementType sign = jsBinaryExpression.getOperationSign();
             if (!JSTokenTypes.PLUS.equals(sign) && !JSTokenTypes.MINUS.equals(sign)) {
                 return;
             }
-            final JSExpression rhs = jsBinaryExpression.getROperand();
+            JSExpression rhs = jsBinaryExpression.getROperand();
             if (rhs == null) {
                 return;
             }
-            final JSExpression lhs = jsBinaryExpression.getLOperand();
+            JSExpression lhs = jsBinaryExpression.getLOperand();
             if (lhs == null) {
                 return;
             }
             if (lhs instanceof JSPostfixExpression) {
-                final JSPostfixExpression postfixExpression = (JSPostfixExpression)lhs;
-                final IElementType innerSign = postfixExpression.getOperationSign();
+                JSPostfixExpression postfixExpression = (JSPostfixExpression)lhs;
+                IElementType innerSign = postfixExpression.getOperationSign();
                 if (matches(sign, innerSign)) {
                     registerError(jsBinaryExpression);
                     return;
                 }
             }
             if (rhs instanceof JSPrefixExpression) {
-                final JSPrefixExpression postfixExpression = (JSPrefixExpression)rhs;
-                final IElementType innerSign = postfixExpression.getOperationSign();
+                JSPrefixExpression postfixExpression = (JSPrefixExpression)rhs;
+                IElementType innerSign = postfixExpression.getOperationSign();
                 if (matches(sign, innerSign)) {
                     registerError(jsBinaryExpression);
                 }

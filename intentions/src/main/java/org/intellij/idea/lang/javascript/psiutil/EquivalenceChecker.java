@@ -69,8 +69,8 @@ public class EquivalenceChecker {
             return false;
         }
 
-        final int type1 = getStatementType(exp1);
-        final int type2 = getStatementType(exp2);
+        int type1 = getStatementType(exp1);
+        int type2 = getStatementType(exp2);
 
         if (type1 != type2) {
             return false;
@@ -207,8 +207,8 @@ public class EquivalenceChecker {
             return false;
         }
 
-        final JSCaseClause[] caseClauses1 = statement1.getCaseClauses();
-        final JSCaseClause[] caseClauses2 = statement2.getCaseClauses();
+        JSCaseClause[] caseClauses1 = statement1.getCaseClauses();
+        JSCaseClause[] caseClauses2 = statement2.getCaseClauses();
 
         if (caseClauses1.length != caseClauses2.length) {
             return false;
@@ -231,8 +231,8 @@ public class EquivalenceChecker {
             return false;
         }
 
-        final JSStatement[] statements1 = caseClause1.getStatements();
-        final JSStatement[] statements2 = caseClause2.getStatements();
+        JSStatement[] statements1 = caseClause1.getStatements();
+        JSStatement[] statements2 = caseClause2.getStatements();
 
         if (statements1.length != statements2.length) {
             return false;
@@ -271,8 +271,8 @@ public class EquivalenceChecker {
     }
 
     private static boolean labeledStatementsAreEquivalent(JSLabeledStatement statement1, JSLabeledStatement statement2) {
-        final PsiElement element1 = statement1.getLabelIdentifier();
-        final PsiElement element2 = statement2.getLabelIdentifier();
+        PsiElement element1 = statement1.getLabelIdentifier();
+        PsiElement element2 = statement2.getLabelIdentifier();
 
         return element1 == null
             ? element2 == null
@@ -322,10 +322,10 @@ public class EquivalenceChecker {
             return false;
         }
 
-        final JSExpression expToCompare1 = ParenthesesUtils.stripParentheses(exp1);
-        final JSExpression expToCompare2 = ParenthesesUtils.stripParentheses(exp2);
-        final int type1 = getExpressionType(expToCompare1);
-        final int type2 = getExpressionType(expToCompare2);
+        JSExpression expToCompare1 = ParenthesesUtils.stripParentheses(exp1);
+        JSExpression expToCompare2 = ParenthesesUtils.stripParentheses(exp2);
+        int type1 = getExpressionType(expToCompare1);
+        int type2 = getExpressionType(expToCompare2);
 
         if (type1 != type2) {
             return false;
@@ -397,18 +397,18 @@ public class EquivalenceChecker {
         JSObjectLiteralExpression objectLiteralExp1,
         JSObjectLiteralExpression objectLiteralExp2
     ) {
-        final JSProperty[] properties1 = objectLiteralExp1.getProperties();
-        final JSProperty[] properties2 = objectLiteralExp2.getProperties();
+        JSProperty[] properties1 = objectLiteralExp1.getProperties();
+        JSProperty[] properties2 = objectLiteralExp2.getProperties();
 
         if (properties1.length != properties2.length) {
             return false;
         }
 
         for (int index = 0; index < properties2.length; index++) {
-            final JSProperty property1 = properties1[index];
-            final JSProperty property2 = properties2[index];
-            final String propertyName1 = property1.getName();
-            final String propertyName2 = property2.getName();
+            JSProperty property1 = properties1[index];
+            JSProperty property2 = properties2[index];
+            String propertyName1 = property1.getName();
+            String propertyName2 = property2.getName();
 
             if (!(propertyName1 != null && propertyName2 != null &&
                 propertyName2.equals(propertyName1) &&
@@ -444,23 +444,23 @@ public class EquivalenceChecker {
             return false;
         }
 
-        final JSArgumentList argumentList1 = methodExp1.getArgumentList();
-        final JSArgumentList argumentList2 = methodExp2.getArgumentList();
+        JSArgumentList argumentList1 = methodExp1.getArgumentList();
+        JSArgumentList argumentList2 = methodExp2.getArgumentList();
 
         return argumentList1 != null && argumentList2 != null
             && expressionListsAreEquivalent(argumentList1.getArguments(), argumentList2.getArguments());
     }
 
     private static boolean newExpressionsAreEquivalent(JSNewExpression newExp1, JSNewExpression newExp2) {
-        final JSExpression exp1 = newExp1.getMethodExpression();
-        final JSExpression exp2 = newExp2.getMethodExpression();
+        JSExpression exp1 = newExp1.getMethodExpression();
+        JSExpression exp2 = newExp2.getMethodExpression();
 
         if (!expressionsAreEquivalent(exp1, exp2)) {
             return false;
         }
 
-        final JSArgumentList argumentList1 = newExp1.getArgumentList();
-        final JSArgumentList argumentList2 = newExp2.getArgumentList();
+        JSArgumentList argumentList1 = newExp1.getArgumentList();
+        JSArgumentList argumentList2 = newExp2.getArgumentList();
 
         return argumentList1 != null && argumentList2 != null
             && expressionListsAreEquivalent(argumentList1.getArguments(), argumentList2.getArguments());
@@ -474,8 +474,8 @@ public class EquivalenceChecker {
     }
 
     private static boolean prefixExpressionsAreEquivalent(JSPrefixExpression prefixExp1, JSPrefixExpression prefixExp2) {
-        final IElementType operator1 = prefixExp1.getOperationSign();
-        final IElementType operator2 = prefixExp2.getOperationSign();
+        IElementType operator1 = prefixExp1.getOperationSign();
+        IElementType operator2 = prefixExp2.getOperationSign();
 
         return (operator1 != null && operator2 != null &&
             operator1.equals(operator2) &&
@@ -483,15 +483,15 @@ public class EquivalenceChecker {
     }
 
     private static boolean postfixExpressionsAreEquivalent(JSPostfixExpression postfixExp1, JSPostfixExpression postfixExp2) {
-        final IElementType operator1 = postfixExp1.getOperationSign();
-        final IElementType operator2 = postfixExp2.getOperationSign();
+        IElementType operator1 = postfixExp1.getOperationSign();
+        IElementType operator2 = postfixExp2.getOperationSign();
 
         return operator1.equals(operator2) && expressionsAreEquivalent(postfixExp1.getExpression(), postfixExp2.getExpression());
     }
 
     private static boolean binaryExpressionsAreEquivalent(JSBinaryExpression binaryExp1, JSBinaryExpression binaryExp2) {
-        final IElementType operator1 = binaryExp1.getOperationSign();
-        final IElementType operator2 = binaryExp2.getOperationSign();
+        IElementType operator1 = binaryExp1.getOperationSign();
+        IElementType operator2 = binaryExp2.getOperationSign();
 
         return operator1.equals(operator2)
             && expressionsAreEquivalent(binaryExp1.getLOperand(), binaryExp2.getLOperand())
@@ -499,8 +499,8 @@ public class EquivalenceChecker {
     }
 
     private static boolean assignmentExpressionsAreEquivalent(JSAssignmentExpression assignExp1, JSAssignmentExpression assignExp2) {
-        final IElementType operator1 = assignExp1.getOperationSign();
-        final IElementType operator2 = assignExp2.getOperationSign();
+        IElementType operator1 = assignExp1.getOperationSign();
+        IElementType operator2 = assignExp2.getOperationSign();
 
         return operator1.equals(operator2)
             && expressionsAreEquivalent(assignExp1.getLOperand(), assignExp2.getLOperand())

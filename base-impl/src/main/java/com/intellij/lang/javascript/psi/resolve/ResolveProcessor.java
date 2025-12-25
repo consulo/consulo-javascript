@@ -97,24 +97,24 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 
     private ResolveHelper myResolveHelper;
 
-    public ResolveProcessor(final String name) {
+    public ResolveProcessor(String name) {
         this(name, false);
     }
 
-    public ResolveProcessor(final String name, boolean toStopOnAssignment) {
+    public ResolveProcessor(String name, boolean toStopOnAssignment) {
         myName = name;
         myToStopOnAssignment = toStopOnAssignment;
         place = null;
     }
 
-    public ResolveProcessor(final String name, PsiElement _place) {
+    public ResolveProcessor(String name, PsiElement _place) {
         myName = name;
         place = _place;
-        final boolean b = place instanceof JSReferenceExpression && ((JSReferenceExpression)place).getQualifier() == null;
+        boolean b = place instanceof JSReferenceExpression && ((JSReferenceExpression)place).getQualifier() == null;
         allowUnqualifiedStaticsFromInstance = b;
 
         if (myName != null && place instanceof JSReferenceExpression placeRefExpr) {
-            final ASTNode node = place.getNode().findChildByType(JSTokenTypes.COLON_COLON);
+            ASTNode node = place.getNode().findChildByType(JSTokenTypes.COLON_COLON);
             String explicitNs = null;
 
             // TODO: e.g. protected is also ns
@@ -144,7 +144,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 
             if (parent instanceof JSReferenceList) {
                 if (parent.getNode().getElementType() == JSElementTypes.EXTENDS_LIST) {
-                    final PsiElement element = parent.getParent();
+                    PsiElement element = parent.getParent();
                     if (element instanceof JSClass jsClass) {
                         if (jsClass.isInterface()) {
                             myAcceptOnlyClasses = false;
@@ -190,7 +190,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
     @RequiredReadAction
     public boolean execute(@Nonnull PsiElement element, ResolveState state) {
         if ((element instanceof JSVariable && !(element instanceof JSParameter)) || element instanceof JSFunction) {
-            final JSAttributeList attributeList = ((JSAttributeListOwner)element).getAttributeList();
+            JSAttributeList attributeList = ((JSAttributeListOwner)element).getAttributeList();
 
             // TODO: we should accept such values during resolve but make them invalid
             if (!acceptPrivateMembers
@@ -234,7 +234,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 
         if (myAcceptOnlyClasses || myAcceptOnlyInterfaces) {
             if (element instanceof JSClass jsClass) {
-                final boolean isInterface = jsClass.isInterface();
+                boolean isInterface = jsClass.isInterface();
 
                 if ((myAcceptOnlyClasses && isInterface) || (myAcceptOnlyInterfaces && !isInterface)) {
                     return true;
@@ -254,7 +254,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
         }
 
         if (place != null && element instanceof JSFunction function && !(element instanceof JSFunctionExpression)) {
-            final PsiElement placeParent = place.getParent();
+            PsiElement placeParent = place.getParent();
 
             if (placeParent instanceof JSDefinitionExpression
                 || (myName == null && placeParent instanceof JSExpressionStatement /* when complete of setter*/)
@@ -273,7 +273,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 
         if (place != null && (place.getParent() instanceof JSNewExpression || place instanceof JSSuperExpression)) {
             if (element instanceof JSClass jsClass) {
-                final JSFunction byName = jsClass.findFunctionByName(jsClass.getName());
+                JSFunction byName = jsClass.findFunctionByName(jsClass.getName());
                 if (byName != null) {
                     element = byName;
                 }
@@ -369,7 +369,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
                 final String qName = ((JSQualifiedNamedElement)element).getQualifiedName();
 
                 if (qName != null && qName.indexOf('.') != -1) {
-                    final ResolveProcessor processor = new ResolveProcessor(myName) {
+                    ResolveProcessor processor = new ResolveProcessor(myName) {
                         @Override
                         @RequiredReadAction
                         public boolean execute(@Nonnull PsiElement element, ResolveState state) {
@@ -401,7 +401,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
                             myResolveStatus.add(Boolean.FALSE);
                         }
                         else {
-                            final ResolveResult[] resultsAsResolveResults = processor.getResultsAsResolveResults();
+                            ResolveResult[] resultsAsResolveResults = processor.getResultsAsResolveResults();
                             if (resultsAsResolveResults.length != 0) {
                                 s = ((JSResolveUtil.MyResolveResult)resultsAsResolveResults[0]).getImportUsed();
                             }
@@ -414,7 +414,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
     }
 
     @RequiredReadAction
-    private static PsiElement getElement(final PsiElement element) {
+    private static PsiElement getElement(PsiElement element) {
         return element instanceof XmlTag xmlTag
             ? xmlTag.getAttribute("name").getValueElement().getChildren()[1]
             : element;
@@ -431,11 +431,11 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
         return null;
     }
 
-    protected void setTypeName(final String qualifiedName) {
+    protected void setTypeName(String qualifiedName) {
         myTypeName = qualifiedName;
     }
 
-    public void configureClassScope(final JSClass jsClass) {
+    public void configureClassScope(JSClass jsClass) {
         if (jsClass != null) {
             myClassScopeTypeName = jsClass.getQualifiedName();
         }
@@ -450,11 +450,11 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
         if (event == Event.SET_DECLARATION_HOLDER) {
             if (associated instanceof JSClass) {
                 myClassDeclarationStarted = true;
-                final JSClass jsClass = (JSClass)associated;
+                JSClass jsClass = (JSClass)associated;
                 final String qName = jsClass.getQualifiedName();
 
                 if (!encounteredDynamicClassesSet) {
-                    final JSAttributeList attributeList = jsClass.getAttributeList();
+                    JSAttributeList attributeList = jsClass.getAttributeList();
                     if (attributeList != null && attributeList.hasModifier(JSAttributeList.ModifierType.DYNAMIC)) {
                         encounteredDynamicClasses = true;
                     }
@@ -472,9 +472,9 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
                         acceptProtectedMembers = myClassScopeTypeName.equals(qName);
 
                         if (!acceptProtectedMembers) {
-                            final PsiElement element = JSClassImpl.findClassFromNamespace(myClassScopeTypeName, place);
+                            PsiElement element = JSClassImpl.findClassFromNamespace(myClassScopeTypeName, place);
                             if (element instanceof JSClass) {
-                                final boolean b = element.processDeclarations(
+                                boolean b = element.processDeclarations(
                                     new ResolveProcessor(null) {
                                         {
                                             setTypeContext(true);
@@ -514,7 +514,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
                 }
             }
             else if (associated instanceof JSAttributeListOwner attributeListOwner) {
-                final JSAttributeList attributeList = attributeListOwner.getAttributeList();
+                JSAttributeList attributeList = attributeListOwner.getAttributeList();
 
                 if (attributeList != null && attributeList.hasModifier(JSAttributeList.ModifierType.STATIC)
                     && (place == null || !(place.getParent() instanceof JSNewExpression))) {
@@ -522,7 +522,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
                 }
 
                 if (associated instanceof JSFunctionExpression functionExpression) {
-                    final PsiElement context = functionExpression.getContainingFile().getContext();
+                    PsiElement context = functionExpression.getContainingFile().getContext();
                     if (!(context instanceof XmlAttributeValue)) {
                         encounteredFunctionExpression = true; // we create anonymous fun exprs for event handlers
                     }
@@ -539,7 +539,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
         return toProcessHierarchy;
     }
 
-    public void setToProcessHierarchy(final boolean toProcessHierarchy) {
+    public void setToProcessHierarchy(boolean toProcessHierarchy) {
         this.toProcessHierarchy = toProcessHierarchy;
     }
 
@@ -547,7 +547,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
         return toSkipClassDeclarationOnce;
     }
 
-    public void setToSkipClassDeclarationsOnce(final boolean toSkipClassDeclarationOnce) {
+    public void setToSkipClassDeclarationsOnce(boolean toSkipClassDeclarationOnce) {
         this.toSkipClassDeclarationOnce = toSkipClassDeclarationOnce;
     }
 
@@ -555,7 +555,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
         return !encounteredFunctionExpression; // TODO: with statement too?
     }
 
-    public void setTypeContext(final boolean b) {
+    public void setTypeContext(boolean b) {
         myTypeContext = b;
     }
 
@@ -564,14 +564,14 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
     }
 
     public ResolveResult[] getResultsAsResolveResults() {
-        final List<PsiElement> processorResults = getResults();
+        List<PsiElement> processorResults = getResults();
         if (processorResults == null) {
             return ResolveResult.EMPTY_ARRAY;
         }
-        final ResolveResult[] results = new ResolveResult[processorResults.size()];
+        ResolveResult[] results = new ResolveResult[processorResults.size()];
 
         for (int i = 0; i < results.length; ++i) {
-            final PsiElement element = processorResults.get(i);
+            PsiElement element = processorResults.get(i);
             results[i] = new JSResolveUtil.MyResolveResult(
                 element,
                 myImportsUsed != null ? myImportsUsed.get(i) : null,
@@ -591,17 +591,17 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 
     @RequiredReadAction
     public Object[] getResultsAsObjects(String qualifiedNameToSkip) {
-        final List<PsiElement> processorResults = getResults();
+        List<PsiElement> processorResults = getResults();
         if (processorResults == null) {
             return ArrayUtil.EMPTY_OBJECT_ARRAY;
         }
-        final int numberOfVariants = processorResults.size();
-        final List<Object> objects = new ArrayList<>(numberOfVariants);
-        final Set<String> processedCandidateNames = new HashSet<>(numberOfVariants);
+        int numberOfVariants = processorResults.size();
+        List<Object> objects = new ArrayList<>(numberOfVariants);
+        Set<String> processedCandidateNames = new HashSet<>(numberOfVariants);
 
         for (int i = 0; i < numberOfVariants; ++i) {
-            final PsiElement namedElement = processorResults.get(i);
-            final String name = getName((PsiNamedElement)namedElement);
+            PsiElement namedElement = processorResults.get(i);
+            String name = getName((PsiNamedElement)namedElement);
             if (name == null) {
                 continue;
             }
@@ -628,7 +628,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
         return toProcessMembers;
     }
 
-    public void setToProcessMembers(final boolean toProcessMembers) {
+    public void setToProcessMembers(boolean toProcessMembers) {
         this.toProcessMembers = toProcessMembers;
     }
 
@@ -640,7 +640,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
         return false;
     }
 
-    public void setProcessStatics(final boolean processStatics) {
+    public void setProcessStatics(boolean processStatics) {
         this.processStatics = processStatics;
     }
 
@@ -648,7 +648,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
         return localResolve;
     }
 
-    public void setLocalResolve(final boolean localResolve) {
+    public void setLocalResolve(boolean localResolve) {
         this.localResolve = localResolve;
     }
 

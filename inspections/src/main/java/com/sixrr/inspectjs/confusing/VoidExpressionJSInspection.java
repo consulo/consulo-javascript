@@ -43,12 +43,12 @@ public class VoidExpressionJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSPrefixExpression(JSPrefixExpression expression) {
             super.visitJSPrefixExpression(expression);
-            final PsiElement firstChild = expression.getFirstChild();
+            PsiElement firstChild = expression.getFirstChild();
             if(firstChild == null)
             {
                 return;
             }
-            @NonNls final String text = firstChild.getText();
+            @NonNls String text = firstChild.getText();
             if (!"void".equals(text)) {
                 return;
             }

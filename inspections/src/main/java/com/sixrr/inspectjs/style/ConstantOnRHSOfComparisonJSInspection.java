@@ -68,14 +68,14 @@ public class ConstantOnRHSOfComparisonJSInspection extends JavaScriptInspection 
 
         @Override
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final JSBinaryExpression expression = (JSBinaryExpression)descriptor.getPsiElement();
-            final JSExpression rhs = expression.getROperand();
-            final JSExpression lhs = expression.getLOperand();
-            final IElementType sign = expression.getOperationSign();
+            JSBinaryExpression expression = (JSBinaryExpression)descriptor.getPsiElement();
+            JSExpression rhs = expression.getROperand();
+            JSExpression lhs = expression.getLOperand();
+            IElementType sign = expression.getOperationSign();
             assert rhs != null;
-            final String rhsText = rhs.getText();
-            final String flippedComparison = ComparisonUtils.getFlippedComparison(sign);
-            final String lhsText = lhs.getText();
+            String rhsText = rhs.getText();
+            String flippedComparison = ComparisonUtils.getFlippedComparison(sign);
+            String lhsText = lhs.getText();
             replaceExpression(expression, rhsText + ' ' + flippedComparison + ' ' + lhsText);
         }
     }
@@ -90,8 +90,8 @@ public class ConstantOnRHSOfComparisonJSInspection extends JavaScriptInspection 
             if (!ComparisonUtils.isComparison(expression)) {
                 return;
             }
-            final JSExpression lhs = expression.getLOperand();
-            final JSExpression rhs = expression.getROperand();
+            JSExpression lhs = expression.getLOperand();
+            JSExpression rhs = expression.getROperand();
             if (lhs instanceof JSLiteralExpression ||
                 !(rhs instanceof JSLiteralExpression)) {
                 return;

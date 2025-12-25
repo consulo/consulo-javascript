@@ -74,7 +74,7 @@ public class UnterminatedStatementJSInspection extends JavaScriptInspection {
             if (expression == null) {
                 return;
             }
-            final String text = expression.getText();
+            String text = expression.getText();
             replaceStatement(expression, text + ';');
         }
     }
@@ -144,7 +144,7 @@ public class UnterminatedStatementJSInspection extends JavaScriptInspection {
         }
 
         @Override
-        protected PsiElement getEditorErrorLocation(final PsiElement location) {
+        protected PsiElement getEditorErrorLocation(PsiElement location) {
             PsiElement editorErrorLocation = PsiTreeUtil.lastChild(location);
             while (editorErrorLocation instanceof PsiErrorElement
                 || (editorErrorLocation != null && editorErrorLocation.getTextLength() == 0)) {
@@ -156,11 +156,11 @@ public class UnterminatedStatementJSInspection extends JavaScriptInspection {
     }
 
     private static boolean isTerminated(JSStatement statement) {
-        final PsiElement parent = statement.getParent();
+        PsiElement parent = statement.getParent();
         if (parent instanceof JSForInStatement || parent instanceof JSForStatement) {
             return true;
         }
-        final String text = statement.getText();
+        String text = statement.getText();
         if (text == null) {
             return true;
         }

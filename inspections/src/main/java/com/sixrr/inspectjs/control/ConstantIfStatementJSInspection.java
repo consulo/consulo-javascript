@@ -58,12 +58,12 @@ public class ConstantIfStatementJSInspection extends JavaScriptInspection {
 
         @Override
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final PsiElement ifKeyword = descriptor.getPsiElement();
-            final JSIfStatement statement = (JSIfStatement) ifKeyword.getParent();
+            PsiElement ifKeyword = descriptor.getPsiElement();
+            JSIfStatement statement = (JSIfStatement) ifKeyword.getParent();
             assert statement != null;
-            final JSStatement thenBranch = statement.getThen();
-            final JSStatement elseBranch = statement.getElse();
-            final JSExpression condition = statement.getCondition();
+            JSStatement thenBranch = statement.getThen();
+            JSStatement elseBranch = statement.getElse();
+            JSExpression condition = statement.getCondition();
             if (BoolUtils.isFalse(condition)) {
                 if (elseBranch != null) {
                     replaceStatementWithUnwrapping(elseBranch, statement);
@@ -76,7 +76,7 @@ public class ConstantIfStatementJSInspection extends JavaScriptInspection {
         }
 
         private static void replaceStatementWithUnwrapping(JSStatement branch, JSIfStatement statement) throws IncorrectOperationException {
-            final String elseText = branch.getText();
+            String elseText = branch.getText();
             replaceStatement(statement, elseText);
         }
     }
@@ -85,11 +85,11 @@ public class ConstantIfStatementJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSIfStatement(JSIfStatement statement) {
             super.visitJSIfStatement(statement);
-            final JSExpression condition = statement.getCondition();
+            JSExpression condition = statement.getCondition();
             if (condition == null) {
                 return;
             }
-            final JSStatement thenBranch = statement.getThen();
+            JSStatement thenBranch = statement.getThen();
             if (thenBranch == null) {
                 return;
             }

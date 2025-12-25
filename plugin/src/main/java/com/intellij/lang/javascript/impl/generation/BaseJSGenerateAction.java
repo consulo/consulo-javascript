@@ -38,7 +38,7 @@ import jakarta.annotation.Nonnull;
 abstract class BaseJSGenerateAction extends AnAction {
     @Override
     @RequiredUIAccess
-    public void actionPerformed(final AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Editor editor = e.getData(PlatformDataKeys.EDITOR);
         PsiFile psifile = e.getData(LangDataKeys.PSI_FILE);
         Project project = e.getData(PlatformDataKeys.PROJECT);

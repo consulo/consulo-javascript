@@ -49,10 +49,10 @@ public class JSReplaceWithOperatorAssignmentIntention extends JSMutablyNamedInte
     @Override
     @RequiredReadAction
     public LocalizeValue getTextForElement(PsiElement element) {
-        final JSAssignmentExpression exp = (JSAssignmentExpression)element;
-        final JSBinaryExpression rhs = (JSBinaryExpression)exp.getROperand();
+        JSAssignmentExpression exp = (JSAssignmentExpression)element;
+        JSBinaryExpression rhs = (JSBinaryExpression)exp.getROperand();
         assert (rhs != null);
-        final IElementType sign = rhs.getOperationSign();
+        IElementType sign = rhs.getOperationSign();
 
         return JSIntentionLocalize.opassignReplaceWithOperatorAssignmentMessage(BinaryOperatorUtils.getOperatorText(sign));
     }
@@ -66,15 +66,15 @@ public class JSReplaceWithOperatorAssignmentIntention extends JSMutablyNamedInte
     @Override
     @RequiredReadAction
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSAssignmentExpression exp = (JSAssignmentExpression)element;
-        final JSBinaryExpression rhs = (JSBinaryExpression)exp.getROperand();
-        final JSExpression lhs = exp.getLOperand();
+        JSAssignmentExpression exp = (JSAssignmentExpression)element;
+        JSBinaryExpression rhs = (JSBinaryExpression)exp.getROperand();
+        JSExpression lhs = exp.getLOperand();
 
         assert (rhs != null);
 
-        final IElementType sign = rhs.getOperationSign();
-        final String operand = BinaryOperatorUtils.getOperatorText(sign);
-        final JSExpression rhsrhs = rhs.getROperand();
+        IElementType sign = rhs.getOperationSign();
+        String operand = BinaryOperatorUtils.getOperatorText(sign);
+        JSExpression rhsrhs = rhs.getROperand();
 
         assert (rhsrhs != null);
 
@@ -88,13 +88,13 @@ public class JSReplaceWithOperatorAssignmentIntention extends JSMutablyNamedInte
             if (!(element instanceof JSAssignmentExpression) || ErrorUtil.containsError(element)) {
                 return false;
             }
-            final JSAssignmentExpression assignment = (JSAssignmentExpression)element;
-            final IElementType tokenType = assignment.getOperationSign();
+            JSAssignmentExpression assignment = (JSAssignmentExpression)element;
+            IElementType tokenType = assignment.getOperationSign();
             if (!JSTokenTypes.EQ.equals(tokenType)) {
                 return false;
             }
             JSExpression lhs = assignment.getLOperand();
-            final JSExpression rhs = assignment.getROperand();
+            JSExpression rhs = assignment.getROperand();
 
             if (lhs instanceof JSDefinitionExpression definitionExpression) {
                 lhs = definitionExpression.getExpression();
@@ -102,15 +102,15 @@ public class JSReplaceWithOperatorAssignmentIntention extends JSMutablyNamedInte
             if (lhs == null || !(rhs instanceof JSBinaryExpression)) {
                 return false;
             }
-            final JSBinaryExpression binaryRhs = (JSBinaryExpression)rhs;
-            final JSExpression rhsRhs = binaryRhs.getROperand();
-            final JSExpression rhsLhs = binaryRhs.getLOperand();
+            JSBinaryExpression binaryRhs = (JSBinaryExpression)rhs;
+            JSExpression rhsRhs = binaryRhs.getROperand();
+            JSExpression rhsLhs = binaryRhs.getLOperand();
 
             if (rhsRhs == null) {
                 return false;
             }
 
-            final IElementType rhsTokenType = binaryRhs.getOperationSign();
+            IElementType rhsTokenType = binaryRhs.getOperationSign();
 
             return !JSTokenTypes.OROR.equals(rhsTokenType)
                 && !JSTokenTypes.ANDAND.equals(rhsTokenType)

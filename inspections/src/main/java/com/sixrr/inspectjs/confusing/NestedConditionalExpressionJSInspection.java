@@ -42,7 +42,7 @@ public class NestedConditionalExpressionJSInspection extends JavaScriptInspectio
         @Override
         public void visitJSConditionalExpression(JSConditionalExpression jsConditionalExpression) {
             super.visitJSConditionalExpression(jsConditionalExpression);
-            final JSConditionalExpression containingConditionalExpression =
+            JSConditionalExpression containingConditionalExpression =
                 PsiTreeUtil.getParentOfType(jsConditionalExpression, JSConditionalExpression.class, true);
             if (containingConditionalExpression == null) {
                 return;

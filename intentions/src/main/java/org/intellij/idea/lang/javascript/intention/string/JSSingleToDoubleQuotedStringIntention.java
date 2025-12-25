@@ -50,7 +50,7 @@ public class JSSingleToDoubleQuotedStringIntention extends JSIntention {
     @Override
     @RequiredReadAction
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSLiteralExpression charLiteral = (JSLiteralExpression)element;
+        JSLiteralExpression charLiteral = (JSLiteralExpression)element;
 
         JSElementFactory.replaceExpression(charLiteral, changeQuotes(charLiteral.getText()));
     }

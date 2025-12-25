@@ -13,7 +13,7 @@ public class SideEffectChecker {
     }
 
     public static boolean mayHaveSideEffects(@Nonnull JSExpression exp) {
-        final SideEffectsVisitor visitJSor = new SideEffectsVisitor();
+        SideEffectsVisitor visitJSor = new SideEffectsVisitor();
         exp.accept(visitJSor);
         return visitJSor.mayHaveSideEffects();
     }
@@ -61,7 +61,7 @@ public class SideEffectChecker {
                 return;
             }
             super.visitJSPostfixExpression(expression);
-            final IElementType sign = expression.getOperationSign();
+            IElementType sign = expression.getOperationSign();
             if (JSTokenTypes.PLUSPLUS.equals(sign) ||
                 JSTokenTypes.MINUSMINUS.equals(sign)) {
                 mayHaveSideEffects = true;
@@ -74,7 +74,7 @@ public class SideEffectChecker {
                 return;
             }
             super.visitJSPrefixExpression(expression);
-            final IElementType sign = expression.getOperationSign();
+            IElementType sign = expression.getOperationSign();
             if (JSTokenTypes.PLUSPLUS.equals(sign) || JSTokenTypes.MINUSMINUS.equals(sign)) {
                 mayHaveSideEffects = true;
             }

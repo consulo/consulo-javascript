@@ -68,10 +68,10 @@ public class PointlessBitwiseExpressionJSInspection extends JavaScriptInspection
 
     @RequiredReadAction
     String calculateReplacementExpression(JSExpression expression, PointlessBitwiseExpressionJSInspectionState state) {
-        final JSBinaryExpression exp = (JSBinaryExpression)expression;
-        final JSExpression lhs = exp.getLOperand();
-        final JSExpression rhs = exp.getROperand();
-        final IElementType tokenType = exp.getOperationSign();
+        JSBinaryExpression exp = (JSBinaryExpression)expression;
+        JSExpression lhs = exp.getLOperand();
+        JSExpression rhs = exp.getROperand();
+        IElementType tokenType = exp.getOperationSign();
         assert rhs != null;
         if (tokenType.equals(JSTokenTypes.AND)) {
             if (isZero(lhs, state) || isAllOnes(rhs, state)) {
@@ -139,8 +139,8 @@ public class PointlessBitwiseExpressionJSInspection extends JavaScriptInspection
         @Override
         @RequiredReadAction
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final JSExpression expression = (JSExpression)descriptor.getPsiElement();
-            final String newExpression = calculateReplacementExpression(expression, myState);
+            JSExpression expression = (JSExpression)descriptor.getPsiElement();
+            String newExpression = calculateReplacementExpression(expression, myState);
             replaceExpression(expression, newExpression);
         }
     }
@@ -150,19 +150,19 @@ public class PointlessBitwiseExpressionJSInspection extends JavaScriptInspection
         @RequiredReadAction
         public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
-            final IElementType sign = expression.getOperationSign();
+            IElementType sign = expression.getOperationSign();
             if (!OUR_BITWISE_TOKENS.contains(sign)) {
                 return;
             }
 
-            final JSExpression rhs = expression.getROperand();
+            JSExpression rhs = expression.getROperand();
             if (rhs == null) {
                 return;
             }
 
-            final JSExpression lhs = expression.getLOperand();
+            JSExpression lhs = expression.getLOperand();
 
-            final boolean isPointless;
+            boolean isPointless;
             if (JSTokenTypes.AND.equals(sign)) {
                 isPointless = andExpressionIsPointless(lhs, rhs);
             }
@@ -209,7 +209,7 @@ public class PointlessBitwiseExpressionJSInspection extends JavaScriptInspection
         if (state.m_ignoreExpressionsContainingConstants && !(expression instanceof JSLiteralExpression)) {
             return false;
         }
-        final Object value =
+        Object value =
             ExpressionUtil.computeConstantExpression(expression);
         return value instanceof Integer && (Integer)value == 0;
     }
@@ -218,7 +218,7 @@ public class PointlessBitwiseExpressionJSInspection extends JavaScriptInspection
         if (state.m_ignoreExpressionsContainingConstants && !(expression instanceof JSLiteralExpression)) {
             return false;
         }
-        final Object value = ExpressionUtil.computeConstantExpression(expression);
+        Object value = ExpressionUtil.computeConstantExpression(expression);
         return value instanceof Integer intValue && intValue == 0xffffffff;
     }
 }

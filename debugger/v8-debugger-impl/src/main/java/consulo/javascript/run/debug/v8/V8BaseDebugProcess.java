@@ -238,7 +238,7 @@ public abstract class V8BaseDebugProcess<V extends JavascriptVm> extends XDebugP
         }
     }
 
-    public void addScript(final Script script) {
+    public void addScript(Script script) {
         UIUtil.invokeLaterIfNeeded(() -> myScriptListPanel.add(script));
     }
 

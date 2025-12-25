@@ -58,7 +58,7 @@ public class JSChangeToCStyleCommentIntention extends JSIntention {
         PsiComment firstComment = (PsiComment)element;
 
         while (true) {
-            final PsiElement prevComment = JSElementFactory.getNonWhiteSpaceSibling(firstComment, false);
+            PsiElement prevComment = JSElementFactory.getNonWhiteSpaceSibling(firstComment, false);
 
             if (!isEndOfLineComment(prevComment)) {
                 break;
@@ -67,8 +67,8 @@ public class JSChangeToCStyleCommentIntention extends JSIntention {
             firstComment = (PsiComment)prevComment;
         }
 
-        final StringBuilder buffer = new StringBuilder(getCommentContents(firstComment));
-        final List<PsiElement> elementsToDelete = new ArrayList<>();
+        StringBuilder buffer = new StringBuilder(getCommentContents(firstComment));
+        List<PsiElement> elementsToDelete = new ArrayList<>();
         PsiElement nextComment = firstComment;
 
         while (true) {
@@ -80,7 +80,7 @@ public class JSChangeToCStyleCommentIntention extends JSIntention {
             }
             assert (nextComment != null);
 
-            final PsiElement prevSibling = nextComment.getPrevSibling();
+            PsiElement prevSibling = nextComment.getPrevSibling();
 
             assert (prevSibling != null);
             elementsToDelete.add(prevSibling);
@@ -89,13 +89,13 @@ public class JSChangeToCStyleCommentIntention extends JSIntention {
                 .append(getCommentContents((PsiComment)nextComment));
         }
 
-        final String text = StringUtil.replace(buffer.toString(), "*/", "* /");
-        final String newCommentString = text.indexOf('\n') >= 0
+        String text = StringUtil.replace(buffer.toString(), "*/", "* /");
+        String newCommentString = text.indexOf('\n') >= 0
             ? "/*\n" + text + "\n*/"
             : "/*" + text + "*/";
 
         JSElementFactory.addElementBefore(firstComment, newCommentString);
-        for (final PsiElement elementToDelete : elementsToDelete) {
+        for (PsiElement elementToDelete : elementsToDelete) {
             JSElementFactory.removeElement(elementToDelete);
         }
     }

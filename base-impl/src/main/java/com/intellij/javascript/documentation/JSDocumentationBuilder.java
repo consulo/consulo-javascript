@@ -82,7 +82,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
     JSDocumentationBuilder(PsiElement element, PsiElement _contextElement) {
         myElement = element;
         contextElement = _contextElement;
-        final PsiElement parent = element.getParent();
+        PsiElement parent = element.getParent();
         if (element instanceof JSVariable variable
             && variable.getInitializer() instanceof JSFunctionExpression functionExpression) {
             element = functionExpression;
@@ -97,7 +97,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
             }
 
             for (JSParameter parameter : function.getParameterList().getParameters()) {
-                final ParameterInfo paramInfo = new ParameterInfo();
+                ParameterInfo paramInfo = new ParameterInfo();
                 ((MethodInfo)generationInfo).parameterInfoMap.put(parameter.getName(), paramInfo);
                 paramInfo.type = parameter.getTypeString();
                 paramInfo.initialValue = parameter.getInitializerText();
@@ -152,7 +152,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
                 return true;
             }
 
-            final int maxSubsequentBr = parametersStarted && !parametersEnded ? 0 : 2;
+            int maxSubsequentBr = parametersStarted && !parametersEnded ? 0 : 2;
             if (myNewLinesPendingCount < maxSubsequentBr) {
                 ++myNewLinesPendingCount;
             }
@@ -174,8 +174,8 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
             int offset = 0;
 
             while (matcher.find()) {
-                final boolean isTagEnd = matcher.start(1) != matcher.end(1);
-                final String s = matcher.group(2);
+                boolean isTagEnd = matcher.start(1) != matcher.end(1);
+                String s = matcher.group(2);
                 // tags that do not need escaping
                 if (tagNameThatDoNotNeedEscaping(s)) {
                     continue;
@@ -195,12 +195,12 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
         return true;
     }
 
-    private static boolean tagNameThatDoNotNeedEscaping(final @NonNls String s) {
+    private static boolean tagNameThatDoNotNeedEscaping(@NonNls String s) {
         return s.equalsIgnoreCase("p") || s.equalsIgnoreCase("i") || s.equalsIgnoreCase("code")
             || s.equalsIgnoreCase("ul") || s.equalsIgnoreCase("li") || s.equalsIgnoreCase("b");
     }
 
-    private void setResult(final StringBuilder builder) {
+    private void setResult(StringBuilder builder) {
         result = builder;
         myNewLinesPendingCount = 0;
     }
@@ -211,8 +211,8 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
         @Nullable String matchName,
         @Nullable String matchValue,
         @Nullable String remainingLineContent,
-        @Nonnull final String line,
-        final String patternMatched
+        @Nonnull String line,
+        String patternMatched
     ) {
         if (metaDocType == MetaDocType.DEFAULT) {
             boolean color = remainingLineContent.startsWith("0x") && remainingLineContent.length() == 8;
@@ -300,7 +300,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
             metaDocType == MetaDocType.PUBLIC ||
             metaDocType == MetaDocType.PROTECTED ||
             metaDocType == MetaDocType.STATIC) {
-            final String s = metaDocType.name().toLowerCase();
+            String s = metaDocType.name().toLowerCase();
             if (generationInfo.visibility == null) {
                 generationInfo.visibility = s;
             }
@@ -327,7 +327,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
         }
 
         if (function != null) {
-            final MethodInfo methodGenerationInfo = ((MethodInfo)generationInfo);
+            MethodInfo methodGenerationInfo = ((MethodInfo)generationInfo);
 
             if (metaDocType == MetaDocType.CONSTRUCTOR) {
                 methodGenerationInfo.methodType = "contructor";
@@ -439,7 +439,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
             result.append(generationInfo.description.toString());
 
             result.append("\n<DL>");
-            final MethodInfo methodInfo = ((MethodInfo)generationInfo);
+            MethodInfo methodInfo = ((MethodInfo)generationInfo);
 
             if (methodInfo.parameterInfoMap.size() > 0) {
                 result.append("<DT><b>");
@@ -481,7 +481,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
         }
 
         if (contextElement != null) {
-            final String text = contextElement.getText();
+            String text = contextElement.getText();
             if (text.startsWith("#") && text.length() == 7) {
                 appendCurrentOrDefaultValue(text.substring(1), true, false);
             }
@@ -490,10 +490,10 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
         return result.toString();
     }
 
-    public String getParameterDoc(final String name) {
+    public String getParameterDoc(String name) {
         if (function != null) {
-            final MethodInfo methodInfo = ((MethodInfo)generationInfo);
-            final ParameterInfo parameterInfo = methodInfo.parameterInfoMap.get(name);
+            MethodInfo methodInfo = ((MethodInfo)generationInfo);
+            ParameterInfo parameterInfo = methodInfo.parameterInfoMap.get(name);
 
             if (parameterInfo != null && parameterInfo.description.length() > 0) {
                 result = new StringBuilder();
@@ -570,7 +570,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
 
             result.append(parameterInfo.getKey());
 
-            final String initialValue = parameterInfo.getValue().initialValue;
+            String initialValue = parameterInfo.getValue().initialValue;
             if (initialValue != null) {
                 result.append(" = ").append(initialValue);
             }
@@ -584,11 +584,11 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
         result.append("</PRE>");
     }
 
-    private int startNamedItem(final String functionName) {
+    private int startNamedItem(String functionName) {
         return startNamedItem(functionName, generationInfo);
     }
 
-    private int startNamedItem(final String functionName, SymbolInfo generationInfo) {
+    private int startNamedItem(String functionName, SymbolInfo generationInfo) {
         result.append("<PRE>");
 
         StringBuffer options = new StringBuffer();
@@ -604,7 +604,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
                 options.append(returnType);
             }
 
-            final String type = ((MethodInfo)generationInfo).methodType;
+            String type = ((MethodInfo)generationInfo).methodType;
             if (type != null) {
                 if (options.length() > 0) {
                     options.append(", ");
@@ -641,7 +641,7 @@ class JSDocumentationBuilder implements JSDocumentationProcessor {
         return offset;
     }
 
-    private void addVisibilityAndAccess(final StringBuffer options, SymbolInfo generationInfo) {
+    private void addVisibilityAndAccess(StringBuffer options, SymbolInfo generationInfo) {
         if (generationInfo.visibility != null) {
             if (options.length() > 0) {
                 options.append(", ");

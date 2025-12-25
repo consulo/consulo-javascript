@@ -49,9 +49,9 @@ public class ConstantConditionalExpressionJSInspection extends JavaScriptInspect
     }
 
     static String calculateReplacementExpression(JSConditionalExpression exp) {
-        final JSExpression thenExpression = exp.getThen();
-        final JSExpression elseExpression = exp.getElse();
-        final JSExpression condition = exp.getCondition();
+        JSExpression thenExpression = exp.getThen();
+        JSExpression elseExpression = exp.getElse();
+        JSExpression condition = exp.getCondition();
         assert thenExpression != null;
         assert elseExpression != null;
         if (BoolUtils.isTrue(condition)) {
@@ -75,8 +75,8 @@ public class ConstantConditionalExpressionJSInspection extends JavaScriptInspect
 
         @Override
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final JSConditionalExpression expression = (JSConditionalExpression) descriptor.getPsiElement();
-            final String newExpression = calculateReplacementExpression(expression);
+            JSConditionalExpression expression = (JSConditionalExpression) descriptor.getPsiElement();
+            String newExpression = calculateReplacementExpression(expression);
             replaceExpression(expression, newExpression);
         }
     }
@@ -85,12 +85,12 @@ public class ConstantConditionalExpressionJSInspection extends JavaScriptInspect
         @Override
         public void visitJSConditionalExpression(JSConditionalExpression expression) {
             super.visitJSConditionalExpression(expression);
-            final JSExpression condition = expression.getCondition();
-            final JSExpression thenExpression = expression.getThen();
+            JSExpression condition = expression.getCondition();
+            JSExpression thenExpression = expression.getThen();
             if (thenExpression == null) {
                 return;
             }
-            final JSExpression elseExpression = expression.getElse();
+            JSExpression elseExpression = expression.getElse();
             if (elseExpression == null) {
                 return;
             }

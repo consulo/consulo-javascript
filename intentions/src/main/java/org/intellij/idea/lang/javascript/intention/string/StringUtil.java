@@ -26,7 +26,7 @@ class StringUtil {
     }
 
     public static boolean isSimpleQuoteStringLiteral(JSLiteralExpression expression) {
-        final String value = expression.getText();
+        String value = expression.getText();
 
         return (value != null &&
             value.charAt(0) == SIMPLE_QUOTE &&
@@ -34,7 +34,7 @@ class StringUtil {
     }
 
     public static boolean isDoubleQuoteStringLiteral(JSLiteralExpression expression) {
-        final String value = expression.getText();
+        String value = expression.getText();
 
         return (value != null &&
             value.charAt(0) == DOUBLE_QUOTE &&

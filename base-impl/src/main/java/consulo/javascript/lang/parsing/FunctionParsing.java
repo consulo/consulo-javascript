@@ -44,9 +44,9 @@ public class FunctionParsing extends Parsing {
     }
 
     public void parseFunctionNoMarker(
-        final PsiBuilder builder,
-        final boolean expressionContext,
-        final @Nonnull PsiBuilder.Marker functionMarker
+        PsiBuilder builder,
+        boolean expressionContext,
+        @Nonnull PsiBuilder.Marker functionMarker
     ) {
         if (builder.getTokenType() == JSTokenTypes.FUNCTION_KEYWORD) {
             // function keyword may be ommited in context of get/set property definition
@@ -85,8 +85,8 @@ public class FunctionParsing extends Parsing {
         functionMarker.done(expressionContext ? JSElementTypes.FUNCTION_EXPRESSION : JSElementTypes.FUNCTION_DECLARATION);
     }
 
-    public void parseParameterList(final PsiBuilder builder) {
-        final PsiBuilder.Marker parameterList;
+    public void parseParameterList(PsiBuilder builder) {
+        PsiBuilder.Marker parameterList;
         if (builder.getTokenType() != JSTokenTypes.LPAR) {
             builder.error(JavaScriptLocalize.javascriptParserMessageExpectedLparen());
             parameterList = builder.mark(); // To have non-empty parameters list at all the time.

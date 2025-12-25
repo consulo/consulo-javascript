@@ -52,26 +52,26 @@ public class DuplicateCaseLabelJSInspection extends JavaScriptInspection {
         public void visitJSSwitchStatement(@Nonnull JSSwitchStatement statement) {
             super.visitJSSwitchStatement(statement);
 
-            final Set<JSExpression> conditions = new HashSet<>();
+            Set<JSExpression> conditions = new HashSet<>();
             collectCaseLabels(statement, conditions);
-            final int numConditions = conditions.size();
+            int numConditions = conditions.size();
             if (numConditions < 2) {
                 return;
             }
-            final JSExpression[] conditionArray = conditions.toArray(new JSExpression[numConditions]);
-            final boolean[] matched = new boolean[conditionArray.length];
+            JSExpression[] conditionArray = conditions.toArray(new JSExpression[numConditions]);
+            boolean[] matched = new boolean[conditionArray.length];
             Arrays.fill(matched, false);
             for (int i = 0; i < conditionArray.length; i++) {
                 if (matched[i]) {
                     continue;
                 }
-                final JSExpression condition = conditionArray[i];
+                JSExpression condition = conditionArray[i];
                 for (int j = i + 1; j < conditionArray.length; j++) {
                     if (matched[j]) {
                         continue;
                     }
-                    final JSExpression testCondition = conditionArray[j];
-                    final boolean areEquivalent = EquivalenceChecker.expressionsAreEquivalent(condition, testCondition);
+                    JSExpression testCondition = conditionArray[j];
+                    boolean areEquivalent = EquivalenceChecker.expressionsAreEquivalent(condition, testCondition);
                     if (areEquivalent) {
                         registerError(testCondition);
                         if (!matched[i]) {
@@ -83,7 +83,7 @@ public class DuplicateCaseLabelJSInspection extends JavaScriptInspection {
                 }
             }
             int numDefaults = 0;
-            final JSCaseClause[] clauses = statement.getCaseClauses();
+            JSCaseClause[] clauses = statement.getCaseClauses();
             for (JSCaseClause clause : clauses) {
                 if (clause.isDefault()) {
                     numDefaults++;
@@ -99,10 +99,10 @@ public class DuplicateCaseLabelJSInspection extends JavaScriptInspection {
         }
 
         private static void collectCaseLabels(JSSwitchStatement statement, Set<JSExpression> conditions) {
-            final JSCaseClause[] clauses = statement.getCaseClauses();
+            JSCaseClause[] clauses = statement.getCaseClauses();
             for (JSCaseClause clause : clauses) {
                 if (!clause.isDefault()) {
-                    final JSExpression caseExpression = clause.getCaseExpression();
+                    JSExpression caseExpression = clause.getCaseExpression();
                     if (caseExpression != null) {
                         conditions.add(caseExpression);
                     }

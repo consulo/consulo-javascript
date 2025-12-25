@@ -44,8 +44,8 @@ public class AnonymousFunctionJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSFunctionExpression(JSFunctionExpression jsFunctionExpression) {
             super.visitJSFunctionExpression(jsFunctionExpression);
-            final JSFunction function = jsFunctionExpression.getFunction();
-            final PsiElement identifier = function.getNameIdentifier();
+            JSFunction function = jsFunctionExpression.getFunction();
+            PsiElement identifier = function.getNameIdentifier();
             if (identifier == null || PsiTreeUtil.isAncestor(function, identifier, true)) {
                 return;
             }

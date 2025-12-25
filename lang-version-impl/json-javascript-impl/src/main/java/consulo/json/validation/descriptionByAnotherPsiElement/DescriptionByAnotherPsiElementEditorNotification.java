@@ -73,7 +73,7 @@ public class DescriptionByAnotherPsiElementEditorNotification<T extends PsiEleme
             return null;
         }
 
-        final PsiFile psiFile = PsiManager.getInstance(myProject).findFile(file);
+        PsiFile psiFile = PsiManager.getInstance(myProject).findFile(file);
         if (psiFile == null) {
             return null;
         }

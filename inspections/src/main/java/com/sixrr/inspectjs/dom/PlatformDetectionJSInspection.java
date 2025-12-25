@@ -43,13 +43,13 @@ public class PlatformDetectionJSInspection extends JavaScriptInspection {
         @SuppressWarnings({"HardCodedStringLiteral"})
         public void visitJSReferenceExpression(JSReferenceExpression referenceExpression) {
             super.visitJSReferenceExpression(referenceExpression);
-            final JSExpression qualifier = referenceExpression.getQualifier();
+            JSExpression qualifier = referenceExpression.getQualifier();
             if (qualifier == null) {
                 return;
             }
-            final String qualifierText = qualifier.getText();
+            String qualifierText = qualifier.getText();
             if ("navigator".equalsIgnoreCase(qualifierText)) {
-                final String methodName = referenceExpression.getReferencedName();
+                String methodName = referenceExpression.getReferencedName();
                 if (!"userAgent".equalsIgnoreCase(methodName) &&
                     !"appName".equalsIgnoreCase(methodName) &&
                     !"appCodeName".equalsIgnoreCase(methodName) &&
@@ -61,7 +61,7 @@ public class PlatformDetectionJSInspection extends JavaScriptInspection {
                 registerError(referenceExpression);
             }
             else if ("document".equalsIgnoreCase(qualifierText)) {
-                final String methodName = referenceExpression.getReferencedName();
+                String methodName = referenceExpression.getReferencedName();
                 if (!"all".equalsIgnoreCase(methodName) &&
                     !"layers".equalsIgnoreCase(methodName)) {
                     return;

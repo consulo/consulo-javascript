@@ -35,7 +35,7 @@ public class VariableAccessUtil {
         JSVariable variable,
         JSElement context
     ) {
-        final VariableAssignedFromVisitor visitor = new VariableAssignedFromVisitor(variable);
+        VariableAssignedFromVisitor visitor = new VariableAssignedFromVisitor(variable);
         context.accept(visitor);
         return visitor.isAssignedFrom();
     }
@@ -72,7 +72,7 @@ public class VariableAccessUtil {
         Set<JSVariable> notUpdatedSymbols,
         Set<JSVariable> candidateSymbols
     ) {
-        final VariableAssignedVisitor visitor = new VariableAssignedVisitor(variable, context, notUpdatedSymbols,
+        VariableAssignedVisitor visitor = new VariableAssignedVisitor(variable, context, notUpdatedSymbols,
             candidateSymbols
         );
         context.accept(visitor);
@@ -80,25 +80,25 @@ public class VariableAccessUtil {
     }
 
     public static boolean variableIsReturned(JSVariable variable, JSElement context) {
-        final VariableReturnedVisitor visitor = new VariableReturnedVisitor(variable);
+        VariableReturnedVisitor visitor = new VariableReturnedVisitor(variable);
         context.accept(visitor);
         return visitor.isReturned();
     }
 
     public static boolean arrayContentsAreAccessed(JSVariable variable, JSElement context) {
-        final ArrayContentsAccessedVisitor visitor = new ArrayContentsAccessedVisitor(variable);
+        ArrayContentsAccessedVisitor visitor = new ArrayContentsAccessedVisitor(variable);
         context.accept(visitor);
         return visitor.isAccessed();
     }
 
     public static boolean arrayContentsAreAssigned(JSVariable variable, JSElement context) {
-        final ArrayContentsAssignedVisitor visitor = new ArrayContentsAssignedVisitor(variable);
+        ArrayContentsAssignedVisitor visitor = new ArrayContentsAssignedVisitor(variable);
         context.accept(visitor);
         return visitor.isAssigned();
     }
 
     public static boolean mayEvaluateToVariable(JSExpression expression, JSVariable variable) {
-        final String variableName = variable.getName();
+        String variableName = variable.getName();
         JSExpression expr = expression;
 
         if (variableName == null) {
@@ -123,7 +123,7 @@ public class VariableAccessUtil {
                 expr = defExpr.getExpression();
             }
             else if (expr instanceof JSReferenceExpression refExpr) {
-                final PsiElement referent = refExpr.resolve();
+                PsiElement referent = refExpr.resolve();
 
                 return referent != null && referent.equals(variable);
             }
@@ -139,7 +139,7 @@ public class VariableAccessUtil {
     }
 
     public static Set<JSVariable> getUsedVariables(PsiElement context) {
-        final UsedVariableVisitor visitor = new UsedVariableVisitor();
+        UsedVariableVisitor visitor = new UsedVariableVisitor();
         context.accept(visitor);
         return visitor.getVariables();
     }
@@ -188,11 +188,11 @@ public class VariableAccessUtil {
             if (!this.assigned) {
                 super.visitJSAssignmentExpression(assignment);
 
-                final JSExpression arg = assignment.getLOperand();
+                JSExpression arg = assignment.getLOperand();
 
                 if (VariableAccessUtil.mayEvaluateToVariable(arg, this.variable)) {
-                    final Set<JSVariable> usedVariables = getUsedVariables(assignment.getROperand());
-                    final Set<JSVariable> newCandidateSet = new LinkedHashSet<>();
+                    Set<JSVariable> usedVariables = getUsedVariables(assignment.getROperand());
+                    Set<JSVariable> newCandidateSet = new LinkedHashSet<>();
                     boolean assigned = false;
 
                     newCandidateSet.addAll(this.candidateSymbols);
@@ -222,14 +222,14 @@ public class VariableAccessUtil {
             if (!this.assigned) {
                 super.visitJSPrefixExpression(expression);
 
-                final IElementType tokenType = expression.getOperationSign();
+                IElementType tokenType = expression.getOperationSign();
 
                 if (!(tokenType.equals(JSTokenTypes.PLUSPLUS) ||
                     tokenType.equals(JSTokenTypes.MINUSMINUS))) {
                     return;
                 }
 
-                final JSExpression operand = expression.getExpression();
+                JSExpression operand = expression.getExpression();
 
                 this.assigned = VariableAccessUtil.mayEvaluateToVariable(operand, this.variable);
             }
@@ -240,14 +240,14 @@ public class VariableAccessUtil {
             if (!this.assigned) {
                 super.visitJSPostfixExpression(postfixExpression);
 
-                final IElementType tokenType = postfixExpression.getOperationSign();
+                IElementType tokenType = postfixExpression.getOperationSign();
 
                 if (!(tokenType.equals(JSTokenTypes.PLUSPLUS) ||
                     tokenType.equals(JSTokenTypes.MINUSMINUS))) {
                     return;
                 }
 
-                final JSExpression operand = postfixExpression.getExpression();
+                JSExpression operand = postfixExpression.getExpression();
 
                 this.assigned = VariableAccessUtil.mayEvaluateToVariable(operand, this.variable);
             }
@@ -288,7 +288,7 @@ public class VariableAccessUtil {
                 super.visitJSVarStatement(statement);
 
                 for (JSVariable declaredVariable : statement.getVariables()) {
-                    final JSExpression initializer = declaredVariable.getInitializer();
+                    JSExpression initializer = declaredVariable.getInitializer();
 
                     if (initializer != null) {
                         this.assignedFrom = VariableAccessUtil.mayEvaluateToVariable(initializer, this.variable);
@@ -353,7 +353,7 @@ public class VariableAccessUtil {
             if (!this.accessed) {
                 super.visitJSIndexedPropertyAccessExpression(accessExpression);
 
-                final PsiElement parent = accessExpression.getParent();
+                PsiElement parent = accessExpression.getParent();
 
                 if (!(parent instanceof JSAssignmentExpression ||
                     ((JSAssignmentExpression)parent).getLOperand().equals(accessExpression))) {
@@ -364,7 +364,7 @@ public class VariableAccessUtil {
 
         private void checkQualifier(JSExpression qualifier) {
             if (qualifier instanceof JSReferenceExpression referenceExpression) {
-                final PsiElement referent = referenceExpression.resolve();
+                PsiElement referent = referenceExpression.resolve();
 
                 this.accessed = (referent != null && referent.equals(this.variable));
             }
@@ -422,7 +422,7 @@ public class VariableAccessUtil {
             }
 
             if (arrayExpression instanceof JSReferenceExpression referenceExpression) {
-                final String referencedName = referenceExpression.getReferencedName();
+                String referencedName = referenceExpression.getReferencedName();
 
                 // TODO maybe it's better to check ((JSReferenceExpression) arrayExpression).isReferenceTo(variable) ?
                 this.assigned = referencedName != null && referencedName.equals(this.variable.getName());
@@ -446,7 +446,7 @@ public class VariableAccessUtil {
         public void visitJSReferenceExpression(@Nonnull JSReferenceExpression ref) {
             super.visitJSReferenceExpression(ref);
 
-            final PsiElement referent = ref.resolve();
+            PsiElement referent = ref.resolve();
 
             if (referent != null && referent instanceof JSVariable variable) {
                 this.variables.add(variable);

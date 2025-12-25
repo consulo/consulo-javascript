@@ -45,7 +45,7 @@ public class DynamicallyGeneratedCodeJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSCallExpression(JSCallExpression jsCallExpression) {
             super.visitJSCallExpression(jsCallExpression);
-            final JSExpression methodExpression;
+            JSExpression methodExpression;
             try {
                 methodExpression = jsCallExpression.getMethodExpression();
             }
@@ -55,10 +55,10 @@ public class DynamicallyGeneratedCodeJSInspection extends JavaScriptInspection {
             if (!(methodExpression instanceof JSReferenceExpression)) {
                 return;
             }
-            final JSReferenceExpression referenceExpression = (JSReferenceExpression)methodExpression;
-            final JSExpression qualifier = referenceExpression.getQualifier();
+            JSReferenceExpression referenceExpression = (JSReferenceExpression)methodExpression;
+            JSExpression qualifier = referenceExpression.getQualifier();
 
-            @NonNls final String methodName = referenceExpression.getReferencedName();
+            @NonNls String methodName = referenceExpression.getReferencedName();
             if (!"eval".equals(methodName) && !"setTimeout".equals(methodName) && !"setInterval".equals(methodName)) {
                 return;
             }
@@ -68,7 +68,7 @@ public class DynamicallyGeneratedCodeJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSNewExpression(JSNewExpression jsNewExpression) {
             super.visitJSNewExpression(jsNewExpression);
-            final JSExpression methodExpression;
+            JSExpression methodExpression;
             try {
                 methodExpression = jsNewExpression.getMethodExpression();
             }
@@ -78,13 +78,13 @@ public class DynamicallyGeneratedCodeJSInspection extends JavaScriptInspection {
             if (!(methodExpression instanceof JSReferenceExpression)) {
                 return;
             }
-            final JSReferenceExpression referenceExpression = (JSReferenceExpression)methodExpression;
-            final JSExpression qualifier = referenceExpression.getQualifier();
+            JSReferenceExpression referenceExpression = (JSReferenceExpression)methodExpression;
+            JSExpression qualifier = referenceExpression.getQualifier();
 
             if (qualifier != null) {
                 return;
             }
-            @NonNls final String methodName = referenceExpression.getReferencedName();
+            @NonNls String methodName = referenceExpression.getReferencedName();
             if (!"Function".equals(methodName)) {
                 return;
             }

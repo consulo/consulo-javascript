@@ -63,15 +63,15 @@ public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection
 
     @Nullable
     private String calculateSimplifiedBinaryExpression(JSBinaryExpression expression) {
-        final IElementType sign = expression.getOperationSign();
-        final JSExpression lhs = expression.getLOperand();
+        IElementType sign = expression.getOperationSign();
+        JSExpression lhs = expression.getLOperand();
 
-        final JSExpression rhs = expression.getROperand();
+        JSExpression rhs = expression.getROperand();
         if (rhs == null) {
             return null;
         }
-        final String rhsText = rhs.getText();
-        final String lhsText = lhs.getText();
+        String rhsText = rhs.getText();
+        String lhsText = lhs.getText();
         if (JSTokenTypes.ANDAND.equals(sign) || JSTokenTypes.AND.equals(sign)) {
             return isTrue(lhs) ? rhsText : lhsText;
         } else if (JSTokenTypes.OROR.equals(sign) || JSTokenTypes.OR.equals(sign)) {
@@ -106,11 +106,11 @@ public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection
 
     private static String createStringForNegatedExpression(JSExpression exp) {
         if (ComparisonUtils.isComparison(exp)) {
-            final JSBinaryExpression binaryExpression = (JSBinaryExpression) exp;
-            final IElementType sign = binaryExpression.getOperationSign();
-            final String negatedComparison = ComparisonUtils.getNegatedComparison(sign);
-            final JSExpression lhs = binaryExpression.getLOperand();
-            final JSExpression rhs = binaryExpression.getROperand();
+            JSBinaryExpression binaryExpression = (JSBinaryExpression) exp;
+            IElementType sign = binaryExpression.getOperationSign();
+            String negatedComparison = ComparisonUtils.getNegatedComparison(sign);
+            JSExpression lhs = binaryExpression.getLOperand();
+            JSExpression rhs = binaryExpression.getROperand();
             assert rhs != null;
             return lhs.getText() + negatedComparison + rhs.getText();
         } else {
@@ -122,7 +122,7 @@ public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection
 
     @NonNls
     private static String calculateSimplifiedPrefixExpression(JSPrefixExpression expression) {
-        final JSExpression operand = expression.getExpression();
+        JSExpression operand = expression.getExpression();
         return isTrue(operand) ? "false" : "true";
     }
 
@@ -140,13 +140,13 @@ public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection
 
         @Override
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final PsiElement element = descriptor.getPsiElement();
+            PsiElement element = descriptor.getPsiElement();
             if (element instanceof JSBinaryExpression expression) {
-                final String replacementString = calculateSimplifiedBinaryExpression(expression);
+                String replacementString = calculateSimplifiedBinaryExpression(expression);
                 replaceExpression(expression, replacementString);
             } else {
-                final JSPrefixExpression expression = (JSPrefixExpression) element;
-                final String replacementString = calculateSimplifiedPrefixExpression(expression);
+                JSPrefixExpression expression = (JSPrefixExpression) element;
+                String replacementString = calculateSimplifiedPrefixExpression(expression);
                 replaceExpression(expression, replacementString);
             }
         }
@@ -173,13 +173,13 @@ public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection
             if (!(expression.getROperand() != null)) {
                 return;
             }
-            final IElementType sign = expression.getOperationSign();
+            IElementType sign = expression.getOperationSign();
             if (!booleanTokens.contains(sign)) {
                 return;
             }
-            final JSExpression rhs = expression.getROperand();
-            final JSExpression lhs = expression.getLOperand();
-            final boolean isPointless;
+            JSExpression rhs = expression.getROperand();
+            JSExpression lhs = expression.getLOperand();
+            boolean isPointless;
             if (JSTokenTypes.EQEQ.equals(sign) /*||
                     JSTokenTypes.EQEQEQ.equals(sign) ||
                     JSTokenTypes.NE.equals(sign) ||
@@ -205,11 +205,11 @@ public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection
         @Override
         public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
             super.visitJSPrefixExpression(expression);
-            final IElementType sign = expression.getOperationSign();
+            IElementType sign = expression.getOperationSign();
             if (sign == null) {
                 return;
             }
-            final JSExpression operand = expression.getExpression();
+            JSExpression operand = expression.getExpression();
             if (JSTokenTypes.EXCL.equals(sign) &&
                     notExpressionIsPointless(operand)) {
                 registerError(expression);
@@ -241,7 +241,7 @@ public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection
         if (expression == null || !(expression instanceof JSLiteralExpression)) {
             return false;
         }
-        @NonNls final String text = expression.getText();
+        @NonNls String text = expression.getText();
         return "true".equals(text);
     }
 
@@ -249,7 +249,7 @@ public class PointlessBooleanExpressionJSInspection extends JavaScriptInspection
         if (expression == null || !(expression instanceof JSLiteralExpression)) {
             return false;
         }
-        @NonNls final String text = expression.getText();
+        @NonNls String text = expression.getText();
         return "false".equals(text);
     }
 }

@@ -56,14 +56,14 @@ public class TrivialConditionalJSInspection extends JavaScriptInspection {
     @RequiredReadAction
     @Override
     public String buildErrorString(Object state, Object... args) {
-        final JSConditionalExpression exp = (JSConditionalExpression) args[0];
+        JSConditionalExpression exp = (JSConditionalExpression) args[0];
         return InspectionJSLocalize.trivialConditionalErrorString(exp.getText(), calculateReplacementExpression(exp)).get();
     }
 
     private static String calculateReplacementExpression(JSConditionalExpression exp) {
-        final JSExpression thenExpression = exp.getThen();
-        final JSExpression elseExpression = exp.getElse();
-        final JSExpression condition = exp.getCondition();
+        JSExpression thenExpression = exp.getThen();
+        JSExpression elseExpression = exp.getElse();
+        JSExpression condition = exp.getCondition();
 
         if (isFalse(thenExpression) && isTrue(elseExpression)) {
             return BoolUtils.getNegatedExpressionText(condition);
@@ -86,8 +86,8 @@ public class TrivialConditionalJSInspection extends JavaScriptInspection {
 
         @Override
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final JSConditionalExpression expression = (JSConditionalExpression) descriptor.getPsiElement();
-            final String newExpression = calculateReplacementExpression(expression);
+            JSConditionalExpression expression = (JSConditionalExpression) descriptor.getPsiElement();
+            String newExpression = calculateReplacementExpression(expression);
             replaceExpression(expression, newExpression);
         }
     }
@@ -96,11 +96,11 @@ public class TrivialConditionalJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSConditionalExpression(JSConditionalExpression exp) {
             super.visitJSConditionalExpression(exp);
-            final JSExpression thenExpression = exp.getThen();
+            JSExpression thenExpression = exp.getThen();
             if (thenExpression == null) {
                 return;
             }
-            final JSExpression elseExpression = exp.getElse();
+            JSExpression elseExpression = exp.getElse();
             if (elseExpression == null) {
                 return;
             }
@@ -114,12 +114,12 @@ public class TrivialConditionalJSInspection extends JavaScriptInspection {
     }
 
     private static boolean isFalse(JSExpression expression) {
-        @NonNls final String text = expression.getText();
+        @NonNls String text = expression.getText();
         return "false".equals(text);
     }
 
     private static boolean isTrue(JSExpression expression) {
-        @NonNls final String text = expression.getText();
+        @NonNls String text = expression.getText();
         return "true".equals(text);
     }
 }

@@ -123,7 +123,7 @@ public class EcmaScriptExpressionParsing extends ExpressionParsing<EcmaScriptPar
 
     @Override
     protected void parseProperty(PsiBuilder builder) {
-        final IElementType nameTokenType = builder.getTokenType();
+        IElementType nameTokenType = builder.getTokenType();
         PsiBuilder.Marker propertyMark = builder.mark();
 
         IElementType isSetterOrGetterType = null;

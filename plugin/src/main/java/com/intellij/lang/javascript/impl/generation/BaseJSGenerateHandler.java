@@ -92,7 +92,7 @@ abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler
                     @Override
                     public void run() {
                         try {
-                            final BaseCreateMethodsFix createMethodsFix = createFix(jsClass);
+                            BaseCreateMethodsFix createMethodsFix = createFix(jsClass);
                             createMethodsFix.addElementsToProcessFrom(selectedElements);
                             createMethodsFix.invoke(project, editor, file);
                         }
@@ -149,7 +149,7 @@ abstract class BaseJSGenerateHandler implements LanguageCodeInsightActionHandler
 
     protected abstract BaseCreateMethodsFix createFix(JSClass clazz);
 
-    protected abstract void collectCandidates(JSClass clazz, final Collection<JSNamedElementNode> candidates);
+    protected abstract void collectCandidates(JSClass clazz, Collection<JSNamedElementNode> candidates);
 
     @Override
     public boolean startInWriteAction() {

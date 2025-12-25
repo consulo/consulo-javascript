@@ -40,7 +40,7 @@ public abstract class JSStubElementType<StubT extends JSStubElement<PsiT>, PsiT 
     }
 
     @Override
-    public void indexStub(@Nonnull final StubT stub, @Nonnull final IndexSink sink) {
+    public void indexStub(@Nonnull StubT stub, @Nonnull IndexSink sink) {
     }
 
     @Nonnull

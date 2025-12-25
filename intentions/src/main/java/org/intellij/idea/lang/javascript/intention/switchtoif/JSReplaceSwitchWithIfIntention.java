@@ -72,19 +72,19 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
     @Override
     @RequiredReadAction
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSSwitchStatement switchStatement = (JSSwitchStatement)element.getParent();
+        JSSwitchStatement switchStatement = (JSSwitchStatement)element.getParent();
 
         assert (switchStatement != null);
 
-        final PsiManager mgr = switchStatement.getManager();
-        final JSExpression switchExpression = switchStatement.getSwitchExpression();
-        final CodeStyleManager codeStyleMgr = CodeStyleManager.getInstance(element.getProject());
-        final boolean hadSideEffects = SideEffectChecker.mayHaveSideEffects(switchExpression);
-        final String declarationString;
-        final String expressionText;
+        PsiManager mgr = switchStatement.getManager();
+        JSExpression switchExpression = switchStatement.getSwitchExpression();
+        CodeStyleManager codeStyleMgr = CodeStyleManager.getInstance(element.getProject());
+        boolean hadSideEffects = SideEffectChecker.mayHaveSideEffects(switchExpression);
+        String declarationString;
+        String expressionText;
 
         if (hadSideEffects) {
-            final String variableName =
+            String variableName =
                 "i"; // TODO JavaCodeStyleManager.getInstance(switchExpression.getProject()).suggestUniqueVariableName("i", switchExpression, true);
 
             expressionText = variableName;
@@ -104,7 +104,7 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
             }
         }
 
-        final StringBuilder ifStatementBuffer = new StringBuilder(1024);
+        StringBuilder ifStatementBuffer = new StringBuilder(1024);
         String breakLabel = null;
 
         if (renameBreaks) {
@@ -112,13 +112,13 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
             ifStatementBuffer.append(breakLabel).append(':');
         }
 
-        final List<SwitchStatementBranch> openBranches = new ArrayList<>();
-        final Set<JSVariable> declaredVars = new HashSet<>(5);
-        final List<SwitchStatementBranch> allBranches = new ArrayList<>();
+        List<SwitchStatementBranch> openBranches = new ArrayList<>();
+        Set<JSVariable> declaredVars = new HashSet<>(5);
+        List<SwitchStatementBranch> allBranches = new ArrayList<>();
         SwitchStatementBranch currentBranch = null;
 
         for (JSCaseClause caseClause : switchStatement.getCaseClauses()) {
-            final PsiElement[] caseClauseChildren = caseClause.getChildren();
+            PsiElement[] caseClauseChildren = caseClause.getChildren();
 
             for (PsiElement child : caseClauseChildren) {
                 if (child == caseClauseChildren[0]) {
@@ -142,22 +142,22 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
 
                 if (child instanceof JSExpression) {
                     // Processes case clause expression
-                    final JSExpression value = ParenthesesUtils.stripParentheses(caseClause.getCaseExpression());
+                    JSExpression value = ParenthesesUtils.stripParentheses(caseClause.getCaseExpression());
 
                     assert (currentBranch != null);
                     currentBranch.addLabel(value.getText());
                 }
                 else if (child instanceof JSStatement) {
                     // Processes case clause statements
-                    final JSStatement statement = (JSStatement)child;
+                    JSStatement statement = (JSStatement)child;
 
                     if (statement instanceof JSVarStatement) {
                         Collections.addAll(declaredVars, ((JSVarStatement)statement).getVariables());
                     }
                     else if (statement instanceof JSBlockStatement) {
                         for (PsiElement blockElement : statement.getChildren()) {
-                            final boolean isJsElement = (blockElement instanceof JSElement);
-                            final boolean isWhiteSpace = (blockElement instanceof PsiWhiteSpace);
+                            boolean isJsElement = (blockElement instanceof JSElement);
+                            boolean isWhiteSpace = (blockElement instanceof PsiWhiteSpace);
 
                             for (SwitchStatementBranch branch : openBranches) {
                                 if (isJsElement) {
@@ -183,7 +183,7 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
                     }
                 }
                 else {
-                    final boolean isWhiteSpace = (child instanceof PsiWhiteSpace);
+                    boolean isWhiteSpace = (child instanceof PsiWhiteSpace);
 
                     for (SwitchStatementBranch openBranch : openBranches) {
                         if (isWhiteSpace) {
@@ -205,9 +205,9 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
                 defaultBranch = branch;
             }
             else {
-                final List<String> labels = branch.getLabels();
-                final List<PsiElement> bodyElements = branch.getBodyElements();
-                final Set<JSVariable> pendingVariableDeclarations = branch.getPendingVariableDeclarations();
+                List<String> labels = branch.getLabels();
+                List<PsiElement> bodyElements = branch.getBodyElements();
+                Set<JSVariable> pendingVariableDeclarations = branch.getPendingVariableDeclarations();
 
                 dumpBranch(
                     ifStatementBuffer,
@@ -223,8 +223,8 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
             }
         }
         if (defaultBranch != null) {
-            final List<PsiElement> bodyElements = defaultBranch.getBodyElements();
-            final Set<JSVariable> pendingVariableDeclarations = defaultBranch.getPendingVariableDeclarations();
+            List<PsiElement> bodyElements = defaultBranch.getBodyElements();
+            Set<JSVariable> pendingVariableDeclarations = defaultBranch.getPendingVariableDeclarations();
 
             dumpDefaultBranch(
                 ifStatementBuffer,
@@ -237,10 +237,10 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
         }
 
         if (hadSideEffects) {
-            final String ifStatementString = ifStatementBuffer.toString();
-            final JSStatement declarationStatement =
+            String ifStatementString = ifStatementBuffer.toString();
+            JSStatement declarationStatement =
                 (JSStatement)JSChangeUtil.createStatementFromText(element.getProject(), declarationString).getPsi();
-            final JSStatement ifStatement =
+            JSStatement ifStatement =
                 (JSStatement)JSChangeUtil.createStatementFromText(element.getProject(), ifStatementString).getPsi();
 
             codeStyleMgr.reformat(declarationStatement);
@@ -248,8 +248,8 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
             JSElementFactory.replaceStatement(switchStatement, declarationStatement.getText() + '\n' + ifStatement.getText());
         }
         else {
-            final String ifStatementString = ifStatementBuffer.toString();
-            final JSStatement newStatement =
+            String ifStatementString = ifStatementBuffer.toString();
+            JSStatement newStatement =
                 (JSStatement)JSChangeUtil.createStatementFromText(element.getProject(), ifStatementString).getPsi();
 
             codeStyleMgr.reformat(newStatement);
@@ -314,7 +314,7 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
         Set<JSVariable> variableDecls
     ) {
         ifStatementString.append('{');
-        for (final JSVariable var : variableDecls) {
+        for (JSVariable var : variableDecls) {
             if (CaseUtil.isUsedByStatementList(var, bodyStatements)) {
                 ifStatementString.append(VAR_PREFIX)
                     .append(var.getName())
@@ -322,7 +322,7 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
             }
         }
 
-        for (final PsiElement bodyStatement : bodyStatements) {
+        for (PsiElement bodyStatement : bodyStatements) {
             if (!(bodyStatement instanceof JSBreakStatement)) {
                 appendElement(ifStatementString, bodyStatement, renameBreaks,
                     breakLabel
@@ -340,12 +340,12 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
         String breakLabelString
     ) {
         if (!renameBreakElements) {
-            final String text = element.getText();
+            String text = element.getText();
 
             ifStatementString.append(text);
         }
         else if (element instanceof JSBreakStatement breakStatement) {
-            final String identifier = breakStatement.getLabel();
+            String identifier = breakStatement.getLabel();
 
             if (identifier == null || identifier.isEmpty()) {
                 ifStatementString.append(BREAK_KEYWORD).append(breakLabelString).append(';');
@@ -355,7 +355,7 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
             }
         }
         else if (element instanceof JSBlockStatement) {
-            for (final PsiElement child : element.getChildren()) {
+            for (PsiElement child : element.getChildren()) {
                 appendElement(ifStatementString, child, renameBreakElements, breakLabelString);
             }
         }
@@ -380,14 +380,14 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
     private static class SwitchPredicate implements JSElementPredicate {
         @Override
         public boolean satisfiedBy(@Nonnull PsiElement element) {
-            final PsiElement parent = element.getParent();
+            PsiElement parent = element.getParent();
 
             if (parent instanceof JSSwitchStatement switchStatement) {
                 if (ErrorUtil.containsError(switchStatement)) {
                     return false;
                 }
 
-                final JSExpression expression = switchStatement.getSwitchExpression();
+                JSExpression expression = switchStatement.getSwitchExpression();
 
                 return expression != null && expression.isValid();
             }

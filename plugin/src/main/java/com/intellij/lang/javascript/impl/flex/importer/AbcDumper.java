@@ -26,7 +26,7 @@ import jakarta.annotation.Nullable;
 class AbcDumper extends AbstractDumpProcessor {
     private boolean dumpCode;
 
-    public AbcDumper(final boolean _dumpCode) {
+    public AbcDumper(boolean _dumpCode) {
         dumpCode = _dumpCode;
     }
 

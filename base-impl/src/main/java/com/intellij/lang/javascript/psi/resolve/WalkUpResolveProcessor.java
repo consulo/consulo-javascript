@@ -70,11 +70,11 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
             myInNewExpression = context.getParent() instanceof JSNewExpression;
 
             final List<String[]> possibleNameIds = new ArrayList<>(1);
-            final JSExpression originalQualifier = refExpr.getQualifier();
-            final JSExpression qualifier = JSResolveUtil.getRealRefExprQualifier(refExpr);
+            JSExpression originalQualifier = refExpr.getQualifier();
+            JSExpression qualifier = JSResolveUtil.getRealRefExprQualifier(refExpr);
 
-            final JSClass jsClass = PsiTreeUtil.getParentOfType(context, JSClass.class); // get rid of it!
-            final JSElement file = PsiTreeUtil.getParentOfType(context, JSEmbeddedContentImpl.class, JSFile.class);
+            JSClass jsClass = PsiTreeUtil.getParentOfType(context, JSClass.class); // get rid of it!
+            JSElement file = PsiTreeUtil.getParentOfType(context, JSEmbeddedContentImpl.class, JSFile.class);
 
             if ((file instanceof JSFile && file.getContext() instanceof XmlAttributeValue) || file instanceof JSEmbeddedContentImpl) {
                 embeddedToHtmlAttr = true;
@@ -87,8 +87,8 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
 
                 if (qualifier instanceof JSThisExpression) {
                     JSResolveUtil.ContextResolver resolver = new JSResolveUtil.ContextResolver(qualifier);
-                    final String contextQualifierText = resolver.getQualifierAsString();
-                    final PsiElement clazz = contextQualifierText != null
+                    String contextQualifierText = resolver.getQualifierAsString();
+                    PsiElement clazz = contextQualifierText != null
                         ? JSClassImpl.findClassFromNamespace(contextQualifierText, context)
                         : null;
 
@@ -96,7 +96,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
                         JSAttributeList attrList = jsClass1.getAttributeList();
 
                         if (attrList != null) {
-                            final boolean clazzIsDynamic = attrList.hasModifier(JSAttributeList.ModifierType.DYNAMIC);
+                            boolean clazzIsDynamic = attrList.hasModifier(JSAttributeList.ModifierType.DYNAMIC);
                             if (clazzIsDynamic) {
                                 haveNotEncounteredDynamics = false;
                             }
@@ -110,7 +110,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
                 }
 
                 if (qualifier == null) {
-                    final JSImportedElementResolveResult expression = JSImportHandlingUtil.resolveTypeNameUsingImports(refExpr);
+                    JSImportedElementResolveResult expression = JSImportHandlingUtil.resolveTypeNameUsingImports(refExpr);
 
                     if (expression != null) {
                         possibleNameIds.add(JSResolveUtil.buildNameIdsForQualifier(JSResolveUtil.getRealRefExprQualifierFromResult(
@@ -147,7 +147,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
                         }
 
                         @Override
-                        public void process(@Nonnull String type, @Nonnull final EvaluateContext context, final PsiElement source) {
+                        public void process(@Nonnull String type, @Nonnull EvaluateContext context, PsiElement source) {
                             if (context.visitedTypes.contains(type)) {
                                 return;
                             }
@@ -169,7 +169,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
                         }
 
                         @Override
-                        public void setUnknownElement(@Nonnull final PsiElement element) {
+                        public void setUnknownElement(@Nonnull PsiElement element) {
                         }
 
                         @Override
@@ -189,14 +189,14 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
             }
         }
         else if (contextIds != null) {
-            final List<String[]> possibleNameIds = new ArrayList<>(1);
+            List<String[]> possibleNameIds = new ArrayList<>(1);
             possibleNameIds.add(contextIds);
             iterateContextIds(contextIds, possibleNameIds, false);
             myContextIds = possibleNameIds.toArray(new String[possibleNameIds.size()][]);
         }
     }
 
-    private void iterateContextIds(final String[] contextIds, final List<String[]> possibleNameIds, final boolean allowObject) {
+    private void iterateContextIds(String[] contextIds, List<String[]> possibleNameIds, boolean allowObject) {
         doIterateTypeHierarchy(
             contextIds,
             clazz -> {
@@ -207,7 +207,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
     }
 
     protected MatchType isAcceptableQualifiedItem(String nameId, PsiElement element) {
-        final boolean partialMatch = myReferenceName.equals(nameId);
+        boolean partialMatch = myReferenceName.equals(nameId);
 
         if (partialMatch) {
             int i = -1;
@@ -216,7 +216,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
                 int maxContextScanCount = myBestMatchedContextId == -1 ? myContextIds.length : myBestMatchedContextId + 1;
 
                 for (int currentContextIndex = 0; currentContextIndex < maxContextScanCount; ++currentContextIndex) {
-                    final String[] contextIds = myContextIds[currentContextIndex];
+                    String[] contextIds = myContextIds[currentContextIndex];
 
                     if (i < 0) {
                         if (myBestMatchedContextId == -1) {
@@ -240,8 +240,8 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
         return partialMatch ? MatchType.PARTIAL : MatchType.NOMATCH;
     }
 
-    private void doQualifiedCheck(String nameId, final PsiElement element) {
-        final MatchType matchType = isAcceptableQualifiedItem(nameId, element);
+    private void doQualifiedCheck(String nameId, PsiElement element) {
+        MatchType matchType = isAcceptableQualifiedItem(nameId, element);
 
         if (matchType == MatchType.PARTIAL) {
             addPartialResult(element);
@@ -252,7 +252,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
     }
 
     private void addCompleteResult(PsiElement element) {
-        final JSResolveUtil.MyResolveResult o = new JSResolveUtil.MyResolveResult(element);
+        JSResolveUtil.MyResolveResult o = new JSResolveUtil.MyResolveResult(element);
         addCompleteResult(o);
     }
 
@@ -272,7 +272,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
         if (myPartialMatchResults == null) {
             myPartialMatchResults = new ArrayList<>(1);
         }
-        final JSResolveUtil.MyResolveResult o = new JSResolveUtil.MyResolveResult(element, !myAddOnlyCompleteMatches);
+        JSResolveUtil.MyResolveResult o = new JSResolveUtil.MyResolveResult(element, !myAddOnlyCompleteMatches);
 
         if (isFromRelevantFileOrDirectory()) {
             myPartialMatchResults.add(myFilePartialResultsCount++, o);
@@ -291,12 +291,12 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
         if (myCompleteMatchResults != null) {
             resultCount += myCompleteMatchResults.size();
         }
-        final boolean addPartialResults = !myAddOnlyCompleteMatches || (resultCount == 0 && myAllowPartialResults);
+        boolean addPartialResults = !myAddOnlyCompleteMatches || (resultCount == 0 && myAllowPartialResults);
         if (myPartialMatchResults != null && addPartialResults) {
             resultCount += myPartialMatchResults.size();
         }
 
-        final ResolveResult[] result = resultCount != 0 ? new ResolveResult[resultCount] : ResolveResult.EMPTY_ARRAY;
+        ResolveResult[] result = resultCount != 0 ? new ResolveResult[resultCount] : ResolveResult.EMPTY_ARRAY;
 
         if (myCompleteMatchResults != null) {
             for (int i = 0; i < myCompleteMatchResults.size(); ++i) {
@@ -308,7 +308,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
         if (myPartialMatchResults != null && addPartialResults) {
             int offset = myCompleteMatchResults != null ? myCompleteMatchResults.size() : 0;
             for (int i = 0; i < myPartialMatchResults.size(); ++i) {
-                final JSResolveUtil.MyResolveResult resolveResult = (JSResolveUtil.MyResolveResult)myPartialMatchResults.get(i);
+                JSResolveUtil.MyResolveResult resolveResult = (JSResolveUtil.MyResolveResult)myPartialMatchResults.get(i);
 
                 assert resolveResult != null;
                 result[offset + i] = resolveResult;
@@ -320,7 +320,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
 
     @Override
     @RequiredReadAction
-    protected String[] calculateContextIds(final JSReferenceExpression jsReferenceExpression) {
+    protected String[] calculateContextIds(JSReferenceExpression jsReferenceExpression) {
         String[] contextNameIds = null;
         JSExpression qualifier = JSResolveUtil.getRealRefExprQualifier(jsReferenceExpression);
 
@@ -334,7 +334,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
         return contextNameIds;
     }
 
-    public void addLocalResults(final ResolveResult results[]) {
+    public void addLocalResults(ResolveResult results[]) {
         if (results == null) {
             return;
         }
@@ -349,7 +349,7 @@ public class WalkUpResolveProcessor extends BaseJSSymbolProcessor {
 
     @Override
     @RequiredReadAction
-    public boolean execute(@Nonnull PsiElement element, final ResolveState state) {
+    public boolean execute(@Nonnull PsiElement element, ResolveState state) {
         if ((element instanceof JSNamedElement namedElement && myReferenceName.equals(namedElement.getName())) || element == myContext) {
             addCompleteResult(element);
         }

@@ -14,13 +14,13 @@ import org.jetbrains.annotations.NonNls;
 public class SingleIntegerFieldOptionsPanel extends JPanel {
     public SingleIntegerFieldOptionsPanel(String labelString, final BaseInspection owner, @NonNls final String property) {
         super(new GridBagLayout());
-        final JLabel label = new JLabel(labelString);
-        final NumberFormat formatter = NumberFormat.getIntegerInstance();
+        JLabel label = new JLabel(labelString);
+        NumberFormat formatter = NumberFormat.getIntegerInstance();
         formatter.setParseIntegerOnly(true);
         final JFormattedTextField valueField = new JFormattedTextField(formatter);
         valueField.setValue(getPropertyValue(owner, property));
         valueField.setColumns(2);
-        final Document document = valueField.getDocument();
+        Document document = valueField.getDocument();
         document.addDocumentListener(new DocumentListener() {
             @Override
             public void changedUpdate(DocumentEvent e) {
@@ -41,7 +41,7 @@ public class SingleIntegerFieldOptionsPanel extends JPanel {
                 setPropertyValue(owner, property, ((Number)valueField.getValue()).intValue());
             }
         });
-        final GridBagConstraints constraints = new GridBagConstraints();
+        GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.weightx = 1.0;

@@ -54,9 +54,9 @@ public class JSMoveCommentToSeparateLineIntention extends JSIntention {
     @Override
     @RequiredReadAction
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final PsiComment selectedComment = (PsiComment)element;
+        PsiComment selectedComment = (PsiComment)element;
         PsiElement elementToCheck = selectedComment;
-        final PsiWhiteSpace whiteSpace;
+        PsiWhiteSpace whiteSpace;
 
         while (true) {
             elementToCheck = TreeUtil.getPrevLeaf(elementToCheck);
@@ -91,26 +91,26 @@ public class JSMoveCommentToSeparateLineIntention extends JSIntention {
             if (!(element instanceof PsiComment)) {
                 return false;
             }
-            final PsiComment comment = (PsiComment)element;
-            final IElementType type = comment.getTokenType();
+            PsiComment comment = (PsiComment)element;
+            IElementType type = comment.getTokenType();
 
             if (!(JSTokenTypes.C_STYLE_COMMENT.equals(type) || JSTokenTypes.END_OF_LINE_COMMENT.equals(type))) {
                 return false; // can't move JSP comments
             }
 
-            final PsiElement prevSibling = TreeUtil.getPrevLeaf(element);
+            PsiElement prevSibling = TreeUtil.getPrevLeaf(element);
             if (!(prevSibling instanceof PsiWhiteSpace)) {
                 return true;
             }
-            final String prevSiblingText = prevSibling.getText();
+            String prevSiblingText = prevSibling.getText();
             if (prevSiblingText.indexOf('\n') < 0 && prevSiblingText.indexOf('\r') < 0) {
                 return true;
             }
-            final PsiElement nextSibling = TreeUtil.getNextLeaf(element);
+            PsiElement nextSibling = TreeUtil.getNextLeaf(element);
             if (!(nextSibling instanceof PsiWhiteSpace)) {
                 return true;
             }
-            final String nextSiblingText = nextSibling.getText();
+            String nextSiblingText = nextSibling.getText();
             return (nextSiblingText.indexOf('\n') < 0 && nextSiblingText.indexOf('\r') < 0);
         }
     }

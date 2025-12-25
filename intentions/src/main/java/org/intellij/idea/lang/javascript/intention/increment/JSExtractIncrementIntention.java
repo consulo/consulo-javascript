@@ -57,11 +57,11 @@ public class JSExtractIncrementIntention extends JSMutablyNamedIntention {
     @Override
     @RequiredReadAction
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final boolean isPostfix = (element instanceof JSPostfixExpression);
-        final JSExpression operand = isPostfix
+        boolean isPostfix = (element instanceof JSPostfixExpression);
+        JSExpression operand = isPostfix
             ? ((JSPostfixExpression)element).getExpression()
             : ((JSPrefixExpression)element).getExpression();
-        final JSStatement statement = TreeUtil.getParentOfType(element, JSStatement.class);
+        JSStatement statement = TreeUtil.getParentOfType(element, JSStatement.class);
 
         assert (statement != null);
 
@@ -90,7 +90,7 @@ public class JSExtractIncrementIntention extends JSMutablyNamedIntention {
                 return false;
             }
 
-            final JSStatement containingStatement = TreeUtil.getParentOfType(element, JSStatement.class);
+            JSStatement containingStatement = TreeUtil.getParentOfType(element, JSStatement.class);
 
             if (element instanceof JSPostfixExpression
                 && (containingStatement instanceof JSReturnStatement || containingStatement instanceof JSThrowStatement)) {

@@ -36,13 +36,13 @@ public class IfStatementWithTooManyBranchesJSInspection extends JavaScriptInspec
     @Override
     @RequiredReadAction
     protected String buildErrorString(Object state, Object... args) {
-        final JSIfStatement statement = (JSIfStatement) args[0];
-        final int branches = calculateNumBranches(statement);
+        JSIfStatement statement = (JSIfStatement) args[0];
+        int branches = calculateNumBranches(statement);
         return InspectionJSLocalize.ifStatementWithTooManyBranchesErrorString(branches).get();
     }
 
     private static int calculateNumBranches(JSIfStatement statement) {
-        final JSStatement branch = statement.getElse();
+        JSStatement branch = statement.getElse();
         if (branch == null) {
             return 1;
         }
@@ -61,15 +61,15 @@ public class IfStatementWithTooManyBranchesJSInspection extends JavaScriptInspec
         @Override
         public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
             super.visitJSIfStatement(statement);
-            final PsiElement parent = statement.getParent();
+            PsiElement parent = statement.getParent();
             if (parent instanceof JSIfStatement) {
-                final JSIfStatement parentStatement = (JSIfStatement) parent;
-                final JSStatement elseBranch = parentStatement.getElse();
+                JSIfStatement parentStatement = (JSIfStatement) parent;
+                JSStatement elseBranch = parentStatement.getElse();
                 if (statement.equals(elseBranch)) {
                     return;
                 }
             }
-            final int branches = calculateNumBranches(statement);
+            int branches = calculateNumBranches(statement);
             if (branches <= myState.m_limit) {
                 return;
             }

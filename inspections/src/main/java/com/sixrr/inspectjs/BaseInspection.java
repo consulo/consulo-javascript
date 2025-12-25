@@ -31,7 +31,7 @@ public abstract class BaseInspection extends LocalInspectionTool implements Cust
             return PsiElementVisitor.EMPTY_VISITOR;
         }
 
-        final BaseInspectionVisitor visitor = buildVisitor();
+        BaseInspectionVisitor visitor = buildVisitor();
         visitor.setProblemsHolder(problemsHolder);
         visitor.setOnTheFly(onTheFly);
         visitor.setInspection(this);
@@ -78,24 +78,24 @@ public abstract class BaseInspection extends LocalInspectionTool implements Cust
     public abstract BaseInspectionVisitor buildVisitor();
 
     protected boolean functionHasIdentifier(JSFunction function) {
-        final PsiElement identifier = function.getNameIdentifier();
+        PsiElement identifier = function.getNameIdentifier();
         return identifier != null && PsiTreeUtil.isAncestor(function, identifier, true);
     }
 
     @Override
-    public PsiNamedElement getProblemElement(final PsiElement psiElement) {
+    public PsiNamedElement getProblemElement(PsiElement psiElement) {
         return PsiTreeUtil.getNonStrictParentOfType(psiElement, PsiFile.class);
     }
 
     @Override
-    public SuppressIntentionAction[] getSuppressActions(@Nullable final PsiElement element) {
+    public SuppressIntentionAction[] getSuppressActions(@Nullable PsiElement element) {
         return new SuppressIntentionAction[]{
             /* new AddNoInspectionCommentFix(HighlightDisplayKey.find(getShortName()), JSSuppressionHolder.class),  */
         };
     }
 
     @Override
-    public boolean isSuppressedFor(@Nonnull final PsiElement element) {
+    public boolean isSuppressedFor(@Nonnull PsiElement element) {
         return SuppressionUtil.isSuppressedInStatement(element, getID(), JSSuppressionHolder.class);
     }
 }

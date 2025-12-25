@@ -55,14 +55,14 @@ public class UnnecessaryLabelJSInspection extends JavaScriptInspection {
 
         @Override
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final PsiElement label = descriptor.getPsiElement();
-            final JSLabeledStatement statement = (JSLabeledStatement) label.getParent();
+            PsiElement label = descriptor.getPsiElement();
+            JSLabeledStatement statement = (JSLabeledStatement) label.getParent();
             assert statement != null;
-            final JSStatement labeledStatement = statement.getStatement();
+            JSStatement labeledStatement = statement.getStatement();
             if (labeledStatement == null) {
                 return;
             }
-            final String statementText = labeledStatement.getText();
+            String statementText = labeledStatement.getText();
             replaceStatement(statement, statementText);
         }
     }
@@ -73,12 +73,12 @@ public class UnnecessaryLabelJSInspection extends JavaScriptInspection {
             if (containsBreakOrContinueForLabel(statement)) {
                 return;
             }
-            final PsiElement labelIdentifier = statement.getLabelIdentifier();
+            PsiElement labelIdentifier = statement.getLabelIdentifier();
             registerError(labelIdentifier);
         }
 
         private static boolean containsBreakOrContinueForLabel(JSLabeledStatement statement) {
-            final LabelFinder labelFinder = new LabelFinder(statement);
+            LabelFinder labelFinder = new LabelFinder(statement);
             statement.accept(labelFinder);
             return labelFinder.jumpFound();
         }
@@ -90,7 +90,7 @@ public class UnnecessaryLabelJSInspection extends JavaScriptInspection {
 
         private LabelFinder(JSLabeledStatement target) {
             super();
-            final PsiElement labelIdentifier = target.getLabelIdentifier();
+            PsiElement labelIdentifier = target.getLabelIdentifier();
             label = labelIdentifier.getText();
         }
 

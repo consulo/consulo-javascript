@@ -32,9 +32,9 @@ public class JSReferenceListStubImpl extends StubBase<JSReferenceList> implement
     private String[] myRefs;
 
     public JSReferenceListStubImpl(
-        final String[] refs,
-        final StubElement parentStub,
-        final JSStubElementType<JSReferenceListStub, JSReferenceList> type
+        String[] refs,
+        StubElement parentStub,
+        JSStubElementType<JSReferenceListStub, JSReferenceList> type
     ) {
         super(parentStub, type);
         myRefs = refs;

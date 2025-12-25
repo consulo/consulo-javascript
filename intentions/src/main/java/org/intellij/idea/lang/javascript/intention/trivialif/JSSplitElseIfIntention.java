@@ -52,12 +52,12 @@ public class JSSplitElseIfIntention extends JSIntention {
     @Override
     @RequiredReadAction
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSIfStatement parentStatement = (JSIfStatement)element.getParent();
+        JSIfStatement parentStatement = (JSIfStatement)element.getParent();
 
         assert (parentStatement != null);
 
-        final JSStatement elseBranch = parentStatement.getElse();
-        final String newStatement = '{' + elseBranch.getText() + '}';
+        JSStatement elseBranch = parentStatement.getElse();
+        String newStatement = '{' + elseBranch.getText() + '}';
 
         JSElementFactory.replaceStatement(elseBranch, newStatement);
     }
@@ -65,19 +65,19 @@ public class JSSplitElseIfIntention extends JSIntention {
     private static class SplitElseIfPredicate implements JSElementPredicate {
         @Override
         public boolean satisfiedBy(@Nonnull PsiElement element) {
-            final PsiElement parent = element.getParent();
+            PsiElement parent = element.getParent();
 
             if (!(parent instanceof JSIfStatement)) {
                 return false;
             }
 
-            final JSIfStatement ifStatement = (JSIfStatement)parent;
+            JSIfStatement ifStatement = (JSIfStatement)parent;
 
             if (ErrorUtil.containsError(ifStatement)) {
                 return false;
             }
-            final JSStatement thenBranch = ifStatement.getThen();
-            final JSStatement elseBranch = ifStatement.getElse();
+            JSStatement thenBranch = ifStatement.getThen();
+            JSStatement elseBranch = ifStatement.getElse();
 
             return thenBranch != null && elseBranch != null && elseBranch instanceof JSIfStatement;
         }

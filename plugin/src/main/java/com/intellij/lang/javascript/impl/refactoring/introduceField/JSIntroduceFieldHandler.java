@@ -68,7 +68,7 @@ public class JSIntroduceFieldHandler extends JSBaseIntroduceHandler<JSElement, J
     }
 
     @Override
-    protected String getDeclText(final JSIntroduceFieldSettings settings) {
+    protected String getDeclText(JSIntroduceFieldSettings settings) {
         String baseDeclText = super.getDeclText(settings);
         JSAttributeList.AccessType type = settings.getAccessType();
         if (type != JSAttributeList.AccessType.PACKAGE_LOCAL) {

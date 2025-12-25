@@ -51,12 +51,12 @@ public class JavaScriptCreateFileAction extends CreateFileFromTemplateAction {
     private static Module findModule(DataContext dataContext) {
         Project project = dataContext.getData(Project.KEY);
         assert project != null;
-        final IdeView view = dataContext.getData(IdeView.KEY);
+        IdeView view = dataContext.getData(IdeView.KEY);
         if (view == null) {
             return null;
         }
 
-        final PsiDirectory directory = view.getOrChooseDirectory();
+        PsiDirectory directory = view.getOrChooseDirectory();
         if (directory == null) {
             return null;
         }

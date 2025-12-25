@@ -124,7 +124,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler {
                     StringBuilder functionText = new StringBuilder("public function ").append(jsClass.getName()).append("(");
                     StringBuilder initialization = new StringBuilder();
                     boolean first = true;
-                    final String semicolon = JSChangeUtil.getSemicolon(project);
+                    String semicolon = JSChangeUtil.getSemicolon(project);
 
                     Set<JSVariable> toProcess = getElementsToProcess();
                     Iterator<JSVariable> variableIterator = toProcess.iterator();
@@ -138,10 +138,10 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler {
 
                         first = false;
 
-                        final String name = var.getName();
+                        String name = var.getName();
                         String parameterName = transformVarNameToAccessorName(name, codeStyleSettings);
 
-                        final String typeString = var.getTypeString();
+                        String typeString = var.getTypeString();
                         functionText.append(parameterName).append(typeString != null ? ":" + typeString : "");
 
                         if (JSResolveUtil.findParent(var) == jsClass) {
@@ -199,7 +199,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler {
                 public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
                     evalAnchor(editor, file);
 
-                    final boolean[] needOverride = new boolean[1];
+                    boolean[] needOverride = new boolean[1];
                     JSResolveUtil.processOverrides(
                         jsClass,
                         (processor, scope, className) -> {
@@ -244,7 +244,7 @@ class JavaScriptGenerateAccessorHandler extends BaseJSGenerateHandler {
 
     @Override
     @RequiredReadAction
-    protected void collectCandidates(JSClass clazz, final Collection<JSNamedElementNode> candidates) {
+    protected void collectCandidates(JSClass clazz, Collection<JSNamedElementNode> candidates) {
         final LinkedHashMap<String, JSNamedElement> candidatesMap = new LinkedHashMap<>();
         final JSCodeStyleSettings codeStyleSettings =
             CodeStyleSettingsManager.getSettings(clazz.getProject()).getCustomSettings(JSCodeStyleSettings.class);

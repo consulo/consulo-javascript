@@ -62,13 +62,13 @@ public class JavaScriptIconDescriptorUpdater implements IconDescriptorUpdater {
             }
         }
         else if (element instanceof JSClass) {
-            final JSAttributeList attributeList = ((JSClass)element).getAttributeList();
+            JSAttributeList attributeList = ((JSClass)element).getAttributeList();
 
             iconDescriptor.setMainIcon(((JSClass)element).isInterface() ? AllIcons.Nodes.Interface : AllIcons.Nodes.Class);
             addStaticAndFinalIcons(iconDescriptor, attributeList);
 
             if (BitUtil.isSet(flags, Iconable.ICON_FLAG_VISIBILITY)) {
-                final JSAttributeList.AccessType accessType =
+                JSAttributeList.AccessType accessType =
                     attributeList != null ? attributeList.getAccessType() : JSAttributeList.AccessType.PACKAGE_LOCAL;
                 iconDescriptor.setRightIcon(getAccessIcon(accessType));
             }
@@ -82,10 +82,10 @@ public class JavaScriptIconDescriptorUpdater implements IconDescriptorUpdater {
         else if (element instanceof JSVariable) {
             iconDescriptor.setMainIcon(AllIcons.Nodes.Variable);
 
-            final PsiElement grandParent = JSResolveUtil.findParent(element);
+            PsiElement grandParent = JSResolveUtil.findParent(element);
 
             if (grandParent instanceof JSClass) {
-                final JSAttributeList attributeList = ((JSVariable)element).getAttributeList();
+                JSAttributeList attributeList = ((JSVariable)element).getAttributeList();
                 if (attributeList != null) {
                     addStaticAndFinalIcons(iconDescriptor, attributeList);
 
@@ -112,14 +112,14 @@ public class JavaScriptIconDescriptorUpdater implements IconDescriptorUpdater {
         else if (element instanceof JSFunction) {
             iconDescriptor.setMainIcon(AllIcons.Nodes.Function);
 
-            final PsiElement parent = JSResolveUtil.findParent(element);
+            PsiElement parent = JSResolveUtil.findParent(element);
             if (parent instanceof JSBlockStatement) {
                 if (BitUtil.isSet(flags, Iconable.ICON_FLAG_VISIBILITY)) {
                     iconDescriptor.setRightIcon(AllIcons.Nodes.C_private);
                 }
             }
             else if (parent instanceof JSClass) {
-                final JSAttributeList attributeList = ((JSFunction)element).getAttributeList();
+                JSAttributeList attributeList = ((JSFunction)element).getAttributeList();
                 if (attributeList != null) {
                     addStaticAndFinalIcons(iconDescriptor, attributeList);
                     if (BitUtil.isSet(flags, Iconable.ICON_FLAG_VISIBILITY)) {

@@ -58,9 +58,9 @@ public class ParameterNamingConventionJSInspection extends ConventionInspection 
     public String buildErrorString(Object state, Object... args) {
         ParameterNamingConventionJSInspectionState inspectionState = (ParameterNamingConventionJSInspectionState) state;
 
-        final JSParameter parameter = (JSParameter) ((PsiElement) args[0]).getParent();
+        JSParameter parameter = (JSParameter) ((PsiElement) args[0]).getParent();
         assert parameter != null;
-        final String parameterName = parameter.getName();
+        String parameterName = parameter.getName();
         if (parameterName.length() < inspectionState.m_minLength) {
             return InspectionJSLocalize.parameterNameIsTooShortErrorString().get();
         }
@@ -79,13 +79,13 @@ public class ParameterNamingConventionJSInspection extends ConventionInspection 
         @Override
         public void visitJSFunctionDeclaration(JSFunction function) {
             super.visitJSFunctionDeclaration(function);
-            final JSParameterList parameterList = function.getParameterList();
+            JSParameterList parameterList = function.getParameterList();
             if (parameterList == null) {
                 return;
             }
-            final JSParameter[] parameters = parameterList.getParameters();
+            JSParameter[] parameters = parameterList.getParameters();
             for (JSVariable variable : parameters) {
-                final String name = variable.getName();
+                String name = variable.getName();
                 if (name == null) {
                     continue;
                 }

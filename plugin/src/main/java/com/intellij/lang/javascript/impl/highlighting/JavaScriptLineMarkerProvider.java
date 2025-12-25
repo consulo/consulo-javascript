@@ -144,13 +144,13 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
 
     @Override
     @RequiredReadAction
-    public LineMarkerInfo getLineMarkerInfo(@Nonnull final PsiElement element) {
+    public LineMarkerInfo getLineMarkerInfo(@Nonnull PsiElement element) {
         if (element instanceof JSFunction function) {
             function.putUserData(ourParticipatesInHierarchyKey, null);
             if (function.getNameIdentifier() == null) {
                 return null;
             }
-            final String qName = JSResolveUtil.getQNameToStartHierarchySearch(function);
+            String qName = JSResolveUtil.getQNameToStartHierarchySearch(function);
 
             if (qName != null) {
                 PsiElement parentNode = element.getParent();
@@ -165,12 +165,12 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
                     parentNode = functionExpr.getContainingFile();
                 }
 
-                final MyOverrideHandler overrideHandler = new MyOverrideHandler();
-                final String typeName = parentNode instanceof JSClass jsClass ? jsClass.getQualifiedName() : qName;
+                MyOverrideHandler overrideHandler = new MyOverrideHandler();
+                String typeName = parentNode instanceof JSClass jsClass ? jsClass.getQualifiedName() : qName;
                 JSResolveUtil.iterateType(function, parentNode, typeName, overrideHandler);
 
                 if (overrideHandler.className != null) {
-                    final PsiElement parentNode1 = parentNode;
+                    PsiElement parentNode1 = parentNode;
                     function.putUserData(ourParticipatesInHierarchyKey, Boolean.TRUE);
 
                     return new LineMarkerInfo<>(
@@ -180,7 +180,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
                         Pass.UPDATE_ALL,
                         psiElement -> OVERRIDES_METHOD_IN + overrideHandler.className,
                         (e, elt) -> {
-                            final Set<NavigationItem> results = new HashSet<>();
+                            Set<NavigationItem> results = new HashSet<>();
                             JSResolveUtil.iterateType(
                                 function,
                                 parentNode1,
@@ -213,11 +213,11 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
 
     @Override
     @RequiredReadAction
-    public void collectSlowLineMarkers(@Nonnull final List<PsiElement> elements, @Nonnull final Collection<LineMarkerInfo> result) {
-        final Map<String, Set<JSFunction>> jsFunctionsToProcess = new HashMap<>();
-        final Map<JSClass, Set<JSFunction>> jsMethodsToProcess = new HashMap<>();
+    public void collectSlowLineMarkers(@Nonnull List<PsiElement> elements, @Nonnull final Collection<LineMarkerInfo> result) {
+        Map<String, Set<JSFunction>> jsFunctionsToProcess = new HashMap<>();
+        Map<JSClass, Set<JSFunction>> jsMethodsToProcess = new HashMap<>();
 
-        for (final PsiElement el : elements) {
+        for (PsiElement el : elements) {
             ProgressManager.getInstance().checkCanceled();
 
             if (el instanceof JSFunction function) {
@@ -286,7 +286,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
                     }
 
                     if (methodsClone != null) {
-                        for (final Iterator<JSFunction> functionIterator = methodsClone.iterator(); functionIterator.hasNext(); ) {
+                        for (Iterator<JSFunction> functionIterator = methodsClone.iterator(); functionIterator.hasNext(); ) {
                             JSFunction function = functionIterator.next();
 
                             JSFunction byName = jsClass.findFunctionByNameAndKind(function.getName(), function.getKind());
@@ -429,7 +429,7 @@ public class JavaScriptLineMarkerProvider implements LineMarkerProvider {
         @Override
         @RequiredUIAccess
         public void navigate(MouseEvent e, T elt) {
-            final List<NavigatablePsiElement> navElements = new ArrayList<>();
+            List<NavigatablePsiElement> navElements = new ArrayList<>();
             Query<T> elementQuery = search(elt);
             if (elementQuery == null) {
                 return;

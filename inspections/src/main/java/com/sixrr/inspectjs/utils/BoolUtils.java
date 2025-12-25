@@ -21,8 +21,8 @@ public class BoolUtils {
         if (!(exp instanceof JSPrefixExpression)) {
             return false;
         }
-        final JSPrefixExpression prefixExp = (JSPrefixExpression)exp;
-        final IElementType sign = prefixExp.getOperationSign();
+        JSPrefixExpression prefixExp = (JSPrefixExpression)exp;
+        IElementType sign = prefixExp.getOperationSign();
         return JSTokenTypes.EXCL.equals(sign);
     }
 
@@ -31,7 +31,7 @@ public class BoolUtils {
         if (test == null) {
             return false;
         }
-        @NonNls final String text = test.getText();
+        @NonNls String text = test.getText();
         return "true".equals(text);
     }
 
@@ -39,25 +39,25 @@ public class BoolUtils {
         if (test == null) {
             return false;
         }
-        @NonNls final String text = test.getText();
+        @NonNls String text = test.getText();
         return "false".equals(text);
     }
 
     public static String getNegatedExpressionText(@Nonnull JSExpression condition) {
         if (condition instanceof JSParenthesizedExpression) {
-            final JSExpression contentExpression = ((JSParenthesizedExpression)condition).getInnerExpression();
+            JSExpression contentExpression = ((JSParenthesizedExpression)condition).getInnerExpression();
             return '(' + getNegatedExpressionText(contentExpression) + ')';
         }
         else if (BoolUtils.isNegation(condition)) {
-            final JSExpression negated = getNegated(condition);
+            JSExpression negated = getNegated(condition);
             return negated.getText();
         }
         else if (ComparisonUtils.isComparison(condition)) {
-            final JSBinaryExpression binaryExpression = (JSBinaryExpression)condition;
-            final IElementType sign = binaryExpression.getOperationSign();
-            final String negatedComparison = ComparisonUtils.getNegatedComparison(sign);
-            final JSExpression lhs = binaryExpression.getLOperand();
-            final JSExpression rhs = binaryExpression.getROperand();
+            JSBinaryExpression binaryExpression = (JSBinaryExpression)condition;
+            IElementType sign = binaryExpression.getOperationSign();
+            String negatedComparison = ComparisonUtils.getNegatedComparison(sign);
+            JSExpression lhs = binaryExpression.getLOperand();
+            JSExpression rhs = binaryExpression.getROperand();
             assert rhs != null;
             return lhs.getText() + negatedComparison + rhs.getText();
         }
@@ -71,8 +71,8 @@ public class BoolUtils {
     }
 
     private static JSExpression getNegated(@Nonnull JSExpression exp) {
-        final JSPrefixExpression prefixExp = (JSPrefixExpression)exp;
-        final JSExpression operand = prefixExp.getExpression();
+        JSPrefixExpression prefixExp = (JSPrefixExpression)exp;
+        JSExpression operand = prefixExp.getExpression();
         return ParenthesesUtils.stripParentheses(operand);
     }
 }

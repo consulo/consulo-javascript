@@ -38,7 +38,7 @@ public class DescriptionByAnotherPsiElementRegistrar implements ExtensionExtende
     public void extend(@Nonnull ComponentManager componentManager, @Nonnull Consumer<EditorNotificationProvider> consumer) {
         ExtensionPoint<DescriptionByAnotherPsiElementProvider> extensionPoint =
             componentManager.getExtensionPoint(DescriptionByAnotherPsiElementProvider.class);
-        for (final DescriptionByAnotherPsiElementProvider<?> provider : extensionPoint) {
+        for (DescriptionByAnotherPsiElementProvider<?> provider : extensionPoint) {
             consumer.accept(new DescriptionByAnotherPsiElementEditorNotification((Project)componentManager, provider));
         }
     }

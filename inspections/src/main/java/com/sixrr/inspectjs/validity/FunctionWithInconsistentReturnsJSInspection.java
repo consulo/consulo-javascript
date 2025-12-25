@@ -40,7 +40,7 @@ public class FunctionWithInconsistentReturnsJSInspection extends JavaScriptInspe
     @Override
     @RequiredReadAction
     protected String buildErrorString(Object state, Object... args) {
-        final JSFunction function = (JSFunction)((PsiElement)args[0]).getParent();
+        JSFunction function = (JSFunction)((PsiElement)args[0]).getParent();
         assert function != null;
         return functionHasIdentifier(function)
             ? InspectionJSLocalize.functionHasInconsistentReturnPointsErrorString().get()
@@ -88,19 +88,19 @@ public class FunctionWithInconsistentReturnsJSInspection extends JavaScriptInspe
     }
 
     private static boolean functionHasReturnValues(JSFunction function) {
-        final ReturnValuesVisitor visitor = new ReturnValuesVisitor(function);
+        ReturnValuesVisitor visitor = new ReturnValuesVisitor(function);
         function.accept(visitor);
         return visitor.hasReturnValues();
     }
 
     private static boolean functionHasValuelessReturns(JSFunction function) {
-        final PsiElement lastChild = function.getLastChild();
+        PsiElement lastChild = function.getLastChild();
         if (lastChild instanceof JSBlockStatement) {
             if (ControlFlowUtils.statementMayCompleteNormally((JSStatement)lastChild)) {
                 return true;
             }
         }
-        final ValuelessReturnVisitor visitor = new ValuelessReturnVisitor(function);
+        ValuelessReturnVisitor visitor = new ValuelessReturnVisitor(function);
         function.acceptChildren(visitor);
         return visitor.hasValuelessReturns();
     }
@@ -117,7 +117,7 @@ public class FunctionWithInconsistentReturnsJSInspection extends JavaScriptInspe
         public void visitJSReturnStatement(JSReturnStatement statement) {
             super.visitJSReturnStatement(statement);
             if (statement.getExpression() != null) {
-                final JSFunction containingFunction = PsiTreeUtil.getParentOfType(statement, JSFunction.class);
+                JSFunction containingFunction = PsiTreeUtil.getParentOfType(statement, JSFunction.class);
                 if (function.equals(containingFunction)) {
                     hasReturnValues = true;
                 }
@@ -141,7 +141,7 @@ public class FunctionWithInconsistentReturnsJSInspection extends JavaScriptInspe
         public void visitJSReturnStatement(JSReturnStatement statement) {
             super.visitJSReturnStatement(statement);
             if (statement.getExpression() == null) {
-                final JSFunction containingFunction = PsiTreeUtil.getParentOfType(statement, JSFunction.class);
+                JSFunction containingFunction = PsiTreeUtil.getParentOfType(statement, JSFunction.class);
                 if (function.equals(containingFunction)) {
                     hasValuelessReturns = true;
                 }

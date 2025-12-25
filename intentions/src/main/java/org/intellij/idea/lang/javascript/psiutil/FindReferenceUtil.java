@@ -36,7 +36,7 @@ public class FindReferenceUtil {
     }
 
     public static JSReferenceExpression[] findReferences(@Nonnull JSVariable variable) {
-        final JSReferenceVisitor visitor = new JSReferenceVisitor(variable, Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
+        JSReferenceVisitor visitor = new JSReferenceVisitor(variable, Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
         JSElement scope = PsiTreeUtil.getParentOfType(variable, JSFunction.class);
 
         if (scope == null) {
@@ -84,7 +84,7 @@ public class FindReferenceUtil {
         @Override
         public void visitElement(PsiElement element) {
             if (this.references.size() < this.maxCount) {
-                final int elementTextOffset = element.getTextOffset();
+                int elementTextOffset = element.getTextOffset();
 
                 if (elementTextOffset + element.getTextLength() >= this.minTextOffset &&
                     elementTextOffset <= this.maxTextOffset) {
@@ -94,11 +94,11 @@ public class FindReferenceUtil {
         }
 
         @Override
-        public void visitJSReferenceExpression(final JSReferenceExpression expression) {
+        public void visitJSReferenceExpression(JSReferenceExpression expression) {
             super.visitJSReferenceExpression(expression);
 
             if (expression.getText().equals(this.variableName)) {
-                final JSVariable referent = ControlFlowUtils.resolveVariable(expression);
+                JSVariable referent = ControlFlowUtils.resolveVariable(expression);
 
                 if (referent != null && this.variable.equals(referent)) {
                     this.references.add(expression);
@@ -135,12 +135,12 @@ public class FindReferenceUtil {
     }
 
     private static Iterable<PsiElement> getReferences(
-        @Nonnull final JSVariable variable,
-        @Nullable final PsiElement scope,
-        final int minTextOffset,
-        final int maxTextOffset
+        @Nonnull JSVariable variable,
+        @Nullable PsiElement scope,
+        int minTextOffset,
+        int maxTextOffset
     ) {
-        final PsiElement iteratedScope;
+        PsiElement iteratedScope;
 
         if (scope == null) {
             JSElement function = PsiTreeUtil.getParentOfType(variable, JSFunction.class);
@@ -176,7 +176,7 @@ public class FindReferenceUtil {
                 return false;
             }
 
-            final JSVariable referent = ControlFlowUtils.resolveVariable((JSReferenceExpression)element);
+            JSVariable referent = ControlFlowUtils.resolveVariable((JSReferenceExpression)element);
 
             return referent != null && this.variable.equals(referent);
         }

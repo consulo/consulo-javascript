@@ -43,9 +43,9 @@ class NestingDepthVisitor extends JSRecursiveElementVisitor {
     public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
         boolean isAlreadyCounted = false;
         if (statement.getParent() instanceof JSIfStatement) {
-            final JSIfStatement parent = (JSIfStatement)statement.getParent();
+            JSIfStatement parent = (JSIfStatement)statement.getParent();
             assert parent != null;
-            final JSStatement elseBranch = parent.getElse();
+            JSStatement elseBranch = parent.getElse();
             if (statement.equals(elseBranch)) {
                 isAlreadyCounted = true;
             }

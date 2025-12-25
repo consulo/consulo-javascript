@@ -30,7 +30,7 @@ class LocalVariableUsageVisitor extends JSRecursiveElementVisitor {
 
     @Override
     public void visitJSReferenceExpression(JSReferenceExpression expression) {
-        final JSElement reference = (JSElement)expression.resolve();
+        JSElement reference = (JSElement)expression.resolve();
         if (this.variable.equals(reference)) {
             this.used = true;
         }

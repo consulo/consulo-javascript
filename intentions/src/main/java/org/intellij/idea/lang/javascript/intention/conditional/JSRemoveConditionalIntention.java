@@ -54,14 +54,14 @@ public class JSRemoveConditionalIntention extends JSIntention {
     @Override
     @RequiredReadAction
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSConditionalExpression exp = (JSConditionalExpression)element;
-        final JSExpression condition = exp.getCondition();
-        final JSExpression thenExpression = exp.getThen();
+        JSConditionalExpression exp = (JSConditionalExpression)element;
+        JSExpression condition = exp.getCondition();
+        JSExpression thenExpression = exp.getThen();
 
         assert (thenExpression != null);
 
-        final String thenExpressionText = thenExpression.getText();
-        final String newExpression;
+        String thenExpressionText = thenExpression.getText();
+        String newExpression;
 
         newExpression = thenExpressionText.equals(BoolUtils.TRUE)
             ? condition.getText()
@@ -74,15 +74,15 @@ public class JSRemoveConditionalIntention extends JSIntention {
         @RequiredReadAction
         public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (element instanceof JSConditionalExpression condition && !ErrorUtil.containsError(element)) {
-                final JSExpression thenExpression = ParenthesesUtils.stripParentheses(condition.getThen());
-                final JSExpression elseExpression = ParenthesesUtils.stripParentheses(condition.getElse());
+                JSExpression thenExpression = ParenthesesUtils.stripParentheses(condition.getThen());
+                JSExpression elseExpression = ParenthesesUtils.stripParentheses(condition.getElse());
 
                 if (condition.getCondition() == null || thenExpression == null || elseExpression == null) {
                     return false;
                 }
 
-                final String thenText = thenExpression.getText();
-                final String elseText = elseExpression.getText();
+                String thenText = thenExpression.getText();
+                String elseText = elseExpression.getText();
 
                 return (BoolUtils.TRUE.equals(elseText) && BoolUtils.FALSE.equals(thenText))
                     || (BoolUtils.TRUE.equals(thenText) && BoolUtils.FALSE.equals(elseText));

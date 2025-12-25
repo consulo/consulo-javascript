@@ -30,7 +30,7 @@ public class VariableAssignedVisitor extends JSRecursiveElementVisitor {
             return;
         }
         super.visitJSAssignmentExpression(assignment);
-        final JSExpression arg = assignment.getLOperand();
+        JSExpression arg = assignment.getLOperand();
         if (VariableAccessUtils.mayEvaluateToVariable(arg, variable)) {
             assigned = true;
         }
@@ -42,12 +42,12 @@ public class VariableAssignedVisitor extends JSRecursiveElementVisitor {
             return;
         }
         super.visitJSPrefixExpression(expression);
-        final IElementType operationSign = expression.getOperationSign();
+        IElementType operationSign = expression.getOperationSign();
         if (!JSTokenTypes.PLUSPLUS.equals(operationSign) &&
             !JSTokenTypes.MINUSMINUS.equals(operationSign)) {
             return;
         }
-        final JSExpression operand = expression.getExpression();
+        JSExpression operand = expression.getExpression();
         if (VariableAccessUtils.mayEvaluateToVariable(operand, variable)) {
             assigned = true;
         }
@@ -59,12 +59,12 @@ public class VariableAssignedVisitor extends JSRecursiveElementVisitor {
             return;
         }
         super.visitJSPostfixExpression(postfixExpression);
-        final IElementType operationSign = postfixExpression.getOperationSign();
+        IElementType operationSign = postfixExpression.getOperationSign();
         if (!JSTokenTypes.PLUSPLUS.equals(operationSign) &&
             !JSTokenTypes.MINUSMINUS.equals(operationSign)) {
             return;
         }
-        final JSExpression operand = postfixExpression.getExpression();
+        JSExpression operand = postfixExpression.getExpression();
         if (VariableAccessUtils.mayEvaluateToVariable(operand, variable)) {
             assigned = true;
         }

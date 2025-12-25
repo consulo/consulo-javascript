@@ -51,18 +51,18 @@ public class JSAddBracesIntention extends JSMutablyNamedIntention {
     @Override
     @RequiredReadAction
     protected LocalizeValue getTextForElement(PsiElement element) {
-        final JSElement parent = (JSElement)element.getParent();
-        final String keyword;
+        JSElement parent = (JSElement)element.getParent();
+        String keyword;
 
         assert (parent != null);
 
         if (parent instanceof JSIfStatement ifStatement) {
-            final JSStatement elseBranch = ifStatement.getElse();
+            JSStatement elseBranch = ifStatement.getElse();
 
             keyword = (element.equals(elseBranch) ? "else" : "if");
         }
         else {
-            final PsiElement firstChild = parent.getFirstChild();
+            PsiElement firstChild = parent.getFirstChild();
 
             assert (firstChild != null);
             keyword = firstChild.getText();
@@ -77,8 +77,8 @@ public class JSAddBracesIntention extends JSMutablyNamedIntention {
         if (!(element instanceof JSStatement statement)) {
             return;
         }
-        final JSElement parent = (JSElement)element.getParent();
-        final String text = element.getText();
+        JSElement parent = (JSElement)element.getParent();
+        String text = element.getText();
         String newText = parent.getLastChild() instanceof PsiComment
             ? '{' + text + "\n}"
             : '{' + text + '}';

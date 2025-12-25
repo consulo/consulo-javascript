@@ -29,13 +29,13 @@ public class FunctionWithMultipleLoopsJSInspection extends JavaScriptInspection 
     @RequiredReadAction
     @Override
     public String buildErrorString(Object state, Object... args) {
-        final JSFunction function = (JSFunction)((PsiElement)args[0]).getParent();
+        JSFunction function = (JSFunction)((PsiElement)args[0]).getParent();
         assert function != null;
-        final LoopCountVisitor visitor = new LoopCountVisitor();
-        final PsiElement lastChild = function.getLastChild();
+        LoopCountVisitor visitor = new LoopCountVisitor();
+        PsiElement lastChild = function.getLastChild();
         assert lastChild != null;
         lastChild.accept(visitor);
-        final int loopCount = visitor.getCount();
+        int loopCount = visitor.getCount();
         return functionHasIdentifier(function)
             ? InspectionJSLocalize.functionContainsMultipleLoopsErrorString(loopCount).get()
             : InspectionJSLocalize.anonymousFunctionContainsMultipleLoopsErrorString(loopCount).get();
@@ -50,13 +50,13 @@ public class FunctionWithMultipleLoopsJSInspection extends JavaScriptInspection 
         @Override
         public void visitJSFunctionDeclaration(@Nonnull JSFunction function) {
             // note: no call to super
-            final PsiElement lastChild = function.getLastChild();
+            PsiElement lastChild = function.getLastChild();
             if (!(lastChild instanceof JSBlockStatement)) {
                 return;
             }
-            final LoopCountVisitor visitor = new LoopCountVisitor();
+            LoopCountVisitor visitor = new LoopCountVisitor();
             lastChild.accept(visitor);
-            final int negationCount = visitor.getCount();
+            int negationCount = visitor.getCount();
             if (negationCount <= 1) {
                 return;
             }

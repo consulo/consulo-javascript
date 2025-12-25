@@ -46,7 +46,7 @@ class CaseUtil {
     }
 
     public static boolean containsHiddenBreak(List<PsiElement> elements) {
-        for (final PsiElement element : elements) {
+        for (PsiElement element : elements) {
             if (element instanceof JSStatement statement && containsHiddenBreak(statement, true)) {
                 return true;
             }
@@ -60,7 +60,7 @@ class CaseUtil {
 
     private static boolean containsHiddenBreak(JSStatement statement, boolean isTopLevel) {
         if (statement instanceof JSBlockStatement blockStatement) {
-            for (final JSStatement childStatement : blockStatement.getStatements()) {
+            for (JSStatement childStatement : blockStatement.getStatements()) {
                 if (containsHiddenBreak(childStatement, false)) {
                     return true;
                 }
@@ -74,7 +74,7 @@ class CaseUtil {
                 return false;
             }
 
-            final String identifier = breakStatement.getLabel();
+            String identifier = breakStatement.getLabel();
 
             return (identifier == null || identifier.length() == 0);
         }
@@ -92,7 +92,7 @@ class CaseUtil {
     }
 
     private static boolean isUsedByStatement(JSVariable var, JSElement statement) {
-        final LocalVariableUsageVisitor visitor = new LocalVariableUsageVisitor(var);
+        LocalVariableUsageVisitor visitor = new LocalVariableUsageVisitor(var);
         statement.accept(visitor);
         return visitor.isUsed();
     }
@@ -114,7 +114,7 @@ class CaseUtil {
         int val = 1;
 
         while (true) {
-            final String name = baseName + val;
+            String name = baseName + val;
 
             if (!checkForLabel(name, ancestor)) {
                 return name;
@@ -124,22 +124,22 @@ class CaseUtil {
     }
 
     private static boolean checkForLabel(String name, JSElement ancestor) {
-        final LabelSearchVisitor visitor = new LabelSearchVisitor(name);
+        LabelSearchVisitor visitor = new LabelSearchVisitor(name);
         ancestor.accept(visitor);
         return visitor.isUsed();
     }
 
     public static JSExpression getCaseExpression(JSIfStatement statement) {
-        final JSExpression condition = statement.getCondition();
-        final List<JSExpression> possibleCaseExpressions = determinePossibleCaseExpressions(condition);
+        JSExpression condition = statement.getCondition();
+        List<JSExpression> possibleCaseExpressions = determinePossibleCaseExpressions(condition);
 
         if (possibleCaseExpressions != null) {
-            for (final JSExpression caseExpression : possibleCaseExpressions) {
+            for (JSExpression caseExpression : possibleCaseExpressions) {
                 if (!SideEffectChecker.mayHaveSideEffects(caseExpression)) {
                     JSIfStatement statementToCheck = statement;
 
                     while (canBeMadeIntoCase(statementToCheck.getCondition(), caseExpression)) {
-                        final JSStatement elseBranch = statementToCheck.getElse();
+                        JSStatement elseBranch = statementToCheck.getElse();
 
                         if (elseBranch == null || !(elseBranch instanceof JSIfStatement)) {
                             return caseExpression;
@@ -153,13 +153,13 @@ class CaseUtil {
     }
 
     private static List<JSExpression> determinePossibleCaseExpressions(JSExpression exp) {
-        final JSExpression expToCheck = ParenthesesUtils.stripParentheses(exp);
-        final List<JSExpression> out = new ArrayList<>(10);
+        JSExpression expToCheck = ParenthesesUtils.stripParentheses(exp);
+        List<JSExpression> out = new ArrayList<>(10);
 
         if (expToCheck instanceof JSBinaryExpression binaryExp) {
-            final IElementType operation = binaryExp.getOperationSign();
-            final JSExpression lhs = binaryExp.getLOperand();
-            final JSExpression rhs = binaryExp.getROperand();
+            IElementType operation = binaryExp.getOperationSign();
+            JSExpression lhs = binaryExp.getLOperand();
+            JSExpression rhs = binaryExp.getROperand();
 
             if (JSTokenTypes.OROR.equals(operation)) {
                 return determinePossibleCaseExpressions(lhs);
@@ -177,16 +177,16 @@ class CaseUtil {
     }
 
     private static boolean canBeMadeIntoCase(JSExpression exp, JSExpression caseExpression) {
-        final JSExpression expToCheck = ParenthesesUtils.stripParentheses(exp);
+        JSExpression expToCheck = ParenthesesUtils.stripParentheses(exp);
 
         if (!(expToCheck instanceof JSBinaryExpression)) {
             return false;
         }
 
-        final JSBinaryExpression binaryExp = (JSBinaryExpression)expToCheck;
-        final IElementType operation = binaryExp.getOperationSign();
-        final JSExpression leftOperand = binaryExp.getLOperand();
-        final JSExpression rightOperand = binaryExp.getROperand();
+        JSBinaryExpression binaryExp = (JSBinaryExpression)expToCheck;
+        IElementType operation = binaryExp.getOperationSign();
+        JSExpression leftOperand = binaryExp.getLOperand();
+        JSExpression rightOperand = binaryExp.getROperand();
 
         if (JSTokenTypes.OROR.equals(operation)) {
             return canBeMadeIntoCase(leftOperand, caseExpression) && canBeMadeIntoCase(rightOperand, caseExpression);

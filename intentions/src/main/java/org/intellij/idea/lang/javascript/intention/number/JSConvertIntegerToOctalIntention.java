@@ -50,7 +50,7 @@ public class JSConvertIntegerToOctalIntention extends JSIntention {
 
     @Override
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSLiteralExpression exp = (JSLiteralExpression)element;
+        JSLiteralExpression exp = (JSLiteralExpression)element;
 
         JSElementFactory.replaceExpression(exp, '0' + NumberUtil.getLiteralNumber(exp).toString(8));
     }
@@ -63,7 +63,7 @@ public class JSConvertIntegerToOctalIntention extends JSIntention {
                 return false;
             }
 
-            final String elementText = element.getText();
+            String elementText = element.getText();
 
             return NumberUtil.isHex(elementText) || (NumberUtil.isDecimal(elementText) && !NumberUtil.isOctal(elementText));
         }

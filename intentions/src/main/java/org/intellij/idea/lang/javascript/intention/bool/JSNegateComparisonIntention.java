@@ -47,12 +47,12 @@ public class JSNegateComparisonIntention extends JSMutablyNamedIntention {
     @Override
     @RequiredReadAction
     public LocalizeValue getTextForElement(PsiElement element) {
-        final JSBinaryExpression expression = (JSBinaryExpression)element;
+        JSBinaryExpression expression = (JSBinaryExpression)element;
         String operatorText = "";
         String negatedOperatorText = "";
 
         if (expression != null) {
-            final IElementType sign = expression.getOperationSign();
+            IElementType sign = expression.getOperationSign();
 
             operatorText = ComparisonUtils.getOperatorText(sign);
             negatedOperatorText = ComparisonUtils.getNegatedOperatorText(sign);
@@ -72,12 +72,12 @@ public class JSNegateComparisonIntention extends JSMutablyNamedIntention {
     @Override
     @RequiredReadAction
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSBinaryExpression exp = (JSBinaryExpression)element;
-        final JSExpression lhs = exp.getLOperand();
-        final JSExpression rhs = exp.getROperand();
-        final IElementType sign = exp.getOperationSign();
-        final String negatedOperator = ComparisonUtils.getNegatedOperatorText(sign);
-        final String lhsText = lhs.getText();
+        JSBinaryExpression exp = (JSBinaryExpression)element;
+        JSExpression lhs = exp.getLOperand();
+        JSExpression rhs = exp.getROperand();
+        IElementType sign = exp.getOperationSign();
+        String negatedOperator = ComparisonUtils.getNegatedOperatorText(sign);
+        String lhsText = lhs.getText();
 
         assert (rhs != null);
 

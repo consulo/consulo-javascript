@@ -26,7 +26,7 @@ class ShiftUtils {
         if (!(expression instanceof JSLiteralExpression)) {
             return false;
         }
-        final String value = expression.getText();
+        String value = expression.getText();
         long intValue;
 
         try {
@@ -46,7 +46,7 @@ class ShiftUtils {
     }
 
     public static int getLogBase2(JSExpression rhs) {
-        final String value = rhs.getText();
+        String value = rhs.getText();
         long intValue;
 
         try {
@@ -66,8 +66,8 @@ class ShiftUtils {
     }
 
     public static int getExpBase2(JSExpression rhs) {
-        final String value = rhs.getText();
-        final long intValue;
+        String value = rhs.getText();
+        long intValue;
 
         try {
             intValue = Integer.decode(value).longValue();
@@ -89,7 +89,7 @@ class ShiftUtils {
             return false;
         }
 
-        final String value = expression.getText();
+        String value = expression.getText();
 
         try {
             Integer.decode(value);

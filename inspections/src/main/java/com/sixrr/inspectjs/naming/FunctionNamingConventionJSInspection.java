@@ -55,7 +55,7 @@ public class FunctionNamingConventionJSInspection extends ConventionInspection {
     @RequiredReadAction
     public String buildErrorString(Object state, Object... args) {
         ConventionInspectionState inspectionState = (ConventionInspectionState) state;
-        final String functionName = ((PsiElement) args[0]).getText();
+        String functionName = ((PsiElement) args[0]).getText();
 
         assert functionName != null;
         if (functionName.length() < inspectionState.m_minLength) {
@@ -77,14 +77,14 @@ public class FunctionNamingConventionJSInspection extends ConventionInspection {
         public void visitJSFunctionDeclaration(JSFunction function) {
             super.visitJSFunctionDeclaration(function);
 
-            final String name = function.getName();
+            String name = function.getName();
             if (name == null) {
                 return;
             }
             if (isValid(name, myState)) {
                 return;
             }
-            final PsiElement identifier = function.getNameIdentifier();
+            PsiElement identifier = function.getNameIdentifier();
             if (identifier == null || !PsiTreeUtil.isAncestor(function, identifier, true)) {
                 return;
             }

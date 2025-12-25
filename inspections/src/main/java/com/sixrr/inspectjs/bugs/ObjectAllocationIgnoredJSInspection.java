@@ -53,8 +53,8 @@ public class ObjectAllocationIgnoredJSInspection extends JavaScriptInspection {
             if (!(statement.getExpression()instanceof JSNewExpression)) {
                 return;
             }
-            final JSNewExpression newExpression = (JSNewExpression) statement.getExpression();
-            final JSExpression methodExpression = newExpression.getMethodExpression();
+            JSNewExpression newExpression = (JSNewExpression) statement.getExpression();
+            JSExpression methodExpression = newExpression.getMethodExpression();
             if (methodExpression == null) {
                 return;
             }

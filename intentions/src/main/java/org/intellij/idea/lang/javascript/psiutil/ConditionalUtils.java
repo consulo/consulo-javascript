@@ -29,7 +29,7 @@ public class ConditionalUtils {
 
     public static JSStatement stripBraces(JSStatement branch) {
         if (branch != null && branch instanceof JSBlockStatement block) {
-            final JSStatement[] statements = block.getStatements();
+            JSStatement[] statements = block.getStatements();
 
             if (statements.length == 1) {
                 return statements[0];
@@ -50,7 +50,7 @@ public class ConditionalUtils {
             return false;
         }
 
-        final JSExpression returnExpression = ((JSReturnStatement)statement).getExpression();
+        JSExpression returnExpression = ((JSReturnStatement)statement).getExpression();
 
         return (returnExpression != null && value.equals(returnExpression.getText()));
     }
@@ -60,13 +60,13 @@ public class ConditionalUtils {
             return false;
         }
 
-        final JSExpression expression = ((JSExpressionStatement)statement).getExpression();
+        JSExpression expression = ((JSExpressionStatement)statement).getExpression();
 
         if (!(expression instanceof JSAssignmentExpression)) {
             return false;
         }
 
-        final JSExpression rhs = ((JSAssignmentExpression)expression).getROperand();
+        JSExpression rhs = ((JSAssignmentExpression)expression).getROperand();
 
         return (rhs != null && rhs.getText().equals(value));
     }
@@ -76,7 +76,7 @@ public class ConditionalUtils {
             return false;
         }
 
-        final JSExpressionStatement expressionStatement = (JSExpressionStatement)statement;
+        JSExpressionStatement expressionStatement = (JSExpressionStatement)statement;
 
         return (expressionStatement.getExpression() instanceof JSAssignmentExpression);
     }
@@ -93,8 +93,8 @@ public class ConditionalUtils {
         }
 
         if (expression instanceof JSBinaryExpression) {
-            final JSBinaryExpression binaryExpression = (JSBinaryExpression)expression;
-            final IElementType sign = binaryExpression.getOperationSign();
+            JSBinaryExpression binaryExpression = (JSBinaryExpression)expression;
+            IElementType sign = binaryExpression.getOperationSign();
 
             if (JSTokenTypes.XOR.equals(sign)) {
                 return (isConditional(binaryExpression.getLOperand()) &&
@@ -111,14 +111,14 @@ public class ConditionalUtils {
     }
 
     public static boolean isSimplifiableImplicitReturn(JSIfStatement ifStatement, boolean negated) {
-        final JSStatement thenBranch = ConditionalUtils.stripBraces(ifStatement.getThen());
-        final PsiElement nextStatement = JSElementFactory.getNonWhiteSpaceSibling(ifStatement, true);
+        JSStatement thenBranch = ConditionalUtils.stripBraces(ifStatement.getThen());
+        PsiElement nextStatement = JSElementFactory.getNonWhiteSpaceSibling(ifStatement, true);
 
         if (!(nextStatement instanceof JSStatement)) {
             return false;
         }
 
-        final JSStatement elseBranch = (JSStatement)nextStatement;
+        JSStatement elseBranch = (JSStatement)nextStatement;
 
         if (negated) {
             return ConditionalUtils.isReturn(thenBranch, BoolUtils.FALSE)
@@ -131,8 +131,8 @@ public class ConditionalUtils {
     }
 
     public static boolean isSimplifiableReturn(JSIfStatement ifStatement, boolean negated) {
-        final JSStatement thenBranch = ConditionalUtils.stripBraces(ifStatement.getThen());
-        final JSStatement elseBranch = ConditionalUtils.stripBraces(ifStatement.getElse());
+        JSStatement thenBranch = ConditionalUtils.stripBraces(ifStatement.getThen());
+        JSStatement elseBranch = ConditionalUtils.stripBraces(ifStatement.getElse());
 
         if (negated) {
             return ConditionalUtils.isReturn(thenBranch, BoolUtils.FALSE)
@@ -145,10 +145,10 @@ public class ConditionalUtils {
     }
 
     public static boolean isSimplifiableAssignment(JSIfStatement ifStatement, boolean negated) {
-        final JSStatement thenBranch = ConditionalUtils.stripBraces(ifStatement.getThen());
-        final JSStatement elseBranch = ConditionalUtils.stripBraces(ifStatement.getElse());
+        JSStatement thenBranch = ConditionalUtils.stripBraces(ifStatement.getThen());
+        JSStatement elseBranch = ConditionalUtils.stripBraces(ifStatement.getElse());
 
-        final boolean isAssignment;
+        boolean isAssignment;
 
         if (negated) {
             isAssignment = ConditionalUtils.isAssignment(thenBranch, BoolUtils.FALSE)
@@ -160,17 +160,17 @@ public class ConditionalUtils {
         }
 
         if (isAssignment) {
-            final JSAssignmentExpression thenExpression = (JSAssignmentExpression)((JSExpressionStatement)thenBranch).getExpression();
-            final JSAssignmentExpression elseExpression = (JSAssignmentExpression)((JSExpressionStatement)elseBranch).getExpression();
-            final IElementType thenSign = thenExpression.getOperationSign();
-            final IElementType elseSign = elseExpression.getOperationSign();
+            JSAssignmentExpression thenExpression = (JSAssignmentExpression)((JSExpressionStatement)thenBranch).getExpression();
+            JSAssignmentExpression elseExpression = (JSAssignmentExpression)((JSExpressionStatement)elseBranch).getExpression();
+            IElementType thenSign = thenExpression.getOperationSign();
+            IElementType elseSign = elseExpression.getOperationSign();
 
             if (!thenSign.equals(elseSign)) {
                 return false;
             }
 
-            final JSExpression thenLhs = thenExpression.getLOperand();
-            final JSExpression elseLhs = elseExpression.getLOperand();
+            JSExpression thenLhs = thenExpression.getLOperand();
+            JSExpression elseLhs = elseExpression.getLOperand();
 
             return EquivalenceChecker.expressionsAreEquivalent(thenLhs, elseLhs);
         }
@@ -183,31 +183,31 @@ public class ConditionalUtils {
         if (ifStatement.getElse() != null) {
             return false;
         }
-        final JSStatement thenBranch = ConditionalUtils.stripBraces(ifStatement.getThen());
-        final PsiElement nextStatement = JSElementFactory.getNonWhiteSpaceSibling(ifStatement, false);
+        JSStatement thenBranch = ConditionalUtils.stripBraces(ifStatement.getThen());
+        PsiElement nextStatement = JSElementFactory.getNonWhiteSpaceSibling(ifStatement, false);
 
         if (!(nextStatement instanceof JSStatement)) {
             return false;
         }
 
-        final JSStatement elseBranch = ConditionalUtils.stripBraces((JSStatement)nextStatement);
+        JSStatement elseBranch = ConditionalUtils.stripBraces((JSStatement)nextStatement);
 
-        final boolean isAssignment = negated
+        boolean isAssignment = negated
             ? ConditionalUtils.isAssignment(thenBranch, BoolUtils.FALSE) && ConditionalUtils.isAssignment(elseBranch, BoolUtils.TRUE)
             : ConditionalUtils.isAssignment(thenBranch, BoolUtils.TRUE) && ConditionalUtils.isAssignment(elseBranch, BoolUtils.FALSE);
 
         if (isAssignment) {
-            final JSAssignmentExpression thenExpression = (JSAssignmentExpression)((JSExpressionStatement)thenBranch).getExpression();
-            final JSAssignmentExpression elseExpression = (JSAssignmentExpression)((JSExpressionStatement)elseBranch).getExpression();
-            final IElementType thenSign = thenExpression.getOperationSign();
-            final IElementType elseSign = elseExpression.getOperationSign();
+            JSAssignmentExpression thenExpression = (JSAssignmentExpression)((JSExpressionStatement)thenBranch).getExpression();
+            JSAssignmentExpression elseExpression = (JSAssignmentExpression)((JSExpressionStatement)elseBranch).getExpression();
+            IElementType thenSign = thenExpression.getOperationSign();
+            IElementType elseSign = elseExpression.getOperationSign();
 
             if (!thenSign.equals(elseSign)) {
                 return false;
             }
 
-            final JSExpression thenLhs = thenExpression.getLOperand();
-            final JSExpression elseLhs = elseExpression.getLOperand();
+            JSExpression thenLhs = thenExpression.getLOperand();
+            JSExpression elseLhs = elseExpression.getLOperand();
 
             return EquivalenceChecker.expressionsAreEquivalent(thenLhs, elseLhs);
         }
@@ -218,10 +218,10 @@ public class ConditionalUtils {
 
     public static void replaceSimplifiableImplicitReturn(JSIfStatement statement, boolean negated)
         throws IncorrectOperationException {
-        final JSExpression condition = statement.getCondition();
-        final String conditionText = negated ? BoolUtils.getNegatedExpressionText(condition) : condition.getText();
-        final JSElement nextStatement = (JSElement)JSElementFactory.getNonWhiteSpaceSibling(statement, true);
-        @NonNls final String newStatement = "return " + conditionText + ';';
+        JSExpression condition = statement.getCondition();
+        String conditionText = negated ? BoolUtils.getNegatedExpressionText(condition) : condition.getText();
+        JSElement nextStatement = (JSElement)JSElementFactory.getNonWhiteSpaceSibling(statement, true);
+        @NonNls String newStatement = "return " + conditionText + ';';
 
         JSElementFactory.replaceStatement(statement, newStatement);
         assert (nextStatement != null);
@@ -230,38 +230,38 @@ public class ConditionalUtils {
 
     public static void replaceSimplifiableReturn(JSIfStatement statement, boolean negated)
         throws IncorrectOperationException {
-        final JSExpression condition = statement.getCondition();
-        final String conditionText = (negated ? BoolUtils.getNegatedExpressionText(condition) : condition.getText());
-        @NonNls final String newStatement = "return " + conditionText + ';';
+        JSExpression condition = statement.getCondition();
+        String conditionText = (negated ? BoolUtils.getNegatedExpressionText(condition) : condition.getText());
+        @NonNls String newStatement = "return " + conditionText + ';';
 
         JSElementFactory.replaceStatement(statement, newStatement);
     }
 
     public static void replaceSimplifiableAssignment(JSIfStatement statement, boolean negated)
         throws IncorrectOperationException {
-        final JSExpression condition = statement.getCondition();
-        final String conditionText = negated ? BoolUtils.getNegatedExpressionText(condition) : condition.getText();
-        final JSExpressionStatement assignmentStatement = (JSExpressionStatement)ConditionalUtils.stripBraces(statement.getThen());
-        final JSAssignmentExpression assignmentExpression = (JSAssignmentExpression)assignmentStatement.getExpression();
-        final IElementType operator = assignmentExpression.getOperationSign();
-        final String operand = BinaryOperatorUtils.getOperatorText(operator);
-        final JSExpression lhs = assignmentExpression.getLOperand();
-        final String lhsText = lhs.getText();
+        JSExpression condition = statement.getCondition();
+        String conditionText = negated ? BoolUtils.getNegatedExpressionText(condition) : condition.getText();
+        JSExpressionStatement assignmentStatement = (JSExpressionStatement)ConditionalUtils.stripBraces(statement.getThen());
+        JSAssignmentExpression assignmentExpression = (JSAssignmentExpression)assignmentStatement.getExpression();
+        IElementType operator = assignmentExpression.getOperationSign();
+        String operand = BinaryOperatorUtils.getOperatorText(operator);
+        JSExpression lhs = assignmentExpression.getLOperand();
+        String lhsText = lhs.getText();
 
         JSElementFactory.replaceStatement(statement, lhsText + operand + conditionText + ';');
     }
 
     public static void replaceSimplifiableImplicitAssignment(JSIfStatement statement, boolean negated)
         throws IncorrectOperationException {
-        final JSElement prevStatement = (JSElement)JSElementFactory.getNonWhiteSpaceSibling(statement, false);
-        final JSExpression condition = statement.getCondition();
-        final String conditionText = (negated ? BoolUtils.getNegatedExpressionText(condition) : condition.getText());
-        final JSExpressionStatement assignmentStatement = (JSExpressionStatement)ConditionalUtils.stripBraces(statement.getThen());
-        final JSAssignmentExpression assignmentExpression = (JSAssignmentExpression)assignmentStatement.getExpression();
-        final IElementType operator = assignmentExpression.getOperationSign();
-        final String operand = BinaryOperatorUtils.getOperatorText(operator);
-        final JSExpression lhs = assignmentExpression.getLOperand();
-        final String lhsText = lhs.getText();
+        JSElement prevStatement = (JSElement)JSElementFactory.getNonWhiteSpaceSibling(statement, false);
+        JSExpression condition = statement.getCondition();
+        String conditionText = (negated ? BoolUtils.getNegatedExpressionText(condition) : condition.getText());
+        JSExpressionStatement assignmentStatement = (JSExpressionStatement)ConditionalUtils.stripBraces(statement.getThen());
+        JSAssignmentExpression assignmentExpression = (JSAssignmentExpression)assignmentStatement.getExpression();
+        IElementType operator = assignmentExpression.getOperationSign();
+        String operand = BinaryOperatorUtils.getOperatorText(operator);
+        JSExpression lhs = assignmentExpression.getLOperand();
+        String lhsText = lhs.getText();
 
         JSElementFactory.replaceStatement(statement, lhsText + operand + conditionText + ';');
 
@@ -300,20 +300,20 @@ public class ConditionalUtils {
 
     public static void replaceConditionalWithIf(JSConditionalExpression conditional)
         throws IncorrectOperationException {
-        final JSStatement statement = PsiTreeUtil.getParentOfType(conditional, JSStatement.class);
+        JSStatement statement = PsiTreeUtil.getParentOfType(conditional, JSStatement.class);
 
         assert (statement != null);
 
-        final String statementText = statement.getText();
-        final String conditionalText = ParenthesesUtils.unstripParentheses(conditional).getText();
-        final int conditionalIndex = statementText.indexOf(conditionalText);
-        final String statementStart = statementText.substring(0, conditionalIndex);
-        final String statementEnd = statementText.substring(conditionalIndex + conditionalText.length());
-        final JSExpression condition = ParenthesesUtils.stripParentheses(conditional.getCondition());
-        final JSExpression thenExpression = ParenthesesUtils.stripParentheses(conditional.getThen());
-        final JSExpression elseExpression = ParenthesesUtils.stripParentheses(conditional.getElse());
+        String statementText = statement.getText();
+        String conditionalText = ParenthesesUtils.unstripParentheses(conditional).getText();
+        int conditionalIndex = statementText.indexOf(conditionalText);
+        String statementStart = statementText.substring(0, conditionalIndex);
+        String statementEnd = statementText.substring(conditionalIndex + conditionalText.length());
+        JSExpression condition = ParenthesesUtils.stripParentheses(conditional.getCondition());
+        JSExpression thenExpression = ParenthesesUtils.stripParentheses(conditional.getThen());
+        JSExpression elseExpression = ParenthesesUtils.stripParentheses(conditional.getElse());
 
-        @NonNls final String ifStatementText = "if (" + condition.getText() + ") {" +
+        @NonNls String ifStatementText = "if (" + condition.getText() + ") {" +
             statementStart + thenExpression.getText() + statementEnd +
             "} else {" +
             statementStart + elseExpression.getText() + statementEnd +

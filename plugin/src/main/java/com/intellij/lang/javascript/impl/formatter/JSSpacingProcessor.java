@@ -124,7 +124,7 @@ public class JSSpacingProcessor extends JSNodeVisitor {
     }
 
     @Override
-    public void visitAttributeList(final ASTNode node) {
+    public void visitAttributeList(ASTNode node) {
         if (type1 == JSElementTypes.ATTRIBUTE || type2 == JSElementTypes.ATTRIBUTE) {
             myResult = Spacing.createSpacing(
                 0,
@@ -146,7 +146,7 @@ public class JSSpacingProcessor extends JSNodeVisitor {
     }
 
     @Override
-    public void visitEmbeddedContent(final ASTNode node) {
+    public void visitEmbeddedContent(ASTNode node) {
         if (type2 == JSTokenTypes.END_OF_LINE_COMMENT) {
             myResult = Spacing.createSpacing(
                 0,

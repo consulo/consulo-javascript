@@ -54,9 +54,9 @@ public class JSConstantExpressionIntention extends JSIntention {
 
     @Override
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSExpression expression = (JSExpression)element;
-        final Object value = ExpressionUtil.computeConstantExpression(expression);
-        final String newExpression = value instanceof String strValue
+        JSExpression expression = (JSExpression)element;
+        Object value = ExpressionUtil.computeConstantExpression(expression);
+        String newExpression = value instanceof String strValue
             ? '"' + StringUtil.escapeStringCharacters(strValue) + '"'
             : String.valueOf(value);
         JSElementFactory.replaceExpression(expression, newExpression);
@@ -68,7 +68,7 @@ public class JSConstantExpressionIntention extends JSIntention {
             if (!(element instanceof JSExpression) || ErrorUtil.containsError(element)) {
                 return false;
             }
-            final JSExpression expression = (JSExpression)element;
+            JSExpression expression = (JSExpression)element;
 
             if (element instanceof JSLiteralExpression
                 || (element instanceof JSReferenceExpression referenceExpression && referenceExpression.getQualifier() != null)
@@ -78,7 +78,7 @@ public class JSConstantExpressionIntention extends JSIntention {
                 return false;
             }
 
-            final PsiElement parent = element.getParent();
+            PsiElement parent = element.getParent();
 
             return !(parent instanceof JSExpression parentExpression && ExpressionUtil.isConstantExpression(parentExpression));
         }

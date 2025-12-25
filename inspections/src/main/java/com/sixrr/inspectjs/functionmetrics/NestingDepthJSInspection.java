@@ -43,11 +43,11 @@ public class NestingDepthJSInspection extends JavaScriptInspection {
     @Override
     @RequiredReadAction
     public String buildErrorString(Object state, Object... args) {
-        final JSFunction function = (JSFunction)((PsiElement)args[0]).getParent();
+        JSFunction function = (JSFunction)((PsiElement)args[0]).getParent();
         assert function != null;
-        final NestingDepthVisitor visitor = new NestingDepthVisitor();
+        NestingDepthVisitor visitor = new NestingDepthVisitor();
         function.accept(visitor);
-        final int nestingDepth = visitor.getMaximumDepth();
+        int nestingDepth = visitor.getMaximumDepth();
         return functionHasIdentifier(function)
             ? InspectionJSLocalize.functionIsOverlyNestedErrorString(nestingDepth).get()
             : InspectionJSLocalize.anonymousFunctionIsOverlyNestedErrorString(nestingDepth).get();
@@ -61,9 +61,9 @@ public class NestingDepthJSInspection extends JavaScriptInspection {
     private class Visitor extends BaseInspectionVisitor<NestingDepthJSInspectionState> {
         @Override
         public void visitJSFunctionDeclaration(@Nonnull JSFunction function) {
-            final NestingDepthVisitor visitor = new NestingDepthVisitor();
+            NestingDepthVisitor visitor = new NestingDepthVisitor();
             function.accept(visitor);
-            final int count = visitor.getMaximumDepth();
+            int count = visitor.getMaximumDepth();
 
             if (count > myState.getLimit()) {
                 registerFunctionError(function);

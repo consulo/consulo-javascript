@@ -10,14 +10,14 @@ import java.awt.*;
 import org.jetbrains.annotations.NonNls;
 
 public class SingleCheckboxOptionsPanel extends JPanel {
-    public SingleCheckboxOptionsPanel(String label, final BaseInspection owner, @NonNls final String property) {
+    public SingleCheckboxOptionsPanel(String label, BaseInspection owner, @NonNls String property) {
         super(new GridBagLayout());
-        final boolean selected = getPropertyValue(owner, property);
-        final JCheckBox checkBox = new JCheckBox(label, selected);
-        final ButtonModel model = checkBox.getModel();
+        boolean selected = getPropertyValue(owner, property);
+        JCheckBox checkBox = new JCheckBox(label, selected);
+        ButtonModel model = checkBox.getModel();
         model.addChangeListener(e -> setPropertyValue(owner, property, model.isSelected()));
 
-        final GridBagConstraints constraints = new GridBagConstraints();
+        GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.weightx = 1.0;

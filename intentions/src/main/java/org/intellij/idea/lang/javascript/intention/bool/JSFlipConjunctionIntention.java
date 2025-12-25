@@ -48,8 +48,8 @@ public class JSFlipConjunctionIntention extends JSMutablyNamedIntention {
     @Override
     @RequiredReadAction
     protected LocalizeValue getTextForElement(PsiElement element) {
-        final JSBinaryExpression binaryExpression = (JSBinaryExpression)element;
-        final IElementType sign = binaryExpression.getOperationSign();
+        JSBinaryExpression binaryExpression = (JSBinaryExpression)element;
+        IElementType sign = binaryExpression.getOperationSign();
 
         return JSIntentionLocalize.boolFlipConjunctionMessage(BinaryOperatorUtils.getOperatorText(sign));
     }
@@ -63,10 +63,10 @@ public class JSFlipConjunctionIntention extends JSMutablyNamedIntention {
     @Override
     @RequiredReadAction
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSBinaryExpression binaryExpression = (JSBinaryExpression)element;
+        JSBinaryExpression binaryExpression = (JSBinaryExpression)element;
         JSExpression exp = binaryExpression;
 
-        final IElementType sign = binaryExpression.getOperationSign();
+        IElementType sign = binaryExpression.getOperationSign();
         JSElement parent = (JSElement)exp.getParent();
 
         while (isConjunctionExpression(parent, sign)) {
@@ -80,7 +80,7 @@ public class JSFlipConjunctionIntention extends JSMutablyNamedIntention {
     @RequiredReadAction
     private String flipExpression(JSExpression exp, IElementType conjunctionType) {
         if (isConjunctionExpression(exp, conjunctionType)) {
-            final JSBinaryExpression andExpression = (JSBinaryExpression)exp;
+            JSBinaryExpression andExpression = (JSBinaryExpression)exp;
 
             return this.flipExpression(andExpression.getROperand(), conjunctionType) + ' ' +
                 BinaryOperatorUtils.getOperatorText(conjunctionType) + ' ' +

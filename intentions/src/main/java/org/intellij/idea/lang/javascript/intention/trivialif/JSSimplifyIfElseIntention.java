@@ -51,7 +51,7 @@ public class JSSimplifyIfElseIntention extends JSIntention {
 
     @Override
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final PsiElement statement = element.getParent() instanceof JSIfStatement ? element.getParent() : element;
+        PsiElement statement = element.getParent() instanceof JSIfStatement ? element.getParent() : element;
 
         ConditionalUtils.replaceAssignmentOrReturnIfSimplifiable((JSIfStatement)statement);
     }
@@ -77,8 +77,8 @@ public class JSSimplifyIfElseIntention extends JSIntention {
                 return false;
             }
 
-            final JSIfStatement ifStatement = (JSIfStatement)parent;
-            final JSExpression condition = ifStatement.getCondition();
+            JSIfStatement ifStatement = (JSIfStatement)parent;
+            JSExpression condition = ifStatement.getCondition();
 
             if (condition == null || !condition.isValid()) {
                 return false;

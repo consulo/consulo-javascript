@@ -43,7 +43,7 @@ public class EcmaScriptStatementParsing extends StatementParsing {
 
     @Override
     public void parseSourceElement(PsiBuilder builder) {
-        final IElementType tokenType = builder.getTokenType();
+        IElementType tokenType = builder.getTokenType();
         if (tokenType == JSTokenTypes.FUNCTION_KEYWORD) {
             getFunctionParsing().parseFunctionDeclaration(builder);
         }
@@ -84,11 +84,11 @@ public class EcmaScriptStatementParsing extends StatementParsing {
     }
 
     @Override
-    protected boolean parseForLoopHeader(final PsiBuilder builder) {
+    protected boolean parseForLoopHeader(PsiBuilder builder) {
         builder.advanceLexer();
 
         Parsing.checkMatches(builder, JSTokenTypes.LPAR, JavaScriptLocalize.javascriptParserMessageExpectedLparen());
-        final boolean empty;
+        boolean empty;
         if (builder.getTokenType() == JSTokenTypes.VAR_KEYWORD
             || builder.getTokenType() == JSTokenTypes.LET_KEYWORD
             || builder.getTokenType() == JSTokenTypes.CONST_KEYWORD) {
@@ -146,8 +146,8 @@ public class EcmaScriptStatementParsing extends StatementParsing {
         super.doParseStatement(builder, canHaveClasses);
     }
 
-    private void parseImportStatement(final PsiBuilder builder) {
-        final PsiBuilder.Marker importStatement = builder.mark();
+    private void parseImportStatement(PsiBuilder builder) {
+        PsiBuilder.Marker importStatement = builder.mark();
         try {
             builder.advanceLexer();
 
@@ -288,11 +288,11 @@ public class EcmaScriptStatementParsing extends StatementParsing {
         return false;
     }
 
-    private void parseClass(final PsiBuilder builder, boolean nameRequired) {
+    private void parseClass(PsiBuilder builder, boolean nameRequired) {
         parseClassWithMarker(builder, builder.mark(), nameRequired);
     }
 
-    public void parseClassWithMarker(final PsiBuilder builder, final @Nonnull PsiBuilder.Marker clazz, boolean nameRequired) {
+    public void parseClassWithMarker(PsiBuilder builder, @Nonnull PsiBuilder.Marker clazz, boolean nameRequired) {
         builder.advanceLexer();
 
         if (builder.getTokenType() != JSTokenTypes.IDENTIFIER) {
@@ -312,7 +312,7 @@ public class EcmaScriptStatementParsing extends StatementParsing {
         clazz.done(JSElementTypes.CLASS);
     }
 
-    protected void parseClassBody(final PsiBuilder builder, BlockType type) {
+    protected void parseClassBody(PsiBuilder builder, BlockType type) {
         if (builder.getTokenType() != JSTokenTypes.LBRACE) {
             builder.error(JavaScriptLocalize.javascriptParserMessageExpectedLbrace());
             return;
@@ -410,10 +410,10 @@ public class EcmaScriptStatementParsing extends StatementParsing {
         return false;
     }
 
-    private void parseReferenceList(final PsiBuilder builder) {
-        final IElementType tokenType = builder.getTokenType();
+    private void parseReferenceList(PsiBuilder builder) {
+        IElementType tokenType = builder.getTokenType();
         LOGGER.assertTrue(tokenType == JSTokenTypes.EXTENDS_KEYWORD || tokenType == JSTokenTypes.IMPLEMENTS_KEYWORD);
-        final PsiBuilder.Marker referenceList = builder.mark();
+        PsiBuilder.Marker referenceList = builder.mark();
         builder.advanceLexer();
 
         if (getExpressionParsing().parseSimpleExpression(builder)) {

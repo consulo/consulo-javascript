@@ -50,7 +50,7 @@ public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention {
     @Override
     @RequiredReadAction
     protected LocalizeValue getTextForElement(PsiElement element) {
-        final JSBinaryExpression binaryExpression = (JSBinaryExpression)element;
+        JSBinaryExpression binaryExpression = (JSBinaryExpression)element;
 
         return JSIntentionLocalize.boolRemoveBooleanEqualityMessage(
             BinaryOperatorUtils.getOperatorText(binaryExpression.getOperationSign())
@@ -65,16 +65,16 @@ public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention {
 
     @Override
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSBinaryExpression exp = (JSBinaryExpression)element;
-        final boolean isEquals = exp.getOperationSign().equals(JSTokenTypes.EQEQ);
-        final JSExpression lhs = exp.getLOperand();
-        final JSExpression rhs = exp.getROperand();
+        JSBinaryExpression exp = (JSBinaryExpression)element;
+        boolean isEquals = exp.getOperationSign().equals(JSTokenTypes.EQEQ);
+        JSExpression lhs = exp.getLOperand();
+        JSExpression rhs = exp.getROperand();
 
         assert (lhs != null);
         assert (rhs != null);
 
-        final String lhsText = lhs.getText();
-        final String rhsText = rhs.getText();
+        String lhsText = lhs.getText();
+        String rhsText = rhs.getText();
 
         if (BoolUtils.TRUE.equals(lhsText)) {
             if (isEquals) {
@@ -117,15 +117,15 @@ public class JSRemoveBooleanEqualityIntention extends JSMutablyNamedIntention {
                 return false;
             }
 
-            final JSBinaryExpression expression = (JSBinaryExpression)element;
-            final IElementType sign = expression.getOperationSign();
+            JSBinaryExpression expression = (JSBinaryExpression)element;
+            IElementType sign = expression.getOperationSign();
 
             if (!(JSTokenTypes.EQEQ.equals(sign) || JSTokenTypes.NE.equals(sign))) {
                 return false;
             }
 
-            final JSExpression lhs = expression.getLOperand();
-            final JSExpression rhs = expression.getROperand();
+            JSExpression lhs = expression.getLOperand();
+            JSExpression rhs = expression.getROperand();
 
             return lhs != null && rhs != null && (BoolUtils.isBooleanLiteral(lhs) || BoolUtils.isBooleanLiteral(rhs));
         }

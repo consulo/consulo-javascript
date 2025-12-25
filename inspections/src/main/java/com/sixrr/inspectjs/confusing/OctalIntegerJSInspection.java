@@ -42,7 +42,7 @@ public class OctalIntegerJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSLiteralExpression(JSSimpleLiteralExpression jsLiteralExpression) {
             super.visitJSLiteralExpression(jsLiteralExpression);
-            @NonNls final String text = jsLiteralExpression.getText();
+            @NonNls String text = jsLiteralExpression.getText();
             if (text.startsWith("0") && !"0".equals(text)
                 && !text.startsWith("0x") && !text.startsWith("0X")
                 && !text.contains(".") && !text.contains("e") && !text.contains("E"))

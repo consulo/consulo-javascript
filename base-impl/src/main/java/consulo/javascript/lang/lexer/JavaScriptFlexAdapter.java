@@ -31,7 +31,7 @@ public class JavaScriptFlexAdapter extends FlexAdapter {
     }
 
     @Override
-    public void start(final CharSequence buffer, final int startOffset, final int endOffset, final int initialState) {
+    public void start(CharSequence buffer, int startOffset, int endOffset, int initialState) {
         super.start(buffer, startOffset, endOffset, initialState & BASE_STATE_MASK);
         ((JavaScriptFlexLexer)getFlex()).setTagCount(initialState >> TAG_COUNT_SHIFT);
     }

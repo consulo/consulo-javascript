@@ -43,11 +43,11 @@ public class ChainedFunctionCallJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSCallExpression(@Nonnull JSCallExpression expression) {
             super.visitJSCallExpression(expression);
-            final JSExpression reference = expression.getMethodExpression();
+            JSExpression reference = expression.getMethodExpression();
             if (!(reference instanceof JSReferenceExpression)) {
                 return;
             }
-            final JSExpression qualifier = ((JSReferenceExpression)reference).getQualifier();
+            JSExpression qualifier = ((JSReferenceExpression)reference).getQualifier();
             if (qualifier == null) {
                 return;
             }
@@ -62,7 +62,7 @@ public class ChainedFunctionCallJSInspection extends JavaScriptInspection {
                 return true;
             }
             if (expression instanceof JSParenthesizedExpression parenthesizedExpression) {
-                final JSExpression containedExpression = parenthesizedExpression.getInnerExpression();
+                JSExpression containedExpression = parenthesizedExpression.getInnerExpression();
                 return isCallExpression(containedExpression);
             }
             return false;

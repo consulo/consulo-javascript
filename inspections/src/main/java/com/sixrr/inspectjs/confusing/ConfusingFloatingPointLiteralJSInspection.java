@@ -57,42 +57,42 @@ public class ConfusingFloatingPointLiteralJSInspection extends JavaScriptInspect
 
         @Override
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final JSExpression literalExpression = (JSExpression)descriptor.getPsiElement();
-            final String text = literalExpression.getText();
-            final String newText = getCanonicalForm(text);
+            JSExpression literalExpression = (JSExpression)descriptor.getPsiElement();
+            String text = literalExpression.getText();
+            String newText = getCanonicalForm(text);
             replaceExpression(literalExpression, newText);
         }
 
         private static String getCanonicalForm(String text) {
-            final String suffix;
-            final String prefix;
+            String suffix;
+            String prefix;
             if (text.indexOf((int)'e') > 0) {
-                final int breakPoint = text.indexOf((int)'e');
+                int breakPoint = text.indexOf((int)'e');
                 suffix = text.substring(breakPoint);
                 prefix = text.substring(0, breakPoint);
             }
             else if (text.indexOf((int)'E') > 0) {
-                final int breakPoint = text.indexOf((int)'E');
+                int breakPoint = text.indexOf((int)'E');
                 suffix = text.substring(breakPoint);
                 prefix = text.substring(0, breakPoint);
             }
             else if (text.indexOf((int)'f') > 0) {
-                final int breakPoint = text.indexOf((int)'f');
+                int breakPoint = text.indexOf((int)'f');
                 suffix = text.substring(breakPoint);
                 prefix = text.substring(0, breakPoint);
             }
             else if (text.indexOf((int)'F') > 0) {
-                final int breakPoint = text.indexOf((int)'F');
+                int breakPoint = text.indexOf((int)'F');
                 suffix = text.substring(breakPoint);
                 prefix = text.substring(0, breakPoint);
             }
             else if (text.indexOf((int)'d') > 0) {
-                final int breakPoint = text.indexOf((int)'d');
+                int breakPoint = text.indexOf((int)'d');
                 suffix = text.substring(breakPoint);
                 prefix = text.substring(0, breakPoint);
             }
             else if (text.indexOf((int)'D') > 0) {
-                final int breakPoint = text.indexOf((int)'D');
+                int breakPoint = text.indexOf((int)'D');
                 suffix = text.substring(breakPoint);
                 prefix = text.substring(0, breakPoint);
             }
@@ -100,7 +100,7 @@ public class ConfusingFloatingPointLiteralJSInspection extends JavaScriptInspect
                 suffix = "";
                 prefix = text;
             }
-            final int indexPoint = prefix.indexOf((int)'.');
+            int indexPoint = prefix.indexOf((int)'.');
             if (indexPoint < 0) {
                 return prefix + ".0" + suffix;
             }
@@ -122,7 +122,7 @@ public class ConfusingFloatingPointLiteralJSInspection extends JavaScriptInspect
         @Override
         public void visitJSLiteralExpression(@Nonnull JSSimpleLiteralExpression literal) {
             super.visitJSLiteralExpression(literal);
-            final String text = literal.getText();
+            String text = literal.getText();
             if (text == null) {
                 return;
             }
@@ -137,13 +137,13 @@ public class ConfusingFloatingPointLiteralJSInspection extends JavaScriptInspect
     }
 
     private static boolean isConfusing(String text) {
-        final Matcher matcher = PICKY_FLOATING_POINT_PATTERN.matcher(text);
+        Matcher matcher = PICKY_FLOATING_POINT_PATTERN.matcher(text);
         return !matcher.matches();
     }
 
     private static boolean isFloatingPoint(JSLiteralExpression literal) {
-        final String text = literal.getText();
-        final char firstChar = text.charAt(0);
+        String text = literal.getText();
+        char firstChar = text.charAt(0);
         if (firstChar != '.' && !Character.isDigit(firstChar)) {
             return false;
         }

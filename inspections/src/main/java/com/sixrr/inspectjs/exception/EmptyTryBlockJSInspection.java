@@ -43,7 +43,7 @@ public class EmptyTryBlockJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSTryStatement(JSTryStatement jsTryStatement) {
             super.visitJSTryStatement(jsTryStatement);
-            final JSStatement statement = jsTryStatement.getStatement();
+            JSStatement statement = jsTryStatement.getStatement();
             if (statement == null) {
                 return;
             }

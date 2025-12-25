@@ -61,7 +61,7 @@ public class JSRemoveUnnecessaryParenthesesIntention extends JSIntention {
             exp = parentExp;
         }
 
-        final String newExpression = ParenthesesUtils.removeParentheses(exp);
+        String newExpression = ParenthesesUtils.removeParentheses(exp);
 
         JSElementFactory.replaceExpression(exp, newExpression);
     }
@@ -75,14 +75,14 @@ public class JSRemoveUnnecessaryParenthesesIntention extends JSIntention {
                     return true;
                 }
 
-                final JSExpression body = expression.getInnerExpression();
+                JSExpression body = expression.getInnerExpression();
 
                 if (body instanceof JSParenthesizedExpression) {
                     return true;
                 }
 
-                final int parentPrecendence = ParenthesesUtils.getPrecendence(parentExpression);
-                final int childPrecendence = ParenthesesUtils.getPrecendence(body);
+                int parentPrecendence = ParenthesesUtils.getPrecendence(parentExpression);
+                int childPrecendence = ParenthesesUtils.getPrecendence(body);
 
                 if (parentPrecendence > childPrecendence) {
                     return !(body instanceof JSFunctionExpression);
@@ -90,9 +90,9 @@ public class JSRemoveUnnecessaryParenthesesIntention extends JSIntention {
                 else if (parentPrecendence == childPrecendence
                     && parentExpression instanceof JSBinaryExpression parentBinaryExpression
                     && body instanceof JSBinaryExpression bodyBinaryExpression) {
-                    final IElementType parentOperator = parentBinaryExpression.getOperationSign();
-                    final IElementType childOperator = bodyBinaryExpression.getOperationSign();
-                    final JSExpression lhs = parentBinaryExpression.getLOperand();
+                    IElementType parentOperator = parentBinaryExpression.getOperationSign();
+                    IElementType childOperator = bodyBinaryExpression.getOperationSign();
+                    JSExpression lhs = parentBinaryExpression.getLOperand();
 
                     return lhs.equals(expression) && parentOperator.equals(childOperator);
                 }

@@ -50,8 +50,8 @@ public class UnnecessaryLabelOnBreakStatementJSInspection extends JavaScriptInsp
 
         @Override
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final PsiElement breakKeywordElement = descriptor.getPsiElement();
-            final JSBreakStatement breakStatement = (JSBreakStatement) breakKeywordElement.getParent();
+            PsiElement breakKeywordElement = descriptor.getPsiElement();
+            JSBreakStatement breakStatement = (JSBreakStatement) breakKeywordElement.getParent();
             replaceStatement(breakStatement, "break;");
         }
     }
@@ -75,15 +75,15 @@ public class UnnecessaryLabelOnBreakStatementJSInspection extends JavaScriptInsp
             if (statement.getLabel() == null) {
                 return;
             }
-            final JSStatement statementToBreak = statement.getStatementToBreak();
+            JSStatement statementToBreak = statement.getStatementToBreak();
             if (statementToBreak == null) {
                 return;
             }
-            final JSStatement containingStatement = PsiTreeUtil.getParentOfType(statement, JSLoopStatement.class, JSSwitchStatement.class);
+            JSStatement containingStatement = PsiTreeUtil.getParentOfType(statement, JSLoopStatement.class, JSSwitchStatement.class);
             if (containingStatement == null) {
                 return;
             }
-            final PsiElement parent = containingStatement.getParent();
+            PsiElement parent = containingStatement.getParent();
             if (!statementToBreak.equals(parent)) {
                 return;
             }

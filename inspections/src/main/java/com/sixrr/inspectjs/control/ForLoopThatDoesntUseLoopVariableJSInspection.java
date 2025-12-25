@@ -28,8 +28,8 @@ public class ForLoopThatDoesntUseLoopVariableJSInspection extends JavaScriptInsp
     @Override
     @RequiredReadAction
     public String buildErrorString(Object state, Object... args) {
-        final boolean condition = (Boolean) args[0];
-        final boolean update = (Boolean) args[1];
+        boolean condition = (Boolean) args[0];
+        boolean update = (Boolean) args[1];
         if (condition && update) {
             return InspectionJSLocalize.forLoopNotUseLoopVariableProblemDescriptorBothConditionAndUpdate().get();
         }
@@ -64,15 +64,15 @@ public class ForLoopThatDoesntUseLoopVariableJSInspection extends JavaScriptInsp
         }
 
         private static boolean conditionUsesInitializer(JSForStatement statement) {
-            final JSExpression condition = statement.getCondition();
+            JSExpression condition = statement.getCondition();
             if (condition == null) {
                 return true;
             }
-            final JSVarStatement initialization = statement.getVarDeclaration();
+            JSVarStatement initialization = statement.getVarDeclaration();
             if (initialization == null) {
                 return true;
             }
-            final JSVariable[] variables = initialization.getVariables();
+            JSVariable[] variables = initialization.getVariables();
             if(variables.length !=1)
             {
                 return false;
@@ -81,15 +81,15 @@ public class ForLoopThatDoesntUseLoopVariableJSInspection extends JavaScriptInsp
         }
 
         private static boolean updateUsesInitializer(JSForStatement statement) {
-            final JSExpression update = statement.getUpdate();
+            JSExpression update = statement.getUpdate();
             if (update == null) {
                 return true;
             }
-            final JSVarStatement initialization = statement.getVarDeclaration();
+            JSVarStatement initialization = statement.getVarDeclaration();
             if (initialization == null) {
                 return true;
             }
-            final JSVariable[] variables = initialization.getVariables();
+            JSVariable[] variables = initialization.getVariables();
             if (variables.length != 1) {
                 return false;
             }
@@ -97,7 +97,7 @@ public class ForLoopThatDoesntUseLoopVariableJSInspection extends JavaScriptInsp
         }
 
         private static boolean expressionUsesVariable(JSExpression expression, JSVariable localVar) {
-            final UseVisitor useVisitor = new UseVisitor(localVar);
+            UseVisitor useVisitor = new UseVisitor(localVar);
             expression.accept(useVisitor);
             return useVisitor.isUsed();
         }
@@ -124,7 +124,7 @@ public class ForLoopThatDoesntUseLoopVariableJSInspection extends JavaScriptInsp
                 return;
             }
             super.visitJSReferenceExpression(ref);
-            final PsiElement resolvedElement = ref.resolve();
+            PsiElement resolvedElement = ref.resolve();
             if (variable.equals(resolvedElement)) {
                 used = true;
             }

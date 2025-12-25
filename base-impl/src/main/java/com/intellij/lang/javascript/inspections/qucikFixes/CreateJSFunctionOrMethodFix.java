@@ -65,8 +65,8 @@ public class CreateJSFunctionOrMethodFix extends CreateJSFunctionFixBase {
         Set<JavaScriptFeature> features
     ) {
         JSCallExpression methodInvokation = (JSCallExpression)referenceExpression.getParent();
-        final JSArgumentList list = methodInvokation.getArgumentList();
-        final JSExpression[] expressions = list.getArguments();
+        JSArgumentList list = methodInvokation.getArgumentList();
+        JSExpression[] expressions = list.getArguments();
         int paramCount = expressions.length;
 
         for (int i = 0; i < paramCount; ++i) {
@@ -75,7 +75,7 @@ public class CreateJSFunctionOrMethodFix extends CreateJSFunctionFixBase {
             }
             String var = null;
 
-            final JSExpression passedParameterValue = expressions[i];
+            JSExpression passedParameterValue = expressions[i];
             if (passedParameterValue instanceof JSReferenceExpression parameterRefExpr) {
                 var = parameterRefExpr.getReferencedName();
             }
@@ -84,7 +84,7 @@ public class CreateJSFunctionOrMethodFix extends CreateJSFunctionFixBase {
                 var = "param" + (i != 0 ? Integer.toString(i + 1) : "");
             }
 
-            final String var1 = var;
+            String var1 = var;
             Expression expression = new MyExpression(var1);
 
             template.addVariable(var, expression, expression, true);
@@ -109,7 +109,7 @@ public class CreateJSFunctionOrMethodFix extends CreateJSFunctionFixBase {
     @RequiredReadAction
     @Override
     protected void buildTemplate(
-        final Template template,
+        Template template,
         JSReferenceExpression referenceExpression,
         Set<JavaScriptFeature> features,
         boolean staticContext,

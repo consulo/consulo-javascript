@@ -81,10 +81,10 @@ public class JSUnusedImportsHelper {
         myElements = elements;
     }
 
-    private void registerUnused(final JSImportStatement importStatement) {
+    private void registerUnused(JSImportStatement importStatement) {
         allImports.add(importStatement);
 
-        final String importText = importStatement.getImportText();
+        String importText = importStatement.getImportText();
         if (importText == null) {
             return;
         }
@@ -225,10 +225,10 @@ public class JSUnusedImportsHelper {
 
         CachedValue<Results> data = containingFile.getUserData(ourUnusedImportsKey);
         if (data == null) {
-            final PsiFile containingFile1 = containingFile;
+            PsiFile containingFile1 = containingFile;
             data = CachedValuesManager.getManager(file.getProject()).createCachedValue(
                 () -> {
-                    final Map<XmlTag, Collection<PsiElement>> allElements = new HashMap<>();
+                    Map<XmlTag, Collection<PsiElement>> allElements = new HashMap<>();
                     Collection<JSFile> processedFiles = new HashSet<>();
                     collectElements(null, containingFile1, allElements, processedFiles);
 
@@ -269,10 +269,10 @@ public class JSUnusedImportsHelper {
     }
 
     private static void collectElements(
-        @Nullable final XmlTag rootTag,
-        final PsiFile file,
-        final Map<XmlTag, Collection<PsiElement>> result,
-        final Collection<JSFile> processedFiles
+        @Nullable XmlTag rootTag,
+        PsiFile file,
+        Map<XmlTag, Collection<PsiElement>> result,
+        Collection<JSFile> processedFiles
     ) {
         if (processedFiles.contains(file)) {
             return;

@@ -67,23 +67,23 @@ public class NegatedIfStatementJSInspection extends JavaScriptInspection {
 
         @Override
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final PsiElement ifToken = descriptor.getPsiElement();
-            final JSIfStatement ifStatement = (JSIfStatement)ifToken.getParent();
+            PsiElement ifToken = descriptor.getPsiElement();
+            JSIfStatement ifStatement = (JSIfStatement)ifToken.getParent();
             assert ifStatement != null;
-            final JSStatement elseBranch = ifStatement.getElse();
-            final JSStatement thenBranch = ifStatement.getThen();
-            final JSExpression condition = ifStatement.getCondition();
-            final String negatedCondition = BoolUtils.getNegatedExpressionText(condition);
+            JSStatement elseBranch = ifStatement.getElse();
+            JSStatement thenBranch = ifStatement.getThen();
+            JSExpression condition = ifStatement.getCondition();
+            String negatedCondition = BoolUtils.getNegatedExpressionText(condition);
             String elseText = elseBranch.getText();
-            final PsiElement lastChild = elseBranch.getLastChild();
+            PsiElement lastChild = elseBranch.getLastChild();
             if (lastChild instanceof PsiComment) {
-                final PsiComment comment = (PsiComment)lastChild;
-                final IElementType tokenType = comment.getTokenType();
+                PsiComment comment = (PsiComment)lastChild;
+                IElementType tokenType = comment.getTokenType();
                 if (JSTokenTypes.END_OF_LINE_COMMENT.equals(tokenType)) {
                     elseText += '\n';
                 }
             }
-            @NonNls final String newStatement = "if(" + negatedCondition + ')' + elseText + " else " + thenBranch.getText();
+            @NonNls String newStatement = "if(" + negatedCondition + ')' + elseText + " else " + thenBranch.getText();
             replaceStatement(ifStatement, newStatement);
         }
     }
@@ -92,9 +92,9 @@ public class NegatedIfStatementJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSIfStatement(JSIfStatement statement) {
             super.visitJSIfStatement(statement);
-            final PsiElement parent = statement.getParent();
+            PsiElement parent = statement.getParent();
             if (parent instanceof JSIfStatement parentStatement) {
-                final JSStatement elseBranch = parentStatement.getElse();
+                JSStatement elseBranch = parentStatement.getElse();
                 if (statement.equals(elseBranch)) {
                     return;
                 }
@@ -115,8 +115,8 @@ public class NegatedIfStatementJSInspection extends JavaScriptInspection {
             if (!(expression instanceof JSBinaryExpression)) {
                 return false;
             }
-            final JSBinaryExpression binaryExpression = (JSBinaryExpression)expression;
-            final IElementType sign = binaryExpression.getOperationSign();
+            JSBinaryExpression binaryExpression = (JSBinaryExpression)expression;
+            IElementType sign = binaryExpression.getOperationSign();
             return JSTokenTypes.NE.equals(sign) || JSTokenTypes.NEQEQ.equals(sign);
         }
     }

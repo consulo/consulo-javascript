@@ -37,7 +37,7 @@ public class BinaryOperatorUtils {
 
     public static boolean isShiftOperator(JSExpression expression) {
         if (expression instanceof JSBinaryExpression binaryExpression) {
-            final IElementType sign = binaryExpression.getOperationSign();
+            IElementType sign = binaryExpression.getOperationSign();
 
             return JSTokenTypes.LTLT.equals(sign) ||
                 JSTokenTypes.GTGT.equals(sign) ||
@@ -52,7 +52,7 @@ public class BinaryOperatorUtils {
         if (operator == null) {
             return "";
         }
-        final OperatorProperties operatorProperties = operators.get(operator);
+        OperatorProperties operatorProperties = operators.get(operator);
         assert operatorProperties != null : "Operator properties is null for " + operator;
         return operatorProperties.text;
     }
@@ -61,7 +61,7 @@ public class BinaryOperatorUtils {
         if (operator == null) {
             return false;
         }
-        final OperatorProperties operatorProperties = operators.get(operator);
+        OperatorProperties operatorProperties = operators.get(operator);
         assert operatorProperties != null : "Operator properties is null for " + operator;
         return operatorProperties.commutative;
     }

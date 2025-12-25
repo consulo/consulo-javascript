@@ -14,7 +14,7 @@ public class StatementUtils {
             return true;
         }
         else if (body instanceof JSBlockStatement block) {
-            final JSStatement[] statements = block.getStatements();
+            JSStatement[] statements = block.getStatements();
             return statements == null || statements.length == 0;
         }
         return false;

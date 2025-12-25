@@ -45,7 +45,7 @@ public class JSExpressionSurroundDescriptor implements SurroundDescriptor {
     @Nonnull
     @RequiredReadAction
     public PsiElement[] getElementsToSurround(PsiFile file, int startOffset, int endOffset) {
-        final JSExpression expr = findExpressionInRange(file, startOffset, endOffset);
+        JSExpression expr = findExpressionInRange(file, startOffset, endOffset);
         if (expr == null) {
             return PsiElement.EMPTY_ARRAY;
         }

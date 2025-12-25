@@ -32,9 +32,9 @@ public class JSImportStatementStubImpl extends StubBase<JSImportStatement> imple
     private final String myImportText;
 
     public JSImportStatementStubImpl(
-        final String importText,
-        final StubElement parentStub,
-        final JSStubElementType<JSImportStatementStub, JSImportStatement> type
+        String importText,
+        StubElement parentStub,
+        JSStubElementType<JSImportStatementStub, JSImportStatement> type
     ) {
         super(parentStub, type);
 

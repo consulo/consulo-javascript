@@ -47,34 +47,34 @@ public class DuplicateConditionJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
             super.visitJSIfStatement(statement);
-            final PsiElement parent = statement.getParent();
+            PsiElement parent = statement.getParent();
             if (parent instanceof JSIfStatement) {
-                final JSIfStatement parentStatement = (JSIfStatement) parent;
-                final JSStatement elseBranch = parentStatement.getElse();
+                JSIfStatement parentStatement = (JSIfStatement) parent;
+                JSStatement elseBranch = parentStatement.getElse();
                 if (statement.equals(elseBranch)) {
                     return;
                 }
             }
-            final Set<JSExpression> conditions = new HashSet<JSExpression>();
+            Set<JSExpression> conditions = new HashSet<JSExpression>();
             collectConditionsForIfStatement(statement, conditions);
-            final int numConditions = conditions.size();
+            int numConditions = conditions.size();
             if (numConditions < 2) {
                 return;
             }
-            final JSExpression[] conditionArray = conditions.toArray(new JSExpression[numConditions]);
-            final boolean[] matched = new boolean[conditionArray.length];
+            JSExpression[] conditionArray = conditions.toArray(new JSExpression[numConditions]);
+            boolean[] matched = new boolean[conditionArray.length];
             Arrays.fill(matched, false);
             for (int i = 0; i < conditionArray.length; i++) {
                 if (matched[i]) {
                     continue;
                 }
-                final JSExpression condition = conditionArray[i];
+                JSExpression condition = conditionArray[i];
                 for (int j = i + 1; j < conditionArray.length; j++) {
                     if (matched[j]) {
                         continue;
                     }
-                    final JSExpression testCondition = conditionArray[j];
-                    final boolean areEquivalent =
+                    JSExpression testCondition = conditionArray[j];
+                    boolean areEquivalent =
                             EquivalenceChecker.expressionsAreEquivalent(condition,
                                     testCondition);
                     if (areEquivalent) {
@@ -90,9 +90,9 @@ public class DuplicateConditionJSInspection extends JavaScriptInspection {
         }
 
         private void collectConditionsForIfStatement(JSIfStatement statement, Set<JSExpression> conditions) {
-            final JSExpression condition = statement.getCondition();
+            JSExpression condition = statement.getCondition();
             collectConditionsForExpression(condition, conditions);
-            final JSStatement branch = statement.getElse();
+            JSStatement branch = statement.getElse();
             if (branch instanceof JSIfStatement) {
                 collectConditionsForIfStatement((JSIfStatement) branch, conditions);
             }
@@ -103,16 +103,16 @@ public class DuplicateConditionJSInspection extends JavaScriptInspection {
                 return;
             }
             if (condition instanceof JSParenthesizedExpression parenthesizedExpression) {
-                final JSExpression contents = parenthesizedExpression.getInnerExpression();
+                JSExpression contents = parenthesizedExpression.getInnerExpression();
                 collectConditionsForExpression(contents, conditions);
                 return;
             }
             if (condition instanceof JSBinaryExpression binaryExpression) {
-                final IElementType sign = binaryExpression.getOperationSign();
+                IElementType sign = binaryExpression.getOperationSign();
                 if (JSTokenTypes.OROR.equals(sign)) {
-                    final JSExpression lhs = binaryExpression.getLOperand();
+                    JSExpression lhs = binaryExpression.getLOperand();
                     collectConditionsForExpression(lhs, conditions);
-                    final JSExpression rhs = binaryExpression.getROperand();
+                    JSExpression rhs = binaryExpression.getROperand();
                     collectConditionsForExpression(rhs, conditions);
                     return;
                 }

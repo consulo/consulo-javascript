@@ -58,13 +58,13 @@ public class JSMergeParallelForInLoopsIntention extends JSIntention {
     @Override
     @RequiredReadAction
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final PsiElement nextElement = JSElementFactory.getNonWhiteSpaceSibling(element, true);
+        PsiElement nextElement = JSElementFactory.getNonWhiteSpaceSibling(element, true);
 
         assert (nextElement != null);
 
-        final JSForInStatement firstStatement = (JSForInStatement)element;
-        final JSForInStatement secondStatement = (JSForInStatement)nextElement;
-        final StringBuilder statementBuffer = new StringBuilder();
+        JSForInStatement firstStatement = (JSForInStatement)element;
+        JSForInStatement secondStatement = (JSForInStatement)nextElement;
+        StringBuilder statementBuffer = new StringBuilder();
 
         this.mergeForInStatements(statementBuffer, firstStatement, secondStatement);
         JSElementFactory.replaceStatement(firstStatement, statementBuffer.toString());
@@ -73,11 +73,11 @@ public class JSMergeParallelForInLoopsIntention extends JSIntention {
 
     @RequiredReadAction
     private void mergeForInStatements(StringBuilder statementBuffer, JSForInStatement firstStatement, JSForInStatement secondStatement) {
-        final JSExpression variableExpression = getVariableExpression(firstStatement);
-        final JSVarStatement declaration = firstStatement.getDeclarationStatement();
-        final JSExpression collectionExpression = getCollectionExpression(firstStatement);
-        final JSStatement firstBody = firstStatement.getBody();
-        final JSStatement secondBody = secondStatement.getBody();
+        JSExpression variableExpression = getVariableExpression(firstStatement);
+        JSVarStatement declaration = firstStatement.getDeclarationStatement();
+        JSExpression collectionExpression = getCollectionExpression(firstStatement);
+        JSStatement firstBody = firstStatement.getBody();
+        JSStatement secondBody = secondStatement.getBody();
 
         statementBuffer.append("for (")
             .append((declaration == null) ? variableExpression.getText() : declaration.getText())
@@ -98,26 +98,26 @@ public class JSMergeParallelForInLoopsIntention extends JSIntention {
         }
 
         public static boolean forInStatementsCanBeMerged(JSForInStatement statement1, JSForInStatement statement2) {
-            final JSExpression firstVarExpression = getVariableExpression(statement1);
-            final JSExpression secondVarExpression = getVariableExpression(statement2);
+            JSExpression firstVarExpression = getVariableExpression(statement1);
+            JSExpression secondVarExpression = getVariableExpression(statement2);
             if (!EquivalenceChecker.expressionsAreEquivalent(firstVarExpression, secondVarExpression)) {
                 return false;
             }
 
-            final JSVarStatement firstDeclaration = statement1.getDeclarationStatement();
-            final JSVarStatement secondDeclaration = statement2.getDeclarationStatement();
+            JSVarStatement firstDeclaration = statement1.getDeclarationStatement();
+            JSVarStatement secondDeclaration = statement2.getDeclarationStatement();
             if (!EquivalenceChecker.statementsAreEquivalent(firstDeclaration, secondDeclaration)) {
                 return false;
             }
 
-            final JSExpression firstCollection = getCollectionExpression(statement1);
-            final JSExpression secondCollection = getCollectionExpression(statement2);
+            JSExpression firstCollection = getCollectionExpression(statement1);
+            JSExpression secondCollection = getCollectionExpression(statement2);
             if (!EquivalenceChecker.expressionsAreEquivalent(firstCollection, secondCollection)) {
                 return false;
             }
 
-            final JSStatement firstBody = statement1.getBody();
-            final JSStatement secondBody = statement2.getBody();
+            JSStatement firstBody = statement1.getBody();
+            JSStatement secondBody = statement2.getBody();
             return firstBody == null || secondBody == null || ControlFlowUtils.canBeMerged(firstBody, secondBody);
         }
     }
@@ -129,7 +129,7 @@ public class JSMergeParallelForInLoopsIntention extends JSIntention {
      * @return the for-in statement collection expression
      */
     private static JSExpression getCollectionExpression(JSForInStatement forInStatement) {
-        final ASTNode statementNode = forInStatement.getNode();
+        ASTNode statementNode = forInStatement.getNode();
         ASTNode child = (statementNode == null) ? null : statementNode.getFirstChildNode();
         boolean inPassed = false;
 
@@ -153,7 +153,7 @@ public class JSMergeParallelForInLoopsIntention extends JSIntention {
      * @return the for-in statement collection expression
      */
     private static JSExpression getVariableExpression(JSForInStatement forInStatement) {
-        final ASTNode statementNode = forInStatement.getNode();
+        ASTNode statementNode = forInStatement.getNode();
         ASTNode child = (statementNode == null) ? null : statementNode.getFirstChildNode();
 
         while (child != null) {

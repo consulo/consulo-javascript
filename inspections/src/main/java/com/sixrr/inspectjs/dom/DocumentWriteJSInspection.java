@@ -45,7 +45,7 @@ public class DocumentWriteJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSCallExpression(JSCallExpression jsCallExpression) {
             super.visitJSCallExpression(jsCallExpression);
-            final JSExpression methodExpression;
+            JSExpression methodExpression;
             try {
                 methodExpression = jsCallExpression.getMethodExpression();
             }
@@ -55,16 +55,16 @@ public class DocumentWriteJSInspection extends JavaScriptInspection {
             if (!(methodExpression instanceof JSReferenceExpression)) {
                 return;
             }
-            final JSReferenceExpression referenceExpression = (JSReferenceExpression)methodExpression;
-            final JSExpression qualifier = referenceExpression.getQualifier();
+            JSReferenceExpression referenceExpression = (JSReferenceExpression)methodExpression;
+            JSExpression qualifier = referenceExpression.getQualifier();
             if (qualifier == null) {
                 return;
             }
-            @NonNls final String qualifierText = qualifier.getText();
+            @NonNls String qualifierText = qualifier.getText();
             if (!"document".equals(qualifierText)) {
                 return;
             }
-            @NonNls final String methodName = referenceExpression.getReferencedName();
+            @NonNls String methodName = referenceExpression.getReferencedName();
             if (!"write".equals(methodName) && !"writeln".equals(methodName)) {
                 return;
             }

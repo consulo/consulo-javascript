@@ -50,9 +50,9 @@ public class LocalVariableNamingConventionJSInspection extends ConventionInspect
     public String buildErrorString(Object state, Object... args) {
         LocalVariableNamingConventionJSInspectionState inspectionState = (LocalVariableNamingConventionJSInspectionState) state;
 
-        final JSVariable variable = (JSVariable) ((PsiElement) args[0]).getParent();
+        JSVariable variable = (JSVariable) ((PsiElement) args[0]).getParent();
         assert variable != null;
-        final String variableName = variable.getName();
+        String variableName = variable.getName();
         if (variableName.length() < inspectionState.m_minLength) {
             return InspectionJSLocalize.variableNameIsTooShortErrorString().get();
         }
@@ -77,9 +77,9 @@ public class LocalVariableNamingConventionJSInspection extends ConventionInspect
         @Override
         public void visitJSVarStatement(JSVarStatement jsVarStatement) {
             super.visitJSVarStatement(jsVarStatement);
-            final JSVariable[] variables = jsVarStatement.getVariables();
+            JSVariable[] variables = jsVarStatement.getVariables();
             for (JSVariable variable : variables) {
-                final String name = variable.getName();
+                String name = variable.getName();
                 if (name == null) {
                     continue;
                 }

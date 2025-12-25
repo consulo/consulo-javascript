@@ -35,9 +35,9 @@ public class FunctionWithMultipleReturnPointsJSInspection extends JavaScriptInsp
     @Override
     @RequiredReadAction
     public String buildErrorString(Object state, Object... args) {
-        final JSFunction function = (JSFunction)((PsiElement)args[0]).getParent();
+        JSFunction function = (JSFunction)((PsiElement)args[0]).getParent();
         assert function != null;
-        final int returnPointCount = countReturnPoints(function);
+        int returnPointCount = countReturnPoints(function);
         if (functionHasIdentifier(function)) {
             return InspectionJSLocalize.functionContainsMultipleReturnPointsErrorString(returnPointCount).get();
         }
@@ -47,7 +47,7 @@ public class FunctionWithMultipleReturnPointsJSInspection extends JavaScriptInsp
     }
 
     private static int countReturnPoints(JSFunction function) {
-        final PsiElement lastChild = function.getLastChild();
+        PsiElement lastChild = function.getLastChild();
         if (!(lastChild instanceof JSBlockStatement)) {
             return 0;
         }
@@ -55,10 +55,10 @@ public class FunctionWithMultipleReturnPointsJSInspection extends JavaScriptInsp
         if (ControlFlowUtils.statementMayCompleteNormally((JSStatement)lastChild)) {
             hasFallthroughReturn = true;
         }
-        final ReturnCountVisitor visitor = new ReturnCountVisitor();
+        ReturnCountVisitor visitor = new ReturnCountVisitor();
         lastChild.accept(visitor);
 
-        final int returnCount = visitor.getReturnCount();
+        int returnCount = visitor.getReturnCount();
         return hasFallthroughReturn ? returnCount + 1 : returnCount;
     }
 
@@ -70,7 +70,7 @@ public class FunctionWithMultipleReturnPointsJSInspection extends JavaScriptInsp
     private static class Visitor extends BaseInspectionVisitor {
         @Override
         public void visitJSFunctionDeclaration(@Nonnull JSFunction function) {
-            final int returnPointCount = countReturnPoints(function);
+            int returnPointCount = countReturnPoints(function);
             if (returnPointCount <= 1) {
                 return;
             }

@@ -87,7 +87,7 @@ public class ParenthesesUtils {
             return POSTFIX_PRECEDENCE;
         }
         if (exp instanceof JSBinaryExpression && !(exp instanceof JSAssignmentExpression)) {
-            final IElementType sign = ((JSBinaryExpression)exp)
+            IElementType sign = ((JSBinaryExpression)exp)
                 .getOperationSign();
             return precedenceForBinaryOperator(sign);
         }

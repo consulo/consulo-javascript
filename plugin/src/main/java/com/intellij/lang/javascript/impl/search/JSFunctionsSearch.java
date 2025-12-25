@@ -85,7 +85,7 @@ public abstract class JSFunctionsSearch implements QueryExecutor<JSFunction, JSF
         return makeQuery(queryParameters, clazz).forEach(new Predicate<>() {
             @Override
             @RequiredReadAction
-            public boolean test(final JSClass jsClass) {
+            public boolean test(JSClass jsClass) {
                 JSFunction function = jsClass.findFunctionByNameAndKind(baseFunction.getName(), baseFunction.getKind());
                 return function == null || consumer.test(function);
             }

@@ -94,7 +94,7 @@ public class JSStructureItemPresentation extends JSStructureViewElement.JSStruct
                         name += ", ";
                     }
                     name += p.getName();
-                    final String variableType = p.getTypeString();
+                    String variableType = p.getTypeString();
                     if (variableType != null) {
                         name += ":" + variableType;
                     }

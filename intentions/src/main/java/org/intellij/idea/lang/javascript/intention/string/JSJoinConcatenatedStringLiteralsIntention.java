@@ -55,17 +55,17 @@ public class JSJoinConcatenatedStringLiteralsIntention extends JSIntention {
     @Override
     @RequiredReadAction
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSBinaryExpression expression = (JSBinaryExpression)element;
-        final JSExpression lhs = expression.getLOperand();
-        final JSExpression rhs = expression.getROperand();
+        JSBinaryExpression expression = (JSBinaryExpression)element;
+        JSExpression lhs = expression.getLOperand();
+        JSExpression rhs = expression.getROperand();
 
         assert (lhs instanceof JSLiteralExpression && rhs instanceof JSLiteralExpression);
 
-        final JSLiteralExpression leftLiteral = (JSLiteralExpression)lhs;
-        final JSLiteralExpression rightLiteral = (JSLiteralExpression)rhs;
+        JSLiteralExpression leftLiteral = (JSLiteralExpression)lhs;
+        JSLiteralExpression rightLiteral = (JSLiteralExpression)rhs;
         String lhsText = lhs.getText();
         String rhsText = rhs.getText();
-        final String newExpression;
+        String newExpression;
 
         if (StringUtil.isSimpleQuoteStringLiteral(leftLiteral)
             && StringUtil.isDoubleQuoteStringLiteral(rightLiteral)) {

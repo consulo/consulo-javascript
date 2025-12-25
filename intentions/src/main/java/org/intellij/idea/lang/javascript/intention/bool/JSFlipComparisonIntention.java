@@ -47,7 +47,7 @@ public class JSFlipComparisonIntention extends JSMutablyNamedIntention {
     @Override
     @RequiredReadAction
     public LocalizeValue getTextForElement(PsiElement element) {
-        final JSBinaryExpression exp = (JSBinaryExpression)element;
+        JSBinaryExpression exp = (JSBinaryExpression)element;
         String operatorText = null;
         String flippedOperatorText = null;
 
@@ -76,14 +76,14 @@ public class JSFlipComparisonIntention extends JSMutablyNamedIntention {
     @Override
     @RequiredReadAction
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSBinaryExpression exp = (JSBinaryExpression)element;
-        final JSExpression lhs = exp.getLOperand();
-        final JSExpression rhs = exp.getROperand();
-        final IElementType sign = exp.getOperationSign();
+        JSBinaryExpression exp = (JSBinaryExpression)element;
+        JSExpression lhs = exp.getLOperand();
+        JSExpression rhs = exp.getROperand();
+        IElementType sign = exp.getOperationSign();
 
         assert (rhs != null);
 
-        final String expString = rhs.getText() + ComparisonUtils.getFlippedOperatorText(sign) + lhs.getText();
+        String expString = rhs.getText() + ComparisonUtils.getFlippedOperatorText(sign) + lhs.getText();
         JSElementFactory.replaceExpression(exp, expString);
     }
 }

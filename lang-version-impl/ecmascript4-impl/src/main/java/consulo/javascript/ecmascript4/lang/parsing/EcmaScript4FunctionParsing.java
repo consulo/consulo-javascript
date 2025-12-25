@@ -17,8 +17,8 @@ public class EcmaScript4FunctionParsing extends FunctionParsing {
         super(context);
     }
 
-    public void parseAttributeWithoutBrackets(final PsiBuilder builder) {
-        final PsiBuilder.Marker attribute = builder.mark();
+    public void parseAttributeWithoutBrackets(PsiBuilder builder) {
+        PsiBuilder.Marker attribute = builder.mark();
         if (!checkMatches(builder, JSTokenTypes.IDENTIFIER, JavaScriptLocalize.javascriptParserMessageExpectedIdentifier())) {
             attribute.drop();
             return;
@@ -27,8 +27,8 @@ public class EcmaScript4FunctionParsing extends FunctionParsing {
         attribute.done(JSElementTypes.ATTRIBUTE);
     }
 
-    void parseAttributesList(final PsiBuilder builder) {
-        final PsiBuilder.Marker modifierList = builder.mark();
+    void parseAttributesList(PsiBuilder builder) {
+        PsiBuilder.Marker modifierList = builder.mark();
 
         boolean seenNs = false;
         boolean seenAnyAttributes = false;
@@ -93,7 +93,7 @@ public class EcmaScript4FunctionParsing extends FunctionParsing {
             }
         }
         finally {
-            final IElementType currentTokenType = builder.getTokenType();
+            IElementType currentTokenType = builder.getTokenType();
 
             if (seenNs && !seenAnyAttributes
                 && currentTokenType != JSTokenTypes.VAR_KEYWORD
@@ -108,8 +108,8 @@ public class EcmaScript4FunctionParsing extends FunctionParsing {
         }
     }
 
-    private void parseAttributeBody(final PsiBuilder builder) {
-        final boolean haveLParen = checkMatches(builder, JSTokenTypes.LPAR, JavaScriptLocalize.javascriptParserMessageExpectedLparen());
+    private void parseAttributeBody(PsiBuilder builder) {
+        boolean haveLParen = checkMatches(builder, JSTokenTypes.LPAR, JavaScriptLocalize.javascriptParserMessageExpectedLparen());
         boolean hasName;
 
         while (haveLParen) {

@@ -44,14 +44,14 @@ public class FallthroughInSwitchStatementJSInspection extends JavaScriptInspecti
     private static class Visitor extends BaseInspectionVisitor {
         @Override
         public void visitJSSwitchStatement(JSSwitchStatement jsSwitchStatement) {
-            final JSCaseClause[] caseClauses = jsSwitchStatement.getCaseClauses();
+            JSCaseClause[] caseClauses = jsSwitchStatement.getCaseClauses();
             for (int i = 0; i < caseClauses.length-1; i++) {
-                final JSCaseClause clause = caseClauses[i];
-                final JSStatement[] statements = clause.getStatements();
+                JSCaseClause clause = caseClauses[i];
+                JSStatement[] statements = clause.getStatements();
                 if (statements != null && statements.length != 0) {
-                    final JSStatement lastStatementOfClause = statements[statements.length - 1];
+                    JSStatement lastStatementOfClause = statements[statements.length - 1];
                     if (ControlFlowUtils.statementMayCompleteNormally(lastStatementOfClause)) {
-                        final PsiElement caseIdentifier = caseClauses[i+1].getFirstChild();
+                        PsiElement caseIdentifier = caseClauses[i+1].getFirstChild();
                         registerError(caseIdentifier);
                     }
                 }

@@ -36,16 +36,16 @@ public class RenameFix extends InspectionJSFix {
 
     @Override
     public void doFix(Project project, ProblemDescriptor descriptor) {
-        final PsiElement nameIdentifier = descriptor.getPsiElement();
-        final PsiElement elementToRename = nameIdentifier.getParent();
+        PsiElement nameIdentifier = descriptor.getPsiElement();
+        PsiElement elementToRename = nameIdentifier.getParent();
         if (m_targetName == null) {
-            final RefactoringActionHandlerFactory factory = RefactoringActionHandlerFactory.getInstance();
-            final RefactoringActionHandler renameHandler = factory.createRenameHandler();
+            RefactoringActionHandlerFactory factory = RefactoringActionHandlerFactory.getInstance();
+            RefactoringActionHandler renameHandler = factory.createRenameHandler();
             renameHandler.invoke(project, new PsiElement[]{elementToRename}, DataManager.getInstance().getDataContext());
         }
         else {
-            final RefactoringFactory factory = RefactoringFactory.getInstance(project);
-            final RenameRefactoring renameRefactoring = factory.createRename(elementToRename, m_targetName);
+            RefactoringFactory factory = RefactoringFactory.getInstance(project);
+            RenameRefactoring renameRefactoring = factory.createRename(elementToRename, m_targetName);
             renameRefactoring.run();
         }
     }

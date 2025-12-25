@@ -53,11 +53,11 @@ public class ConditionalExpressionWithIdenticalBranchesJSInspection extends Java
 
         @Override
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final JSConditionalExpression expression = (JSConditionalExpression) descriptor.getPsiElement();
+            JSConditionalExpression expression = (JSConditionalExpression) descriptor.getPsiElement();
 
-            final JSExpression thenExpression = expression.getThen();
+            JSExpression thenExpression = expression.getThen();
             assert thenExpression != null;
-            final String bodyText = thenExpression.getText();
+            String bodyText = thenExpression.getText();
             replaceExpression(expression, bodyText);
         }
     }
@@ -71,8 +71,8 @@ public class ConditionalExpressionWithIdenticalBranchesJSInspection extends Java
         @Override
         public void visitJSConditionalExpression(JSConditionalExpression expression) {
             super.visitJSConditionalExpression(expression);
-            final JSExpression thenExpression = expression.getThen();
-            final JSExpression elseExpression = expression.getElse();
+            JSExpression thenExpression = expression.getThen();
+            JSExpression elseExpression = expression.getElse();
             if (EquivalenceChecker.expressionsAreEquivalent(thenExpression, elseExpression)) {
                 registerError(expression);
             }

@@ -10,22 +10,22 @@ public class VariableAccessUtils {
             return false;
         }
         if (expression instanceof JSParenthesizedExpression parenthesized) {
-            final JSExpression containedExpression = parenthesized.getInnerExpression();
+            JSExpression containedExpression = parenthesized.getInnerExpression();
             return mayEvaluateToVariable(containedExpression, variable);
         }
         if (expression instanceof JSDefinitionExpression definition) {
-            final JSExpression containedExpression = definition.getExpression();
+            JSExpression containedExpression = definition.getExpression();
             return mayEvaluateToVariable(containedExpression, variable);
         }
         if (expression instanceof JSConditionalExpression conditional) {
-            final JSExpression thenExpression = conditional.getThen();
-            final JSExpression elseExpression = conditional.getElse();
+            JSExpression thenExpression = conditional.getThen();
+            JSExpression elseExpression = conditional.getElse();
             return mayEvaluateToVariable(thenExpression, variable) || mayEvaluateToVariable(elseExpression, variable);
         }
         if (!(expression instanceof JSReferenceExpression)) {
             return false;
         }
-        final PsiElement referent = ((PsiReference)expression).resolve();
+        PsiElement referent = ((PsiReference)expression).resolve();
         if (referent == null) {
             return false;
         }
@@ -33,7 +33,7 @@ public class VariableAccessUtils {
     }
 
     public static boolean variableIsUsed(JSVariable variable, PsiElement context) {
-        final VariableUsedVisitor visitor = new VariableUsedVisitor(variable);
+        VariableUsedVisitor visitor = new VariableUsedVisitor(variable);
         context.accept(visitor);
         return visitor.isUsed();
     }

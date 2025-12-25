@@ -30,14 +30,14 @@ public class RecursionVisitor extends JSRecursiveElementVisitor {
             return;
         }
         super.visitJSCallExpression(call);
-        final JSExpression methodExpression = call.getMethodExpression();
+        JSExpression methodExpression = call.getMethodExpression();
 
         // method expression could be e.g. a["1"]
         if (!(methodExpression instanceof JSReferenceExpression)) {
             return;
         }
-        final JSReferenceExpression functionExpression = (JSReferenceExpression)methodExpression;
-        final String calledFunctionName = functionExpression.getReferencedName();
+        JSReferenceExpression functionExpression = (JSReferenceExpression)methodExpression;
+        String calledFunctionName = functionExpression.getReferencedName();
 
         if (calledFunctionName == null) {
             return;
@@ -45,11 +45,11 @@ public class RecursionVisitor extends JSRecursiveElementVisitor {
         if (!calledFunctionName.equals(functionName)) {
             return;
         }
-        final PsiElement referent = functionExpression.resolve();
+        PsiElement referent = functionExpression.resolve();
         if (!function.equals(referent)) {
             return;
         }
-        final JSExpression qualifier = functionExpression.getQualifier();
+        JSExpression qualifier = functionExpression.getQualifier();
         if (qualifier == null || qualifier instanceof JSThisExpression) {
             recursive = true;
         }

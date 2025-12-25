@@ -52,21 +52,21 @@ public class ThisExpressionReferencesGlobalObjectJSInspection extends JavaScript
         @Override
         public void visitJSThisExpression(JSThisExpression jsThisExpression) {
             super.visitJSThisExpression(jsThisExpression);
-            final JSObjectLiteralExpression containingObject =
+            JSObjectLiteralExpression containingObject =
                 PsiTreeUtil.getParentOfType(jsThisExpression, JSObjectLiteralExpression.class);
             if (containingObject != null) {
                 return;
             }
-            final JSFunction containingFunction = PsiTreeUtil.getParentOfType(jsThisExpression, JSFunction.class);
+            JSFunction containingFunction = PsiTreeUtil.getParentOfType(jsThisExpression, JSFunction.class);
             if (containingFunction != null) {
                 return;
             }
-            final XmlAttributeValue containingAttribute = PsiTreeUtil.getParentOfType(jsThisExpression, XmlAttributeValue.class);
+            XmlAttributeValue containingAttribute = PsiTreeUtil.getParentOfType(jsThisExpression, XmlAttributeValue.class);
             if (containingAttribute != null) {
                 return;
             }
 
-            final PsiFile containingFile = jsThisExpression.getContainingFile();
+            PsiFile containingFile = jsThisExpression.getContainingFile();
             if (containingFile instanceof JSExpressionCodeFragment ||
                 containingFile.getContext() instanceof XmlAttributeValue) {
                 return;

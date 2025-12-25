@@ -43,8 +43,8 @@ public abstract class JSFunctionElementType extends JSQualifiedStubElementType<J
     }
 
     @Override
-    protected boolean doIndexName(JSFunctionStub stub, final String name, final String fqn) {
-        final IStubElementType stubType = stub.getParentStub().getStubType();
+    protected boolean doIndexName(JSFunctionStub stub, String name, String fqn) {
+        IStubElementType stubType = stub.getParentStub().getStubType();
 
         return stubType instanceof JSPackageStatementElementType || stubType == null;
     }

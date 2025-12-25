@@ -47,7 +47,7 @@ public class ControlFlowUtils {
             return true;
         }
         else if (statement instanceof JSForStatement loopStatement) {
-            final JSExpression condition = loopStatement.getCondition();
+            JSExpression condition = loopStatement.getCondition();
 
             return condition != null && !isBooleanConstant(condition, false) || statementIsBreakTarget(loopStatement);
         }
@@ -65,14 +65,14 @@ public class ControlFlowUtils {
             return codeBlockMayCompleteNormally(blockStatement.getStatements());
         }
         else if (statement instanceof JSLabeledStatement) {
-            final JSLabeledStatement labeledStatement = (JSLabeledStatement)statement;
-            final JSStatement body = labeledStatement.getStatement();
+            JSLabeledStatement labeledStatement = (JSLabeledStatement)statement;
+            JSStatement body = labeledStatement.getStatement();
 
             return (statementMayCompleteNormally(body) || statementIsBreakTarget(body));
         }
         else if (statement instanceof JSIfStatement ifStatement) {
-            final JSStatement thenBranch = ifStatement.getThen();
-            final JSStatement elseBranch = ifStatement.getElse();
+            JSStatement thenBranch = ifStatement.getThen();
+            JSStatement elseBranch = ifStatement.getElse();
 
             return elseBranch == null ||
                 statementMayCompleteNormally(thenBranch) ||
@@ -86,7 +86,7 @@ public class ControlFlowUtils {
                 return true;
             }
 
-            final JSCatchBlock catchBlock = tryStatement.getCatchBlock();
+            JSCatchBlock catchBlock = tryStatement.getCatchBlock();
 
             return catchBlock != null && statementMayCompleteNormally(catchBlock.getStatement());
         }
@@ -109,7 +109,7 @@ public class ControlFlowUtils {
 
     public static boolean codeBlockMayCompleteNormally(@Nullable JSStatement[] statements) {
         if (statements != null) {
-            for (final JSStatement statement : statements) {
+            for (JSStatement statement : statements) {
                 if (!statementMayCompleteNormally(statement)) {
                     return false;
                 }
@@ -123,7 +123,7 @@ public class ControlFlowUtils {
         if (!ExpressionUtil.isConstantExpression(test)) {
             return false;
         }
-        final Object value = ExpressionUtil.computeConstantExpression(test);
+        Object value = ExpressionUtil.computeConstantExpression(test);
         return value != null && value instanceof Boolean && ((Boolean)value).booleanValue() == val;
     }
 
@@ -132,7 +132,7 @@ public class ControlFlowUtils {
             return false;
         }
 
-        final BreakTargetFinder breakFinder = new BreakTargetFinder(statement);
+        BreakTargetFinder breakFinder = new BreakTargetFinder(statement);
 
         statement.accept(breakFinder);
         return breakFinder.breakFound();
@@ -143,7 +143,7 @@ public class ControlFlowUtils {
             return false;
         }
 
-        final ExitingBreakFinder breakFinder = new ExitingBreakFinder();
+        ExitingBreakFinder breakFinder = new ExitingBreakFinder();
 
         statement.accept(breakFinder);
         return breakFinder.breakFound();
@@ -154,7 +154,7 @@ public class ControlFlowUtils {
             return false;
         }
 
-        final ContinueTargetFinder continueFinder = new ContinueTargetFinder(statement);
+        ContinueTargetFinder continueFinder = new ContinueTargetFinder(statement);
 
         statement.accept(continueFinder);
         return continueFinder.continueFound();
@@ -165,7 +165,7 @@ public class ControlFlowUtils {
             return false;
         }
 
-        final ReturnFinder returnFinder = new ReturnFinder();
+        ReturnFinder returnFinder = new ReturnFinder();
 
         statement.accept(returnFinder);
         return returnFinder.returnFound();
@@ -179,7 +179,7 @@ public class ControlFlowUtils {
                 return true;
             }
 
-            final JSStatement container = PsiTreeUtil.getParentOfType(statementToCheck, JSStatement.class);
+            JSStatement container = PsiTreeUtil.getParentOfType(statementToCheck, JSStatement.class);
 
             if (container == null) {
                 return false;
@@ -207,7 +207,7 @@ public class ControlFlowUtils {
                 return true;
             }
 
-            final JSElement container = PsiTreeUtil.getParentOfType(statementToCheck, JSElement.class);
+            JSElement container = PsiTreeUtil.getParentOfType(statementToCheck, JSElement.class);
 
             if (container == null || container instanceof JSLoopStatement) {
                 return false;
@@ -237,11 +237,11 @@ public class ControlFlowUtils {
     }
 
     private static boolean statementIsLastInBlock(@Nonnull JSBlockStatement block, @Nonnull JSStatement statement) {
-        final JSStatement[] statements = block.getStatements();
+        JSStatement[] statements = block.getStatements();
 
         //noinspection ForLoopWithMissingComponent
         for (int index = statements.length; --index >= 0; ) {
-            final JSStatement childStatement = statements[index];
+            JSStatement childStatement = statements[index];
 
             if (statement.equals(childStatement)) {
                 return true;
@@ -259,14 +259,14 @@ public class ControlFlowUtils {
             return null;
         }
         else if (expression instanceof JSReferenceExpression referenceExpression) {
-            final PsiElement variable = referenceExpression.resolve();
+            PsiElement variable = referenceExpression.resolve();
 
             return variable != null && variable instanceof JSVariable jsVariable ? jsVariable : null;
         }
         else if (expression instanceof JSDefinitionExpression definitionExpression) {
-            final JSExpression referentExpression = definitionExpression.getExpression();
-            final PsiReference reference = (referentExpression == null) ? null : referentExpression.getReference();
-            final PsiElement variable = (reference == null) ? null : reference.resolve();
+            JSExpression referentExpression = definitionExpression.getExpression();
+            PsiReference reference = (referentExpression == null) ? null : referentExpression.getReference();
+            PsiElement variable = (reference == null) ? null : reference.resolve();
 
             return variable != null && variable instanceof JSVariable jsVariable ? jsVariable : null;
         }
@@ -277,10 +277,10 @@ public class ControlFlowUtils {
 
     @Nullable
     public static JSFunction resolveMethod(JSCallExpression expression) {
-        final JSExpression methodExpression = (expression == null) ? null : expression.getMethodExpression();
+        JSExpression methodExpression = (expression == null) ? null : expression.getMethodExpression();
 
         if (methodExpression != null && methodExpression instanceof JSReferenceExpression referenceExpression) {
-            final PsiElement referent = referenceExpression.resolve();
+            PsiElement referent = referenceExpression.resolve();
 
             return referent != null && referent instanceof JSFunction function ? function : null;
         }
@@ -291,54 +291,54 @@ public class ControlFlowUtils {
         if (!ControlFlowUtils.statementMayCompleteNormally(statement1)) {
             return false;
         }
-        final Set<String> statement1Declarations = calculateTopLevelDeclarations(statement1);
+        Set<String> statement1Declarations = calculateTopLevelDeclarations(statement1);
         if (containsConflictingDeclarations(statement1Declarations, statement2)) {
             return false;
         }
-        final Set<String> statement2Declarations = calculateTopLevelDeclarations(statement2);
+        Set<String> statement2Declarations = calculateTopLevelDeclarations(statement2);
         return (!containsConflictingDeclarations(statement2Declarations, statement1));
     }
 
     public static boolean isInLoopStatementBody(@Nonnull PsiElement element) {
-        final JSLoopStatement forStatement = PsiTreeUtil.getParentOfType(element, JSLoopStatement.class);
+        JSLoopStatement forStatement = PsiTreeUtil.getParentOfType(element, JSLoopStatement.class);
 
         if (forStatement == null) {
             return false;
         }
 
-        final JSStatement body = forStatement.getBody();
+        JSStatement body = forStatement.getBody();
 
         return (body != null && PsiTreeUtil.isAncestor(body, element, true));
     }
 
     @Nonnull
     public static List<JSCallExpression> getRecursiveCalls(@Nonnull JSFunction function) {
-        final RecursiveCallVisitor recursiveCallVisitor = new RecursiveCallVisitor(function);
+        RecursiveCallVisitor recursiveCallVisitor = new RecursiveCallVisitor(function);
 
         function.accept(recursiveCallVisitor);
         return recursiveCallVisitor.getCalls();
     }
 
     private static boolean containsConflictingDeclarations(Set<String> declarations, JSStatement statement) {
-        final DeclarationUtils.DeclarationConflictVisitor visitor =
+        DeclarationUtils.DeclarationConflictVisitor visitor =
             new DeclarationUtils.DeclarationConflictVisitor(declarations);
         statement.accept(visitor);
         return visitor.hasConflict();
     }
 
     public static boolean containsConflictingDeclarations(JSBlockStatement block, JSBlockStatement parentBlock) {
-        final JSStatement[] statements = block.getStatements();
-        final Set<JSVariable> declaredVars = new HashSet<>();
+        JSStatement[] statements = block.getStatements();
+        Set<JSVariable> declaredVars = new HashSet<>();
 
-        for (final JSStatement statement : statements) {
+        for (JSStatement statement : statements) {
             if (statement instanceof JSVarStatement declaration) {
-                for (final JSVariable var : declaration.getVariables()) {
+                for (JSVariable var : declaration.getVariables()) {
                     declaredVars.add(var);
                 }
             }
         }
 
-        for (final JSVariable variable : declaredVars) {
+        for (JSVariable variable : declaredVars) {
             if (conflictingDeclarationExists(variable.getName(), parentBlock, block)) {
                 return true;
             }
@@ -348,13 +348,13 @@ public class ControlFlowUtils {
     }
 
     private static boolean conflictingDeclarationExists(String name, JSBlockStatement parentBlock, JSBlockStatement exceptBlock) {
-        final ConflictingDeclarationVisitor visitor = new ConflictingDeclarationVisitor(name, exceptBlock);
+        ConflictingDeclarationVisitor visitor = new ConflictingDeclarationVisitor(name, exceptBlock);
         parentBlock.accept(visitor);
         return visitor.hasConflictingDeclaration();
     }
 
     private static Set<String> calculateTopLevelDeclarations(JSStatement statement) {
-        final Set<String> out = new HashSet<>();
+        Set<String> out = new HashSet<>();
 
         if (statement instanceof JSVarStatement varStatement) {
             addDeclarations(varStatement, out);
@@ -370,7 +370,7 @@ public class ControlFlowUtils {
     }
 
     private static void addDeclarations(JSVarStatement statement, Set<String> declaredVars) {
-        for (final JSVariable variable : statement.getVariables()) {
+        for (JSVariable variable : statement.getVariables()) {
             declaredVars.add(variable.getName());
         }
     }
@@ -422,7 +422,7 @@ public class ControlFlowUtils {
         @Override
         public void visitJSBreakStatement(JSBreakStatement breakStatement) {
             super.visitJSBreakStatement(breakStatement);
-            final JSStatement exitedStatement = breakStatement.getStatementToBreak();
+            JSStatement exitedStatement = breakStatement.getStatementToBreak();
             if (exitedStatement == null) {
                 return;
             }
@@ -449,7 +449,7 @@ public class ControlFlowUtils {
         @Override
         public void visitJSContinueStatement(JSContinueStatement continueStatement) {
             super.visitJSContinueStatement(continueStatement);
-            final JSStatement statement = continueStatement.getStatementToContinue();
+            JSStatement statement = continueStatement.getStatementToContinue();
             if (statement == null) {
                 return;
             }
@@ -554,7 +554,7 @@ public class ControlFlowUtils {
         public void visitJSVariable(JSVariable variable) {
             if (!this.hasConflictingDeclaration) {
                 super.visitJSVariable(variable);
-                final String name = variable.getName();
+                String name = variable.getName();
                 this.hasConflictingDeclaration = (name != null && name.equals(this.variableName));
             }
         }
@@ -577,19 +577,19 @@ public class ControlFlowUtils {
         public void visitJSCallExpression(JSCallExpression callExpression) {
             super.visitJSCallExpression(callExpression);
 
-            final JSExpression methodExpression = callExpression.getMethodExpression();
+            JSExpression methodExpression = callExpression.getMethodExpression();
 
             if (methodExpression == null || !(methodExpression instanceof JSReferenceExpression)) {
                 return;
             }
 
-            final JSReturnStatement returnStatement = PsiTreeUtil.getParentOfType(callExpression, JSReturnStatement.class);
+            JSReturnStatement returnStatement = PsiTreeUtil.getParentOfType(callExpression, JSReturnStatement.class);
 
             if (returnStatement == null) {
                 return;
             }
 
-            final PsiElement calledFunction = ((JSReferenceExpression)methodExpression).resolve();
+            PsiElement calledFunction = ((JSReferenceExpression)methodExpression).resolve();
 
             if (calledFunction == null ||
                 (!(calledFunction instanceof JSFunction) || !calledFunction.equals(this.function))) {

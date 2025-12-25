@@ -93,8 +93,8 @@ public class DeclarationUtils {
             );
         }
         else if (statement instanceof JSIfStatement ifStatement) {
-            final JSStatement thenBranch = ifStatement.getThen();
-            final JSStatement elseBranch = ifStatement.getElse();
+            JSStatement thenBranch = ifStatement.getThen();
+            JSStatement elseBranch = ifStatement.getElse();
 
             calculateVariablesDeclared(thenBranch, variablesDeclaredAtTopLevel,
                 variablesDeclaredAtLowerLevels, false
@@ -117,7 +117,7 @@ public class DeclarationUtils {
                 false
             );
 
-            final JSCatchBlock catchBlock = tryStatement.getCatchBlock();
+            JSCatchBlock catchBlock = tryStatement.getCatchBlock();
 
             if (catchBlock != null) {
                 calculateVariablesDeclared(
@@ -147,7 +147,7 @@ public class DeclarationUtils {
         boolean isTopLevel
     ) {
         for (JSVariable variable : statement.getVariables()) {
-            final String variableName = variable.getName();
+            String variableName = variable.getName();
 
             if (isTopLevel) {
                 variablesDeclaredAtTopLevel.add(variableName);
@@ -188,7 +188,7 @@ public class DeclarationUtils {
         public void visitJSVariable(JSVariable variable) {
             super.visitJSVariable(variable);
 
-            final String name = variable.getName();
+            String name = variable.getName();
 
             for (String declaration : this.declarations) {
                 if (declaration.equals(name)) {

@@ -59,15 +59,15 @@ public class NegatedConditionalExpressionJSInspection extends JavaScriptInspecti
 
         @Override
         public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
-            final JSConditionalExpression exp = (JSConditionalExpression)descriptor.getPsiElement();
+            JSConditionalExpression exp = (JSConditionalExpression)descriptor.getPsiElement();
             assert exp != null;
-            final JSExpression elseBranch = exp.getElse();
-            final JSExpression thenBranch = exp.getThen();
-            final JSExpression condition = exp.getCondition();
-            final String negatedCondition = BoolUtils.getNegatedExpressionText(condition);
+            JSExpression elseBranch = exp.getElse();
+            JSExpression thenBranch = exp.getThen();
+            JSExpression condition = exp.getCondition();
+            String negatedCondition = BoolUtils.getNegatedExpressionText(condition);
             assert elseBranch != null;
             assert thenBranch != null;
-            final String newStatement = negatedCondition + '?' + elseBranch.getText() + ':' + thenBranch.getText();
+            String newStatement = negatedCondition + '?' + elseBranch.getText() + ':' + thenBranch.getText();
             replaceExpression(exp, newStatement);
         }
     }
@@ -93,8 +93,8 @@ public class NegatedConditionalExpressionJSInspection extends JavaScriptInspecti
             if (!(expression instanceof JSBinaryExpression)) {
                 return false;
             }
-            final JSBinaryExpression binaryExpression = (JSBinaryExpression)expression;
-            final IElementType sign = binaryExpression.getOperationSign();
+            JSBinaryExpression binaryExpression = (JSBinaryExpression)expression;
+            IElementType sign = binaryExpression.getOperationSign();
             return JSTokenTypes.NE.equals(sign) || JSTokenTypes.NEQEQ.equals(sign);
         }
     }

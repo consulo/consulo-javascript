@@ -62,7 +62,7 @@ public class EmptyStatementBodyJSInspection extends JavaScriptInspection {
         public void visitJSDoWhileStatement(@Nonnull JSDoWhileStatement statement) {
             super.visitJSDoWhileStatement(statement);
 
-            final JSStatement body = statement.getBody();
+            JSStatement body = statement.getBody();
             if (body == null) {
                 return;
             }
@@ -76,7 +76,7 @@ public class EmptyStatementBodyJSInspection extends JavaScriptInspection {
         public void visitJSWhileStatement(@Nonnull JSWhileStatement statement) {
             super.visitJSWhileStatement(statement);
 
-            final JSStatement body = statement.getBody();
+            JSStatement body = statement.getBody();
             if (body == null) {
                 return;
             }
@@ -90,7 +90,7 @@ public class EmptyStatementBodyJSInspection extends JavaScriptInspection {
         public void visitJSForStatement(@Nonnull JSForStatement statement) {
             super.visitJSForStatement(statement);
 
-            final JSStatement body = statement.getBody();
+            JSStatement body = statement.getBody();
             if (body == null) {
                 return;
             }
@@ -104,7 +104,7 @@ public class EmptyStatementBodyJSInspection extends JavaScriptInspection {
         public void visitJSForInStatement(@Nonnull JSForInStatement statement) {
             super.visitJSForInStatement(statement);
 
-            final JSStatement body = statement.getBody();
+            JSStatement body = statement.getBody();
             if (body == null) {
                 return;
             }
@@ -118,14 +118,14 @@ public class EmptyStatementBodyJSInspection extends JavaScriptInspection {
         public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
             super.visitJSIfStatement(statement);
 
-            final JSStatement thenBranch = statement.getThen();
+            JSStatement thenBranch = statement.getThen();
             if (thenBranch != null) {
                 if (isEmpty(thenBranch)) {
                     registerStatementError(statement, statement);
                     return;
                 }
             }
-            final JSStatement elseBranch = statement.getElse();
+            JSStatement elseBranch = statement.getElse();
 
             if (elseBranch != null && isEmpty(elseBranch)) {
                 registerStatementError(statement, statement);
@@ -137,8 +137,8 @@ public class EmptyStatementBodyJSInspection extends JavaScriptInspection {
                 return true;
             }
             else if (myState.m_reportEmptyBlocks && body instanceof JSBlockStatement) {
-                final JSBlockStatement block = (JSBlockStatement)body;
-                final JSStatement[] statements = block.getStatements();
+                JSBlockStatement block = (JSBlockStatement)body;
+                JSStatement[] statements = block.getStatements();
                 return statements.length == 0;
             }
             return false;

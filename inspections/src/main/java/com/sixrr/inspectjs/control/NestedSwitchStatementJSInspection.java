@@ -42,7 +42,7 @@ public class NestedSwitchStatementJSInspection extends JavaScriptInspection {
         @Override
         public void visitJSSwitchStatement(JSSwitchStatement jsSwitchStatement) {
             super.visitJSSwitchStatement(jsSwitchStatement);
-            final JSSwitchStatement containingSwitchStatement =
+            JSSwitchStatement containingSwitchStatement =
                 PsiTreeUtil.getParentOfType(jsSwitchStatement, JSSwitchStatement.class, true);
             if (containingSwitchStatement == null) {
                 return;
