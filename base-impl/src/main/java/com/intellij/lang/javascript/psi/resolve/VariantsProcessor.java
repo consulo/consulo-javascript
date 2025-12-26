@@ -178,7 +178,7 @@ public class VariantsProcessor extends BaseJSSymbolProcessor {
     }
 
     @RequiredReadAction
-    public void addLocalResults(List<PsiElement> results) {
+    public void addLocalResults(Collection<PsiElement> results) {
         if (results == null) {
             return;
         }

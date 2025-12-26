@@ -38,14 +38,10 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.xml.psi.xml.XmlAttributeValue;
 import consulo.xml.psi.xml.XmlTag;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Maxim.Mossienko
@@ -60,7 +56,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
     protected final String myName;
     private PsiElement myResult;
     private PsiElement myCandidateResult;
-    private List<PsiElement> myResults;
+    private Set<PsiElement> myResults;
     private List<JavaScriptImportStatementBase> myImportsUsed;
     private List<Boolean> myResolveStatus;
 
@@ -110,7 +106,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
     public ResolveProcessor(String name, PsiElement _place) {
         myName = name;
         place = _place;
-        boolean b = place instanceof JSReferenceExpression && ((JSReferenceExpression)place).getQualifier() == null;
+        boolean b = place instanceof JSReferenceExpression && ((JSReferenceExpression) place).getQualifier() == null;
         allowUnqualifiedStaticsFromInstance = b;
 
         if (myName != null && place instanceof JSReferenceExpression placeRefExpr) {
@@ -178,9 +174,9 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
         return myImportsUsed != null ? myImportsUsed.get(0) : null;
     }
 
-    public List<PsiElement> getResults() {
+    public Collection<PsiElement> getResults() {
         if (myResults == null && myResult == null && myCandidateResult != null) {
-            myResults = new ArrayList<>(1);
+            myResults = new LinkedHashSet<>(1);
             myResults.add(myCandidateResult);
         }
         return myResults;
@@ -190,7 +186,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
     @RequiredReadAction
     public boolean execute(@Nonnull PsiElement element, ResolveState state) {
         if ((element instanceof JSVariable && !(element instanceof JSParameter)) || element instanceof JSFunction) {
-            JSAttributeList attributeList = ((JSAttributeListOwner)element).getAttributeList();
+            JSAttributeList attributeList = ((JSAttributeListOwner) element).getAttributeList();
 
             // TODO: we should accept such values during resolve but make them invalid
             if (!acceptPrivateMembers
@@ -345,7 +341,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
                     }
                 }
                 if (myResults == null) {
-                    myResults = new ArrayList<>(1);
+                    myResults = new LinkedHashSet<>();
                 }
                 myResults.add(element);
                 myResult = element;
@@ -366,7 +362,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 
             if (placeTopParent instanceof JSReferenceExpression placeTopParentRefExpr
                 && !(placeTopParent.getParent() instanceof JavaScriptImportStatementBase)) {
-                final String qName = ((JSQualifiedNamedElement)element).getQualifiedName();
+                final String qName = ((JSQualifiedNamedElement) element).getQualifiedName();
 
                 if (qName != null && qName.indexOf('.') != -1) {
                     ResolveProcessor processor = new ResolveProcessor(myName) {
@@ -403,7 +399,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
                         else {
                             ResolveResult[] resultsAsResolveResults = processor.getResultsAsResolveResults();
                             if (resultsAsResolveResults.length != 0) {
-                                s = ((JSResolveUtil.MyResolveResult)resultsAsResolveResults[0]).getImportUsed();
+                                s = ((JSResolveUtil.MyResolveResult) resultsAsResolveResults[0]).getImportUsed();
                             }
                         }
                     }
@@ -422,8 +418,8 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 
     @Nullable
     @RequiredReadAction
-    public static String getName(PsiNamedElement element) {
-        return element instanceof JSNamedElement ? element.getName() : null;
+    public static String getName(PsiElement element) {
+        return element instanceof JSNamedElement namedElement ? namedElement.getName() : null;
     }
 
     @Override
@@ -446,11 +442,12 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
     }
 
     @Override
+    @RequiredReadAction
     public void handleEvent(Event event, Object associated) {
         if (event == Event.SET_DECLARATION_HOLDER) {
             if (associated instanceof JSClass) {
                 myClassDeclarationStarted = true;
-                JSClass jsClass = (JSClass)associated;
+                JSClass jsClass = (JSClass) associated;
                 final String qName = jsClass.getQualifiedName();
 
                 if (!encounteredDynamicClassesSet) {
@@ -491,7 +488,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
                                                 return true;
                                             }
                                             String classQName = jsClass.getQualifiedName();
-                                            return qName == classQName || (qName != null && !qName.equals(classQName));
+                                            return Objects.equals(qName, classQName);
                                         }
                                     },
                                     ResolveState.initial(),
@@ -564,20 +561,23 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
     }
 
     public ResolveResult[] getResultsAsResolveResults() {
-        List<PsiElement> processorResults = getResults();
+        Collection<PsiElement> processorResults = getResults();
         if (processorResults == null) {
             return ResolveResult.EMPTY_ARRAY;
         }
         ResolveResult[] results = new ResolveResult[processorResults.size()];
 
-        for (int i = 0; i < results.length; ++i) {
-            PsiElement element = processorResults.get(i);
-            results[i] = new JSResolveUtil.MyResolveResult(
+        int i = 0;
+        for (PsiElement element : processorResults) {
+            int pos = i++;
+
+            results[pos] = new JSResolveUtil.MyResolveResult(
                 element,
-                myImportsUsed != null ? myImportsUsed.get(i) : null,
-                myResolveStatus != null ? myResolveStatus.get(i) : true
+                myImportsUsed != null ? myImportsUsed.get(pos) : null,
+                myResolveStatus != null ? myResolveStatus.get(pos) : true
             );
         }
+
         return results;
     }
 
@@ -591,7 +591,7 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
 
     @RequiredReadAction
     public Object[] getResultsAsObjects(String qualifiedNameToSkip) {
-        List<PsiElement> processorResults = getResults();
+        Collection<PsiElement> processorResults = getResults();
         if (processorResults == null) {
             return ArrayUtil.EMPTY_OBJECT_ARRAY;
         }
@@ -599,9 +599,8 @@ public class ResolveProcessor extends UserDataHolderBase implements PsiScopeProc
         List<Object> objects = new ArrayList<>(numberOfVariants);
         Set<String> processedCandidateNames = new HashSet<>(numberOfVariants);
 
-        for (int i = 0; i < numberOfVariants; ++i) {
-            PsiElement namedElement = processorResults.get(i);
-            String name = getName((PsiNamedElement)namedElement);
+        for (PsiElement namedElement : processorResults) {
+            String name = getName(namedElement);
             if (name == null) {
                 continue;
             }
