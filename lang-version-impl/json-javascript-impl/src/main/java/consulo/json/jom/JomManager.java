@@ -79,7 +79,7 @@ public class JomManager {
                     if (fileDescriptor != null) {
                         value = new JomFileElement((JSFile)psiFile, fileDescriptor);
                     }
-                    return Result.<JomFileElement<?>>create(value, psiFile, PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT);
+                    return Result.<JomFileElement<?>>create(value, psiFile, PsiModificationTracker.MODIFICATION_COUNT);
                 }
             }, false);
 

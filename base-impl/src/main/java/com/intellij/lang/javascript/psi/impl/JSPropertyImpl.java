@@ -61,7 +61,7 @@ public class JSPropertyImpl extends JSElementImpl implements JSProperty {
                 return Result.create(
                     buildReferences(),
                     JSPropertyImpl.this,
-                    PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT
+                    PsiModificationTracker.MODIFICATION_COUNT
                 );
             }
         });

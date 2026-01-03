@@ -216,7 +216,7 @@ public class PropertyValidationInspection extends LocalInspectionTool {
                 return Result.create(
                     findPropertyDescriptorImpl(jsProperty),
                     jsProperty,
-                    PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT
+                    PsiModificationTracker.MODIFICATION_COUNT
                 );
             }
         }, false).getValue();

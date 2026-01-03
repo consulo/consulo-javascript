@@ -47,7 +47,7 @@ public class JsonFileDescriptorProviders {
                             JsonObjectDescriptor objectDescriptor = new JsonObjectDescriptor();
                             provider.fillRootObject(objectDescriptor, file);
 
-                            return Result.create(objectDescriptor, file, PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT);
+                            return Result.create(objectDescriptor, file, PsiModificationTracker.MODIFICATION_COUNT);
                         }
                     }
                     return null;
