@@ -30,7 +30,7 @@ public abstract class JSMutablyNamedIntention extends JSIntention {
     @Override
     @Nonnull
     public LocalizeValue getText() {
-        return myText != LocalizeValue.empty() ? myText : getBasicText();
+        return myText.orIfEmpty(getBasicText());
     }
 
     @Nonnull
