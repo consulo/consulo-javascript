@@ -7,8 +7,7 @@ import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
 import consulo.content.bundle.SdkType;
 import consulo.javascript.icon.JavaScriptIconGroup;
-import consulo.ui.image.Image;
-
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -24,7 +23,7 @@ public class ClientJavaScriptSdkType extends SdkType {
     }
 
     public ClientJavaScriptSdkType() {
-        super("CLIENT_JAVASCRIPT_SDK_TYPE");
+        super("CLIENT_JAVASCRIPT_SDK_TYPE", LocalizeValue.localizeTODO("Client JavaScript"), JavaScriptIconGroup.javascriptmodule());
     }
 
     @Override
@@ -35,12 +34,6 @@ public class ClientJavaScriptSdkType extends SdkType {
     @Override
     public boolean isRootTypeApplicable(OrderRootType type) {
         return type == BinariesOrderRootType.getInstance() || type == SourcesOrderRootType.getInstance();
-    }
-
-    @Nonnull
-    @Override
-    public Image getIcon() {
-        return JavaScriptIconGroup.javascriptmodule();
     }
 
     @Override
@@ -54,14 +47,9 @@ public class ClientJavaScriptSdkType extends SdkType {
         return "1";
     }
 
+    @Nonnull
     @Override
     public String suggestSdkName(String currentSdkName, String sdkHome) {
         return currentSdkName;
-    }
-
-    @Nonnull
-    @Override
-    public String getPresentableName() {
-        return "Client JavaScript";
     }
 }
