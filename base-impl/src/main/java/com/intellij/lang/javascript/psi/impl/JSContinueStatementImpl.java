@@ -16,43 +16,36 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.util.PsiTreeUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:52:04 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public class JSContinueStatementImpl extends JSStatementWithLabelReferenceImpl implements JSContinueStatement
-{
-	public JSContinueStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSContinueStatementImpl extends JSStatementWithLabelReferenceImpl implements JSContinueStatement {
+    public JSContinueStatementImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSStatement getStatementToContinue()
-	{
-		String label = getLabel();
-		if(label == null)
-		{
-			return PsiTreeUtil.getParentOfType(this, JSLoopStatement.class, JSSwitchStatement.class);
-		}
-		else
-		{
-			return (JSStatement) getReferences()[0].resolve();
-		}
-	}
+    @Override
+    @RequiredReadAction
+    public JSStatement getStatementToContinue() {
+        String label = getLabel();
+        if (label == null) {
+            return PsiTreeUtil.getParentOfType(this, JSLoopStatement.class, JSSwitchStatement.class);
+        }
+        else {
+            return (JSStatement)getReferences()[0].resolve();
+        }
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSContinueStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSContinueStatement(this);
+    }
 }

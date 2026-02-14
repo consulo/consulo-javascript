@@ -1,19 +1,18 @@
 package consulo.actionscript;
 
-import javax.annotation.Nonnull;
-
-import com.intellij.openapi.fileTypes.FileTypeConsumer;
-import com.intellij.openapi.fileTypes.FileTypeFactory;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.virtualFileSystem.fileType.FileTypeConsumer;
+import consulo.virtualFileSystem.fileType.FileTypeFactory;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 06.04.2015
  */
-public class ActionScriptFileTypeFactory extends FileTypeFactory
-{
-	@Override
-	public void createFileTypes(@Nonnull FileTypeConsumer consumer)
-	{
-		consumer.consume(ActionScriptFileType.INSTANCE);
-	}
+@ExtensionImpl
+public class ActionScriptFileTypeFactory extends FileTypeFactory {
+    @Override
+    public void createFileTypes(@Nonnull FileTypeConsumer consumer) {
+        consumer.consume(ActionScriptFileType.INSTANCE);
+    }
 }

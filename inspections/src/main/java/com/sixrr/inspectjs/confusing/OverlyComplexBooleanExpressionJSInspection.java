@@ -5,75 +5,70 @@ import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSParenthesizedExpression;
 import com.intellij.lang.javascript.psi.JSPrefixExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
-import com.sixrr.inspectjs.ui.SingleIntegerFieldOptionsPanel;
-import javax.annotation.Nonnull;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.inspection.InspectionToolState;
+import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 
-import javax.swing.*;
-
+@ExtensionImpl
 public class OverlyComplexBooleanExpressionJSInspection extends JavaScriptInspection {
-    private static final int TERM_LIMIT = 3;
-
-    /**
-     * @noinspection PublicField
-     */
-    public int m_limit = TERM_LIMIT;
-
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("overly.complex.boolean.expression.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.overlyComplexBooleanExpressionDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
-    private int getLimit() {
-        return m_limit;
+    @Nonnull
+    @Override
+    public InspectionToolState<?> createStateProvider() {
+        return new OverlyComplexBooleanExpressionJSInspectionState();
     }
 
     @Override
-	public JComponent createOptionsPanel() {
-        return new SingleIntegerFieldOptionsPanel(InspectionJSBundle.message("maximum.number.of.terms.parameter"),
-                this, "m_limit");
-    }
-
-    @Override
-	protected boolean buildQuickFixesOnlyForOnTheFlyErrors() {
+    protected boolean buildQuickFixesOnlyForOnTheFlyErrors() {
         return true;
     }
 
+    @RequiredReadAction
     @Override
-	protected String buildErrorString(Object... args) {
-        return InspectionJSBundle.message("overly.complex.boolean.expression.error.string");
+    protected String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.overlyComplexBooleanExpressionErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
-    private class Visitor extends BaseInspectionVisitor {
+    private class Visitor extends BaseInspectionVisitor<OverlyComplexBooleanExpressionJSInspectionState> {
 
-        @Override public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
+        @Override
+        public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             checkExpression(expression);
         }
 
-        @Override public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
+        @Override
+        public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
             super.visitJSPrefixExpression(expression);
             checkExpression(expression);
         }
 
-        @Override public void visitJSParenthesizedExpression(JSParenthesizedExpression expression) {
+        @Override
+        public void visitJSParenthesizedExpression(JSParenthesizedExpression expression) {
             super.visitJSParenthesizedExpression(expression);
             checkExpression(expression);
         }
@@ -85,8 +80,8 @@ public class OverlyComplexBooleanExpressionJSInspection extends JavaScriptInspec
             if (isParentBoolean(expression)) {
                 return;
             }
-            final int numTerms = countTerms(expression);
-            if (numTerms <= getLimit()) {
+            int numTerms = countTerms(expression);
+            if (numTerms <= myState.m_limit) {
                 return;
             }
             registerError(expression);
@@ -100,24 +95,26 @@ public class OverlyComplexBooleanExpressionJSInspection extends JavaScriptInspec
                 return 1;
             }
             if (expression instanceof JSBinaryExpression) {
-                final JSBinaryExpression binaryExpression = (JSBinaryExpression) expression;
-                final JSExpression lhs = binaryExpression.getLOperand();
-                final JSExpression rhs = binaryExpression.getROperand();
+                JSBinaryExpression binaryExpression = (JSBinaryExpression) expression;
+                JSExpression lhs = binaryExpression.getLOperand();
+                JSExpression rhs = binaryExpression.getROperand();
                 return countTerms(lhs) + countTerms(rhs);
-            } else if (expression instanceof JSPrefixExpression) {
-                final JSPrefixExpression prefixExpression = (JSPrefixExpression) expression;
-                final JSExpression operand = prefixExpression.getExpression();
+            }
+            else if (expression instanceof JSPrefixExpression) {
+                JSPrefixExpression prefixExpression = (JSPrefixExpression) expression;
+                JSExpression operand = prefixExpression.getExpression();
                 return countTerms(operand);
-            } else if (expression instanceof JSParenthesizedExpression) {
-                final JSParenthesizedExpression parenthesizedExpression = (JSParenthesizedExpression) expression;
-                final JSExpression contents = parenthesizedExpression.getInnerExpression();
+            }
+            else if (expression instanceof JSParenthesizedExpression) {
+                JSParenthesizedExpression parenthesizedExpression = (JSParenthesizedExpression) expression;
+                JSExpression contents = parenthesizedExpression.getInnerExpression();
                 return countTerms(contents);
             }
             return 1;
         }
 
         private boolean isParentBoolean(JSExpression expression) {
-            final PsiElement parent = expression.getParent();
+            PsiElement parent = expression.getParent();
             if (!(parent instanceof JSExpression)) {
                 return false;
             }
@@ -126,17 +123,19 @@ public class OverlyComplexBooleanExpressionJSInspection extends JavaScriptInspec
 
         private boolean isBoolean(JSExpression expression) {
             if (expression instanceof JSBinaryExpression) {
-                final JSBinaryExpression binaryExpression = (JSBinaryExpression) expression;
-                final IElementType sign = binaryExpression.getOperationSign();
+                JSBinaryExpression binaryExpression = (JSBinaryExpression) expression;
+                IElementType sign = binaryExpression.getOperationSign();
                 return JSTokenTypes.ANDAND.equals(sign) ||
-                        JSTokenTypes.OROR.equals(sign);
-            } else if (expression instanceof JSPrefixExpression) {
-                final JSPrefixExpression prefixExpression = (JSPrefixExpression) expression;
-                final IElementType sign = prefixExpression.getOperationSign();
+                    JSTokenTypes.OROR.equals(sign);
+            }
+            else if (expression instanceof JSPrefixExpression) {
+                JSPrefixExpression prefixExpression = (JSPrefixExpression) expression;
+                IElementType sign = prefixExpression.getOperationSign();
                 return JSTokenTypes.EXCL.equals(sign);
-            } else if (expression instanceof JSParenthesizedExpression) {
-                final JSParenthesizedExpression parenthesizedExpression = (JSParenthesizedExpression) expression;
-                final JSExpression contents = parenthesizedExpression.getInnerExpression();
+            }
+            else if (expression instanceof JSParenthesizedExpression) {
+                JSParenthesizedExpression parenthesizedExpression = (JSParenthesizedExpression) expression;
+                JSExpression contents = parenthesizedExpression.getInnerExpression();
                 return isBoolean(contents);
             }
             return false;

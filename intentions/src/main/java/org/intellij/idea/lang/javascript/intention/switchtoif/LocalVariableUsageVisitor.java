@@ -20,17 +20,17 @@ import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.lang.javascript.psi.JSVariable;
 import org.intellij.idea.lang.javascript.psiutil.JSRecursiveElementVisitor;
 
-
 class LocalVariableUsageVisitor extends JSRecursiveElementVisitor {
     private final JSVariable variable;
-    private       boolean    used;
+    private boolean used;
 
     LocalVariableUsageVisitor(JSVariable name) {
         this.variable = name;
     }
 
-    @Override public void visitJSReferenceExpression(JSReferenceExpression expression) {
-        final JSElement reference = (JSElement) expression.resolve();
+    @Override
+    public void visitJSReferenceExpression(JSReferenceExpression expression) {
+        JSElement reference = (JSElement)expression.resolve();
         if (this.variable.equals(reference)) {
             this.used = true;
         }

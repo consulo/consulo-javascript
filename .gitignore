@@ -1,5 +1,7 @@
 /.consulo
 !/.consulo/codeStyleSettings.xml
+!/.consulo/runConfigurations
 /out
 /target
 target/
+plugin/sandbox/

@@ -17,8 +17,7 @@
 package com.intellij.lang.javascript.psi;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
-public interface JSSuperExpression extends JSExpression
-{
+public interface JSSuperExpression extends JSExpression {
 }

@@ -16,89 +16,87 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.language.ast.TokenSet;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.psi.util.PsiTreeUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 11:41:42 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public class JSBinaryExpressionImpl extends JSExpressionImpl implements JSBinaryExpression
-{
-	private static final TokenSet BINARY_OPERATIONS = TokenSet.orSet(JSTokenTypes.OPERATIONS, JSTokenTypes.RELATIONAL_OPERATIONS);
-	private static final TokenSet BINARY_OPERATIONS_WITH_DEFS = TokenSet.create(JSTokenTypes.COMMA, JSTokenTypes.EQ);
+public class JSBinaryExpressionImpl extends JSExpressionImpl implements JSBinaryExpression {
+    private static final TokenSet BINARY_OPERATIONS = TokenSet.orSet(JSTokenTypes.OPERATIONS, JSTokenTypes.RELATIONAL_OPERATIONS);
+    private static final TokenSet BINARY_OPERATIONS_WITH_DEFS = TokenSet.create(JSTokenTypes.COMMA, JSTokenTypes.EQ);
 
-	public JSBinaryExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+    public JSBinaryExpressionImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getLOperand()
-	{
-		final ASTNode astNode = getNode();
-		final JSExpression firstExpression = PsiTreeUtil.findChildOfType(astNode.getPsi(), JSExpression.class);
-		if(firstExpression != null && astNode.findChildByType(BINARY_OPERATIONS, firstExpression.getNode()) == null)
-		{
-			return null; // =a
-		}
-		return firstExpression != null ? firstExpression : null;
-	}
+    @Override
+    @RequiredReadAction
+    public JSExpression getLOperand() {
+        ASTNode astNode = getNode();
+        JSExpression firstExpression = PsiTreeUtil.findChildOfType(astNode.getPsi(), JSExpression.class);
+        if (firstExpression != null && astNode.findChildByType(BINARY_OPERATIONS, firstExpression.getNode()) == null) {
+            return null; // =a
+        }
+        return firstExpression != null ? firstExpression : null;
+    }
 
-	@Override
-	public JSExpression getROperand()
-	{
-		final ASTNode myNode = getNode();
-		final ASTNode secondExpression = myNode.findChildByType(JSElementTypes.EXPRESSIONS, myNode.findChildByType(BINARY_OPERATIONS));
-		return secondExpression != null ? (JSExpression) secondExpression.getPsi() : null;
-	}
+    @Override
+    @RequiredReadAction
+    public JSExpression getROperand() {
+        ASTNode myNode = getNode();
+        ASTNode secondExpression = myNode.findChildByType(JSElementTypes.EXPRESSIONS, myNode.findChildByType(BINARY_OPERATIONS));
+        return secondExpression != null ? (JSExpression)secondExpression.getPsi() : null;
+    }
 
-	@Override
-	public IElementType getOperationSign()
-	{
-		final ASTNode operationASTNode = getNode().findChildByType(BINARY_OPERATIONS);
-		return operationASTNode != null ? operationASTNode.getElementType() : null;
-	}
+    @Nullable
+    @Override
+    @RequiredReadAction
+    public PsiElement getOperationElement() {
+        ASTNode operationASTNode = getNode().findChildByType(BINARY_OPERATIONS);
+        return operationASTNode != null ? operationASTNode.getPsi() : null;
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSBinaryExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSBinaryExpression(this);
+    }
 
-	@Override
-	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent,
-			@Nonnull PsiElement place)
-	{
-		final IElementType operationType = getOperationSign();
+    @Override
+    @RequiredReadAction
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        IElementType operationType = getOperationSign();
 
-		if(BINARY_OPERATIONS_WITH_DEFS.contains(operationType))
-		{
-			final JSExpression loperand = getLOperand();
-			final JSExpression roperand = getROperand();
+        if (BINARY_OPERATIONS_WITH_DEFS.contains(operationType)) {
+            JSExpression loperand = getLOperand();
+            JSExpression roperand = getROperand();
 
-			if(loperand != null)
-			{
-				return loperand.processDeclarations(processor, state, lastParent, place) && (roperand != null ? roperand.processDeclarations(processor, state,
-						lastParent, place) : true);
-			}
-		}
+            if (loperand != null) {
+                return loperand.processDeclarations(processor, state, lastParent, place)
+                    && (roperand == null || roperand.processDeclarations(processor, state, lastParent, place));
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 }

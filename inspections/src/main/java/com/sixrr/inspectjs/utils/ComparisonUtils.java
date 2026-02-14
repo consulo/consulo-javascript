@@ -3,9 +3,9 @@ package com.sixrr.inspectjs.utils;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.psi.tree.IElementType;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.language.ast.IElementType;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -54,8 +54,8 @@ public class ComparisonUtils {
         if (!(exp instanceof JSBinaryExpression)) {
             return false;
         }
-        final JSBinaryExpression binaryExpression = (JSBinaryExpression) exp;
-        final IElementType sign = binaryExpression.getOperationSign();
+        JSBinaryExpression binaryExpression = (JSBinaryExpression)exp;
+        IElementType sign = binaryExpression.getOperationSign();
         return s_comparisonStrings.contains(sign);
     }
 
@@ -64,7 +64,7 @@ public class ComparisonUtils {
     }
 
     public static boolean isEqualityComparison(@Nonnull JSBinaryExpression operator) {
-        final IElementType sign = operator.getOperationSign();
+        IElementType sign = operator.getOperationSign();
         return JSTokenTypes.EQEQ.equals(sign) || JSTokenTypes.NE.equals(sign);
     }
 

@@ -16,54 +16,43 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSCaseClause;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSStatement;
-
-import javax.annotation.Nonnull;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.ast.ASTNode;
+import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 10:11:23 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public class JSCaseClauseImpl extends JSElementImpl implements JSCaseClause
-{
-	public JSCaseClauseImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSCaseClauseImpl extends JSElementImpl implements JSCaseClause {
+    public JSCaseClauseImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public boolean isDefault()
-	{
-		return getNode().findChildByType(JSTokenTypes.DEFAULT_KEYWORD) != null;
-	}
+    @Override
+    @RequiredReadAction
+    public boolean isDefault() {
+        return getNode().findChildByType(JSTokenTypes.DEFAULT_KEYWORD) != null;
+    }
 
-	@Override
-	public JSExpression getCaseExpression()
-	{
-		if(isDefault())
-		{
-			return null;
-		}
-		return findChildByClass(JSExpression.class);
-	}
+    @Override
+    @RequiredReadAction
+    public JSExpression getCaseExpression() {
+        return isDefault() ? null : findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	public JSStatement[] getStatements()
-	{
-		return findChildrenByClass(JSStatement.class);
-	}
+    @Override
+    public JSStatement[] getStatements() {
+        return findChildrenByClass(JSStatement.class);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSCaseClause(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSCaseClause(this);
+    }
 }

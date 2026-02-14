@@ -16,22 +16,19 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSGenericSignature;
+import consulo.language.ast.ASTNode;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-public class JSGenericSignatureImpl extends JSElementImpl implements JSGenericSignature
-{
-	public JSGenericSignatureImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSGenericSignatureImpl extends JSElementImpl implements JSGenericSignature {
+    public JSGenericSignatureImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSGenericSignature(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSGenericSignature(this);
+    }
 }

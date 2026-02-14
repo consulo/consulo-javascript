@@ -16,149 +16,141 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.IncorrectOperationException;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.IncorrectOperationException;
+import consulo.document.util.TextRange;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.ResolveResult;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.util.collection.ArrayUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 11:24:42 PM
+ * @author max
+ * @since 2005-01-30
  */
-public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperExpression
-{
-	public JSSuperExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSSuperExpressionImpl extends JSExpressionImpl implements JSSuperExpression {
+    public JSSuperExpressionImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSSuperExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSSuperExpression(this);
+    }
 
-	@Override
-	public PsiReference getReference()
-	{
-		return getReferences()[0];
-	}
+    @Override
+    public PsiReference getReference() {
+        return getReferences()[0];
+    }
 
-	@Override
-	@Nonnull
-	public PsiReference[] getReferences()
-	{
-		PsiReference[] refs = {
-				new PsiReference()
-				{
-					@Override
-					public PsiElement getElement()
-					{
-						return JSSuperExpressionImpl.this;
-					}
+    @Override
+    @Nonnull
+    public PsiReference[] getReferences() {
+        PsiReference[] refs = {
+            new PsiReference() {
+                @Override
+                @RequiredReadAction
+                public PsiElement getElement() {
+                    return JSSuperExpressionImpl.this;
+                }
 
-					@Override
-					public TextRange getRangeInElement()
-					{
-						return new TextRange(0, getTextLength());
-					}
+                @Nonnull
+                @Override
+                @RequiredReadAction
+                public TextRange getRangeInElement() {
+                    return new TextRange(0, getTextLength());
+                }
 
-					@Override
-					@Nullable
-					public PsiElement resolve()
-					{
-						final PsiElement element = findClass();
+                @Nullable
+                @Override
+                @RequiredReadAction
+                public PsiElement resolve() {
+                    PsiElement element = findClass();
 
-						if(getElement().getParent() instanceof JSCallExpression && element instanceof JSClass)
-						{
-							final JSClass clazz = (JSClass) element;
-							final ResolveProcessor processor = new ResolveProcessor(clazz.getName(), JSSuperExpressionImpl.this);
-							element.processDeclarations(processor, ResolveState.initial(), clazz, getElement());
-							if(processor.getResult() != null)
-							{
-								return processor.getResult();
-							}
-						}
+                    if (getElement().getParent() instanceof JSCallExpression && element instanceof JSClass jsClass) {
+                        ResolveProcessor processor = new ResolveProcessor(jsClass.getName(), JSSuperExpressionImpl.this);
+                        element.processDeclarations(processor, ResolveState.initial(), jsClass, getElement());
+                        if (processor.getResult() != null) {
+                            return processor.getResult();
+                        }
+                    }
 
-						return element;
-					}
+                    return element;
+                }
 
-					private PsiElement findClass()
-					{
-						final JSClass jsClass = PsiTreeUtil.getParentOfType(getElement(), JSClass.class);
+                @RequiredReadAction
+                private PsiElement findClass() {
+                    JSClass jsClass = PsiTreeUtil.getParentOfType(getElement(), JSClass.class);
 
-						if(jsClass != null)
-						{
-							final JSReferenceList extendsList = jsClass.getExtendsList();
-							if(extendsList != null)
-							{
-								final JSReferenceExpression[] referenceExpressions = extendsList.getExpressions();
-								if(referenceExpressions != null && referenceExpressions.length > 0)
-								{
-									final ResolveResult[] results = referenceExpressions[0].multiResolve(false);
-									return results.length > 0 ? results[0].getElement() : null;
-								}
-							}
-						}
-						else
-						{
-							final JSFile jsFile = PsiTreeUtil.getParentOfType(getElement(), JSFile.class);
+                    if (jsClass != null) {
+                        JSReferenceList extendsList = jsClass.getExtendsList();
+                        if (extendsList != null) {
+                            JSReferenceExpression[] referenceExpressions = extendsList.getExpressions();
+                            if (referenceExpressions != null && referenceExpressions.length > 0) {
+                                ResolveResult[] results = referenceExpressions[0].multiResolve(false);
+                                return results.length > 0 ? results[0].getElement() : null;
+                            }
+                        }
+                    }
+                    else {
+                        JSFile jsFile = PsiTreeUtil.getParentOfType(getElement(), JSFile.class);
 
-							if(jsFile != null)
-							{
-								return JSResolveUtil.getClassReferenceForXmlFromContext(jsFile);
-							}
-						}
-						return null;
-					}
+                        if (jsFile != null) {
+                            return JSResolveUtil.getClassReferenceForXmlFromContext(jsFile);
+                        }
+                    }
+                    return null;
+                }
 
-					@Override
-					public String getCanonicalText()
-					{
-						return getText();
-					}
+                @Nonnull
+                @Override
+                @RequiredReadAction
+                public String getCanonicalText() {
+                    return getText();
+                }
 
-					@Override
-					public PsiElement handleElementRename(final String newElementName) throws IncorrectOperationException
-					{
-						return null;
-					}
+                @Override
+                @RequiredWriteAction
+                public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
+                    return null;
+                }
 
-					@Override
-					public PsiElement bindToElement(@Nonnull final PsiElement element) throws IncorrectOperationException
-					{
-						return null;
-					}
+                @Override
+                @RequiredWriteAction
+                public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
+                    return null;
+                }
 
-					@Override
-					public boolean isReferenceTo(final PsiElement element)
-					{
-						return false;
-					}
+                @Override
+                @RequiredReadAction
+                public boolean isReferenceTo(PsiElement element) {
+                    return false;
+                }
 
-					@Override
-					public Object[] getVariants()
-					{
-						return ArrayUtil.EMPTY_OBJECT_ARRAY;
-					}
+                @Nonnull
+                @Override
+                @RequiredReadAction
+                public Object[] getVariants() {
+                    return ArrayUtil.EMPTY_OBJECT_ARRAY;
+                }
 
-					@Override
-					public boolean isSoft()
-					{
-						return true;
-					}
-				}
-		};
-		return refs;
-	}
+                @Override
+                @RequiredReadAction
+                public boolean isSoft() {
+                    return true;
+                }
+            }
+        };
+        return refs;
+    }
 }

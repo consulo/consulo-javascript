@@ -1,0 +1,84 @@
+package consulo.javascript.impl.ide.actions;
+
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.ReadAction;
+import consulo.dataContext.DataContext;
+import consulo.ide.IdeView;
+import consulo.ide.action.CreateFileFromTemplateAction;
+import consulo.ide.action.CreateFileFromTemplateDialog;
+import consulo.javascript.language.JavaScriptFileType;
+import consulo.javascript.localize.JavaScriptLocalize;
+import consulo.javascript.module.extension.JavaScriptModuleExtension;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.util.ModuleUtilCore;
+import consulo.localize.LocalizeValue;
+import consulo.module.Module;
+import consulo.module.content.NewFileModuleResolver;
+import consulo.project.Project;
+import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
+/**
+ * @author VISTALL
+ * @since 06.12.2015
+ */
+public class JavaScriptCreateFileAction extends CreateFileFromTemplateAction {
+    public JavaScriptCreateFileAction() {
+        super(
+            JavaScriptLocalize.actionJavascriptFileText(),
+            JavaScriptLocalize.actionJavascriptFileText(),
+            JavaScriptFileType.INSTANCE.getIcon()
+        );
+    }
+
+    @Override
+    protected boolean isAvailable(DataContext dataContext) {
+        if (!super.isAvailable(dataContext)) {
+            return false;
+        }
+        Module module = ReadAction.compute(() -> findModule(dataContext));
+        return module != null && ModuleUtilCore.getExtension(module, JavaScriptModuleExtension.class) != null;
+    }
+
+    @Nullable
+    @Override
+    protected FileType getFileTypeForModuleResolve() {
+        return JavaScriptFileType.INSTANCE;
+    }
+
+    @RequiredReadAction
+    private static Module findModule(DataContext dataContext) {
+        Project project = dataContext.getData(Project.KEY);
+        assert project != null;
+        IdeView view = dataContext.getData(IdeView.KEY);
+        if (view == null) {
+            return null;
+        }
+
+        PsiDirectory directory = view.getOrChooseDirectory();
+        if (directory == null) {
+            return null;
+        }
+
+        Module resolvedModule =
+            NewFileModuleResolver.resolveModule(directory.getProject(), directory.getVirtualFile(), JavaScriptFileType.INSTANCE);
+        if (resolvedModule != null) {
+            return resolvedModule;
+        }
+        return dataContext.getData(Module.KEY);
+    }
+
+    @Override
+    protected void buildDialog(Project project, PsiDirectory directory, CreateFileFromTemplateDialog.Builder builder) {
+        builder.setTitle(JavaScriptLocalize.actionJavascriptFileTitleText());
+
+        builder.addKind(JavaScriptLocalize.actionJavascriptFileEmptyFileKind(), JavaScriptFileType.INSTANCE.getIcon(), "JavaScriptFile");
+    }
+
+    @Nonnull
+    @Override
+    protected LocalizeValue getActionName(PsiDirectory directory, String newName, String templateName) {
+        return JavaScriptLocalize.actionJavascriptFileTitleText();
+    }
+}

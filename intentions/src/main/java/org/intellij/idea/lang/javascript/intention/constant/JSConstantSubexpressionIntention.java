@@ -15,8 +15,21 @@
  */
 package org.intellij.idea.lang.javascript.intention.constant;
 
-import javax.annotation.Nonnull;
-
+import com.intellij.lang.javascript.psi.JSBinaryExpression;
+import com.intellij.lang.javascript.psi.JSElement;
+import com.intellij.lang.javascript.psi.JSExpression;
+import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
@@ -24,169 +37,161 @@ import org.intellij.idea.lang.javascript.psiutil.ExpressionUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
 
-import javax.annotation.Nullable;
-import com.intellij.lang.javascript.psi.JSBinaryExpression;
-import com.intellij.lang.javascript.psi.JSElement;
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
-
+@ExtensionImpl
+@IntentionMetaData(
+    ignoreId = "JSConstantSubexpressionIntention",
+    categories = {"JavaScript", "Other"},
+    fileExtensions = "js"
+)
 public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention {
     @Override
-	@Nonnull
+    @Nonnull
     protected JSElementPredicate getElementPredicate() {
         return new ConstantSubexpressionPredicate();
     }
 
+    @Nonnull
     @Override
-	protected String getTextForElement(PsiElement element) {
-        final PsiElement         parent           = element.getParent();
-        final JSBinaryExpression binaryExpression = (JSBinaryExpression) (parent instanceof JSBinaryExpression ? parent : element);
-        final JSExpression       lhs              = binaryExpression.getLOperand();
-        final JSExpression       leftSide;
+    protected LocalizeValue getBasicText() {
+        return JSIntentionLocalize.constantComputeSubexpression();
+    }
 
-        if (lhs instanceof JSBinaryExpression) {
-            leftSide = ((JSBinaryExpression) lhs).getROperand();
-        } else {
-            leftSide = lhs;
-        }
-        final IElementType operationSign = binaryExpression.getOperationSign();
-        final JSExpression rhs           = binaryExpression.getROperand();
+    @Override
+    @RequiredReadAction
+    protected LocalizeValue getTextForElement(PsiElement element) {
+        PsiElement parent = element.getParent();
+        JSBinaryExpression binaryExpression = (JSBinaryExpression)(parent instanceof JSBinaryExpression ? parent : element);
+        JSExpression lhs = binaryExpression.getLOperand();
+        JSExpression leftSide = lhs instanceof JSBinaryExpression lhsBinaryExpression ? lhsBinaryExpression.getROperand() : lhs;
+        IElementType operationSign = binaryExpression.getOperationSign();
+        JSExpression rhs = binaryExpression.getROperand();
 
         assert (rhs != null);
         assert (leftSide != null);
 
-        return this.getText(leftSide.getText(), BinaryOperatorUtils.getOperatorText(operationSign), rhs.getText());
+        return JSIntentionLocalize.constantComputeSubexpressionMessage(
+            leftSide.getText(),
+            BinaryOperatorUtils.getOperatorText(operationSign),
+            rhs.getText()
+        );
     }
 
     @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final PsiElement   parent        = element.getParent();
-        final JSExpression expression    = (JSExpression) (parent instanceof JSBinaryExpression ? parent : element);
-        String             newExpression = "";
-        final Object       constantValue;
+    @RequiredReadAction
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        PsiElement parent = element.getParent();
+        JSExpression expression = (JSExpression)(parent instanceof JSBinaryExpression ? parent : element);
+        String newExpression = "";
+        Object constantValue;
 
         if (expression instanceof JSBinaryExpression) {
-            final JSBinaryExpression binaryExpression = (JSBinaryExpression) expression;
-            final JSExpression       lhs              = binaryExpression.getLOperand();
+            JSBinaryExpression binaryExpression = (JSBinaryExpression)expression;
+            JSExpression lhs = binaryExpression.getLOperand();
 
-            if (lhs instanceof JSBinaryExpression) {
-                final JSBinaryExpression lhsBinaryExpression = (JSBinaryExpression) lhs;
-                final JSExpression       rightSide           = lhsBinaryExpression.getROperand();
+            if (lhs instanceof JSBinaryExpression lhsBinaryExpression) {
+                JSExpression rightSide = lhsBinaryExpression.getROperand();
 
                 newExpression += getLeftSideText(lhsBinaryExpression);
 
                 assert (rightSide != null);
             }
             constantValue = ExpressionUtil.computeConstantExpression(getSubexpression(binaryExpression));
-        } else {
+        }
+        else {
             constantValue = ExpressionUtil.computeConstantExpression(expression);
         }
 
-        if (constantValue instanceof String) {
-            newExpression += '"' + StringUtil.escapeStringCharacters(constantValue.toString()) + '"';
-        } else {
-            newExpression += String.valueOf(constantValue);
-        }
+        newExpression += constantValue instanceof String strValue
+            ? '"' + StringUtil.escapeStringCharacters(strValue) + '"'
+            : String.valueOf(constantValue);
         JSElementFactory.replaceExpression(expression, newExpression);
     }
 
+    @RequiredReadAction
     private static String getLeftSideText(JSBinaryExpression binaryExpression) {
         return binaryExpression.getLOperand().getText() +
-               BinaryOperatorUtils.getOperatorText(binaryExpression.getOperationSign());
+            BinaryOperatorUtils.getOperatorText(binaryExpression.getOperationSign());
     }
 
     /**
      * Returns the smallest subexpression (if precendence allows it). For instance:
      * variable + 2 + 3 normally gets evaluated left to right -> (variable + 2)
      * + 3 this method returns the right most legal subexpression -> 2 + 3
+     *
      * @param expression the expression to analyse
      * @return the found common sub-expression if found, or <tt>null</tt> otherwise.
      */
     @Nullable
+    @RequiredReadAction
     private static JSBinaryExpression getSubexpression(JSBinaryExpression expression) {
-        final JSExpression       rhs               = expression.getROperand();
-        final IElementType       sign              = expression.getOperationSign();
-        final int                parentPrecendence = ParenthesesUtils.getPrecendence(expression);
+        JSExpression rhs = expression.getROperand();
+        IElementType sign = expression.getOperationSign();
+        int parentPrecendence = ParenthesesUtils.getPrecendence(expression);
 
         if (rhs == null) {
             return null;
         }
 
-        final JSExpression lhs = expression.getLOperand();
+        JSExpression lhs = expression.getLOperand();
 
         if (!(lhs instanceof JSBinaryExpression)) {
             return expression;
         }
 
-        final JSBinaryExpression lhsBinaryExpression = (JSBinaryExpression) lhs;
-        final int                childPrecendence    = ParenthesesUtils.getPrecendence(lhsBinaryExpression);
-        final JSExpression       leftSide            = lhsBinaryExpression.getROperand();
+        JSBinaryExpression lhsBinaryExpression = (JSBinaryExpression)lhs;
+        int childPrecendence = ParenthesesUtils.getPrecendence(lhsBinaryExpression);
+        JSExpression leftSide = lhsBinaryExpression.getROperand();
 
-        if (leftSide == null) {
-            return null;
-        }
-
-        if (parentPrecendence > childPrecendence) {
+        if (leftSide == null || parentPrecendence > childPrecendence) {
             return null;
         }
 
         try {
-            final String  subExpressionText = leftSide.getText() + BinaryOperatorUtils.getOperatorText(sign) +
-                                              rhs.getText();
-            final JSExpression subExpression     = JSChangeUtil.createExpressionFromText(expression.getProject(),
-                                                                                    subExpressionText);
-
-            return (JSBinaryExpression) subExpression;
-        } catch (Throwable ignore) {
+            String subExpressionText = leftSide.getText() + BinaryOperatorUtils.getOperatorText(sign) + rhs.getText();
+            return (JSBinaryExpression)JSChangeUtil.createExpressionFromText(expression.getProject(), subExpressionText);
+        }
+        catch (Throwable ignore) {
             return null;
         }
     }
 
     private static class ConstantSubexpressionPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-            if (!(element instanceof JSElement ||
-                  element.getPrevSibling() instanceof JSElement)) {
+        @RequiredReadAction
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            if (!(element instanceof JSElement || element.getPrevSibling() instanceof JSElement)) {
                 return false;
             }
 
             PsiElement parent = element.getParent();
 
             if (!(parent instanceof JSBinaryExpression)) {
-                if (element instanceof JSBinaryExpression &&
-                    ((JSBinaryExpression) element).getLOperand() instanceof JSBinaryExpression) {
+                if (element instanceof JSBinaryExpression binaryExpression
+                    && binaryExpression.getLOperand() instanceof JSBinaryExpression) {
                     parent = element;
-                } else {
+                }
+                else {
                     return false;
                 }
             }
-            final JSBinaryExpression binaryExpression = (JSBinaryExpression) parent;
+            JSBinaryExpression binaryExpression = (JSBinaryExpression)parent;
 
-            final JSBinaryExpression subexpression = getSubexpression(binaryExpression);
+            JSBinaryExpression subexpression = getSubexpression(binaryExpression);
             if (subexpression == null) {
                 return false;
             }
-            if (binaryExpression.equals(subexpression) &&
-                !isPartOfConstantExpression(binaryExpression)) {
+            if (binaryExpression.equals(subexpression) && !isPartOfConstantExpression(binaryExpression)) {
                 // handled by JSConstantExpressionIntention
                 return false;
             }
-            if (!ExpressionUtil.isConstantExpression(subexpression)) {
-                return false;
-            }
-
-            return (ExpressionUtil.computeConstantExpression(subexpression) != null);
+            return ExpressionUtil.isConstantExpression(subexpression)
+                && ExpressionUtil.computeConstantExpression(subexpression) != null;
         }
 
         private static boolean isPartOfConstantExpression(JSBinaryExpression binaryExpression) {
-            final PsiElement containingElement = binaryExpression.getParent();
+            PsiElement containingElement = binaryExpression.getParent();
 
-            return (containingElement instanceof JSExpression &&
-                    ExpressionUtil.isConstantExpression((JSExpression) containingElement));
+            return containingElement instanceof JSExpression expression && ExpressionUtil.isConstantExpression(expression);
         }
     }
 }

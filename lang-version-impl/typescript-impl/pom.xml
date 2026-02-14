@@ -19,20 +19,20 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>consulo</groupId>
-		<artifactId>arch.ide-provided</artifactId>
-		<version>2-SNAPSHOT</version>
+		<artifactId>arch.ide-api-provided</artifactId>
+		<version>3-SNAPSHOT</version>
 		<relativePath/>
 	</parent>
 
 	<groupId>consulo.plugin</groupId>
 	<artifactId>consulo.javascript-typescript.impl</artifactId>
-	<version>2-SNAPSHOT</version>
+	<version>3-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<repositories>
 		<repository>
 			<id>consulo</id>
-			<url>https://maven.consulo.io/repository/snapshots/</url>
+			<url>https://maven.consulo.dev/repository/snapshots/</url>
 			<snapshots>
 				<enabled>true</enabled>
 				<updatePolicy>interval:60</updatePolicy>
@@ -49,15 +49,8 @@
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>consulo.javascript-javascript17.impl</artifactId>
+			<artifactId>consulo.javascript-ecmascript.impl</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>${project.parent.groupId}</groupId>
-			<artifactId>consulo-lang-impl-testing</artifactId>
-			<version>${project.parent.version}</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

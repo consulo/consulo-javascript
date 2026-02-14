@@ -16,188 +16,147 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.extapi.psi.StubBasedPsiElementBase;
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.index.JSItemPresentation;
 import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSNamedElement;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.navigation.NavigationItem;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.search.SearchScope;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.util.IncorrectOperationException;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.content.scope.SearchScope;
+import consulo.language.ast.ASTNode;
+import consulo.language.impl.psi.stub.StubBasedPsiElementBase;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigationItem;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
- * User: max
- * Date: Jan 30, 2005
- * Time: 8:23:10 PM
+ * @author max
+ * @since 2005-01-30
  */
-public abstract class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElementBase<T> implements JSElement
-{
-	public static Key<NavigationItem> ORIGINAL_ELEMENT = Key.create("ORIGINAL_NAMED_ELEMENT");
-	@NonNls
-	private static final String IMPL = "Impl";
+public abstract class JSStubElementImpl<T extends StubElement> extends StubBasedPsiElementBase<T> implements JSElement {
+    public static Key<NavigationItem> ORIGINAL_ELEMENT = Key.create("ORIGINAL_NAMED_ELEMENT");
 
-	public JSStubElementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+    public JSStubElementImpl(ASTNode node) {
+        super(node);
+    }
 
-	public JSStubElementImpl(final T t, IStubElementType type)
-	{
-		super(t, type);
-	}
+    public JSStubElementImpl(T t, IStubElementType type) {
+        super(t, type);
+    }
 
-	protected abstract void accept(@Nonnull JSElementVisitor visitor);
+    protected abstract void accept(@Nonnull JSElementVisitor visitor);
 
-	@Override
-	public final void accept(@Nonnull PsiElementVisitor visitor)
-	{
-		if(visitor instanceof JSElementVisitor)
-		{
-			accept((JSElementVisitor)visitor);
-		}
-		else
-		{
-			super.accept(visitor);
-		}
-	}
+    @Override
+    public final void accept(@Nonnull PsiElementVisitor visitor) {
+        if (visitor instanceof JSElementVisitor elementVisitor) {
+            accept(elementVisitor);
+        }
+        else {
+            super.accept(visitor);
+        }
+    }
 
-	public SearchScope getDefaultUseScope()
-	{
-		return super.getUseScope();
-	}
+    public SearchScope getDefaultUseScope() {
+        return super.getUseScope();
+    }
 
-	@Override
-	public String toString()
-	{
-		String classname = getClass().getName();
-		if(classname.endsWith(IMPL))
-		{
-			classname = classname.substring(0, classname.length() - IMPL.length());
-		}
+    @Override
+    public ItemPresentation getPresentation() {
+        if (this instanceof JSNamedElement namedThis) {
+            NavigationItem element = getUserData(ORIGINAL_ELEMENT);
+            return element == null ? new JSItemPresentation(namedThis) : element.getPresentation();
+        }
+        return null;
+    }
 
-		classname = classname.substring(classname.lastIndexOf(".") + 1);
-		return classname;
-	}
+    @Override
+    @RequiredWriteAction
+    public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+        if (JSChangeUtil.isStatementOrComment(element)) {
+            if (JSChangeUtil.isStatementContainer(this)) {
+                return JSChangeUtil.doAddBefore(this, element, anchor);
+            }
+            else if (JSChangeUtil.isBlockStatementContainer(this) && anchor != null) {
+                return JSChangeUtil.blockDoAddBefore(element, anchor);
+            }
+        }
 
-	@Override
-	public ItemPresentation getPresentation()
-	{
-		if(this instanceof JSNamedElement)
-		{
-			final NavigationItem element = getUserData(ORIGINAL_ELEMENT);
-			if(element == null)
-			{
-				return new JSItemPresentation((JSNamedElement) this);
-			}
-			return element.getPresentation();
-		}
-		return null;
-	}
+        return super.addBefore(element, anchor);
+    }
 
-	@Override
-	public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException
-	{
-		if(JSChangeUtil.isStatementOrComment(element))
-		{
-			if(JSChangeUtil.isStatementContainer(this))
-			{
-				return JSChangeUtil.doAddBefore(this, element, anchor);
-			}
-			else if(JSChangeUtil.isBlockStatementContainer(this) && anchor != null)
-			{
-				return JSChangeUtil.blockDoAddBefore(element, anchor);
-			}
-		}
+    @Override
+    @RequiredWriteAction
+    public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+        if (JSChangeUtil.isStatementOrComment(element)) {
+            if (JSChangeUtil.isStatementContainer(this)) {
+                return JSChangeUtil.doAddAfter(this, element, anchor);
+            }
+            else if (JSChangeUtil.isBlockStatementContainer(this) && anchor != null) {
+                return JSChangeUtil.blockDoAddAfter(element, anchor);
+            }
+        }
+        return super.addAfter(element, anchor);
+    }
 
-		return super.addBefore(element, anchor);
-	}
+    @Override
+    @RequiredWriteAction
+    public PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor)
+        throws IncorrectOperationException {
+        if (JSChangeUtil.isStatementOrComment(first)) {
+            if (JSChangeUtil.isStatementContainer(this)) {
+                return JSChangeUtil.doAddRangeBefore(this, first, last, anchor);
+            }
+            else if (JSChangeUtil.isBlockStatementContainer(this) && anchor != null) {
+                return JSChangeUtil.blockDoAddRangeBefore(first, last, anchor);
+            }
+        }
+        return super.addRangeBefore(first, last, anchor);
+    }
 
-	@Override
-	public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException
-	{
-		if(JSChangeUtil.isStatementOrComment(element))
-		{
-			if(JSChangeUtil.isStatementContainer(this))
-			{
-				return JSChangeUtil.doAddAfter(this, element, anchor);
-			}
-			else if(JSChangeUtil.isBlockStatementContainer(this) && anchor != null)
-			{
-				return JSChangeUtil.blockDoAddAfter(element, anchor);
-			}
-		}
-		return super.addAfter(element, anchor);
-	}
+    @Override
+    @RequiredWriteAction
+    public PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor) throws IncorrectOperationException {
+        if (JSChangeUtil.isStatementOrComment(first)) {
+            if (JSChangeUtil.isStatementContainer(this)) {
+                return JSChangeUtil.doAddRangeAfter(this, first, last, anchor);
+            }
+            else if (JSChangeUtil.isBlockStatementContainer(this) && anchor != null) {
+                return JSChangeUtil.blockDoAddRangeAfter(first, last, anchor);
+            }
+        }
 
-	@Override
-	public PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor) throws IncorrectOperationException
-	{
-		if(JSChangeUtil.isStatementOrComment(first))
-		{
-			if(JSChangeUtil.isStatementContainer(this))
-			{
-				return JSChangeUtil.doAddRangeBefore(this, first, last, anchor);
-			}
-			else if(JSChangeUtil.isBlockStatementContainer(this) && anchor != null)
-			{
-				return JSChangeUtil.blockDoAddRangeBefore(first, last, anchor);
-			}
-		}
-		return super.addRangeBefore(first, last, anchor);
-	}
+        return super.addRangeAfter(first, last, anchor);
+    }
 
-	@Override
-	public PsiElement addRangeAfter(PsiElement first, PsiElement last, PsiElement anchor) throws IncorrectOperationException
-	{
-		if(JSChangeUtil.isStatementOrComment(first))
-		{
-			if(JSChangeUtil.isStatementContainer(this))
-			{
-				return JSChangeUtil.doAddRangeAfter(this, first, last, anchor);
-			}
-			else if(JSChangeUtil.isBlockStatementContainer(this) && anchor != null)
-			{
-				return JSChangeUtil.blockDoAddRangeAfter(first, last, anchor);
-			}
-		}
+    @Override
+    @RequiredWriteAction
+    public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
+        return addAfter(element, null);
+    }
 
-		return super.addRangeAfter(first, last, anchor);
-	}
+    @Override
+    @RequiredWriteAction
+    public PsiElement addRange(PsiElement first, PsiElement last) throws IncorrectOperationException {
+        return addRangeAfter(first, last, null);
+    }
 
-	@Override
-	public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException
-	{
-		return addAfter(element, null);
-	}
+    @Override
+    @RequiredReadAction
+    public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
+        ASTNode myNode = getNode();
+        ASTNode result = newElement.getNode().copyElement();
+        myNode.getTreeParent().replaceChild(myNode, result);
+        return result.getPsi();
+    }
 
-	@Override
-	public PsiElement addRange(PsiElement first, PsiElement last) throws IncorrectOperationException
-	{
-		return addRangeAfter(first, last, null);
-	}
-
-	@Override
-	public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException
-	{
-		final ASTNode myNode = getNode();
-		final ASTNode result = newElement.getNode().copyElement();
-		myNode.getTreeParent().replaceChild(myNode, result);
-		return result.getPsi();
-	}
-
-	@Override
-	public PsiElement getParent()
-	{
-		return getParentByStub();
-	}
+    @Override
+    public PsiElement getParent() {
+        return getParentByStub();
+    }
 }

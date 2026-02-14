@@ -15,43 +15,57 @@
  */
 package org.intellij.idea.lang.javascript.intention.number;
 
-import javax.annotation.Nonnull;
-
+import com.intellij.lang.javascript.psi.JSLiteralExpression;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.NumberUtil;
 
-import com.intellij.lang.javascript.psi.JSLiteralExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
-
-
+@ExtensionImpl
+@IntentionMetaData(
+    ignoreId = "JSConvertIntegerToDecimalIntention",
+    categories = {"JavaScript", "Numbers"},
+    fileExtensions = "js"
+)
 public class JSConvertIntegerToDecimalIntention extends JSIntention {
     @Override
-	@Nonnull
+    @Nonnull
+    public LocalizeValue getText() {
+        return JSIntentionLocalize.numberConvertIntegerToDecimal();
+    }
+
+    @Override
+    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new ConvertIntegerToDecimalPredicate();
     }
 
     @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSLiteralExpression exp = (JSLiteralExpression) element;
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        JSLiteralExpression exp = (JSLiteralExpression)element;
 
         JSElementFactory.replaceExpression(exp, NumberUtil.getLiteralNumber(exp).toString());
     }
 
     private static class ConvertIntegerToDecimalPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
+        @RequiredReadAction
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (!(element instanceof JSLiteralExpression)) {
                 return false;
             }
 
-            final String elementText = element.getText();
+            String elementText = element.getText();
 
-            return (NumberUtil.isHex  (elementText) ||
-                    NumberUtil.isOctal(elementText));
+            return NumberUtil.isHex(elementText) || NumberUtil.isOctal(elementText);
         }
     }
 }

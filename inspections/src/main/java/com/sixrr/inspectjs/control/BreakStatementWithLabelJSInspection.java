@@ -1,41 +1,43 @@
 package com.sixrr.inspectjs.control;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.lang.javascript.psi.JSBreakStatement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
+@ExtensionImpl
 public class BreakStatementWithLabelJSInspection extends JavaScriptInspection {
-
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("break.statement.with.label.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.breakStatementWithLabelDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
+    @Nullable
     @Override
-	@Nullable
-    protected String buildErrorString(Object... args) {
-        return InspectionJSBundle.message("break.statement.with.label.error.string");
+    @RequiredReadAction
+    protected String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.breakStatementWithLabelErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
     private static class Visitor extends BaseInspectionVisitor {
-
         @Override public void visitJSBreakStatement(@Nonnull JSBreakStatement statement) {
             super.visitJSBreakStatement(statement);
             if (statement.getLabel() == null) {

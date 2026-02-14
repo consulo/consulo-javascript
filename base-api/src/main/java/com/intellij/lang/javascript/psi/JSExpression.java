@@ -16,26 +16,25 @@
 
 package com.intellij.lang.javascript.psi;
 
-import com.intellij.util.ArrayFactory;
+import consulo.util.collection.ArrayFactory;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.lang.psi.JavaScriptType;
+import consulo.javascript.language.psi.JavaScriptType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max
- * @since  6:46:19 PM Jan 30, 2005
+ * @since 2005-01-30
  */
-public interface JSExpression extends JSElement
-{
-	JSExpression[] EMPTY_ARRAY = new JSExpression[0];
+public interface JSExpression extends JSElement {
+    JSExpression[] EMPTY_ARRAY = new JSExpression[0];
 
-	ArrayFactory<JSExpression> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new JSExpression[count];
+    ArrayFactory<JSExpression> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new JSExpression[count];
 
-	@Nonnull
-	JSExpression replace(JSExpression other);
+    @Nonnull
+    JSExpression replace(JSExpression other);
 
-	@Nonnull
-	@RequiredReadAction
-	JavaScriptType getType();
+    @Nonnull
+    @RequiredReadAction
+    JavaScriptType getType();
 }

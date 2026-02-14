@@ -16,54 +16,70 @@
 package org.intellij.idea.lang.javascript.intention.initialization;
 
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.FindReferenceUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
 import java.util.Iterator;
 
+@ExtensionImpl
+@IntentionMetaData(
+    ignoreId = "JSMergeDeclarationAndInitializationIntention",
+    categories = {"JavaScript", "Declaration"},
+    fileExtensions = "js"
+)
 public class JSMergeDeclarationAndInitializationIntention extends JSIntention {
-    @NonNls private static final String JS_VAR_PREFIX = "var ";
+    @Override
+    @Nonnull
+    public LocalizeValue getText() {
+        return JSIntentionLocalize.initializationMergeDeclarationAndInitialization();
+    }
 
     @Override
-	@Nonnull
+    @Nonnull
     protected JSElementPredicate getElementPredicate() {
         return new Predicate();
     }
 
     @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    @RequiredReadAction
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         assert (element instanceof JSVarStatement);
 
-        final JSVarStatement varStatement      = (JSVarStatement) element;
-        StringBuilder        declarationBuffer = new StringBuilder();
+        JSVarStatement varStatement = (JSVarStatement)element;
+        StringBuilder declarationBuffer = new StringBuilder();
 
-        for (final JSVariable variable : varStatement.getVariables()) {
+        for (JSVariable variable : varStatement.getVariables()) {
             if (variable.hasInitializer()) {
-                declarationBuffer.append((declarationBuffer.length() == 0) ? JS_VAR_PREFIX : ", ")
-                                 .append(variable.getName())
-                                 .append(" = ")
-                                 .append(variable.getInitializer().getText());
-            } else {
-                final Iterator<PsiElement>  referenceIterator = FindReferenceUtil.getReferencesAfter(variable, variable.getTextRange().getEndOffset()).iterator();
-                final JSReferenceExpression firstReference    = (JSReferenceExpression) (referenceIterator.hasNext() ? referenceIterator.next() : null);
-//                final JSReferenceExpression firstReference = FindReferenceUtil.findFirstReference(variable);
+                declarationBuffer.append(declarationBuffer.isEmpty() ? "var " : ", ")
+                    .append(variable.getName()).append(" = ").append(variable.getInitializer().getText());
+            }
+            else {
+                Iterator<PsiElement> referenceIterator =
+                    FindReferenceUtil.getReferencesAfter(variable, variable.getTextRange().getEndOffset()).iterator();
+                JSReferenceExpression firstReference =
+                    (JSReferenceExpression)(referenceIterator.hasNext() ? referenceIterator.next() : null);
+                //final JSReferenceExpression firstReference = FindReferenceUtil.findFirstReference(variable);
 
-                if (firstReference != null &&
-                    firstReference.getParent() instanceof JSDefinitionExpression) {
-                    final JSExpressionStatement assignmentStatement = (JSExpressionStatement) firstReference.getParent().getParent().getParent();
+                if (firstReference != null && firstReference.getParent() instanceof JSDefinitionExpression definitionExpression) {
+                    JSExpressionStatement assignmentStatement = (JSExpressionStatement)definitionExpression.getParent().getParent();
 
                     // Replace assignment statement by var statement.
-                    JSElementFactory.replaceStatement(assignmentStatement, JS_VAR_PREFIX + assignmentStatement.getText());
-                } else {
-                    declarationBuffer.append((declarationBuffer.length() == 0) ? JS_VAR_PREFIX : ", ")
-                                     .append(variable.getName());
+                    JSElementFactory.replaceStatement(assignmentStatement, "var " + assignmentStatement.getText());
+                }
+                else {
+                    declarationBuffer.append((declarationBuffer.length() == 0) ? "var " : ", ")
+                        .append(variable.getName());
                 }
             }
         }
@@ -71,7 +87,8 @@ public class JSMergeDeclarationAndInitializationIntention extends JSIntention {
         // Do replacement.
         if (declarationBuffer.length() == 0) {
             JSElementFactory.removeElement(varStatement);
-        } else {
+        }
+        else {
             declarationBuffer.append(';');
             JSElementFactory.replaceStatement(varStatement, declarationBuffer.toString());
         }
@@ -79,24 +96,23 @@ public class JSMergeDeclarationAndInitializationIntention extends JSIntention {
 
     private static class Predicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-            if (!(element instanceof JSVarStatement)) {
-                return false;
-            }
-            final JSVarStatement varStatement = (JSVarStatement) element;
-            if (ErrorUtil.containsError(varStatement)) {
-                return false;
-            }
+        @RequiredReadAction
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            if (element instanceof JSVarStatement varStatement && !ErrorUtil.containsError(varStatement)) {
+                for (JSVariable variable : varStatement.getVariables()) {
+                    if (variable.hasInitializer()) {
+                        continue;
+                    }
 
-            for (JSVariable variable : varStatement.getVariables()) {
-                if (!variable.hasInitializer()) {
-                    final Iterator<PsiElement>  referenceIterator = FindReferenceUtil.getReferencesAfter(variable, variable.getTextRange().getEndOffset()).iterator();
-                    final JSReferenceExpression firstReference    = (JSReferenceExpression) (referenceIterator.hasNext() ? referenceIterator.next() : null);
+                    Iterator<PsiElement> referenceIterator =
+                        FindReferenceUtil.getReferencesAfter(variable, variable.getTextRange().getEndOffset()).iterator();
+                    JSReferenceExpression firstReference =
+                        (JSReferenceExpression)(referenceIterator.hasNext() ? referenceIterator.next() : null);
 
-                    if (firstReference != null &&
-                        firstReference.getParent()                         instanceof JSDefinitionExpression &&
-                        firstReference.getParent().getParent()             instanceof JSAssignmentExpression &&
-                        firstReference.getParent().getParent().getParent() instanceof JSExpressionStatement) {
+                    if (firstReference != null
+                        && firstReference.getParent() instanceof JSDefinitionExpression definitionExpression
+                        && definitionExpression.getParent() instanceof JSAssignmentExpression assignmentExpression
+                        && assignmentExpression.getParent() instanceof JSExpressionStatement) {
                         return true;
                     }
                 }

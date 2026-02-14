@@ -16,29 +16,22 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.psi.JSCommaExpression;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 11:41:42 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public class JSCommaExpressionImpl extends JSBinaryExpressionImpl implements JSCommaExpression
-{
-	public JSCommaExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSCommaExpressionImpl extends JSBinaryExpressionImpl implements JSCommaExpression {
+    public JSCommaExpressionImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSCommaExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSCommaExpression(this);
+    }
 }

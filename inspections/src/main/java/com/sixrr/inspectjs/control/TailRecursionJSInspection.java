@@ -1,35 +1,36 @@
 package com.sixrr.inspectjs.control;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 
+@ExtensionImpl
 public class TailRecursionJSInspection extends JavaScriptInspection {
-
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message(
-                "tail.recursion.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.tailRecursionDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    protected String buildErrorString(Object... args) {
-        return InspectionJSBundle.message(
-                "tail.recursion.problem.descriptor");
+    @RequiredReadAction
+    protected String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.tailRecursionProblemDescriptor().get();
     }
 
     /*
@@ -171,40 +172,42 @@ public class TailRecursionJSInspection extends JavaScriptInspection {
     */
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new TailRecursionVisitor();
     }
 
     private static class TailRecursionVisitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSReturnStatement(
-                @Nonnull JSReturnStatement statement) {
+        @Override
+        public void visitJSReturnStatement(
+            @Nonnull JSReturnStatement statement
+        ) {
             super.visitJSReturnStatement(statement);
-            final JSExpression returnValue = statement.getExpression();
+            JSExpression returnValue = statement.getExpression();
             if (!(returnValue instanceof JSCallExpression)) {
                 return;
             }
-            final JSFunction containingMethod =
-                    PsiTreeUtil.getParentOfType(statement,
-                            JSFunction.class);
+            JSFunction containingMethod =
+                PsiTreeUtil.getParentOfType(
+                    statement,
+                    JSFunction.class
+                );
             if (containingMethod == null) {
                 return;
             }
-            final JSCallExpression returnCall =
-                    (JSCallExpression) returnValue;
-            final JSExpression methodExpression = returnCall.getMethodExpression();
-            if(!(methodExpression  instanceof JSReferenceExpression))
-            {
+            JSCallExpression returnCall =
+                (JSCallExpression) returnValue;
+            JSExpression methodExpression = returnCall.getMethodExpression();
+            if (!(methodExpression instanceof JSReferenceExpression)) {
                 return;
             }
-            final JSReferenceExpression reference =(JSReferenceExpression) methodExpression;
+            JSReferenceExpression reference = (JSReferenceExpression) methodExpression;
 
-            final PsiElement referent = reference.resolve();
-            if(!(referent instanceof JSFunction))
-            {
+            PsiElement referent = reference.resolve();
+            if (!(referent instanceof JSFunction)) {
                 return;
             }
-            final JSFunction method = (JSFunction) referent;
+            JSFunction method = (JSFunction) referent;
 
             if (!method.equals(containingMethod)) {
                 return;

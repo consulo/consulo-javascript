@@ -1,44 +1,46 @@
 package com.sixrr.inspectjs.control;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.psi.JSBreakStatement;
 import com.intellij.lang.javascript.psi.JSCaseClause;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-import javax.annotation.Nullable;
-
+@ExtensionImpl
 public class BreakStatementJSInspection extends JavaScriptInspection {
-
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("break.statement.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.breakStatementDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
+    @Nullable
     @Override
-	@Nullable
-    protected String buildErrorString(Object... args) {
-        return InspectionJSBundle.message("break.statement.error.string");
+    @RequiredReadAction
+    protected String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.breakStatementErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
     private static class Visitor extends BaseInspectionVisitor {
-
-        @Override public void visitJSBreakStatement(@Nonnull JSBreakStatement statement) {
+        @Override
+        public void visitJSBreakStatement(@Nonnull JSBreakStatement statement) {
             super.visitJSBreakStatement(statement);
             if (statement.getParent() instanceof JSCaseClause) {
                 return;

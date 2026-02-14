@@ -16,44 +16,38 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSArgumentList;
 import com.intellij.lang.javascript.psi.JSCallExpression;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.language.ast.ASTNode;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:15:02 PM
+ * @author max
+ * @since 2005-01-30
  */
-public class JSArgumentListImpl extends JSElementImpl implements JSArgumentList
-{
-	public JSArgumentListImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSArgumentListImpl extends JSElementImpl implements JSArgumentList {
+    public JSArgumentListImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression[] getArguments()
-	{
-		return findChildrenByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression[] getArguments() {
+        return findChildrenByClass(JSExpression.class);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSArgumentList(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSArgumentList(this);
+    }
 
-	@Override
-	public void delete() throws IncorrectOperationException
-	{
-		PsiElement element = getParent();
-		element.replace(((JSCallExpression) element).getMethodExpression());
-	}
+    @Override
+    public void delete() throws IncorrectOperationException {
+        PsiElement element = getParent();
+        element.replace(((JSCallExpression)element).getMethodExpression());
+    }
 }

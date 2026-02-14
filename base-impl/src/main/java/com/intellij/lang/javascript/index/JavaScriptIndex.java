@@ -16,29 +16,25 @@
 
 package com.intellij.lang.javascript.index;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 
 /**
  * @author maxim, yole
  */
 @Deprecated
-public final class JavaScriptIndex
-{
-	public static final String ECMASCRIPT_JS2 = "ECMAScript.js2";
+public final class JavaScriptIndex {
+    public static final String ECMASCRIPT_JS2 = "ECMAScript.js2";
 
-	public static boolean isFromPredefinedFile(final PsiFile containingFile)
-	{
-		return false;
-	}
+    public static boolean isFromPredefinedFile(PsiFile containingFile) {
+        return false;
+    }
 
-	public static PsiElement findSymbolByFileAndNameAndOffset(final String fileName, final String name, final int offset)
-	{
-		return null;
-	}
+    public static PsiElement findSymbolByFileAndNameAndOffset(String fileName, String name, int offset) {
+        return null;
+    }
 
-	public static PsiElement findSymbolWithNameAndOffsetInEntry(final String nameId, final int offset)
-	{
-		return null;
-	}
+    public static PsiElement findSymbolWithNameAndOffsetInEntry(String nameId, int offset) {
+        return null;
+    }
 }

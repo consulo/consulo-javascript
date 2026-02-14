@@ -16,18 +16,20 @@
 
 package com.intellij.lang.javascript.search;
 
+import com.intellij.lang.javascript.psi.JSClass;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.component.extension.ExtensionPointName;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.project.Project;
+
 import java.util.Collection;
 
-import com.intellij.lang.javascript.psi.JSClass;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.search.GlobalSearchScope;
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface JSClassInheritorsProvider {
+    ExtensionPointName<JSClassInheritorsProvider> EP_NAME = ExtensionPointName.create(JSClassInheritorsProvider.class);
 
-public interface JSClassInheritorsProvider
-{
-	ExtensionPointName<JSClassInheritorsProvider> EP_NAME = ExtensionPointName.create("consulo.javascript.classInheritorsProvider");
+    Collection<JSClass> getImplementingClasses(String parentName, Project project, GlobalSearchScope scope);
 
-	Collection<JSClass> getImplementingClasses(String parentName, Project project, GlobalSearchScope scope);
-
-	Collection<JSClass> getExtendingClasses(String parentName, Project project, GlobalSearchScope scope);
+    Collection<JSClass> getExtendingClasses(String parentName, Project project, GlobalSearchScope scope);
 }

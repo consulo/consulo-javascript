@@ -16,20 +16,30 @@
 
 package com.intellij.lang.javascript.psi;
 
-import com.intellij.psi.tree.IElementType;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
+import jakarta.annotation.Nullable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 6:49:21 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public interface JSBinaryExpression extends JSExpression
-{
-	JSExpression getLOperand();
+public interface JSBinaryExpression extends JSExpression {
+    @RequiredReadAction
+    JSExpression getLOperand();
 
-	JSExpression getROperand();
+    @RequiredReadAction
+    JSExpression getROperand();
 
-	IElementType getOperationSign();
+    @Nullable
+    @RequiredReadAction
+    default IElementType getOperationSign() {
+        PsiElement element = getOperationElement();
+        return element != null ? element.getNode().getElementType() : null;
+    }
+
+    @Nullable
+    @RequiredReadAction
+    PsiElement getOperationElement();
 }

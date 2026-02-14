@@ -16,29 +16,23 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSThisExpression;
+import consulo.language.ast.ASTNode;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 11:24:42 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public class JSThisExpressionImpl extends JSExpressionImpl implements JSThisExpression
-{
-	public JSThisExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSThisExpressionImpl extends JSExpressionImpl implements JSThisExpression {
+    public JSThisExpressionImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSThisExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSThisExpression(this);
+    }
 }

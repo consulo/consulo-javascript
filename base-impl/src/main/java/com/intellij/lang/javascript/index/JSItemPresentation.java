@@ -21,85 +21,73 @@ import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSNamedElement;
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.util.Iconable;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import consulo.ide.IconDescriptorUpdaters;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.component.util.Iconable;
+import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.language.psi.PsiFile;
+import consulo.navigation.ItemPresentation;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Maxim.Mossienko
- * @since 9:55:49 PM Apr 7, 2006
+ * @since 2006-04-07
  */
-public class JSItemPresentation implements ItemPresentation
-{
-	private JSNamedElement myElement;
+public class JSItemPresentation implements ItemPresentation {
+    private JSNamedElement myElement;
 
-	public JSItemPresentation(final JSNamedElement elementProxy)
-	{
-		this.myElement = elementProxy;
-	}
+    public JSItemPresentation(JSNamedElement elementProxy) {
+        this.myElement = elementProxy;
+    }
 
-	@Override
-	public String getPresentableText()
-	{
-		return myElement.getName();
-	}
+    @Override
+    public String getPresentableText() {
+        return myElement.getName();
+    }
 
-	@Override
-	@Nullable
-	public String getLocationString()
-	{
-		final PsiFile psiFile = myElement.getContainingFile();
-		if(myElement instanceof JSVariable || myElement instanceof JSFunction)
-		{
-			PsiElement possibleClazz = JSResolveUtil.findParent(myElement);
+    @Nullable
+    @Override
+    @RequiredReadAction
+    public String getLocationString() {
+        PsiFile psiFile = myElement.getContainingFile();
+        if (myElement instanceof JSVariable || myElement instanceof JSFunction) {
+            if (JSResolveUtil.findParent(myElement) instanceof JSClass possibleJsClass) {
+                StringBuilder presentation = new StringBuilder();
 
-			if(possibleClazz instanceof JSClass)
-			{
-				final StringBuilder presentation = new StringBuilder();
+                presentation.append(possibleJsClass.getQualifiedName());
+                presentation.append('(').append(getFileName(psiFile)).append(')');
+                return presentation.toString();
+            }
+        }
+        else if (myElement instanceof JSClass jsClass) {
+            String s = jsClass.getQualifiedName();
+            int i = s.lastIndexOf('.');
 
-				presentation.append(((JSClass) possibleClazz).getQualifiedName());
-				presentation.append('(').append(getFileName(psiFile)).append(')');
-				return presentation.toString();
-			}
-		}
-		else if(myElement instanceof JSClass)
-		{
-			final String s = ((JSClass) myElement).getQualifiedName();
-			final int i = s.lastIndexOf('.');
+            if (i != -1) {
+                StringBuilder presentation = new StringBuilder();
 
-			if(i != -1)
-			{
-				final StringBuilder presentation = new StringBuilder();
+                presentation.append(s.substring(0, i));
+                presentation.append('(').append(getFileName(psiFile)).append(')');
+                return presentation.toString();
+            }
+        }
+        return getFileName(psiFile);
+    }
 
-				presentation.append(s.substring(0, i));
-				presentation.append('(').append(getFileName(psiFile)).append(')');
-				return presentation.toString();
-			}
-		}
-		return getFileName(psiFile);
-	}
+    @RequiredReadAction
+    private static String getFileName(PsiFile psiFile) {
+        String s = psiFile.getName();
+        if (JSResolveUtil.isPredefinedFile(psiFile)) {
+            return s.substring(s.lastIndexOf('/') + 1);
+        }
+        return s;
+    }
 
-	private static String getFileName(final PsiFile psiFile)
-	{
-		final String s = psiFile.getName();
-		if(JSResolveUtil.isPredefinedFile(psiFile))
-		{
-			return s.substring(s.lastIndexOf('/') + 1);
-		}
-		return s;
-	}
-
-	@Override
-	@Nullable
-	@RequiredUIAccess
-	public Image getIcon()
-	{
-		return IconDescriptorUpdaters.getIcon(myElement, Iconable.ICON_FLAG_VISIBILITY);
-	}
+    @Override
+    @Nullable
+    @RequiredUIAccess
+    public Image getIcon() {
+        return IconDescriptorUpdaters.getIcon(myElement, Iconable.ICON_FLAG_VISIBILITY);
+    }
 }

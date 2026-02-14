@@ -16,61 +16,54 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSPackageStatement;
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.stubs.JSVariableStub;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.ASTNode;
+import consulo.language.util.IncorrectOperationException;
+import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 8:47:58 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public class JSVariableImpl extends JSVariableBaseImpl<JSVariableStub, JSVariable>
-{
-	public JSVariableImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSVariableImpl extends JSVariableBaseImpl<JSVariableStub, JSVariable> {
+    public JSVariableImpl(ASTNode node) {
+        super(node);
+    }
 
-	public JSVariableImpl(final JSVariableStub stub)
-	{
-		super(stub, JSElementTypes.VARIABLE);
-	}
+    public JSVariableImpl(JSVariableStub stub) {
+        super(stub, JSElementTypes.VARIABLE);
+    }
 
-	@Override
-	public PsiElement getNavigationElement()
-	{
-		PsiElement parent = getParent().getParent();
-		if(parent instanceof JSClass)
-		{
-			PsiElement parentOriginalElement = parent.getNavigationElement();
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public PsiElement getNavigationElement() {
+        if (getParent().getParent() instanceof JSClass jsClass) {
+            PsiElement parentOriginalElement = jsClass.getNavigationElement();
 
-			if(parentOriginalElement != parent)
-			{
-				JSVariable jsVariable = ((JSClass) parentOriginalElement).findFieldByName(getName());
-				return jsVariable != null ? jsVariable : this;
-			}
-		}
-		return JSPsiImplUtils.findTopLevelNavigatableElement(this);
-	}
+            if (parentOriginalElement != jsClass) {
+                JSVariable jsVariable = ((JSClass)parentOriginalElement).findFieldByName(getName());
+                return jsVariable != null ? jsVariable : this;
+            }
+        }
+        return JSPsiImplUtils.findTopLevelNavigatableElement(this);
+    }
 
-	@Override
-	public PsiElement setName(@Nonnull String name) throws IncorrectOperationException
-	{
-		String oldName = getName();
-		PsiElement element = super.setName(name);
-		if(getParent().getParent() instanceof JSPackageStatement)
-		{
-			JSPsiImplUtils.updateFileName(this, name, oldName);
-		}
-		return element;
-	}
+    @Override
+    @RequiredWriteAction
+    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+        String oldName = getName();
+        PsiElement element = super.setName(name);
+        if (getParent().getParent() instanceof JSPackageStatement) {
+            JSPsiImplUtils.updateFileName(this, name, oldName);
+        }
+        return element;
+    }
 }

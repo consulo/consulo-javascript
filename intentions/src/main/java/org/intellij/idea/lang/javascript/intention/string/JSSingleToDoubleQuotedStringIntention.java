@@ -15,34 +15,50 @@
  */
 package org.intellij.idea.lang.javascript.intention.string;
 
-import javax.annotation.Nonnull;
-
+import com.intellij.lang.javascript.psi.JSLiteralExpression;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
-import com.intellij.lang.javascript.psi.JSLiteralExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
-
+@ExtensionImpl
+@IntentionMetaData(
+    ignoreId = "JSSingleToDoubleQuotedStringIntention",
+    categories = {"JavaScript", "Other"},
+    fileExtensions = "js"
+)
 public class JSSingleToDoubleQuotedStringIntention extends JSIntention {
     @Override
-	@Nonnull
+    @Nonnull
+    public LocalizeValue getText() {
+        return JSIntentionLocalize.stringSingleToDoubleQuotedString();
+    }
+
+    @Override
+    @Nonnull
     protected JSElementPredicate getElementPredicate() {
         return new SingleToDoubleQuotedStringPredicate();
     }
 
     @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSLiteralExpression charLiteral = (JSLiteralExpression) element;
+    @RequiredReadAction
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        JSLiteralExpression charLiteral = (JSLiteralExpression)element;
 
         JSElementFactory.replaceExpression(charLiteral, changeQuotes(charLiteral.getText()));
     }
 
     static String changeQuotes(String charLiteral) {
-        StringBuilder buffer      = new StringBuilder(charLiteral);
-        int           simpleIndex = charLiteral.lastIndexOf(StringUtil.SIMPLE_QUOTE, charLiteral.length() - 2);
-        int           doubleIndex = charLiteral.lastIndexOf(StringUtil.DOUBLE_QUOTE);
+        StringBuilder buffer = new StringBuilder(charLiteral);
+        int simpleIndex = charLiteral.lastIndexOf(StringUtil.SIMPLE_QUOTE, charLiteral.length() - 2);
+        int doubleIndex = charLiteral.lastIndexOf(StringUtil.DOUBLE_QUOTE);
 
         while (simpleIndex > 0 || doubleIndex >= 0) {
             if (simpleIndex > doubleIndex) {
@@ -50,14 +66,15 @@ public class JSSingleToDoubleQuotedStringIntention extends JSIntention {
                     buffer.deleteCharAt(simpleIndex - 1);
                 }
                 simpleIndex = charLiteral.lastIndexOf(StringUtil.SIMPLE_QUOTE, simpleIndex - 2);
-            } else {
+            }
+            else {
                 if (charLiteral.charAt(doubleIndex - 1) != StringUtil.BACKSLASH) {
                     buffer.insert(doubleIndex, StringUtil.BACKSLASH);
                 }
                 doubleIndex = charLiteral.lastIndexOf(StringUtil.DOUBLE_QUOTE, doubleIndex - 1);
             }
         }
-        buffer.setCharAt(0,                   StringUtil.DOUBLE_QUOTE);
+        buffer.setCharAt(0, StringUtil.DOUBLE_QUOTE);
         buffer.setCharAt(buffer.length() - 1, StringUtil.DOUBLE_QUOTE);
 
         return buffer.toString();
@@ -65,14 +82,8 @@ public class JSSingleToDoubleQuotedStringIntention extends JSIntention {
 
     private static class SingleToDoubleQuotedStringPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-            if (!(element instanceof JSLiteralExpression)) {
-                return false;
-            }
-
-            final JSLiteralExpression expression = (JSLiteralExpression) element;
-
-            return StringUtil.isSimpleQuoteStringLiteral(expression);
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            return element instanceof JSLiteralExpression expression && StringUtil.isSimpleQuoteStringLiteral(expression);
         }
     }
 }

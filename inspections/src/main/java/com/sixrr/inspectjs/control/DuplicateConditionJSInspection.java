@@ -2,76 +2,79 @@ package com.sixrr.inspectjs.control;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import com.sixrr.inspectjs.utils.EquivalenceChecker;
-import javax.annotation.Nonnull;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+@ExtensionImpl
 public class DuplicateConditionJSInspection extends JavaScriptInspection {
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("duplicate.condition.in.if.statement.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.duplicateConditionInIfStatementDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
     @Override
-	public String buildErrorString(Object... args) {
-        return InspectionJSBundle.message("duplicate.condition.error.string");
+    @RequiredReadAction
+    public String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.duplicateConditionErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new DuplicateConditionVisitor();
     }
 
-    private static class DuplicateConditionVisitor
-            extends BaseInspectionVisitor {
-
-        @Override public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
+    private static class DuplicateConditionVisitor extends BaseInspectionVisitor {
+        @Override
+        public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
             super.visitJSIfStatement(statement);
-            final PsiElement parent = statement.getParent();
+            PsiElement parent = statement.getParent();
             if (parent instanceof JSIfStatement) {
-                final JSIfStatement parentStatement = (JSIfStatement) parent;
-                final JSStatement elseBranch = parentStatement.getElse();
+                JSIfStatement parentStatement = (JSIfStatement) parent;
+                JSStatement elseBranch = parentStatement.getElse();
                 if (statement.equals(elseBranch)) {
                     return;
                 }
             }
-            final Set<JSExpression> conditions = new HashSet<JSExpression>();
+            Set<JSExpression> conditions = new HashSet<JSExpression>();
             collectConditionsForIfStatement(statement, conditions);
-            final int numConditions = conditions.size();
+            int numConditions = conditions.size();
             if (numConditions < 2) {
                 return;
             }
-            final JSExpression[] conditionArray =
-                    conditions.toArray(new JSExpression[numConditions]);
-            final boolean[] matched = new boolean[conditionArray.length];
+            JSExpression[] conditionArray = conditions.toArray(new JSExpression[numConditions]);
+            boolean[] matched = new boolean[conditionArray.length];
             Arrays.fill(matched, false);
             for (int i = 0; i < conditionArray.length; i++) {
                 if (matched[i]) {
                     continue;
                 }
-                final JSExpression condition = conditionArray[i];
+                JSExpression condition = conditionArray[i];
                 for (int j = i + 1; j < conditionArray.length; j++) {
                     if (matched[j]) {
                         continue;
                     }
-                    final JSExpression testCondition = conditionArray[j];
-                    final boolean areEquivalent =
+                    JSExpression testCondition = conditionArray[j];
+                    boolean areEquivalent =
                             EquivalenceChecker.expressionsAreEquivalent(condition,
                                     testCondition);
                     if (areEquivalent) {
@@ -86,11 +89,10 @@ public class DuplicateConditionJSInspection extends JavaScriptInspection {
             }
         }
 
-        private void collectConditionsForIfStatement(JSIfStatement statement,
-                                                     Set<JSExpression> conditions) {
-            final JSExpression condition = statement.getCondition();
+        private void collectConditionsForIfStatement(JSIfStatement statement, Set<JSExpression> conditions) {
+            JSExpression condition = statement.getCondition();
             collectConditionsForExpression(condition, conditions);
-            final JSStatement branch = statement.getElse();
+            JSStatement branch = statement.getElse();
             if (branch instanceof JSIfStatement) {
                 collectConditionsForIfStatement((JSIfStatement) branch, conditions);
             }
@@ -100,18 +102,17 @@ public class DuplicateConditionJSInspection extends JavaScriptInspection {
             if (condition == null) {
                 return;
             }
-            if (condition instanceof JSParenthesizedExpression) {
-                final JSExpression contents = ((JSParenthesizedExpression) condition).getInnerExpression();
+            if (condition instanceof JSParenthesizedExpression parenthesizedExpression) {
+                JSExpression contents = parenthesizedExpression.getInnerExpression();
                 collectConditionsForExpression(contents, conditions);
                 return;
             }
-            if (condition instanceof JSBinaryExpression) {
-                final JSBinaryExpression binaryExpression = (JSBinaryExpression) condition;
-                final IElementType sign = binaryExpression.getOperationSign();
+            if (condition instanceof JSBinaryExpression binaryExpression) {
+                IElementType sign = binaryExpression.getOperationSign();
                 if (JSTokenTypes.OROR.equals(sign)) {
-                    final JSExpression lhs = binaryExpression.getLOperand();
+                    JSExpression lhs = binaryExpression.getLOperand();
                     collectConditionsForExpression(lhs, conditions);
-                    final JSExpression rhs = binaryExpression.getROperand();
+                    JSExpression rhs = binaryExpression.getROperand();
                     collectConditionsForExpression(rhs, conditions);
                     return;
                 }

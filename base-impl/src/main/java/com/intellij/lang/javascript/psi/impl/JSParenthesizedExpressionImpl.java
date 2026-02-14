@@ -16,34 +16,28 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSParenthesizedExpression;
-
-import javax.annotation.Nonnull;
+import consulo.language.ast.ASTNode;
+import jakarta.annotation.Nonnull;
 
 /**
- * User: max
- * Date: Jan 30, 2005
- * Time: 11:30:44 PM
+ * @author max
+ * @since 2005-01-30
  */
-public class JSParenthesizedExpressionImpl extends JSExpressionImpl implements JSParenthesizedExpression
-{
-	public JSParenthesizedExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSParenthesizedExpressionImpl extends JSExpressionImpl implements JSParenthesizedExpression {
+    public JSParenthesizedExpressionImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getInnerExpression()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression getInnerExpression() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSParenthesizedExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSParenthesizedExpression(this);
+    }
 }

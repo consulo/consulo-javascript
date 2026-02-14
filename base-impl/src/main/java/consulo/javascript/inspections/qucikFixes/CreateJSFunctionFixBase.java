@@ -14,96 +14,87 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.javascript.inspections.qucikFixes;
 
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import org.jetbrains.annotations.PropertyKey;
-import com.intellij.codeInsight.template.Template;
-import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.inspections.qucikFixes.BaseCreateFix;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.lang.JavaScriptFeature;
+import consulo.javascript.language.JavaScriptFeature;
+import consulo.language.editor.template.Template;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
+
+import jakarta.annotation.Nonnull;
+
+import java.util.Set;
 
 /**
-* @author VISTALL
-* @since 24.02.2016
-*/
-public abstract class CreateJSFunctionFixBase extends BaseCreateFix
-{
-	private final String myName;
-	private final String myIntentionNameKey;
+ * @author VISTALL
+ * @since 2016-02-24
+ */
+public abstract class CreateJSFunctionFixBase extends BaseCreateFix {
+    @Nonnull
+    private final LocalizeValue myMessage;
 
-	public CreateJSFunctionFixBase(String name, @PropertyKey(resourceBundle = JavaScriptBundle.BUNDLE) String nameKey)
-	{
-		myName = name;
-		myIntentionNameKey = nameKey;
-	}
+    public CreateJSFunctionFixBase(@Nonnull LocalizeValue message) {
+        myMessage = message;
+    }
 
-	@Override
-	@Nonnull
-	public String getName()
-	{
-		return JavaScriptBundle.message(myIntentionNameKey, myName);
-	}
+    @Override
+    @Nonnull
+    public LocalizeValue getName() {
+        return myMessage;
+    }
 
-	@Override
-	@Nonnull
-	public String getFamilyName()
-	{
-		return JavaScriptBundle.message("javascript.create.function.intention.family");
-	}
+    @RequiredReadAction
+    @Override
+    protected void buildTemplate(
+        Template template,
+        JSReferenceExpression referenceExpression,
+        Set<JavaScriptFeature> features,
+        boolean staticContext,
+        PsiFile file,
+        PsiElement anchorParent
+    ) {
+        boolean classFeature = features.contains(JavaScriptFeature.CLASS);
+        String referencedName = classFeature ? referenceExpression.getReferencedName() : referenceExpression.getText();
+        BaseCreateFix.addAccessModifier(template, referenceExpression, classFeature, staticContext);
+        writeFunctionAndName(template, referencedName, features);
+        template.addTextSegment("(");
 
-	@RequiredReadAction
-	@Override
-	protected void buildTemplate(Template template, JSReferenceExpression referenceExpression, Set<JavaScriptFeature> features, boolean staticContext, PsiFile file,
-			PsiElement anchorParent)
-	{
-		boolean classFeature = features.contains(JavaScriptFeature.CLASS);
-		String referencedName = classFeature ? referenceExpression.getReferencedName() : referenceExpression.getText();
-		BaseCreateFix.addAccessModifier(template, referenceExpression, classFeature, staticContext);
-		writeFunctionAndName(template, referencedName, features);
-		template.addTextSegment("(");
+        addParameters(template, referenceExpression, file, features);
 
-		addParameters(template, referenceExpression, file, features);
+        template.addTextSegment(")");
 
-		template.addTextSegment(")");
+        if (classFeature) {
+            template.addTextSegment(":");
+            addReturnType(template, referenceExpression, file);
+        }
 
-		if(classFeature)
-		{
-			template.addTextSegment(":");
-			addReturnType(template, referenceExpression, file);
-		}
+        JSClass clazz = BaseCreateFix.findClass(file, anchorParent);
+        if (clazz == null || !clazz.isInterface()) {
+            template.addTextSegment(" {");
+            addBody(template, referenceExpression, file);
+            template.addTextSegment("}");
+        }
+        else {
+            addSemicolonSegment(template, file);
+            template.addEndVariable();
+        }
+    }
 
-		JSClass clazz = BaseCreateFix.findClass(file, anchorParent);
-		if(clazz == null || !clazz.isInterface())
-		{
-			template.addTextSegment(" {");
-			addBody(template, referenceExpression, file);
-			template.addTextSegment("}");
-		}
-		else
-		{
-			addSemicolonSegment(template, file);
-			template.addEndVariable();
-		}
-	}
+    protected void writeFunctionAndName(Template template, String referencedName, Set<JavaScriptFeature> features) {
+        template.addTextSegment("function ");
+        template.addTextSegment(referencedName);
+    }
 
-	protected void writeFunctionAndName(Template template, String referencedName, Set<JavaScriptFeature> features)
-	{
-		template.addTextSegment("function ");
-		template.addTextSegment(referencedName);
-	}
+    @RequiredReadAction
+    protected abstract void addParameters(Template template, JSReferenceExpression refExpr, PsiFile file, Set<JavaScriptFeature> features);
 
-	protected abstract void addParameters(Template template, JSReferenceExpression refExpr, PsiFile file, Set<JavaScriptFeature> features);
+    @RequiredReadAction
+    protected abstract void addReturnType(Template template, JSReferenceExpression referenceExpression, PsiFile psifile);
 
-	protected abstract void addReturnType(Template template, JSReferenceExpression referenceExpression, PsiFile psifile);
-
-	protected abstract void addBody(Template template, JSReferenceExpression refExpr, PsiFile file);
+    protected abstract void addBody(Template template, JSReferenceExpression refExpr, PsiFile file);
 }

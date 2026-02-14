@@ -2,95 +2,85 @@ package com.sixrr.inspectjs.assignment;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.tree.IElementType;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.ast.IElementType;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
+@ExtensionImpl
 public class AssignmentToFunctionParameterJSInspection extends JavaScriptInspection {
-
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("assignment.to.function.parameter.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.assignmentToFunctionParameterDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.ASSIGNMENT_GROUP_NAME;
     }
 
+    @RequiredReadAction
     @Override
-	@Nullable
-    protected String buildErrorString(Object... args) {
-        return InspectionJSBundle.message("assignment.to.function.parameter.error.string");
+    @Nullable
+    protected String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.assignmentToFunctionParameterErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
     private static class Visitor extends BaseInspectionVisitor {
-        @Override public void visitJSAssignmentExpression(JSAssignmentExpression jsAssignmentExpression) {
+        @Override
+        @RequiredReadAction
+        public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression jsAssignmentExpression) {
             super.visitJSAssignmentExpression(jsAssignmentExpression);
-            final JSExpression lhs = jsAssignmentExpression.getLOperand();
+            JSExpression lhs = jsAssignmentExpression.getLOperand();
             checkOperand(lhs);
         }
 
-        @Override public void visitJSPrefixExpression(JSPrefixExpression expression) {
+        @Override
+        @RequiredReadAction
+        public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
             super.visitJSPrefixExpression(expression);
-            final IElementType sign = expression.getOperationSign();
-            if (!JSTokenTypes.PLUSPLUS.equals(sign) &&
-                    !JSTokenTypes.MINUSMINUS.equals(sign)) {
+            IElementType sign = expression.getOperationSign();
+            if (!JSTokenTypes.PLUSPLUS.equals(sign) && !JSTokenTypes.MINUSMINUS.equals(sign)) {
                 return;
             }
-            final JSExpression operand = expression.getExpression();
+            JSExpression operand = expression.getExpression();
             checkOperand(operand);
         }
 
-        @Override public void visitJSPostfixExpression(JSPostfixExpression jsPostfixExpression) {
-            super.visitJSPostfixExpression(jsPostfixExpression);
-            final IElementType sign = jsPostfixExpression.getOperationSign();
-            if (!JSTokenTypes.PLUSPLUS.equals(sign) &&
-                    !JSTokenTypes.MINUSMINUS.equals(sign)) {
+        @Override
+        @RequiredReadAction
+        public void visitJSPostfixExpression(@Nonnull JSPostfixExpression postfixExpr) {
+            super.visitJSPostfixExpression(postfixExpr);
+            IElementType sign = postfixExpr.getOperationSign();
+            if (!JSTokenTypes.PLUSPLUS.equals(sign) && !JSTokenTypes.MINUSMINUS.equals(sign)) {
                 return;
             }
-            final JSExpression operand = jsPostfixExpression.getExpression();
+            JSExpression operand = postfixExpr.getExpression();
             checkOperand(operand);
         }
 
+        @RequiredReadAction
         private void checkOperand(JSExpression operand) {
-            if (operand == null) {
-                return;
+            if (operand instanceof JSDefinitionExpression defExpr
+                && defExpr.getExpression() instanceof JSReferenceExpression refExpr
+                && refExpr.resolve() instanceof JSParameter) {
+                registerError(operand);
             }
-            if (operand instanceof JSDefinitionExpression) {
-                final JSExpression definiend = ((JSDefinitionExpression) operand).getExpression();
-                if (definiend instanceof JSReferenceExpression) {
-                    final PsiElement referent = ((PsiReference) definiend).resolve();
-                    if (referent == null) {
-                        return;
-                    }
-                    if (!(referent instanceof JSParameter)) {
-                        return;
-                    }
-                    registerError(operand);
-                }
-            }
-            if (operand instanceof JSReferenceExpression) {
-                final PsiElement referent = ((PsiReference) operand).resolve();
-                if (referent == null) {
-                    return;
-                }
-                if (!(referent instanceof JSParameter)) {
-                    return;
-                }
+            if (operand instanceof JSReferenceExpression refExpr
+                && refExpr.resolve() instanceof JSParameter) {
                 registerError(operand);
             }
         }

@@ -18,17 +18,17 @@ package consulo.javascript.lang;
 
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.ast.TokenSet;
 
 /**
  * @author VISTALL
  * @since 24.08.14
  */
-public interface JavaScriptTokenSets extends JSTokenTypes
-{
-	TokenSet STRING_LITERALS = TokenSet.create(JSTokenTypes.STRING_LITERAL, JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL, JSTokenTypes.INTERPOLATION_STRING_LITERAL);
+public interface JavaScriptTokenSets extends JSTokenTypes {
+    TokenSet STRING_LITERALS =
+        TokenSet.create(JSTokenTypes.STRING_LITERAL, JSTokenTypes.SINGLE_QUOTE_STRING_LITERAL, JSTokenTypes.INTERPOLATION_STRING_LITERAL);
 
-	TokenSet WHITE_SPACES = TokenSet.create(JSTokenTypes.WHITE_SPACE);
+    TokenSet WHITE_SPACES = TokenSet.create(JSTokenTypes.WHITE_SPACE);
 
-	TokenSet NAME_TOKEN_TYPES = TokenSet.create(JSElementTypes.REFERENCE_EXPRESSION, JSTokenTypes.IDENTIFIER);
+    TokenSet NAME_TOKEN_TYPES = TokenSet.create(JSElementTypes.REFERENCE_EXPRESSION, JSTokenTypes.IDENTIFIER);
 }

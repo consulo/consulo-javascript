@@ -15,29 +15,30 @@
  */
 package org.intellij.idea.lang.javascript.psiutil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.lang.javascript.psi.JSElement;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class TreeUtil {
-    private TreeUtil() {}
+    private TreeUtil() {
+    }
 
     public static PsiElement getNextLeaf(PsiElement element) {
         if (element == null) {
             return null;
         }
-        final PsiElement sibling = element.getNextSibling();
+        PsiElement sibling = element.getNextSibling();
         if (sibling == null) {
-            final PsiElement parent = element.getParent();
+            PsiElement parent = element.getParent();
             return getNextLeaf(parent);
         }
         return getFirstLeaf(sibling);
     }
 
     private static PsiElement getFirstLeaf(PsiElement element) {
-        final PsiElement[] children = element.getChildren();
+        PsiElement[] children = element.getChildren();
         if (children.length == 0) {
             return element;
         }
@@ -48,31 +49,35 @@ public class TreeUtil {
         if (element == null) {
             return null;
         }
-        final PsiElement sibling = element.getPrevSibling();
+        PsiElement sibling = element.getPrevSibling();
         if (sibling == null) {
-            final PsiElement parent = element.getParent();
+            PsiElement parent = element.getParent();
             return getPrevLeaf(parent);
         }
         return getLastLeaf(sibling);
     }
 
     private static PsiElement getLastLeaf(PsiElement element) {
-        final PsiElement[] children = element.getChildren();
+        PsiElement[] children = element.getChildren();
         if (children.length == 0) {
             return element;
         }
-        return getLastLeaf(children[children.length-1]);
+        return getLastLeaf(children[children.length - 1]);
     }
 
     @Nullable
-    public static <ParentType extends PsiElement> ParentType getParentOfType(@Nullable PsiElement        element,
-                                                                             @Nonnull Class<ParentType> aClass) {
+    public static <ParentType extends PsiElement> ParentType getParentOfType(
+        @Nullable PsiElement element,
+        @Nonnull Class<ParentType> aClass
+    ) {
         return getParentOfType(element, aClass, true);
     }
 
-    public static <ParentType extends PsiElement> ParentType getParentOfType(PsiElement        element,
-                                                                             Class<ParentType> aClass,
-                                                                             boolean           strict) {
+    public static <ParentType extends PsiElement> ParentType getParentOfType(
+        PsiElement element,
+        Class<ParentType> aClass,
+        boolean strict
+    ) {
         if (element == null) {
             return null;
         }
@@ -84,18 +89,22 @@ public class TreeUtil {
             element = element.getParent();
         }
 
-        return (ParentType) element;
+        return (ParentType)element;
     }
 
     @Nullable
-    public static <ParentType extends PsiElement> ParentType getPrevLeafOfType(@Nullable PsiElement         element,
-                                                                               @Nonnull Class<ParentType> aClass) {
+    public static <ParentType extends PsiElement> ParentType getPrevLeafOfType(
+        @Nullable PsiElement element,
+        @Nonnull Class<ParentType> aClass
+    ) {
         return getPrevLeafOfType(element, aClass, true);
     }
 
-    public static <ParentType extends PsiElement> ParentType getPrevLeafOfType(PsiElement        element,
-                                                                               Class<ParentType> aClass,
-                                                                               boolean           strict) {
+    public static <ParentType extends PsiElement> ParentType getPrevLeafOfType(
+        PsiElement element,
+        Class<ParentType> aClass,
+        boolean strict
+    ) {
         if (element == null) {
             return null;
         }
@@ -107,18 +116,22 @@ public class TreeUtil {
             element = getPrevLeaf(element);
         }
 
-        return (ParentType) element;
+        return (ParentType)element;
     }
 
     @Nullable
-    public static <ParentType extends PsiElement> ParentType getNextLeafOfType(@Nullable PsiElement         element,
-                                                                               @Nonnull Class<ParentType> aClass) {
+    public static <ParentType extends PsiElement> ParentType getNextLeafOfType(
+        @Nullable PsiElement element,
+        @Nonnull Class<ParentType> aClass
+    ) {
         return getNextLeafOfType(element, aClass, true);
     }
 
-    public static <ParentType extends PsiElement> ParentType getNextLeafOfType(PsiElement        element,
-                                                                               Class<ParentType> aClass,
-                                                                               boolean           strict) {
+    public static <ParentType extends PsiElement> ParentType getNextLeafOfType(
+        PsiElement element,
+        Class<ParentType> aClass,
+        boolean strict
+    ) {
         if (element == null) {
             return null;
         }
@@ -130,13 +143,11 @@ public class TreeUtil {
             element = getNextLeaf(element);
         }
 
-        return (ParentType) element;
+        return (ParentType)element;
     }
 
-    public static boolean isAncestor(@Nonnull JSElement ancestor,
-                                     @Nonnull JSElement element,
-                                     boolean            strict) {
-        PsiElement parent = (strict ? element.getParent() : element);
+    public static boolean isAncestor(@Nonnull JSElement ancestor, @Nonnull JSElement element, boolean strict) {
+        PsiElement parent = strict ? element.getParent() : element;
 
         while (parent != null && parent instanceof JSElement) {
             if (parent.equals(ancestor)) {

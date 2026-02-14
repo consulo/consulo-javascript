@@ -16,73 +16,61 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSIndexedPropertyAccessExpression;
-import com.intellij.psi.tree.IElementType;
-
-import javax.annotation.Nonnull;
+import consulo.language.ast.IElementType;
+import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 11:59:36 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public class JSIndexedPropertyAccessExpressionImpl extends JSExpressionImpl implements JSIndexedPropertyAccessExpression
-{
-	public JSIndexedPropertyAccessExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSIndexedPropertyAccessExpressionImpl extends JSExpressionImpl implements JSIndexedPropertyAccessExpression {
+    public JSIndexedPropertyAccessExpressionImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getQualifier()
-	{
-		ASTNode child = getNode().getFirstChildNode();
-		while(child != null)
-		{
-			final IElementType type = child.getElementType();
-			if(type == JSTokenTypes.LBRACKET)
-			{
-				return null;
-			}
-			if(child.getPsi() instanceof JSExpression)
-			{
-				return (JSExpression) child.getPsi();
-			}
-			child = child.getTreeNext();
-		}
-		return null;
-	}
+    @Override
+    @RequiredReadAction
+    public JSExpression getQualifier() {
+        ASTNode child = getNode().getFirstChildNode();
+        while (child != null) {
+            IElementType type = child.getElementType();
+            if (type == JSTokenTypes.LBRACKET) {
+                return null;
+            }
+            if (child.getPsi() instanceof JSExpression expression) {
+                return expression;
+            }
+            child = child.getTreeNext();
+        }
+        return null;
+    }
 
-	@Override
-	public JSExpression getIndexExpression()
-	{
-		ASTNode child = getNode().getFirstChildNode();
-		boolean bracketPassed = false;
-		while(child != null)
-		{
-			final IElementType type = child.getElementType();
-			if(type == JSTokenTypes.LBRACKET)
-			{
-				bracketPassed = true;
-			}
-			if(bracketPassed && child.getPsi() instanceof JSExpression)
-			{
-				return (JSExpression) child.getPsi();
-			}
-			child = child.getTreeNext();
-		}
-		return null;
-	}
+    @Override
+    @RequiredReadAction
+    public JSExpression getIndexExpression() {
+        ASTNode child = getNode().getFirstChildNode();
+        boolean bracketPassed = false;
+        while (child != null) {
+            IElementType type = child.getElementType();
+            if (type == JSTokenTypes.LBRACKET) {
+                bracketPassed = true;
+            }
+            if (bracketPassed && child.getPsi() instanceof JSExpression expression) {
+                return expression;
+            }
+            child = child.getTreeNext();
+        }
+        return null;
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSIndexedPropertyAccessExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSIndexedPropertyAccessExpression(this);
+    }
 }

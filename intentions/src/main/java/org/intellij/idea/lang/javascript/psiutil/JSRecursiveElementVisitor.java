@@ -23,7 +23,8 @@ import com.intellij.lang.javascript.psi.JSElementVisitor;
  * on which the visit was started.
  */
 public abstract class JSRecursiveElementVisitor extends JSElementVisitor {
-    @Override public void visitJSElement(JSElement element) {
+    @Override
+    public void visitJSElement(JSElement element) {
         element.acceptChildren(this);
     }
 }

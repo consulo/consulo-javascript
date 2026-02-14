@@ -15,98 +15,104 @@
  */
 package org.intellij.idea.lang.javascript.intention.trivialif;
 
-import javax.annotation.Nonnull;
-
-import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
-import org.intellij.idea.lang.javascript.intention.JSIntention;
-import org.intellij.idea.lang.javascript.psiutil.ControlFlowUtils;
-import org.intellij.idea.lang.javascript.psiutil.EquivalenceChecker;
-import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
-import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
-import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NonNls;
-
 import com.intellij.lang.javascript.psi.JSElement;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSIfStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
+import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
+import org.intellij.idea.lang.javascript.intention.JSIntention;
+import org.intellij.idea.lang.javascript.psiutil.*;
 
+@ExtensionImpl
+@IntentionMetaData(
+    ignoreId = "JSMergeIfOrIntention",
+    categories = {"JavaScript", "Control Flow"},
+    fileExtensions = "js"
+)
 public class JSMergeIfOrIntention extends JSIntention {
-    @NonNls private static final String IF_STATEMENT_PREFIX = "if (";
-    @NonNls private static final String ELSE_KEYWORD        = "else ";
+    @Override
+    @Nonnull
+    public LocalizeValue getText() {
+        return JSIntentionLocalize.trivialifMergeIfOr();
+    }
 
     @Override
-	@Nonnull
+    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new MergeIfOrPredicate();
     }
 
     @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    @RequiredReadAction
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         assert (element instanceof JSElement);
-        JSElement jsElement = (JSElement) element;
+        JSElement jsElement = (JSElement)element;
         if (MergeIfOrPredicate.isMergableExplicitIf(jsElement)) {
             replaceMergeableExplicitIf(jsElement);
-        } else {
+        }
+        else {
             replaceMergeableImplicitIf(jsElement);
         }
     }
 
+    @RequiredReadAction
     private static void replaceMergeableExplicitIf(JSElement token) throws IncorrectOperationException {
-        final JSIfStatement parentStatement = (JSIfStatement) (token.getParent() instanceof JSIfStatement ? token.getParent() : token);
+        JSIfStatement parentStatement = (JSIfStatement)(token.getParent() instanceof JSIfStatement ? token.getParent() : token);
 
         assert (parentStatement != null);
 
-        final JSIfStatement childStatement       = (JSIfStatement) parentStatement.getElse();
-        final JSExpression  childCondition       = childStatement.getCondition();
-        final JSExpression  condition            = parentStatement.getCondition();
-        final String        childConditionText   = ParenthesesUtils.getParenthesized(childCondition, ParenthesesUtils.OR_PRECENDENCE);
-        final String        parentConditionText  = ParenthesesUtils.getParenthesized(condition,      ParenthesesUtils.OR_PRECENDENCE);
-        final JSStatement   parentThenBranch     = parentStatement.getThen();
-        final String        parentThenBranchText = parentThenBranch.getText();
-        final StringBuilder statement            = new StringBuilder(IF_STATEMENT_PREFIX)
-                                                             .append(parentConditionText)
-                                                             .append(" || ")
-                                                             .append(childConditionText)
-                                                             .append(')')
-                                                             .append(parentThenBranchText);
-        final JSStatement   childElseBranch      = childStatement.getElse();
+        JSIfStatement childStatement = (JSIfStatement)parentStatement.getElse();
+        JSExpression childCondition = childStatement.getCondition();
+        JSExpression condition = parentStatement.getCondition();
+        String childConditionText = ParenthesesUtils.getParenthesized(childCondition, ParenthesesUtils.OR_PRECENDENCE);
+        String parentConditionText = ParenthesesUtils.getParenthesized(condition, ParenthesesUtils.OR_PRECENDENCE);
+        JSStatement parentThenBranch = parentStatement.getThen();
+        StringBuilder statement = new StringBuilder("if (")
+            .append(parentConditionText)
+            .append(" || ")
+            .append(childConditionText)
+            .append(')')
+            .append(parentThenBranch.getText());
+        JSStatement childElseBranch = childStatement.getElse();
 
         if (childElseBranch != null) {
-            final String childElseBranchText = childElseBranch.getText();
-
-            statement.append(ELSE_KEYWORD)
-                     .append(childElseBranchText);
+            statement.append("else ").append(childElseBranch.getText());
         }
 
         JSElementFactory.replaceStatement(parentStatement, statement.toString());
     }
 
+    @RequiredReadAction
     private static void replaceMergeableImplicitIf(JSElement token) throws IncorrectOperationException {
-        final JSIfStatement parentStatement = (JSIfStatement) (token.getParent() instanceof JSIfStatement ? token.getParent() : token);
-        final JSIfStatement childStatement  = (JSIfStatement) JSElementFactory.getNonWhiteSpaceSibling(parentStatement, true);
+        JSIfStatement parentStatement = (JSIfStatement)(token.getParent() instanceof JSIfStatement ? token.getParent() : token);
+        JSIfStatement childStatement = (JSIfStatement)JSElementFactory.getNonWhiteSpaceSibling(parentStatement, true);
 
-        assert (childStatement  != null);
+        assert (childStatement != null);
         assert (parentStatement != null);
 
-        final JSExpression childCondition      = childStatement.getCondition();
-        final JSExpression condition           = parentStatement.getCondition();
-        final String       childConditionText  = ParenthesesUtils.getParenthesized(childCondition, ParenthesesUtils.OR_PRECENDENCE);
-        final String       parentConditionText = ParenthesesUtils.getParenthesized(condition,      ParenthesesUtils.OR_PRECENDENCE);
-        final JSStatement  parentThenBranch    = parentStatement.getThen();
-        final JSStatement  childElseBranch     = childStatement.getElse();
-        StringBuilder      statement           = new StringBuilder(IF_STATEMENT_PREFIX)
-                                                           .append(parentConditionText)
-                                                           .append(" || ")
-                                                           .append(childConditionText)
-                                                           .append(')')
-                                                           .append(parentThenBranch.getText());
+        JSExpression childCondition = childStatement.getCondition();
+        JSExpression condition = parentStatement.getCondition();
+        String childConditionText = ParenthesesUtils.getParenthesized(childCondition, ParenthesesUtils.OR_PRECENDENCE);
+        String parentConditionText = ParenthesesUtils.getParenthesized(condition, ParenthesesUtils.OR_PRECENDENCE);
+        JSStatement parentThenBranch = parentStatement.getThen();
+        JSStatement childElseBranch = childStatement.getElse();
+        StringBuilder statement = new StringBuilder("if (")
+            .append(parentConditionText)
+            .append(" || ")
+            .append(childConditionText)
+            .append(')')
+            .append(parentThenBranch.getText());
 
         if (childElseBranch != null) {
-            statement.append(ELSE_KEYWORD)
-                     .append(childElseBranch.getText());
+            statement.append("else ").append(childElseBranch.getText());
         }
 
         JSElementFactory.replaceStatement(parentStatement, statement.toString());
@@ -115,14 +121,9 @@ public class JSMergeIfOrIntention extends JSIntention {
 
     private static class MergeIfOrPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-            if (!(element instanceof JSElement)) {
-                return false;
-            }
-
-            final JSElement jsElement  = (JSElement) element;
-
-            return (isMergableExplicitIf(jsElement) || isMergableImplicitIf(jsElement));
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            return element instanceof JSElement jsElement
+                && (isMergableExplicitIf(jsElement) || isMergableImplicitIf(jsElement));
         }
 
         public static boolean isMergableExplicitIf(JSElement element) {
@@ -131,31 +132,23 @@ public class JSMergeIfOrIntention extends JSIntention {
             if (!(parent instanceof JSIfStatement)) {
                 if (element instanceof JSIfStatement) {
                     parent = element;
-                } else {
+                }
+                else {
                     return false;
                 }
             }
 
-            final JSIfStatement ifStatement = (JSIfStatement) parent;
+            JSIfStatement ifStatement = (JSIfStatement)parent;
 
             if (ErrorUtil.containsError(ifStatement)) {
                 return false;
             }
 
-            final JSStatement thenBranch = ifStatement.getThen();
-            final JSStatement elseBranch = ifStatement.getElse();
+            JSStatement thenBranch = ifStatement.getThen(), elseBranch = ifStatement.getElse();
 
-            if (thenBranch == null || elseBranch == null) {
-                return false;
-            }
-            if (!(elseBranch instanceof JSIfStatement)) {
-                return false;
-            }
-
-            final JSIfStatement childIfStatement = (JSIfStatement) elseBranch;
-            final JSStatement   childThenBranch  = childIfStatement.getThen();
-
-            return EquivalenceChecker.statementsAreEquivalent(thenBranch, childThenBranch);
+            return thenBranch != null
+                && elseBranch instanceof JSIfStatement childIfStatement
+                && EquivalenceChecker.statementsAreEquivalent(thenBranch, childIfStatement.getThen());
         }
 
         private static boolean isMergableImplicitIf(JSElement element) {
@@ -164,33 +157,23 @@ public class JSMergeIfOrIntention extends JSIntention {
             if (!(parent instanceof JSIfStatement)) {
                 if (element instanceof JSIfStatement) {
                     parent = element;
-                } else {
+                }
+                else {
                     return false;
                 }
             }
 
-            final JSIfStatement ifStatement = (JSIfStatement) parent;
-            final JSStatement   thenBranch  = ifStatement.getThen();
-            final JSStatement   elseBranch  = ifStatement.getElse();
+            JSIfStatement ifStatement = (JSIfStatement)parent;
+            JSStatement thenBranch = ifStatement.getThen(), elseBranch = ifStatement.getElse();
 
-            if (thenBranch == null || elseBranch != null) {
+            if (thenBranch == null || elseBranch != null || ControlFlowUtils.statementMayCompleteNormally(thenBranch)) {
                 return false;
             }
 
-            if (ControlFlowUtils.statementMayCompleteNormally(thenBranch)) {
-                return false;
-            }
+            PsiElement nextStatement = JSElementFactory.getNonWhiteSpaceSibling(ifStatement, true);
 
-            final PsiElement nextStatement = JSElementFactory.getNonWhiteSpaceSibling(ifStatement, true);
-
-            if (!(nextStatement instanceof JSIfStatement)) {
-                return false;
-            }
-
-            final JSIfStatement childIfStatement = (JSIfStatement) nextStatement;
-            final JSStatement   childThenBranch  = childIfStatement.getThen();
-
-            return EquivalenceChecker.statementsAreEquivalent(thenBranch, childThenBranch);
+            return nextStatement instanceof JSIfStatement childIfStatement
+                && EquivalenceChecker.statementsAreEquivalent(thenBranch, childIfStatement.getThen());
         }
     }
 }

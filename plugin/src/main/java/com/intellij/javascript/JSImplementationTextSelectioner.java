@@ -20,29 +20,38 @@
  */
 package com.intellij.javascript;
 
-import javax.annotation.Nonnull;
-
-import com.intellij.codeInsight.hint.ImplementationTextSelectioner;
 import com.intellij.lang.javascript.psi.JSDefinitionExpression;
 import com.intellij.lang.javascript.psi.JSExpressionStatement;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.language.Language;
+import consulo.language.editor.ImplementationTextSelectioner;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
 
-public class JSImplementationTextSelectioner implements ImplementationTextSelectioner
-{
-	@Override
-	public int getTextStartOffset(@Nonnull PsiElement element)
-	{
-		return element.getTextOffset();
-	}
+import jakarta.annotation.Nonnull;
 
-	@Override
-	public int getTextEndOffset(@Nonnull PsiElement element)
-	{
-		if(element instanceof JSDefinitionExpression)
-		{
-			element = PsiTreeUtil.getParentOfType(element, JSExpressionStatement.class);
-		}
-		return element.getTextRange().getEndOffset();
-	}
+@ExtensionImpl
+public class JSImplementationTextSelectioner implements ImplementationTextSelectioner {
+    @RequiredReadAction
+    @Override
+    public int getTextStartOffset(@Nonnull PsiElement element) {
+        return element.getTextOffset();
+    }
+
+    @RequiredReadAction
+    @Override
+    public int getTextEndOffset(@Nonnull PsiElement element) {
+        if (element instanceof JSDefinitionExpression) {
+            element = PsiTreeUtil.getParentOfType(element, JSExpressionStatement.class);
+        }
+        return element.getTextRange().getEndOffset();
+    }
+
+    @Nonnull
+    @Override
+    public Language getLanguage() {
+        return JavaScriptLanguage.INSTANCE;
+    }
 }

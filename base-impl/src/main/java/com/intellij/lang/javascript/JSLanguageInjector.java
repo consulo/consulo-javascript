@@ -16,429 +16,400 @@
 
 package com.intellij.lang.javascript;
 
-import javax.annotation.Nonnull;
-
-import org.jetbrains.annotations.NonNls;
-import com.intellij.lang.Language;
-import com.intellij.lang.injection.MultiHostInjector;
-import com.intellij.lang.injection.MultiHostRegistrar;
 import com.intellij.lang.javascript.flex.AnnotationBackedDescriptor;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.html.HtmlTag;
-import com.intellij.psi.meta.PsiMetaData;
-import com.intellij.psi.templateLanguages.OuterLanguageElement;
-import com.intellij.psi.xml.XmlAttribute;
-import com.intellij.psi.xml.XmlAttributeValue;
-import com.intellij.psi.xml.XmlElementType;
-import com.intellij.psi.xml.XmlTag;
-import com.intellij.psi.xml.XmlTagChild;
-import com.intellij.psi.xml.XmlTagValue;
-import com.intellij.psi.xml.XmlText;
-import com.intellij.psi.xml.XmlToken;
-import com.intellij.psi.xml.XmlTokenType;
 import com.intellij.xml.XmlElementDescriptorWithCDataContent;
-import consulo.javascript.lang.JavaScriptLanguage;
-import consulo.lang.LanguagePointerUtil;
-import consulo.util.pointers.NamedPointer;
+import consulo.component.util.pointer.NamedPointer;
+import consulo.document.util.TextRange;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.language.Language;
+import consulo.language.LanguagePointerUtil;
+import consulo.language.inject.MultiHostInjector;
+import consulo.language.inject.MultiHostRegistrar;
+import consulo.language.psi.OuterLanguageElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiLanguageInjectionHost;
+import consulo.language.psi.meta.PsiMetaData;
+import consulo.util.lang.StringUtil;
+import consulo.xml.psi.html.HtmlTag;
+import consulo.xml.psi.xml.*;
+import org.jetbrains.annotations.NonNls;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Apr 28, 2008
- *         Time: 8:40:38 PM
+ * Date: Apr 28, 2008
+ * Time: 8:40:38 PM
  */
-public class JSLanguageInjector implements MultiHostInjector
-{
-	@NonNls
-	private static final String JAVASCRIPT_PREFIX = "javascript:";
-	@NonNls
-	public static final String JSP_URI = "http://java.sun.com/JSP/Page";
+public abstract class JSLanguageInjector implements MultiHostInjector {
+    @NonNls
+    private static final String JAVASCRIPT_PREFIX = "javascript:";
+    @NonNls
+    public static final String JSP_URI = "http://java.sun.com/JSP/Page";
 
-	private static final NamedPointer<Language> CSS_LANGUAGE = LanguagePointerUtil.createPointer("CSS");
+    private static final NamedPointer<Language> CSS_LANGUAGE = LanguagePointerUtil.createPointer("CSS");
 
-	@Override
-	public void injectLanguages(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement host)
-	{
+    @Override
+    public void injectLanguages(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement host) {
+        if (host instanceof XmlAttributeValue attributeValue) {
+            PsiElement attribute = attributeValue.getParent();
+            PsiElement tag = attribute.getParent();
 
-		if(host instanceof XmlAttributeValue)
-		{
-			final PsiElement attribute = host.getParent();
-			final PsiElement tag = attribute.getParent();
+            if (attribute instanceof XmlAttribute xmlAttribute && tag instanceof XmlTag xmlTag) {
+                if (attributeValue.getTextLength() == 0) {
+                    return;
+                }
+                @NonNls String attrName = xmlAttribute.getName();
+                if (tag instanceof HtmlTag) {
+                    attrName = attrName.toLowerCase();
+                }
 
-			if(attribute instanceof XmlAttribute && tag instanceof XmlTag)
-			{
-				if(host.getTextLength() == 0)
-				{
-					return;
-				}
-				@NonNls String attrName = ((XmlAttribute) attribute).getName();
-				if(tag instanceof HtmlTag)
-				{
-					attrName = attrName.toLowerCase();
-				}
+                if ("href".equals(attrName) && attributeValue.getValue().startsWith(JAVASCRIPT_PREFIX)) {
+                    injectJSIntoAttributeValue(registrar, attributeValue, true);
+                }
+                else if (attrName.startsWith("on")) {
+                    String ns = xmlTag.getNamespace();
+                    if (JavaScriptSupportLoader.BINDOWS_URI.equals(ns)
+                        || JavaScriptSupportLoader.isBindowsFile(attributeValue)
+                        || isMozillaXulOrXblNs(ns)) {
+                        TextRange range = new TextRange(1, attributeValue.getTextLength() - 1);
+                        registrar.startInjecting(JavaScriptLanguage.INSTANCE)
+                            .addPlace(null, null, (PsiLanguageInjectionHost)attributeValue, range)
+                            .doneInjecting();
+                    }
+                    else {
+                        checkMxmlInjection(registrar, attributeValue, attribute, tag);
+                    }
+                }
+                else if ("style".equals(attrName) && isMozillaXulOrXblNs(xmlTag.getNamespace()) && CSS_LANGUAGE.get() != null) {
+                    registrar.startInjecting(CSS_LANGUAGE.get())
+                        .addPlace(
+                            "inline.style {",
+                            "}",
+                            (PsiLanguageInjectionHost)attributeValue,
+                            new TextRange(1, attributeValue.getTextLength() - 1)
+                        )
+                        .doneInjecting();
+                }
+                else if ("implements".equals(attrName) && JavaScriptSupportLoader.isFlexMxmFile(tag.getContainingFile())) {
+                    TextRange range = new TextRange(1, attributeValue.getTextLength() - 1);
+                    registrar.startInjecting(JavaScriptSupportLoader.ECMA_SCRIPT_L4)
+                        .addPlace("class Foo implements ", " {}", (PsiLanguageInjectionHost)attributeValue, range)
+                        .doneInjecting();
+                }
+                else if (attrName.equalsIgnoreCase("dojoType")) {
+                    TextRange range = new TextRange(1, attributeValue.getTextLength() - 1);
+                    registrar.startInjecting(JavaScriptSupportLoader.ECMA_SCRIPT_L4)
+                        .addPlace("var a:", null, (PsiLanguageInjectionHost)attributeValue, range)
+                        .doneInjecting();
+                }
+                else if (attrName.equalsIgnoreCase("djConfig")) {
+                    TextRange range = new TextRange(1, attributeValue.getTextLength() - 1);
+                    registrar.startInjecting(JavaScriptLanguage.INSTANCE)
+                        .addPlace("a = { ", " }", (PsiLanguageInjectionHost)attributeValue, range)
+                        .doneInjecting();
+                }
+                else {
+                    checkMxmlInjection(registrar, attributeValue, attribute, tag);
+                }
+            }
+        }
+        else if (host instanceof XmlText && host.getParent() instanceof XmlTag tag) {
+            @NonNls String localName = tag.getLocalName();
 
-				if("href".equals(attrName) && ((XmlAttributeValue) host).getValue().startsWith(JAVASCRIPT_PREFIX))
-				{
-					injectJSIntoAttributeValue(registrar, (XmlAttributeValue) host, true);
-				}
-				else if(attrName.startsWith("on"))
-				{
-					final String ns = ((XmlTag) tag).getNamespace();
-					if(JavaScriptSupportLoader.BINDOWS_URI.equals(ns) ||
-							JavaScriptSupportLoader.isBindowsFile(host) ||
-							isMozillaXulOrXblNs(ns))
-					{
-						TextRange range = new TextRange(1, host.getTextLength() - 1);
-						registrar.startInjecting(JavaScriptLanguage.INSTANCE).addPlace(null, null, (PsiLanguageInjectionHost) host,
-								range).doneInjecting();
-					}
-					else
-					{
-						checkMxmlInjection(registrar, host, attribute, tag);
-					}
-				}
-				else if("style".equals(attrName) && isMozillaXulOrXblNs(((XmlTag) tag).getNamespace()) && CSS_LANGUAGE.get() != null)
-				{
-					registrar.startInjecting(CSS_LANGUAGE.get()).addPlace("inline.style {", "}", (PsiLanguageInjectionHost) host, new TextRange(1,
-							host.getTextLength() - 1)).doneInjecting();
-				}
-				else if("implements".equals(attrName) && JavaScriptSupportLoader.isFlexMxmFile(tag.getContainingFile()))
-				{
-					TextRange range = new TextRange(1, host.getTextLength() - 1);
-					registrar.startInjecting(JavaScriptSupportLoader.ECMA_SCRIPT_L4).addPlace("class Foo implements ", " {}", (PsiLanguageInjectionHost) host,
-							range).doneInjecting();
-				}
-				else if(attrName.equalsIgnoreCase("dojoType"))
-				{
-					TextRange range = new TextRange(1, host.getTextLength() - 1);
-					registrar.startInjecting(JavaScriptSupportLoader.ECMA_SCRIPT_L4).addPlace("var a:", null, (PsiLanguageInjectionHost) host,
-							range).doneInjecting();
-				}
-				else if(attrName.equalsIgnoreCase("djConfig"))
-				{
-					TextRange range = new TextRange(1, host.getTextLength() - 1);
-					registrar.startInjecting(JavaScriptLanguage.INSTANCE).addPlace("a = { ", " }", (PsiLanguageInjectionHost) host,
-							range).doneInjecting();
-				}
-				else
-				{
-					checkMxmlInjection(registrar, host, attribute, tag);
-				}
-			}
-		}
-		else if(host instanceof XmlText)
-		{
-			final PsiElement _tag = host.getParent();
-			if(_tag instanceof XmlTag)
-			{
-				final XmlTag tag = (XmlTag) _tag;
+            if ("attribute".equals(localName) && JSP_URI.equals(tag.getNamespace())) {
+                @NonNls String name = tag.getAttributeValue("name");
+                if (name != null && name.startsWith("on")) {
+                    Language language = JavaScriptLanguage.INSTANCE;
+                    injectToXmlText(registrar, host, language, null, null);
+                }
+            }
+            else if ("Style".equals(localName) && JavaScriptSupportLoader.isMxmlNs(tag.getNamespace()) && CSS_LANGUAGE.get() != null) {
+                injectToXmlText(registrar, host, CSS_LANGUAGE.get(), null, null);
+            }
+            else if ((("script".equals(localName) && ((tag.getNamespacePrefix().length() > 0 && doInjectTo(tag))
+                || isMozillaXulOrXblNs(tag.getNamespace()))) || "Script".equals(localName) || "Metadata".equals(localName))
+                && !(tag instanceof HtmlTag)) {
+                boolean inject = true;
+                boolean ecma = JavaScriptSupportLoader.isFlexMxmFile(tag.getContainingFile());
+                if (ecma && tag.getAttributeValue("source") != null) {
+                    inject = false;
+                }
+                Language language = ecma ? JavaScriptSupportLoader.ECMA_SCRIPT_L4 : JavaScriptLanguage.INSTANCE;
+                if (inject) {
+                    injectToXmlText(registrar, host, language, null, null);
+                }
+            }
+            else if (!(tag instanceof HtmlTag) && JavaScriptSupportLoader.isFlexMxmFile(tag.getContainingFile())
+                && tag.getSubTags().length == 0) {
+                injectInMxmlFile(registrar, host, tag.getDescriptor(), tag);
+            }
+            else {
+                boolean getter;
+                boolean setter = false;
+                boolean field = false;
+                boolean body = false;
+                boolean handler = false;
+                boolean constructor = false;
 
-				final @NonNls String localName = tag.getLocalName();
+                if (((getter = "getter".equals(localName))
+                    || (setter = "setter".equals(localName))
+                    || (field = "field".equals(localName))
+                    || (body = "body".equals(localName))
+                    || (handler = "handler".equals(localName))
+                    //|| (property = ("property".equals(localName) && tag.getSubTags().length == 0))
+                    || (constructor = "constructor".equals(localName)))
+                    && isMozillaXulOrXblNs(tag.getNamespace())) {
+                    @NonNls String prefix = null;
+                    @NonNls String suffix = null;
 
-				if("attribute".equals(localName) && JSP_URI.equals(tag.getNamespace()))
-				{
-					@NonNls final String name = tag.getAttributeValue("name");
-					if(name != null && name.startsWith("on"))
-					{
-						Language language = JavaScriptLanguage.INSTANCE;
-						injectToXmlText(registrar, host, language, null, null);
-					}
-				}
-				else if("Style".equals(localName) && JavaScriptSupportLoader.isMxmlNs(tag.getNamespace()) && CSS_LANGUAGE.get() != null)
-				{
-					injectToXmlText(registrar, host, CSS_LANGUAGE.get(), null, null);
-				}
-				else if((("script".equals(localName) && ((tag.getNamespacePrefix().length() > 0 && doInjectTo(tag)) || isMozillaXulOrXblNs(tag.getNamespace()))
-				) ||
-						"Script".equals(localName) ||
-						"Metadata".equals(localName)) && !(tag instanceof HtmlTag))
-				{
-					boolean inject = true;
-					boolean ecma = JavaScriptSupportLoader.isFlexMxmFile(tag.getContainingFile());
-					if(ecma && tag.getAttributeValue("source") != null)
-					{
-						inject = false;
-					}
-					Language language = ecma ? JavaScriptSupportLoader.ECMA_SCRIPT_L4 : JavaScriptLanguage.INSTANCE;
-					if(inject)
-					{
-						injectToXmlText(registrar, host, language, null, null);
-					}
-				}
-				else if(!(tag instanceof HtmlTag) && JavaScriptSupportLoader.isFlexMxmFile(tag.getContainingFile()) && tag.getSubTags().length == 0)
-				{
-					injectInMxmlFile(registrar, host, tag.getDescriptor(), tag);
-				}
-				else
-				{
-					boolean getter;
-					boolean setter = false;
-					boolean field = false;
-					boolean body = false;
-					boolean handler = false;
-					boolean constructor = false;
+                    if (getter || setter) {
+                        String name = getNameFromTag(tag.getParentTag(), "property");
+                        prefix = "function " + (getter ? "get " : "set ") + name + "(" + (setter ? "val" : "") + ") {";
+                        suffix = "}";
+                    }
+                    else if (body) {
+                        XmlTag parentTag = tag.getParentTag();
+                        String name = getNameFromTag(parentTag, "method");
+                        String signature = "";
+                        for (XmlTag ptag : parentTag.findSubTags("parameter")) {
+                            if (signature.length() > 0) {
+                                signature += ", ";
+                            }
+                            signature += ptag.getAttributeValue("name");
+                        }
+                        prefix = "function " + name + "(" + signature + ") {";
+                        suffix = "}";
+                    }
+                    else if (field) {
+                        prefix = "var " + tag.getAttributeValue("name") + " = ";
+                    }
+                    else if (handler) {
+                        prefix = "function " + tag.getAttributeValue("event") + " {";
+                        suffix = "}";
+                    }
+                    else if (constructor) {
+                        XmlTag parentTag = tag.getParentTag();
+                        XmlTag grandParentTag = parentTag != null ? parentTag.getParentTag() : null;
+                        prefix = "function " + (grandParentTag != null ? grandParentTag.getAttributeValue("id") : null) + "() {";
+                        suffix = "}";
+                    }
 
-					if(((getter = "getter".equals(localName)) ||
-							(setter = "setter".equals(localName)) ||
-							(field = "field".equals(localName)) ||
-							(body = "body".equals(localName)) ||
-							(handler = "handler".equals(localName)) ||
-							//(property = ("property".equals(localName) && tag.getSubTags().length == 0)) ||
-							(constructor = "constructor".equals(localName))) && isMozillaXulOrXblNs(tag.getNamespace()))
-					{
-						@NonNls String prefix = null;
-						@NonNls String suffix = null;
+                    injectToXmlText(registrar, host, JavaScriptLanguage.INSTANCE, prefix, suffix);
+                }
+            }
+        }
+    }
 
-						if(getter || setter)
-						{
-							final String name = getNameFromTag(tag.getParentTag(), "property");
-							prefix = "function " + (getter ? "get " : "set ") + name + "(" + (setter ? "val" : "") + ") {";
-							suffix = "}";
-						}
-						else if(body)
-						{
-							final XmlTag parentTag = tag.getParentTag();
-							String name = getNameFromTag(parentTag, "method");
-							String signature = "";
-							for(XmlTag ptag : parentTag.findSubTags("parameter"))
-							{
-								if(signature.length() > 0)
-								{
-									signature += ", ";
-								}
-								signature += ptag.getAttributeValue("name");
-							}
-							prefix = "function " + name + "(" + signature + ") {";
-							suffix = "}";
-						}
-						else if(field)
-						{
-							prefix = "var " + tag.getAttributeValue("name") + " = ";
-						}
-						else if(handler)
-						{
-							prefix = "function " + tag.getAttributeValue("event") + " {";
-							suffix = "}";
-						}
-						else if(constructor)
-						{
-							final XmlTag parentTag = tag.getParentTag();
-							final XmlTag grandParentTag = parentTag != null ? parentTag.getParentTag() : null;
-							prefix = "function " + (grandParentTag != null ? grandParentTag.getAttributeValue("id") : null) + "() {";
-							suffix = "}";
-						}
+    private boolean doInjectTo(XmlTag tag) {
+        XmlTagValue value = tag.getValue();
+        XmlTagChild[] tagChildren = value.getChildren();
 
-						injectToXmlText(registrar, host, JavaScriptLanguage.INSTANCE, prefix, suffix);
-					}
-				}
-			}
-		}
-	}
+        return tagChildren.length == 1
+            && (tagChildren[0].getNode().getElementType() == XmlElementType.XML_CDATA || !tagChildren[0].textContains('<'));
+    }
 
-	private boolean doInjectTo(final XmlTag tag)
-	{
-		final XmlTagValue value = tag.getValue();
-		final XmlTagChild[] tagChildren = value.getChildren();
+    private static void checkMxmlInjection(
+        MultiHostRegistrar registrar,
+        PsiElement host,
+        PsiElement attribute,
+        PsiElement _tag
+    ) {
+        PsiFile containingFile = _tag.getContainingFile();
+        if (JavaScriptSupportLoader.isFlexMxmFile(containingFile)) {
+            injectInMxmlFile(registrar, host, ((XmlAttribute)attribute).getDescriptor(), (XmlTag)_tag);
+        }
+    }
 
-		return tagChildren.length == 1 && (tagChildren[0].getNode().getElementType() == XmlElementType.XML_CDATA || !tagChildren[0].textContains('<'));
-	}
+    private static void injectToXmlText(
+        MultiHostRegistrar registrar,
+        PsiElement host,
+        Language language,
+        String prefix,
+        String suffix
+    ) {
+        TextRange range = new TextRange(0, host.getTextLength());
+        registrar.startInjecting(language).addPlace(prefix, suffix, (PsiLanguageInjectionHost)host, range).doneInjecting();
+    }
 
-	private static void checkMxmlInjection(final MultiHostRegistrar registrar, final PsiElement host, final PsiElement attribute, final PsiElement _tag)
-	{
-		final PsiFile containingFile = _tag.getContainingFile();
-		if(JavaScriptSupportLoader.isFlexMxmFile(containingFile))
-		{
-			injectInMxmlFile(registrar, host, ((XmlAttribute) attribute).getDescriptor(), (XmlTag) _tag);
-		}
-	}
+    private static String getNameFromTag(XmlTag parentTag, @NonNls String s) {
+        return parentTag != null && s.equals(parentTag.getLocalName()) ? parentTag.getAttributeValue("name") : "";
+    }
 
-	private static void injectToXmlText(final MultiHostRegistrar registrar, final PsiElement host, final Language language, final String prefix,
-			final String suffix)
-	{
-		TextRange range = new TextRange(0, host.getTextLength());
-		registrar.startInjecting(language).addPlace(prefix, suffix, (PsiLanguageInjectionHost) host, range).doneInjecting();
-	}
+    public static boolean isMozillaXulOrXblNs(@NonNls String ns) {
+        return "http://www.mozilla.org/xbl".equals(ns) || "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul".equals(ns);
+    }
 
-	private static String getNameFromTag(final XmlTag parentTag, final @NonNls String s)
-	{
-		return parentTag != null && s.equals(parentTag.getLocalName()) ? parentTag.getAttributeValue("name") : "";
-	}
+    public static void injectJSIntoAttributeValue(
+        MultiHostRegistrar registrar,
+        XmlAttributeValue host,
+        boolean startsWithPrefix
+    ) {
+        PsiElement[] myChildren = host.getChildren();
+        int valueIndex = myChildren.length - 2;
+        int valueTokenNumber = 1;
+        if (valueIndex < 0) {
+            valueIndex = 0;
+            valueTokenNumber = 0;
+        }
 
-	public static boolean isMozillaXulOrXblNs(final @NonNls String ns)
-	{
-		return "http://www.mozilla.org/xbl".equals(ns) || "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul".equals(ns);
-	}
+        PsiElement valueChild = myChildren[valueIndex];
 
-	public static void injectJSIntoAttributeValue(final MultiHostRegistrar registrar, final XmlAttributeValue host, final boolean startsWithPrefix)
-	{
-		final PsiElement[] myChildren = host.getChildren();
-		int valueIndex = myChildren.length - 2;
-		int valueTokenNumber = 1;
-		if(valueIndex < 0)
-		{
-			valueIndex = 0;
-			valueTokenNumber = 0;
-		}
+        if (valueChild instanceof XmlToken && ((XmlToken)valueChild).getTokenType() == XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN) {
+            boolean injectFromTheBeginning = valueIndex == valueTokenNumber;
+            if (!injectFromTheBeginning) {
+                // check if well formed el holder
+                boolean wellFormed = true;
+                boolean badlyFormed = false;
 
-		final PsiElement valueChild = myChildren[valueIndex];
+                for (int i = valueTokenNumber; i < valueIndex; ++i) {
+                    PsiElement currentElement = myChildren[i];
 
-		if(valueChild instanceof XmlToken && ((XmlToken) valueChild).getTokenType() == XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN)
-		{
-			boolean injectFromTheBeginning = valueIndex == valueTokenNumber;
-			if(!injectFromTheBeginning)
-			{
-				// check if well formed el holder
-				boolean wellFormed = true;
-				boolean badlyFormed = false;
+                    if (currentElement instanceof XmlToken && ((XmlToken)currentElement).getTokenType() == XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN) {
+                        // ok child
+                        continue;
+                    }
+                    else {
+                        if (currentElement instanceof OuterLanguageElement) {
+                            String prevText = myChildren[i - 1].getText();
+                            String nextText = myChildren[i + 1].getText();
 
-				for(int i = valueTokenNumber; i < valueIndex; ++i)
-				{
-					final PsiElement currentElement = myChildren[i];
+                            if ((StringUtil.endsWithChar(prevText, '\"') && StringUtil.startsWithChar(nextText, '\"'))
+                                || (StringUtil.endsWithChar(prevText, '\'') && StringUtil.startsWithChar(nextText, '\''))) {
+                                // ok child
+                                continue;
+                            }
+                            else if ((StringUtil.endsWithChar(prevText, '(') && StringUtil.startsWithChar(nextText, ')'))
+                                && currentElement.textContains('<')) {
+                                badlyFormed = true;
+                            }
+                            else if (currentElement.textContains('$')) {
+                                String s = currentElement.getText();
+                                if (s.startsWith("${") && s.endsWith("}") && s.length() > 2) {
+                                    continue;
+                                }
+                            }
+                            else if (currentElement.textContains('%')) {
+                                badlyFormed = true;
+                            }
+                        }
 
-					if(currentElement instanceof XmlToken && ((XmlToken) currentElement).getTokenType() == XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN)
-					{
-						// ok child
-						continue;
-					}
-					else
-					{
+                        wellFormed = false;
+                        break;
+                    }
+                }
 
-						if(currentElement instanceof OuterLanguageElement)
-						{
-							final String prevText = myChildren[i - 1].getText();
-							final String nextText = myChildren[i + 1].getText();
+                if (badlyFormed) {
+                    return;
+                }
+                if (wellFormed) {
+                    injectFromTheBeginning = wellFormed;
+                }
+            }
+            TextRange range = new TextRange(
+                injectFromTheBeginning
+                    ? valueTokenNumber + (startsWithPrefix ? JAVASCRIPT_PREFIX.length() : 0)
+                    : valueChild.getStartOffsetInParent(),
+                host.getTextLength() - valueTokenNumber
+            );
+            Language language = JavaScriptLanguage.INSTANCE;
+            registrar.startInjecting(language).addPlace(null, null, (PsiLanguageInjectionHost)host, range).doneInjecting();
+        }
+    }
 
-							if((StringUtil.endsWithChar(prevText, '\"') && StringUtil.startsWithChar(nextText, '\"')) || (StringUtil.endsWithChar(prevText,
-									'\'') && StringUtil.startsWithChar(nextText, '\'')))
-							{
-								// ok child
-								continue;
-							}
-							else if((StringUtil.endsWithChar(prevText, '(') && StringUtil.startsWithChar(nextText, ')')) && currentElement.textContains('<'))
-							{
-								badlyFormed = true;
-							}
-							else if(currentElement.textContains('$'))
-							{
-								final String s = currentElement.getText();
-								if(s.startsWith("${") && s.endsWith("}") && s.length() > 2)
-								{
-									continue;
-								}
-							}
-							else if(currentElement.textContains('%'))
-							{
-								badlyFormed = true;
-							}
-						}
+    private static void injectInMxmlFile(
+        MultiHostRegistrar registrar,
+        PsiElement host,
+        PsiMetaData descriptor,
+        XmlTag tag
+    ) {
+        int offset = host instanceof XmlText ? 0 : 1;
 
-						wellFormed = false;
-						break;
-					}
-				}
+        if (descriptor instanceof AnnotationBackedDescriptor annotationBackedDescriptor
+            && annotationBackedDescriptor.requiresCdataBracesInContext(tag)) {
+            int length = host.getTextLength();
+            if (length < 2 * offset) {
+                return;
+            }
+            String type = ((AnnotationBackedDescriptor)descriptor).getType();
+            if (type == null) {
+                type = "*";
+            }
+            @NonNls String prefix = "(function (event:" + type + ") {";
+            @NonNls String suffix = "})();";
 
-				if(badlyFormed)
-				{
-					return;
-				}
-				if(wellFormed)
-				{
-					injectFromTheBeginning = wellFormed;
-				}
-			}
-			TextRange range = new TextRange(injectFromTheBeginning ? valueTokenNumber + (startsWithPrefix ? JAVASCRIPT_PREFIX.length() : 0) : valueChild
-					.getStartOffsetInParent(), host.getTextLength() - valueTokenNumber);
-			Language language = JavaScriptLanguage.INSTANCE;
-			registrar.startInjecting(language).addPlace(null, null, (PsiLanguageInjectionHost) host, range).doneInjecting();
+            if (host instanceof XmlText) {
+                injectToXmlText(registrar, host, JavaScriptSupportLoader.ECMA_SCRIPT_L4, prefix, suffix);
+            }
+            else {
+                TextRange range = new TextRange(offset, length - offset);
 
-		}
-	}
+                registrar.startInjecting(JavaScriptSupportLoader.ECMA_SCRIPT_L4)
+                    .addPlace(
+                        prefix,
+                        (host instanceof XmlAttributeValue ? "\n" : "") + suffix,
+                        (PsiLanguageInjectionHost)host,
+                        range
+                    )
+                    .doneInjecting();
+            }
+        }
+        else {
+            String text = StringUtil.stripQuotesAroundValue(host.getText());
+            int openedBraces = 0;
+            int start = -1;
+            boolean addedSomething = false;
+            boolean quoted = false;
 
-	private static void injectInMxmlFile(final MultiHostRegistrar registrar, final PsiElement host, final PsiMetaData descriptor, XmlTag tag)
-	{
-		int offset = host instanceof XmlText ? 0 : 1;
+            for (int i = 0; i < text.length(); ++i) {
+                char ch = text.charAt(i);
 
-		if(descriptor instanceof AnnotationBackedDescriptor && ((XmlElementDescriptorWithCDataContent) descriptor).requiresCdataBracesInContext(tag))
-		{
-			final int length = host.getTextLength();
-			if(length < 2 * offset)
-			{
-				return;
-			}
-			String type = ((AnnotationBackedDescriptor) descriptor).getType();
-			if(type == null)
-			{
-				type = "*";
-			}
-			final @NonNls String prefix = "(function (event:" + type + ") {";
-			final @NonNls String suffix = "})();";
+                if (quoted) {
+                    quoted = false;
+                    continue;
+                }
+                if (ch == '\\') {
+                    quoted = true;
+                }
+                else if (ch == '{') {
+                    if (openedBraces == 0) {
+                        start = i + 1;
+                    }
+                    openedBraces++;
+                }
+                else if (ch == '}') {
+                    openedBraces--;
+                    if (openedBraces == 0 && start != -1) {
+                        registrar.startInjecting(JavaScriptSupportLoader.ECMA_SCRIPT_L4)
+                            .addPlace(
+                                "(function (){}) (",
+                                "\n);",
+                                (PsiLanguageInjectionHost)host,
+                                new TextRange(offset + start, i + offset)
+                            )
+                            .doneInjecting();
+                        addedSomething = true;
+                        start = -1;
+                    }
+                }
+            }
 
-			if(host instanceof XmlText)
-			{
-				injectToXmlText(registrar, host, JavaScriptSupportLoader.ECMA_SCRIPT_L4, prefix, suffix);
-			}
-			else
-			{
-				TextRange range = new TextRange(offset, length - offset);
-
-				registrar.startInjecting(JavaScriptSupportLoader.ECMA_SCRIPT_L4).addPlace(prefix, (host instanceof XmlAttributeValue ? "\n" : "") + suffix,
-						(PsiLanguageInjectionHost) host, range).doneInjecting();
-			}
-		}
-		else
-		{
-			final String text = StringUtil.stripQuotesAroundValue(host.getText());
-			int openedBraces = 0;
-			int start = -1;
-			boolean addedSomething = false;
-			boolean quoted = false;
-
-			for(int i = 0; i < text.length(); ++i)
-			{
-				final char ch = text.charAt(i);
-
-				if(quoted)
-				{
-					quoted = false;
-					continue;
-				}
-				if(ch == '\\')
-				{
-					quoted = true;
-				}
-				else if(ch == '{')
-				{
-					if(openedBraces == 0)
-					{
-						start = i + 1;
-					}
-					openedBraces++;
-				}
-				else if(ch == '}')
-				{
-					openedBraces--;
-					if(openedBraces == 0 && start != -1)
-					{
-						registrar.startInjecting(JavaScriptSupportLoader.ECMA_SCRIPT_L4).addPlace("(function (){}) (", "\n);", (PsiLanguageInjectionHost) host, new TextRange(offset + start, i + offset)).doneInjecting();
-						addedSomething = true;
-						start = -1;
-					}
-				}
-			}
-
-			if(!addedSomething)
-			{
-				final String trimmedText = text.trim();
-				start = trimmedText.indexOf("@Embed");
-				if(start == 0)
-				{
-					offset += text.indexOf(trimmedText);
-					registrar.startInjecting(JavaScriptSupportLoader.ECMA_SCRIPT_L4).addPlace(null, null, (PsiLanguageInjectionHost) host, new TextRange(offset, trimmedText.length() + offset)).doneInjecting();
-				}
-			}
-		}
-	}
+            if (!addedSomething) {
+                String trimmedText = text.trim();
+                start = trimmedText.indexOf("@Embed");
+                if (start == 0) {
+                    offset += text.indexOf(trimmedText);
+                    registrar.startInjecting(JavaScriptSupportLoader.ECMA_SCRIPT_L4)
+                        .addPlace(
+                            null,
+                            null,
+                            (PsiLanguageInjectionHost)host,
+                            new TextRange(offset, trimmedText.length() + offset)
+                        )
+                        .doneInjecting();
+                }
+            }
+        }
+    }
 }

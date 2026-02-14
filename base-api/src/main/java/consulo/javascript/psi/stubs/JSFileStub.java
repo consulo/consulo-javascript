@@ -1,15 +1,15 @@
 package consulo.javascript.psi.stubs;
 
-import javax.annotation.Nonnull;
 import com.intellij.lang.javascript.psi.JSFile;
-import com.intellij.psi.stubs.PsiFileStub;
+import consulo.language.psi.stub.PsiFileStub;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 19.07.2015
+ * @since 2015-07-19
  */
-public interface JSFileStub extends PsiFileStub<JSFile>
-{
-	@Nonnull
-	String getName();
+public interface JSFileStub extends PsiFileStub<JSFile> {
+    @Nonnull
+    String getName();
 }

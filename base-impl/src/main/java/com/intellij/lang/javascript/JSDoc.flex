@@ -1,6 +1,7 @@
 package com.intellij.lang.javascript;
-import com.intellij.lexer.FlexLexer;
-import com.intellij.psi.tree.IElementType;
+
+import consulo.language.lexer.FlexLexer;
+import consulo.language.ast.IElementType;
 
 %%
 

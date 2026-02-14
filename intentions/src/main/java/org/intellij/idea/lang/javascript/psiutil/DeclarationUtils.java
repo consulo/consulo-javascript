@@ -21,132 +21,174 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class DeclarationUtils {
-    private DeclarationUtils() {}
+    private DeclarationUtils() {
+    }
 
-    public static void calculateVariablesDeclared(JSStatement statement,
-                                                  Set<String> variablesDeclaredAtTopLevel,
-                                                  Set<String> variablesDeclaredAtLowerLevels,
-                                                  boolean     isTopLevel) {
+    public static void calculateVariablesDeclared(
+        JSStatement statement,
+        Set<String> variablesDeclaredAtTopLevel,
+        Set<String> variablesDeclaredAtLowerLevels,
+        boolean isTopLevel
+    ) {
         if (statement == null) {
             return;
         }
 
-        if (statement instanceof JSBreakStatement      ||
-            statement instanceof JSExpressionStatement ||
-            statement instanceof JSContinueStatement   ||
-            statement instanceof JSThrowStatement      ||
-            statement instanceof JSReturnStatement) {
+        if (statement instanceof JSBreakStatement
+            || statement instanceof JSExpressionStatement
+            || statement instanceof JSContinueStatement
+            || statement instanceof JSThrowStatement
+            || statement instanceof JSReturnStatement) {
             // Nothing to do.
-        } else if (statement instanceof JSVarStatement) {
-            calculateVariablesDeclared((JSVarStatement) statement, variablesDeclaredAtTopLevel,
-                                       variablesDeclaredAtLowerLevels, isTopLevel);
-        } else if (statement instanceof JSForStatement) {
-            final JSForStatement loopStatement = (JSForStatement) statement;
-
-            calculateVariablesDeclared(loopStatement.getVarDeclaration(), variablesDeclaredAtTopLevel,
-                                       variablesDeclaredAtLowerLevels, false);
-            calculateVariablesDeclared(loopStatement.getBody(),           variablesDeclaredAtTopLevel,
-                                       variablesDeclaredAtLowerLevels, false);
-        } else if (statement instanceof JSWhileStatement) {
-            final JSWhileStatement loopStatement = (JSWhileStatement) statement;
-
-            calculateVariablesDeclared(loopStatement.getBody(), variablesDeclaredAtTopLevel,
-                                       variablesDeclaredAtLowerLevels, false);
-        } else if (statement instanceof JSDoWhileStatement) {
-            final JSDoWhileStatement loopStatement = (JSDoWhileStatement) statement;
-
-            calculateVariablesDeclared(loopStatement.getBody(), variablesDeclaredAtTopLevel,
-                                       variablesDeclaredAtLowerLevels, false);
-        } else if (statement instanceof JSBlockStatement) {
-            final JSBlockStatement block = (JSBlockStatement) statement;
-
-            calculateVariablesDeclared(block.getStatements(), variablesDeclaredAtTopLevel,
-                                       variablesDeclaredAtLowerLevels, false);
-        } else if (statement instanceof JSLabeledStatement) {
-            final JSLabeledStatement labeledStatement = (JSLabeledStatement) statement;
-
-            calculateVariablesDeclared(labeledStatement.getStatement(), variablesDeclaredAtTopLevel,
-                                       variablesDeclaredAtLowerLevels, false);
-        } else if (statement instanceof JSIfStatement) {
-            final JSIfStatement ifStatement = (JSIfStatement) statement;
-            final JSStatement   thenBranch  = ifStatement.getThen();
-            final JSStatement   elseBranch  = ifStatement.getElse();
+        }
+        else if (statement instanceof JSVarStatement varStatement) {
+            calculateVariablesDeclared(varStatement, variablesDeclaredAtTopLevel,
+                variablesDeclaredAtLowerLevels, isTopLevel
+            );
+        }
+        else if (statement instanceof JSForStatement loopStatement) {
+            calculateVariablesDeclared(
+                loopStatement.getVarDeclaration(),
+                variablesDeclaredAtTopLevel,
+                variablesDeclaredAtLowerLevels,
+                false
+            );
+            calculateVariablesDeclared(
+                loopStatement.getBody(),
+                variablesDeclaredAtTopLevel,
+                variablesDeclaredAtLowerLevels,
+                false
+            );
+        }
+        else if (statement instanceof JSWhileStatement loopStatement) {
+            calculateVariablesDeclared(
+                loopStatement.getBody(),
+                variablesDeclaredAtTopLevel,
+                variablesDeclaredAtLowerLevels,
+                false
+            );
+        }
+        else if (statement instanceof JSDoWhileStatement loopStatement) {
+            calculateVariablesDeclared(
+                loopStatement.getBody(),
+                variablesDeclaredAtTopLevel,
+                variablesDeclaredAtLowerLevels,
+                false
+            );
+        }
+        else if (statement instanceof JSBlockStatement block) {
+            calculateVariablesDeclared(
+                block.getStatements(),
+                variablesDeclaredAtTopLevel,
+                variablesDeclaredAtLowerLevels,
+                false
+            );
+        }
+        else if (statement instanceof JSLabeledStatement labeledStatement) {
+            calculateVariablesDeclared(
+                labeledStatement.getStatement(),
+                variablesDeclaredAtTopLevel,
+                variablesDeclaredAtLowerLevels,
+                false
+            );
+        }
+        else if (statement instanceof JSIfStatement ifStatement) {
+            JSStatement thenBranch = ifStatement.getThen();
+            JSStatement elseBranch = ifStatement.getElse();
 
             calculateVariablesDeclared(thenBranch, variablesDeclaredAtTopLevel,
-                                       variablesDeclaredAtLowerLevels, false);
+                variablesDeclaredAtLowerLevels, false
+            );
             calculateVariablesDeclared(elseBranch, variablesDeclaredAtTopLevel,
-                                       variablesDeclaredAtLowerLevels, false);
-        } else if (statement instanceof JSTryStatement) {
-            final JSTryStatement tryStatement = (JSTryStatement) statement;
+                variablesDeclaredAtLowerLevels, false
+            );
+        }
+        else if (statement instanceof JSTryStatement tryStatement) {
+            calculateVariablesDeclared(
+                tryStatement.getStatement(),
+                variablesDeclaredAtTopLevel,
+                variablesDeclaredAtLowerLevels,
+                false
+            );
+            calculateVariablesDeclared(
+                tryStatement.getFinallyStatement(),
+                variablesDeclaredAtTopLevel,
+                variablesDeclaredAtLowerLevels,
+                false
+            );
 
-            calculateVariablesDeclared(tryStatement.getStatement(),
-                                       variablesDeclaredAtTopLevel,
-                                       variablesDeclaredAtLowerLevels,
-                                       false);
-            calculateVariablesDeclared(tryStatement.getFinallyStatement(),
-                                       variablesDeclaredAtTopLevel,
-                                       variablesDeclaredAtLowerLevels,
-                                       false);
-
-            final JSCatchBlock catchBlock = tryStatement.getCatchBlock();
+            JSCatchBlock catchBlock = tryStatement.getCatchBlock();
 
             if (catchBlock != null) {
-                calculateVariablesDeclared(catchBlock.getStatement(),
-                                           variablesDeclaredAtTopLevel,
-                                           variablesDeclaredAtLowerLevels,
-                                           false);
+                calculateVariablesDeclared(
+                    catchBlock.getStatement(),
+                    variablesDeclaredAtTopLevel,
+                    variablesDeclaredAtLowerLevels,
+                    false
+                );
             }
-        } else if (statement instanceof JSSwitchStatement) {
-            final JSSwitchStatement switchStatement = (JSSwitchStatement) statement;
-
+        }
+        else if (statement instanceof JSSwitchStatement switchStatement) {
             for (JSCaseClause caseClause : switchStatement.getCaseClauses()) {
-                calculateVariablesDeclared(caseClause.getStatements(), variablesDeclaredAtTopLevel,
-                                           variablesDeclaredAtLowerLevels, false);
+                calculateVariablesDeclared(
+                    caseClause.getStatements(),
+                    variablesDeclaredAtTopLevel,
+                    variablesDeclaredAtLowerLevels,
+                    false
+                );
             }
         }
     }
 
-    private static void calculateVariablesDeclared(JSVarStatement statement,
-                                                   Set<String>    variablesDeclaredAtTopLevel,
-                                                   Set<String>    variablesDeclaredAtLowerLevels,
-                                                   boolean        isTopLevel) {
+    private static void calculateVariablesDeclared(
+        JSVarStatement statement,
+        Set<String> variablesDeclaredAtTopLevel,
+        Set<String> variablesDeclaredAtLowerLevels,
+        boolean isTopLevel
+    ) {
         for (JSVariable variable : statement.getVariables()) {
-            final String variableName = variable.getName();
+            String variableName = variable.getName();
 
             if (isTopLevel) {
                 variablesDeclaredAtTopLevel.add(variableName);
-            } else {
+            }
+            else {
                 variablesDeclaredAtLowerLevels.add(variableName);
             }
         }
     }
 
-    private static void calculateVariablesDeclared(JSStatement[] statements,
-                                                   Set<String>   variablesDeclaredAtTopLevel,
-                                                   Set<String>   variablesDeclaredAtLowerLevels,
-                                                   boolean       isTopLevel) {
+    private static void calculateVariablesDeclared(
+        JSStatement[] statements,
+        Set<String> variablesDeclaredAtTopLevel,
+        Set<String> variablesDeclaredAtLowerLevels,
+        boolean isTopLevel
+    ) {
         if (statements != null) {
             for (JSStatement statement : statements) {
-                calculateVariablesDeclared(statement,
-                                           variablesDeclaredAtTopLevel,
-                                           variablesDeclaredAtLowerLevels,
-                                           isTopLevel);
+                calculateVariablesDeclared(
+                    statement,
+                    variablesDeclaredAtTopLevel,
+                    variablesDeclaredAtLowerLevels,
+                    isTopLevel
+                );
             }
         }
     }
 
     public static class DeclarationConflictVisitor extends JSRecursiveElementVisitor {
         private final Set<String> declarations;
-        private       boolean     hasConflict;
+        private boolean hasConflict;
 
         public DeclarationConflictVisitor(Set<String> declarations) {
             this.declarations = new HashSet<String>(declarations);
         }
 
-        @Override public void visitJSVariable(JSVariable variable) {
+        @Override
+        public void visitJSVariable(JSVariable variable) {
             super.visitJSVariable(variable);
 
-            final String name = variable.getName();
+            String name = variable.getName();
 
             for (String declaration : this.declarations) {
                 if (declaration.equals(name)) {

@@ -15,34 +15,36 @@
  */
 package org.intellij.idea.lang.javascript.intention;
 
-import javax.annotation.Nonnull;
-
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NonNls;
-
-import javax.annotation.Nullable;
+import consulo.codeEditor.Editor;
+import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public abstract class JSMutablyNamedIntention extends JSIntention {
-    private String text;
+    private LocalizeValue myText = LocalizeValue.empty();
 
-    @NonNls protected abstract String getTextForElement(PsiElement element);
+    protected abstract LocalizeValue getTextForElement(PsiElement element);
 
     @Override
-	@Nonnull
-	public String getText() {
-      return text;
+    @Nonnull
+    public LocalizeValue getText() {
+        return myText.orIfEmpty(getBasicText());
     }
 
+    @Nonnull
+    protected abstract LocalizeValue getBasicText();
+
     @Override
-	public boolean isAvailable(@Nonnull Project project, Editor editor, @Nullable PsiElement node) {
-      final PsiElement element = findMatchingElement(node);
-      if (element != null) {
-        text = getTextForElement(element);
-        return true;
-      } else {
-        return false;
-      }
+    public boolean isAvailable(@Nonnull Project project, Editor editor, @Nullable PsiElement node) {
+        PsiElement element = findMatchingElement(node);
+        if (element != null) {
+            myText = getTextForElement(element);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

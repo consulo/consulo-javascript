@@ -1,90 +1,98 @@
 package com.sixrr.inspectjs.control;
 
-import javax.annotation.Nonnull;
-
-import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.IncorrectOperationException;
-import com.sixrr.inspectjs.*;
+import com.sixrr.inspectjs.BaseInspectionVisitor;
+import com.sixrr.inspectjs.InspectionJSFix;
+import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import jakarta.annotation.Nonnull;
+import org.intellij.lang.annotations.Pattern;
 
+@ExtensionImpl
 public class  UnnecessaryReturnJSInspection extends JavaScriptInspection {
     private final UnnecessaryReturnFix fix = new UnnecessaryReturnFix();
 
+    @Nonnull
     @Override
-	@Nonnull
+    @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "UnnecessaryReturnStatementJS";
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("unnecessary.return.statement.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.unnecessaryReturnStatementDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
     @Override
-	public boolean isEnabledByDefault() {
+    public boolean isEnabledByDefault() {
         return true;
     }
 
+    @RequiredReadAction
     @Override
-	public String buildErrorString(Object... args) {
-        return InspectionJSBundle.message("unnecessary.return.error.string");
+    public String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.unnecessaryReturnErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new UnnecessaryReturnVisitor();
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location) {
+    public InspectionJSFix buildFix(PsiElement location, Object state) {
         return fix;
     }
 
     private static class UnnecessaryReturnFix extends InspectionJSFix {
+        @Nonnull
         @Override
-		@Nonnull
-        public String getName() {
-            return InspectionJSBundle.message("remove.unnecessary.return.fix");
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.removeUnnecessaryReturnFix();
         }
 
         @Override
-		public void doFix(Project project, ProblemDescriptor descriptor)
-                throws IncorrectOperationException {
-            final PsiElement returnKeywordElement = descriptor.getPsiElement();
-            final PsiElement returnStatement = returnKeywordElement.getParent();
+        public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
+            PsiElement returnKeywordElement = descriptor.getPsiElement();
+            PsiElement returnStatement = returnKeywordElement.getParent();
             assert returnStatement != null;
             deleteElement(returnStatement);
         }
     }
 
     private static class UnnecessaryReturnVisitor extends BaseInspectionVisitor {
-
-        @Override public void visitJSReturnStatement(@Nonnull JSReturnStatement statement) {
+        @Override
+        public void visitJSReturnStatement(@Nonnull JSReturnStatement statement) {
             super.visitJSReturnStatement(statement);
 
-            final JSExpression returnValue = statement.getExpression();
+            JSExpression returnValue = statement.getExpression();
             if(returnValue!=null)
             {
                 return;
             }
-            final JSFunction function =
-                    PsiTreeUtil.getParentOfType(statement, JSFunction.class);
+            JSFunction function = PsiTreeUtil.getParentOfType(statement, JSFunction.class);
             if (function == null) {
                 return;
             }
-            final PsiElement body = function.getLastChild();
+            PsiElement body = function.getLastChild();
             if (body == null) {
                 return;
             }

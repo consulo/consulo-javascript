@@ -1,7 +1,7 @@
 package com.intellij.lang.javascript;
 
-import com.intellij.lexer.FlexLexer;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.lexer.FlexLexer;
+import consulo.language.ast.IElementType;
 
 %%
 
@@ -62,7 +62,7 @@ DOUBLE_QUOTED_LITERAL=\"([^\\\"\r\n]|{ESCAPE_SEQUENCE}|\\{CRLF})*(\"|\\)?
 ESCAPE_SEQUENCE=\\[^\r\n]
 GROUP = "[" [^\]]* "]"
 
-REGEXP_LITERAL="/"([^\*\\/\r\n]|{ESCAPE_SEQUENCE}|{GROUP})([^\\/\r\n]|{ESCAPE_SEQUENCE}|{GROUP})*("/"[gimx]*)?
+REGEXP_LITERAL="/"([^\*\\/\r\n]|{ESCAPE_SEQUENCE}|{GROUP})([^\\/\r\n]|{ESCAPE_SEQUENCE}|{GROUP})*("/"[dgimsuvy]*)?
 ALPHA=[:letter:]
 DIGIT=[0-9]
 XML_NAME=({ALPHA}|"_")({ALPHA}|{DIGIT}|"_"|"."|"-")*(":"({ALPHA}|"_")?({ALPHA}|{DIGIT}|"_"|"."|"-")*)?
@@ -276,8 +276,6 @@ FIELD_OR_METHOD={IDENTIFIER} ("(" [^ \\)]* ")"? )?
 <YYINITIAL,DIV_OR_GT> "super"               { yybegin(YYINITIAL); return optionsHolder.isECMAL4Level ? JSTokenTypes.SUPER_KEYWORD:JSTokenTypes.IDENTIFIER; }
 <YYINITIAL,DIV_OR_GT> "include"             { yybegin(YYINITIAL); return optionsHolder.isECMAL4Level ? JSTokenTypes.INCLUDE_KEYWORD:JSTokenTypes.IDENTIFIER; }
 <YYINITIAL,DIV_OR_GT> "is"                  { yybegin(YYINITIAL); return optionsHolder.isECMAL4Level ? JSTokenTypes.IS_KEYWORD:JSTokenTypes.IDENTIFIER; }
-<YYINITIAL,DIV_OR_GT> "get"                 { yybegin(YYINITIAL); return optionsHolder.isJavaScript1_6_OrBetter ? JSTokenTypes.GET_KEYWORD:JSTokenTypes.IDENTIFIER; }
-<YYINITIAL,DIV_OR_GT> "set"                 { yybegin(YYINITIAL); return optionsHolder.isJavaScript1_6_OrBetter ? JSTokenTypes.SET_KEYWORD:JSTokenTypes.IDENTIFIER; }
 <YYINITIAL,DIV_OR_GT> "as"                  { yybegin(YYINITIAL); return optionsHolder.isECMAL4Level ? JSTokenTypes.AS_KEYWORD:JSTokenTypes.IDENTIFIER; }
 <YYINITIAL,DIV_OR_GT> "each"                { yybegin(YYINITIAL); return optionsHolder.hasE4X ? JSTokenTypes.EACH_KEYWORD:JSTokenTypes.IDENTIFIER; }
 <YYINITIAL,DIV_OR_GT> "uint"                { yybegin(YYINITIAL); return optionsHolder.isECMAL4Level ? JSTokenTypes.UINT_KEYWORD:JSTokenTypes.IDENTIFIER; }
@@ -414,4 +412,4 @@ FIELD_OR_METHOD={IDENTIFIER} ("(" [^ \\)]* ")"? )?
 
 <YYINITIAL,DIV_OR_GT> "]]>" { yybegin(YYINITIAL); return JSTokenTypes.CDATA_END; }
 <YYINITIAL,DIV_OR_GT> "<![CDATA[" { yybegin(YYINITIAL); return JSTokenTypes.CDATA_START; }
-.                     { yybegin(YYINITIAL); return JSTokenTypes.BAD_CHARACTER; }
+[^]                     { yybegin(YYINITIAL); return JSTokenTypes.BAD_CHARACTER; }

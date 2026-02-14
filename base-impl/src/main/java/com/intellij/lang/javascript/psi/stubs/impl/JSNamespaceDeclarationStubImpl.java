@@ -19,27 +19,31 @@ package com.intellij.lang.javascript.psi.stubs.impl;
 
 import com.intellij.lang.javascript.psi.JSNamespaceDeclaration;
 import com.intellij.lang.javascript.psi.stubs.JSNamespaceDeclarationStub;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubElement;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.stub.IStubElementType;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jun 6, 2008
- *         Time: 8:00:52 PM
+ * Date: Jun 6, 2008
+ * Time: 8:00:52 PM
  */
-public class JSNamespaceDeclarationStubImpl extends JSQualifiedObjectStubBase<JSNamespaceDeclaration> implements JSNamespaceDeclarationStub
-{
-	private String myInitialValueString;
+public class JSNamespaceDeclarationStubImpl extends JSQualifiedObjectStubBase<JSNamespaceDeclaration>
+    implements JSNamespaceDeclarationStub {
+    private String myInitialValueString;
 
-	public JSNamespaceDeclarationStubImpl(String name, String qName, String initialValueString, StubElement parent, IStubElementType elementType)
-	{
-		super(name, 0, qName, parent, elementType);
-		myInitialValueString = initialValueString;
-	}
+    public JSNamespaceDeclarationStubImpl(
+        String name,
+        String qName,
+        String initialValueString,
+        StubElement parent,
+        IStubElementType elementType
+    ) {
+        super(name, 0, qName, parent, elementType);
+        myInitialValueString = initialValueString;
+    }
 
-	@Override
-	public String getInitialValueString()
-	{
-		return myInitialValueString;
-	}
+    @Override
+    public String getInitialValueString() {
+        return myInitialValueString;
+    }
 }

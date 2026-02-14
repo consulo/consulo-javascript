@@ -1,97 +1,100 @@
 package com.sixrr.inspectjs.confusing;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSIfStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
-import com.sixrr.inspectjs.*;
+import com.sixrr.inspectjs.BaseInspectionVisitor;
+import com.sixrr.inspectjs.InspectionJSFix;
+import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import com.sixrr.inspectjs.utils.BoolUtils;
 import com.sixrr.inspectjs.utils.ParenthesesUtils;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 
+@ExtensionImpl
 public class NegatedIfStatementJSInspection extends JavaScriptInspection {
     private final NegatedIfElseFix fix = new NegatedIfElseFix();
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("negated.if.statement.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.negatedIfStatementDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
+    @Nullable
     @Override
-	@Nullable
-    protected String buildErrorString(Object... args) {
-        return InspectionJSBundle.message("negated.ref.statement.error.string");
+    @RequiredReadAction
+    protected String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.negatedRefStatementErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
     @Override
-	protected InspectionJSFix buildFix(PsiElement location) {
+    protected InspectionJSFix buildFix(PsiElement location, Object state) {
         return fix;
     }
 
     private static class NegatedIfElseFix extends InspectionJSFix {
-
+        @Nonnull
         @Override
-		@Nonnull
-        public String getName() {
-            return InspectionJSBundle.message("invert.if.condition.fix");
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.invertIfConditionFix();
         }
 
         @Override
-		public void doFix(Project project, ProblemDescriptor descriptor)
-                throws IncorrectOperationException {
-            final PsiElement ifToken = descriptor.getPsiElement();
-            final JSIfStatement ifStatement = (JSIfStatement) ifToken.getParent();
+        public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
+            PsiElement ifToken = descriptor.getPsiElement();
+            JSIfStatement ifStatement = (JSIfStatement)ifToken.getParent();
             assert ifStatement != null;
-            final JSStatement elseBranch = ifStatement.getElse();
-            final JSStatement thenBranch = ifStatement.getThen();
-            final JSExpression condition = ifStatement.getCondition();
-            final String negatedCondition =
-                    BoolUtils.getNegatedExpressionText(condition);
+            JSStatement elseBranch = ifStatement.getElse();
+            JSStatement thenBranch = ifStatement.getThen();
+            JSExpression condition = ifStatement.getCondition();
+            String negatedCondition = BoolUtils.getNegatedExpressionText(condition);
             String elseText = elseBranch.getText();
-            final PsiElement lastChild = elseBranch.getLastChild();
+            PsiElement lastChild = elseBranch.getLastChild();
             if (lastChild instanceof PsiComment) {
-                final PsiComment comment = (PsiComment) lastChild;
-                final IElementType tokenType = comment.getTokenType();
+                PsiComment comment = (PsiComment)lastChild;
+                IElementType tokenType = comment.getTokenType();
                 if (JSTokenTypes.END_OF_LINE_COMMENT.equals(tokenType)) {
                     elseText += '\n';
                 }
             }
-            @NonNls final String newStatement = "if(" + negatedCondition + ')' +
-                    elseText + " else " + thenBranch.getText();
+            @NonNls String newStatement = "if(" + negatedCondition + ')' + elseText + " else " + thenBranch.getText();
             replaceStatement(ifStatement, newStatement);
         }
     }
+
     private static class Visitor extends BaseInspectionVisitor {
-
-
-        @Override public void visitJSIfStatement(JSIfStatement statement) {
+        @Override
+        public void visitJSIfStatement(JSIfStatement statement) {
             super.visitJSIfStatement(statement);
-            final PsiElement parent = statement.getParent();
-            if (parent instanceof JSIfStatement) {
-                final JSIfStatement parentStatement = (JSIfStatement) parent;
-                final JSStatement elseBranch = parentStatement.getElse();
+            PsiElement parent = statement.getParent();
+            if (parent instanceof JSIfStatement parentStatement) {
+                JSStatement elseBranch = parentStatement.getElse();
                 if (statement.equals(elseBranch)) {
                     return;
                 }
@@ -99,7 +102,6 @@ public class NegatedIfStatementJSInspection extends JavaScriptInspection {
             if (statement.getElse() == null) {
                 return;
             }
-
 
             JSExpression condition = statement.getCondition();
             condition = ParenthesesUtils.stripExpression(condition);
@@ -113,9 +115,8 @@ public class NegatedIfStatementJSInspection extends JavaScriptInspection {
             if (!(expression instanceof JSBinaryExpression)) {
                 return false;
             }
-            final JSBinaryExpression binaryExpression =
-                    (JSBinaryExpression) expression;
-            final IElementType sign = binaryExpression.getOperationSign();
+            JSBinaryExpression binaryExpression = (JSBinaryExpression)expression;
+            IElementType sign = binaryExpression.getOperationSign();
             return JSTokenTypes.NE.equals(sign) || JSTokenTypes.NEQEQ.equals(sign);
         }
     }

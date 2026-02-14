@@ -16,526 +16,443 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSImportHandlingUtil;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
 import com.intellij.lang.javascript.psi.stubs.JSClassStub;
-import com.intellij.openapi.util.UserDataCache;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.*;
-import com.intellij.util.ArrayFactory;
-import com.intellij.util.ArrayUtil;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.util.CachedValueProvider;
+import consulo.application.util.CachedValuesManager;
+import consulo.application.util.ParameterizedCachedValue;
+import consulo.application.util.UserDataCache;
+import consulo.javascript.impl.language.psi.JSStubElementType;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiModificationTracker;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.util.collection.ArrayFactory;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
-import gnu.trove.THashMap;
-import gnu.trove.THashSet;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.*;
 
 /**
  * @author Maxim.Mossienko
  */
-public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> implements JSClass
-{
-	private volatile Map<String, Object> myName2FunctionMap;
-	private volatile Map<String, JSVariable> myName2FieldsMap;
-	private static Key<ParameterizedCachedValue<List<JSClass>, Object>> ourImplementsListCacheKey = Key.create("implements.list.cache");
-	private static Key<ParameterizedCachedValue<List<JSClass>, Object>> ourExtendsListCacheKey = Key.create("implements.list.cache");
-	private static UserDataCache<ParameterizedCachedValue<List<JSClass>, Object>, JSClassBase, Object> ourImplementsListCache = new
-			ClassesUserDataCache();
-	private static UserDataCache<ParameterizedCachedValue<List<JSClass>, Object>, JSClassBase,
-			Object> ourExtendsListCache = new ExtendsClassesUserDataCache();
+public abstract class JSClassBase extends JSStubElementImpl<JSClassStub> implements JSClass {
+    private static final Key<ParameterizedCachedValue<List<JSClass>, Object>> IMPLEMENTS_LIST_CACHE_KEY = Key.create("implements.list.cache");
+    private static final Key<ParameterizedCachedValue<List<JSClass>, Object>> EXTENDS_LIST_CACHE_KEY = Key.create("implements.list.cache");
+    private static final UserDataCache<ParameterizedCachedValue<List<JSClass>, Object>, JSClassBase, Object> IMPLEMENTS_LIST_CACHE =
+        new ClassesUserDataCache();
+    private static final UserDataCache<ParameterizedCachedValue<List<JSClass>, Object>, JSClassBase, Object> EXTENDS_LIST_CACHE =
+        new ExtendsClassesUserDataCache();
 
-	protected JSClassBase(final ASTNode node)
-	{
-		super(node);
-	}
+    private volatile Map<String, Object> myName2FunctionMap;
+    private volatile Map<String, JSVariable> myName2FieldsMap;
 
-	public JSClassBase(final JSClassStub stub, final JSStubElementType<JSClassStub, JSClass> aClass)
-	{
-		super(stub, aClass);
-	}
+    protected JSClassBase(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSClass(this);
-	}
+    public JSClassBase(JSClassStub stub, JSStubElementType<JSClassStub, JSClass> aClass) {
+        super(stub, aClass);
+    }
 
-	@Override
-	public void subtreeChanged()
-	{
-		dropCaches();
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSClass(this);
+    }
 
-		super.subtreeChanged();
-	}
+    @Override
+    public void subtreeChanged() {
+        dropCaches();
 
-	@Override
-	protected Object clone()
-	{
-		final JSClassBase o = (JSClassBase) super.clone();
-		o.dropCaches();
-		return o;
-	}
+        super.subtreeChanged();
+    }
 
-	private void dropCaches()
-	{
-		synchronized(this)
-		{
-			myName2FunctionMap = null;
-			myName2FieldsMap = null;
-		}
-	}
+    @Override
+    protected Object clone() {
+        JSClassBase o = (JSClassBase)super.clone();
+        o.dropCaches();
+        return o;
+    }
 
-	@Override
-	public JSFunction[] getFunctions()
-	{
-		final JSClassStub classStub = getStub();
-		if(classStub != null)
-		{
-			return getStubChildrenByType(classStub, JSElementTypes.FUNCTION_DECLARATION, JSFunction.ARRAY_FACTORY);
-		}
-		else
-		{
-			final List<JSFunction> functions = new ArrayList<JSFunction>();
-			processDeclarations(new PsiScopeProcessor()
-			{
-				@Override
-				public boolean execute(final PsiElement element, final ResolveState state)
-				{
-					if(element instanceof JSFunction)
-					{
-						functions.add((JSFunction) element);
-					}
-					return true;
-				}
+    private void dropCaches() {
+        synchronized (this) {
+            myName2FunctionMap = null;
+            myName2FieldsMap = null;
+        }
+    }
 
-				@Override
-				public <T> T getHint(final Key<T> hintClass)
-				{
-					return null;
-				}
+    @Override
+    @RequiredReadAction
+    public JSFunction[] getFunctions() {
+        JSClassStub classStub = getStub();
+        if (classStub != null) {
+            return getStubChildrenByType(classStub, JSElementTypes.FUNCTION_DECLARATION, JSFunction.ARRAY_FACTORY);
+        }
+        else {
+            final List<JSFunction> functions = new ArrayList<>();
+            processDeclarations(
+                new PsiScopeProcessor() {
+                    @Override
+                    public boolean execute(@Nonnull PsiElement element, ResolveState state) {
+                        if (element instanceof JSFunction function) {
+                            functions.add(function);
+                        }
+                        return true;
+                    }
 
-				@Override
-				public void handleEvent(final Event event, final Object associated)
-				{
-				}
-			}, ResolveState.initial(), this, this);
-			return functions.toArray(JSFunction.EMPTY_ARRAY);
-		}
-	}
+                    @Override
+                    public <T> T getHint(@Nonnull Key<T> hintClass) {
+                        return null;
+                    }
 
-	@Override
-	public JSFunction findFunctionByName(String functionName)
-	{
-		if(functionName == null)
-		{
-			return null;
-		}
-		final Map<String, Object> name2FunctionMap = initFunctions();
-		final Object o = name2FunctionMap.get(functionName);
-		if(o instanceof JSFunction)
-		{
-			return (JSFunction) o;
-		}
-		else if(o instanceof JSFunction[])
-		{
-			return ((JSFunction[]) o)[0];
-		}
-		return null;
-	}
+                    @Override
+                    public void handleEvent(Event event, Object associated) {
+                    }
+                },
+                ResolveState.initial(),
+                this,
+                this
+            );
+            return functions.toArray(JSFunction.EMPTY_ARRAY);
+        }
+    }
 
-	@Override
-	public JSVariable[] getFields()
-	{
-		final JSClassStub classStub = getStub();
-		final List<JSVariable> vars = new ArrayList<JSVariable>(3);
+    @Override
+    @RequiredReadAction
+    public JSFunction findFunctionByName(String functionName) {
+        if (functionName == null) {
+            return null;
+        }
+        Map<String, Object> name2FunctionMap = initFunctions();
+        Object o = name2FunctionMap.get(functionName);
+        if (o instanceof JSFunction function) {
+            return function;
+        }
+        else if (o instanceof JSFunction[] functions) {
+            return functions[0];
+        }
+        return null;
+    }
 
-		if(classStub != null)
-		{
-			for(JSVarStatement var : getStubChildrenByType(classStub, JSElementTypes.VAR_STATEMENT, new ArrayFactory<JSVarStatement>()
-			{
-				@Override
-				public JSVarStatement[] create(final int count)
-				{
-					return new JSVarStatement[count];
-				}
-			}))
-			{
-				vars.addAll(Arrays.asList(var.getVariables()));
-			}
-		}
-		else
-		{
-			processDeclarations(new PsiScopeProcessor()
-			{
-				@Override
-				public boolean execute(final PsiElement element, final ResolveState state)
-				{
-					if(element instanceof JSVariable)
-					{
-						vars.add((JSVariable) element);
-					}
-					return true;
-				}
+    @Override
+    @RequiredReadAction
+    public JSVariable[] getFields() {
+        JSClassStub classStub = getStub();
+        final List<JSVariable> vars = new ArrayList<>(3);
 
-				@Override
-				public <T> T getHint(final Key<T> hintClass)
-				{
-					return null;
-				}
+        if (classStub != null) {
+            for (JSVarStatement var : getStubChildrenByType(classStub, JSElementTypes.VAR_STATEMENT, JSVarStatement[]::new)) {
+                vars.addAll(Arrays.asList(var.getVariables()));
+            }
+        }
+        else {
+            processDeclarations(
+                new PsiScopeProcessor() {
+                    @Override
+                    public boolean execute(@Nonnull PsiElement element, ResolveState state) {
+                        if (element instanceof JSVariable variable) {
+                            vars.add(variable);
+                        }
+                        return true;
+                    }
 
-				@Override
-				public void handleEvent(final Event event, final Object associated)
-				{
-				}
-			}, ResolveState.initial(), this, this);
-		}
-		return vars.toArray(JSVariable.EMPTY_ARRAY);
-	}
+                    @Override
+                    public <T> T getHint(@Nonnull Key<T> hintClass) {
+                        return null;
+                    }
 
-	@Override
-	public JSVariable findFieldByName(String name)
-	{
-		return initFields().get(name);
-	}
+                    @Override
+                    public void handleEvent(Event event, Object associated) {
+                    }
+                },
+                ResolveState.initial(),
+                this,
+                this
+            );
+        }
+        return vars.toArray(JSVariable.EMPTY_ARRAY);
+    }
 
-	private
-	@Nonnull
-	Map<String, JSVariable> initFields()
-	{
-		Map<String, JSVariable> name2FieldsMap = myName2FieldsMap;
+    @Override
+    @RequiredReadAction
+    public JSVariable findFieldByName(String name) {
+        return initFields().get(name);
+    }
 
-		if(name2FieldsMap == null)
-		{
-			synchronized(this)
-			{
-				name2FieldsMap = myName2FieldsMap;
+    @Nonnull
+    @RequiredReadAction
+    private Map<String, JSVariable> initFields() {
+        Map<String, JSVariable> name2FieldsMap = myName2FieldsMap;
 
-				if(name2FieldsMap == null)
-				{
-					name2FieldsMap = new THashMap<String, JSVariable>();
+        if (name2FieldsMap == null) {
+            synchronized (this) {
+                name2FieldsMap = myName2FieldsMap;
 
-					for(JSVariable variable : getFields())
-					{
-						final String name = variable.getName();
+                if (name2FieldsMap == null) {
+                    name2FieldsMap = new HashMap<>();
 
-						if(name != null)
-						{
-							name2FieldsMap.put(name, variable);
-						}
-					}
-					myName2FieldsMap = name2FieldsMap;
-				}
-			}
-		}
-		return name2FieldsMap;
-	}
+                    for (JSVariable variable : getFields()) {
+                        String name = variable.getName();
 
-	private
-	@Nonnull
-	Map<String, Object> initFunctions()
-	{
-		Map<String, Object> name2FunctionMap = myName2FunctionMap;
+                        if (name != null) {
+                            name2FieldsMap.put(name, variable);
+                        }
+                    }
+                    myName2FieldsMap = name2FieldsMap;
+                }
+            }
+        }
+        return name2FieldsMap;
+    }
 
-		if(name2FunctionMap == null)
-		{
-			synchronized(this)
-			{
-				name2FunctionMap = myName2FunctionMap;
+    @Nonnull
+    @RequiredReadAction
+    private Map<String, Object> initFunctions() {
+        Map<String, Object> name2FunctionMap = myName2FunctionMap;
 
-				if(name2FunctionMap == null)
-				{
-					name2FunctionMap = new THashMap<String, Object>();
+        if (name2FunctionMap == null) {
+            synchronized (this) {
+                name2FunctionMap = myName2FunctionMap;
 
-					for(JSFunction function : getFunctions())
-					{
-						final String name = function.getName();
+                if (name2FunctionMap == null) {
+                    name2FunctionMap = new HashMap<>();
 
-						if(name != null)
-						{
-							final Object o = name2FunctionMap.get(name);
-							if(o == null)
-							{
-								name2FunctionMap.put(name, function);
-							}
-							else if(o instanceof JSFunction)
-							{
-								name2FunctionMap.put(name, new JSFunction[]{
-										(JSFunction) o,
-										function
-								});
-							}
-							else if(o instanceof JSFunction[])
-							{
-								name2FunctionMap.put(name, ArrayUtil.append((JSFunction[]) o, function));
-							}
-						}
-					}
-					myName2FunctionMap = name2FunctionMap;
-				}
-			}
-		}
-		return name2FunctionMap;
-	}
+                    for (JSFunction function : getFunctions()) {
+                        String name = function.getName();
 
-	@Override
-	public JSFunction findFunctionByNameAndKind(final String name, JSFunction.FunctionKind kind)
-	{
-		if(name == null)
-		{
-			return null;
-		}
-		Map<String, Object> name2FunctionMap = initFunctions();
-		final Object o = name2FunctionMap.get(name);
+                        if (name != null) {
+                            Object o = name2FunctionMap.get(name);
+                            if (o == null) {
+                                name2FunctionMap.put(name, function);
+                            }
+                            else if (o instanceof JSFunction sameNameFunction) {
+                                name2FunctionMap.put(name, new JSFunction[]{sameNameFunction, function});
+                            }
+                            else if (o instanceof JSFunction[] sameNameFunctions) {
+                                name2FunctionMap.put(name, ArrayUtil.append(sameNameFunctions, function));
+                            }
+                        }
+                    }
+                    myName2FunctionMap = name2FunctionMap;
+                }
+            }
+        }
+        return name2FunctionMap;
+    }
 
-		if(o instanceof JSFunction)
-		{
-			final JSFunction function = (JSFunction) o;
-			return function.getKind() == kind ? function : null;
-		}
-		else if(o instanceof JSFunction[])
-		{
-			for(JSFunction fun : (JSFunction[]) o)
-			{
-				if(fun.getKind() == kind)
-				{
-					return fun;
-				}
-			}
-		}
-		return null;
-	}
+    @Override
+    @RequiredReadAction
+    public JSFunction findFunctionByNameAndKind(String name, JSFunction.FunctionKind kind) {
+        if (name == null) {
+            return null;
+        }
+        Map<String, Object> name2FunctionMap = initFunctions();
+        Object o = name2FunctionMap.get(name);
 
-	@Override
-	public JSClass[] getSupers()
-	{
-		List<JSClass> superClasses = new ArrayList<JSClass>(getClassesFromReferenceList(getExtendsList(), JSElementTypes.EXTENDS_LIST));
-		superClasses.addAll(getClassesFromReferenceList(getImplementsList(), JSElementTypes.IMPLEMENTS_LIST));
-		return superClasses.toArray(new JSClass[superClasses.size()]);
-	}
+        if (o instanceof JSFunction function) {
+            return function.getKind() == kind ? function : null;
+        }
+        else if (o instanceof JSFunction[] functions) {
+            for (JSFunction fun : functions) {
+                if (fun.getKind() == kind) {
+                    return fun;
+                }
+            }
+        }
+        return null;
+    }
 
-	private List<JSClass> getClassesFromReferenceList(final @Nullable JSReferenceList extendsList, @Nonnull IElementType type)
-	{
-		final PsiElement element = extendsList != null ? extendsList : this;
+    @Override
+    public JSClass[] getSupers() {
+        List<JSClass> superClasses = new ArrayList<>(getClassesFromReferenceList(getExtendsList(), JSElementTypes.EXTENDS_LIST));
+        superClasses.addAll(getClassesFromReferenceList(getImplementsList(), JSElementTypes.IMPLEMENTS_LIST));
+        return superClasses.toArray(new JSClass[superClasses.size()]);
+    }
 
-		if(type == JSElementTypes.EXTENDS_LIST)
-		{
-			return ourExtendsListCache.get(ourExtendsListCacheKey, this, extendsList).getValue(element);
-		}
-		else
-		{
-			return ourImplementsListCache.get(ourImplementsListCacheKey, this, extendsList).getValue(element);
-		}
-	}
+    private List<JSClass> getClassesFromReferenceList(@Nullable JSReferenceList extendsList, @Nonnull IElementType type) {
+        PsiElement element = extendsList != null ? extendsList : this;
 
-	@Override
-	public boolean processDeclarations(@Nonnull final PsiScopeProcessor processor, @Nonnull final ResolveState substitutor,
-			final PsiElement lastParent, @Nonnull final PsiElement place)
-	{
-		final ResolveProcessor resolveProcessor = processor instanceof ResolveProcessor ? (ResolveProcessor) processor : null;
-		final boolean toProcessClass = resolveProcessor != null && resolveProcessor.isTypeContext();
+        if (type == JSElementTypes.EXTENDS_LIST) {
+            return EXTENDS_LIST_CACHE.get(EXTENDS_LIST_CACHE_KEY, this, extendsList).getValue(element);
+        }
+        else {
+            return IMPLEMENTS_LIST_CACHE.get(IMPLEMENTS_LIST_CACHE_KEY, this, extendsList).getValue(element);
+        }
+    }
 
-		if(toProcessClass)
-		{
-			if(!processor.execute(this, null))
-			{
-				return false;
-			}
-		}
+    @Override
+    @RequiredReadAction
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState substitutor,
+        PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        ResolveProcessor resolveProcessor = processor instanceof ResolveProcessor rProcessor ? rProcessor : null;
+        boolean toProcessClass = resolveProcessor != null && resolveProcessor.isTypeContext();
 
-		if(lastParent == null)
-		{
-			return true;
-		}
+        if (toProcessClass) {
+            if (!processor.execute(this, null)) {
+                return false;
+            }
+        }
 
-		processor.handleEvent(PsiScopeProcessor.Event.SET_DECLARATION_HOLDER, this);
-		final boolean toProcessMembers = (resolveProcessor == null || (!resolveProcessor.isToSkipClassDeclarationOnce() && resolveProcessor
-				.isToProcessMembers()));
-		if(toProcessMembers)
-		{
-			if(!processMembers(processor, substitutor, lastParent, place))
-			{
-				return false;
-			}
-		}
-		else
-		{
-			resolveProcessor.setToSkipClassDeclarationsOnce(false);
-		}
+        if (lastParent == null) {
+            return true;
+        }
 
-		final boolean toProcessInHierarchy = processor instanceof ResolveProcessor && ((ResolveProcessor) processor).isToProcessHierarchy();
+        processor.handleEvent(PsiScopeProcessor.Event.SET_DECLARATION_HOLDER, this);
+        boolean toProcessMembers = resolveProcessor == null
+            || !resolveProcessor.isToSkipClassDeclarationOnce() && resolveProcessor.isToProcessMembers();
+        if (toProcessMembers) {
+            if (!processMembers(processor, substitutor, lastParent, place)) {
+                return false;
+            }
+        }
+        else {
+            resolveProcessor.setToSkipClassDeclarationsOnce(false);
+        }
 
-		if(!toProcessInHierarchy || ((ResolveProcessor) processor).checkVisited(getQualifiedName()))
-		{
-			return true;
-		}
+        boolean toProcessInHierarchy = resolveProcessor != null && resolveProcessor.isToProcessHierarchy();
 
-		for(JSClass clazz : getSuperClasses())
-		{
-			if(!clazz.processDeclarations(processor, ResolveState.initial(), lastParent, place))
-			{
-				return false;
-			}
-		}
+        if (!toProcessInHierarchy || resolveProcessor.checkVisited(getQualifiedName())) {
+            return true;
+        }
 
-		return true;
-	}
+        for (JSClass clazz : getSuperClasses()) {
+            if (!clazz.processDeclarations(processor, ResolveState.initial(), lastParent, place)) {
+                return false;
+            }
+        }
 
-	protected abstract boolean processMembers(final PsiScopeProcessor processor, final ResolveState substitutor, final PsiElement lastParent,
-			final PsiElement place);
+        return true;
+    }
 
-	@Override
-	public JSClass[] getSuperClasses()
-	{
-		final JSReferenceList extendsList = getExtendsList();
-		final List<JSClass> supers = getClassesFromReferenceList(extendsList, JSElementTypes.EXTENDS_LIST);
-		return supers.toArray(new JSClass[supers.size()]);
-	}
+    protected abstract boolean processMembers(
+        PsiScopeProcessor processor,
+        ResolveState substitutor,
+        PsiElement lastParent,
+        PsiElement place
+    );
 
-	public static PsiElement findClassFromNamespace(final String qname, PsiElement context)
-	{
-		PsiElement realClazz = null;
-		final PsiElement clazz = JSResolveUtil.findClassByQName(qname, context);
+    @Override
+    public JSClass[] getSuperClasses() {
+        JSReferenceList extendsList = getExtendsList();
+        List<JSClass> supers = getClassesFromReferenceList(extendsList, JSElementTypes.EXTENDS_LIST);
+        return supers.toArray(new JSClass[supers.size()]);
+    }
 
-		realClazz = clazz;
-		return realClazz;
-	}
+    @RequiredReadAction
+    public static PsiElement findClassFromNamespace(String qName, PsiElement context) {
+        return JSResolveUtil.findClassByQName(qName, context);
+    }
 
-	@Override
-	public JSClass[] getImplementedInterfaces()
-	{
-		final JSReferenceList implementsList = getImplementsList();
-		if(implementsList == null)
-		{
-			return JSClass.EMPTY_ARRAY;
-		}
-		final List<JSClass> classes = getClassesFromReferenceList(implementsList, JSElementTypes.IMPLEMENTS_LIST);
-		return classes.toArray(new JSClass[classes.size()]);
-	}
+    @Override
+    public JSClass[] getImplementedInterfaces() {
+        JSReferenceList implementsList = getImplementsList();
+        if (implementsList == null) {
+            return JSClass.EMPTY_ARRAY;
+        }
+        List<JSClass> classes = getClassesFromReferenceList(implementsList, JSElementTypes.IMPLEMENTS_LIST);
+        return classes.toArray(new JSClass[classes.size()]);
+    }
 
-	private static class ExtendsClassesUserDataCache extends ClassesUserDataCache
-	{
-		@Override
-		protected List<JSClass> doCompute(final Object extendsList)
-		{
-			if(extendsList instanceof JSClass)
-			{
-				final JSClass jsClass = (JSClass) extendsList;
+    private static class ExtendsClassesUserDataCache extends ClassesUserDataCache {
+        @Override
+        @RequiredReadAction
+        protected List<JSClass> doCompute(Object extendsList) {
+            if (extendsList instanceof JSClass jsClass) {
+                ArrayList<JSClass> supers = new ArrayList<>(1);
+                if (!"Object".equals(jsClass.getQualifiedName())) {
+                    PsiElement element = findClassFromNamespace("Object", jsClass);
+                    if (element instanceof JSClass elementClass) {
+                        supers.add(elementClass);
+                    }
+                }
 
-				final ArrayList<JSClass> supers = new ArrayList<JSClass>(1);
-				if(!"Object".equals(jsClass.getQualifiedName()))
-				{
-					final PsiElement element = findClassFromNamespace("Object", jsClass);
-					if(element instanceof JSClass)
-					{
-						supers.add((JSClass) element);
-					}
-				}
+                return supers;
+            }
+            return super.doCompute(extendsList);
+        }
+    }
 
-				return supers;
-			}
-			return super.doCompute(extendsList);
-		}
-	}
+    private static class ClassesUserDataCache extends UserDataCache<ParameterizedCachedValue<List<JSClass>, Object>, JSClassBase, Object> {
+        @Override
+        protected ParameterizedCachedValue<List<JSClass>, Object> compute(JSClassBase jsClassBase, Object p) {
+            return CachedValuesManager.getManager(jsClassBase.getProject()).createParameterizedCachedValue(
+                list -> new CachedValueProvider.Result<>(doCompute(list), PsiModificationTracker.MODIFICATION_COUNT),
+                false
+            );
+        }
 
-	private static class ClassesUserDataCache extends UserDataCache<ParameterizedCachedValue<List<JSClass>, Object>, JSClassBase, Object>
-	{
-		@Override
-		protected ParameterizedCachedValue<List<JSClass>, Object> compute(final JSClassBase jsClassBase, final Object p)
-		{
-			return CachedValuesManager.getManager(jsClassBase.getProject()).createParameterizedCachedValue(new
-																												   ParameterizedCachedValueProvider<List<JSClass>, Object>()
-			{
-				@Override
-				public CachedValueProvider.Result<List<JSClass>> compute(Object list)
-				{
-					return new CachedValueProvider.Result<List<JSClass>>(doCompute(list), PsiModificationTracker.MODIFICATION_COUNT);
-				}
-			}, false);
-		}
+        @RequiredReadAction
+        protected List<JSClass> doCompute(Object object) {
+            if (object instanceof JSClass) {
+                return Collections.emptyList();
+            }
 
-		protected List<JSClass> doCompute(final Object object)
-		{
-			if(object instanceof JSClass)
-			{
-				return Collections.emptyList();
-			}
+            ArrayList<JSClass> supers = new ArrayList<>(1);
+            JSReferenceList extendsList = (JSReferenceList)object;
 
-			final ArrayList<JSClass> supers = new ArrayList<JSClass>(1);
-			final JSReferenceList extendsList = (JSReferenceList) object;
+            for (String refText : extendsList.getReferenceTexts()) {
+                refText = JSImportHandlingUtil.resolveTypeName(refText, extendsList.getParent());
+                PsiElement element = findClassFromNamespace(refText, extendsList.getParent());
+                if (element instanceof JSClass jsClass) {
+                    supers.add(jsClass);
+                }
+            }
+            return supers;
+        }
+    }
 
-			for(String refText : extendsList.getReferenceTexts())
-			{
-				refText = JSImportHandlingUtil.resolveTypeName(refText, extendsList.getParent());
-				final PsiElement element = findClassFromNamespace(refText, extendsList.getParent());
-				if(element instanceof JSClass)
-				{
-					supers.add((JSClass) element);
-				}
-			}
-			return supers;
-		}
-	}
+    private static <E extends PsiElement> E[] getStubChildrenByType(JSClassStub stub, IElementType elementType, ArrayFactory<E> f) {
+        assert JSElementTypes.INCLUDE_DIRECTIVE != elementType;
 
-	private static <E extends PsiElement> E[] getStubChildrenByType(JSClassStub stub, final IElementType elementType, ArrayFactory<E> f)
-	{
-		assert JSElementTypes.INCLUDE_DIRECTIVE != elementType;
+        ArrayList<E> result = new ArrayList<>(Arrays.asList(stub.getChildrenByType(elementType, f)));
+        JSIncludeDirective[] includes = stub.getChildrenByType(JSElementTypes.INCLUDE_DIRECTIVE, JSIncludeDirective[]::new);
+        Collection<JSFile> visited = new HashSet<>();
+        TokenSet filter = TokenSet.create(JSElementTypes.INCLUDE_DIRECTIVE, elementType);
+        for (JSIncludeDirective include : includes) {
+            PsiFile file = include.resolveFile();
+            if (file instanceof JSFile jsFile) {
+                process(filter, jsFile, result, visited);
+            }
+        }
+        return result.toArray(f.create(result.size()));
+    }
 
-		ArrayList<E> result = new ArrayList<E>(Arrays.asList(stub.getChildrenByType(elementType, f)));
-		JSIncludeDirective[] includes = stub.getChildrenByType(JSElementTypes.INCLUDE_DIRECTIVE, new ArrayFactory<JSIncludeDirective>()
-		{
-			@Override
-			public JSIncludeDirective[] create(final int count)
-			{
-				return new JSIncludeDirective[count];
-			}
-		});
-		Collection<JSFile> visited = new THashSet<JSFile>();
-		TokenSet filter = TokenSet.create(JSElementTypes.INCLUDE_DIRECTIVE, elementType);
-		for(JSIncludeDirective include : includes)
-		{
-			PsiFile file = include.resolveFile();
-			if(file instanceof JSFile)
-			{
-				process(filter, (JSFile) file, result, visited);
-			}
-		}
-		return result.toArray(f.create(result.size()));
-	}
-
-	private static <E extends PsiElement> void process(TokenSet filter, final JSFile file, final ArrayList<E> result, final Collection<JSFile> visited)
-	{
-		if(visited.contains(file))
-		{
-			return;
-		}
-		visited.add(file);
-		for(PsiElement element : JSResolveUtil.getStubbedChildren(file, filter))
-		{
-			if(element instanceof JSIncludeDirective)
-			{
-				PsiFile includedFile = ((JSIncludeDirective) element).resolveFile();
-				if(includedFile instanceof JSFile)
-				{
-					process(filter, (JSFile) includedFile, result, visited);
-				}
-			}
-			else
-			{
-				result.add((E) element);
-			}
-		}
-	}
-
-
+    @SuppressWarnings("unchecked")
+    private static <E extends PsiElement> void process(
+        TokenSet filter,
+        JSFile file,
+        ArrayList<E> result,
+        Collection<JSFile> visited
+    ) {
+        if (visited.contains(file)) {
+            return;
+        }
+        visited.add(file);
+        for (PsiElement element : JSResolveUtil.getStubbedChildren(file, filter)) {
+            if (element instanceof JSIncludeDirective includeDirective) {
+                PsiFile includedFile = includeDirective.resolveFile();
+                if (includedFile instanceof JSFile jsFile) {
+                    process(filter, jsFile, result, visited);
+                }
+            }
+            else {
+                result.add((E)element);
+            }
+        }
+    }
 }

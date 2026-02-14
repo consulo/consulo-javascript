@@ -18,30 +18,30 @@
 package com.intellij.lang.javascript.psi.stubs.impl;
 
 import com.intellij.lang.javascript.psi.JSReferenceList;
-import com.intellij.lang.javascript.psi.JSStubElementType;
+import consulo.javascript.impl.language.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.stubs.JSReferenceListStub;
-import com.intellij.psi.stubs.StubBase;
-import com.intellij.psi.stubs.StubElement;
+import consulo.language.psi.stub.StubBase;
+import consulo.language.psi.stub.StubElement;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jun 6, 2008
- *         Time: 8:00:52 PM
+ * Date: Jun 6, 2008
+ * Time: 8:00:52 PM
  */
-public class JSReferenceListStubImpl extends StubBase<JSReferenceList> implements JSReferenceListStub
-{
-	private String[] myRefs;
+public class JSReferenceListStubImpl extends StubBase<JSReferenceList> implements JSReferenceListStub {
+    private String[] myRefs;
 
-	public JSReferenceListStubImpl(final String[] refs, final StubElement parentStub, final JSStubElementType<JSReferenceListStub,
-			JSReferenceList> type)
-	{
-		super(parentStub, type);
-		myRefs = refs;
-	}
+    public JSReferenceListStubImpl(
+        String[] refs,
+        StubElement parentStub,
+        JSStubElementType<JSReferenceListStub, JSReferenceList> type
+    ) {
+        super(parentStub, type);
+        myRefs = refs;
+    }
 
-	@Override
-	public String[] getReferenceTexts()
-	{
-		return myRefs;
-	}
+    @Override
+    public String[] getReferenceTexts() {
+        return myRefs;
+    }
 }

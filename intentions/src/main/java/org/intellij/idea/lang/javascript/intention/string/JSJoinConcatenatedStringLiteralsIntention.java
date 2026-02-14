@@ -15,49 +15,64 @@
  */
 package org.intellij.idea.lang.javascript.intention.string;
 
-import javax.annotation.Nonnull;
-
-import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
-import org.intellij.idea.lang.javascript.intention.JSIntention;
-import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
-import consulo.javascript.psi.JSSimpleLiteralExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
 import consulo.javascript.lang.JavaScriptTokenSets;
+import consulo.javascript.psi.JSSimpleLiteralExpression;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
+import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
+import org.intellij.idea.lang.javascript.intention.JSIntention;
+import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
+@ExtensionImpl
+@IntentionMetaData(
+    ignoreId = "JSJoinConcatenatedStringLiteralsIntention",
+    categories = {"JavaScript", "Other"},
+    fileExtensions = "js"
+)
 public class JSJoinConcatenatedStringLiteralsIntention extends JSIntention {
     @Override
-	@Nonnull
+    @Nonnull
+    public LocalizeValue getText() {
+        return JSIntentionLocalize.stringJoinConcatenatedStringLiterals();
+    }
+
+    @Override
+    @Nonnull
     protected JSElementPredicate getElementPredicate() {
         return new StringConcatPredicate();
     }
 
     @Override
-	public void processIntention(@Nonnull PsiElement element)
-            throws IncorrectOperationException {
-        final JSBinaryExpression expression = (JSBinaryExpression) element;
-        final JSExpression       lhs        = expression.getLOperand();
-        final JSExpression       rhs        = expression.getROperand();
+    @RequiredReadAction
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        JSBinaryExpression expression = (JSBinaryExpression)element;
+        JSExpression lhs = expression.getLOperand();
+        JSExpression rhs = expression.getROperand();
 
         assert (lhs instanceof JSLiteralExpression && rhs instanceof JSLiteralExpression);
 
-        final JSLiteralExpression  leftLiteral  = (JSLiteralExpression) lhs;
-        final JSLiteralExpression  rightLiteral = (JSLiteralExpression) rhs;
-        String                     lhsText      = lhs.getText();
-        String                     rhsText      = rhs.getText();
-        final String               newExpression;
+        JSLiteralExpression leftLiteral = (JSLiteralExpression)lhs;
+        JSLiteralExpression rightLiteral = (JSLiteralExpression)rhs;
+        String lhsText = lhs.getText();
+        String rhsText = rhs.getText();
+        String newExpression;
 
-        if (StringUtil.isSimpleQuoteStringLiteral(leftLiteral) &&
-            StringUtil.isDoubleQuoteStringLiteral(rightLiteral)) {
+        if (StringUtil.isSimpleQuoteStringLiteral(leftLiteral)
+            && StringUtil.isDoubleQuoteStringLiteral(rightLiteral)) {
             rhsText = JSDoubleToSingleQuotedStringIntention.changeQuotes(rhsText);
-        } else if (StringUtil.isDoubleQuoteStringLiteral(leftLiteral) &&
-                   StringUtil.isSimpleQuoteStringLiteral(rightLiteral)) {
+        }
+        else if (StringUtil.isDoubleQuoteStringLiteral(leftLiteral)
+            && StringUtil.isSimpleQuoteStringLiteral(rightLiteral)) {
             rhsText = JSSingleToDoubleQuotedStringIntention.changeQuotes(rhsText);
         }
 
@@ -67,35 +82,19 @@ public class JSJoinConcatenatedStringLiteralsIntention extends JSIntention {
 
     private static class StringConcatPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-            if (!(element instanceof JSBinaryExpression)) {
-                return false;
-            }
-
-            final JSBinaryExpression expression = (JSBinaryExpression) element;
-            final IElementType       sign       = expression.getOperationSign();
-
-            if (!sign.equals(JSTokenTypes.PLUS)) {
-                return false;
-            }
-            final JSExpression lhs = expression.getLOperand();
-            final JSExpression rhs = expression.getROperand();
-
-            if (!isApplicableLiteral(lhs)) {
-                return false;
-            }
-            if (!isApplicableLiteral(rhs)) {
-                return false;
-            }
-
-            return true;
+        @RequiredReadAction
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            return element instanceof JSBinaryExpression expression
+                && JSTokenTypes.PLUS.equals(expression.getOperationSign())
+                && isApplicableLiteral(expression.getLOperand())
+                && isApplicableLiteral(expression.getROperand());
         }
 
-		@RequiredReadAction
+        @RequiredReadAction
         private static boolean isApplicableLiteral(JSExpression lhs) {
-            return lhs != null &&
-                   lhs instanceof JSSimpleLiteralExpression &&
-                    JavaScriptTokenSets.STRING_LITERALS.contains(((JSSimpleLiteralExpression) lhs).getLiteralElementType());
+            return lhs != null
+                && lhs instanceof JSSimpleLiteralExpression simpleLiteralExpression
+                && JavaScriptTokenSets.STRING_LITERALS.contains(simpleLiteralExpression.getLiteralElementType());
         }
     }
 }

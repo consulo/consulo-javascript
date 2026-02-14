@@ -16,20 +16,22 @@
 
 package com.intellij.lang.javascript.psi;
 
-import javax.annotation.Nullable;
+import consulo.annotation.access.RequiredReadAction;
+import jakarta.annotation.Nullable;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeNameValuePairStub;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.StubBasedPsiElement;
+import consulo.language.psi.PsiNamedElement;
+import consulo.language.psi.StubBasedPsiElement;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
-public interface JSAttributeNameValuePair extends JSElement, PsiNamedElement, StubBasedPsiElement<JSAttributeNameValuePairStub>
-{
-	JSAttributeNameValuePair[] EMPTY_ARRAY = new JSAttributeNameValuePair[0];
+public interface JSAttributeNameValuePair extends JSElement, PsiNamedElement, StubBasedPsiElement<JSAttributeNameValuePairStub> {
+    JSAttributeNameValuePair[] EMPTY_ARRAY = new JSAttributeNameValuePair[0];
 
-	JSExpression getValue();
+    @RequiredReadAction
+    JSExpression getValue();
 
-	@Nullable
-	String getSimpleValue();
+    @Nullable
+    @RequiredReadAction
+    String getSimpleValue();
 }

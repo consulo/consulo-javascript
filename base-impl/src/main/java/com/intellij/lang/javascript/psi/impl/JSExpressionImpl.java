@@ -16,33 +16,32 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.lang.psi.JavaScriptType;
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSExpression;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.javascript.language.psi.JavaScriptType;
+import consulo.language.ast.ASTNode;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author ven
  */
-public abstract class JSExpressionImpl extends JSElementImpl implements JSExpression
-{
-	public JSExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public abstract class JSExpressionImpl extends JSElementImpl implements JSExpression {
+    public JSExpressionImpl(ASTNode node) {
+        super(node);
+    }
 
-	@RequiredReadAction
-	@Nonnull
-	@Override
-	public JavaScriptType getType()
-	{
-		return JavaScriptType.UNKNOWN;
-	}
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public JavaScriptType getType() {
+        return JavaScriptType.UNKNOWN;
+    }
 
-	@Override
-	public JSExpression replace(JSExpression newExpr)
-	{
-		return JSChangeUtil.replaceExpression(this, newExpr);
-	}
+    @Nonnull
+    @Override
+    @RequiredWriteAction
+    public JSExpression replace(JSExpression newExpr) {
+        return JSChangeUtil.replaceExpression(this, newExpr);
+    }
 }

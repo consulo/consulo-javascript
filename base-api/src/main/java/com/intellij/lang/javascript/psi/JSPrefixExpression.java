@@ -16,28 +16,24 @@
 
 package com.intellij.lang.javascript.psi;
 
-import javax.annotation.Nullable;
 import consulo.annotation.access.RequiredReadAction;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
+import jakarta.annotation.Nullable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 7:41:36 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public interface JSPrefixExpression extends JSExpression
-{
-	@Nullable
-	JSExpression getExpression();
+public interface JSPrefixExpression extends JSExpression {
+    @Nullable
+    JSExpression getExpression();
 
-	@Nullable
-	@RequiredReadAction
-	IElementType getOperationSign();
+    @Nullable
+    @RequiredReadAction
+    IElementType getOperationSign();
 
-	@RequiredReadAction
-	@Nullable
-	PsiElement getOperatorElement();
+    @Nullable
+    @RequiredReadAction
+    PsiElement getOperatorElement();
 }

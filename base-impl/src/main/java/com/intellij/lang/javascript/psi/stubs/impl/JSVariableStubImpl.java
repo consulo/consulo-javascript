@@ -19,19 +19,24 @@ package com.intellij.lang.javascript.psi.stubs.impl;
 
 import com.intellij.lang.javascript.psi.JSVariable;
 import com.intellij.lang.javascript.psi.stubs.JSVariableStub;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubElement;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.stub.IStubElementType;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Mar 26, 2008
- *         Time: 11:29:19 PM
+ * Date: Mar 26, 2008
+ * Time: 11:29:19 PM
  */
-public class JSVariableStubImpl extends JSVariableStubBaseImpl<JSVariable> implements JSVariableStub
-{
-	public JSVariableStubImpl(String name, int flags, String type, String initial, String qName, StubElement parentStub,
-			IStubElementType elementType)
-	{
-		super(name, flags, type, initial, qName, parentStub, elementType);
-	}
+public class JSVariableStubImpl extends JSVariableStubBaseImpl<JSVariable> implements JSVariableStub {
+    public JSVariableStubImpl(
+        String name,
+        int flags,
+        String type,
+        String initial,
+        String qName,
+        StubElement parentStub,
+        IStubElementType elementType
+    ) {
+        super(name, flags, type, initial, qName, parentStub, elementType);
+    }
 }

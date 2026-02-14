@@ -1,49 +1,52 @@
 package com.sixrr.inspectjs.confusing;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSFunctionExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-public class AnonymousFunctionJSInspection extends JavaScriptInspection{
-
+@ExtensionImpl
+public class AnonymousFunctionJSInspection extends JavaScriptInspection {
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName(){
-        return InspectionJSBundle.message("anonymous.function.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.anonymousFunctionDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName(){
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
+    @Nullable
     @Override
-	@Nullable
-    protected String buildErrorString(Object... args){
-        return InspectionJSBundle.message("anonymous.function.error.string");
+    @RequiredReadAction
+    protected String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.anonymousFunctionErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor(){
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
-    private static class Visitor extends BaseInspectionVisitor{
-
-        @Override public void visitJSFunctionExpression(JSFunctionExpression jsFunctionExpression){
+    private static class Visitor extends BaseInspectionVisitor {
+        @Override
+        public void visitJSFunctionExpression(JSFunctionExpression jsFunctionExpression) {
             super.visitJSFunctionExpression(jsFunctionExpression);
-            final JSFunction function = jsFunctionExpression.getFunction();
-            final PsiElement identifier = function.getNameIdentifier();
-            if(identifier == null ||
-                    PsiTreeUtil.isAncestor(function, identifier, true)){
+            JSFunction function = jsFunctionExpression.getFunction();
+            PsiElement identifier = function.getNameIdentifier();
+            if (identifier == null || PsiTreeUtil.isAncestor(function, identifier, true)) {
                 return;
             }
             registerError(function.getFirstChild());

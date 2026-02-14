@@ -15,20 +15,21 @@
  */
 package org.intellij.idea.lang.javascript.psiutil;
 
+import com.intellij.lang.javascript.JSTokenTypes;
+import com.intellij.lang.javascript.psi.*;
+import consulo.javascript.psi.JSSimpleLiteralExpression;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import consulo.javascript.psi.JSSimpleLiteralExpression;
-
 public class ExpressionUtil {
-
-    private ExpressionUtil() {}
+    private ExpressionUtil() {
+    }
 
     public static boolean isConstantExpression(JSExpression expression) {
         if (expression == null) {
@@ -40,45 +41,52 @@ public class ExpressionUtil {
     }
 
     public static boolean isIncrementDecrementExpression(@Nonnull PsiElement expression) {
-        if (expression instanceof JSPostfixExpression) {
-            final IElementType operator = ((JSPostfixExpression) expression).getOperationSign();
-            return (JSTokenTypes.PLUSPLUS.equals(operator) || JSTokenTypes.MINUSMINUS.equals(operator));
-        } else if (expression instanceof JSPrefixExpression) {
-            final IElementType operator = ((JSPrefixExpression) expression).getOperationSign();
-            return (JSTokenTypes.PLUSPLUS.equals(operator) || JSTokenTypes.MINUSMINUS.equals(operator));
-        } else {
+        if (expression instanceof JSPostfixExpression postfixExpression) {
+            IElementType operator = postfixExpression.getOperationSign();
+            return JSTokenTypes.PLUSPLUS.equals(operator) || JSTokenTypes.MINUSMINUS.equals(operator);
+        }
+        else if (expression instanceof JSPrefixExpression prefixExpression) {
+            IElementType operator = prefixExpression.getOperationSign();
+            return JSTokenTypes.PLUSPLUS.equals(operator) || JSTokenTypes.MINUSMINUS.equals(operator);
+        }
+        else {
             return false;
         }
     }
 
     public static class IsConstantExpressionVisitor extends JSElementVisitor {
-        protected boolean                        isConstant;
-        private   final Map<JSVariable, Boolean> isVariableConstant = new HashMap<JSVariable, Boolean>();
+        protected boolean isConstant;
+        private final Map<JSVariable, Boolean> isVariableConstant = new HashMap<>();
 
         public boolean isConstant() {
             return this.isConstant;
         }
 
-        @Override public void visitJSExpression(JSExpression expression) {
+        @Override
+        public void visitJSExpression(JSExpression expression) {
             this.isConstant = false;
         }
 
-        @Override public void visitJSLiteralExpression(JSSimpleLiteralExpression expression) {
+        @Override
+        public void visitJSLiteralExpression(JSSimpleLiteralExpression expression) {
             this.isConstant = true;
         }
 
-        @Override public void visitJSParenthesizedExpression(JSParenthesizedExpression expression) {
+        @Override
+        public void visitJSParenthesizedExpression(JSParenthesizedExpression expression) {
             JSExpression expr = expression.getInnerExpression();
             if (expr != null) {
                 expr.accept(this);
             }
         }
 
-        @Override public void visitJSPrefixExpression(JSPrefixExpression expression) {
+        @Override
+        public void visitJSPrefixExpression(JSPrefixExpression expression) {
             this.visitJSPrefixOrPostfixExpression(expression.getExpression(), expression.getOperationSign());
         }
 
-        @Override public void visitJSPostfixExpression(JSPostfixExpression expression) {
+        @Override
+        public void visitJSPostfixExpression(JSPostfixExpression expression) {
             this.visitJSPrefixOrPostfixExpression(expression.getExpression(), expression.getOperationSign());
         }
 
@@ -93,7 +101,7 @@ public class ExpressionUtil {
                 return;
             }
 
-            if (sign == JSTokenTypes.PLUS  ||
+            if (sign == JSTokenTypes.PLUS ||
                 sign == JSTokenTypes.MINUS ||
                 sign == JSTokenTypes.TILDE ||
                 sign == JSTokenTypes.EXCL) {
@@ -102,9 +110,12 @@ public class ExpressionUtil {
             this.isConstant = false;
         }
 
-        @Override public void visitJSBinaryExpression(JSBinaryExpression expression) {
-            final JSExpression jsExpression = expression.getLOperand();
-            if (jsExpression == null) return;
+        @Override
+        public void visitJSBinaryExpression(JSBinaryExpression expression) {
+            JSExpression jsExpression = expression.getLOperand();
+            if (jsExpression == null) {
+                return;
+            }
             jsExpression.accept(this);
             if (!this.isConstant) {
                 return;
@@ -115,7 +126,8 @@ public class ExpressionUtil {
             }
         }
 
-        @Override public void visitJSConditionalExpression(JSConditionalExpression expression) {
+        @Override
+        public void visitJSConditionalExpression(JSConditionalExpression expression) {
             JSExpression thenExpr = expression.getThen();
             JSExpression elseExpr = expression.getElse();
             if (thenExpr == null || elseExpr == null) {
@@ -134,16 +146,17 @@ public class ExpressionUtil {
             elseExpr.accept(this);
         }
 
-        @Override public void visitJSReferenceExpression(JSReferenceExpression expression) {
-            JSElement refElement = (JSElement) expression.resolve();
+        @Override
+        public void visitJSReferenceExpression(JSReferenceExpression expression) {
+            JSElement refElement = (JSElement)expression.resolve();
 
             if (!(refElement instanceof JSVariable)) {
                 this.isConstant = false;
                 return;
             }
 
-            JSVariable variable = (JSVariable) refElement;
-            Boolean    isConst  = this.isVariableConstant.get(variable);
+            JSVariable variable = (JSVariable)refElement;
+            Boolean isConst = this.isVariableConstant.get(variable);
 
             if (isConst != null) {
                 this.isConstant &= isConst;
@@ -177,7 +190,7 @@ public class ExpressionUtil {
         //    return null;
         //}
 
-      // TODO: constant expressions are not evaluated by PsiManager et al
-      return null;
+        // TODO: constant expressions are not evaluated by PsiManager et al
+        return null;
     }
 }

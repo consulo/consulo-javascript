@@ -16,36 +16,29 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSLetExpression;
-
-import javax.annotation.Nonnull;
+import consulo.language.ast.ASTNode;
+import jakarta.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.
- * User: maxim.mossienko
- * Date: Dec 14, 2005
- * Time: 6:40:04 PM
- * To change this template use File | Settings | File Templates.
+ * @author maxim.mossienko
+ * @since 2005-12-14
  */
-public class JSLetExpressionImpl extends JSExpressionImpl implements JSLetExpression
-{
-	public JSLetExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSLetExpressionImpl extends JSExpressionImpl implements JSLetExpression {
+    public JSLetExpressionImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getExpression()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression getExpression() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSLetExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSLetExpression(this);
+    }
 }

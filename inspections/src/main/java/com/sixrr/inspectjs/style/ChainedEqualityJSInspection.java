@@ -1,51 +1,55 @@
 package com.sixrr.inspectjs.style;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.psi.tree.IElementType;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.ast.IElementType;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
+import org.intellij.lang.annotations.Pattern;
 
+@ExtensionImpl
 public class ChainedEqualityJSInspection extends JavaScriptInspection {
-
+    @Nonnull
     @Override
-	@Nonnull
+    @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "ChainedEqualityComparisonsJS";
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("chained.equality.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.chainedEqualityDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.STYLE_GROUP_NAME;
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String buildErrorString(Object... args) {
-        return InspectionJSBundle.message("chained.equality.error.string");
+    @RequiredReadAction
+    public String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.chainedEqualityErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new ChainedEqualityVisitor();
     }
 
     private static class ChainedEqualityVisitor extends BaseInspectionVisitor {
-
-        @Override public void visitJSBinaryExpression(
-                @Nonnull JSBinaryExpression expression) {
+        @Override
+        public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             if (!(expression.getROperand() != null)) {
                 return;
@@ -53,21 +57,19 @@ public class ChainedEqualityJSInspection extends JavaScriptInspection {
             if (!isEqualityComparison(expression)) {
                 return;
             }
-            final JSExpression lhs = expression.getLOperand();
+            JSExpression lhs = expression.getLOperand();
             if (!(lhs instanceof JSBinaryExpression)) {
                 return;
             }
-            if (!isEqualityComparison((JSBinaryExpression) lhs)) {
+            if (!isEqualityComparison((JSBinaryExpression)lhs)) {
                 return;
             }
             registerError(expression);
         }
 
-        private static boolean isEqualityComparison(
-                @Nonnull JSBinaryExpression expression) {
-            final IElementType tokenType = expression.getOperationSign();
-            return JSTokenTypes.EQEQ.equals(tokenType) ||
-                    JSTokenTypes.NE.equals(tokenType);
+        private static boolean isEqualityComparison(@Nonnull JSBinaryExpression expression) {
+            IElementType tokenType = expression.getOperationSign();
+            return JSTokenTypes.EQEQ.equals(tokenType) || JSTokenTypes.NE.equals(tokenType);
         }
     }
 }

@@ -1,80 +1,88 @@
 package com.sixrr.inspectjs.style;
 
-import javax.annotation.Nonnull;
-
-import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
-import com.sixrr.inspectjs.*;
+import com.sixrr.inspectjs.BaseInspectionVisitor;
+import com.sixrr.inspectjs.InspectionJSFix;
+import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import com.sixrr.inspectjs.utils.ComparisonUtils;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import jakarta.annotation.Nonnull;
+import org.intellij.lang.annotations.Pattern;
 
+@ExtensionImpl
 public class ConstantOnRHSOfComparisonJSInspection extends JavaScriptInspection {
     private final SwapComparisonFix fix = new SwapComparisonFix();
 
+    @Nonnull
     @Override
-	@Nonnull
+    @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "ConstantOnRightSideOfComparisonJS";
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("constant.on.right.side.of.comparison.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.constantOnRightSideOfComparisonDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.STYLE_GROUP_NAME;
     }
 
     @Override
-	public String buildErrorString(Object... args) {
-        return InspectionJSBundle.message("constant.on.right.side.of.comparison.error.string");
+    @RequiredReadAction
+    public String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.constantOnRightSideOfComparisonErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new ConstantOnRHSOfComparisonVisitor();
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location) {
+    public InspectionJSFix buildFix(PsiElement location, Object state) {
         return fix;
     }
 
     private static class SwapComparisonFix extends InspectionJSFix {
+        @Nonnull
         @Override
-		@Nonnull
-        public String getName() {
-            return InspectionJSBundle.message("flip.comparison.fix");
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.flipComparisonFix();
         }
 
         @Override
-		public void doFix(Project project, ProblemDescriptor descriptor)
-                throws IncorrectOperationException {
-            final JSBinaryExpression expression = (JSBinaryExpression) descriptor.getPsiElement();
-            final JSExpression rhs = expression.getROperand();
-            final JSExpression lhs = expression.getLOperand();
-            final IElementType sign = expression.getOperationSign();
+        public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
+            JSBinaryExpression expression = (JSBinaryExpression)descriptor.getPsiElement();
+            JSExpression rhs = expression.getROperand();
+            JSExpression lhs = expression.getLOperand();
+            IElementType sign = expression.getOperationSign();
             assert rhs != null;
-            final String rhsText = rhs.getText();
-            final String flippedComparison = ComparisonUtils.getFlippedComparison(sign);
-            final String lhsText = lhs.getText();
-            replaceExpression(expression,
-                    rhsText + ' ' + flippedComparison + ' ' + lhsText);
+            String rhsText = rhs.getText();
+            String flippedComparison = ComparisonUtils.getFlippedComparison(sign);
+            String lhsText = lhs.getText();
+            replaceExpression(expression, rhsText + ' ' + flippedComparison + ' ' + lhsText);
         }
     }
 
     private static class ConstantOnRHSOfComparisonVisitor extends BaseInspectionVisitor {
-
-        @Override public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
+        @Override
+        public void visitJSBinaryExpression(@Nonnull JSBinaryExpression expression) {
             super.visitJSBinaryExpression(expression);
             if (!(expression.getROperand() != null)) {
                 return;
@@ -82,10 +90,10 @@ public class ConstantOnRHSOfComparisonJSInspection extends JavaScriptInspection 
             if (!ComparisonUtils.isComparison(expression)) {
                 return;
             }
-            final JSExpression lhs = expression.getLOperand();
-            final JSExpression rhs = expression.getROperand();
+            JSExpression lhs = expression.getLOperand();
+            JSExpression rhs = expression.getROperand();
             if (lhs instanceof JSLiteralExpression ||
-                    !(rhs instanceof JSLiteralExpression)) {
+                !(rhs instanceof JSLiteralExpression)) {
                 return;
             }
             registerError(expression);

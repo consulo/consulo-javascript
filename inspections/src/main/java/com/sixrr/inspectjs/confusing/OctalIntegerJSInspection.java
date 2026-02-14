@@ -1,51 +1,54 @@
 package com.sixrr.inspectjs.confusing;
 
-import consulo.javascript.psi.JSSimpleLiteralExpression;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.psi.JSSimpleLiteralExpression;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+@ExtensionImpl
 public class OctalIntegerJSInspection extends JavaScriptInspection {
-
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("octal.integer.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.octalIntegerDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
+    @Nullable
     @Override
-	@Nullable
-    protected String buildErrorString(Object... args) {
-        return InspectionJSBundle.message("octal.integer.error.string");
+    @RequiredReadAction
+    protected String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.octalIntegerErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
     private static class Visitor extends BaseInspectionVisitor {
-
-        @Override public void visitJSLiteralExpression(JSSimpleLiteralExpression jsLiteralExpression) {
+        @Override
+        public void visitJSLiteralExpression(JSSimpleLiteralExpression jsLiteralExpression) {
             super.visitJSLiteralExpression(jsLiteralExpression);
-            @NonNls final String text = jsLiteralExpression.getText();
-            if(text.startsWith("0")&&  !"0".equals(text) &&
-                    !text.startsWith("0x") &&!text.startsWith("0X") &&
-                    !text.contains(".") &&!text.contains("e")&&!text.contains("E"))
+            @NonNls String text = jsLiteralExpression.getText();
+            if (text.startsWith("0") && !"0".equals(text)
+                && !text.startsWith("0x") && !text.startsWith("0X")
+                && !text.contains(".") && !text.contains("e") && !text.contains("E"))
             {
                 registerError(jsLiteralExpression);
             }
         }
-
     }
 }

@@ -1,114 +1,108 @@
 package com.sixrr.inspectjs.control;
 
-import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.psi.JSBreakStatement;
 import com.intellij.lang.javascript.psi.JSContinueStatement;
 import com.intellij.lang.javascript.psi.JSLabeledStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
 import com.sixrr.inspectjs.*;
-import javax.annotation.Nonnull;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import jakarta.annotation.Nonnull;
 
+@ExtensionImpl
 public class UnnecessaryLabelJSInspection extends JavaScriptInspection {
-
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("unnecessary.label.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.unnecessaryLabelDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
     @Override
-	public boolean isEnabledByDefault() {
-        return true;
-    }
-
-    @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new UnusedLabelVisitor();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    protected String buildErrorString(Object... args) {
-        return InspectionJSBundle.message("unnecessary.label.error.string");
-
+    @RequiredReadAction
+    protected String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.unnecessaryLabelErrorString().get();
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location) {
+    public InspectionJSFix buildFix(PsiElement location, Object state) {
         return new UnusedLabelFix();
     }
 
     private static class UnusedLabelFix extends InspectionJSFix {
-
+        @Nonnull
         @Override
-		@Nonnull
-        public String getName() {
-            return InspectionJSBundle.message("remove.label.fix");
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.removeLabelFix();
         }
 
         @Override
-		public void doFix(Project project, ProblemDescriptor descriptor)
-                throws IncorrectOperationException {
-            final PsiElement label = descriptor.getPsiElement();
-            final JSLabeledStatement statement =
-                    (JSLabeledStatement) label.getParent();
+        public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
+            PsiElement label = descriptor.getPsiElement();
+            JSLabeledStatement statement = (JSLabeledStatement) label.getParent();
             assert statement != null;
-            final JSStatement labeledStatement = statement.getStatement();
+            JSStatement labeledStatement = statement.getStatement();
             if (labeledStatement == null) {
                 return;
             }
-            final String statementText = labeledStatement.getText();
+            String statementText = labeledStatement.getText();
             replaceStatement(statement, statementText);
         }
     }
 
     private static class UnusedLabelVisitor extends BaseInspectionVisitor {
-
-        @Override public void visitJSLabeledStatement(JSLabeledStatement statement) {
+        @Override
+        public void visitJSLabeledStatement(JSLabeledStatement statement) {
             if (containsBreakOrContinueForLabel(statement)) {
                 return;
             }
-            final PsiElement labelIdentifier =
-                    statement.getLabelIdentifier();
+            PsiElement labelIdentifier = statement.getLabelIdentifier();
             registerError(labelIdentifier);
         }
 
-        private static boolean containsBreakOrContinueForLabel(
-                JSLabeledStatement statement) {
-            final LabelFinder labelFinder = new LabelFinder(statement);
+        private static boolean containsBreakOrContinueForLabel(JSLabeledStatement statement) {
+            LabelFinder labelFinder = new LabelFinder(statement);
             statement.accept(labelFinder);
             return labelFinder.jumpFound();
         }
     }
 
     private static class LabelFinder extends JSRecursiveElementVisitor {
-
         private boolean found = false;
         private String label = null;
 
         private LabelFinder(JSLabeledStatement target) {
             super();
-            final PsiElement labelIdentifier = target.getLabelIdentifier();
+            PsiElement labelIdentifier = target.getLabelIdentifier();
             label = labelIdentifier.getText();
         }
 
-        @Override public void visitElement(@Nonnull PsiElement element) {
+        @Override
+        public void visitElement(@Nonnull PsiElement element) {
             if (!found) {
                 super.visitElement(element);
             }
         }
 
-        @Override public void visitJSContinueStatement(
-                @Nonnull JSContinueStatement continueStatement) {
+        @Override
+        public void visitJSContinueStatement(@Nonnull JSContinueStatement continueStatement) {
             if (found) {
                 return;
             }
@@ -119,8 +113,8 @@ public class UnnecessaryLabelJSInspection extends JavaScriptInspection {
             }
         }
 
-        @Override public void visitJSBreakStatement(
-                @Nonnull JSBreakStatement breakStatement) {
+        @Override
+        public void visitJSBreakStatement(@Nonnull JSBreakStatement breakStatement) {
             if (found) {
                 return;
             }

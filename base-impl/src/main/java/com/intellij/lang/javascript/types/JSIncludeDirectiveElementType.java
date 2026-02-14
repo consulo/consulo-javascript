@@ -19,65 +19,58 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import consulo.annotation.access.RequiredReadAction;
-import com.intellij.lang.ASTNode;
+import consulo.index.io.StringRef;
+import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.psi.JSIncludeDirective;
-import com.intellij.lang.javascript.psi.JSStubElementType;
+import consulo.javascript.impl.language.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.impl.JSIncludeDirectiveImpl;
 import com.intellij.lang.javascript.psi.stubs.JSIncludeDirectiveStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSIncludeDirectiveStubImpl;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
-import com.intellij.util.io.StringRef;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.stub.StubInputStream;
+import consulo.language.psi.stub.StubOutputStream;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jun 7, 2008
- *         Time: 9:23:54 PM
+ * Date: Jun 7, 2008
+ * Time: 9:23:54 PM
  */
-public class JSIncludeDirectiveElementType extends JSStubElementType<JSIncludeDirectiveStub, JSIncludeDirective>
-{
-	public JSIncludeDirectiveElementType()
-	{
-		super("INCLUDE_DIRECTIVE");
-	}
+public class JSIncludeDirectiveElementType extends JSStubElementType<JSIncludeDirectiveStub, JSIncludeDirective> {
+    public JSIncludeDirectiveElementType() {
+        super("INCLUDE_DIRECTIVE");
+    }
 
-	@Override
-	public void serialize(@Nonnull JSIncludeDirectiveStub stub, @Nonnull StubOutputStream dataStream) throws IOException
-	{
-		dataStream.writeName(stub.getIncludeText());
-	}
+    @Override
+    public void serialize(@Nonnull JSIncludeDirectiveStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+        dataStream.writeName(stub.getIncludeText());
+    }
 
-	@Nonnull
-	@Override
-	public JSIncludeDirectiveStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
-	{
-		StringRef includeText = dataStream.readName();
-		return new JSIncludeDirectiveStubImpl(StringRef.toString(includeText), parentStub, this);
-	}
+    @Nonnull
+    @Override
+    public JSIncludeDirectiveStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+        StringRef includeText = dataStream.readName();
+        return new JSIncludeDirectiveStubImpl(StringRef.toString(includeText), parentStub, this);
+    }
 
-	@RequiredReadAction
-	@Override
-	public JSIncludeDirectiveStub createStub(@Nonnull JSIncludeDirective psi, StubElement parentStub)
-	{
-		String includeText = psi.getIncludeText();
-		return new JSIncludeDirectiveStubImpl(includeText, parentStub, this);
-	}
+    @RequiredReadAction
+    @Override
+    public JSIncludeDirectiveStub createStub(@Nonnull JSIncludeDirective psi, StubElement parentStub) {
+        String includeText = psi.getIncludeText();
+        return new JSIncludeDirectiveStubImpl(includeText, parentStub, this);
+    }
 
-	@Nonnull
-	@Override
-	public PsiElement createElement(@Nonnull ASTNode astNode)
-	{
-		return new JSIncludeDirectiveImpl(astNode);
-	}
+    @Nonnull
+    @Override
+    public PsiElement createElement(@Nonnull ASTNode astNode) {
+        return new JSIncludeDirectiveImpl(astNode);
+    }
 
-	@Override
-	public JSIncludeDirective createPsi(@Nonnull JSIncludeDirectiveStub stub)
-	{
-		return new JSIncludeDirectiveImpl(stub);
-	}
+    @Override
+    public JSIncludeDirective createPsi(@Nonnull JSIncludeDirectiveStub stub) {
+        return new JSIncludeDirectiveImpl(stub);
+    }
 }

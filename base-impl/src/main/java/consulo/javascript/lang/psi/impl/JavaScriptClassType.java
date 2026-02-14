@@ -16,39 +16,36 @@
 
 package consulo.javascript.lang.psi.impl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.lang.psi.JavaScriptType;
 import com.intellij.lang.javascript.psi.JSClass;
-import com.intellij.psi.PsiElement;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.javascript.language.psi.JavaScriptType;
+import consulo.language.psi.PsiElement;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 23.02.2016
  */
-public class JavaScriptClassType implements JavaScriptType
-{
-	private JSClass myClass;
+public class JavaScriptClassType implements JavaScriptType {
+    private JSClass myClass;
 
-	public JavaScriptClassType(JSClass aClass)
-	{
-		myClass = aClass;
-	}
+    public JavaScriptClassType(JSClass aClass) {
+        myClass = aClass;
+    }
 
-	@RequiredReadAction
-	@Nonnull
-	@Override
-	public String getPresentableText()
-	{
-		return myClass.getName();
-	}
+    @RequiredReadAction
+    @Nonnull
+    @Override
+    public String getPresentableText() {
+        String name = myClass.getName();
+        return name == null ? "<anonymous class>" : name;
+    }
 
-	@Nullable
-	@Override
-	public PsiElement getTargetElement()
-	{
-		return myClass;
-	}
+    @Nullable
+    @Override
+    public PsiElement getTargetElement() {
+        return myClass;
+    }
 }

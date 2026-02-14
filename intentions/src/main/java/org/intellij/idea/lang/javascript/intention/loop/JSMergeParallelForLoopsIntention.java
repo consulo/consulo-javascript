@@ -15,118 +15,117 @@
  */
 package org.intellij.idea.lang.javascript.intention.loop;
 
-import javax.annotation.Nonnull;
-
+import com.intellij.lang.javascript.psi.JSExpression;
+import com.intellij.lang.javascript.psi.JSForStatement;
+import com.intellij.lang.javascript.psi.JSStatement;
+import com.intellij.lang.javascript.psi.JSVarStatement;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ControlFlowUtils;
 import org.intellij.idea.lang.javascript.psiutil.EquivalenceChecker;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NonNls;
 
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSForStatement;
-import com.intellij.lang.javascript.psi.JSStatement;
-import com.intellij.lang.javascript.psi.JSVarStatement;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
-
+@ExtensionImpl
+@IntentionMetaData(
+    ignoreId = "JSMergeParallelForLoopsIntention",
+    categories = {"JavaScript", "Control Flow"},
+    fileExtensions = "js"
+)
 public class JSMergeParallelForLoopsIntention extends JSIntention {
-    @NonNls private static final String FOR_STATEMENT_PREFIX = "for (";
+    @Override
+    @Nonnull
+    public LocalizeValue getText() {
+        return JSIntentionLocalize.loopMergeParallelForLoops();
+    }
 
     @Override
-	@Nonnull
+    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new MergeParallelForLoopsPredicate();
     }
 
     @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final PsiElement  nextElement = JSElementFactory.getNonWhiteSpaceSibling(element, true);
+    @RequiredReadAction
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        PsiElement nextElement = JSElementFactory.getNonWhiteSpaceSibling(element, true);
 
         assert (nextElement != null);
 
-        final JSForStatement firstStatement  = (JSForStatement) element;
-        final JSForStatement secondStatement = (JSForStatement) nextElement;
-        final StringBuilder  statementBuffer = new StringBuilder();
+        JSForStatement firstStatement = (JSForStatement)element;
+        JSForStatement secondStatement = (JSForStatement)nextElement;
+        StringBuilder statementBuffer = new StringBuilder();
 
         this.mergeForStatements(statementBuffer, firstStatement, secondStatement);
         JSElementFactory.replaceStatement(firstStatement, statementBuffer.toString());
         JSElementFactory.removeElement(secondStatement);
     }
 
-    private void mergeForStatements(StringBuilder  statementBuffer,
-                                    JSForStatement firstStatement,
-                                    JSForStatement secondStatement) {
-        final JSExpression   initialization = firstStatement.getInitialization();
-        final JSVarStatement varStatement   = firstStatement.getVarDeclaration();
-        final JSExpression   condition      = firstStatement.getCondition();
-        final JSExpression   update         = firstStatement.getUpdate();
-        final JSStatement    firstBody      = firstStatement .getBody();
-        final JSStatement    secondBody     = secondStatement.getBody();
+    @RequiredReadAction
+    private void mergeForStatements(StringBuilder statementBuffer, JSForStatement firstStatement, JSForStatement secondStatement) {
+        JSExpression initialization = firstStatement.getInitialization();
+        JSVarStatement varStatement = firstStatement.getVarDeclaration();
+        JSExpression condition = firstStatement.getCondition();
+        JSExpression update = firstStatement.getUpdate();
+        JSStatement firstBody = firstStatement.getBody();
+        JSStatement secondBody = secondStatement.getBody();
 
-        statementBuffer.append(FOR_STATEMENT_PREFIX)
-                       .append((initialization == null) ? varStatement.getText() : initialization.getText())
-                       .append(';')
-                       .append(condition.getText())
-                       .append(';')
-                       .append(update.getText())
-                       .append(')');
+        statementBuffer.append("for (")
+            .append((initialization == null) ? varStatement.getText() : initialization.getText())
+            .append(';')
+            .append(condition.getText())
+            .append(';')
+            .append(update.getText())
+            .append(')');
         ControlFlowUtils.appendStatementsInSequence(statementBuffer, firstBody, secondBody);
     }
 
     private static class MergeParallelForLoopsPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-            if (!(element instanceof JSForStatement) || ErrorUtil.containsError(element)) {
-                return false;
-            }
-
-            final PsiElement nextStatement = JSElementFactory.getNonWhiteSpaceSibling(element, true);
-
-            if (!(nextStatement instanceof JSForStatement) ||  ErrorUtil.containsError(nextStatement)) {
-                return false;
-            }
-
-            return forStatementsCanBeMerged((JSForStatement) element,
-                                            (JSForStatement) nextStatement);
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            return element instanceof JSForStatement forStatement
+                && !ErrorUtil.containsError(forStatement)
+                && JSElementFactory.getNonWhiteSpaceSibling(element, true) instanceof JSForStatement nextForStatement
+                && !ErrorUtil.containsError(nextForStatement)
+                && forStatementsCanBeMerged(forStatement, nextForStatement);
         }
 
-        public static boolean forStatementsCanBeMerged(JSForStatement statement1,
-                                                       JSForStatement statement2) {
-            final JSExpression firstInitialization  = statement1.getInitialization();
-            final JSExpression secondInitialization = statement2.getInitialization();
-            if (!EquivalenceChecker.expressionsAreEquivalent(firstInitialization,
-                                                             secondInitialization)) {
+        public static boolean forStatementsCanBeMerged(JSForStatement statement1, JSForStatement statement2) {
+            JSExpression firstInitialization = statement1.getInitialization();
+            JSExpression secondInitialization = statement2.getInitialization();
+            if (!EquivalenceChecker.expressionsAreEquivalent(firstInitialization, secondInitialization)) {
                 return false;
             }
 
-            final JSVarStatement firstVarStatement  = statement1.getVarDeclaration();
-            final JSVarStatement secondVarStatement = statement2.getVarDeclaration();
-            if (!EquivalenceChecker.statementsAreEquivalent(firstVarStatement,
-                                                            secondVarStatement)) {
+            JSVarStatement firstVarStatement = statement1.getVarDeclaration();
+            JSVarStatement secondVarStatement = statement2.getVarDeclaration();
+            if (!EquivalenceChecker.statementsAreEquivalent(firstVarStatement, secondVarStatement)) {
                 return false;
             }
 
-            final JSExpression firstCondition  = statement1.getCondition();
-            final JSExpression secondCondition = statement2.getCondition();
-            if (!EquivalenceChecker.expressionsAreEquivalent(firstCondition,
-                                                             secondCondition)) {
+            JSExpression firstCondition = statement1.getCondition();
+            JSExpression secondCondition = statement2.getCondition();
+            if (!EquivalenceChecker.expressionsAreEquivalent(firstCondition, secondCondition)) {
                 return false;
             }
 
-            final JSExpression firstUpdate  = statement1.getUpdate();
-            final JSExpression secondUpdate = statement2.getUpdate();
-            if (!EquivalenceChecker.expressionsAreEquivalent(firstUpdate,
-                                                             secondUpdate)) {
+            JSExpression firstUpdate = statement1.getUpdate();
+            JSExpression secondUpdate = statement2.getUpdate();
+            if (!EquivalenceChecker.expressionsAreEquivalent(firstUpdate, secondUpdate)) {
                 return false;
             }
 
-            final JSStatement firstBody  = statement1.getBody();
-            final JSStatement secondBody = statement2.getBody();
-            return (firstBody == null || secondBody == null ||
-                    ControlFlowUtils.canBeMerged(firstBody, secondBody));
+            JSStatement firstBody = statement1.getBody();
+            JSStatement secondBody = statement2.getBody();
+            return (firstBody == null || secondBody == null || ControlFlowUtils.canBeMerged(firstBody, secondBody));
         }
-     }
- }
+    }
+}

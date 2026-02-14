@@ -17,107 +17,108 @@
 
 package com.intellij.lang.javascript.inspections.qucikFixes;
 
-import java.util.Set;
-
-import com.intellij.codeInsight.template.Expression;
-import com.intellij.codeInsight.template.Template;
 import com.intellij.lang.javascript.psi.JSArgumentList;
 import com.intellij.lang.javascript.psi.JSCallExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.inspections.qucikFixes.CreateJSFunctionFixBase;
-import consulo.javascript.lang.JavaScriptFeature;
+import consulo.javascript.language.JavaScriptFeature;
+import consulo.javascript.localize.JavaScriptLocalize;
+import consulo.language.editor.template.Expression;
+import consulo.language.editor.template.Template;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 
-public class CreateJSFunctionOrMethodFix extends CreateJSFunctionFixBase
-{
-	protected final boolean myIsMethod;
+import java.util.Set;
 
-	public CreateJSFunctionOrMethodFix(String name, boolean isMethod)
-	{
-		super(name, isMethod ? "javascript.create.method.intention.name" : "javascript.create.function.intention.name");
-		myIsMethod = isMethod;
-	}
+public class CreateJSFunctionOrMethodFix extends CreateJSFunctionFixBase {
+    protected final boolean myIsMethod;
 
-	@Override
-	protected void writeFunctionAndName(Template template, String createdMethodName, Set<JavaScriptFeature> features)
-	{
-		boolean ecma = features.contains(JavaScriptFeature.CLASS);
-		if(!myIsMethod || ecma)
-		{
-			template.addTextSegment("function ");
-		}
-		template.addTextSegment(createdMethodName);
-		if(myIsMethod && !ecma)
-		{
-			template.addTextSegment(" = function ");
-		}
-	}
+    public CreateJSFunctionOrMethodFix(String name, boolean isMethod) {
+        super(
+            isMethod
+                ? JavaScriptLocalize.javascriptCreateMethodIntentionName(name)
+                : JavaScriptLocalize.javascriptCreateFunctionIntentionName(name)
+        );
+        myIsMethod = isMethod;
+    }
 
-	@Override
-	protected void addParameters(Template template, JSReferenceExpression referenceExpression, PsiFile file, Set<JavaScriptFeature> features)
-	{
-		JSCallExpression methodInvokation = (JSCallExpression) referenceExpression.getParent();
-		final JSArgumentList list = methodInvokation.getArgumentList();
-		final JSExpression[] expressions = list.getArguments();
-		int paramCount = expressions.length;
+    @Override
+    protected void writeFunctionAndName(Template template, String createdMethodName, Set<JavaScriptFeature> features) {
+        boolean ecma = features.contains(JavaScriptFeature.CLASS);
+        if (!myIsMethod || ecma) {
+            template.addTextSegment("function ");
+        }
+        template.addTextSegment(createdMethodName);
+        if (myIsMethod && !ecma) {
+            template.addTextSegment(" = function ");
+        }
+    }
 
-		for(int i = 0; i < paramCount; ++i)
-		{
-			if(i != 0)
-			{
-				template.addTextSegment(", ");
-			}
-			String var = null;
+    @Override
+    @RequiredReadAction
+    protected void addParameters(
+        Template template,
+        JSReferenceExpression referenceExpression,
+        PsiFile file,
+        Set<JavaScriptFeature> features
+    ) {
+        JSCallExpression methodInvokation = (JSCallExpression)referenceExpression.getParent();
+        JSArgumentList list = methodInvokation.getArgumentList();
+        JSExpression[] expressions = list.getArguments();
+        int paramCount = expressions.length;
 
-			final JSExpression passedParameterValue = expressions[i];
-			if(passedParameterValue instanceof JSReferenceExpression)
-			{
-				var = ((JSReferenceExpression) passedParameterValue).getReferencedName();
-			}
+        for (int i = 0; i < paramCount; ++i) {
+            if (i != 0) {
+                template.addTextSegment(", ");
+            }
+            String var = null;
 
-			if(var == null || var.length() == 0)
-			{
-				var = "param" + (i != 0 ? Integer.toString(i + 1) : "");
-			}
+            JSExpression passedParameterValue = expressions[i];
+            if (passedParameterValue instanceof JSReferenceExpression parameterRefExpr) {
+                var = parameterRefExpr.getReferencedName();
+            }
 
-			final String var1 = var;
-			Expression expression = new MyExpression(var1);
+            if (var == null || var.length() == 0) {
+                var = "param" + (i != 0 ? Integer.toString(i + 1) : "");
+            }
 
-			template.addVariable(var, expression, expression, true);
-			if(features.contains(JavaScriptFeature.CLASS))
-			{
-				template.addTextSegment(":");
-				BaseCreateFix.guessExprTypeAndAddSuchVariable(passedParameterValue, template, var1, file, features);
-			}
-		}
+            String var1 = var;
+            Expression expression = new MyExpression(var1);
 
-	}
+            template.addVariable(var, expression, expression, true);
+            if (features.contains(JavaScriptFeature.CLASS)) {
+                template.addTextSegment(":");
+                BaseCreateFix.guessExprTypeAndAddSuchVariable(passedParameterValue, template, var1, file, features);
+            }
+        }
+    }
 
-	@Override
-	protected void addReturnType(Template template, JSReferenceExpression referenceExpression, PsiFile file)
-	{
-		guessTypeAndAddTemplateVariable(template, referenceExpression, file);
-	}
+    @Override
+    @RequiredReadAction
+    protected void addReturnType(Template template, JSReferenceExpression referenceExpression, PsiFile file) {
+        guessTypeAndAddTemplateVariable(template, referenceExpression, file);
+    }
 
-	@Override
-	protected void addBody(Template template, JSReferenceExpression refExpr, PsiFile file)
-	{
-		template.addEndVariable();
-	}
+    @Override
+    protected void addBody(Template template, JSReferenceExpression refExpr, PsiFile file) {
+        template.addEndVariable();
+    }
 
-	@RequiredReadAction
-	@Override
-	protected void buildTemplate(final Template template, JSReferenceExpression referenceExpression, Set<JavaScriptFeature> features, boolean staticContext,
-			PsiFile file, PsiElement anchorParent)
-	{
-		super.buildTemplate(template, referenceExpression, features, staticContext, file, anchorParent);
+    @RequiredReadAction
+    @Override
+    protected void buildTemplate(
+        Template template,
+        JSReferenceExpression referenceExpression,
+        Set<JavaScriptFeature> features,
+        boolean staticContext,
+        PsiFile file, PsiElement anchorParent
+    ) {
+        super.buildTemplate(template, referenceExpression, features, staticContext, file, anchorParent);
 
-		if(myIsMethod && !features.contains(JavaScriptFeature.CLASS))
-		{
-			addSemicolonSegment(template, file);
-		}
-	}
+        if (myIsMethod && !features.contains(JavaScriptFeature.CLASS)) {
+            addSemicolonSegment(template, file);
+        }
+    }
 }

@@ -19,42 +19,61 @@ import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSPsiImplUtils;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.util.IncorrectOperationException;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@ExtensionImpl
+@IntentionMetaData(
+    ignoreId = "JSSplitDeclarationAndInitializationIntention",
+    categories = {"JavaScript", "Declaration"},
+    fileExtensions = "js"
+)
 public class JSSplitDeclarationAndInitializationIntention extends JSIntention {
-    @NonNls private static final String VAR_KEYWORD = "var ";
+    @NonNls
+    private static final String VAR_KEYWORD = "var ";
 
     @Override
-	@Nonnull
+    @Nonnull
+    public LocalizeValue getText() {
+        return JSIntentionLocalize.initializationSplitDeclarationAndInitialization();
+    }
+
+    @Override
+    @Nonnull
     protected JSElementPredicate getElementPredicate() {
         return new Predicate();
     }
 
     @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+    @RequiredReadAction
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
         assert (element instanceof JSVarStatement);
 
-        final JSVarStatement varStatement      = (JSVarStatement) element;
-        StringBuilder        declarationBuffer = new StringBuilder();
-        List<String>         initializations   = new ArrayList<String>();
+        JSVarStatement varStatement = (JSVarStatement)element;
+        StringBuilder declarationBuffer = new StringBuilder();
+        List<String> initializations = new ArrayList<>();
 
         for (JSVariable variable : varStatement.getVariables()) {
-            declarationBuffer.append((declarationBuffer.length() == 0) ? VAR_KEYWORD : ",")
-                             .append(variable.getName());
+            declarationBuffer.append(declarationBuffer.isEmpty() ? VAR_KEYWORD : ",")
+                .append(variable.getName());
 
             String s = JSPsiImplUtils.getTypeFromDeclaration(variable);
-            final PsiFile containingFile = element.getContainingFile();
+            PsiFile containingFile = element.getContainingFile();
 
             if (s == null && containingFile.getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4) {
                 s = JSResolveUtil.getExpressionType(variable.getInitializer(), containingFile);
@@ -72,24 +91,24 @@ public class JSSplitDeclarationAndInitializationIntention extends JSIntention {
         // Do replacement.
         JSStatement newStatement = JSElementFactory.replaceStatement(varStatement, declarationBuffer.toString());
 
-        for (final String initialization : initializations) {
+        for (String initialization : initializations) {
             newStatement = JSElementFactory.addStatementAfter(newStatement, initialization);
         }
     }
 
     private static class Predicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
             PsiElement elementParent;
 
-            if (!(element instanceof JSVarStatement) ||
-                (elementParent = element.getParent()) instanceof JSForStatement ||
+            if (!(element instanceof JSVarStatement)
+                || (elementParent = element.getParent()) instanceof JSForStatement ||
                 elementParent instanceof JSClass
-               ) {
+            ) {
                 return false;
             }
 
-            final JSVarStatement varStatement = (JSVarStatement) element;
+            JSVarStatement varStatement = (JSVarStatement)element;
             if (ErrorUtil.containsError(varStatement)) {
                 return false;
             }

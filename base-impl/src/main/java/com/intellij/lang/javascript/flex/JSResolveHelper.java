@@ -16,33 +16,40 @@
 
 package com.intellij.lang.javascript.flex;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.Processor;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.util.function.Processor;
+import consulo.component.extension.ExtensionPointName;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiNamedElement;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.annotation.DeprecationInfo;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author yole
  */
 @Deprecated
 @DeprecationInfo("We need this?")
-public interface JSResolveHelper
-{
-	ExtensionPointName<JSResolveHelper> EP_NAME = ExtensionPointName.create("consulo.javascript.resolveHelper");
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface JSResolveHelper {
+    ExtensionPointName<JSResolveHelper> EP_NAME = ExtensionPointName.create(JSResolveHelper.class);
 
-	// TODO: drop module
-	@Nullable
-	PsiElement findClassByQName(final String link, final Project project, final String className, GlobalSearchScope scope);
+    // TODO: drop module
+    @Nullable
+    PsiElement findClassByQName(String link, Project project, String className, GlobalSearchScope scope);
 
-	void importClass(final PsiScopeProcessor processor, final PsiNamedElement file, final String packageQualifierText);
+    void importClass(PsiScopeProcessor processor, PsiNamedElement file, String packageQualifierText);
 
-	boolean processPackage(final String packageQualifierText, String resolvedName, final Processor<VirtualFile> processor,
-			GlobalSearchScope globalSearchScope, Project project);
+    boolean processPackage(
+        String packageQualifierText,
+        String resolvedName,
+        Processor<VirtualFile> processor,
+        GlobalSearchScope globalSearchScope,
+        Project project
+    );
 }

@@ -18,75 +18,73 @@
 package com.intellij.lang.javascript.psi.stubs.impl;
 
 import com.intellij.lang.javascript.psi.JSFunction;
-import com.intellij.lang.javascript.psi.JSStubElementType;
+import consulo.javascript.impl.language.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.stubs.JSFunctionStub;
-import com.intellij.psi.stubs.StubElement;
+import consulo.language.psi.stub.StubElement;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Mar 26, 2008
- *         Time: 7:11:48 PM
+ * Date: Mar 26, 2008
+ * Time: 7:11:48 PM
  */
-public class JSFunctionStubImpl extends JSQualifiedObjectStubBase<JSFunction> implements JSFunctionStub
-{
-	private String myReturnType;
-	public static final int GET_PROPERTY_MASK = 1;
-	public static final int SET_PROPERTY_MASK = 2;
-	public static final int CONSTRUCTOR_MASK = 4;
-	private static final int DEPRECATED_MASK = 8;
-	private static final int REFERENCES_ARGUMENTS_MASK = 16;
+public class JSFunctionStubImpl extends JSQualifiedObjectStubBase<JSFunction> implements JSFunctionStub {
+    private String myReturnType;
+    public static final int GET_PROPERTY_MASK = 1;
+    public static final int SET_PROPERTY_MASK = 2;
+    public static final int CONSTRUCTOR_MASK = 4;
+    private static final int DEPRECATED_MASK = 8;
+    private static final int REFERENCES_ARGUMENTS_MASK = 16;
 
-	public JSFunctionStubImpl(final String name,
-			int flags,
-			String qName,
-			String returnType,
-			final StubElement parentStub,
-			final JSStubElementType elementType)
-	{
-		super(name, flags, qName, parentStub, elementType);
-		myReturnType = returnType;
-	}
+    public JSFunctionStubImpl(
+        String name,
+        int flags,
+        String qName,
+        String returnType,
+        StubElement parentStub,
+        JSStubElementType elementType
+    ) {
+        super(name, flags, qName, parentStub, elementType);
+        myReturnType = returnType;
+    }
 
-	public static int buildFlags(final JSFunction clazz)
-	{
-		final int val = clazz.isConstructor() ? CONSTRUCTOR_MASK : clazz.isGetProperty() ? GET_PROPERTY_MASK : clazz.isSetProperty() ? SET_PROPERTY_MASK
-				: 0;
-		return val | (clazz.isDeprecated() ? DEPRECATED_MASK : 0) | (clazz.isReferencesArguments() ? REFERENCES_ARGUMENTS_MASK : 0);
-	}
+    public static int buildFlags(JSFunction clazz) {
+        int val = clazz.isConstructor()
+            ? CONSTRUCTOR_MASK
+            : clazz.isGetProperty()
+            ? GET_PROPERTY_MASK
+            : clazz.isSetProperty()
+            ? SET_PROPERTY_MASK
+            : 0;
+        return val | (clazz.isDeprecated() ? DEPRECATED_MASK : 0) | (clazz.isReferencesArguments() ? REFERENCES_ARGUMENTS_MASK : 0);
+    }
 
-	@Override
-	public boolean isGetProperty()
-	{
-		return (myFlags & GET_PROPERTY_MASK) != 0;
-	}
+    @Override
+    public boolean isGetProperty() {
+        return (myFlags & GET_PROPERTY_MASK) != 0;
+    }
 
-	@Override
-	public boolean isSetProperty()
-	{
-		return (myFlags & SET_PROPERTY_MASK) != 0;
-	}
+    @Override
+    public boolean isSetProperty() {
+        return (myFlags & SET_PROPERTY_MASK) != 0;
+    }
 
-	@Override
-	public boolean isConstructor()
-	{
-		return (myFlags & CONSTRUCTOR_MASK) != 0;
-	}
+    @Override
+    public boolean isConstructor() {
+        return (myFlags & CONSTRUCTOR_MASK) != 0;
+    }
 
-	@Override
-	public boolean isDeprecated()
-	{
-		return (myFlags & DEPRECATED_MASK) != 0;
-	}
+    @Override
+    public boolean isDeprecated() {
+        return (myFlags & DEPRECATED_MASK) != 0;
+    }
 
-	@Override
-	public boolean isReferencesArguments()
-	{
-		return (myFlags & REFERENCES_ARGUMENTS_MASK) != 0;
-	}
+    @Override
+    public boolean isReferencesArguments() {
+        return (myFlags & REFERENCES_ARGUMENTS_MASK) != 0;
+    }
 
-	@Override
-	public String getReturnTypeString()
-	{
-		return myReturnType;
-	}
+    @Override
+    public String getReturnTypeString() {
+        return myReturnType;
+    }
 }

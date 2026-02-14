@@ -16,72 +16,61 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSIfStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
-
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:49:01 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public class JSIfStatementImpl extends JSStatementImpl implements JSIfStatement
-{
-	public JSIfStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSIfStatementImpl extends JSStatementImpl implements JSIfStatement {
+    public JSIfStatementImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getCondition()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression getCondition() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	public JSStatement getThen()
-	{
-		return findChildByClass(JSStatement.class);
-	}
+    @Override
+    public JSStatement getThen() {
+        return findChildByClass(JSStatement.class);
+    }
 
-	@Override
-	public JSStatement getElse()
-	{
-		final ASTNode myNode = getNode();
-		final ASTNode elseNode = myNode.findChildByType(JSTokenTypes.ELSE_KEYWORD);
-		final ASTNode node = elseNode != null ? myNode.findChildByType(JSElementTypes.STATEMENTS, elseNode) : null;
-		return node != null ? (JSStatement) node.getPsi() : null;
-	}
+    @Override
+    @RequiredReadAction
+    public JSStatement getElse() {
+        ASTNode myNode = getNode();
+        ASTNode elseNode = myNode.findChildByType(JSTokenTypes.ELSE_KEYWORD);
+        ASTNode node = elseNode != null ? myNode.findChildByType(JSElementTypes.STATEMENTS, elseNode) : null;
+        return node != null ? (JSStatement)node.getPsi() : null;
+    }
 
-	@Override
-	public void setThen(JSStatement statement)
-	{
-		throw new UnsupportedOperationException("TODO: implement");
-	}
+    @Override
+    public void setThen(JSStatement statement) {
+        throw new UnsupportedOperationException("TODO: implement");
+    }
 
-	@Override
-	public void setElse(JSStatement statement)
-	{
-		throw new UnsupportedOperationException("TODO: implement");
-	}
+    @Override
+    public void setElse(JSStatement statement) {
+        throw new UnsupportedOperationException("TODO: implement");
+    }
 
-	@Override
-	public void setCondition(JSExpression expr)
-	{
-		throw new UnsupportedOperationException("TODO: implement");
-	}
+    @Override
+    public void setCondition(JSExpression expr) {
+        throw new UnsupportedOperationException("TODO: implement");
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSIfStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSIfStatement(this);
+    }
 }

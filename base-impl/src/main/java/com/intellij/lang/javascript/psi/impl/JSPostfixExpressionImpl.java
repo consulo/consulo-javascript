@@ -16,54 +16,48 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSPostfixExpression;
-import com.intellij.psi.tree.IElementType;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.lang.psi.JavaScriptType;
+import consulo.javascript.language.psi.JavaScriptType;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
- * User: max
- * Date: Jan 30, 2005
- * Time: 11:52:13 PM
+ * @author max
+ * @since 2005-01-30
  */
-public class JSPostfixExpressionImpl extends JSExpressionImpl implements JSPostfixExpression
-{
-	public JSPostfixExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSPostfixExpressionImpl extends JSExpressionImpl implements JSPostfixExpression {
+    public JSPostfixExpressionImpl(ASTNode node) {
+        super(node);
+    }
 
-	@RequiredReadAction
-	@Nonnull
-	@Override
-	public JavaScriptType getType()
-	{
-		JSExpression expression = getExpression();
-		return expression == null ? JavaScriptType.UNKNOWN : expression.getType();
-	}
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public JavaScriptType getType() {
+        JSExpression expression = getExpression();
+        return expression == null ? JavaScriptType.UNKNOWN : expression.getType();
+    }
 
-	@Override
-	public JSExpression getExpression()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression getExpression() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	public IElementType getOperationSign()
-	{
-		final ASTNode[] nodes = getNode().getChildren(JSTokenTypes.OPERATIONS);
-		return nodes.length == 1 ? nodes[0].getElementType() : null;
-	}
+    @Override
+    @RequiredReadAction
+    public IElementType getOperationSign() {
+        ASTNode[] nodes = getNode().getChildren(JSTokenTypes.OPERATIONS);
+        return nodes.length == 1 ? nodes[0].getElementType() : null;
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSPostfixExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSPostfixExpression(this);
+    }
 }

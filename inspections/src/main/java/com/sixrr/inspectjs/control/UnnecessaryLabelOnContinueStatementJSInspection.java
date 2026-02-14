@@ -1,92 +1,94 @@
 package com.sixrr.inspectjs.control;
 
-import javax.annotation.Nonnull;
-
-import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.psi.JSContinueStatement;
 import com.intellij.lang.javascript.psi.JSLoopStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.IncorrectOperationException;
-import com.sixrr.inspectjs.*;
+import com.sixrr.inspectjs.BaseInspectionVisitor;
+import com.sixrr.inspectjs.InspectionJSFix;
+import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-import javax.annotation.Nullable;
-
+@ExtensionImpl
 public class UnnecessaryLabelOnContinueStatementJSInspection extends JavaScriptInspection {
-    private final UnnecessaryLabelOnContinueStatementFix fix =
-            new UnnecessaryLabelOnContinueStatementFix();
+    private final UnnecessaryLabelOnContinueStatementFix fix = new UnnecessaryLabelOnContinueStatementFix();
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("unnecessary.label.on.continue.statement.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.unnecessaryLabelOnContinueStatementDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
     @Override
-	public boolean isEnabledByDefault() {
+    public boolean isEnabledByDefault() {
         return true;
     }
 
+    @Nullable
     @Override
-	@Nullable
-    protected String buildErrorString(Object... args) {
-        return InspectionJSBundle.message("unnecessary.label.on.continue.error.string");
+    @RequiredReadAction
+    protected String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.unnecessaryLabelOnContinueErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location) {
+    public InspectionJSFix buildFix(PsiElement location, Object state) {
         return fix;
     }
 
     private static class UnnecessaryLabelOnContinueStatementFix extends InspectionJSFix {
+        @Nonnull
         @Override
-		@Nonnull
-        public String getName() {
-            return InspectionJSBundle.message("remove.label.fix");
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.removeLabelFix();
         }
 
         @Override
-		public void doFix(Project project, ProblemDescriptor descriptor)
-                throws IncorrectOperationException {
-            final PsiElement continueKeywordElement = descriptor.getPsiElement();
-            final JSContinueStatement continueStatement =
-                    (JSContinueStatement) continueKeywordElement.getParent();
+        public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
+            PsiElement continueKeywordElement = descriptor.getPsiElement();
+            JSContinueStatement continueStatement = (JSContinueStatement) continueKeywordElement.getParent();
             replaceStatement(continueStatement, "continue;");
         }
     }
-    private static class Visitor extends BaseInspectionVisitor {
 
-        @Override public void visitJSContinueStatement(@Nonnull JSContinueStatement statement) {
+    private static class Visitor extends BaseInspectionVisitor {
+        @Override
+        public void visitJSContinueStatement(@Nonnull JSContinueStatement statement) {
             super.visitJSContinueStatement(statement);
             if (statement.getLabel() == null) {
                 return;
             }
-            final JSStatement statementToContinue = statement.getStatementToContinue();
-            if(statementToContinue == null)
-            {
+            JSStatement statementToContinue = statement.getStatementToContinue();
+            if (statementToContinue == null) {
                 return;
             }
-            final JSLoopStatement containingLoop = PsiTreeUtil.getParentOfType(statement, JSLoopStatement.class);
-            if(containingLoop == null)
-            {
+            JSLoopStatement containingLoop = PsiTreeUtil.getParentOfType(statement, JSLoopStatement.class);
+            if (containingLoop == null) {
                 return;
             }
-            final PsiElement parent = containingLoop.getParent();
-            if(!statementToContinue.equals(parent))
-            {
+            PsiElement parent = containingLoop.getParent();
+            if (!statementToContinue.equals(parent)) {
                 return;
             }
             registerStatementError(statement);

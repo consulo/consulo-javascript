@@ -16,43 +16,36 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSDoWhileStatement;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSStatement;
-
-import javax.annotation.Nonnull;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.ast.ASTNode;
+import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 10:15:13 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public class JSDoWhileStatementImpl extends JSStatementImpl implements JSDoWhileStatement
-{
-	public JSDoWhileStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSDoWhileStatementImpl extends JSStatementImpl implements JSDoWhileStatement {
+    public JSDoWhileStatementImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getCondition()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression getCondition() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	public JSStatement getBody()
-	{
-		return findChildByClass(JSStatement.class);
-	}
+    @Override
+    @RequiredReadAction
+    public JSStatement getBody() {
+        return findChildByClass(JSStatement.class);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSDoWhileStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSDoWhileStatement(this);
+    }
 }

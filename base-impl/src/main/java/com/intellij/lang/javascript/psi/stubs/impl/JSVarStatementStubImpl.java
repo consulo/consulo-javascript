@@ -19,19 +19,17 @@ package com.intellij.lang.javascript.psi.stubs.impl;
 
 import com.intellij.lang.javascript.psi.JSVarStatement;
 import com.intellij.lang.javascript.psi.stubs.JSVarStatementStub;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubBase;
-import com.intellij.psi.stubs.StubElement;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.stub.StubBase;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Mar 26, 2008
- *         Time: 11:29:19 PM
+ * Date: Mar 26, 2008
+ * Time: 11:29:19 PM
  */
-public class JSVarStatementStubImpl extends StubBase<JSVarStatement> implements JSVarStatementStub
-{
-	public JSVarStatementStubImpl(StubElement parent, IStubElementType elementType)
-	{
-		super(parent, elementType);
-	}
+public class JSVarStatementStubImpl extends StubBase<JSVarStatement> implements JSVarStatementStub {
+    public JSVarStatementStubImpl(StubElement parent, IStubElementType elementType) {
+        super(parent, elementType);
+    }
 }

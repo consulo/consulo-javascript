@@ -16,86 +16,77 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSExpressionStatement;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.IconDescriptorUpdaters;
+import consulo.language.ast.ASTNode;
+import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.navigation.ItemPresentation;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:26:39 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public class JSExpressionStatementImpl extends JSStatementImpl implements JSExpressionStatement
-{
-	public JSExpressionStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSExpressionStatementImpl extends JSStatementImpl implements JSExpressionStatement {
+    public JSExpressionStatementImpl(ASTNode node) {
+        super(node);
+    }
 
-	@RequiredReadAction
-	@Override
-	public JSExpression getExpression()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @RequiredReadAction
+    @Override
+    public JSExpression getExpression() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSExpressionStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSExpressionStatement(this);
+    }
 
-	@Override
-	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent,
-			@Nonnull PsiElement place)
-	{
-		if(lastParent == null)
-		{
-			final JSExpression expression = getExpression();
-			if(expression != null)
-			{
-				return expression.processDeclarations(processor, state, lastParent, place);
-			}
-		}
+    @Override
+    @RequiredReadAction
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        if (lastParent == null) {
+            JSExpression expression = getExpression();
+            if (expression != null) {
+                return expression.processDeclarations(processor, state, lastParent, place);
+            }
+        }
 
-		return super.processDeclarations(processor, state, lastParent, place);
-	}
+        return super.processDeclarations(processor, state, lastParent, place);
+    }
 
-	@Override
-	public ItemPresentation getPresentation()
-	{
-		return new ItemPresentation()
-		{
-			@Override
-			public String getPresentableText()
-			{
-				return getText();
-			}
+    @Override
+    public ItemPresentation getPresentation() {
+        return new ItemPresentation() {
+            @Override
+            @RequiredReadAction
+            public String getPresentableText() {
+                return getText();
+            }
 
-			@Override
-			public String getLocationString()
-			{
-				return "";
-			}
+            @Override
+            public String getLocationString() {
+                return "";
+            }
 
-			@Override
-			public Image getIcon()
-			{
-				return IconDescriptorUpdaters.getIcon(JSExpressionStatementImpl.this, 0);
-			}
-		};
-
-	}
+            @Override
+            @RequiredReadAction
+            public Image getIcon() {
+                return IconDescriptorUpdaters.getIcon(JSExpressionStatementImpl.this, 0);
+            }
+        };
+    }
 }

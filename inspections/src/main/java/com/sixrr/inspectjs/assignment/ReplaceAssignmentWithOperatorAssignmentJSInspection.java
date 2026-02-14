@@ -1,139 +1,138 @@
 package com.sixrr.inspectjs.assignment;
 
-import javax.annotation.Nonnull;
-
-import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSAssignmentExpression;
 import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSDefinitionExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
-import com.sixrr.inspectjs.*;
+import com.sixrr.inspectjs.BaseInspectionVisitor;
+import com.sixrr.inspectjs.InspectionJSFix;
+import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import com.sixrr.inspectjs.utils.EquivalenceChecker;
 import com.sixrr.inspectjs.utils.SideEffectChecker;
-import org.jetbrains.annotations.NonNls;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import jakarta.annotation.Nonnull;
+import org.intellij.lang.annotations.Pattern;
 
-public class ReplaceAssignmentWithOperatorAssignmentJSInspection
-        extends JavaScriptInspection {
+import java.util.Map;
+
+@ExtensionImpl
+public class ReplaceAssignmentWithOperatorAssignmentJSInspection extends JavaScriptInspection {
+    @Nonnull
     @Override
-	@Nonnull
+    @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "AssignmentReplaceableWithOperatorAssignmentJS";
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("assignment.replaceable.with.operator.assignment.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.assignmentReplaceableWithOperatorAssignmentDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.ASSIGNMENT_GROUP_NAME;
     }
 
     @Override
-	public String buildErrorString(Object... args) {
-        return InspectionJSBundle.message(
-                "assignment.replaceable.with.operator.assignment.error.string",
-                calculateReplacementExpression((JSAssignmentExpression) args[0]));
+    @RequiredReadAction
+    public String buildErrorString(Object state, Object... args) {
+        String expression = calculateReplacementExpression((JSAssignmentExpression) args[0]);
+        return InspectionJSLocalize.assignmentReplaceableWithOperatorAssignmentErrorString(expression).get();
     }
 
-    private static String calculateReplacementExpression(
-            JSAssignmentExpression expression) {
-        final JSBinaryExpression rhs =
-                (JSBinaryExpression) expression.getROperand();
-        final JSExpression lhs = expression.getLOperand();
+    @RequiredReadAction
+    private static String calculateReplacementExpression(JSAssignmentExpression expression) {
+        JSBinaryExpression rhs = (JSBinaryExpression) expression.getROperand();
+        JSExpression lhs = expression.getLOperand();
         assert rhs != null;
-        final IElementType sign = rhs.getOperationSign();
-        final JSExpression rhsRhs = rhs.getROperand();
+        IElementType sign = rhs.getOperationSign();
+        JSExpression rhsRhs = rhs.getROperand();
         assert rhsRhs != null;
         String signText = getTextForOperator(sign);
         return lhs.getText() + ' ' + signText + "= " + rhsRhs.getText();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new ReplaceAssignmentWithOperatorAssignmentVisitor();
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location) {
-        return new ReplaceAssignmentWithOperatorAssignmentFix(
-                (JSAssignmentExpression) location);
+    @RequiredReadAction
+    public InspectionJSFix buildFix(PsiElement location, Object state) {
+        return new ReplaceAssignmentWithOperatorAssignmentFix((JSAssignmentExpression) location);
     }
 
-    private static class ReplaceAssignmentWithOperatorAssignmentFix
-            extends InspectionJSFix {
-        private final String m_name;
+    private static class ReplaceAssignmentWithOperatorAssignmentFix extends InspectionJSFix {
+        @Nonnull
+        private final LocalizeValue myName;
 
-        private ReplaceAssignmentWithOperatorAssignmentFix(
-                JSAssignmentExpression expression) {
+        @RequiredReadAction
+        private ReplaceAssignmentWithOperatorAssignmentFix(JSAssignmentExpression expression) {
             super();
-            final JSBinaryExpression rhs =
-                    (JSBinaryExpression) expression.getROperand();
+            JSBinaryExpression rhs = (JSBinaryExpression) expression.getROperand();
             assert rhs != null;
-            final IElementType sign = rhs.getOperationSign();
+            IElementType sign = rhs.getOperationSign();
             String signText = getTextForOperator(sign);
-            m_name = InspectionJSBundle.message("replace.with.operator.assign.fix", signText);
+            myName = InspectionJSLocalize.replaceWithOperatorAssignFix(signText);
+        }
+
+        @Nonnull
+        @Override
+        public LocalizeValue getName() {
+            return myName;
         }
 
         @Override
-		@Nonnull
-        public String getName() {
-            return m_name;
-        }
-
-        @Override
-		public void doFix(Project project, ProblemDescriptor descriptor)
-                throws IncorrectOperationException {
-            final JSAssignmentExpression expression =
-                    (JSAssignmentExpression) descriptor.getPsiElement();
-            final String newExpression =
-                    calculateReplacementExpression(expression);
+        @RequiredWriteAction
+        public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
+            JSAssignmentExpression expression = (JSAssignmentExpression) descriptor.getPsiElement();
+            String newExpression = calculateReplacementExpression(expression);
             replaceExpression(expression, newExpression);
         }
     }
 
-    private static class ReplaceAssignmentWithOperatorAssignmentVisitor
-            extends BaseInspectionVisitor {
-
-        @Override public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression assignment) {
+    private static class ReplaceAssignmentWithOperatorAssignmentVisitor extends BaseInspectionVisitor {
+        @Override
+        @RequiredReadAction
+        public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression assignment) {
             super.visitJSAssignmentExpression(assignment);
 
-            final IElementType sign = assignment.getOperationSign();
+            IElementType sign = assignment.getOperationSign();
             if (!JSTokenTypes.EQ.equals(sign)) {
                 return;
             }
             JSExpression lhs = assignment.getLOperand();
-            final JSExpression rhs = assignment.getROperand();
-            if (rhs == null || lhs == null) {
+            if (lhs == null) {
                 return;
             }
-            if (!(rhs instanceof JSBinaryExpression)) {
-                return;
-            }
-            final JSBinaryExpression binaryRhs = (JSBinaryExpression) rhs;
-            if (!(binaryRhs.getROperand() != null)) {
+            if (!(assignment.getROperand() instanceof JSBinaryExpression binaryRhs && binaryRhs.getROperand() != null)) {
                 return;
             }
             IElementType operationSign = binaryRhs.getOperationSign();
-            if (operationSign == JSTokenTypes.ANDAND ||
-                operationSign == JSTokenTypes.OROR) {
+            if (operationSign == JSTokenTypes.ANDAND || operationSign == JSTokenTypes.OROR) {
                 return;
             }
-            final JSExpression lOperand = binaryRhs.getLOperand();
+            JSExpression lOperand = binaryRhs.getLOperand();
             if (SideEffectChecker.mayHaveSideEffects(lhs)) {
                 return;
             }
-            if(lhs instanceof JSDefinitionExpression)
-            {
-                lhs = ((JSDefinitionExpression)lhs).getExpression();
+            if (lhs instanceof JSDefinitionExpression defExpr) {
+                lhs = defExpr.getExpression();
             }
             if (!EquivalenceChecker.expressionsAreEquivalent(lhs, lOperand)) {
                 return;
@@ -142,50 +141,24 @@ public class ReplaceAssignmentWithOperatorAssignmentJSInspection
         }
     }
 
-    @NonNls
+    private static final Map<IElementType, String> TEXT_FOR_OPERATOR = Map.ofEntries(
+        Map.entry(JSTokenTypes.PLUS, "+"),
+        Map.entry(JSTokenTypes.MINUS, "-"),
+        Map.entry(JSTokenTypes.MULT, "*"),
+        Map.entry(JSTokenTypes.DIV, "/"),
+        Map.entry(JSTokenTypes.PERC, "%"),
+        Map.entry(JSTokenTypes.XOR, "^"),
+        Map.entry(JSTokenTypes.ANDAND, "&&"),
+        Map.entry(JSTokenTypes.OROR, "||"),
+        Map.entry(JSTokenTypes.AND, "&"),
+        Map.entry(JSTokenTypes.OR, "|"),
+        Map.entry(JSTokenTypes.LTLT, "<<"),
+        Map.entry(JSTokenTypes.LTLTEQ, "<<="),
+        Map.entry(JSTokenTypes.GTGT, ">>"),
+        Map.entry(JSTokenTypes.GTGTGT, ">>>")
+    );
+
     private static String getTextForOperator(IElementType operator) {
-        if (JSTokenTypes.PLUS.equals(operator)) {
-            return "+";
-        }
-        if (JSTokenTypes.MINUS.equals(operator)) {
-            return "-";
-        }
-        if (JSTokenTypes.MULT.equals(operator)) {
-            return "*";
-        }
-        if (JSTokenTypes.DIV.equals(operator)) {
-            return "/";
-        }
-        if (JSTokenTypes.PERC.equals(operator)) {
-            return "%";
-        }
-        if (JSTokenTypes.XOR.equals(operator)) {
-            return "^";
-        }
-        if (JSTokenTypes.ANDAND.equals(operator)) {
-            return "&&";
-        }
-        if (JSTokenTypes.OROR.equals(operator)) {
-            return "||";
-        }
-        if (JSTokenTypes.AND.equals(operator)) {
-            return "&";
-        }
-        if (JSTokenTypes.OR.equals(operator)) {
-            return "|";
-        }
-        if (JSTokenTypes.LTLT.equals(operator)) {
-            return "<<";
-        }
-        if (JSTokenTypes.LTLTEQ.equals(operator)) {
-            return "<<=";
-        }
-        if (JSTokenTypes.GTGT.equals(operator)) {
-            return ">>";
-        }
-        if (JSTokenTypes.GTGTGT.equals(operator)) {
-            return ">>>";
-        }
-        return "unknown";
+        return TEXT_FOR_OPERATOR.getOrDefault(operator, "unknown");
     }
 }

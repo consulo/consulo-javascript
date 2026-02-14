@@ -19,72 +19,64 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import consulo.annotation.access.RequiredReadAction;
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.psi.JSClass;
 import com.intellij.lang.javascript.psi.JSFile;
 import com.intellij.lang.javascript.psi.JSPackageStatement;
-import com.intellij.lang.javascript.psi.JSStubElementType;
+import consulo.javascript.impl.language.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.JSVarStatement;
 import com.intellij.lang.javascript.psi.impl.JSVarStatementImpl;
 import com.intellij.lang.javascript.psi.stubs.JSVarStatementStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSVarStatementStubImpl;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.stub.StubInputStream;
+import consulo.language.psi.stub.StubOutputStream;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jun 8, 2008
- *         Time: 1:50:59 PM
+ * Date: Jun 8, 2008
+ * Time: 1:50:59 PM
  */
-public class JSVarStatementElementType extends JSStubElementType<JSVarStatementStub, JSVarStatement>
-{
-	public JSVarStatementElementType()
-	{
-		super("VAR_STATEMENT");
-	}
+public class JSVarStatementElementType extends JSStubElementType<JSVarStatementStub, JSVarStatement> {
+    public JSVarStatementElementType() {
+        super("VAR_STATEMENT");
+    }
 
-	@Override
-	public boolean shouldCreateStub(ASTNode node)
-	{
-		final PsiElement element = node.getTreeParent().getPsi();
-		return element instanceof JSClass || element instanceof JSPackageStatement || element instanceof JSFile;
-	}
+    @Override
+    public boolean shouldCreateStub(ASTNode node) {
+        PsiElement element = node.getTreeParent().getPsi();
+        return element instanceof JSClass || element instanceof JSPackageStatement || element instanceof JSFile;
+    }
 
-	@Nonnull
-	@Override
-	public PsiElement createElement(@Nonnull ASTNode astNode)
-	{
-		return new JSVarStatementImpl(astNode);
-	}
+    @Nonnull
+    @Override
+    public PsiElement createElement(@Nonnull ASTNode astNode) {
+        return new JSVarStatementImpl(astNode);
+    }
 
-	@Override
-	public JSVarStatement createPsi(@Nonnull JSVarStatementStub stub)
-	{
-		return new JSVarStatementImpl(stub);
-	}
+    @Override
+    public JSVarStatement createPsi(@Nonnull JSVarStatementStub stub) {
+        return new JSVarStatementImpl(stub);
+    }
 
-	@RequiredReadAction
-	@Override
-	public JSVarStatementStub createStub(@Nonnull JSVarStatement psi, StubElement parentStub)
-	{
-		return new JSVarStatementStubImpl(parentStub, this);
-	}
+    @RequiredReadAction
+    @Override
+    public JSVarStatementStub createStub(@Nonnull JSVarStatement psi, StubElement parentStub) {
+        return new JSVarStatementStubImpl(parentStub, this);
+    }
 
-	@Override
-	public void serialize(@Nonnull JSVarStatementStub stub, @Nonnull StubOutputStream dataStream) throws IOException
-	{
+    @Override
+    public void serialize(@Nonnull JSVarStatementStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
 
-	}
+    }
 
-	@Nonnull
-	@Override
-	public JSVarStatementStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
-	{
-		return new JSVarStatementStubImpl(parentStub, this);
-	}
+    @Nonnull
+    @Override
+    public JSVarStatementStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+        return new JSVarStatementStubImpl(parentStub, this);
+    }
 }

@@ -16,86 +16,69 @@
  */
 package com.intellij.lang.javascript.types;
 
-import com.intellij.lang.Language;
 import com.intellij.lang.javascript.psi.JSFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.StubBuilder;
-import com.intellij.psi.stubs.*;
-import com.intellij.psi.tree.IStubFileElementType;
-import com.intellij.util.io.StringRef;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.index.io.StringRef;
+import consulo.language.psi.stub.*;
 import consulo.javascript.index.JavaScriptIndexer;
 import consulo.javascript.psi.stubs.JSFileStub;
-import consulo.javascript.psi.stubs.impl.JSFileStubImpl;
+import consulo.javascript.impl.language.psi.stub.JSFileStubImpl;
+import consulo.language.Language;
+import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
+
 import java.io.IOException;
 
 /**
  * @author peter
  */
-public class JSFileElementType extends IStubFileElementType<JSFileStub>
-{
-	public JSFileElementType(final Language language)
-	{
-		super(language);
-	}
+public class JSFileElementType extends IStubFileElementType<JSFileStub> {
+    public JSFileElementType(Language language) {
+        super(language);
+    }
 
-	@Override
-	public void indexStub(@Nonnull final JSFileStub stub, @Nonnull final IndexSink sink)
-	{
-		for(JavaScriptIndexer javaScriptIndexer : JavaScriptIndexer.EP_NAME.getExtensions())
-		{
-			javaScriptIndexer.indexFile(stub, sink);
-		}
-	}
+    @Override
+    public void indexStub(@Nonnull JSFileStub stub, @Nonnull IndexSink sink) {
+        JavaScriptIndexer.EP_NAME.forEachExtensionSafe(it -> it.indexFile(stub, sink));
+    }
 
-	@Override
-	public StubBuilder getBuilder()
-	{
-		return new DefaultStubBuilder()
-		{
-			@Nonnull
-			@Override
-			protected StubElement createStubForFile(@Nonnull PsiFile file)
-			{
-				if(file instanceof JSFile)
-				{
-					return new JSFileStubImpl((JSFile) file, file.getName());
-				}
-				return super.createStubForFile(file);
-			}
-		};
-	}
+    @Override
+    public StubBuilder getBuilder() {
+        return new DefaultStubBuilder() {
+            @Nonnull
+            @Override
+            @RequiredReadAction
+            protected StubElement createStubForFile(@Nonnull PsiFile file) {
+                return file instanceof JSFile jsFile
+                    ? new JSFileStubImpl(jsFile, file.getName())
+                    : super.createStubForFile(file);
+            }
+        };
+    }
 
-	@Override
-	public void serialize(@Nonnull JSFileStub stub, @Nonnull StubOutputStream dataStream) throws IOException
-	{
-		dataStream.writeName(stub.getName());
-	}
+    @Override
+    public void serialize(@Nonnull JSFileStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+        dataStream.writeName(stub.getName());
+    }
 
-	@Nonnull
-	@Override
-	public JSFileStub deserialize(@Nonnull final StubInputStream dataStream, final StubElement parentStub) throws IOException
-	{
-		StringRef name = dataStream.readName();
-		return new JSFileStubImpl(null, name);
-	}
+    @Nonnull
+    @Override
+    public JSFileStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+        StringRef name = dataStream.readName();
+        return new JSFileStubImpl(null, name);
+    }
 
-	@Nonnull
-	@Override
-	public String getExternalId()
-	{
-		return getLanguage() + ":" + toString();
-	}
+    @Nonnull
+    @Override
+    public String getExternalId() {
+        return getLanguage() + ":" + toString();
+    }
 
-	@Override
-	public int getStubVersion()
-	{
-		int version = 43;
-		for(JavaScriptIndexer javaScriptIndexer : JavaScriptIndexer.EP_NAME.getExtensionList())
-		{
-			version += javaScriptIndexer.getVersion();
-		}
-		return version;
-	}
+    @Override
+    public int getStubVersion() {
+        int[] version = new int[]{48};
+        JavaScriptIndexer.EP_NAME.forEachExtensionSafe(javaScriptIndexer -> version[0]++);
+        return version[0];
+    }
 }

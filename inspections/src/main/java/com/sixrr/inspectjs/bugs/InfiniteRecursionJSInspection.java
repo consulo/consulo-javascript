@@ -1,57 +1,53 @@
 package com.sixrr.inspectjs.bugs;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.psi.JSFunction;
-import com.intellij.openapi.diagnostic.Logger;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 
+@ExtensionImpl
 public class InfiniteRecursionJSInspection extends JavaScriptInspection {
-    private static Logger logger = Logger.getInstance("ULVJS");
-
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message(
-                "infinite.recursion.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.infiniteRecursionDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.BUGS_GROUP_NAME;
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String buildErrorString(Object... args) {
-        return InspectionJSBundle.message(
-                "infinite.recursion.problem.descriptor");
+    @RequiredReadAction
+    public String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.infiniteRecursionProblemDescriptor().get();
     }
 
     @Override
-	public boolean isEnabledByDefault() {
+    public boolean isEnabledByDefault() {
         return true;
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new InfiniteRecursionVisitor();
     }
 
-    private static class InfiniteRecursionVisitor
-            extends BaseInspectionVisitor {
-
-        @Override public void visitJSFunctionDeclaration(@Nonnull JSFunction function) {
+    private static class InfiniteRecursionVisitor extends BaseInspectionVisitor {
+        @Override
+        public void visitJSFunctionDeclaration(@Nonnull JSFunction function) {
             super.visitJSFunctionDeclaration(function);
 
-            if (!RecursionUtils.functionMayRecurse(function)) {
-                return;
-            }
-            if (!RecursionUtils.functionDefinitelyRecurses(function)) {
+            if (!RecursionUtils.functionMayRecurse(function)
+                || !RecursionUtils.functionDefinitelyRecurses(function)) {
                 return;
             }
             registerFunctionError(function);

@@ -20,26 +20,23 @@ package com.intellij.lang.javascript.psi.stubs.impl;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSAttributeNameValuePair;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeNameValuePairStub;
-import com.intellij.psi.stubs.StubElement;
+import consulo.language.psi.stub.StubElement;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jun 6, 2008
- *         Time: 8:00:52 PM
+ * Date: Jun 6, 2008
+ * Time: 8:00:52 PM
  */
-public class JSAttributeNameValuePairStubImpl extends JSNamedObjectStubBase<JSAttributeNameValuePair> implements JSAttributeNameValuePairStub
-{
-	private String myValue;
+public class JSAttributeNameValuePairStubImpl extends JSNamedObjectStubBase<JSAttributeNameValuePair> implements JSAttributeNameValuePairStub {
+    private String myValue;
 
-	public JSAttributeNameValuePairStubImpl(String name, final String value, final StubElement parentStub)
-	{
-		super(name, 0, parentStub, JSElementTypes.ATTRIBUTE_NAME_VALUE_PAIR);
-		myValue = value;
-	}
+    public JSAttributeNameValuePairStubImpl(String name, String value, StubElement parentStub) {
+        super(name, 0, parentStub, JSElementTypes.ATTRIBUTE_NAME_VALUE_PAIR);
+        myValue = value;
+    }
 
-	@Override
-	public String getValue()
-	{
-		return myValue;
-	}
+    @Override
+    public String getValue() {
+        return myValue;
+    }
 }

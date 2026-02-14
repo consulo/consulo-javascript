@@ -1,49 +1,48 @@
 package com.sixrr.inspectjs.assignment;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.psi.JSAssignmentExpression;
-import com.intellij.psi.PsiElement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 
+@ExtensionImpl
 public class NestedAssignmentJSInspection extends JavaScriptInspection {
-
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("nested.assignment.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.nestedAssignmentDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.ASSIGNMENT_GROUP_NAME;
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String buildErrorString(Object... args) {
-        return InspectionJSBundle.message("nested.assignment.error.string");
+    @RequiredReadAction
+    public String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.nestedAssignmentErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new NestedAssignmentVisitor();
     }
 
     private static class NestedAssignmentVisitor extends BaseInspectionVisitor {
-
-        @Override public void visitJSAssignmentExpression(
-                @Nonnull JSAssignmentExpression expression) {
+        @Override
+        public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression expression) {
             super.visitJSAssignmentExpression(expression);
-            final PsiElement parent = expression.getParent();
-            if (parent == null) {
-                return;
-            }
-            if (!(parent instanceof JSAssignmentExpression )) {
+            PsiElement parent = expression.getParent();
+            if (parent == null || !(parent instanceof JSAssignmentExpression)) {
                 return;
             }
             registerError(expression);

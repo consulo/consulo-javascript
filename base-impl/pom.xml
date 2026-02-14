@@ -19,22 +19,21 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>consulo</groupId>
-		<artifactId>arch.ide-provided</artifactId>
-		<version>2-SNAPSHOT</version>
+		<artifactId>arch.ide-api-provided</artifactId>
+		<version>3-SNAPSHOT</version>
 		<relativePath/>
 	</parent>
 
 	<groupId>consulo.plugin</groupId>
 	<artifactId>consulo.javascript-base.impl</artifactId>
-	<version>2-SNAPSHOT</version>
+	<version>3-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>consulo.maven</groupId>
-				<artifactId>consulo-maven-plugin</artifactId>
-				<version>2-SNAPSHOT</version>
+				<artifactId>maven-consulo-plugin</artifactId>
 				<extensions>true</extensions>
 				<executions>
 					<execution>
@@ -51,10 +50,10 @@
 	<repositories>
 		<repository>
 			<id>consulo</id>
-			<url>https://maven.consulo.io/repository/snapshots/</url>
+			<url>https://maven.consulo.dev/repository/snapshots/</url>
 			<snapshots>
 				<enabled>true</enabled>
-				<updatePolicy>interval:60</updatePolicy>
+				<updatePolicy>always</updatePolicy>
 			</snapshots>
 		</repository>
 	</repositories>
@@ -74,10 +73,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>${project.parent.groupId}</groupId>
-			<artifactId>consulo-lang-impl-testing</artifactId>
-			<version>${project.parent.version}</version>
-			<scope>test</scope>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>

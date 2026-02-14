@@ -16,7 +16,6 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSAttribute;
@@ -24,166 +23,139 @@ import com.intellij.lang.javascript.psi.JSAttributeList;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSReferenceExpression;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeListStub;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.util.IncorrectOperationException;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
- * @author  Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
-public class JSAttributeListImpl extends JSStubElementImpl<JSAttributeListStub> implements JSAttributeList
-{
-	private static final TokenSet ourModifiersTypeSet = TokenSet.create(JSTokenTypes.PUBLIC_KEYWORD, JSTokenTypes.PRIVATE_KEYWORD,
-			JSTokenTypes.PROTECTED_KEYWORD, JSTokenTypes.INTERNAL_KEYWORD);
+public class JSAttributeListImpl extends JSStubElementImpl<JSAttributeListStub> implements JSAttributeList {
+    private static final TokenSet MODIFIERS_TYPE_SET = TokenSet.create(
+        JSTokenTypes.PUBLIC_KEYWORD,
+        JSTokenTypes.PRIVATE_KEYWORD,
+        JSTokenTypes.PROTECTED_KEYWORD,
+        JSTokenTypes.INTERNAL_KEYWORD
+    );
 
-	public JSAttributeListImpl(final ASTNode node)
-	{
-		super(node);
-	}
+    private static final Map<IElementType, AccessType> ACCESS_TYPE_MAP = Map.of(
+        JSTokenTypes.PUBLIC_KEYWORD, AccessType.PUBLIC,
+        JSTokenTypes.PROTECTED_KEYWORD, AccessType.PROTECTED,
+        JSTokenTypes.PRIVATE_KEYWORD, AccessType.PRIVATE,
+        JSTokenTypes.INTERNAL_KEYWORD, AccessType.PACKAGE_LOCAL
+    );
 
-	public JSAttributeListImpl(final JSAttributeListStub stub)
-	{
-		super(stub, JSElementTypes.ATTRIBUTE_LIST);
-	}
+    public JSAttributeListImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSAttributeList(this);
-	}
+    public JSAttributeListImpl(JSAttributeListStub stub) {
+        super(stub, JSElementTypes.ATTRIBUTE_LIST);
+    }
 
-	@Override
-	@Nullable
-	public String getNamespace()
-	{
-		final JSAttributeListStub attributeListStub = getStub();
-		if(attributeListStub != null)
-		{
-			return attributeListStub.getNamespace();
-		}
-		final JSReferenceExpression namespaceElement = getNamespaceElement();
-		return namespaceElement != null ? namespaceElement.getText() : null;
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSAttributeList(this);
+    }
 
-	@Override
-	public JSReferenceExpression getNamespaceElement()
-	{
-		final ASTNode node = getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
-		return node != null ? (JSReferenceExpression) node.getPsi() : null;
-	}
+    @Nullable
+    @Override
+    @RequiredReadAction
+    public String getNamespace() {
+        JSAttributeListStub attributeListStub = getStub();
+        if (attributeListStub != null) {
+            return attributeListStub.getNamespace();
+        }
+        JSReferenceExpression namespaceElement = getNamespaceElement();
+        return namespaceElement != null ? namespaceElement.getText() : null;
+    }
 
-	@Override
-	public JSAttribute[] getAttributes()
-	{
-		return getStubOrPsiChildren(JSElementTypes.ATTRIBUTE, JSAttribute.ARRAY_FACTORY);
-	}
+    @Override
+    @RequiredReadAction
+    public JSReferenceExpression getNamespaceElement() {
+        ASTNode node = getNode().findChildByType(JSElementTypes.REFERENCE_EXPRESSION);
+        return node != null ? (JSReferenceExpression)node.getPsi() : null;
+    }
 
-	@Nonnull
-	@Override
-	public JSAttribute[] getAttributesByName(final @Nonnull String name)
-	{
-		List<JSAttribute> attributes = null;
-		for(JSAttribute attr : getAttributes())
-		{
-			if(name.equals(attr.getName()))
-			{
-				if(attributes == null)
-				{
-					attributes = new ArrayList<JSAttribute>();
-				}
-				attributes.add(attr);
-			}
-		}
-		return attributes != null ? attributes.toArray(new JSAttribute[attributes.size()]) : JSAttribute.EMPTY_ARRAY;
-	}
+    @Override
+    public JSAttribute[] getAttributes() {
+        return getStubOrPsiChildren(JSElementTypes.ATTRIBUTE, JSAttribute.ARRAY_FACTORY);
+    }
 
-	@Override
-	public AccessType getAccessType()
-	{
-		final JSAttributeListStub stub = getStub();
-		if(stub != null)
-		{
-			return stub.getAccessType();
-		}
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public JSAttribute[] getAttributesByName(@Nonnull String name) {
+        List<JSAttribute> attributes = null;
+        for (JSAttribute attr : getAttributes()) {
+            if (name.equals(attr.getName())) {
+                if (attributes == null) {
+                    attributes = new ArrayList<>();
+                }
+                attributes.add(attr);
+            }
+        }
+        return attributes != null ? attributes.toArray(new JSAttribute[attributes.size()]) : JSAttribute.EMPTY_ARRAY;
+    }
 
-		final ASTNode node = getNode().findChildByType(ourModifiersTypeSet);
-		if(node != null)
-		{
-			final IElementType nodeType = node.getElementType();
-			if(nodeType == JSTokenTypes.PUBLIC_KEYWORD)
-			{
-				return AccessType.PUBLIC;
-			}
-			if(nodeType == JSTokenTypes.PROTECTED_KEYWORD)
-			{
-				return AccessType.PROTECTED;
-			}
-			if(nodeType == JSTokenTypes.PRIVATE_KEYWORD)
-			{
-				return AccessType.PRIVATE;
-			}
-			if(nodeType == JSTokenTypes.INTERNAL_KEYWORD)
-			{
-				return AccessType.PACKAGE_LOCAL;
-			}
-		}
-		return AccessType.PACKAGE_LOCAL;
-	}
+    @Override
+    @RequiredReadAction
+    public AccessType getAccessType() {
+        JSAttributeListStub stub = getStub();
+        if (stub != null) {
+            return stub.getAccessType();
+        }
 
-	@Override
-	public PsiElement findAccessTypeElement()
-	{
-		final ASTNode modifier = getNode().findChildByType(ourModifiersTypeSet);
-		return modifier != null ? modifier.getPsi() : null;
-	}
+        ASTNode node = getNode().findChildByType(MODIFIERS_TYPE_SET);
+        if (node == null) {
+            return AccessType.PACKAGE_LOCAL;
+        }
+        return ACCESS_TYPE_MAP.getOrDefault(node.getElementType(), AccessType.PACKAGE_LOCAL);
+    }
 
-	@Override
-	public boolean hasModifier(final ModifierType modifier)
-	{
-		final JSAttributeListStub stub = getStub();
-		if(stub != null)
-		{
-			return stub.hasModifier(modifier);
-		}
+    @Override
+    @RequiredReadAction
+    public PsiElement findAccessTypeElement() {
+        ASTNode modifier = getNode().findChildByType(MODIFIERS_TYPE_SET);
+        return modifier != null ? modifier.getPsi() : null;
+    }
 
-		IElementType type = null;
-		switch(modifier)
-		{
-			case DYNAMIC:
-				type = JSTokenTypes.DYNAMIC_KEYWORD;
-				break;
-			case OVERRIDE:
-				type = JSTokenTypes.OVERRIDE_KEYWORD;
-				break;
-			case NATIVE:
-				type = JSTokenTypes.NATIVE_KEYWORD;
-				break;
-			case STATIC:
-				type = JSTokenTypes.STATIC_KEYWORD;
-				break;
-			case FINAL:
-				type = JSTokenTypes.FINAL_KEYWORD;
-				break;
-			case VIRTUAL:
-				type = JSTokenTypes.VIRTUAL_KEYWORD;
-				break;
-		}
-		return type != null && getNode().findChildByType(type) != null;
-	}
+    @Override
+    @RequiredReadAction
+    public boolean hasModifier(ModifierType modifier) {
+        JSAttributeListStub stub = getStub();
+        if (stub != null) {
+            return stub.hasModifier(modifier);
+        }
 
-	@Override
-	public PsiElement add(@Nonnull final PsiElement element) throws IncorrectOperationException
-	{
-		if(element.getNode().getElementType() == JSTokenTypes.OVERRIDE_KEYWORD)
-		{
-			return JSChangeUtil.doDoAddBefore(this, element, getFirstChild());
-		}
-		return JSChangeUtil.doDoAddAfter(this, element, getLastChild());
-	}
+        IElementType type = switch (modifier) {
+            case DYNAMIC -> JSTokenTypes.DYNAMIC_KEYWORD;
+            case OVERRIDE -> JSTokenTypes.OVERRIDE_KEYWORD;
+            case NATIVE -> JSTokenTypes.NATIVE_KEYWORD;
+            case STATIC -> JSTokenTypes.STATIC_KEYWORD;
+            case FINAL -> JSTokenTypes.FINAL_KEYWORD;
+            case VIRTUAL -> JSTokenTypes.VIRTUAL_KEYWORD;
+            default -> null;
+        };
+        return type != null && getNode().findChildByType(type) != null;
+    }
+
+    @Override
+    @RequiredWriteAction
+    public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
+        if (element.getNode().getElementType() == JSTokenTypes.OVERRIDE_KEYWORD) {
+            return JSChangeUtil.doDoAddBefore(this, element, getFirstChild());
+        }
+        return JSChangeUtil.doDoAddAfter(this, element, getLastChild());
+    }
 }

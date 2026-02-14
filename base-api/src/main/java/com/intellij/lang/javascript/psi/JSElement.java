@@ -16,12 +16,11 @@
 
 package com.intellij.lang.javascript.psi;
 
-import com.intellij.psi.NavigatablePsiElement;
+import consulo.language.psi.NavigatablePsiElement;
 
 /**
  * @author max
- * @since 2:30:26 PM Feb 3, 2005
+ * @since 2005-02-03
  */
-public interface JSElement extends NavigatablePsiElement
-{
+public interface JSElement extends NavigatablePsiElement {
 }

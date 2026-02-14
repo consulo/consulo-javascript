@@ -1,187 +1,160 @@
 package com.sixrr.inspectjs.validity;
 
-import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.lang.javascript.JavaScriptSupportLoader;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.sixrr.inspectjs.*;
+import com.sixrr.inspectjs.BaseInspectionVisitor;
+import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JSRecursiveElementVisitor;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.inspection.ProblemHighlightType;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+@ExtensionImpl
+public class FunctionWithInconsistentReturnsJSInspection extends JavaScriptInspection {
+    @Nonnull
+    @Override
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.functionWithInconsistentReturnsDisplayName();
+    }
 
-public class FunctionWithInconsistentReturnsJSInspection extends JavaScriptInspection
-{
+    @Nonnull
+    @Override
+    public LocalizeValue getGroupDisplayName() {
+        return JSGroupNames.VALIDITY_GROUP_NAME;
+    }
 
-	@Override
-	@Nonnull
-	public String getDisplayName()
-	{
-		return InspectionJSBundle.message("function.with.inconsistent.returns.display.name");
-	}
+    @Override
+    public boolean isEnabledByDefault() {
+        return true;
+    }
 
-	@Override
-	@Nonnull
-	public String getGroupDisplayName()
-	{
-		return JSGroupNames.VALIDITY_GROUP_NAME;
-	}
+    @Nullable
+    @Override
+    @RequiredReadAction
+    protected String buildErrorString(Object state, Object... args) {
+        JSFunction function = (JSFunction)((PsiElement)args[0]).getParent();
+        assert function != null;
+        return functionHasIdentifier(function)
+            ? InspectionJSLocalize.functionHasInconsistentReturnPointsErrorString().get()
+            : InspectionJSLocalize.anonymousFunctionHasInconsistentReturnPointsErrorString().get();
+    }
 
-	@Override
-	public boolean isEnabledByDefault()
-	{
-		return true;
-	}
+    @Override
+    public BaseInspectionVisitor buildVisitor() {
+        return new Visitor();
+    }
 
-	@Override
-	@Nullable
-	protected String buildErrorString(Object... args)
-	{
-		final JSFunction function = (JSFunction) ((PsiElement) args[0]).getParent();
-		assert function != null;
-		if(functionHasIdentifier(function))
-		{
-			return InspectionJSBundle.message("function.has.inconsistent.return.points.error.string");
-		}
-		else
-		{
-			return InspectionJSBundle.message("anonymous.function.has.inconsistent.return.points.error.string");
-		}
-	}
+    private static class Visitor extends BaseInspectionVisitor {
+        @Override
+        protected ProblemHighlightType getProblemHighlightType(PsiElement location) {
+            return location.getContainingFile().getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4
+                ? ProblemHighlightType.GENERIC_ERROR
+                : super.getProblemHighlightType(location);
+        }
 
-	@Override
-	public BaseInspectionVisitor buildVisitor()
-	{
-		return new Visitor();
-	}
+        @Override
+        public void visitJSFunctionDeclaration(JSFunction function) {
+            super.visitJSFunctionDeclaration(function);
+            String typeString = function.getReturnTypeString();
+            if (typeString == null && !functionHasReturnValues(function)) {
+                return;
+            }
+            if ("void".equals(typeString) || !functionHasValuelessReturns(function)) {
+                return;
+            }
+            registerFunctionError(function);
+        }
 
-	private static class Visitor extends BaseInspectionVisitor
-	{
-		@Override
-		protected ProblemHighlightType getProblemHighlightType(PsiElement location)
-		{
-			return location.getContainingFile().getLanguage() == JavaScriptSupportLoader.ECMA_SCRIPT_L4 ? ProblemHighlightType.GENERIC_ERROR : super.getProblemHighlightType(location);
-		}
+        @Override
+        public void visitJSFunctionExpression(JSFunctionExpression node) {
+            super.visitJSFunctionExpression(node);
+            JSFunction function = node.getFunction();
+            String typeString = function.getReturnTypeString();
 
-		@Override
-		public void visitJSFunctionDeclaration(JSFunction function)
-		{
-			super.visitJSFunctionDeclaration(function);
-			String typeString = function.getReturnTypeString();
-			if(typeString == null && !functionHasReturnValues(function))
-			{
-				return;
-			}
-			if("void".equals(typeString) || !functionHasValuelessReturns(function))
-			{
-				return;
-			}
-			registerFunctionError(function);
-		}
+            if (typeString != null && !"void".equals(typeString)) {
+                if (functionHasValuelessReturns(function)) {
+                    registerFunctionError(function);
+                }
+            }
+        }
+    }
 
-		@Override
-		public void visitJSFunctionExpression(JSFunctionExpression node)
-		{
-			super.visitJSFunctionExpression(node);
-			JSFunction function = node.getFunction();
-			String typeString = function.getReturnTypeString();
+    private static boolean functionHasReturnValues(JSFunction function) {
+        ReturnValuesVisitor visitor = new ReturnValuesVisitor(function);
+        function.accept(visitor);
+        return visitor.hasReturnValues();
+    }
 
-			if(typeString != null && !"void".equals(typeString))
-			{
-				if(functionHasValuelessReturns(function))
-				{
-					registerFunctionError(function);
-				}
-			}
-		}
-	}
+    private static boolean functionHasValuelessReturns(JSFunction function) {
+        PsiElement lastChild = function.getLastChild();
+        if (lastChild instanceof JSBlockStatement) {
+            if (ControlFlowUtils.statementMayCompleteNormally((JSStatement)lastChild)) {
+                return true;
+            }
+        }
+        ValuelessReturnVisitor visitor = new ValuelessReturnVisitor(function);
+        function.acceptChildren(visitor);
+        return visitor.hasValuelessReturns();
+    }
 
-	private static boolean functionHasReturnValues(JSFunction function)
-	{
-		final ReturnValuesVisitor visitor = new ReturnValuesVisitor(function);
-		function.accept(visitor);
-		return visitor.hasReturnValues();
-	}
+    private static class ReturnValuesVisitor extends JSRecursiveElementVisitor {
+        private final JSFunction function;
+        private boolean hasReturnValues = false;
 
-	private static boolean functionHasValuelessReturns(JSFunction function)
-	{
-		final PsiElement lastChild = function.getLastChild();
-		if(lastChild instanceof JSBlockStatement)
-		{
-			if(ControlFlowUtils.statementMayCompleteNormally((JSStatement) lastChild))
-			{
-				return true;
-			}
-		}
-		final ValuelessReturnVisitor visitor = new ValuelessReturnVisitor(function);
-		function.acceptChildren(visitor);
-		return visitor.hasValuelessReturns();
-	}
+        ReturnValuesVisitor(JSFunction function) {
+            this.function = function;
+        }
 
-	private static class ReturnValuesVisitor extends JSRecursiveElementVisitor
-	{
-		private final JSFunction function;
-		private boolean hasReturnValues = false;
+        @Override
+        public void visitJSReturnStatement(JSReturnStatement statement) {
+            super.visitJSReturnStatement(statement);
+            if (statement.getExpression() != null) {
+                JSFunction containingFunction = PsiTreeUtil.getParentOfType(statement, JSFunction.class);
+                if (function.equals(containingFunction)) {
+                    hasReturnValues = true;
+                }
+            }
+        }
 
-		ReturnValuesVisitor(JSFunction function)
-		{
-			this.function = function;
-		}
+        public boolean hasReturnValues() {
+            return hasReturnValues;
+        }
+    }
 
-		@Override
-		public void visitJSReturnStatement(JSReturnStatement statement)
-		{
-			super.visitJSReturnStatement(statement);
-			if(statement.getExpression() != null)
-			{
-				final JSFunction containingFunction = PsiTreeUtil.getParentOfType(statement, JSFunction.class);
-				if(function.equals(containingFunction))
-				{
-					hasReturnValues = true;
-				}
-			}
-		}
+    private static class ValuelessReturnVisitor extends JSRecursiveElementVisitor {
+        private final JSFunction function;
+        private boolean hasValuelessReturns = false;
 
-		public boolean hasReturnValues()
-		{
-			return hasReturnValues;
-		}
-	}
+        ValuelessReturnVisitor(JSFunction function) {
+            this.function = function;
+        }
 
-	private static class ValuelessReturnVisitor extends JSRecursiveElementVisitor
-	{
-		private final JSFunction function;
-		private boolean hasValuelessReturns = false;
+        @Override
+        public void visitJSReturnStatement(JSReturnStatement statement) {
+            super.visitJSReturnStatement(statement);
+            if (statement.getExpression() == null) {
+                JSFunction containingFunction = PsiTreeUtil.getParentOfType(statement, JSFunction.class);
+                if (function.equals(containingFunction)) {
+                    hasValuelessReturns = true;
+                }
+            }
+        }
 
-		ValuelessReturnVisitor(JSFunction function)
-		{
-			this.function = function;
-		}
+        @Override
+        public void visitJSFunctionDeclaration(JSFunction function) {
+            // do nothing, so that it doesn't drill into nested functions
+        }
 
-		@Override
-		public void visitJSReturnStatement(JSReturnStatement statement)
-		{
-			super.visitJSReturnStatement(statement);
-			if(statement.getExpression() == null)
-			{
-				final JSFunction containingFunction = PsiTreeUtil.getParentOfType(statement, JSFunction.class);
-				if(function.equals(containingFunction))
-				{
-					hasValuelessReturns = true;
-				}
-			}
-		}
-
-		@Override
-		public void visitJSFunctionDeclaration(JSFunction function)
-		{
-			// do nothing, so that it doesn't drill into nested functions
-		}
-
-		public boolean hasValuelessReturns()
-		{
-			return hasValuelessReturns;
-		}
-	}
+        public boolean hasValuelessReturns() {
+            return hasValuelessReturns;
+        }
+    }
 }

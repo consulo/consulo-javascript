@@ -16,97 +16,86 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSCatchBlock;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.JSTryStatement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:59:44 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public class JSTryStatementImpl extends JSStatementImpl implements JSTryStatement
-{
-	private static TokenSet ourCatchesTypeSet = TokenSet.create(JSElementTypes.CATCH_BLOCK);
+public class JSTryStatementImpl extends JSStatementImpl implements JSTryStatement {
+    private static final TokenSet CATCHES_TYPE_SET = TokenSet.create(JSElementTypes.CATCH_BLOCK);
 
-	public JSTryStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+    public JSTryStatementImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSStatement getStatement()
-	{
-		ASTNode child = getNode().getFirstChildNode();
-		while(child != null)
-		{
-			final IElementType type = child.getElementType();
-			if(child.getPsi() instanceof JSStatement)
-			{
-				return (JSStatement) child.getPsi();
-			}
-			if(type == JSTokenTypes.FINALLY_KEYWORD)
-			{
-				break;
-			}
-			child = child.getTreeNext();
-		}
-		return null;
-	}
+    @Override
+    @RequiredReadAction
+    public JSStatement getStatement() {
+        ASTNode child = getNode().getFirstChildNode();
+        while (child != null) {
+            IElementType type = child.getElementType();
+            if (child.getPsi() instanceof JSStatement statement) {
+                return statement;
+            }
+            if (type == JSTokenTypes.FINALLY_KEYWORD) {
+                break;
+            }
+            child = child.getTreeNext();
+        }
+        return null;
+    }
 
-	@Override
-	@Nullable
-	public JSCatchBlock getCatchBlock()
-	{
-		final ASTNode catchChild = getNode().findChildByType(JSElementTypes.CATCH_BLOCK);
-		if(catchChild == null)
-		{
-			return null;
-		}
-		return (JSCatchBlock) catchChild.getPsi();
-	}
+    @Override
+    @Nullable
+    @RequiredReadAction
+    public JSCatchBlock getCatchBlock() {
+        ASTNode catchChild = getNode().findChildByType(JSElementTypes.CATCH_BLOCK);
+        if (catchChild == null) {
+            return null;
+        }
+        return (JSCatchBlock)catchChild.getPsi();
+    }
 
-	@Override
-	public JSCatchBlock[] getAllCatchBlocks()
-	{
-		return findChildrenByClass(JSCatchBlock.class);
-	}
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public JSCatchBlock[] getAllCatchBlocks() {
+        return findChildrenByClass(JSCatchBlock.class);
+    }
 
-	@Override
-	public JSStatement getFinallyStatement()
-	{
-		ASTNode child = getNode().getFirstChildNode();
-		boolean foundFinally = false;
-		while(child != null)
-		{
-			final IElementType type = child.getElementType();
-			if(foundFinally && child.getPsi() instanceof JSStatement)
-			{
-				return (JSStatement) child.getPsi();
-			}
-			if(type == JSTokenTypes.FINALLY_KEYWORD)
-			{
-				foundFinally = true;
-			}
-			child = child.getTreeNext();
-		}
-		return null;
-	}
+    @Override
+    @RequiredReadAction
+    public JSStatement getFinallyStatement() {
+        ASTNode child = getNode().getFirstChildNode();
+        boolean foundFinally = false;
+        while (child != null) {
+            IElementType type = child.getElementType();
+            if (foundFinally && child.getPsi() instanceof JSStatement statement) {
+                return statement;
+            }
+            if (type == JSTokenTypes.FINALLY_KEYWORD) {
+                foundFinally = true;
+            }
+            child = child.getTreeNext();
+        }
+        return null;
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSTryStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSTryStatement(this);
+    }
 }

@@ -16,24 +16,24 @@
 
 package com.intellij.lang.javascript.psi;
 
-import javax.annotation.Nullable;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiPolyVariantReference;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiPolyVariantReference;
+
+import jakarta.annotation.Nullable;
 
 /**
  * @author max
- * @since 7:26:32 PM Jan 30, 2005
+ * @since 2005-01-30
  */
-public interface JSReferenceExpression extends JSExpression, PsiPolyVariantReference
-{
-	@Nullable
-	JSExpression getQualifier();
+public interface JSReferenceExpression extends JSExpression, PsiPolyVariantReference {
+    @Nullable
+    JSExpression getQualifier();
 
-	@Nullable
-	String getReferencedName();
+    @Nullable
+    String getReferencedName();
 
-	@Nullable
-	PsiElement getReferenceNameElement();
+    @Nullable
+    PsiElement getReferenceNameElement();
 
-	boolean shouldCheckReferences();
+    boolean shouldCheckReferences();
 }

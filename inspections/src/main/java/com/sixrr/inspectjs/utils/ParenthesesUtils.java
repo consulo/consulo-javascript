@@ -2,7 +2,7 @@ package com.sixrr.inspectjs.utils;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +35,7 @@ public class ParenthesesUtils {
     private static final int NUM_PRECEDENCES = 17;
 
     private static final Map<IElementType, Integer> s_binaryOperatorPrecedence =
-            new HashMap<IElementType, Integer>(NUM_PRECEDENCES);
+        new HashMap<IElementType, Integer>(NUM_PRECEDENCES);
 
     static {
         s_binaryOperatorPrecedence.put(JSTokenTypes.PLUS, ADDITIVE_PRECEDENCE);
@@ -63,16 +63,17 @@ public class ParenthesesUtils {
 
     public static int getPrecendence(JSExpression exp) {
         if (exp instanceof JSThisExpression ||
-                exp instanceof JSLiteralExpression ||
-                exp instanceof JSObjectLiteralExpression ||
-                exp instanceof JSArrayLiteralExpression ||
-                exp instanceof JSIndexedPropertyAccessExpression) {
+            exp instanceof JSLiteralExpression ||
+            exp instanceof JSObjectLiteralExpression ||
+            exp instanceof JSArrayLiteralExpression ||
+            exp instanceof JSIndexedPropertyAccessExpression) {
             return LITERAL_PRECEDENCE;
         }
         if (exp instanceof JSReferenceExpression) {
-            if (((JSReferenceExpression) exp).getQualifier() != null) {
+            if (((JSReferenceExpression)exp).getQualifier() != null) {
                 return METHOD_CALL_PRECEDENCE;
-            } else {
+            }
+            else {
                 return LITERAL_PRECEDENCE;
             }
         }
@@ -86,8 +87,8 @@ public class ParenthesesUtils {
             return POSTFIX_PRECEDENCE;
         }
         if (exp instanceof JSBinaryExpression && !(exp instanceof JSAssignmentExpression)) {
-            final IElementType sign = ((JSBinaryExpression) exp)
-                    .getOperationSign();
+            IElementType sign = ((JSBinaryExpression)exp)
+                .getOperationSign();
             return precedenceForBinaryOperator(sign);
         }
         if (exp instanceof JSConditionalExpression) {
@@ -103,26 +104,26 @@ public class ParenthesesUtils {
     }
 
     private static int precedenceForBinaryOperator(IElementType sign) {
-        if (s_binaryOperatorPrecedence.containsKey(sign)) return s_binaryOperatorPrecedence.get(sign);
+        if (s_binaryOperatorPrecedence.containsKey(sign)) {
+            return s_binaryOperatorPrecedence.get(sign);
+        }
         return ASSIGNMENT_PRECEDENCE;
     }
 
     public static JSExpression stripExpression(JSExpression expression) {
         JSExpression workingExpression = expression;
-        while (workingExpression instanceof JSParenthesizedExpression) {
-            final JSParenthesizedExpression parenthesizedExpression =
-                    (JSParenthesizedExpression) workingExpression;
+        while (workingExpression instanceof JSParenthesizedExpression parenthesizedExpression) {
             workingExpression = parenthesizedExpression.getInnerExpression();
         }
         return workingExpression;
     }
 
     public static JSExpression stripParentheses(JSExpression exp) {
-        JSExpression parenthesized = exp;
-        while (parenthesized instanceof JSParenthesizedExpression) {
-            parenthesized = ((JSParenthesizedExpression) parenthesized)
-                    .getInnerExpression();
+        JSExpression strippedExpression = exp;
+        while (strippedExpression instanceof JSParenthesizedExpression parenthesizedExpression) {
+            strippedExpression = parenthesizedExpression.getInnerExpression();
         }
 
-        return parenthesized;
-    }}
+        return strippedExpression;
+    }
+}

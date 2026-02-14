@@ -1,55 +1,54 @@
 package consulo.javascript.lang;
 
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.util.Factory;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.javascript.ide.hightlight.JavaScriptHighlighter;
 import consulo.javascript.lang.lexer.JavaScript15Lexer;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.javascript.language.StandardJavaScriptVersion;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.lexer.Lexer;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
+
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 05.03.2015
  */
-public class JavaScript15LanguageVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersions.Marker
-{
-	private static final Factory<Lexer> ourLexerFactory = () -> new JavaScript15Lexer();
+@ExtensionImpl
+public class JavaScript15LanguageVersion extends BaseJavaScriptLanguageVersion implements StandardJavaScriptVersion {
+    private static final Supplier<Lexer> ourLexerFactory = () -> new JavaScript15Lexer();
 
-	@Nonnull
-	public static JavaScript15LanguageVersion getInstance()
-	{
-		return JavaScriptLanguage.INSTANCE.findVersionByClass(JavaScript15LanguageVersion.class);
-	}
+    @Nonnull
+    public static JavaScript15LanguageVersion getInstance() {
+        return JavaScriptLanguage.INSTANCE.findVersionByClass(JavaScript15LanguageVersion.class);
+    }
 
-	public JavaScript15LanguageVersion()
-	{
-		super("JAVASCRIPT_1_5");
-	}
+    public JavaScript15LanguageVersion() {
+        super("JAVASCRIPT_1_5");
+    }
 
-	@Nonnull
-	@Override
-	public String getPresentableName()
-	{
-		return "JavaScript 1.5";
-	}
-	@Nonnull
-	@Override
-	public Lexer createLexer()
-	{
-		return ourLexerFactory.create();
-	}
+    @Nonnull
+    @Override
+    public String getPresentableName() {
+        return "JavaScript 1.5";
+    }
 
-	@Nonnull
-	@Override
-	public SyntaxHighlighter getSyntaxHighlighter()
-	{
-		return new JavaScriptHighlighter(ourLexerFactory);
-	}
+    @Nonnull
+    @Override
+    public Lexer createLexer() {
+        return ourLexerFactory.get();
+    }
 
-	@Override
-	public int getWeight()
-	{
-		return 0;
-	}
+    @Nonnull
+    @Override
+    public SyntaxHighlighter getSyntaxHighlighter() {
+        return new JavaScriptHighlighter(ourLexerFactory);
+    }
+
+    @Override
+    public int getWeight() {
+        return 0;
+    }
 }

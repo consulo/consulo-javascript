@@ -15,43 +15,57 @@
  */
 package org.intellij.idea.lang.javascript.intention.number;
 
+import com.intellij.lang.javascript.psi.JSLiteralExpression;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.NumberUtil;
-import javax.annotation.Nonnull;
 
-import com.intellij.lang.javascript.psi.JSLiteralExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
-
+@ExtensionImpl
+@IntentionMetaData(
+    ignoreId = "JSConvertIntegerToOctalIntention",
+    categories = {"JavaScript", "Numbers"},
+    fileExtensions = "js"
+)
 public class JSConvertIntegerToOctalIntention extends JSIntention {
     @Override
-	@Nonnull
+    @Nonnull
+    public LocalizeValue getText() {
+        return JSIntentionLocalize.numberConvertIntegerToOctal();
+    }
+
+    @Override
+    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new ConvertIntegerToOctalPredicate();
     }
 
     @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSLiteralExpression exp = (JSLiteralExpression) element;
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        JSLiteralExpression exp = (JSLiteralExpression)element;
 
         JSElementFactory.replaceExpression(exp, '0' + NumberUtil.getLiteralNumber(exp).toString(8));
     }
 
     private static class ConvertIntegerToOctalPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
+        @RequiredReadAction
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (!(element instanceof JSLiteralExpression)) {
                 return false;
             }
 
-            final String elementText = element.getText();
+            String elementText = element.getText();
 
-            return (NumberUtil.isHex     (elementText) ||
-                    (NumberUtil.isDecimal(elementText) &&
-                     !NumberUtil.isOctal (elementText)));
+            return NumberUtil.isHex(elementText) || (NumberUtil.isDecimal(elementText) && !NumberUtil.isOctal(elementText));
         }
     }
-
 }

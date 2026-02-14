@@ -16,47 +16,38 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSCaseClause;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSSwitchStatement;
-import com.intellij.psi.tree.TokenSet;
-
-import javax.annotation.Nonnull;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.TokenSet;
+import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 10:08:20 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public class JSSwitchStatementImpl extends JSStatementImpl implements JSSwitchStatement
-{
-	private static final TokenSet CASE_CLAUSE_FILTER = TokenSet.create(JSElementTypes.CASE_CLAUSE);
+public class JSSwitchStatementImpl extends JSStatementImpl implements JSSwitchStatement {
+    private static final TokenSet CASE_CLAUSE_FILTER = TokenSet.create(JSElementTypes.CASE_CLAUSE);
 
-	public JSSwitchStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+    public JSSwitchStatementImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getSwitchExpression()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression getSwitchExpression() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	public JSCaseClause[] getCaseClauses()
-	{
-		return findChildrenByClass(JSCaseClause.class);
-	}
+    @Override
+    public JSCaseClause[] getCaseClauses() {
+        return findChildrenByClass(JSCaseClause.class);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSSwitchStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSSwitchStatement(this);
+    }
 }

@@ -16,82 +16,75 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSLabeledStatement;
 import com.intellij.lang.javascript.psi.JSNamedElement;
 import com.intellij.lang.javascript.psi.JSStatement;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.language.util.IncorrectOperationException;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:20:04 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public class JSLabeledStatementImpl extends JSStatementImpl implements JSLabeledStatement, JSNamedElement
-{
-	public JSLabeledStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSLabeledStatementImpl extends JSStatementImpl implements JSLabeledStatement, JSNamedElement {
+    public JSLabeledStatementImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public String getLabel()
-	{
-		return getNameIdentifier().getText();
-	}
+    @Override
+    @RequiredReadAction
+    public String getLabel() {
+        return getNameIdentifier().getText();
+    }
 
-	@Override
-	public PsiElement getLabelIdentifier()
-	{
-		return getNameIdentifier();
-	}
+    @Override
+    @RequiredReadAction
+    public PsiElement getLabelIdentifier() {
+        return getNameIdentifier();
+    }
 
-	@Override
-	public JSStatement getStatement()
-	{
-		return findChildByClass(JSStatement.class);
-	}
+    @Override
+    public JSStatement getStatement() {
+        return findChildByClass(JSStatement.class);
+    }
 
-	@Override
-	public JSStatement unlabel()
-	{
-		throw new UnsupportedOperationException("TODO: implement");
-	}
+    @Override
+    public JSStatement unlabel() {
+        throw new UnsupportedOperationException("TODO: implement");
+    }
 
-	public JSLabeledStatement setLabel(String label)
-	{
-		throw new UnsupportedOperationException("TODO: implement");
-	}
+    public JSLabeledStatement setLabel(String label) {
+        throw new UnsupportedOperationException("TODO: implement");
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSLabeledStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSLabeledStatement(this);
+    }
 
-	@Override
-	public String getName()
-	{
-		return getLabel();
-	}
+    @Override
+    @RequiredReadAction
+    public String getName() {
+        return getLabel();
+    }
 
-	@Override
-	public PsiElement setName(@Nonnull String name) throws IncorrectOperationException
-	{
-		JSChangeUtil.doIdentifierReplacement(this, getLabelIdentifier(), name);
-		return this;
-	}
+    @Override
+    @RequiredWriteAction
+    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+        JSChangeUtil.doIdentifierReplacement(this, getLabelIdentifier(), name);
+        return this;
+    }
 
-	@Override
-	public PsiElement getNameIdentifier()
-	{
-		return findChildByType(JSTokenTypes.IDENTIFIER);
-	}
+    @Override
+    @RequiredReadAction
+    public PsiElement getNameIdentifier() {
+        return findChildByType(JSTokenTypes.IDENTIFIER);
+    }
 }

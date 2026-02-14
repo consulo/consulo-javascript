@@ -4,47 +4,49 @@ import com.intellij.lang.javascript.psi.JSCaseClause;
 import com.intellij.lang.javascript.psi.JSLabeledStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.JSSwitchStatement;
-import com.intellij.psi.PsiElement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
-import javax.annotation.Nonnull;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 
+@ExtensionImpl
 public class TextLabelInSwitchStatementJSInspection extends JavaScriptInspection {
-
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("text.label.in.switch.statement.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.textLabelInSwitchStatementDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.BUGS_GROUP_NAME;
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String buildErrorString(Object... args) {
-        return InspectionJSBundle.message("text.label.in.switch.statement.error.string");
+    @RequiredReadAction
+    public String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.textLabelInSwitchStatementErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new TextLabelInSwitchStatementVisitor();
     }
 
-    private static class TextLabelInSwitchStatementVisitor
-            extends BaseInspectionVisitor {
-
-        @Override public void visitJSSwitchStatement(
-                @Nonnull JSSwitchStatement statement) {
+    private static class TextLabelInSwitchStatementVisitor extends BaseInspectionVisitor {
+        @Override
+        public void visitJSSwitchStatement(@Nonnull JSSwitchStatement statement) {
             super.visitJSSwitchStatement(statement);
-            final JSCaseClause[] caseClauses = statement.getCaseClauses();
+            JSCaseClause[] caseClauses = statement.getCaseClauses();
             for (JSCaseClause caseClause : caseClauses) {
-                final JSStatement[] statements = caseClause.getStatements();
+                JSStatement[] statements = caseClause.getStatements();
                 for (JSStatement statement1 : statements) {
                     checkForLabel(statement1);
                 }
@@ -55,9 +57,8 @@ public class TextLabelInSwitchStatementJSInspection extends JavaScriptInspection
             if (!(statement instanceof JSLabeledStatement)) {
                 return;
             }
-            final JSLabeledStatement labeledStatement =
-                    (JSLabeledStatement) statement;
-            final PsiElement label = labeledStatement.getLabelIdentifier();
+            JSLabeledStatement labeledStatement = (JSLabeledStatement) statement;
+            PsiElement label = labeledStatement.getLabelIdentifier();
             registerError(label);
         }
     }

@@ -16,69 +16,78 @@
 
 package com.intellij.lang.javascript.psi;
 
-import com.intellij.util.ArrayFactory;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.lang.psi.JavaScriptType;
-import consulo.javascript.lang.psi.JavaScriptTypeElement;
+import consulo.javascript.language.psi.JavaScriptType;
+import consulo.javascript.language.psi.JavaScriptTypeElement;
+import consulo.util.collection.ArrayFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author max
  */
-public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JSAttributeListOwner
-{
-	public static final JSFunction[] EMPTY_ARRAY = new JSFunction[0];
+public interface JSFunction extends JSQualifiedNamedElement, JSSourceElement, JSAttributeListOwner {
+    JSFunction[] EMPTY_ARRAY = new JSFunction[0];
 
-	public static ArrayFactory<JSFunction> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new JSFunction[count];
+    ArrayFactory<JSFunction> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new JSFunction[count];
 
-	@Nullable
-	@RequiredReadAction
-	JSParameterList getParameterList();
+    @Nullable
+    @RequiredReadAction
+    JSParameterList getParameterList();
 
-	JSSourceElement[] getBody();
+    @RequiredReadAction
+    JSSourceElement[] getBody();
 
-	@RequiredReadAction
-	default boolean isGetProperty()
-	{
-		return false;
-	}
+    @RequiredReadAction
+    default boolean isGetProperty() {
+        return false;
+    }
 
-	@RequiredReadAction
-	default boolean isSetProperty()
-	{
-		return false;
-	}
+    @RequiredReadAction
+    default boolean isSetProperty() {
+        return false;
+    }
 
-	@RequiredReadAction
-	default boolean isConstructor()
-	{
-		return false;
-	}
+    @RequiredReadAction
+    default boolean isConstructor() {
+        return false;
+    }
 
-	@Nonnull
-	JavaScriptType getReturnType();
+    @Nonnull
+    JavaScriptType getReturnType();
 
-	String getReturnTypeString();
+    String getReturnTypeString();
 
-	@Nullable
-	JavaScriptTypeElement getReturnTypeElement();
+    @Nullable
+    JavaScriptTypeElement getReturnTypeElement();
 
-	enum FunctionKind
-	{
-		GETTER,
-		SETTER,
-		CONSTRUCTOR,
-		SIMPLE
-	}
+    enum FunctionKind {
+        GETTER,
+        SETTER,
+        CONSTRUCTOR,
+        SIMPLE
+    }
 
-	FunctionKind getKind();
+    @Nonnull
+    @RequiredReadAction
+    default FunctionKind getKind() {
+        if (isGetProperty()) {
+            return FunctionKind.GETTER;
+        }
+        if (isSetProperty()) {
+            return FunctionKind.SETTER;
+        }
+        if (isConstructor()) {
+            return FunctionKind.CONSTRUCTOR;
+        }
+        return FunctionKind.SIMPLE;
+    }
 
-	boolean isDeprecated();
 
-	default boolean isReferencesArguments()
-	{
-		return false;
-	}
+    boolean isDeprecated();
+
+    default boolean isReferencesArguments() {
+        return false;
+    }
 }

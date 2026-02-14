@@ -16,57 +16,48 @@
 
 package consulo.javascript.client.module.extension;
 
-import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.LabeledComponent;
-import com.intellij.openapi.ui.VerticalFlowLayout;
-import com.intellij.ui.CollectionComboBoxModel;
-import com.intellij.ui.ColoredListCellRenderer;
-import consulo.javascript.lang.BaseJavaScriptLanguageVersion;
-import consulo.javascript.lang.JavaScriptLanguageVersion;
-import consulo.javascript.lang.StandardJavaScriptVersions;
+import consulo.javascript.language.JavaScriptLanguageVersion;
+import consulo.javascript.language.StandardJavaScriptVersions;
 import consulo.javascript.module.extension.JavaScriptMutableModuleExtension;
-import consulo.lang.LanguageVersion;
+import consulo.language.version.LanguageVersion;
+import consulo.ui.ex.awt.*;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.List;
 
 /**
  * @author VISTALL
- * @since 12.12.2015
+ * @since 2015-12-12
  */
-public class ClientJavaScriptModuleExtensionPanel extends JPanel
-{
-	public ClientJavaScriptModuleExtensionPanel(final JavaScriptMutableModuleExtension<?> extension)
-	{
-		super(new VerticalFlowLayout(true, false));
+public class ClientJavaScriptModuleExtensionPanel extends JPanel {
+    public ClientJavaScriptModuleExtensionPanel(JavaScriptMutableModuleExtension<?> extension) {
+        super(new VerticalFlowLayout(true, false));
 
-		List<JavaScriptLanguageVersion> validLanguageVersions = StandardJavaScriptVersions.getInstance().getValidLanguageVersions();
+        List<JavaScriptLanguageVersion> validLanguageVersions = StandardJavaScriptVersions.getInstance().getValidLanguageVersions();
 
-		ComboBox languageVersionComboBox = new ComboBox(new CollectionComboBoxModel(validLanguageVersions, extension.getLanguageVersion()));
-		languageVersionComboBox.addItemListener(new ItemListener()
-		{
-			@Override
-			public void itemStateChanged(ItemEvent e)
-			{
-				if(e.getStateChange() == ItemEvent.SELECTED)
-				{
-					//noinspection unchecked
-					extension.setLanguageVersion((LanguageVersion) e.getItem());
-				}
-			}
-		});
-		languageVersionComboBox.setRenderer(new ColoredListCellRenderer<BaseJavaScriptLanguageVersion>()
-		{
-			@Override
-			protected void customizeCellRenderer(@Nonnull JList list, BaseJavaScriptLanguageVersion value, int index, boolean selected, boolean hasFocus)
-			{
-				append(value.getPresentableName());
-			}
-		});
+        ComboBox<JavaScriptLanguageVersion> languageVersionComboBox =
+            new ComboBox<>(new CollectionComboBoxModel<>(validLanguageVersions, (JavaScriptLanguageVersion)extension.getLanguageVersion()));
+        languageVersionComboBox.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                //noinspection unchecked
+                extension.setLanguageVersion((LanguageVersion)e.getItem());
+            }
+        });
+        languageVersionComboBox.setRenderer(new ColoredListCellRenderer<>() {
+            @Override
+            protected void customizeCellRenderer(
+                @Nonnull JList list,
+                JavaScriptLanguageVersion value,
+                int index,
+                boolean selected,
+                boolean hasFocus
+            ) {
+                append(value.getPresentableName());
+            }
+        });
 
-		add(LabeledComponent.create(languageVersionComboBox, "Default Version"));
-	}
+        add(LabeledComponent.create(languageVersionComboBox, "Default Version"));
+    }
 }

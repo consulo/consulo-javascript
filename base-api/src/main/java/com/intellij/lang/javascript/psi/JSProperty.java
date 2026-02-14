@@ -17,32 +17,32 @@
 
 package com.intellij.lang.javascript.psi;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import com.intellij.psi.PsiElement;
+import jakarta.annotation.Nullable;
+
 import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.lang.psi.JavaScriptType;
+import consulo.javascript.language.psi.JavaScriptType;
 import consulo.javascript.psi.JSComputedName;
+import consulo.language.psi.PsiElement;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max
- * @since 7:39:29 PM Jan 30, 2005
+ * @since 2005-01-30
  */
-public interface JSProperty extends JSNamedElement
-{
-	@Nullable
-	@RequiredReadAction
-	JSExpression getValue();
+public interface JSProperty extends JSNamedElement {
+    @Nullable
+    @RequiredReadAction
+    JSExpression getValue();
 
-	@Nullable
-	@RequiredReadAction
-	PsiElement getColonElement();
+    @Nullable
+    @RequiredReadAction
+    PsiElement getColonElement();
 
-	@Nullable
-	@RequiredReadAction
-	JSComputedName getComputedName();
+    @Nullable
+    @RequiredReadAction
+    JSComputedName getComputedName();
 
-	@Nonnull
-	@RequiredReadAction
-	JavaScriptType getType();
+    @Nonnull
+    @RequiredReadAction
+    JavaScriptType getType();
 }

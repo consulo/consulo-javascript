@@ -16,19 +16,19 @@
 
 package consulo.typescript;
 
-import javax.annotation.Nonnull;
-import com.intellij.openapi.fileTypes.FileTypeConsumer;
-import com.intellij.openapi.fileTypes.FileTypeFactory;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.virtualFileSystem.fileType.FileTypeConsumer;
+import consulo.virtualFileSystem.fileType.FileTypeFactory;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 03.03.2016
  */
-public class TypeScriptFileTypeFactory extends FileTypeFactory
-{
-	@Override
-	public void createFileTypes(@Nonnull FileTypeConsumer consumer)
-	{
-		consumer.consume(TypeScriptFileType.INSTANCE);
-	}
+@ExtensionImpl
+public class TypeScriptFileTypeFactory extends FileTypeFactory {
+    @Override
+    public void createFileTypes(@Nonnull FileTypeConsumer consumer) {
+        consumer.consume(TypeScriptFileType.INSTANCE);
+    }
 }

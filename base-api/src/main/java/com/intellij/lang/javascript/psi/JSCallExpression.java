@@ -16,16 +16,15 @@
 
 package com.intellij.lang.javascript.psi;
 
-/**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 7:46:07 PM
- * To change this template use File | Settings | File Templates.
- */
-public interface JSCallExpression extends JSExpression
-{
-	JSExpression getMethodExpression();
+import consulo.annotation.access.RequiredReadAction;
 
-	JSArgumentList getArgumentList();
+/**
+ * @author max
+ * @since 2005-01-30
+ */
+public interface JSCallExpression extends JSExpression {
+    JSExpression getMethodExpression();
+
+    @RequiredReadAction
+    JSArgumentList getArgumentList();
 }

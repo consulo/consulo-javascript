@@ -16,70 +16,53 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSObjectLiteralExpression;
 import com.intellij.lang.javascript.psi.JSProperty;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.resolve.ResolveState;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 11:36:30 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public class JSObjectLiteralExpressionImpl extends JSExpressionImpl implements JSObjectLiteralExpression
-{
-	private static final TokenSet PROPERTIES_FILTER = TokenSet.create(JSElementTypes.PROPERTY);
+public class JSObjectLiteralExpressionImpl extends JSExpressionImpl implements JSObjectLiteralExpression {
+    public JSObjectLiteralExpressionImpl(ASTNode node) {
+        super(node);
+    }
 
-	public JSObjectLiteralExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+    @Override
+    public JSProperty[] getProperties() {
+        return findChildrenByClass(JSProperty.class);
+    }
 
-	@Override
-	public JSProperty[] getProperties()
-	{
-		final ASTNode[] nodes = getNode().getChildren(PROPERTIES_FILTER);
-		final JSProperty[] properties = new JSProperty[nodes.length];
-		for(int i = 0; i < properties.length; i++)
-		{
-			properties[i] = (JSProperty) nodes[i].getPsi();
-		}
-		return properties;
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSObjectLiteralExpression(this);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSObjectLiteralExpression(this);
-	}
+    @Override
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        if (lastParent == null || !(place instanceof JSProperty)) {
+            return true;
+        }
+        JSProperty[] props = getProperties();
 
-	@Override
-	public boolean processDeclarations(@Nonnull final PsiScopeProcessor processor, @Nonnull final ResolveState state, final PsiElement lastParent,
-			@Nonnull final PsiElement place)
-	{
-		if(lastParent == null || !(place instanceof JSProperty))
-		{
-			return true;
-		}
-		final JSProperty[] props = getProperties();
+        for (JSProperty property : props) {
+            if (!processor.execute(property, state)) {
+                return false;
+            }
+        }
 
-		for(JSProperty property : props)
-		{
-			if(!processor.execute(property, state))
-			{
-				return false;
-			}
-		}
-
-		return true;
-	}
+        return true;
+    }
 }

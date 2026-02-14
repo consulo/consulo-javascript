@@ -19,18 +19,20 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
 
 class ShiftUtils {
-    private ShiftUtils() {}
+    private ShiftUtils() {
+    }
 
     public static boolean isPowerOfTwo(JSExpression expression) {
         if (!(expression instanceof JSLiteralExpression)) {
             return false;
         }
-        final String value = expression.getText();
-        long         intValue;
+        String value = expression.getText();
+        long intValue;
 
         try {
             intValue = Integer.decode(value).longValue();
-        } catch (NumberFormatException e) {
+        }
+        catch (NumberFormatException e) {
             return false;
         }
 
@@ -44,17 +46,18 @@ class ShiftUtils {
     }
 
     public static int getLogBase2(JSExpression rhs) {
-        final String value = rhs.getText();
-        long         intValue;
+        String value = rhs.getText();
+        long intValue;
 
         try {
             intValue = Integer.decode(value).longValue();
-        } catch (NumberFormatException e) {
-            assert(false);
+        }
+        catch (NumberFormatException e) {
+            assert (false);
             return 0;
         }
 
-        int log      = 0;
+        int log = 0;
         while ((intValue & 1) == 0) {
             intValue >>= 1;
             log++;
@@ -63,13 +66,14 @@ class ShiftUtils {
     }
 
     public static int getExpBase2(JSExpression rhs) {
-        final String value = rhs.getText();
-        final long   intValue;
+        String value = rhs.getText();
+        long intValue;
 
         try {
             intValue = Integer.decode(value).longValue();
-        } catch (NumberFormatException e) {
-            assert(false);
+        }
+        catch (NumberFormatException e) {
+            assert (false);
             return 0;
         }
 
@@ -85,15 +89,13 @@ class ShiftUtils {
             return false;
         }
 
-        if (!(expression instanceof JSLiteralExpression)) {
-            return false;
-        }
-        final String value = expression.getText();
+        String value = expression.getText();
 
         try {
             Integer.decode(value);
             return true;
-        } catch (NumberFormatException e) {
+        }
+        catch (NumberFormatException e) {
             return false;
         }
     }

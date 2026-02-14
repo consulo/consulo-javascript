@@ -16,53 +16,61 @@
 
 package consulo.typescript;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.intellij.lang.javascript.JavaScriptBundle;
-import com.intellij.lang.javascript.JavaScriptIcons;
-import com.intellij.openapi.fileTypes.LanguageFileType;
-import consulo.javascript.lang.JavaScriptLanguage;
+import consulo.module.Module;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.javascript.icon.JavaScriptIconGroup;
+import consulo.javascript.language.JavaScriptFileTypeWithVersion;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.javascript.localize.JavaScriptLocalize;
+import consulo.language.version.LanguageVersion;
+import consulo.language.file.LanguageFileType;
+import consulo.localize.LocalizeValue;
+import consulo.typescript.version.TypeScriptLanguageVersion;
 import consulo.ui.image.Image;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 03.03.2016
  */
-public class TypeScriptFileType extends LanguageFileType
-{
-	public static final TypeScriptFileType INSTANCE = new TypeScriptFileType();
+public class TypeScriptFileType extends LanguageFileType implements JavaScriptFileTypeWithVersion {
+    public static final TypeScriptFileType INSTANCE = new TypeScriptFileType();
 
-	private TypeScriptFileType()
-	{
-		super(JavaScriptLanguage.INSTANCE);
-	}
+    private TypeScriptFileType() {
+        super(JavaScriptLanguage.INSTANCE);
+    }
 
-	@Nonnull
-	@Override
-	public String getId()
-	{
-		return "TypeScript";
-	}
+    @Nonnull
+    @Override
+    public String getId() {
+        return "TypeScript";
+    }
 
-	@Nonnull
-	@Override
-	public String getDescription()
-	{
-		return JavaScriptBundle.message("typescript.filetype.description");
-	}
+    @Nonnull
+    @Override
+    public LocalizeValue getDescription() {
+        return JavaScriptLocalize.typescriptFiletypeDescription();
+    }
 
-	@Nonnull
-	@Override
-	public String getDefaultExtension()
-	{
-		return "ts";
-	}
+    @Nonnull
+    @Override
+    public String getDefaultExtension() {
+        return "ts";
+    }
 
-	@Nullable
-	@Override
-	public Image getIcon()
-	{
-		return JavaScriptIcons.TypeScript;
-	}
+    @Nullable
+    @Override
+    public Image getIcon() {
+        return JavaScriptIconGroup.typescript();
+    }
+
+    @RequiredReadAction
+    @Nonnull
+    @Override
+    public LanguageVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile) {
+        return TypeScriptLanguageVersion.getInstance();
+    }
 }

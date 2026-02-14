@@ -16,41 +16,37 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSStatement;
 import com.intellij.lang.javascript.psi.JSWhileStatement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
- * User: max
- * Date: Jan 30, 2005
- * Time: 10:15:13 PM
+ * @author max
+ * @since 2005-01-30
  */
-public class JSWhileStatementImpl extends JSStatementImpl implements JSWhileStatement
-{
-	public JSWhileStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSWhileStatementImpl extends JSStatementImpl implements JSWhileStatement {
+    public JSWhileStatementImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getCondition()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression getCondition() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	public JSStatement getBody()
-	{
-		return findChildByClass(JSStatement.class);
-	}
+    @Override
+    @RequiredReadAction
+    public JSStatement getBody() {
+        return findChildByClass(JSStatement.class);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSWhileStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSWhileStatement(this);
+    }
 }

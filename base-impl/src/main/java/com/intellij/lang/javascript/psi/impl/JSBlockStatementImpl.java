@@ -16,62 +16,52 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSBlockStatement;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSLabeledStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.util.IncorrectOperationException;
-
-import javax.annotation.Nonnull;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.language.ast.ASTNode;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:17:15 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public class JSBlockStatementImpl extends JSStatementImpl implements JSBlockStatement
-{
-	public JSBlockStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSBlockStatementImpl extends JSStatementImpl implements JSBlockStatement {
+    public JSBlockStatementImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSStatement[] getStatements()
-	{
-		return findChildrenByClass(JSStatement.class);
-	}
+    @Override
+    public JSStatement[] getStatements() {
+        return findChildrenByClass(JSStatement.class);
+    }
 
-	public JSLabeledStatement setLabel(String label)
-	{
-		throw new UnsupportedOperationException("TODO: implement");
-	}
+    public JSLabeledStatement setLabel(String label) {
+        throw new UnsupportedOperationException("TODO: implement");
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSBlock(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSBlock(this);
+    }
 
-	@Override
-	public PsiElement add(@Nonnull final PsiElement element) throws IncorrectOperationException
-	{
-		if(element instanceof JSStatement)
-		{
-			ASTNode node = getNode().findChildByType(JSTokenTypes.RBRACE);
-			if(node != null)
-			{
-				PsiElement psiElement = super.addAfter(element, node.getTreePrev().getPsi());
-				CodeStyleManager.getInstance(getProject()).reformatNewlyAddedElement(getNode(), psiElement.getNode());
-				return psiElement;
-			}
-		}
-		return super.add(element);
-	}
+    @Override
+    @RequiredWriteAction
+    public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
+        if (element instanceof JSStatement statement) {
+            ASTNode node = getNode().findChildByType(JSTokenTypes.RBRACE);
+            if (node != null) {
+                PsiElement psiElement = super.addAfter(statement, node.getTreePrev().getPsi());
+                CodeStyleManager.getInstance(getProject()).reformatNewlyAddedElement(getNode(), psiElement.getNode());
+                return psiElement;
+            }
+        }
+        return super.add(element);
+    }
 }

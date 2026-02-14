@@ -16,106 +16,88 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.util.IncorrectOperationException;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.util.IncorrectOperationException;
+import consulo.language.ast.ASTNode;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: maxim.mossienko
- * Date: Dec 14, 2005
- * Time: 6:40:04 PM
- * To change this template use File | Settings | File Templates.
+ * @author maxim.mossienko
+ * @since 2005-12-14
  */
-public class JSDefinitionExpressionImpl extends JSExpressionImpl implements JSDefinitionExpression
-{
-	public JSDefinitionExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSDefinitionExpressionImpl extends JSExpressionImpl implements JSDefinitionExpression {
+    public JSDefinitionExpressionImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getExpression()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression getExpression() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	public String getName()
-	{
-		final JSExpression expression = getExpression();
-		if(expression instanceof JSReferenceExpression)
-		{
-			return ((JSReferenceExpression) expression).getReferencedName();
-		}
-		return null;
-	}
+    @Override
+    @RequiredReadAction
+    public String getName() {
+        return getExpression() instanceof JSReferenceExpression referenceExpression
+            ? referenceExpression.getReferencedName()
+            : null;
+    }
 
-	@Override
-	public PsiElement setName(@Nonnull String name) throws IncorrectOperationException
-	{
-		final JSExpression expression = getExpression();
-		if(expression instanceof JSReferenceExpressionImpl)
-		{
-			return ((JSReferenceExpressionImpl) expression).handleElementRenameInternal(name);
-		}
-		return null;
-	}
+    @Override
+    @RequiredWriteAction
+    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+        return getExpression() instanceof JSReferenceExpressionImpl referenceExpression
+            ? referenceExpression.handleElementRenameInternal(name)
+            : null;
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSDefinitionExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSDefinitionExpression(this);
+    }
 
-	@Override
-	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent,
-			@Nonnull PsiElement place)
-	{
-		if(lastParent == null)
-		{
-			return processor.execute(this, state);
-		}
-		return true;
-	}
+    @Override
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        return lastParent != null || processor.execute(this, state);
+    }
 
-	@Override
-	public void delete() throws IncorrectOperationException
-	{
-		final PsiElement parent = getParent();
+    @Override
+    @RequiredWriteAction
+    public void delete() throws IncorrectOperationException {
+        if (getParent() instanceof JSAssignmentExpression assignment) {
+            PsiElement assignmentParent = assignment.getParent();
 
-		if(parent instanceof JSAssignmentExpression)
-		{
-			final PsiElement grandParent = parent.getParent();
+            if (assignmentParent instanceof JSStatement statement) {
+                statement.delete();
+                return;
+            }
+            else if (assignmentParent instanceof JSBinaryExpression binaryExpression) {
+                binaryExpression.getROperand().replace(assignment.getROperand());
+                return;
+            }
+            else if (assignmentParent instanceof JSVariable variable) {
+                JSExpression initializer = variable.getInitializer();
+                initializer.replace(assignment.getROperand());
+                return;
+            }
+        }
+        super.delete();
+    }
 
-			if(grandParent instanceof JSStatement)
-			{
-				grandParent.delete();
-				return;
-			}
-			else if(grandParent instanceof JSBinaryExpression)
-			{
-				((JSBinaryExpression) grandParent).getROperand().replace(((JSAssignmentExpression) parent).getROperand());
-				return;
-			}
-			else if(grandParent instanceof JSVariable)
-			{
-				final JSExpression initializerExpression = ((JSVariable) grandParent).getInitializer();
-				initializerExpression.replace(((JSAssignmentExpression) parent).getROperand());
-				return;
-			}
-		}
-		super.delete();
-	}
-
-	@Override
-	public PsiElement getNameIdentifier()
-	{
-		return null;
-	}
+    @Override
+    @RequiredReadAction
+    public PsiElement getNameIdentifier() {
+        return null;
+    }
 }

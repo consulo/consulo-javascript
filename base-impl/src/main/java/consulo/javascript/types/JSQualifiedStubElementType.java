@@ -17,50 +17,43 @@
 
 package consulo.javascript.types;
 
-import javax.annotation.Nonnull;
-
-import org.jetbrains.annotations.NonNls;
 import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
-import com.intellij.lang.javascript.psi.JSStubElementType;
+import consulo.javascript.impl.language.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.stubs.JSQualifiedStub;
-import com.intellij.psi.stubs.IndexSink;
-import consulo.javascript.lang.psi.stubs.JavaScriptIndexKeys;
+import consulo.javascript.language.psi.stub.JavaScriptIndexKeys;
+import consulo.language.psi.stub.IndexSink;
+import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NonNls;
 
 /**
  * @author VISTALL
  * @since 03.05.2015
  */
-public abstract class JSQualifiedStubElementType<StubT extends JSQualifiedStub<PsiT>, PsiT extends JSQualifiedNamedElement> extends JSStubElementType<StubT, PsiT>
-{
-	public JSQualifiedStubElementType(@NonNls String debugName)
-	{
-		super(debugName);
-	}
+public abstract class JSQualifiedStubElementType<StubT extends JSQualifiedStub<PsiT>, PsiT extends JSQualifiedNamedElement>
+    extends JSStubElementType<StubT, PsiT> {
+    public JSQualifiedStubElementType(@NonNls String debugName) {
+        super(debugName);
+    }
 
-	@Override
-	public void indexStub(@Nonnull StubT stub, @Nonnull IndexSink sink)
-	{
-		final String name = stub.getName();
-		final String fqn = stub.getQualifiedName();
+    @Override
+    public void indexStub(@Nonnull StubT stub, @Nonnull IndexSink sink) {
+        String name = stub.getName();
+        String fqn = stub.getQualifiedName();
 
-		if(name != null && doIndexName(stub, name, fqn))
-		{
-			sink.occurrence(JavaScriptIndexKeys.ELEMENTS_BY_NAME, name);
-		}
+        if (name != null && doIndexName(stub, name, fqn)) {
+            sink.occurrence(JavaScriptIndexKeys.ELEMENTS_BY_NAME, name);
+        }
 
-		if(fqn != null && doIndexQualifiedName(stub, name, fqn))
-		{
-			sink.occurrence(JavaScriptIndexKeys.ELEMENTS_BY_QNAME, fqn);
-		}
-	}
+        if (fqn != null && doIndexQualifiedName(stub, name, fqn)) {
+            sink.occurrence(JavaScriptIndexKeys.ELEMENTS_BY_QNAME, fqn);
+        }
+    }
 
-	protected boolean doIndexQualifiedName(StubT stub, final String name, final String fqn)
-	{
-		return true;
-	}
+    protected boolean doIndexQualifiedName(StubT stub, String name, String fqn) {
+        return true;
+    }
 
-	protected boolean doIndexName(StubT stub, final String name, final String fqn)
-	{
-		return true;
-	}
+    protected boolean doIndexName(StubT stub, String name, String fqn) {
+        return true;
+    }
 }

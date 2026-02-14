@@ -35,7 +35,6 @@ import java.util.EmptyStackException;
  * instead.
  */
 public class ArrayStack<E> extends ArrayList<E> implements Cloneable {
-
     /**
      * Creates an empty <tt>ArrayStack</tt>.
      */
@@ -48,9 +47,9 @@ public class ArrayStack<E> extends ArrayList<E> implements Cloneable {
      * <blockquote><pre>
      * add(item)</pre></blockquote>
      *
-     * @param   item   the item to be pushed onto this stack.
-     * @return  the <tt>item</tt> argument.
-     * @see     ArrayList#add
+     * @param item the item to be pushed onto this stack.
+     * @return the <tt>item</tt> argument.
+     * @see ArrayList#add
      */
     public E push(E item) {
         this.add(item);
@@ -61,13 +60,13 @@ public class ArrayStack<E> extends ArrayList<E> implements Cloneable {
      * Removes the object at the top of this stack and returns that
      * object as the value of this function.
      *
-     * @return  The object at the top of this stack (the last item
-     *          of the <tt>ArrayList</tt> object).
-     * @throws  EmptyStackException  if this stack is empty.
+     * @return The object at the top of this stack (the last item
+     * of the <tt>ArrayList</tt> object).
+     * @throws EmptyStackException if this stack is empty.
      */
     public E pop() {
-        int  len = this.size();
-        E    obj = this.peek();
+        int len = this.size();
+        E obj = this.peek();
 
         this.remove(len - 1);
         return obj;
@@ -77,12 +76,12 @@ public class ArrayStack<E> extends ArrayList<E> implements Cloneable {
      * Looks at the object at the top of this stack without removing it
      * from the stack.
      *
-     * @return  the object at the top of this stack (the last item
-     *          of the <tt>ArrayList</tt> object).
-     * @throws  EmptyStackException  if this stack is empty.
+     * @return the object at the top of this stack (the last item
+     * of the <tt>ArrayList</tt> object).
+     * @throws EmptyStackException if this stack is empty.
      */
     public E peek() {
-        int  len = this.size();
+        int len = this.size();
 
         if (len == 0) {
             throw new EmptyStackException();
@@ -93,8 +92,8 @@ public class ArrayStack<E> extends ArrayList<E> implements Cloneable {
     /**
      * Tests if this stack is empty.
      *
-     * @return  <tt>true</tt> if and only if this stack contains
-     *          no items; <tt>false</tt> otherwise.
+     * @return <tt>true</tt> if and only if this stack contains
+     * no items; <tt>false</tt> otherwise.
      */
     public boolean empty() {
         return (this.size() == 0);
@@ -109,13 +108,13 @@ public class ArrayStack<E> extends ArrayList<E> implements Cloneable {
      * method is used to compare <tt>o</tt> to the
      * items in this stack.
      *
-     * @param   o   the desired object.
-     * @return  the 1-based position from the top of the stack where
-     *          the object is located; the return value <tt>-1</tt>
-     *          indicates that the object is not on the stack.
+     * @param o the desired object.
+     * @return the 1-based position from the top of the stack where
+     * the object is located; the return value <tt>-1</tt>
+     * indicates that the object is not on the stack.
      */
     public int search(E o) {
-        int  index = this.lastIndexOf(o);
+        int index = this.lastIndexOf(o);
 
         if (index >= 0) {
             return this.size() - index;
@@ -128,13 +127,15 @@ public class ArrayStack<E> extends ArrayList<E> implements Cloneable {
      * Returns a shallow copy of this <tt>ArrayList</tt> instance.  (The
      * elements themselves are not copied.)
      *
-     * @return  a clone of this <tt>ArrayList</tt> instance.
+     * @return a clone of this <tt>ArrayList</tt> instance.
      */
     @Override
-	public Object clone() {
-        return (ArrayStack<E>) super.clone();
+    public Object clone() {
+        return super.clone();
     }
 
-    /** use java.util.Stack#serialVersionUID from JDK 1.0.2 for interoperability */
+    /**
+     * use java.util.Stack#serialVersionUID from JDK 1.0.2 for interoperability
+     */
     private static final long serialVersionUID = 1224463164541339165L;
 }

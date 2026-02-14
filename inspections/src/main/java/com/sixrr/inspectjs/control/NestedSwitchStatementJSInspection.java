@@ -1,50 +1,53 @@
 package com.sixrr.inspectjs.control;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.intellij.lang.javascript.psi.JSSwitchStatement;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
+@ExtensionImpl
 public class NestedSwitchStatementJSInspection extends JavaScriptInspection {
-
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("nested.switch.statement.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.nestedSwitchStatementDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
+    @Nullable
     @Override
-	@Nullable
-    protected String buildErrorString(Object... args) {
-        return InspectionJSBundle.message("nested.switch.statement.error.string");
+    @RequiredReadAction
+    protected String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.nestedSwitchStatementErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
     private static class Visitor extends BaseInspectionVisitor {
-        @Override public void visitJSSwitchStatement(JSSwitchStatement jsSwitchStatement) {
+        @Override
+        public void visitJSSwitchStatement(JSSwitchStatement jsSwitchStatement) {
             super.visitJSSwitchStatement(jsSwitchStatement);
-            final JSSwitchStatement containingSwitchStatement =
-                    PsiTreeUtil.getParentOfType(jsSwitchStatement, JSSwitchStatement.class, true);
-            if (containingSwitchStatement ==null) {
+            JSSwitchStatement containingSwitchStatement =
+                PsiTreeUtil.getParentOfType(jsSwitchStatement, JSSwitchStatement.class, true);
+            if (containingSwitchStatement == null) {
                 return;
             }
             registerStatementError(jsSwitchStatement);
         }
-
     }
 }

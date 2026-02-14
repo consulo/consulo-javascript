@@ -16,104 +16,88 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.search.PsiElementProcessor;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.xml.XmlTag;
-import com.intellij.psi.xml.XmlTagChild;
-import com.intellij.util.IncorrectOperationException;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.resolve.PsiElementProcessor;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.language.util.IncorrectOperationException;
+import consulo.xml.psi.xml.XmlTag;
+import consulo.xml.psi.xml.XmlTagChild;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 31, 2005
- * Time: 12:02:38 AM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-31
  */
-public class JSEmbeddedContentImpl extends JSElementImpl implements XmlTagChild
-{
-	public JSEmbeddedContentImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSEmbeddedContentImpl extends JSElementImpl implements XmlTagChild {
+    public JSEmbeddedContentImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSElement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSElement(this);
+    }
 
-	@Override
-	public XmlTag getParentTag()
-	{
-		final PsiElement parent = getParent();
-		if(parent instanceof XmlTag)
-		{
-			return (XmlTag) parent;
-		}
-		return null;
-	}
+    @Override
+    public XmlTag getParentTag() {
+        PsiElement parent = getParent();
+        return parent instanceof XmlTag parentTag ? parentTag : null;
+    }
 
-	@Override
-	public XmlTagChild getNextSiblingInTag()
-	{
-		PsiElement nextSibling = getNextSibling();
-		if(nextSibling instanceof XmlTagChild)
-		{
-			return (XmlTagChild) nextSibling;
-		}
-		return null;
-	}
+    @Override
+    @RequiredReadAction
+    public XmlTagChild getNextSiblingInTag() {
+        PsiElement nextSibling = getNextSibling();
+        return nextSibling instanceof XmlTagChild tagChild ? tagChild : null;
+    }
 
-	@Override
-	public XmlTagChild getPrevSiblingInTag()
-	{
-		final PsiElement prevSibling = getPrevSibling();
-		if(prevSibling instanceof XmlTagChild)
-		{
-			return (XmlTagChild) prevSibling;
-		}
-		return null;
-	}
+    @Override
+    @RequiredReadAction
+    public XmlTagChild getPrevSiblingInTag() {
+        PsiElement prevSibling = getPrevSibling();
+        return prevSibling instanceof XmlTagChild tagChild ? tagChild : null;
+    }
 
-	@Override
-	public boolean processElements(PsiElementProcessor processor, PsiElement place)
-	{
-		// TODO
-		return true;
-	}
+    @Override
+    public boolean processElements(PsiElementProcessor processor, PsiElement place) {
+        // TODO
+        return true;
+    }
 
-	@Override
-	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent,
-			@Nonnull PsiElement place)
-	{
-		return JSResolveUtil.processDeclarationsInScope(this, processor, state, lastParent, place);
-	}
+    @Override
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        return JSResolveUtil.processDeclarationsInScope(this, processor, state, lastParent, place);
+    }
 
-	@Override
-	public String toString()
-	{
-		String s = super.toString();
-		final IElementType type = getNode().getElementType();
-		if(type != JSElementTypes.EMBEDDED_CONTENT)
-		{
-			s += ":" + type;
-		}
-		return s;
-	}
+    @Override
+    @RequiredReadAction
+    public String toString() {
+        String s = super.toString();
+        IElementType type = getNode().getElementType();
+        if (type != JSElementTypes.EMBEDDED_CONTENT) {
+            s += ":" + type;
+        }
+        return s;
+    }
 
-	@Override
-	public void delete() throws IncorrectOperationException
-	{
-		final ASTNode astNode = getNode();
-		astNode.getTreeParent().removeChild(astNode);
-	}
+    @Override
+    @RequiredWriteAction
+    public void delete() throws IncorrectOperationException {
+        ASTNode astNode = getNode();
+        astNode.getTreeParent().removeChild(astNode);
+    }
 }

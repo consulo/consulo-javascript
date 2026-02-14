@@ -17,18 +17,19 @@
 package com.intellij.lang.javascript.psi;
 
 import com.intellij.lang.javascript.psi.stubs.JSImportStatementStub;
-import com.intellij.psi.StubBasedPsiElement;
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.javascript.psi.JavaScriptImportStatementBase;
+import consulo.language.psi.StubBasedPsiElement;
 
 /**
- * @by Maxim.Mossienko
- *
  * EcmaScript 4 implementation
+ *
+ * @author Maxim.Mossienko
  */
 @Deprecated
-@DeprecationInfo("We need rename it")
-public interface JSImportStatement extends JSStatement, StubBasedPsiElement<JSImportStatementStub>, JavaScriptImportStatementBase
-{
-	String getImportText();
+@DeprecationInfo("We need to rename it")
+public interface JSImportStatement extends JSStatement, StubBasedPsiElement<JSImportStatementStub>, JavaScriptImportStatementBase {
+    @RequiredReadAction
+    String getImportText();
 }

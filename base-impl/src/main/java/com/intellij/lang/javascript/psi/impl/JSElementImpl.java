@@ -16,19 +16,15 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import javax.annotation.Nonnull;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.stubs.StubElement;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.stub.StubElement;
 
 /**
  * @author max
- * @since Jan 30, 2005 8:23:10 PM
+ * @since 2005-01-30
  */
-public abstract class JSElementImpl extends JSStubElementImpl<StubElement>
-{
-	public JSElementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public abstract class JSElementImpl extends JSStubElementImpl<StubElement> {
+    public JSElementImpl(ASTNode node) {
+        super(node);
+    }
 }

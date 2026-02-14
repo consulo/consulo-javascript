@@ -17,25 +17,21 @@
 package com.intellij.lang.javascript.psi;
 
 import com.intellij.lang.javascript.psi.stubs.JSVarStatementStub;
-import com.intellij.psi.StubBasedPsiElement;
 import consulo.annotation.access.RequiredReadAction;
-
-import javax.annotation.Nullable;
+import consulo.language.psi.StubBasedPsiElement;
+import jakarta.annotation.Nullable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 6:55:04 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public interface JSVarStatement extends JSStatement, StubBasedPsiElement<JSVarStatementStub>
-{
-	JSVariable[] getVariables();
+public interface JSVarStatement extends JSStatement, StubBasedPsiElement<JSVarStatementStub> {
+    @RequiredReadAction
+    JSVariable[] getVariables();
 
-	@Nullable
-	@RequiredReadAction
-	JSDestructuringElement getDestructuringElement();
+    @Nullable
+    @RequiredReadAction
+    JSDestructuringElement getDestructuringElement();
 
-	void declareVariable(String name, JSExpression initializer);
+    void declareVariable(String name, JSExpression initializer);
 }

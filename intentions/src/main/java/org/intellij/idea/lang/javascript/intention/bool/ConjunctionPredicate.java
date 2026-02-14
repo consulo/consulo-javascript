@@ -15,19 +15,17 @@
  */
 package org.intellij.idea.lang.javascript.intention.bool;
 
-import javax.annotation.Nonnull;
-
+import com.intellij.lang.javascript.JSTokenTypes;
+import com.intellij.lang.javascript.psi.JSBinaryExpression;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
+import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 
-import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.lang.javascript.psi.JSBinaryExpression;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.PsiElement;
-
 class ConjunctionPredicate implements JSElementPredicate {
     @Override
-	public boolean satisfiedBy(@Nonnull PsiElement element) {
+    public boolean satisfiedBy(@Nonnull PsiElement element) {
         if (!(element instanceof JSBinaryExpression)) {
             return false;
         }
@@ -35,9 +33,9 @@ class ConjunctionPredicate implements JSElementPredicate {
             return false;
         }
 
-        final JSBinaryExpression expression = (JSBinaryExpression) element;
-        final IElementType       sign       = expression.getOperationSign();
+        JSBinaryExpression expression = (JSBinaryExpression)element;
+        IElementType sign = expression.getOperationSign();
 
-        return (sign.equals(JSTokenTypes.ANDAND) || sign.equals(JSTokenTypes.OROR));
+        return (JSTokenTypes.ANDAND.equals(sign) || JSTokenTypes.OROR.equals(sign));
     }
 }

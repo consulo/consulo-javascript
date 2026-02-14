@@ -1,69 +1,72 @@
 package com.sixrr.inspectjs.validity;
 
+import com.intellij.lang.javascript.psi.JSExpressionCodeFragment;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSObjectLiteralExpression;
 import com.intellij.lang.javascript.psi.JSThisExpression;
-import com.intellij.lang.javascript.psi.JSExpressionCodeFragment;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.xml.XmlAttributeValue;
-import com.intellij.psi.PsiFile;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
+import consulo.xml.psi.xml.XmlAttributeValue;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
+@ExtensionImpl
 public class ThisExpressionReferencesGlobalObjectJSInspection extends JavaScriptInspection {
-
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("this.expression.which.references.the.global.object.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.thisExpressionWhichReferencesTheGlobalObjectDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.VALIDITY_GROUP_NAME;
     }
 
     @Override
-	public boolean isEnabledByDefault() {
+    public boolean isEnabledByDefault() {
         return true;
     }
 
+    @Nullable
     @Override
-	@Nullable
-    protected String buildErrorString(Object... args) {
-        return InspectionJSBundle.message("this.expression.references.global.object.error.string");
+    @RequiredReadAction
+    protected String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.thisExpressionReferencesGlobalObjectErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
     private static class Visitor extends BaseInspectionVisitor {
-
-        @Override public void visitJSThisExpression(JSThisExpression jsThisExpression) {
+        @Override
+        public void visitJSThisExpression(JSThisExpression jsThisExpression) {
             super.visitJSThisExpression(jsThisExpression);
-            final JSObjectLiteralExpression containingObject = PsiTreeUtil.getParentOfType(jsThisExpression, JSObjectLiteralExpression.class);
+            JSObjectLiteralExpression containingObject =
+                PsiTreeUtil.getParentOfType(jsThisExpression, JSObjectLiteralExpression.class);
             if (containingObject != null) {
                 return;
             }
-            final JSFunction containingFunction =
-                    PsiTreeUtil.getParentOfType(jsThisExpression, JSFunction.class);
+            JSFunction containingFunction = PsiTreeUtil.getParentOfType(jsThisExpression, JSFunction.class);
             if (containingFunction != null) {
                 return;
             }
-            final XmlAttributeValue containingAttribute =
-                    PsiTreeUtil.getParentOfType(jsThisExpression, XmlAttributeValue.class);
+            XmlAttributeValue containingAttribute = PsiTreeUtil.getParentOfType(jsThisExpression, XmlAttributeValue.class);
             if (containingAttribute != null) {
                 return;
             }
 
-            final PsiFile containingFile = jsThisExpression.getContainingFile();
+            PsiFile containingFile = jsThisExpression.getContainingFile();
             if (containingFile instanceof JSExpressionCodeFragment ||
                 containingFile.getContext() instanceof XmlAttributeValue) {
                 return;

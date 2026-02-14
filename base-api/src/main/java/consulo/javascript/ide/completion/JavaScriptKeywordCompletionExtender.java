@@ -1,19 +1,21 @@
 package consulo.javascript.ide.completion;
 
-import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.util.ProcessingContext;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.component.extension.ExtensionPointName;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.CompletionResultSet;
+import consulo.language.util.ProcessingContext;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2019-12-17
  */
-public interface JavaScriptKeywordCompletionExtender
-{
-	ExtensionPointName<JavaScriptKeywordCompletionExtender> EP_NAME = ExtensionPointName.create("consulo.javascript.keywordCompletionExtender");
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface JavaScriptKeywordCompletionExtender {
+    ExtensionPointName<JavaScriptKeywordCompletionExtender> EP_NAME = ExtensionPointName.create(JavaScriptKeywordCompletionExtender.class);
 
-	void fillCompletion(@Nonnull CompletionParameters parameters, ProcessingContext context, @Nonnull CompletionResultSet result);
+    void fillCompletion(@Nonnull CompletionParameters parameters, ProcessingContext context, @Nonnull CompletionResultSet result);
 }

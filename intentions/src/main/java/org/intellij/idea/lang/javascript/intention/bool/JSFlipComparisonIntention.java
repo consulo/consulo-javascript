@@ -15,56 +15,75 @@
  */
 package org.intellij.idea.lang.javascript.intention.bool;
 
-import javax.annotation.Nonnull;
-
+import com.intellij.lang.javascript.psi.JSBinaryExpression;
+import com.intellij.lang.javascript.psi.JSExpression;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.ComparisonUtils;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
-import com.intellij.lang.javascript.psi.JSBinaryExpression;
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
-
+@ExtensionImpl
+@IntentionMetaData(
+    ignoreId = "JSFlipComparisonIntention",
+    categories = {"JavaScript", "Boolean"},
+    fileExtensions = "js"
+)
 public class JSFlipComparisonIntention extends JSMutablyNamedIntention {
+    @Nonnull
     @Override
-	public String getTextForElement(PsiElement element) {
-        final JSBinaryExpression exp                 = (JSBinaryExpression) element;
-        String                   operatorText        = null;
-        String                   flippedOperatorText = null;
+    protected LocalizeValue getBasicText() {
+        return JSIntentionLocalize.boolFlipComparison();
+    }
+
+    @Override
+    @RequiredReadAction
+    public LocalizeValue getTextForElement(PsiElement element) {
+        JSBinaryExpression exp = (JSBinaryExpression)element;
+        String operatorText = null;
+        String flippedOperatorText = null;
 
         if (exp != null) {
-            operatorText        = ComparisonUtils.getOperatorText       (exp.getOperationSign());
+            operatorText = ComparisonUtils.getOperatorText(exp.getOperationSign());
             flippedOperatorText = ComparisonUtils.getFlippedOperatorText(exp.getOperationSign());
         }
 
         if (exp == null) {
-            return this.getSuffixedDisplayName("unknown");
-        } else if (operatorText.equals(flippedOperatorText)) {
-            return this.getSuffixedDisplayName("equals", operatorText);
-        } else {
-            return this.getSuffixedDisplayName("not-equals", operatorText, flippedOperatorText);
+            return JSIntentionLocalize.boolFlipComparisonUnknown();
+        }
+        else if (operatorText.equals(flippedOperatorText)) {
+            return JSIntentionLocalize.boolFlipComparisonEquals(operatorText);
+        }
+        else {
+            return JSIntentionLocalize.boolFlipComparisonNotEquals(operatorText, flippedOperatorText);
         }
     }
 
     @Override
-	@Nonnull
-	public JSElementPredicate getElementPredicate() {
+    @Nonnull
+    public JSElementPredicate getElementPredicate() {
         return new ComparisonPredicate();
     }
 
     @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSBinaryExpression exp  = (JSBinaryExpression) element;
-        final JSExpression       lhs  = exp.getLOperand();
-        final JSExpression       rhs  = exp.getROperand();
-        final IElementType       sign = exp.getOperationSign();
+    @RequiredReadAction
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        JSBinaryExpression exp = (JSBinaryExpression)element;
+        JSExpression lhs = exp.getLOperand();
+        JSExpression rhs = exp.getROperand();
+        IElementType sign = exp.getOperationSign();
 
         assert (rhs != null);
 
-        final String expString = rhs.getText() + ComparisonUtils.getFlippedOperatorText(sign) + lhs.getText();
+        String expString = rhs.getText() + ComparisonUtils.getFlippedOperatorText(sign) + lhs.getText();
         JSElementFactory.replaceExpression(exp, expString);
     }
 }

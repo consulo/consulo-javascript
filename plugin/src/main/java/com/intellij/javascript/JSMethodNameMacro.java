@@ -16,78 +16,64 @@
 
 package com.intellij.javascript;
 
-import javax.annotation.Nonnull;
-
-import org.jetbrains.annotations.NonNls;
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.template.Expression;
-import com.intellij.codeInsight.template.ExpressionContext;
-import com.intellij.codeInsight.template.Macro;
-import com.intellij.codeInsight.template.Result;
-import com.intellij.codeInsight.template.TextResult;
-import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSFunctionExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.localize.JavaScriptLocalize;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.template.Expression;
+import consulo.language.editor.template.ExpressionContext;
+import consulo.language.editor.template.Result;
+import consulo.language.editor.template.TextResult;
+import consulo.language.editor.template.macro.Macro;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
 
-public class JSMethodNameMacro extends Macro
-{
+import jakarta.annotation.Nonnull;
 
-	@Override
-	@NonNls
-	public String getName()
-	{
-		return "jsMethodName";
-	}
+@ExtensionImpl
+public class JSMethodNameMacro extends Macro {
+    @Override
+    public String getName() {
+        return "jsMethodName";
+    }
 
-	@Override
-	public String getPresentableName()
-	{
-		return JavaScriptBundle.message("js.methodname.macro.description");
-	}
+    @Override
+    public String getPresentableName() {
+        return JavaScriptLocalize.jsMethodnameMacroDescription().get();
+    }
 
+    @Override
+    public String getDefaultValue() {
+        return "";
+    }
 
-	@Override
-	@NonNls
-	public String getDefaultValue()
-	{
-		return "";
-	}
+    @Override
+    public Result calculateResult(@Nonnull Expression[] params, ExpressionContext context) {
+        PsiElement elementAtCaret = JSClassNameMacro.findElementAtCaret(context);
+        if (elementAtCaret != null) {
+            JSFunction function = PsiTreeUtil.getParentOfType(elementAtCaret, JSFunction.class);
+            if (function instanceof JSFunctionExpression functionExpression) {
+                function = functionExpression.getFunction();
+            }
 
-	@Override
-	public Result calculateResult(@Nonnull Expression[] params, ExpressionContext context)
-	{
-		final PsiElement elementAtCaret = JSClassNameMacro.findElementAtCaret(context);
-		if(elementAtCaret != null)
-		{
-			JSFunction function = PsiTreeUtil.getParentOfType(elementAtCaret, JSFunction.class);
-			if(function instanceof JSFunctionExpression)
-			{
-				function = ((JSFunctionExpression) function).getFunction();
-			}
+            if (function != null) {
+                String name = function.getName();
+                if (name != null) {
+                    return new TextResult(name);
+                }
+            }
+        }
+        return null;
+    }
 
-			if(function != null)
-			{
-				final String name = function.getName();
-				if(name != null)
-				{
-					return new TextResult(name);
-				}
-			}
-		}
-		return null;
-	}
+    @Override
+    public Result calculateQuickResult(@Nonnull Expression[] params, ExpressionContext context) {
+        return null;
+    }
 
-	@Override
-	public Result calculateQuickResult(@Nonnull Expression[] params, ExpressionContext context)
-	{
-		return null;
-	}
-
-	@Override
-	public LookupElement[] calculateLookupItems(@Nonnull Expression[] params, ExpressionContext context)
-	{
-		return null;
-	}
+    @Override
+    public LookupElement[] calculateLookupItems(@Nonnull Expression[] params, ExpressionContext context) {
+        return null;
+    }
 }

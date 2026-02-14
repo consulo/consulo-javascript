@@ -16,92 +16,83 @@
 
 package com.intellij.javascript;
 
-import javax.annotation.Nonnull;
-
-import org.jetbrains.annotations.NonNls;
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.template.Expression;
-import com.intellij.codeInsight.template.ExpressionContext;
-import com.intellij.codeInsight.template.Macro;
-import com.intellij.codeInsight.template.Result;
-import com.intellij.codeInsight.template.TextResult;
-import com.intellij.lang.javascript.JavaScriptBundle;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.localize.JavaScriptLocalize;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.template.Expression;
+import consulo.language.editor.template.ExpressionContext;
+import consulo.language.editor.template.Result;
+import consulo.language.editor.template.TextResult;
+import consulo.language.editor.template.macro.Macro;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.project.Project;
+import org.jetbrains.annotations.NonNls;
 
-public class JSClassNameMacro extends Macro
-{
-	@Override
-	@NonNls
-	public String getName()
-	{
-		return "jsClassName";
-	}
+import jakarta.annotation.Nonnull;
 
-	@Override
-	public String getPresentableName()
-	{
-		return JavaScriptBundle.message("js.classname.macro.description");
-	}
+@ExtensionImpl
+public class JSClassNameMacro extends Macro {
+    @Override
+    @NonNls
+    public String getName() {
+        return "jsClassName";
+    }
 
-	@Override
-	@NonNls
-	public String getDefaultValue()
-	{
-		return "";
-	}
+    @Override
+    public String getPresentableName() {
+        return JavaScriptLocalize.jsClassnameMacroDescription().get();
+    }
 
-	@Override
-	public Result calculateResult(@Nonnull final Expression[] params, final ExpressionContext context)
-	{
-		final PsiElement elementAtCaret = findElementAtCaret(context);
-		final JSResolveUtil.ContextResolver resolver = new JSResolveUtil.ContextResolver(elementAtCaret);
+    @Override
+    @NonNls
+    public String getDefaultValue() {
+        return "";
+    }
 
-		String text = resolver.getQualifierAsString();
-		if(text == null)
-		{
-			final JSFunction previousFunction = PsiTreeUtil.getPrevSiblingOfType(elementAtCaret, JSFunction.class);
+    @Override
+    public Result calculateResult(@Nonnull Expression[] params, ExpressionContext context) {
+        PsiElement elementAtCaret = findElementAtCaret(context);
+        JSResolveUtil.ContextResolver resolver = new JSResolveUtil.ContextResolver(elementAtCaret);
 
-			if(previousFunction != null)
-			{
-				text = previousFunction.getName();
-			}
-		}
+        String text = resolver.getQualifierAsString();
+        if (text == null) {
+            JSFunction previousFunction = PsiTreeUtil.getPrevSiblingOfType(elementAtCaret, JSFunction.class);
 
-		if(text != null)
-		{
-			return new TextResult(text);
-		}
+            if (previousFunction != null) {
+                text = previousFunction.getName();
+            }
+        }
 
-		return null;
-	}
+        if (text != null) {
+            return new TextResult(text);
+        }
 
-	public static PsiElement findElementAtCaret(final ExpressionContext context)
-	{
-		Project project = context.getProject();
-		int templateStartOffset = context.getTemplateStartOffset();
-		int offset = templateStartOffset > 0 ? context.getTemplateStartOffset() - 1 : context.getTemplateStartOffset();
+        return null;
+    }
 
-		PsiDocumentManager.getInstance(project).commitAllDocuments();
+    public static PsiElement findElementAtCaret(ExpressionContext context) {
+        Project project = context.getProject();
+        int templateStartOffset = context.getTemplateStartOffset();
+        int offset = templateStartOffset > 0 ? context.getTemplateStartOffset() - 1 : context.getTemplateStartOffset();
 
-		PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(context.getEditor().getDocument());
-		return file.findElementAt(offset);
-	}
+        PsiDocumentManager.getInstance(project).commitAllDocuments();
 
-	@Override
-	public Result calculateQuickResult(@Nonnull final Expression[] params, final ExpressionContext context)
-	{
-		return null;
-	}
+        PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(context.getEditor().getDocument());
+        return file.findElementAt(offset);
+    }
 
-	@Override
-	public LookupElement[] calculateLookupItems(@Nonnull final Expression[] params, final ExpressionContext context)
-	{
-		return null;
-	}
+    @Override
+    public Result calculateQuickResult(@Nonnull Expression[] params, ExpressionContext context) {
+        return null;
+    }
+
+    @Override
+    public LookupElement[] calculateLookupItems(@Nonnull Expression[] params, ExpressionContext context) {
+        return null;
+    }
 }

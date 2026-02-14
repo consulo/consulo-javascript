@@ -16,66 +16,60 @@
 
 package consulo.actionscript;
 
-import com.intellij.lang.javascript.JavaScriptIcons;
-import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.language.version.LanguageVersion;
+import consulo.module.Module;
 import consulo.actionscript.lang.ActionScriptLanguageVersion;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.lang.JavaScriptFileTypeWithVersion;
-import consulo.javascript.lang.JavaScriptLanguage;
-import consulo.lang.LanguageVersion;
+import consulo.javascript.icon.JavaScriptIconGroup;
+import consulo.javascript.language.JavaScriptFileTypeWithVersion;
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.language.file.LanguageFileType;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 02.12.13.
  */
-public class ActionScriptFileType extends LanguageFileType implements JavaScriptFileTypeWithVersion
-{
-	public static final ActionScriptFileType INSTANCE = new ActionScriptFileType();
+public class ActionScriptFileType extends LanguageFileType implements JavaScriptFileTypeWithVersion {
+    public static final ActionScriptFileType INSTANCE = new ActionScriptFileType();
 
-	private ActionScriptFileType()
-	{
-		super(JavaScriptLanguage.INSTANCE);
-	}
+    private ActionScriptFileType() {
+        super(JavaScriptLanguage.INSTANCE);
+    }
 
-	@Nonnull
-	@Override
-	public String getId()
-	{
-		return "ACTIONSCRIPT";
-	}
+    @Nonnull
+    @Override
+    public String getId() {
+        return "ACTIONSCRIPT";
+    }
 
-	@Nonnull
-	@Override
-	public String getDescription()
-	{
-		return "ActionScript files";
-	}
+    @Nonnull
+    @Override
+    public LocalizeValue getDescription() {
+        return LocalizeValue.localizeTODO("ActionScript files");
+    }
 
-	@Nonnull
-	@Override
-	public String getDefaultExtension()
-	{
-		return "as";
-	}
+    @Nonnull
+    @Override
+    public String getDefaultExtension() {
+        return "as";
+    }
 
-	@Nullable
-	@Override
-	public Image getIcon()
-	{
-		return JavaScriptIcons.As;
-	}
+    @Nullable
+    @Override
+    public Image getIcon() {
+        return JavaScriptIconGroup.as();
+    }
 
-	@RequiredReadAction
-	@Nonnull
-	@Override
-	public LanguageVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile)
-	{
-		return ActionScriptLanguageVersion.getInstance();
-	}
+    @RequiredReadAction
+    @Nonnull
+    @Override
+    public LanguageVersion getLanguageVersion(@Nullable Module module, @Nullable VirtualFile virtualFile) {
+        return ActionScriptLanguageVersion.getInstance();
+    }
 }

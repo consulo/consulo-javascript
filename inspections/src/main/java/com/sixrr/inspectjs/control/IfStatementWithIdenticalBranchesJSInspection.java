@@ -1,63 +1,69 @@
 package com.sixrr.inspectjs.control;
 
-import javax.annotation.Nonnull;
-
-import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.psi.JSIfStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
-import com.sixrr.inspectjs.*;
+import com.sixrr.inspectjs.BaseInspectionVisitor;
+import com.sixrr.inspectjs.InspectionJSFix;
+import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import com.sixrr.inspectjs.utils.EquivalenceChecker;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import jakarta.annotation.Nonnull;
 
+@ExtensionImpl
 public class IfStatementWithIdenticalBranchesJSInspection extends JavaScriptInspection {
     private InspectionJSFix fix = new CollapseIfFix();
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("if.statement.with.identical.branches.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.ifStatementWithIdenticalBranchesDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
     @Override
-	public String buildErrorString(Object... args) {
-        return InspectionJSBundle.message("ref.statement.with.identical.branches.error.string");
+    @RequiredReadAction
+    public String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.refStatementWithIdenticalBranchesErrorString().get();
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location) {
+    public InspectionJSFix buildFix(PsiElement location, Object state) {
         return fix;
     }
 
     private static class CollapseIfFix extends InspectionJSFix {
+        @Nonnull
         @Override
-		@Nonnull
-        public String getName() {
-            return InspectionJSBundle.message("collapse.if.statement.fix");
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.collapseIfStatementFix();
         }
 
         @Override
-		public void doFix(Project project, ProblemDescriptor descriptor)
-                throws IncorrectOperationException {
-            final PsiElement identifier = descriptor.getPsiElement();
-            final JSIfStatement statement =
-                    (JSIfStatement) identifier.getParent();
+        public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
+            PsiElement identifier = descriptor.getPsiElement();
+            JSIfStatement statement = (JSIfStatement) identifier.getParent();
             assert statement != null;
-            final JSStatement thenBranch = statement.getThen();
-            final String bodyText = thenBranch.getText();
+            JSStatement thenBranch = statement.getThen();
+            String bodyText = thenBranch.getText();
             replaceStatement(statement, bodyText);
         }
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new IfStatementWithIdenticalBranchesVisitor();
     }
 
@@ -65,8 +71,8 @@ public class IfStatementWithIdenticalBranchesJSInspection extends JavaScriptInsp
 
         @Override public void visitJSIfStatement(@Nonnull JSIfStatement statement) {
             super.visitJSIfStatement(statement);
-            final JSStatement thenBranch = statement.getThen();
-            final JSStatement elseBranch = statement.getElse();
+            JSStatement thenBranch = statement.getThen();
+            JSStatement elseBranch = statement.getElse();
             if(thenBranch == null || elseBranch == null)
             {
                 return ;

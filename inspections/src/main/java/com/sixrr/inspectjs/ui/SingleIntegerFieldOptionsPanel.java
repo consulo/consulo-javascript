@@ -14,34 +14,34 @@ import org.jetbrains.annotations.NonNls;
 public class SingleIntegerFieldOptionsPanel extends JPanel {
     public SingleIntegerFieldOptionsPanel(String labelString, final BaseInspection owner, @NonNls final String property) {
         super(new GridBagLayout());
-        final JLabel label = new JLabel(labelString);
-        final NumberFormat formatter = NumberFormat.getIntegerInstance();
+        JLabel label = new JLabel(labelString);
+        NumberFormat formatter = NumberFormat.getIntegerInstance();
         formatter.setParseIntegerOnly(true);
         final JFormattedTextField valueField = new JFormattedTextField(formatter);
         valueField.setValue(getPropertyValue(owner, property));
         valueField.setColumns(2);
-        final Document document = valueField.getDocument();
+        Document document = valueField.getDocument();
         document.addDocumentListener(new DocumentListener() {
             @Override
-			public void changedUpdate(DocumentEvent e) {
+            public void changedUpdate(DocumentEvent e) {
                 textChanged();
             }
 
             @Override
-			public void insertUpdate(DocumentEvent e) {
+            public void insertUpdate(DocumentEvent e) {
                 textChanged();
             }
 
             @Override
-			public void removeUpdate(DocumentEvent e) {
+            public void removeUpdate(DocumentEvent e) {
                 textChanged();
             }
 
             private void textChanged() {
-                setPropertyValue(owner, property, ((Number) valueField.getValue()).intValue());
+                setPropertyValue(owner, property, ((Number)valueField.getValue()).intValue());
             }
         });
-        final GridBagConstraints constraints = new GridBagConstraints();
+        GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.weightx = 1.0;
@@ -59,14 +59,16 @@ public class SingleIntegerFieldOptionsPanel extends JPanel {
     private void setPropertyValue(BaseInspection owner, String property, int value) {
         try {
             owner.getClass().getField(property).setInt(owner, value);
-        } catch (Exception e) {
+        }
+        catch (Exception ignore) {
         }
     }
 
     private int getPropertyValue(BaseInspection owner, String property) {
         try {
             return owner.getClass().getField(property).getInt(owner);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return 0;
         }
     }

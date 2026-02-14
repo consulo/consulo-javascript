@@ -15,64 +15,66 @@
  */
 package org.intellij.idea.lang.javascript.intention.trivialif;
 
-import javax.annotation.Nonnull;
-
+import com.intellij.lang.javascript.psi.*;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
-import org.intellij.idea.lang.javascript.psiutil.BinaryOperatorUtils;
-import org.intellij.idea.lang.javascript.psiutil.ConditionalUtils;
-import org.intellij.idea.lang.javascript.psiutil.EquivalenceChecker;
-import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
-import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
-import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NonNls;
+import org.intellij.idea.lang.javascript.psiutil.*;
 
-import com.intellij.lang.javascript.psi.JSAssignmentExpression;
-import com.intellij.lang.javascript.psi.JSElement;
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSExpressionStatement;
-import com.intellij.lang.javascript.psi.JSIfStatement;
-import com.intellij.lang.javascript.psi.JSReturnStatement;
-import com.intellij.lang.javascript.psi.JSStatement;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.IncorrectOperationException;
-
+@ExtensionImpl
+@IntentionMetaData(
+    ignoreId = "JSReplaceIfWithConditionalIntention",
+    categories = {"JavaScript", "Conditional"},
+    fileExtensions = "js"
+)
 public class JSReplaceIfWithConditionalIntention extends JSIntention {
-    private         static final char   TERNARY_QUESTION  = '?';
-    private         static final char   TERNARY_SEMICOLON = ':';
-    @NonNls private static final String RETURN_KEYWORD    = "return ";
+    @Override
+    @Nonnull
+    public LocalizeValue getText() {
+        return JSIntentionLocalize.trivialifReplaceIfWithConditional();
+    }
 
     @Override
-	@Nonnull
+    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new ReplaceIfWithConditionalPredicate();
     }
 
     @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSIfStatement ifStatement = (JSIfStatement) (element.getParent() instanceof JSIfStatement ? element.getParent() : element);
+    @RequiredReadAction
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        JSIfStatement ifStatement = (JSIfStatement)(element.getParent() instanceof JSIfStatement ? element.getParent() : element);
 
         assert (ifStatement != null);
 
         if (ReplaceIfWithConditionalPredicate.isReplaceableAssignment(ifStatement)) {
-            final StringBuilder newStatement = new StringBuilder();
+            StringBuilder newStatement = new StringBuilder();
 
             getAssignmentReplacement(newStatement, ifStatement);
             newStatement.append(';');
             JSElementFactory.replaceStatement(ifStatement, newStatement.toString());
-        } else if (ReplaceIfWithConditionalPredicate.isReplaceableReturn(ifStatement)) {
-            final StringBuilder newStatement = new StringBuilder(RETURN_KEYWORD);
+        }
+        else if (ReplaceIfWithConditionalPredicate.isReplaceableReturn(ifStatement)) {
+            StringBuilder newStatement = new StringBuilder("return ");
 
             getReturnReplacement(newStatement, ifStatement);
             newStatement.append(';');
             JSElementFactory.replaceStatement(ifStatement, newStatement.toString());
-        } else if (ReplaceIfWithConditionalPredicate.isReplaceableImplicitReturn(ifStatement)) {
-            final JSExpression      condition    = ifStatement.getCondition();
-            final JSReturnStatement thenBranch   = (JSReturnStatement) ConditionalUtils.stripBraces(ifStatement.getThen());
-            final JSReturnStatement elseBranch   = PsiTreeUtil.getNextSiblingOfType(ifStatement, JSReturnStatement.class);
-            final String            newStatement = getImplicitReturnReplacement(condition, thenBranch, elseBranch);
+        }
+        else if (ReplaceIfWithConditionalPredicate.isReplaceableImplicitReturn(ifStatement)) {
+            JSExpression condition = ifStatement.getCondition();
+            JSReturnStatement thenBranch = (JSReturnStatement)ConditionalUtils.stripBraces(ifStatement.getThen());
+            JSReturnStatement elseBranch = PsiTreeUtil.getNextSiblingOfType(ifStatement, JSReturnStatement.class);
+            String newStatement = getImplicitReturnReplacement(condition, thenBranch, elseBranch);
 
             JSElementFactory.replaceStatement(ifStatement, newStatement);
             if (elseBranch != null) {
@@ -81,31 +83,32 @@ public class JSReplaceIfWithConditionalIntention extends JSIntention {
         }
     }
 
+    @RequiredReadAction
     private static void getAssignmentReplacement(StringBuilder buffer, JSIfStatement ifStatement) {
-        final JSExpression           condition  = ifStatement.getCondition();
-        final JSExpressionStatement  thenBranch = (JSExpressionStatement) ConditionalUtils.stripBraces(ifStatement.getThen());
-        final JSAssignmentExpression thenAssign = (JSAssignmentExpression) thenBranch.getExpression();
-        final JSExpression           thenRhs    = thenAssign.getROperand();
-        final String                 operator   = BinaryOperatorUtils.getOperatorText(thenAssign.getOperationSign());
-        final JSStatement            elseBranch = ifStatement.getElse();
+        JSExpression condition = ifStatement.getCondition();
+        JSExpressionStatement thenBranch = (JSExpressionStatement)ConditionalUtils.stripBraces(ifStatement.getThen());
+        JSAssignmentExpression thenAssign = (JSAssignmentExpression)thenBranch.getExpression();
+        JSExpression thenRhs = thenAssign.getROperand();
+        String operator = BinaryOperatorUtils.getOperatorText(thenAssign.getOperationSign());
+        JSStatement elseBranch = ifStatement.getElse();
 
         assert (thenRhs != null);
 
         buffer.append(thenAssign.getLOperand().getText())
-              .append(operator)
-              .append(ParenthesesUtils.getParenthesized(condition, ParenthesesUtils.CONDITIONAL_PRECENDENCE))
-              .append(TERNARY_QUESTION)
-              .append(ParenthesesUtils.getParenthesized(thenRhs,   ParenthesesUtils.CONDITIONAL_PRECENDENCE))
-              .append(TERNARY_SEMICOLON);
+            .append(operator)
+            .append(ParenthesesUtils.getParenthesized(condition, ParenthesesUtils.CONDITIONAL_PRECENDENCE))
+            .append('?')
+            .append(ParenthesesUtils.getParenthesized(thenRhs, ParenthesesUtils.CONDITIONAL_PRECENDENCE))
+            .append(':');
 
         if (elseBranch instanceof JSIfStatement) {
-            getAssignmentReplacement(buffer, (JSIfStatement) elseBranch);
+            getAssignmentReplacement(buffer, (JSIfStatement)elseBranch);
             return;
         }
 
-        final JSExpressionStatement  strippedElseBranch = (JSExpressionStatement)  ConditionalUtils.stripBraces(elseBranch);
-        final JSAssignmentExpression elseAssign         = (JSAssignmentExpression) strippedElseBranch.getExpression();
-        final JSExpression           elseRhs            = elseAssign.getROperand();
+        JSExpressionStatement strippedElseBranch = (JSExpressionStatement)ConditionalUtils.stripBraces(elseBranch);
+        JSAssignmentExpression elseAssign = (JSAssignmentExpression)strippedElseBranch.getExpression();
+        JSExpression elseRhs = elseAssign.getROperand();
 
         assert (elseRhs != null);
 
@@ -113,45 +116,42 @@ public class JSReplaceIfWithConditionalIntention extends JSIntention {
     }
 
     private static void getReturnReplacement(StringBuilder buffer, JSIfStatement ifStatement) {
-        final JSStatement       thenBranch = ifStatement.getThen();
-        final JSReturnStatement thenReturn = (JSReturnStatement) ConditionalUtils.stripBraces(thenBranch);
-        final JSStatement       elseBranch = ifStatement.getElse();
+        JSStatement thenBranch = ifStatement.getThen();
+        JSReturnStatement thenReturn = (JSReturnStatement)ConditionalUtils.stripBraces(thenBranch);
+        JSStatement elseBranch = ifStatement.getElse();
 
-        buffer.append(ParenthesesUtils.getParenthesized(ifStatement.getCondition(),
-                                                        ParenthesesUtils.CONDITIONAL_PRECENDENCE))
-              .append(TERNARY_QUESTION)
-              .append(ParenthesesUtils.getParenthesized(thenReturn.getExpression(),
-                                                        ParenthesesUtils.CONDITIONAL_PRECENDENCE))
-              .append(TERNARY_SEMICOLON);
+        buffer.append(ParenthesesUtils.getParenthesized(ifStatement.getCondition(), ParenthesesUtils.CONDITIONAL_PRECENDENCE))
+            .append('?')
+            .append(ParenthesesUtils.getParenthesized(thenReturn.getExpression(), ParenthesesUtils.CONDITIONAL_PRECENDENCE))
+            .append(':');
 
-        if (elseBranch instanceof JSIfStatement) {
-            getReturnReplacement(buffer, (JSIfStatement) elseBranch);
+        if (elseBranch instanceof JSIfStatement elseIfStatement) {
+            getReturnReplacement(buffer, elseIfStatement);
             return;
         }
 
-        final JSReturnStatement elseReturn = (JSReturnStatement) ConditionalUtils.stripBraces(elseBranch);
+        JSReturnStatement elseReturn = (JSReturnStatement)ConditionalUtils.stripBraces(elseBranch);
 
-        buffer.append(ParenthesesUtils.getParenthesized(elseReturn.getExpression(),
-                                                        ParenthesesUtils.CONDITIONAL_PRECENDENCE));
+        buffer.append(ParenthesesUtils.getParenthesized(elseReturn.getExpression(), ParenthesesUtils.CONDITIONAL_PRECENDENCE));
     }
 
     private static String getImplicitReturnReplacement(JSExpression condition, JSReturnStatement thenBranch, JSReturnStatement elseBranch) {
         assert (thenBranch != null);
         assert (elseBranch != null);
 
-        final JSExpression thenReturnValue = thenBranch.getExpression();
-        final JSExpression elseReturnValue = elseBranch.getExpression();
+        JSExpression thenReturnValue = thenBranch.getExpression();
+        JSExpression elseReturnValue = elseBranch.getExpression();
 
-        final String thenValue     = ParenthesesUtils.getParenthesized(thenReturnValue, ParenthesesUtils.CONDITIONAL_PRECENDENCE);
-        final String elseValue     = ParenthesesUtils.getParenthesized(elseReturnValue, ParenthesesUtils.CONDITIONAL_PRECENDENCE);
-        final String conditionText = ParenthesesUtils.getParenthesized(condition,       ParenthesesUtils.CONDITIONAL_PRECENDENCE);
+        String thenValue = ParenthesesUtils.getParenthesized(thenReturnValue, ParenthesesUtils.CONDITIONAL_PRECENDENCE);
+        String elseValue = ParenthesesUtils.getParenthesized(elseReturnValue, ParenthesesUtils.CONDITIONAL_PRECENDENCE);
+        String conditionText = ParenthesesUtils.getParenthesized(condition, ParenthesesUtils.CONDITIONAL_PRECENDENCE);
 
-        return RETURN_KEYWORD + conditionText + TERNARY_QUESTION + thenValue + TERNARY_SEMICOLON + elseValue + ';';
+        return "return " + conditionText + '?' + thenValue + ':' + elseValue + ';';
     }
 
     private static class ReplaceIfWithConditionalPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
             if (!(element instanceof JSElement)) {
                 return false;
             }
@@ -161,7 +161,8 @@ public class JSReplaceIfWithConditionalIntention extends JSIntention {
             if (!(parent instanceof JSIfStatement)) {
                 if (element instanceof JSIfStatement) {
                     parent = element;
-                } else {
+                }
+                else {
                     return false;
                 }
             }
@@ -170,60 +171,51 @@ public class JSReplaceIfWithConditionalIntention extends JSIntention {
                 return false;
             }
 
-            final JSIfStatement ifStatement = (JSIfStatement) parent;
-            final JSExpression  condition   = ifStatement.getCondition();
+            JSIfStatement ifStatement = (JSIfStatement)parent;
+            JSExpression condition = ifStatement.getCondition();
 
             if (condition == null || !condition.isValid()) {
                 return false;
             }
-            if (isReplaceableAssignment(ifStatement)) {
-                return true;
-            }
-            if (isReplaceableReturn(ifStatement)) {
-                return true;
-            }
-            return isReplaceableImplicitReturn(ifStatement);
+            return isReplaceableAssignment(ifStatement)
+                || isReplaceableReturn(ifStatement)
+                || isReplaceableImplicitReturn(ifStatement);
         }
 
         public static boolean isReplaceableImplicitReturn(JSIfStatement ifStatement) {
-            final PsiElement nextStatement = JSElementFactory.getNonWhiteSpaceSibling(ifStatement, true);
+            PsiElement nextStatement = JSElementFactory.getNonWhiteSpaceSibling(ifStatement, true);
 
-            if (!(nextStatement instanceof JSReturnStatement)) {
+            if (!(nextStatement instanceof JSReturnStatement nextReturnStatement)) {
                 return false;
             }
 
-            final JSStatement thenBranch = ConditionalUtils.stripBraces(ifStatement.getThen());
+            JSStatement thenBranch = ConditionalUtils.stripBraces(ifStatement.getThen());
 
-            if (!(thenBranch instanceof JSReturnStatement)) {
-                return false;
-            }
-
-            return (((JSReturnStatement) thenBranch)   .getExpression() != null &&
-                    ((JSReturnStatement) nextStatement).getExpression() != null);
+            return thenBranch instanceof JSReturnStatement thenReturnStatement
+                && thenReturnStatement.getExpression() != null
+                && nextReturnStatement.getExpression() != null;
         }
 
         public static boolean isReplaceableReturn(JSIfStatement ifStatement) {
-            final JSStatement thenBranch = ConditionalUtils.stripBraces(ifStatement.getThen());
-            final JSStatement elseBranch = ConditionalUtils.stripBraces(ifStatement.getElse());
+            JSStatement thenBranch = ConditionalUtils.stripBraces(ifStatement.getThen());
+            JSStatement elseBranch = ConditionalUtils.stripBraces(ifStatement.getElse());
 
-            if (!(thenBranch instanceof JSReturnStatement)) {
+            if (!(thenBranch instanceof JSReturnStatement thenReturnStatement)) {
                 return false;
             }
 
-            if (elseBranch instanceof JSIfStatement) {
-                return isReplaceableReturn((JSIfStatement) elseBranch);
-            }
-            if (!(elseBranch instanceof JSReturnStatement)) {
-                return false;
+            if (elseBranch instanceof JSIfStatement elseIfStatement) {
+                return isReplaceableReturn(elseIfStatement);
             }
 
-            return (((JSReturnStatement) thenBranch).getExpression() != null &&
-                    ((JSReturnStatement) elseBranch).getExpression() != null);
-
+            return elseBranch instanceof JSReturnStatement elseReturnStatement
+                && thenReturnStatement.getExpression() != null
+                && elseReturnStatement.getExpression() != null;
         }
 
+        @RequiredReadAction
         public static boolean isReplaceableAssignment(JSIfStatement ifStatement) {
-            final JSStatement thenBranch = ConditionalUtils.stripBraces(ifStatement.getThen());
+            JSStatement thenBranch = ConditionalUtils.stripBraces(ifStatement.getThen());
             if (thenBranch == null) {
                 return false;
             }
@@ -231,46 +223,45 @@ public class JSReplaceIfWithConditionalIntention extends JSIntention {
             if (!ConditionalUtils.isAssignment(thenBranch)) {
                 return false;
             }
-            final JSStatement elseBranch = ConditionalUtils.stripBraces(ifStatement.getElse());
+            JSStatement elseBranch = ConditionalUtils.stripBraces(ifStatement.getElse());
 
             if (elseBranch == null) {
                 return false;
             }
-            if (elseBranch instanceof JSIfStatement) {
-                return isReplaceableAssignment((JSIfStatement) elseBranch);
+
+            if (elseBranch instanceof JSIfStatement elseIfStatement) {
+                return isReplaceableAssignment(elseIfStatement);
             }
 
             if (!ConditionalUtils.isAssignment(elseBranch)) {
                 return false;
             }
 
-            final JSAssignmentExpression thenExpression = (JSAssignmentExpression) ((JSExpressionStatement) thenBranch).getExpression();
-            final JSAssignmentExpression elseExpression = (JSAssignmentExpression) ((JSExpressionStatement) elseBranch).getExpression();
-            final IElementType           thenSign       = thenExpression.getOperationSign();
-            final IElementType           elseSign       = elseExpression.getOperationSign();
+            JSAssignmentExpression thenExpression = (JSAssignmentExpression)((JSExpressionStatement)thenBranch).getExpression();
+            JSAssignmentExpression elseExpression = (JSAssignmentExpression)((JSExpressionStatement)elseBranch).getExpression();
+            IElementType thenSign = thenExpression.getOperationSign();
+            IElementType elseSign = elseExpression.getOperationSign();
 
             if (!thenSign.equals(elseSign)) {
                 return false;
             }
 
-            final JSExpression thenLhs = thenExpression.getLOperand();
+            JSExpression thenLhs = thenExpression.getLOperand();
 
-            if (thenExpression.getROperand() == null) {
+            if (thenExpression.getROperand() == null
+                || elseExpression.getROperand() == null
+                || elseExpression.getLOperand() == null) {
                 return false;
             }
-            if (elseExpression.getROperand() == null ||
-                elseExpression.getLOperand() == null) {
-                return false;
-            }
-            final JSExpression thenRhs = thenExpression.getROperand();
+            JSExpression thenRhs = thenExpression.getROperand();
             assert thenRhs != null;
 
-            final JSExpression elseRhs = elseExpression.getROperand();
+            JSExpression elseRhs = elseExpression.getROperand();
             if (elseRhs == null) {
                 return false;
             }
 
-            final JSExpression elseLhs = elseExpression.getLOperand();
+            JSExpression elseLhs = elseExpression.getLOperand();
             return EquivalenceChecker.expressionsAreEquivalent(thenLhs, elseLhs);
         }
     }

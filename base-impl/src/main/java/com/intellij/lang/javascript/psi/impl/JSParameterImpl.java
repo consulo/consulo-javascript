@@ -17,7 +17,8 @@
 package com.intellij.lang.javascript.psi.impl;
 
 import com.intellij.javascript.documentation.JSDocumentationUtils;
-import com.intellij.lang.ASTNode;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSAttributeList;
@@ -25,128 +26,108 @@ import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSParameter;
 import com.intellij.lang.javascript.psi.stubs.JSParameterStub;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.language.util.IncorrectOperationException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:12:51 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public class JSParameterImpl extends JSVariableBaseImpl<JSParameterStub, JSParameter> implements JSParameter
-{
-	public JSParameterImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSParameterImpl extends JSVariableBaseImpl<JSParameterStub, JSParameter> implements JSParameter {
+    public JSParameterImpl(ASTNode node) {
+        super(node);
+    }
 
-	public JSParameterImpl(final JSParameterStub stub)
-	{
-		super(stub, JSElementTypes.FORMAL_PARAMETER);
-	}
+    public JSParameterImpl(JSParameterStub stub) {
+        super(stub, JSElementTypes.FORMAL_PARAMETER);
+    }
 
-	@Override
-	public JSFunction getDeclaringFunction()
-	{
-		return (JSFunction) getNode().getTreeParent().getTreeParent().getPsi();
-	}
+    @Override
+    @RequiredReadAction
+    public JSFunction getDeclaringFunction() {
+        return (JSFunction)getNode().getTreeParent().getTreeParent().getPsi();
+    }
 
-	@Override
-	@RequiredReadAction
-	public boolean isRest()
-	{
-		final JSParameterStub parameterStub = getStub();
-		if(parameterStub != null)
-		{
-			return parameterStub.isRest();
-		}
-		return getRestElement() != null;
-	}
+    @Override
+    @RequiredReadAction
+    public boolean isRest() {
+        JSParameterStub parameterStub = getStub();
+        return parameterStub != null ? parameterStub.isRest() : getRestElement() != null;
+    }
 
-	@Nullable
-	@Override
-	@RequiredReadAction
-	public PsiElement getRestElement()
-	{
-		return findChildByType(JSTokenTypes.DOT_DOT_DOT);
-	}
+    @Nullable
+    @Override
+    @RequiredReadAction
+    public PsiElement getRestElement() {
+        return findChildByType(JSTokenTypes.DOT_DOT_DOT);
+    }
 
-	@Override
-	public boolean isOptional()
-	{
-		final JSParameterStub parameterStub = getStub();
-		if(parameterStub != null)
-		{
-			return parameterStub.isOptional();
-		}
-		if(getInitializer() != null)
-		{
-			return true;
-		}
+    @Override
+    @RequiredReadAction
+    public boolean isOptional() {
+        JSParameterStub parameterStub = getStub();
+        if (parameterStub != null) {
+            return parameterStub.isOptional();
+        }
+        return getInitializer() != null || JSDocumentationUtils.findOptionalStatusFromComments(this);
+    }
 
-		return JSDocumentationUtils.findOptionalStatusFromComments(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSParameter(this);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSParameter(this);
-	}
+    @Override
+    public JSAttributeList getAttributeList() {
+        return null;
+    }
 
-	@Override
-	public JSAttributeList getAttributeList()
-	{
-		return null;
-	}
+    @Override
+    @RequiredWriteAction
+    public void delete() throws IncorrectOperationException {
+        ASTNode myNode = getNode();
+        ASTNode parent = myNode.getTreeParent();
 
-	@Override
-	public void delete() throws IncorrectOperationException
-	{
-		final ASTNode myNode = getNode();
-		final ASTNode parent = myNode.getTreeParent();
+        if (parent.getElementType() == JSElementTypes.PARAMETER_LIST) {
+            JSChangeUtil.removeRangeWithRemovalOfCommas(myNode, parent);
+            return;
+        }
 
-		if(parent.getElementType() == JSElementTypes.PARAMETER_LIST)
-		{
-			JSChangeUtil.removeRangeWithRemovalOfCommas(myNode, parent);
-			return;
-		}
+        throw new IncorrectOperationException("Cannot delete variable from parent : " + parent.getElementType());
+    }
 
-		throw new IncorrectOperationException("Cannot delete variable from parent : " + parent.getElementType());
-	}
+    @Override
+    @RequiredReadAction
+    protected String doGetType() {
+        String s = super.doGetType();
 
-	@Override
-	protected String doGetType()
-	{
-		String s = super.doGetType();
+        if (s == null) {
+            ASTNode astNode = getNode();
+            ASTNode anchor = astNode.findChildByType(JSTokenTypes.INSTANCEOF_KEYWORD);
 
-		if(s == null)
-		{
-			final ASTNode astNode = getNode();
-			final ASTNode anchor = astNode.findChildByType(JSTokenTypes.INSTANCEOF_KEYWORD);
+            if (anchor != null) {
+                ASTNode type = astNode.findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET, anchor);
+                if (type != null) {
+                    s = type.getText();
+                }
+            }
+        }
+        return s;
+    }
 
-			if(anchor != null)
-			{
-				ASTNode type = astNode.findChildByType(JSTokenTypes.IDENTIFIER_TOKENS_SET, anchor);
-				if(type != null)
-				{
-					s = type.getText();
-				}
-			}
-		}
-		return s;
-	}
-
-	@Override
-	public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent, @Nonnull PsiElement place)
-	{
-		return processor.execute(this, state);
-	}
+    @Override
+    public boolean processDeclarations(
+        @Nonnull PsiScopeProcessor processor,
+        @Nonnull ResolveState state,
+        PsiElement lastParent,
+        @Nonnull PsiElement place
+    ) {
+        return processor.execute(this, state);
+    }
 }

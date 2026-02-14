@@ -1,318 +1,269 @@
 package consulo.javascript.lang.parsing;
 
-import com.intellij.codeInsight.daemon.XmlErrorMessages;
-import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.ICustomParsingType;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.ILazyParseableElementType;
-import com.intellij.psi.xml.XmlElementType;
-import com.intellij.psi.xml.XmlTokenType;
+import consulo.language.ast.ICustomParsingType;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.ILazyParseableElementType;
+import consulo.language.ast.TokenType;
+import consulo.language.parser.PsiBuilder;
+import consulo.localize.LocalizeValue;
+import consulo.xml.impl.localize.XmlErrorLocalize;
+import consulo.xml.psi.xml.XmlElementType;
+import consulo.xml.psi.xml.XmlTokenType;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Stack;
 
 /**
  * @author VISTALL
- * @see com.intellij.psi.impl.source.parsing.xml.XmlParsing
- * @see com.intellij.lang.html.HtmlParsing
+ * @see consulo.xml.psi.impl.source.parsing.xml.XmlParsing
+ * @see consulo.xml.lang.html.HtmlParsing
  * @since 2019-12-17
  */
-public class JSXParser
-{
-	private final Stack<String> myTagNamesStack = new Stack<>();
-	private static final int BALANCING_DEPTH_THRESHOLD = 1000;
+public class JSXParser {
+    public static final String FRAGMENT_TAG = "<<<FRAGMENT TAG>>>";
 
-	private PsiBuilder myBuilder;
+    private final Stack<String> myTagNamesStack = new Stack<>();
+    private static final int BALANCING_DEPTH_THRESHOLD = 1000;
 
-	public void setBuilder(PsiBuilder builder)
-	{
-		myBuilder = builder;
-	}
+    private PsiBuilder myBuilder;
 
-	private PsiBuilder.Marker mark()
-	{
-		return myBuilder.mark();
-	}
+    public void setBuilder(PsiBuilder builder) {
+        myBuilder = builder;
+    }
 
-	private void advance()
-	{
-		myBuilder.advanceLexer();
-	}
+    private PsiBuilder.Marker mark() {
+        return myBuilder.mark();
+    }
 
-	private IElementType token()
-	{
-		return myBuilder.getTokenType();
-	}
+    private void advance() {
+        myBuilder.advanceLexer();
+    }
 
-	private void error(String error)
-	{
-		myBuilder.error(error);
-	}
+    private IElementType token() {
+        return myBuilder.getTokenType();
+    }
 
-	private boolean eof()
-	{
-		return myBuilder.eof();
-	}
+    private void error(LocalizeValue error) {
+        myBuilder.error(error);
+    }
 
-	@Nullable
-	private String parseTagHeader(final boolean multipleRootTagError, final PsiBuilder.Marker tag)
-	{
-		if(multipleRootTagError)
-		{
-			final PsiBuilder.Marker error = mark();
-			advance();
-			error.error(XmlErrorMessages.message("xml.parsing.multiple.root.tags"));
-		}
-		else
-		{
-			advance();
-		}
+    private boolean eof() {
+        return myBuilder.eof();
+    }
 
-		final String tagName;
-		if(token() != JSTokenTypes.XML_NAME || myBuilder.rawLookup(-1) == TokenType.WHITE_SPACE)
-		{
-			error(XmlErrorMessages.message("xml.parsing.tag.name.expected"));
-			tagName = "";
-		}
-		else
-		{
-			tagName = myBuilder.getTokenText();
-			assert tagName != null;
-			advance();
-		}
-		myTagNamesStack.push(tagName);
+    @Nullable
+    private String parseTagHeader(boolean multipleRootTagError, PsiBuilder.Marker tag) {
+        if (token() == JSTokenTypes.XML_START_TAG_LIST) {
+            myTagNamesStack.push(FRAGMENT_TAG);
+            advance();
+            return FRAGMENT_TAG;
+        }
 
-		do
-		{
-			final IElementType tt = token();
-			if(tt == JSTokenTypes.XML_NAME)
-			{
-				parseAttribute();
-			}
-			else if(tt == JSTokenTypes.XML_JS_SCRIPT)
-			{
-				advance();
-			}
-			else
-			{
-				break;
-			}
-		}
-		while(true);
+        if (multipleRootTagError) {
+            PsiBuilder.Marker error = mark();
+            advance();
+            error.error(XmlErrorLocalize.xmlParsingMultipleRootTags());
+        }
+        else {
+            advance();
+        }
 
-		if(token() == XmlTokenType.XML_EMPTY_ELEMENT_END)
-		{
-			advance();
-			myTagNamesStack.pop();
-			tag.done(JSElementTypes.XML_LITERAL_EXPRESSION);
-			return null;
-		}
+        String tagName;
+        if (token() != JSTokenTypes.XML_NAME || myBuilder.rawLookup(-1) == TokenType.WHITE_SPACE) {
+            error(XmlErrorLocalize.xmlParsingTagNameExpected());
+            tagName = "";
+        }
+        else {
+            tagName = myBuilder.getTokenText();
+            advance();
+        }
+        myTagNamesStack.push(tagName);
 
-		if(token() == JSTokenTypes.XML_TAG_END)
-		{
-			advance();
-		}
-		else
-		{
-			error(XmlErrorMessages.message("tag.start.is.not.closed"));
-			myTagNamesStack.pop();
-			tag.done(JSElementTypes.XML_LITERAL_EXPRESSION);
-			return null;
-		}
+        do {
+            IElementType tt = token();
+            if (tt == JSTokenTypes.XML_NAME) {
+                parseAttribute();
+            }
+            else if (tt == JSTokenTypes.XML_JS_SCRIPT) {
+                advance();
+            }
+            else {
+                break;
+            }
+        }
+        while (true);
 
-		if(myTagNamesStack.size() > BALANCING_DEPTH_THRESHOLD)
-		{
-			error(XmlErrorMessages.message("way.too.unbalanced"));
-			tag.done(JSElementTypes.XML_LITERAL_EXPRESSION);
-			return null;
-		}
+        if (token() == XmlTokenType.XML_EMPTY_ELEMENT_END) {
+            advance();
+            myTagNamesStack.pop();
+            tag.done(JSElementTypes.XML_LITERAL_EXPRESSION);
+            return null;
+        }
 
-		return tagName;
-	}
+        if (token() == JSTokenTypes.XML_TAG_END) {
+            advance();
+        }
+        else {
+            error(XmlErrorLocalize.tagStartIsNotClosed());
+            myTagNamesStack.pop();
+            tag.done(JSElementTypes.XML_LITERAL_EXPRESSION);
+            return null;
+        }
 
+        if (myTagNamesStack.size() > BALANCING_DEPTH_THRESHOLD) {
+            error(XmlErrorLocalize.wayTooUnbalanced());
+            tag.done(JSElementTypes.XML_LITERAL_EXPRESSION);
+            return null;
+        }
 
-	private void parseAttribute()
-	{
-		assert token() == XmlTokenType.XML_NAME;
-		final PsiBuilder.Marker att = mark();
-		advance();
-		if(token() == XmlTokenType.XML_EQ)
-		{
-			advance();
-			parseAttributeValue();
-		}
-		att.done(XmlElementType.XML_ATTRIBUTE);
-	}
+        return tagName;
+    }
 
-	private void parseAttributeValue()
-	{
-		final PsiBuilder.Marker attValue = mark();
-		if(token() == XmlTokenType.XML_ATTRIBUTE_VALUE_START_DELIMITER)
-		{
-			while(true)
-			{
-				final IElementType tt = token();
-				if(tt == null || tt == XmlTokenType.XML_ATTRIBUTE_VALUE_END_DELIMITER || tt == XmlTokenType.XML_END_TAG_START || tt == XmlTokenType.XML_EMPTY_ELEMENT_END ||
-						tt == JSTokenTypes.XML_START_TAG_START)
-				{
-					break;
-				}
+    private void parseAttribute() {
+        PsiBuilder.Marker att = mark();
+        advance();
+        if (token() == XmlTokenType.XML_EQ) {
+            advance();
+            parseAttributeValue();
+        }
+        att.done(XmlElementType.XML_ATTRIBUTE);
+    }
 
-				if(tt == JSTokenTypes.BAD_CHARACTER)
-				{
-					final PsiBuilder.Marker error = mark();
-					advance();
-					error.error(XmlErrorMessages.message("unescaped.ampersand.or.nonterminated.character.entity.reference"));
-				}
-				else
-				{
-					advance();
-				}
-			}
+    private void parseAttributeValue() {
+        PsiBuilder.Marker attValue = mark();
+        if (token() == XmlTokenType.XML_ATTRIBUTE_VALUE_START_DELIMITER) {
+            while (true) {
+                IElementType tt = token();
+                if (tt == null || tt == XmlTokenType.XML_ATTRIBUTE_VALUE_END_DELIMITER || tt == XmlTokenType.XML_END_TAG_START
+                    || tt == XmlTokenType.XML_EMPTY_ELEMENT_END || tt == JSTokenTypes.XML_START_TAG_START) {
+                    break;
+                }
 
-			if(token() == XmlTokenType.XML_ATTRIBUTE_VALUE_END_DELIMITER)
-			{
-				advance();
-			}
-			else
-			{
-				error(XmlErrorMessages.message("xml.parsing.unclosed.attribute.value"));
-			}
-		}
-		else if(token() == JSTokenTypes.XML_JS_SCRIPT)
-		{
-			advance();
-		}
-		else
-		{
-			if(token() != XmlTokenType.XML_TAG_END && token() != XmlTokenType.XML_EMPTY_ELEMENT_END)
-			{
-				advance(); // Single token att value
-			}
-		}
+                if (tt == JSTokenTypes.BAD_CHARACTER) {
+                    PsiBuilder.Marker error = mark();
+                    advance();
+                    error.error(XmlErrorLocalize.unescapedAmpersandOrNonterminatedCharacterEntityReference());
+                }
+                else {
+                    advance();
+                }
+            }
 
-		attValue.done(XmlElementType.XML_ATTRIBUTE_VALUE);
-	}
+            if (token() == XmlTokenType.XML_ATTRIBUTE_VALUE_END_DELIMITER) {
+                advance();
+            }
+            else {
+                error(XmlErrorLocalize.xmlParsingUnclosedAttributeValue());
+            }
+        }
+        else if (token() == JSTokenTypes.XML_JS_SCRIPT) {
+            advance();
+        }
+        else if (token() != XmlTokenType.XML_TAG_END && token() != XmlTokenType.XML_EMPTY_ELEMENT_END) {
+            advance(); // Single token att value
+        }
 
-	public void parseTagContent()
-	{
-		PsiBuilder.Marker xmlText = null;
-		while(true)
-		{
-			final IElementType tt = token();
-			if(tt == null || tt == XmlTokenType.XML_END_TAG_START)
-			{
-				break;
-			}
+        attValue.done(XmlElementType.XML_ATTRIBUTE_VALUE);
+    }
 
-			if(tt == JSTokenTypes.XML_START_TAG_START)
-			{
-				xmlText = terminateText(xmlText);
-				parseTag(false);
-			}
-			else if(tt == JSTokenTypes.BAD_CHARACTER)
-			{
-				xmlText = startText(xmlText);
-				final PsiBuilder.Marker error = mark();
-				advance();
-				error.error(XmlErrorMessages.message("unescaped.ampersand.or.nonterminated.character.entity.reference"));
-			}
-			else if(tt instanceof ICustomParsingType || tt instanceof ILazyParseableElementType)
-			{
-				xmlText = terminateText(xmlText);
-				advance();
-			}
-			else
-			{
-				xmlText = startText(xmlText);
-				advance();
-			}
-		}
+    public void parseTagContent() {
+        PsiBuilder.Marker xmlText = null;
+        while (true) {
+            IElementType tt = token();
+            if (tt == null || tt == XmlTokenType.XML_END_TAG_START) {
+                break;
+            }
 
-		terminateText(xmlText);
-	}
+            if (tt == JSTokenTypes.XML_START_TAG_START) {
+                xmlText = terminateText(xmlText);
+                parseTag(false);
+            }
+            else if (tt == JSTokenTypes.BAD_CHARACTER) {
+                xmlText = startText(xmlText);
+                PsiBuilder.Marker error = mark();
+                advance();
+                error.error(XmlErrorLocalize.unescapedAmpersandOrNonterminatedCharacterEntityReference());
+            }
+            else if (tt instanceof ICustomParsingType || tt instanceof ILazyParseableElementType) {
+                xmlText = terminateText(xmlText);
+                advance();
+            }
+            else {
+                xmlText = startText(xmlText);
+                advance();
+            }
+        }
 
-	@Nullable
-	private static PsiBuilder.Marker terminateText(@Nullable PsiBuilder.Marker xmlText)
-	{
-		if(xmlText != null)
-		{
-			xmlText.done(XmlElementType.XML_TEXT);
-		}
-		return null;
-	}
+        terminateText(xmlText);
+    }
 
-	@Nonnull
-	private PsiBuilder.Marker startText(@Nullable PsiBuilder.Marker xmlText)
-	{
-		if(xmlText == null)
-		{
-			xmlText = mark();
-		}
-		return xmlText;
-	}
+    @Nullable
+    private static PsiBuilder.Marker terminateText(@Nullable PsiBuilder.Marker xmlText) {
+        if (xmlText != null) {
+            xmlText.done(XmlElementType.XML_TEXT);
+        }
+        return null;
+    }
 
-	protected void parseTag(boolean multipleRootTagError)
-	{
-		assert token() == JSTokenTypes.XML_START_TAG_START : "Tag start expected";
-		final PsiBuilder.Marker tag = mark();
+    @Nonnull
+    private PsiBuilder.Marker startText(@Nullable PsiBuilder.Marker xmlText) {
+        if (xmlText == null) {
+            xmlText = mark();
+        }
+        return xmlText;
+    }
 
-		final String tagName = parseTagHeader(multipleRootTagError, tag);
-		if(tagName == null)
-		{
-			return;
-		}
+    protected void parseTag(boolean multipleRootTagError) {
+        PsiBuilder.Marker tag = mark();
 
-		final PsiBuilder.Marker content = mark();
-		parseTagContent();
+        String tagName = parseTagHeader(multipleRootTagError, tag);
+        if (tagName == null) {
+            return;
+        }
 
-		if(token() == JSTokenTypes.XML_END_TAG_START)
-		{
-			final PsiBuilder.Marker footer = mark();
-			advance();
+        PsiBuilder.Marker content = mark();
+        parseTagContent();
 
-			if(token() == JSTokenTypes.XML_NAME)
-			{
-				String endName = myBuilder.getTokenText();
-				if(!tagName.equals(endName) && myTagNamesStack.contains(endName))
-				{
-					footer.rollbackTo();
-					myTagNamesStack.pop();
-					tag.doneBefore(JSElementTypes.XML_LITERAL_EXPRESSION, content, XmlErrorMessages.message("named.element.is.not.closed", tagName));
-					content.drop();
-					return;
-				}
+        if (token() == JSTokenTypes.XML_END_TAG_START) {
+            PsiBuilder.Marker footer = mark();
+            advance();
 
-				advance();
-			}
-			footer.drop();
+            if (token() == JSTokenTypes.XML_NAME) {
+                String endName = myBuilder.getTokenText();
+                if (!tagName.equals(endName) && myTagNamesStack.contains(endName)) {
+                    footer.rollbackTo();
+                    myTagNamesStack.pop();
+                    tag.doneBefore(JSElementTypes.XML_LITERAL_EXPRESSION, content, XmlErrorLocalize.namedElementIsNotClosed(tagName));
+                    content.drop();
+                    return;
+                }
 
-			while(token() != XmlTokenType.XML_TAG_END && token() != XmlTokenType.XML_START_TAG_START && token() != XmlTokenType.XML_END_TAG_START && !eof())
-			{
-				error(XmlErrorMessages.message("xml.parsing.unexpected.token"));
-				advance();
-			}
+                advance();
+            }
+            footer.drop();
 
-			if(token() == JSTokenTypes.XML_TAG_END)
-			{
-				advance();
-			}
-			else
-			{
-				error(XmlErrorMessages.message("xml.parsing.closing.tag.is.not.done"));
-			}
-		}
-		else
-		{
-			error(XmlErrorMessages.message("xml.parsing.unexpected.end.of.file"));
-		}
+            while (token() != XmlTokenType.XML_TAG_END && token() != XmlTokenType.XML_START_TAG_START
+                && token() != XmlTokenType.XML_END_TAG_START && !eof()) {
+                error(XmlErrorLocalize.xmlParsingUnexpectedToken());
+                advance();
+            }
 
-		content.drop();
-		myTagNamesStack.pop();
-		tag.done(JSElementTypes.XML_LITERAL_EXPRESSION);
-	}
+            if (token() == JSTokenTypes.XML_TAG_END) {
+                advance();
+            }
+            else {
+                error(XmlErrorLocalize.xmlParsingClosingTagIsNotDone());
+            }
+        }
+        else {
+            error(XmlErrorLocalize.xmlParsingUnexpectedEndOfFile());
+        }
+
+        content.drop();
+        myTagNamesStack.pop();
+        tag.done(JSElementTypes.XML_LITERAL_EXPRESSION);
+    }
 }

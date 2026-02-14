@@ -16,18 +16,18 @@
 
 package com.intellij.lang.javascript.psi;
 
-import javax.annotation.Nullable;
 import com.intellij.lang.javascript.psi.stubs.JSNamespaceDeclarationStub;
-import com.intellij.psi.StubBasedPsiElement;
+import consulo.language.psi.StubBasedPsiElement;
+import jakarta.annotation.Nullable;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
-public interface JSNamespaceDeclaration extends JSStatement, JSQualifiedNamedElement, JSAttributeListOwner,
-		StubBasedPsiElement<JSNamespaceDeclarationStub>
-{
-	@Nullable
-	String getInitialValueString();
+public interface JSNamespaceDeclaration
+    extends JSStatement, JSQualifiedNamedElement, JSAttributeListOwner, StubBasedPsiElement<JSNamespaceDeclarationStub> {
 
-	boolean isDeprecated();
+    @Nullable
+    String getInitialValueString();
+
+    boolean isDeprecated();
 }

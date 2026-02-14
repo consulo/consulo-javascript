@@ -16,43 +16,35 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.util.PsiTreeUtil;
-
-import javax.annotation.Nonnull;
+import consulo.language.psi.util.PsiTreeUtil;
+import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:52:04 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public class JSBreakStatementImpl extends JSStatementWithLabelReferenceImpl implements JSBreakStatement
-{
-	public JSBreakStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSBreakStatementImpl extends JSStatementWithLabelReferenceImpl implements JSBreakStatement {
+    public JSBreakStatementImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSBreakStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSBreakStatement(this);
+    }
 
-	@Override
-	public JSStatement getStatementToBreak()
-	{
-		String label = getLabel();
-		if(label == null)
-		{
-			return PsiTreeUtil.getParentOfType(this, JSLoopStatement.class, JSSwitchStatement.class);
-		}
-		else
-		{
-			return (JSStatement) getReferences()[0].resolve();
-		}
-	}
+    @Override
+    @RequiredReadAction
+    public JSStatement getStatementToBreak() {
+        String label = getLabel();
+        if (label == null) {
+            return PsiTreeUtil.getParentOfType(this, JSLoopStatement.class, JSSwitchStatement.class);
+        }
+        else {
+            return (JSStatement)getReferences()[0].resolve();
+        }
+    }
 }

@@ -16,68 +16,58 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSPrefixExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.lang.psi.JavaScriptType;
+import consulo.javascript.language.psi.JavaScriptType;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 11:52:13 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public class JSPrefixExpressionImpl extends JSExpressionImpl implements JSPrefixExpression
-{
-	public JSPrefixExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSPrefixExpressionImpl extends JSExpressionImpl implements JSPrefixExpression {
+    public JSPrefixExpressionImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getExpression()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression getExpression() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Nullable
-	@RequiredReadAction
-	@Override
-	public IElementType getOperationSign()
-	{
-		PsiElement operatorElement = getOperatorElement();
-		return operatorElement != null ? operatorElement.getNode().getElementType() : null;
-	}
+    @Nullable
+    @RequiredReadAction
+    @Override
+    public IElementType getOperationSign() {
+        PsiElement operatorElement = getOperatorElement();
+        return operatorElement != null ? operatorElement.getNode().getElementType() : null;
+    }
 
-	@RequiredReadAction
-	@Nullable
-	@Override
-	public PsiElement getOperatorElement()
-	{
-		return findChildByType(JSTokenTypes.OPERATIONS);
-	}
+    @RequiredReadAction
+    @Nullable
+    @Override
+    public PsiElement getOperatorElement() {
+        return findChildByType(JSTokenTypes.OPERATIONS);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSPrefixExpression(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSPrefixExpression(this);
+    }
 
-	@RequiredReadAction
-	@Nonnull
-	@Override
-	public JavaScriptType getType()
-	{
-		JSExpression expression = getExpression();
-		return expression == null ? JavaScriptType.UNKNOWN : expression.getType();
-	}
+    @RequiredReadAction
+    @Nonnull
+    @Override
+    public JavaScriptType getType() {
+        JSExpression expression = getExpression();
+        return expression == null ? JavaScriptType.UNKNOWN : expression.getType();
+    }
 }

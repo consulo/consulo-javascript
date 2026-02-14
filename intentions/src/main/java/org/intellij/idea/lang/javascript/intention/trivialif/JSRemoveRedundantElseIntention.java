@@ -15,43 +15,57 @@
  */
 package org.intellij.idea.lang.javascript.intention.trivialif;
 
-import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
-import org.intellij.idea.lang.javascript.intention.JSIntention;
-import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
-import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import javax.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
-
 import com.intellij.lang.javascript.psi.JSBlockStatement;
 import com.intellij.lang.javascript.psi.JSIfStatement;
 import com.intellij.lang.javascript.psi.JSReturnStatement;
 import com.intellij.lang.javascript.psi.JSStatement;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
+import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
+import org.intellij.idea.lang.javascript.intention.JSIntention;
+import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
+import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
+@ExtensionImpl
+@IntentionMetaData(
+    ignoreId = "JSRemoveRedundantElseIntention",
+    categories = {"JavaScript", "Control Flow"},
+    fileExtensions = "js"
+)
 public class JSRemoveRedundantElseIntention extends JSIntention {
-    @NonNls private static final String IF_STATEMENT_PREFIX = "if (";
+    @Override
+    @Nonnull
+    public LocalizeValue getText() {
+        return JSIntentionLocalize.trivialifRemoveRedundantElse();
+    }
 
     @Override
-	@Nonnull
+    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new RemoveRedundantElsePredicate();
     }
 
     @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSIfStatement ifStatement = (JSIfStatement) element;
-        final JSStatement   thenBranch  = ifStatement.getThen();
-        final JSStatement   elseBranch  = ifStatement.getElse();
+    @RequiredReadAction
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        JSIfStatement ifStatement = (JSIfStatement)element;
+        JSStatement thenBranch = ifStatement.getThen();
+        JSStatement elseBranch = ifStatement.getElse();
 
         assert (thenBranch != null);
         assert (elseBranch != null);
 
-        final String      newIfText    = IF_STATEMENT_PREFIX + ifStatement.getCondition().getText() + ')' + thenBranch.getText();
-        final String      elseText     = elseBranch.getText();
-        final String      newStatement = (elseBranch instanceof JSBlockStatement
-                                              ? elseText.substring(elseText.indexOf('{') + 1, elseText.lastIndexOf('}') - 1).trim()
-                                              : elseText);
+        String newIfText = "if (" + ifStatement.getCondition().getText() + ')' + thenBranch.getText();
+        String elseText = elseBranch.getText();
+        String newStatement = elseBranch instanceof JSBlockStatement
+            ? elseText.substring(elseText.indexOf('{') + 1, elseText.lastIndexOf('}') - 1).trim()
+            : elseText;
 
         JSElementFactory.addStatementAfter(ifStatement, newStatement);
         JSElementFactory.replaceStatement(ifStatement, newIfText);
@@ -59,36 +73,24 @@ public class JSRemoveRedundantElseIntention extends JSIntention {
 
     private static class RemoveRedundantElsePredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-            if (!(element instanceof JSIfStatement)) {
-                return false;
-            }
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            if (element instanceof JSIfStatement ifStatement && !ErrorUtil.containsError(ifStatement) && ifStatement.getElse() != null) {
+                JSStatement thenBranch = ifStatement.getThen();
+                while (thenBranch instanceof JSBlockStatement thenBlockStatement) {
+                    JSStatement[] thenStatements = thenBlockStatement.getStatements();
 
-            final JSIfStatement ifStatement = (JSIfStatement) element;
-
-            if (ErrorUtil.containsError(ifStatement)) {
-                return false;
-            }
-
-            final JSStatement  elseBranch = ifStatement.getElse();
-            JSStatement        thenBranch = ifStatement.getThen();
-
-            if (elseBranch == null) {
-                return false;
-            }
-
-            while (thenBranch != null && thenBranch instanceof JSBlockStatement) {
-                JSStatement[] thenStatements = ((JSBlockStatement) thenBranch).getStatements();
-
-                if (thenStatements.length == 0) {
-                    return true;
-                } else if (thenStatements.length > 1) {
-                    return false;
+                    if (thenStatements.length == 0) {
+                        return true;
+                    }
+                    else if (thenStatements.length > 1) {
+                        return false;
+                    }
+                    thenBranch = thenStatements[0];
                 }
-                thenBranch = thenStatements[0];
-            }
 
-            return (thenBranch != null && thenBranch instanceof JSReturnStatement);
+                return thenBranch instanceof JSReturnStatement;
+            }
+            return false;
         }
     }
 }

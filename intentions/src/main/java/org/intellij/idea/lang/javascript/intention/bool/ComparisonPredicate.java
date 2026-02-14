@@ -15,18 +15,18 @@
  */
 package org.intellij.idea.lang.javascript.intention.bool;
 
+import com.intellij.lang.javascript.psi.JSBinaryExpression;
+import com.intellij.lang.javascript.psi.JSExpression;
+import consulo.language.psi.PsiElement;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.psiutil.ComparisonUtils;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
-import javax.annotation.Nonnull;
 
-import com.intellij.lang.javascript.psi.JSBinaryExpression;
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.psi.PsiElement;
+import jakarta.annotation.Nonnull;
 
 class ComparisonPredicate implements JSElementPredicate {
     @Override
-	public boolean satisfiedBy(@Nonnull PsiElement element) {
+    public boolean satisfiedBy(@Nonnull PsiElement element) {
         if (!(element instanceof JSBinaryExpression)) {
             return false;
         }
@@ -34,11 +34,9 @@ class ComparisonPredicate implements JSElementPredicate {
             return false;
         }
 
-        final JSBinaryExpression expression = (JSBinaryExpression) element;
-        final JSExpression       rhs        = expression.getROperand();
+        JSBinaryExpression expression = (JSBinaryExpression)element;
+        JSExpression rhs = expression.getROperand();
 
-        return (rhs != null &&
-                ComparisonUtils.isComparisonOperator((JSExpression) element));
-
+        return (rhs != null && ComparisonUtils.isComparisonOperator((JSExpression)element));
     }
 }

@@ -19,68 +19,61 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import consulo.annotation.access.RequiredReadAction;
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSAttributeNameValuePair;
-import com.intellij.lang.javascript.psi.JSStubElementType;
+import consulo.javascript.impl.language.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.impl.JSAttributeNameValuePairImpl;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeNameValuePairStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSAttributeNameValuePairStubImpl;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
-import com.intellij.util.io.StringRef;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.StubElement;
+import consulo.index.io.StringRef;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.stub.StubInputStream;
+import consulo.language.psi.stub.StubOutputStream;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jun 8, 2008
- *         Time: 6:20:05 PM
+ * Date: Jun 8, 2008
+ * Time: 6:20:05 PM
  */
-public class JSAttributeNameValuePairType extends JSStubElementType<JSAttributeNameValuePairStub, JSAttributeNameValuePair>
-{
-	public JSAttributeNameValuePairType()
-	{
-		super("ATTRIBUTE_NAME_VALUE_PAIR");
-	}
+public class JSAttributeNameValuePairType extends JSStubElementType<JSAttributeNameValuePairStub, JSAttributeNameValuePair> {
+    public JSAttributeNameValuePairType() {
+        super("ATTRIBUTE_NAME_VALUE_PAIR");
+    }
 
-	@Nonnull
-	@Override
-	public PsiElement createElement(@Nonnull ASTNode astNode)
-	{
-		return new JSAttributeNameValuePairImpl(astNode);
-	}
+    @Nonnull
+    @Override
+    public PsiElement createElement(@Nonnull ASTNode astNode) {
+        return new JSAttributeNameValuePairImpl(astNode);
+    }
 
-	@Override
-	public JSAttributeNameValuePair createPsi(@Nonnull JSAttributeNameValuePairStub stub)
-	{
-		return new JSAttributeNameValuePairImpl(stub);
-	}
+    @Override
+    public JSAttributeNameValuePair createPsi(@Nonnull JSAttributeNameValuePairStub stub) {
+        return new JSAttributeNameValuePairImpl(stub);
+    }
 
-	@RequiredReadAction
-	@Override
-	public JSAttributeNameValuePairStub createStub(@Nonnull JSAttributeNameValuePair psi, StubElement parentStub)
-	{
-		String name = psi.getName();
-		String simpleValue = psi.getSimpleValue();
-		return new JSAttributeNameValuePairStubImpl(name, simpleValue, parentStub);
-	}
+    @RequiredReadAction
+    @Override
+    public JSAttributeNameValuePairStub createStub(@Nonnull JSAttributeNameValuePair psi, StubElement parentStub) {
+        String name = psi.getName();
+        String simpleValue = psi.getSimpleValue();
+        return new JSAttributeNameValuePairStubImpl(name, simpleValue, parentStub);
+    }
 
-	@Override
-	public void serialize(@Nonnull JSAttributeNameValuePairStub stub, @Nonnull StubOutputStream dataStream) throws IOException
-	{
-		dataStream.writeName(stub.getName());
-		dataStream.writeName(stub.getValue());
-	}
+    @Override
+    public void serialize(@Nonnull JSAttributeNameValuePairStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+        dataStream.writeName(stub.getName());
+        dataStream.writeName(stub.getValue());
+    }
 
-	@Nonnull
-	@Override
-	public JSAttributeNameValuePairStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
-	{
-		StringRef name = dataStream.readName();
-		StringRef value = dataStream.readName();
-		return new JSAttributeNameValuePairStubImpl(StringRef.toString(name), StringRef.toString(value), parentStub);
-	}
+    @Nonnull
+    @Override
+    public JSAttributeNameValuePairStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+        StringRef name = dataStream.readName();
+        StringRef value = dataStream.readName();
+        return new JSAttributeNameValuePairStubImpl(StringRef.toString(name), StringRef.toString(value), parentStub);
+    }
 }

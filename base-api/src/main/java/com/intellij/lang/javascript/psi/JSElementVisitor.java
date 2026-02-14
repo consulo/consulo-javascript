@@ -16,340 +16,276 @@
 
 package com.intellij.lang.javascript.psi;
 
-import com.intellij.psi.PsiElementVisitor;
 import consulo.javascript.psi.JSSimpleLiteralExpression;
 import consulo.javascript.psi.JavaScriptLambdaExpression;
+import consulo.language.psi.PsiElementVisitor;
+import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Feb 3, 2005
- * Time: 2:25:12 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-02-03
  */
-public class JSElementVisitor extends PsiElementVisitor
-{
-	public void visitJSCallExpression(final JSCallExpression node)
-	{
-		visitJSExpression(node);
-	}
-
-	public void visitJSIndexedPropertyAccessExpression(final JSIndexedPropertyAccessExpression node)
-	{
-		visitJSExpression(node);
-	}
-
-	public void visitJSNewExpression(final JSNewExpression node)
-	{
-		visitJSCallExpression(node);
-	}
-
-	public void visitJSFunctionExpression(final JSFunctionExpression node)
-	{
-		visitJSExpression(node);
-	}
-
-	public void visitJSPrefixExpression(final JSPrefixExpression expression)
-	{
-		visitJSExpression(expression);
-	}
-
-	public void visitJSPostfixExpression(final JSPostfixExpression node)
-	{
-		visitJSExpression(node);
-	}
-
-	public void visitJSConditionalExpression(final JSConditionalExpression node)
-	{
-		visitJSExpression(node);
-	}
-
-	public void visitJSCommaExpression(final JSCommaExpression node)
-	{
-		visitJSBinaryExpression(node);
-	}
-
-	public void visitJSAssignmentExpression(final JSAssignmentExpression node)
-	{
-		visitJSBinaryExpression(node);
-	}
-
-	public void visitJSBinaryExpression(final JSBinaryExpression node)
-	{
-		visitJSExpression(node);
-	}
-
-	public void visitJSProperty(final JSProperty node)
-	{
-		visitJSElement(node);
-	}
-
-	public void visitJSObjectLiteralExpression(final JSObjectLiteralExpression node)
-	{
-		visitJSExpression(node);
-	}
-
-	public void visitJSArrayLiteralExpression(final JSArrayLiteralExpression node)
-	{
-		visitJSExpression(node);
-	}
-
-	public void visitJSParenthesizedExpression(final JSParenthesizedExpression node)
-	{
-		visitJSExpression(node);
-	}
-
-	public void visitJSReferenceExpression(final JSReferenceExpression node)
-	{
-		visitJSExpression(node);
-	}
-
-	public void visitJSDefinitionExpression(final JSDefinitionExpression node)
-	{
-		visitJSExpression(node);
-	}
-
-	public void visitJSLiteralExpression(final JSSimpleLiteralExpression node)
-	{
-		visitJSExpression(node);
-	}
-
-	public void visitJSThisExpression(final JSThisExpression node)
-	{
-		visitJSExpression(node);
-	}
-
-	public void visitJSForInStatement(final JSForInStatement node)
-	{
-		visitJSStatement(node);
-	}
-
-	public void visitJSForStatement(final JSForStatement node)
-	{
-		visitJSStatement(node);
-	}
-
-	public void visitJSDoWhileStatement(final JSDoWhileStatement node)
-	{
-		visitJSStatement(node);
-	}
-
-	public void visitJSWhileStatement(final JSWhileStatement node)
-	{
-		visitJSStatement(node);
-	}
-
-	public void visitJSCaseClause(final JSCaseClause node)
-	{
-		visitJSElement(node);
-	}
-
-	public void visitJSSwitchStatement(final JSSwitchStatement node)
-	{
-		visitJSStatement(node);
-	}
-
-	public void visitJSCatchBlock(final JSCatchBlock node)
-	{
-		visitJSElement(node);
-	}
-
-	public void visitJSTryStatement(final JSTryStatement node)
-	{
-		visitJSStatement(node);
-	}
-
-	public void visitJSThrowStatement(final JSThrowStatement node)
-	{
-		visitJSStatement(node);
-	}
-
-	public void visitJSReturnStatement(final JSReturnStatement node)
-	{
-		visitJSStatement(node);
-	}
-
-	public void visitJSWithStatement(final JSWithStatement node)
-	{
-		visitJSStatement(node);
-	}
-
-	public void visitJSBreakStatement(final JSBreakStatement node)
-	{
-		visitJSStatement(node);
-	}
-
-	public void visitJSContinueStatement(final JSContinueStatement node)
-	{
-		visitJSStatement(node);
-	}
-
-	public void visitJSIfStatement(final JSIfStatement node)
-	{
-		visitJSStatement(node);
-	}
-
-	public void visitJSEmptyStatement(final JSEmptyStatement node)
-	{
-		visitJSStatement(node);
-	}
-
-	public void visitJSVarStatement(final JSVarStatement node)
-	{
-		visitJSStatement(node);
-	}
-
-	public void visitJSExpressionStatement(final JSExpressionStatement node)
-	{
-		visitJSStatement(node);
-	}
-
-	public void visitJSLabeledStatement(final JSLabeledStatement node)
-	{
-		visitJSStatement(node);
-	}
-
-	public void visitJSBlock(final JSBlockStatement node)
-	{
-		visitJSStatement(node);
-	}
-
-	public void visitJSArgumentList(final JSArgumentList node)
-	{
-		visitJSElement(node);
-	}
-
-	public void visitJSParameter(final JSParameter parameter)
-	{
-		visitJSVariable(parameter);
-	}
-
-	public void visitJSVariable(final JSVariable node)
-	{
-		visitJSElement(node);
-	}
-
-	public void visitJSParameterList(final JSParameterList node)
-	{
-		visitJSElement(node);
-	}
-
-	public void visitJSElement(final JSElement node)
-	{
-		visitElement(node);
-	}
-
-	public void visitJSSourceElement(final JSElement node)
-	{
-		visitJSElement(node);
-	}
-
-	public void visitJSFunctionDeclaration(final JSFunction node)
-	{
-		visitJSSourceElement(node);
-	}
-
-	public void visitJSStatement(final JSStatement node)
-	{
-		visitJSSourceElement(node);
-	}
-
-	public void visitJSExpression(final JSExpression node)
-	{
-		visitJSElement(node);
-	}
-
-	public void visitJSAttributeList(final JSAttributeList attributeList)
-	{
-		visitJSElement(attributeList);
-	}
-
-	public void visitJSPackageStatement(final JSPackageStatement packageStatement)
-	{
-		visitJSStatement(packageStatement);
-	}
-
-	public void visitJSImportStatement(final JSImportStatement importStatement)
-	{
-		visitJSStatement(importStatement);
-	}
-
-	public void visitJSUseNamespaceDirective(final JSUseNamespaceDirective useNamespaceDirective)
-	{
-		visitJSStatement(useNamespaceDirective);
-	}
-
-	public void visitJSNamespaceDeclaration(final JSNamespaceDeclaration namespaceDeclaration)
-	{
-		visitJSStatement(namespaceDeclaration);
-	}
-
-	public void visitJSClass(final JSClass aClass)
-	{
-		visitJSElement(aClass);
-	}
-
-	public void visitJSReferenceList(final JSReferenceList referenceList)
-	{
-		visitJSElement(referenceList);
-	}
-
-	public void visitJSSuperExpression(final JSSuperExpression superExpression)
-	{
-		visitJSExpression(superExpression);
-	}
-
-	public void visitJSIncludeDirective(final JSIncludeDirective includeDirective)
-	{
-		visitJSStatement(includeDirective);
-	}
-
-	public void visitJSAttribute(final JSAttribute jsAttribute)
-	{
-		visitJSElement(jsAttribute);
-	}
-
-	public void visitJSAttributeNameValuePair(final JSAttributeNameValuePair attributeNameValuePair)
-	{
-	}
-
-	public void visitJSYieldStatement(final JSYieldStatement statement)
-	{
-		visitJSStatement(statement);
-	}
-
-	public void visitJSLetStatement(final JSLetStatement statement)
-	{
-		visitJSStatement(statement);
-	}
-
-	public void visitJSLetExpression(final JSLetExpression expression)
-	{
-		visitJSExpression(expression);
-	}
-
-	public void visitJSGenericSignature(final JSGenericSignature signature)
-	{
-		visitJSElement(signature);
-	}
-
-	public void visitJSDocTagValue(final JSDocTagValue tagValue)
-	{
-		visitJSElement(tagValue);
-	}
-
-	public void visitJSDocTag(final JSDocTag docTag)
-	{
-		visitJSElement(docTag);
-	}
-
-	public void visitJSDocComment(final JSDocComment docComment)
-	{
-		visitComment(docComment);
-	}
-
-	public void visitLambdaExpression(JavaScriptLambdaExpression expression)
-	{
-		visitJSExpression(expression);
-	}
+public class JSElementVisitor extends PsiElementVisitor {
+    public void visitJSCallExpression(@Nonnull JSCallExpression node) {
+        visitJSExpression(node);
+    }
+
+    public void visitJSIndexedPropertyAccessExpression(@Nonnull JSIndexedPropertyAccessExpression node) {
+        visitJSExpression(node);
+    }
+
+    public void visitJSNewExpression(@Nonnull JSNewExpression node) {
+        visitJSCallExpression(node);
+    }
+
+    public void visitJSFunctionExpression(@Nonnull JSFunctionExpression node) {
+        visitJSExpression(node);
+    }
+
+    public void visitJSPrefixExpression(@Nonnull JSPrefixExpression expression) {
+        visitJSExpression(expression);
+    }
+
+    public void visitJSPostfixExpression(@Nonnull JSPostfixExpression node) {
+        visitJSExpression(node);
+    }
+
+    public void visitJSConditionalExpression(@Nonnull JSConditionalExpression node) {
+        visitJSExpression(node);
+    }
+
+    public void visitJSCommaExpression(@Nonnull JSCommaExpression node) {
+        visitJSBinaryExpression(node);
+    }
+
+    public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression node) {
+        visitJSBinaryExpression(node);
+    }
+
+    public void visitJSBinaryExpression(@Nonnull JSBinaryExpression node) {
+        visitJSExpression(node);
+    }
+
+    public void visitJSProperty(@Nonnull JSProperty node) {
+        visitJSElement(node);
+    }
+
+    public void visitJSObjectLiteralExpression(@Nonnull JSObjectLiteralExpression node) {
+        visitJSExpression(node);
+    }
+
+    public void visitJSArrayLiteralExpression(@Nonnull JSArrayLiteralExpression node) {
+        visitJSExpression(node);
+    }
+
+    public void visitJSParenthesizedExpression(@Nonnull JSParenthesizedExpression node) {
+        visitJSExpression(node);
+    }
+
+    public void visitJSReferenceExpression(@Nonnull JSReferenceExpression node) {
+        visitJSExpression(node);
+    }
+
+    public void visitJSDefinitionExpression(@Nonnull JSDefinitionExpression node) {
+        visitJSExpression(node);
+    }
+
+    public void visitJSLiteralExpression(@Nonnull JSSimpleLiteralExpression node) {
+        visitJSExpression(node);
+    }
+
+    public void visitJSThisExpression(@Nonnull JSThisExpression node) {
+        visitJSExpression(node);
+    }
+
+    public void visitJSForInStatement(@Nonnull JSForInStatement node) {
+        visitJSStatement(node);
+    }
+
+    public void visitJSForStatement(@Nonnull JSForStatement node) {
+        visitJSStatement(node);
+    }
+
+    public void visitJSDoWhileStatement(@Nonnull JSDoWhileStatement node) {
+        visitJSStatement(node);
+    }
+
+    public void visitJSWhileStatement(@Nonnull JSWhileStatement node) {
+        visitJSStatement(node);
+    }
+
+    public void visitJSCaseClause(@Nonnull JSCaseClause node) {
+        visitJSElement(node);
+    }
+
+    public void visitJSSwitchStatement(@Nonnull JSSwitchStatement node) {
+        visitJSStatement(node);
+    }
+
+    public void visitJSCatchBlock(@Nonnull JSCatchBlock node) {
+        visitJSElement(node);
+    }
+
+    public void visitJSTryStatement(@Nonnull JSTryStatement node) {
+        visitJSStatement(node);
+    }
+
+    public void visitJSThrowStatement(@Nonnull JSThrowStatement node) {
+        visitJSStatement(node);
+    }
+
+    public void visitJSReturnStatement(@Nonnull JSReturnStatement node) {
+        visitJSStatement(node);
+    }
+
+    public void visitJSWithStatement(@Nonnull JSWithStatement node) {
+        visitJSStatement(node);
+    }
+
+    public void visitJSBreakStatement(@Nonnull JSBreakStatement node) {
+        visitJSStatement(node);
+    }
+
+    public void visitJSContinueStatement(@Nonnull JSContinueStatement node) {
+        visitJSStatement(node);
+    }
+
+    public void visitJSIfStatement(@Nonnull JSIfStatement node) {
+        visitJSStatement(node);
+    }
+
+    public void visitJSEmptyStatement(@Nonnull JSEmptyStatement node) {
+        visitJSStatement(node);
+    }
+
+    public void visitJSVarStatement(@Nonnull JSVarStatement node) {
+        visitJSStatement(node);
+    }
+
+    public void visitJSExpressionStatement(@Nonnull JSExpressionStatement node) {
+        visitJSStatement(node);
+    }
+
+    public void visitJSLabeledStatement(@Nonnull JSLabeledStatement node) {
+        visitJSStatement(node);
+    }
+
+    public void visitJSBlock(@Nonnull JSBlockStatement node) {
+        visitJSStatement(node);
+    }
+
+    public void visitJSArgumentList(@Nonnull JSArgumentList node) {
+        visitJSElement(node);
+    }
+
+    public void visitJSParameter(@Nonnull JSParameter parameter) {
+        visitJSVariable(parameter);
+    }
+
+    public void visitJSVariable(@Nonnull JSVariable node) {
+        visitJSElement(node);
+    }
+
+    public void visitJSParameterList(@Nonnull JSParameterList node) {
+        visitJSElement(node);
+    }
+
+    public void visitJSElement(@Nonnull JSElement node) {
+        visitElement(node);
+    }
+
+    public void visitJSSourceElement(@Nonnull JSElement node) {
+        visitJSElement(node);
+    }
+
+    public void visitJSFunctionDeclaration(@Nonnull JSFunction node) {
+        visitJSSourceElement(node);
+    }
+
+    public void visitJSStatement(@Nonnull JSStatement node) {
+        visitJSSourceElement(node);
+    }
+
+    public void visitJSExpression(@Nonnull JSExpression node) {
+        visitJSElement(node);
+    }
+
+    public void visitJSAttributeList(@Nonnull JSAttributeList attributeList) {
+        visitJSElement(attributeList);
+    }
+
+    public void visitJSPackageStatement(@Nonnull JSPackageStatement packageStatement) {
+        visitJSStatement(packageStatement);
+    }
+
+    public void visitJSImportStatement(@Nonnull JSImportStatement importStatement) {
+        visitJSStatement(importStatement);
+    }
+
+    public void visitJSUseNamespaceDirective(@Nonnull JSUseNamespaceDirective useNamespaceDirective) {
+        visitJSStatement(useNamespaceDirective);
+    }
+
+    public void visitJSNamespaceDeclaration(@Nonnull JSNamespaceDeclaration namespaceDeclaration) {
+        visitJSStatement(namespaceDeclaration);
+    }
+
+    public void visitJSClass(@Nonnull JSClass aClass) {
+        visitJSElement(aClass);
+    }
+
+    public void visitJSClassExpression(@Nonnull JSClassExpression expression) {
+        visitJSExpression(expression);
+    }
+
+    public void visitJSReferenceList(@Nonnull JSReferenceList referenceList) {
+        visitJSElement(referenceList);
+    }
+
+    public void visitJSSuperExpression(@Nonnull JSSuperExpression superExpression) {
+        visitJSExpression(superExpression);
+    }
+
+    public void visitJSIncludeDirective(@Nonnull JSIncludeDirective includeDirective) {
+        visitJSStatement(includeDirective);
+    }
+
+    public void visitJSAttribute(@Nonnull JSAttribute jsAttribute) {
+        visitJSElement(jsAttribute);
+    }
+
+    public void visitJSAttributeNameValuePair(@Nonnull JSAttributeNameValuePair attributeNameValuePair) {
+    }
+
+    public void visitJSYieldStatement(@Nonnull JSYieldStatement statement) {
+        visitJSStatement(statement);
+    }
+
+    public void visitJSLetStatement(@Nonnull JSLetStatement statement) {
+        visitJSStatement(statement);
+    }
+
+    public void visitJSLetExpression(@Nonnull JSLetExpression expression) {
+        visitJSExpression(expression);
+    }
+
+    public void visitJSGenericSignature(@Nonnull JSGenericSignature signature) {
+        visitJSElement(signature);
+    }
+
+    public void visitJSDocTagValue(@Nonnull JSDocTagValue tagValue) {
+        visitJSElement(tagValue);
+    }
+
+    public void visitJSDocTag(@Nonnull JSDocTag docTag) {
+        visitJSElement(docTag);
+    }
+
+    public void visitJSDocComment(@Nonnull JSDocComment docComment) {
+        visitComment(docComment);
+    }
+
+    public void visitLambdaExpression(@Nonnull JavaScriptLambdaExpression expression) {
+        visitJSExpression(expression);
+    }
 }

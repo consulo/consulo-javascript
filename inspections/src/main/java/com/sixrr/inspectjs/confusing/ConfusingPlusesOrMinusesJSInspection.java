@@ -5,66 +5,70 @@ import com.intellij.lang.javascript.psi.JSBinaryExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSPostfixExpression;
 import com.intellij.lang.javascript.psi.JSPrefixExpression;
-import com.intellij.psi.tree.IElementType;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.ast.IElementType;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
+@ExtensionImpl
 public class ConfusingPlusesOrMinusesJSInspection extends JavaScriptInspection {
-
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("confusing.pluses.or.minuses.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.confusingPlusesOrMinusesDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
+    @Nullable
     @Override
-	@Nullable
-    protected String buildErrorString(Object... args) {
-        return InspectionJSBundle.message("confusing.pluses.or.minuses.error.string");
+    @RequiredReadAction
+    protected String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.confusingPlusesOrMinusesErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
     private static class Visitor extends BaseInspectionVisitor {
-
-        @Override public void visitJSBinaryExpression(JSBinaryExpression jsBinaryExpression) {
+        @Override
+        public void visitJSBinaryExpression(JSBinaryExpression jsBinaryExpression) {
             super.visitJSBinaryExpression(jsBinaryExpression);
-            final IElementType sign = jsBinaryExpression.getOperationSign();
+            IElementType sign = jsBinaryExpression.getOperationSign();
             if (!JSTokenTypes.PLUS.equals(sign) && !JSTokenTypes.MINUS.equals(sign)) {
                 return;
             }
-            final JSExpression rhs = jsBinaryExpression.getROperand();
+            JSExpression rhs = jsBinaryExpression.getROperand();
             if (rhs == null) {
                 return;
             }
-            final JSExpression lhs = jsBinaryExpression.getLOperand();
+            JSExpression lhs = jsBinaryExpression.getLOperand();
             if (lhs == null) {
                 return;
             }
             if (lhs instanceof JSPostfixExpression) {
-                final JSPostfixExpression postfixExpression = (JSPostfixExpression) lhs;
-                final IElementType innerSign = postfixExpression.getOperationSign();
+                JSPostfixExpression postfixExpression = (JSPostfixExpression)lhs;
+                IElementType innerSign = postfixExpression.getOperationSign();
                 if (matches(sign, innerSign)) {
                     registerError(jsBinaryExpression);
                     return;
                 }
             }
             if (rhs instanceof JSPrefixExpression) {
-                final JSPrefixExpression postfixExpression = (JSPrefixExpression) rhs;
-                final IElementType innerSign = postfixExpression.getOperationSign();
+                JSPrefixExpression postfixExpression = (JSPrefixExpression)rhs;
+                IElementType innerSign = postfixExpression.getOperationSign();
                 if (matches(sign, innerSign)) {
                     registerError(jsBinaryExpression);
                 }
@@ -74,7 +78,8 @@ public class ConfusingPlusesOrMinusesJSInspection extends JavaScriptInspection {
         private static boolean matches(IElementType sign, IElementType innerSign) {
             if (JSTokenTypes.PLUS.equals(sign)) {
                 return JSTokenTypes.PLUSPLUS.equals(innerSign);
-            } else {
+            }
+            else {
                 return JSTokenTypes.MINUSMINUS.equals(innerSign);
             }
         }

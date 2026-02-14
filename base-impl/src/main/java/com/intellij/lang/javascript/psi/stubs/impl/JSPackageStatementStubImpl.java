@@ -19,18 +19,16 @@ package com.intellij.lang.javascript.psi.stubs.impl;
 
 import com.intellij.lang.javascript.psi.JSPackageStatement;
 import com.intellij.lang.javascript.psi.stubs.JSPackageStatementStub;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubElement;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.stub.StubElement;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jun 6, 2008
- *         Time: 8:00:52 PM
+ * Date: Jun 6, 2008
+ * Time: 8:00:52 PM
  */
-public class JSPackageStatementStubImpl extends JSQualifiedObjectStubBase<JSPackageStatement> implements JSPackageStatementStub
-{
-	public JSPackageStatementStubImpl(String name, String qName, StubElement parent, IStubElementType elementType)
-	{
-		super(name, 0, qName, parent, elementType);
-	}
+public class JSPackageStatementStubImpl extends JSQualifiedObjectStubBase<JSPackageStatement> implements JSPackageStatementStub {
+    public JSPackageStatementStubImpl(String name, String qName, StubElement parent, IStubElementType elementType) {
+        super(name, 0, qName, parent, elementType);
+    }
 }

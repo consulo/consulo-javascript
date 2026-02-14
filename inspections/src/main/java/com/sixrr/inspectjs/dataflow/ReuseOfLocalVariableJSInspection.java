@@ -1,92 +1,86 @@
 package com.sixrr.inspectjs.dataflow;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-import javax.annotation.Nullable;
-
-public class ReuseOfLocalVariableJSInspection
-        extends JavaScriptInspection {
-
+@ExtensionImpl
+public class ReuseOfLocalVariableJSInspection extends JavaScriptInspection {
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message(
-                "reuse.of.local.variable.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.reuseOfLocalVariableDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.DATA_FLOW_ISSUES;
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String buildErrorString(Object... args) {
-        return InspectionJSBundle.message(
-                "reuse.of.local.variable.problem.descriptor");
+    @RequiredReadAction
+    public String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.reuseOfLocalVariableProblemDescriptor().get();
     }
 
-
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new ReuseOfLocalVariableVisitor();
     }
 
-    private static class ReuseOfLocalVariableVisitor
-            extends BaseInspectionVisitor {
-
-        @Override public void visitJSAssignmentExpression(
-                @Nonnull JSAssignmentExpression assignment) {
+    private static class ReuseOfLocalVariableVisitor extends BaseInspectionVisitor {
+        @Override
+        public void visitJSAssignmentExpression(@Nonnull JSAssignmentExpression assignment) {
             super.visitJSAssignmentExpression(assignment);
-            if (assignment.getROperand()==null) {
+            if (assignment.getROperand() == null) {
                 return;
             }
-            final PsiElement assignmentParent = assignment.getParent();
+            PsiElement assignmentParent = assignment.getParent();
             if (!(assignmentParent instanceof JSExpressionStatement)) {
                 return;
             }
-            final JSExpression lhs = assignment.getLOperand();
+            JSExpression lhs = assignment.getLOperand();
             if (!(lhs instanceof JSDefinitionExpression)) {
                 return;
             }
-            final JSDefinitionExpression def = (JSDefinitionExpression) lhs;
-            final JSExpression defExpression = def.getExpression();
-            if(!(defExpression instanceof JSReferenceExpression))
-            {
+            JSDefinitionExpression def = (JSDefinitionExpression)lhs;
+            JSExpression defExpression = def.getExpression();
+            if (!(defExpression instanceof JSReferenceExpression)) {
                 return;
             }
-            final PsiElement referent = ((PsiReference) defExpression).resolve();
+            PsiElement referent = ((PsiReference)defExpression).resolve();
             if (!(referent instanceof JSVariable)) {
                 return;
             }
-            final JSVariable variable = (JSVariable) referent;
+            JSVariable variable = (JSVariable)referent;
 
             if (variable.getInitializer() == null) {
                 return;
             }
-            final IElementType tokenType = assignment.getOperationSign();
+            IElementType tokenType = assignment.getOperationSign();
 
             if (!JSTokenTypes.EQ.equals(tokenType)) {
                 return;
             }
-            final JSExpression rhs =  assignment.getROperand();
+            JSExpression rhs = assignment.getROperand();
             if (VariableAccessUtils.variableIsUsed(variable, rhs)) {
                 return;
             }
-            final JSBlockStatement variableBlock =
-                    PsiTreeUtil.getParentOfType(variable, JSBlockStatement.class);
+            JSBlockStatement variableBlock = PsiTreeUtil.getParentOfType(variable, JSBlockStatement.class);
             if (variableBlock == null) {
                 return;
             }
@@ -99,8 +93,7 @@ public class ReuseOfLocalVariableJSInspection
                 // that a variable is used in only one branch of a try statement
                 return;
             }
-            final PsiElement assignmentBlock =
-                    assignmentParent.getParent();
+            PsiElement assignmentBlock = assignmentParent.getParent();
             if (assignmentBlock == null) {
                 return;
             }
@@ -108,9 +101,8 @@ public class ReuseOfLocalVariableJSInspection
                 registerError(lhs);
                 return;
             }
-            final JSStatement[] statements = variableBlock.getStatements();
-            final PsiElement containingStatement =
-                    getChildWhichContainsElement(variableBlock, assignment);
+            JSStatement[] statements = variableBlock.getStatements();
+            PsiElement containingStatement = getChildWhichContainsElement(variableBlock, assignment);
             int statementPosition = -1;
             for (int i = 0; i < statements.length; i++) {
                 if (statements[i].equals(containingStatement)) {
@@ -129,8 +121,7 @@ public class ReuseOfLocalVariableJSInspection
             registerError(lhs);
         }
 
-        private static boolean loopExistsBetween(
-                JSAssignmentExpression assignment, JSBlockStatement block) {
+        private static boolean loopExistsBetween(JSAssignmentExpression assignment, JSBlockStatement block) {
             PsiElement elementToTest = assignment;
             while (elementToTest != null) {
                 if (elementToTest.equals(block)) {
@@ -144,8 +135,7 @@ public class ReuseOfLocalVariableJSInspection
             return false;
         }
 
-        private static boolean tryExistsBetween(
-                JSAssignmentExpression assignment, JSBlockStatement block) {
+        private static boolean tryExistsBetween(JSAssignmentExpression assignment, JSBlockStatement block) {
             PsiElement elementToTest = assignment;
             while (elementToTest != null) {
                 if (elementToTest.equals(block)) {
@@ -163,9 +153,7 @@ public class ReuseOfLocalVariableJSInspection
          * @noinspection AssignmentToMethodParameter
          */
         @Nullable
-        public static PsiElement getChildWhichContainsElement(
-                @Nonnull JSBlockStatement ancestor,
-                @Nonnull PsiElement descendant) {
+        public static PsiElement getChildWhichContainsElement(@Nonnull JSBlockStatement ancestor, @Nonnull PsiElement descendant) {
             PsiElement element = descendant;
             while (!element.equals(ancestor)) {
                 descendant = element;

@@ -16,37 +16,32 @@
 
 package consulo.javascript.lang.lexer;
 
-import com.intellij.lexer.FlexAdapter;
-import com.intellij.lexer.FlexLexer;
+import consulo.language.lexer.FlexAdapter;
+import consulo.language.lexer.FlexLexer;
 
 /**
  * @author Maxim.Mossienko
  */
-public class JavaScriptFlexAdapter extends FlexAdapter
-{
-	private static final int BASE_STATE_MASK = 0xF;
-	private static final int TAG_COUNT_SHIFT = 4;
+public class JavaScriptFlexAdapter extends FlexAdapter {
+    private static final int BASE_STATE_MASK = 0xF;
+    private static final int TAG_COUNT_SHIFT = 4;
 
-	public JavaScriptFlexAdapter(FlexLexer lexer)
-	{
-		super(lexer);
-	}
+    public JavaScriptFlexAdapter(FlexLexer lexer) {
+        super(lexer);
+    }
 
-	@Override
-	public void start(final CharSequence buffer, final int startOffset, final int endOffset, final int initialState)
-	{
-		super.start(buffer, startOffset, endOffset, initialState & BASE_STATE_MASK);
-		((JavaScriptFlexLexer) getFlex()).setTagCount(initialState >> TAG_COUNT_SHIFT);
-	}
+    @Override
+    public void start(CharSequence buffer, int startOffset, int endOffset, int initialState) {
+        super.start(buffer, startOffset, endOffset, initialState & BASE_STATE_MASK);
+        ((JavaScriptFlexLexer)getFlex()).setTagCount(initialState >> TAG_COUNT_SHIFT);
+    }
 
-	@Override
-	public int getState()
-	{
-		return getStateInternal() + (((JavaScriptFlexLexer) getFlex()).getTagCount() << TAG_COUNT_SHIFT);
-	}
+    @Override
+    public int getState() {
+        return getStateInternal() + (((JavaScriptFlexLexer)getFlex()).getTagCount() << TAG_COUNT_SHIFT);
+    }
 
-	protected int getStateInternal()
-	{
-		return super.getState();
-	}
+    protected int getStateInternal() {
+        return super.getState();
+    }
 }

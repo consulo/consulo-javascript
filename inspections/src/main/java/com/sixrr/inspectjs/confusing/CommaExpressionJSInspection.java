@@ -1,54 +1,51 @@
 package com.sixrr.inspectjs.confusing;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.psi.JSCommaExpression;
 import com.intellij.lang.javascript.psi.JSForStatement;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-import javax.annotation.Nullable;
-
+@ExtensionImpl
 public class CommaExpressionJSInspection extends JavaScriptInspection {
-
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("comma.expression.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.commaExpressionDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONFUSING_GROUP_NAME;
     }
 
+    @Nullable
     @Override
-	@Nullable
-    protected String buildErrorString(Object... args) {
-        return InspectionJSBundle.message("comma.expression.error.string");
+    @RequiredReadAction
+    protected String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.commaExpressionErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
     private static class Visitor extends BaseInspectionVisitor {
-        @Override public void visitJSCommaExpression(JSCommaExpression node) {
+        @Override
+        public void visitJSCommaExpression(JSCommaExpression node) {
             super.visitJSCommaExpression(node);
-            if(node.getParent() instanceof JSCommaExpression)
-            {
-                return;
-            }
-            if(node.getParent() instanceof JSForStatement)
-            {
+            if (node.getParent() instanceof JSCommaExpression || node.getParent() instanceof JSForStatement) {
                 return;
             }
             registerError(node);
         }
-
     }
 }

@@ -21,18 +21,21 @@ import org.intellij.idea.lang.javascript.psiutil.JSRecursiveElementVisitor;
 
 class LabelSearchVisitor extends JSRecursiveElementVisitor {
     private final String labelName;
-    private boolean      used;
+    private boolean used;
 
     LabelSearchVisitor(String name) {
         this.labelName = name;
     }
 
-    @Override public void visitJSReferenceExpression(JSReferenceExpression expression) {}
+    @Override
+    public void visitJSReferenceExpression(JSReferenceExpression expression) {
+    }
 
-    @Override public void visitJSLabeledStatement(JSLabeledStatement statement) {
-        final String labelText = statement.getLabel();
+    @Override
+    public void visitJSLabeledStatement(JSLabeledStatement statement) {
+        String labelText = statement.getLabel();
 
-        this.used = (labelText != null && labelText.equals(this.labelName));
+        this.used = labelText != null && labelText.equals(this.labelName);
     }
 
     public boolean isUsed() {

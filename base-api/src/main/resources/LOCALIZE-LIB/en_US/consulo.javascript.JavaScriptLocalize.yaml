@@ -1,0 +1,544 @@
+action.JavaScript.File.empty.file.kind:
+    text: Empty File
+action.JavaScript.File.text:
+    text: JavaScript File
+action.JavaScript.File.title.text:
+    text: Create JavaScript File
+building.index.message:
+    text: Building JavaScript indices
+choose.class.title:
+    text: Choose Class
+create.class.dialog.title:
+    text: Create Class
+create.interface.dialog.title:
+    text: Create Interface
+flex.import.class:
+    text: Import Class {0}
+flex.import.function:
+    text: Import Function {0}
+generate.constructor.fields.chooser.title:
+    text: Choose Fields to Initialize by Constructor
+generate.getter.fields.bindable.properties:
+    text: '&Bindable properties'
+generate.getter.fields.chooser.title:
+    text: Select Fields to Generate Getters
+generate.getter.setter.chooser.title:
+    text: Select Fields to Generate Getters and Setters
+generate.setter.fields.chooser.title:
+    text: Select Fields to Generate Setters
+generate.to.string.chooser.title:
+    text: Select Fields to Use in toString function
+interface.function.declaration.should.have.no.body:
+    text: Interface functions declaration should have no body
+interface.should.have.no.variable.declarations:
+    text: Interface should have no variable declarations
+invalid.identifier.value:
+    text: invalid identifier value
+javascript.argument.type.mismatch:
+    text: Argument type {1} is not assignable to parameter type {0}
+javascript.assigned.expression.type.mismatch:
+    text: Assigned expression type {1} is not assignable to type {0}
+javascript.badcharacter:
+    text: Bad character
+javascript.binary.operand.type.mismatch:
+    text: Binary operation argument type {1} is not assignable to type {0}
+javascript.blockcomment:
+    text: Block comment
+javascript.braces:
+    text: Braces
+javascript.brackets:
+    text: Brackets
+javascript.comma:
+    text: Comma
+javascript.create.class.intention.name:
+    text: Create Class {0}
+javascript.create.constant.field.intention.name:
+    text: Create Constant Field {0}
+javascript.create.constant.intention.name:
+    text: Create Constant {0}
+javascript.create.event.handler.intention.name:
+    text: Create Event Handler {0}
+javascript.create.function.intention.family:
+    text: Create JavaScript Function or Method
+javascript.create.function.intention.name:
+    text: Create Function {0}
+javascript.create.get.property.intention.name:
+    text: Create Get Property {0}
+javascript.create.interface.intention.name:
+    text: Create Interface {0}
+javascript.create.method.intention.name:
+    text: Create Method {0}
+javascript.create.namespace.intention.name:
+    text: Create Namespace {0}
+javascript.create.property.intention.name:
+    text: Create Field {0}
+javascript.create.set.property.intention.name:
+    text: Create Set Property {0}
+javascript.create.variable.intention.family:
+    text: Create JavaScript Variable Or Property
+javascript.create.variable.intention.name:
+    text: Create Variable {0}
+javascript.declare.variable.intention.name:
+    text: Insert Var Declaration for {0}
+javascript.deprecated.symbol.used.name.message:
+    text: 'Deprecated symbol used, consult docs for better alternative #loc'
+javascript.doccomment:
+    text: Doc comment
+javascript.docmarkup:
+    text: Documentation markup
+javascript.doctag:
+    text: Documentation tag
+javascript.dot:
+    text: Dot
+javascript.extract.method.title:
+    text: Extract Function
+javascript.filetype.description:
+    text: JavaScript files
+javascript.fix.add.override.modifier:
+    text: Add override modifier
+javascript.fix.create.constructor.invoke.super:
+    text: Create constructor matching super
+javascript.fix.create.invoke.super:
+    text: Insert super class constructor invokation
+javascript.fix.implement.methods:
+    text: Implement Methods
+javascript.fix.optimize.imports:
+    text: Optimize imports
+javascript.fix.package.name:
+    text: Set package name to ''{0}''
+javascript.fix.remove.access.modifier:
+    text: Remove access modifier
+javascript.fix.remove.circular.dependency:
+    text: Remove circular dependency
+javascript.fix.remove.constructor:
+    text: Remove constructor
+javascript.fix.remove.externally.visible.symbol:
+    text: Remove externally visible symbol
+javascript.fix.remove.initializer:
+    text: Remove initializer
+javascript.fix.remove.namespace.reference:
+    text: Remove namespace reference
+javascript.fix.remove.override.modifier:
+    text: Remove override modifier
+javascript.fix.remove.parameter:
+    text: Remove parameter
+javascript.fix.remove.type.reference:
+    text: Remove type reference
+javascript.formatting.options.panel.title:
+    text: Formatting options
+javascript.global.function:
+    text: Global function
+javascript.global.variable:
+    text: Global variable
+javascript.incorrect.array.type.in.forin:
+    text: Array key type should be String
+javascript.incorrect.variable.type.mismatch:
+    text: Variable type {1} is not assignable to type {0}
+javascript.initializer.type.mismatch:
+    text: Initializer type {1} is not assignable to variable type {0}
+javascript.insert.cast.fix:
+    text: Insert cast
+javascript.instance.member.function:
+    text: Instance member function
+javascript.instance.member.variable:
+    text: Instance member variable
+javascript.interface.can.not.be.instantiated.message:
+    text: Interface can not be instantiated
+javascript.introduce.constant.error.no.expression.selected:
+    text: |-
+        Cannot introduce constant.
+        Selection does not form an expression.
+javascript.introduce.constant.error.not.available.in.javascript.code:
+    text: Introduce Constant is not available in JavaScript code
+javascript.introduce.constant.error.not.constant.expression.selected:
+    text: |-
+        Cannot introduce constant.
+        Selection is not constant expression.
+javascript.introduce.constant.title:
+    text: Introduce Constant
+javascript.introduce.field.error.no.expression.selected:
+    text: |-
+        Cannot introduce field.
+        Selection does not form an expression.
+javascript.introduce.field.error.not.available.in.javascript.code:
+    text: Introduce Field is not available in JavaScript code
+javascript.introduce.field.title:
+    text: Introduce Field
+javascript.introduce.variable.error.no.expression.selected:
+    text: |-
+        Cannot introduce variable.
+        Selection does not form an expression.
+javascript.introduce.variable.function.already.exists:
+    text: Function with name {0} already exists in the scope.
+javascript.introduce.variable.invalid.name:
+    text: Please enter a valid name.
+javascript.introduce.variable.name.prompt:
+    text: '&Name:'
+javascript.introduce.variable.replace.all.occurrences:
+    text: Replace &all occurrences ({0} occurrences found)
+javascript.introduce.variable.title:
+    text: Introduce Variable
+javascript.introduce.variable.variable.already.exists:
+    text: Variable with name {0} already exists in the scope.
+javascript.invalid.number.of.parameters:
+    text: Invalid number of parameters, expected {0}
+javascript.invalid.string.escape:
+    text: Invalid string escape
+javascript.keyword:
+    text: Keyword
+javascript.language.term.attribute.value:
+    text: Attribute value
+javascript.language.term.class:
+    text: class
+javascript.language.term.function:
+    text: function
+javascript.language.term.label:
+    text: label
+javascript.language.term.namespace:
+    text: namespace
+javascript.language.term.package:
+    text: package
+javascript.language.term.parameter:
+    text: parameter
+javascript.language.term.property:
+    text: property
+javascript.language.term.prototype:
+    text: prototype
+javascript.language.term.tag:
+    text: tag
+javascript.language.term.value:
+    text: value
+javascript.language.term.variable:
+    text: variable
+javascript.linecomment:
+    text: Line comment
+javascript.local.variable:
+    text: Local variable
+javascript.metadata:
+    text: Metadata
+javascript.name:
+    text: JavaScript
+javascript.number:
+    text: Number
+javascript.operation:
+    text: Operation
+javascript.parameter:
+    text: Parameter
+javascript.parens:
+    text: Parenthesis
+javascript.parser.message.expected.catch.or.default:
+    text: catch or default expected
+javascript.parser.message.expected.colon:
+    text: ': expected'
+javascript.parser.message.expected.comma:
+    text: ', expected'
+javascript.parser.message.expected.comma.or.rparen:
+    text: ', or ) expected'
+javascript.parser.message.expected.doc.tag.name:
+    text: Expected doc tag name
+javascript.parser.message.expected.doc.tag.value:
+    text: Expected doc tag value
+javascript.parser.message.expected.eof:
+    text: End of file expected
+javascript.parser.message.expected.equal:
+    text: expected =
+javascript.parser.message.expected.expression:
+    text: expression expected
+javascript.parser.message.expected.forloop.in.of.or.semicolon:
+    text: '''in'', ''of'' or ; expected'
+javascript.parser.message.expected.forloop.in.or.semicolon:
+    text: '''in'' or ; expected'
+javascript.parser.message.expected.forloop.left.hand.side.expression.or.variable.declaration:
+    text: left hand side expression or variable declaration expected before 'in'
+javascript.parser.message.expected.formal.parameter.name:
+    text: formal parameter name expected
+javascript.parser.message.expected.function.name:
+    text: function name expected
+javascript.parser.message.expected.function.var.class.interface.namespace:
+    text: Expected function, variable, class, interface or namespace declaration
+javascript.parser.message.expected.identifer.or.value:
+    text: Identifier or value expected
+javascript.parser.message.expected.identifier:
+    text: Expected identifier
+javascript.parser.message.expected.identifier.string.literal.or.numeric.literal:
+    text: identifier or string literal or numeric literal expected
+javascript.parser.message.expected.instanceof:
+    text: Expected instanceof
+javascript.parser.message.expected.lbrace:
+    text: '''{'' expected'
+javascript.parser.message.expected.lbrace.or.lbracket:
+    text: '''{'' or ''['' expected'
+javascript.parser.message.expected.lparen:
+    text: ( expected
+javascript.parser.message.expected.lt:
+    text: Expected >
+javascript.parser.message.expected.name:
+    text: name expected
+javascript.parser.message.expected.name.or.lbrace:
+    text: Expected package name or '{'
+javascript.parser.message.expected.namespace:
+    text: Namespace keyword expected
+javascript.parser.message.expected.parameter.name:
+    text: parameter name expected
+javascript.parser.message.expected.rbrace:
+    text: '''}'' expected'
+javascript.parser.message.expected.rbracket:
+    text: '] expected'
+javascript.parser.message.expected.rparen:
+    text: ) expected
+javascript.parser.message.expected.semicolon:
+    text: ; expected
+javascript.parser.message.expected.statement:
+    text: statement expected
+javascript.parser.message.expected.string.literal:
+    text: String literal expected
+javascript.parser.message.expected.typename:
+    text: '* or type name expected'
+javascript.parser.message.expected.value:
+    text: value expected
+javascript.parser.message.expected.variable.name:
+    text: variable name expected
+javascript.parser.message.expected.while.keyword:
+    text: while expected
+javascript.parser.message.expected.xml:
+    text: xml context keyword expected
+javascript.parser.message.expected.xml.element:
+    text: xml element expected
+javascript.parser.message.missing.rbrace:
+    text: missing }
+javascript.parser.message.unclosed.string.literal:
+    text: Unclosed string literal
+javascript.parser.message.unexpected.end.of.file:
+    text: unexpected end of file
+javascript.parser.property.expected:
+    text: property expected
+javascript.regexp:
+    text: Regular expression
+javascript.returned.expression.type.mismatch:
+    text: Returned expression type {1} is not assignable to type {0}
+javascript.semicolon:
+    text: Semicolon
+javascript.static.member.function:
+    text: Static member function
+javascript.static.member.variable:
+    text: Static member variable
+javascript.string:
+    text: String
+javascript.surround.with.do.while:
+    text: do / while
+javascript.surround.with.for:
+    text: for
+javascript.surround.with.function:
+    text: function
+javascript.surround.with.function.expression:
+    text: function expression
+javascript.surround.with.if:
+    text: if
+javascript.surround.with.if.else:
+    text: if / else
+javascript.surround.with.parenthesis:
+    text: (expr)
+javascript.surround.with.try.catch:
+    text: try / catch
+javascript.surround.with.try.catch.finally:
+    text: try / catch / finally
+javascript.surround.with.try.finally:
+    text: try / finally
+javascript.surround.with.while:
+    text: while
+javascript.surround.with.with:
+    text: with
+javascript.template.context.type:
+    text: Java Sc&ript
+javascript.term.does.not.evaluate.to.function:
+    text: Method expression is not of Function type
+javascript.term.does.not.evaluate.to.function2:
+    text: Property can not be invoked as function
+javascript.term.does.not.evaluate.to.function2.fix:
+    text: Remove argument list
+javascript.undeclared.variable.name.message:
+    text: 'Variable {0} implicitly declared #loc'
+javascript.unresolved.function.name.message:
+    text: 'Unresolved function or method {0}() #loc'
+javascript.unresolved.type.name.message:
+    text: 'Unresolved type {0} #loc'
+javascript.unresolved.variable.name.message:
+    text: 'Unresolved variable {0} #loc'
+javascript.unresolved.variable.or.type.name.message:
+    text: 'Unresolved variable or type {0} #loc'
+javascript.unresolved.variable.or.type.name.message2:
+    text: Unresolved variable or type {0}
+javascript.valid.string.escape:
+    text: Valid string escape
+javascript.validation.message.access.modifier.allowed.only.for.class.members:
+    text: Access modifier allowed for class members only
+javascript.validation.message.access.modifier.allowed.only.for.package.members:
+    text: Only public / internal modifiers allowed for package members
+javascript.validation.message.arguments.out.of.function:
+    text: Using function arguments object outside function
+javascript.validation.message.arguments.with.rest.parameter:
+    text: '''arguments'' object is not available when using rest parameter'
+javascript.validation.message.assignment.to.const:
+    text: Attempt to assign to const variable
+javascript.validation.message.break.without.target:
+    text: Cannot determine target for 'break'
+javascript.validation.message.circular.dependency:
+    text: Circular dependency
+javascript.validation.message.class.name.expected.here:
+    text: Class name expected here
+javascript.validation.message.class.should.be.in.file:
+    text: Class ''{0}'' should be defined in file ''{1}''
+javascript.validation.message.const.variable.without.initializer.:
+    text: const variable without initializer. It won't be possible to assign meaningful value later.
+javascript.validation.message.constructor.in.mxml.is.not.allowed:
+    text: Constructor is not allowed for MXML class
+javascript.validation.message.continue.without.target:
+    text: Cannot determine target for 'continue'
+javascript.validation.message.duplicate.declaration:
+    text: Duplicate declaration
+javascript.validation.message.duplicate.label:
+    text: Duplicate label
+javascript.validation.message.duplicated.catch.block:
+    text: 'Duplicated catch block #loc'
+javascript.validation.message.duplicated.catch.block.fix:
+    text: Remove duplicated catch block
+javascript.validation.message.file.should.be.under.source.root:
+    text: Object is located in file out of source root, certain functionality will not be available
+javascript.validation.message.function.override.for.object.method:
+    text: Method inherited from Object does not need override
+javascript.validation.message.function.override.incompatible.access.modifier:
+    text: Incompatible override, should have ''{0}'' access modifier
+javascript.validation.message.function.override.incompatible.signature:
+    text: Incompatible override, should have signature ''{0}''
+javascript.validation.message.function.override.incompatible.signature2:
+    text: Incompatible override, should have return type ''{0}''
+javascript.validation.message.function.override.without.override.modifier:
+    text: Method overrides method in superclass {0} without override keyword
+javascript.validation.message.function.override.without.parent.method:
+    text: Method does not override method from super class
+javascript.validation.message.function.should.be.in.file:
+    text: Function ''{0}'' should be defined in file ''{1}''
+javascript.validation.message.get.method.should.be.valid.type:
+    text: Return type of a getter definition should not be {0}
+javascript.validation.message.get.method.should.have.no.parameter:
+    text: A getter definition must have no parameters
+javascript.validation.message.implements.for.interface.not.allowed:
+    text: Implements list is not allowed for interface
+javascript.validation.message.incorrect.package.name:
+    text: Package name ''{0}'' does not correspond to file path ''{1}''
+javascript.validation.message.incorrect.parameter.name:
+    text: Incorrect parameter name
+javascript.validation.message.incorrect.tag.value:
+    text: Incorrect Tag Value
+javascript.validation.message.interface.members.cannot.have.access.modifiers:
+    text: Interface members cannot have access modifiers
+javascript.validation.message.interface.method.invalid.access.modifier:
+    text: Incompatible implementation, should have 'public' access modifier
+javascript.validation.message.interface.method.invalid.signature:
+    text: Incompatible implementation, should have signature ''{0}''
+javascript.validation.message.interface.method.invalid.signature2:
+    text: Incompatible implementation, should have return type ''{0}''
+javascript.validation.message.interface.method.not.implemented:
+    text: Method {0} from interface {1} is not implemented
+javascript.validation.message.interface.name.expected.here:
+    text: Interface name expected here
+javascript.validation.message.missed.super.constructor.call:
+    text: Missed superclass's constructor invokation
+javascript.validation.message.more.than.one.externally.visible.symbol:
+    text: More than one externally visible symbol defined in file
+javascript.validation.message.must.be.lvalue:
+    text: Must be lvalue
+javascript.validation.message.namespace.allowed.only.for.class.members:
+    text: Namespace allowed for class members only
+javascript.validation.message.namespace.should.be.in.file:
+    text: Namespace ''{0}'' should be defined in file ''{1}''
+javascript.validation.message.nested.classes.are.not.allowed:
+    text: Nested classes are not allowed
+javascript.validation.message.package.shouldbe.first.statement:
+    text: Package should be first statement in file
+javascript.validation.message.parameter.is.not.allowed.after.rest.parameter:
+    text: No parameter is allowed after rest parameter
+javascript.validation.message.parameter.should.be.initialized:
+    text: Parameter should be initialized
+javascript.validation.message.remove.unneeded.comma.fix:
+    text: Remove unneeded comma
+javascript.validation.message.rest.parameter.should.not.be.initialized:
+    text: Rest parameter should not be initialized
+javascript.validation.message.return.outside.function.definition:
+    text: '''return'' outside function definition'
+javascript.validation.message.return.value.of.type.is.required:
+    text: Return value of type {0} is required
+javascript.validation.message.set.method.should.be.void.or.without.type:
+    text: Return type of a setter definition must be unspecified or void
+javascript.validation.message.set.method.should.have.one.parameter:
+    text: A setter definition must have exactly one parameter
+javascript.validation.message.super.referenced.from.static.context:
+    text: '''super'' referenced in static context'
+javascript.validation.message.super.referenced.without.class.instance.context:
+    text: '''super'' referenced without class instance context'
+javascript.validation.message.this.referenced.from.static.context:
+    text: '''this'' referenced in static context'
+javascript.validation.message.unexpected.type.for.rest.parameter:
+    text: Rest parameter should have no type
+javascript.validation.message.unneeded.comma:
+    text: Unneeded comma
+javascript.validation.message.use.namespace.reference.or.access.modifier:
+    text: Use namespace OR access modifier
+javascript.validation.message.variable.should.be.in.file:
+    text: Variable ''{0}'' should be defined in file ''{1}''
+javascript.validation.unused.import:
+    text: Unused import
+js.classname.macro.description:
+    text: jsClassName()
+js.code.style.tab.name:
+    text: JavaScript / ECMAScript / ActionScript
+js.deprecated.symbols.inspection.name:
+    text: Deprecated JavaScript symbol
+js.duplicated.declaration.inspection.name:
+    text: Duplicated JavaScript declaration
+js.inspection.group.name:
+    text: JavaScript
+js.methodname.macro.description:
+    text: jsMethodName()
+js.show.overriding.markers.inspection.name:
+    text: Shows function overriding markers in JavaScript
+js.undeclared.variable.inspection.name:
+    text: Implicitly declared JavaScript variable
+js.unresolved.function.inspection.name:
+    text: Unresolved JavaScript function
+js.unresolved.variable.inspection.name:
+    text: Unresolved JavaScript variable
+js.untyped.declaration.inspection.name:
+    text: Declaration with no type
+js.untyped.declaration.problem.addtype.fix:
+    text: Add Type to Declaration
+js.untyped.function.problem:
+    text: Function {0} has no return type
+js.untyped.variable.problem:
+    text: Variable {0} has no type
+js.unused.function.declaration:
+    text: Unused function declaration
+js.unused.local.symbol.inspection.name:
+    text: Unused JavaScript local symbol
+js.unused.local.variable:
+    text: Unused local variable declaration
+js.unused.parameter:
+    text: Unused parameter
+js.unused.symbol.remove:
+    text: Remove unused symbol
+loading.index.message:
+    text: Loading JavaScript indices
+methods.to.implement.chooser.title:
+    text: Select Methods to Implement
+methods.to.override.chooser.title:
+    text: Select Methods to Override
+preview.panel.title:
+    text: Preview
+this.feature.is.not.supported.by.current.language:
+    text: '''''{0}'''' is not supported by current language version'
+to.indent.package.statement.children:
+    text: '&Indent package statement children'
+typescript.filetype.description:
+    text: TypeScript files
+use.semicolon.to.terminate.statement:
+    text: Use &semicolon to terminate statements

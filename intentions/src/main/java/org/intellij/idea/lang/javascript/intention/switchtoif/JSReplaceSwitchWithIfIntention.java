@@ -15,66 +15,84 @@
  */
 package org.intellij.idea.lang.javascript.intention.switchtoif;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
-import org.intellij.idea.lang.javascript.intention.JSIntention;
-import org.intellij.idea.lang.javascript.psiutil.ControlFlowUtils;
-import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
-import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
-import org.intellij.idea.lang.javascript.psiutil.SideEffectChecker;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSChangeUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.util.IncorrectOperationException;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
+import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
+import org.intellij.idea.lang.javascript.intention.JSIntention;
+import org.intellij.idea.lang.javascript.psiutil.*;
+import org.jetbrains.annotations.NonNls;
 
+import java.util.*;
+
+@ExtensionImpl
+@IntentionMetaData(
+    ignoreId = "JSReplaceSwitchWithIfIntention",
+    categories = {"JavaScript", "Control Flow"},
+    fileExtensions = "js"
+)
 public class JSReplaceSwitchWithIfIntention extends JSIntention {
-
-    @NonNls private static final String IF_PREFIX          = "if (";
-    @NonNls private static final String IF_SUFFIX          = ") {";
-    @NonNls private static final String ELSE               = "} else {";
-    @NonNls private static final String ELSE_KEYWORD       = "else ";
-    @NonNls private static final String VAR_PREFIX         = "var ";
-    @NonNls private static final String BREAK_KEYWORD      = "break ";
-    @NonNls private static final String DEFAULT_LABEL_NAME = "Label";
+    @NonNls
+    private static final String IF_PREFIX = "if (";
+    @NonNls
+    private static final String IF_SUFFIX = ") {";
+    @NonNls
+    private static final String ELSE = "} else {";
+    @NonNls
+    private static final String ELSE_KEYWORD = "else ";
+    @NonNls
+    private static final String VAR_PREFIX = "var ";
+    @NonNls
+    private static final String BREAK_KEYWORD = "break ";
+    @NonNls
+    private static final String DEFAULT_LABEL_NAME = "Label";
 
     @Override
-	@Nonnull
+    @Nonnull
+    public LocalizeValue getText() {
+        return JSIntentionLocalize.switchtoifReplaceSwitchWithIf();
+    }
+
+    @Override
+    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new SwitchPredicate();
     }
 
     @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSSwitchStatement switchStatement = (JSSwitchStatement) element.getParent();
+    @RequiredReadAction
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        JSSwitchStatement switchStatement = (JSSwitchStatement)element.getParent();
 
         assert (switchStatement != null);
 
-        final PsiManager       mgr              = switchStatement.getManager();
-        final JSExpression     switchExpression = switchStatement.getSwitchExpression();
-        final CodeStyleManager codeStyleMgr     = CodeStyleManager.getInstance(element.getProject());
-        final boolean          hadSideEffects   = SideEffectChecker.mayHaveSideEffects(switchExpression);
-        final String           declarationString;
-        final String           expressionText;
+        PsiManager mgr = switchStatement.getManager();
+        JSExpression switchExpression = switchStatement.getSwitchExpression();
+        CodeStyleManager codeStyleMgr = CodeStyleManager.getInstance(element.getProject());
+        boolean hadSideEffects = SideEffectChecker.mayHaveSideEffects(switchExpression);
+        String declarationString;
+        String expressionText;
 
         if (hadSideEffects) {
-            final String variableName = "i"; // TODO JavaCodeStyleManager.getInstance(switchExpression.getProject()).suggestUniqueVariableName("i", switchExpression, true);
+            String variableName =
+                "i"; // TODO JavaCodeStyleManager.getInstance(switchExpression.getProject()).suggestUniqueVariableName("i", switchExpression, true);
 
-            expressionText    = variableName;
+            expressionText = variableName;
             declarationString = VAR_PREFIX + variableName + " = " + switchExpression.getText() + ';';
-        } else {
+        }
+        else {
             declarationString = null;
-            expressionText    = switchExpression.getText();
+            expressionText = switchExpression.getText();
         }
 
         boolean renameBreaks = false;
@@ -86,22 +104,21 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
             }
         }
 
-        final StringBuilder ifStatementBuffer = new StringBuilder(1024);
-        String              breakLabel        = null;
+        StringBuilder ifStatementBuffer = new StringBuilder(1024);
+        String breakLabel = null;
 
         if (renameBreaks) {
             breakLabel = CaseUtil.findUniqueLabel(switchStatement, DEFAULT_LABEL_NAME);
-            ifStatementBuffer.append(breakLabel)
-                             .append(':');
+            ifStatementBuffer.append(breakLabel).append(':');
         }
 
-        final List<SwitchStatementBranch> openBranches  = new ArrayList<SwitchStatementBranch>();
-        final Set<JSVariable>             declaredVars  = new HashSet<JSVariable>(5);
-        final List<SwitchStatementBranch> allBranches   = new ArrayList<SwitchStatementBranch>();
-        SwitchStatementBranch             currentBranch = null;
+        List<SwitchStatementBranch> openBranches = new ArrayList<>();
+        Set<JSVariable> declaredVars = new HashSet<>(5);
+        List<SwitchStatementBranch> allBranches = new ArrayList<>();
+        SwitchStatementBranch currentBranch = null;
 
         for (JSCaseClause caseClause : switchStatement.getCaseClauses()) {
-            final PsiElement[] caseClauseChildren = caseClause.getChildren();
+            PsiElement[] caseClauseChildren = caseClause.getChildren();
 
             for (PsiElement child : caseClauseChildren) {
                 if (child == caseClauseChildren[0]) {
@@ -109,11 +126,12 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
                         openBranches.clear();
                         currentBranch = new SwitchStatementBranch();
                         currentBranch.addPendingVariableDeclarations(declaredVars);
-                        allBranches .add(currentBranch);
+                        allBranches.add(currentBranch);
                         openBranches.add(currentBranch);
-                    } else if (currentBranch.hasStatements()) {
+                    }
+                    else if (currentBranch.hasStatements()) {
                         currentBranch = new SwitchStatementBranch();
-                        allBranches .add(currentBranch);
+                        allBranches.add(currentBranch);
                         openBranches.add(currentBranch);
                     }
 
@@ -124,34 +142,37 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
 
                 if (child instanceof JSExpression) {
                     // Processes case clause expression
-                    final JSExpression value = ParenthesesUtils.stripParentheses(caseClause.getCaseExpression());
+                    JSExpression value = ParenthesesUtils.stripParentheses(caseClause.getCaseExpression());
 
                     assert (currentBranch != null);
                     currentBranch.addLabel(value.getText());
-                } else if (child instanceof JSStatement) {
+                }
+                else if (child instanceof JSStatement) {
                     // Processes case clause statements
-                    final JSStatement statement = (JSStatement) child;
+                    JSStatement statement = (JSStatement)child;
 
                     if (statement instanceof JSVarStatement) {
-                        for (JSVariable variable : ((JSVarStatement) statement).getVariables()) {
-                            declaredVars.add(variable);
-                        }
-                    } else if (statement instanceof JSBlockStatement) {
+                        Collections.addAll(declaredVars, ((JSVarStatement)statement).getVariables());
+                    }
+                    else if (statement instanceof JSBlockStatement) {
                         for (PsiElement blockElement : statement.getChildren()) {
-                            final boolean isJsElement  = (blockElement instanceof JSElement);
-                            final boolean isWhiteSpace = (blockElement instanceof PsiWhiteSpace);
+                            boolean isJsElement = (blockElement instanceof JSElement);
+                            boolean isWhiteSpace = (blockElement instanceof PsiWhiteSpace);
 
                             for (SwitchStatementBranch branch : openBranches) {
                                 if (isJsElement) {
-                                    branch.addStatement((JSElement) blockElement);
-                                } else if (isWhiteSpace) {
+                                    branch.addStatement((JSElement)blockElement);
+                                }
+                                else if (isWhiteSpace) {
                                     branch.addWhiteSpace(blockElement);
-                                } else {
+                                }
+                                else {
                                     branch.addComment(blockElement);
                                 }
                             }
                         }
-                    } else {
+                    }
+                    else {
                         for (SwitchStatementBranch branch : openBranches) {
                             branch.addStatement(statement);
                         }
@@ -160,13 +181,15 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
                     if (!ControlFlowUtils.statementMayCompleteNormally(statement)) {
                         currentBranch = null;
                     }
-                } else {
-                    final boolean isWhiteSpace = (child instanceof PsiWhiteSpace);
+                }
+                else {
+                    boolean isWhiteSpace = (child instanceof PsiWhiteSpace);
 
                     for (SwitchStatementBranch openBranch : openBranches) {
                         if (isWhiteSpace) {
                             openBranch.addWhiteSpace(child);
-                        } else {
+                        }
+                        else {
                             openBranch.addComment(child);
                         }
                     }
@@ -174,82 +197,100 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
             }
         }
 
-        boolean               firstBranch   = true;
+        boolean firstBranch = true;
         SwitchStatementBranch defaultBranch = null;
 
         for (SwitchStatementBranch branch : allBranches) {
             if (branch.isDefault()) {
                 defaultBranch = branch;
-            } else {
-                final List<String>     labels                      = branch.getLabels();
-                final List<PsiElement> bodyElements                = branch.getBodyElements();
-                final Set<JSVariable>  pendingVariableDeclarations = branch.getPendingVariableDeclarations();
+            }
+            else {
+                List<String> labels = branch.getLabels();
+                List<PsiElement> bodyElements = branch.getBodyElements();
+                Set<JSVariable> pendingVariableDeclarations = branch.getPendingVariableDeclarations();
 
-                dumpBranch(ifStatementBuffer, expressionText,
-                           labels, bodyElements, firstBranch,
-                           renameBreaks && CaseUtil.containsHiddenBreak(bodyElements), breakLabel,
-                           pendingVariableDeclarations);
+                dumpBranch(
+                    ifStatementBuffer,
+                    expressionText,
+                    labels,
+                    bodyElements,
+                    firstBranch,
+                    renameBreaks && CaseUtil.containsHiddenBreak(bodyElements),
+                    breakLabel,
+                    pendingVariableDeclarations
+                );
                 firstBranch = false;
             }
         }
         if (defaultBranch != null) {
-            final List<PsiElement> bodyElements                = defaultBranch.getBodyElements();
-            final Set<JSVariable>  pendingVariableDeclarations = defaultBranch.getPendingVariableDeclarations();
+            List<PsiElement> bodyElements = defaultBranch.getBodyElements();
+            Set<JSVariable> pendingVariableDeclarations = defaultBranch.getPendingVariableDeclarations();
 
-            dumpDefaultBranch(ifStatementBuffer, bodyElements,
-                              firstBranch, renameBreaks, breakLabel,
-                              pendingVariableDeclarations);
+            dumpDefaultBranch(
+                ifStatementBuffer,
+                bodyElements,
+                firstBranch,
+                renameBreaks,
+                breakLabel,
+                pendingVariableDeclarations
+            );
         }
 
-      if (hadSideEffects) {
-            final String      ifStatementString    = ifStatementBuffer.toString();
-            final JSStatement declarationStatement = (JSStatement) JSChangeUtil.createStatementFromText(element.getProject(), declarationString).getPsi();
-            final JSStatement ifStatement          = (JSStatement) JSChangeUtil.createStatementFromText(element.getProject(), ifStatementString).getPsi();
+        if (hadSideEffects) {
+            String ifStatementString = ifStatementBuffer.toString();
+            JSStatement declarationStatement =
+                (JSStatement)JSChangeUtil.createStatementFromText(element.getProject(), declarationString).getPsi();
+            JSStatement ifStatement =
+                (JSStatement)JSChangeUtil.createStatementFromText(element.getProject(), ifStatementString).getPsi();
 
             codeStyleMgr.reformat(declarationStatement);
             codeStyleMgr.reformat(ifStatement);
             JSElementFactory.replaceStatement(switchStatement, declarationStatement.getText() + '\n' + ifStatement.getText());
-        } else {
-            final String      ifStatementString = ifStatementBuffer.toString();
-            final JSStatement newStatement = (JSStatement) JSChangeUtil.createStatementFromText(element.getProject(), ifStatementString).getPsi();
+        }
+        else {
+            String ifStatementString = ifStatementBuffer.toString();
+            JSStatement newStatement =
+                (JSStatement)JSChangeUtil.createStatementFromText(element.getProject(), ifStatementString).getPsi();
 
             codeStyleMgr.reformat(newStatement);
             JSElementFactory.replaceStatement(switchStatement, newStatement.getText());
         }
     }
 
-    private static void dumpBranch(StringBuilder     ifStatementString,
-                                   String            expressionText,
-                                   List<String>      labels,
-                                   List<PsiElement>  bodyStatements,
-                                   boolean           firstBranch,
-                                   boolean           renameBreaks,
-                                   String            breakLabel,
-                                   Set<JSVariable>   variableDecls) {
+    @RequiredReadAction
+    private static void dumpBranch(
+        StringBuilder ifStatementString,
+        String expressionText,
+        List<String> labels,
+        List<PsiElement> bodyStatements,
+        boolean firstBranch,
+        boolean renameBreaks,
+        String breakLabel,
+        Set<JSVariable> variableDecls
+    ) {
         if (!firstBranch) {
             ifStatementString.append(ELSE_KEYWORD);
         }
         dumpLabels(ifStatementString, expressionText, labels);
-        dumpBody  (ifStatementString, bodyStatements, renameBreaks, breakLabel,
-                   variableDecls);
+        dumpBody(ifStatementString, bodyStatements, renameBreaks, breakLabel, variableDecls);
     }
 
-    private static void dumpDefaultBranch(StringBuilder     ifStatementString,
-                                          List<PsiElement>  bodyStatements,
-                                          boolean           firstBranch,
-                                          boolean           renameBreaks,
-                                          String            breakLabel,
-                                          Set<JSVariable>   variableDecls) {
+    @RequiredReadAction
+    private static void dumpDefaultBranch(
+        StringBuilder ifStatementString,
+        List<PsiElement> bodyStatements,
+        boolean firstBranch,
+        boolean renameBreaks,
+        String breakLabel,
+        Set<JSVariable> variableDecls
+    ) {
         if (!firstBranch) {
             ifStatementString.append(ELSE_KEYWORD);
         }
-        dumpBody(ifStatementString, bodyStatements, renameBreaks, breakLabel,
-                 variableDecls);
+        dumpBody(ifStatementString, bodyStatements, renameBreaks, breakLabel, variableDecls);
     }
 
-    private static void dumpLabels(StringBuilder ifStatementString,
-                                   String        expressionText,
-                                   List<String>  labels) {
+    private static void dumpLabels(StringBuilder ifStatementString, String expressionText, List<String> labels) {
         boolean firstLabel = true;
 
         ifStatementString.append(IF_PREFIX);
@@ -259,104 +300,110 @@ public class JSReplaceSwitchWithIfIntention extends JSIntention {
             }
             firstLabel = false;
 
-            ifStatementString.append(expressionText)
-                             .append("==")
-                             .append(label);
+            ifStatementString.append(expressionText).append("==").append(label);
         }
         ifStatementString.append(')');
     }
 
-    private static void dumpBody(StringBuilder    ifStatementString,
-                                 List<PsiElement> bodyStatements,
-                                 boolean          renameBreaks,
-                                 String           breakLabel,
-                                 Set<JSVariable>  variableDecls) {
-
+    @RequiredReadAction
+    private static void dumpBody(
+        StringBuilder ifStatementString,
+        List<PsiElement> bodyStatements,
+        boolean renameBreaks,
+        String breakLabel,
+        Set<JSVariable> variableDecls
+    ) {
         ifStatementString.append('{');
-        for (final JSVariable var : variableDecls) {
+        for (JSVariable var : variableDecls) {
             if (CaseUtil.isUsedByStatementList(var, bodyStatements)) {
                 ifStatementString.append(VAR_PREFIX)
-                                 .append(var.getName())
-                                 .append(';');
+                    .append(var.getName())
+                    .append(';');
             }
         }
 
-        for (final PsiElement bodyStatement : bodyStatements) {
+        for (PsiElement bodyStatement : bodyStatements) {
             if (!(bodyStatement instanceof JSBreakStatement)) {
                 appendElement(ifStatementString, bodyStatement, renameBreaks,
-                              breakLabel);
+                    breakLabel
+                );
             }
         }
         ifStatementString.append('}');
     }
 
-    private static void appendElement(StringBuilder ifStatementString,
-                                      PsiElement    element,
-                                      boolean       renameBreakElements,
-                                      String        breakLabelString) {
+    @RequiredReadAction
+    private static void appendElement(
+        StringBuilder ifStatementString,
+        PsiElement element,
+        boolean renameBreakElements,
+        String breakLabelString
+    ) {
         if (!renameBreakElements) {
-            final String text = element.getText();
+            String text = element.getText();
 
             ifStatementString.append(text);
-        } else if (element instanceof JSBreakStatement) {
-            final String identifier = ((JSBreakStatement) element).getLabel();
+        }
+        else if (element instanceof JSBreakStatement breakStatement) {
+            String identifier = breakStatement.getLabel();
 
-            if (identifier == null || identifier.length() == 0) {
-                ifStatementString.append(BREAK_KEYWORD)
-                                 .append(breakLabelString)
-                                 .append(';');
-            } else {
-                final String text = element.getText();
-                ifStatementString.append(text);
+            if (identifier == null || identifier.isEmpty()) {
+                ifStatementString.append(BREAK_KEYWORD).append(breakLabelString).append(';');
             }
-        } else if (element instanceof JSBlockStatement) {
-            for (final PsiElement child : element.getChildren()) {
+            else {
+                ifStatementString.append(element.getText());
+            }
+        }
+        else if (element instanceof JSBlockStatement) {
+            for (PsiElement child : element.getChildren()) {
                 appendElement(ifStatementString, child, renameBreakElements, breakLabelString);
             }
-        } else if (element instanceof JSIfStatement) {
-            JSIfStatement ifStatement = (JSIfStatement) element;
-            JSStatement   elseBranch  = ifStatement.getElse();
+        }
+        else if (element instanceof JSIfStatement ifStatement) {
+            JSStatement elseBranch = ifStatement.getElse();
 
             ifStatementString.append(IF_PREFIX)
-                             .append(ifStatement.getCondition().getText())
-                             .append(IF_SUFFIX);
+                .append(ifStatement.getCondition().getText())
+                .append(IF_SUFFIX);
             appendElement(ifStatementString, ifStatement.getThen(), renameBreakElements, breakLabelString);
             if (elseBranch != null) {
                 ifStatementString.append(ELSE);
                 appendElement(ifStatementString, elseBranch, renameBreakElements, breakLabelString);
             }
             ifStatementString.append('}');
-        } else {
+        }
+        else {
             ifStatementString.append(element.getText());
         }
     }
 
     private static class SwitchPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-            final PsiElement parent = element.getParent();
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            PsiElement parent = element.getParent();
 
-            if (!(parent instanceof JSSwitchStatement)) {
+            if (parent instanceof JSSwitchStatement switchStatement) {
+                if (ErrorUtil.containsError(switchStatement)) {
+                    return false;
+                }
+
+                JSExpression expression = switchStatement.getSwitchExpression();
+
+                return expression != null && expression.isValid();
+            }
+            else {
                 return false;
             }
-            final JSSwitchStatement switchStatement = (JSSwitchStatement) parent;
-            if (ErrorUtil.containsError(switchStatement)) {
-                return false;
-            }
-
-            final JSExpression expression = switchStatement.getSwitchExpression();
-
-            return (expression != null && expression.isValid());
         }
     }
 
     private static class SwitchStatementBranch {
-        private final Set<JSVariable>  pendingVariableDeclarations = new HashSet<JSVariable>(5);
-        private final List<String>     labels                      = new ArrayList<String>(2);
-        private final List<PsiElement> bodyElements                = new ArrayList<PsiElement>(5);
-        private final List<PsiElement> pendingWhiteSpace           = new ArrayList<PsiElement>(2);
-        private       boolean          isDefault;
-        private       boolean          hasStatements;
+        private final Set<JSVariable> pendingVariableDeclarations = new HashSet<>(5);
+        private final List<String> labels = new ArrayList<>(2);
+        private final List<PsiElement> bodyElements = new ArrayList<>(5);
+        private final List<PsiElement> pendingWhiteSpace = new ArrayList<>(2);
+        private boolean isDefault;
+        private boolean hasStatements;
 
         public void addLabel(String labelString) {
             this.labels.add(labelString);

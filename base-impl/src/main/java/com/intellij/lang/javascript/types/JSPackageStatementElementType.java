@@ -19,68 +19,61 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import consulo.annotation.access.RequiredReadAction;
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSPackageStatement;
-import com.intellij.lang.javascript.psi.JSStubElementType;
+import consulo.javascript.impl.language.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.impl.JSPackageStatementImpl;
 import com.intellij.lang.javascript.psi.stubs.JSPackageStatementStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSPackageStatementStubImpl;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
-import com.intellij.util.io.StringRef;
+import consulo.index.io.StringRef;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.stub.StubInputStream;
+import consulo.language.psi.stub.StubOutputStream;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jun 6, 2008
- *         Time: 7:49:25 PM
+ * Date: Jun 6, 2008
+ * Time: 7:49:25 PM
  */
-public class JSPackageStatementElementType extends JSStubElementType<JSPackageStatementStub, JSPackageStatement>
-{
-	public JSPackageStatementElementType()
-	{
-		super("PACKAGE_STATEMENT");
-	}
+public class JSPackageStatementElementType extends JSStubElementType<JSPackageStatementStub, JSPackageStatement> {
+    public JSPackageStatementElementType() {
+        super("PACKAGE_STATEMENT");
+    }
 
-	@Nonnull
-	@Override
-	public PsiElement createElement(@Nonnull ASTNode astNode)
-	{
-		return new JSPackageStatementImpl(astNode);
-	}
+    @Nonnull
+    @Override
+    public PsiElement createElement(@Nonnull ASTNode astNode) {
+        return new JSPackageStatementImpl(astNode);
+    }
 
-	@Override
-	public JSPackageStatement createPsi(@Nonnull JSPackageStatementStub stub)
-	{
-		return new JSPackageStatementImpl(stub);
-	}
+    @Override
+    public JSPackageStatement createPsi(@Nonnull JSPackageStatementStub stub) {
+        return new JSPackageStatementImpl(stub);
+    }
 
-	@RequiredReadAction
-	@Override
-	public JSPackageStatementStub createStub(@Nonnull JSPackageStatement psi, StubElement parentStub)
-	{
-		String name = psi.getName();
-		String qualifiedName = psi.getQualifiedName();
-		return new JSPackageStatementStubImpl(name, qualifiedName, parentStub, this);
-	}
+    @RequiredReadAction
+    @Override
+    public JSPackageStatementStub createStub(@Nonnull JSPackageStatement psi, StubElement parentStub) {
+        String name = psi.getName();
+        String qualifiedName = psi.getQualifiedName();
+        return new JSPackageStatementStubImpl(name, qualifiedName, parentStub, this);
+    }
 
-	@Override
-	public void serialize(@Nonnull JSPackageStatementStub stub, @Nonnull StubOutputStream dataStream) throws IOException
-	{
-		dataStream.writeName(stub.getName());
-		dataStream.writeName(stub.getQualifiedName());
-	}
+    @Override
+    public void serialize(@Nonnull JSPackageStatementStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+        dataStream.writeName(stub.getName());
+        dataStream.writeName(stub.getQualifiedName());
+    }
 
-	@Nonnull
-	@Override
-	public JSPackageStatementStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
-	{
-		StringRef nameRef = dataStream.readName();
-		StringRef qualifiedRef = dataStream.readName();
-		return new JSPackageStatementStubImpl(StringRef.toString(nameRef), StringRef.toString(qualifiedRef), parentStub, this);
-	}
+    @Nonnull
+    @Override
+    public JSPackageStatementStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+        StringRef nameRef = dataStream.readName();
+        StringRef qualifiedRef = dataStream.readName();
+        return new JSPackageStatementStubImpl(StringRef.toString(nameRef), StringRef.toString(qualifiedRef), parentStub, this);
+    }
 }

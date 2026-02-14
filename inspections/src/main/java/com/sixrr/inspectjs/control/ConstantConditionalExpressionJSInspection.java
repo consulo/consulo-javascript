@@ -1,51 +1,57 @@
 package com.sixrr.inspectjs.control;
 
-import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.psi.JSConditionalExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
-import com.sixrr.inspectjs.*;
+import com.sixrr.inspectjs.BaseInspectionVisitor;
+import com.sixrr.inspectjs.InspectionJSFix;
+import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import com.sixrr.inspectjs.utils.BoolUtils;
-import javax.annotation.Nonnull;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import jakarta.annotation.Nonnull;
 
-public class ConstantConditionalExpressionJSInspection
-        extends JavaScriptInspection {
-
+@ExtensionImpl
+public class ConstantConditionalExpressionJSInspection extends JavaScriptInspection {
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("constant.conditional.expression.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.constantConditionalExpressionDisplayName();
     }
 
     @Override
-	public boolean isEnabledByDefault() {
+    public boolean isEnabledByDefault() {
         return true;
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new ConstantConditionalExpressionVisitor();
     }
 
+    @RequiredReadAction
     @Override
-	@Nonnull
-    public String buildErrorString(Object... args) {
-        return InspectionJSBundle.message("constant.conditional.expression.error.string");
+    @Nonnull
+    public String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.constantConditionalExpressionErrorString().get();
     }
 
-    static String calculateReplacementExpression(
-            JSConditionalExpression exp) {
-        final JSExpression thenExpression = exp.getThen();
-        final JSExpression elseExpression = exp.getElse();
-        final JSExpression condition = exp.getCondition();
+    static String calculateReplacementExpression(JSConditionalExpression exp) {
+        JSExpression thenExpression = exp.getThen();
+        JSExpression elseExpression = exp.getElse();
+        JSExpression condition = exp.getCondition();
         assert thenExpression != null;
         assert elseExpression != null;
         if (BoolUtils.isTrue(condition)) {
@@ -56,41 +62,35 @@ public class ConstantConditionalExpressionJSInspection
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location) {
+    public InspectionJSFix buildFix(PsiElement location, Object state) {
         return new ConstantConditionalFix();
     }
 
     private static class ConstantConditionalFix extends InspectionJSFix {
-
+        @Nonnull
         @Override
-		@Nonnull
-        public String getName() {
-            return InspectionJSBundle.message("simplify.fix");
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.simplifyFix();
         }
 
         @Override
-		public void doFix(Project project, ProblemDescriptor descriptor)
-                throws IncorrectOperationException {
-            final JSConditionalExpression expression =
-                    (JSConditionalExpression) descriptor.getPsiElement();
-            final String newExpression =
-                    calculateReplacementExpression(expression);
+        public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
+            JSConditionalExpression expression = (JSConditionalExpression) descriptor.getPsiElement();
+            String newExpression = calculateReplacementExpression(expression);
             replaceExpression(expression, newExpression);
         }
     }
 
-    private static class ConstantConditionalExpressionVisitor
-            extends BaseInspectionVisitor {
-
-        @Override public void visitJSConditionalExpression(
-                JSConditionalExpression expression) {
+    private static class ConstantConditionalExpressionVisitor extends BaseInspectionVisitor {
+        @Override
+        public void visitJSConditionalExpression(JSConditionalExpression expression) {
             super.visitJSConditionalExpression(expression);
-            final JSExpression condition = expression.getCondition();
-            final JSExpression thenExpression = expression.getThen();
+            JSExpression condition = expression.getCondition();
+            JSExpression thenExpression = expression.getThen();
             if (thenExpression == null) {
                 return;
             }
-            final JSExpression elseExpression = expression.getElse();
+            JSExpression elseExpression = expression.getElse();
             if (elseExpression == null) {
                 return;
             }

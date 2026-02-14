@@ -19,72 +19,69 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import javax.annotation.Nonnull;
-
 import consulo.annotation.access.RequiredReadAction;
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSNamespaceDeclaration;
 import com.intellij.lang.javascript.psi.impl.JSNamespaceDeclarationImpl;
 import com.intellij.lang.javascript.psi.stubs.JSNamespaceDeclarationStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSNamespaceDeclarationStubImpl;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
-import com.intellij.util.io.StringRef;
+import consulo.language.psi.PsiElement;
+import consulo.index.io.StringRef;
 import consulo.javascript.types.JSQualifiedStubElementType;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.stub.StubInputStream;
+import consulo.language.psi.stub.StubOutputStream;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jun 6, 2008
- *         Time: 7:49:06 PM
+ * Date: Jun 6, 2008
+ * Time: 7:49:06 PM
  */
-public class JSNamespaceDeclarationElementType extends JSQualifiedStubElementType<JSNamespaceDeclarationStub, JSNamespaceDeclaration>
-{
-	public JSNamespaceDeclarationElementType()
-	{
-		super("NAMESPACE_DECLARATION");
-	}
+public class JSNamespaceDeclarationElementType extends JSQualifiedStubElementType<JSNamespaceDeclarationStub, JSNamespaceDeclaration> {
+    public JSNamespaceDeclarationElementType() {
+        super("NAMESPACE_DECLARATION");
+    }
 
-	@Nonnull
-	@Override
-	public PsiElement createElement(@Nonnull ASTNode astNode)
-	{
-		return new JSNamespaceDeclarationImpl(astNode);
-	}
+    @Nonnull
+    @Override
+    public PsiElement createElement(@Nonnull ASTNode astNode) {
+        return new JSNamespaceDeclarationImpl(astNode);
+    }
 
-	@Override
-	public JSNamespaceDeclaration createPsi(@Nonnull JSNamespaceDeclarationStub stub)
-	{
-		return new JSNamespaceDeclarationImpl(stub);
-	}
+    @Override
+    public JSNamespaceDeclaration createPsi(@Nonnull JSNamespaceDeclarationStub stub) {
+        return new JSNamespaceDeclarationImpl(stub);
+    }
 
-	@RequiredReadAction
-	@Override
-	public JSNamespaceDeclarationStub createStub(@Nonnull JSNamespaceDeclaration psi, StubElement parentStub)
-	{
-		String name = psi.getName();
-		String qualifiedName = psi.getQualifiedName();
-		String initialValueString = psi.getInitialValueString();
-		return new JSNamespaceDeclarationStubImpl(name, qualifiedName, initialValueString, parentStub, this);
-	}
+    @RequiredReadAction
+    @Override
+    public JSNamespaceDeclarationStub createStub(@Nonnull JSNamespaceDeclaration psi, StubElement parentStub) {
+        String name = psi.getName();
+        String qualifiedName = psi.getQualifiedName();
+        String initialValueString = psi.getInitialValueString();
+        return new JSNamespaceDeclarationStubImpl(name, qualifiedName, initialValueString, parentStub, this);
+    }
 
-	@Override
-	public void serialize(@Nonnull JSNamespaceDeclarationStub stub, @Nonnull StubOutputStream dataStream) throws IOException
-	{
-		dataStream.writeName(stub.getName());
-		dataStream.writeName(stub.getQualifiedName());
-		dataStream.writeName(stub.getInitialValueString());
-	}
+    @Override
+    public void serialize(@Nonnull JSNamespaceDeclarationStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+        dataStream.writeName(stub.getName());
+        dataStream.writeName(stub.getQualifiedName());
+        dataStream.writeName(stub.getInitialValueString());
+    }
 
-	@Nonnull
-	@Override
-	public JSNamespaceDeclarationStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
-	{
-		StringRef nameRef = dataStream.readName();
-		StringRef qualifiedRef = dataStream.readName();
-		StringRef initialValueRef = dataStream.readName();
-		return new JSNamespaceDeclarationStubImpl(StringRef.toString(nameRef), StringRef.toString(qualifiedRef),
-				StringRef.toString(initialValueRef), parentStub, this);
-	}
+    @Nonnull
+    @Override
+    public JSNamespaceDeclarationStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+        StringRef nameRef = dataStream.readName();
+        StringRef qualifiedRef = dataStream.readName();
+        StringRef initialValueRef = dataStream.readName();
+        return new JSNamespaceDeclarationStubImpl(
+            StringRef.toString(nameRef),
+            StringRef.toString(qualifiedRef),
+            StringRef.toString(initialValueRef),
+            parentStub,
+            this
+        );
+    }
 }

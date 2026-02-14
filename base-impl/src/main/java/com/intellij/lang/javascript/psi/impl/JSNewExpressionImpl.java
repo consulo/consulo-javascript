@@ -16,64 +16,57 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.lang.psi.JavaScriptType;
 import consulo.javascript.lang.psi.impl.JavaScriptClassType;
-
-import javax.annotation.Nonnull;
+import consulo.javascript.language.psi.JavaScriptType;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 11:57:36 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public class JSNewExpressionImpl extends JSExpressionImpl implements JSNewExpression
-{
-	public JSNewExpressionImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSNewExpressionImpl extends JSExpressionImpl implements JSNewExpression {
+    public JSNewExpressionImpl(ASTNode node) {
+        super(node);
+    }
 
-	@RequiredReadAction
-	@Nonnull
-	@Override
-	public JavaScriptType getType()
-	{
-		JSExpression methodExpression = getMethodExpression();
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public JavaScriptType getType() {
+        JSExpression methodExpression = getMethodExpression();
 
-		if(methodExpression instanceof JSReferenceExpression)
-		{
-			PsiElement resolvedElement = ((JSReferenceExpression) methodExpression).resolve();
-			if(resolvedElement instanceof JSClass)
-			{
-				return new JavaScriptClassType((JSClass) resolvedElement);
-			}
-		}
-		return super.getType();
-	}
+        if (methodExpression instanceof JSReferenceExpression referenceExpression) {
+            PsiElement element = referenceExpression.resolve();
+            if (element instanceof JSClass jsClass) {
+                return new JavaScriptClassType(jsClass);
+            }
 
-	@Override
-	public JSExpression getMethodExpression()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+            if (element instanceof JSVariable jsVar) {
+                return jsVar.getType();
+            }
+        }
+        return super.getType();
+    }
 
-	@Override
-	public JSArgumentList getArgumentList()
-	{
-		final ASTNode node = getNode().findChildByType(JSElementTypes.ARGUMENT_LIST);
-		return node != null ? (JSArgumentList) node.getPsi() : null;
-	}
+    @Override
+    public JSExpression getMethodExpression() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSNewExpression(this);
-	}
+    @Override
+    @RequiredReadAction
+    public JSArgumentList getArgumentList() {
+        ASTNode node = getNode().findChildByType(JSElementTypes.ARGUMENT_LIST);
+        return node != null ? (JSArgumentList)node.getPsi() : null;
+    }
+
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSNewExpression(this);
+    }
 }

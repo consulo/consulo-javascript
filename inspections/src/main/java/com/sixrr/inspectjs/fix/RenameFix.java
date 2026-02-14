@@ -1,16 +1,17 @@
 package com.sixrr.inspectjs.fix;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.psi.PsiElement;
-import com.intellij.refactoring.RefactoringActionHandlerFactory;
-import com.intellij.refactoring.RefactoringActionHandler;
-import com.intellij.refactoring.RefactoringFactory;
-import com.intellij.refactoring.RenameRefactoring;
-import com.intellij.ide.DataManager;
 import com.sixrr.inspectjs.InspectionJSFix;
-import com.sixrr.inspectjs.InspectionJSBundle;
-import javax.annotation.Nonnull;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
+import consulo.dataContext.DataManager;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.editor.refactoring.RefactoringFactory;
+import consulo.language.editor.refactoring.RenameRefactoring;
+import consulo.language.editor.refactoring.action.RefactoringActionHandler;
+import consulo.language.editor.refactoring.action.RefactoringActionHandlerFactory;
+import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import jakarta.annotation.Nonnull;
 
 public class RenameFix extends InspectionJSFix {
     private final String m_targetName;
@@ -26,27 +27,25 @@ public class RenameFix extends InspectionJSFix {
     }
 
     @Override
-	@Nonnull
-    public String getName() {
-        if (m_targetName == null) {
-            return InspectionJSBundle.message("rename.fix");
-        } else {
-            return InspectionJSBundle.message("rename.to.fix", m_targetName);
-        }
+    @Nonnull
+    public LocalizeValue getName() {
+        return m_targetName == null
+            ? InspectionJSLocalize.renameFix()
+            : InspectionJSLocalize.renameToFix(m_targetName);
     }
 
     @Override
-	public void doFix(Project project, ProblemDescriptor descriptor) {
-        final PsiElement nameIdentifier = descriptor.getPsiElement();
-        final PsiElement elementToRename = nameIdentifier.getParent();
+    public void doFix(Project project, ProblemDescriptor descriptor) {
+        PsiElement nameIdentifier = descriptor.getPsiElement();
+        PsiElement elementToRename = nameIdentifier.getParent();
         if (m_targetName == null) {
-            final RefactoringActionHandlerFactory factory =
-                    RefactoringActionHandlerFactory.getInstance();
-            final RefactoringActionHandler renameHandler = factory.createRenameHandler();
+            RefactoringActionHandlerFactory factory = RefactoringActionHandlerFactory.getInstance();
+            RefactoringActionHandler renameHandler = factory.createRenameHandler();
             renameHandler.invoke(project, new PsiElement[]{elementToRename}, DataManager.getInstance().getDataContext());
-        } else {
-            final RefactoringFactory factory = RefactoringFactory.getInstance(project);
-            final RenameRefactoring renameRefactoring = factory.createRename(elementToRename, m_targetName);
+        }
+        else {
+            RefactoringFactory factory = RefactoringFactory.getInstance(project);
+            RenameRefactoring renameRefactoring = factory.createRename(elementToRename, m_targetName);
             renameRefactoring.run();
         }
     }

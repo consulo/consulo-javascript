@@ -16,434 +16,352 @@
 
 package com.intellij.lang.javascript.index;
 
-import gnu.trove.THashSet;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
 import com.intellij.lang.javascript.psi.resolve.ResolveProcessor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import jakarta.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
- * @by maxim.mossienko, yole
+ * @author maxim.mossienko, yole
  */
-public class JSSymbolUtil
-{
-	@NonNls
-	private static final String PROTOTYPE_FIELD_NAME = "prototype";
-	@NonNls
-	private static final String J_QUERY_VAR_NAME = "jQuery";
-	@NonNls
-	private static final String FN_FUN_NAME = "fn";
+public class JSSymbolUtil {
+    private static final String PROTOTYPE_FIELD_NAME = "prototype";
+    private static final String J_QUERY_VAR_NAME = "jQuery";
+    private static final String FN_FUN_NAME = "fn";
 
+    private static JSElement findNameComponent(JSElement expr) {
+        if (expr instanceof JSReferenceExpression) {
+            return expr;
+        }
+        JSElement current = expr;
 
-	private static JSElement findNameComponent(JSElement expr)
-	{
-		if(expr instanceof JSReferenceExpression)
-		{
-			return expr;
-		}
-		JSElement current = expr;
+        while (expr != null) {
+            if (expr instanceof JSReferenceExpression) {
+                return expr;
+            }
+            else if (expr instanceof JSAssignmentExpression assignment) {
+                JSExpression _lOperand = assignment.getLOperand();
+                if (!(_lOperand instanceof JSDefinitionExpression)) {
+                    break;
+                }
+                JSExpression lOperand = ((JSDefinitionExpression)_lOperand).getExpression();
 
-		while(expr != null)
-		{
-			if(expr instanceof JSReferenceExpression)
-			{
-				return expr;
-			}
-			else if(expr instanceof JSAssignmentExpression)
-			{
-				final JSExpression _lOperand = ((JSAssignmentExpression) expr).getLOperand();
-				if(!(_lOperand instanceof JSDefinitionExpression))
-				{
-					break;
-				}
-				final JSExpression lOperand = ((JSDefinitionExpression) _lOperand).getExpression();
+                if (lOperand instanceof JSReferenceExpression refExpr) {
+                    expr = refExpr;
+                    continue;
+                }
+                else {
+                    break;
+                }
+            }
+            else if (expr instanceof JSVariable variable) {
+                return variable;
+            }
+            else if (expr instanceof JSCallExpression call) {
+                if (call.getMethodExpression() instanceof JSReferenceExpression methodRefExpr) {
+                    return methodRefExpr;
+                }
+            }
+            else {
+                current = expr;
+            }
 
-				if(lOperand instanceof JSReferenceExpression)
-				{
-					expr = lOperand;
-					continue;
-				}
-				else
-				{
-					break;
-				}
-			}
-			else if(expr instanceof JSVariable)
-			{
-				return expr;
-			}
-			else if(expr instanceof JSCallExpression)
-			{
-				final JSExpression method = ((JSCallExpression) expr).getMethodExpression();
-				if(method instanceof JSReferenceExpression)
-				{
-					return method;
-				}
-			}
-			else
-			{
-				current = expr;
-			}
+            if (current != null) {
+                PsiElement parent = current.getParent();
+                if (!(parent instanceof JSElement)) {
+                    break;
+                }
+                if (parent instanceof JSStatement) {
+                    break;
+                }
+                expr = (JSElement)parent;
+            }
+        }
 
-			if(current != null)
-			{
-				final PsiElement parent = current.getParent();
-				if(!(parent instanceof JSElement))
-				{
-					break;
-				}
-				if(parent instanceof JSStatement)
-				{
-					break;
-				}
-				expr = (JSElement) parent;
-			}
-		}
+        return null;
+    }
 
-		return null;
-	}
+    public static String[] buildNameIndexArray(JSElement _expr) {
+        final List<String> nameComponents = new ArrayList<>();
 
-	public static String[] buildNameIndexArray(final JSElement _expr)
-	{
-		final List<String> nameComponents = new ArrayList<String>();
+        JSElement nameComponent = findNameComponent(_expr);
+        JSReferenceExpression expr = null;
 
-		JSElement nameComponent = findNameComponent(_expr);
-		JSReferenceExpression expr = null;
+        if (nameComponent instanceof JSVariable variable) {
+            String varName = variable.getName();
+            if (varName != null) {
+                nameComponents.add(varName);
+            }
+        }
+        else if (nameComponent instanceof JSReferenceExpression nameRefExpr) {
+            expr = nameRefExpr;
+        }
 
-		if(nameComponent instanceof JSVariable)
-		{
-			String varName = nameComponent.getName();
-			if(varName != null)
-			{
-				nameComponents.add(varName);
-			}
-		}
-		else if(nameComponent instanceof JSReferenceExpression)
-		{
-			expr = (JSReferenceExpression) nameComponent;
-		}
+        if (expr != null) {
+            final JSReferenceExpression expr1 = expr;
+            visitReferenceExpressionComponentsInRootFirstOrder(
+                expr,
+                new ReferenceExpressionProcessor() {
+                    @Override
+                    public void processExpression(JSReferenceExpression expr) {
+                        nameComponents.add(expr.getReferencedName());
+                    }
 
-		if(expr != null)
-		{
-			final JSReferenceExpression expr1 = expr;
-			visitReferenceExpressionComponentsInRootFirstOrder(expr, new ReferenceExpressionProcessor()
-			{
+                    @Override
+                    public void processUnresolvedThis() {
+                        nameComponents.add("");
+                    }
 
-				@Override
-				public void processExpression(JSReferenceExpression expr)
-				{
-					nameComponents.add(expr.getReferencedName());
-				}
+                    @Override
+                    public boolean isTopLevel(JSReferenceExpression expression) {
+                        return expr1 == expression;
+                    }
+                }
+            );
+        }
 
-				@Override
-				public void processUnresolvedThis()
-				{
-					nameComponents.add("");
-				}
+        return nameComponents.toArray(new String[nameComponents.size()]);
+    }
 
-				@Override
-				public boolean isTopLevel(final JSReferenceExpression expression)
-				{
-					return expr1 == expression;
-				}
-			});
-		}
+    interface ReferenceExpressionProcessor {
+        void processExpression(JSReferenceExpression expr);
 
-		return nameComponents.toArray(new String[nameComponents.size()]);
-	}
+        void processUnresolvedThis();
 
-	interface ReferenceExpressionProcessor
-	{
-		void processExpression(JSReferenceExpression expr);
+        boolean isTopLevel(JSReferenceExpression expression);
+    }
 
-		void processUnresolvedThis();
+    private static void visitReferenceExpressionComponentsInRootFirstOrder(
+        JSReferenceExpression expr,
+        ReferenceExpressionProcessor processor
+    ) {
+        JSExpression qualifier = expr.getQualifier();
 
-		boolean isTopLevel(final JSReferenceExpression expression);
-	}
+        if (qualifier instanceof JSCallExpression callExpression) {
+            qualifier = callExpression.getMethodExpression();
+        }
 
+        if (qualifier instanceof JSIndexedPropertyAccessExpression indexedPropertyAccessExpression) {
+            qualifier = indexedPropertyAccessExpression.getQualifier();
+        }
 
-	private static void visitReferenceExpressionComponentsInRootFirstOrder(JSReferenceExpression expr, ReferenceExpressionProcessor processor)
-	{
-		JSExpression qualifier = expr.getQualifier();
+        if (qualifier instanceof JSReferenceExpression referenceExpression) {
+            visitReferenceExpressionComponentsInRootFirstOrder(referenceExpression, processor);
+        }
 
-		if(qualifier instanceof JSCallExpression)
-		{
-			qualifier = ((JSCallExpression) qualifier).getMethodExpression();
-		}
+        if (qualifier instanceof JSThisExpression) {
+            processor.processUnresolvedThis();
+        }
 
-		if(qualifier instanceof JSIndexedPropertyAccessExpression)
-		{
-			qualifier = ((JSIndexedPropertyAccessExpression) qualifier).getQualifier();
-		}
+        String refName = expr.getReferencedName();
 
-		if(qualifier instanceof JSReferenceExpression)
-		{
-			visitReferenceExpressionComponentsInRootFirstOrder((JSReferenceExpression) qualifier, processor);
-		}
+        if (refName != null && (!refName.equals(PROTOTYPE_FIELD_NAME) || processor.isTopLevel(expr))) {
+            processor.processExpression(expr);
+        }
+    }
 
-		if(qualifier instanceof JSThisExpression)
-		{
-			processor.processUnresolvedThis();
-		}
+    private static JSReferenceExpression evaluateInitializedPrototype(JSExpression initializer) {
+        JSReferenceExpression initializedPrototype = null;
 
-		final String refName = expr.getReferencedName();
+        if (initializer instanceof JSReferenceExpression initializerRefExpr
+            && PROTOTYPE_FIELD_NAME.equals(initializerRefExpr.getReferencedName())
+            && initializerRefExpr.getQualifier() instanceof JSReferenceExpression qualifierRefExpr) {
+            initializedPrototype = qualifierRefExpr;
+        }
+        else if (initializer instanceof JSAssignmentExpression initializerAssignmentExpr
+            && initializerAssignmentExpr.getLOperand() instanceof JSDefinitionExpression lOperandDefExpr) {
+            initializedPrototype = evaluateInitializedPrototype(lOperandDefExpr.getExpression());
+        }
+        return initializedPrototype;
+    }
 
-		if(refName != null && (!refName.equals(PROTOTYPE_FIELD_NAME) || processor.isTopLevel(expr)))
-		{
-			processor.processExpression(expr);
-		}
-	}
+    public static JSReferenceExpression findReferenceExpressionUsedForClassExtending(JSReferenceExpression lOperand) {
+        return findReferenceExpressionUsedForClassExtending(lOperand, null);
+    }
 
-	private static JSReferenceExpression evaluateInitializedPrototype(final JSExpression initializer)
-	{
-		JSReferenceExpression initializedPrototype = null;
+    private static JSReferenceExpression findReferenceExpressionUsedForClassExtending(
+        JSReferenceExpression lOperand,
+        @Nullable Set<String> visited
+    ) {
+        JSReferenceExpression originalExpr = lOperand;
+        ResolveProcessor processor = new ResolveProcessor(lOperand.getText(), true);
+        processor.setLocalResolve(true);
+        PsiElement parent = lOperand.getParent();
+        JSResolveUtil.treeWalkUp(processor, lOperand, parent, lOperand);
 
-		if(initializer instanceof JSReferenceExpression && PROTOTYPE_FIELD_NAME.equals(((JSReferenceExpression) initializer).getReferencedName()))
-		{
-			final JSExpression qualifier = ((JSReferenceExpression) initializer).getQualifier();
-			if(qualifier instanceof JSReferenceExpression)
-			{
-				initializedPrototype = (JSReferenceExpression) qualifier;
-			}
-		}
-		else if(initializer instanceof JSAssignmentExpression)
-		{
-			JSExpression initializerlOperand = ((JSAssignmentExpression) initializer).getLOperand();
-			if(initializerlOperand instanceof JSDefinitionExpression)
-			{
-				JSExpression lOperand = ((JSDefinitionExpression) initializerlOperand).getExpression();
-				initializedPrototype = evaluateInitializedPrototype(lOperand);
-			}
-		}
-		return initializedPrototype;
-	}
+        PsiElement jsElement = processor.getResult();
+        if (jsElement == null && parent instanceof JSDefinitionExpression parentDefExpr) {
+            jsElement = parentDefExpr;
+        }
 
-	public static JSReferenceExpression findReferenceExpressionUsedForClassExtending(JSReferenceExpression lOperand)
-	{
-		return findReferenceExpressionUsedForClassExtending(lOperand, null);
-	}
+        if (jsElement instanceof JSVariable variable) {
+            JSExpression initialization = variable.getInitializer();
+            JSReferenceExpression expression = initialization != null ? evaluateInitializedPrototype(initialization) : null;
 
-	private static JSReferenceExpression findReferenceExpressionUsedForClassExtending(JSReferenceExpression lOperand, @Nullable Set<String> visited)
-	{
-		JSReferenceExpression originalExpr = lOperand;
-		final ResolveProcessor processor = new ResolveProcessor(lOperand.getText(), true);
-		processor.setLocalResolve(true);
-		final PsiElement parent = lOperand.getParent();
-		JSResolveUtil.treeWalkUp(processor, lOperand, parent, lOperand);
+            if (expression != null) {
+                lOperand = expression;
+            }
+            else if (initialization instanceof JSReferenceExpression initializationRefExpr) {
+                lOperand = initializationRefExpr;
+            }
+        }
+        else {
+            PsiElement parentJsElement = jsElement != null ? jsElement.getParent() : null;
 
-		PsiElement jsElement = processor.getResult();
-		if(jsElement == null && parent instanceof JSDefinitionExpression)
-		{
-			jsElement = (JSElement) parent;
-		}
+            // new expression also could mean something extension !
+            if (jsElement instanceof JSDefinitionExpression
+                && jsElement.getParent() instanceof JSAssignmentExpression parentAssignExpr) {
+                JSExpression rOperand = parentAssignExpr.getROperand();
 
-		if(jsElement instanceof JSVariable)
-		{
-			final JSExpression initialization = ((JSVariable) jsElement).getInitializer();
-			final JSReferenceExpression expression = initialization != null ? evaluateInitializedPrototype(initialization) : null;
+                if (rOperand instanceof JSCallExpression callExpression && !(rOperand instanceof JSNewExpression)) {
+                    JSArgumentList list = callExpression.getArgumentList();
 
-			if(expression != null)
-			{
-				lOperand = expression;
-			}
-			else if(initialization instanceof JSReferenceExpression)
-			{
-				lOperand = (JSReferenceExpression) initialization;
-			}
-		}
-		else
-		{
-			final PsiElement parentJsElement = jsElement != null ? jsElement.getParent() : null;
+                    if (list != null) {
+                        JSExpression[] jsExpressions = list.getArguments();
 
-			if(jsElement instanceof JSDefinitionExpression && parentJsElement instanceof JSAssignmentExpression)
-			{ // new expression also could mean something extension !
-				JSExpression rOperand = ((JSAssignmentExpression) parentJsElement).getROperand();
+                        if (jsExpressions.length >= 2
+                            && jsExpressions[0] instanceof JSReferenceExpression
+                            && jsExpressions[1] instanceof JSReferenceExpression) {
+                            lOperand = (JSReferenceExpression)jsExpressions[0];
+                        }
+                    }
+                }
+                else if (rOperand instanceof JSReferenceExpression rOperandRefExpr) {
+                    JSReferenceExpression expression = evaluateInitializedPrototype(rOperand);
+                    lOperand = expression != null ? expression : rOperandRefExpr;
+                }
+            }
+        }
+        return lOperand != originalExpr ? replaceLocalVars(lOperand, visited) : lOperand;
+    }
 
-				if(rOperand instanceof JSCallExpression && !(rOperand instanceof JSNewExpression))
-				{
-					final JSArgumentList list = ((JSCallExpression) rOperand).getArgumentList();
+    private static JSReferenceExpression replaceLocalVars(JSReferenceExpression expression, @Nullable Set<String> visited) {
+        JSReferenceExpression expr = expression;
+        JSExpression qualifier = expr.getQualifier();
 
-					if(list != null)
-					{
-						final JSExpression[] jsExpressions = list.getArguments();
+        JSFunction func = PsiTreeUtil.getParentOfType(expression, JSFunction.class);
+        if (func == null) {
+            return expression;
+        }
 
-						if(jsExpressions.length >= 2 &&
-								jsExpressions[0] instanceof JSReferenceExpression &&
-								jsExpressions[1] instanceof JSReferenceExpression)
-						{
-							lOperand = (JSReferenceExpression) jsExpressions[0];
-						}
-					}
-				}
-				else if(rOperand instanceof JSReferenceExpression)
-				{
-					final JSReferenceExpression expression = evaluateInitializedPrototype(rOperand);
+        while (qualifier instanceof JSReferenceExpression qualifierRefExpr) {
+            expr = qualifierRefExpr;
+            qualifier = expr.getQualifier();
+        }
 
-					if(expression != null)
-					{
-						lOperand = expression;
-					}
-					else
-					{
-						lOperand = (JSReferenceExpression) rOperand;
-					}
-				}
-			}
-		}
-		return lOperand != originalExpr ? replaceLocalVars(lOperand, visited) : lOperand;
-	}
+        if (qualifier == null) {
+            PsiElement ref = JSResolveUtil.getLocalVariableRef(func, expr);
 
-	private static JSReferenceExpression replaceLocalVars(final JSReferenceExpression expression, @Nullable Set<String> visited)
-	{
-		JSReferenceExpression expr = expression;
-		JSExpression qualifier = expr.getQualifier();
+            if (ref instanceof JSVariable variable && !(ref instanceof JSParameter)) {
+                JSExpression initializer = variable.getInitializer();
 
-		JSFunction func = PsiTreeUtil.getParentOfType(expression, JSFunction.class);
-		if(func == null)
-		{
-			return expression;
-		}
+                if (initializer instanceof JSReferenceExpression initializerRefExpr) {
+                    return replaceExpression(expression, expr, initializerRefExpr);
+                }
+                else if (expr != expression) {
+                    if (visited == null) {
+                        visited = new HashSet<>();
+                    }
+                    String replaced = expr.getText();
 
-		while(qualifier instanceof JSReferenceExpression)
-		{
-			expr = (JSReferenceExpression) qualifier;
-			qualifier = expr.getQualifier();
-		}
+                    if (!visited.contains(replaced)) {
+                        visited.add(replaced);
+                        return replaceExpression(expression, expr, findReferenceExpressionUsedForClassExtending(expr, visited));
+                    }
+                }
+                else {
+                    return findReferenceExpressionUsedForClassExtending(expr, visited);
+                }
+            }
+        }
+        return expression;
+    }
 
-		if(qualifier == null)
-		{
-			final PsiElement ref = JSResolveUtil.getLocalVariableRef(func, expr);
+    private static JSReferenceExpression replaceExpression(
+        JSReferenceExpression expression,
+        JSReferenceExpression what,
+        JSReferenceExpression by
+    ) {
+        if (expression == what) {
+            return by;
+        }
+        int offsetOfExprInExpression = what.getTextOffset() - expression.getTextOffset();
+        JSReferenceExpression copyOfExpr = (JSReferenceExpression)expression.copy();
+        JSReferenceExpression expressionToReplace = PsiTreeUtil.getParentOfType(
+            copyOfExpr.findElementAt(offsetOfExprInExpression),
+            JSReferenceExpression.class
+        );
+        expressionToReplace.replace(by);
+        return copyOfExpr;
+    }
 
-			if(ref instanceof JSVariable && !(ref instanceof JSParameter))
-			{
-				final JSExpression initializer = ((JSVariable) ref).getInitializer();
+    public static JSElement findQualifyingExpressionFromArgumentList(JSArgumentList parent) {
+        PsiElement firstParent = parent.getParent();
+        PsiElement grandParent = firstParent.getParent();
 
-				if(initializer instanceof JSReferenceExpression)
-				{
-					return replaceExpression(expression, expr, (JSReferenceExpression) initializer);
-				}
-				else if(expr != expression)
-				{
-					if(visited == null)
-					{
-						visited = new THashSet<String>();
-					}
-					final String replaced = expr.getText();
+        if (grandParent instanceof JSVariable variable) {
+            return variable;
+        }
 
-					if(!visited.contains(replaced))
-					{
-						visited.add(replaced);
-						return replaceExpression(expression, expr, findReferenceExpressionUsedForClassExtending(expr, visited));
-					}
-				}
-				else
-				{
-					return findReferenceExpressionUsedForClassExtending(expr, visited);
-				}
-			}
-		}
-		return expression;
-	}
+        if (grandParent instanceof JSAssignmentExpression assignExpr) {
+            JSExpression jsExpression = assignExpr.getLOperand();
+            JSExpression assignedTo = jsExpression instanceof JSDefinitionExpression defExpr ? defExpr.getExpression() : null;
+            if (assignedTo instanceof JSReferenceExpression) {
+                return assignedTo;
+            }
+        }
+        if (grandParent instanceof JSExpressionStatement
+            && firstParent instanceof JSCallExpression call
+            && call.getMethodExpression() instanceof JSReferenceExpression methodRefExpr) {
 
-	private static JSReferenceExpression replaceExpression(final JSReferenceExpression expression, final JSReferenceExpression what,
-			final JSReferenceExpression by)
-	{
-		if(expression == what)
-		{
-			return by;
-		}
-		int offsetOfExprInExpression = what.getTextOffset() - expression.getTextOffset();
-		final JSReferenceExpression copyOfExpr = (JSReferenceExpression) expression.copy();
-		final JSReferenceExpression expressionToReplace = PsiTreeUtil.getParentOfType(copyOfExpr.findElementAt(offsetOfExprInExpression),
-				JSReferenceExpression.class);
-		expressionToReplace.replace(by);
-		return copyOfExpr;
-	}
+            String methodName = methodRefExpr.getReferencedName();
 
-	public static JSElement findQualifyingExpressionFromArgumentList(final JSArgumentList parent)
-	{
-		PsiElement firstParent = parent.getParent();
-		final PsiElement grandParent = firstParent.getParent();
+            if ("each".equals(methodName) || "extend".equals(methodName)) {
+                JSExpression expression = methodRefExpr.getQualifier();
 
-		if(grandParent instanceof JSVariable)
-		{
-			return (JSElement) grandParent;
-		}
+                if (expression instanceof JSReferenceExpression qualifierRefExpr
+                    && FN_FUN_NAME.equals(qualifierRefExpr.getReferencedName())) {
+                    expression = qualifierRefExpr.getQualifier();
+                }
 
-		if(grandParent instanceof JSAssignmentExpression)
-		{
-			JSExpression jsExpression = ((JSAssignmentExpression) grandParent).getLOperand();
-			JSExpression assignedTo = jsExpression instanceof JSDefinitionExpression ? ((JSDefinitionExpression) jsExpression).getExpression() : null;
-			if(assignedTo instanceof JSReferenceExpression)
-			{
-				return assignedTo;
-			}
-		}
-		if(grandParent instanceof JSExpressionStatement && firstParent instanceof JSCallExpression)
-		{
-			JSExpression methodExpression = ((JSCallExpression) firstParent).getMethodExpression();
-			String methodName = methodExpression instanceof JSReferenceExpression ? ((JSReferenceExpression) methodExpression).getReferencedName() : null;
+                if (expression != null && J_QUERY_VAR_NAME.equals(expression.getText())) {
+                    return expression;
+                }
+            }
+            else if ("implement".equals(methodName)) {
+                if (methodRefExpr.getQualifier() instanceof JSReferenceExpression qualifierRefExpr && parent.getArguments().length == 1) {
+                    return qualifierRefExpr;
+                }
+            }
+        }
 
-			if("each".equals(methodName) || "extend".equals(methodName))
-			{
-				JSExpression expression = ((JSReferenceExpression) methodExpression).getQualifier();
+        JSExpression[] jsExpressions = parent.getArguments();
+        for (int i = 0; i < jsExpressions.length; ++i) {
+            JSExpression expr = jsExpressions[i];
 
-				if(expression instanceof JSReferenceExpression)
-				{
-					JSReferenceExpression qualifierExpr = (JSReferenceExpression) expression;
-
-					if(FN_FUN_NAME.equals(qualifierExpr.getReferencedName()))
-					{
-						expression = qualifierExpr.getQualifier();
-					}
-				}
-				if(expression != null && J_QUERY_VAR_NAME.equals(expression.getText()))
-				{
-					return expression;
-				}
-			}
-			else if("implement".equals(methodName))
-			{
-				JSExpression qualifier = ((JSReferenceExpression) methodExpression).getQualifier();
-				if(qualifier instanceof JSReferenceExpression && parent.getArguments().length == 1)
-				{
-					return qualifier;
-				}
-			}
-		}
-
-		JSExpression[] jsExpressions = parent.getArguments();
-		for(int i = 0; i < jsExpressions.length; ++i)
-		{
-			final JSExpression expr = jsExpressions[i];
-
-			if(expr instanceof JSReferenceExpression || (expr instanceof JSLiteralExpression && !expr.textContains(' ') && expr.getTextLength() < 100))
-			{
-				return expr;
-			}
-			else if(expr instanceof JSCallExpression)
-			{
-				final JSArgumentList argumentList = ((JSCallExpression) expr).getArgumentList();
-				if(argumentList != null)
-				{
-					jsExpressions = argumentList.getArguments();
-					i = -1;
-				}
-			}
-			else if(expr instanceof JSArrayLiteralExpression)
-			{
-				jsExpressions = ((JSArrayLiteralExpression) expr).getExpressions();
-				i = -1;
-			}
-		}
-		return null;
-	}
+            if (expr instanceof JSReferenceExpression
+                || (expr instanceof JSLiteralExpression && !expr.textContains(' ') && expr.getTextLength() < 100)) {
+                return expr;
+            }
+            else if (expr instanceof JSCallExpression call) {
+                JSArgumentList argumentList = call.getArgumentList();
+                if (argumentList != null) {
+                    jsExpressions = argumentList.getArguments();
+                    i = -1;
+                }
+            }
+            else if (expr instanceof JSArrayLiteralExpression arrayLiteral) {
+                jsExpressions = arrayLiteral.getExpressions();
+                i = -1;
+            }
+        }
+        return null;
+    }
 }

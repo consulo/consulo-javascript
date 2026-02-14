@@ -15,71 +15,75 @@
  */
 package org.intellij.idea.lang.javascript.intention.braces;
 
-import javax.annotation.Nonnull;
-
+import com.intellij.lang.javascript.psi.*;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSMutablyNamedIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
-import org.jetbrains.annotations.NonNls;
 
-import com.intellij.lang.javascript.psi.JSBlockStatement;
-import com.intellij.lang.javascript.psi.JSDoWhileStatement;
-import com.intellij.lang.javascript.psi.JSElement;
-import com.intellij.lang.javascript.psi.JSForInStatement;
-import com.intellij.lang.javascript.psi.JSForStatement;
-import com.intellij.lang.javascript.psi.JSIfStatement;
-import com.intellij.lang.javascript.psi.JSStatement;
-import com.intellij.lang.javascript.psi.JSVarStatement;
-import com.intellij.lang.javascript.psi.JSWhileStatement;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
-
+@ExtensionImpl
+@IntentionMetaData(
+    ignoreId = "JSRemoveBracesIntention",
+    categories = {"JavaScript", "Control Flow"},
+    fileExtensions = "js"
+)
 public class JSRemoveBracesIntention extends JSMutablyNamedIntention {
-    @NonNls private static final String IF_KEYWORD   = "if";
-    @NonNls private static final String ELSE_KEYWORD = "else";
+    @Nonnull
+    @Override
+    protected LocalizeValue getBasicText() {
+        return JSIntentionLocalize.bracesRemove();
+    }
 
     @Override
-	@Nonnull
+    @Nonnull
     protected JSElementPredicate getElementPredicate() {
         return new RemoveBracesPredicate();
     }
 
     @Override
-	protected String getTextForElement(PsiElement element) {
-        final JSElement parent = (JSElement) element.getParent();
-        final String    keyword;
+    @RequiredReadAction
+    protected LocalizeValue getTextForElement(PsiElement element) {
+        JSElement parent = (JSElement)element.getParent();
+        String keyword;
 
         assert (parent != null);
 
-        if (parent instanceof JSIfStatement) {
-            final JSIfStatement ifStatement = (JSIfStatement) parent;
-            final JSStatement   elseBranch  = ifStatement.getElse();
+        if (parent instanceof JSIfStatement ifStatement) {
+            JSStatement elseBranch = ifStatement.getElse();
 
-            keyword = (element.equals(elseBranch) ? ELSE_KEYWORD : IF_KEYWORD);
-        } else {
-            final PsiElement keywordChild = parent.getFirstChild();
+            keyword = element.equals(elseBranch) ? "else" : "if";
+        }
+        else {
+            PsiElement keywordChild = parent.getFirstChild();
 
             assert (keywordChild != null);
             keyword = keywordChild.getText();
         }
 
-        return this.getText(keyword);
+        return JSIntentionLocalize.bracesRemoveMessage(keyword);
     }
 
     @Override
-	protected void processIntention(@Nonnull PsiElement element)
-        throws IncorrectOperationException {
-        final JSBlockStatement blockStatement = (JSBlockStatement) element;
-        final JSStatement[]    statements     = blockStatement.getStatements();
-        final JSStatement      statement      = statements[0];
+    @RequiredReadAction
+    protected void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        JSBlockStatement blockStatement = (JSBlockStatement)element;
+        JSStatement[] statements = blockStatement.getStatements();
+        JSStatement statement = statements[0];
 
         // handle comments
-        final JSElement parent = (JSElement) blockStatement.getParent();
+        JSElement parent = (JSElement)blockStatement.getParent();
 
         assert (parent != null);
 
-        final JSElement grandParent = (JSElement) parent.getParent();
+        JSElement grandParent = (JSElement)parent.getParent();
 
         assert (grandParent != null);
 
@@ -95,10 +99,10 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention {
             sibling = sibling.getNextSibling();
         }
 
-        final PsiElement lastChild = blockStatement.getLastChild();
+        PsiElement lastChild = blockStatement.getLastChild();
 
         if (lastChild instanceof PsiComment) {
-            final JSElement nextSibling = (JSElement) parent.getNextSibling();
+            JSElement nextSibling = (JSElement)parent.getNextSibling();
 
             grandParent.addAfter(lastChild, nextSibling);
         }
@@ -109,25 +113,20 @@ public class JSRemoveBracesIntention extends JSMutablyNamedIntention {
 
     public static class RemoveBracesPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-            if (!(element instanceof JSBlockStatement)) {
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            if (!(element instanceof JSBlockStatement blockStatement)) {
                 return false;
             }
 
-            final JSBlockStatement blockStatement = (JSBlockStatement) element;
-            final PsiElement        parent         = blockStatement.getParent();
+            PsiElement parent = blockStatement.getParent();
 
-            if (!(parent instanceof JSIfStatement      ||
-                  parent instanceof JSWhileStatement   ||
-                  parent instanceof JSDoWhileStatement ||
-                  parent instanceof JSForStatement     ||
-                  parent instanceof JSForInStatement)) {
-                return false;
-            }
+            return (parent instanceof JSIfStatement || parent instanceof JSWhileStatement || parent instanceof JSDoWhileStatement
+                || parent instanceof JSForStatement || parent instanceof JSForInStatement)
+                && isSingleNonVarStatement(blockStatement.getStatements());
+        }
 
-            final JSStatement[] statements = blockStatement.getStatements();
-
-            return (statements.length == 1 && !(statements[0] instanceof JSVarStatement));
+        private boolean isSingleNonVarStatement(JSStatement[] statements) {
+            return statements.length == 1 && !(statements[0] instanceof JSVarStatement);
         }
     }
 }

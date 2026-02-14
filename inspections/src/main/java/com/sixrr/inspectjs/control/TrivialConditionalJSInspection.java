@@ -1,60 +1,69 @@
 package com.sixrr.inspectjs.control;
 
-import javax.annotation.Nonnull;
-
-import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.lang.javascript.psi.JSConditionalExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.resolve.JSResolveUtil;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
-import com.sixrr.inspectjs.*;
+import com.sixrr.inspectjs.BaseInspectionVisitor;
+import com.sixrr.inspectjs.InspectionJSFix;
+import com.sixrr.inspectjs.JSGroupNames;
+import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import com.sixrr.inspectjs.utils.BoolUtils;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import jakarta.annotation.Nonnull;
+import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NonNls;
 
-public class TrivialConditionalJSInspection
-        extends JavaScriptInspection {
+@ExtensionImpl
+public class TrivialConditionalJSInspection extends JavaScriptInspection {
     private final TrivialConditionalFix fix = new TrivialConditionalFix();
 
+    @Nonnull
     @Override
-	@Nonnull
+    @Pattern(value = "[a-zA-Z_0-9.-]+")
     public String getID() {
         return "RedundantConditionalExpressionJS";
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("redundant.conditional.expression.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.redundantConditionalExpressionDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
     @Override
-	public boolean isEnabledByDefault() {
+    public boolean isEnabledByDefault() {
         return true;
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new UnnecessaryConditionalExpressionVisitor();
     }
 
+    @RequiredReadAction
     @Override
-	public String buildErrorString(Object... args) {
-        final JSConditionalExpression exp = (JSConditionalExpression) args[0];
-        return InspectionJSBundle.message("trivial.conditional.error.string", exp.getText(), calculateReplacementExpression(exp));
+    public String buildErrorString(Object state, Object... args) {
+        JSConditionalExpression exp = (JSConditionalExpression) args[0];
+        return InspectionJSLocalize.trivialConditionalErrorString(exp.getText(), calculateReplacementExpression(exp)).get();
     }
 
     private static String calculateReplacementExpression(JSConditionalExpression exp) {
-        final JSExpression thenExpression = exp.getThen();
-        final JSExpression elseExpression = exp.getElse();
-        final JSExpression condition = exp.getCondition();
+        JSExpression thenExpression = exp.getThen();
+        JSExpression elseExpression = exp.getElse();
+        JSExpression condition = exp.getCondition();
 
         if (isFalse(thenExpression) && isTrue(elseExpression)) {
             return BoolUtils.getNegatedExpressionText(condition);
@@ -64,37 +73,34 @@ public class TrivialConditionalJSInspection
     }
 
     @Override
-	public InspectionJSFix buildFix(PsiElement location) {
+    public InspectionJSFix buildFix(PsiElement location, Object state) {
         return fix;
     }
 
-    private static class
-            TrivialConditionalFix extends InspectionJSFix {
+    private static class TrivialConditionalFix extends InspectionJSFix {
+        @Nonnull
         @Override
-		@Nonnull
-        public String getName() {
-            return InspectionJSBundle.message("simplify.fix");
+        public LocalizeValue getName() {
+            return InspectionJSLocalize.simplifyFix();
         }
 
         @Override
-		public void doFix(Project project, ProblemDescriptor descriptor)
-                throws IncorrectOperationException {
-            final JSConditionalExpression expression = (JSConditionalExpression) descriptor.getPsiElement();
-            final String newExpression = calculateReplacementExpression(expression);
+        public void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
+            JSConditionalExpression expression = (JSConditionalExpression) descriptor.getPsiElement();
+            String newExpression = calculateReplacementExpression(expression);
             replaceExpression(expression, newExpression);
         }
     }
 
-    private static class UnnecessaryConditionalExpressionVisitor
-            extends BaseInspectionVisitor {
-
-        @Override public void visitJSConditionalExpression(JSConditionalExpression exp) {
+    private static class UnnecessaryConditionalExpressionVisitor extends BaseInspectionVisitor {
+        @Override
+        public void visitJSConditionalExpression(JSConditionalExpression exp) {
             super.visitJSConditionalExpression(exp);
-            final JSExpression thenExpression = exp.getThen();
+            JSExpression thenExpression = exp.getThen();
             if (thenExpression == null) {
                 return;
             }
-            final JSExpression elseExpression = exp.getElse();
+            JSExpression elseExpression = exp.getElse();
             if (elseExpression == null) {
                 return;
             }
@@ -108,12 +114,12 @@ public class TrivialConditionalJSInspection
     }
 
     private static boolean isFalse(JSExpression expression) {
-        @NonNls final String text = expression.getText();
+        @NonNls String text = expression.getText();
         return "false".equals(text);
     }
 
     private static boolean isTrue(JSExpression expression) {
-        @NonNls final String text = expression.getText();
+        @NonNls String text = expression.getText();
         return "true".equals(text);
     }
 }

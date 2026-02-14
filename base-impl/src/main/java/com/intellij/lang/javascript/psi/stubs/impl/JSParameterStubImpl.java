@@ -19,46 +19,42 @@ package com.intellij.lang.javascript.psi.stubs.impl;
 
 import com.intellij.lang.javascript.psi.JSParameter;
 import com.intellij.lang.javascript.psi.stubs.JSParameterStub;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubElement;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.stub.StubElement;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Mar 26, 2008
- *         Time: 11:29:19 PM
+ * Date: Mar 26, 2008
+ * Time: 11:29:19 PM
  */
-public class JSParameterStubImpl extends JSVariableStubBaseImpl<JSParameter> implements JSParameterStub
-{
-	public static final int REST_MASK = LAST_USED_MASK << 1;
-	public static final int OPTIONAL_MASK = LAST_USED_MASK << 2;
+public class JSParameterStubImpl extends JSVariableStubBaseImpl<JSParameter> implements JSParameterStub {
+    public static final int REST_MASK = LAST_USED_MASK << 1;
+    public static final int OPTIONAL_MASK = LAST_USED_MASK << 2;
 
-	public JSParameterStubImpl(String name,
-			int flags,
-			String type,
-			String initial,
-			String qName,
-			StubElement parentStub,
-			IStubElementType elementType)
-	{
-		super(name, flags, type, initial, qName, parentStub, elementType);
-	}
+    public JSParameterStubImpl(
+        String name,
+        int flags,
+        String type,
+        String initial,
+        String qName,
+        StubElement parentStub,
+        IStubElementType elementType
+    ) {
+        super(name, flags, type, initial, qName, parentStub, elementType);
+    }
 
+    public static int buildFlags(JSParameter clazz) {
+        int i = JSVariableStubBaseImpl.buildFlags(clazz);
+        return i | (clazz.isRest() ? REST_MASK : 0) | (clazz.isOptional() ? OPTIONAL_MASK : 0);
+    }
 
-	public static int buildFlags(final JSParameter clazz)
-	{
-		final int i = JSVariableStubBaseImpl.buildFlags(clazz);
-		return i | (clazz.isRest() ? REST_MASK : 0) | (clazz.isOptional() ? OPTIONAL_MASK : 0);
-	}
+    @Override
+    public boolean isRest() {
+        return (myFlags & REST_MASK) != 0;
+    }
 
-	@Override
-	public boolean isRest()
-	{
-		return (myFlags & REST_MASK) != 0;
-	}
-
-	@Override
-	public boolean isOptional()
-	{
-		return (myFlags & OPTIONAL_MASK) != 0;
-	}
+    @Override
+    public boolean isOptional() {
+        return (myFlags & OPTIONAL_MASK) != 0;
+    }
 }

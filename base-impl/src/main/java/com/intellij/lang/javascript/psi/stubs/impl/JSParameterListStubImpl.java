@@ -19,19 +19,17 @@ package com.intellij.lang.javascript.psi.stubs.impl;
 
 import com.intellij.lang.javascript.psi.JSParameterList;
 import com.intellij.lang.javascript.psi.stubs.JSParameterListStub;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubBase;
-import com.intellij.psi.stubs.StubElement;
+import consulo.language.psi.stub.StubBase;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.stub.IStubElementType;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Mar 26, 2008
- *         Time: 11:29:19 PM
+ * Date: Mar 26, 2008
+ * Time: 11:29:19 PM
  */
-public class JSParameterListStubImpl extends StubBase<JSParameterList> implements JSParameterListStub
-{
-	public JSParameterListStubImpl(StubElement parent, IStubElementType elementType)
-	{
-		super(parent, elementType);
-	}
+public class JSParameterListStubImpl extends StubBase<JSParameterList> implements JSParameterListStub {
+    public JSParameterListStubImpl(StubElement parent, IStubElementType elementType) {
+        super(parent, elementType);
+    }
 }

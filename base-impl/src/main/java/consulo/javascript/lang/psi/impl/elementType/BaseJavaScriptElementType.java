@@ -17,18 +17,17 @@
 package consulo.javascript.lang.psi.impl.elementType;
 
 import org.jetbrains.annotations.NonNls;
-import com.intellij.lang.javascript.psi.JSStubElementType;
+import consulo.javascript.impl.language.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.stubs.JSStubElement;
-import consulo.javascript.lang.psi.JavaScriptTypeElement;
+import consulo.javascript.language.psi.JavaScriptTypeElement;
 
 /**
  * @author VISTALL
  * @since 01.03.2016
  */
-public abstract class BaseJavaScriptElementType<S extends JSStubElement<P>, P extends JavaScriptTypeElement> extends JSStubElementType<S, P>
-{
-	public BaseJavaScriptElementType(@NonNls String debugName)
-	{
-		super(debugName);
-	}
+public abstract class BaseJavaScriptElementType<S extends JSStubElement<P>, P extends JavaScriptTypeElement>
+    extends JSStubElementType<S, P> {
+    public BaseJavaScriptElementType(@NonNls String debugName) {
+        super(debugName);
+    }
 }

@@ -17,16 +17,14 @@
 package com.intellij.lang.javascript.psi.stubs;
 
 import com.intellij.lang.javascript.psi.JSQualifiedNamedElement;
-import com.intellij.psi.stubs.NamedStub;
+import consulo.language.psi.stub.NamedStub;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Jul 30, 2008
- *         Time: 9:30:52 PM
+ * @since 2008-07-30
  */
-public interface JSQualifiedStub<T extends JSQualifiedNamedElement> extends NamedStub<T>, JSStubElement<T>
-{
-	String getQualifiedName();
+public interface JSQualifiedStub<T extends JSQualifiedNamedElement> extends NamedStub<T>, JSStubElement<T> {
+    String getQualifiedName();
 
-	int getFlags();
+    int getFlags();
 }

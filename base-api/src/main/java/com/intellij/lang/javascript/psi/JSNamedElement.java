@@ -16,13 +16,12 @@
 
 package com.intellij.lang.javascript.psi;
 
-import com.intellij.navigation.NavigationItem;
-import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.psi.PsiNamedElement;
+import consulo.language.psi.PsiNameIdentifierOwner;
+import consulo.language.psi.PsiNamedElement;
+import consulo.navigation.NavigationItem;
 
 /**
  * @author ven
  */
-public interface JSNamedElement extends PsiNamedElement, JSElement, NavigationItem, PsiNameIdentifierOwner
-{
+public interface JSNamedElement extends PsiNamedElement, JSElement, NavigationItem, PsiNameIdentifierOwner {
 }

@@ -17,13 +17,14 @@ package org.intellij.idea.lang.javascript.psiutil;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 
 public class SideEffectChecker {
-    private SideEffectChecker() {}
+    private SideEffectChecker() {
+    }
 
     public static boolean mayHaveSideEffects(JSExpression exp) {
-        final SideEffectsVisitor visitor = new SideEffectsVisitor();
+        SideEffectsVisitor visitor = new SideEffectsVisitor();
         exp.accept(visitor);
         return visitor.mayHaveSideEffects();
     }
@@ -31,42 +32,44 @@ public class SideEffectChecker {
     private static class SideEffectsVisitor extends JSRecursiveElementVisitor {
         private boolean mayHaveSideEffects;
 
-        @Override public void visitJSElement(JSElement element) {
+        @Override
+        public void visitJSElement(JSElement element) {
             if (!this.mayHaveSideEffects) {
                 super.visitJSElement(element);
             }
         }
 
-        @Override public void visitJSCallExpression(JSCallExpression expression) {
+        @Override
+        public void visitJSCallExpression(JSCallExpression expression) {
             this.mayHaveSideEffects = true;
         }
 
-        @Override public void visitJSNewExpression(JSNewExpression expression) {
+        @Override
+        public void visitJSNewExpression(JSNewExpression expression) {
             this.mayHaveSideEffects = true;
         }
 
-        @Override public void visitJSAssignmentExpression(JSAssignmentExpression expression) {
+        @Override
+        public void visitJSAssignmentExpression(JSAssignmentExpression expression) {
             this.mayHaveSideEffects = true;
         }
 
-        @Override public void visitJSPrefixExpression(JSPrefixExpression expression) {
+        @Override
+        public void visitJSPrefixExpression(JSPrefixExpression expression) {
             super.visitJSPrefixExpression(expression);
-            final IElementType sign = expression.getOperationSign();
+            IElementType sign = expression.getOperationSign();
 
-            if (sign != null &&
-                (sign.equals(JSTokenTypes.PLUSPLUS)   ||
-                 sign.equals(JSTokenTypes.MINUSMINUS))) {
+            if (sign != null && (JSTokenTypes.PLUSPLUS.equals(sign) || JSTokenTypes.MINUSMINUS.equals(sign))) {
                 this.mayHaveSideEffects = true;
             }
         }
 
-        @Override public void visitJSPostfixExpression(JSPostfixExpression expression) {
+        @Override
+        public void visitJSPostfixExpression(JSPostfixExpression expression) {
             super.visitJSPostfixExpression(expression);
-            final IElementType sign = expression.getOperationSign();
+            IElementType sign = expression.getOperationSign();
 
-            if (sign != null &&
-                (sign.equals(JSTokenTypes.PLUSPLUS)   ||
-                 sign.equals(JSTokenTypes.MINUSMINUS))) {
+            if (sign != null && (JSTokenTypes.PLUSPLUS.equals(sign) || JSTokenTypes.MINUSMINUS.equals(sign))) {
                 this.mayHaveSideEffects = true;
             }
         }

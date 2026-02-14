@@ -16,43 +16,35 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSParameter;
 import com.intellij.lang.javascript.psi.JSParameterList;
 import com.intellij.lang.javascript.psi.stubs.JSParameterListStub;
+import consulo.language.ast.ASTNode;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 8:41:53 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public class JSParameterListImpl extends JSStubElementImpl<JSParameterListStub> implements JSParameterList
-{
-	public JSParameterListImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSParameterListImpl extends JSStubElementImpl<JSParameterListStub> implements JSParameterList {
+    public JSParameterListImpl(ASTNode node) {
+        super(node);
+    }
 
-	public JSParameterListImpl(final JSParameterListStub stub)
-	{
-		super(stub, JSElementTypes.PARAMETER_LIST);
-	}
+    public JSParameterListImpl(JSParameterListStub stub) {
+        super(stub, JSElementTypes.PARAMETER_LIST);
+    }
 
-	@Override
-	public JSParameter[] getParameters()
-	{
-		return getStubOrPsiChildren(JSElementTypes.PARAMETERS, JSParameter.EMPTY_ARRAY);
-	}
+    @Override
+    public JSParameter[] getParameters() {
+        return getStubOrPsiChildren(JSElementTypes.PARAMETERS, JSParameter.EMPTY_ARRAY);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSParameterList(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSParameterList(this);
+    }
 }

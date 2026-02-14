@@ -19,26 +19,44 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>consulo</groupId>
-		<artifactId>arch.ide-provided</artifactId>
-		<version>2-SNAPSHOT</version>
+		<artifactId>arch.ide-api-provided</artifactId>
+		<version>3-SNAPSHOT</version>
 		<relativePath/>
 	</parent>
 
 	<groupId>consulo.plugin</groupId>
 	<artifactId>consulo.javascript-inspections</artifactId>
-	<version>2-SNAPSHOT</version>
+	<version>3-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<repositories>
 		<repository>
 			<id>consulo</id>
-			<url>https://maven.consulo.io/repository/snapshots/</url>
+			<url>https://maven.consulo.dev/repository/snapshots/</url>
 			<snapshots>
 				<enabled>true</enabled>
 				<updatePolicy>interval:60</updatePolicy>
 			</snapshots>
 		</repository>
 	</repositories>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>consulo.maven</groupId>
+				<artifactId>maven-consulo-plugin</artifactId>
+				<extensions>true</extensions>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate-localize</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 
 	<dependencies>
 		<dependency>
@@ -49,7 +67,7 @@
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>consulo.javascript-ecmascript6.impl</artifactId>
+			<artifactId>consulo.javascript-ecmascript.impl</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

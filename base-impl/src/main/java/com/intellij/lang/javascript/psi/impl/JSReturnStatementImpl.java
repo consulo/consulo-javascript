@@ -16,34 +16,28 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSReturnStatement;
-
-import javax.annotation.Nonnull;
+import consulo.language.ast.ASTNode;
+import jakarta.annotation.Nonnull;
 
 /**
- * User: max
- * Date: Jan 30, 2005
- * Time: 9:57:08 PM
+ * @author max
+ * @since 2005-01-30
  */
-public class JSReturnStatementImpl extends JSStatementImpl implements JSReturnStatement
-{
-	public JSReturnStatementImpl(final ASTNode node)
-	{
-		super(node);
-	}
+public class JSReturnStatementImpl extends JSStatementImpl implements JSReturnStatement {
+    public JSReturnStatementImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public JSExpression getExpression()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @Override
+    public JSExpression getExpression() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSReturnStatement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSReturnStatement(this);
+    }
 }

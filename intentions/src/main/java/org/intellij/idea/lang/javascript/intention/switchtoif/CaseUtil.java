@@ -17,9 +17,9 @@ package org.intellij.idea.lang.javascript.intention.switchtoif;
 
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import org.intellij.idea.lang.javascript.psiutil.EquivalenceChecker;
 import org.intellij.idea.lang.javascript.psiutil.ExpressionUtil;
 import org.intellij.idea.lang.javascript.psiutil.ParenthesesUtils;
@@ -29,14 +29,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 class CaseUtil {
-
-    private CaseUtil() {}
+    private CaseUtil() {
+    }
 
     private static boolean canBeCaseLabel(JSExpression expression) {
-        if (expression == null) {
-            return false;
-        }
-        return ExpressionUtil.isConstantExpression(expression);
+        return expression != null && ExpressionUtil.isConstantExpression(expression);
     }
 
     public static boolean containsHiddenBreak(JSCaseClause caseClause) {
@@ -49,9 +46,8 @@ class CaseUtil {
     }
 
     public static boolean containsHiddenBreak(List<PsiElement> elements) {
-        for (final PsiElement element : elements) {
-            if (element instanceof JSStatement &&
-                containsHiddenBreak((JSStatement) element, true)) {
+        for (PsiElement element : elements) {
+            if (element instanceof JSStatement statement && containsHiddenBreak(statement, true)) {
                 return true;
             }
         }
@@ -62,26 +58,23 @@ class CaseUtil {
         return containsHiddenBreak(statement, true);
     }
 
-    private static boolean containsHiddenBreak(JSStatement statement,
-                                               boolean     isTopLevel) {
-        if (statement instanceof JSBlockStatement) {
-            final JSStatement[] statements = ((JSBlockStatement) statement).getStatements();
-            for (final JSStatement childStatement : statements) {
+    private static boolean containsHiddenBreak(JSStatement statement, boolean isTopLevel) {
+        if (statement instanceof JSBlockStatement blockStatement) {
+            for (JSStatement childStatement : blockStatement.getStatements()) {
                 if (containsHiddenBreak(childStatement, false)) {
                     return true;
                 }
             }
-        } else if (statement instanceof JSIfStatement) {
-            final JSIfStatement ifStatement = (JSIfStatement) statement;
-
-            return (containsHiddenBreak(ifStatement.getThen(), false) ||
-                    containsHiddenBreak(ifStatement.getElse(), false));
-        } else if (statement instanceof JSBreakStatement) {
+        }
+        else if (statement instanceof JSIfStatement ifStatement) {
+            return containsHiddenBreak(ifStatement.getThen(), false) || containsHiddenBreak(ifStatement.getElse(), false);
+        }
+        else if (statement instanceof JSBreakStatement breakStatement) {
             if (isTopLevel) {
                 return false;
             }
 
-            final String identifier = ((JSBreakStatement) statement).getLabel();
+            String identifier = breakStatement.getLabel();
 
             return (identifier == null || identifier.length() == 0);
         }
@@ -89,33 +82,29 @@ class CaseUtil {
         return false;
     }
 
-    public static boolean isUsedByStatementList(JSVariable      var,
-                                                List<PsiElement> elements) {
+    public static boolean isUsedByStatementList(JSVariable var, List<PsiElement> elements) {
         for (PsiElement element : elements) {
-            if (element instanceof JSElement &&
-                isUsedByStatement(var, (JSElement) element)) {
+            if (element instanceof JSElement jsElement && isUsedByStatement(var, jsElement)) {
                 return true;
             }
         }
         return false;
     }
 
-    private static boolean isUsedByStatement(JSVariable var,
-                                             JSElement  statement) {
-        final LocalVariableUsageVisitor visitor = new LocalVariableUsageVisitor(var);
+    private static boolean isUsedByStatement(JSVariable var, JSElement statement) {
+        LocalVariableUsageVisitor visitor = new LocalVariableUsageVisitor(var);
         statement.accept(visitor);
         return visitor.isUsed();
     }
 
-    public static String findUniqueLabel(JSStatement statement,
-                                         String      baseName) {
+    public static String findUniqueLabel(JSStatement statement, String baseName) {
         JSElement ancestor = statement;
 
         while (ancestor.getParent() != null) {
             if (ancestor instanceof PsiFile) {
                 break;
             }
-            ancestor = (JSElement) ancestor.getParent();
+            ancestor = (JSElement)ancestor.getParent();
         }
 
         if (!checkForLabel(baseName, ancestor)) {
@@ -125,7 +114,7 @@ class CaseUtil {
         int val = 1;
 
         while (true) {
-            final String name = baseName + val;
+            String name = baseName + val;
 
             if (!checkForLabel(name, ancestor)) {
                 return name;
@@ -135,27 +124,27 @@ class CaseUtil {
     }
 
     private static boolean checkForLabel(String name, JSElement ancestor) {
-        final LabelSearchVisitor visitor = new LabelSearchVisitor(name);
+        LabelSearchVisitor visitor = new LabelSearchVisitor(name);
         ancestor.accept(visitor);
         return visitor.isUsed();
     }
 
     public static JSExpression getCaseExpression(JSIfStatement statement) {
-        final JSExpression       condition               = statement.getCondition();
-        final List<JSExpression> possibleCaseExpressions = determinePossibleCaseExpressions(condition);
+        JSExpression condition = statement.getCondition();
+        List<JSExpression> possibleCaseExpressions = determinePossibleCaseExpressions(condition);
 
         if (possibleCaseExpressions != null) {
-            for (final JSExpression caseExpression : possibleCaseExpressions) {
+            for (JSExpression caseExpression : possibleCaseExpressions) {
                 if (!SideEffectChecker.mayHaveSideEffects(caseExpression)) {
                     JSIfStatement statementToCheck = statement;
 
                     while (canBeMadeIntoCase(statementToCheck.getCondition(), caseExpression)) {
-                        final JSStatement elseBranch = statementToCheck.getElse();
+                        JSStatement elseBranch = statementToCheck.getElse();
 
                         if (elseBranch == null || !(elseBranch instanceof JSIfStatement)) {
                             return caseExpression;
                         }
-                        statementToCheck = (JSIfStatement) elseBranch;
+                        statementToCheck = (JSIfStatement)elseBranch;
                     }
                 }
             }
@@ -164,18 +153,18 @@ class CaseUtil {
     }
 
     private static List<JSExpression> determinePossibleCaseExpressions(JSExpression exp) {
-        final JSExpression       expToCheck = ParenthesesUtils.stripParentheses(exp);
-        final List<JSExpression> out        = new ArrayList<JSExpression>(10);
+        JSExpression expToCheck = ParenthesesUtils.stripParentheses(exp);
+        List<JSExpression> out = new ArrayList<>(10);
 
-        if (expToCheck instanceof JSBinaryExpression) {
-            final JSBinaryExpression binaryExp = (JSBinaryExpression) expToCheck;
-            final IElementType       operation = binaryExp.getOperationSign();
-            final JSExpression       lhs       = binaryExp.getLOperand();
-            final JSExpression       rhs       = binaryExp.getROperand();
+        if (expToCheck instanceof JSBinaryExpression binaryExp) {
+            IElementType operation = binaryExp.getOperationSign();
+            JSExpression lhs = binaryExp.getLOperand();
+            JSExpression rhs = binaryExp.getROperand();
 
-            if (operation.equals(JSTokenTypes.OROR)) {
+            if (JSTokenTypes.OROR.equals(operation)) {
                 return determinePossibleCaseExpressions(lhs);
-            } else if (operation.equals(JSTokenTypes.EQEQ)) {
+            }
+            else if (JSTokenTypes.EQEQ.equals(operation)) {
                 if (canBeCaseLabel(lhs) && rhs != null) {
                     out.add(rhs);
                 }
@@ -187,26 +176,26 @@ class CaseUtil {
         return out;
     }
 
-    private static boolean canBeMadeIntoCase(JSExpression exp,
-                                             JSExpression caseExpression) {
-        final JSExpression expToCheck = ParenthesesUtils.stripParentheses(exp);
+    private static boolean canBeMadeIntoCase(JSExpression exp, JSExpression caseExpression) {
+        JSExpression expToCheck = ParenthesesUtils.stripParentheses(exp);
 
         if (!(expToCheck instanceof JSBinaryExpression)) {
             return false;
         }
 
-        final JSBinaryExpression binaryExp    = (JSBinaryExpression) expToCheck;
-        final IElementType       operation    = binaryExp.getOperationSign();
-        final JSExpression       leftOperand  = binaryExp.getLOperand();
-        final JSExpression       rightOperand = binaryExp.getROperand();
+        JSBinaryExpression binaryExp = (JSBinaryExpression)expToCheck;
+        IElementType operation = binaryExp.getOperationSign();
+        JSExpression leftOperand = binaryExp.getLOperand();
+        JSExpression rightOperand = binaryExp.getROperand();
 
-        if (operation.equals(JSTokenTypes.OROR)) {
-            return (canBeMadeIntoCase(leftOperand,  caseExpression) &&
-                    canBeMadeIntoCase(rightOperand, caseExpression));
-        } else if (operation.equals(JSTokenTypes.EQEQ)) {
-            return ((canBeCaseLabel(leftOperand)  && EquivalenceChecker.expressionsAreEquivalent(caseExpression, rightOperand)) ||
-                    (canBeCaseLabel(rightOperand) && EquivalenceChecker.expressionsAreEquivalent(caseExpression, leftOperand)));
-        } else {
+        if (JSTokenTypes.OROR.equals(operation)) {
+            return canBeMadeIntoCase(leftOperand, caseExpression) && canBeMadeIntoCase(rightOperand, caseExpression);
+        }
+        else if (JSTokenTypes.EQEQ.equals(operation)) {
+            return (canBeCaseLabel(leftOperand) && EquivalenceChecker.expressionsAreEquivalent(caseExpression, rightOperand)
+                || (canBeCaseLabel(rightOperand) && EquivalenceChecker.expressionsAreEquivalent(caseExpression, leftOperand)));
+        }
+        else {
             return false;
         }
     }

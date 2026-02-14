@@ -22,21 +22,45 @@
  */
 package com.intellij.javascript.documentation;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-public interface JSDocumentationProcessor
-{
-	enum MetaDocType
-	{
-		RETURN, CONSTRUCTOR, METHOD, PARAMETER, PRIVATE, PUBLIC, PROTECTED, STATIC, DESCRIPTION, FINAL, REQUIRES, TYPE, NAMESPACE,
-		OPTIONAL_PARAMETERS, EVENT, NOTE, DEPRECATED, SEE, DEFAULT, EXTENDS, CLASS, FIELD
-	}
+public interface JSDocumentationProcessor {
+    enum MetaDocType {
+        RETURN,
+        CONSTRUCTOR,
+        METHOD,
+        PARAMETER,
+        PRIVATE,
+        PUBLIC,
+        PROTECTED,
+        STATIC,
+        DESCRIPTION,
+        FINAL,
+        REQUIRES,
+        TYPE,
+        NAMESPACE,
+        OPTIONAL_PARAMETERS,
+        EVENT,
+        NOTE,
+        DEPRECATED,
+        SEE,
+        DEFAULT,
+        EXTENDS,
+        CLASS,
+        FIELD
+    }
 
-	boolean needsPlainCommentData();
+    boolean needsPlainCommentData();
 
-	boolean onCommentLine(@Nonnull String line);
+    boolean onCommentLine(@Nonnull String line);
 
-	boolean onPatternMatch(@Nonnull MetaDocType type, @Nullable String matchName, @Nullable final String matchValue,
-			@Nullable String remainingLineContent, @Nonnull final String line, final String patternMatched);
+    boolean onPatternMatch(
+        @Nonnull MetaDocType type,
+        @Nullable String matchName,
+        @Nullable String matchValue,
+        @Nullable String remainingLineContent,
+        @Nonnull String line,
+        String patternMatched
+    );
 }

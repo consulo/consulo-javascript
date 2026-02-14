@@ -1,49 +1,51 @@
 package com.sixrr.inspectjs.control;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.psi.*;
 import com.sixrr.inspectjs.BaseInspectionVisitor;
-import com.sixrr.inspectjs.InspectionJSBundle;
 import com.sixrr.inspectjs.JSGroupNames;
 import com.sixrr.inspectjs.JavaScriptInspection;
+import com.sixrr.inspectjs.localize.InspectionJSLocalize;
 import com.sixrr.inspectjs.utils.ControlFlowUtils;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 
+@ExtensionImpl
 public class LoopStatementThatDoesntLoopJSInspection extends JavaScriptInspection {
-
-
+    @Nonnull
     @Override
-	@Nonnull
-    public String getDisplayName() {
-        return InspectionJSBundle.message("loop.statement.that.doesn.t.loop.display.name");
+    public LocalizeValue getDisplayName() {
+        return InspectionJSLocalize.loopStatementThatDoesnTLoopDisplayName();
     }
 
+    @Nonnull
     @Override
-	@Nonnull
-    public String getGroupDisplayName() {
+    public LocalizeValue getGroupDisplayName() {
         return JSGroupNames.CONTROL_FLOW_GROUP_NAME;
     }
 
     @Override
-	public boolean isEnabledByDefault() {
+    public boolean isEnabledByDefault() {
         return true;
     }
 
+    @RequiredReadAction
     @Override
-	public String buildErrorString(Object... args) {
-        return InspectionJSBundle.message("loop.statement.that.doesnt.loop.error.string");
+    public String buildErrorString(Object state, Object... args) {
+        return InspectionJSLocalize.loopStatementThatDoesntLoopErrorString().get();
     }
 
     @Override
-	public BaseInspectionVisitor buildVisitor() {
+    public BaseInspectionVisitor buildVisitor() {
         return new Visitor();
     }
 
     private static class Visitor extends BaseInspectionVisitor {
-
-        @Override public void visitJSForStatement(@Nonnull JSForStatement statement) {
+        @Override
+        public void visitJSForStatement(@Nonnull JSForStatement statement) {
             super.visitJSForStatement(statement);
-            final JSStatement body = statement.getBody();
+            JSStatement body = statement.getBody();
             if (body == null) {
                 return;
             }
@@ -56,9 +58,10 @@ public class LoopStatementThatDoesntLoopJSInspection extends JavaScriptInspectio
             registerStatementError(statement);
         }
 
-        @Override public void visitJSForInStatement(@Nonnull JSForInStatement statement) {
+        @Override
+        public void visitJSForInStatement(@Nonnull JSForInStatement statement) {
             super.visitJSForInStatement(statement);
-            final JSStatement body = statement.getBody();
+            JSStatement body = statement.getBody();
             if (body == null) {
                 return;
             }
@@ -71,16 +74,13 @@ public class LoopStatementThatDoesntLoopJSInspection extends JavaScriptInspectio
             registerStatementError(statement);
         }
 
-        @Override public void visitJSWhileStatement(@Nonnull JSWhileStatement statement) {
+        @Override
+        public void visitJSWhileStatement(@Nonnull JSWhileStatement statement) {
             super.visitJSWhileStatement(statement);
-            final JSStatement body = statement.getBody();
-            if (body == null) {
-                return;
-            }
-            if (ControlFlowUtils.statementMayCompleteNormally(body)) {
-                return;
-            }
-            if (ControlFlowUtils.statementIsContinueTarget(statement)) {
+            JSStatement body = statement.getBody();
+            if (body == null
+                || ControlFlowUtils.statementMayCompleteNormally(body)
+                || ControlFlowUtils.statementIsContinueTarget(statement)) {
                 return;
             }
             registerStatementError(statement);
@@ -88,14 +88,10 @@ public class LoopStatementThatDoesntLoopJSInspection extends JavaScriptInspectio
 
         @Override public void visitJSDoWhileStatement(@Nonnull JSDoWhileStatement statement) {
             super.visitJSDoWhileStatement(statement);
-            final JSStatement body = statement.getBody();
-            if (body == null) {
-                return;
-            }
-            if (ControlFlowUtils.statementMayCompleteNormally(body)) {
-                return;
-            }
-            if (ControlFlowUtils.statementIsContinueTarget(statement)) {
+            JSStatement body = statement.getBody();
+            if (body == null
+                || ControlFlowUtils.statementMayCompleteNormally(body)
+                || ControlFlowUtils.statementIsContinueTarget(statement)) {
                 return;
             }
             registerStatementError(statement);

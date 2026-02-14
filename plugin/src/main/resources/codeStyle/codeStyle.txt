@@ -1,0 +1,63 @@
+function test() {
+    var some = 1;
+
+    if(some == 2) {
+       var array = [1, 2, 3];
+
+       for(var v in array) {
+          console.log(v);
+       }
+    }
+    else if(some == 3) {
+        someFunc(some, "test");
+    }
+    else {
+        switch(some) {
+           case 1:
+              break;
+           default:
+              console.log("test me");
+              break;
+        }
+    }
+}
+
+function someFunc(someParam, someLongParamName, t2) {
+   var t = dom.getElementById("test");
+
+   if(t != undefined) {
+       console.log("exists");
+   }
+
+   t2 = t2 == 3 ? 5 : t2;
+
+   do {
+      t2 ++;
+
+      var value = 1 + 2 - 5 * 10 / 10 - t2;
+
+      if(value == 0) {
+         break;
+      }
+
+      try {
+          alert("call me");
+      }
+      catch(err) {
+          alert(err);
+          break;
+      }
+   }
+   while(t2 != 100);
+
+   while(true) {
+      console.log("endless loop");
+
+      callingLongFunc(
+          1,
+          "some param",
+          "test",
+          5
+      );
+   }
+}

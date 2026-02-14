@@ -16,10 +16,10 @@
 
 package com.intellij.lang.javascript;
 
+import consulo.javascript.language.JavaScriptLanguage;
+import consulo.language.ast.IElementType;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import com.intellij.psi.tree.IElementType;
-import consulo.javascript.lang.JavaScriptLanguage;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,10 +27,8 @@ import consulo.javascript.lang.JavaScriptLanguage;
  * Date: Jan 27, 2005
  * Time: 6:38:56 PM
  */
-public class JSElementType extends IElementType
-{
-	public JSElementType(@NonNls @Nonnull String debugName)
-	{
-		super(debugName, JavaScriptLanguage.INSTANCE);
-	}
+public class JSElementType extends IElementType {
+    public JSElementType(@NonNls @Nonnull String debugName) {
+        super(debugName, JavaScriptLanguage.INSTANCE);
+    }
 }

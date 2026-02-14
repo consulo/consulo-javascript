@@ -16,15 +16,14 @@
 
 package consulo.javascript.module.extension;
 
-import javax.annotation.Nonnull;
-import consulo.lang.LanguageVersion;
+import consulo.language.version.LanguageVersion;
 import consulo.module.extension.MutableModuleExtensionWithSdk;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 12.12.2015
+ * @since 2015-12-12
  */
-public interface JavaScriptMutableModuleExtension<T extends JavaScriptModuleExtension<T>> extends JavaScriptModuleExtension<T>, MutableModuleExtensionWithSdk<T>
-{
-	void setLanguageVersion(@Nonnull LanguageVersion languageVersion);
+public interface JavaScriptMutableModuleExtension<T extends JavaScriptModuleExtension<T>> extends JavaScriptModuleExtension<T>, MutableModuleExtensionWithSdk<T> {
+    void setLanguageVersion(@Nonnull LanguageVersion languageVersion);
 }

@@ -20,17 +20,15 @@ package com.intellij.lang.javascript.psi.stubs.impl;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.psi.JSAttribute;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeStub;
-import com.intellij.psi.stubs.StubElement;
+import consulo.language.psi.stub.StubElement;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Mar 26, 2008
- *         Time: 11:29:19 PM
+ * Date: Mar 26, 2008
+ * Time: 11:29:19 PM
  */
-public class JSAttributeStubImpl extends JSNamedObjectStubBase<JSAttribute> implements JSAttributeStub
-{
-	public JSAttributeStubImpl(final String name, int flags, final StubElement parentStub)
-	{
-		super(name, flags, parentStub, JSElementTypes.ATTRIBUTE);
-	}
+public class JSAttributeStubImpl extends JSNamedObjectStubBase<JSAttribute> implements JSAttributeStub {
+    public JSAttributeStubImpl(String name, int flags, StubElement parentStub) {
+        super(name, flags, parentStub, JSElementTypes.ATTRIBUTE);
+    }
 }

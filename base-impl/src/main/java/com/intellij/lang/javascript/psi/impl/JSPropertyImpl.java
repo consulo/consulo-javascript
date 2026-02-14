@@ -16,167 +16,149 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSProperty;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiModificationTracker;
-import com.intellij.util.IncorrectOperationException;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.util.CachedValueProvider;
 import consulo.javascript.lang.JavaScriptTokenSets;
-import consulo.javascript.lang.psi.JavaScriptType;
+import consulo.javascript.language.psi.JavaScriptType;
 import consulo.javascript.psi.JSComputedName;
 import consulo.javascript.psi.impl.reference.JSPropertyNameReferenceProvider;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.TokenSet;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiModificationTracker;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.util.LanguageCachedValueUtil;
+import consulo.language.util.IncorrectOperationException;
+import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author max
  */
-public class JSPropertyImpl extends JSElementImpl implements JSProperty
-{
-	private static TokenSet IDENTIFIER_TOKENS_SET = TokenSet.orSet(TokenSet.create(JSTokenTypes.NUMERIC_LITERAL, JSTokenTypes.IDENTIFIER), JavaScriptTokenSets.STRING_LITERALS);
+public class JSPropertyImpl extends JSElementImpl implements JSProperty {
+    private static TokenSet IDENTIFIER_TOKENS_SET =
+        TokenSet.orSet(TokenSet.create(JSTokenTypes.NUMERIC_LITERAL, JSTokenTypes.IDENTIFIER), JavaScriptTokenSets.STRING_LITERALS);
 
-	public JSPropertyImpl(final ASTNode node)
-	{
-		super(node);
-	}
+    public JSPropertyImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	@Nonnull
-	public PsiReference[] getReferences()
-	{
-		return CachedValuesManager.getCachedValue(this, new CachedValueProvider<PsiReference[]>()
-		{
-			@Nullable
-			@Override
-			@RequiredReadAction
-			public Result<PsiReference[]> compute()
-			{
-				return Result.create(buildReferences(), JSPropertyImpl.this, PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT);
-			}
-		});
-	}
+    @Override
+    @Nonnull
+    public PsiReference[] getReferences() {
+        return LanguageCachedValueUtil.getCachedValue(this, new CachedValueProvider<PsiReference[]>() {
+            @Nullable
+            @Override
+            @RequiredReadAction
+            public Result<PsiReference[]> compute() {
+                return Result.create(
+                    buildReferences(),
+                    JSPropertyImpl.this,
+                    PsiModificationTracker.MODIFICATION_COUNT
+                );
+            }
+        });
+    }
 
-	@Nonnull
-	@RequiredReadAction
-	private PsiReference[] buildReferences()
-	{
-		PsiElement nameIdentifier = getNameIdentifier();
-		if(nameIdentifier == null)
-		{
-			return PsiReference.EMPTY_ARRAY;
-		}
-		PsiReference reference = JSPropertyNameReferenceProvider.EP_NAME.composite().getReference(this);
-		if(reference != null)
-		{
-			return new PsiReference[]{reference};
-		}
-		return PsiReference.EMPTY_ARRAY;
-	}
+    @Nonnull
+    @RequiredReadAction
+    private PsiReference[] buildReferences() {
+        PsiElement nameIdentifier = getNameIdentifier();
+        if (nameIdentifier == null) {
+            return PsiReference.EMPTY_ARRAY;
+        }
+        PsiReference reference = JSPropertyNameReferenceProvider.EP_NAME.computeSafeIfAny(it -> it.getReference(this));
+        if (reference != null) {
+            return new PsiReference[]{reference};
+        }
+        return PsiReference.EMPTY_ARRAY;
+    }
 
-	@Override
-	@RequiredReadAction
-	public String getName()
-	{
-		final PsiElement nameIdentifier = getNameIdentifier();
-		if(nameIdentifier != null)
-		{
-			return StringUtil.stripQuotesAroundValue(nameIdentifier.getText());
-		}
-		return null;
-	}
+    @Override
+    @RequiredReadAction
+    public String getName() {
+        PsiElement nameIdentifier = getNameIdentifier();
+        return nameIdentifier != null ? StringUtil.stripQuotesAroundValue(nameIdentifier.getText()) : null;
+    }
 
-	@Override
-	public PsiElement setName(@Nonnull String name) throws IncorrectOperationException
-	{
-		final PsiElement nameNode = getNameIdentifier();
-		assert nameNode != null;
-		final ASTNode nameElement = JSChangeUtil.createNameIdentifier(getProject(), name, nameNode.getNode().getElementType());
-		getNode().replaceChild(nameNode.getNode(), nameElement);
-		return this;
-	}
+    @Override
+    @RequiredWriteAction
+    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+        PsiElement nameNode = getNameIdentifier();
+        assert nameNode != null;
+        ASTNode nameElement = JSChangeUtil.createNameIdentifier(getProject(), name, nameNode.getNode().getElementType());
+        getNode().replaceChild(nameNode.getNode(), nameElement);
+        return this;
+    }
 
-	@RequiredReadAction
-	@Nonnull
-	@Override
-	public JavaScriptType getType()
-	{
-		JSExpression value = getValue();
-		if(value != null)
-		{
-			return value.getType();
-		}
-		return JavaScriptType.UNKNOWN;
-	}
+    @RequiredReadAction
+    @Nonnull
+    @Override
+    public JavaScriptType getType() {
+        JSExpression value = getValue();
+        if (value != null) {
+            return value.getType();
+        }
+        return JavaScriptType.UNKNOWN;
+    }
 
-	@RequiredReadAction
-	@Override
-	public JSExpression getValue()
-	{
-		return findChildByClass(JSExpression.class);
-	}
+    @RequiredReadAction
+    @Override
+    public JSExpression getValue() {
+        return findChildByClass(JSExpression.class);
+    }
 
-	@RequiredReadAction
-	@Nullable
-	@Override
-	public PsiElement getColonElement()
-	{
-		return findChildByType(JSTokenTypes.COLON);
-	}
+    @RequiredReadAction
+    @Nullable
+    @Override
+    public PsiElement getColonElement() {
+        return findChildByType(JSTokenTypes.COLON);
+    }
 
-	@RequiredReadAction
-	@Nullable
-	@Override
-	public JSComputedName getComputedName()
-	{
-		return findChildByClass(JSComputedName.class);
-	}
+    @RequiredReadAction
+    @Nullable
+    @Override
+    public JSComputedName getComputedName() {
+        return findChildByClass(JSComputedName.class);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSProperty(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSProperty(this);
+    }
 
-	@RequiredReadAction
-	@Override
-	public int getTextOffset()
-	{
-		final PsiElement name = getNameIdentifier();
-		return name != null ? name.getTextOffset() : super.getTextOffset();
-	}
+    @RequiredReadAction
+    @Override
+    public int getTextOffset() {
+        PsiElement name = getNameIdentifier();
+        return name != null ? name.getTextOffset() : super.getTextOffset();
+    }
 
-	@Override
-	@RequiredReadAction
-	public void delete() throws IncorrectOperationException
-	{
-		final ASTNode myNode = getNode();
-		JSChangeUtil.removeRangeWithRemovalOfCommas(myNode, myNode.getTreeParent());
-	}
+    @Override
+    @RequiredWriteAction
+    public void delete() throws IncorrectOperationException {
+        ASTNode myNode = getNode();
+        JSChangeUtil.removeRangeWithRemovalOfCommas(myNode, myNode.getTreeParent());
+    }
 
-	@Override
-	@RequiredReadAction
-	public PsiElement getNameIdentifier()
-	{
-		PsiElement nameIdentifier = findChildByType(IDENTIFIER_TOKENS_SET);
-		if(nameIdentifier == null)
-		{
-			JSExpression value = getValue();
-			// auto-property name
-			if(value != null && getColonElement() == null)
-			{
-				return value;
-			}
-		}
-		return nameIdentifier;
-	}
+    @Override
+    @RequiredReadAction
+    public PsiElement getNameIdentifier() {
+        PsiElement nameIdentifier = findChildByType(IDENTIFIER_TOKENS_SET);
+        if (nameIdentifier == null) {
+            JSExpression value = getValue();
+            // auto-property name
+            if (value != null && getColonElement() == null) {
+                return value;
+            }
+        }
+        return nameIdentifier;
+    }
 }

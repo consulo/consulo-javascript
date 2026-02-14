@@ -16,43 +16,55 @@
 
 package com.intellij.lang.javascript.psi;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.annotation.access.RequiredReadAction;
+import jakarta.annotation.Nullable;
 
 import com.intellij.lang.javascript.psi.stubs.JSAttributeListStub;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.StubBasedPsiElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.StubBasedPsiElement;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
  */
-public interface JSAttributeList extends JSElement, StubBasedPsiElement<JSAttributeListStub>
-{
-	@Nullable
-	String getNamespace();
+public interface JSAttributeList extends JSElement, StubBasedPsiElement<JSAttributeListStub> {
+    @Nullable
+    @RequiredReadAction
+    String getNamespace();
 
-	@Nullable
-	JSReferenceExpression getNamespaceElement();
+    @Nullable
+    @RequiredReadAction
+    JSReferenceExpression getNamespaceElement();
 
-	JSAttribute[] getAttributes();
+    JSAttribute[] getAttributes();
 
-	@Nonnull
-	JSAttribute[] getAttributesByName(@Nonnull String name);
+    @Nonnull
+    @RequiredReadAction
+    JSAttribute[] getAttributesByName(@Nonnull String name);
 
-	enum AccessType
-	{
-		PACKAGE_LOCAL, PUBLIC, PRIVATE, PROTECTED;
-	}
+    enum AccessType {
+        PACKAGE_LOCAL,
+        PUBLIC,
+        PRIVATE,
+        PROTECTED
+    }
 
-	AccessType getAccessType();
+    @RequiredReadAction
+    AccessType getAccessType();
 
-	@Nullable
-	PsiElement findAccessTypeElement();
+    @Nullable
+    @RequiredReadAction
+    PsiElement findAccessTypeElement();
 
-	enum ModifierType
-	{
-		DYNAMIC, NATIVE, OVERRIDE, STATIC, FINAL, VIRTUAL
-	}
+    enum ModifierType {
+        DYNAMIC,
+        NATIVE,
+        OVERRIDE,
+        STATIC,
+        FINAL,
+        VIRTUAL
+    }
 
-	boolean hasModifier(ModifierType modifier);
+    @RequiredReadAction
+    boolean hasModifier(ModifierType modifier);
 }

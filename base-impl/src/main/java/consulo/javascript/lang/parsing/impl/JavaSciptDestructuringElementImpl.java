@@ -1,37 +1,33 @@
 package consulo.javascript.lang.parsing.impl;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.psi.JSDestructuringElement;
 import com.intellij.lang.javascript.psi.JSDestructuringObject;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.impl.JSElementImpl;
 import consulo.annotation.access.RequiredReadAction;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 2019-12-14
  */
-public class JavaSciptDestructuringElementImpl extends JSElementImpl implements JSDestructuringElement
-{
-	public JavaSciptDestructuringElementImpl(ASTNode node)
-	{
-		super(node);
-	}
+public class JavaSciptDestructuringElementImpl extends JSElementImpl implements JSDestructuringElement {
+    public JavaSciptDestructuringElementImpl(ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSElement(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSElement(this);
+    }
 
-	@RequiredReadAction
-	@Nullable
-	@Override
-	public JSDestructuringObject getDestructuringObject()
-	{
-		return findChildByClass(JSDestructuringObject.class);
-	}
+    @RequiredReadAction
+    @Nullable
+    @Override
+    public JSDestructuringObject getDestructuringObject() {
+        return findChildByClass(JSDestructuringObject.class);
+    }
 }

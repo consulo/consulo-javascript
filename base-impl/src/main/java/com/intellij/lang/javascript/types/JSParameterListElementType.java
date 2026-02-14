@@ -17,64 +17,57 @@
 
 package com.intellij.lang.javascript.types;
 
-import java.io.IOException;
-
-import javax.annotation.Nonnull;
-
-import consulo.annotation.access.RequiredReadAction;
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.psi.JSParameterList;
-import com.intellij.lang.javascript.psi.JSStubElementType;
+import consulo.javascript.impl.language.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.impl.JSParameterListImpl;
 import com.intellij.lang.javascript.psi.stubs.JSParameterListStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSParameterListStubImpl;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.stub.StubInputStream;
+import consulo.language.psi.stub.StubOutputStream;
+
+import jakarta.annotation.Nonnull;
+
+import java.io.IOException;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Mar 25, 2008
- *         Time: 10:30:00 PM
+ * Date: Mar 25, 2008
+ * Time: 10:30:00 PM
  */
-public class JSParameterListElementType extends JSStubElementType<JSParameterListStub, JSParameterList>
-{
-	public JSParameterListElementType()
-	{
-		super("PARAMETER_LIST");
-	}
+public class JSParameterListElementType extends JSStubElementType<JSParameterListStub, JSParameterList> {
+    public JSParameterListElementType() {
+        super("PARAMETER_LIST");
+    }
 
-	@Nonnull
-	@Override
-	public PsiElement createElement(@Nonnull ASTNode astNode)
-	{
-		return new JSParameterListImpl(astNode);
-	}
+    @Nonnull
+    @Override
+    public PsiElement createElement(@Nonnull ASTNode astNode) {
+        return new JSParameterListImpl(astNode);
+    }
 
-	@Override
-	public JSParameterList createPsi(@Nonnull JSParameterListStub stub)
-	{
-		return new JSParameterListImpl(stub);
-	}
+    @Override
+    public JSParameterList createPsi(@Nonnull JSParameterListStub stub) {
+        return new JSParameterListImpl(stub);
+    }
 
-	@RequiredReadAction
-	@Override
-	public JSParameterListStub createStub(@Nonnull JSParameterList psi, StubElement parentStub)
-	{
-		return new JSParameterListStubImpl(parentStub, this);
-	}
+    @RequiredReadAction
+    @Override
+    public JSParameterListStub createStub(@Nonnull JSParameterList psi, StubElement parentStub) {
+        return new JSParameterListStubImpl(parentStub, this);
+    }
 
-	@Override
-	public void serialize(@Nonnull JSParameterListStub stub, @Nonnull StubOutputStream dataStream) throws IOException
-	{
+    @Override
+    public void serialize(@Nonnull JSParameterListStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
 
-	}
+    }
 
-	@Nonnull
-	@Override
-	public JSParameterListStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
-	{
-		return new JSParameterListStubImpl(parentStub, this);
-	}
+    @Nonnull
+    @Override
+    public JSParameterListStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+        return new JSParameterListStubImpl(parentStub, this);
+    }
 }

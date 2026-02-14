@@ -15,39 +15,51 @@
  */
 package org.intellij.idea.lang.javascript.intention.number;
 
-import javax.annotation.Nonnull;
-
+import com.intellij.lang.javascript.psi.JSLiteralExpression;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 import org.intellij.idea.lang.javascript.psiutil.NumberUtil;
 
-import com.intellij.lang.javascript.psi.JSLiteralExpression;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
-
+@ExtensionImpl
+@IntentionMetaData(
+    ignoreId = "JSConvertIntegerToHexIntention",
+    categories = {"JavaScript", "Numbers"},
+    fileExtensions = "js"
+)
 public class JSConvertIntegerToHexIntention extends JSIntention {
     @Override
-	@Nonnull
+    @Nonnull
+    public LocalizeValue getText() {
+        return JSIntentionLocalize.numberConvertIntegerToHex();
+    }
+
+    @Override
+    @Nonnull
     public JSElementPredicate getElementPredicate() {
         return new ConvertIntegerToHexPredicate();
     }
 
     @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSLiteralExpression exp = (JSLiteralExpression) element;
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        JSLiteralExpression exp = (JSLiteralExpression)element;
 
         JSElementFactory.replaceExpression(exp, "0x" + NumberUtil.getLiteralNumber(exp).toString(16));
     }
 
     private static class ConvertIntegerToHexPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-            if (!(element instanceof JSLiteralExpression)) {
-                return false;
-            }
-
-            return NumberUtil.isDecimal(element.getText());
+        @RequiredReadAction
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            return element instanceof JSLiteralExpression && NumberUtil.isDecimal(element.getText());
         }
     }
 }

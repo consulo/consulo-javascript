@@ -17,19 +17,17 @@
 
 package consulo.javascript.psi;
 
-import javax.annotation.Nonnull;
-
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
 import consulo.annotation.access.RequiredReadAction;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 11.12.2015
+ * @since 2015-12-11
  */
-public interface JSSimpleLiteralExpression extends JSLiteralExpression
-{
-	@Nonnull
-	@RequiredReadAction
-	IElementType getLiteralElementType();
+public interface JSSimpleLiteralExpression extends JSLiteralExpression {
+    @Nonnull
+    @RequiredReadAction
+    IElementType getLiteralElementType();
 }

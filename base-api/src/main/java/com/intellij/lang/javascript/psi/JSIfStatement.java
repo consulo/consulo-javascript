@@ -16,24 +16,23 @@
 
 package com.intellij.lang.javascript.psi;
 
+import consulo.annotation.access.RequiredReadAction;
+
 /**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 30, 2005
- * Time: 6:56:53 PM
- * To change this template use File | Settings | File Templates.
+ * @author max
+ * @since 2005-01-30
  */
-public interface JSIfStatement extends JSStatement
-{
-	JSExpression getCondition();
+public interface JSIfStatement extends JSStatement {
+    JSExpression getCondition();
 
-	JSStatement getThen();
+    JSStatement getThen();
 
-	JSStatement getElse();
+    @RequiredReadAction
+    JSStatement getElse();
 
-	void setThen(JSStatement statement);
+    void setThen(JSStatement statement);
 
-	void setElse(JSStatement statement);
+    void setElse(JSStatement statement);
 
-	void setCondition(JSExpression expr);
+    void setCondition(JSExpression expr);
 }

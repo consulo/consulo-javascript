@@ -1,7 +1,7 @@
 package consulo.javascript.lang.lexer;
 
-import com.intellij.lexer.LexerBase;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.lexer.LexerBase;
+import consulo.language.ast.IElementType;
 import com.intellij.lang.javascript.JSTokenTypes;
 
 %%
@@ -44,7 +44,7 @@ DOUBLE_QUOTED_LITERAL=\"([^\\\"\r\n]|{ESCAPE_SEQUENCE}|\\{CRLF})*(\"|\\)?
 ESCAPE_SEQUENCE=\\[^\r\n]
 GROUP = "[" [^\]]* "]"
 
-REGEXP_LITERAL="/"([^\*\\/\r\n]|{ESCAPE_SEQUENCE}|{GROUP})([^\\/\r\n]|{ESCAPE_SEQUENCE}|{GROUP})*("/"[gimx]*)?
+REGEXP_LITERAL="/"([^\*\\/\r\n]|{ESCAPE_SEQUENCE}|{GROUP})([^\\/\r\n]|{ESCAPE_SEQUENCE}|{GROUP})*("/"[gimxu]*)?
 DIGIT=[0-9]
 
 %state DIV_OR_GT

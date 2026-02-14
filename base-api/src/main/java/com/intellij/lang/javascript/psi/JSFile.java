@@ -16,15 +16,14 @@
 
 package com.intellij.lang.javascript.psi;
 
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.StubBasedPsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.StubBasedPsiElement;
 
 /**
  * @author nik
  */
-public interface JSFile extends PsiFile, JSElement
-{
-	StubBasedPsiElement findStubbedElementAtOffset(final int offset, final Class<? extends StubBasedPsiElement> clazz);
+public interface JSFile extends PsiFile, JSElement {
+    StubBasedPsiElement findStubbedElementAtOffset(int offset, Class<? extends StubBasedPsiElement> clazz);
 
-	JSSourceElement[] getStatements();
+    JSSourceElement[] getStatements();
 }

@@ -19,64 +19,57 @@ package com.intellij.lang.javascript.types;
 
 import java.io.IOException;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import consulo.annotation.access.RequiredReadAction;
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.intellij.lang.javascript.psi.JSAttribute;
-import com.intellij.lang.javascript.psi.JSStubElementType;
+import consulo.javascript.impl.language.psi.JSStubElementType;
 import com.intellij.lang.javascript.psi.impl.JSAttributeImpl;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeStub;
 import com.intellij.lang.javascript.psi.stubs.impl.JSAttributeStubImpl;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
-import com.intellij.util.io.StringRef;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.stub.StubOutputStream;
+import consulo.index.io.StringRef;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.StubInputStream;
 
 /**
  * @author Maxim.Mossienko
- *         Date: Mar 25, 2008
- *         Time: 10:30:20 PM
+ * Date: Mar 25, 2008
+ * Time: 10:30:20 PM
  */
-public class JSAttributeElementType extends JSStubElementType<JSAttributeStub, JSAttribute>
-{
-	public JSAttributeElementType()
-	{
-		super("ATTRIBUTE");
-	}
+public class JSAttributeElementType extends JSStubElementType<JSAttributeStub, JSAttribute> {
+    public JSAttributeElementType() {
+        super("ATTRIBUTE");
+    }
 
-	@Nonnull
-	@Override
-	public PsiElement createElement(@Nonnull ASTNode astNode)
-	{
-		return new JSAttributeImpl(astNode);
-	}
+    @Nonnull
+    @Override
+    public PsiElement createElement(@Nonnull ASTNode astNode) {
+        return new JSAttributeImpl(astNode);
+    }
 
-	@Override
-	public JSAttribute createPsi(@Nonnull JSAttributeStub stub)
-	{
-		return new JSAttributeImpl(stub);
-	}
+    @Override
+    public JSAttribute createPsi(@Nonnull JSAttributeStub stub) {
+        return new JSAttributeImpl(stub);
+    }
 
-	@RequiredReadAction
-	@Override
-	public JSAttributeStub createStub(@Nonnull JSAttribute psi, StubElement parentStub)
-	{
-		return new JSAttributeStubImpl(psi.getName(), 0, parentStub);
-	}
+    @RequiredReadAction
+    @Override
+    public JSAttributeStub createStub(@Nonnull JSAttribute psi, StubElement parentStub) {
+        return new JSAttributeStubImpl(psi.getName(), 0, parentStub);
+    }
 
-	@Override
-	public void serialize(@Nonnull JSAttributeStub stub, @Nonnull StubOutputStream dataStream) throws IOException
-	{
-		dataStream.writeName(stub.getName());
-	}
+    @Override
+    public void serialize(@Nonnull JSAttributeStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+        dataStream.writeName(stub.getName());
+    }
 
-	@Nonnull
-	@Override
-	public JSAttributeStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException
-	{
-		StringRef name = dataStream.readName();
-		return new JSAttributeStubImpl(StringRef.toString(name), 0, parentStub);
-	}
+    @Nonnull
+    @Override
+    public JSAttributeStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+        StringRef name = dataStream.readName();
+        return new JSAttributeStubImpl(StringRef.toString(name), 0, parentStub);
+    }
 }

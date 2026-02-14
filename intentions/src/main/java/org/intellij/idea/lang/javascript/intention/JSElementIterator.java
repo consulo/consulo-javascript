@@ -15,23 +15,21 @@
  */
 package org.intellij.idea.lang.javascript.intention;
 
+import com.intellij.lang.javascript.psi.JSElement;
+import consulo.language.psi.PsiElement;
+import consulo.xml.psi.xml.XmlFile;
+import org.intellij.idea.lang.javascript.psiutil.ArrayStack;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.intellij.idea.lang.javascript.psiutil.ArrayStack;
-
-import com.intellij.lang.javascript.psi.JSElement;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.xml.XmlFile;
-
 public abstract class JSElementIterator implements Iterator<PsiElement> {
-
-    private boolean                reverse;
-    private final int              minTextOffset;
-    private final int              maxTextOffset;
+    private boolean reverse;
+    private final int minTextOffset;
+    private final int maxTextOffset;
     private ArrayStack<PsiElement> elementStack;
-    private PsiElement             next;
-    private boolean                retrieveNext;
+    private PsiElement next;
+    private boolean retrieveNext;
 
     public JSElementIterator(PsiElement element) {
         this(element, false, 0, Integer.MAX_VALUE);
@@ -42,23 +40,26 @@ public abstract class JSElementIterator implements Iterator<PsiElement> {
     }
 
     public JSElementIterator(PsiElement element, boolean reverse, int minTextOffset, int maxTextOffset) {
-        this.reverse       = reverse;
+        this.reverse = reverse;
         this.minTextOffset = minTextOffset;
         this.maxTextOffset = maxTextOffset;
-        this.retrieveNext  = true;
-        this.elementStack  = new ArrayStack<PsiElement>();
+        this.retrieveNext = true;
+        this.elementStack = new ArrayStack<PsiElement>();
 
         if (element instanceof XmlFile) {
-            for (JSElement embeddedElement : JSFunctionVisitor.getEmbeddedJSElements((XmlFile) element)) {
+            for (JSElement embeddedElement : JSFunctionVisitor.getEmbeddedJSElements((XmlFile)element)) {
                 if (reverse) {
                     this.elementStack.add(0, embeddedElement);
-                } else {
+                }
+                else {
                     this.elementStack.add(embeddedElement);
                 }
             }
-        } else if (element instanceof JSElement) {
+        }
+        else if (element instanceof JSElement) {
             this.elementStack.push(element);
-        } else {
+        }
+        else {
             throw new ClassCastException(element.getClass().getName());
         }
     }
@@ -66,33 +67,37 @@ public abstract class JSElementIterator implements Iterator<PsiElement> {
     /**
      * Returns <tt>true</tt> if this element should be part of the iteration,
      * <tt>false</tt> otherwise.
-     * @param element  this element
+     *
+     * @param element this element
      * @return <tt>true</tt> if this element should be part of the iteration,
-     *         <tt>false</tt> otherwise.
+     * <tt>false</tt> otherwise.
      */
     protected abstract boolean visitElement(PsiElement element);
 
     private void findNext() {
         PsiElement element = null;
-        boolean    pass    = false;
+        boolean pass = false;
 
         if (!this.elementStack.empty()) {
             do {
                 element = this.elementStack.pop();
 
-                final int elementTextOffset    = element.getTextOffset();
-                final int elementTextEndOffset = elementTextOffset + element.getTextLength();
+                int elementTextOffset = element.getTextOffset();
+                int elementTextEndOffset = elementTextOffset + element.getTextLength();
 
                 if (elementTextEndOffset >= this.minTextOffset &&
-                    elementTextOffset    <= this.maxTextOffset) {
+                    elementTextOffset <= this.maxTextOffset) {
                     pass = this.visitElement(element);
-                    this.pushChildren(element.getChildren(),
-                                      (this.reverse ? elementTextOffset : elementTextEndOffset));
+                    this.pushChildren(
+                        element.getChildren(),
+                        this.reverse ? elementTextOffset : elementTextEndOffset
+                    );
                 }
-            } while (!(pass || this.elementStack.empty()));
+            }
+            while (!pass && !this.elementStack.empty());
         }
 
-        this.next         = (pass ? element : null);
+        this.next = pass ? element : null;
         this.retrieveNext = false;
     }
 
@@ -103,7 +108,7 @@ public abstract class JSElementIterator implements Iterator<PsiElement> {
             int index = 0;
 
             while (index < children.length && childTextOffset <= this.maxTextOffset) {
-                final PsiElement child = children[index];
+                PsiElement child = children[index];
 
                 childTextOffset = child.getTextOffset();
                 if (childTextOffset <= this.maxTextOffset) {
@@ -111,11 +116,12 @@ public abstract class JSElementIterator implements Iterator<PsiElement> {
                 }
                 index++;
             }
-        } else {
+        }
+        else {
             int index = children.length - 1;
 
             while (index >= 0 && childTextOffset >= this.minTextOffset) {
-                final PsiElement child = children[index];
+                PsiElement child = children[index];
 
                 childTextOffset = child.getTextOffset() + child.getTextLength();
                 if (childTextOffset >= this.minTextOffset) {
@@ -127,7 +133,7 @@ public abstract class JSElementIterator implements Iterator<PsiElement> {
     }
 
     @Override
-	public boolean hasNext() {
+    public boolean hasNext() {
         if (this.retrieveNext) {
             this.findNext();
         }
@@ -136,7 +142,7 @@ public abstract class JSElementIterator implements Iterator<PsiElement> {
     }
 
     @Override
-	public PsiElement next() {
+    public PsiElement next() {
         if (this.retrieveNext) {
             this.findNext();  // hasNext() has not been called
         }
@@ -149,7 +155,7 @@ public abstract class JSElementIterator implements Iterator<PsiElement> {
     }
 
     @Override
-	public void remove() {
+    public void remove() {
         throw new UnsupportedOperationException();
     }
 }

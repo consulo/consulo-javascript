@@ -16,49 +16,46 @@
 
 package com.intellij.lang.javascript.psi;
 
-import com.intellij.lang.javascript.psi.stubs.JSVariableStubBase;
-import com.intellij.psi.StubBasedPsiElement;
-import com.intellij.util.IncorrectOperationException;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.javascript.lang.psi.JavaScriptType;
-import consulo.javascript.lang.psi.JavaScriptTypeElement;
+import consulo.javascript.language.psi.JavaScriptType;
+import consulo.javascript.language.psi.JavaScriptTypeElement;
+import consulo.language.util.IncorrectOperationException;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author max
- *         Date: Jan 30, 2005
- *         Time: 6:43:42 PM
+ * @since 2005-01-30
  */
-public interface JSVariable extends JSQualifiedNamedElement, JSAttributeListOwner, StubBasedPsiElement<JSVariableStubBase>
-{
-	JSVariable[] EMPTY_ARRAY = new JSVariable[0];
+public interface JSVariable extends JSQualifiedNamedElement, JSAttributeListOwner {
+    JSVariable[] EMPTY_ARRAY = new JSVariable[0];
 
-	boolean hasInitializer();
+    boolean hasInitializer();
 
-	@RequiredReadAction
-	@Nullable
-	JSExpression getInitializer();
+    @RequiredReadAction
+    @Nullable
+    JSExpression getInitializer();
 
-	String getInitializerText();
+    @RequiredReadAction
+    String getInitializerText();
 
-	void setInitializer(JSExpression expr) throws IncorrectOperationException;
+    void setInitializer(JSExpression expr) throws IncorrectOperationException;
 
-	@Nonnull
-	JavaScriptType getType();
+    @Nonnull
+    JavaScriptType getType();
 
-	@Nullable
-	@Deprecated
-	String getTypeString();
+    @Nullable
+    @Deprecated
+    String getTypeString();
 
-	@Nullable
-	@RequiredReadAction
-	JavaScriptTypeElement getTypeElement();
+    @Nullable
+    @RequiredReadAction
+    JavaScriptTypeElement getTypeElement();
 
-	boolean isConst();
+    boolean isConst();
 
-	boolean isLocal();
+    boolean isLocal();
 
-	boolean isDeprecated();
+    boolean isDeprecated();
 }

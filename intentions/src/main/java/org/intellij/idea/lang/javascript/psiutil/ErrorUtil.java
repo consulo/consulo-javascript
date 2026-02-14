@@ -15,25 +15,27 @@
  */
 package org.intellij.idea.lang.javascript.psiutil;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiErrorElement;
-import com.intellij.psi.PsiRecursiveElementVisitor;
-import com.intellij.psi.util.PsiUtilBase;
-import javax.annotation.Nonnull;
+import consulo.language.editor.util.PsiUtilBase;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiErrorElement;
+import consulo.language.psi.PsiRecursiveElementVisitor;
+import jakarta.annotation.Nonnull;
 
 public class ErrorUtil {
-    private ErrorUtil() {}
+    private ErrorUtil() {
+    }
 
     private static final boolean fullTraversal = false;
 
     public static boolean containsError(@Nonnull PsiElement element) {
         // check only immediate children, full tree traversal is too expensive
         if (fullTraversal) {
-            final ErrorElementVisitor visitor = new ErrorElementVisitor();
+            ErrorElementVisitor visitor = new ErrorElementVisitor();
 
             element.accept(visitor);
             return visitor.containsErrorElement();
-        } else {
+        }
+        else {
             return PsiUtilBase.hasErrorElementChild(element);
         }
     }
@@ -41,11 +43,12 @@ public class ErrorUtil {
     private static class ErrorElementVisitor extends PsiRecursiveElementVisitor {
         private boolean containsErrorElement;
 
-        @Override public void visitErrorElement(PsiErrorElement element) {
+        @Override
+        public void visitErrorElement(PsiErrorElement element) {
             this.containsErrorElement = true;
         }
 
-        private boolean containsErrorElement(){
+        private boolean containsErrorElement() {
             return this.containsErrorElement;
         }
     }

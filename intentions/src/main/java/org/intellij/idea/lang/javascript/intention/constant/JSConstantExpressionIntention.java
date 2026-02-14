@@ -15,76 +15,72 @@
  */
 package org.intellij.idea.lang.javascript.intention.constant;
 
-import javax.annotation.Nonnull;
-
+import com.intellij.lang.javascript.psi.JSCallExpression;
+import com.intellij.lang.javascript.psi.JSExpression;
+import com.intellij.lang.javascript.psi.JSLiteralExpression;
+import com.intellij.lang.javascript.psi.JSReferenceExpression;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.javascript.intention.localize.JSIntentionLocalize;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
 import org.intellij.idea.lang.javascript.psiutil.ErrorUtil;
 import org.intellij.idea.lang.javascript.psiutil.ExpressionUtil;
 import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
 
-import com.intellij.lang.javascript.psi.JSExpression;
-import com.intellij.lang.javascript.psi.JSLiteralExpression;
-import com.intellij.lang.javascript.psi.JSReferenceExpression;
-import com.intellij.lang.javascript.psi.JSCallExpression;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
-
+@ExtensionImpl
+@IntentionMetaData(
+    ignoreId = "JSConstantExpressionIntention",
+    categories = {"JavaScript", "Other"},
+    fileExtensions = "js"
+)
 public class JSConstantExpressionIntention extends JSIntention {
     @Override
-	@Nonnull
+    @Nonnull
+    public LocalizeValue getText() {
+        return JSIntentionLocalize.constantComputeExpression();
+    }
+
+    @Override
+    @Nonnull
     protected JSElementPredicate getElementPredicate() {
         return new ConstantExpressionPredicate();
     }
 
     @Override
-	public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        final JSExpression  expression = (JSExpression) element;
-        final Object        value      = ExpressionUtil.computeConstantExpression(expression);
-        final String        newExpression;
-
-        if (value instanceof String) {
-            newExpression = '"' + StringUtil.escapeStringCharacters((String) value) + '"';
-        } else {
-            newExpression = String.valueOf(value);
-        }
+    public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
+        JSExpression expression = (JSExpression)element;
+        Object value = ExpressionUtil.computeConstantExpression(expression);
+        String newExpression = value instanceof String strValue
+            ? '"' + StringUtil.escapeStringCharacters(strValue) + '"'
+            : String.valueOf(value);
         JSElementFactory.replaceExpression(expression, newExpression);
     }
 
     private static class ConstantExpressionPredicate implements JSElementPredicate {
         @Override
-		public boolean satisfiedBy(@Nonnull PsiElement element) {
-            if (!(element instanceof JSExpression)) {
+        public boolean satisfiedBy(@Nonnull PsiElement element) {
+            if (!(element instanceof JSExpression) || ErrorUtil.containsError(element)) {
                 return false;
             }
-            if (ErrorUtil.containsError(element)) {
-                return false;
-            }
-            final JSExpression expression = (JSExpression) element;
+            JSExpression expression = (JSExpression)element;
 
-            if (element instanceof JSLiteralExpression ||
-                ( element instanceof JSReferenceExpression &&
-                  ((JSReferenceExpression)element).getQualifier() != null
-                ) ||
-                expression instanceof JSCallExpression
-               ) {
-                return false;
-            }
-            if (!ExpressionUtil.isConstantExpression(expression)) {
+            if (element instanceof JSLiteralExpression
+                || (element instanceof JSReferenceExpression referenceExpression && referenceExpression.getQualifier() != null)
+                || expression instanceof JSCallExpression
+                || !ExpressionUtil.isConstantExpression(expression)
+                || ExpressionUtil.computeConstantExpression(expression) == null) {
                 return false;
             }
 
-            if (ExpressionUtil.computeConstantExpression(expression) == null) {
-                return false;
-            }
+            PsiElement parent = element.getParent();
 
-            final PsiElement parent = element.getParent();
-
-            if (!(parent instanceof JSExpression)) {
-                return true;
-            }
-            return (!ExpressionUtil.isConstantExpression((JSExpression) parent));
+            return !(parent instanceof JSExpression parentExpression && ExpressionUtil.isConstantExpression(parentExpression));
         }
     }
 }

@@ -17,14 +17,15 @@
 package com.intellij.lang.javascript.psi;
 
 import com.intellij.lang.javascript.psi.stubs.JSPackageStatementStub;
-import com.intellij.psi.StubBasedPsiElement;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.language.psi.StubBasedPsiElement;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
-public interface JSPackageStatement extends JSStatement, JSQualifiedNamedElement, StubBasedPsiElement<JSPackageStatementStub>
-{
-	JSSourceElement[] getStatements();
+public interface JSPackageStatement extends JSStatement, JSQualifiedNamedElement, StubBasedPsiElement<JSPackageStatementStub> {
+    JSSourceElement[] getStatements();
 
-	void setQualifiedName(final String expectedPackageNameFromFile);
+    @RequiredWriteAction
+    void setQualifiedName(String expectedPackageNameFromFile);
 }

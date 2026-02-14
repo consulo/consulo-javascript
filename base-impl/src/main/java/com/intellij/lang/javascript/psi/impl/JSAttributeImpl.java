@@ -16,205 +16,193 @@
 
 package com.intellij.lang.javascript.psi.impl;
 
-import com.intellij.codeInsight.daemon.EmptyResolveMessageProvider;
-import com.intellij.lang.ASTNode;
 import com.intellij.lang.javascript.JSElementTypes;
 import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.JSAttribute;
 import com.intellij.lang.javascript.psi.JSAttributeNameValuePair;
 import com.intellij.lang.javascript.psi.JSElementVisitor;
 import com.intellij.lang.javascript.psi.stubs.JSAttributeStub;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NonNls;
-
-import javax.annotation.Nonnull;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.document.util.TextRange;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.EmptyResolveMessageProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
+import consulo.util.collection.ArrayUtil;
+import jakarta.annotation.Nonnull;
 
 /**
- * @by Maxim.Mossienko
+ * @author Maxim.Mossienko
  */
-public class JSAttributeImpl extends JSStubElementImpl<JSAttributeStub> implements JSAttribute
-{
-	private PsiReference[] myReferences;
-	private static
-	@NonNls
-	String[] myPossibleMetaData = new String[]{
-			"AccessibilityClass",
-			"ArrayElementType",
-			"Bindable",
-			"DefaultProperty",
-			"Deprecated",
-			"Effect",
-			"Embed",
-			"Event",
-			"Exclude",
-			"ExcludeClass",
-			"IconFile",
-			"Inspectable",
-			"InstanceType",
-			"HostComponent",
-			"NonCommittingChangeEvent",
-			"Frame",
-			"RemoteClass",
-			"ResourceBundle",
-			"Style",
-			"Transient"
-	};
+public class JSAttributeImpl extends JSStubElementImpl<JSAttributeStub> implements JSAttribute {
+    private PsiReference[] myReferences;
+    private static final String[] POSSIBLE_META_DATA = new String[]{
+        "AccessibilityClass",
+        "ArrayElementType",
+        "Bindable",
+        "DefaultProperty",
+        "Deprecated",
+        "Effect",
+        "Embed",
+        "Event",
+        "Exclude",
+        "ExcludeClass",
+        "IconFile",
+        "Inspectable",
+        "InstanceType",
+        "HostComponent",
+        "NonCommittingChangeEvent",
+        "Frame",
+        "RemoteClass",
+        "ResourceBundle",
+        "Style",
+        "Transient"
+    };
 
-	public JSAttributeImpl(final ASTNode node)
-	{
-		super(node);
-	}
+    public JSAttributeImpl(ASTNode node) {
+        super(node);
+    }
 
-	public JSAttributeImpl(final JSAttributeStub node)
-	{
-		super(node, JSElementTypes.ATTRIBUTE);
-	}
+    public JSAttributeImpl(JSAttributeStub node) {
+        super(node, JSElementTypes.ATTRIBUTE);
+    }
 
-	@Override
-	protected void accept(@Nonnull JSElementVisitor visitor)
-	{
-		visitor.visitJSAttribute(this);
-	}
+    @Override
+    protected void accept(@Nonnull JSElementVisitor visitor) {
+        visitor.visitJSAttribute(this);
+    }
 
-	@Override
-	public String getName()
-	{
-		final JSAttributeStub attributeStub = getStub();
-		if(attributeStub != null)
-		{
-			return attributeStub.getName();
-		}
-		final ASTNode node = getNode().findChildByType(JSTokenTypes.IDENTIFIER);
-		return node != null ? node.getText() : null;
-	}
+    @Override
+    @RequiredReadAction
+    public String getName() {
+        JSAttributeStub attributeStub = getStub();
+        if (attributeStub != null) {
+            return attributeStub.getName();
+        }
+        ASTNode node = getNode().findChildByType(JSTokenTypes.IDENTIFIER);
+        return node != null ? node.getText() : null;
+    }
 
-	@Override
-	public PsiElement setName(@NonNls @Nonnull final String name) throws IncorrectOperationException
-	{
-		throw new IncorrectOperationException();
-	}
+    @Override
+    @RequiredWriteAction
+    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+        throw new IncorrectOperationException();
+    }
 
-	@Override
-	public JSAttributeNameValuePair[] getValues()
-	{
-		return getStubOrPsiChildren(JSElementTypes.ATTRIBUTE_NAME_VALUE_PAIR, JSAttributeNameValuePair.EMPTY_ARRAY);
-	}
+    @Override
+    public JSAttributeNameValuePair[] getValues() {
+        return getStubOrPsiChildren(JSElementTypes.ATTRIBUTE_NAME_VALUE_PAIR, JSAttributeNameValuePair.EMPTY_ARRAY);
+    }
 
-	@Override
-	public JSAttributeNameValuePair getValueByName(final String name)
-	{
-		for(JSAttributeNameValuePair p : getValues())
-		{
-			final String pName = p.getName();
+    @Override
+    public JSAttributeNameValuePair getValueByName(String name) {
+        for (JSAttributeNameValuePair p : getValues()) {
+            String pName = p.getName();
 
-			if((name != null && name.equals(pName)) || (name == null && name == pName))
-			{
-				return p;
-			}
-		}
-		return null;
-	}
+            if ((name != null && name.equals(pName)) || (name == null && name == pName)) {
+                return p;
+            }
+        }
+        return null;
+    }
 
-	@Override
-	public PsiReference[] getReferences()
-	{
-		if(myReferences == null)
-		{
-			final ASTNode node = getNode().findChildByType(JSTokenTypes.IDENTIFIER);
+    @Nonnull
+    @Override
+    @RequiredReadAction
+    public PsiReference[] getReferences() {
+        if (myReferences == null) {
+            ASTNode node = getNode().findChildByType(JSTokenTypes.IDENTIFIER);
 
-			if(node == null)
-			{
-				myReferences = PsiReference.EMPTY_ARRAY;
-			}
-			else
-			{
-				final int startOffsetInParent = node.getPsi().getStartOffsetInParent();
-				final TextRange range = new TextRange(startOffsetInParent, startOffsetInParent + node.getTextLength());
+            if (node == null) {
+                myReferences = PsiReference.EMPTY_ARRAY;
+            }
+            else {
+                int startOffsetInParent = node.getPsi().getStartOffsetInParent();
+                TextRange range = new TextRange(startOffsetInParent, startOffsetInParent + node.getTextLength());
 
-				myReferences = new PsiReference[]{new AttrNameReference(range)};
-			}
-		}
+                myReferences = new PsiReference[]{new AttrNameReference(range)};
+            }
+        }
 
-		return myReferences;
-	}
+        return myReferences;
+    }
 
-	private class AttrNameReference implements PsiReference, EmptyResolveMessageProvider
-	{
-		private final TextRange myRange;
+    private class AttrNameReference implements PsiReference, EmptyResolveMessageProvider {
+        private final TextRange myRange;
 
-		public AttrNameReference(final TextRange range)
-		{
-			myRange = range;
-		}
+        public AttrNameReference(TextRange range) {
+            myRange = range;
+        }
 
-		@Override
-		public PsiElement getElement()
-		{
-			return JSAttributeImpl.this;
-		}
+        @Override
+        @RequiredReadAction
+        public PsiElement getElement() {
+            return JSAttributeImpl.this;
+        }
 
-		@Override
-		public TextRange getRangeInElement()
-		{
-			return myRange;
-		}
+        @Nonnull
+        @Override
+        @RequiredReadAction
+        public TextRange getRangeInElement() {
+            return myRange;
+        }
 
-		@Override
-		public PsiElement resolve()
-		{
-			final String s = getCanonicalText();
-			return ArrayUtil.indexOf(myPossibleMetaData, s) >= 0 ? JSAttributeImpl.this : null;
-		}
+        @Override
+        @RequiredReadAction
+        public PsiElement resolve() {
+            String s = getCanonicalText();
+            return ArrayUtil.indexOf(POSSIBLE_META_DATA, s) >= 0 ? JSAttributeImpl.this : null;
+        }
 
-		@Override
-		public String getCanonicalText()
-		{
-			return getName();
-		}
+        @Nonnull
+        @Override
+        @RequiredReadAction
+        public String getCanonicalText() {
+            return getName();
+        }
 
-		@Override
-		public PsiElement handleElementRename(final String newElementName) throws IncorrectOperationException
-		{
-			return null;
-		}
+        @Override
+        @RequiredWriteAction
+        public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
+            return null;
+        }
 
-		@Override
-		public PsiElement bindToElement(@Nonnull final PsiElement element) throws IncorrectOperationException
-		{
-			return null;
-		}
+        @Override
+        @RequiredWriteAction
+        public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
+            return null;
+        }
 
-		@Override
-		public boolean isReferenceTo(final PsiElement element)
-		{
-			if(element instanceof JSAttribute)
-			{
-				final String name = getName();
-				return name != null && name.equals(((JSAttribute) element).getName());
-			}
-			return false;
-		}
+        @Override
+        @RequiredReadAction
+        public boolean isReferenceTo(PsiElement element) {
+            if (element instanceof JSAttribute attribute) {
+                String name = getName();
+                return name != null && name.equals(attribute.getName());
+            }
+            return false;
+        }
 
-		@Override
-		public Object[] getVariants()
-		{
-			return myPossibleMetaData;
-		}
+        @Nonnull
+        @Override
+        @RequiredReadAction
+        public Object[] getVariants() {
+            return POSSIBLE_META_DATA;
+        }
 
-		@Override
-		public boolean isSoft()
-		{
-			return true;
-		}
+        @Override
+        @RequiredReadAction
+        public boolean isSoft() {
+            return true;
+        }
 
-		@Override
-		public String getUnresolvedMessagePattern()
-		{
-			return "Unknown metadata tag";
-		}
-	}
+        @Nonnull
+        @Override
+        public LocalizeValue buildUnresolvedMessage(@Nonnull String referenceText) {
+            return LocalizeValue.localizeTODO("Unknown metadata tag");
+        }
+    }
 }

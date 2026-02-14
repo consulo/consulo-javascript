@@ -19,11 +19,11 @@ import com.intellij.lang.javascript.JSTokenTypes;
 import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSEmbeddedContentImpl;
 import com.intellij.lang.javascript.psi.impl.JSNewExpressionImpl;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.xml.XmlFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.logging.Logger;
+import consulo.xml.psi.xml.XmlFile;
 import org.intellij.idea.lang.javascript.psiutil.FindReferenceUtil;
 import org.jetbrains.annotations.NonNls;
 
@@ -31,53 +31,53 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class JSFunctionVisitor extends JSElementVisitor {
-
-    @Override public void visitElement(PsiElement element) {
-        if (element instanceof JSFunction) {
-            this.visitJSFunctionDeclaration((JSFunction) element);
-        } else if (element instanceof JSReferenceExpression) {
+    @Override
+    public void visitElement(PsiElement element) {
+        if (element instanceof JSFunction function) {
+            this.visitJSFunctionDeclaration(function);
+        }
+        else if (element instanceof JSReferenceExpression) {
             if (element == element.getParent().getChildren()[0]) {
-                final PsiElement firstChild = element.getParent().getFirstChild();
+                PsiElement firstChild = element.getParent().getFirstChild();
 
                 if (firstChild != null && firstChild.toString().indexOf(JSTokenTypes.NEW_KEYWORD.toString()) >= 0) {
                     this.visitJSNewExpression(new JSNewExpressionImpl(element.getParent().getNode()));
                 }
             }
         }
-        else if (element instanceof XmlFile) {
-            processFile((XmlFile)element);
+        else if (element instanceof XmlFile xmlFile) {
+            processFile(xmlFile);
         }
 
         super.visitElement(element);
 
-        for (final PsiElement childElement : element.getChildren()) {
+        for (PsiElement childElement : element.getChildren()) {
             childElement.accept(this);
         }
     }
 
-    @Override public void visitJSNewExpression(JSNewExpression newExpression) {}
+    @Override
+    public void visitJSNewExpression(JSNewExpression newExpression) {
+    }
 
     private static final Logger logger = Logger.getInstance(JSFunctionVisitor.class.getName());
 
     private void processFile(XmlFile file) {
-      int  count = 0;
-      long start = System.currentTimeMillis();
+        int count = 0;
+        long start = System.currentTimeMillis();
 
-      for (final JSElement element : getEmbeddedJSElements(file)) {
-          this.visitElement(element);
-          count++;
-      }
-      logger.info("Processed inspection " + this.getClass().getSimpleName() + " on file " + file.getName() +
-                  " (" + count + " blocks) in " + (System.currentTimeMillis() - start) + " ms.");
+        for (JSElement element : getEmbeddedJSElements(file)) {
+            this.visitElement(element);
+            count++;
+        }
+        logger.info(
+            "Processed inspection " + this.getClass().getSimpleName() + " on file " + file.getName() +
+                " (" + count + " blocks) in " + (System.currentTimeMillis() - start) + " ms."
+        );
     }
 
-    static Iterable<JSElement> getEmbeddedJSElements(final XmlFile file) {
-        return new Iterable<JSElement>() {
-                @Override
-				public Iterator<JSElement> iterator() {
-                    return new EmbeddedJSElementIterator(file);
-                }
-            };
+    static Iterable<JSElement> getEmbeddedJSElements(XmlFile file) {
+        return () -> new EmbeddedJSElementIterator(file);
     }
 
     /**
@@ -86,31 +86,34 @@ public class JSFunctionVisitor extends JSElementVisitor {
      * this.visitElement() can be called.
      */
     private static class EmbeddedJSElementIterator implements Iterator<JSElement> {
-        @NonNls private static final String SCRIPT_START = "<SCRIPT";
-        @NonNls private static final String SCRIPT_END   = "</SCRIPT>";
-        @NonNls private static final String HTML_TAG_END = ">";
+        @NonNls
+        private static final String SCRIPT_START = "<SCRIPT";
+        @NonNls
+        private static final String SCRIPT_END = "</SCRIPT>";
+        @NonNls
+        private static final String HTML_TAG_END = ">";
 
         final XmlFile file;
-        final String          fileText;
-        int                   scriptStartIndex;
-        int                   scriptEndIndex;
-        JSElement             next;
+        final String fileText;
+        int scriptStartIndex;
+        int scriptEndIndex;
+        JSElement next;
 
         public EmbeddedJSElementIterator(XmlFile file) {
-            this.file           = file;
-            this.fileText       = file.getText();
+            this.file = file;
+            this.fileText = file.getText();
             this.scriptEndIndex = -SCRIPT_END.length();
 
             this.findNext();
         }
 
         @Override
-		public boolean hasNext() {
+        public boolean hasNext() {
             return (this.next != null);
         }
 
         @Override
-		public JSElement next() {
+        public JSElement next() {
             if (this.next == null) {
                 throw new NoSuchElementException();
             }
@@ -142,8 +145,9 @@ public class JSFunctionVisitor extends JSElementVisitor {
                     return;
                 }
 
-                int offset = ((this.scriptStartIndex >= 0) ? this.fileText.indexOf(HTML_TAG_END, this.scriptStartIndex + SCRIPT_START.length()) + 1
-                              : 0);
+                int offset = this.scriptStartIndex >= 0
+                    ? this.fileText.indexOf(HTML_TAG_END, this.scriptStartIndex + SCRIPT_START.length()) + 1
+                    : 0;
 
                 this.scriptEndIndex = ((offset > 0) ? this.fileText.indexOf(SCRIPT_END, offset) : -1);
                 if (this.scriptEndIndex < 0) {
@@ -160,11 +164,12 @@ public class JSFunctionVisitor extends JSElementVisitor {
                 if (psiElement != null && psiElement instanceof JSElement) {
                     this.next = FindReferenceUtil.getFarthestAncestor(psiElement, JSElement.class);
                 }
-            } while (this.next == null);
+            }
+            while (this.next == null);
         }
 
         @Override
-		public void remove() {
+        public void remove() {
             throw new UnsupportedOperationException();
         }
     }
