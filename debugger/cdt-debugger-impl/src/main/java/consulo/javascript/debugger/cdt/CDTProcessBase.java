@@ -2,6 +2,7 @@ package consulo.javascript.debugger.cdt;
 
 import com.github.kklisura.cdt.protocol.ChromeDevTools;
 import com.github.kklisura.cdt.protocol.commands.Debugger;
+import com.github.kklisura.cdt.protocol.events.debugger.Paused;
 import com.github.kklisura.cdt.protocol.types.debugger.Location;
 import com.github.kklisura.cdt.protocol.types.debugger.SetBreakpointByUrl;
 import consulo.application.Application;
@@ -85,27 +86,7 @@ public abstract class CDTProcessBase extends XDebugProcess {
             getSession().getProject().getUIAccess().execute(() -> myScriptListPanel.add(cdtScript));
         });
 
-        debugger.onPaused(event -> {
-            XBreakpoint<?> breakpoint = null;
-            List<String> hitBreakpoints = event.getHitBreakpoints();
-            if (hitBreakpoints != null) {
-                for (String hitBreakpoint : hitBreakpoints) {
-                    CDTBreakpointInfo info = myBreakpoints.get(hitBreakpoint);
-                    if (info != null) {
-                        breakpoint = info.getBreakpoint();
-                        break;
-                    }
-                }
-            }
-
-            XDebugSession debugSession = getSession();
-            if (breakpoint != null) {
-                debugSession.breakpointReached(breakpoint, null, new CDTSuspendContext(event, this));
-            }
-            else {
-                debugSession.positionReached(new CDTSuspendContext(event, this));
-            }
-        });
+        debugger.onPaused(this::onPause);
     }
 
     public CDTScriptHolder getScripts() {
@@ -118,6 +99,28 @@ public abstract class CDTProcessBase extends XDebugProcess {
         }
 
         myExecutor.execute(() -> runnable.accept(myChromeDevTools));
+    }
+
+    protected void onPause(Paused event) {
+        XBreakpoint<?> breakpoint = null;
+        List<String> hitBreakpoints = event.getHitBreakpoints();
+        if (hitBreakpoints != null) {
+            for (String hitBreakpoint : hitBreakpoints) {
+                CDTBreakpointInfo info = myBreakpoints.get(hitBreakpoint);
+                if (info != null) {
+                    breakpoint = info.getBreakpoint();
+                    break;
+                }
+            }
+        }
+
+        XDebugSession debugSession = getSession();
+        if (breakpoint != null) {
+            debugSession.breakpointReached(breakpoint, null, new CDTSuspendContext(event, this));
+        }
+        else {
+            debugSession.positionReached(new CDTSuspendContext(event, this));
+        }
     }
 
     @Nullable
@@ -152,10 +155,9 @@ public abstract class CDTProcessBase extends XDebugProcess {
     @Override
     public XBreakpointHandler<?>[] getBreakpointHandlers() {
         return new XBreakpointHandler[]{
-            new XBreakpointHandler<XLineBreakpoint<XBreakpointProperties>>(JavaScriptLineBreakpointType.class) {
+            new XBreakpointHandler<>(JavaScriptLineBreakpointType.class) {
                 @Override
                 public void registerBreakpoint(@Nonnull final XLineBreakpoint lineBreakpoint) {
-                    String presentableFilePath = lineBreakpoint.getFileUrl();
                     int line = lineBreakpoint.getLine();
                     XExpression conditionExpression = lineBreakpoint.getConditionExpression();
                     String expression = conditionExpression == null ? null : conditionExpression.getExpression();
