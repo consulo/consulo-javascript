@@ -36,7 +36,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 
 /**
@@ -54,7 +54,7 @@ public class CDTProcess extends XDebugProcess {
 
     private ChromeDevTools myChromeDevTools;
 
-    private Executor myExecutor;
+    private ExecutorService myExecutor;
 
     private Map<String, CDTBreakpointInfo> myBreakpoints = new HashMap<>();
 
@@ -216,7 +216,8 @@ public class CDTProcess extends XDebugProcess {
 
     @Override
     public void stop() {
-        // TODO !myVm.detach();
+        myExecutor.shutdown();
+
         myBreakpoints.clear();
 
         Application.get().runReadAction(new Runnable() {
