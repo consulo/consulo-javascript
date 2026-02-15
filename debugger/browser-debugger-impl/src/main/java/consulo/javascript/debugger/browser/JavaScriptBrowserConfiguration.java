@@ -1,29 +1,32 @@
 package consulo.javascript.debugger.browser;
 
-import com.intellij.compiler.options.CompileStepBeforeRun;
-import com.intellij.execution.DefaultExecutionResult;
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.ExecutionResult;
-import com.intellij.execution.Executor;
-import com.intellij.execution.configurations.*;
-import com.intellij.execution.filters.TextConsoleBuilder;
-import com.intellij.execution.filters.TextConsoleBuilderFactory;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.runners.ProgramRunner;
-import com.intellij.execution.runners.RunConfigurationWithSuppressedDefaultRunAction;
-import com.intellij.execution.ui.ConsoleView;
-import com.intellij.ide.browsers.BrowserFamily;
-import com.intellij.ide.browsers.BrowserLauncher;
-import com.intellij.ide.browsers.WebBrowser;
-import com.intellij.ide.browsers.WebBrowserManager;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.xdebugger.DefaultDebugProcessHandler;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
+import consulo.compiler.execution.CompileStepBeforeRun;
+import consulo.execution.DefaultExecutionResult;
+import consulo.execution.ExecutionResult;
+import consulo.execution.configuration.*;
+import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.execution.executor.Executor;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.runner.ProgramRunner;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.execution.ui.console.TextConsoleBuilder;
+import consulo.execution.ui.console.TextConsoleBuilderFactory;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.process.ExecutionException;
+import consulo.util.lang.StringUtil;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.WriteExternalException;
+import consulo.util.xml.serializer.XmlSerializer;
+import consulo.webBrowser.BrowserLauncher;
+import consulo.webBrowser.WebBrowser;
+import consulo.webBrowser.WebBrowserManager;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -31,58 +34,71 @@ import java.util.Collection;
  * @author VISTALL
  * @since 2020-06-15
  */
-public class JavaScriptBrowserConfiguration extends ModuleBasedConfiguration<RunConfigurationModule> implements RunConfigurationWithSuppressedDefaultRunAction, CompileStepBeforeRun.Suppressor
-{
-	public JavaScriptBrowserConfiguration(String name, RunConfigurationModule configurationModule, ConfigurationFactory factory)
-	{
-		super(name, configurationModule, factory);
-	}
+public class JavaScriptBrowserConfiguration extends ModuleBasedConfiguration<RunConfigurationModule> implements RunConfigurationWithSuppressedDefaultRunAction, CompileStepBeforeRun.Suppressor {
+    public String URL = "http://localhost";
 
-	public JavaScriptBrowserConfiguration(RunConfigurationModule configurationModule, ConfigurationFactory factory)
-	{
-		super(configurationModule, factory);
-	}
+    public JavaScriptBrowserConfiguration(String name, RunConfigurationModule configurationModule, ConfigurationFactory factory) {
+        super(name, configurationModule, factory);
+    }
 
-	@Override
-	@RequiredReadAction
-	public Collection<Module> getValidModules()
-	{
-		ModuleManager manager = ModuleManager.getInstance(getProject());
-		return Arrays.asList(manager.getModules());
-	}
+    public JavaScriptBrowserConfiguration(RunConfigurationModule configurationModule, ConfigurationFactory factory) {
+        super(configurationModule, factory);
+    }
 
-	@Nonnull
-	@Override
-	public SettingsEditor<? extends RunConfiguration> getConfigurationEditor()
-	{
-		return new JavaScriptBrowserConfigurationEditor();
-	}
+    @Override
+    public void readExternal(Element element) throws InvalidDataException {
+        super.readExternal(element);
+        XmlSerializer.deserializeInto(this, element);
+    }
 
-	@Nullable
-	@Override
-	public RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment environment) throws ExecutionException
-	{
-		return new RunProfileState()
-		{
-			@Nullable
-			@Override
-			public ExecutionResult execute(Executor executor, @Nonnull ProgramRunner programRunner) throws ExecutionException
-			{
-				TextConsoleBuilder builder = TextConsoleBuilderFactory.getInstance().createBuilder(environment.getProject());
+    @Override
+    public void writeExternal(Element element) throws WriteExternalException {
+        super.writeExternal(element);
+        XmlSerializer.serializeInto(this, element);
+    }
 
-				ConsoleView console = builder.getConsole();
+    @Override
+    @RequiredReadAction
+    public Collection<Module> getValidModules() {
+        ModuleManager manager = ModuleManager.getInstance(getProject());
+        return Arrays.asList(manager.getModules());
+    }
 
-				WebBrowser browser = WebBrowserManager.getInstance().getFirstBrowserOrNull(BrowserFamily.CHROME);
+    @Nonnull
+    @Override
+    public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
+        return new JavaScriptBrowserConfigurationEditor();
+    }
 
-				if(browser == null)
-				{
-					throw new ExecutionException("Can't find Chrome browser");
-				}
+    @Nullable
+    @Override
+    public RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment environment) throws ExecutionException {
+        return new RunProfileState() {
+            @Override
+            public ExecutionResult execute(Executor executor, @Nonnull ProgramRunner programRunner) throws ExecutionException {
+                TextConsoleBuilder builder = TextConsoleBuilderFactory.getInstance().createBuilder(environment.getProject());
 
-				BrowserLauncher.getInstance().browse("http://localhost", browser, environment.getProject());
+                ConsoleView console = builder.getConsole();
 
-				return new DefaultExecutionResult(console, new DefaultDebugProcessHandler());
-			}
-		};
-	}
+                WebBrowserManager manager = WebBrowserManager.getInstance();
+                WebBrowser webBrowser = manager.getFirstActiveBrowser();
+
+                if (webBrowser == null) {
+                    throw new ExecutionException("Can't find Chrome browser");
+                }
+
+                if (StringUtil.isEmpty(URL)) {
+                    throw new ExecutionException("URL is empty");
+                }
+
+                BrowserLauncher.getInstance().browse(URL, webBrowser, environment.getProject());
+
+                SessionHolder holder = Application.get().getInstance(SessionHolder.class);
+
+                SessionHolder.BrowserSession browserSession = holder.prepareSession(URL);
+
+                return new DefaultExecutionResult(console, new BrowserDebuggerProcess(browserSession));
+            }
+        };
+    }
 }
