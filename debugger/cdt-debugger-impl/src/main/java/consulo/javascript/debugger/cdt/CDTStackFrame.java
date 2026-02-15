@@ -1,4 +1,4 @@
-package consulo.javascript.debugger.browser.process;
+package consulo.javascript.debugger.cdt;
 
 import com.github.kklisura.cdt.protocol.types.debugger.CallFrame;
 import com.github.kklisura.cdt.protocol.types.debugger.Location;
@@ -22,11 +22,11 @@ import java.util.List;
  */
 public class CDTStackFrame extends XStackFrame {
     private final CallFrame myCallFrame;
-    private final CDTProcess myProcess;
+    private final CDTProcessBase myProcess;
 
     private XSourcePosition mySourcePosition;
 
-    public CDTStackFrame(CallFrame callFrame, CDTProcess process) {
+    public CDTStackFrame(CallFrame callFrame, CDTProcessBase process) {
         myCallFrame = callFrame;
         myProcess = process;
 

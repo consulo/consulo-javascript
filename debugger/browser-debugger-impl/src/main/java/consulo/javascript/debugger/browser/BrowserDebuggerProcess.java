@@ -2,7 +2,6 @@ package consulo.javascript.debugger.browser;
 
 import consulo.builtinWebServer.webSocket.WebSocketConnection;
 import consulo.execution.debug.DefaultDebugProcessHandler;
-import consulo.javascript.debugger.browser.process.CDTProcess;
 import consulo.javascript.debugger.browser.transport.DetachDebuggerRequest;
 import consulo.javascript.debugger.browser.transport.ExtensionWebSocketAccepter;
 import jakarta.annotation.Nonnull;
@@ -18,7 +17,7 @@ public class BrowserDebuggerProcess extends DefaultDebugProcessHandler {
         myBrowserSession = browserSession;
     }
 
-    public void setDebugProcess(CDTProcess cdtProcess) {
+    public void setDebugProcess(BrowserCDTDebugProcess cdtProcess) {
         myBrowserSession.setDebugProcess(cdtProcess);
     }
 

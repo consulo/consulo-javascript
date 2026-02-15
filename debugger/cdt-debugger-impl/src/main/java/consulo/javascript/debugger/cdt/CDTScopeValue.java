@@ -1,4 +1,4 @@
-package consulo.javascript.debugger.browser.process;
+package consulo.javascript.debugger.cdt;
 
 import com.github.kklisura.cdt.protocol.types.debugger.Scope;
 import com.github.kklisura.cdt.protocol.types.runtime.RemoteObject;
@@ -14,7 +14,7 @@ import java.util.Locale;
  * @since 2026-02-15
  */
 public class CDTScopeValue extends CDTRemoteObjectValue {
-    public CDTScopeValue(@Nonnull Scope scope, @Nonnull RemoteObject remoteObject, CDTProcess process) {
+    public CDTScopeValue(@Nonnull Scope scope, @Nonnull RemoteObject remoteObject, CDTProcessBase process) {
         super(StringUtil.capitalize(scope.getType().name().toLowerCase(Locale.ROOT)), remoteObject, process);
     }
 

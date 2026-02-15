@@ -1,4 +1,4 @@
-package consulo.javascript.debugger.browser.process;
+package consulo.javascript.debugger.cdt;
 
 import com.github.kklisura.cdt.protocol.types.runtime.Properties;
 import com.github.kklisura.cdt.protocol.types.runtime.PropertyDescriptor;
@@ -20,9 +20,9 @@ public class CDTRemoteObjectValue extends XNamedValue {
     @Nonnull
     private final RemoteObject myRemoteObject;
 
-    private final CDTProcess myProcess;
+    private final CDTProcessBase myProcess;
 
-    public CDTRemoteObjectValue(@Nonnull String name, @Nonnull RemoteObject remoteObject, CDTProcess process) {
+    public CDTRemoteObjectValue(@Nonnull String name, @Nonnull RemoteObject remoteObject, CDTProcessBase process) {
         super(name);
         myRemoteObject = remoteObject;
         myProcess = process;

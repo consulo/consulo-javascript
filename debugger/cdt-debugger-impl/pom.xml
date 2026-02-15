@@ -25,7 +25,7 @@
     </parent>
 
     <groupId>consulo.plugin</groupId>
-    <artifactId>consulo.javascript-browser.debugger.impl</artifactId>
+    <artifactId>consulo.javascript-cdt.debugger.impl</artifactId>
     <version>3-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -50,12 +50,6 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo.javascript-debugger.impl</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>consulo.javascript-cdt.debugger.impl</artifactId>
             <version>${project.version}</version>
         </dependency>
 

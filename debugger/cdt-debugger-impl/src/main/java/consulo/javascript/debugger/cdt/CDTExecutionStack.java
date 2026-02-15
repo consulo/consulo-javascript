@@ -1,4 +1,4 @@
-package consulo.javascript.debugger.browser.process;
+package consulo.javascript.debugger.cdt;
 
 import com.github.kklisura.cdt.protocol.types.debugger.CallFrame;
 import consulo.execution.debug.frame.XExecutionStack;
@@ -17,7 +17,7 @@ public class CDTExecutionStack extends XExecutionStack {
 
     public CDTExecutionStack(String displayName,
                              List<CallFrame> callFrames,
-                             CDTProcess process) {
+                             CDTProcessBase process) {
         super(displayName);
 
         myFrames = new ArrayList<>(callFrames.size());

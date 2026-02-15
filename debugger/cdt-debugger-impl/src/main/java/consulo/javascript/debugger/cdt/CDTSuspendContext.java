@@ -1,4 +1,4 @@
-package consulo.javascript.debugger.browser.process;
+package consulo.javascript.debugger.cdt;
 
 import com.github.kklisura.cdt.protocol.events.debugger.Paused;
 import consulo.execution.debug.frame.XExecutionStack;
@@ -12,7 +12,7 @@ import jakarta.annotation.Nullable;
 public class CDTSuspendContext extends XSuspendContext {
     private CDTExecutionStack myStack;
 
-    public CDTSuspendContext(Paused event, CDTProcess process) {
+    public CDTSuspendContext(Paused event, CDTProcessBase process) {
         myStack = new CDTExecutionStack("", event.getCallFrames(), process);
     }
 

@@ -7,8 +7,9 @@ import consulo.builtinWebServer.webSocket.WebSocketAccepter;
 import consulo.builtinWebServer.webSocket.WebSocketConnection;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.ui.console.ConsoleViewContentType;
+import consulo.javascript.debugger.browser.BrowserCDTDebugProcess;
 import consulo.javascript.debugger.browser.SessionHolder;
-import consulo.javascript.debugger.browser.process.CDTProcess;
+import consulo.javascript.debugger.cdt.CDTProcessBase;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
@@ -64,7 +65,7 @@ public class ExtensionWebSocketAccepter implements WebSocketAccepter {
                             session = mySessionHolder.find(tabId);
 
                             if (session != null) {
-                                CDTProcess debugProcess = session.getDebugProcess();
+                                CDTProcessBase debugProcess = session.getDebugProcess();
 
                                 XDebugSession xDebugSession = debugProcess.getSession();
 
@@ -94,7 +95,7 @@ public class ExtensionWebSocketAccepter implements WebSocketAccepter {
                             session = mySessionHolder.find(tabId);
 
                             if (session != null) {
-                                CDTProcess debugProcess = session.getDebugProcess();
+                                BrowserCDTDebugProcess debugProcess = session.getDebugProcess();
 
                                 XDebugSession xDebugSession = debugProcess.getSession();
 

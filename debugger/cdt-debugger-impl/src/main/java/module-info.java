@@ -2,12 +2,12 @@
  * @author VISTALL
  * @since 2026-02-15
  */
-module consulo.javascript.browser.debugger.impl {
+module consulo.javascript.cdt.debugger.impl {
     requires consulo.javascript.debugger.impl;
 
     requires com.google.gson;
 
     requires cdt.java.client;
 
-    requires consulo.javascript.cdt.debugger.impl;
+    exports consulo.javascript.debugger.cdt;
 }

@@ -9,7 +9,7 @@ import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.runner.DefaultProgramRunner;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.ui.RunContentDescriptor;
-import consulo.javascript.debugger.browser.process.CDTProcess;
+import consulo.javascript.debugger.cdt.CDTProcessBase;
 import consulo.process.ExecutionException;
 import jakarta.annotation.Nonnull;
 
@@ -34,7 +34,7 @@ public class JavaScriptBrowserDebugRunner extends DefaultProgramRunner {
 
             BrowserDebuggerProcess processHandler = (BrowserDebuggerProcess) result.getProcessHandler();
 
-            CDTProcess process = new CDTProcess(xDebugSession, result);
+            BrowserCDTDebugProcess process = new BrowserCDTDebugProcess(xDebugSession, result);
 
             processHandler.setDebugProcess(process);
             

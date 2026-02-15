@@ -1,4 +1,4 @@
-package consulo.javascript.debugger.browser.process;
+package consulo.javascript.debugger.cdt;
 
 import com.github.kklisura.cdt.protocol.events.debugger.ScriptParsed;
 import consulo.virtualFileSystem.VirtualFile;

@@ -1,4 +1,4 @@
-package consulo.javascript.debugger.browser.process;
+package consulo.javascript.debugger.cdt;
 
 import com.github.kklisura.cdt.protocol.ChromeDevTools;
 import com.github.kklisura.cdt.protocol.commands.Debugger;
@@ -19,8 +19,6 @@ import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.javascript.debugger.JavaScriptEditorsProvider;
 import consulo.javascript.debugger.JavaScriptLineBreakpointType;
 import consulo.javascript.debugger.JavaScriptListPanel;
-import consulo.javascript.debugger.browser.ChromeDevToolsFactory;
-import consulo.javascript.debugger.browser.SessionHolder;
 import consulo.javascript.icon.JavaScriptIconGroup;
 import consulo.localize.LocalizeValue;
 import consulo.process.ExecutionException;
@@ -43,7 +41,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 2026-02-15
  */
-public class CDTProcess extends XDebugProcess {
+public abstract class CDTProcessBase extends XDebugProcess {
     private final ExecutionResult myResult;
 
     private CDTScriptHolder myScripts = new CDTScriptHolder();
@@ -58,7 +56,7 @@ public class CDTProcess extends XDebugProcess {
 
     private Map<String, CDTBreakpointInfo> myBreakpoints = new HashMap<>();
 
-    public CDTProcess(@Nonnull XDebugSession session, ExecutionResult result) throws ExecutionException {
+    public CDTProcessBase(@Nonnull XDebugSession session, ExecutionResult result) throws ExecutionException {
         super(session);
         myScriptListPanel = new JavaScriptListPanel<>(session.getProject()) {
             @Nullable
@@ -74,8 +72,8 @@ public class CDTProcess extends XDebugProcess {
         getSession().setPauseActionSupported(true);
     }
 
-    public void init(SessionHolder.BrowserSession session) {
-        myChromeDevTools = ChromeDevToolsFactory.create(session);
+    public void initTools(ChromeDevTools devTools) {
+        myChromeDevTools = devTools;
 
         Debugger debugger = myChromeDevTools.getDebugger();
 

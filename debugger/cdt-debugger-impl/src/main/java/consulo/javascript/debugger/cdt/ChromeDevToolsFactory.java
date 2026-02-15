@@ -1,4 +1,4 @@
-package consulo.javascript.debugger.browser;
+package consulo.javascript.debugger.cdt;
 
 import com.github.kklisura.cdt.services.WebSocketService;
 import com.github.kklisura.cdt.services.config.ChromeDevToolsServiceConfiguration;
@@ -16,10 +16,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 2026-02-15
  */
 public class ChromeDevToolsFactory {
-    public static ChromeDevToolsServiceImpl create(SessionHolder.BrowserSession browserSession) {
+    public static ChromeDevToolsServiceImpl create(WebSocketService webSocketService) {
         ChromeDevToolsServiceConfiguration conf = new ChromeDevToolsServiceConfiguration();
-
-        WebSocketService webSocketService = new ProxyWebSocketService(browserSession);
 
         // Create invocation handler
         CommandInvocationHandler commandInvocationHandler = new CommandInvocationHandler();

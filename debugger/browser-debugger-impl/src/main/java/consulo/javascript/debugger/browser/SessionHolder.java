@@ -4,7 +4,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.builtinWebServer.webSocket.WebSocketConnection;
-import consulo.javascript.debugger.browser.process.CDTProcess;
 import consulo.util.collection.Lists;
 import consulo.util.collection.SmartList;
 import jakarta.inject.Singleton;
@@ -28,7 +27,7 @@ public class SessionHolder {
 
         private WebSocketConnection myWebSocketConnection;
 
-        private CDTProcess myDebugProcess;
+        private BrowserCDTDebugProcess myDebugProcess;
 
         private List<Consumer<String>> myHandlers = new SmartList<>();
 
@@ -54,7 +53,7 @@ public class SessionHolder {
             myBrowserSessions.remove(this);
         }
 
-        public void setDebugProcess(CDTProcess debugProcess) {
+        public void setDebugProcess(BrowserCDTDebugProcess debugProcess) {
             myDebugProcess = debugProcess;
         }
 
@@ -62,7 +61,7 @@ public class SessionHolder {
             return myWebSocketConnection;
         }
 
-        public CDTProcess getDebugProcess() {
+        public BrowserCDTDebugProcess getDebugProcess() {
             return myDebugProcess;
         }
     }

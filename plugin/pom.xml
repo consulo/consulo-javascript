@@ -173,6 +173,12 @@
         </dependency>
 
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo.javascript-cdt.debugger.impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.github.kklisura.cdt</groupId>
             <artifactId>cdt-java-client</artifactId>
             <version>2.1.0</version>
