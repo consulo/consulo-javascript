@@ -143,20 +143,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1.1</version>
-        </dependency>
-
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>consulo.javascript-debugger.impl</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>consulo.javascript-v8.debugger.impl</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -181,7 +169,7 @@
         <dependency>
             <groupId>consulo.internal.com.github.kklisura.cdt</groupId>
             <artifactId>cdt-java-client</artifactId>
-            <version>4.0.0</version>
+            <version>4.0.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.javassist</groupId>

@@ -2,7 +2,6 @@ package consulo.javascript.debugger.browser.transport;
 
 import com.google.gson.Gson;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ReadAction;
 import consulo.builtinWebServer.webSocket.WebSocketAccepter;
 import consulo.builtinWebServer.webSocket.WebSocketConnection;
 import consulo.execution.debug.XDebugSession;
@@ -102,8 +101,6 @@ public class ExtensionWebSocketAccepter implements WebSocketAccepter {
                                 debugProcess.init(session);
 
                                 xDebugSession.getConsoleView().print("Browser connected\n", ConsoleViewContentType.LOG_INFO_OUTPUT);
-
-                                ReadAction.nonBlocking(xDebugSession::initBreakpoints).submitDefault();
                             }
 
                             break;

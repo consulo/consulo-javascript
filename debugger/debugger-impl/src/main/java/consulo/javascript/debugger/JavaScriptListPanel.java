@@ -16,17 +16,15 @@
 
 package consulo.javascript.debugger;
 
-import consulo.language.editor.FileColorManager;
-import consulo.navigation.OpenFileDescriptorFactory;
-import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.SortedListModel;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.io.FileUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,66 +36,51 @@ import java.util.Comparator;
  * @author VISTALL
  * @since 21.03.14
  */
-public abstract class JavaScriptListPanel<T> extends JPanel {
-    @Nonnull
-    private final Project myProject;
-    private SortedListModel<T> myModel = SortedListModel.create(new Comparator<T>() {
-        @Override
-        public int compare(T o1, T o2) {
-            VirtualFile v1 = toVirtualFile(o1, false);
-            VirtualFile v2 = toVirtualFile(o2, false);
-            if (v1 == null || v2 == null) {
-                return -1;
-            }
-            return FileUtil.comparePaths(v1.getPath(), v2.getPath());
-        }
-    });
+public class JavaScriptListPanel<T extends JavaScriptFileInfo> extends JPanel {
+    private SortedListModel<T> myModel = SortedListModel.create((Comparator<T>) (o1, o2) -> FileUtil.comparePaths(o1.getPath(), o2.getPath()));
 
-    public JavaScriptListPanel(@Nonnull Project project) {
+    public JavaScriptListPanel() {
         super(new BorderLayout());
         init();
-        myProject = project;
     }
 
     private void init() {
-        final JBList<T> jbList = new JBList<>(myModel);
-        jbList.setCellRenderer(new ColoredListCellRenderer<T>() {
+        final JBList<T> list = new JBList<>(myModel);
+        list.setCellRenderer(new ColoredListCellRenderer<T>() {
             @Override
-            protected void customizeCellRenderer(@Nonnull JList<? extends T> jList, T t, int i, boolean b, boolean b1) {
-                VirtualFile virtualFile = toVirtualFile(t, false);
-                if (virtualFile == null) {
-                    append("<invalid>");
-                }
-                else {
-                    setBackground(FileColorManager.getInstance(myProject).getFileColor(virtualFile));
-                    append(virtualFile.getPath());
-                    setIcon(virtualFile.getFileType().getIcon());
+            protected void customizeCellRenderer(@Nonnull JList<? extends T> list, T value, int index, boolean selected, boolean hasFocus) {
+                append(value.getPath());
+
+                setIcon(value.getIcon());
+
+                if (!selected) {
+                    ColorValue fileStatusColor = value.getFileStatusColor();
+                    if (fileStatusColor != null) {
+                        setBackground(TargetAWT.to(fileStatusColor));
+                    }
                 }
             }
         });
-        jbList.addMouseListener(new MouseAdapter() {
+
+        list.addMouseListener(new MouseAdapter() {
             @Override
+            @RequiredUIAccess
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
-                    T selectedValue = jbList.getSelectedValue();
+                    T selectedValue = list.getSelectedValue();
                     if (selectedValue == null) {
                         return;
                     }
 
-                    VirtualFile virtualFile = toVirtualFile(selectedValue, true);
-
-                    if (virtualFile != null) {
-                        OpenFileDescriptorFactory.getInstance(myProject).builder(virtualFile).build().navigate(true);
+                    if (selectedValue.canNavigate()) {
+                        selectedValue.navigate(true);
                     }
                 }
             }
         });
 
-        add(new JBScrollPane(jbList), BorderLayout.CENTER);
+        add(new JBScrollPane(list), BorderLayout.CENTER);
     }
-
-    @Nullable
-    public abstract VirtualFile toVirtualFile(@Nonnull T value, boolean toOpen);
 
     public void add(T value) {
         myModel.add(value);

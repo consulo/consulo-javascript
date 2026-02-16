@@ -63,7 +63,7 @@
         <dependency>
             <groupId>consulo.internal.com.github.kklisura.cdt</groupId>
             <artifactId>cdt-java-client</artifactId>
-            <version>4.0.0</version>
+            <version>4.0.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.javassist</groupId>

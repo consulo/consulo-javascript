@@ -9,6 +9,7 @@ import consulo.execution.debug.frame.presentation.XValuePresentation;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 
@@ -17,12 +18,12 @@ import java.util.List;
  * @since 2026-02-15
  */
 public class CDTRemoteObjectValue extends XNamedValue {
-    @Nonnull
+    @Nullable
     private final RemoteObject myRemoteObject;
 
     private final CDTProcessBase myProcess;
 
-    public CDTRemoteObjectValue(@Nonnull String name, @Nonnull RemoteObject remoteObject, CDTProcessBase process) {
+    public CDTRemoteObjectValue(@Nonnull String name, @Nullable RemoteObject remoteObject, CDTProcessBase process) {
         super(name);
         myRemoteObject = remoteObject;
         myProcess = process;
@@ -30,13 +31,21 @@ public class CDTRemoteObjectValue extends XNamedValue {
 
     @Override
     public void computeChildren(@Nonnull XCompositeNode node) {
-        if (myRemoteObject.getType() != RemoteObjectType.OBJECT) {
+        fill(myRemoteObject, node, myProcess);
+    }
+
+    public static void fill(RemoteObject remoteObject, XCompositeNode node, CDTProcessBase process) {
+        if (remoteObject == null) {
+            return;
+        }
+
+        if (remoteObject.getType() != RemoteObjectType.OBJECT) {
             node.addChildren(XValueChildrenList.EMPTY, true);
             return;
         }
 
-        myProcess.invoke(devTools -> {
-            String objectId = myRemoteObject.getObjectId();
+        process.invoke(devTools -> {
+            String objectId = remoteObject.getObjectId();
 
             Properties properties = devTools.getRuntime().getProperties(objectId);
 
@@ -47,7 +56,7 @@ public class CDTRemoteObjectValue extends XNamedValue {
             for (PropertyDescriptor propertyDescriptor : result) {
                 RemoteObject value = propertyDescriptor.getValue();
 
-                list.add(new CDTRemoteObjectValue(propertyDescriptor.getName(), value, myProcess));
+                list.add(new CDTRemoteObjectValue(propertyDescriptor.getName(), value, process));
             }
 
             node.addChildren(list, true);
@@ -61,6 +70,11 @@ public class CDTRemoteObjectValue extends XNamedValue {
 
     @Override
     public void computePresentation(@Nonnull XValueNode node, @Nonnull XValuePlace place) {
+        if (myRemoteObject == null) {
+            node.setPresentation(getObjectIcon(), null, "null", false);
+            return;
+        }
+
         if (myRemoteObject.getType() == RemoteObjectType.OBJECT) {
             node.setPresentation(getObjectIcon(), "", "", true);
         }

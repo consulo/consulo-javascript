@@ -49,7 +49,6 @@
         </module>
         <module>web-browser-impl</module>
         <module>debugger/debugger-impl</module>
-        <module>debugger/v8-debugger-impl</module>
         <module>debugger/browser-debugger-impl</module>
         <module>debugger/cdt-debugger-impl</module>
         <module>lang-version-impl/javascript16-impl</module>

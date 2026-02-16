@@ -11,6 +11,8 @@ import consulo.execution.debug.XSourcePositionFactory;
 import consulo.execution.debug.frame.XCompositeNode;
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XValueChildrenList;
+import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.ex.SimpleTextAttributes;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -26,23 +28,31 @@ public class CDTStackFrame extends XStackFrame {
 
     private XSourcePosition mySourcePosition;
 
+    private final Location myLocation;
+    private final CDTScript myScript;
+    private final String myScriptId;
+
     public CDTStackFrame(CallFrame callFrame, CDTProcessBase process) {
         myCallFrame = callFrame;
         myProcess = process;
 
-        Location location = callFrame.getLocation();
+        myLocation = callFrame.getLocation();
 
-        if (location != null) {
-            String scriptId = location.getScriptId();
+        if (myLocation != null) {
+            myScriptId = myLocation.getScriptId();
+            myScript = process.getScripts().find(myScriptId);
 
-            CDTScript script = process.getScripts().find(scriptId);
-            if (script != null) {
+            if (myScript != null) {
                 mySourcePosition = Application.get().getInstance(XSourcePositionFactory.class).createPosition(
-                    script.toVirtualFile(),
-                    location.getLineNumber(),
-                    location.getColumnNumber()
+                    myScript.toVirtualFile(),
+                    myLocation.getLineNumber(),
+                    myLocation.getColumnNumber()
                 );
             }
+        }
+        else {
+            myScript = null;
+            myScriptId = null;
         }
     }
 
@@ -56,6 +66,22 @@ public class CDTStackFrame extends XStackFrame {
     @Override
     public Object getEqualityObject() {
         return myCallFrame.getCallFrameId();
+    }
+
+    @Override
+    public void customizePresentation(ColoredTextContainer component) {
+        XSourcePosition position = getSourcePosition();
+        if (position != null) {
+            component.append(position.getFile().getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+            component.append(":" + (position.getLine() + 1), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        }
+        else if (myScript != null) {
+            component.append(myScript.getPath(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+            component.append(":" + (myLocation.getLineNumber() + 1), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        }
+        else {
+            component.append(myScriptId, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        }
     }
 
     @Override
@@ -74,7 +100,7 @@ public class CDTStackFrame extends XStackFrame {
                     continue;
                 }
 
-                list.add(new CDTScopeValue(scope, object, myProcess));
+                list.addTopGroup(new CDTScopeValue(scope, object, myProcess));
             }
 
             node.addChildren(list, true);

@@ -6,6 +6,7 @@ import com.github.kklisura.cdt.protocol.events.debugger.Paused;
 import com.github.kklisura.cdt.protocol.types.debugger.Location;
 import com.github.kklisura.cdt.protocol.types.debugger.SetBreakpointByUrl;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.execution.ExecutionResult;
 import consulo.execution.debug.*;
@@ -27,10 +28,10 @@ import consulo.process.ProcessHandler;
 import consulo.ui.ex.content.Content;
 import consulo.util.io.Url;
 import consulo.util.io.Urls;
-import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.net.SocketException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -59,13 +60,8 @@ public abstract class CDTProcessBase extends XDebugProcess {
 
     public CDTProcessBase(@Nonnull XDebugSession session, ExecutionResult result) throws ExecutionException {
         super(session);
-        myScriptListPanel = new JavaScriptListPanel<>(session.getProject()) {
-            @Nullable
-            @Override
-            public VirtualFile toVirtualFile(@Nonnull CDTScript value, boolean toOpen) {
-                return value.toVirtualFile();
-            }
-        };
+        myScriptListPanel = new JavaScriptListPanel<>();
+
         myExecutor = Application.get().getInstance(ApplicationConcurrency.class).createBoundedScheduledExecutorService("CDTProcess", 1);
 
         myResult = result;
@@ -79,7 +75,7 @@ public abstract class CDTProcessBase extends XDebugProcess {
         Debugger debugger = myChromeDevTools.getDebugger();
 
         debugger.onScriptParsed(event -> {
-            CDTScript cdtScript = new CDTScript(event);
+            CDTScript cdtScript = new CDTScript(getSession().getProject(), event);
 
             myScripts.add(cdtScript);
 
@@ -87,6 +83,20 @@ public abstract class CDTProcessBase extends XDebugProcess {
         });
 
         debugger.onPaused(this::onPause);
+
+        devTools.getRuntime().onExecutionContextDestroyed(executionContextDestroyed -> {
+            getProcessHandler().destroyProcess();
+        });
+
+        initOthers();
+    }
+
+    protected void initOthers() {
+        invoke(devTools -> {
+            ReadAction.run(() -> getSession().initBreakpoints());
+
+            devTools.getRuntime().runIfWaitingForDebugger();
+        });
     }
 
     public CDTScriptHolder getScripts() {
@@ -98,7 +108,14 @@ public abstract class CDTProcessBase extends XDebugProcess {
             return;
         }
 
-        myExecutor.execute(() -> runnable.accept(myChromeDevTools));
+        myExecutor.execute(() -> {
+            try {
+                runnable.accept(myChromeDevTools);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     protected void onPause(Paused event) {
@@ -216,6 +233,14 @@ public abstract class CDTProcessBase extends XDebugProcess {
 
     @Override
     public void stop() {
+        if (myChromeDevTools instanceof AutoCloseable closeable) {
+            try {
+                closeable.close();
+            }
+            catch (Exception ignored) {
+            }
+        }
+
         myExecutor.shutdown();
 
         myBreakpoints.clear();
