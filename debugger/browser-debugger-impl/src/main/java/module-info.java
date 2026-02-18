@@ -10,4 +10,6 @@ module consulo.javascript.browser.debugger.impl {
     requires cdt.java.client;
 
     requires consulo.javascript.cdt.debugger.impl;
+
+    opens consulo.javascript.debugger.browser to consulo.util.xml.serializer;
 }
