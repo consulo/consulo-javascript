@@ -16,6 +16,7 @@
 
 package com.intellij.lang.javascript.impl.flex.importer;
 
+import consulo.util.lang.StringEscapeUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -86,9 +87,8 @@ class AS3InterfaceDumper extends AbstractDumpProcessor {
                 catch (NumberFormatException ignored) {
                 }
             }
-            else if (value.length() > 0 && (Character.isDigit(
-                ch = value.charAt(0)) || (ch == '-' && value.length() > 1 && Character.isDigit(value.charAt(1)
-            )))) {
+            else if (value.length() > 0
+                && (Character.isDigit(ch = value.charAt(0)) || ch == '-' && value.length() > 1 && Character.isDigit(value.charAt(1)))) {
                 try {
                     Integer.parseInt(value);
                     doQoute = false;
@@ -98,17 +98,17 @@ class AS3InterfaceDumper extends AbstractDumpProcessor {
             }
 
             if (doQoute) {
-                value = "\"" + quote(value) + "\"";
+                value = StringEscapeUtil.quote(value, '"');
             }
         }
         return value;
     }
 
-    private static final Set<String> DO_NOT_NEED_QOTING =
+    private static final Set<String> DO_NOT_NEED_QUOTING =
         Set.of("null", "NaN", "undefined", "true", "false", "Infinity", "-Infinity");
 
     private static boolean needsQuoting(String value) {
-        return !DO_NOT_NEED_QOTING.contains(value);
+        return !DO_NOT_NEED_QUOTING.contains(value);
     }
 
     @Override

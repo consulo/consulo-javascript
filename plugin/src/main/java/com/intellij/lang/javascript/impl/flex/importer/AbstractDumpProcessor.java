@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.intellij.lang.javascript.impl.flex.importer;
 
 import jakarta.annotation.Nonnull;
@@ -236,30 +235,5 @@ abstract class AbstractDumpProcessor implements FlexByteCodeInformationProcessor
             }
             append("\n");
         }
-    }
-
-    protected static String quote(String s) {
-        if (s.length() == 0) {
-            return s;
-        }
-        StringBuilder b = new StringBuilder(s.length());
-
-        for (int i = 0; i < s.length(); ++i) {
-            char ch = s.charAt(i);
-
-            if (ch == '\\' || ch == '"') {
-                b.append('\\');
-            }
-            else if (ch == '\n') {
-                b.append("\\n");
-                continue;
-            }
-            else if (ch == '\r') {
-                b.append("\\r");
-                continue;
-            }
-            b.append(ch);
-        }
-        return b.toString();
     }
 }
