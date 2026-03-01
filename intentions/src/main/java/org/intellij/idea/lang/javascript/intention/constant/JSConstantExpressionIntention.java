@@ -25,7 +25,7 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import consulo.util.lang.StringUtil;
+import consulo.util.lang.StringEscapeUtil;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
@@ -57,7 +57,7 @@ public class JSConstantExpressionIntention extends JSIntention {
         JSExpression expression = (JSExpression) element;
         Object value = ExpressionUtil.computeConstantExpression(expression);
         String newExpression = value instanceof String strValue
-            ? StringUtil.escapeStringCharacters(strValue, new StringBuilder(strValue.length() + 2).append('"')).append('"').toString()
+            ? StringEscapeUtil.quote(strValue, '"')
             : String.valueOf(value);
         JSElementFactory.replaceExpression(expression, newExpression);
     }

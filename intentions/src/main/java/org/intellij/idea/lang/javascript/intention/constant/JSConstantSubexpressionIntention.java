@@ -27,7 +27,7 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import consulo.util.lang.StringUtil;
+import consulo.util.lang.StringEscapeUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
@@ -99,10 +99,7 @@ public class JSConstantSubexpressionIntention extends JSMutablyNamedIntention {
         }
 
         if (constantValue instanceof String strValue) {
-            newExpression.ensureCapacity(newExpression.length() + strValue.length() + 2);
-            newExpression.append('"');
-            StringUtil.escapeStringCharacters(strValue, newExpression);
-            newExpression.append('"');
+            StringEscapeUtil.escape(strValue, '"', newExpression);
         }
         else {
             newExpression.append(constantValue);

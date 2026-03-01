@@ -17,11 +17,11 @@ package com.intellij.javascript.manipulators;
 
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.util.TextRange;
-import consulo.language.psi.PsiElement;
-import consulo.project.Project;
 import consulo.language.psi.AbstractElementManipulator;
+import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
-import consulo.util.lang.StringUtil;
+import consulo.project.Project;
+import consulo.util.lang.StringEscapeUtil;
 
 /**
  * @author peter
@@ -35,7 +35,7 @@ abstract class JSAbstractElementManipulator<T extends PsiElement> extends Abstra
         int oldLength = oldText.length();
         StringBuilder newText = new StringBuilder(oldLength);
         newText.append(oldText, 0, range.getStartOffset());
-        StringUtil.escapeStringCharacters(newContent, newText);
+        StringEscapeUtil.escape(newContent, '"', newText);
         newText.append(oldText, range.getEndOffset(), oldLength);
 
         return (T) element.replace(createTree(newText.toString(), element.getProject()));
