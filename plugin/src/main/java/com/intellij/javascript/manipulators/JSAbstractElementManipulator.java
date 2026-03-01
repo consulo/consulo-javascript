@@ -15,6 +15,7 @@
  */
 package com.intellij.javascript.manipulators;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
@@ -27,12 +28,17 @@ import consulo.util.lang.StringUtil;
  */
 abstract class JSAbstractElementManipulator<T extends PsiElement> extends AbstractElementManipulator<T> {
     @Override
+    @RequiredWriteAction
+    @SuppressWarnings("unchecked")
     public T handleContentChange(T element, TextRange range, String newContent) throws IncorrectOperationException {
         String oldText = element.getText();
-        newContent = StringUtil.escapeStringCharacters(newContent);
-        String newText = oldText.substring(0, range.getStartOffset()) + newContent + oldText.substring(range.getEndOffset());
+        int oldLength = oldText.length();
+        StringBuilder newText = new StringBuilder(oldLength);
+        newText.append(oldText, 0, range.getStartOffset());
+        StringUtil.escapeStringCharacters(newContent, newText);
+        newText.append(oldText, range.getEndOffset(), oldLength);
 
-        return (T)element.replace(createTree(newText, element.getProject()));
+        return (T) element.replace(createTree(newText.toString(), element.getProject()));
     }
 
     protected abstract T createTree(String newText, Project project);
