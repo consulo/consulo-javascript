@@ -25,7 +25,7 @@ import consulo.language.editor.intention.IntentionMetaData;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
-import consulo.util.lang.StringUtil;
+import consulo.util.lang.StringEscapeUtil;
 import jakarta.annotation.Nonnull;
 import org.intellij.idea.lang.javascript.intention.JSElementPredicate;
 import org.intellij.idea.lang.javascript.intention.JSIntention;
@@ -40,24 +40,24 @@ import org.intellij.idea.lang.javascript.psiutil.JSElementFactory;
     fileExtensions = "js"
 )
 public class JSConstantExpressionIntention extends JSIntention {
-    @Override
     @Nonnull
+    @Override
     public LocalizeValue getText() {
         return JSIntentionLocalize.constantComputeExpression();
     }
 
-    @Override
     @Nonnull
+    @Override
     protected JSElementPredicate getElementPredicate() {
         return new ConstantExpressionPredicate();
     }
 
     @Override
     public void processIntention(@Nonnull PsiElement element) throws IncorrectOperationException {
-        JSExpression expression = (JSExpression)element;
+        JSExpression expression = (JSExpression) element;
         Object value = ExpressionUtil.computeConstantExpression(expression);
         String newExpression = value instanceof String strValue
-            ? '"' + StringUtil.escapeStringCharacters(strValue) + '"'
+            ? StringEscapeUtil.quote(strValue, '"')
             : String.valueOf(value);
         JSElementFactory.replaceExpression(expression, newExpression);
     }
@@ -65,22 +65,14 @@ public class JSConstantExpressionIntention extends JSIntention {
     private static class ConstantExpressionPredicate implements JSElementPredicate {
         @Override
         public boolean satisfiedBy(@Nonnull PsiElement element) {
-            if (!(element instanceof JSExpression) || ErrorUtil.containsError(element)) {
-                return false;
-            }
-            JSExpression expression = (JSExpression)element;
-
-            if (element instanceof JSLiteralExpression
-                || (element instanceof JSReferenceExpression referenceExpression && referenceExpression.getQualifier() != null)
-                || expression instanceof JSCallExpression
-                || !ExpressionUtil.isConstantExpression(expression)
-                || ExpressionUtil.computeConstantExpression(expression) == null) {
-                return false;
-            }
-
-            PsiElement parent = element.getParent();
-
-            return !(parent instanceof JSExpression parentExpression && ExpressionUtil.isConstantExpression(parentExpression));
+            return element instanceof JSExpression expression
+                && !ErrorUtil.containsError(element)
+                && !(element instanceof JSLiteralExpression)
+                && !(element instanceof JSReferenceExpression refExpr && refExpr.getQualifier() != null)
+                && !(expression instanceof JSCallExpression)
+                && ExpressionUtil.isConstantExpression(expression)
+                && ExpressionUtil.computeConstantExpression(expression) != null
+                && !(element.getParent() instanceof JSExpression parentExpr && ExpressionUtil.isConstantExpression(parentExpr));
         }
     }
 }
